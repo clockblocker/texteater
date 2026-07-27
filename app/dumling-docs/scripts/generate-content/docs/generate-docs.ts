@@ -1,10 +1,11 @@
-import { mkdirSync } from "node:fs";
-import { generatedDocsDir, publicDir } from "../shared/paths";
+import { runCodegen } from "dumcodegen";
 import type { SourcePage } from "../shared/types";
+import { defineDocsCodegen } from "./codegen";
+import { discoverDocsInitialOwnership } from "./initial-ownership";
 import { typedDocsGenerationConfig } from "./typed/config";
-import { discoverTypedDocs, writeTypedDocs } from "./typed/generate-typed-docs";
+import { discoverTypedDocs } from "./typed/generate-typed-docs";
 import type { DocsOutput } from "./types";
-import { removeGeneratedDocOutputs, writeNavFiles } from "./write-nav";
+import { sourcePageFromDocsOutput } from "./types";
 
 function assertUniqueRouteIds(outputs: DocsOutput[]): void {
 	const routeIds = new Map<string, string>();
@@ -21,12 +22,11 @@ function assertUniqueRouteIds(outputs: DocsOutput[]): void {
 }
 
 export async function generateDocs(): Promise<SourcePage[]> {
-	mkdirSync(generatedDocsDir, { recursive: true });
-	mkdirSync(publicDir, { recursive: true });
-	removeGeneratedDocOutputs();
+	const initialOwnership = discoverDocsInitialOwnership();
 	const outputs = await discoverTypedDocs(typedDocsGenerationConfig);
 	assertUniqueRouteIds(outputs);
-	const pages = [...writeTypedDocs(outputs)];
-	writeNavFiles();
-	return pages;
+	await runCodegen(defineDocsCodegen(outputs, initialOwnership), {
+		mode: "write",
+	});
+	return outputs.map((output) => sourcePageFromDocsOutput(output));
 }

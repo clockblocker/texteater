@@ -1,13 +1,11 @@
-import { writeGeneratedMarkdown } from "../../shared/fs";
 import { pathRelativeToSiteRoot } from "../../shared/paths";
-import type { DocsOutput } from "../types";
-import { sourcePageFromDocsOutput } from "../types";
 import { frontmatterForDocMeta } from "../metadata";
 import {
 	generatedPathForTypedDoc,
 	publicHrefForRouteId,
 	publicMarkdownPathForRouteId,
 } from "../routes";
+import type { DocsOutput } from "../types";
 import type { TypedDocsGenerationConfig } from "./config";
 import { listTypedDocEntrypoints } from "./list-typed-doc-entrypoints";
 import type {
@@ -19,10 +17,10 @@ import type {
 } from "./load-typed-doc-source";
 import { loadTypedDocSource } from "./load-typed-doc-source";
 import {
+	type RenderedChildPage,
 	renderChildPages,
 	renderRuleDocument,
 	renderRuleDocumentBody,
-	type RenderedChildPage,
 } from "./render-rule-document";
 
 type RenderPart = {
@@ -63,7 +61,9 @@ function mergeMirroredMeta(
 		),
 		navTitle: mergeInheritedField(universal.navTitle, overlay?.navTitle),
 		order: mergeInheritedField(universal.order, overlay?.order) ?? 0,
-		title: mergeInheritedField(universal.title, overlay?.title) ?? universal.title,
+		title:
+			mergeInheritedField(universal.title, overlay?.title) ??
+			universal.title,
 	};
 }
 
@@ -104,7 +104,10 @@ function validateUniqueSourceRoutes(
 	}
 }
 
-function universalRouteIdForLanguageRoute(routeId: string, lang: string): string {
+function universalRouteIdForLanguageRoute(
+	routeId: string,
+	lang: string,
+): string {
 	return routeId === lang ? "u" : `u/${routeId.slice(lang.length + 1)}`;
 }
 
@@ -225,8 +228,9 @@ function renderDraftBody(
 	config: TypedDocsGenerationConfig,
 	childPages: readonly RenderedChildPage[],
 ): string {
-	if (draft.parts.length === 1) {
-		return renderRuleDocument(draft.parts[0]!.document, config, {
+	const onlyPart = draft.parts.length === 1 ? draft.parts[0] : undefined;
+	if (onlyPart !== undefined) {
+		return renderRuleDocument(onlyPart.document, config, {
 			childPages,
 			titleOverride: draft.title,
 		});
@@ -280,12 +284,17 @@ function buildMirroredLanguageDrafts(
 			const explicitOverlay = explicitByRouteId.get(routeId);
 			if (
 				explicitOverlay !== undefined &&
-				isLanguageOnlyClassificationLeaf(explicitOverlay.relativeConceptPath)
+				isLanguageOnlyClassificationLeaf(
+					explicitOverlay.relativeConceptPath,
+				)
 			) {
 				continue;
 			}
 
-			const universalRouteId = universalRouteIdForLanguageRoute(routeId, lang);
+			const universalRouteId = universalRouteIdForLanguageRoute(
+				routeId,
+				lang,
+			);
 			const universalSource = universalsByRouteId.get(universalRouteId);
 			if (universalSource === undefined) {
 				throw new Error(
@@ -317,7 +326,8 @@ function buildMirroredLanguageDrafts(
 							]),
 				],
 				routeId,
-				sourcePath: explicitOverlay?.sourcePath ?? universalSource.sourcePath,
+				sourcePath:
+					explicitOverlay?.sourcePath ?? universalSource.sourcePath,
 				title: mergedMeta.title,
 			});
 		}
@@ -347,7 +357,8 @@ export async function discoverTypedDocs(
 	validateUniqueSourceRoutes(sources, "language-overlay-page");
 
 	const generatedSources = sources.filter(
-		(source): source is GeneratedDocSource => source.kind === "generated-page",
+		(source): source is GeneratedDocSource =>
+			source.kind === "generated-page",
 	);
 	const universalSources = sources.filter(
 		(source): source is UniversalConceptSource =>
@@ -406,17 +417,4 @@ export async function discoverTypedDocs(
 			sourcePath: draft.sourcePath,
 		};
 	});
-}
-
-export function writeTypedDocs(outputs: DocsOutput[]) {
-	for (const output of outputs) {
-		writeGeneratedMarkdown(
-			output.generatedPath,
-			output.frontmatter,
-			output.body,
-			output.publicPath,
-		);
-	}
-
-	return outputs.map((output) => sourcePageFromDocsOutput(output));
 }

@@ -4,6 +4,7 @@ The build-your-own-dictionary product is a Bun monorepo split by
 responsibility:
 
 - `app/dumling-docs`: user-facing documentation for `dumling`
+- `battery/dumcodegen`: deterministic, filesystem-safe code generation
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
 - `battery/dumgen`: deterministic prompt construction and evaluation
 - `battery/dumdict`: dictionary relations, workflows, and storage boundaries
@@ -57,8 +58,8 @@ An override must run the stage itself and must not invoke `bun validate`.
 Package TypeScript and Biome files are deliberately small. They extend the
 layered defaults in `tooling/typescript/` and `tooling/biome/`, then retain
 only package-specific paths, inputs, and exclusions. Build implementation
-remains package-owned; in particular, `dumling` keeps its multi-entrypoint
-JavaScript and declaration rollup pipeline.
+remains package-owned; TypeScript packages emit ordinary JavaScript and
+declaration graphs from their package-local build configurations.
 
 ## Repository commands
 

@@ -1,5 +1,9 @@
 import { join, relative } from "node:path";
-import { generatedDocsDir, publicDir, sourceTypedDocsDir } from "../shared/paths";
+import {
+	generatedDocsDir,
+	publicDir,
+	sourceTypedDocsDir,
+} from "../shared/paths";
 
 function normalizePathSegments(path: string): string {
 	return path.replaceAll("\\", "/");

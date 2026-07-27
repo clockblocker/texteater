@@ -1,22 +1,21 @@
-import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import { runCodegen } from "dumcodegen";
 import { getLanguageApi } from "dumling";
-import { parseFrontmatter } from "../docs/frontmatter";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
-import { listMarkdownFiles, writeGeneratedMarkdown } from "../shared/fs";
-import {
-	generatedDocsDir,
-	generatedEntitiesDir,
-	publicDir,
-	sourceAttestationsDir,
-} from "../shared/paths";
+import { generatedEntitiesDir } from "../shared/paths";
 import type { SelectionAttestationSource, SourcePage } from "../shared/types";
+import {
+	type AttestationOutput,
+	defineAttestationsCodegen,
+	lastAttestationOutputForEachRoute,
+} from "./codegen";
 import { entityKindFor } from "./entity/helpers";
+import { discoverAttestationsInitialOwnership } from "./initial-ownership";
 import { generatedFrontmatterForAttestation } from "./render/generated-frontmatter";
 import { renderAttestationBody } from "./render/render-attestation-body";
 import {
 	prepareSelectionLogbooks,
-	writeSelectionLogbookCsv,
+	selectionLogbookCsvOutputs,
 } from "./selection/logbook";
 import { renameSelectionSources } from "./selection/rename-selection-sources";
 import { loadAttestationSource } from "./source/load-attestation-source";
@@ -26,59 +25,12 @@ import {
 	validateSelectionAttestation,
 } from "./validate/validate-selection-attestation";
 
-function removeGeneratedAttestationOutputs(): void {
-	for (const generatedDir of [generatedEntitiesDir, generatedDocsDir]) {
-		for (const generatedPath of listMarkdownFiles(generatedDir)) {
-			if (!existsSync(generatedPath)) {
-				continue;
-			}
-
-			let frontmatter;
-			try {
-				frontmatter = parseFrontmatter(
-					readFileSync(generatedPath, "utf8"),
-					generatedPath,
-				).frontmatter;
-			} catch (error) {
-				// Another cleanup step may have removed the file after discovery.
-				if (
-					error instanceof Error &&
-					"code" in error &&
-					error.code === "ENOENT"
-				) {
-					continue;
-				}
-				throw error;
-			}
-			if (frontmatter.routeId === undefined) {
-				continue;
-			}
-
-			const isLegacyAttestation =
-				frontmatter.routeId.includes("/attestation/");
-			const isEntityAttestation =
-				generatedDir === generatedEntitiesDir &&
-				frontmatter.routeId.split("/").length === 3;
-
-			if (!isLegacyAttestation && !isEntityAttestation) {
-				continue;
-			}
-
-			rmSync(generatedPath, { force: true });
-			rmSync(publicMarkdownPathForRouteId(frontmatter.routeId), {
-				force: true,
-			});
-		}
-	}
-}
-
 export async function generateAttestations(): Promise<SourcePage[]> {
 	const pages: SourcePage[] = [];
 	const selectionSources: SelectionAttestationSource[] = [];
+	const outputs: AttestationOutput[] = [];
+	const initialOwnership = discoverAttestationsInitialOwnership();
 
-	mkdirSync(generatedEntitiesDir, { recursive: true });
-	mkdirSync(publicDir, { recursive: true });
-	removeGeneratedAttestationOutputs();
 	prepareSelectionLogbooks();
 	const sourcePaths = await renameSelectionSources();
 
@@ -99,24 +51,33 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 			String(languageApi.id.encode.asCsv(source.entity)),
 		);
 
-		writeGeneratedMarkdown(
-			join(
+		outputs.push({
+			body,
+			frontmatter,
+			generatedPath: join(
 				generatedEntitiesDir,
 				source.entity.language,
 				entityKind,
 				`${base64UrlId}.md`,
 			),
-			frontmatter,
-			body,
-			publicMarkdownPathForRouteId(routeId),
-		);
+			publicPath: publicMarkdownPathForRouteId(routeId),
+			routeId,
+			sourcePath,
+		});
 		pages.push({ frontmatter, routeId, sourcePath });
 		if (isSelectionAttestationSource(source)) {
 			selectionSources.push(source);
 		}
 	}
 
-	writeSelectionLogbookCsv(selectionSources);
+	await runCodegen(
+		defineAttestationsCodegen(
+			lastAttestationOutputForEachRoute(outputs),
+			selectionLogbookCsvOutputs(selectionSources),
+			initialOwnership,
+		),
+		{ mode: "write" },
+	);
 
 	return pages;
 }

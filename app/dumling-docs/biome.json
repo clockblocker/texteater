@@ -1,3 +1,14 @@
 {
-	"extends": ["../../tooling/biome/base.json"]
+	"extends": ["../../tooling/biome/base.json"],
+	"files": {
+		"includes": [
+			"!!dist",
+			"!!node_modules",
+			"!!.astro",
+			"!!.dumcodegen",
+			"!!public/**/*.md",
+			"!!public/nav.json",
+			"!!src/generated"
+		]
+	}
 }

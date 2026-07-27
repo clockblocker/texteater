@@ -97,7 +97,9 @@ Fort geht nun die Mutter und [wupp]! den Daumen in den Mund. ,wupp,Citation,Lexe
 Genau da liegt der [Hase] im Pfeffer.,da liegt der Hase im Pfeffer,Citation,Phraseme,Idiom
 "[Guten Tag], ich habe einen Termin.",Guten Tag,Citation,Phraseme,DiscourseFormula
 "Ich gehe Tomaten kaufen, um einen Salat [zu] machen.",um zu,Citation,Construction,PairedFrame
+Ich [lasse] mir morgen die Haare schneiden.,lasse,Inflection,Lexeme,VERB
 Ich suche einen [besseren] Ansatz.,besseren,Inflection,Lexeme,ADJ
+Ich will mir morgen die Haare schneiden [lassen].,lassen,Inflection,Lexeme,VERB
 Im Heft stand [Filosofie] statt Philosophie.,Filosofie,Inflection,Lexeme,NOUN
 In Berlin betreibt die [BVG] die U-Bahn.,BVG,Citation,Lexeme,PROPN
 In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge-...-t,Citation,Morpheme,Circumfix
@@ -154,5 +156,7 @@ Unter falschem [Namen] mietete er das Zimmer.,Namen,Inflection,Lexeme,NOUN
 Viele [deutschsprachigen] Quellen fehlen noch.,deutschsprachigen,Inflection,Lexeme,ADJ
 [Viele] kamen zu spät.,viele,Inflection,Lexeme,PRON
 [Wegen] dem Regen kamen wir zu spät.,wegen,Citation,Lexeme,ADP
+[Wer] war das?,wer,Inflection,Lexeme,PRON
+"[Wer] zuerst kommt, mahlt zuerst.",wer,Inflection,Lexeme,PRON
 Wir [hätten] gern mehr Zeit.,hätten,Inflection,Lexeme,AUX
 Wir liefen den Fluss [entlang].,entlang,Citation,Lexeme,ADP

@@ -7,10 +7,5 @@
 			"dumling/types": ["./src/types.ts"]
 		}
 	},
-	"include": [
-		"generate-readme/**/*.ts",
-		"scripts/doc-blocks.ts",
-		"src/**/*.ts",
-		"tests/**/*.ts"
-	]
+	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }

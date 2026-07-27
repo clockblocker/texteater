@@ -1,10 +1,9 @@
 import {
 	existsSync,
 	mkdirSync,
-	readFileSync,
 	readdirSync,
+	readFileSync,
 	rmSync,
-	writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
 import { getLanguageApi } from "dumling";
@@ -28,6 +27,13 @@ type SelectionLogbookRow = {
 	};
 	isVerified?: true;
 	sentenceMarkdown: string;
+	sourcePath?: string;
+};
+
+export type SelectionLogbookCsvOutput = {
+	content: string;
+	path: string;
+	sourcePaths: readonly string[];
 };
 
 export function selectionLogbookCsvRow(selection: SelectionLogbookRow): string {
@@ -167,10 +173,11 @@ export function prepareSelectionLogbooks(): void {
 	}
 }
 
-export function writeSelectionLogbookCsv(
+export function selectionLogbookCsvOutputs(
 	selections: SelectionLogbookRow[],
-): void {
+): SelectionLogbookCsvOutput[] {
 	const rowsByLanguage = new Map<SupportedLanguage, SelectionLogbookRow[]>();
+	const outputs: SelectionLogbookCsvOutput[] = [];
 
 	for (const selection of selections) {
 		const language = selection.entity.language as SupportedLanguage;
@@ -243,7 +250,22 @@ export function writeSelectionLogbookCsv(
 				].join(",");
 			}),
 		];
-		writeFileSync(selectionsCsvPath, `${selectionLines.join("\n")}\n`);
-		writeFileSync(descriptorCsvPath, `${descriptorLines.join("\n")}\n`);
+		const sourcePaths = selectionsForLanguage.flatMap((selection) =>
+			selection.sourcePath === undefined ? [] : [selection.sourcePath],
+		);
+		outputs.push(
+			{
+				content: `${selectionLines.join("\n")}\n`,
+				path: selectionsCsvPath,
+				sourcePaths,
+			},
+			{
+				content: `${descriptorLines.join("\n")}\n`,
+				path: descriptorCsvPath,
+				sourcePaths,
+			},
+		);
 	}
+
+	return outputs;
 }

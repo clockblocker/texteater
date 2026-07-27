@@ -1,5 +1,4 @@
-export { generateContent } from "./generate-content";
+export { generateAttestations } from "./attestations/generate-attestations";
 export { generateDocs } from "./docs/generate-docs";
 export { runDocsHousekeeping } from "./docs/housekeeping";
-export { writeNavFiles } from "./docs/write-nav";
-export { generateAttestations } from "./attestations/generate-attestations";
+export { generateContent } from "./generate-content";
