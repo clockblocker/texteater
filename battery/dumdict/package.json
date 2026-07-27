@@ -40,9 +40,7 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
-		"dumling": "workspace:^",
-		"neverthrow": "^8.2.0",
-		"zod": "3.25.76"
+		"dumling": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.5",

@@ -44,27 +44,22 @@ src/
     commit.ts
 
   core/
-    intents.ts
     lookup.ts
-    plan-mutation.ts
     validate-slice.ts
-    apply-plan.ts
     planned-changes.ts
     preconditions.ts
-    affected.ts
-    summaries.ts
+
+  core/plan-mutation/
+    add-new-note.ts
+    append-lemma-attestation.ts
+    cleanup-relations.ts
+    result.ts
 
   core/relations/
-    lexical.ts
-    morphological.ts
-    inverse-rules.ts
-    relation-ops.ts
+    rules.ts
 
   core/pending/
     identity.ts
-    pending-refs.ts
-    pending-relations.ts
-    pickup.ts
 
   testing/
     in-memory-storage.ts
@@ -173,19 +168,18 @@ dictionary snapshot.
 Owned by `core/`.
 
 ```ts
-type DictionaryIntent<L> =
-  | AppendLemmaAttestationIntent<L>
-  | AddNewNoteIntent<L>;
-
 type PlanMutationResult<L> = {
+  status: "planned";
   baseRevision: StoreRevision;
-  intent: DictionaryIntent<L>;
   changes: PlannedChangeOp<L>[];
   affected: AffectedDictionaryEntities<L>;
-  summary: MutationPlanSummary;
-  diagnostics?: DumdictDiagnostic[];
+  summary: MutationSummary;
 };
 ```
+
+Each operation-shaped planner accepts the matching public request and storage
+slice directly. There is no generic intent dispatcher because it would erase
+the type relationship between a request and its slice.
 
 The minimum v1 planned-op union should be concrete, not `type: string` inside
 implementation:
@@ -360,8 +354,9 @@ Core functions are pure over DTOs:
 ```ts
 lookup(slice, request) -> LookupResult
 validateSlice(slice) -> Result
-planMutation(slice, intent) -> PlanMutationResult | Rejection
-applyPlan(slice, plan) -> nextSlice
+planAddNewNote(slice, request) -> PlanMutationResult | Rejection
+planAppendLemmaAttestation(slice, request) -> PlanMutationResult | Rejection
+planCleanupRelations(slice, request) -> PlanMutationResult | Rejection
 ```
 
 Core must not:
@@ -459,8 +454,7 @@ host adapter receives should be used by service tests.
 3. Implement language guard and typed language mismatch error.
 4. Implement relation inverse rules and relation patch helpers.
 5. Implement pending identity, pending relation keys, and pickup planner.
-6. Implement `planAddAttestation`.
+6. Implement `planAppendLemmaAttestation`.
 7. Implement `planAddNewNote`.
-8. Implement strict `applyPlan` for in-memory/reference behavior.
-9. Implement in-memory storage adapter and boot helper.
-10. Add service tests from `TESTING_STRATEGY.md`.
+8. Implement in-memory storage adapter and boot helper.
+9. Add service tests from `TESTING_STRATEGY.md`.

@@ -29,10 +29,9 @@ function buildSelectionFromSurface<L extends SupportedLanguage>(
 	} as unknown as Selection<L>;
 }
 
-export function buildConvertOperations<L extends SupportedLanguage>(
-	_language: L,
-	_parse: LanguageApi<L>["parse"],
-): LanguageApi<L>["convert"] {
+export function buildConvertOperations<
+	L extends SupportedLanguage,
+>(): LanguageApi<L>["convert"] {
 	return {
 		lemma: {
 			toSurface(lemma: Lemma<L>) {

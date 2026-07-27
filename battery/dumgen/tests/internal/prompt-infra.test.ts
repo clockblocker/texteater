@@ -1,13 +1,109 @@
 import { describe, expect, test } from "bun:test";
 
 import { z } from "zod";
-
+import type {
+	PromptExecutionRequest,
+	PromptExecutor,
+} from "../../src/internal/prompt-infra";
 import {
-	PromptInfraValidationError,
 	buildPrompt,
+	createPromptExperiment,
 	evaluatePromptBuild,
+	PromptExperimentConfigurationError,
+	PromptInfraValidationError,
 } from "../../src/internal/prompt-infra";
 import { deClassifyPromptSource } from "../../src/internal/prompt-infra/fixtures/de/classify";
+
+describe("createPromptExperiment", () => {
+	test("owns the validated build and evaluation corpus behind one interface", async () => {
+		const examples = [
+			{
+				id: "uppercase-1",
+				input: "alpha",
+				idealOutput: "ALPHA",
+			},
+			{
+				id: "uppercase-2",
+				input: "beta",
+				idealOutput: "BETA",
+			},
+		];
+		const source = {
+			taskDescription: "Return an uppercase copy.",
+			examples,
+			numOfFirstExamplesToUse: 1,
+		};
+		const experiment = createPromptExperiment(source);
+
+		examples.splice(0, examples.length);
+
+		const requests: PromptExecutionRequest[] = [];
+		const executePrompt: PromptExecutor = async (request) => {
+			requests.push(request);
+			return "BETA";
+		};
+		const run = await experiment.evaluate({
+			executePrompt,
+			provider: "test-provider",
+			modelId: "test-model",
+			temperature: 0,
+			structuredOutputMode: "raw-text",
+			retryPolicy: {
+				maxAttempts: 1,
+				backoffMs: 0,
+				jitter: false,
+			},
+			executedAt: "2026-05-09T00:00:00.000Z",
+		});
+
+		expect(Object.isFrozen(experiment)).toBe(true);
+		expect(Object.isFrozen(experiment.build)).toBe(true);
+		expect(experiment.build.usedExampleIds).toEqual(["uppercase-1"]);
+		expect(experiment.build.evalExampleIds).toEqual(["uppercase-2"]);
+		expect(requests).toEqual([
+			{
+				systemPrompt: experiment.build.systemPrompt,
+				input: "beta",
+				outputSchema: undefined,
+			},
+		]);
+		expect(run.sourceVersion).toBe(experiment.build.sourceVersion);
+		expect(run.buildVersion).toBe(experiment.build.buildVersion);
+		expect(run.results).toEqual([
+			{
+				exampleId: "uppercase-2",
+				exampleIndex: 1,
+				contentMatched: true,
+				rawAgentResponse: "BETA",
+			},
+		]);
+	});
+
+	test("rejects an invalid retry policy before calling the executor", async () => {
+		const experiment = createPromptExperiment(deClassifyPromptSource);
+		let executionCount = 0;
+
+		await expect(
+			experiment.evaluate({
+				executePrompt: async () => {
+					executionCount += 1;
+					return "{}";
+				},
+				provider: "test-provider",
+				modelId: "test-model",
+				temperature: 0,
+				structuredOutputMode: "json",
+				retryPolicy: {
+					maxAttempts: 0,
+					backoffMs: -1,
+					jitter: false,
+				},
+			}),
+		).rejects.toThrow(PromptExperimentConfigurationError);
+
+		expect(executionCount).toBe(0);
+	});
+});
 
 describe("buildPrompt", () => {
 	test("builds deterministically from the same source", () => {
@@ -82,6 +178,32 @@ describe("buildPrompt", () => {
 });
 
 describe("evaluatePromptBuild", () => {
+	test("keeps rejecting mismatched compatibility source and build pairs", async () => {
+		const build = buildPrompt(deClassifyPromptSource);
+
+		await expect(
+			evaluatePromptBuild({
+				source: {
+					...deClassifyPromptSource,
+					taskDescription: `${deClassifyPromptSource.taskDescription} Changed.`,
+				},
+				build,
+				executePrompt: async () => "{}",
+				provider: "test-provider",
+				modelId: "test-model",
+				temperature: 0,
+				structuredOutputMode: "json",
+				retryPolicy: {
+					maxAttempts: 1,
+					backoffMs: 0,
+					jitter: false,
+				},
+			}),
+		).rejects.toThrow(
+			"PromptBuild sourceVersion does not match PromptSource",
+		);
+	});
+
 	test("parses schema-based responses and compares parsed content", async () => {
 		const build = buildPrompt(deClassifyPromptSource);
 		const run = await evaluatePromptBuild({

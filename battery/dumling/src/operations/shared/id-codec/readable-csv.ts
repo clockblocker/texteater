@@ -10,7 +10,6 @@ import { isSupportedLanguage } from "../language-inventory.js";
 import { featureNameTokens } from "./tiny-tokens.js";
 
 type CsvValue = string | number | boolean | null | undefined;
-type IdEntity<L extends SupportedLanguage> = Lemma<L> | Surface<L>;
 type CsvEntity<L extends SupportedLanguage> =
 	| Lemma<L>
 	| Surface<L>
@@ -183,7 +182,7 @@ export function assertEntityIdFeatureConstraints(
 	}
 }
 
-export function formatFeatureSet(features: Record<string, unknown>): string {
+function formatFeatureSet(features: Record<string, unknown>): string {
 	const pairs = Object.entries(features)
 		.filter(([, value]) => value !== undefined)
 		.sort(([left], [right]) => left.localeCompare(right))

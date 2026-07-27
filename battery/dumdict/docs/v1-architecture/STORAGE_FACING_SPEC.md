@@ -184,17 +184,16 @@ local database/cache.
 
 The semantic core produces plans internally.
 
-A mutation plan answers: "Given this structured intent and loaded slice, what
+A mutation plan answers: "Given this operation request and loaded slice, what
 semantic changes should the host write?"
 
 ```ts
 type PlanMutationResult<L> = {
+  status: "planned";
   baseRevision: StoreRevision;
-  intent: DictionaryIntent<L>;
   changes: PlannedChangeOp<L>[];
   affected: AffectedDictionaryEntities<L>;
-  summary: MutationPlanSummary;
-  diagnostics?: DumdictDiagnostic[];
+  summary: MutationSummary;
 };
 ```
 

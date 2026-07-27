@@ -1,5 +1,5 @@
 import { planCleanupRelations } from "../core/plan-mutation";
-import { isKnownRelation } from "../core/relations/family";
+import { isKnownRelation } from "../core/relations/rules";
 import { validateCleanupRelationsSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type { CleanupRelationsRequest, MutationResult } from "../public";
@@ -47,9 +47,15 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 				message: "Cleanup relation is invalid.",
 			};
 		}
-		assertDumlingIdLanguageMatches(options.language, resolution.sourceLemmaId);
+		assertDumlingIdLanguageMatches(
+			options.language,
+			resolution.sourceLemmaId,
+		);
 		if (resolution.targetLemmaId) {
-			assertDumlingIdLanguageMatches(options.language, resolution.targetLemmaId);
+			assertDumlingIdLanguageMatches(
+				options.language,
+				resolution.targetLemmaId,
+			);
 		}
 	}
 
@@ -70,7 +76,10 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 
 	const targetLemmasById = new Set(slice.targetLemmas.map(({ id }) => id));
 	for (const resolution of request.resolutions) {
-		if (resolution.targetLemmaId && !targetLemmasById.has(resolution.targetLemmaId)) {
+		if (
+			resolution.targetLemmaId &&
+			!targetLemmasById.has(resolution.targetLemmaId)
+		) {
 			return {
 				status: "conflict",
 				code: "semanticPreconditionFailed",
@@ -100,11 +109,7 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 		}
 	}
 
-	const plan = planCleanupRelations(slice, {
-		type: "cleanupRelations",
-		baseRevision: request.baseRevision,
-		resolutions: request.resolutions,
-	});
+	const plan = planCleanupRelations(slice, request);
 	if (plan.status === "rejected") {
 		return plan;
 	}

@@ -96,7 +96,7 @@ export const abstractFeatureCatalog = {
 	voice: Voice,
 } as const;
 
-export type AbstractFeatureAtoms = {
+type AbstractFeatureAtoms = {
 	[TName in keyof typeof abstractFeatureCatalog]: SchemaOutput<
 		(typeof abstractFeatureCatalog)[TName]
 	>;

@@ -42,7 +42,6 @@
 	"dependencies": {
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
-		"neverthrow": "^8.2.0",
 		"zod": "3.25.76"
 	},
 	"devDependencies": {

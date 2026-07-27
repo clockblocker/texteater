@@ -65,9 +65,13 @@ export type PromptExecutor = (
 	request: PromptExecutionRequest,
 ) => Promise<string>;
 
-export type EvaluatePromptBuildOptions = {
-	readonly source: PromptSource;
-	readonly build: PromptBuild;
+export type PromptRetryPolicy = {
+	readonly maxAttempts: number;
+	readonly backoffMs: number;
+	readonly jitter: boolean;
+};
+
+export type PromptEvaluationOptions = {
 	readonly executePrompt: PromptExecutor;
 	readonly provider: string;
 	readonly modelId: string;
@@ -76,10 +80,22 @@ export type EvaluatePromptBuildOptions = {
 	readonly seed?: number;
 	readonly maxOutputTokens?: number;
 	readonly structuredOutputMode: string;
-	readonly retryPolicy: {
-		readonly maxAttempts: number;
-		readonly backoffMs: number;
-		readonly jitter: boolean;
-	};
+	readonly retryPolicy: PromptRetryPolicy;
 	readonly executedAt?: string;
+};
+
+export type PromptExperiment = {
+	readonly build: PromptBuild;
+	readonly evaluate: (
+		options: PromptEvaluationOptions,
+	) => Promise<EvaluationRun>;
+};
+
+export type CreatePromptExperimentOptions = {
+	readonly rendererVersion?: string;
+};
+
+export type EvaluatePromptBuildOptions = PromptEvaluationOptions & {
+	readonly source: PromptSource;
+	readonly build: PromptBuild;
 };

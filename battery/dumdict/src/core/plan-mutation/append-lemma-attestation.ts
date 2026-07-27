@@ -1,14 +1,11 @@
 import type { SupportedLanguage } from "../../dumling";
+import type { AddAttestationRequest } from "../../public";
 import type { LemmaPatchSlice } from "../../storage";
-import type {
-	AppendLemmaAttestationIntent,
-	PlanMutationRejected,
-	PlanMutationResult,
-} from "./result";
+import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 export function planAppendLemmaAttestation<L extends SupportedLanguage>(
 	slice: LemmaPatchSlice<L>,
-	intent: AppendLemmaAttestationIntent<L>,
+	request: AddAttestationRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	if (!slice.lemma) {
 		return {
@@ -17,7 +14,7 @@ export function planAppendLemmaAttestation<L extends SupportedLanguage>(
 			message: "Lemma does not exist.",
 		};
 	}
-	if (slice.lemma.id !== intent.lemmaId) {
+	if (slice.lemma.id !== request.lemmaId) {
 		throw new Error(
 			"lemma patch slice lemma id does not match the requested lemma id.",
 		);
@@ -26,24 +23,23 @@ export function planAppendLemmaAttestation<L extends SupportedLanguage>(
 	return {
 		status: "planned",
 		baseRevision: slice.revision,
-		intent,
 		changes: [
 			{
 				type: "patchLemma",
-				lemmaId: intent.lemmaId,
-				ops: [{ kind: "addAttestation", value: intent.attestation }],
+				lemmaId: request.lemmaId,
+				ops: [{ kind: "addAttestation", value: request.attestation }],
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "lemmaExists", lemmaId: intent.lemmaId },
+					{ kind: "lemmaExists", lemmaId: request.lemmaId },
 					{
 						kind: "lemmaAttestationMissing",
-						lemmaId: intent.lemmaId,
-						value: intent.attestation,
+						lemmaId: request.lemmaId,
+						value: request.attestation,
 					},
 				],
 			},
 		],
-		affected: { lemmaIds: [intent.lemmaId] },
+		affected: { lemmaIds: [request.lemmaId] },
 		summary: { message: "Added lemma attestation." },
 	};
 }

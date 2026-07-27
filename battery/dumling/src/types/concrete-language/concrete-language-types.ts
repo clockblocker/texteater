@@ -130,16 +130,7 @@ type UnionFromThreeLevelMap<
 	[K in keyof T]: UnionFromTwoLevelMap<T[K]>;
 }>;
 
-type UnionFromFourLevelMap<
-	T extends Record<
-		PropertyKey,
-		Record<PropertyKey, Record<PropertyKey, Record<PropertyKey, unknown>>>
-	>,
-> = ValueOf<{
-	[K in keyof T]: UnionFromThreeLevelMap<T[K]>;
-}>;
-
-export type LemmaByKindForLanguage<L extends ConcreteLanguage> = {
+type LemmaByKindForLanguage<L extends ConcreteLanguage> = {
 	[LK in LemmaKindForLanguage<L>]: {
 		[LSK in LemmaSubKindForLanguage<L, LK>]: ConcreteLemmaForLanguage<
 			L,
@@ -190,7 +181,7 @@ type InflectionSelectionByKindForLanguage<L extends ConcreteLanguage> = {
 	};
 };
 
-export type SelectionByKindForLanguage<L extends ConcreteLanguage> = {
+type SelectionByKindForLanguage<L extends ConcreteLanguage> = {
 	Citation: CitationSelectionByKindForLanguage<L>;
 	Inflection: InflectionSelectionByKindForLanguage<L>;
 };
@@ -207,10 +198,4 @@ export type LanguageSurfaceUnionMap = {
 
 export type LanguageSelectionByKindMap = {
 	[L in ConcreteLanguage]: SelectionByKindForLanguage<L>;
-};
-
-export type LanguageSelectionUnionMap = {
-	[L in ConcreteLanguage]: UnionFromThreeLevelMap<
-		SelectionByKindForLanguage<L>
-	>;
 };

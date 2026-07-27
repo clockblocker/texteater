@@ -21,7 +21,9 @@ describe("public API usage", () => {
 
 	it("exposes dynamic language helpers and language-scoped ID decoding", () => {
 		expect(supportedLanguages).toEqual(["de", "en", "he"]);
-		expect(getLanguageApi("de")).toBe(dumling.de);
+		for (const language of supportedLanguages) {
+			expect(getLanguageApi(language)).toBe(dumling[language]);
+		}
 
 		const selection = getLanguageApi("de").convert.lemma.toSelection(
 			dumling.de.create.lemma({

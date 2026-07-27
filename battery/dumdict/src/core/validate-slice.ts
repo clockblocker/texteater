@@ -28,7 +28,7 @@ import {
 	makePendingLemmaRef,
 	samePendingLemmaIdentity,
 } from "./pending/identity";
-import { relationFamilyFor } from "./relations/family";
+import { relationFamilyFor } from "./relations/rules";
 
 function assertLanguage(
 	expectedLanguage: SupportedLanguage,
@@ -61,10 +61,7 @@ function assertEqualId(actual: string, expected: string, context: string) {
 	}
 }
 
-function assertNoDuplicates(
-	values: string[],
-	context: string,
-) {
+function assertNoDuplicates(values: string[], context: string) {
 	const seen = new Set<string>();
 	for (const value of values) {
 		if (seen.has(value)) {
@@ -180,7 +177,10 @@ export function validateStoredLemmaSensesSlice<L extends SupportedLanguage>(
 		validateLemmaEntry(expectedLanguage, candidate.entry);
 		if (
 			requestedDescription &&
-			!lemmaMatchesDescription(candidate.entry.lemma, requestedDescription)
+			!lemmaMatchesDescription(
+				candidate.entry.lemma,
+				requestedDescription,
+			)
 		) {
 			throw new Error(
 				"stored lemma sense candidate does not match the requested lemma description.",
@@ -383,7 +383,9 @@ export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
 		validatePendingRelation(expectedLanguage, relation);
 	}
 
-	const pendingIds = new Set(slice.pendingRefs.map(({ pendingId }) => pendingId));
+	const pendingIds = new Set(
+		slice.pendingRefs.map(({ pendingId }) => pendingId),
+	);
 	for (const relation of slice.pendingRelations) {
 		if (!pendingIds.has(relation.targetPendingId)) {
 			throw new Error(
@@ -432,7 +434,9 @@ export function validateCleanupRelationsSlice<L extends SupportedLanguage>(
 		"cleanup target lemmas",
 	);
 
-	const pendingIds = new Set(slice.pendingRefs.map(({ pendingId }) => pendingId));
+	const pendingIds = new Set(
+		slice.pendingRefs.map(({ pendingId }) => pendingId),
+	);
 	for (const relation of slice.pendingRelations) {
 		if (!pendingIds.has(relation.targetPendingId)) {
 			throw new Error(

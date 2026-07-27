@@ -5,14 +5,10 @@ import type {
 	PendingLemmaRelation,
 } from "../../dto";
 import type { SupportedLanguage } from "../../dumling";
+import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
-import { relationFamilyFor } from "../relations/family";
-import { inverseRelationFor } from "../relations/inverse-rules";
-import type {
-	CleanupRelationsIntent,
-	PlanMutationRejected,
-	PlanMutationResult,
-} from "./result";
+import { inverseRelationFor, relationFamilyFor } from "../relations/rules";
+import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function relationKey<L extends SupportedLanguage>(
 	relation: Pick<
@@ -62,9 +58,9 @@ function morphologicalPendingRelation<L extends SupportedLanguage>(
 
 export function planCleanupRelations<L extends SupportedLanguage>(
 	slice: CleanupRelationsSlice<L>,
-	intent: CleanupRelationsIntent<L>,
+	request: CleanupRelationsRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
-	const resolutionKeys = intent.resolutions.map((resolution) =>
+	const resolutionKeys = request.resolutions.map((resolution) =>
 		relationKey({
 			sourceLemmaId: resolution.sourceLemmaId,
 			relation: resolution.relation,
@@ -80,7 +76,9 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 	}
 
 	const pendingRefsById = new Map(
-		slice.pendingRefs.map((pendingRef) => [pendingRef.pendingId, pendingRef] as const),
+		slice.pendingRefs.map(
+			(pendingRef) => [pendingRef.pendingId, pendingRef] as const,
+		),
 	);
 	const targetLemmasById = new Map(
 		slice.targetLemmas.map((lemma) => [lemma.id, lemma] as const),
@@ -93,7 +91,7 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		);
 	}
 
-	for (const resolution of intent.resolutions) {
+	for (const resolution of request.resolutions) {
 		if (resolution.targetLemmaId === resolution.sourceLemmaId) {
 			return {
 				status: "rejected",
@@ -129,7 +127,7 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 	const affectedLemmaIds = new Set<string>();
 	const affectedPendingIds = new Set<string>();
 
-	for (const resolution of intent.resolutions) {
+	for (const resolution of request.resolutions) {
 		const family = relationFamilyFor(resolution.relation);
 		if (family === "lexical") {
 			const relation = resolution.relation as LexicalRelation;
@@ -153,8 +151,14 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 					],
 					preconditions: [
 						{ kind: "revisionMatches", revision: slice.revision },
-						{ kind: "lemmaExists", lemmaId: resolution.sourceLemmaId },
-						{ kind: "lemmaExists", lemmaId: resolution.targetLemmaId },
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.sourceLemmaId,
+						},
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.targetLemmaId,
+						},
 					],
 				});
 				changes.push({
@@ -170,8 +174,14 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 					],
 					preconditions: [
 						{ kind: "revisionMatches", revision: slice.revision },
-						{ kind: "lemmaExists", lemmaId: resolution.targetLemmaId },
-						{ kind: "lemmaExists", lemmaId: resolution.sourceLemmaId },
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.targetLemmaId,
+						},
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.sourceLemmaId,
+						},
 					],
 				});
 				affectedLemmaIds.add(resolution.targetLemmaId);
@@ -182,7 +192,10 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 				relation: pendingRelation,
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationExists", relation: pendingRelation },
+					{
+						kind: "pendingRelationExists",
+						relation: pendingRelation,
+					},
 				],
 			});
 		} else {
@@ -207,8 +220,14 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 					],
 					preconditions: [
 						{ kind: "revisionMatches", revision: slice.revision },
-						{ kind: "lemmaExists", lemmaId: resolution.sourceLemmaId },
-						{ kind: "lemmaExists", lemmaId: resolution.targetLemmaId },
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.sourceLemmaId,
+						},
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.targetLemmaId,
+						},
 					],
 				});
 				changes.push({
@@ -224,8 +243,14 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 					],
 					preconditions: [
 						{ kind: "revisionMatches", revision: slice.revision },
-						{ kind: "lemmaExists", lemmaId: resolution.targetLemmaId },
-						{ kind: "lemmaExists", lemmaId: resolution.sourceLemmaId },
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.targetLemmaId,
+						},
+						{
+							kind: "lemmaExists",
+							lemmaId: resolution.sourceLemmaId,
+						},
 					],
 				});
 				affectedLemmaIds.add(resolution.targetLemmaId);
@@ -236,7 +261,10 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 				relation: pendingRelation,
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRelationExists", relation: pendingRelation },
+					{
+						kind: "pendingRelationExists",
+						relation: pendingRelation,
+					},
 				],
 			});
 		}
@@ -245,7 +273,8 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		affectedPendingIds.add(resolution.targetPendingId);
 		incomingCountsByPendingId.set(
 			resolution.targetPendingId,
-			(incomingCountsByPendingId.get(resolution.targetPendingId) ?? 0) - 1,
+			(incomingCountsByPendingId.get(resolution.targetPendingId) ?? 0) -
+				1,
 		);
 	}
 
@@ -268,21 +297,24 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 	return {
 		status: "planned",
 		baseRevision: slice.revision,
-		intent,
 		changes,
 		affected: {
 			lemmaIds:
 				affectedLemmaIds.size > 0
-					? Array.from(affectedLemmaIds) as PlanMutationResult<L>["affected"]["lemmaIds"]
+					? (Array.from(
+							affectedLemmaIds,
+						) as PlanMutationResult<L>["affected"]["lemmaIds"])
 					: undefined,
 			pendingIds:
-				affectedPendingIds.size > 0 ? Array.from(affectedPendingIds) : undefined,
+				affectedPendingIds.size > 0
+					? Array.from(affectedPendingIds)
+					: undefined,
 		},
 		summary: {
 			message:
-				intent.resolutions.length === 1
+				request.resolutions.length === 1
 					? "Cleaned up 1 relation."
-					: `Cleaned up ${intent.resolutions.length} relations.`,
+					: `Cleaned up ${request.resolutions.length} relations.`,
 		},
 	};
 }

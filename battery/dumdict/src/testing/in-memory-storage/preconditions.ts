@@ -16,7 +16,7 @@ export function findDraftNoteByLemmaId<L extends SupportedLanguage>(
 	return draft.draftNotes.find(({ lemmaEntry }) => lemmaEntry.id === lemmaId);
 }
 
-export function findDraftSurfaceById<L extends SupportedLanguage>(
+function findDraftSurfaceById<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	surfaceId: string,
 ) {
@@ -25,20 +25,22 @@ export function findDraftSurfaceById<L extends SupportedLanguage>(
 		.find(({ id }) => id === surfaceId);
 }
 
-export function draftPendingRelations<L extends SupportedLanguage>(
+function draftPendingRelations<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 ) {
 	return draft.draftNotes.flatMap(({ pendingRelations }) => pendingRelations);
 }
 
-export function findDraftPendingRefById<L extends SupportedLanguage>(
+function findDraftPendingRefById<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	pendingId: string,
 ) {
-	return draft.draftPendingRefs?.find(({ pendingId: id }) => id === pendingId);
+	return draft.draftPendingRefs?.find(
+		({ pendingId: id }) => id === pendingId,
+	);
 }
 
-export function hasDraftPendingRelation<L extends SupportedLanguage>(
+function hasDraftPendingRelation<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	relation: PendingLemmaRelation<L>,
 ) {
@@ -69,14 +71,17 @@ export function draftPreconditionFails<L extends SupportedLanguage>(
 		case "pendingRefExists":
 			return !findDraftPendingRefById(draft, precondition.pendingId);
 		case "pendingRefMissing":
-			return Boolean(findDraftPendingRefById(draft, precondition.pendingId));
+			return Boolean(
+				findDraftPendingRefById(draft, precondition.pendingId),
+			);
 		case "pendingRelationExists":
 			return !hasDraftPendingRelation(draft, precondition.relation);
 		case "pendingRelationMissing":
 			return hasDraftPendingRelation(draft, precondition.relation);
 		case "pendingRefHasNoIncomingRelations":
 			return draftPendingRelations(draft).some(
-				(relation) => relation.targetPendingId === precondition.pendingId,
+				(relation) =>
+					relation.targetPendingId === precondition.pendingId,
 			);
 		case "lemmaAttestationMissing":
 			return Boolean(

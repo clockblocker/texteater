@@ -6,7 +6,7 @@ import type {
 	Surface,
 } from "../../types/public-types.js";
 import type { LanguageApi } from "../api-shape.js";
-import { extractLemma } from "./entity-accessors.js";
+import { inspectEntity } from "./entity-accessors.js";
 import { csvRow } from "./id-codec/readable-csv.js";
 
 type EntityValue<L extends SupportedLanguage> =
@@ -26,21 +26,13 @@ function descriptorToCsv<L extends SupportedLanguage>(
 					descriptor.lemmaKind,
 					descriptor.lemmaSubKind,
 				]
-			: entityKind === "Surface"
-				? [
-						entityKind,
-						descriptor.language,
-						descriptor.surfaceKind,
-						descriptor.lemmaKind,
-						descriptor.lemmaSubKind,
-					]
-				: [
-						entityKind,
-						descriptor.language,
-						descriptor.surfaceKind,
-						descriptor.lemmaKind,
-						descriptor.lemmaSubKind,
-					];
+			: [
+					entityKind,
+					descriptor.language,
+					descriptor.surfaceKind,
+					descriptor.lemmaKind,
+					descriptor.lemmaSubKind,
+				];
 
 	return csvRow(fields) as DumlingDescriptorCsv<L>;
 }
@@ -48,9 +40,19 @@ function descriptorToCsv<L extends SupportedLanguage>(
 export function buildDescribeOperations<
 	L extends SupportedLanguage,
 >(): LanguageApi<L>["describe"] {
+	function surfaceDescriptor(value: EntityValue<L>) {
+		const inspection = inspectEntity(value);
+		return {
+			language: inspection.language,
+			surfaceKind: inspection.surfaceKind,
+			lemmaKind: inspection.lemma.lemmaKind,
+			lemmaSubKind: inspection.lemma.lemmaSubKind,
+		};
+	}
+
 	const as = {
 		lemma(value: EntityValue<L>) {
-			const lemma = extractLemma(value);
+			const { lemma } = inspectEntity(value);
 
 			return {
 				language: lemma.language,
@@ -59,56 +61,10 @@ export function buildDescribeOperations<
 			} as never;
 		},
 		surface(value: EntityValue<L>) {
-			if ("surfaceKind" in value) {
-				return {
-					language: value.language,
-					surfaceKind: value.surfaceKind,
-					lemmaKind: value.lemma.lemmaKind,
-					lemmaSubKind: value.lemma.lemmaSubKind,
-				} as never;
-			}
-
-			if ("surface" in value) {
-				return {
-					language: value.language,
-					surfaceKind: value.surface.surfaceKind,
-					lemmaKind: value.surface.lemma.lemmaKind,
-					lemmaSubKind: value.surface.lemma.lemmaSubKind,
-				} as never;
-			}
-
-			return {
-				language: value.language,
-				surfaceKind: "Citation",
-				lemmaKind: value.lemmaKind,
-				lemmaSubKind: value.lemmaSubKind,
-			} as never;
+			return surfaceDescriptor(value) as never;
 		},
 		selection(value: EntityValue<L>) {
-			if ("surface" in value) {
-				return {
-					language: value.language,
-					surfaceKind: value.surface.surfaceKind,
-					lemmaKind: value.surface.lemma.lemmaKind,
-					lemmaSubKind: value.surface.lemma.lemmaSubKind,
-				} as never;
-			}
-
-			if ("surfaceKind" in value) {
-				return {
-					language: value.language,
-					surfaceKind: value.surfaceKind,
-					lemmaKind: value.lemma.lemmaKind,
-					lemmaSubKind: value.lemma.lemmaSubKind,
-				} as never;
-			}
-
-			return {
-				language: value.language,
-				surfaceKind: "Citation",
-				lemmaKind: value.lemmaKind,
-				lemmaSubKind: value.lemmaSubKind,
-			} as never;
+			return surfaceDescriptor(value) as never;
 		},
 	} satisfies LanguageApi<L>["describe"]["as"];
 

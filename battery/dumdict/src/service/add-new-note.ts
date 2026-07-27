@@ -19,7 +19,10 @@ export async function addNewNote<L extends SupportedLanguage>(
 ): Promise<MutationResult<L>> {
 	assertLanguageMatches(options.language, request.draft.lemma.language);
 	const languageApi = getLanguageApi(options.language);
-	const draftLemmaId = makeDumlingIdFor(options.language, request.draft.lemma);
+	const draftLemmaId = makeDumlingIdFor(
+		options.language,
+		request.draft.lemma,
+	);
 	for (const ownedSurface of request.draft.ownedSurfaces ?? []) {
 		assertLanguageMatches(options.language, ownedSurface.surface.language);
 		assertLanguageMatches(
@@ -41,17 +44,17 @@ export async function addNewNote<L extends SupportedLanguage>(
 	}
 	for (const relation of request.draft.relations ?? []) {
 		if (relation.target.kind === "existing") {
-			assertDumlingIdLanguageMatches(options.language, relation.target.lemmaId);
+			assertDumlingIdLanguageMatches(
+				options.language,
+				relation.target.lemmaId,
+			);
 		}
 	}
 
 	const slice = await options.storage.loadNewNoteContext(request);
 	validateNewNoteSlice(options.language, slice, request.draft);
 
-	const plan = planAddNewNote(slice, {
-		type: "addNewNote",
-		draft: request.draft,
-	});
+	const plan = planAddNewNote(slice, request);
 	if (plan.status === "rejected") {
 		return plan;
 	}

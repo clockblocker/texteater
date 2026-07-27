@@ -137,9 +137,10 @@ The core shape should remain close to:
 
 ```ts
 lookup(slice, request) -> LookupResult
-planMutation(slice, intent) -> PlanMutationResult
 validate(slice) -> Result
-apply(slice, plan) -> nextSlice // reference/helper, not persistence
+planAddNewNote(slice, request) -> PlanMutationResult
+planAppendLemmaAttestation(slice, request) -> PlanMutationResult
+planCleanupRelations(slice, request) -> PlanMutationResult
 ```
 
 `dumdict-core` can remain exported for tests and advanced consumers, but the

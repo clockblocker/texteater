@@ -17,11 +17,7 @@ export async function addAttestation<L extends SupportedLanguage>(
 	});
 	validateLemmaPatchSlice(options.language, slice, request.lemmaId);
 
-	const plan = planAppendLemmaAttestation(slice, {
-		type: "appendLemmaAttestation",
-		lemmaId: request.lemmaId,
-		attestation: request.attestation,
-	});
+	const plan = planAppendLemmaAttestation(slice, request);
 	if (plan.status === "rejected") {
 		return plan;
 	}

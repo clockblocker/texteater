@@ -23,21 +23,6 @@ const surfaceKindValues = ["Citation", "Inflection"] as const;
 export const SurfaceKind = z.enum(surfaceKindValues);
 export type SurfaceKind = z.infer<typeof SurfaceKind>;
 
-const orthographicStatusValues = ["Standard", "Typo"] as const;
-
-export const OrthographicStatus = z.enum(orthographicStatusValues);
-export type OrthographicStatus = z.infer<typeof OrthographicStatus>;
-
-const selectionCoverageValues = ["Full", "Partial"] as const;
-
-export const SelectionCoverage = z.enum(selectionCoverageValues);
-export type SelectionCoverage = z.infer<typeof SelectionCoverage>;
-
-const spellingRelationValues = ["Canonical", "Variant"] as const;
-
-export const SpellingRelation = z.enum(spellingRelationValues);
-export type SpellingRelation = z.infer<typeof SpellingRelation>;
-
 const openClassPosValues = [
 	"ADJ",
 	"ADV",
