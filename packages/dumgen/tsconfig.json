@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"allowImportingTsExtensions": true,
+		"isolatedModules": false,
+		"lib": ["ESNext"],
+		"module": "Preserve",
+		"moduleDetection": "force",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"paths": {
+			"dumgen": ["./src/index.ts"]
+		},
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": false,
+		"target": "ESNext",
+		"types": ["node", "bun-types"],
+		"verbatimModuleSyntax": true
+	},
+	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}

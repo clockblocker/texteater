@@ -1,0 +1,9 @@
+.DS_Store
+.git.pre-monorepo/
+.npm-cache/
+.types-temp/
+.astro/
+coverage/
+dist/
+node_modules/
+*.tsbuildinfo

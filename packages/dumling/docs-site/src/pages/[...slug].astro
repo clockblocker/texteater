@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from "astro:content";
+import DocsLayout from "../layouts/DocsLayout.astro";
+import { hrefForPage, navItemsForDocs, routeIdForPage } from "../lib/navigation";
+
+export async function getStaticPaths() {
+	const docs = await getCollection("docs");
+	const entities = await getCollection("entities");
+	const pages = [...docs, ...entities];
+
+	return pages
+		.filter((page) => routeIdForPage(page) !== "index")
+		.map((page) => ({
+			params: { slug: routeIdForPage(page) },
+			props: { page },
+		}));
+}
+
+const { page } = Astro.props;
+const docs = await getCollection("docs");
+const navItems = navItemsForDocs(docs);
+const { Content } = await render(page);
+const currentHref = hrefForPage(page);
+---
+
+<DocsLayout
+	currentHref={currentHref}
+	description={page.data.description}
+	navItems={navItems}
+	title={page.data.title}
+>
+	<Content />
+</DocsLayout>

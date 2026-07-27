@@ -1,0 +1,51 @@
+sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
+Abso-[bloody]-lutely not.,bloody,Citation,Morpheme,Infix
+"[By and large], the migration worked.",by and large,Citation,Phraseme,Idiom
+Could you [wind] the old clock?,wind,Citation,Lexeme,VERB
+Do it [like] I showed you.,like,Citation,Lexeme,SCONJ
+[Does] this key open the archive?,does,Inflection,Lexeme,AUX
+"During my [walk] in a park, I saw a squirrel.",walk,Citation,Lexeme,NOUN
+"For this layout, [less is more].",less is more,Citation,Phraseme,Aphorism
+I [definately] saved the file.,definitely,Citation,Lexeme,ADV
+I emailed [them] yesterday.,them,Inflection,Lexeme,PRON
+I know [that] you tried.,that,Citation,Lexeme,SCONJ
+I [saw] the comet through binoculars.,saw,Inflection,Lexeme,VERB
+"If I [were] you, I would wait.",were,Inflection,Lexeme,AUX
+I'[ll] call when I arrive.,ll,Citation,Morpheme,Clitic
+Is [OK] still acceptable here?,OK,Citation,Lexeme,INTJ
+Mira finally [spilled] the beans.,spill the beans,Citation,Phraseme,Idiom
+"Move [that] chair, please.",that,Citation,Lexeme,DET
+"[My bad], I merged the wrong branch.",my bad,Citation,Phraseme,DiscourseFormula
+"[No worries], I already fixed it.",no worries,Citation,Phraseme,DiscourseFormula
+Please [lead] the discussion today.,lead,Citation,Lexeme,VERB
+Please [look] it up before replying.,look up,Citation,Lexeme,VERB
+"Remember, the [early bird] catches the worm.",the early bird catches the worm,Citation,Phraseme,Proverb
+[Running] before breakfast clears my head.,running,Inflection,Lexeme,VERB
+[See] you later at the station.,see you later,Citation,Phraseme,DiscourseFormula
+Send the [e-mail] before noon.,e-mail,Citation,Lexeme,NOUN
+She gave [up] after midnight.,up,Citation,Lexeme,PART
+She performed [best] under pressure.,best,Inflection,Lexeme,ADV
+Tag the issue with [#] before the number.,#,Citation,Lexeme,SYM
+That answer was [un]believable.,un-,Citation,Morpheme,Prefix
+[That] was unexpected.,that,Citation,Lexeme,PRON
+The [bio]reactor failed overnight.,bio,Citation,Morpheme,Root
+The [data] are still inconsistent.,data,Inflection,Lexeme,NOUN
+The estimate was thirty[ish] minutes.,-ish,Citation,Morpheme,Suffix
+The note was [written] in pencil.,written,Inflection,Lexeme,VERB
+The old laptop finally [kicked] the bucket.,kick the bucket,Citation,Phraseme,Idiom
+The pipe contained traces of [lead].,lead,Citation,Lexeme,NOUN
+The plane will [take] off at dawn.,take off,Citation,Lexeme,VERB
+The report says [COVID-ish] twice.,COVID-ish,Citation,Lexeme,X
+The [saw] needs a new blade.,saw,Citation,Lexeme,NOUN
+The sign advertised [acommodation] nearby.,accommodation,Citation,Lexeme,NOUN
+The [Smiths] invited everyone over.,Smiths,Inflection,Lexeme,PROPN
+The [twenty-first] attempt finally passed.,twenty-first,Citation,Lexeme,ADJ
+The [wind] shifted before dawn.,wind,Citation,Lexeme,NOUN
+These [scissors] are blunt.,scissors,Inflection,Lexeme,NOUN
+[They] left their umbrella here.,they,Inflection,Lexeme,PRON
+This exam was a [walk] in the park.,walk in the park,Citation,Phraseme,Idiom
+This is the [better] option.,better,Inflection,Lexeme,ADJ
+Use [half] the flour first.,half,Citation,Lexeme,DET
+We [depend] on accurate labels.,depend on,Citation,Lexeme,VERB
+[Whose] keys are these?,whose,Inflection,Lexeme,PRON
+Yesterday I [read] the warning twice.,read,Inflection,Lexeme,VERB

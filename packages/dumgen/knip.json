@@ -1,0 +1,9 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"entry": [
+		"src/index.ts",
+		"generate-readme/examples/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"project": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}

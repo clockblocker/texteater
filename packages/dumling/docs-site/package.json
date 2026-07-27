@@ -1,0 +1,26 @@
+{
+	"name": "@dumling/docs-site",
+	"private": true,
+	"type": "module",
+	"packageManager": "bun@1.3.0",
+	"scripts": {
+		"astro:build": "astro build",
+		"build": "bun run astro:build && bun run scripts/flatten-html-routes.ts",
+		"check": "tsgo -p tsconfig.json --noEmit",
+		"dev": "bun run generate:content && astro dev",
+		"generate:attestations": "bun run scripts/generate-attestations.ts",
+		"generate:content": "bun run scripts/generate-content.ts",
+		"generate:docs": "bun run scripts/generate-docs.ts",
+		"generate": "bun run generate:attestations && bun run generate:content bun run generate:docs",
+		"prebuild": "bun run generate:content",
+		"preview": "astro preview"
+	},
+	"dependencies": {
+		"astro": "^6.1.8",
+		"dumling": "workspace:^"
+	},
+	"devDependencies": {
+		"@typescript/native-preview": "beta",
+		"@types/node": "^24.5.2"
+	}
+}

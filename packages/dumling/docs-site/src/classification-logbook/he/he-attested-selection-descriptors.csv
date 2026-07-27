@@ -1,0 +1,48 @@
+sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
+[איזה] רחוב זה?,איזה,Inflection,Lexeme,DET
+אין [חדש] תחת השמש.,אין חדש תחת השמש,Citation,Phraseme,Proverb
+[אין] מקום פנוי.,אין,Citation,Lexeme,VERB
+אל [תלך] לבד.,תלך,Inflection,Lexeme,VERB
+[אמא] התקשרה.,אימא,Citation,Lexeme,NOUN
+אמרת [ש]תבוא.,ש,Citation,Morpheme,Prefix
+אנחנו [הולכים] עכשיו.,הולכים,Inflection,Lexeme,VERB
+[אני] לא בטוחה.,אני,Inflection,Lexeme,PRON
+"אפשר מים, [בבקשה]?",בבקשה,Citation,Phraseme,DiscourseFormula
+[בואו] לכאן.,בואו,Inflection,Lexeme,VERB
+[בתי] הספר נסגרו מוקדם.,בתי,Inflection,Lexeme,NOUN
+ה[אוכל] כבר מוכן.,אוכל,Citation,Lexeme,NOUN
+"הבטיחו דרמה, אבל [לא דובים ולא יער].",לא דובים ולא יער,Citation,Phraseme,Idiom
+[ה]בית פתוח.,ה,Citation,Lexeme,DET
+"הדו""ח [נכתב] אתמול.",נכתב,Inflection,Lexeme,VERB
+הוא [התכתב] עם המרצה.,התכתב,Inflection,Lexeme,VERB
+הוא [כתב] מהר.,כתב,Inflection,Lexeme,VERB
+"הוא שירת ב[צה""ל].","צה""ל",Citation,Lexeme,PROPN
+החדרים [גדולים].,גדולים,Inflection,Lexeme,ADJ
+היא [כתבה] מכתב קצר.,כתבה,Inflection,Lexeme,VERB
+[הם] הגיעו בזמן.,הם,Inflection,Lexeme,PRON
+הם נפגשו [ב]בית.,ב,Citation,Morpheme,Prefix
+הספר [של] נועה נשאר כאן.,של,Citation,Lexeme,ADP
+[הספרים] על השולחן.,הספרים,Inflection,Lexeme,NOUN
+הראיון היה על ה[פנים].,על הפנים,Citation,Phraseme,Idiom
+השאלות [הטובות] נשארו לסוף.,הטובות,Inflection,Lexeme,ADJ
+[ו]דנה כבר חיכתה בחוץ.,ו,Citation,Morpheme,Clitic
+זו טעות [גדולה].,גדולה,Inflection,Lexeme,ADJ
+חזרתי ל[בית].,הבית,Inflection,Lexeme,NOUN
+[חס וחלילה] שנאחר שוב.,חס וחלילה,Citation,Phraseme,Idiom
+יצאתי [ל]עבודה מוקדם.,ל,Citation,Morpheme,Prefix
+[ירושלים] יפה בלילה.,ירושלים,Inflection,Lexeme,PROPN
+[יש] קפה במטבח.,יש,Citation,Lexeme,VERB
+[מה נשמע] אצלכם?,מה נשמע,Citation,Phraseme,DiscourseFormula
+מחר [אוכל] מוקדם.,אוכל,Inflection,Lexeme,VERB
+מצאתי [מכתבים] ישנים.,מכתבים,Inflection,Lexeme,NOUN
+"[נו], תספר כבר.",נו,Citation,Lexeme,INTJ
+נמשיך [כאשר] כולם יגיעו.,כאשר,Citation,Lexeme,SCONJ
+נשארנו בבית [בגלל] הגשם.,בגלל,Citation,Lexeme,ADP
+עברתי ל[תל אביב].,תל אביב,Citation,Lexeme,PROPN
+קניתי [שתי] מחברות.,שתי,Inflection,Lexeme,NUM
+ראיתי [את] הסרט.,את,Citation,Lexeme,ADP
+רחצתי [ידיים].,ידיים,Inflection,Lexeme,NOUN
+רק [את] יודעת.,את,Inflection,Lexeme,PRON
+"[שלום], מה שלומך?",שלום,Citation,Phraseme,DiscourseFormula
+[תודה] על העזרה.,תודה,Citation,Phraseme,DiscourseFormula
+[תפסת] מרובה לא תפסת.,תפסת מרובה לא תפסת,Citation,Phraseme,Proverb
