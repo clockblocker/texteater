@@ -3,8 +3,8 @@
 	"private": true,
 	"packageManager": "bun@1.3.0",
 	"workspaces": [
-		"packages/*",
-		"packages/dumling/docs-site"
+		"app/*",
+		"battery/*"
 	],
 	"scripts": {
 		"build": "bun run --filter dumling build && bun run --filter dumdict build && bun run --filter dumgen build",

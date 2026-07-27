@@ -1,0 +1,6 @@
+.astro
+dist
+node_modules
+public/**/*.md
+public/nav.json
+src/generated

@@ -1,0 +1,77 @@
+{
+	"name": "dumling",
+	"version": "0.1.12",
+	"description": "TypeScript and Zod schemas, DTO types, operations, and stable IDs for learner-facing linguistic annotation.",
+	"type": "module",
+	"packageManager": "bun@1.3.0",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"keywords": [
+		"typescript",
+		"zod",
+		"schema",
+		"linguistics",
+		"nlp",
+		"annotation",
+		"lemma",
+		"inflection",
+		"segmentation",
+		"language-learning",
+		"english",
+		"german",
+		"hebrew"
+	],
+	"exports": {
+		".": {
+			"default": "./dist/index.js",
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./types": {
+			"default": "./dist/types.js",
+			"types": "./dist/types.d.ts",
+			"import": "./dist/types.js"
+		},
+		"./schema": {
+			"default": "./dist/schema.js",
+			"types": "./dist/schema.d.ts",
+			"import": "./dist/schema.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": ["dist", "README.md", "LICENSE"],
+	"engines": {
+		"node": ">=20"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist .types-temp && bun build src/index.ts src/types.ts src/schema.ts --outdir dist --format esm --target node --packages external",
+		"build:types": "bun run scripts/build-types.ts",
+		"check": "tsgo -p tsconfig.json --noEmit",
+		"check:types": "tsgo -p tsconfig.type-tests.json --noEmit",
+		"fix": "bunx @biomejs/biome check --write .",
+		"generate": "bun run generate:readme",
+		"generate:readme": "bun run generate-readme/generate-readme.ts",
+		"knip": "bunx knip",
+		"lint": "bunx @biomejs/biome check .",
+		"prepack": "bun run generate:readme && bun run build",
+		"test": "bun test",
+		"test:package": "bun test ./tests/internal/package-hygine/package-entrypoints.check.ts"
+	},
+	"dependencies": {
+		"zod": "3.25.76"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@microsoft/api-extractor": "^7.58.6",
+		"@types/node": "^24.5.2",
+		"@typescript/native-preview": "beta",
+		"bun-types": "1.3.0",
+		"knip": "^5.82.1"
+	}
+}

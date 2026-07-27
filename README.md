@@ -1,11 +1,12 @@
 # Textfresser batteries
 
-The independently publishable packages behind the build-your-own-dictionary
-product live in one Bun workspace:
+The build-your-own-dictionary product lives in one Bun workspace, split by
+responsibility:
 
-- `packages/dumling`: linguistic schemas, DTOs, operations, and stable IDs
-- `packages/dumgen`: deterministic prompt construction and evaluation
-- `packages/dumdict`: dictionary relations, workflows, and storage boundaries
+- `app/dumling-docs`: user-facing documentation for `dumling`
+- `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
+- `battery/dumgen`: deterministic prompt construction and evaluation
+- `battery/dumdict`: dictionary relations, workflows, and storage boundaries
 
 Install dependencies once from the repository root:
 
@@ -21,5 +22,5 @@ bun test
 bun run build
 ```
 
-Each package retains its own `package.json` and can be versioned and published
-independently.
+An app is a self-contained, user-facing business unit. A battery is a generic,
+reusable module. Each workspace retains its own `package.json`.
