@@ -1,21 +1,9 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"files": {
-		"ignore": ["dist", "node_modules"]
-	},
+	"extends": ["../../tooling/biome/base.json"],
 	"formatter": {
-		"enabled": true,
-		"ignore": ["generate-readme/examples/**/*.ts"],
-		"indentStyle": "tab",
-		"indentWidth": 4,
-		"lineEnding": "lf",
-		"lineWidth": 80
-	},
-	"organizeImports": {
-		"enabled": true
+		"includes": ["**", "!generate-readme/examples/**/*.ts"]
 	},
 	"linter": {
-		"enabled": true,
-		"ignore": ["generate-readme/examples/**/*.ts"]
+		"includes": ["**", "!generate-readme/examples/**/*.ts"]
 	}
 }

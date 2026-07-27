@@ -1,14 +1,5 @@
 {
-	"extends": "astro/tsconfigs/strict",
-	"compilerOptions": {
-		"allowImportingTsExtensions": true,
-		"paths": {
-			"dumling": ["../../battery/dumling/src/index.ts"],
-			"dumling/schema": ["../../battery/dumling/src/schema.ts"],
-			"dumling/types": ["../../battery/dumling/src/types.ts"]
-		},
-		"types": ["node"]
-	},
+	"extends": ["../../tooling/typescript/app.json", "astro/tsconfigs/strict"],
 	"include": [".astro/types.d.ts", "**/*"],
 	"exclude": ["dist"]
 }
