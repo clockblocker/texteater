@@ -3,14 +3,14 @@ import type {
 	AbstractLemmaSubKindFor,
 	AbstractSelection,
 	AbstractSurface,
-} from "../abstract/entities";
-import type { LemmaKind } from "../core/enums";
-import type { Replace, ReplaceMany } from "../core/helpers";
+} from "../abstract/entities.js";
+import type { LemmaKind } from "../core/enums.js";
+import type { Replace, ReplaceMany } from "../core/helpers.js";
 import type {
 	ConcreteLanguage,
 	LanguagePackFeatureRegistry,
-} from "./features/feature-registry";
-import type { ValueOf } from "./shared";
+} from "./features/feature-registry.js";
+import type { ValueOf } from "./shared.js";
 
 type RegistryFor<L extends ConcreteLanguage> = LanguagePackFeatureRegistry[L];
 type LemmaKindForLanguage<L extends ConcreteLanguage> = Extract<

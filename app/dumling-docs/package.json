@@ -2,11 +2,11 @@
 	"name": "@dumling/docs-site",
 	"private": true,
 	"type": "module",
-	"packageManager": "bun@1.3.0",
+	"packageManager": "bun@1.3.14",
 	"scripts": {
 		"astro:build": "astro build",
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run astro:build && bun run scripts/flatten-html-routes.ts",
-		"check": "tsgo -p tsconfig.json --noEmit",
+		"check": "bun ../../node_modules/@typescript/native/bin/tsc -p tsconfig.json --noEmit",
 		"dev": "bun run generate:content && astro dev",
 		"generate:attestations": "bun run scripts/generate-attestations.ts",
 		"generate:content": "bun run scripts/generate-content.ts",
@@ -18,15 +18,16 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
-		"astro": "^6.1.8",
+		"astro": "^7.1.3",
 		"dumling": "workspace:^"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.5",
-		"@typescript/native-preview": "beta",
+		"@typescript/native": "npm:typescript@^7.0.2",
 		"@types/node": "^24.5.2",
-		"dependency-cruiser": "^17.3.3",
-		"knip": "^5.82.1",
-		"typescript": "^5.9.3"
+		"bun-types": "1.3.14",
+		"dependency-cruiser": "^18.1.0",
+		"knip": "^6.29.0",
+		"typescript": "^6.0.2"
 	}
 }

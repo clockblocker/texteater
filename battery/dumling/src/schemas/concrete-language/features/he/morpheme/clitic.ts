@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { HeCliticMorphemeFeatures } from "../../../../../types/concrete-language/features/he/morpheme/clitic";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeCliticMorphemeFeatures } from "../../../../../types/concrete-language/features/he/morpheme/clitic.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heCliticMorphemeFeaturesSchema = z
 	.object({

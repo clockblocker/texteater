@@ -1,4 +1,4 @@
-import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog";
+import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type EnVerbFeatures = {
 	inherent: {

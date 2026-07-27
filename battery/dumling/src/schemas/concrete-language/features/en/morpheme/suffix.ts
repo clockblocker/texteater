@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { EnSuffixMorphemeFeatures } from "../../../../../types/concrete-language/features/en/morpheme/suffix";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { EnSuffixMorphemeFeatures } from "../../../../../types/concrete-language/features/en/morpheme/suffix.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enSuffixMorphemeFeaturesSchema = z
 	.object({

@@ -1,13 +1,13 @@
 import type { SupportedLanguage } from "dumling/types";
-import { deSubtree } from "./concrete-language/features/de/de-subtree";
-import { enSubtree } from "./concrete-language/features/en/en-subtree";
-import { heSubtree } from "./concrete-language/features/he/he-subtree";
-import { buildDescriptorSchemas } from "./descriptor-schemas";
+import { deSubtree } from "./concrete-language/features/de/de-subtree.js";
+import { enSubtree } from "./concrete-language/features/en/en-subtree.js";
+import { heSubtree } from "./concrete-language/features/he/he-subtree.js";
+import { buildDescriptorSchemas } from "./descriptor-schemas.js";
 import type {
 	RawEntitySchemaRegistry,
 	SchemaRegistry,
-} from "./shared/schema-helper-types";
-import { wrapEntitySchemaTree } from "./shared/wrap-entity-schema-tree";
+} from "./shared/schema-helper-types.js";
+import { wrapEntitySchemaTree } from "./shared/wrap-entity-schema-tree.js";
 
 const entitySchemasByLanguage = {
 	de: deSubtree,

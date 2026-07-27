@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { HeConstructionFusionFeatures } from "../../../../../types/concrete-language/features/he/construction/fusion";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeConstructionFusionFeatures } from "../../../../../types/concrete-language/features/he/construction/fusion.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heConstructionFusionFeaturesSchema = z
 	.object({

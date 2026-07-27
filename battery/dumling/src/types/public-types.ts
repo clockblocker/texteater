@@ -7,28 +7,28 @@ import type {
 	SelectionFeatures as AbstractSelectionFeatures,
 	AbstractSurface,
 	SurfaceFeatures as AbstractSurfaceFeatures,
-} from "./abstract/entities";
+} from "./abstract/entities.js";
 import type {
 	AbstractFeatureName,
 	AbstractFeatureValue as AbstractFeatureValueForName,
-} from "./abstract/features/features-catalog";
+} from "./abstract/features/features-catalog.js";
 import type {
 	LanguageLemmaUnionMap,
 	LanguageSelectionByKindMap,
 	LanguageSurfaceUnionMap,
 	SurfaceByKindForLanguage,
-} from "./concrete-language/concrete-language-types";
+} from "./concrete-language/concrete-language-types.js";
 import type {
 	ConcreteLanguage,
 	LanguagePackFeatureRegistry,
-} from "./concrete-language/features/feature-registry";
+} from "./concrete-language/features/feature-registry.js";
 import type {
 	LemmaKind as CoreLemmaKind,
 	LemmaSubKind as CoreLemmaSubKind,
 	SupportedLanguage as CoreSupportedLanguage,
 	SurfaceKind as CoreSurfaceKind,
-} from "./core/enums";
-import type { PrettifyDeep } from "./core/helpers";
+} from "./core/enums.js";
+import type { PrettifyDeep } from "./core/helpers.js";
 
 export type SupportedLanguage = CoreSupportedLanguage;
 export type Language = SupportedLanguage;
@@ -287,13 +287,14 @@ export type FeatureValue<
 	LK extends LemmaKindFor<L>,
 	LSK extends LemmaSubKindFor<L, LK>,
 	F extends FeatureName<L, K, LK, LSK>,
-> = FeatureSet<L, K, LK, LSK> extends infer TFeatureSet
-	? TFeatureSet extends unknown
-		? F extends keyof TFeatureSet
-			? TFeatureSet[F]
+> =
+	FeatureSet<L, K, LK, LSK> extends infer TFeatureSet
+		? TFeatureSet extends unknown
+			? F extends keyof TFeatureSet
+				? TFeatureSet[F]
+				: never
 			: never
-		: never
-	: never;
+		: never;
 
 export type SelectionOptionsFor = {
 	selectionFeatures?: SelectionFeatures;
@@ -301,22 +302,13 @@ export type SelectionOptionsFor = {
 };
 
 export type {
+	AbstractInflectionalFeaturesFor,
+	AbstractInherentFeaturesFor,
 	AbstractLemma,
+	AbstractLemmaSubKindFor,
 	AbstractSelection,
 	AbstractSurface,
-	AbstractInherentFeaturesFor,
-	AbstractInflectionalFeaturesFor,
-	AbstractLemmaSubKindFor,
 };
-
-export type {
-	ApiResult,
-	DumlingApi,
-	IdDecodeError,
-	IdDecodeSuccess,
-	LanguageApi,
-	ParseError,
-} from "../operations/api-shape";
 
 type PlaceholderLemma<
 	L extends SupportedLanguage,

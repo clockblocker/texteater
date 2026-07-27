@@ -1,10 +1,10 @@
 import { z } from "zod/v3";
-import type { DeSymbolFeatures } from "../../../../../types/concrete-language/features/de/lexeme/symbol";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { DeSymbolFeatures } from "../../../../../types/concrete-language/features/de/lexeme/symbol.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const deSymbolFeaturesSchema = z
 	.object({

@@ -1,7 +1,7 @@
 import { z } from "zod/v3";
-import type { DeParticleFeatures } from "../../../../../types/concrete-language/features/de/lexeme/particle";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { DeParticleFeatures } from "../../../../../types/concrete-language/features/de/lexeme/particle.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deParticleFeaturesSchema = z
 	.object({

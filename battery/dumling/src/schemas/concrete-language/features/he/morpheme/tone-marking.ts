@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { HeToneMarkingMorphemeFeatures } from "../../../../../types/concrete-language/features/he/morpheme/tone-marking";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeToneMarkingMorphemeFeatures } from "../../../../../types/concrete-language/features/he/morpheme/tone-marking.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heToneMarkingMorphemeFeaturesSchema = z
 	.object({

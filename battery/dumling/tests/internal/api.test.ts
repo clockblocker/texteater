@@ -149,14 +149,14 @@ describe("API", () => {
 			dumling.de.create.surface.citation({
 				lemma,
 				normalizedFullSurface: "See",
-				surfaceFeatures: {},
+				surfaceFeatures: {} as never,
 			}),
 		).toThrow("surfaceFeatures must contain at least one marked value");
 		expect(() =>
 			dumling.de.create.surface.inflection({
 				lemma: verbLemma,
 				normalizedFullSurface: "geht",
-				surfaceFeatures: {},
+				surfaceFeatures: {} as never,
 				inflectionalFeatures: {
 					number: "Sing",
 					person: "3",
@@ -169,17 +169,17 @@ describe("API", () => {
 			dumling.de.create.selection({
 				surface: citationSurface,
 				spelledSelection: "See",
-				selectionFeatures: {},
+				selectionFeatures: {} as never,
 			}),
 		).toThrow("selectionFeatures must contain at least one marked value");
 		expect(() =>
 			dumling.de.convert.lemma.toSelection(lemma, {
-				selectionFeatures: {},
+				selectionFeatures: {} as never,
 			}),
 		).toThrow("selectionFeatures must contain at least one marked value");
 		expect(() =>
 			dumling.de.convert.surface.toSelection(citationSurface, {
-				selectionFeatures: {},
+				selectionFeatures: {} as never,
 			}),
 		).toThrow("selectionFeatures must contain at least one marked value");
 	});

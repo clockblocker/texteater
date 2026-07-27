@@ -1,5 +1,5 @@
-import type { LanguageApi } from "../../../types/public-types";
-import { requireNonEmptyFeatureBag } from "../../shared/feature-bags";
+import type { LanguageApi } from "../../api-shape.js";
+import { requireNonEmptyFeatureBag } from "../../shared/feature-bags.js";
 
 type DeCreateOperations = LanguageApi<"de">["create"];
 type DeCreateLemma = DeCreateOperations["lemma"];

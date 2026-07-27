@@ -3,11 +3,11 @@ import type {
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../../types/public-types";
-import type { ApiResult, IdDecodeError, LanguageApi } from "../../api-shape";
-import { idError } from "../id-errors";
-import { isSupportedLanguage } from "../language-inventory";
-import { featureNameTokens } from "./tiny-tokens";
+} from "../../../types/public-types.js";
+import type { ApiResult, IdDecodeError, LanguageApi } from "../../api-shape.js";
+import { idError } from "../id-errors.js";
+import { isSupportedLanguage } from "../language-inventory.js";
+import { featureNameTokens } from "./tiny-tokens.js";
 
 type CsvValue = string | number | boolean | null | undefined;
 type IdEntity<L extends SupportedLanguage> = Lemma<L> | Surface<L>;

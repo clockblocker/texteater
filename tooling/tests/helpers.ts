@@ -7,7 +7,7 @@ export async function temporaryRepository(): Promise<string> {
 	await writeJson(join(root, "package.json"), {
 		name: "fixture",
 		private: true,
-		packageManager: "bun@1.3.0",
+		packageManager: "bun@1.3.14",
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
 			build: "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
@@ -43,7 +43,7 @@ export async function addWorkspace(
 		description: `${options.name} fixture`,
 		private: options.private ?? true,
 		type: "module",
-		packageManager: "bun@1.3.0",
+		packageManager: "bun@1.3.14",
 		license: "MIT",
 		exports: options.exports ?? { ".": "./dist/index.js" },
 		files: ["dist"],

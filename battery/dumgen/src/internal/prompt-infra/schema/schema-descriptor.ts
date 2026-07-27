@@ -68,7 +68,7 @@ export function getSchemaDescriptor(schema: ZodTypeAny): SchemaDescriptor {
 	if (schema instanceof z.ZodUnion) {
 		return {
 			kind: "union",
-			options: schema.options.map((option) =>
+			options: schema.options.map((option: ZodTypeAny) =>
 				getSchemaDescriptor(option),
 			),
 		};

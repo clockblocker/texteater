@@ -7,4 +7,4 @@
 - Astro: 7.1.3
 - Node runtime floor: 24
 
-don't upgrade zod. it should be pinned cause of the 
+don't upgrade zod. it should be pinned cause of the dep on ai sdk

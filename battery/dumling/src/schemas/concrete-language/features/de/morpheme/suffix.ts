@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { DeSuffixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/suffix";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { DeSuffixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/suffix.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deSuffixMorphemeFeaturesSchema = z
 	.object({

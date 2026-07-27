@@ -4,9 +4,9 @@ import type {
 	SelectionFeatures,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types";
-import type { LanguageApi } from "../api-shape";
-import { requireNonEmptyFeatureBag } from "./feature-bags";
+} from "../../types/public-types.js";
+import type { LanguageApi } from "../api-shape.js";
+import { requireNonEmptyFeatureBag } from "./feature-bags.js";
 
 type SelectionOptions = {
 	selectionFeatures?: SelectionFeatures;

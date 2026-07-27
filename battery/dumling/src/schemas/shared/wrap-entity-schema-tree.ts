@@ -2,7 +2,7 @@ import type { SupportedLanguage } from "dumling/types";
 import type {
 	LanguageEntitySchemaTree,
 	RawLanguageEntitySchemaTree,
-} from "./schema-helper-types";
+} from "./schema-helper-types.js";
 
 function isZodSchema(value: unknown): value is { safeParse: unknown } {
 	return (

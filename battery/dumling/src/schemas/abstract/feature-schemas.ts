@@ -2,14 +2,14 @@ import type { z } from "zod/v3";
 import type {
 	AbstractInflectionalFeatures,
 	AbstractInherentFeatures,
-} from "../../types/abstract/features/features-catalog";
-import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog";
+} from "../../types/abstract/features/features-catalog.js";
+import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog.js";
 import {
-	type FeatureSchemaShape,
 	buildOptionalFeatureObjectSchema,
+	type FeatureSchemaShape,
 	featureValueSet,
 	requireNonEmptyFeatureObject,
-} from "../shared/feature-helpers";
+} from "../shared/feature-helpers.js";
 
 export const abstractFeatureAtomSchemas =
 	abstractFeatureCatalog satisfies FeatureSchemaShape;

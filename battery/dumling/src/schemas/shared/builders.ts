@@ -5,12 +5,12 @@ import type {
 	LemmaSubKindFor,
 } from "dumling/types";
 import { z } from "zod/v3";
-import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry";
+import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
 import {
 	normalizedLowercaseStringSchema,
 	normalizedStringSchema,
-} from "./normalization";
-import type { RawLanguageEntitySchemaTree } from "./schema-helper-types";
+} from "./normalization.js";
+import type { RawLanguageEntitySchemaTree } from "./schema-helper-types.js";
 
 type SchemaOutput<TSchema extends z.ZodTypeAny> = z.output<TSchema>;
 type SchemaTuple = readonly [z.ZodTypeAny, ...z.ZodTypeAny[]];

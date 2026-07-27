@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { DeSuffixoidMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/suffixoid";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { DeSuffixoidMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/suffixoid.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deSuffixoidMorphemeFeaturesSchema = z
 	.object({

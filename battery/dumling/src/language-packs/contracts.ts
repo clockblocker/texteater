@@ -1,5 +1,5 @@
 import type { z } from "zod/v3";
-import type { SupportedLanguage } from "../types/core/enums";
+import type { SupportedLanguage } from "../types/core/enums.js";
 
 export type LanguageTypePack<L extends SupportedLanguage = SupportedLanguage> =
 	{

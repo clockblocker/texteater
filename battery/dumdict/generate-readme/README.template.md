@@ -91,7 +91,7 @@ The root export is intentionally focused:
 ## Scope
 
 - Languages: `en`, `de`, `he`
-- Runtime: `Node >= 20`
+- Runtime: `Node >= 24`
 - Package format: ESM
 
 For repo development:

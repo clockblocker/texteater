@@ -5,23 +5,23 @@ import {
 	MorphemeKind,
 	PhrasemeKind,
 	Pos,
-} from "../../types/core/enums";
+} from "../../types/core/enums.js";
 import type {
 	AbstractLemma,
 	AbstractSelection,
 	AbstractSurface,
-} from "../../types/public-types";
+} from "../../types/public-types.js";
 import {
 	buildCitationSurfaceSchema,
 	buildInflectionSurfaceSchema,
 	buildLemmaSchema,
 	buildSelectionSchema,
 	buildUnionSchema,
-} from "../shared/builders";
+} from "../shared/builders.js";
 import {
 	abstractInflectionalFeaturesSchema,
 	abstractInherentFeaturesSchema,
-} from "./feature-schemas";
+} from "./feature-schemas.js";
 
 type AbstractLeafBundle = {
 	citationSurfaceSchema: z.ZodType<AbstractSurface<string, "Citation">>;

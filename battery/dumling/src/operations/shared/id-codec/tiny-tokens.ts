@@ -3,7 +3,7 @@ import type {
 	LemmaSubKind,
 	SupportedLanguage,
 	SurfaceKind,
-} from "../../../types/public-types";
+} from "../../../types/public-types.js";
 
 type TokenMap<T extends string> = Record<T, string>;
 type InverseTokenMap<T extends string> = Record<string, T>;

@@ -1,10 +1,10 @@
 import { z } from "zod/v3";
-import type { DeAuxiliaryFeatures } from "../../../../../types/concrete-language/features/de/lexeme/auxiliary";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { DeAuxiliaryFeatures } from "../../../../../types/concrete-language/features/de/lexeme/auxiliary.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildFeatureObjectSchema,
 	buildOptionalFeatureObjectSchema,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 const deAuxiliaryInflectionalFeaturesSchema = z.union([
 	buildFeatureObjectSchema({

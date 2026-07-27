@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { HeParticleFeatures } from "../../../../../types/concrete-language/features/he/lexeme/particle";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeParticleFeatures } from "../../../../../types/concrete-language/features/he/lexeme/particle.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heParticleFeaturesSchema = z
 	.object({

@@ -1,4 +1,4 @@
-import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog";
+import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 

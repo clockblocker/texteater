@@ -1,11 +1,11 @@
 import { z } from "zod/v3";
-import type { HeAuxiliaryFeatures } from "../../../../../types/concrete-language/features/he/lexeme/auxiliary";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { HeAuxiliaryFeatures } from "../../../../../types/concrete-language/features/he/lexeme/auxiliary.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	featureValueSet,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const heAuxiliaryFeaturesSchema = z
 	.object({

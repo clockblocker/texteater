@@ -113,7 +113,7 @@ Lemma kinds also include `Construction` for learner-facing patterned entries suc
 ## Scope
 
 - Runtime today: `de`, `en`, `he`
-- Runtime: `Node >= 20`
+- Runtime: `Node >= 24`
 - Package format: ESM
 
 For repo development:

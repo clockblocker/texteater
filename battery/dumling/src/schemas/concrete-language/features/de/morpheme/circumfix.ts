@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { DeCircumfixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/circumfix";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { DeCircumfixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/circumfix.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deCircumfixMorphemeFeaturesSchema = z
 	.object({

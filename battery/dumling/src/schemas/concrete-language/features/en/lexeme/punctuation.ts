@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { EnPunctuationFeatures } from "../../../../../types/concrete-language/features/en/lexeme/punctuation";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { EnPunctuationFeatures } from "../../../../../types/concrete-language/features/en/lexeme/punctuation.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enPunctuationFeaturesSchema = z
 	.object({

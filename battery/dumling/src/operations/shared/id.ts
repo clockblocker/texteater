@@ -5,24 +5,24 @@ import type {
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types";
+} from "../../types/public-types.js";
 import type {
 	ApiResult,
 	IdDecodeError,
 	IdDecodeSuccess,
 	LanguageApi,
-} from "../api-shape";
-import { decodeBase64Url, encodeBase64Url } from "./id-codec/base64url";
+} from "../api-shape.js";
+import { decodeBase64Url, encodeBase64Url } from "./id-codec/base64url.js";
 import {
 	assertEntityIdFeatureConstraints,
 	decodeReadableCsv,
 	entityToReadableCsv,
-} from "./id-codec/readable-csv";
+} from "./id-codec/readable-csv.js";
 import {
 	readableCsvToTinyCsv,
 	tinyCsvToReadableCsv,
-} from "./id-codec/tiny-csv";
-import { idError } from "./id-errors";
+} from "./id-codec/tiny-csv.js";
+import { idError } from "./id-errors.js";
 
 type DecodeResult<L extends SupportedLanguage> = ApiResult<
 	IdDecodeSuccess<L>,

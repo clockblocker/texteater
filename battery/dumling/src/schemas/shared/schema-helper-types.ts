@@ -9,7 +9,7 @@ import type {
 	SurfaceKindFor,
 } from "dumling/types";
 import type { z } from "zod/v3";
-import type { Descriptor } from "../../types/descriptor";
+import type { Descriptor } from "../../types/descriptor.js";
 
 type SchemaGetter<T> = () => z.ZodType<T>;
 
@@ -17,23 +17,24 @@ export type LemmaSubKindForSurfaceKind<
 	L extends SupportedLanguage,
 	SK extends SurfaceKindFor<L>,
 	LK extends LemmaKindForSurfaceKind<L, SK>,
-> = Extract<
-	Surface<L>,
-	{
-		lemma: {
-			lemmaKind: LK;
-		};
-		surfaceKind: SK;
-	}
-> extends infer TSurface
-	? TSurface extends {
+> =
+	Extract<
+		Surface<L>,
+		{
 			lemma: {
-				lemmaSubKind: infer LSK;
+				lemmaKind: LK;
 			};
+			surfaceKind: SK;
 		}
-		? Extract<LSK, LemmaSubKindFor<L, LK>>
-		: never
-	: never;
+	> extends infer TSurface
+		? TSurface extends {
+				lemma: {
+					lemmaSubKind: infer LSK;
+				};
+			}
+			? Extract<LSK, LemmaSubKindFor<L, LK>>
+			: never
+		: never;
 
 export type RawLanguageEntitySchemaTree<L extends SupportedLanguage> = {
 	Lemma: RawLemmaSchemaSubtree<L>;

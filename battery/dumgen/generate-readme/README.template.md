@@ -16,6 +16,6 @@ Example usage:
 
 ## Scope
 
-- Runtime: `Node >= 20`
+- Runtime: `Node >= 24`
 - Package format: ESM
 - Tooling: Bun, TypeScript, Biome

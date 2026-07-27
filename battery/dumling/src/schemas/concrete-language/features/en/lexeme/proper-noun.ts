@@ -1,10 +1,10 @@
 import { z } from "zod/v3";
-import type { EnProperNounFeatures } from "../../../../../types/concrete-language/features/en/lexeme/proper-noun";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { EnProperNounFeatures } from "../../../../../types/concrete-language/features/en/lexeme/proper-noun.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const enProperNounFeaturesSchema = z
 	.object({

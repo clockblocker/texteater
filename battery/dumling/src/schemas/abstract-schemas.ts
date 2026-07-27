@@ -5,7 +5,7 @@ import {
 	LemmaKind,
 	LemmaSubKind,
 	SurfaceKind,
-} from "../types/core/enums";
+} from "../types/core/enums.js";
 import type {
 	AbstractLemma,
 	AbstractLemmaSubKindFor,
@@ -14,8 +14,8 @@ import type {
 	EntityKind,
 	LemmaKind as LemmaKindType,
 	SurfaceKind as SurfaceKindType,
-} from "../types/public-types";
-import { abstractRuntimeSchemas } from "./abstract/registry";
+} from "../types/public-types.js";
+import { abstractRuntimeSchemas } from "./abstract/registry.js";
 
 type AbstractLemmaDescriptor = {
 	[LK in LemmaKindType]: {

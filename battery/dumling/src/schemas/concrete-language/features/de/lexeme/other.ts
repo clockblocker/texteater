@@ -1,10 +1,10 @@
 import { z } from "zod/v3";
-import type { DeOtherFeatures } from "../../../../../types/concrete-language/features/de/lexeme/other";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { DeOtherFeatures } from "../../../../../types/concrete-language/features/de/lexeme/other.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const deOtherFeaturesSchema = z
 	.object({

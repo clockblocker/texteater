@@ -5,11 +5,11 @@ import type {
 	PhrasemeKind,
 	Pos,
 	SurfaceKind,
-} from "../core/enums";
+} from "../core/enums.js";
 import type {
 	AbstractInflectionalFeatures,
 	AbstractInherentFeatures,
-} from "./features/features-catalog";
+} from "./features/features-catalog.js";
 
 type RequireAtLeastOne<T extends object> = {
 	[K in keyof T]-?: Required<Pick<T, K>> & Partial<Omit<T, K>>;

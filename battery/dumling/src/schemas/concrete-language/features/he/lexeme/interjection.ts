@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { HeInterjectionFeatures } from "../../../../../types/concrete-language/features/he/lexeme/interjection";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeInterjectionFeatures } from "../../../../../types/concrete-language/features/he/lexeme/interjection.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heInterjectionFeaturesSchema = z
 	.object({

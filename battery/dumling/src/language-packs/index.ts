@@ -1,18 +1,18 @@
 import type { z } from "zod/v3";
-import { buildDeCreateOperations } from "../operations/lang/de/create";
-import { buildDeParseOperations } from "../operations/lang/de/parse";
-import { buildEnCreateOperations } from "../operations/lang/en/create";
-import { buildEnParseOperations } from "../operations/lang/en/parse";
-import { buildHeCreateOperations } from "../operations/lang/he/create";
-import { buildHeParseOperations } from "../operations/lang/he/parse";
-import { schemasFor } from "../schema";
-import { buildUnionSchema } from "../schemas/shared/builders";
-import type { LanguageApi } from "../types/public-types";
+import type { LanguageApi } from "../operations/api-shape.js";
+import { buildDeCreateOperations } from "../operations/lang/de/create.js";
+import { buildDeParseOperations } from "../operations/lang/de/parse.js";
+import { buildEnCreateOperations } from "../operations/lang/en/create.js";
+import { buildEnParseOperations } from "../operations/lang/en/parse.js";
+import { buildHeCreateOperations } from "../operations/lang/he/create.js";
+import { buildHeParseOperations } from "../operations/lang/he/parse.js";
+import { schemasFor } from "../schema.js";
+import { buildUnionSchema } from "../schemas/shared/builders.js";
 import type {
 	ImplementedLanguagePackDescriptor,
 	RuntimeSchemaSet,
-} from "./contracts";
-import type { LanguageTypePackMap } from "./type-packs";
+} from "./contracts.js";
+import type { LanguageTypePackMap } from "./type-packs.js";
 
 type LanguagePackSchemaTreeMap = {
 	de: (typeof schemasFor)["de"];

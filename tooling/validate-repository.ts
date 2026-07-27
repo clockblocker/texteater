@@ -56,7 +56,7 @@ const commands = [
 	{
 		args: [
 			"bun",
-			tools.tsgo,
+			tools.typescript,
 			"-p",
 			join(repositoryRoot, "tooling/tsconfig.json"),
 			"--noEmit",

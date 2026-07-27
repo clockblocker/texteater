@@ -1,10 +1,10 @@
 import { z } from "zod/v3";
-import type { DeNumeralFeatures } from "../../../../../types/concrete-language/features/de/lexeme/numeral";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { DeNumeralFeatures } from "../../../../../types/concrete-language/features/de/lexeme/numeral.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const deNumeralFeaturesSchema = z
 	.object({

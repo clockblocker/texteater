@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../../types/public-types";
+import type { SupportedLanguage } from "../../types/public-types.js";
 
 const supportedLanguageValues = [
 	"de",

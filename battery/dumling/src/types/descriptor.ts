@@ -5,7 +5,7 @@ import type {
 	LemmaSubKindFor,
 	SupportedLanguage,
 	SurfaceKindFor,
-} from "./public-types";
+} from "./public-types.js";
 
 export type Descriptor<
 	K extends EntityKind = EntityKind,

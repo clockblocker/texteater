@@ -1,7 +1,7 @@
 import { z } from "zod/v3";
-import type { HeSubordinatingConjunctionFeatures } from "../../../../../types/concrete-language/features/he/lexeme/subordinating-conjunction";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { HeSubordinatingConjunctionFeatures } from "../../../../../types/concrete-language/features/he/lexeme/subordinating-conjunction.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heSubordinatingConjunctionFeaturesSchema = z
 	.object({

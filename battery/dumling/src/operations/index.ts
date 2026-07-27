@@ -1,14 +1,11 @@
-import { languagePacks } from "../language-packs";
-import type {
-	DumlingApi,
-	LanguageApi,
-	SupportedLanguage,
-} from "../types/public-types";
-import { buildConvertOperations } from "./shared/convert";
-import { buildDescribeOperations } from "./shared/describe";
-import { buildExtractOperations } from "./shared/extract";
-import { buildIdOperations } from "./shared/id";
-import { supportedLanguages } from "./shared/language-inventory";
+import { languagePacks } from "../language-packs/index.js";
+import type { SupportedLanguage } from "../types/public-types.js";
+import type { DumlingApi, LanguageApi } from "./api-shape.js";
+import { buildConvertOperations } from "./shared/convert.js";
+import { buildDescribeOperations } from "./shared/describe.js";
+import { buildExtractOperations } from "./shared/extract.js";
+import { buildIdOperations } from "./shared/id.js";
+import { supportedLanguages } from "./shared/language-inventory.js";
 
 function buildImplementedLanguageApi<L extends SupportedLanguage>(
 	language: L,

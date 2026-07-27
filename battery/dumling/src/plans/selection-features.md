@@ -144,7 +144,7 @@ Today that extra axis shows up in several places:
 - schema helper types where selection subtrees are keyed as
   `[OS in OrthographicStatus]`
 - selection descriptor schema trees with the same extra branch
-- generated declaration output in `scripts/build-types.ts`
+- emitted declaration types for schema and descriptor trees
 - create / convert helper signatures that thread `TStatus extends
   OrthographicStatus`
 

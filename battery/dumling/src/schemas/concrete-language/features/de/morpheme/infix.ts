@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { DeInfixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/infix";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { DeInfixMorphemeFeatures } from "../../../../../types/concrete-language/features/de/morpheme/infix.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deInfixMorphemeFeaturesSchema = z
 	.object({

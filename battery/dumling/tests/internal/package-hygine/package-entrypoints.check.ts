@@ -1,13 +1,14 @@
 import { describe, expect, it, setDefaultTimeout } from "bun:test";
 import { execFileSync } from "node:child_process";
 import {
+	existsSync,
 	mkdtempSync,
+	readdirSync,
 	readFileSync,
 	rmSync,
-	statSync,
 	writeFileSync,
 } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 const projectRoot = resolve(import.meta.dir, "../../..");
 
@@ -38,10 +39,24 @@ function run(command: string, args: string[]) {
 	}
 }
 
+function filesRecursively(directory: string): string[] {
+	return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+		const path = resolve(directory, entry.name);
+		return entry.isDirectory() ? filesRecursively(path) : [path];
+	});
+}
+
+function relativeDeclarationSpecifiers(declarationFile: string): string[] {
+	const contents = readFileSync(declarationFile, "utf8");
+	const pattern =
+		/(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)["'](\.{1,2}\/[^"']+)["']/g;
+	return [...contents.matchAll(pattern)].map((match) => match[1] as string);
+}
+
 describe("published package entrypoints", () => {
-	it("builds rolled entrypoints, supports self-reference, and packs only public files", () => {
-		run("bun", ["run", "generate:readme"]);
-		run("bun", ["run", "build"]);
+	it("builds ordinary declarations, supports self-reference, and packs only public files", () => {
+		run(process.execPath, ["run", "generate:readme"]);
+		run(process.execPath, ["run", "build"]);
 
 		const runtimeSmokeTest = `
 			import { dumling, getLanguageApi, supportedLanguages } from "dumling";
@@ -89,12 +104,16 @@ describe("published package entrypoints", () => {
 				join(typecheckDir, "fixture.ts"),
 				[
 					'import { dumling, getLanguageApi, supportedLanguages } from "dumling";',
+					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
 					'import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";',
 					'import type * as z from "zod/v3";',
-					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeSuccess, LanguageApi, Lemma, ParseError, Selection, SelectionOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
+					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Selection, SelectionOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',
 					"void languages;",
+					'const rootLanguage: RootSupportedLanguage = "de";',
+					"const rootApi: RootLanguageApi<typeof rootLanguage> = dumling.de;",
+					"void rootApi;",
 					'const lemma: Lemma<"de", "Lexeme", "NOUN"> = dumling.de.create.lemma({',
 					'\tcanonicalLemma: "see",',
 					'\tlemmaKind: "Lexeme",',
@@ -128,12 +147,16 @@ describe("published package entrypoints", () => {
 					'const entityForKind: EntityForKind<"de", "Selection"> = parsed.data;',
 					'const selectionOptions: SelectionOptionsFor = { spelledSelection: "See" };',
 					"declare const parseError: ParseError;",
+					'const parseErrorCode: ParseErrorCode = "InvalidInput";',
+					'const idDecodeErrorCode: IdDecodeErrorCode = "MalformedId";',
 					"void entityValue;",
 					"void selectionValue;",
 					"void entityForKind;",
 					"void selectionOptions;",
 					"void selectionDescriptorCsv;",
 					"void parseError;",
+					"void parseErrorCode;",
+					"void idDecodeErrorCode;",
 					'const nounLemmaSchema: z.ZodType<Lemma<"de", "Lexeme", "NOUN">> = schemasFor.de.entity.Lemma.Lexeme.NOUN();',
 					'const nounSelectionSchema: z.ZodType<Selection<"de", "Citation", "Lexeme", "NOUN">> = schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();',
 					'const nounLemmaDescriptorSchema: z.ZodType<Descriptor<"Lemma", "de", "Lexeme", "NOUN">> = schemasFor.de.descriptor.Lemma.Lexeme.NOUN;',
@@ -170,13 +193,18 @@ describe("published package entrypoints", () => {
 				),
 			);
 
-			run(resolve(projectRoot, "node_modules/.bin/tsgo"), [
-				"--project",
-				join(typecheckDir, "tsconfig.json"),
-				"--pretty",
-				"false",
-			]);
-
+			run(
+				resolve(
+					projectRoot,
+					"../../node_modules/@typescript/native/bin/tsc",
+				),
+				[
+					"--project",
+					join(typecheckDir, "tsconfig.json"),
+					"--pretty",
+					"false",
+				],
+			);
 		} finally {
 			rmSync(typecheckDir, { force: true, recursive: true });
 		}
@@ -189,75 +217,48 @@ describe("published package entrypoints", () => {
 		const packedFiles =
 			packSummary[0]?.files.map((file) => file.path) ?? [];
 
-		expect(packedFiles.length).toBeLessThan(20);
 		expect(packedFiles).toContain("dist/index.d.ts");
+		expect(packedFiles).toContain("dist/index.js");
 		expect(packedFiles).toContain("dist/types.d.ts");
+		expect(packedFiles).toContain("dist/types.js");
 		expect(packedFiles).toContain("dist/schema.d.ts");
-		expect(packedFiles).not.toContain("dist/id.d.ts");
-		expect(packedFiles).not.toContain("dist/operation.d.ts");
-		expect(packedFiles).not.toContain("dist/entities.d.ts");
-		const rolledTypes = readFileSync(
-			resolve(projectRoot, "dist/types.d.ts"),
-			"utf8",
-		);
-		const indexEntrypointTypes = readFileSync(
-			resolve(projectRoot, "dist/index.d.ts"),
-			"utf8",
-		);
-		const schemaEntrypointTypes = readFileSync(
-			resolve(projectRoot, "dist/schema.d.ts"),
-			"utf8",
-		);
+		expect(packedFiles).toContain("dist/schema.js");
+		expect(packedFiles).toContain("dist/operations/api-shape.d.ts");
+		expect(packedFiles).toContain("dist/types/public-types.d.ts");
+		expect(packedFiles).toContain("dist/schemas/public-schemas.d.ts");
 
-		expect(indexEntrypointTypes).toContain('from "./types.js"');
-		expect(indexEntrypointTypes).not.toContain('from "dumling/types"');
-		expect(schemaEntrypointTypes).toContain('from "./types.js"');
-		expect(schemaEntrypointTypes).not.toContain('from "dumling/types"');
-		expect(rolledTypes).not.toContain(
-			"export declare type AbstractLanguageTag",
-		);
-		expect(rolledTypes).not.toContain(
-			"export declare const AbstractLanguageTag",
-		);
-		expect(rolledTypes).not.toContain("export declare const LemmaKind");
-		expect(rolledTypes).not.toContain("export declare const LemmaSubKind");
-		expect(rolledTypes).not.toContain(
-			"export declare const OrthographicStatus",
-		);
-		expect(rolledTypes).not.toContain(
-			"export declare const SelectionCoverage",
-		);
-		expect(rolledTypes).not.toContain(
-			"export declare const SpellingRelation",
-		);
-		expect(rolledTypes).not.toContain(
-			"export declare const SupportedLanguage",
-		);
-		expect(rolledTypes).not.toContain("export declare const SurfaceKind");
-		expect(
-			statSync(resolve(projectRoot, "dist/index.d.ts")).size,
-		).toBeLessThan(120_000);
-		const indexDts = readFileSync(
-			resolve(projectRoot, "dist/index.d.ts"),
-			"utf8",
-		);
-		expect(indexDts).not.toContain("GenericLanguageApi");
-		expect(indexDts).toContain(
-			"getLanguageApi<L extends SupportedLanguage>",
-		);
-		expect(indexDts).toContain("): LanguageApi<L>;");
+		for (const packedFile of packedFiles) {
+			expect(
+				packedFile === "LICENSE" ||
+					packedFile === "README.md" ||
+					packedFile === "package.json" ||
+					packedFile.startsWith("dist/"),
+			).toBe(true);
+		}
 
-		const schemaDts = readFileSync(
-			resolve(projectRoot, "dist/schema.d.ts"),
-			"utf8",
-		);
-		expect(schemaDts).not.toContain("runtimeSchemas");
-		expect(schemaDts).not.toContain("descriptorSchemas");
-		expect(schemaDts).not.toContain("src/schemas");
-		expect(schemaDts).not.toContain("export type New");
-		expect(schemaDts).not.toContain(
-			"EverySupportedLanguageHasConcreteSchema",
-		);
-		expect(schemaDts.length).toBeLessThan(40_000);
+		const declarationFiles = filesRecursively(
+			resolve(projectRoot, "dist"),
+		).filter((file) => file.endsWith(".d.ts"));
+		expect(declarationFiles.length).toBeGreaterThan(200);
+
+		for (const declarationFile of declarationFiles) {
+			expect(packedFiles).toContain(
+				relative(projectRoot, declarationFile),
+			);
+
+			for (const specifier of relativeDeclarationSpecifiers(
+				declarationFile,
+			)) {
+				expect(specifier.endsWith(".js")).toBe(true);
+				expect(
+					existsSync(
+						resolve(
+							dirname(declarationFile),
+							`${specifier.slice(0, -3)}.d.ts`,
+						),
+					),
+				).toBe(true);
+			}
+		}
 	});
 });

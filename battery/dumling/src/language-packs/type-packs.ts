@@ -2,9 +2,9 @@ import type {
 	LanguageLemmaUnionMap,
 	LanguageSelectionUnionMap,
 	LanguageSurfaceUnionMap,
-} from "../types/concrete-language/concrete-language-types";
-import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry";
-import type { LanguageTypePack } from "./contracts";
+} from "../types/concrete-language/concrete-language-types.js";
+import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry.js";
+import type { LanguageTypePack } from "./contracts.js";
 
 type ConcreteLanguageTypePack<L extends ConcreteLanguage> =
 	LanguageTypePack<L> & {

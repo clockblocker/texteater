@@ -1,13 +1,13 @@
 import type {
 	DumlingDescriptorCsv,
-	LanguageApi,
 	Lemma,
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types";
-import { extractLemma } from "./entity-accessors";
-import { csvRow } from "./id-codec/readable-csv";
+} from "../../types/public-types.js";
+import type { LanguageApi } from "../api-shape.js";
+import { extractLemma } from "./entity-accessors.js";
+import { csvRow } from "./id-codec/readable-csv.js";
 
 type EntityValue<L extends SupportedLanguage> =
 	| Lemma<L>

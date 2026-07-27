@@ -1,18 +1,18 @@
 import type { z } from "zod/v3";
 import { z as zod } from "zod/v3";
-import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry";
-import type { Descriptor } from "../types/descriptor";
+import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry.js";
+import type { Descriptor } from "../types/descriptor.js";
 import type {
 	LemmaKindFor,
 	LemmaKindForSurfaceKind,
 	LemmaSubKindFor,
 	SurfaceKindFor,
-} from "../types/public-types";
+} from "../types/public-types.js";
 import type {
 	LanguageDescriptorSchemaTree,
 	LemmaSubKindForSurfaceKind,
 	RawEntitySchemaRegistry,
-} from "./shared/schema-helper-types";
+} from "./shared/schema-helper-types.js";
 
 type DescriptorSchema<TDescriptor> = z.ZodType<TDescriptor>;
 

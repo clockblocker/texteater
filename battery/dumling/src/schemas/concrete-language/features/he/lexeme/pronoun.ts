@@ -1,11 +1,11 @@
 import { z } from "zod/v3";
-import type { HePronounFeatures } from "../../../../../types/concrete-language/features/he/lexeme/pronoun";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
+import type { HePronounFeatures } from "../../../../../types/concrete-language/features/he/lexeme/pronoun.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	featureValueSet,
 	requireNonEmptyFeatureObject,
-} from "../../../../shared/feature-helpers";
+} from "../../../../shared/feature-helpers.js";
 
 export const hePronounFeaturesSchema = z
 	.object({

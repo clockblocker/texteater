@@ -48,7 +48,7 @@ const commands = [
 	overrideOrDefault("lint", ["bun", tools.biome, "lint", "."]),
 	overrideOrDefault("types", [
 		"bun",
-		tools.tsgo,
+		tools.typescript,
 		"-p",
 		"tsconfig.json",
 		"--noEmit",

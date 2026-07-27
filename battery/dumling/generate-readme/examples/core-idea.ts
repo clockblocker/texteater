@@ -49,6 +49,8 @@ import type {
 	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
 	FeatureValue as PackageFeatureValue,
 	Lemma as PackageLemma,
+	Selection as PackageSelection,
+	Surface as PackageSurface,
 } from "dumling/types";
 
 const lemma = packageDumling.de.create.lemma({
@@ -61,13 +63,15 @@ const lemma = packageDumling.de.create.lemma({
 	meaningInEmojis: "🌊",
 }) satisfies PackageLemma<"de", "Lexeme", "NOUN">;
 
-const surface = packageDumling.de.create.surface.citation({
-	lemma,
-	normalizedFullSurface: "See",
-});
-const selection = packageDumling.de.convert.surface.toSelection(surface, {
-	spelledSelection: "See",
-});
+const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
+	packageDumling.de.create.surface.citation({
+		lemma,
+		normalizedFullSurface: "See",
+	});
+const selection: PackageSelection<"de", "Citation", "Lexeme", "NOUN"> =
+	packageDumling.de.convert.surface.toSelection(surface, {
+		spelledSelection: "See",
+	});
 const descriptor = packageDumling.de.describe.as.selection(selection);
 const descriptorCsv = packageDumling.de.describe.asCsv.selection(selection);
 const extractedLemma = packageDumling.de.extract.lemma(selection);

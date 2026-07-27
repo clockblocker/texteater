@@ -4,7 +4,7 @@ import type {
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types";
+} from "../../types/public-types.js";
 
 export function extractLemma<L extends SupportedLanguage>(
 	value: Lemma<L> | Surface<L> | Selection<L>,

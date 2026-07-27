@@ -1,5 +1,6 @@
-import type { LanguageApi, SupportedLanguage } from "../../types/public-types";
-import { extractLemma } from "./entity-accessors";
+import type { SupportedLanguage } from "../../types/public-types.js";
+import type { LanguageApi } from "../api-shape.js";
+import { extractLemma } from "./entity-accessors.js";
 
 export function buildExtractOperations<
 	L extends SupportedLanguage,

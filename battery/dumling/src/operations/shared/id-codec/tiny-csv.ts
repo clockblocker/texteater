@@ -1,9 +1,9 @@
-import type { ApiResult, IdDecodeError } from "../../api-shape";
-import { idError } from "../id-errors";
-import { csvRow, parseCsvRow } from "./readable-csv";
+import type { ApiResult, IdDecodeError } from "../../api-shape.js";
+import { idError } from "../id-errors.js";
+import { csvRow, parseCsvRow } from "./readable-csv.js";
 import {
-	type FeatureNameTokenKey,
 	entityKindTokens,
+	type FeatureNameTokenKey,
 	featureNameTokens,
 	featureValueTokens,
 	inverseEntityKindTokens,
@@ -18,7 +18,7 @@ import {
 	lemmaSubKindTokens,
 	rawStringFeatureNames,
 	surfaceKindTokens,
-} from "./tiny-tokens";
+} from "./tiny-tokens.js";
 
 type TinyResult = ApiResult<string, IdDecodeError>;
 

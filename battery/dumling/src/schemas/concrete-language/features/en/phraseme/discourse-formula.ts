@@ -1,7 +1,7 @@
 import { z } from "zod/v3";
-import type { EnDiscourseFormulaPhrasemeFeatures } from "../../../../../types/concrete-language/features/en/phraseme/discourse-formula";
-import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { EnDiscourseFormulaPhrasemeFeatures } from "../../../../../types/concrete-language/features/en/phraseme/discourse-formula.js";
+import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enDiscourseFormulaPhrasemeFeaturesSchema = z
 	.object({

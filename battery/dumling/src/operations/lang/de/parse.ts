@@ -1,6 +1,6 @@
-import type { RuntimeSchemaSet } from "../../../language-packs/contracts";
-import type { LanguageTypePackMap } from "../../../language-packs/type-packs";
-import { parseWithSchema } from "../../shared/parse-result";
+import type { RuntimeSchemaSet } from "../../../language-packs/contracts.js";
+import type { LanguageTypePackMap } from "../../../language-packs/type-packs.js";
+import { parseWithSchema } from "../../shared/parse-result.js";
 
 export function buildDeParseOperations(
 	runtimeSchemas: RuntimeSchemaSet<LanguageTypePackMap["de"]>,

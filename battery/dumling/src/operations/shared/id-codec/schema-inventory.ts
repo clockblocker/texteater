@@ -1,4 +1,4 @@
-import type { FeatureNameTokenKey } from "./tiny-tokens";
+import type { FeatureNameTokenKey } from "./tiny-tokens.js";
 
 export const concreteFeatureSchemaInventory = {
 	featureNames: [

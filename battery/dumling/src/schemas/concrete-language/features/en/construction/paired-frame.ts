@@ -1,6 +1,6 @@
 import { z } from "zod/v3";
-import type { EnConstructionPairedFrameFeatures } from "../../../../../types/concrete-language/features/en/construction/paired-frame";
-import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers";
+import type { EnConstructionPairedFrameFeatures } from "../../../../../types/concrete-language/features/en/construction/paired-frame.js";
+import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enConstructionPairedFrameFeaturesSchema = z
 	.object({

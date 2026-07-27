@@ -22,6 +22,6 @@ const prompt = createPrompt("Generate a compact lexical summary.");
 
 ## Scope
 
-- Runtime: `Node >= 20`
+- Runtime: `Node >= 24`
 - Package format: ESM
 - Tooling: Bun, TypeScript, Biome
