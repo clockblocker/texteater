@@ -6,18 +6,24 @@ Composable generation helpers with the same Bun and Biome stack as `dumdict`.
 
 ## Core idea
 
-`dumgen` starts as a minimal library scaffold that already supports:
+`dumgen` provides a server-side GPT-5 nano runtime with structured output:
 
-- `bun run build`
-- `bun test`
-- `bun run generate:readme`
+- the OpenAI Responses API
+- automatic prompt caching for repeated prompt prefixes
+- Zod-backed structured output
 
 Example usage:
 
 ```ts
-import { createPrompt } from "dumgen";
+import { buildDumgen, createOpenAIPromptExecutor } from "dumgen";
 
-const prompt = createPrompt("Generate a compact lexical summary.");
+// Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
+const dumgen = buildDumgen(createOpenAIPromptExecutor());
+
+const classification = await dumgen.de.classify(
+	"Sie sitzt am Ufer auf der Bank.",
+	"Bank",
+);
 ```
 
 ## Scope
@@ -25,3 +31,6 @@ const prompt = createPrompt("Generate a compact lexical summary.");
 - Runtime: `Node >= 24`
 - Package format: ESM
 - Tooling: Bun, TypeScript, Biome
+
+Set `OPENAI_API_KEY` in the server environment. Never expose it to browser
+code or commit it to source control.

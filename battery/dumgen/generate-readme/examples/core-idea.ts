@@ -1,5 +1,11 @@
 // README_BLOCK:basic-usage:start
-import { createPrompt } from "dumgen";
+import { buildDumgen, createOpenAIPromptExecutor } from "dumgen";
 
-const prompt = createPrompt("Generate a compact lexical summary.");
+// Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
+const dumgen = buildDumgen(createOpenAIPromptExecutor());
+
+const classification = await dumgen.de.classify(
+	"Sie sitzt am Ufer auf der Bank.",
+	"Bank",
+);
 // README_BLOCK:basic-usage:end
