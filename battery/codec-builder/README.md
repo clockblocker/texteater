@@ -1,6 +1,8 @@
 # codec-builder-library
 
-Composable codec builders on top of `zod` for reshaping data and building strict field adapters.
+Composable codec builders on top of Zod for reshaping data and building strict field adapters.
+
+The package supports Zod 3 and Zod 4 Classic. Zod Mini is not supported.
 
 ## Install
 
@@ -8,11 +10,30 @@ Composable codec builders on top of `zod` for reshaping data and building strict
 npm install codec-builder-library zod
 ```
 
-## Usage
+## Choose a Zod version
+
+Import the versioned entrypoint when only one Zod implementation should enter
+your application module graph:
 
 ```ts
-import { z } from "zod";
-import { codecBuilder } from "codec-builder-library";
+import { codecBuilder3 } from "codec-builder-library/v3";
+import { codecBuilder4 } from "codec-builder-library/v4";
+```
+
+Both builders are also available from the package root for applications whose
+bundler performs ESM tree-shaking:
+
+```ts
+import { codecBuilder3, codecBuilder4 } from "codec-builder-library";
+```
+
+The original `codecBuilder` export remains an alias for `codecBuilder3`.
+
+## Zod 3 usage
+
+```ts
+import { codecBuilder3 } from "codec-builder-library/v3";
+import { z } from "zod/v3";
 
 const serverSchema = z.object({
 	id: z.number(),
@@ -24,14 +45,17 @@ const serverSchema = z.object({
 	),
 });
 
-const codec = codecBuilder.buildStrictFieldAdapterCodec(serverSchema, {
-	id: codecBuilder.fieldCodec.noOp,
-	answers: codecBuilder.fieldCodec.arrayOf({
-		ans_to_q1: codecBuilder.fieldCodec.noOp,
-		comment_to_q1_: codecBuilder.fieldCodec.noOp,
+const codec = codecBuilder3.buildStrictFieldAdapterCodec(serverSchema, {
+	id: codecBuilder3.fieldCodec.noOp,
+	answers: codecBuilder3.fieldCodec.arrayOf({
+		ans_to_q1: codecBuilder3.fieldCodec.noOp,
+		comment_to_q1_: codecBuilder3.fieldCodec.noOp,
 	}),
 });
 ```
+
+For Zod 4, import `codecBuilder4` from `codec-builder-library/v4` and Zod from
+`zod/v4` (or the `zod` package root when using Zod 4).
 
 ## Development
 

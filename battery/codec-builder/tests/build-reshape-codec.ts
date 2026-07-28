@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { z } from "zod";
-import { buildReshapeCodec } from "../src/codec-builders/build-reshape-codec";
+import { z } from "zod/v3";
+import { buildReshapeCodec } from "../src/v3/codec-builders/build-reshape-codec";
 
 // -- Assertions --
 

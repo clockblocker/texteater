@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { codecBuilder } from "../src";
 import {
 	buildStrictFieldAdapter,
 	buildStrictFieldAdapterCodec,
 	type ShapeOfStrictFieldAdapter,
 	type ShapeOfStrictFieldAdapterCodec,
-} from "../src/codec-builders/strict-field-adapter/build-strict-field-adapter-codec";
-import { yesNoAndBoolean } from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
-import { pipeCodecs } from "../src/core/pipe-codecs";
-import type { Codec, SchemaCodec } from "../src/core/types";
+} from "../src/v3/codec-builders/strict-field-adapter/build-strict-field-adapter-codec";
+import { yesNoAndBoolean } from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
+import { pipeCodecs } from "../src/v3/core/pipe-codecs";
+import type { Codec, SchemaCodec } from "../src/v3/core/types";
 
 // -- Assertions --
 

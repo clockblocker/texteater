@@ -1,28 +1,28 @@
 import { describe, expect, test } from "bun:test";
-import { numericStringAndNumber } from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/numeric-string-and-number";
-import { yesNoAndBoolean } from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
+import { numericStringAndNumber } from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/numeric-string-and-number";
+import { yesNoAndBoolean } from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/core-non-nullable-codecs/yes-no-and-boolean";
 import {
 	isoStringAndDate,
 	nullableDateAndIsoString,
 	nullableDateAndNullishIsoString,
 	nullableIsoStringAndDate,
 	nullableIsoStringAndNullishDate,
-} from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/derived/date";
+} from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/derived/date";
 import {
 	nullableNumberAndNumericString,
 	nullableNumericStringAndNumber,
 	numberAndNullishNumericString,
 	numberAndNumericString,
-} from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/derived/number";
+} from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/derived/number";
 import {
 	nullishStringAndString,
 	stringAndNullish,
-} from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/derived/string";
+} from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/derived/string";
 import {
 	booleanAndYesNo,
 	nullableBooleanAndYesNo,
 	nullableYesNoAndBoolean,
-} from "../src/codec-builders/strict-field-adapter/field-codecs/atoms/derived/yes-no";
+} from "../src/v3/codec-builders/strict-field-adapter/field-codecs/atoms/derived/yes-no";
 
 describe("numericStringAndNumber", () => {
 	test("uses strict non-nullable schemas in both directions", () => {

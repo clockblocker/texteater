@@ -2,7 +2,9 @@
 	"extends": "../../tooling/typescript/battery.json",
 	"compilerOptions": {
 		"paths": {
-			"codec-builder-library": ["./src/index.ts"]
+			"codec-builder-library": ["./src/index.ts"],
+			"codec-builder-library/v3": ["./src/v3/index.ts"],
+			"codec-builder-library/v4": ["./src/v4/index.ts"]
 		}
 	},
 	"include": ["src/**/*.ts", "tests/**/*.ts"]

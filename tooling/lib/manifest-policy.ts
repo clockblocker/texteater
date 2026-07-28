@@ -132,8 +132,14 @@ function validateWorkspaceManifest(
 function allDependencyVersions(
 	location: string,
 	manifest: JsonObject,
-): Array<{ location: string; name: string; version: string }> {
+): Array<{
+	field: (typeof dependencyFields)[number];
+	location: string;
+	name: string;
+	version: string;
+}> {
 	const versions: Array<{
+		field: (typeof dependencyFields)[number];
 		location: string;
 		name: string;
 		version: string;
@@ -143,6 +149,7 @@ function allDependencyVersions(
 			stringRecord(manifest[field]),
 		)) {
 			versions.push({
+				field,
 				location: `${location}#${field}.${name}`,
 				name,
 				version,
@@ -265,10 +272,11 @@ export async function validateManifestPolicy(options: {
 				workspace.manifest,
 			),
 		),
-	].filter((entry) =>
-		governedDependencies.includes(
-			entry.name as (typeof governedDependencies)[number],
-		),
+	].filter(
+		(entry) =>
+			governedDependencies.includes(
+				entry.name as (typeof governedDependencies)[number],
+			) && entry.field !== "peerDependencies",
 	);
 	for (const dependency of governedDependencies) {
 		const declarations = governed.filter(
