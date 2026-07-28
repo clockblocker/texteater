@@ -1,12 +1,11 @@
-import type { DumlingId, SupportedLanguage } from "../dumling";
 import type {
 	LemmaNoteForDisambiguation,
 	LexicalRelation,
 	MorphologicalRelation,
 	PendingLemmaRef,
-	PendingLemmaId,
 	StoreRevision,
 } from "../dto";
+import type { DumlingId, SupportedLanguage } from "../dumling";
 import type { DumdictDiagnostic } from "./diagnostics";
 
 export type AffectedDictionaryEntities<L extends SupportedLanguage> = {
@@ -36,9 +35,7 @@ export type CleanupPendingRelation<L extends SupportedLanguage> = {
 	relation: LexicalRelation | MorphologicalRelation;
 };
 
-export type GetInfoForRelationsCleanupResult<
-	L extends SupportedLanguage,
-> = {
+export type GetInfoForRelationsCleanupResult<L extends SupportedLanguage> = {
 	revision: StoreRevision;
 	canonicalLemma: string;
 	candidateLemmaIds: DumlingId<"Lemma", L>[];

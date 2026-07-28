@@ -5,14 +5,13 @@ import {
 } from "dumling";
 import type {
 	ApiResult,
-	DumlingApi as BaseDumlingApi,
+	LanguageApi as BaseLanguageApi,
+	Lemma as BaseLemma,
 	DumlingCsv,
 	EntityKind,
 	IdDecodeError,
 	InflectionalFeaturesFor,
 	InherentFeaturesFor,
-	LanguageApi as BaseLanguageApi,
-	Lemma as BaseLemma,
 	LemmaKindFor,
 	LemmaSubKindFor,
 	ParseError,
@@ -88,9 +87,10 @@ type LanguageApi<L extends SupportedLanguage> = {
 	create: BaseLanguageApi<L>["create"];
 	convert: {
 		lemma: {
-			toSurface<LK extends LemmaKindFor<L>, LSK extends LemmaSubKindFor<L, LK>>(
-				lemma: Lemma<L, LK, LSK>,
-			): Surface<L, "Lemma", LK, LSK>;
+			toSurface<
+				LK extends LemmaKindFor<L>,
+				LSK extends LemmaSubKindFor<L, LK>,
+			>(lemma: Lemma<L, LK, LSK>): Surface<L, "Lemma", LK, LSK>;
 		};
 	};
 	extract: {
@@ -109,7 +109,14 @@ type LanguageApi<L extends SupportedLanguage> = {
 	};
 };
 
-export type { EntityKind, InherentFeaturesFor, LanguageApi, LemmaKindFor, LemmaSubKindFor, SupportedLanguage };
+export type {
+	EntityKind,
+	InherentFeaturesFor,
+	LanguageApi,
+	LemmaKindFor,
+	LemmaSubKindFor,
+	SupportedLanguage,
+};
 
 export type DumlingApi = {
 	[L in SupportedLanguage]: LanguageApi<L>;
@@ -134,7 +141,9 @@ function toBaseSurface<L extends SupportedLanguage>(value: Surface<L>) {
 		...value,
 		surfaceKind: value.surfaceKind === "Lemma" ? "Citation" : "Inflection",
 	};
-	return baseValue as Parameters<BaseLanguageApi<L>["id"]["encode"]["asCsv"]>[0];
+	return baseValue as Parameters<
+		BaseLanguageApi<L>["id"]["encode"]["asCsv"]
+	>[0];
 }
 
 function fromBaseSurface<
@@ -169,30 +178,34 @@ function toBaseSelection<L extends SupportedLanguage>(value: Selection<L>) {
 	return {
 		language: value.language,
 		selectionFeatures:
-			Object.keys(selectionFeatures).length > 0 ? selectionFeatures : undefined,
+			Object.keys(selectionFeatures).length > 0
+				? selectionFeatures
+				: undefined,
 		spelledSelection: value.spelledSelection,
 		surface: toBaseSurface(value.surface),
 	} as Parameters<BaseLanguageApi<L>["id"]["encode"]["asCsv"]>[0];
 }
 
-function fromBaseSelection<L extends SupportedLanguage>(
-	value: {
-		language: L;
-		spelledSelection: string;
-		surface: ReturnType<BaseLanguageApi<L>["convert"]["lemma"]["toSurface"]>;
-		selectionFeatures?: {
-			coverage?: "Partial";
-			orthography?: "Typo";
-			spelling?: "Variant";
-		};
-	},
-): Selection<L> {
+function fromBaseSelection<L extends SupportedLanguage>(value: {
+	language: L;
+	spelledSelection: string;
+	surface: ReturnType<BaseLanguageApi<L>["convert"]["lemma"]["toSurface"]>;
+	selectionFeatures?: {
+		coverage?: "Partial";
+		orthography?: "Typo";
+		spelling?: "Variant";
+	};
+}): Selection<L> {
 	return {
 		language: value.language,
 		orthographicStatus:
-			value.selectionFeatures?.orthography === "Typo" ? "Typo" : "Standard",
+			value.selectionFeatures?.orthography === "Typo"
+				? "Typo"
+				: "Standard",
 		selectionCoverage:
-			value.selectionFeatures?.coverage === "Partial" ? "Partial" : "Full",
+			value.selectionFeatures?.coverage === "Partial"
+				? "Partial"
+				: "Full",
 		spellingRelation:
 			value.selectionFeatures?.spelling === "Variant"
 				? "Variant"
@@ -201,7 +214,9 @@ function fromBaseSelection<L extends SupportedLanguage>(
 		surface: {
 			...value.surface,
 			surfaceKind:
-				value.surface.surfaceKind === "Inflection" ? "Inflection" : "Lemma",
+				value.surface.surfaceKind === "Inflection"
+					? "Inflection"
+					: "Lemma",
 		} as Surface<L>,
 	};
 }
@@ -234,15 +249,23 @@ function inspectWithLanguage<L extends SupportedLanguage>(
 	};
 }
 
-function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageApi<L> {
+function createLanguageApi<L extends SupportedLanguage>(
+	language: L,
+): LanguageApi<L> {
 	const baseApi = getBaseLanguageApi(language);
 	return {
 		create: baseApi.create,
 		convert: {
 			lemma: {
 				toSurface(lemma) {
-					return fromBaseSurface<L, typeof lemma.lemmaKind, typeof lemma.lemmaSubKind>(
-						baseApi.convert.lemma.toSurface(lemma as unknown as Lemma<L>),
+					return fromBaseSurface<
+						L,
+						typeof lemma.lemmaKind,
+						typeof lemma.lemmaSubKind
+					>(
+						baseApi.convert.lemma.toSurface(
+							lemma as unknown as Lemma<L>,
+						),
 					);
 				},
 			},
@@ -260,7 +283,10 @@ function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageAp
 		},
 		parse: {
 			lemma(input) {
-				return baseApi.parse.lemma(input) as ApiResult<Lemma<L>, ParseError>;
+				return baseApi.parse.lemma(input) as ApiResult<
+					Lemma<L>,
+					ParseError
+				>;
 			},
 			surface(input) {
 				const parsed = baseApi.parse.surface(
@@ -276,7 +302,9 @@ function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageAp
 					data: {
 						...parsed.data,
 						surfaceKind:
-							parsed.data.surfaceKind === "Inflection" ? "Inflection" : "Lemma",
+							parsed.data.surfaceKind === "Inflection"
+								? "Inflection"
+								: "Lemma",
 					} as Surface<L>,
 				};
 			},
@@ -295,7 +323,9 @@ function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageAp
 						parsed.data as {
 							language: L;
 							spelledSelection: string;
-							surface: ReturnType<BaseLanguageApi<L>["convert"]["lemma"]["toSurface"]>;
+							surface: ReturnType<
+								BaseLanguageApi<L>["convert"]["lemma"]["toSurface"]
+							>;
 							selectionFeatures?: {
 								coverage?: "Partial";
 								orthography?: "Typo";
@@ -308,10 +338,9 @@ function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageAp
 		},
 		id: {
 			encode(value) {
-				return baseApi.id.encode.asCsv(toBaseEntityValue(value)) as DumlingId<
-					EntityKind,
-					L
-				>;
+				return baseApi.id.encode.asCsv(
+					toBaseEntityValue(value),
+				) as DumlingId<EntityKind, L>;
 			},
 			decode: {
 				any(id) {
@@ -323,7 +352,10 @@ function createLanguageApi<L extends SupportedLanguage>(language: L): LanguageAp
 }
 
 const languageApis = Object.fromEntries(
-	supportedLanguages.map((language) => [language, createLanguageApi(language)]),
+	supportedLanguages.map((language) => [
+		language,
+		createLanguageApi(language),
+	]),
 ) as DumlingApi;
 
 export const dumling: DumlingApi = {

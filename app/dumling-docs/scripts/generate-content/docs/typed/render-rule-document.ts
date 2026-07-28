@@ -67,7 +67,10 @@ function renderRuleBlock(
 export function renderRuleDocumentBody(
 	document: RuleDocument,
 	config: TypedDocsGenerationConfig,
-	options: Omit<RenderRuleDocumentOptions, "childPages" | "includeTitle"> = {},
+	options: Omit<
+		RenderRuleDocumentOptions,
+		"childPages" | "includeTitle"
+	> = {},
 ): string {
 	const includeExamples = options.includeExamples ?? true;
 	const sections: string[] = [];
@@ -121,7 +124,8 @@ export function renderChildPages(
 	return [
 		`## ${childListHeading(childPages)}`,
 		...childPages.map((page) =>
-			page.description === undefined || page.description.trim().length === 0
+			page.description === undefined ||
+			page.description.trim().length === 0
 				? `- [${page.title}](${page.href})`
 				: `- [${page.title}](${page.href}): ${page.description.trim()}`,
 		),
@@ -133,9 +137,7 @@ export function renderRuleDocument(
 	config: TypedDocsGenerationConfig,
 	options: RenderRuleDocumentOptions = {},
 ): string {
-	const sections = [
-		`# ${options.titleOverride ?? document.meta.title}`,
-	];
+	const sections = [`# ${options.titleOverride ?? document.meta.title}`];
 	const body = renderRuleDocumentBody(document, config, options);
 	if (body.length > 0) {
 		sections.push(body);

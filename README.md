@@ -38,10 +38,12 @@ bun run build
 ```
 
 `bun validate` uses the current directory as its complete scope. It checks
-that package's manifest, formatting, lint, types, tests, unused or missing
-dependencies, and internal dependency architecture. It does not validate
-unrelated siblings. Local `build` (and `run`, when a package defines it)
-gates only on package-mode manifest policy.
+that package's manifest, formatting, import organization, lint, types, tests,
+unused or missing dependencies, and internal dependency architecture. It does
+not validate unrelated siblings. Validation is read-only; use `bun fix` to
+apply Biome formatting, safe fixes, and import organization. Local `build`
+(and `run`, when a package defines it) gates only on package-mode manifest
+policy.
 
 The shared runner provides defaults for each validation stage. A package can
 replace one stage by defining its conventional override script:

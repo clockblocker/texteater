@@ -1,12 +1,12 @@
-import type {
-	RelationsCleanupInfoSlice,
-	StoredLemmaSensesSlice,
-} from "../storage";
 import type { SupportedLanguage } from "../dumling";
 import type {
 	FindStoredLemmaSensesResult,
 	GetInfoForRelationsCleanupResult,
 } from "../public";
+import type {
+	RelationsCleanupInfoSlice,
+	StoredLemmaSensesSlice,
+} from "../storage";
 
 export function lookupStoredLemmaSenses<L extends SupportedLanguage>(
 	slice: StoredLemmaSensesSlice<L>,
@@ -30,7 +30,9 @@ export function lookupRelationsCleanupInfo<L extends SupportedLanguage>(
 	slice: RelationsCleanupInfoSlice<L>,
 ): GetInfoForRelationsCleanupResult<L> {
 	const pendingRefsById = new Map(
-		slice.pendingRefs.map((pendingRef) => [pendingRef.pendingId, pendingRef] as const),
+		slice.pendingRefs.map(
+			(pendingRef) => [pendingRef.pendingId, pendingRef] as const,
+		),
 	);
 
 	return {

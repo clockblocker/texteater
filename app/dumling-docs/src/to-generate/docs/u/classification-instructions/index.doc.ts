@@ -1,7 +1,8 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 
 const document = defineUniversalConceptPage({
-	description: "Language-specific classifier instructions that extend the shared universal tree.",
+	description:
+		"Language-specific classifier instructions that extend the shared universal tree.",
 	family: "scope",
 	order: 20000,
 	subject: "classification-instructions",

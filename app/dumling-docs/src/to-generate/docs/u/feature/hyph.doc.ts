@@ -1,6 +1,6 @@
-import { attestation as twentyFirstHyphenatedOrdinal } from "../../../attestations/en/selection/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
-import { attestation as unPrefixPartialSelection } from "../../../attestations/en/selection/That_answer_was_unbelievable/That_answer_was_[un]believable.ts";
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
+import { attestation as unPrefixPartialSelection } from "../../../attestations/en/selection/That_answer_was_unbelievable/That_answer_was_[un]believable.ts";
+import { attestation as twentyFirstHyphenatedOrdinal } from "../../../attestations/en/selection/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Hyph feature.",

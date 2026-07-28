@@ -10,5 +10,17 @@
 			"!!public/nav.json",
 			"!!src/generated"
 		]
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.astro"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnusedImports": "off"
+					}
+				}
+			}
+		}
+	]
 }

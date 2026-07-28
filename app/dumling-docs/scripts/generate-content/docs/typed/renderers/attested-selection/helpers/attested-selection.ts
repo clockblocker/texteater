@@ -22,7 +22,9 @@ export function hrefForAttestedSelection(
 export function withLinkedSelectionSpan(
 	attestedSelection: AttestedSelection,
 ): string {
-	const sentenceMarkdown = asSingleLineSentence(attestedSelection.sentenceMarkdown);
+	const sentenceMarkdown = asSingleLineSentence(
+		attestedSelection.sentenceMarkdown,
+	);
 	const href = hrefForAttestedSelection(attestedSelection);
 
 	return sentenceMarkdown.replace(

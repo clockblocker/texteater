@@ -1,6 +1,6 @@
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 export async function temporaryRepository(): Promise<string> {
 	const root = await mkdtemp(join(tmpdir(), "textfresser-tooling-"));

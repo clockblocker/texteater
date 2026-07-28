@@ -1,7 +1,4 @@
-import type {
-	EntityValue,
-	SupportedLanguage,
-} from "dumling/types";
+import type { EntityValue, SupportedLanguage } from "dumling/types";
 
 export interface Frontmatter {
 	description?: string;

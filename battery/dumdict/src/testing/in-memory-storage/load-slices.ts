@@ -55,7 +55,8 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 	request: LoadNewNoteContextRequest<L>,
 ): NewNoteSlice<L> {
 	const draftLemmaId = makeDumlingIdFor(state.language, request.draft.lemma);
-	const existingLemma = state.findStoredNoteByLemmaId(draftLemmaId)?.lemmaEntry;
+	const existingLemma =
+		state.findStoredNoteByLemmaId(draftLemmaId)?.lemmaEntry;
 	const matchingPendingId = derivePendingLemmaId({
 		language: state.language,
 		canonicalLemma: request.draft.lemma.canonicalLemma,
@@ -106,7 +107,9 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 			.map((surfaceId) => state.findStoredSurfaceById(surfaceId))
 			.filter((surface) => surface !== undefined),
 		explicitExistingRelationTargets: explicitExistingRelationTargetIds
-			.map((lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry)
+			.map(
+				(lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry,
+			)
 			.filter((lemmaEntry) => lemmaEntry !== undefined),
 		existingPendingRefsForProposedPendingTargets: proposedPendingTargetIds
 			.map((pendingId) => state.findStoredPendingRefById(pendingId))
@@ -116,7 +119,8 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 		incomingPendingSourceLemmas: incomingPendingRelations
 			.map(
 				(relation) =>
-					state.findStoredNoteByLemmaId(relation.sourceLemmaId)?.lemmaEntry,
+					state.findStoredNoteByLemmaId(relation.sourceLemmaId)
+						?.lemmaEntry,
 			)
 			.filter((lemmaEntry) => lemmaEntry !== undefined),
 	};
@@ -126,14 +130,13 @@ export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
 	request: GetInfoForRelationsCleanupStorageRequest<L>,
 ): RelationsCleanupInfoSlice<L> {
-	const pendingRefs = state.storedPendingRefs.filter(
-		(pendingRef) =>
-			samePendingLemmaIdentity(pendingRef, {
-				language: state.language,
-				canonicalLemma: request.canonicalLemma,
-				lemmaKind: pendingRef.lemmaKind,
-				lemmaSubKind: pendingRef.lemmaSubKind,
-			}),
+	const pendingRefs = state.storedPendingRefs.filter((pendingRef) =>
+		samePendingLemmaIdentity(pendingRef, {
+			language: state.language,
+			canonicalLemma: request.canonicalLemma,
+			lemmaKind: pendingRef.lemmaKind,
+			lemmaSubKind: pendingRef.lemmaSubKind,
+		}),
 	);
 	const pendingIds = new Set(pendingRefs.map(({ pendingId }) => pendingId));
 
@@ -141,22 +144,21 @@ export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 		revision: state.currentRevision(),
 		canonicalLemma: request.canonicalLemma,
 		candidateLemmas: state.storedNotes
-			.filter(
-				({ lemmaEntry }) =>
-					samePendingLemmaIdentity(
-						{
-							language: state.language,
-							canonicalLemma: lemmaEntry.lemma.canonicalLemma,
-							lemmaKind: lemmaEntry.lemma.lemmaKind,
-							lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
-						},
-						{
-							language: state.language,
-							canonicalLemma: request.canonicalLemma,
-							lemmaKind: lemmaEntry.lemma.lemmaKind,
-							lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
-						},
-					),
+			.filter(({ lemmaEntry }) =>
+				samePendingLemmaIdentity(
+					{
+						language: state.language,
+						canonicalLemma: lemmaEntry.lemma.canonicalLemma,
+						lemmaKind: lemmaEntry.lemma.lemmaKind,
+						lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
+					},
+					{
+						language: state.language,
+						canonicalLemma: request.canonicalLemma,
+						lemmaKind: lemmaEntry.lemma.lemmaKind,
+						lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
+					},
+				),
 			)
 			.map(({ lemmaEntry }) => lemmaEntry),
 		pendingRefs,
@@ -188,7 +190,9 @@ export function loadCleanupRelationsContext<L extends SupportedLanguage>(
 			.allPendingRelations()
 			.filter((relation) => pendingIds.has(relation.targetPendingId)),
 		targetLemmas: Array.from(targetLemmaIds)
-			.map((lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry)
+			.map(
+				(lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry,
+			)
 			.filter((lemmaEntry) => lemmaEntry !== undefined),
 	};
 }

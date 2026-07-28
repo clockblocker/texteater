@@ -1,6 +1,6 @@
-import { createDumdictService } from "../service/create-dumdict-service";
-import type { DumdictService } from "../public";
 import type { SupportedLanguage } from "../dumling";
+import type { DumdictService } from "../public";
+import { createDumdictService } from "../service/create-dumdict-service";
 import {
 	createInMemoryTestStorage,
 	type InMemoryTestStorage,

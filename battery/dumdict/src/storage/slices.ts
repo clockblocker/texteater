@@ -7,12 +7,8 @@ import type {
 	StoreRevision,
 	SurfaceEntry,
 } from "../dto";
-import type { DumlingId } from "../dumling";
-import type {
-	CleanupRelationResolution,
-	LemmaDescription,
-} from "../public";
-import type { SupportedLanguage } from "../dumling";
+import type { DumlingId, SupportedLanguage } from "../dumling";
+import type { CleanupRelationResolution, LemmaDescription } from "../public";
 
 export type FindStoredLemmaSensesStorageRequest<L extends SupportedLanguage> = {
 	lemmaDescription: LemmaDescription<L>;
@@ -64,9 +60,7 @@ export type RelationsCleanupInfoSlice<L extends SupportedLanguage> = {
 	pendingRelations: PendingLemmaRelation<L>[];
 };
 
-export type LoadCleanupRelationsContextRequest<
-	L extends SupportedLanguage,
-> = {
+export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
 	resolutions: CleanupRelationResolution<L>[];
 };
 

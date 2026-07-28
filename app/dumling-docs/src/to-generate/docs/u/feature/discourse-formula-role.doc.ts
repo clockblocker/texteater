@@ -31,11 +31,7 @@ It is a Dumling-specific feature with ten public values and belongs in \`lemma.i
 
 If \`lemma.inherentFeatures.discourseFormulaRole\` is absent or \`undefined\`, the discourse formula is treated as having no recorded role in the current payload.
 `,
-	examples: [
-		gutenTagGreeting,
-		tutMirLeidApology,
-		noWorriesAcknowledgment,
-	],
+	examples: [gutenTagGreeting, tutMirLeidApology, noWorriesAcknowledgment],
 	subsections: [
 		{
 			heading: "Use",

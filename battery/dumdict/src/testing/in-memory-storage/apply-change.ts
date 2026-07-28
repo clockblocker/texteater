@@ -51,10 +51,13 @@ export function applyChange<L extends SupportedLanguage>(
 			storedNote.pendingRelations = storedNote.pendingRelations.filter(
 				(relation) =>
 					!(
-						relation.sourceLemmaId === change.relation.sourceLemmaId &&
-						relation.relationFamily === change.relation.relationFamily &&
+						relation.sourceLemmaId ===
+							change.relation.sourceLemmaId &&
+						relation.relationFamily ===
+							change.relation.relationFamily &&
 						relation.relation === change.relation.relation &&
-						relation.targetPendingId === change.relation.targetPendingId
+						relation.targetPendingId ===
+							change.relation.targetPendingId
 					),
 			);
 			return true;
@@ -99,12 +102,11 @@ function applyLemmaPatch<L extends SupportedLanguage>(
 				}
 			} else {
 				const existingTargets =
-					storedNote.lemmaEntry.morphologicalRelations[op.relation] ?? [];
+					storedNote.lemmaEntry.morphologicalRelations[op.relation] ??
+					[];
 				if (!existingTargets.includes(op.targetLemmaId)) {
-					storedNote.lemmaEntry.morphologicalRelations[op.relation] = [
-						...existingTargets,
-						op.targetLemmaId,
-					];
+					storedNote.lemmaEntry.morphologicalRelations[op.relation] =
+						[...existingTargets, op.targetLemmaId];
 				}
 			}
 		}

@@ -11,7 +11,8 @@ export function createDumdictService<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 ): DumdictService<L> {
 	return {
-		findStoredLemmaSenses: (request) => findStoredLemmaSenses(options, request),
+		findStoredLemmaSenses: (request) =>
+			findStoredLemmaSenses(options, request),
 		addAttestation: (request) => addAttestation(options, request),
 		addNewNote: (request) => addNewNote(options, request),
 		getInfoForRelationsCleanup: (request) =>

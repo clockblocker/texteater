@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
 	createDumdictService,
-	type DumdictStoragePort,
 	englishSwimLemma,
 	englishSwimLemmaSurface,
 	enSerializedNotes,
@@ -34,7 +33,9 @@ describe("configured service", () => {
 			)?.lemmaEntry;
 
 		expect(result.status).toBe("applied");
-		expect(storedSwimNote?.attestations).toContain("They swim every morning.");
+		expect(storedSwimNote?.attestations).toContain(
+			"They swim every morning.",
+		);
 		expect(storedSwimNote?.notes).toBe(
 			"Move through water by moving the body.",
 		);
@@ -66,12 +67,15 @@ describe("configured service", () => {
 
 		const storedSwimNote = storage
 			.loadAll()
-			.find(({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim");
+			.find(
+				({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim",
+			);
 
 		expect(result.status).toBe("applied");
 		expect(storedSwimNote?.ownedSurfaceEntries).toHaveLength(1);
 		expect(
-			storedSwimNote?.ownedSurfaceEntries[0]?.surface.normalizedFullSurface,
+			storedSwimNote?.ownedSurfaceEntries[0]?.surface
+				.normalizedFullSurface,
 		).toBe("swim");
 		expect(storedSwimNote?.ownedSurfaceEntries[0]?.notes).toBe(
 			"Plain present form.",

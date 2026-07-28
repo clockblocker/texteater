@@ -190,7 +190,9 @@ describe("configured service", () => {
 
 		expect(result.candidateLemmaIds).toEqual([swimId]);
 		expect(result.pendingRelations).toHaveLength(1);
-		expect(result.pendingRelations[0]?.pendingRef.canonicalLemma).toBe("swim");
+		expect(result.pendingRelations[0]?.pendingRef.canonicalLemma).toBe(
+			"swim",
+		);
 	});
 
 	test("getInfoForRelationsCleanup returns candidates when no pending relations exist", async () => {
@@ -269,12 +271,16 @@ describe("configured service", () => {
 		expect(result.pendingRelations).toHaveLength(2);
 		expect(
 			new Set(
-				result.pendingRelations.map(({ sourceLemmaId }) => sourceLemmaId),
+				result.pendingRelations.map(
+					({ sourceLemmaId }) => sourceLemmaId,
+				),
 			),
 		).toEqual(new Set([englishWalkLemmaId, englishRunLemmaId]));
 		expect(
 			new Set(
-				result.pendingRelations.map(({ pendingRef }) => pendingRef.pendingId),
+				result.pendingRelations.map(
+					({ pendingRef }) => pendingRef.pendingId,
+				),
 			).size,
 		).toBe(1);
 	});
@@ -288,7 +294,10 @@ describe("configured service", () => {
 			sourceLemma: englishRunLemma,
 			targetPendingLemma: englishSwimNounLemma,
 		});
-		const { dict } = getBootedUpDumdict("en", [walkToVerbSwim, runToNounSwim]);
+		const { dict } = getBootedUpDumdict("en", [
+			walkToVerbSwim,
+			runToNounSwim,
+		]);
 
 		const result = await dict.getInfoForRelationsCleanup({
 			canonicalLemma: "swim",
@@ -297,7 +306,9 @@ describe("configured service", () => {
 		expect(result.pendingRelations).toHaveLength(2);
 		expect(
 			new Set(
-				result.pendingRelations.map(({ pendingRef }) => pendingRef.pendingId),
+				result.pendingRelations.map(
+					({ pendingRef }) => pendingRef.pendingId,
+				),
 			).size,
 		).toBe(2);
 	});
@@ -482,7 +493,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: swimId,
 				},
 			],
@@ -503,7 +515,9 @@ describe("configured service", () => {
 			englishWalkLemmaId,
 		);
 		expect(
-			storage.loadAll().flatMap(({ pendingRelations }) => pendingRelations),
+			storage
+				.loadAll()
+				.flatMap(({ pendingRelations }) => pendingRelations),
 		).toHaveLength(0);
 		expect(
 			storage.loadAll().flatMap(({ pendingRefs }) => pendingRefs ?? []),
@@ -580,7 +594,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 				},
 			],
 		});
@@ -594,7 +609,9 @@ describe("configured service", () => {
 		expect(result.status).toBe("applied");
 		expect(storedWalk?.lexicalRelations.nearSynonym ?? []).toHaveLength(0);
 		expect(
-			storage.loadAll().flatMap(({ pendingRelations }) => pendingRelations),
+			storage
+				.loadAll()
+				.flatMap(({ pendingRelations }) => pendingRelations),
 		).toHaveLength(0);
 	});
 
@@ -625,7 +642,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: swimId,
 				},
 			],
@@ -662,7 +680,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: englishWalkLemmaId,
 				},
 			],
@@ -693,7 +712,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: englishRunLemmaId,
 				},
 			],
@@ -741,7 +761,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: swimId,
 				},
 			],
@@ -756,7 +777,9 @@ describe("configured service", () => {
 		expect(result.status).toBe("applied");
 		expect(storedWalk?.lexicalRelations.nearSynonym).toEqual([swimId]);
 		expect(
-			storage.loadAll().flatMap(({ pendingRelations }) => pendingRelations),
+			storage
+				.loadAll()
+				.flatMap(({ pendingRelations }) => pendingRelations),
 		).toHaveLength(0);
 	});
 
@@ -775,7 +798,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: englishRunLemmaId,
 				},
 			],
@@ -812,7 +836,8 @@ describe("configured service", () => {
 				{
 					sourceLemmaId: englishWalkLemmaId,
 					relation: "nearSynonym",
-					targetPendingId: info.pendingRelations[0]!.pendingRef.pendingId,
+					targetPendingId:
+						info.pendingRelations[0]!.pendingRef.pendingId,
 					targetLemmaId: swimId,
 				},
 			],

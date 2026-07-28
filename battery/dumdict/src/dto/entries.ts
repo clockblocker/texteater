@@ -19,4 +19,3 @@ export type SurfaceEntry<L extends SupportedLanguage> = {
 	attestations: string[];
 	notes: string;
 };
-

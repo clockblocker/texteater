@@ -1,10 +1,10 @@
 import type {
+	DumlingId,
 	LemmaKindFor,
 	LemmaSubKindFor,
 	SupportedLanguage,
 } from "../dumling";
 import type { LexicalRelation, MorphologicalRelation } from "./relations";
-import type { DumlingId } from "../dumling";
 
 export type PendingLemmaId<L extends SupportedLanguage> = string & {
 	readonly __pendingLemmaIdBrand?: unique symbol;
@@ -18,9 +18,10 @@ export type PendingLemmaIdentity<L extends SupportedLanguage> = {
 	lemmaSubKind: LemmaSubKindFor<L, LemmaKindFor<L>>;
 };
 
-export type PendingLemmaRef<L extends SupportedLanguage> = PendingLemmaIdentity<L> & {
-	pendingId: PendingLemmaId<L>;
-};
+export type PendingLemmaRef<L extends SupportedLanguage> =
+	PendingLemmaIdentity<L> & {
+		pendingId: PendingLemmaId<L>;
+	};
 
 export type PendingLemmaRelation<L extends SupportedLanguage> =
 	| {

@@ -26,15 +26,19 @@ import {
 	enSerializedNotesWithPendingSwimRelation,
 	pendingSwimLemmaId,
 } from "../../fixtures/en-notes";
-import {
-	hebrewKatavLemmaId,
-	heSerializedNotes,
-} from "../../fixtures/he-notes";
+import { hebrewKatavLemmaId, heSerializedNotes } from "../../fixtures/he-notes";
 
+export type {
+	DumdictStoragePort,
+	Lemma,
+	LemmaEntry,
+	StoreRevision,
+	SurfaceEntry,
+};
 export {
 	createDumdictService,
-	derivePendingLemmaId,
 	DumdictLanguageMismatchError,
+	derivePendingLemmaId,
 	deSerializedNotes,
 	englishRunLemma,
 	englishRunLemmaId,
@@ -51,13 +55,6 @@ export {
 	heSerializedNotes,
 	makeDumlingIdFor,
 	pendingSwimLemmaId,
-};
-export type {
-	DumdictStoragePort,
-	Lemma,
-	LemmaEntry,
-	StoreRevision,
-	SurfaceEntry,
 };
 export const englishWalkEntry = (): LemmaEntry<"en"> => {
 	const note = enSerializedNotes[0];

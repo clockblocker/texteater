@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as entlangPostposition } from "../../../attestations/de/selection/Wir_liefen_den_Fluss_entlang/Wir_liefen_den_Fluss_[entlang].ts";
-import { attestation as wegenPreposition } from "../../../attestations/de/selection/Wegen_dem_Regen_kamen_wir_zu_spät/[Wegen]_dem_Regen_kamen_wir_zu_spät.ts";
 import { attestation as zuPreposition } from "../../../attestations/de/selection/Und_Minz_und_Maunz_die_schreiengar_jämmerlich_zu_zweien/Und_Minz_und_Maunz_die_schreiengar_jämmerlich_[zu]_zweien.ts";
+import { attestation as wegenPreposition } from "../../../attestations/de/selection/Wegen_dem_Regen_kamen_wir_zu_spät/[Wegen]_dem_Regen_kamen_wir_zu_spät.ts";
+import { attestation as entlangPostposition } from "../../../attestations/de/selection/Wir_liefen_den_Fluss_entlang/Wir_liefen_den_Fluss_[entlang].ts";
 
 const document = defineUniversalConceptPage({
 	description:

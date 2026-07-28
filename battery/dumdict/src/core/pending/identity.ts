@@ -26,7 +26,9 @@ function makePendingIdentityLemma<L extends SupportedLanguage>(
 	});
 
 	if (!parsed.success) {
-		throw new Error(`Invalid pending lemma identity: ${parsed.error.message}`);
+		throw new Error(
+			`Invalid pending lemma identity: ${parsed.error.message}`,
+		);
 	}
 
 	return parsed.data as Lemma<L>;

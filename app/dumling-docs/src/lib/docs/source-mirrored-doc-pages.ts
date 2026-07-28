@@ -40,10 +40,7 @@ function toMeta(options: {
 	};
 }
 
-function leafLabel(
-	leaf: LegacyMirroredOptions["leaf"],
-	title: string,
-): string {
+function leafLabel(leaf: LegacyMirroredOptions["leaf"], title: string): string {
 	if (typeof leaf === "string") {
 		return leaf;
 	}

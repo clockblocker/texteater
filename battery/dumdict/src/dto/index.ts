@@ -4,4 +4,3 @@ export * from "./notes";
 export * from "./pending";
 export * from "./relations";
 export * from "./revisions";
-

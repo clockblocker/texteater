@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { runAll, type Command } from "../lib/process";
+import { type Command, runAll } from "../lib/process";
 
 test("validation aggregation attempts every command after failures", async () => {
 	const commands: Command[] = ["first", "second", "third"].map((label) => ({

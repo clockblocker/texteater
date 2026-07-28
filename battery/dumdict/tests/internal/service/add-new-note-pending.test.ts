@@ -52,7 +52,9 @@ describe("configured service", () => {
 		expect(result.status).toBe("applied");
 		expect(pendingRefs).toHaveLength(2);
 		expect(
-			pendingRefs.every(({ pendingId }) => pendingId === pendingSwimLemmaId),
+			pendingRefs.every(
+				({ pendingId }) => pendingId === pendingSwimLemmaId,
+			),
 		).toBe(true);
 		expect(pendingRelations).toContainEqual({
 			sourceLemmaId: englishRunLemmaId,
@@ -94,7 +96,9 @@ describe("configured service", () => {
 		);
 
 		expect(result.status).toBe("applied");
-		expect(storedWalk?.lexicalRelations.nearSynonym).toContain(storedSwim?.id);
+		expect(storedWalk?.lexicalRelations.nearSynonym).toContain(
+			storedSwim?.id,
+		);
 		expect(storedSwim?.lexicalRelations.nearSynonym).toContain(
 			englishWalkLemmaId,
 		);

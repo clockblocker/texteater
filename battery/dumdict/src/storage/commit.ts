@@ -1,12 +1,12 @@
+import type { PlannedChangeOp } from "../core/planned-changes";
 import type { StoreRevision } from "../dto";
 import type { SupportedLanguage } from "../dumling";
-import type { PlannedChangeOp } from "../core/planned-changes";
 
-export type { ChangePrecondition } from "../core/preconditions";
 export type {
 	LemmaPatchOp,
 	PlannedChangeOp,
 } from "../core/planned-changes";
+export type { ChangePrecondition } from "../core/preconditions";
 
 export type CommitChangesRequest<L extends SupportedLanguage> = {
 	baseRevision: StoreRevision;

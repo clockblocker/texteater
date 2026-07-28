@@ -1,7 +1,7 @@
+import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
+import { attestation as derArticle } from "../../../attestations/de/selection/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
 import { attestation as bateiConstructState } from "../../../attestations/he/selection/בתי_הספר_נסגרו_מוקדם/[בתי]_הספר_נסגרו_מוקדם.ts";
 import { attestation as habayitPartialSelection } from "../../../attestations/he/selection/חזרתי_לבית/חזרתי_ל[בית].ts";
-import { attestation as derArticle } from "../../../attestations/de/selection/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
-import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Definite feature.",

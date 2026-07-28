@@ -37,9 +37,7 @@ export type AddNewNoteRequest<L extends SupportedLanguage> = {
 	draft: DumdictEntryDraft<L>;
 };
 
-export type GetInfoForRelationsCleanupRequest<
-	L extends SupportedLanguage,
-> = {
+export type GetInfoForRelationsCleanupRequest<L extends SupportedLanguage> = {
 	canonicalLemma: string;
 };
 
@@ -60,7 +58,9 @@ export type DumdictService<L extends SupportedLanguage> = {
 		request: FindStoredLemmaSensesRequest<L>,
 	): Promise<FindStoredLemmaSensesResult<L>>;
 
-	addAttestation(request: AddAttestationRequest<L>): Promise<MutationResult<L>>;
+	addAttestation(
+		request: AddAttestationRequest<L>,
+	): Promise<MutationResult<L>>;
 
 	addNewNote(request: AddNewNoteRequest<L>): Promise<MutationResult<L>>;
 

@@ -1,8 +1,8 @@
+import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { attestation as gehImperative } from "../../../attestations/de/selection/Geh_bitte_nicht_ohne_Jacke_raus/[Geh]_bitte_nicht_ohne_Jacke_raus.ts";
-import { attestation as boUImperative } from "../../../attestations/he/selection/בואו_לכאן/[בואו]_לכאן.ts";
 import { attestation as doesIndicative } from "../../../attestations/en/selection/Does_this_key_open_the_archive/[Does]_this_key_open_the_archive.ts";
 import { attestation as wereSubjunctive } from "../../../attestations/en/selection/If_I_were_you_I_would_wait/If_I_[were]_you_I_would_wait.ts";
-import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
+import { attestation as boUImperative } from "../../../attestations/he/selection/בואו_לכאן/[בואו]_לכאן.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Mood feature.",

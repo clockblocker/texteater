@@ -1,7 +1,7 @@
 import type { PlanMutationResult } from "../core/plan-mutation";
 import type { SupportedLanguage } from "../dumling";
-import type { CommitChangesResult } from "../storage";
 import type { MutationResult } from "../public";
+import type { CommitChangesResult } from "../storage";
 
 export function mutationResultFromCommit<L extends SupportedLanguage>(
 	plan: PlanMutationResult<L>,

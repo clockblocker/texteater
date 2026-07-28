@@ -7,9 +7,7 @@ import type {
 } from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
 
-export async function getInfoForRelationsCleanup<
-	L extends SupportedLanguage,
->(
+export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Promise<GetInfoForRelationsCleanupResult<L>> {

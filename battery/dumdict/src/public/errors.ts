@@ -25,4 +25,3 @@ export class DumdictNotImplementedError extends Error {
 		this.name = "DumdictNotImplementedError";
 	}
 }
-

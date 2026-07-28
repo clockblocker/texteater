@@ -12,8 +12,7 @@ const { currentHref, description, navItems, title } = Astro.props;
 
 function isDescendantRoute(ancestorRouteId: string, routeId: string): boolean {
 	return (
-		ancestorRouteId !== "index" &&
-		routeId.startsWith(`${ancestorRouteId}/`)
+		ancestorRouteId !== "index" && routeId.startsWith(`${ancestorRouteId}/`)
 	);
 }
 
@@ -40,10 +39,16 @@ function directChildrenFor(parent: NavItem, items: NavItem[]): NavItem[] {
 }
 
 function descendantsFor(parent: NavItem, items: NavItem[]): NavItem[] {
-	return items.filter((item) => isDescendantRoute(parent.routeId, item.routeId));
+	return items.filter((item) =>
+		isDescendantRoute(parent.routeId, item.routeId),
+	);
 }
 
-function currentItemIsWithin(item: NavItem, items: NavItem[], href: string): boolean {
+function currentItemIsWithin(
+	item: NavItem,
+	items: NavItem[],
+	href: string,
+): boolean {
 	return (
 		item.href === href ||
 		descendantsFor(item, items).some((candidate) => candidate.href === href)

@@ -89,7 +89,10 @@ describe("configured service", () => {
 					{
 						relationFamily: "lexical",
 						relation: "nearSynonym",
-						target: { kind: "existing", lemmaId: englishWalkLemmaId },
+						target: {
+							kind: "existing",
+							lemmaId: englishWalkLemmaId,
+						},
 					},
 				],
 			},
@@ -107,7 +110,9 @@ describe("configured service", () => {
 		expect(storedSwim?.lexicalRelations.nearSynonym).toContain(
 			englishWalkLemmaId,
 		);
-		expect(storedWalk?.lexicalRelations.nearSynonym).toContain(storedSwim?.id);
+		expect(storedWalk?.lexicalRelations.nearSynonym).toContain(
+			storedSwim?.id,
+		);
 	});
 
 	test("addNewNote creates pending refs and pending relations for missing relation targets", async () => {
@@ -146,7 +151,9 @@ describe("configured service", () => {
 
 		const storedSwim = storage
 			.loadAll()
-			.find(({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim");
+			.find(
+				({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim",
+			);
 
 		expect(result.status).toBe("applied");
 		if (!storedSwim) {
@@ -190,7 +197,9 @@ describe("configured service", () => {
 
 		const storedSwim = storage
 			.loadAll()
-			.find(({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim");
+			.find(
+				({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim",
+			);
 
 		expect(result.status).toBe("applied");
 		expect(storedSwim?.ownedSurfaceEntries).toHaveLength(1);

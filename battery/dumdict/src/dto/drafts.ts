@@ -20,4 +20,3 @@ export type DumdictEntryDraft<L extends SupportedLanguage> = {
 	ownedSurfaces?: OwnedSurfaceDraft<L>[];
 	relations?: ProposedRelation<L>[];
 };
-

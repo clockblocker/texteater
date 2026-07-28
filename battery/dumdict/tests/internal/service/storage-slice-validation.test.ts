@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
 	createDumdictService,
-	type DumdictStoragePort,
 	derivePendingLemmaId,
 	englishRunLemmaId,
 	englishSwimLemma,
@@ -351,8 +350,7 @@ describe("configured service", () => {
 							morphologicalRelations: {},
 							attestedTranslations: ["walk"],
 							attestations: ["They walk home together."],
-							notes:
-								"Move at a regular pace by lifting and setting down each foot.",
+							notes: "Move at a regular pace by lifting and setting down each foot.",
 						},
 					],
 				};

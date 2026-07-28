@@ -31,7 +31,10 @@ describe("configured service", () => {
 						notes: "Move through water by moving the body.",
 					},
 					preconditions: [
-						{ kind: "revisionMatches", revision: "mem-1" as StoreRevision },
+						{
+							kind: "revisionMatches",
+							revision: "mem-1" as StoreRevision,
+						},
 						{ kind: "lemmaMissing", lemmaId: swimLemmaId },
 					],
 				},
@@ -46,7 +49,10 @@ describe("configured service", () => {
 						notes: "Plain present form.",
 					},
 					preconditions: [
-						{ kind: "revisionMatches", revision: "mem-1" as StoreRevision },
+						{
+							kind: "revisionMatches",
+							revision: "mem-1" as StoreRevision,
+						},
 						{ kind: "lemmaExists", lemmaId: englishRunLemmaId },
 						{ kind: "surfaceMissing", surfaceId: swimSurfaceId },
 					],
@@ -59,7 +65,9 @@ describe("configured service", () => {
 			code: "semanticPreconditionFailed",
 		});
 		expect(
-			storage.loadAll().some(({ lemmaEntry }) => lemmaEntry.id === swimLemmaId),
+			storage
+				.loadAll()
+				.some(({ lemmaEntry }) => lemmaEntry.id === swimLemmaId),
 		).toBe(false);
 	});
 
@@ -79,7 +87,10 @@ describe("configured service", () => {
 						},
 					],
 					preconditions: [
-						{ kind: "revisionMatches", revision: "mem-1" as StoreRevision },
+						{
+							kind: "revisionMatches",
+							revision: "mem-1" as StoreRevision,
+						},
 						{ kind: "lemmaExists", lemmaId: englishWalkLemmaId },
 						{
 							kind: "lemmaAttestationMissing",
@@ -104,7 +115,10 @@ describe("configured service", () => {
 						},
 					],
 					preconditions: [
-						{ kind: "revisionMatches", revision: "mem-1" as StoreRevision },
+						{
+							kind: "revisionMatches",
+							revision: "mem-1" as StoreRevision,
+						},
 						{ kind: "lemmaExists", lemmaId: englishWalkLemmaId },
 						{
 							kind: "lemmaAttestationMissing",

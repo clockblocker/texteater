@@ -34,7 +34,9 @@ export type DumdictStoragePort<L extends SupportedLanguage> = {
 		request: LoadCleanupRelationsContextRequest<L>,
 	): Promise<CleanupRelationsSlice<L>>;
 
-	commitChanges(request: CommitChangesRequest<L>): Promise<CommitChangesResult>;
+	commitChanges(
+		request: CommitChangesRequest<L>,
+	): Promise<CommitChangesResult>;
 };
 
 export type DumdictServiceConfig<L extends SupportedLanguage> = {

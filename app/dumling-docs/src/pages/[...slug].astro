@@ -1,7 +1,11 @@
 ---
 import { getCollection, render } from "astro:content";
 import DocsLayout from "../layouts/DocsLayout.astro";
-import { hrefForPage, navItemsForDocs, routeIdForPage } from "../lib/navigation";
+import {
+	hrefForPage,
+	navItemsForDocs,
+	routeIdForPage,
+} from "../lib/navigation";
 
 export async function getStaticPaths() {
 	const docs = await getCollection("docs");

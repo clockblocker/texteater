@@ -2,7 +2,6 @@ import { describe, expect, test } from "bun:test";
 import {
 	createDumdictService,
 	DumdictLanguageMismatchError,
-	type DumdictStoragePort,
 	englishRunLemma,
 	englishSwimLemma,
 	englishSwimLemmaSurface,
@@ -137,7 +136,10 @@ describe("configured service", () => {
 						{
 							relationFamily: "lexical",
 							relation: "nearSynonym",
-							target: { kind: "existing", lemmaId: germanLemmaId },
+							target: {
+								kind: "existing",
+								lemmaId: germanLemmaId,
+							},
 						},
 					],
 				},

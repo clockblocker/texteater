@@ -12,8 +12,8 @@ import { commitChanges } from "./commit";
 import {
 	findStoredLemmaSenses,
 	getInfoForRelationsCleanup,
-	loadLemmaForPatch,
 	loadCleanupRelationsContext,
+	loadLemmaForPatch,
 	loadNewNoteContext,
 } from "./load-slices";
 import { createInMemoryStorageState, type InMemoryTestStorage } from "./state";
@@ -65,7 +65,8 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 				...note,
 				pendingRefs: state.storedPendingRefs.filter((ref) =>
 					note.pendingRelations.some(
-						(relation) => relation.targetPendingId === ref.pendingId,
+						(relation) =>
+							relation.targetPendingId === ref.pendingId,
 					),
 				),
 			}));

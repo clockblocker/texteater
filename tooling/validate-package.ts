@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { biomeFormatAndAssistArgs } from "./lib/biome-validation";
 import { validateManifestPolicy } from "./lib/manifest-policy";
 import { type Command, reportFailures, runAll } from "./lib/process";
 import { conventionalArchitectureInputs } from "./lib/source-import-policy";
@@ -44,7 +45,13 @@ function overrideOrDefault(stage: string, defaultArgs: string[]): Command {
 }
 
 const commands = [
-	overrideOrDefault("format", ["bun", tools.biome, "format", "."]),
+	overrideOrDefault(
+		"format",
+		biomeFormatAndAssistArgs({
+			biomePath: tools.biome,
+			scope: ".",
+		}),
+	),
 	overrideOrDefault("lint", ["bun", tools.biome, "lint", "."]),
 	overrideOrDefault("types", [
 		"bun",

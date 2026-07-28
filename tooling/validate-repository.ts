@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { biomeFormatAndAssistArgs } from "./lib/biome-validation";
 import { reportFailures, runAll } from "./lib/process";
 import { toolPaths } from "./lib/tools";
 import { discoverWorkspaces, findRepositoryRoot } from "./lib/workspaces";
@@ -30,16 +31,13 @@ const commands = [
 		label: "tooling tests",
 	},
 	{
-		args: [
-			"bun",
-			tools.biome,
-			"format",
-			"--config-path",
-			join(repositoryRoot, "tooling/biome/base.json"),
-			join(repositoryRoot, "tooling"),
-		],
+		args: biomeFormatAndAssistArgs({
+			biomePath: tools.biome,
+			configPath: join(repositoryRoot, "tooling/biome/base.json"),
+			scope: join(repositoryRoot, "tooling"),
+		}),
 		cwd: repositoryRoot,
-		label: "tooling format",
+		label: "tooling format and assists",
 	},
 	{
 		args: [

@@ -57,4 +57,3 @@ export type PendingRelationTargetRef<L extends SupportedLanguage> = {
 		import("../dumling").LemmaKindFor<L>
 	>;
 };
-

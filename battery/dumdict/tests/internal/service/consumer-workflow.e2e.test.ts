@@ -104,7 +104,10 @@ async function addAttestationAfterConsumerLookup({
 	attestation: string;
 }) {
 	const lookup = await lookupForSelection(dict, selection);
-	const picked = perfectLlmChoosesStoredSense(lookup, selection.surface.lemma);
+	const picked = perfectLlmChoosesStoredSense(
+		lookup,
+		selection.surface.lemma,
+	);
 	if (!picked) {
 		throw new Error("Expected consumer LLM to pick an existing sense.");
 	}
@@ -128,7 +131,10 @@ async function addNewNoteAfterConsumerLookup({
 	draft: DumdictEntryDraft<"en">;
 }) {
 	const lookup = await lookupForSelection(dict, selection);
-	const picked = perfectLlmChoosesStoredSense(lookup, selection.surface.lemma);
+	const picked = perfectLlmChoosesStoredSense(
+		lookup,
+		selection.surface.lemma,
+	);
 	if (picked) {
 		throw new Error("Expected consumer LLM to request a new sense.");
 	}
@@ -160,14 +166,21 @@ describe("consumer e2e workflow", () => {
 			attestation: "The bank approved the loan.",
 		});
 
-		const bankFinancialId = makeDumlingIdFor("en", englishBankFinancialLemma);
+		const bankFinancialId = makeDumlingIdFor(
+			"en",
+			englishBankFinancialLemma,
+		);
 		const bankRiverId = makeDumlingIdFor("en", englishBankRiverLemma);
 		const storedFinancialBank = storage
 			.loadAll()
-			.find(({ lemmaEntry }) => lemmaEntry.id === bankFinancialId)?.lemmaEntry;
+			.find(
+				({ lemmaEntry }) => lemmaEntry.id === bankFinancialId,
+			)?.lemmaEntry;
 		const storedRiverBank = storage
 			.loadAll()
-			.find(({ lemmaEntry }) => lemmaEntry.id === bankRiverId)?.lemmaEntry;
+			.find(
+				({ lemmaEntry }) => lemmaEntry.id === bankRiverId,
+			)?.lemmaEntry;
 
 		expect(lookup.candidates.map(({ lemmaId }) => lemmaId).sort()).toEqual(
 			[bankFinancialId, bankRiverId].sort(),
@@ -218,7 +231,10 @@ describe("consumer e2e workflow", () => {
 			},
 		});
 
-		const plantOrganismId = makeDumlingIdFor("en", englishPlantOrganismLemma);
+		const plantOrganismId = makeDumlingIdFor(
+			"en",
+			englishPlantOrganismLemma,
+		);
 		const plantFactoryId = makeDumlingIdFor("en", englishPlantFactoryLemma);
 		const postCreateLookup = await lookupForSelection(
 			dict,
@@ -232,8 +248,8 @@ describe("consumer e2e workflow", () => {
 		expect(
 			storage
 				.loadAll()
-				.find(({ lemmaEntry }) => lemmaEntry.id === plantFactoryId)?.lemmaEntry
-				.attestations,
+				.find(({ lemmaEntry }) => lemmaEntry.id === plantFactoryId)
+				?.lemmaEntry.attestations,
 		).toContain("The auto plant added a night shift.");
 		expect(
 			postCreateLookup.candidates.map(({ lemmaId }) => lemmaId).sort(),
@@ -282,7 +298,9 @@ describe("consumer e2e workflow", () => {
 		expect(createdPhrasalVerb.lookup.candidates).toHaveLength(0);
 		expect(createdPhrasalVerb.mutation.status).toBe("applied");
 		expect(
-			storedAfterPhrasalVerb.flatMap(({ pendingRefs }) => pendingRefs ?? []),
+			storedAfterPhrasalVerb.flatMap(
+				({ pendingRefs }) => pendingRefs ?? [],
+			),
 		).toContainEqual({
 			pendingId: pendingLookId,
 			language: "en",
@@ -334,8 +352,12 @@ describe("consumer e2e workflow", () => {
 		expect(
 			storedAfterLook.flatMap(({ pendingRelations }) => pendingRelations),
 		).toHaveLength(0);
-		expect(lookContextAfterFill.matchingPendingRefsForNewLemma).toHaveLength(0);
-		expect(storedLookUp?.morphologicalRelations.consistsOf).toContain(lookId);
+		expect(
+			lookContextAfterFill.matchingPendingRefsForNewLemma,
+		).toHaveLength(0);
+		expect(storedLookUp?.morphologicalRelations.consistsOf).toContain(
+			lookId,
+		);
 		expect(storedLook?.morphologicalRelations.usedIn).toContain(lookUpId);
 	});
 
@@ -366,7 +388,9 @@ describe("consumer e2e workflow", () => {
 			nounLookup.candidates.map(({ note }) => note.lemma.lemmaSubKind),
 		).toEqual(["NOUN"]);
 		expect(
-			adjectiveLookup.candidates.map(({ note }) => note.lemma.lemmaSubKind),
+			adjectiveLookup.candidates.map(
+				({ note }) => note.lemma.lemmaSubKind,
+			),
 		).toEqual(["ADJ"]);
 	});
 });

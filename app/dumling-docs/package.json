@@ -8,6 +8,7 @@
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run astro:build && bun run scripts/flatten-html-routes.ts",
 		"check": "bun ../../node_modules/@typescript/native/bin/tsc -p tsconfig.json --noEmit",
 		"dev": "bun run generate:content && astro dev",
+		"fix": "bun run --silent biome check --write .",
 		"generate:attestations": "bun run scripts/generate-attestations.ts",
 		"generate:content": "bun run scripts/generate-content.ts",
 		"generate:docs": "bun run scripts/generate-docs.ts",

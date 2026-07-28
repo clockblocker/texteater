@@ -15,10 +15,7 @@ import {
 } from "../../../../src/lib/docs/document-shapes.ts";
 import { sourceTypedDocsDir } from "../../shared/paths";
 import { parseDocPageMeta } from "../metadata";
-import {
-	normalizeRouteId,
-	routeIdForGeneratedDocSourcePath,
-} from "../routes";
+import { normalizeRouteId, routeIdForGeneratedDocSourcePath } from "../routes";
 
 export type RuleBlock = {
 	body?: string;
@@ -183,7 +180,9 @@ function parseBaseDocumentFields(
 							parseRuleExample(example, sourcePath),
 						)
 					: (() => {
-							throw new Error(`${sourcePath} must export examples as an array.`);
+							throw new Error(
+								`${sourcePath} must export examples as an array.`,
+							);
 						})(),
 		meta: parseDocPageMeta(value.meta, sourcePath),
 		subsections: parseRuleBlocks(value.subsections, sourcePath),
@@ -314,13 +313,16 @@ function loadLanguageOverlayRouteInfo(sourcePath: string): {
 
 	const lang = (segments[1] ?? "").trim();
 	if (lang.length === 0) {
-		throw new Error(`${sourcePath} could not derive a language from its source path.`);
+		throw new Error(
+			`${sourcePath} could not derive a language from its source path.`,
+		);
 	}
 
 	const routeId = normalizeRouteId([lang, ...segments.slice(2)].join("/"));
 	return {
 		lang,
-		relativeConceptPath: routeId === lang ? "" : routeId.slice(lang.length + 1),
+		relativeConceptPath:
+			routeId === lang ? "" : routeId.slice(lang.length + 1),
 		routeId,
 	};
 }
@@ -348,7 +350,9 @@ function typedDocSourceForDocument(
 	}
 
 	if (!isLanguageOverlayPageDocument(document)) {
-		throw new Error(`${sourcePath} could not be classified as a typed doc source.`);
+		throw new Error(
+			`${sourcePath} could not be classified as a typed doc source.`,
+		);
 	}
 
 	return {

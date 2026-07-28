@@ -8,4 +8,3 @@ export type LemmaNoteForDisambiguation<L extends SupportedLanguage> = {
 	notes: string;
 	relations?: RelationNotesForDisambiguation<L>;
 };
-
