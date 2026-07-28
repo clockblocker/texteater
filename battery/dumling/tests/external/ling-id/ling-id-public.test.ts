@@ -126,7 +126,11 @@ describe("ID helpers", () => {
 		);
 		const variantId = dumling.en.id.encode.asBase64Url({
 			...englishWalkStandardFullSelection,
-			selectionFeatures: { spelling: "Variant" },
+			selectionFeatures: {
+				spelling: "Variant",
+				coverage: null,
+				orthography: null,
+			},
 		});
 
 		expect(canonicalId).not.toBe(variantId);

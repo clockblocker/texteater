@@ -7,6 +7,8 @@ export const englishWalkCitationSurface = {
 	normalizedFullSurface: "walk",
 	surfaceKind: "Citation",
 	lemma: englishWalkLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
@@ -14,11 +16,18 @@ export const englishWalkInflectionSurface = {
 	inflectionalFeatures: {
 		tense: "Pres",
 		verbForm: "Fin",
+
+		voice: null,
+		person: null,
+		number: null,
+		mood: null,
 	},
 	language: "en",
 	normalizedFullSurface: "walk",
 	surfaceKind: "Inflection",
 	lemma: englishWalkLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
@@ -26,9 +35,16 @@ export const englishGiveUpInflectionSurface = {
 	inflectionalFeatures: {
 		tense: "Past",
 		verbForm: "Fin",
+
+		voice: null,
+		person: null,
+		number: null,
+		mood: null,
 	},
 	language: "en",
 	normalizedFullSurface: "gave up",
 	surfaceKind: "Inflection",
 	lemma: englishGiveUpLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;

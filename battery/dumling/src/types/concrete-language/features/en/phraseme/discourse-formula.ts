@@ -2,7 +2,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnDiscourseFormulaPhrasemeFeatures = {
 	inherent: {
-		discourseFormulaRole?: AbstractFeatureValue<"discourseFormulaRole">;
+		discourseFormulaRole: AbstractFeatureValue<"discourseFormulaRole"> | null;
 	};
 	inflectional: Record<never, never>;
 };

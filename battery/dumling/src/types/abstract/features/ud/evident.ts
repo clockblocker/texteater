@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const evidentValues = ["Fh", "Nfh"] as const;
 

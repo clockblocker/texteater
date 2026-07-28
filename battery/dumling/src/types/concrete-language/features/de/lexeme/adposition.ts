@@ -2,15 +2,15 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeAdpositionFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		adpType?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		adpType: Extract<
 			AbstractFeatureValue<"adpType">,
 			"Circ" | "Post" | "Prep"
-		>;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "ADV" | "SCONJ">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		governedCase?: AbstractFeatureValue<"governedCase">;
-		partType?: Extract<AbstractFeatureValue<"partType">, "Vbp">;
+		> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "ADV" | "SCONJ"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		governedCase: AbstractFeatureValue<"governedCase"> | null;
+		partType: Extract<AbstractFeatureValue<"partType">, "Vbp"> | null;
 	};
 	inflectional: Record<never, never>;
 };

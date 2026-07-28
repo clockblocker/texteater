@@ -2,8 +2,8 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type HeAdpositionFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		case?: Extract<AbstractFeatureValue<"case">, "Acc" | "Gen">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		case: Extract<AbstractFeatureValue<"case">, "Acc" | "Gen"> | null;
 	};
 	inflectional: Record<never, never>;
 };

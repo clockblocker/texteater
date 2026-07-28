@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { EnAdjectiveFeatures } from "../../../../../types/concrete-language/features/en/lexeme/adjective.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
@@ -6,33 +6,25 @@ import {
 	requireNonEmptyFeatureObject,
 } from "../../../../shared/feature-helpers.js";
 
-export const enAdjectiveFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({
-			abbr: abstractFeatureAtomSchemas.abbr,
-			extPos: abstractFeatureAtomSchemas.extPos.extract([
-				"ADP",
-				"ADV",
-				"SCONJ",
+export const enAdjectiveFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({
+		abbr: abstractFeatureAtomSchemas.abbr,
+		extPos: abstractFeatureAtomSchemas.extPos.extract([
+			"ADP",
+			"ADV",
+			"SCONJ",
+		]),
+		numForm: abstractFeatureAtomSchemas.numForm.extract(["Combi", "Word"]),
+		numType: abstractFeatureAtomSchemas.numType.extract(["Frac", "Ord"]),
+		style: abstractFeatureAtomSchemas.style.extract(["Expr"]),
+	}),
+	inflectional: requireNonEmptyFeatureObject(
+		buildOptionalFeatureObjectSchema({
+			degree: abstractFeatureAtomSchemas.degree.extract([
+				"Cmp",
+				"Pos",
+				"Sup",
 			]),
-			numForm: abstractFeatureAtomSchemas.numForm.extract([
-				"Combi",
-				"Word",
-			]),
-			numType: abstractFeatureAtomSchemas.numType.extract([
-				"Frac",
-				"Ord",
-			]),
-			style: abstractFeatureAtomSchemas.style.extract(["Expr"]),
 		}),
-		inflectional: requireNonEmptyFeatureObject(
-			buildOptionalFeatureObjectSchema({
-				degree: abstractFeatureAtomSchemas.degree.extract([
-					"Cmp",
-					"Pos",
-					"Sup",
-				]),
-			}),
-		),
-	})
-	.strict() satisfies z.ZodSchema<EnAdjectiveFeatures>;
+	),
+}) satisfies z.ZodSchema<EnAdjectiveFeatures>;

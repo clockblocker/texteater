@@ -4,7 +4,7 @@ import type {
 	LemmaKindFor,
 	LemmaSubKindFor,
 } from "dumling/types";
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
 import {
 	normalizedLowercaseStringSchema,
@@ -12,21 +12,19 @@ import {
 } from "./normalization.js";
 import type { RawLanguageEntitySchemaTree } from "./schema-helper-types.js";
 
-type SchemaOutput<TSchema extends z.ZodTypeAny> = z.output<TSchema>;
-type SchemaTuple = readonly [z.ZodTypeAny, ...z.ZodTypeAny[]];
+type SchemaOutput<TSchema extends z.ZodType> = z.output<TSchema>;
+type SchemaTuple = readonly [z.ZodType, ...z.ZodType[]];
 
-function optionalNonEmptyObjectSchema<TShape extends z.ZodRawShape>(
+function nullableNonEmptyObjectSchema<TShape extends z.ZodRawShape>(
 	shape: TShape,
-): z.ZodOptional<z.ZodEffects<z.ZodObject<TShape>>> {
+) {
 	return z
-		.object(shape)
-		.strict()
+		.strictObject(shape)
 		.refine(
-			(value) =>
-				Object.values(value).some((entry) => entry !== undefined),
+			(value) => Object.values(value).some((entry) => entry !== null),
 			"Feature bag must contain at least one marked value",
 		)
-		.optional();
+		.nullable();
 }
 
 export function buildLemmaSchema<
@@ -47,16 +45,14 @@ export function buildLemmaSchema<
 	lemmaSubKind: TLemmaSubKind;
 	meaningInEmojis: string;
 }> {
-	return z
-		.object({
-			language: options.languageSchema,
-			canonicalLemma: normalizedLowercaseStringSchema(),
-			lemmaKind: z.literal(options.lemmaKind),
-			lemmaSubKind: z.literal(options.lemmaSubKind),
-			inherentFeatures: options.inherentFeaturesSchema,
-			meaningInEmojis: normalizedStringSchema(),
-		})
-		.strict() as unknown as z.ZodType<{
+	return z.strictObject({
+		language: options.languageSchema,
+		canonicalLemma: normalizedLowercaseStringSchema(),
+		lemmaKind: z.literal(options.lemmaKind),
+		lemmaSubKind: z.literal(options.lemmaSubKind),
+		inherentFeatures: options.inherentFeaturesSchema,
+		meaningInEmojis: normalizedStringSchema(),
+	}) as unknown as z.ZodType<{
 		canonicalLemma: string;
 		inherentFeatures: TInherentFeatures;
 		language: TLanguage;
@@ -77,25 +73,26 @@ export function buildCitationSurfaceSchema<
 	lemma: TLemma;
 	normalizedFullSurface: string;
 	surfaceKind: "Citation";
+	surfaceFeatures: {
+		historicalStatus: "Archaic" | null;
+	} | null;
 }> {
-	return z
-		.object({
-			language: options.languageSchema,
-			normalizedFullSurface: normalizedLowercaseStringSchema(),
-			surfaceKind: z.literal("Citation"),
-			surfaceFeatures: optionalNonEmptyObjectSchema({
-				historicalStatus: z.literal("Archaic").optional(),
-			}),
-			lemma: options.lemmaSchema,
-		})
-		.strict() as unknown as z.ZodType<{
+	return z.strictObject({
+		language: options.languageSchema,
+		normalizedFullSurface: normalizedLowercaseStringSchema(),
+		surfaceKind: z.literal("Citation"),
+		surfaceFeatures: nullableNonEmptyObjectSchema({
+			historicalStatus: z.literal("Archaic").nullable(),
+		}),
+		lemma: options.lemmaSchema,
+	}) as unknown as z.ZodType<{
 		language: TLanguage;
 		lemma: TLemma;
 		normalizedFullSurface: string;
 		surfaceKind: "Citation";
-		surfaceFeatures?: {
-			historicalStatus?: "Archaic";
-		};
+		surfaceFeatures: {
+			historicalStatus: "Archaic" | null;
+		} | null;
 	}>;
 }
 
@@ -113,27 +110,28 @@ export function buildInflectionSurfaceSchema<
 	lemma: TLemma;
 	normalizedFullSurface: string;
 	surfaceKind: "Inflection";
+	surfaceFeatures: {
+		historicalStatus: "Archaic" | null;
+	} | null;
 }> {
-	return z
-		.object({
-			language: options.languageSchema,
-			normalizedFullSurface: normalizedLowercaseStringSchema(),
-			surfaceKind: z.literal("Inflection"),
-			surfaceFeatures: optionalNonEmptyObjectSchema({
-				historicalStatus: z.literal("Archaic").optional(),
-			}),
-			lemma: options.lemmaSchema,
-			inflectionalFeatures: options.inflectionalFeaturesSchema,
-		})
-		.strict() as unknown as z.ZodType<{
+	return z.strictObject({
+		language: options.languageSchema,
+		normalizedFullSurface: normalizedLowercaseStringSchema(),
+		surfaceKind: z.literal("Inflection"),
+		surfaceFeatures: nullableNonEmptyObjectSchema({
+			historicalStatus: z.literal("Archaic").nullable(),
+		}),
+		lemma: options.lemmaSchema,
+		inflectionalFeatures: options.inflectionalFeaturesSchema,
+	}) as unknown as z.ZodType<{
 		inflectionalFeatures: TInflectionalFeatures;
 		language: TLanguage;
 		lemma: TLemma;
 		normalizedFullSurface: string;
 		surfaceKind: "Inflection";
-		surfaceFeatures?: {
-			historicalStatus?: "Archaic";
-		};
+		surfaceFeatures: {
+			historicalStatus: "Archaic" | null;
+		} | null;
 	}>;
 }
 
@@ -145,32 +143,30 @@ export function buildSelectionSchema<
 	surfaceSchema: z.ZodType<TSurface>;
 }): z.ZodType<{
 	language: TLanguage;
-	selectionFeatures?: {
-		coverage?: "Partial";
-		orthography?: "Typo";
-		spelling?: "Variant";
-	};
+	selectionFeatures: {
+		coverage: "Partial" | null;
+		orthography: "Typo" | null;
+		spelling: "Variant" | null;
+	} | null;
 	spelledSelection: string;
 	surface: TSurface;
 }> {
-	return z
-		.object({
-			language: options.languageSchema,
-			selectionFeatures: optionalNonEmptyObjectSchema({
-				coverage: z.literal("Partial").optional(),
-				orthography: z.literal("Typo").optional(),
-				spelling: z.literal("Variant").optional(),
-			}),
-			spelledSelection: normalizedStringSchema(),
-			surface: options.surfaceSchema,
-		})
-		.strict() as unknown as z.ZodType<{
+	return z.strictObject({
+		language: options.languageSchema,
+		selectionFeatures: nullableNonEmptyObjectSchema({
+			coverage: z.literal("Partial").nullable(),
+			orthography: z.literal("Typo").nullable(),
+			spelling: z.literal("Variant").nullable(),
+		}),
+		spelledSelection: normalizedStringSchema(),
+		surface: options.surfaceSchema,
+	}) as unknown as z.ZodType<{
 		language: TLanguage;
-		selectionFeatures?: {
-			coverage?: "Partial";
-			orthography?: "Typo";
-			spelling?: "Variant";
-		};
+		selectionFeatures: {
+			coverage: "Partial" | null;
+			orthography: "Typo" | null;
+			spelling: "Variant" | null;
+		} | null;
 		spelledSelection: string;
 		surface: TSurface;
 	}>;
@@ -184,7 +180,7 @@ export function buildUnionSchema<TSchemas extends SchemaTuple>(
 	}
 
 	return z.union(
-		schemas as unknown as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]],
+		schemas as unknown as [z.ZodType, z.ZodType, ...z.ZodType[]],
 	) as unknown as z.ZodType<SchemaOutput<TSchemas[number]>>;
 }
 
@@ -204,21 +200,23 @@ type FeatureSchemaTree<L extends ConcreteLanguage> = {
 };
 
 type LeafSchemas = {
-	lemma: z.ZodTypeAny;
-	citationSelection: z.ZodTypeAny;
-	citationSurface: z.ZodTypeAny;
-	inflectionSelection?: z.ZodTypeAny;
-	inflectionSurface?: z.ZodTypeAny;
+	lemma: z.ZodType;
+	citationSelection: z.ZodType;
+	citationSurface: z.ZodType;
+	inflectionSelection?: z.ZodType;
+	inflectionSurface?: z.ZodType;
 };
 
 type MutableSchemaTree = {
-	Lemma: Record<string, Record<string, z.ZodTypeAny>>;
-	Selection: Record<string, Record<string, Record<string, z.ZodTypeAny>>>;
-	Surface: Record<string, Record<string, Record<string, z.ZodTypeAny>>>;
+	Lemma: Record<string, Record<string, z.ZodType>>;
+	Selection: Record<string, Record<string, Record<string, z.ZodType>>>;
+	Surface: Record<string, Record<string, Record<string, z.ZodType>>>;
 };
 
-function hasInflectionSurface(inflectionalFeaturesSchema: z.ZodTypeAny) {
-	return !inflectionalFeaturesSchema.safeParse({}).success;
+function hasInflectionSurface(inflectionalFeaturesSchema: z.ZodType) {
+	return (
+		inflectionalFeaturesSchema.meta()?.dumlingHasInflectionSurface === true
+	);
 }
 
 function buildLeafSchemas<

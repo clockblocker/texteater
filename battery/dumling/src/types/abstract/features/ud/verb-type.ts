@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const verbTypeValues = ["Aux", "Cop", "Light", "Mod", "Quasi"] as const;
 

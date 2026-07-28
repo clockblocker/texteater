@@ -4,15 +4,18 @@ type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HeNounFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		gender?: FeatureValueSet<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		gender: FeatureValueSet<
 			Extract<AbstractFeatureValue<"gender">, "Fem" | "Masc">
-		>;
+		> | null;
 	};
 	inflectional: {
-		definite?: Extract<AbstractFeatureValue<"definite">, "Cons" | "Def">;
-		number?: FeatureValueSet<
+		definite: Extract<
+			AbstractFeatureValue<"definite">,
+			"Cons" | "Def"
+		> | null;
+		number: FeatureValueSet<
 			Extract<AbstractFeatureValue<"number">, "Dual" | "Plur">
-		>;
+		> | null;
 	};
 };

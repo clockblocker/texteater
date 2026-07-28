@@ -1,3 +1,6 @@
+import type { ZodType } from "zod";
+import { canonicalizeNullableProperties } from "../../../src/operations/shared/canonicalize-nullable";
+import { schemasFor } from "../../../src/schema";
 import type {
 	InherentFeaturesFor,
 	Lemma,
@@ -26,7 +29,7 @@ function makeLemma<
 	canonicalLemma: string,
 	options: BuilderOptions<L, LK, LSK> = {},
 ): Lemma<L, LK, LSK> {
-	return {
+	const rawLemma = {
 		language,
 		canonicalLemma,
 		lemmaKind,
@@ -34,7 +37,14 @@ function makeLemma<
 		inherentFeatures: (options.inherentFeatures ??
 			{}) as InherentFeaturesFor<L, LK, LSK>,
 		meaningInEmojis: options.meaningInEmojis ?? "🔤",
-	} as Lemma<L, LK, LSK>;
+	};
+	const languageSchemas = Reflect.get(schemasFor, language);
+	const lemmaSchemas = Reflect.get(languageSchemas.entity.Lemma, lemmaKind);
+	const getSchema = Reflect.get(lemmaSchemas, lemmaSubKind) as () => ZodType;
+	const schema = getSchema();
+	return schema.parse(
+		canonicalizeNullableProperties(schema, rawLemma),
+	) as Lemma<L, LK, LSK>;
 }
 
 export function makeLexemeSurfaceReference<
@@ -54,6 +64,7 @@ export function makeLexemeSurfaceReference<
 			canonicalLemma,
 			options,
 		),
+		surfaceFeatures: null,
 	};
 }
 
@@ -74,6 +85,7 @@ export function makeMorphemeSurfaceReference<
 			canonicalLemma,
 			options,
 		),
+		surfaceFeatures: null,
 	};
 }
 
@@ -94,6 +106,7 @@ export function makePhrasemeSurfaceReference<
 			canonicalLemma,
 			options,
 		),
+		surfaceFeatures: null,
 	};
 }
 
@@ -114,5 +127,6 @@ export function makeConstructionSurfaceReference<
 			canonicalLemma,
 			options,
 		),
+		surfaceFeatures: null,
 	};
 }

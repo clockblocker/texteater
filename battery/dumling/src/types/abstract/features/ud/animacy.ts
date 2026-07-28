@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const animacyValues = ["Anim", "Hum", "Inan", "Nhum"] as const;
 

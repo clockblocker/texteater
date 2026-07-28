@@ -1,4 +1,4 @@
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import { buildUnionSchema } from "../schemas/shared/builders.js";
 import type {
 	Lemma,
@@ -7,6 +7,7 @@ import type {
 	Surface,
 } from "../types/public-types.js";
 import type { LanguageApi } from "./api-shape.js";
+import { canonicalizeNullableProperties } from "./shared/canonicalize-nullable.js";
 import { buildConvertOperations } from "./shared/convert.js";
 import { buildDescribeOperations } from "./shared/describe.js";
 import { extractLemma } from "./shared/entity-accessors.js";
@@ -26,7 +27,7 @@ type RuntimeSchemaSet<L extends SupportedLanguage> = {
 	surface: z.ZodType<Surface<L>>;
 };
 
-type SchemaGetter = () => z.ZodTypeAny;
+type SchemaGetter = () => z.ZodType;
 
 function collectSchemaGetters(value: unknown): SchemaGetter[] {
 	if (typeof value === "function") {
@@ -40,13 +41,13 @@ function collectSchemaGetters(value: unknown): SchemaGetter[] {
 	return Object.values(value).flatMap(collectSchemaGetters);
 }
 
-function buildRuntimeUnion(value: unknown): z.ZodTypeAny {
+function buildRuntimeUnion(value: unknown): z.ZodType {
 	const schemas = collectSchemaGetters(value).map((getSchema) => getSchema());
 	if (schemas.length === 0) {
 		throw new Error("Cannot build runtime schema union from an empty tree");
 	}
 
-	return buildUnionSchema(schemas as [z.ZodTypeAny, ...z.ZodTypeAny[]]);
+	return buildUnionSchema(schemas as [z.ZodType, ...z.ZodType[]]);
 }
 
 function buildRuntimeSchemas<L extends SupportedLanguage>(
@@ -132,13 +133,25 @@ function buildParseOperations<L extends SupportedLanguage>(
 ): LanguageApi<L>["parse"] {
 	return {
 		lemma(input: unknown) {
-			return parseWithSchema(language, runtimeSchemas.lemma, input);
+			return parseWithSchema(
+				language,
+				runtimeSchemas.lemma,
+				canonicalizeNullableProperties(runtimeSchemas.lemma, input),
+			);
 		},
 		surface(input: unknown) {
-			return parseWithSchema(language, runtimeSchemas.surface, input);
+			return parseWithSchema(
+				language,
+				runtimeSchemas.surface,
+				canonicalizeNullableProperties(runtimeSchemas.surface, input),
+			);
 		},
 		selection(input: unknown) {
-			return parseWithSchema(language, runtimeSchemas.selection, input);
+			return parseWithSchema(
+				language,
+				runtimeSchemas.selection,
+				canonicalizeNullableProperties(runtimeSchemas.selection, input),
+			);
 		},
 	};
 }

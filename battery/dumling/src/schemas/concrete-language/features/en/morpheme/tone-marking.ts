@@ -1,10 +1,8 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { EnToneMarkingMorphemeFeatures } from "../../../../../types/concrete-language/features/en/morpheme/tone-marking.js";
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
-export const enToneMarkingMorphemeFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({}),
-		inflectional: buildOptionalFeatureObjectSchema({}),
-	})
-	.strict() satisfies z.ZodSchema<EnToneMarkingMorphemeFeatures>;
+export const enToneMarkingMorphemeFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({}),
+	inflectional: buildOptionalFeatureObjectSchema({}),
+}) satisfies z.ZodSchema<EnToneMarkingMorphemeFeatures>;

@@ -2,7 +2,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DePunctuationFeatures = {
 	inherent: {
-		punctType?: AbstractFeatureValue<"punctType">;
+		punctType: AbstractFeatureValue<"punctType"> | null;
 	};
 	inflectional: Record<never, never>;
 };

@@ -11,13 +11,21 @@ export const germanAufJedenFallDiscourseFormulaSelection = {
 		normalizedFullSurface: "auf jeden Fall",
 		surfaceKind: "Citation",
 		lemma: germanAufJedenFallLemma,
+
+		surfaceFeatures: null,
 	},
+
+	selectionFeatures: null,
 } satisfies Selection<"de", "Citation", "Phraseme", "DiscourseFormula">;
 
 // Attestation: "Ich komme auf [jeden Fall] morgen."
 export const germanAufJedenFallPartialSelection = {
 	language: "de",
-	selectionFeatures: { coverage: "Partial" },
+	selectionFeatures: {
+		coverage: "Partial",
+		orthography: null,
+		spelling: null,
+	},
 	spelledSelection: "jeden Fall",
 
 	surface: {
@@ -25,6 +33,8 @@ export const germanAufJedenFallPartialSelection = {
 		normalizedFullSurface: "auf jeden Fall",
 		surfaceKind: "Citation",
 		lemma: germanAufJedenFallLemma,
+
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "DiscourseFormula">;
 
@@ -38,5 +48,9 @@ export const germanBVGAbbreviationSelection = {
 		normalizedFullSurface: "BVG",
 		surfaceKind: "Citation",
 		lemma: germanBVGLemma,
+
+		surfaceFeatures: null,
 	},
+
+	selectionFeatures: null,
 } satisfies Selection<"de", "Citation", "Lexeme", "PROPN">;

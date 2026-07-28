@@ -11,19 +11,15 @@ import type {
 	AbstractInherentFeatures,
 } from "./features/features-catalog.js";
 
-type RequireAtLeastOne<T extends object> = {
-	[K in keyof T]-?: Required<Pick<T, K>> & Partial<Omit<T, K>>;
-}[keyof T];
+export type SelectionFeatures = {
+	orthography: "Typo" | null;
+	coverage: "Partial" | null;
+	spelling: "Variant" | null;
+};
 
-export type SelectionFeatures = RequireAtLeastOne<{
-	orthography?: "Typo";
-	coverage?: "Partial";
-	spelling?: "Variant";
-}>;
-
-export type SurfaceFeatures = RequireAtLeastOne<{
-	historicalStatus?: "Archaic";
-}>;
+export type SurfaceFeatures = {
+	historicalStatus: "Archaic" | null;
+};
 
 export type AbstractLemmaSubKindFor<LK extends LemmaKind> = LK extends "Lexeme"
 	? Pos
@@ -43,7 +39,7 @@ export type AbstractInherentFeaturesFor<
 export type AbstractInflectionalFeaturesFor<
 	LK extends LemmaKind = LemmaKind,
 	_LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
-> = RequireAtLeastOne<AbstractInflectionalFeatures>;
+> = AbstractInflectionalFeatures;
 
 export type AbstractLemma<
 	L extends string = string,
@@ -79,7 +75,7 @@ export type AbstractSurface<
 	language: L;
 	normalizedFullSurface: string;
 	surfaceKind: SK;
-	surfaceFeatures?: SurfaceFeatures;
+	surfaceFeatures: SurfaceFeatures | null;
 	lemma: AbstractLemma<L, LK, LSK>;
 } & AbstractSurfacePayload<SK, LK, LSK>;
 
@@ -90,7 +86,7 @@ export type AbstractSelection<
 	LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
 > = {
 	language: L;
-	selectionFeatures?: SelectionFeatures;
+	selectionFeatures: SelectionFeatures | null;
 	spelledSelection: string;
 	surface: AbstractSurface<L, SK, LK, LSK>;
 };

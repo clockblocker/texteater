@@ -7,4 +7,6 @@ export const germanHausCitationSurface = {
 	normalizedFullSurface: "Haus",
 	surfaceKind: "Citation",
 	lemma: germanHausLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;

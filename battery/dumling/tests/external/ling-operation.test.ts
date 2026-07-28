@@ -38,6 +38,8 @@ describe("operations", () => {
 			spelledSelection: "Walk",
 
 			surface: englishWalkInflectionSurface,
+
+			selectionFeatures: null,
 		});
 	});
 

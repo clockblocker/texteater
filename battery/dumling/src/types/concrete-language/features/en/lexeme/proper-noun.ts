@@ -2,14 +2,14 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnProperNounFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "PROPN">;
-		style?: Extract<AbstractFeatureValue<"style">, "Expr">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "PROPN"> | null;
+		style: Extract<AbstractFeatureValue<"style">, "Expr"> | null;
 	};
 	inflectional: {
-		number?: Extract<
+		number: Extract<
 			AbstractFeatureValue<"number">,
 			"Plur" | "Ptan" | "Sing"
-		>;
+		> | null;
 	};
 };

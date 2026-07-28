@@ -2,13 +2,16 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnNumeralFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "PROPN">;
-		numForm?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "PROPN"> | null;
+		numForm: Extract<
 			AbstractFeatureValue<"numForm">,
 			"Digit" | "Roman" | "Word"
-		>;
-		numType?: Extract<AbstractFeatureValue<"numType">, "Card" | "Frac">;
+		> | null;
+		numType: Extract<
+			AbstractFeatureValue<"numType">,
+			"Card" | "Frac"
+		> | null;
 	};
 	inflectional: Record<never, never>;
 };

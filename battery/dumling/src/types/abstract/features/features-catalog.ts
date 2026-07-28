@@ -1,4 +1,4 @@
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import { DiscourseFormulaRole } from "./custom/discourse-formula-role.js";
 import { GovernedCase } from "./custom/governed-case.js";
 import { HasGovPrep } from "./custom/governed-preposition.js";
@@ -45,7 +45,7 @@ import { VerbType } from "./ud/verb-type.js";
 import { Voice } from "./ud/voice.js";
 
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
-type SchemaOutput<TSchema extends z.ZodTypeAny> = z.output<TSchema>;
+type SchemaOutput<TSchema extends z.ZodType> = z.output<TSchema>;
 
 export const abstractFeatureCatalog = {
 	abbr: Abbr,

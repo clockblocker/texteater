@@ -30,7 +30,7 @@ describe("public API usage", () => {
 				canonicalLemma: "see",
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "NOUN",
-				inherentFeatures: { gender: "Masc" },
+				inherentFeatures: { gender: "Masc", hyph: null },
 				meaningInEmojis: "🌊",
 			}),
 		);

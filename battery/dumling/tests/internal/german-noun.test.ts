@@ -16,6 +16,7 @@ describe("German noun schemas", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
 				language: "de",
+				selectionFeatures: null,
 				spelledSelection: "kindern",
 
 				surface: {

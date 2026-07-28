@@ -7,6 +7,7 @@ describe("German remaining POS schemas", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
 				language: "de",
+				selectionFeatures: null,
 				spelledSelection: "kleiner",
 
 				surface: {
@@ -31,7 +32,12 @@ describe("German remaining POS schemas", () => {
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "ADP",
 				inherentFeatures: {
+					abbr: null,
+					adpType: null,
+					extPos: null,
+					foreign: null,
 					governedCase: "Dat",
+					partType: null,
 				},
 				meaningInEmojis: "➡️",
 			}).success,
@@ -40,6 +46,7 @@ describe("German remaining POS schemas", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.DET().safeParse({
 				language: "de",
+				selectionFeatures: null,
 				spelledSelection: "dieser",
 
 				surface: {
@@ -49,8 +56,11 @@ describe("German remaining POS schemas", () => {
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Nom",
+						degree: null,
 						gender: "Masc",
+						"gender[psor]": null,
 						number: "Sing",
+						"number[psor]": null,
 					},
 				},
 			}).success,
@@ -63,7 +73,10 @@ describe("German remaining POS schemas", () => {
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "X",
 				inherentFeatures: {
+					abbr: null,
 					foreign: "Yes",
+					hyph: null,
+					numType: null,
 				},
 				meaningInEmojis: "❓",
 			}).success,

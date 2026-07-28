@@ -335,7 +335,7 @@ type PlaceholderSurface<
 	language: L;
 	normalizedFullSurface: string;
 	surfaceKind: SK;
-	surfaceFeatures?: SurfaceFeatures;
+	surfaceFeatures: SurfaceFeatures | null;
 	lemma: Lemma<L, LK, LSK>;
 } & (SK extends "Inflection"
 	? {
@@ -367,7 +367,7 @@ type PlaceholderSelection<
 	LSK extends LemmaSubKindFor<L, LK>,
 > = {
 	language: L;
-	selectionFeatures?: SelectionFeatures;
+	selectionFeatures: SelectionFeatures | null;
 	spelledSelection: string;
 	surface: Surface<L, SK, LK, LSK>;
 };

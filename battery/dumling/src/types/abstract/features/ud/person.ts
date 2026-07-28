@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const personValues = ["0", "1", "2", "3", "4"] as const;
 

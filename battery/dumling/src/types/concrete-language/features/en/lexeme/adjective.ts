@@ -2,16 +2,25 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnAdjectiveFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<
 			AbstractFeatureValue<"extPos">,
 			"ADP" | "ADV" | "SCONJ"
-		>;
-		numForm?: Extract<AbstractFeatureValue<"numForm">, "Combi" | "Word">;
-		numType?: Extract<AbstractFeatureValue<"numType">, "Frac" | "Ord">;
-		style?: Extract<AbstractFeatureValue<"style">, "Expr">;
+		> | null;
+		numForm: Extract<
+			AbstractFeatureValue<"numForm">,
+			"Combi" | "Word"
+		> | null;
+		numType: Extract<
+			AbstractFeatureValue<"numType">,
+			"Frac" | "Ord"
+		> | null;
+		style: Extract<AbstractFeatureValue<"style">, "Expr"> | null;
 	};
 	inflectional: {
-		degree?: Extract<AbstractFeatureValue<"degree">, "Cmp" | "Pos" | "Sup">;
+		degree: Extract<
+			AbstractFeatureValue<"degree">,
+			"Cmp" | "Pos" | "Sup"
+		> | null;
 	};
 };

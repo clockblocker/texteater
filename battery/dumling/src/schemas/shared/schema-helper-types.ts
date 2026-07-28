@@ -8,7 +8,7 @@ import type {
 	Surface,
 	SurfaceKindFor,
 } from "dumling/types";
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import type { Descriptor } from "../../types/descriptor.js";
 
 type SchemaGetter<T> = () => z.ZodType<T>;

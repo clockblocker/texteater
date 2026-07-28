@@ -7,6 +7,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "smaller",
 
 				surface: {
@@ -24,6 +25,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "small",
 
 				surface: {
@@ -41,6 +43,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "scissors",
 
 				surface: {
@@ -77,8 +80,11 @@ describe("English schema specificity", () => {
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "VERB",
 				inherentFeatures: {
+					abbr: null,
+					extPos: null,
 					hasGovPrep: "to",
 					phrasal: "Yes",
+					style: null,
 				},
 				meaningInEmojis: "👀",
 			}).success,
@@ -100,6 +106,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.VERB().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "washing",
 
 				surface: {
@@ -108,7 +115,12 @@ describe("English schema specificity", () => {
 					normalizedFullSurface: "washing",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
+						mood: null,
+						number: null,
+						person: null,
+						tense: null,
 						verbForm: "Ger",
+						voice: null,
 					},
 				},
 			}).success,
@@ -117,6 +129,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.VERB().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "washed",
 
 				surface: {
@@ -136,6 +149,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.PRON().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "him",
 
 				surface: {
@@ -145,6 +159,9 @@ describe("English schema specificity", () => {
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Acc",
+						gender: null,
+						number: null,
+						reflex: null,
 					},
 				},
 			}).success,
@@ -158,6 +175,7 @@ describe("English schema specificity", () => {
 				lemmaSubKind: "DET",
 				inherentFeatures: {
 					abbr: "Yes",
+					definite: null,
 					extPos: "ADV",
 					numForm: "Word",
 					numType: "Frac",
@@ -171,6 +189,7 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.SYM().safeParse({
 				language: "en",
+				selectionFeatures: null,
 				spelledSelection: "%",
 
 				surface: {

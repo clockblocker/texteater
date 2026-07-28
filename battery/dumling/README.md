@@ -62,6 +62,7 @@ const seeLemma = dumling.de.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		gender: "Masc",
+		hyph: null,
 	},
 	meaningInEmojis: "🌊",
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
@@ -73,6 +74,7 @@ The `Surface` is the normalized full form that the note belongs to:
 const seeSurface = dumling.de.create.surface.citation({
 	lemma: seeLemma,
 	normalizedFullSurface: "See",
+	surfaceFeatures: null,
 }) satisfies Surface<
 	"de",
 	"Citation",
@@ -87,6 +89,7 @@ The `Selection` is the exact observed highlight in the learner's text:
 const seeSelection = dumling.de.create.selection({
 	spelledSelection: "See",
 	surface: seeSurface,
+	selectionFeatures: null,
 }) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 ```
 
@@ -125,6 +128,7 @@ const lemma = packageDumling.de.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		gender: "Masc",
+		hyph: null,
 	},
 	meaningInEmojis: "🌊",
 }) satisfies PackageLemma<"de", "Lexeme", "NOUN">;
@@ -133,6 +137,7 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.create.surface.citation({
 		lemma,
 		normalizedFullSurface: "See",
+		surfaceFeatures: null,
 	});
 const selection: PackageSelection<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toSelection(surface, {

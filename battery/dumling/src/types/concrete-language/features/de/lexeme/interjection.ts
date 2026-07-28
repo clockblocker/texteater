@@ -2,7 +2,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeInterjectionFeatures = {
 	inherent: {
-		partType?: Extract<AbstractFeatureValue<"partType">, "Res">;
+		partType: Extract<AbstractFeatureValue<"partType">, "Res"> | null;
 	};
 	inflectional: Record<never, never>;
 };

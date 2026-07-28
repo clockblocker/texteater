@@ -2,55 +2,85 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 type DeVerbalInflectionalFeatures =
 	| {
-			number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-			tense?: Extract<AbstractFeatureValue<"tense">, "Past" | "Pres">;
-			verbForm?: never;
-			voice?: Extract<AbstractFeatureValue<"voice">, "Pass">;
+			number: Extract<
+				AbstractFeatureValue<"number">,
+				"Plur" | "Sing"
+			> | null;
+			tense: Extract<
+				AbstractFeatureValue<"tense">,
+				"Past" | "Pres"
+			> | null;
+			verbForm: never | null;
+			voice: Extract<AbstractFeatureValue<"voice">, "Pass"> | null;
 	  }
 	| {
 			mood: Extract<AbstractFeatureValue<"mood">, "Imp">;
-			number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-			person?: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3">;
-			tense?: never;
+			number: Extract<
+				AbstractFeatureValue<"number">,
+				"Plur" | "Sing"
+			> | null;
+			person: Extract<
+				AbstractFeatureValue<"person">,
+				"1" | "2" | "3"
+			> | null;
+			tense: never | null;
 			verbForm: Extract<AbstractFeatureValue<"verbForm">, "Fin">;
-			voice?: Extract<AbstractFeatureValue<"voice">, "Pass">;
+			voice: Extract<AbstractFeatureValue<"voice">, "Pass"> | null;
 	  }
 	| {
-			mood?: Extract<AbstractFeatureValue<"mood">, "Ind" | "Sub">;
-			number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-			person?: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3">;
-			tense?: Extract<AbstractFeatureValue<"tense">, "Past" | "Pres">;
+			mood: Extract<AbstractFeatureValue<"mood">, "Ind" | "Sub"> | null;
+			number: Extract<
+				AbstractFeatureValue<"number">,
+				"Plur" | "Sing"
+			> | null;
+			person: Extract<
+				AbstractFeatureValue<"person">,
+				"1" | "2" | "3"
+			> | null;
+			tense: Extract<
+				AbstractFeatureValue<"tense">,
+				"Past" | "Pres"
+			> | null;
 			verbForm: Extract<AbstractFeatureValue<"verbForm">, "Fin">;
-			voice?: Extract<AbstractFeatureValue<"voice">, "Pass">;
+			voice: Extract<AbstractFeatureValue<"voice">, "Pass"> | null;
 	  }
 	| {
-			mood?: never;
-			number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-			person?: never;
-			tense?: never;
+			mood: never | null;
+			number: Extract<
+				AbstractFeatureValue<"number">,
+				"Plur" | "Sing"
+			> | null;
+			person: never | null;
+			tense: never | null;
 			verbForm: Extract<AbstractFeatureValue<"verbForm">, "Inf">;
-			voice?: Extract<AbstractFeatureValue<"voice">, "Pass">;
+			voice: Extract<AbstractFeatureValue<"voice">, "Pass"> | null;
 	  }
 	| {
-			aspect?: Extract<AbstractFeatureValue<"aspect">, "Perf">;
-			gender?: Extract<
+			aspect: Extract<AbstractFeatureValue<"aspect">, "Perf"> | null;
+			gender: Extract<
 				AbstractFeatureValue<"gender">,
 				"Fem" | "Masc" | "Neut"
-			>;
-			mood?: never;
-			number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-			person?: never;
-			tense?: Extract<AbstractFeatureValue<"tense">, "Past" | "Pres">;
+			> | null;
+			mood: never | null;
+			number: Extract<
+				AbstractFeatureValue<"number">,
+				"Plur" | "Sing"
+			> | null;
+			person: never | null;
+			tense: Extract<
+				AbstractFeatureValue<"tense">,
+				"Past" | "Pres"
+			> | null;
 			verbForm: Extract<AbstractFeatureValue<"verbForm">, "Part">;
-			voice?: Extract<AbstractFeatureValue<"voice">, "Pass">;
+			voice: Extract<AbstractFeatureValue<"voice">, "Pass"> | null;
 	  };
 
 export type DeVerbFeatures = {
 	inherent: {
-		hasGovPrep?: AbstractFeatureValue<"hasGovPrep">;
-		hasSepPrefix?: AbstractFeatureValue<"hasSepPrefix">;
-		lexicallyReflexive?: AbstractFeatureValue<"lexicallyReflexive">;
-		verbType?: "Mod";
+		hasGovPrep: AbstractFeatureValue<"hasGovPrep"> | null;
+		hasSepPrefix: AbstractFeatureValue<"hasSepPrefix"> | null;
+		lexicallyReflexive: AbstractFeatureValue<"lexicallyReflexive"> | null;
+		verbType: "Mod" | null;
 	};
 	inflectional: DeVerbalInflectionalFeatures;
 };

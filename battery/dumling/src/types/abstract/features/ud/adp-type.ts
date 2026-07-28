@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const adpTypeValues = ["Circ", "Post", "Prep", "Voc"] as const;
 

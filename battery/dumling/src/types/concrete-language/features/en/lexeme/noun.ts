@@ -2,23 +2,23 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnNounFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "ADV" | "PROPN">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		numForm?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "ADV" | "PROPN"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		numForm: Extract<
 			AbstractFeatureValue<"numForm">,
 			"Combi" | "Digit" | "Word"
-		>;
-		numType?: Extract<
+		> | null;
+		numType: Extract<
 			AbstractFeatureValue<"numType">,
 			"Card" | "Frac" | "Ord"
-		>;
-		style?: Extract<AbstractFeatureValue<"style">, "Expr" | "Vrnc">;
+		> | null;
+		style: Extract<AbstractFeatureValue<"style">, "Expr" | "Vrnc"> | null;
 	};
 	inflectional: {
-		number?: Extract<
+		number: Extract<
 			AbstractFeatureValue<"number">,
 			"Plur" | "Ptan" | "Sing"
-		>;
+		> | null;
 	};
 };

@@ -1,8 +1,8 @@
-import type { ZodTypeAny } from "zod";
+import type { ZodType } from "zod";
 
 import { getSchemaDescriptor } from "../schema/schema-descriptor";
 
-export function renderSchemaContract(schema: ZodTypeAny): string {
+export function renderSchemaContract(schema: ZodType): string {
 	return renderSchemaDescriptor(getSchemaDescriptor(schema), 0);
 }
 
@@ -27,8 +27,6 @@ function renderSchemaDescriptor(
 			return `[\n${nestedIndent}${renderSchemaDescriptor(descriptor.item, indentLevel + 1)}\n${indent}]`;
 		case "optional":
 			return `${renderSchemaDescriptor(descriptor.inner, indentLevel)} | undefined`;
-		case "nullable":
-			return `${renderSchemaDescriptor(descriptor.inner, indentLevel)} | null`;
 		case "union":
 			return descriptor.options
 				.map((option) => renderSchemaDescriptor(option, indentLevel))

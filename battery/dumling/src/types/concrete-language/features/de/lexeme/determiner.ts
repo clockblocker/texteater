@@ -4,14 +4,20 @@ type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type DeDeterminerFeatures = {
 	inherent: {
-		definite?: Extract<AbstractFeatureValue<"definite">, "Def" | "Ind">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "ADV" | "DET">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		numType?: Extract<AbstractFeatureValue<"numType">, "Card" | "Ord">;
-		person?: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3">;
-		polite?: Extract<AbstractFeatureValue<"polite">, "Form" | "Infm">;
-		poss?: AbstractFeatureValue<"poss">;
-		pronType?: Extract<
+		definite: Extract<
+			AbstractFeatureValue<"definite">,
+			"Def" | "Ind"
+		> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "ADV" | "DET"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		numType: Extract<
+			AbstractFeatureValue<"numType">,
+			"Card" | "Ord"
+		> | null;
+		person: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3"> | null;
+		polite: Extract<AbstractFeatureValue<"polite">, "Form" | "Infm"> | null;
+		poss: AbstractFeatureValue<"poss"> | null;
+		pronType: Extract<
 			AbstractFeatureValue<"pronType">,
 			| "Art"
 			| "Dem"
@@ -23,25 +29,29 @@ export type DeDeterminerFeatures = {
 			| "Prs"
 			| "Rel"
 			| "Tot"
-		>;
+		> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		degree?: Extract<AbstractFeatureValue<"degree">, "Cmp" | "Pos" | "Sup">;
-		gender?:
+		> | null;
+		degree: Extract<
+			AbstractFeatureValue<"degree">,
+			"Cmp" | "Pos" | "Sup"
+		> | null;
+		gender:
 			| Extract<AbstractFeatureValue<"gender">, "Masc" | "Neut">
 			| readonly ["Masc", "Neut"]
-			| readonly ["Neut", "Masc"];
-		"gender[psor]"?: FeatureValueSet<
+			| readonly ["Neut", "Masc"]
+			| null;
+		"gender[psor]": FeatureValueSet<
 			Extract<AbstractFeatureValue<"gender">, "Fem" | "Masc" | "Neut">
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-		"number[psor]"?: Extract<
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
+		"number[psor]": Extract<
 			AbstractFeatureValue<"number">,
 			"Plur" | "Sing"
-		>;
+		> | null;
 	};
 };

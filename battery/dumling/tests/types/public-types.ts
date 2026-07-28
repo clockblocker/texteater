@@ -1,4 +1,4 @@
-import type { ZodType } from "zod/v3";
+import type { ZodType } from "zod";
 import { dumling } from "../../src";
 import {
 	abstractSchemas,
@@ -37,6 +37,8 @@ const lemma = dumling.de.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		gender: "Masc",
+
+		hyph: null,
 	},
 	meaningInEmojis: "🌊",
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
@@ -44,6 +46,8 @@ const lemma = dumling.de.create.lemma({
 const citationSurface = dumling.de.create.surface.citation({
 	lemma,
 	normalizedFullSurface: "see",
+
+	surfaceFeatures: null,
 }) satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;
 
 const inflectionSurface = dumling.de.create.surface.inflection({
@@ -51,19 +55,30 @@ const inflectionSurface = dumling.de.create.surface.inflection({
 		canonicalLemma: "gehen",
 		lemmaKind: "Lexeme",
 		lemmaSubKind: "VERB",
-		inherentFeatures: {},
+		inherentFeatures: {
+			verbType: null,
+			lexicallyReflexive: null,
+			hasSepPrefix: null,
+			hasGovPrep: null,
+		},
 		meaningInEmojis: "🚶",
 	}),
 	normalizedFullSurface: "geht",
 	inflectionalFeatures: {
+		mood: "Imp",
 		number: "Sing",
 		person: "3",
 		verbForm: "Fin",
+
+		voice: null,
+		tense: null,
 	},
+
+	surfaceFeatures: null,
 }) satisfies Surface<"de", "Inflection", "Lexeme", "VERB">;
 
 const typoSelection = dumling.de.create.selection({
-	selectionFeatures: { orthography: "Typo" },
+	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
 	spelledSelection: "Sse",
 	surface: citationSurface,
 }) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
@@ -71,12 +86,16 @@ const standardSelection = dumling.de.convert.lemma.toSelection(
 	lemma,
 ) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 const typoFromLemma = dumling.de.convert.lemma.toSelection(lemma, {
-	selectionFeatures: { orthography: "Typo" },
+	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
 }) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 const typoFromInflectionSurface = dumling.de.convert.surface.toSelection(
 	inflectionSurface,
 	{
-		selectionFeatures: { orthography: "Typo" },
+		selectionFeatures: {
+			orthography: "Typo",
+			coverage: null,
+			spelling: null,
+		},
 	},
 ) satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 const lemmaDescriptor = dumling.de.describe.as.lemma(typoSelection) satisfies {
@@ -174,7 +193,7 @@ const unbrandedId: DumlingBase64Url<"de"> = "abc";
 const entityValue: EntityValue<"de"> = typoSelection;
 const selectionForKind: EntityForKind<"de", "Selection"> = typoSelection;
 const typoOptions: SelectionOptionsFor = {
-	selectionFeatures: { orthography: "Typo" },
+	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
 	spelledSelection: "Sse",
 };
 const decodedSelection = dumling.de.id.decode.asSelection(selectionId);
@@ -239,6 +258,12 @@ const enLemma = dumling.en.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		numType: "Card",
+
+		style: null,
+		numForm: null,
+		foreign: null,
+		extPos: null,
+		abbr: null,
 	},
 	meaningInEmojis: "👀",
 }) satisfies Lemma<"en", "Lexeme", "NOUN">;
@@ -259,6 +284,8 @@ const heLemma = dumling.he.create.lemma({
 	lemmaSubKind: "VERB",
 	inherentFeatures: {
 		hebBinyan: "PAAL",
+
+		hebExistential: null,
 	},
 	meaningInEmojis: "✍️",
 }) satisfies Lemma<"he", "Lexeme", "VERB">;

@@ -11,7 +11,11 @@ describe("selection spelling relation", () => {
 		expect(
 			schemasFor.en.entity.Selection.Citation.Lexeme.VERB().safeParse({
 				...englishWalkCitationSelection,
-				selectionFeatures: { spelling: "Variant" },
+				selectionFeatures: {
+					spelling: "Variant",
+					coverage: null,
+					orthography: null,
+				},
 			}).success,
 		).toBe(true);
 	});
@@ -20,7 +24,11 @@ describe("selection spelling relation", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.VERB().safeParse({
 				...englishWalkStandardFullSelection,
-				selectionFeatures: { spelling: "Variant" },
+				selectionFeatures: {
+					spelling: "Variant",
+					coverage: null,
+					orthography: null,
+				},
 			}).success,
 		).toBe(true);
 	});
@@ -37,7 +45,11 @@ describe("selection spelling relation", () => {
 		expect(
 			schemasFor.en.entity.Selection.Citation.Lexeme.VERB().safeParse({
 				...englishWalkCitationSelection,
-				selectionFeatures: { spelling: "Variant" },
+				selectionFeatures: {
+					spelling: "Variant",
+					coverage: null,
+					orthography: null,
+				},
 				surface: {
 					...englishWalkCitationSelection.surface,
 					surfaceKind: "Variant",

@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const supportedLanguageValues = ["en", "de", "he"] as const;
 

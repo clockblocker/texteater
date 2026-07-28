@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 // Source: https://universaldependencies.org/u/feat/Foreign.html
 export const Foreign = z.literal("Yes");

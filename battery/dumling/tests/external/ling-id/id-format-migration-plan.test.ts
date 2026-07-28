@@ -124,14 +124,25 @@ describe("ID format migration plan contracts", () => {
 			canonicalLemma: "give up",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "VERB",
-			inherentFeatures: { hasGovPrep: "up" },
+			inherentFeatures: {
+				hasGovPrep: "up",
+				style: null,
+				phrasal: null,
+				extPos: null,
+				abbr: null,
+			},
 			meaningInEmojis: "👉",
 		});
 		const germanVerb = dumling.de.create.lemma({
 			canonicalLemma: "mitgehen",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "VERB",
-			inherentFeatures: { hasSepPrefix: "mit" },
+			inherentFeatures: {
+				hasSepPrefix: "mit",
+				verbType: null,
+				lexicallyReflexive: null,
+				hasGovPrep: null,
+			},
 			meaningInEmojis: "🚶",
 		});
 

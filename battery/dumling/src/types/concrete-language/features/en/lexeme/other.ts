@@ -2,8 +2,8 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnOtherFeatures = {
 	inherent: {
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "PROPN">;
-		foreign?: AbstractFeatureValue<"foreign">;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "PROPN"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
 	};
 	inflectional: Record<never, never>;
 };

@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const verbFormValues = [
 	"Conv", // converb; transgressive, adverbial participle, verbal adverb

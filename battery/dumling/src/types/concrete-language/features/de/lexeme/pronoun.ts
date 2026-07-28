@@ -2,26 +2,26 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DePronounFeatures = {
 	inherent: {
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "DET">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		person?: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3">;
-		polite?: Extract<AbstractFeatureValue<"polite">, "Form" | "Infm">;
-		poss?: AbstractFeatureValue<"poss">;
-		pronType?: Extract<
+		extPos: Extract<AbstractFeatureValue<"extPos">, "DET"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		person: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3"> | null;
+		polite: Extract<AbstractFeatureValue<"polite">, "Form" | "Infm"> | null;
+		poss: AbstractFeatureValue<"poss"> | null;
+		pronType: Extract<
 			AbstractFeatureValue<"pronType">,
 			"Dem" | "Ind" | "Int" | "Neg" | "Prs" | "Rcp" | "Rel" | "Tot"
-		>;
+		> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		gender?: Extract<
+		> | null;
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-		reflex?: AbstractFeatureValue<"reflex">;
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
+		reflex: AbstractFeatureValue<"reflex"> | null;
 	};
 };

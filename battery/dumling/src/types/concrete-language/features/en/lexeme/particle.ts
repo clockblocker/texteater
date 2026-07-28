@@ -2,9 +2,9 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnParticleFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "CCONJ">;
-		polarity?: Extract<AbstractFeatureValue<"polarity">, "Neg">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "CCONJ"> | null;
+		polarity: Extract<AbstractFeatureValue<"polarity">, "Neg"> | null;
 	};
 	inflectional: Record<never, never>;
 };

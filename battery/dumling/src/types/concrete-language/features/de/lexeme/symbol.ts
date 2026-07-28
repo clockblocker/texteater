@@ -2,18 +2,21 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeSymbolFeatures = {
 	inherent: {
-		foreign?: AbstractFeatureValue<"foreign">;
-		numType?: Extract<AbstractFeatureValue<"numType">, "Card" | "Range">;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		numType: Extract<
+			AbstractFeatureValue<"numType">,
+			"Card" | "Range"
+		> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		gender?: Extract<
+		> | null;
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
 	};
 };

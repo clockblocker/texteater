@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { DeSymbolFeatures } from "../../../../../types/concrete-language/features/de/lexeme/symbol.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
@@ -6,33 +6,25 @@ import {
 	requireNonEmptyFeatureObject,
 } from "../../../../shared/feature-helpers.js";
 
-export const deSymbolFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({
-			foreign: abstractFeatureAtomSchemas.foreign,
-			numType: abstractFeatureAtomSchemas.numType.extract([
-				"Card",
-				"Range",
+export const deSymbolFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({
+		foreign: abstractFeatureAtomSchemas.foreign,
+		numType: abstractFeatureAtomSchemas.numType.extract(["Card", "Range"]),
+	}),
+	inflectional: requireNonEmptyFeatureObject(
+		buildOptionalFeatureObjectSchema({
+			case: abstractFeatureAtomSchemas.case.extract([
+				"Acc",
+				"Dat",
+				"Gen",
+				"Nom",
 			]),
+			gender: abstractFeatureAtomSchemas.gender.extract([
+				"Fem",
+				"Masc",
+				"Neut",
+			]),
+			number: abstractFeatureAtomSchemas.number.extract(["Plur", "Sing"]),
 		}),
-		inflectional: requireNonEmptyFeatureObject(
-			buildOptionalFeatureObjectSchema({
-				case: abstractFeatureAtomSchemas.case.extract([
-					"Acc",
-					"Dat",
-					"Gen",
-					"Nom",
-				]),
-				gender: abstractFeatureAtomSchemas.gender.extract([
-					"Fem",
-					"Masc",
-					"Neut",
-				]),
-				number: abstractFeatureAtomSchemas.number.extract([
-					"Plur",
-					"Sing",
-				]),
-			}),
-		),
-	})
-	.strict() satisfies z.ZodSchema<DeSymbolFeatures>;
+	),
+}) satisfies z.ZodSchema<DeSymbolFeatures>;

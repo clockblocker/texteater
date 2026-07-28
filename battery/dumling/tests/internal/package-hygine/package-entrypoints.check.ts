@@ -106,7 +106,7 @@ describe("published package entrypoints", () => {
 					'import { dumling, getLanguageApi, supportedLanguages } from "dumling";',
 					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
 					'import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";',
-					'import type * as z from "zod/v3";',
+					'import type * as z from "zod";',
 					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Selection, SelectionOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',

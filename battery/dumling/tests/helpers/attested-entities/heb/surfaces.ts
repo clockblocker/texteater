@@ -11,11 +11,20 @@ export const hebrewKatvuInflectionSurface = {
 		number: "Plur",
 		person: "3",
 		tense: "Past",
+
+		voice: null,
+		verbForm: null,
+		polarity: null,
+		mood: null,
+		gender: null,
+		definite: null,
 	},
 	language: "he",
 	normalizedFullSurface: "כתבו",
 	surfaceKind: "Inflection",
 	lemma: hebrewKatavLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"he", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
@@ -24,6 +33,8 @@ export const hebrewShanaCitationSurface = {
 	normalizedFullSurface: "שנה",
 	surfaceKind: "Citation",
 	lemma: hebrewShanaLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"he", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
@@ -32,4 +43,6 @@ export const hebrewUsAbbreviationCitationSurface = {
 	normalizedFullSurface: "ארה״ב",
 	surfaceKind: "Citation",
 	lemma: hebrewUsAbbreviationLemma,
+
+	surfaceFeatures: null,
 } satisfies Surface<"he", "Citation", "Lexeme", "PROPN">;

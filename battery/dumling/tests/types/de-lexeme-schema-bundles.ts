@@ -1,4 +1,4 @@
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import { schemasFor } from "../../src/schema";
 import type { Lemma, Selection, Surface } from "../../src/types/public-types";
 

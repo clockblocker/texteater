@@ -1,4 +1,4 @@
-import type { z } from "zod/v3";
+import type { z } from "zod";
 import {
 	AbstractLanguageTag,
 	ConstructionKind,
@@ -69,9 +69,9 @@ function buildAbstractLeafBundle(
 	};
 }
 
-const abstractLemmaSchemas: z.ZodTypeAny[] = [];
-const abstractSurfaceSchemas: z.ZodTypeAny[] = [];
-const abstractSelectionSchemas: z.ZodTypeAny[] = [];
+const abstractLemmaSchemas: z.ZodType[] = [];
+const abstractSurfaceSchemas: z.ZodType[] = [];
+const abstractSelectionSchemas: z.ZodType[] = [];
 
 for (const [lemmaKind, subKinds] of [
 	["Lexeme", Pos.options],
@@ -93,20 +93,12 @@ for (const [lemmaKind, subKinds] of [
 
 export const abstractRuntimeSchemas = {
 	lemma: buildUnionSchema(
-		abstractLemmaSchemas as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]],
+		abstractLemmaSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
 	) as z.ZodType<AbstractLemma<string>>,
 	surface: buildUnionSchema(
-		abstractSurfaceSchemas as [
-			z.ZodTypeAny,
-			z.ZodTypeAny,
-			...z.ZodTypeAny[],
-		],
+		abstractSurfaceSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
 	) as z.ZodType<AbstractSurface<string>>,
 	selection: buildUnionSchema(
-		abstractSelectionSchemas as [
-			z.ZodTypeAny,
-			z.ZodTypeAny,
-			...z.ZodTypeAny[],
-		],
+		abstractSelectionSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
 	) as z.ZodType<AbstractSelection<string>>,
 } as const;

@@ -4,18 +4,27 @@ type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HeAuxiliaryFeatures = {
 	inherent: {
-		verbType?: Extract<AbstractFeatureValue<"verbType">, "Cop" | "Mod">;
+		verbType: Extract<
+			AbstractFeatureValue<"verbType">,
+			"Cop" | "Mod"
+		> | null;
 	};
 	inflectional: {
-		gender?: FeatureValueSet<
+		gender: FeatureValueSet<
 			Extract<AbstractFeatureValue<"gender">, "Fem" | "Masc">
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-		person?: FeatureValueSet<
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
+		person: FeatureValueSet<
 			Extract<AbstractFeatureValue<"person">, "1" | "2" | "3">
-		>;
-		polarity?: Extract<AbstractFeatureValue<"polarity">, "Neg" | "Pos">;
-		tense?: Extract<AbstractFeatureValue<"tense">, "Fut" | "Past">;
-		verbForm?: Extract<AbstractFeatureValue<"verbForm">, "Inf" | "Part">;
+		> | null;
+		polarity: Extract<
+			AbstractFeatureValue<"polarity">,
+			"Neg" | "Pos"
+		> | null;
+		tense: Extract<AbstractFeatureValue<"tense">, "Fut" | "Past"> | null;
+		verbForm: Extract<
+			AbstractFeatureValue<"verbForm">,
+			"Inf" | "Part"
+		> | null;
 	};
 };

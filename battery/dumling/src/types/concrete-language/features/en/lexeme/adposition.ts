@@ -2,11 +2,11 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnAdpositionFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<
 			AbstractFeatureValue<"extPos">,
 			"ADP" | "ADV" | "SCONJ"
-		>;
+		> | null;
 	};
 	inflectional: Record<never, never>;
 };

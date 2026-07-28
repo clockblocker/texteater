@@ -33,8 +33,6 @@ export const codecBuilder3 = {
 	buildReshapeCodec,
 } as const;
 
-export const codecBuilder = codecBuilder3;
-
 export type {
 	ShapeOfStrictFieldAdapter,
 	ShapeOfStrictFieldAdapterCodec,

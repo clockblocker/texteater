@@ -1,10 +1,8 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { HeProverbPhrasemeFeatures } from "../../../../../types/concrete-language/features/he/phraseme/proverb.js";
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
-export const heProverbPhrasemeFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({}),
-		inflectional: buildOptionalFeatureObjectSchema({}),
-	})
-	.strict() satisfies z.ZodSchema<HeProverbPhrasemeFeatures>;
+export const heProverbPhrasemeFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({}),
+	inflectional: buildOptionalFeatureObjectSchema({}),
+}) satisfies z.ZodSchema<HeProverbPhrasemeFeatures>;

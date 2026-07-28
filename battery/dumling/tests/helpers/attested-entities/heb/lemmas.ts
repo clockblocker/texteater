@@ -5,6 +5,8 @@ export const hebrewKatavLemma = {
 	canonicalLemma: "כתב",
 	inherentFeatures: {
 		hebBinyan: "PAAL",
+
+		hebExistential: null,
 	},
 	language: "he",
 	lemmaKind: "Lexeme",
@@ -17,6 +19,8 @@ export const hebrewShanaLemma = {
 	canonicalLemma: "שנה",
 	inherentFeatures: {
 		gender: ["Fem", "Masc"],
+
+		abbr: null,
 	},
 	language: "he",
 	lemmaKind: "Lexeme",
@@ -29,6 +33,8 @@ export const hebrewUsAbbreviationLemma = {
 	canonicalLemma: "ארה״ב",
 	inherentFeatures: {
 		abbr: "Yes",
+
+		gender: null,
 	},
 	language: "he",
 	lemmaKind: "Lexeme",

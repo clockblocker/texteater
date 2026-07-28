@@ -2,7 +2,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type HeSubordinatingConjunctionFeatures = {
 	inherent: {
-		case?: Extract<AbstractFeatureValue<"case">, "Tem">;
+		case: Extract<AbstractFeatureValue<"case">, "Tem"> | null;
 	};
 	inflectional: Record<never, never>;
 };

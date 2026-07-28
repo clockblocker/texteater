@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { HeDeterminerFeatures } from "../../../../../types/concrete-language/features/he/lexeme/determiner.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
@@ -7,28 +7,20 @@ import {
 	requireNonEmptyFeatureObject,
 } from "../../../../shared/feature-helpers.js";
 
-export const heDeterminerFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({
-			pronType: abstractFeatureAtomSchemas.pronType.extract([
-				"Art",
-				"Int",
+export const heDeterminerFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({
+		pronType: abstractFeatureAtomSchemas.pronType.extract(["Art", "Int"]),
+	}),
+	inflectional: requireNonEmptyFeatureObject(
+		buildOptionalFeatureObjectSchema({
+			definite: abstractFeatureAtomSchemas.definite.extract([
+				"Cons",
+				"Def",
 			]),
+			gender: featureValueSet(
+				abstractFeatureAtomSchemas.gender.extract(["Fem", "Masc"]),
+			),
+			number: abstractFeatureAtomSchemas.number.extract(["Plur", "Sing"]),
 		}),
-		inflectional: requireNonEmptyFeatureObject(
-			buildOptionalFeatureObjectSchema({
-				definite: abstractFeatureAtomSchemas.definite.extract([
-					"Cons",
-					"Def",
-				]),
-				gender: featureValueSet(
-					abstractFeatureAtomSchemas.gender.extract(["Fem", "Masc"]),
-				),
-				number: abstractFeatureAtomSchemas.number.extract([
-					"Plur",
-					"Sing",
-				]),
-			}),
-		),
-	})
-	.strict() satisfies z.ZodSchema<HeDeterminerFeatures>;
+	),
+}) satisfies z.ZodSchema<HeDeterminerFeatures>;

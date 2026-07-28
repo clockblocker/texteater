@@ -12,6 +12,7 @@ describe("Hebrew schema specificity", () => {
 				lemmaSubKind: "VERB",
 				inherentFeatures: {
 					hebBinyan: "PAAL",
+					hebExistential: null,
 				},
 				meaningInEmojis: "✍️",
 			}).success,
@@ -20,6 +21,7 @@ describe("Hebrew schema specificity", () => {
 		expect(
 			schemasFor.he.entity.Selection.Inflection.Lexeme.VERB().safeParse({
 				language: "he",
+				selectionFeatures: null,
 				spelledSelection: "כתבו",
 
 				surface: {
@@ -28,9 +30,15 @@ describe("Hebrew schema specificity", () => {
 					normalizedFullSurface: "כתבו",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
+						definite: null,
+						gender: null,
+						mood: null,
 						number: "Plur",
 						person: "3",
+						polarity: null,
 						tense: "Past",
+						verbForm: null,
+						voice: null,
 					},
 				},
 			}).success,
@@ -39,6 +47,7 @@ describe("Hebrew schema specificity", () => {
 		expect(
 			schemasFor.he.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
 				language: "he",
+				selectionFeatures: null,
 				spelledSelection: "שנתיים",
 
 				surface: {
@@ -47,6 +56,7 @@ describe("Hebrew schema specificity", () => {
 					normalizedFullSurface: "שנתיים",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
+						definite: null,
 						number: ["Dual", "Plur"],
 					},
 				},

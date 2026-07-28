@@ -11,6 +11,8 @@ export const englishWalkStandardFullSelection = {
 	spelledSelection: "walk",
 
 	surface: englishWalkInflectionSurface,
+
+	selectionFeatures: null,
 } satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
@@ -19,12 +21,18 @@ export const englishWalkCitationSelection = {
 	spelledSelection: "walk",
 
 	surface: englishWalkCitationSurface,
+
+	selectionFeatures: null,
 } satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
 export const englishGiveUpTypoPartialUpSelection = {
 	language: "en",
-	selectionFeatures: { orthography: "Typo", coverage: "Partial" },
+	selectionFeatures: {
+		orthography: "Typo",
+		coverage: "Partial",
+		spelling: null,
+	},
 	spelledSelection: "up",
 
 	surface: englishGiveUpInflectionSurface,

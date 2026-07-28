@@ -1,5 +1,5 @@
-import type { z } from "zod/v3";
-import { z as zod } from "zod/v3";
+import type { z } from "zod";
+import { z as zod } from "zod";
 import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry.js";
 import type { Descriptor } from "../types/descriptor.js";
 import type {
@@ -21,9 +21,9 @@ type DescriptorSchemaTree = {
 };
 
 type MutableLanguageDescriptorSchemaTree = {
-	Lemma: Record<string, Record<string, z.ZodTypeAny>>;
-	Surface: Record<string, Record<string, Record<string, z.ZodTypeAny>>>;
-	Selection: Record<string, Record<string, Record<string, z.ZodTypeAny>>>;
+	Lemma: Record<string, Record<string, z.ZodType>>;
+	Surface: Record<string, Record<string, Record<string, z.ZodType>>>;
+	Selection: Record<string, Record<string, Record<string, z.ZodType>>>;
 };
 
 type IterableLanguageSchemaTree = {
@@ -49,13 +49,11 @@ function buildLemmaDescriptorSchema<
 	lemmaKind: LK,
 	lemmaSubKind: LSK,
 ): DescriptorSchema<Descriptor<"Lemma", L, LK, LSK>> {
-	return zod
-		.object({
-			language: zod.literal(language),
-			lemmaKind: zod.literal(lemmaKind),
-			lemmaSubKind: zod.literal(lemmaSubKind),
-		})
-		.strict() as DescriptorSchema<Descriptor<"Lemma", L, LK, LSK>>;
+	return zod.strictObject({
+		language: zod.literal(language),
+		lemmaKind: zod.literal(lemmaKind),
+		lemmaSubKind: zod.literal(lemmaSubKind),
+	}) as DescriptorSchema<Descriptor<"Lemma", L, LK, LSK>>;
 }
 
 function buildSurfaceDescriptorSchema<
@@ -69,14 +67,12 @@ function buildSurfaceDescriptorSchema<
 	lemmaKind: LK,
 	lemmaSubKind: LSK,
 ): DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>> {
-	return zod
-		.object({
-			language: zod.literal(language),
-			surfaceKind: zod.literal(surfaceKind),
-			lemmaKind: zod.literal(lemmaKind),
-			lemmaSubKind: zod.literal(lemmaSubKind),
-		})
-		.strict() as DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>>;
+	return zod.strictObject({
+		language: zod.literal(language),
+		surfaceKind: zod.literal(surfaceKind),
+		lemmaKind: zod.literal(lemmaKind),
+		lemmaSubKind: zod.literal(lemmaSubKind),
+	}) as DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>>;
 }
 
 function buildSelectionDescriptorSchema<
@@ -90,14 +86,12 @@ function buildSelectionDescriptorSchema<
 	lemmaKind: LK,
 	lemmaSubKind: LSK,
 ): DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>> {
-	return zod
-		.object({
-			language: zod.literal(language),
-			surfaceKind: zod.literal(surfaceKind),
-			lemmaKind: zod.literal(lemmaKind),
-			lemmaSubKind: zod.literal(lemmaSubKind),
-		})
-		.strict() as DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>>;
+	return zod.strictObject({
+		language: zod.literal(language),
+		surfaceKind: zod.literal(surfaceKind),
+		lemmaKind: zod.literal(lemmaKind),
+		lemmaSubKind: zod.literal(lemmaSubKind),
+	}) as DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>>;
 }
 
 function buildLanguageDescriptorSchemas<L extends ConcreteLanguage>(

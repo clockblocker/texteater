@@ -10,6 +10,7 @@ const seeLemma = dumling.de.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		gender: "Masc",
+		hyph: null,
 	},
 	meaningInEmojis: "🌊",
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
@@ -19,6 +20,7 @@ const seeLemma = dumling.de.create.lemma({
 const seeSurface = dumling.de.create.surface.citation({
 	lemma: seeLemma,
 	normalizedFullSurface: "See",
+	surfaceFeatures: null,
 }) satisfies Surface<
 	"de",
 	"Citation",
@@ -31,6 +33,7 @@ const seeSurface = dumling.de.create.surface.citation({
 const seeSelection = dumling.de.create.selection({
 	spelledSelection: "See",
 	surface: seeSurface,
+	selectionFeatures: null,
 }) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 // README_BLOCK:core-selection:end
 
@@ -59,6 +62,7 @@ const lemma = packageDumling.de.create.lemma({
 	lemmaSubKind: "NOUN",
 	inherentFeatures: {
 		gender: "Masc",
+		hyph: null,
 	},
 	meaningInEmojis: "🌊",
 }) satisfies PackageLemma<"de", "Lexeme", "NOUN">;
@@ -67,6 +71,7 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.create.surface.citation({
 		lemma,
 		normalizedFullSurface: "See",
+		surfaceFeatures: null,
 	});
 const selection: PackageSelection<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toSelection(surface, {

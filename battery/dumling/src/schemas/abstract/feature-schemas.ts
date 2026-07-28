@@ -1,11 +1,10 @@
-import type { z } from "zod/v3";
+import { z } from "zod";
 import type {
 	AbstractInflectionalFeatures,
 	AbstractInherentFeatures,
 } from "../../types/abstract/features/features-catalog.js";
 import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog.js";
 import {
-	buildOptionalFeatureObjectSchema,
 	type FeatureSchemaShape,
 	featureValueSet,
 	requireNonEmptyFeatureObject,
@@ -14,6 +13,17 @@ import {
 export const abstractFeatureAtomSchemas =
 	abstractFeatureCatalog satisfies FeatureSchemaShape;
 
+function buildAbstractFeatureObjectSchema(shape: FeatureSchemaShape) {
+	return z.strictObject(
+		Object.fromEntries(
+			Object.entries(shape).map(([name, schema]) => [
+				name,
+				schema.optional(),
+			]),
+		),
+	);
+}
+
 const abstractInflectionalFeatureValueSchemas = Object.fromEntries(
 	Object.entries(abstractFeatureAtomSchemas).map(([name, schema]) => [
 		name,
@@ -21,10 +31,10 @@ const abstractInflectionalFeatureValueSchemas = Object.fromEntries(
 	]),
 ) as FeatureSchemaShape;
 
-export const abstractInherentFeaturesSchema = buildOptionalFeatureObjectSchema(
+export const abstractInherentFeaturesSchema = buildAbstractFeatureObjectSchema(
 	abstractInflectionalFeatureValueSchemas,
 ) satisfies z.ZodType<AbstractInherentFeatures>;
 
 export const abstractInflectionalFeaturesSchema = requireNonEmptyFeatureObject(
-	buildOptionalFeatureObjectSchema(abstractInflectionalFeatureValueSchemas),
+	buildAbstractFeatureObjectSchema(abstractInflectionalFeatureValueSchemas),
 ) satisfies z.ZodType<AbstractInflectionalFeatures>;

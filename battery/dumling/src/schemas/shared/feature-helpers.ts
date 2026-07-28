@@ -1,89 +1,74 @@
-import { z } from "zod/v3";
-import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog.js";
+import { z } from "zod";
 
 type NonEmptyFeatureValueSet<T> = readonly [T, ...T[]];
 
-export type FeatureSchemaShape = Record<string, z.ZodTypeAny>;
+export type FeatureSchemaShape = Record<string, z.ZodType>;
 
-type OptionalizedShape<TShape extends FeatureSchemaShape> = {
-	[K in keyof TShape]: z.ZodOptional<TShape[K]>;
+type NullableShape<TShape extends FeatureSchemaShape> = {
+	[K in keyof TShape]: z.ZodNullable<TShape[K]>;
 };
 
-type InferFeatureObject<TShape extends FeatureSchemaShape> = Partial<{
-	[K in keyof TShape]: z.output<TShape[K]>;
-}>;
+type NullableFeatureObject<TShape extends FeatureSchemaShape> = {
+	[K in keyof TShape]: z.output<TShape[K]> | null;
+};
 
 type RequiredFeatureObject<TShape extends FeatureSchemaShape> = {
 	[K in keyof TShape]: z.output<TShape[K]>;
 };
 
-type RequireAtLeastOne<T extends object> = {
-	[K in keyof T]-?: Required<Pick<T, K>> & Partial<Omit<T, K>>;
-}[keyof T];
-
-export function featureValueSet<TSchema extends z.ZodTypeAny>(
+export function featureValueSet<TSchema extends z.ZodType>(
 	schema: TSchema,
 ): z.ZodType<z.output<TSchema> | NonEmptyFeatureValueSet<z.output<TSchema>>> {
-	return z.union([
-		schema,
-		z
-			.array(schema)
-			.min(1)
-			.transform(
-				(values) =>
-					values as [z.output<TSchema>, ...z.output<TSchema>[]],
-			),
-	]) as unknown as z.ZodType<
+	return z.union([schema, z.array(schema).min(1)]) as unknown as z.ZodType<
 		z.output<TSchema> | NonEmptyFeatureValueSet<z.output<TSchema>>
 	>;
-}
-
-function stripUnknownOntologyFeatureKeys(value: unknown) {
-	if (typeof value !== "object" || value === null || Array.isArray(value)) {
-		return value;
-	}
-
-	return Object.fromEntries(
-		Object.entries(value).filter(
-			([name]) => name in abstractFeatureCatalog,
-		),
-	);
 }
 
 export function buildFeatureObjectSchema<TShape extends FeatureSchemaShape>(
 	shape: TShape,
 ): z.ZodType<RequiredFeatureObject<TShape>> {
-	return z.preprocess(
-		stripUnknownOntologyFeatureKeys,
-		z.object(shape).strict(),
-	) as unknown as z.ZodType<RequiredFeatureObject<TShape>>;
+	return z.strictObject(shape) as unknown as z.ZodType<
+		RequiredFeatureObject<TShape>
+	>;
 }
 
 export function buildOptionalFeatureObjectSchema<
 	TShape extends FeatureSchemaShape,
->(shape: TShape): z.ZodType<InferFeatureObject<TShape>> {
+>(shape: TShape): z.ZodType<NullableFeatureObject<TShape>> {
 	const optionalShape = Object.fromEntries(
 		Object.entries(shape).map(([name, schema]) => [
 			name,
-			schema.optional(),
+			schema.nullable(),
 		]),
-	) as OptionalizedShape<TShape>;
+	) as NullableShape<TShape>;
 
 	return buildFeatureObjectSchema(optionalShape) as unknown as z.ZodType<
-		InferFeatureObject<TShape>
+		NullableFeatureObject<TShape>
 	>;
+}
+
+const hasInflectionSurfaceMetadata = {
+	dumlingHasInflectionSurface: true,
+} as const;
+
+export function markInflectionSurface<TSchema extends z.ZodType>(
+	schema: TSchema,
+): TSchema {
+	return schema.meta(hasInflectionSurfaceMetadata);
 }
 
 export function requireNonEmptyFeatureObject<T extends object>(
 	schema: z.ZodType<T>,
 	fieldName = "inflectionalFeatures",
-): z.ZodType<RequireAtLeastOne<T>> {
-	return schema.superRefine((value, ctx) => {
-		if (Object.keys(value).length === 0) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: `${fieldName} must not be empty`,
-			});
-		}
-	}) as unknown as z.ZodType<RequireAtLeastOne<T>>;
+): z.ZodType<T> {
+	return markInflectionSurface(
+		schema.superRefine((value, ctx) => {
+			if (!Object.values(value).some((entry) => entry !== null)) {
+				ctx.addIssue({
+					code: "custom",
+					message: `${fieldName} must not be empty`,
+				});
+			}
+		}),
+	) as z.ZodType<T>;
 }

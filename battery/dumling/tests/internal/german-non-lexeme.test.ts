@@ -70,7 +70,11 @@ describe("German non-lexeme schemas", () => {
 			schemasFor.de.entity.Selection.Citation.Morpheme.Suffix().safeParse(
 				{
 					language: "de",
-					selectionFeatures: { orthography: "Typo" },
+					selectionFeatures: {
+						orthography: "Typo",
+						coverage: null,
+						spelling: null,
+					},
 					spelledSelection: "hait",
 
 					surface: {
@@ -100,6 +104,7 @@ describe("German non-lexeme schemas", () => {
 			schemasFor.de.entity.Selection.Citation.Construction.Fusion().safeParse(
 				{
 					language: "de",
+					selectionFeatures: null,
 					spelledSelection: "zum",
 
 					surface: {

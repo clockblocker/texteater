@@ -2,9 +2,9 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnSubordinatingConjunctionFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		extPos?: Extract<AbstractFeatureValue<"extPos">, "ADP" | "SCONJ">;
-		style?: Extract<AbstractFeatureValue<"style">, "Vrnc">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		extPos: Extract<AbstractFeatureValue<"extPos">, "ADP" | "SCONJ"> | null;
+		style: Extract<AbstractFeatureValue<"style">, "Vrnc"> | null;
 	};
 	inflectional: Record<never, never>;
 };

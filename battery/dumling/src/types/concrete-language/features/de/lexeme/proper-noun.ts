@@ -2,18 +2,18 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeProperNounFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		gender?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
+		> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
 	};
 };

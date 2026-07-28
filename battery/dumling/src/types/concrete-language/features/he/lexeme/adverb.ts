@@ -2,7 +2,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type HeAdverbFeatures = {
 	inherent: {
-		prefix?: AbstractFeatureValue<"prefix">;
+		prefix: AbstractFeatureValue<"prefix"> | null;
 	};
 	inflectional: Record<never, never>;
 };

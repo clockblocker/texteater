@@ -7,6 +7,7 @@ describe("German verb schemas", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
 				language: "de",
+				selectionFeatures: null,
 				spelledSelection: "ging",
 
 				surface: {
@@ -20,6 +21,7 @@ describe("German verb schemas", () => {
 						person: "3",
 						tense: "Past",
 						verbForm: "Fin",
+						voice: null,
 					},
 				},
 			}).success,
@@ -32,7 +34,10 @@ describe("German verb schemas", () => {
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "VERB",
 				inherentFeatures: {
+					hasGovPrep: null,
 					hasSepPrefix: "mit",
+					lexicallyReflexive: null,
+					verbType: null,
 				},
 				meaningInEmojis: "🚶",
 			}).success,

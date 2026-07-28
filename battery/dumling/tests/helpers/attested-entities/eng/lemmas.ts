@@ -3,7 +3,13 @@ import type { Lemma } from "../../../../src/types";
 // Attestation: "They [walk] home together."
 export const englishWalkLemma = {
 	canonicalLemma: "walk",
-	inherentFeatures: {},
+	inherentFeatures: {
+		style: null,
+		phrasal: null,
+		hasGovPrep: null,
+		extPos: null,
+		abbr: null,
+	},
 	language: "en",
 	lemmaKind: "Lexeme",
 	lemmaSubKind: "VERB",
@@ -16,6 +22,10 @@ export const englishGiveUpLemma = {
 	inherentFeatures: {
 		hasGovPrep: "up",
 		phrasal: "Yes",
+
+		style: null,
+		extPos: null,
+		abbr: null,
 	},
 	language: "en",
 	lemmaKind: "Lexeme",

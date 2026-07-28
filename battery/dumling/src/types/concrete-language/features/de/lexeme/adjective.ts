@@ -2,21 +2,27 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeAdjectiveFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		numType?: Extract<AbstractFeatureValue<"numType">, "Card" | "Ord">;
-		variant?: AbstractFeatureValue<"variant">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		numType: Extract<
+			AbstractFeatureValue<"numType">,
+			"Card" | "Ord"
+		> | null;
+		variant: AbstractFeatureValue<"variant"> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		degree?: Extract<AbstractFeatureValue<"degree">, "Cmp" | "Pos" | "Sup">;
-		gender?: Extract<
+		> | null;
+		degree: Extract<
+			AbstractFeatureValue<"degree">,
+			"Cmp" | "Pos" | "Sup"
+		> | null;
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
 	};
 };

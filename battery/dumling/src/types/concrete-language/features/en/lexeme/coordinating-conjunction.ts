@@ -2,8 +2,8 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type EnCoordinatingConjunctionFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		polarity?: Extract<AbstractFeatureValue<"polarity">, "Neg">;
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		polarity: Extract<AbstractFeatureValue<"polarity">, "Neg"> | null;
 	};
 	inflectional: Record<never, never>;
 };

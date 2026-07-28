@@ -150,6 +150,7 @@ function assertNoDuplicateValues(
 	context: string,
 ) {
 	for (const [key, value] of Object.entries(features)) {
+		if (value === null) continue;
 		const values = valuesForFeature(value);
 		if (new Set(values).size !== values.length) {
 			throw new Error(`${context}.${key} contains duplicate values`);
@@ -184,7 +185,7 @@ export function assertEntityIdFeatureConstraints(
 
 function formatFeatureSet(features: Record<string, unknown>): string {
 	const pairs = Object.entries(features)
-		.filter(([, value]) => value !== undefined)
+		.filter(([, value]) => value !== null)
 		.sort(([left], [right]) => left.localeCompare(right))
 		.map(([key, rawValue]) => {
 			assertNoFeatureDelimiters(key, `Feature key ${key}`);

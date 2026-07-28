@@ -2,28 +2,31 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeOtherFeatures = {
 	inherent: {
-		abbr?: AbstractFeatureValue<"abbr">;
-		foreign?: AbstractFeatureValue<"foreign">;
-		hyph?: AbstractFeatureValue<"hyph">;
-		numType?: Extract<
+		abbr: AbstractFeatureValue<"abbr"> | null;
+		foreign: AbstractFeatureValue<"foreign"> | null;
+		hyph: AbstractFeatureValue<"hyph"> | null;
+		numType: Extract<
 			AbstractFeatureValue<"numType">,
 			"Card" | "Mult" | "Range"
-		>;
+		> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		gender?: Extract<
+		> | null;
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
-		mood?: Extract<AbstractFeatureValue<"mood">, "Imp" | "Ind" | "Sub">;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
-		verbForm?: Extract<
+		> | null;
+		mood: Extract<
+			AbstractFeatureValue<"mood">,
+			"Imp" | "Ind" | "Sub"
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
+		verbForm: Extract<
 			AbstractFeatureValue<"verbForm">,
 			"Fin" | "Inf" | "Part"
-		>;
+		> | null;
 	};
 };

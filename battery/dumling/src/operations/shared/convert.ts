@@ -39,6 +39,7 @@ export function buildConvertOperations<
 					language: lemma.language,
 					normalizedFullSurface: lemma.canonicalLemma,
 					surfaceKind: "Citation",
+					surfaceFeatures: null,
 					lemma,
 				} as unknown as ReturnType<
 					LanguageApi<L>["convert"]["lemma"]["toSurface"]
@@ -50,6 +51,7 @@ export function buildConvertOperations<
 						language: lemma.language,
 						normalizedFullSurface: lemma.canonicalLemma,
 						surfaceKind: "Citation",
+						surfaceFeatures: null,
 						lemma,
 					} as unknown as Surface<L>,
 					options,

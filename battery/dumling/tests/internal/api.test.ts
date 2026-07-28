@@ -20,6 +20,8 @@ describe("API", () => {
 			lemmaSubKind: "NOUN",
 			inherentFeatures: {
 				gender: "Masc",
+
+				hyph: null,
 			},
 			meaningInEmojis: "🌊",
 		});
@@ -34,7 +36,7 @@ describe("API", () => {
 
 		expect(lemma.language).toBe("de");
 		expect(surface.normalizedFullSurface).toBe("See");
-		expect(selection.selectionFeatures).toBeUndefined();
+		expect(selection.selectionFeatures).toBeNull();
 		expect(dumling.de.extract.lemma(selection)).toBe(lemma);
 		expect(dumling.de.describe.as.lemma(selection)).toEqual({
 			language: "de",
@@ -70,7 +72,10 @@ describe("API", () => {
 			canonicalLemma: "See",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
+			inherentFeatures: {
+				hyph: null,
+				gender: null,
+			},
 			meaningInEmojis: "🌊",
 		});
 
@@ -88,7 +93,11 @@ describe("API", () => {
 
 		const typoSelection = dumling.de.create.selection({
 			language: "he",
-			selectionFeatures: { orthography: "Typo" },
+			selectionFeatures: {
+				orthography: "Typo",
+				coverage: null,
+				spelling: null,
+			},
 			spelledSelection: "Sse",
 
 			surface: {
@@ -102,7 +111,9 @@ describe("API", () => {
 		expect(citationSurface.surfaceKind).toBe("Citation");
 		expect(typoSelection.language).toBe(typoSelection.surface.language);
 		expect(typoSelection.selectionFeatures).toEqual({
+			coverage: null,
 			orthography: "Typo",
+			spelling: null,
 		});
 	});
 
@@ -111,7 +122,10 @@ describe("API", () => {
 			canonicalLemma: "See",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
+			inherentFeatures: {
+				hyph: null,
+				gender: null,
+			},
 			meaningInEmojis: "🌊",
 		});
 
@@ -120,7 +134,7 @@ describe("API", () => {
 			dumling.de.convert.lemma.toSurface(lemma),
 		);
 
-		expect(fromLemma.selectionFeatures).toBeUndefined();
+		expect(fromLemma.selectionFeatures).toBeNull();
 		expect(fromLemma.spelledSelection).toBe("See");
 		expect(fromSurface).toEqual(fromLemma);
 	});
@@ -130,18 +144,28 @@ describe("API", () => {
 			canonicalLemma: "See",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
+			inherentFeatures: {
+				hyph: null,
+				gender: null,
+			},
 			meaningInEmojis: "🌊",
 		});
 		const citationSurface = dumling.de.create.surface.citation({
 			lemma,
 			normalizedFullSurface: "See",
+
+			surfaceFeatures: null,
 		});
 		const verbLemma = dumling.de.create.lemma({
 			canonicalLemma: "gehen",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "VERB",
-			inherentFeatures: {},
+			inherentFeatures: {
+				verbType: null,
+				lexicallyReflexive: null,
+				hasSepPrefix: null,
+				hasGovPrep: null,
+			},
 			meaningInEmojis: "🚶",
 		});
 
@@ -153,15 +177,24 @@ describe("API", () => {
 			}),
 		).toThrow("surfaceFeatures must contain at least one marked value");
 		expect(() =>
+			dumling.de.create.surface.citation({
+				lemma,
+				normalizedFullSurface: "See",
+				surfaceFeatures: { historicalStatus: null },
+			}),
+		).toThrow("surfaceFeatures must contain at least one marked value");
+		expect(() =>
 			dumling.de.create.surface.inflection({
 				lemma: verbLemma,
 				normalizedFullSurface: "geht",
 				surfaceFeatures: {} as never,
 				inflectionalFeatures: {
+					mood: null,
 					number: "Sing",
 					person: "3",
 					tense: "Pres",
 					verbForm: "Fin",
+					voice: null,
 				},
 			}),
 		).toThrow("surfaceFeatures must contain at least one marked value");
@@ -170,6 +203,17 @@ describe("API", () => {
 				surface: citationSurface,
 				spelledSelection: "See",
 				selectionFeatures: {} as never,
+			}),
+		).toThrow("selectionFeatures must contain at least one marked value");
+		expect(() =>
+			dumling.de.create.selection({
+				surface: citationSurface,
+				spelledSelection: "See",
+				selectionFeatures: {
+					coverage: null,
+					orthography: null,
+					spelling: null,
+				},
 			}),
 		).toThrow("selectionFeatures must contain at least one marked value");
 		expect(() =>
@@ -191,6 +235,8 @@ describe("API", () => {
 			lemmaSubKind: "NOUN",
 			inherentFeatures: {
 				gender: "Masc",
+
+				hyph: null,
 			},
 			meaningInEmojis: "🌊",
 		});
@@ -221,9 +267,13 @@ describe("API", () => {
 				lemmaSubKind: "NOUN",
 				inherentFeatures: {
 					gender: "Masc",
+
+					hyph: null,
 				},
 				meaningInEmojis: "🌊",
 			},
+
+			surfaceFeatures: null,
 		});
 	});
 
@@ -232,16 +282,28 @@ describe("API", () => {
 			canonicalLemma: "run",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "VERB",
-			inherentFeatures: {},
+			inherentFeatures: {
+				style: null,
+				phrasal: null,
+				hasGovPrep: null,
+				extPos: null,
+				abbr: null,
+			},
 			meaningInEmojis: "🏃",
 		});
 		const surface = dumling.en.create.surface.inflection({
 			lemma,
 			normalizedFullSurface: "ran",
 			inflectionalFeatures: {
+				mood: null,
+				number: null,
+				person: null,
 				tense: "Past",
 				verbForm: "Fin",
+				voice: null,
 			},
+
+			surfaceFeatures: null,
 		});
 
 		const csv = dumling.en.id.encode.asCsv(surface);
@@ -269,6 +331,8 @@ describe("API", () => {
 				lemmaSubKind: "NOUN",
 				inherentFeatures: {
 					gender: "Masc",
+
+					hyph: null,
 				},
 				meaningInEmojis: "🌊",
 			}),
@@ -293,7 +357,7 @@ describe("API", () => {
 			lemmaSubKind: "NOUN",
 			inherentFeatures: {
 				gender: "Masc",
-				unexpected: "x",
+				hyph: null,
 			},
 			meaningInEmojis: "🌊",
 		});
@@ -305,6 +369,7 @@ describe("API", () => {
 		expect(parsedLemma.data.canonicalLemma).toBe("see");
 		expect(parsedLemma.data.inherentFeatures).toEqual({
 			gender: "Masc",
+			hyph: null,
 		});
 
 		const parsedSelection = dumling.de.parse.selection({
@@ -346,7 +411,7 @@ describe("API", () => {
 		expect(result.error.code).toBe("InvalidInput");
 	});
 
-	it("rejects empty inflectional features after stripping unknown keys", () => {
+	it("strictly rejects unknown inflectional feature keys", () => {
 		const result = dumling.de.parse.surface({
 			language: "de",
 			normalizedFullSurface: "Ging",
@@ -369,11 +434,6 @@ describe("API", () => {
 			throw new Error("expected invalid parse result");
 		}
 		expect(result.error.code).toBe("InvalidInput");
-		expect(
-			result.error.issues?.some((issue) =>
-				issue.includes("inflectionalFeatures"),
-			),
-		).toBe(true);
 	});
 
 	it("rejects known-but-illegal german verbal inflection keys", () => {
@@ -405,7 +465,11 @@ describe("API", () => {
 	it("round-trips german ids and exposes english and hebrew language behavior", () => {
 		const selection = dumling.de.parse.selection({
 			language: "de",
-			selectionFeatures: { orthography: "Typo", coverage: "Partial" },
+			selectionFeatures: {
+				orthography: "Typo",
+				coverage: "Partial",
+				spelling: null,
+			},
 			spelledSelection: "Sse",
 
 			surface: {
@@ -446,7 +510,14 @@ describe("API", () => {
 			canonicalLemma: "see",
 			lemmaKind: "Lexeme",
 			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
+			inherentFeatures: {
+				style: null,
+				numType: null,
+				numForm: null,
+				foreign: null,
+				extPos: null,
+				abbr: null,
+			},
 			meaningInEmojis: "👀",
 		});
 		expect(englishLemma.language).toBe("en");
@@ -466,6 +537,8 @@ describe("API", () => {
 			lemmaSubKind: "VERB",
 			inherentFeatures: {
 				hebBinyan: "PAAL",
+
+				hebExistential: null,
 			},
 			meaningInEmojis: "✍️",
 		});
@@ -513,7 +586,10 @@ describe("API", () => {
 				canonicalLemma: "See",
 				lemmaKind: "Lexeme",
 				lemmaSubKind: "NOUN",
-				inherentFeatures: {},
+				inherentFeatures: {
+					hyph: null,
+					gender: null,
+				},
 				meaningInEmojis: "🌊",
 			}),
 		);

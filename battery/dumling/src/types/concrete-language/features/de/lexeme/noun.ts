@@ -2,17 +2,17 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 
 export type DeNounFeatures = {
 	inherent: {
-		gender?: Extract<
+		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"
-		>;
-		hyph?: AbstractFeatureValue<"hyph">;
+		> | null;
+		hyph: AbstractFeatureValue<"hyph"> | null;
 	};
 	inflectional: {
-		case?: Extract<
+		case: Extract<
 			AbstractFeatureValue<"case">,
 			"Acc" | "Dat" | "Gen" | "Nom"
-		>;
-		number?: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing">;
+		> | null;
+		number: Extract<AbstractFeatureValue<"number">, "Plur" | "Sing"> | null;
 	};
 };

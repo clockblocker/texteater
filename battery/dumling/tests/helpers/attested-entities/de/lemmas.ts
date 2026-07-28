@@ -5,6 +5,8 @@ export const germanMasculineSeeLemma = {
 	canonicalLemma: "See",
 	inherentFeatures: {
 		gender: "Masc",
+
+		hyph: null,
 	},
 	language: "de",
 	lemmaKind: "Lexeme",
@@ -17,6 +19,8 @@ export const germanKindLemma = {
 	canonicalLemma: "Kind",
 	inherentFeatures: {
 		gender: "Neut",
+
+		hyph: null,
 	},
 	language: "de",
 	lemmaKind: "Lexeme",
@@ -29,6 +33,8 @@ export const germanHausLemma = {
 	canonicalLemma: "Haus",
 	inherentFeatures: {
 		gender: "Neut",
+
+		hyph: null,
 	},
 	language: "de",
 	lemmaKind: "Lexeme",
@@ -39,7 +45,12 @@ export const germanHausLemma = {
 // Attestation: "Wir [gehen] nach Hause."
 export const germanGehenLemma = {
 	canonicalLemma: "gehen",
-	inherentFeatures: {},
+	inherentFeatures: {
+		verbType: null,
+		lexicallyReflexive: null,
+		hasSepPrefix: null,
+		hasGovPrep: null,
+	},
 	language: "de",
 	lemmaKind: "Lexeme",
 	lemmaSubKind: "VERB",
@@ -51,6 +62,9 @@ export const germanBVGLemma = {
 	canonicalLemma: "BVG",
 	inherentFeatures: {
 		abbr: "Yes",
+
+		gender: null,
+		foreign: null,
 	},
 	language: "de",
 	lemmaKind: "Lexeme",
@@ -61,7 +75,9 @@ export const germanBVGLemma = {
 // Attestation: "[Ab]fahrt nur am Gleis 3."
 export const germanAbPrefixLemma = {
 	canonicalLemma: "ab",
-	inherentFeatures: {},
+	inherentFeatures: {
+		hasSepPrefix: null,
+	},
 	language: "de",
 	lemmaKind: "Morpheme",
 	lemmaSubKind: "Prefix",

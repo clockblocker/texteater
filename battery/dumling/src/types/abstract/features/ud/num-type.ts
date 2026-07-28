@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 
 const numTypeValues = [
 	"Card", // cardinal number; or corresponding interrogative / relative / indefinite / demonstrative word

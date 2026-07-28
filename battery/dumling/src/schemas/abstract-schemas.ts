@@ -1,5 +1,5 @@
-import type { z } from "zod/v3";
-import { z as zod } from "zod/v3";
+import type { z } from "zod";
+import { z as zod } from "zod";
 import {
 	AbstractLanguageTag,
 	LemmaKind,
@@ -48,31 +48,25 @@ type AbstractSchemaRegistry = {
 	};
 };
 
-const abstractLemmaDescriptorSchema = zod
-	.object({
-		language: AbstractLanguageTag,
-		lemmaKind: LemmaKind,
-		lemmaSubKind: LemmaSubKind,
-	})
-	.strict() as unknown as z.ZodType<AbstractDescriptor<"Lemma">>;
+const abstractLemmaDescriptorSchema = zod.strictObject({
+	language: AbstractLanguageTag,
+	lemmaKind: LemmaKind,
+	lemmaSubKind: LemmaSubKind,
+}) as unknown as z.ZodType<AbstractDescriptor<"Lemma">>;
 
-const abstractSurfaceDescriptorSchema = zod
-	.object({
-		language: AbstractLanguageTag,
-		lemmaKind: LemmaKind,
-		lemmaSubKind: LemmaSubKind,
-		surfaceKind: SurfaceKind,
-	})
-	.strict() as unknown as z.ZodType<AbstractDescriptor<"Surface">>;
+const abstractSurfaceDescriptorSchema = zod.strictObject({
+	language: AbstractLanguageTag,
+	lemmaKind: LemmaKind,
+	lemmaSubKind: LemmaSubKind,
+	surfaceKind: SurfaceKind,
+}) as unknown as z.ZodType<AbstractDescriptor<"Surface">>;
 
-const abstractSelectionDescriptorSchema = zod
-	.object({
-		language: AbstractLanguageTag,
-		lemmaKind: LemmaKind,
-		lemmaSubKind: LemmaSubKind,
-		surfaceKind: SurfaceKind,
-	})
-	.strict() as unknown as z.ZodType<AbstractDescriptor<"Selection">>;
+const abstractSelectionDescriptorSchema = zod.strictObject({
+	language: AbstractLanguageTag,
+	lemmaKind: LemmaKind,
+	lemmaSubKind: LemmaSubKind,
+	surfaceKind: SurfaceKind,
+}) as unknown as z.ZodType<AbstractDescriptor<"Selection">>;
 
 export const abstractSchemas = {
 	entity: {

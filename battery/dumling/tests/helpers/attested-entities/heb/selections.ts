@@ -11,6 +11,8 @@ export const hebrewKatvuStandardFullSelection = {
 	spelledSelection: "כתבו",
 
 	surface: hebrewKatvuInflectionSurface,
+
+	selectionFeatures: null,
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
@@ -19,6 +21,8 @@ export const hebrewShanaCitationSelection = {
 	spelledSelection: "שנה",
 
 	surface: hebrewShanaCitationSurface,
+
+	selectionFeatures: null,
 } satisfies Selection<"he", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
@@ -27,16 +31,24 @@ export const hebrewUsAbbreviationSelection = {
 	spelledSelection: "ארה״ב",
 
 	surface: hebrewUsAbbreviationCitationSurface,
+
+	selectionFeatures: null,
 } satisfies Selection<"he", "Citation", "Lexeme", "PROPN">;
 
 // Attestation: "הם [כָּתְבוּ] מכתב."
 export const hebrewKatvuPointedVariantSelection = {
 	language: "he",
-	selectionFeatures: { spelling: "Variant" },
+	selectionFeatures: {
+		spelling: "Variant",
+		coverage: null,
+		orthography: null,
+	},
 	spelledSelection: "כָּתְבוּ",
 
 	surface: {
 		...hebrewKatvuInflectionSurface,
 		normalizedFullSurface: "כָּתְבוּ",
+
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;

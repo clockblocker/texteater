@@ -1,4 +1,4 @@
-import type { ZodTypeAny } from "zod";
+import type { ZodType } from "zod";
 
 export type PromptExample = {
 	readonly id: string;
@@ -11,8 +11,8 @@ export type PromptSource = {
 	readonly examples: readonly PromptExample[];
 	readonly numOfFirstExamplesToUse: number;
 	readonly agentRole?: string;
-	readonly inputSchema?: ZodTypeAny;
-	readonly outputSchema?: ZodTypeAny;
+	readonly inputSchema?: ZodType;
+	readonly outputSchema?: ZodType;
 };
 
 export type PromptBuild = {
@@ -58,7 +58,7 @@ export type EvaluationRun = {
 export type PromptExecutionRequest = {
 	readonly systemPrompt: string;
 	readonly input: unknown;
-	readonly outputSchema?: ZodTypeAny;
+	readonly outputSchema?: ZodType;
 };
 
 export type PromptExecutor = (

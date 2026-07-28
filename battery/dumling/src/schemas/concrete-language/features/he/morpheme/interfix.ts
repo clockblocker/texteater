@@ -1,10 +1,8 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { HeInterfixMorphemeFeatures } from "../../../../../types/concrete-language/features/he/morpheme/interfix.js";
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
-export const heInterfixMorphemeFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({}),
-		inflectional: buildOptionalFeatureObjectSchema({}),
-	})
-	.strict() satisfies z.ZodSchema<HeInterfixMorphemeFeatures>;
+export const heInterfixMorphemeFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({}),
+	inflectional: buildOptionalFeatureObjectSchema({}),
+}) satisfies z.ZodSchema<HeInterfixMorphemeFeatures>;

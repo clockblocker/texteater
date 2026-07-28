@@ -1,4 +1,4 @@
-import { z } from "zod/v3";
+import { z } from "zod";
 import type { DePronounFeatures } from "../../../../../types/concrete-language/features/de/lexeme/pronoun.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
@@ -6,44 +6,39 @@ import {
 	requireNonEmptyFeatureObject,
 } from "../../../../shared/feature-helpers.js";
 
-export const dePronounFeaturesSchema = z
-	.object({
-		inherent: buildOptionalFeatureObjectSchema({
-			extPos: abstractFeatureAtomSchemas.extPos.extract(["DET"]),
-			foreign: abstractFeatureAtomSchemas.foreign,
-			person: abstractFeatureAtomSchemas.person.extract(["1", "2", "3"]),
-			polite: abstractFeatureAtomSchemas.polite.extract(["Form", "Infm"]),
-			poss: abstractFeatureAtomSchemas.poss,
-			pronType: abstractFeatureAtomSchemas.pronType.extract([
-				"Dem",
-				"Ind",
-				"Int",
-				"Neg",
-				"Prs",
-				"Rcp",
-				"Rel",
-				"Tot",
+export const dePronounFeaturesSchema = z.strictObject({
+	inherent: buildOptionalFeatureObjectSchema({
+		extPos: abstractFeatureAtomSchemas.extPos.extract(["DET"]),
+		foreign: abstractFeatureAtomSchemas.foreign,
+		person: abstractFeatureAtomSchemas.person.extract(["1", "2", "3"]),
+		polite: abstractFeatureAtomSchemas.polite.extract(["Form", "Infm"]),
+		poss: abstractFeatureAtomSchemas.poss,
+		pronType: abstractFeatureAtomSchemas.pronType.extract([
+			"Dem",
+			"Ind",
+			"Int",
+			"Neg",
+			"Prs",
+			"Rcp",
+			"Rel",
+			"Tot",
+		]),
+	}),
+	inflectional: requireNonEmptyFeatureObject(
+		buildOptionalFeatureObjectSchema({
+			case: abstractFeatureAtomSchemas.case.extract([
+				"Acc",
+				"Dat",
+				"Gen",
+				"Nom",
 			]),
+			gender: abstractFeatureAtomSchemas.gender.extract([
+				"Fem",
+				"Masc",
+				"Neut",
+			]),
+			number: abstractFeatureAtomSchemas.number.extract(["Plur", "Sing"]),
+			reflex: abstractFeatureAtomSchemas.reflex,
 		}),
-		inflectional: requireNonEmptyFeatureObject(
-			buildOptionalFeatureObjectSchema({
-				case: abstractFeatureAtomSchemas.case.extract([
-					"Acc",
-					"Dat",
-					"Gen",
-					"Nom",
-				]),
-				gender: abstractFeatureAtomSchemas.gender.extract([
-					"Fem",
-					"Masc",
-					"Neut",
-				]),
-				number: abstractFeatureAtomSchemas.number.extract([
-					"Plur",
-					"Sing",
-				]),
-				reflex: abstractFeatureAtomSchemas.reflex,
-			}),
-		),
-	})
-	.strict() satisfies z.ZodSchema<DePronounFeatures>;
+	),
+}) satisfies z.ZodSchema<DePronounFeatures>;
