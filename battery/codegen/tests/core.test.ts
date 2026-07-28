@@ -412,7 +412,7 @@ test("a missing ownership manifest never authorizes deletion", async () => {
 		outputs: {
 			generated: {
 				root: "/workspace/output",
-				ownership: { manifest: ".dumcodegen/owned.json" },
+				ownership: { manifest: ".codegen/owned.json" },
 			},
 		},
 		build: () => [],
@@ -455,7 +455,7 @@ test("initial ownership safely bootstraps an existing generator", async () => {
 
 test("unsafe stale paths are rejected before mutation", async () => {
 	const fileSystem = new MemoryFileSystem({
-		"/workspace/output/.dumcodegen/owned.json":
+		"/workspace/output/.codegen/owned.json":
 			'{"version":1,"files":["../outside.txt"]}\n',
 	});
 	const recipe = defineCodegen({
@@ -463,7 +463,7 @@ test("unsafe stale paths are rejected before mutation", async () => {
 		outputs: {
 			generated: {
 				root: "/workspace/output",
-				ownership: { manifest: ".dumcodegen/owned.json" },
+				ownership: { manifest: ".codegen/owned.json" },
 			},
 		},
 		build: () => [],
@@ -476,7 +476,7 @@ test("unsafe stale paths are rejected before mutation", async () => {
 });
 
 test("the Node adapter rejects symlink traversal before stale deletion", async () => {
-	const directory = await mkdtemp(join(tmpdir(), "dumcodegen-symlink-"));
+	const directory = await mkdtemp(join(tmpdir(), "codegen-symlink-"));
 	const output = join(directory, "output");
 	const outside = join(directory, "outside");
 	const victim = join(outside, "victim.txt");
@@ -511,7 +511,7 @@ test("the Node adapter rejects symlink traversal before stale deletion", async (
 });
 
 test("the Node adapter writes ordinary files and preserves clean output", async () => {
-	const directory = await mkdtemp(join(tmpdir(), "dumcodegen-"));
+	const directory = await mkdtemp(join(tmpdir(), "codegen-"));
 	try {
 		const recipe = defineCodegen({
 			inputs: {},

@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { namedBlockMarkdown, runCodegen } from "../../codegen/dist";
+import { namedBlockMarkdown, runCodegen } from "codegen";
 
 const generatorRoot = dirname(fileURLToPath(import.meta.url));
 

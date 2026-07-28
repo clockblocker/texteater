@@ -4,7 +4,7 @@ The build-your-own-dictionary product is a Bun monorepo split by
 responsibility:
 
 - `app/dumling-docs`: user-facing documentation for `dumling`
-- `battery/dumcodegen`: deterministic, filesystem-safe code generation
+- `battery/codegen`: deterministic, filesystem-safe code generation
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
 - `battery/dumgen`: deterministic prompt construction and evaluation
 - `battery/dumdict`: dictionary relations, workflows, and storage boundaries

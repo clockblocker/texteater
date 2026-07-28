@@ -134,7 +134,7 @@ export const nodeFileSystem: CodegenFileSystem = {
 		await mkdir(dirname(path), { recursive: true });
 		const temporaryPath = resolve(
 			dirname(path),
-			`.${basename(path)}.dumcodegen-${process.pid}-${temporaryFileCounter++}.tmp`,
+			`.${basename(path)}.codegen-${process.pid}-${temporaryFileCounter++}.tmp`,
 		);
 		try {
 			await writeFile(temporaryPath, content, { flag: "wx" });

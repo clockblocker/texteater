@@ -1,4 +1,4 @@
-import { runCodegen } from "dumcodegen";
+import { runCodegen } from "codegen";
 import type { SourcePage } from "../shared/types";
 import { defineDocsCodegen } from "./codegen";
 import { discoverDocsInitialOwnership } from "./initial-ownership";

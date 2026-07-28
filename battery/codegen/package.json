@@ -1,5 +1,5 @@
 {
-	"name": "dumcodegen",
+	"name": "codegen",
 	"version": "0.1.0",
 	"description": "Deterministic, filesystem-safe code generation recipes.",
 	"type": "module",

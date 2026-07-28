@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { runCodegen } from "dumcodegen";
+import { runCodegen } from "codegen";
 import { getLanguageApi } from "dumling";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
 import { generatedEntitiesDir } from "../shared/paths";

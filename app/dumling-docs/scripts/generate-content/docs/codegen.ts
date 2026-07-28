@@ -1,5 +1,5 @@
 import { join, relative } from "node:path";
-import { defineCodegen } from "dumcodegen";
+import { defineCodegen } from "codegen";
 import { generatedDocsDir, publicDir, siteRoot } from "../shared/paths";
 import { serializeFrontmatter } from "./frontmatter";
 import type { DocsInitialOwnership } from "./initial-ownership";
@@ -39,14 +39,14 @@ export function defineDocsCodegen(
 		generatedDocs: {
 			root: generatedDocsDir,
 			ownership: {
-				manifest: join(siteRoot, ".dumcodegen/docs-generated.json"),
+				manifest: join(siteRoot, ".codegen/docs-generated.json"),
 				initialFiles: initialOwnership.generatedDocs,
 			},
 		},
 		publicDocs: {
 			root: publicDir,
 			ownership: {
-				manifest: join(siteRoot, ".dumcodegen/docs-public.json"),
+				manifest: join(siteRoot, ".codegen/docs-public.json"),
 				initialFiles: initialOwnership.publicDocs,
 			},
 		},

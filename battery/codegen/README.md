@@ -1,9 +1,9 @@
-# dumcodegen
+# codegen
 
-`dumcodegen` runs deterministic, typed code-generation recipes.
+`codegen` runs deterministic, typed code-generation recipes.
 
 ```ts
-import { namedBlockMarkdown, runCodegen } from "dumcodegen";
+import { namedBlockMarkdown, runCodegen } from "codegen";
 
 const readme = namedBlockMarkdown({
 	template: "./README.template.md",
@@ -32,7 +32,7 @@ For general generators, `defineCodegen` separates discovery, primary
 artifacts, and derived artifacts:
 
 ```ts
-import { defineCodegen, runCodegen } from "dumcodegen";
+import { defineCodegen, runCodegen } from "codegen";
 
 const recipe = defineCodegen({
 	inputs: {
@@ -47,7 +47,7 @@ const recipe = defineCodegen({
 		public: {
 			root: "./public",
 			ownership: {
-				manifest: ".dumcodegen/public.json",
+				manifest: ".codegen/public.json",
 			},
 		},
 	},

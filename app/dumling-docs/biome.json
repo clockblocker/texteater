@@ -5,7 +5,7 @@
 			"!!dist",
 			"!!node_modules",
 			"!!.astro",
-			"!!.dumcodegen",
+			"!!.codegen",
 			"!!public/**/*.md",
 			"!!public/nav.json",
 			"!!src/generated"

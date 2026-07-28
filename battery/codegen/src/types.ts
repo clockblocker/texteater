@@ -104,7 +104,7 @@ export type RecipeDefinition<
 	) => Awaitable<readonly ArtifactDraft<OutputKey<O>, Metadata>[]>;
 }>;
 
-export const recipeDefinition = Symbol("dumcodegen.recipe");
+export const recipeDefinition = Symbol("codegen.recipe");
 
 export type CodegenRecipe<
 	I extends Inputs = Inputs,

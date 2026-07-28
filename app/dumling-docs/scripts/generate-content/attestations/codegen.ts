@@ -1,5 +1,5 @@
 import { join, relative } from "node:path";
-import { defineCodegen } from "dumcodegen";
+import { defineCodegen } from "codegen";
 import { serializeFrontmatter } from "../docs/frontmatter";
 import {
 	classificationLogbookDir,
@@ -62,10 +62,7 @@ export function defineAttestationsCodegen(
 		classificationLogbooks: {
 			root: classificationLogbookDir,
 			ownership: {
-				manifest: join(
-					siteRoot,
-					".dumcodegen/attestations-logbooks.json",
-				),
+				manifest: join(siteRoot, ".codegen/attestations-logbooks.json"),
 			},
 		},
 		generatedEntities: {
@@ -73,7 +70,7 @@ export function defineAttestationsCodegen(
 			ownership: {
 				manifest: join(
 					siteRoot,
-					".dumcodegen/attestations-generated.json",
+					".codegen/attestations-generated.json",
 				),
 				initialFiles: initialOwnership.generatedEntities,
 			},
@@ -83,7 +80,7 @@ export function defineAttestationsCodegen(
 			ownership: {
 				manifest: join(
 					siteRoot,
-					".dumcodegen/attestations-legacy-generated.json",
+					".codegen/attestations-legacy-generated.json",
 				),
 				initialFiles: initialOwnership.legacyGeneratedDocs,
 			},
@@ -91,10 +88,7 @@ export function defineAttestationsCodegen(
 		publicAttestations: {
 			root: publicDir,
 			ownership: {
-				manifest: join(
-					siteRoot,
-					".dumcodegen/attestations-public.json",
-				),
+				manifest: join(siteRoot, ".codegen/attestations-public.json"),
 				initialFiles: initialOwnership.publicAttestations,
 			},
 		},
