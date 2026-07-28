@@ -1,0 +1,6 @@
+{
+	"extends": ["../../tooling/biome/base.json"],
+	"files": {
+		"includes": ["!!dist", "!!node_modules"]
+	}
+}
