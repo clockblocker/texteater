@@ -34,5 +34,6 @@
 	},
 	"files.associations": {
 		"bun.lock": "jsonc"
-	}
+	},
+	"js/ts.experimental.useTsgo": true
 }
