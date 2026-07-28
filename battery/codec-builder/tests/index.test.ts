@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod/v3";
-import { codecBuilder } from "../src/index";
+import { codecBuilder3 as codecBuilder } from "../src/v3";
 
 describe("codecBuilder.helpers", () => {
 	const c = codecBuilder.fieldCodec;

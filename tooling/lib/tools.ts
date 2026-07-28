@@ -18,6 +18,6 @@ export function toolPaths(repositoryRoot: string): ToolPaths {
 			"dependency-cruise.mjs",
 		),
 		knip: join(modules, "knip", "bin", "knip.js"),
-		typescript: join(modules, "@typescript", "native", "bin", "tsc"),
+		typescript: join(modules, "typescript", "bin", "tsc"),
 	};
 }

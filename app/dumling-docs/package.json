@@ -6,7 +6,7 @@
 	"scripts": {
 		"astro:build": "astro build",
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run astro:build && bun run scripts/flatten-html-routes.ts",
-		"check": "bun ../../node_modules/@typescript/native/bin/tsc -p tsconfig.json --noEmit",
+		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"dev": "bun run generate:content && astro dev",
 		"fix": "bun run --silent biome check --write .",
 		"generate:attestations": "bun run scripts/generate-attestations.ts",
@@ -25,11 +25,10 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.5",
-		"@typescript/native": "npm:typescript@^7.0.2",
 		"@types/node": "^24.5.2",
 		"bun-types": "1.3.14",
 		"dependency-cruiser": "^18.1.0",
 		"knip": "^6.29.0",
-		"typescript": "^6.0.2"
+		"typescript": "^7.0.2"
 	}
 }

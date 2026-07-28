@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod/v3";
-import { codecBuilder } from "../src";
+import { codecBuilder3 as codecBuilder } from "../src/v3";
 import {
 	buildStrictFieldAdapter,
 	buildStrictFieldAdapterCodec,

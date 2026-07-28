@@ -196,7 +196,7 @@ describe("published package entrypoints", () => {
 			run(
 				resolve(
 					projectRoot,
-					"../../node_modules/@typescript/native/bin/tsc",
+					"../../node_modules/typescript/bin/tsc",
 				),
 				[
 					"--project",

@@ -27,7 +27,6 @@ export default {
 		...(localConfig.ignoreDependencies ?? []),
 		...workspaceDependencies,
 		"@biomejs/biome",
-		"@typescript/native",
 		"bun-types",
 		"dependency-cruiser",
 		"knip",

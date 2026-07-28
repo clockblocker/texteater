@@ -18,7 +18,6 @@ export interface PolicyIssue {
 export const governedDependencies = [
 	"zod",
 	"typescript",
-	"@typescript/native",
 	"@types/node",
 	"bun-types",
 	"@biomejs/biome",

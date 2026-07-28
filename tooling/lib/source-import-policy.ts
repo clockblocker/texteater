@@ -8,7 +8,6 @@ import {
 	relative,
 	resolve,
 } from "node:path";
-import * as ts from "typescript";
 import { stringRecord, type Workspace } from "./workspaces";
 
 export interface ImportPolicyIssue {
@@ -46,42 +45,11 @@ function importSpecifiers(contents: string, file: string): string[] {
 		extname(file) === ".astro"
 			? (contents.match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? "")
 			: contents;
-	const source = ts.createSourceFile(
-		file,
-		script,
-		ts.ScriptTarget.Latest,
-		true,
-		file.endsWith(".tsx") || file.endsWith(".jsx")
-			? ts.ScriptKind.TSX
-			: ts.ScriptKind.TS,
-	);
-	const specifiers: string[] = [];
-
-	function add(node: ts.Expression | undefined): void {
-		if (node && ts.isStringLiteralLike(node)) specifiers.push(node.text);
-	}
-
-	function visit(node: ts.Node): void {
-		if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
-			add(node.moduleSpecifier);
-		} else if (
-			ts.isCallExpression(node) &&
-			(node.expression.kind === ts.SyntaxKind.ImportKeyword ||
-				(ts.isIdentifier(node.expression) &&
-					node.expression.text === "require"))
-		) {
-			add(node.arguments[0]);
-		} else if (
-			ts.isImportTypeNode(node) &&
-			ts.isLiteralTypeNode(node.argument)
-		) {
-			add(node.argument.literal);
-		}
-		ts.forEachChild(node, visit);
-	}
-
-	visit(source);
-	return specifiers;
+	const loader =
+		file.endsWith(".tsx") || file.endsWith(".jsx") ? "tsx" : "ts";
+	return new Bun.Transpiler({ loader })
+		.scanImports(script)
+		.map(({ path }) => path);
 }
 
 function workspaceForPath(

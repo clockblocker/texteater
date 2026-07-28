@@ -4,6 +4,7 @@ The build-your-own-dictionary product is a Bun monorepo split by
 responsibility:
 
 - `app/dumling-docs`: user-facing documentation for `dumling`
+- `battery/codec-builder`: composable Zod 3 and Zod 4 codec builders
 - `battery/codegen`: deterministic, filesystem-safe code generation
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
 - `battery/dumgen`: deterministic prompt construction and evaluation
@@ -23,7 +24,8 @@ bun install
 ```
 
 Turborepo and Prettier are intentionally not part of the toolchain. Bun runs
-the workspace commands, and Biome 2 provides formatting and linting.
+the workspace commands, TypeScript 7 provides compilation and type checking,
+and Biome 2 provides formatting and linting.
 
 ## Package autonomy
 
