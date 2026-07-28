@@ -1,18 +1,17 @@
 import { z } from "zod/v4";
 
-import type { SchemaCodec } from "../../../../core/types";
-
 export function toArrayOf<
 	TInputSchema extends z.ZodTypeAny,
 	TOutputSchema extends z.ZodTypeAny,
->(itemCodec: SchemaCodec<TInputSchema, TOutputSchema>) {
-	const inputSchema = z.array(itemCodec.inputSchema);
-	const outputSchema = z.array(itemCodec.outputSchema);
-
-	return {
-		fromInput: (input) => input.map(itemCodec.fromInput),
-		fromOutput: (output) => output.map(itemCodec.fromOutput),
-		inputSchema,
-		outputSchema,
-	} as const satisfies SchemaCodec<typeof inputSchema, typeof outputSchema>;
+>(itemCodec: z.ZodCodec<TInputSchema, TOutputSchema>) {
+	return z.codec(z.array(itemCodec.in), z.array(itemCodec.out), {
+		decode: (input) =>
+			input.map((item) =>
+				itemCodec.decode(item as z.input<TInputSchema>),
+			) as z.input<TOutputSchema>[],
+		encode: (output) =>
+			output.map((item) =>
+				itemCodec.encode(item as z.output<TOutputSchema>),
+			) as z.output<TInputSchema>[],
+	});
 }

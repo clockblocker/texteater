@@ -2,7 +2,8 @@
 
 Composable codec builders on top of Zod for reshaping data and building strict field adapters.
 
-The package supports Zod 3 and Zod 4 Classic. Zod Mini is not supported.
+The package supports Zod 3 and Zod 4 Classic. The v4 entrypoint requires Zod
+4.4 or newer and returns native Zod codecs. Zod Mini is not supported.
 
 ## Install
 
@@ -26,8 +27,6 @@ bundler performs ESM tree-shaking:
 ```ts
 import { codecBuilder3, codecBuilder4 } from "codec-builder-library";
 ```
-
-The original `codecBuilder` export remains an alias for `codecBuilder3`.
 
 ## Zod 3 usage
 
@@ -55,7 +54,24 @@ const codec = codecBuilder3.buildStrictFieldAdapterCodec(serverSchema, {
 ```
 
 For Zod 4, import `codecBuilder4` from `codec-builder-library/v4` and Zod from
-`zod/v4` (or the `zod` package root when using Zod 4).
+`zod/v4` (or the `zod` package root when using Zod 4). Its schema-backed
+builders and field codecs use Zod's validated `decode`/`encode` contract:
+
+```ts
+import { codecBuilder4 } from "codec-builder-library/v4";
+
+const numericString =
+	codecBuilder4.fieldCodec.nonNullish.numericString.and.number;
+
+numericString.decode(42); // "42"
+numericString.encode("42.5"); // 42.5
+
+numericString.in; // input schema
+numericString.out; // output schema
+```
+
+The schema-less `buildStrictFieldAdapter()` also uses the `decode` and
+`encode` names, but cannot provide Zod validation because it has no schemas.
 
 ## Development
 

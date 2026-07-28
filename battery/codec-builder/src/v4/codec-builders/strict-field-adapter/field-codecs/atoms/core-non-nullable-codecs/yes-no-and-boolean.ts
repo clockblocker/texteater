@@ -1,12 +1,9 @@
 import { z } from "zod/v4";
-import type { Codec } from "../../../../../core/types";
 
-const yesNoSchema = z.enum(["Yes", "No"]);
-const booleanSchema = z.boolean();
-
-export const yesNoAndBoolean = {
-	fromInput: (v) => (v ? "Yes" : "No"),
-	fromOutput: (v) => v === "Yes",
-	inputSchema: booleanSchema,
-	outputSchema: yesNoSchema,
-} as const satisfies Codec<"Yes" | "No", boolean>;
+export const yesNoAndBoolean = z.invertCodec(
+	z.stringbool({
+		truthy: ["Yes"],
+		falsy: ["No"],
+		case: "sensitive",
+	}),
+);

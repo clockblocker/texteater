@@ -1,5 +1,4 @@
 import { z } from "zod/v4";
-import type { Codec } from "../../../../../core/types";
 
 const numericStringSchema = z
 	.string()
@@ -9,9 +8,11 @@ const numericStringSchema = z
 
 const numberSchema = z.number();
 
-export const numericStringAndNumber = {
-	fromInput: (v) => String(v),
-	fromOutput: (v) => Number(v),
-	inputSchema: numberSchema,
-	outputSchema: numericStringSchema,
-} as const satisfies Codec<string, number>;
+export const numericStringAndNumber = z.codec(
+	numberSchema,
+	numericStringSchema,
+	{
+		decode: String,
+		encode: Number,
+	},
+);

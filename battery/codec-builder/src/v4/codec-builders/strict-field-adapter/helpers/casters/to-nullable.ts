@@ -1,19 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- helper keeps codec generics broad */
-import type { z } from "zod/v4";
+import { z } from "zod/v4";
 import { mapNullishToNullable } from "../../../../core/helpers/nullish-utils";
-import type { SchemaCodec } from "../../../../core/types";
 
 export function toNullable<
 	TInputSchema extends z.ZodTypeAny,
 	TOutputSchema extends z.ZodTypeAny,
->(codec: SchemaCodec<TInputSchema, TOutputSchema>) {
-	const inputSchema = codec.inputSchema.nullish();
-	const outputSchema = codec.outputSchema.nullable();
-
-	return {
-		fromInput: (input) => mapNullishToNullable(input, codec.fromInput),
-		fromOutput: (output) => mapNullishToNullable(output, codec.fromOutput),
+>(codec: z.ZodCodec<TInputSchema, TOutputSchema>) {
+	const inputSchema = codec.in.nullish();
+	const outputSchema = codec.out.nullable();
+	return z.codec<typeof inputSchema, typeof outputSchema>(
 		inputSchema,
 		outputSchema,
-	} as const satisfies SchemaCodec<typeof inputSchema, typeof outputSchema>;
+		{
+			decode: (input) =>
+				mapNullishToNullable(
+					input,
+					(value) =>
+						codec.decode(
+							value as z.input<TInputSchema>,
+						) as z.input<TOutputSchema>,
+				),
+			encode: (output) =>
+				mapNullishToNullable(
+					output,
+					(value) =>
+						codec.encode(
+							value as z.output<TOutputSchema>,
+						) as z.output<TInputSchema>,
+				),
+		},
+	);
 }

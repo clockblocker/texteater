@@ -1,7 +1,5 @@
 import { z } from "zod/v4";
-import type { Nullish } from "../../../../core/helpers/nullish-utils";
 import { pipeCodecs } from "../../../../core/pipe-codecs";
-import type { Codec } from "../../../../core/types";
 import { buildFilteredNullishArrayCodec } from "../../helpers/builders/filtered-nullish-array";
 import { toArrayOf } from "../../helpers/casters/to-array-of";
 import { toNonNullishWithDefault } from "../../helpers/casters/to-non-nullish-with-default";
@@ -15,19 +13,7 @@ const nullishArrayOfStrings = toNonNullishWithDefault(
 	[],
 );
 
-const {
-	inputSchema,
-	outputSchema,
-	fromOutput: fromArrayOfNullishStrings,
-	fromInput: fromArrayOfNonEmptyStrings,
-} = pipeCodecs(
+export const arrayOfNonEmptyStringsAndNullishArrayOfNullishStrings = pipeCodecs(
 	nullishArrayOfStrings,
 	buildFilteredNullishArrayCodec(z.string(), nonEmptyStringSchema),
 );
-
-export const arrayOfNonEmptyStringsAndNullishArrayOfNullishStrings = {
-	fromInput: fromArrayOfNonEmptyStrings,
-	fromOutput: fromArrayOfNullishStrings,
-	inputSchema,
-	outputSchema,
-} as const satisfies Codec<string[], Nullish<Nullish<string>[]>>;

@@ -5,7 +5,6 @@ import { z } from "zod/v4";
 import type {
 	CodecPair,
 	NoOpCodec,
-	SchemaCodec,
 	SchemaShapeOf as SharedSchemaShapeOf,
 } from "../../core/types";
 
@@ -45,26 +44,28 @@ export function buildStrictFieldAdapterCodec<
 	type InputType = z.infer<TInputSchema>;
 	type OutputType = z.infer<typeof outputSchema>;
 
-	const fromInput = (data: InputType): OutputType => {
+	const decode = (data: InputType): OutputType => {
 		return convertFromInput(
 			shape as RuntimeCodecShape,
 			data as Record<string, unknown>,
 		) as OutputType;
 	};
 
-	const fromOutput = (data: OutputType): InputType => {
+	const encode = (data: OutputType): InputType => {
 		return convertFromOutput(
 			shape as RuntimeCodecShape,
 			data as Record<string, unknown>,
 		) as InputType;
 	};
 
-	return {
-		inputSchema,
-		outputSchema,
-		fromInput,
-		fromOutput,
-	} satisfies SchemaCodec<TInputSchema, typeof outputSchema>;
+	return z.codec(inputSchema, outputSchema, {
+		decode: decode as (
+			value: z.output<TInputSchema>,
+		) => z.input<typeof outputSchema>,
+		encode: encode as (
+			value: z.input<typeof outputSchema>,
+		) => z.output<TInputSchema>,
+	});
 }
 
 export function buildStrictFieldAdapter<InputType extends object>(): <
@@ -92,14 +93,14 @@ export function buildStrictFieldAdapter<
 
 	type OutputType = OutputOfStrictFieldAdapter<InputType, S>;
 
-	const fromInput = (data: InputType): OutputType => {
+	const decode = (data: InputType): OutputType => {
 		return convertFromInput(
 			shape as RuntimeCodecShape,
 			data as Record<string, unknown>,
 		) as OutputType;
 	};
 
-	const fromOutput = (data: OutputType): InputType => {
+	const encode = (data: OutputType): InputType => {
 		return convertFromOutput(
 			shape as RuntimeCodecShape,
 			data as Record<string, unknown>,
@@ -107,8 +108,8 @@ export function buildStrictFieldAdapter<
 	};
 
 	return {
-		fromInput,
-		fromOutput,
+		decode,
+		encode,
 	} satisfies CodecPair<InputType, OutputType>;
 }
 
@@ -116,13 +117,11 @@ export function buildStrictFieldAdapter<
 
 type RuntimeCodecShape = Record<string, unknown>;
 type AnyZodSchema = z.ZodType<any, any>;
-type AnySchemaCodec = SchemaCodec<AnyZodSchema, AnyZodSchema>;
-type CodecWithOutputSchema<TSchema extends z.ZodTypeAny> = {
-	readonly fromInput: (input: any) => any;
-	readonly fromOutput: (output: any) => any;
-	readonly inputSchema: AnyZodSchema;
-	readonly outputSchema: TSchema;
-};
+type AnySchemaCodec = z.ZodCodec<AnyZodSchema, AnyZodSchema>;
+type CodecWithOutputSchema<TSchema extends z.ZodTypeAny> = z.ZodCodec<
+	AnyZodSchema,
+	TSchema
+>;
 type KnownKeys<T> = {
 	[K in keyof T]: string extends K
 		? never
@@ -143,7 +142,7 @@ interface ArrayCodecShape<
 type RuntimeArrayItemShape = RuntimeCodecShape | AnySchemaCodec | NoOpCodec;
 
 type InputCompatibleCodecForValue<TInput> = AnySchemaCodec & {
-	fromInput: (v: TInput) => unknown;
+	decode: (v: TInput) => unknown;
 };
 
 type ArrayItemOfValue<TValue> =
@@ -286,7 +285,7 @@ type ZodTypeForValue<TValue> = z.ZodType<TValue, TValue>;
 type FieldInput<TField extends z.ZodTypeAny> = z.input<TField>;
 type InputCompatibleCodecForField<TField extends z.ZodTypeAny> =
 	AnySchemaCodec & {
-		fromInput: (v: FieldInput<TField>) => unknown;
+		decode: (v: FieldInput<TField>) => unknown;
 	};
 type ArrayItemInput<TField extends z.ZodTypeAny> =
 	ArrayItemSchemaOf<TField> extends z.ZodTypeAny
@@ -295,7 +294,7 @@ type ArrayItemInput<TField extends z.ZodTypeAny> =
 type InputCompatibleCodecForArrayItem<TField extends z.ZodTypeAny> =
 	ArrayItemSchemaOf<TField> extends z.ZodTypeAny
 		? AnySchemaCodec & {
-				fromInput: (v: ArrayItemInput<TField>) => unknown;
+				decode: (v: ArrayItemInput<TField>) => unknown;
 			}
 		: never;
 type IsArraySchema<TSchema extends z.ZodTypeAny> =
@@ -485,10 +484,11 @@ function isCodec(v: unknown): v is AnySchemaCodec {
 	return (
 		typeof v === "object" &&
 		v !== null &&
-		"fromInput" in v &&
-		"fromOutput" in v &&
-		"inputSchema" in v &&
-		"outputSchema" in v
+		"_zod" in v &&
+		"in" in v &&
+		"out" in v &&
+		"decode" in v &&
+		"encode" in v
 	);
 }
 
@@ -603,7 +603,7 @@ function buildOutputZodArrayItem(
 	itemSchema: z.ZodTypeAny,
 ): z.ZodTypeAny {
 	if (isCodec(itemShape)) {
-		return itemShape.outputSchema;
+		return itemShape.out;
 	}
 
 	if (isNoOpCodec(itemShape)) {
@@ -624,7 +624,7 @@ function convertArrayItemFromInput(
 	item: unknown,
 ): unknown {
 	if (isCodec(itemShape)) {
-		return itemShape.fromInput(item);
+		return z.decode(itemShape, item);
 	}
 
 	if (isNoOpCodec(itemShape)) {
@@ -639,7 +639,7 @@ function convertArrayItemFromOutput(
 	item: unknown,
 ): unknown {
 	if (isCodec(itemShape)) {
-		return itemShape.fromOutput(item);
+		return z.encode(itemShape, item);
 	}
 
 	if (isNoOpCodec(itemShape)) {
@@ -659,7 +659,7 @@ function buildOutputZodShape(
 		const schemaNode = getSchemaNode(schemaShape, key);
 
 		if (isCodec(node)) {
-			result[key] = node.outputSchema;
+			result[key] = node.out;
 		} else if (isNoOpCodec(node)) {
 			result[key] = schemaNode;
 		} else if (isArrayCodecShape(node)) {
@@ -687,7 +687,7 @@ function convertFromInput(
 	for (const key in shape) {
 		const node = shape[key];
 		if (isCodec(node)) {
-			result[key] = node.fromInput(data[key]);
+			result[key] = z.decode(node, data[key]);
 		} else if (isNoOpCodec(node)) {
 			result[key] = data[key];
 		} else if (isArrayCodecShape(node)) {
@@ -715,7 +715,7 @@ function convertFromOutput(
 	for (const key in shape) {
 		const node = shape[key];
 		if (isCodec(node)) {
-			result[key] = node.fromOutput(data[key]);
+			result[key] = z.encode(node, data[key]);
 		} else if (isNoOpCodec(node)) {
 			result[key] = data[key];
 		} else if (isArrayCodecShape(node)) {

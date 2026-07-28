@@ -1,5 +1,5 @@
+import { z } from "zod/v4";
 import { pipeCodecs } from "../../../../core/pipe-codecs";
-import { reverseCodecDirections } from "../../helpers/casters/reverse-codec-directions";
 import { toNonNullishWithDefault } from "../../helpers/casters/to-non-nullish-with-default";
 import { toNullable } from "../../helpers/casters/to-nullable";
 import { numericStringAndNumber } from "../atoms/core-non-nullable-codecs/numeric-string-and-number";
@@ -10,7 +10,7 @@ export const numericStringAndInt = pipeCodecs(
 	numericStringAndNumber,
 );
 
-export const intAndNumericString = reverseCodecDirections(numericStringAndInt);
+export const intAndNumericString = z.invertCodec(numericStringAndInt);
 
 export const nullableNumericStringAndInt = toNullable(numericStringAndInt);
 export const numericStringAndNullishInt = toNonNullishWithDefault(
@@ -25,6 +25,6 @@ export const intAndNullishNumericString = toNonNullishWithDefault(
 );
 
 export const nullableNumericStringAndNullishInt = nullableNumericStringAndInt;
-export const nullishIntAndNullableNumericString = reverseCodecDirections(
+export const nullishIntAndNullableNumericString = z.invertCodec(
 	nullableNumericStringAndNullishInt,
 );

@@ -5,7 +5,6 @@ import {
 	mapNullishToNullable,
 	type Nullish,
 } from "../../../../core/helpers/nullish-utils";
-import type { SchemaCodec } from "../../../../core/types";
 
 export function buildNullableUnionAndNullishString<
 	const TValues extends NonEmptyStringTuple,
@@ -25,14 +24,12 @@ export function buildNullableUnionAndNullishString<
 	const outputSchema = typedEnumSchema.nullable();
 	const allowedValues = typedEnumSchema.options;
 
-	return {
-		fromInput: (v: Nullish<string>): TValues[number] | null =>
+	return z.codec(inputSchema, outputSchema, {
+		decode: (v: Nullish<string>): TValues[number] | null =>
 			nullableUnionFromNullishString(v, allowedValues),
-		fromOutput: (v: TValues[number] | null): TValues[number] | null =>
+		encode: (v: TValues[number] | null): TValues[number] | null =>
 			nullableStringFromNullableUnion(v),
-		inputSchema,
-		outputSchema,
-	} satisfies SchemaCodec<typeof inputSchema, typeof outputSchema>;
+	});
 }
 
 // -- Internals --

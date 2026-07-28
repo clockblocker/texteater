@@ -1,51 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- zod schema generics are intentionally unconstrained */
-/** biome-ignore-all lint/suspicious/noExplicitAny: Library generic shape */
+import { z } from "zod/v4";
 
-import type { z } from "zod/v4";
-
-import type { CodecPair, SchemaCodec } from "./types";
+import type { CodecPair } from "./types";
 
 export function pipeCodecs<
 	TInputSchema extends z.ZodTypeAny,
-	TIntermediateOutputSchema extends z.ZodTypeAny,
-	TIntermediateInputSchema extends z.ZodType<
-		z.output<TIntermediateOutputSchema>,
-		any
-	>,
+	TIntermediateSchema extends z.ZodTypeAny,
 	TOutputSchema extends z.ZodTypeAny,
 >(
-	ab: SchemaCodec<TInputSchema, TIntermediateOutputSchema>,
-	bc: SchemaCodec<TIntermediateInputSchema, TOutputSchema>,
-): SchemaCodec<TInputSchema, TOutputSchema>;
+	left: z.ZodCodec<TInputSchema, TIntermediateSchema>,
+	right: z.ZodCodec<TIntermediateSchema, TOutputSchema>,
+): z.ZodCodec<TInputSchema, TOutputSchema>;
 export function pipeCodecs<A, B, C>(
-	ab: CodecPair<A, B>,
-	bc: CodecPair<B, C>,
+	left: CodecPair<A, B>,
+	right: CodecPair<B, C>,
 ): CodecPair<A, C>;
-export function pipeCodecs<
-	A,
-	B,
-	C,
-	TInputSchema extends z.ZodType<A, any>,
-	TOutputSchema extends z.ZodType<C, any>,
->(
-	ab: CodecPair<A, B> & { inputSchema?: TInputSchema },
-	bc: CodecPair<B, C> & { outputSchema?: TOutputSchema },
-): CodecPair<A, C> & {
-	inputSchema?: TInputSchema;
-	outputSchema?: TOutputSchema;
-} {
-	const piped = {
-		fromInput: (input: A) => bc.fromInput(ab.fromInput(input)),
-		fromOutput: (output: C) => ab.fromOutput(bc.fromOutput(output)),
-	};
-
-	if ("inputSchema" in ab && "outputSchema" in bc) {
-		return {
-			...piped,
-			inputSchema: ab.inputSchema,
-			outputSchema: bc.outputSchema,
-		};
+export function pipeCodecs<A, B, C>(
+	left: z.ZodCodec | CodecPair<A, B>,
+	right: z.ZodCodec | CodecPair<B, C>,
+) {
+	if (left instanceof z.ZodCodec && right instanceof z.ZodCodec) {
+		return z.codec(left.in, right.out, {
+			decode: (input) => right.decode(left.decode(input)),
+			encode: (output) => left.encode(right.encode(output)),
+		});
 	}
 
-	return piped;
+	const leftPair = left as CodecPair<A, B>;
+	const rightPair = right as CodecPair<B, C>;
+	return {
+		decode: (input: A) => rightPair.decode(leftPair.decode(input)),
+		encode: (output: C) => leftPair.encode(rightPair.encode(output)),
+	};
 }

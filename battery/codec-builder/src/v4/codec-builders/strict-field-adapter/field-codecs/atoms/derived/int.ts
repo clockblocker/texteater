@@ -1,11 +1,11 @@
-import { reverseCodecDirections } from "../../../helpers/casters/reverse-codec-directions";
+import { z } from "zod/v4";
 import { toNonNullishWithDefault } from "../../../helpers/casters/to-non-nullish-with-default";
 import { toNullable } from "../../../helpers/casters/to-nullable";
 import { intAndNumber } from "../core-non-nullable-codecs/int-and-number";
 
 export { intAndNumber };
 
-export const numberAndInt = reverseCodecDirections(intAndNumber);
+export const numberAndInt = z.invertCodec(intAndNumber);
 
 export const nullableIntAndNumber = toNullable(intAndNumber);
 export const intAndNullishNumber = toNonNullishWithDefault(

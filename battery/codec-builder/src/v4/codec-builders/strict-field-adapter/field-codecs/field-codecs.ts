@@ -1,4 +1,3 @@
-import type { AnyCodec, NoOpCodec } from "../../../core/types";
 import { noOpCodec } from "../build-strict-field-adapter-codec";
 import { toNullish } from "../helpers/casters/to-nullish";
 import { toOptional } from "../helpers/casters/to-optional";
@@ -39,10 +38,6 @@ import {
 	numericStringAndInt,
 	numericStringAndNullishInt,
 } from "./molecules/int-and-numeric-string";
-
-type FieldCodecNamespace = {
-	readonly [key: string]: AnyCodec | NoOpCodec | FieldCodecNamespace;
-};
 
 export const fieldCodecs = {
 	nullable: {
@@ -250,4 +245,4 @@ export const fieldCodecs = {
 
 	// Returns the same type as the original field.
 	noOp: noOpCodec,
-} as const satisfies FieldCodecNamespace;
+} as const;

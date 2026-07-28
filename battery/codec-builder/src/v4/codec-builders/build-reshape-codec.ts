@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import type { SchemaCodec, SchemaShapeOf } from "../core/types";
+import type { SchemaShapeOf } from "../core/types";
 
 export function buildReshapeCodec<
 	TInputSchema extends z.ZodObject,
@@ -45,7 +45,7 @@ export function buildReshapeCodec<
 	type InputType = z.infer<TInputSchema>;
 	type OutputType = z.infer<typeof outputSchema>;
 
-	const fromInput = (data: InputType): OutputType => {
+	const decode = (data: InputType): OutputType => {
 		const constructedField = construct(data);
 		const result = {
 			...data,
@@ -59,7 +59,7 @@ export function buildReshapeCodec<
 		return result as OutputType;
 	};
 
-	const fromOutput = (data: OutputType): InputType => {
+	const encode = (data: OutputType): InputType => {
 		const fieldValue = (data as Record<string, unknown>)[
 			fieldName
 		] as z.output<TFieldSchema>;
@@ -82,12 +82,14 @@ export function buildReshapeCodec<
 		return result as InputType;
 	};
 
-	return {
-		inputSchema,
-		outputSchema,
-		fromInput,
-		fromOutput,
-	} satisfies SchemaCodec<TInputSchema, typeof outputSchema>;
+	return z.codec(inputSchema, outputSchema, {
+		decode: decode as (
+			value: z.output<TInputSchema>,
+		) => z.input<typeof outputSchema>,
+		encode: encode as (
+			value: z.input<typeof outputSchema>,
+		) => z.output<TInputSchema>,
+	});
 }
 
 // -- Internals --

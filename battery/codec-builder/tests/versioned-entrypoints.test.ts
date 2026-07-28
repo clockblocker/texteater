@@ -18,9 +18,9 @@ describe("versioned codec builders", () => {
 		const codec =
 			codecBuilder4.fieldCodec.nonNullish.numericString.and.number;
 
-		expect(codec.inputSchema).toBeInstanceOf(z4.ZodNumber);
-		expect(codec.fromInput(42)).toBe("42");
-		expect(codec.fromOutput("42.5")).toBe(42.5);
+		expect(codec.in).toBeInstanceOf(z4.ZodNumber);
+		expect(codec.decode(42)).toBe("42");
+		expect(codec.encode("42.5")).toBe(42.5);
 
 		const adapter = codecBuilder4.buildStrictFieldAdapterCodec(
 			z4.object({
@@ -33,13 +33,11 @@ describe("versioned codec builders", () => {
 			},
 		);
 
-		expect(
-			adapter.outputSchema.parse({ id: "42", label: "answer" }),
-		).toEqual({
+		expect(adapter.out.parse({ id: "42", label: "answer" })).toEqual({
 			id: "42",
 			label: "answer",
 		});
-		expect(adapter.fromInput({ id: 42, label: "answer" })).toEqual({
+		expect(adapter.decode({ id: 42, label: "answer" })).toEqual({
 			id: "42",
 			label: "answer",
 		});

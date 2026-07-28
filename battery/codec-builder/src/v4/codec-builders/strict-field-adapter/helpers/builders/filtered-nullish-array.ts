@@ -1,7 +1,5 @@
 import { z } from "zod/v4";
 
-import type { SchemaCodec } from "../../../../core/types";
-
 export function buildFilteredNullishArrayCodec<
 	TInputItemSchema extends z.ZodTypeAny,
 	TOutputItemSchema extends z.ZodTypeAny = TInputItemSchema,
@@ -12,12 +10,9 @@ export function buildFilteredNullishArrayCodec<
 	const inputSchema = z.array(inputItemSchema);
 	const outputSchema = z.array(outputItemSchema);
 
-	return {
-		fromInput: (input) =>
-			input.filter(Boolean) as unknown as z.output<TOutputItemSchema>[],
-		fromOutput: (output) =>
-			output as unknown as z.output<TInputItemSchema>[],
-		inputSchema,
-		outputSchema,
-	} as const satisfies SchemaCodec<typeof inputSchema, typeof outputSchema>;
+	return z.codec(inputSchema, outputSchema, {
+		decode: (input) =>
+			input.filter(Boolean) as unknown as z.input<TOutputItemSchema>[],
+		encode: (output) => output as unknown as z.output<TInputItemSchema>[],
+	});
 }

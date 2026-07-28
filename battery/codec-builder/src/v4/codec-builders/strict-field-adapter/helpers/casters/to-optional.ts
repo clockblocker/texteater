@@ -1,20 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- helper keeps codec generics broad */
-import type { z } from "zod/v4";
-import type { SchemaCodec } from "../../../../core/types";
+import { z } from "zod/v4";
 
 export function toOptional<
 	TInputSchema extends z.ZodTypeAny,
 	TOutputSchema extends z.ZodTypeAny,
->(codec: SchemaCodec<TInputSchema, TOutputSchema>) {
-	const inputSchema = codec.inputSchema.optional();
-	const outputSchema = codec.outputSchema.optional();
-
-	return {
-		fromInput: (input) =>
-			input === undefined ? undefined : codec.fromInput(input),
-		fromOutput: (output) =>
-			output === undefined ? undefined : codec.fromOutput(output),
+>(codec: z.ZodCodec<TInputSchema, TOutputSchema>) {
+	const inputSchema = codec.in.optional();
+	const outputSchema = codec.out.optional();
+	return z.codec<typeof inputSchema, typeof outputSchema>(
 		inputSchema,
 		outputSchema,
-	} as const satisfies SchemaCodec<typeof inputSchema, typeof outputSchema>;
+		{
+			decode: (input) =>
+				input === undefined
+					? undefined
+					: (codec.decode(
+							input as z.input<TInputSchema>,
+						) as z.input<TOutputSchema>),
+			encode: (output) =>
+				output === undefined
+					? undefined
+					: (codec.encode(
+							output as z.output<TOutputSchema>,
+						) as z.output<TInputSchema>),
+		},
+	);
 }
