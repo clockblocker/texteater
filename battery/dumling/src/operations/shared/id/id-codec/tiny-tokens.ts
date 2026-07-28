@@ -3,26 +3,9 @@ import type {
 	LemmaSubKind,
 	SupportedLanguage,
 	SurfaceKind,
-} from "../../../types/public-types.js";
+} from "../../../../types/public-types.js";
 
 type TokenMap<T extends string> = Record<T, string>;
-type InverseTokenMap<T extends string> = Record<string, T>;
-
-function invert<T extends string>(
-	name: string,
-	tokens: TokenMap<T>,
-): InverseTokenMap<T> {
-	const inverse: Partial<Record<string, T>> = {};
-
-	for (const [value, token] of Object.entries(tokens) as [T, string][]) {
-		if (inverse[token] !== undefined) {
-			throw new Error(`${name} token collision for ${token}`);
-		}
-		inverse[token] = value;
-	}
-
-	return inverse as InverseTokenMap<T>;
-}
 
 export const languageTokens = {
 	de: "de",
@@ -265,32 +248,6 @@ export const featureValueTokens = {
 };
 
 export type FeatureNameTokenKey = keyof typeof featureNameTokens;
-
-export const inverseLanguageTokens = invert("language", languageTokens);
-export const inverseEntityKindTokens = invert("entityKind", entityKindTokens);
-export const inverseSurfaceKindTokens = invert(
-	"surfaceKind",
-	surfaceKindTokens,
-);
-export const inverseLemmaKindTokens = invert("lemmaKind", lemmaKindTokens);
-export const inverseLemmaSubKindTokens = invert(
-	"lemmaSubKind",
-	lemmaSubKindTokens,
-);
-export const inverseFeatureNameTokens = invert(
-	"featureName",
-	featureNameTokens,
-);
-export const inverseFeatureValueTokens = Object.fromEntries(
-	Object.entries(featureValueTokens).map(([name, tokens]) => [
-		name,
-		invert(`${name} feature value`, tokens as TokenMap<string>),
-	]),
-) as unknown as {
-	[K in keyof typeof featureValueTokens]: InverseTokenMap<
-		keyof (typeof featureValueTokens)[K] & string
-	>;
-};
 
 export const rawStringFeatureNames = new Set<FeatureNameTokenKey>([
 	"hasGovPrep",

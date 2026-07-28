@@ -4,10 +4,10 @@ import type {
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types.js";
-import type { LanguageApi } from "../api-shape.js";
-import { inspectEntity } from "./entity-accessors.js";
-import { csvRow } from "./id-codec/readable-csv.js";
+} from "../../../types/public-types.js";
+import type { LanguageApi } from "../../api-shape.js";
+import { inspectEntity } from "../entity-accessors.js";
+import { csvRow } from "../id/id-codec/readable-csv.js";
 
 type EntityValue<L extends SupportedLanguage> =
 	| Lemma<L>

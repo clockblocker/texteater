@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import { canonicalizeNullableProperties } from "../../../src/operations/shared/canonicalize-nullable";
+import { canonicalizeNullableProperties } from "../../../src/operations/shared/parse/canonicalize-nullable";
 import { schemasFor } from "../../../src/schema";
 import type {
 	InherentFeaturesFor,

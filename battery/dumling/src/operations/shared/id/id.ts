@@ -5,14 +5,14 @@ import type {
 	Selection,
 	SupportedLanguage,
 	Surface,
-} from "../../types/public-types.js";
+} from "../../../types/public-types.js";
 import type {
 	ApiResult,
 	IdDecodeError,
 	IdDecodeSuccess,
 	LanguageApi,
-} from "../api-shape.js";
-import { decodeBase64Url, encodeBase64Url } from "./id-codec/base64url.js";
+} from "../../api-shape.js";
+import { decodeBase64Url, encodeBase64Url } from "./base64url.js";
 import {
 	assertEntityIdFeatureConstraints,
 	decodeReadableCsv,

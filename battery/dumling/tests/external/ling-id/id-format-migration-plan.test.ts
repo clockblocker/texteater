@@ -1,11 +1,11 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../../src";
-import { concreteFeatureSchemaInventory } from "../../../src/operations/shared/id-codec/schema-inventory";
+import { concreteFeatureSchemaInventory } from "../../../src/operations/shared/id/id-codec/schema-inventory";
 import {
 	featureNameTokens,
 	featureValueTokens,
 	rawStringFeatureNames,
-} from "../../../src/operations/shared/id-codec/tiny-tokens";
+} from "../../../src/operations/shared/id/id-codec/tiny-tokens";
 
 function sorted(values: Iterable<string>): string[] {
 	return [...values].sort((left, right) => left.localeCompare(right));

@@ -30,7 +30,7 @@
     },
     "battery/codec-builder": {
       "name": "codec-builder-library",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "devDependencies": {
         "@biomejs/biome": "^2.5.5",
         "@types/node": "^24.5.2",
@@ -95,6 +95,7 @@
       "name": "dumling",
       "version": "0.1.12",
       "dependencies": {
+        "codec-builder-library": "workspace:^",
         "zod": "^4.3.6",
       },
       "devDependencies": {

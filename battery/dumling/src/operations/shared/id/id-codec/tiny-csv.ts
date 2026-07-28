@@ -1,24 +1,20 @@
-import type { ApiResult, IdDecodeError } from "../../api-shape.js";
+import type { ApiResult, IdDecodeError } from "../../../api-shape.js";
 import { idError } from "../id-errors.js";
 import { csvRow, parseCsvRow } from "./readable-csv.js";
 import {
-	entityKindTokens,
 	type FeatureNameTokenKey,
-	featureNameTokens,
-	featureValueTokens,
-	inverseEntityKindTokens,
-	inverseFeatureNameTokens,
-	inverseFeatureValueTokens,
-	inverseLanguageTokens,
-	inverseLemmaKindTokens,
-	inverseLemmaSubKindTokens,
-	inverseSurfaceKindTokens,
-	languageTokens,
-	lemmaKindTokens,
-	lemmaSubKindTokens,
 	rawStringFeatureNames,
-	surfaceKindTokens,
 } from "./tiny-tokens.js";
+import {
+	decodeEntityKind,
+	decodeFeatureName,
+	decodeFiniteFeatureValue,
+	encodeEntityKind,
+	encodeFeatureName,
+	encodeFiniteFeatureValue,
+	lemmaFieldTokenCodec,
+	surfaceHeaderTokenCodec,
+} from "./token-codecs.js";
 
 type TinyResult = ApiResult<string, IdDecodeError>;
 
@@ -53,8 +49,7 @@ function decodeRawFeatureValue(value: string): string | undefined {
 }
 
 function encodeFeatureValue(key: FeatureNameTokenKey, value: string): string {
-	const tokens = featureValueTokens[key] as Record<string, string>;
-	const token = tokens[value];
+	const token = encodeFiniteFeatureValue(key, value);
 	if (token !== undefined) {
 		return token;
 	}
@@ -70,8 +65,7 @@ function decodeFeatureValue(
 	key: FeatureNameTokenKey,
 	token: string,
 ): string | undefined {
-	const values = inverseFeatureValueTokens[key] as Record<string, string>;
-	const value = values[token];
+	const value = decodeFiniteFeatureValue(key, token);
 	if (value !== undefined) {
 		return value;
 	}
@@ -95,10 +89,7 @@ function encodeFeatureSet(input: string): string {
 				FeatureNameTokenKey,
 				string,
 			];
-			const keyToken = featureNameTokens[key];
-			if (keyToken === undefined) {
-				throw new Error(`No tiny token for feature ${key}`);
-			}
+			const keyToken = encodeFeatureName(key);
 
 			const valueTokens = valueText
 				.split("+")
@@ -116,9 +107,7 @@ function decodeFeatureSet(input: string): string | undefined {
 	const pairs: string[] = [];
 	for (const pair of input.split("|")) {
 		const [nameToken, valueText] = pair.split("=") as [string, string];
-		const key = inverseFeatureNameTokens[nameToken] as
-			| FeatureNameTokenKey
-			| undefined;
+		const key = decodeFeatureName(nameToken);
 		if (key === undefined || valueText === undefined) {
 			return undefined;
 		}
@@ -142,31 +131,29 @@ function readableLemmaFieldsToTiny(fields: string[]): string[] {
 	const [, language, lemmaKind, lemmaSubKind, lemma, meaning, features] =
 		fields as [string, string, string, string, string, string, string];
 
-	const languageToken =
-		languageTokens[language as keyof typeof languageTokens];
-	const lemmaKindToken =
-		lemmaKindTokens[lemmaKind as keyof typeof lemmaKindTokens];
-	const lemmaSubKindToken =
-		lemmaSubKindTokens[lemmaSubKind as keyof typeof lemmaSubKindTokens];
-
-	if (
-		languageToken === undefined ||
-		lemmaKindToken === undefined ||
-		lemmaSubKindToken === undefined
-	) {
+	const encoded = lemmaFieldTokenCodec.safeParse({
+		entityKind: fields[0],
+		language,
+		lemmaKind,
+		lemmaSubKind,
+		lemma,
+		meaning,
+		features,
+	});
+	if (!encoded.success) {
 		throw new Error(
 			"Readable CSV contains an unsupported tiny token value",
 		);
 	}
 
 	return [
-		entityKindTokens.Lemma,
-		languageToken,
-		lemmaKindToken,
-		lemmaSubKindToken,
-		lemma,
-		meaning,
-		encodeFeatureSet(features),
+		encoded.data.entityKind,
+		encoded.data.language,
+		encoded.data.lemmaKind,
+		encoded.data.lemmaSubKind,
+		encoded.data.lemma,
+		encoded.data.meaning,
+		encodeFeatureSet(encoded.data.features),
 	];
 }
 
@@ -174,31 +161,33 @@ function tinyLemmaFieldsToReadable(fields: string[]): string[] | undefined {
 	const [kind, language, lemmaKind, lemmaSubKind, lemma, meaning, features] =
 		fields as [string, string, string, string, string, string, string];
 
-	if (kind !== entityKindTokens.Lemma) {
+	const parsed = lemmaFieldTokenCodec.out.safeParse({
+		entityKind: kind,
+		language,
+		lemmaKind,
+		lemmaSubKind,
+		lemma,
+		meaning,
+		features,
+	});
+	if (!parsed.success) {
 		return undefined;
 	}
 
-	const decodedLanguage = inverseLanguageTokens[language] ?? language;
-	const decodedLemmaKind = inverseLemmaKindTokens[lemmaKind];
-	const decodedLemmaSubKind = inverseLemmaSubKindTokens[lemmaSubKind];
+	const decoded = lemmaFieldTokenCodec.encode(parsed.data);
 	const decodedFeatures = decodeFeatureSet(features);
 
-	if (
-		decodedLanguage === undefined ||
-		decodedLemmaKind === undefined ||
-		decodedLemmaSubKind === undefined ||
-		decodedFeatures === undefined
-	) {
+	if (decoded.entityKind !== "Lemma" || decodedFeatures === undefined) {
 		return undefined;
 	}
 
 	return [
-		"Lemma",
-		decodedLanguage,
-		decodedLemmaKind,
-		decodedLemmaSubKind,
-		lemma,
-		meaning,
+		decoded.entityKind,
+		decoded.language,
+		decoded.lemmaKind,
+		decoded.lemmaSubKind,
+		decoded.lemma,
+		decoded.meaning,
 		decodedFeatures,
 	];
 }
@@ -231,14 +220,14 @@ export function readableCsvToTinyCsv(input: string): string {
 			hasSelectionFeatures
 				? [
 						"v1",
-						entityKindTokens.Selection,
+						encodeEntityKind("Selection"),
 						fields[1],
 						encodeFeatureSet(fields[2] ?? ""),
 						...tinySurface.data.slice(1),
 					]
 				: [
 						"v1",
-						entityKindTokens.Selection,
+						encodeEntityKind("Selection"),
 						fields[1],
 						...tinySurface.data.slice(1),
 					],
@@ -251,9 +240,11 @@ export function readableCsvToTinyCsv(input: string): string {
 		);
 	}
 
-	const surfaceKindToken =
-		surfaceKindTokens[fields[1] as keyof typeof surfaceKindTokens];
-	if (surfaceKindToken === undefined) {
+	const encodedHeader = surfaceHeaderTokenCodec.safeParse({
+		entityKind: fields[0],
+		surfaceKind: fields[1],
+	});
+	if (!encodedHeader.success) {
 		throw new Error("Readable CSV contains an unsupported surface kind");
 	}
 
@@ -263,16 +254,16 @@ export function readableCsvToTinyCsv(input: string): string {
 			hasSurfaceFeatures
 				? [
 						"v1",
-						entityKindTokens.Surface,
-						surfaceKindToken,
+						encodedHeader.data.entityKind,
+						encodedHeader.data.surfaceKind,
 						fields[2],
 						encodeFeatureSet(fields[3] ?? ""),
 						...readableLemmaFieldsToTiny(fields.slice(4)),
 					]
 				: [
 						"v1",
-						entityKindTokens.Surface,
-						surfaceKindToken,
+						encodedHeader.data.entityKind,
+						encodedHeader.data.surfaceKind,
 						fields[2],
 						...readableLemmaFieldsToTiny(fields.slice(3)),
 					],
@@ -284,8 +275,8 @@ export function readableCsvToTinyCsv(input: string): string {
 		hasSurfaceFeatures
 			? [
 					"v1",
-					entityKindTokens.Surface,
-					surfaceKindToken,
+					encodedHeader.data.entityKind,
+					encodedHeader.data.surfaceKind,
 					fields[2],
 					encodeFeatureSet(fields[3] ?? ""),
 					encodeFeatureSet(fields[4] ?? ""),
@@ -293,8 +284,8 @@ export function readableCsvToTinyCsv(input: string): string {
 				]
 			: [
 					"v1",
-					entityKindTokens.Surface,
-					surfaceKindToken,
+					encodedHeader.data.entityKind,
+					encodedHeader.data.surfaceKind,
 					fields[2],
 					encodeFeatureSet(fields[3] ?? ""),
 					...readableLemmaFieldsToTiny(fields.slice(4)),
@@ -320,7 +311,7 @@ export function tinyCsvToReadableCsv(input: string): TinyResult {
 	}
 
 	const payload = fields.slice(1);
-	const entityKind = inverseEntityKindTokens[payload[0] ?? ""];
+	const entityKind = decodeEntityKind(payload[0] ?? "");
 
 	if (entityKind === "Lemma") {
 		if (payload.length !== 7) {
@@ -343,7 +334,7 @@ export function tinyCsvToReadableCsv(input: string): TinyResult {
 			return invalid("Tiny Selection rows are missing surface fields");
 		}
 
-		const hasSelectionFeatures = payload[2] !== entityKindTokens.Surface;
+		const hasSelectionFeatures = payload[2] !== encodeEntityKind("Surface");
 		const selectionFeatures = hasSelectionFeatures
 			? decodeFeatureSet(payload[2] ?? "")
 			: undefined;
@@ -390,10 +381,14 @@ export function tinyCsvToReadableCsv(input: string): TinyResult {
 		return invalid("Tiny row kind is invalid");
 	}
 
-	const surfaceKind = inverseSurfaceKindTokens[payload[1] ?? ""];
-	if (surfaceKind === undefined) {
+	const parsedHeader = surfaceHeaderTokenCodec.out.safeParse({
+		entityKind: payload[0],
+		surfaceKind: payload[1],
+	});
+	if (!parsedHeader.success) {
 		return invalid("Tiny Surface row contains an unknown surface token");
 	}
+	const { surfaceKind } = surfaceHeaderTokenCodec.encode(parsedHeader.data);
 
 	if (surfaceKind === "Citation") {
 		if (payload.length !== 10 && payload.length !== 11) {

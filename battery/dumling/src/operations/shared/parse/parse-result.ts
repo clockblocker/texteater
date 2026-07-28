@@ -1,6 +1,6 @@
 import type { z } from "zod";
-import type { SupportedLanguage } from "../../types/public-types.js";
-import type { ApiResult, ParseError } from "../api-shape.js";
+import type { SupportedLanguage } from "../../../types/public-types.js";
+import type { ApiResult, ParseError } from "../../api-shape.js";
 
 function invalidParseResult(
 	language: SupportedLanguage,

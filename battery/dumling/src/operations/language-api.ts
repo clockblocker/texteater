@@ -7,13 +7,12 @@ import type {
 	Surface,
 } from "../types/public-types.js";
 import type { LanguageApi } from "./api-shape.js";
-import { canonicalizeNullableProperties } from "./shared/canonicalize-nullable.js";
-import { buildConvertOperations } from "./shared/convert.js";
-import { buildDescribeOperations } from "./shared/describe.js";
-import { extractLemma } from "./shared/entity-accessors.js";
-import { requireNonEmptyFeatureBag } from "./shared/feature-bags.js";
-import { buildIdOperations } from "./shared/id.js";
-import { parseWithSchema } from "./shared/parse-result.js";
+import { buildConvertOperations } from "./shared/convert/convert.js";
+import { buildCreateOperations } from "./shared/create/create.js";
+import { buildDescribeOperations } from "./shared/describe/describe.js";
+import { buildExtractOperations } from "./shared/extract/extract.js";
+import { buildIdOperations } from "./shared/id/id.js";
+import { buildParseOperations } from "./shared/parse/parse.js";
 
 type EntitySchemaTree = {
 	Lemma: unknown;
@@ -60,102 +59,6 @@ function buildRuntimeSchemas<L extends SupportedLanguage>(
 	} as RuntimeSchemaSet<L>;
 }
 
-function buildCreateOperations<L extends SupportedLanguage>(
-	language: L,
-): LanguageApi<L>["create"] {
-	type CreateOperations = LanguageApi<L>["create"];
-
-	const createLemma: CreateOperations["lemma"] = (input) =>
-		({
-			language,
-			canonicalLemma: input.canonicalLemma,
-			lemmaKind: input.lemmaKind,
-			lemmaSubKind: input.lemmaSubKind,
-			inherentFeatures: input.inherentFeatures ?? {},
-			meaningInEmojis: input.meaningInEmojis,
-		}) as never;
-
-	const createCitationSurface: CreateOperations["surface"]["citation"] = (
-		input,
-	) =>
-		({
-			language: input.lemma.language,
-			normalizedFullSurface: input.normalizedFullSurface,
-			surfaceKind: "Citation",
-			surfaceFeatures: requireNonEmptyFeatureBag(
-				input.surfaceFeatures,
-				"surfaceFeatures",
-			),
-			lemma: input.lemma,
-		}) as never;
-
-	const createInflectionSurface: CreateOperations["surface"]["inflection"] = (
-		input,
-	) =>
-		({
-			language: input.lemma.language,
-			normalizedFullSurface: input.normalizedFullSurface,
-			surfaceKind: "Inflection",
-			surfaceFeatures: requireNonEmptyFeatureBag(
-				input.surfaceFeatures,
-				"surfaceFeatures",
-			),
-			lemma: input.lemma,
-			inflectionalFeatures: (
-				input as typeof input & { inflectionalFeatures: unknown }
-			).inflectionalFeatures,
-		}) as never;
-
-	const createSelection: CreateOperations["selection"] = (input) =>
-		({
-			language: input.surface.language,
-			selectionFeatures: requireNonEmptyFeatureBag(
-				input.selectionFeatures,
-				"selectionFeatures",
-			),
-			spelledSelection: input.spelledSelection,
-			surface: input.surface,
-		}) as never;
-
-	return {
-		lemma: createLemma,
-		surface: {
-			citation: createCitationSurface,
-			inflection: createInflectionSurface,
-		},
-		selection: createSelection,
-	};
-}
-
-function buildParseOperations<L extends SupportedLanguage>(
-	language: L,
-	runtimeSchemas: RuntimeSchemaSet<L>,
-): LanguageApi<L>["parse"] {
-	return {
-		lemma(input: unknown) {
-			return parseWithSchema(
-				language,
-				runtimeSchemas.lemma,
-				canonicalizeNullableProperties(runtimeSchemas.lemma, input),
-			);
-		},
-		surface(input: unknown) {
-			return parseWithSchema(
-				language,
-				runtimeSchemas.surface,
-				canonicalizeNullableProperties(runtimeSchemas.surface, input),
-			);
-		},
-		selection(input: unknown) {
-			return parseWithSchema(
-				language,
-				runtimeSchemas.selection,
-				canonicalizeNullableProperties(runtimeSchemas.selection, input),
-			);
-		},
-	};
-}
-
 export function buildLanguageApi<L extends SupportedLanguage>(
 	language: L,
 	schemaTree: { entity: EntitySchemaTree },
@@ -167,9 +70,7 @@ export function buildLanguageApi<L extends SupportedLanguage>(
 		create: buildCreateOperations(language),
 		convert: buildConvertOperations<L>(),
 		describe: buildDescribeOperations<L>(),
-		extract: {
-			lemma: extractLemma as LanguageApi<L>["extract"]["lemma"],
-		},
+		extract: buildExtractOperations<L>(),
 		id: buildIdOperations(language, parse),
 		parse,
 	};
