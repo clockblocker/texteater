@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { runCodegen } from "dumcodegen";
+import { runCodegen } from "../../../codegen/dist";
 import { readmeRecipe } from "../../generate-readme/generate-readme";
 
 test("README recipe matches the committed README bytes", async () => {
