@@ -6,25 +6,51 @@ Composable generation helpers with the same Bun and Biome stack as `dumdict`.
 
 ## Core idea
 
-`dumgen` provides a server-side GPT-5 nano runtime with structured output:
+`dumgen` exposes a typed catalog of executable generators:
 
 - the OpenAI Responses API
 - automatic prompt caching for repeated prompt prefixes
-- Zod-backed structured output
+- Zod-backed input and output validation
+- inferred input and output types at every generator leaf
 
 Example usage:
 
 ```ts
-import { buildDumgen, createOpenAIPromptExecutor } from "dumgen";
+import { buildDumgen } from "dumgen";
 
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
-const dumgen = buildDumgen(createOpenAIPromptExecutor());
+const generate = buildDumgen();
 
-const classification = await dumgen.de.classify(
-	"Sie sitzt am Ufer auf der Bank.",
-	"Bank",
-);
+const semanticIdentity =
+	await generate.production.noteBlock.de.noun.features({
+		canonicalLemma: "bank",
+		descriptor: {
+			language: "de",
+			lemmaKind: "Lexeme",
+			lemmaSubKind: "NOUN",
+		},
+	});
 ```
+
+## Vision
+
+`dumgen` is the generation layer behind the clickable-word dictionary. It uses
+progressively narrower generators as layered defenses against invalid or
+underspecified input:
+
+1. Determine whether the input is meaningful and uses a supported language.
+2. Once it is parsable, classify it into a grammatical entity identity sourced
+   from `dumling`.
+3. Feed that grammatical identity to an identity-specific generator such as
+   `production.noteBlock.de.noun.features`, which establishes a sense-level
+   semantic identity.
+4. Feed the semantic identity to narrowly scoped generators for the remaining
+   NoteBlock fields.
+
+The classification stages will eventually be available as one full-chain
+method. For now, supported identities and generator paths are registered by
+hand. As the catalog grows, a map of possible NoteBlocks for every identity
+will let TypeScript infer each valid input, output, and generator path.
 
 ## Scope
 
