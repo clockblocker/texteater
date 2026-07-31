@@ -2,7 +2,8 @@
 
 ## The best parts of computational linguistics with a typesafe API
 
-`dumling` provides types and Zod schemas for learner-facing meaning-focused segmentation.
+`dumling` is inspired by [Universal Dependencies](https://universaldependencies.org/)
+and provides types and Zod schemas for learner-facing meaning-focused segmentation.
 
 This package ships working runtime surfaces for `de`, `en`, and `he`.
 

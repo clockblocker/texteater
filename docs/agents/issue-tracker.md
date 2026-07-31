@@ -12,6 +12,16 @@ Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all op
 - Close with `gh issue close <number> --comment "..."`.
 - Infer the repository from the current Git remote.
 
+## Authentication diagnostics
+
+Do not conclude that GitHub authentication is stale from `gh auth status` alone:
+that command may report an invalid token when the sandbox cannot reach GitHub.
+
+Verify with `gh api user --jq .login`. Treat DNS, connection, or network-access
+errors as sandbox/network failures and retry with network approval. Ask for
+`gh auth login` only when GitHub itself responds with an authentication failure
+such as `401 Bad credentials`.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.**
