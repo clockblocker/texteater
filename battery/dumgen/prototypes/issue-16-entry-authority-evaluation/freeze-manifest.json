@@ -1,0 +1,58 @@
+{
+	"prototype": true,
+	"frozenAt": "2026-07-31",
+	"corpusVersion": "entry-identity-v2-hidden-blind",
+	"catalogVersion": "opaque-entry-catalog-v2-hidden",
+	"goldVersion": "entry-identity-v2-hidden-gold",
+	"noInference": true,
+	"hiddenSemantics": "newly versioned and withheld from inference arms; checked-in data is not permanently secret",
+	"counts": {
+		"cases": 21,
+		"catalogEntries": 20,
+		"languages": {
+			"de": 18,
+			"ru": 3
+		},
+		"decisions": {
+			"Existing": 20,
+			"ProposeNew": 1
+		},
+		"primaryStrata": {
+			"baseline": 1,
+			"cross-linguistic-homonym": 3,
+			"family-subkind": 4,
+			"grammar-category": 2,
+			"inflection-same-entry": 2,
+			"new-entry": 1,
+			"paradigm-homonym": 4,
+			"polysemy-meaning-independence": 2,
+			"same-spelling-pos": 2
+		},
+		"relationalAssertions": 10,
+		"meaningIndependenceAssertions": 1,
+		"exactVisibleSentenceOverlap": 0,
+		"exactVisibleCaseIdOverlap": 0,
+		"exactVisibleEntryIdOverlap": 0
+	},
+	"files": {
+		"README.md": "cb36da6f8dcf362f4311985ef41db5c7cb86a137578ad728239532b7d0801b49",
+		"catalog.json": "b8e8c60fbc1d0d62ac2efc2277ac070f3b18c8d707550d3c04e90f67e6621500",
+		"blind-input.json": "da71ff6ea88ff9ffbe025b84b5fb9f73de8f30cbbbee0fdac8e1defa6445141e",
+		"gold.json": "3ff7c2b8e1c8a9318e288fcc4c5704b989a732495659f9f026894571f66aa63f",
+		"scorer.ts": "73cbf7cdc5d534ca8bb4e02b866981fb3892bc28fbe0d619cdae1b76adbb001b",
+		"scorer.test.ts": "58e2f7a45c3eebe8dae9686be3321884b156399b9227248bbee21fac5021e650",
+		"validate.ts": "b206fea3f03d86a01c9d91b3917e4bbc77ba349a8e17fefaf53e1664a7e75896"
+	},
+	"policySources": {
+		"../issue-7-entry-resolution/corpus.ts": "0d1333de42db573fe098e3a363dd66d9a2968ad5b397fdb52c15a0771ab6ff9d",
+		"../issue-7-entry-resolution/logic.ts": "5d7ccc170f86d7bf3091837e7f1d56c116bcc51f85c06c639e76b26fa1585f3f",
+		"../../docs/research/click-resolution-corpus-and-evaluation-contract.md": "31fb928bb44645ded4bc77c1a88b34b6322cee4d860402fe2e627f943828754e",
+		"../../../../docs/adr/0001-separate-entry-identity-from-lemma-form.md": "927dd76be685eb7ca786c28f458f890051b01b18740dc8e1d30d050d36ca43bb"
+	},
+	"externalPolicyRefs": [
+		"https://github.com/clockblocker/texteater/issues/5",
+		"https://github.com/clockblocker/texteater/issues/7",
+		"https://github.com/clockblocker/texteater/issues/11",
+		"https://github.com/clockblocker/texteater/issues/16"
+	]
+}

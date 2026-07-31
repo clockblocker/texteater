@@ -1,0 +1,22 @@
+{
+	"corpusVersion": "segmentation-chain-v2-hidden",
+	"status": "frozen-before-inference",
+	"frozenAt": "2026-07-31",
+	"hashAlgorithm": "sha256",
+	"aggregateAlgorithm": "sha256(path + NUL + fileSha256 + LF, in manifest order)",
+	"files": [
+		{
+			"path": "corpus.hidden.ts",
+			"sha256": "c04674ea3f5f88213c8f1ab9ec404923cd8015a1d9832f328fa880beb56bc706"
+		},
+		{
+			"path": "blind-evaluation-input.ts",
+			"sha256": "b958c79bb8c75a13590f994ed328508a247dc168597f62f71a2d6afd673a9522"
+		},
+		{
+			"path": "scoring-fixtures.ts",
+			"sha256": "b13326ac8825118b5bd2ca4f24f92de5e21f10866eaa2020e786ad9095d0cf1b"
+		}
+	],
+	"aggregateSha256": "f7fd4e38fb878b63d24dd4267b919a31fa6e7ed71d5cba3a768b3dfadcd13a4d"
+}

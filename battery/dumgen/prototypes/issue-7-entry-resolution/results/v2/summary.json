@@ -1,0 +1,51 @@
+[
+	{
+		"armId": "agentic-hydrated",
+		"attempts": 63,
+		"invalidAttempts": 0,
+		"invalidAttemptRate": 0,
+		"identityExact": 0.30158730158730157,
+		"familyExact": 0.9365079365079365,
+		"subkindExact": 0.8888888888888888,
+		"citationFormExact": 0.8253968253968254,
+		"inherentFeaturesExact": 0.7142857142857143,
+		"fullContractExact": 0.30158730158730157,
+		"falseExistingMerges": 3,
+		"relationalAssertionsExact": 0,
+		"relationalAssertionFailures": [
+			"rep 2: Schloss lock and palace share one Entry",
+			"rep 2: Bank finance and bench differ",
+			"rep 2: laut adjective and adposition differ",
+			"rep 2: laufen motor and clock share one Entry",
+			"rep 2: Russian коса homonyms all differ",
+			"rep 2: missing Ton identity proposes new",
+			"rep 1: Schloss lock and palace share one Entry",
+			"rep 1: Bank finance and bench differ",
+			"rep 1: laut adjective and adposition differ",
+			"rep 1: laufen motor and clock share one Entry",
+			"rep 1: Russian коса homonyms all differ",
+			"rep 1: missing Ton identity proposes new",
+			"rep 3: Schloss lock and palace share one Entry",
+			"rep 3: Bank finance and bench differ",
+			"rep 3: laut adjective and adposition differ",
+			"rep 3: laufen motor and clock share one Entry",
+			"rep 3: Russian коса homonyms all differ",
+			"rep 3: missing Ton identity proposes new"
+		],
+		"latencyMs": {
+			"mean": 4486.5739074127,
+			"p50": 3470.286500000002,
+			"p95": 6868.407499999999,
+			"max": 48746.404
+		},
+		"tokens": {
+			"input": 107524,
+			"cachedInput": 0,
+			"output": 7140,
+			"reasoning": 0
+		},
+		"rawOutputBytes": 238276,
+		"costUsd": 0.0082322,
+		"costPer1000CasesUsd": 0.1306698412698413
+	}
+]

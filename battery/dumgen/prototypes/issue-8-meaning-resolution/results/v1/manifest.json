@@ -1,0 +1,60 @@
+{
+	"prototype": "issue-8-meaning-resolution",
+	"generatedAt": "2026-07-31T07:13:05.694Z",
+	"modelAlias": "gpt-5-nano",
+	"actualModels": ["gpt-5-nano-2025-08-07"],
+	"repetitions": 3,
+	"concurrency": 6,
+	"shuffleSeed": 8008,
+	"runId": "v1",
+	"maxOutputTokens": 256,
+	"reasoningEffort": "minimal",
+	"textVerbosity": "low",
+	"store": false,
+	"corpusVersion": "meaning-resolution-v1",
+	"caseCount": 21,
+	"groupCounts": {
+		"baseline-reuse": 5,
+		"penny-control": 7,
+		"false-merge-trap": 4,
+		"multi-candidate": 4,
+		"empty-inventory": 1
+	},
+	"scopeInvariant": "Every supplied candidate belongs to learner-eval-001 and the case's resolved opaque Entry.",
+	"armBuildHashes": {
+		"direct-descriptions-forward": "e2303d9f3df81636079c1501cadc9a82c58ba202dd420df0fe90efb133bbbd6f",
+		"direct-descriptions-reverse": "c3bc35f70dd3dc970924043e23cec7abbeef2f39962bf45dbe9d5763b22e05f3",
+		"direct-description-emoji": "def9211169858ace06173db025f1c3390750889a2084d5443a7f74f8dcd7baa2",
+		"direct-full-candidates": "7c163ebaf7e6cfeb0bdaff58a62409bcd518042ea4027684eac821950cd9eaf9",
+		"direct-full-few-shot": "2c19a181040699bc65ec799e5b3b56bb64a889b4d1e769c6c114ee78410b2b7f",
+		"agentic-candidate-inspection": "ea1294db4066d78b06476cc9b8417d315c359262f9dd54eb015d303a9a435778"
+	},
+	"priceSnapshot": {
+		"currency": "USD",
+		"effectiveDate": "2026-07-31",
+		"source": "https://developers.openai.com/api/docs/models/gpt-5-nano",
+		"inputPerMillion": 0.05,
+		"cachedInputPerMillion": 0.005,
+		"outputPerMillion": 0.4
+	},
+	"modelAccessProbe": {
+		"checkedAt": "2026-07-31T07:11:26.831Z",
+		"visibleGpt5Models": ["gpt-5-nano"],
+		"listError": null,
+		"probes": [
+			{
+				"model": "gpt-5-nano",
+				"available": true,
+				"responseModel": "gpt-5-nano-2025-08-07"
+			},
+			{
+				"model": "gpt-5-mini",
+				"available": false,
+				"status": 403,
+				"code": "model_not_found",
+				"message": "403 model_not_found; project lacks access"
+			}
+		],
+		"experimentLimit": "Only available model aliases can be measured; inaccessible model strength is recorded, not inferred."
+	}
+}

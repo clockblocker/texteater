@@ -1,0 +1,43 @@
+{
+	"prototype": "issue-6-selection-surface",
+	"generatedAt": "2026-07-31T07:11:31.740Z",
+	"modelAlias": "gpt-5-nano",
+	"actualModels": ["gpt-5-nano-2025-08-07"],
+	"repetitions": 3,
+	"concurrency": 4,
+	"shuffleSeed": 6006,
+	"maxOutputTokens": 2048,
+	"reasoningEffort": "low",
+	"textVerbosity": "low",
+	"temperature": "provider default (retained responses report 1)",
+	"seed": "unavailable (Responses API request did not expose a seed)",
+	"store": false,
+	"corpus": "click-resolution-chain-v1 Selection/Surface subset",
+	"caseCount": 24,
+	"armBuildHashes": {
+		"monolith-indices": "b086775e1a5ec78310cbc9b13420c73241e78b3725d84bd3a5233f85d58293db",
+		"monolith-text": "43d213ca033250645916a94e478df9da9d7e37e1bdc8d4780d1f411631bff90a",
+		"chain-free-normalization": "a7dbb539bfa6d51033f22d64f628ed26e817d9e23bd7665ffd417fb42ec0d186",
+		"chain-guarded-normalization": "6b70bdea13e1f68964ec5170e6a055932007d3d99e6efb0d7f2abc5796acb0e9",
+		"agentic-inspection": "4aa3c4aedd92a9c09d7c49a4bca8e46e1f1a892112cbee62f8ae6af5f712ba13"
+	},
+	"priceSnapshot": {
+		"currency": "USD",
+		"effectiveDate": "2026-07-31",
+		"source": "https://developers.openai.com/api/docs/models/gpt-5-nano",
+		"inputPerMillion": 0.05,
+		"cachedInputPerMillion": 0.005,
+		"outputPerMillion": 0.4
+	},
+	"modelAccessProbe": {
+		"checkedAt": "2026-07-31T06:57:43.339Z",
+		"visibleGpt5Models": ["gpt-5-nano"],
+		"higherModelProbe": {
+			"model": "gpt-5-mini",
+			"available": false,
+			"status": 403,
+			"code": "model_not_found",
+			"message": "403 Project `<redacted>` does not have access to model `gpt-5-mini`"
+		}
+	}
+}

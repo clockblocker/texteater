@@ -83,7 +83,8 @@ Each Segment has exactly one structural kind:
 - `Punctuation`
 
 `ResolvableText` means that the material can be passed to click resolution. It
-does not assert a part of speech, Lemma, morpheme, or other lexical identity.
+does not assert a part of speech, Lexeme, morpheme, or other linguistic
+identity.
 `OpaqueText` preserves local material that cannot be interpreted defensibly
 without making the rest of an accepted sentence non-interactive.
 
@@ -118,36 +119,70 @@ A Surface contains:
   reordering, or lemmatizing lexical constituents;
 - `spelling`, explicitly `Canonical` or `Variant`;
 - `realizationCoverage`, explicitly `Full` or `Partial`, describing how the
-  Surface realizes its Lemma;
+  Surface realizes its Linguistic Entry;
 - its Surface kind and applicable inflectional features;
-- one Lemma identity.
+- one Linguistic Entry identity.
 
 Surface identity includes its language, normalized form, Surface kind,
-inflectional features, and Lemma identity. Identically spelled noun and verb
-forms, and overlapping inflections with different grammatical analyses, are
-different Surfaces.
+inflectional features, and Linguistic Entry identity. Identically spelled noun
+and verb forms, and overlapping inflections with different grammatical
+analyses, are different Surfaces.
 
 Typos stop at Selection and are repaired in `normalizedSurface`. Licensed
 variants survive normalization and are marked on Surface. For example,
-`armuor` may be a Typo Selection of the Variant Surface `armour` for a Lemma
-whose canonical form is `armor`.
+`armuor` may be a Typo Selection of the Variant Surface `armour` for a Lexeme
+whose Lemma Form is `armor`.
 
 `realizationCoverage: Partial` does not license Surface normalization to invent
 missing material. For `heulte mit` resolving to the idiom
 `mit den Wölfen heulen`, both `attestedSurface` and `normalizedSurface` remain
-`heulte mit`; the complete citation form belongs to the Lemma.
+`heulte mit`; the complete citation form belongs to the Linguistic Entry.
+
+### Linguistic Entry
+The reusable, language-specific identity behind a Surface.
+
+Every Linguistic Entry has one stable identity, one family, one citation form,
+and the inherent grammatical features applicable to that family. `Lexeme`,
+`Phraseme`, `Morpheme`, and `Construction` are peer families of Linguistic
+Entry. Matching spelling, citation form, and grammatical features narrows
+candidate entries but never proves that two uses have the same identity.
+
+### Lexeme
+A word-like Linguistic Entry whose identity distinguishes homonymy while
+allowing polysemous uses to remain together.
+
+Two Lexemes may have the same Lemma Form, part of speech, inherent features,
+and inflectional paradigm. A language's declared lexical boundary policy
+decides whether uses belong to the same Lexeme; unresolved sameness is not
+silently inferred from matching grammar.
+
+### Lemma Form
+The canonical citation form of one Lexeme.
+
+A Lemma Form is descriptive text, not an identity-bearing node. Multiple
+Lexemes may have the same Lemma Form.
+
+### Sense
+An optional, lexicographic subdivision of one Linguistic Entry under a named
+dictionary or other lexical authority.
+
+Sense boundaries are authority-scoped and do not determine Linguistic Entry
+identity or learner-owned Meaning boundaries.
 
 ### Meaning
-A learner-owned, note-worthy grouping of contextual uses for one Lemma.
+A learner-owned, note-worthy grouping of contextual uses for one Linguistic
+Entry.
 
 A Meaning has a compact emoji description and other semantic description
-blocks. When a learner encounters another use of the same Lemma, classification
-either reuses one of that learner's existing Meanings or drafts a new Meaning.
+blocks. When a learner encounters another use of the same Linguistic Entry,
+classification either reuses one of that learner's existing Meanings or drafts
+a new Meaning.
 
 Meaning boundaries are intentionally learner-local. A Meaning is not guaranteed
-to correspond to a lexicographic sense, homonym, or smallest semantic
-distinction. Dumgen does not split semantic pennies unless the distinction is
-useful enough to deserve a separate learner-facing note.
+to correspond to a Sense or the smallest semantic distinction. Meanings never
+decide whether two uses are the same Linguistic Entry. Dumgen does not split
+semantic pennies unless the distinction is useful enough to deserve a separate
+learner-facing note.
 
 ### Segmentation Chain
 The pre-click chain.
@@ -161,8 +196,8 @@ The post-click chain.
 
 It begins with a Segmented Sentence and one clicked `ResolvableText` index. It
 resolves one valid Selection containing the complete contextual Surface
-membership, then resolves the global Surface and its Lemma, and finally either
-selects an existing learner-owned Meaning or drafts a new one.
+membership, then resolves the global Surface and its Linguistic Entry, and
+finally either selects an existing learner-owned Meaning or drafts a new one.
 
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
 itself an experiment.
@@ -175,23 +210,23 @@ itself an experiment.
 - A **Selection** resolves one or more `ResolvableText` Segments to exactly one
   **Surface**.
 - Many noisy **Selections** may resolve to one global **Surface**.
-- A **Surface** realizes exactly one **Lemma** under one grammatical analysis.
-- A **Meaning** groups learner-owned uses of one **Lemma**.
+- A **Surface** realizes exactly one **Linguistic Entry** under one grammatical
+  analysis.
+- A **Lexeme** is a word-like **Linguistic Entry** and has exactly one **Lemma
+  Form**.
+- A **Sense**, when present, subdivides one **Linguistic Entry** for one named
+  lexical authority.
+- A **Meaning** groups one learner's uses of one **Linguistic Entry**.
 
 ## Example dialogue
 
 > **Dev:** "Does clicking `gvae` create a misspelled Surface?"
 > **Domain expert:** "No. It creates a Typo Selection whose attested Surface is
 > `gvae up`; that Selection resolves to the global normalized Surface `gave up`
-> and Lemma `give up`."
+> and Lexeme whose Lemma Form is `give up`."
 
 ## Flagged ambiguities
 
-- **Lemma identity** remains unresolved. A purely morphogrammatical identity
-  policy was rejected because cross-linguistic homonyms such as Russian `коса`
-  may share spelling, part of speech, gender, and paradigm. Whether to introduce
-  a separate Lexeme and redefine Lemma as a citation form remains a separate
-  wayfinder decision.
 - **Valency** is outside the dumgen chain wayfinder. Whether attested and
   normalized Surface data should later carry valency realizations belongs in a
   separate backlog issue.

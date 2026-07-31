@@ -1,0 +1,55 @@
+{
+	"prototype": "issue-8-meaning-resolution",
+	"generatedAt": "2026-07-31T07:14:11.451Z",
+	"modelAlias": "gpt-5-nano",
+	"actualModels": ["gpt-5-nano-2025-08-07"],
+	"repetitions": 3,
+	"concurrency": 6,
+	"shuffleSeed": 8008,
+	"runId": "v2",
+	"maxOutputTokens": 256,
+	"reasoningEffort": "minimal",
+	"textVerbosity": "low",
+	"store": false,
+	"corpusVersion": "meaning-resolution-v1",
+	"caseCount": 21,
+	"groupCounts": {
+		"baseline-reuse": 5,
+		"penny-control": 7,
+		"false-merge-trap": 4,
+		"multi-candidate": 4,
+		"empty-inventory": 1
+	},
+	"scopeInvariant": "Every supplied candidate belongs to learner-eval-001 and the case's resolved opaque Entry.",
+	"armBuildHashes": {
+		"progressive-decision-then-draft": "adb2b705e489205fac9549b70711689a21841b41b6c00ab01b60393331ea6fb1"
+	},
+	"priceSnapshot": {
+		"currency": "USD",
+		"effectiveDate": "2026-07-31",
+		"source": "https://developers.openai.com/api/docs/models/gpt-5-nano",
+		"inputPerMillion": 0.05,
+		"cachedInputPerMillion": 0.005,
+		"outputPerMillion": 0.4
+	},
+	"modelAccessProbe": {
+		"checkedAt": "2026-07-31T07:13:56.266Z",
+		"visibleGpt5Models": ["gpt-5-nano"],
+		"listError": null,
+		"probes": [
+			{
+				"model": "gpt-5-nano",
+				"available": true,
+				"responseModel": "gpt-5-nano-2025-08-07"
+			},
+			{
+				"model": "gpt-5-mini",
+				"available": false,
+				"status": 403,
+				"code": "model_not_found",
+				"message": "403 model_not_found; project lacks access"
+			}
+		],
+		"experimentLimit": "Only available model aliases can be measured; inaccessible model strength is recorded, not inferred."
+	}
+}

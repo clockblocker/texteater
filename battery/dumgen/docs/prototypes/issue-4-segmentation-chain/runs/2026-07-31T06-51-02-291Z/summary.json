@@ -1,0 +1,1310 @@
+{
+  "meta": {
+    "runId": "2026-07-31T06-51-02-291Z",
+    "startedAt": "2026-07-31T06:51:03.897Z",
+    "corpusVersion": "segmentation-chain-v1",
+    "corpusCases": 28,
+    "repetitions": 3,
+    "shuffleSeed": 420420260731,
+    "runnerVersion": "issue-4-prototype-v1",
+    "runtime": "Bun 1.3.0",
+    "provider": "OpenAI",
+    "endpoint": "Responses API",
+    "requestedModel": "gpt-5-nano",
+    "expectedResolvedSnapshot": "gpt-5-nano-2025-08-07",
+    "reasoningEffort": "minimal",
+    "maxOutputTokens": 1600,
+    "temperature": "provider default (parameter unsupported/omitted)",
+    "apiSeed": "unavailable in Responses request; order seed fixed",
+    "serviceTier": "default",
+    "region": "provider-managed; API response exposes no region field",
+    "concurrency": 1,
+    "retries": 0,
+    "store": false,
+    "pricing": {
+      "scheduleId": "openai-standard-pricing-2026-07-31",
+      "effectiveDate": "2026-07-31",
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "currency": "USD",
+      "perMillion": {
+        "input": 0.05,
+        "cachedInput": 0.005,
+        "output": 0.4
+      }
+    },
+    "arms": [
+      {
+        "id": "minimal-combined-direct",
+        "decomposition": "combined",
+        "strategy": "direct",
+        "promptSource": "minimal-zero-shot"
+      },
+      {
+        "id": "explicit-combined-direct",
+        "decomposition": "combined",
+        "strategy": "direct",
+        "promptSource": "explicit-few-shot"
+      },
+      {
+        "id": "explicit-decomposed-direct",
+        "decomposition": "decomposed",
+        "strategy": "direct",
+        "promptSource": "explicit-few-shot"
+      },
+      {
+        "id": "explicit-combined-agentic",
+        "decomposition": "combined",
+        "strategy": "agentic-review",
+        "promptSource": "explicit-few-shot"
+      }
+    ],
+    "finishedAt": "2026-07-31T07:02:46.287Z"
+  },
+  "availability": {
+    "modelListHttpStatus": 200,
+    "listedModels": [
+      "gpt-5-nano"
+    ],
+    "probes": [
+      {
+        "model": "gpt-5-mini",
+        "available": false,
+        "httpStatus": 403,
+        "code": "model_not_found",
+        "message": "403 Project `[redacted]` does not have access to model `gpt-5-mini`"
+      },
+      {
+        "model": "gpt-5.4-mini-2026-03-17",
+        "available": false,
+        "httpStatus": 403,
+        "code": "model_not_found",
+        "message": "403 Project `[redacted]` does not have access to model `gpt-5.4-mini-2026-03-17`"
+      },
+      {
+        "model": "gpt-5.4-2026-03-05",
+        "available": false,
+        "httpStatus": 403,
+        "code": "model_not_found",
+        "message": "403 Project `[redacted]` does not have access to model `gpt-5.4-2026-03-05`"
+      }
+    ]
+  },
+  "arms": [
+    {
+      "arm": {
+        "id": "minimal-combined-direct",
+        "decomposition": "combined",
+        "strategy": "direct",
+        "promptSource": "minimal-zero-shot"
+      },
+      "attempts": 84,
+      "requests": 84,
+      "adapterFailures": 12,
+      "providerErrors": 0,
+      "retries": 0,
+      "domainGatePass": false,
+      "intakeAccuracy": 0.7380952380952381,
+      "intakeMacroRecall": 0.49074074074074076,
+      "confusion": {
+        "Accepted": {
+          "Accepted": 58,
+          "UnsupportedLanguage": 3,
+          "Unintelligible": 0,
+          "Failure": 11
+        },
+        "UnsupportedLanguage": {
+          "Accepted": 1,
+          "UnsupportedLanguage": 4,
+          "Unintelligible": 0,
+          "Failure": 1
+        },
+        "Unintelligible": {
+          "Accepted": 2,
+          "UnsupportedLanguage": 4,
+          "Unintelligible": 0,
+          "Failure": 0
+        }
+      },
+      "authoritativeTextExact": 0.6805555555555556,
+      "boundary": {
+        "tp": 3,
+        "fp": 64,
+        "fn": 576,
+        "precision": 0.04477611940298507,
+        "recall": 0.0051813471502590676,
+        "f1": 0.009287925696594429,
+        "unionAccuracy": 0.004665629860031105
+      },
+      "boundaryKind": {
+        "tp": 3,
+        "fp": 64,
+        "fn": 576,
+        "precision": 0.04477611940298507,
+        "recall": 0.0051813471502590676,
+        "f1": 0.009287925696594429,
+        "unionAccuracy": 0.004665629860031105
+      },
+      "exactSegmentedSentenceAccuracy": 0,
+      "click": {
+        "tp": 3,
+        "fp": 64,
+        "fn": 576,
+        "precision": 0.04477611940298507,
+        "recall": 0.0051813471502590676,
+        "f1": 0.009287925696594429,
+        "unionAccuracy": 0.004665629860031105
+      },
+      "clickExactCaseAccuracy": 0,
+      "typoVariantPreservation": 1,
+      "conservativeReconstruction": 0,
+      "falseReconstructionRate": 0.10909090909090909,
+      "requiredNoisyAtomAccuracy": 0,
+      "localOpaque": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 6,
+        "precision": 1,
+        "recall": 0.3333333333333333,
+        "f1": 0.5,
+        "unionAccuracy": 0.3333333333333333
+      },
+      "hebrewFusedExactAccuracy": 0,
+      "minimumPerClassExact": 0,
+      "byClass": [
+        {
+          "className": "clean German",
+          "attempts": 12,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "punctuation and whitespace",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "punctuation inside text",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "tab and repeated space",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "nested punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "ordinary typo",
+          "attempts": 6,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "licensed variant",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "licensed variants",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "severe structural corruption",
+          "attempts": 9,
+          "intakeAccuracy": 0.2222222222222222,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "required noisy atom case",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "accepted with local opaque text",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "unintelligible",
+          "attempts": 6,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Polish",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Spanish",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "Hebrew visible fused prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew prefix and pronominal suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew object suffix",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew stacked visible prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        }
+      ],
+      "operations": {
+        "latencyMs": {
+          "count": 84,
+          "mean": 1252.1405551428543,
+          "p50": 1054.7632919999887,
+          "p95": 2321.484375,
+          "max": 5203.641665999952,
+          "total": 105179.80663199976
+        },
+        "promptBytes": {
+          "count": 84,
+          "mean": 1051.642857142857,
+          "p50": 1052,
+          "p95": 1062,
+          "max": 1063,
+          "total": 88338
+        },
+        "rawOutputBytes": {
+          "count": 84,
+          "mean": 100.13095238095238,
+          "p50": 97,
+          "p95": 182,
+          "max": 194,
+          "total": 8411
+        },
+        "canonicalResultBytes": {
+          "count": 61,
+          "mean": 184.40983606557376,
+          "p50": 176,
+          "p95": 299,
+          "max": 356,
+          "total": 11249
+        },
+        "segmentCount": {
+          "count": 61,
+          "mean": 1.1475409836065573,
+          "p50": 1,
+          "p95": 3,
+          "max": 4,
+          "total": 70
+        },
+        "inputTokens": {
+          "count": 84,
+          "mean": 183.96428571428572,
+          "p50": 184,
+          "p95": 186,
+          "max": 189,
+          "total": 15453
+        },
+        "cachedInputTokens": {
+          "count": 84,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "outputTokens": {
+          "count": 84,
+          "mean": 47.82142857142857,
+          "p50": 48,
+          "p95": 70,
+          "max": 75,
+          "total": 4017
+        },
+        "reasoningTokens": {
+          "count": 84,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "totalTokens": {
+          "count": 84,
+          "mean": 231.78571428571428,
+          "p50": 232,
+          "p95": 251,
+          "max": 259,
+          "total": 19470
+        },
+        "costUsd": {
+          "total": 0.002379450000000001,
+          "perCase": 0.000028326785714285724,
+          "per1000Cases": 0.028326785714285724
+        }
+      },
+      "eligible": false
+    },
+    {
+      "arm": {
+        "id": "explicit-combined-direct",
+        "decomposition": "combined",
+        "strategy": "direct",
+        "promptSource": "explicit-few-shot"
+      },
+      "attempts": 84,
+      "requests": 84,
+      "adapterFailures": 5,
+      "providerErrors": 0,
+      "retries": 0,
+      "domainGatePass": false,
+      "intakeAccuracy": 0.8452380952380952,
+      "intakeMacroRecall": 0.6342592592592592,
+      "confusion": {
+        "Accepted": {
+          "Accepted": 65,
+          "UnsupportedLanguage": 2,
+          "Unintelligible": 0,
+          "Failure": 5
+        },
+        "UnsupportedLanguage": {
+          "Accepted": 2,
+          "UnsupportedLanguage": 4,
+          "Unintelligible": 0,
+          "Failure": 0
+        },
+        "Unintelligible": {
+          "Accepted": 4,
+          "UnsupportedLanguage": 0,
+          "Unintelligible": 2,
+          "Failure": 0
+        }
+      },
+      "authoritativeTextExact": 0.6805555555555556,
+      "boundary": {
+        "tp": 379,
+        "fp": 124,
+        "fn": 200,
+        "precision": 0.7534791252485089,
+        "recall": 0.6545768566493955,
+        "f1": 0.7005545286506469,
+        "unionAccuracy": 0.5391180654338549
+      },
+      "boundaryKind": {
+        "tp": 375,
+        "fp": 128,
+        "fn": 204,
+        "precision": 0.7455268389662028,
+        "recall": 0.6476683937823834,
+        "f1": 0.6931608133086876,
+        "unionAccuracy": 0.5304101838755304
+      },
+      "exactSegmentedSentenceAccuracy": 0.5277777777777778,
+      "click": {
+        "tp": 375,
+        "fp": 128,
+        "fn": 204,
+        "precision": 0.7455268389662028,
+        "recall": 0.6476683937823834,
+        "f1": 0.6931608133086876,
+        "unionAccuracy": 0.5304101838755304
+      },
+      "clickExactCaseAccuracy": 0.5277777777777778,
+      "typoVariantPreservation": 1,
+      "conservativeReconstruction": 0.25,
+      "falseReconstructionRate": 0.16363636363636364,
+      "requiredNoisyAtomAccuracy": 0,
+      "localOpaque": {
+        "tp": 4,
+        "fp": 1,
+        "fn": 5,
+        "precision": 0.8,
+        "recall": 0.4444444444444444,
+        "f1": 0.5714285714285714,
+        "unionAccuracy": 0.4
+      },
+      "hebrewFusedExactAccuracy": 0.25,
+      "minimumPerClassExact": 0,
+      "byClass": [
+        {
+          "className": "clean German",
+          "attempts": 12,
+          "intakeAccuracy": 0.8333333333333334,
+          "exactCaseAccuracy": 0.6666666666666666,
+          "exactSentenceAccuracy": 0.6666666666666666
+        },
+        {
+          "className": "punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "punctuation and whitespace",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "punctuation inside text",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.6666666666666666,
+          "exactSentenceAccuracy": 0.6666666666666666
+        },
+        {
+          "className": "tab and repeated space",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "nested punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.6666666666666666,
+          "exactSentenceAccuracy": 0.6666666666666666
+        },
+        {
+          "className": "ordinary typo",
+          "attempts": 6,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "licensed variant",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "licensed variants",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "severe structural corruption",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "required noisy atom case",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "accepted with local opaque text",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.4444444444444444,
+          "exactSentenceAccuracy": 0.4444444444444444
+        },
+        {
+          "className": "unintelligible",
+          "attempts": 6,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Polish",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Spanish",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "Hebrew visible fused prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "Hebrew prefix and pronominal suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew object suffix",
+          "attempts": 3,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew stacked visible prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        }
+      ],
+      "operations": {
+        "latencyMs": {
+          "count": 84,
+          "mean": 1631.900107119045,
+          "p50": 1450.2773750000051,
+          "p95": 2860.3164579999866,
+          "max": 4381.008167000022,
+          "total": 137079.60899799978
+        },
+        "promptBytes": {
+          "count": 84,
+          "mean": 4033.6428571428573,
+          "p50": 4034,
+          "p95": 4044,
+          "max": 4045,
+          "total": 338826
+        },
+        "rawOutputBytes": {
+          "count": 84,
+          "mean": 293.0238095238095,
+          "p50": 304,
+          "p95": 465,
+          "max": 556,
+          "total": 24614
+        },
+        "canonicalResultBytes": {
+          "count": 71,
+          "mean": 579.0704225352113,
+          "p50": 605,
+          "p95": 851,
+          "max": 867,
+          "total": 41114
+        },
+        "segmentCount": {
+          "count": 71,
+          "mean": 7.591549295774648,
+          "p50": 8,
+          "p95": 12,
+          "max": 12,
+          "total": 539
+        },
+        "inputTokens": {
+          "count": 84,
+          "mean": 762.9642857142857,
+          "p50": 763,
+          "p95": 765,
+          "max": 768,
+          "total": 64089
+        },
+        "cachedInputTokens": {
+          "count": 84,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "outputTokens": {
+          "count": 84,
+          "mean": 94.54761904761905,
+          "p50": 97,
+          "p95": 138,
+          "max": 157,
+          "total": 7942
+        },
+        "reasoningTokens": {
+          "count": 84,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "totalTokens": {
+          "count": 84,
+          "mean": 857.5119047619048,
+          "p50": 860,
+          "p95": 903,
+          "max": 921,
+          "total": 72031
+        },
+        "costUsd": {
+          "total": 0.006381250000000001,
+          "perCase": 0.00007596726190476192,
+          "per1000Cases": 0.07596726190476191
+        }
+      },
+      "eligible": false
+    },
+    {
+      "arm": {
+        "id": "explicit-decomposed-direct",
+        "decomposition": "decomposed",
+        "strategy": "direct",
+        "promptSource": "explicit-few-shot"
+      },
+      "attempts": 84,
+      "requests": 152,
+      "adapterFailures": 0,
+      "providerErrors": 0,
+      "retries": 0,
+      "domainGatePass": true,
+      "intakeAccuracy": 0.8095238095238095,
+      "intakeMacroRecall": 0.6203703703703703,
+      "confusion": {
+        "Accepted": {
+          "Accepted": 62,
+          "UnsupportedLanguage": 1,
+          "Unintelligible": 9,
+          "Failure": 0
+        },
+        "UnsupportedLanguage": {
+          "Accepted": 6,
+          "UnsupportedLanguage": 0,
+          "Unintelligible": 0,
+          "Failure": 0
+        },
+        "Unintelligible": {
+          "Accepted": 0,
+          "UnsupportedLanguage": 0,
+          "Unintelligible": 6,
+          "Failure": 0
+        }
+      },
+      "authoritativeTextExact": 0.6666666666666666,
+      "boundary": {
+        "tp": 350,
+        "fp": 123,
+        "fn": 229,
+        "precision": 0.7399577167019028,
+        "recall": 0.6044905008635578,
+        "f1": 0.6653992395437263,
+        "unionAccuracy": 0.4985754985754986
+      },
+      "boundaryKind": {
+        "tp": 339,
+        "fp": 134,
+        "fn": 240,
+        "precision": 0.7167019027484144,
+        "recall": 0.5854922279792746,
+        "f1": 0.6444866920152091,
+        "unionAccuracy": 0.47545582047685836
+      },
+      "exactSegmentedSentenceAccuracy": 0.4027777777777778,
+      "click": {
+        "tp": 339,
+        "fp": 134,
+        "fn": 240,
+        "precision": 0.7167019027484144,
+        "recall": 0.5854922279792746,
+        "f1": 0.6444866920152091,
+        "unionAccuracy": 0.47545582047685836
+      },
+      "clickExactCaseAccuracy": 0.4027777777777778,
+      "typoVariantPreservation": 0.9166666666666666,
+      "conservativeReconstruction": 0,
+      "falseReconstructionRate": 0.1864406779661017,
+      "requiredNoisyAtomAccuracy": 0,
+      "localOpaque": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 6,
+        "precision": 1,
+        "recall": 0.3333333333333333,
+        "f1": 0.5,
+        "unionAccuracy": 0.3333333333333333
+      },
+      "hebrewFusedExactAccuracy": 0.16666666666666666,
+      "minimumPerClassExact": 0,
+      "byClass": [
+        {
+          "className": "clean German",
+          "attempts": 12,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.75,
+          "exactSentenceAccuracy": 0.75
+        },
+        {
+          "className": "punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "punctuation and whitespace",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "punctuation inside text",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "tab and repeated space",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "nested punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "ordinary typo",
+          "attempts": 6,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.8333333333333334,
+          "exactSentenceAccuracy": 0.8333333333333334
+        },
+        {
+          "className": "licensed variant",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "licensed variants",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "severe structural corruption",
+          "attempts": 9,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "required noisy atom case",
+          "attempts": 3,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "accepted with local opaque text",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "unintelligible",
+          "attempts": 6,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Polish",
+          "attempts": 3,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Spanish",
+          "attempts": 3,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "Hebrew visible fused prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.6666666666666666,
+          "exactSentenceAccuracy": 0.6666666666666666
+        },
+        {
+          "className": "Hebrew prefix and pronominal suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew object suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew stacked visible prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        }
+      ],
+      "operations": {
+        "latencyMs": {
+          "count": 152,
+          "mean": 1386.7576427828938,
+          "p50": 1237.208917,
+          "p95": 2603.1712079999998,
+          "max": 8206.475666000042,
+          "total": 210787.16170299985
+        },
+        "promptBytes": {
+          "count": 152,
+          "mean": 2300.375,
+          "p50": 1103,
+          "p95": 3795,
+          "max": 3799,
+          "total": 349657
+        },
+        "rawOutputBytes": {
+          "count": 152,
+          "mean": 147.29605263157896,
+          "p50": 29,
+          "p95": 389,
+          "max": 751,
+          "total": 22389
+        },
+        "canonicalResultBytes": {
+          "count": 68,
+          "mean": 584.25,
+          "p50": 604,
+          "p95": 851,
+          "max": 1380,
+          "total": 39729
+        },
+        "segmentCount": {
+          "count": 68,
+          "mean": 7.661764705882353,
+          "p50": 8,
+          "p95": 12,
+          "max": 20,
+          "total": 521
+        },
+        "inputTokens": {
+          "count": 152,
+          "mean": 437.4736842105263,
+          "p50": 211,
+          "p95": 721,
+          "max": 722,
+          "total": 66496
+        },
+        "cachedInputTokens": {
+          "count": 152,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "outputTokens": {
+          "count": 152,
+          "mean": 59.49342105263158,
+          "p50": 32,
+          "p95": 118,
+          "max": 204,
+          "total": 9043
+        },
+        "reasoningTokens": {
+          "count": 152,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "totalTokens": {
+          "count": 152,
+          "mean": 496.9671052631579,
+          "p50": 242,
+          "p95": 839,
+          "max": 925,
+          "total": 75539
+        },
+        "costUsd": {
+          "total": 0.006942,
+          "perCase": 0.00008264285714285715,
+          "per1000Cases": 0.08264285714285716
+        }
+      },
+      "eligible": false
+    },
+    {
+      "arm": {
+        "id": "explicit-combined-agentic",
+        "decomposition": "combined",
+        "strategy": "agentic-review",
+        "promptSource": "explicit-few-shot"
+      },
+      "attempts": 84,
+      "requests": 168,
+      "adapterFailures": 0,
+      "providerErrors": 0,
+      "retries": 0,
+      "domainGatePass": true,
+      "intakeAccuracy": 0.8690476190476191,
+      "intakeMacroRecall": 0.4398148148148148,
+      "confusion": {
+        "Accepted": {
+          "Accepted": 71,
+          "UnsupportedLanguage": 1,
+          "Unintelligible": 0,
+          "Failure": 0
+        },
+        "UnsupportedLanguage": {
+          "Accepted": 6,
+          "UnsupportedLanguage": 0,
+          "Unintelligible": 0,
+          "Failure": 0
+        },
+        "Unintelligible": {
+          "Accepted": 4,
+          "UnsupportedLanguage": 0,
+          "Unintelligible": 2,
+          "Failure": 0
+        }
+      },
+      "authoritativeTextExact": 0.6666666666666666,
+      "boundary": {
+        "tp": 358,
+        "fp": 204,
+        "fn": 221,
+        "precision": 0.6370106761565836,
+        "recall": 0.6183074265975821,
+        "f1": 0.6275197195442594,
+        "unionAccuracy": 0.45721583652618136
+      },
+      "boundaryKind": {
+        "tp": 355,
+        "fp": 207,
+        "fn": 224,
+        "precision": 0.6316725978647687,
+        "recall": 0.613126079447323,
+        "f1": 0.6222611744084138,
+        "unionAccuracy": 0.45165394402035625
+      },
+      "exactSegmentedSentenceAccuracy": 0.5138888888888888,
+      "click": {
+        "tp": 355,
+        "fp": 207,
+        "fn": 224,
+        "precision": 0.6316725978647687,
+        "recall": 0.613126079447323,
+        "f1": 0.6222611744084138,
+        "unionAccuracy": 0.45165394402035625
+      },
+      "clickExactCaseAccuracy": 0.5138888888888888,
+      "typoVariantPreservation": 0.9166666666666666,
+      "conservativeReconstruction": 0.4166666666666667,
+      "falseReconstructionRate": 0.2833333333333333,
+      "requiredNoisyAtomAccuracy": 0,
+      "localOpaque": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 4,
+        "precision": 1,
+        "recall": 0.5555555555555556,
+        "f1": 0.7142857142857143,
+        "unionAccuracy": 0.5555555555555556
+      },
+      "hebrewFusedExactAccuracy": 0.08333333333333333,
+      "minimumPerClassExact": 0,
+      "byClass": [
+        {
+          "className": "clean German",
+          "attempts": 12,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.75,
+          "exactSentenceAccuracy": 0.75
+        },
+        {
+          "className": "punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "punctuation and whitespace",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "punctuation inside text",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "tab and repeated space",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "nested punctuation",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.6666666666666666,
+          "exactSentenceAccuracy": 0.6666666666666666
+        },
+        {
+          "className": "ordinary typo",
+          "attempts": 6,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.8333333333333334,
+          "exactSentenceAccuracy": 0.8333333333333334
+        },
+        {
+          "className": "licensed variant",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "licensed variants",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 1,
+          "exactSentenceAccuracy": 1
+        },
+        {
+          "className": "severe structural corruption",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.4444444444444444,
+          "exactSentenceAccuracy": 0.4444444444444444
+        },
+        {
+          "className": "required noisy atom case",
+          "attempts": 3,
+          "intakeAccuracy": 0.6666666666666666,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "accepted with local opaque text",
+          "attempts": 9,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.5555555555555556,
+          "exactSentenceAccuracy": 0.5555555555555556
+        },
+        {
+          "className": "unintelligible",
+          "attempts": 6,
+          "intakeAccuracy": 0.3333333333333333,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Polish",
+          "attempts": 3,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "valid unsupported Spanish",
+          "attempts": 3,
+          "intakeAccuracy": 0,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": null
+        },
+        {
+          "className": "Hebrew visible fused prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0.3333333333333333,
+          "exactSentenceAccuracy": 0.3333333333333333
+        },
+        {
+          "className": "Hebrew prefix and pronominal suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew object suffix",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        },
+        {
+          "className": "Hebrew stacked visible prefixes",
+          "attempts": 3,
+          "intakeAccuracy": 1,
+          "exactCaseAccuracy": 0,
+          "exactSentenceAccuracy": 0
+        }
+      ],
+      "operations": {
+        "latencyMs": {
+          "count": 168,
+          "mean": 1481.8431726250003,
+          "p50": 1305.0459580000024,
+          "p95": 3094.198915999965,
+          "max": 4505.710165999946,
+          "total": 248949.65300100006
+        },
+        "promptBytes": {
+          "count": 168,
+          "mean": 3464.160714285714,
+          "p50": 3096,
+          "p95": 4041,
+          "max": 4045,
+          "total": 581979
+        },
+        "rawOutputBytes": {
+          "count": 168,
+          "mean": 306.1011904761905,
+          "p50": 333,
+          "p95": 446,
+          "max": 466,
+          "total": 51425
+        },
+        "canonicalResultBytes": {
+          "count": 81,
+          "mean": 574.7777777777778,
+          "p50": 606,
+          "p95": 801,
+          "max": 852,
+          "total": 46557
+        },
+        "segmentCount": {
+          "count": 81,
+          "mean": 7.518518518518518,
+          "p50": 8,
+          "p95": 11,
+          "max": 12,
+          "total": 609
+        },
+        "inputTokens": {
+          "count": 168,
+          "mean": 644.7738095238095,
+          "p50": 570,
+          "p95": 765,
+          "max": 768,
+          "total": 108322
+        },
+        "cachedInputTokens": {
+          "count": 168,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "outputTokens": {
+          "count": 168,
+          "mean": 98.75,
+          "p50": 104,
+          "p95": 131,
+          "max": 141,
+          "total": 16590
+        },
+        "reasoningTokens": {
+          "count": 168,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0,
+          "total": 0
+        },
+        "totalTokens": {
+          "count": 168,
+          "mean": 743.5238095238095,
+          "p50": 711,
+          "p95": 888,
+          "max": 904,
+          "total": 124912
+        },
+        "costUsd": {
+          "total": 0.012052100000000005,
+          "perCase": 0.000143477380952381,
+          "per1000Cases": 0.143477380952381
+        }
+      },
+      "eligible": false
+    }
+  ]
+}

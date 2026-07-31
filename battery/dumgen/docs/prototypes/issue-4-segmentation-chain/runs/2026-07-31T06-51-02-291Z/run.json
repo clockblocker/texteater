@@ -1,0 +1,61 @@
+{
+  "runId": "2026-07-31T06-51-02-291Z",
+  "startedAt": "2026-07-31T06:51:03.897Z",
+  "corpusVersion": "segmentation-chain-v1",
+  "corpusCases": 28,
+  "repetitions": 3,
+  "shuffleSeed": 420420260731,
+  "runnerVersion": "issue-4-prototype-v1",
+  "runtime": "Bun 1.3.0",
+  "provider": "OpenAI",
+  "endpoint": "Responses API",
+  "requestedModel": "gpt-5-nano",
+  "expectedResolvedSnapshot": "gpt-5-nano-2025-08-07",
+  "reasoningEffort": "minimal",
+  "maxOutputTokens": 1600,
+  "temperature": "provider default (parameter unsupported/omitted)",
+  "apiSeed": "unavailable in Responses request; order seed fixed",
+  "serviceTier": "default",
+  "region": "provider-managed; API response exposes no region field",
+  "concurrency": 1,
+  "retries": 0,
+  "store": false,
+  "pricing": {
+    "scheduleId": "openai-standard-pricing-2026-07-31",
+    "effectiveDate": "2026-07-31",
+    "url": "https://developers.openai.com/api/docs/pricing",
+    "currency": "USD",
+    "perMillion": {
+      "input": 0.05,
+      "cachedInput": 0.005,
+      "output": 0.4
+    }
+  },
+  "arms": [
+    {
+      "id": "minimal-combined-direct",
+      "decomposition": "combined",
+      "strategy": "direct",
+      "promptSource": "minimal-zero-shot"
+    },
+    {
+      "id": "explicit-combined-direct",
+      "decomposition": "combined",
+      "strategy": "direct",
+      "promptSource": "explicit-few-shot"
+    },
+    {
+      "id": "explicit-decomposed-direct",
+      "decomposition": "decomposed",
+      "strategy": "direct",
+      "promptSource": "explicit-few-shot"
+    },
+    {
+      "id": "explicit-combined-agentic",
+      "decomposition": "combined",
+      "strategy": "agentic-review",
+      "promptSource": "explicit-few-shot"
+    }
+  ],
+  "finishedAt": "2026-07-31T07:02:46.287Z"
+}

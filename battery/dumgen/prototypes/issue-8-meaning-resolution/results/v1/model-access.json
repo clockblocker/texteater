@@ -1,0 +1,20 @@
+{
+	"checkedAt": "2026-07-31T07:11:26.831Z",
+	"visibleGpt5Models": ["gpt-5-nano"],
+	"listError": null,
+	"probes": [
+		{
+			"model": "gpt-5-nano",
+			"available": true,
+			"responseModel": "gpt-5-nano-2025-08-07"
+		},
+		{
+			"model": "gpt-5-mini",
+			"available": false,
+			"status": 403,
+			"code": "model_not_found",
+			"message": "403 model_not_found; project lacks access"
+		}
+	],
+	"experimentLimit": "Only available model aliases can be measured; inaccessible model strength is recorded, not inferred."
+}

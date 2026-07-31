@@ -1,9 +1,19 @@
 {
 	"extends": ["../../tooling/biome/base.json"],
 	"formatter": {
-		"includes": ["**", "!generate-readme/examples/**/*.ts"]
+		"includes": [
+			"**",
+			"!generate-readme/examples/**/*.ts",
+			"!docs/prototypes/**/runs/**",
+			"!prototypes/**/results/**"
+		]
 	},
 	"linter": {
-		"includes": ["**", "!generate-readme/examples/**/*.ts"]
+		"includes": [
+			"**",
+			"!generate-readme/examples/**/*.ts",
+			"!docs/prototypes/**/runs/**",
+			"!prototypes/**/results/**"
+		]
 	}
 }

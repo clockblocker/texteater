@@ -1,0 +1,11 @@
+{
+	"checkedAt": "2026-07-31T06:57:43.339Z",
+	"visibleGpt5Models": ["gpt-5-nano"],
+	"higherModelProbe": {
+		"model": "gpt-5-mini",
+		"available": false,
+		"status": 403,
+		"code": "model_not_found",
+		"message": "403 Project `<redacted>` does not have access to model `gpt-5-mini`"
+	}
+}

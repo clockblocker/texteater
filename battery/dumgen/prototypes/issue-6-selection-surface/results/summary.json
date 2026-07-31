@@ -1,0 +1,432 @@
+[
+	{
+		"armId": "monolith-indices",
+		"attempts": 72,
+		"invalidAttempts": 0,
+		"invalidAttemptRate": 0,
+		"membershipExact": 0.5277777777777778,
+		"membershipPrecision": 0.6887417218543046,
+		"membershipRecall": 0.8888888888888888,
+		"membershipF1": 0.7761194029850746,
+		"attestedSurfaceExact": 0.5416666666666666,
+		"selectedOrthographyExact": 0.9444444444444444,
+		"normalizedSurfaceExact": 0.4861111111111111,
+		"normalizationEligibleAttempts": 38,
+		"normalizedSurfaceExactGivenMembership": 0.9210526315789473,
+		"spellingExact": 0.9583333333333334,
+		"realizationCoverageExact": 0.8611111111111112,
+		"fullContractExact": 0.4027777777777778,
+		"ambiguousTextMappingFailures": 0,
+		"normalizationErrors": 37,
+		"normalizationErrorsGivenMembership": 3,
+		"whitespaceTokenExpansionViolations": 0,
+		"lemmatizationViolations": 0,
+		"falseTypoPropagation": 0,
+		"falseVariantErasure": 2,
+		"latencyMs": {
+			"mean": 7342.217830430554,
+			"p50": 6672.776124999989,
+			"p95": 13611.130959,
+			"max": 20522.120291999992,
+			"total": 528639.6837909999
+		},
+		"tokens": {
+			"input": {
+				"mean": 689.0833333333334,
+				"p50": 665,
+				"p95": 818,
+				"max": 818,
+				"total": 49614
+			},
+			"cachedInput": {
+				"mean": 0,
+				"p50": 0,
+				"p95": 0,
+				"max": 0,
+				"total": 0
+			},
+			"output": {
+				"mean": 804,
+				"p50": 756,
+				"p95": 1405,
+				"max": 1660,
+				"total": 57888
+			},
+			"reasoning": {
+				"mean": 731.5555555555555,
+				"p50": 704,
+				"p95": 1344,
+				"max": 1600,
+				"total": 52672
+			}
+		},
+		"rawOutputBytes": {
+			"mean": 148.08333333333334,
+			"p50": 144,
+			"p95": 160,
+			"max": 178,
+			"total": 10662
+		},
+		"parsedJsonBytes": {
+			"mean": 148.08333333333334,
+			"p50": 144,
+			"p95": 160,
+			"max": 178,
+			"total": 10662
+		},
+		"retryCount": {
+			"mean": 0,
+			"p50": 0,
+			"p95": 0,
+			"max": 0,
+			"total": 0
+		},
+		"costUsd": 0.025635899999999996,
+		"meanCostUsd": 0.0003560541666666666,
+		"costPer1000CasesUsd": 0.3560541666666666
+	},
+	{
+		"armId": "monolith-text",
+		"attempts": 72,
+		"invalidAttempts": 9,
+		"invalidAttemptRate": 0.125,
+		"membershipExact": 0.4305555555555556,
+		"membershipPrecision": 0.6258064516129033,
+		"membershipRecall": 0.8290598290598291,
+		"membershipF1": 0.7132352941176471,
+		"attestedSurfaceExact": 0.4305555555555556,
+		"selectedOrthographyExact": 0.8055555555555556,
+		"normalizedSurfaceExact": 0.3333333333333333,
+		"normalizationEligibleAttempts": 31,
+		"normalizedSurfaceExactGivenMembership": 0.7741935483870968,
+		"spellingExact": 0.7916666666666666,
+		"realizationCoverageExact": 0.7361111111111112,
+		"fullContractExact": 0.2361111111111111,
+		"ambiguousTextMappingFailures": 9,
+		"normalizationErrors": 39,
+		"normalizationErrorsGivenMembership": 7,
+		"whitespaceTokenExpansionViolations": 0,
+		"lemmatizationViolations": 0,
+		"falseTypoPropagation": 0,
+		"falseVariantErasure": 3,
+		"latencyMs": {
+			"mean": 7152.797811958331,
+			"p50": 6380.057916999998,
+			"p95": 14743.459249999985,
+			"max": 24152.101250000007,
+			"total": 515001.4424609999
+		},
+		"tokens": {
+			"input": {
+				"mean": 749.0833333333334,
+				"p50": 725,
+				"p95": 878,
+				"max": 878,
+				"total": 53934
+			},
+			"cachedInput": {
+				"mean": 0,
+				"p50": 0,
+				"p95": 0,
+				"max": 0,
+				"total": 0
+			},
+			"output": {
+				"mean": 879.1805555555555,
+				"p50": 841,
+				"p95": 1525,
+				"max": 1809,
+				"total": 63301
+			},
+			"reasoning": {
+				"mean": 801.7777777777778,
+				"p50": 768,
+				"p95": 1472,
+				"max": 1728,
+				"total": 57728
+			}
+		},
+		"rawOutputBytes": {
+			"mean": 150.88888888888889,
+			"p50": 150,
+			"p95": 168,
+			"max": 198,
+			"total": 10864
+		},
+		"parsedJsonBytes": {
+			"mean": 150.88888888888889,
+			"p50": 150,
+			"p95": 168,
+			"max": 198,
+			"total": 10864
+		},
+		"retryCount": {
+			"mean": 0,
+			"p50": 0,
+			"p95": 0,
+			"max": 0,
+			"total": 0
+		},
+		"costUsd": 0.02801710000000001,
+		"meanCostUsd": 0.00038912638888888903,
+		"costPer1000CasesUsd": 0.389126388888889
+	},
+	{
+		"armId": "chain-free-normalization",
+		"attempts": 72,
+		"invalidAttempts": 0,
+		"invalidAttemptRate": 0,
+		"membershipExact": 0.5833333333333334,
+		"membershipPrecision": 0.8235294117647058,
+		"membershipRecall": 0.8376068376068376,
+		"membershipF1": 0.8305084745762712,
+		"attestedSurfaceExact": 0.5972222222222222,
+		"selectedOrthographyExact": 0.8611111111111112,
+		"normalizedSurfaceExact": 0.5277777777777778,
+		"normalizationEligibleAttempts": 42,
+		"normalizedSurfaceExactGivenMembership": 0.9047619047619048,
+		"spellingExact": 1,
+		"realizationCoverageExact": 0.8472222222222222,
+		"fullContractExact": 0.4444444444444444,
+		"ambiguousTextMappingFailures": 0,
+		"normalizationErrors": 34,
+		"normalizationErrorsGivenMembership": 4,
+		"whitespaceTokenExpansionViolations": 1,
+		"lemmatizationViolations": 3,
+		"falseTypoPropagation": 2,
+		"falseVariantErasure": 0,
+		"latencyMs": {
+			"mean": 9562.934339722224,
+			"p50": 8206.976208000036,
+			"p95": 18183.22883400001,
+			"max": 33242.733916,
+			"total": 688531.2724600001
+		},
+		"tokens": {
+			"input": {
+				"mean": 912.0972222222222,
+				"p50": 848,
+				"p95": 1200,
+				"max": 1200,
+				"total": 65671
+			},
+			"cachedInput": {
+				"mean": 0,
+				"p50": 0,
+				"p95": 0,
+				"max": 0,
+				"total": 0
+			},
+			"output": {
+				"mean": 929.3888888888889,
+				"p50": 809,
+				"p95": 1745,
+				"max": 2568,
+				"total": 66916
+			},
+			"reasoning": {
+				"mean": 810.6666666666666,
+				"p50": 704,
+				"p95": 1600,
+				"max": 2432,
+				"total": 58368
+			}
+		},
+		"rawOutputBytes": {
+			"mean": 145.875,
+			"p50": 144,
+			"p95": 154,
+			"max": 161,
+			"total": 10503
+		},
+		"parsedJsonBytes": {
+			"mean": 145.875,
+			"p50": 144,
+			"p95": 154,
+			"max": 161,
+			"total": 10503
+		},
+		"retryCount": {
+			"mean": 0,
+			"p50": 0,
+			"p95": 0,
+			"max": 0,
+			"total": 0
+		},
+		"costUsd": 0.03004994999999999,
+		"meanCostUsd": 0.00041736041666666653,
+		"costPer1000CasesUsd": 0.4173604166666665
+	},
+	{
+		"armId": "chain-guarded-normalization",
+		"attempts": 72,
+		"invalidAttempts": 2,
+		"invalidAttemptRate": 0.027777777777777776,
+		"membershipExact": 0.5833333333333334,
+		"membershipPrecision": 0.808,
+		"membershipRecall": 0.8632478632478633,
+		"membershipF1": 0.8347107438016529,
+		"attestedSurfaceExact": 0.5972222222222222,
+		"selectedOrthographyExact": 0.8055555555555556,
+		"normalizedSurfaceExact": 0.5138888888888888,
+		"normalizationEligibleAttempts": 42,
+		"normalizedSurfaceExactGivenMembership": 0.8809523809523809,
+		"spellingExact": 0.9583333333333334,
+		"realizationCoverageExact": 0.7916666666666666,
+		"fullContractExact": 0.4444444444444444,
+		"ambiguousTextMappingFailures": 0,
+		"normalizationErrors": 33,
+		"normalizationErrorsGivenMembership": 5,
+		"whitespaceTokenExpansionViolations": 0,
+		"lemmatizationViolations": 2,
+		"falseTypoPropagation": 1,
+		"falseVariantErasure": 0,
+		"latencyMs": {
+			"mean": 11551.804098402774,
+			"p50": 9619.961583000026,
+			"p95": 21078.865082999924,
+			"max": 73787.85062499996,
+			"total": 831729.8950849997
+		},
+		"tokens": {
+			"input": {
+				"mean": 894.3333333333334,
+				"p50": 843,
+				"p95": 1195,
+				"max": 1195,
+				"total": 64392
+			},
+			"cachedInput": {
+				"mean": 0,
+				"p50": 0,
+				"p95": 0,
+				"max": 0,
+				"total": 0
+			},
+			"output": {
+				"mean": 1103.8055555555557,
+				"p50": 1014,
+				"p95": 2070,
+				"max": 2360,
+				"total": 79474
+			},
+			"reasoning": {
+				"mean": 968.8888888888889,
+				"p50": 832,
+				"p95": 1920,
+				"max": 2240,
+				"total": 69760
+			}
+		},
+		"rawOutputBytes": {
+			"mean": 186.81944444444446,
+			"p50": 166,
+			"p95": 240,
+			"max": 256,
+			"total": 13451
+		},
+		"parsedJsonBytes": {
+			"mean": 186.80555555555554,
+			"p50": 166,
+			"p95": 240,
+			"max": 256,
+			"total": 13450
+		},
+		"retryCount": {
+			"mean": 0,
+			"p50": 0,
+			"p95": 0,
+			"max": 0,
+			"total": 0
+		},
+		"costUsd": 0.03500920000000001,
+		"meanCostUsd": 0.00048623888888888904,
+		"costPer1000CasesUsd": 0.48623888888888905
+	},
+	{
+		"armId": "agentic-inspection",
+		"attempts": 72,
+		"invalidAttempts": 0,
+		"invalidAttemptRate": 0,
+		"membershipExact": 0.4444444444444444,
+		"membershipPrecision": 0.6830985915492958,
+		"membershipRecall": 0.8290598290598291,
+		"membershipF1": 0.7490347490347491,
+		"attestedSurfaceExact": 0.4583333333333333,
+		"selectedOrthographyExact": 0.9305555555555556,
+		"normalizedSurfaceExact": 0.3611111111111111,
+		"normalizationEligibleAttempts": 32,
+		"normalizedSurfaceExactGivenMembership": 0.8125,
+		"spellingExact": 0.9305555555555556,
+		"realizationCoverageExact": 0.8472222222222222,
+		"fullContractExact": 0.3055555555555556,
+		"ambiguousTextMappingFailures": 0,
+		"normalizationErrors": 46,
+		"normalizationErrorsGivenMembership": 6,
+		"whitespaceTokenExpansionViolations": 0,
+		"lemmatizationViolations": 1,
+		"falseTypoPropagation": 0,
+		"falseVariantErasure": 3,
+		"latencyMs": {
+			"mean": 8508.170774916658,
+			"p50": 7687.464999999967,
+			"p95": 14485.040500000003,
+			"max": 20655.91841699998,
+			"total": 612588.2957939993
+		},
+		"tokens": {
+			"input": {
+				"mean": 1991.6666666666667,
+				"p50": 1924,
+				"p95": 2708,
+				"max": 2879,
+				"total": 143400
+			},
+			"cachedInput": {
+				"mean": 0,
+				"p50": 0,
+				"p95": 0,
+				"max": 0,
+				"total": 0
+			},
+			"output": {
+				"mean": 876.8333333333334,
+				"p50": 825,
+				"p95": 1495,
+				"max": 1684,
+				"total": 63132
+			},
+			"reasoning": {
+				"mean": 739.5555555555555,
+				"p50": 704,
+				"p95": 1344,
+				"max": 1536,
+				"total": 53248
+			}
+		},
+		"rawOutputBytes": {
+			"mean": 178.44444444444446,
+			"p50": 177,
+			"p95": 195,
+			"max": 213,
+			"total": 12848
+		},
+		"parsedJsonBytes": {
+			"mean": 178.44444444444446,
+			"p50": 177,
+			"p95": 195,
+			"max": 213,
+			"total": 12848
+		},
+		"retryCount": {
+			"mean": 0,
+			"p50": 0,
+			"p95": 0,
+			"max": 0,
+			"total": 0
+		},
+		"costUsd": 0.03242280000000001,
+		"meanCostUsd": 0.0004503166666666668,
+		"costPer1000CasesUsd": 0.45031666666666675
+	}
+]

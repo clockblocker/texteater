@@ -1,0 +1,409 @@
+{
+	"version": "entry-identity-v2-hidden-blind",
+	"catalogVersion": "opaque-entry-catalog-v2-hidden",
+	"cases": [
+		{
+			"caseId": "H16-DE-001",
+			"primaryStratum": "polysemy-meaning-independence",
+			"coverageTags": [
+				"german-schloss",
+				"polysemy",
+				"meaning-independent"
+			],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Am Gartentor rostet das alte Schloss.",
+			"surface": {
+				"normalizedSurface": "Schloss",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_f179736fab3a94ce",
+				"ent_3c776044e8729b5f"
+			]
+		},
+		{
+			"caseId": "H16-DE-002",
+			"primaryStratum": "polysemy-meaning-independence",
+			"coverageTags": [
+				"german-schloss",
+				"polysemy",
+				"meaning-independent"
+			],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Nach der Führung verließen wir das barocke Schloss.",
+			"surface": {
+				"normalizedSurface": "Schloss",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_3c776044e8729b5f",
+				"ent_f179736fab3a94ce"
+			]
+		},
+		{
+			"caseId": "H16-DE-003",
+			"primaryStratum": "paradigm-homonym",
+			"coverageTags": ["bank-paradigm", "homonym"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Mehrere Banken erhöhten die Kontogebühren.",
+			"surface": {
+				"normalizedSurface": "Banken",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_b8d083d53026c60e",
+				"ent_634cb0851a98a80b"
+			]
+		},
+		{
+			"caseId": "H16-DE-004",
+			"primaryStratum": "paradigm-homonym",
+			"coverageTags": ["bank-paradigm", "homonym"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Unter den Bäumen standen frisch gestrichene Bänke.",
+			"surface": {
+				"normalizedSurface": "Bänke",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"case": "Nom",
+					"number": "Plur"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_634cb0851a98a80b",
+				"ent_b8d083d53026c60e"
+			]
+		},
+		{
+			"caseId": "H16-DE-005",
+			"primaryStratum": "same-spelling-pos",
+			"coverageTags": ["same-spelling-pos"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Er wartet seit Montag auf Antwort.",
+			"surface": {
+				"normalizedSurface": "seit",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_913b13559f1bff98",
+				"ent_b8b6b30d8db594ba"
+			]
+		},
+		{
+			"caseId": "H16-DE-006",
+			"primaryStratum": "same-spelling-pos",
+			"coverageTags": ["same-spelling-pos"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Wir warten, seit sie umgezogen ist.",
+			"surface": {
+				"normalizedSurface": "seit",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_b8b6b30d8db594ba",
+				"ent_913b13559f1bff98"
+			]
+		},
+		{
+			"caseId": "H16-RU-001",
+			"primaryStratum": "cross-linguistic-homonym",
+			"coverageTags": ["russian-kosa", "homonym"],
+			"language": "ru",
+			"boundaryPolicyVersion": "ru-entry-boundaries-v2-hidden",
+			"sentence": "Девочка распустила косу перед сном.",
+			"surface": {
+				"normalizedSurface": "косу",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_a8b3d51670013b0a",
+				"ent_243f751f62a2765e",
+				"ent_3e824e3f997f47d2"
+			]
+		},
+		{
+			"caseId": "H16-RU-002",
+			"primaryStratum": "cross-linguistic-homonym",
+			"coverageTags": ["russian-kosa", "homonym"],
+			"language": "ru",
+			"boundaryPolicyVersion": "ru-entry-boundaries-v2-hidden",
+			"sentence": "Рабочий повесил косу на стену сарая.",
+			"surface": {
+				"normalizedSurface": "косу",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_3e824e3f997f47d2",
+				"ent_a8b3d51670013b0a",
+				"ent_243f751f62a2765e"
+			]
+		},
+		{
+			"caseId": "H16-RU-003",
+			"primaryStratum": "cross-linguistic-homonym",
+			"coverageTags": ["russian-kosa", "homonym"],
+			"language": "ru",
+			"boundaryPolicyVersion": "ru-entry-boundaries-v2-hidden",
+			"sentence": "Лодка обогнула песчаную косу.",
+			"surface": {
+				"normalizedSurface": "косу",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"case": "Acc",
+					"number": "Sing"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_243f751f62a2765e",
+				"ent_3e824e3f997f47d2",
+				"ent_a8b3d51670013b0a"
+			]
+		},
+		{
+			"caseId": "H16-DE-007",
+			"primaryStratum": "family-subkind",
+			"coverageTags": ["family-phraseme", "subkind-idiom"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Aus Angst vor Ausgrenzung heulte sie im Team mit.",
+			"surface": {
+				"normalizedSurface": "heulte mit",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_b51f7dafafb9359b",
+				"ent_d7b4fc32a5621bab"
+			]
+		},
+		{
+			"caseId": "H16-DE-008",
+			"primaryStratum": "family-subkind",
+			"coverageTags": ["family-lexeme", "phraseme-boundary"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Als der Hund begann, heulte der Welpe mit.",
+			"surface": {
+				"normalizedSurface": "heulte mit",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_d7b4fc32a5621bab",
+				"ent_b51f7dafafb9359b"
+			]
+		},
+		{
+			"caseId": "H16-DE-009",
+			"primaryStratum": "family-subkind",
+			"coverageTags": ["family-morpheme", "subkind-circumfix"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Die Mechanikerin hat das Gehäuse gesäubert.",
+			"surface": {
+				"normalizedSurface": "ge-…-t",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_603691d9e8457244",
+				"ent_5b59a3d0e90251b0"
+			]
+		},
+		{
+			"caseId": "H16-DE-010",
+			"primaryStratum": "family-subkind",
+			"coverageTags": ["family-lexeme", "morpheme-boundary"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Sie hat die Werkbank gründlich gesäubert.",
+			"surface": {
+				"normalizedSurface": "gesäubert",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"aspect": "Perf",
+					"verbForm": "Part"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_5b59a3d0e90251b0",
+				"ent_603691d9e8457244"
+			]
+		},
+		{
+			"caseId": "H16-DE-011",
+			"primaryStratum": "grammar-category",
+			"coverageTags": ["family-lexeme", "separable-verb"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Bitte pass beim Überqueren gut auf.",
+			"surface": {
+				"normalizedSurface": "pass auf",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"mood": "Imp",
+					"number": "Sing",
+					"person": "2",
+					"verbForm": "Fin"
+				}
+			},
+			"candidateEntryIds": [
+				"ent_eedd8d0725e8e4ae",
+				"ent_6980ac059d5c574e"
+			]
+		},
+		{
+			"caseId": "H16-DE-012",
+			"primaryStratum": "grammar-category",
+			"coverageTags": ["family-lexeme", "pos-adp"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Die Tasse steht auf dem Tablett.",
+			"surface": {
+				"normalizedSurface": "auf",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_6980ac059d5c574e",
+				"ent_eedd8d0725e8e4ae"
+			]
+		},
+		{
+			"caseId": "H16-DE-013",
+			"primaryStratum": "baseline",
+			"coverageTags": ["family-lexeme", "baseline"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Das Rätsel blieb schwierig.",
+			"surface": {
+				"normalizedSurface": "schwierig",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": ["ent_de53d9c7fabb5ba0"]
+		},
+		{
+			"caseId": "H16-DE-014",
+			"primaryStratum": "inflection-same-entry",
+			"coverageTags": ["inflection-same-entry", "person-feature"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Damals spielte ich jeden Abend Schach.",
+			"surface": {
+				"normalizedSurface": "spielte",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "1",
+					"tense": "Past",
+					"verbForm": "Fin"
+				}
+			},
+			"candidateEntryIds": ["ent_7e84f1ef64ad240e"]
+		},
+		{
+			"caseId": "H16-DE-015",
+			"primaryStratum": "inflection-same-entry",
+			"coverageTags": ["inflection-same-entry", "person-feature"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Damals spielte er jeden Abend Schach.",
+			"surface": {
+				"normalizedSurface": "spielte",
+				"surfaceKind": "Inflection",
+				"inflectionalFeatures": {
+					"mood": "Ind",
+					"number": "Sing",
+					"person": "3",
+					"tense": "Past",
+					"verbForm": "Fin"
+				}
+			},
+			"candidateEntryIds": ["ent_7e84f1ef64ad240e"]
+		},
+		{
+			"caseId": "H16-DE-016",
+			"primaryStratum": "paradigm-homonym",
+			"coverageTags": ["paradigm-homonym", "mutter-paradigm"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Seine Mutter rief kurz nach Mittag an.",
+			"surface": {
+				"normalizedSurface": "Mutter",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_d5daa54ba21e51e6",
+				"ent_a8563d79996b633b"
+			]
+		},
+		{
+			"caseId": "H16-DE-017",
+			"primaryStratum": "paradigm-homonym",
+			"coverageTags": ["paradigm-homonym", "mutter-paradigm"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Die Mutter am Bolzen hatte sich gelöst.",
+			"surface": {
+				"normalizedSurface": "Mutter",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": [
+				"ent_a8563d79996b633b",
+				"ent_d5daa54ba21e51e6"
+			]
+		},
+		{
+			"caseId": "H16-DE-018",
+			"primaryStratum": "new-entry",
+			"coverageTags": ["missing-identity", "propose-new"],
+			"language": "de",
+			"boundaryPolicyVersion": "de-entry-boundaries-v2-hidden",
+			"sentence": "Für die Schale knetete die Keramikerin feuchten Ton.",
+			"surface": {
+				"normalizedSurface": "Ton",
+				"surfaceKind": "Citation",
+				"inflectionalFeatures": {}
+			},
+			"candidateEntryIds": ["ent_2cd1e15ae7dc6da5"]
+		}
+	]
+}
