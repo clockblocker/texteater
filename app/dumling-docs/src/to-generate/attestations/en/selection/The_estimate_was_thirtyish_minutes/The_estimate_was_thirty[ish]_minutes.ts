@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const ishSuffixPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial", spelling: "Variant" },
-	spelledSelection: "ish",
+	segmentedSentenceId: "sentence_x5bwKW9s1wvqgs5TcY" as SegmentedSentenceId,
+	clickedSegmentIndex: 7,
+	surfaceSegmentIndices: [7],
+	attestedSurface: "ish",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "-ish",
+		normalizedSurface: "ish",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "-ish",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Suffix",
-			inherentFeatures: {},
-			meaningInEmojis: "~",
+			canonicalForm: "-ish",
+			family: "Morpheme",
+			kind: "Suffix",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Morpheme", "Suffix">;
 

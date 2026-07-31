@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type {
+	AbstractCoreFeatures,
 	AbstractInflectionalFeatures,
-	AbstractInherentFeatures,
 } from "../../types/abstract/features/features-catalog.js";
 import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog.js";
 import {
@@ -31,9 +31,9 @@ const abstractInflectionalFeatureValueSchemas = Object.fromEntries(
 	]),
 ) as FeatureSchemaShape;
 
-export const abstractInherentFeaturesSchema = buildAbstractFeatureObjectSchema(
+export const abstractCoreFeaturesSchema = buildAbstractFeatureObjectSchema(
 	abstractInflectionalFeatureValueSchemas,
-) satisfies z.ZodType<AbstractInherentFeatures>;
+) satisfies z.ZodType<AbstractCoreFeatures>;
 
 export const abstractInflectionalFeaturesSchema = requireNonEmptyFeatureObject(
 	buildAbstractFeatureObjectSchema(abstractInflectionalFeatureValueSchemas),

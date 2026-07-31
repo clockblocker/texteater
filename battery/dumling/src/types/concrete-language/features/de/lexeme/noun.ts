@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type DeNounFeatures = {
-	inherent: {
+	core: {
 		gender: Extract<
 			AbstractFeatureValue<"gender">,
 			"Fem" | "Masc" | "Neut"

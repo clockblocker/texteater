@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "acht",
+	segmentedSentenceId: "sentence_pJroeJAAiSmYPgsKOZ" as SegmentedSentenceId,
+	clickedSegmentIndex: 22,
+	surfaceSegmentIndices: [20, 22],
+	attestedSurface: "in acht",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "in acht nehmen",
+		normalizedSurface: "in acht",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "in acht nehmen",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "👀",
+			canonicalForm: "in acht nehmen",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "Idiom">;
 

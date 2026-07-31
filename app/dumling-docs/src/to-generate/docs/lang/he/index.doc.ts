@@ -9,14 +9,14 @@ Hebrew is available at \`dumling.he\`, \`getLanguageApi("he")\`, and \`schemasFo
 
 ## Supported Lemma Families
 
-| \`lemmaKind\` | \`lemmaSubKind\` values |
+| \`family\` | \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\`, \`PairedFrame\` |
 
-\`Construction\` is part of the shared public ontology even though the Hebrew examples here focus on lexemes, morphemes, and phrasemes. Construction entries are citation-only and currently featureless.
+\`Construction\` is part of the shared public ontology even though the Hebrew examples here focus on lexemes, morphemes, and phrasemes. Construction Lemmas are citation-only and currently featureless.
 
 ## Common Feature Areas
 
@@ -36,28 +36,41 @@ Hebrew gender values are scoped to \`Fem\` and \`Masc\`. Hebrew noun number supp
 import { dumling } from "dumling";
 
 const katavLemma = dumling.he.create.lemma({
-\tcanonicalLemma: "כתב",
-\tlemmaKind: "Lexeme",
-\tlemmaSubKind: "VERB",
-\tinherentFeatures: {
+\tcanonicalForm: "כתב",
+\tfamily: "Lexeme",
+\tkind: "VERB",
+\tcoreFeatures: {
 \t\thebBinyan: "PAAL",
+\t\thebExistential: null,
 \t},
-\tmeaningInEmojis: "✍️",
 });
 
 const katavSurface = dumling.he.create.surface.inflection({
 \tlemma: katavLemma,
-\tnormalizedFullSurface: "כתב",
+\tnormalizedSurface: "כתב",
+\tspelling: "Canonical",
+\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
+\t\tdefinite: null,
 \t\tgender: "Masc",
+\t\tmood: null,
 \t\tnumber: "Sing",
 \t\tperson: "3",
+\t\tpolarity: null,
 \t\ttense: "Past",
+\t\tverbForm: null,
+\t\tvoice: null,
 \t},
+\tsurfaceFeatures: null,
 });
 
 const katavSelection = dumling.he.convert.surface.toSelection(katavSurface, {
-\tspelledSelection: "כתב",
+\tsegmentedSentenceId:
+\t\tdumling.he.create.segmentedSentenceId("sentence:he:katav"),
+\tclickedSegmentIndex: 0,
+\tsurfaceSegmentIndices: [0],
+\tattestedSurface: "כתב",
+\tselectedOrthography: "Standard",
 });
 
 dumling.he.parse.selection(katavSelection);

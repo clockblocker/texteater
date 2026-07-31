@@ -1,27 +1,45 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "eingezeichnet",
+	segmentedSentenceId: "sentence_ajIP5KV5kzJAhXtQGg" as SegmentedSentenceId,
+	clickedSegmentIndex: 12,
+	surfaceSegmentIndices: [12],
+	attestedSurface: "eingezeichnet",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "eingezeichnet",
+		normalizedSurface: "eingezeichnet",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			aspect: "Perf",
 			verbForm: "Part",
+			gender: null,
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "einzeichnen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "einzeichnen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasSepPrefix: "ein",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
-			meaningInEmojis: "🗺️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

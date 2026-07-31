@@ -20,7 +20,7 @@ const deDeterminerGenderSchema = z.union([
 >;
 
 export const deDeterminerFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		definite: abstractFeatureAtomSchemas.definite.extract(["Def", "Ind"]),
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["ADV", "DET"]),
 		foreign: abstractFeatureAtomSchemas.foreign,

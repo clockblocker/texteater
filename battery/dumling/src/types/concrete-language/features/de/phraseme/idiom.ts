@@ -1,4 +1,6 @@
+import type { DeVerbalInflectionalFeatures } from "../lexeme/verb.js";
+
 export type DeIdiomPhrasemeFeatures = {
-	inherent: Record<never, never>;
-	inflectional: Record<never, never>;
+	core: Record<never, never>;
+	inflectional: DeVerbalInflectionalFeatures;
 };

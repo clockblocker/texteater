@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded-by: 0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
 ---
 
 # Separate linguistic entry identity from lemma form
@@ -66,10 +67,8 @@ identity in addition to family, subkind, Lemma Form, and inherent features.
 Candidate lookup may use the descriptive fields, but exact resolution is
 against an Entry ID declared by the corpus boundary policy.
 
-The current Dumling `Lemma` DTO and ID codec conflate citation text,
-morphogrammatical description, and learner semantic content. Dumling and
-Dumdict therefore require a later schema migration: introduce entry IDs,
-replace identity-bearing `Lemma` references with Linguistic Entry references,
-keep Meaning IDs learner-owned, and stop deriving stable entry identity from
-emoji or other Meaning content. This ADR records the policy; it does not perform
-that migration.
+Dumling implements this boundary with opaque Linguistic Entry IDs, explicit
+Linguistic Entry DTOs, Entry-bearing Surfaces, and contextual Selections.
+Dumdict stores learner-owned Meanings separately and relates them to Linguistic
+Entries by opaque ID. Emoji and other Meaning content never participate in
+Linguistic Entry identity.

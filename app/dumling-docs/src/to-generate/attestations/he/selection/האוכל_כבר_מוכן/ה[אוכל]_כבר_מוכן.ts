@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const ochelNounSelection = {
-	language: "he",
-	spelledSelection: "אוכל",
+	segmentedSentenceId: "sentence_Qq2cgAF698r3GS_HS7" as SegmentedSentenceId,
+	clickedSegmentIndex: 1,
+	surfaceSegmentIndices: [1],
+	attestedSurface: "אוכל",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "אוכל",
+		normalizedSurface: "אוכל",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "אוכל",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "אוכל",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				abbr: null,
 			},
-			meaningInEmojis: "🍲",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "NOUN">;
 

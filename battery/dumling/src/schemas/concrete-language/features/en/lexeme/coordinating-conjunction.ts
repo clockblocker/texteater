@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enCoordinatingConjunctionFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		polarity: abstractFeatureAtomSchemas.polarity.extract(["Neg"]),
 	}),

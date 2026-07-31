@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection054 = {
-	language: "de",
-	spelledSelection: "Am",
+	segmentedSentenceId: "sentence_xqLp_lkYYRnJqE3nOg" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Am",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "am",
+		normalizedSurface: "am",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "am",
-			lemmaKind: "Construction",
-			lemmaSubKind: "Fusion",
-			inherentFeatures: {},
-			meaningInEmojis: "📍",
+			canonicalForm: "am",
+			family: "Construction",
+			kind: "Fusion",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Construction", "Fusion">;
 
@@ -25,6 +34,6 @@ export const attestation = {
 	classifierNotes:
 		"Am is modeled as Construction/Fusion, parallel to zum and ins. Sentence-initial capitalization is treated as canonical here, and the emoji is for am itself rather than the surrounding temporal phrase.",
 	classificationMistakes:
-		'Do not mark sentence-initial capitalization alone as a spelling variant, and do not assign the emoji from the surrounding phrase. For this row, the earlier mistakes were `{ selectionFeatures: { spelling: "Variant" } }` and `meaningInEmojis` set to the temporal context rather than to `am` itself.',
+		"Do not mark sentence-initial capitalization alone as a spelling variant. `Am` is a Standard click on a Canonical Surface.",
 	isVerified: true,
 } as const satisfies AttestedSelection;

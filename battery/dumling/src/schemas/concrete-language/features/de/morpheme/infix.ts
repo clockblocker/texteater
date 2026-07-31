@@ -3,6 +3,6 @@ import type { DeInfixMorphemeFeatures } from "../../../../../types/concrete-lang
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deInfixMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeInfixMorphemeFeatures>;

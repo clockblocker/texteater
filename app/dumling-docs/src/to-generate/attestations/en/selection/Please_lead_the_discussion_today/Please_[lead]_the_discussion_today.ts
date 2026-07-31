@@ -1,21 +1,36 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const leadVerbHomographSelection = {
-	language: "en",
-	spelledSelection: "lead",
+	segmentedSentenceId: "sentence_w4c7onQ-_-_4Suv0xC" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "lead",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "lead",
+		normalizedSurface: "lead",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "lead",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "🧭",
+			canonicalForm: "lead",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				hasGovPrep: null,
+				phrasal: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 

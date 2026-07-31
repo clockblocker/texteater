@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const lePrefixSelection = {
-	language: "he",
-	spelledSelection: "ל",
+	segmentedSentenceId: "sentence_1UKL3rSeg1YqwoRPFM" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "ל",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "ל",
+		normalizedSurface: "ל",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "ל",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Prefix",
-			inherentFeatures: {},
-			meaningInEmojis: "➡️",
+			canonicalForm: "ל",
+			family: "Morpheme",
+			kind: "Prefix",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Morpheme", "Prefix">;
 

@@ -105,11 +105,12 @@ A Selection contains:
   clicked Segment;
 - one resolved global Surface.
 
-`spelledSelection` is derived from the immutable Segmented Sentence and clicked
-index and is not stored. A resolution request, failed attempt, or prompt
-candidate is not a Selection. The canonical Selection requires Segment indices,
-although experiments may compare whether a model should emit those indices
-directly or an adapter should resolve another output representation to them.
+The clicked Segment text is derived from the immutable Segmented Sentence and
+clicked index and is not stored again. A resolution request, failed attempt, or
+prompt candidate is not a Selection. The canonical Selection requires Segment
+indices, although experiments may compare whether a model should emit those
+indices directly or an adapter should resolve another output representation to
+them.
 
 ### Surface
 A reusable global grammatical form shared by normalized-equivalent Selections.
@@ -119,70 +120,49 @@ A Surface contains:
   reordering, or lemmatizing lexical constituents;
 - `spelling`, explicitly `Canonical` or `Variant`;
 - `realizationCoverage`, explicitly `Full` or `Partial`, describing how the
-  Surface realizes its Linguistic Entry;
+  Surface realizes its Lemma;
 - its Surface kind and applicable inflectional features;
-- one Linguistic Entry identity.
+- one Lemma.
 
 Surface identity includes its language, normalized form, Surface kind,
-inflectional features, and Linguistic Entry identity. Identically spelled noun
+inflectional features, and Lemma identity. Identically spelled noun
 and verb forms, and overlapping inflections with different grammatical
 analyses, are different Surfaces.
 
 Typos stop at Selection and are repaired in `normalizedSurface`. Licensed
 variants survive normalization and are marked on Surface. For example,
 `armuor` may be a Typo Selection of the Variant Surface `armour` for a Lexeme
-whose Lemma Form is `armor`.
+whose Canonical Form is `armor`.
 
 `realizationCoverage: Partial` does not license Surface normalization to invent
 missing material. For `heulte mit` resolving to the idiom
 `mit den Wölfen heulen`, both `attestedSurface` and `normalizedSurface` remain
-`heulte mit`; the complete citation form belongs to the Linguistic Entry.
+`heulte mit`; the complete Canonical Form belongs to the Lemma.
 
-### Linguistic Entry
-The reusable, language-specific identity behind a Surface.
+### Lemma
+The normalized grammatical identity behind a Surface.
 
-Every Linguistic Entry has one stable identity, one family, one citation form,
-and the inherent grammatical features applicable to that family. `Lexeme`,
-`Phraseme`, `Morpheme`, and `Construction` are peer families of Linguistic
-Entry. Matching spelling, citation form, and grammatical features narrows
-candidate entries but never proves that two uses have the same identity.
+Every Lemma consists of its language, `canonicalForm`, `family`, `kind`, and
+`coreFeatures`. `Lexeme`, `Phraseme`, `Morpheme`, and `Construction` are peer
+families. Grammatically indistinguishable homonyms share one Lemma; homographs
+with different grammatical analyses are different Lemmas.
 
 ### Lexeme
-A word-like Linguistic Entry whose identity distinguishes homonymy while
-allowing polysemous uses to remain together.
+A word-like Lemma.
 
-Two Lexemes may have the same Lemma Form, part of speech, inherent features,
-and inflectional paradigm. A language's declared lexical boundary policy
-decides whether uses belong to the same Lexeme; unresolved sameness is not
-silently inferred from matching grammar.
+Lexeme is one Lemma family, not a synonym for Lemma. Semantic differences do
+not split a Lexeme when its canonical form, kind, and core features are the
+same.
 
-### Lemma Form
-The canonical citation form of one Lexeme.
+### Reading
+The learner-scoped semantic identity formed by one Lemma and one emoji
+description.
 
-A Lemma Form is descriptive text, not an identity-bearing node. Multiple
-Lexemes may have the same Lemma Form.
-
-### Sense
-An optional, lexicographic subdivision of one Linguistic Entry under a named
-dictionary or other lexical authority.
-
-Sense boundaries are authority-scoped and do not determine Linguistic Entry
-identity or learner-owned Meaning boundaries.
-
-### Meaning
-A learner-owned, note-worthy grouping of contextual uses for one Linguistic
-Entry.
-
-A Meaning has a compact emoji description and other semantic description
-blocks. When a learner encounters another use of the same Linguistic Entry,
-classification either reuses one of that learner's existing Meanings or drafts
-a new Meaning.
-
-Meaning boundaries are intentionally learner-local. A Meaning is not guaranteed
-to correspond to a Sense or the smallest semantic distinction. Meanings never
-decide whether two uses are the same Linguistic Entry. Dumgen does not split
-semantic pennies unless the distinction is useful enough to deserve a separate
-learner-facing note.
+A Reading is exactly `{ lemma, emojiDescription }`. When a learner encounters
+another use of the same Lemma, classification reuses one of that learner's
+existing Readings when it is close enough or drafts a new Reading. This is the
+no-splitting-semantic-pennies policy: semantic identity is learner-local and is
+split only when a separate learner-facing Reading is useful.
 
 ### Segmentation Chain
 The pre-click chain.
@@ -196,8 +176,8 @@ The post-click chain.
 
 It begins with a Segmented Sentence and one clicked `ResolvableText` index. It
 resolves one valid Selection containing the complete contextual Surface
-membership, then resolves the global Surface and its Linguistic Entry, and
-finally either selects an existing learner-owned Meaning or drafts a new one.
+membership, then resolves the global Surface and its Lemma, and finally either
+selects an existing learner-owned Reading or drafts a new one.
 
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
 itself an experiment.
@@ -210,20 +190,18 @@ itself an experiment.
 - A **Selection** resolves one or more `ResolvableText` Segments to exactly one
   **Surface**.
 - Many noisy **Selections** may resolve to one global **Surface**.
-- A **Surface** realizes exactly one **Linguistic Entry** under one grammatical
+- A **Surface** realizes exactly one **Lemma** under one grammatical
   analysis.
-- A **Lexeme** is a word-like **Linguistic Entry** and has exactly one **Lemma
-  Form**.
-- A **Sense**, when present, subdivides one **Linguistic Entry** for one named
-  lexical authority.
-- A **Meaning** groups one learner's uses of one **Linguistic Entry**.
+- A **Lexeme** is a word-like **Lemma**.
+- A **Reading** combines exactly one **Lemma** and one learner-scoped Emoji
+  Description.
 
 ## Example dialogue
 
 > **Dev:** "Does clicking `gvae` create a misspelled Surface?"
 > **Domain expert:** "No. It creates a Typo Selection whose attested Surface is
 > `gvae up`; that Selection resolves to the global normalized Surface `gave up`
-> and Lexeme whose Lemma Form is `give up`."
+> and Lexeme Lemma whose Canonical Form is `give up`."
 
 ## Flagged ambiguities
 

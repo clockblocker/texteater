@@ -1,22 +1,35 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const okVariantSelection = {
-	language: "en",
-	selectionFeatures: { spelling: "Variant" },
-	spelledSelection: "OK",
+	segmentedSentenceId: "sentence_i8ar0bQO1a7zXqRKBE" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "OK",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "OK",
+		normalizedSurface: "OK",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "okay",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "INTJ",
-			inherentFeatures: {},
-			meaningInEmojis: "👌",
+			canonicalForm: "okay",
+			family: "Lexeme",
+			kind: "INTJ",
+			coreFeatures: {
+				abbr: null,
+				foreign: null,
+				polarity: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "INTJ">;
 

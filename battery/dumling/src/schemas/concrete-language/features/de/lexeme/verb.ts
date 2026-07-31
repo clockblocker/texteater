@@ -7,7 +7,7 @@ import {
 	markInflectionSurface,
 } from "../../../../shared/feature-helpers.js";
 
-const deVerbInflectionalFeaturesSchema = markInflectionSurface(
+export const deVerbInflectionalFeaturesSchema = markInflectionSurface(
 	z.union([
 		buildFeatureObjectSchema({
 			number: abstractFeatureAtomSchemas.number
@@ -100,7 +100,7 @@ const deVerbInflectionalFeaturesSchema = markInflectionSurface(
 ) as unknown as z.ZodType<DeVerbFeatures["inflectional"]>;
 
 export const deVerbFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		hasGovPrep: abstractFeatureAtomSchemas.hasGovPrep,
 		hasSepPrefix: abstractFeatureAtomSchemas.hasSepPrefix,
 		lexicallyReflexive: abstractFeatureAtomSchemas.lexicallyReflexive,

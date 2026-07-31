@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const vavCliticSelection = {
-	language: "he",
-	spelledSelection: "ו",
+	segmentedSentenceId: "sentence_BbUUz8-Cma7C7UlLSU" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "ו",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "ו",
+		normalizedSurface: "ו",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "ו",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Clitic",
-			inherentFeatures: {},
-			meaningInEmojis: "➕",
+			canonicalForm: "ו",
+			family: "Morpheme",
+			kind: "Clitic",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Morpheme", "Clitic">;
 

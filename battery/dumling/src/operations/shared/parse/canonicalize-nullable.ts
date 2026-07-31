@@ -76,8 +76,8 @@ function canonicalize(schema: JsonSchema, value: unknown): unknown {
 
 	if (schema.type === "array" && Array.isArray(value)) {
 		return isJsonSchema(schema.items)
-			? value.map((entry) =>
-					canonicalize(schema.items as JsonSchema, entry),
+			? value.map((lemma) =>
+					canonicalize(schema.items as JsonSchema, lemma),
 				)
 			: value;
 	}

@@ -5,21 +5,22 @@ import type { Lemma, Selection, Surface } from "../../src/types";
 
 // README_BLOCK:core-lemma:start
 const seeLemma = dumling.de.create.lemma({
-	canonicalLemma: "see",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "NOUN",
-	inherentFeatures: {
+	canonicalForm: "see",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: {
 		gender: "Masc",
 		hyph: null,
 	},
-	meaningInEmojis: "🌊",
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
 // README_BLOCK:core-lemma:end
 
 // README_BLOCK:core-surface:start
 const seeSurface = dumling.de.create.surface.citation({
 	lemma: seeLemma,
-	normalizedFullSurface: "See",
+	normalizedSurface: "See",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceFeatures: null,
 }) satisfies Surface<
 	"de",
@@ -31,16 +32,22 @@ const seeSurface = dumling.de.create.surface.citation({
 
 // README_BLOCK:core-selection:start
 const seeSelection = dumling.de.create.selection({
-	spelledSelection: "See",
+	segmentedSentenceId: dumling.de.create.segmentedSentenceId(
+		"example:sentence:am-see",
+	),
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "See",
+	selectedOrthography: "Standard",
 	surface: seeSurface,
-	selectionFeatures: null,
 }) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 // README_BLOCK:core-selection:end
 
 // README_BLOCK:core-selection-id-examples:start
 const seeSelectionReadableCsv =
-	"Selection,See,Surface,Citation,see,Lemma,de,Lexeme,NOUN,see,🌊,gender=Masc";
-const seeSelectionTinyCsv = "v1,x,See,s,c,see,l,de,l,n,see,🌊,g=m";
+	"Selection,example:sentence:am-see,0";
+const seeLemmaReadableCsv =
+	'Lemma,de,see,Lexeme,NOUN,"{""gender"":""Masc"",""hyph"":null}"';
 // README_BLOCK:core-selection-id-examples:end
 
 void seeSelection;
@@ -57,32 +64,39 @@ import type {
 } from "dumling/types";
 
 const lemma = packageDumling.de.create.lemma({
-	canonicalLemma: "see",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "NOUN",
-	inherentFeatures: {
+	canonicalForm: "see",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: {
 		gender: "Masc",
 		hyph: null,
 	},
-	meaningInEmojis: "🌊",
 }) satisfies PackageLemma<"de", "Lexeme", "NOUN">;
 
 const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.create.surface.citation({
 		lemma,
-		normalizedFullSurface: "See",
+		normalizedSurface: "See",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceFeatures: null,
 	});
 const selection: PackageSelection<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toSelection(surface, {
-		spelledSelection: "See",
+		segmentedSentenceId: packageDumling.de.create.segmentedSentenceId(
+			"example:sentence:am-see",
+		),
+		clickedSegmentIndex: 0,
+		surfaceSegmentIndices: [0],
+		attestedSurface: "See",
+		selectedOrthography: "Standard",
 	});
 const descriptor = packageDumling.de.describe.as.selection(selection);
 const descriptorCsv = packageDumling.de.describe.asCsv.selection(selection);
 const extractedLemma = packageDumling.de.extract.lemma(selection);
 const gender: PackageFeatureValue<
 	"de",
-	"inherent",
+	"core",
 	"Lexeme",
 	"NOUN",
 	"gender"
@@ -94,7 +108,7 @@ if (!parsed.success) {
 }
 
 const id = packageDumling.de.id.encode.asBase64Url(parsed.data);
-const decoded = packageDumling.de.id.decode.asSelection(id);
+const decoded = packageDumling.de.id.decode.asSelectionIdentity(id);
 if (!decoded.success) {
 	throw new Error(decoded.error?.message ?? "Failed to decode selection ID");
 }
@@ -104,9 +118,8 @@ descriptorCsv satisfies PackageDumlingDescriptorCsv<"de", "Selection">;
 extractedLemma satisfies PackageLemma<"de">;
 gender satisfies "Masc";
 
-packageSchemas.de.entity.Selection.Citation.Lexeme.NOUN().parse(
-	decoded.data.selection,
-);
+decoded.data.selectionIdentity.clickedSegmentIndex satisfies number;
+packageSchemas.de.entity.Selection.Citation.Lexeme.NOUN().parse(parsed.data);
 // README_BLOCK:quickstart-de:end
 
 void schemasFor.de.entity.Lemma.Lexeme.VERB();

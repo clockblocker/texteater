@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "nimmt",
+	segmentedSentenceId: "sentence_pJroeJAAiSmYPgsKOZ" as SegmentedSentenceId,
+	clickedSegmentIndex: 12,
+	surfaceSegmentIndices: [12],
+	attestedSurface: "nimmt",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "in acht nehmen",
+		normalizedSurface: "nimmt",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "in acht nehmen",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "👀",
+			canonicalForm: "in acht nehmen",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "Idiom">;
 

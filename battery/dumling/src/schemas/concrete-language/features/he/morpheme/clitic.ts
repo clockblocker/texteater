@@ -3,6 +3,6 @@ import type { HeCliticMorphemeFeatures } from "../../../../../types/concrete-lan
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heCliticMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<HeCliticMorphemeFeatures>;

@@ -14,7 +14,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Gender\` marks grammatical gender.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Gender.html) feature with four public values. In Dumling, it may belong either in \`lemma.inherentFeatures\` for lexemes with lexical gender or in \`surface.inflectionalFeatures\` for inflected forms that show gender agreement.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Gender.html) feature with four public values. In Dumling, it may belong either in \`Lemma.coreFeatures\` for lexemes with lexical gender or in \`surface.inflectionalFeatures\` for inflected forms that show gender agreement.
 
 ## Values
 
@@ -23,7 +23,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Gender.html) fea
 - \`Masc\`: masculine
 - \`Neut\`: neuter
 
-If \`gender\` is absent or \`undefined\`, Dumling records no gender value for that lemma or surface. Absence should be read as unspecified, not as a claim that the language lacks gender.
+If \`gender\` is absent or \`undefined\`, Dumling records no gender value for that Lemma or surface. Absence should be read as unspecified, not as a claim that the language lacks gender.
 `,
 	examples: [
 		mutterFeminine,
@@ -37,7 +37,7 @@ If \`gender\` is absent or \`undefined\`, Dumling records no gender value for th
 			body: `
 Use \`gender\` when the language-specific schema exposes a grammatical gender distinction for the relevant lexeme class.
 
-Put the value on \`lemma.inherentFeatures.gender\` when the gender is part of the lemma identity, as with many nouns and proper nouns.
+Put the value on \`Lemma.coreFeatures.gender\` when the gender is part of the Lemma identity, as with many nouns and proper nouns.
 
 Put the value on \`surface.inflectionalFeatures.gender\` when a concrete inflected form agrees in gender, as with pronouns, determiners, adjectives, or verbs in languages that inflect for it.
 `,

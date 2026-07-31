@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type DeAdverbFeatures = {
-	inherent: {
+	core: {
 		foreign: AbstractFeatureValue<"foreign"> | null;
 		numType: Extract<
 			AbstractFeatureValue<"numType">,

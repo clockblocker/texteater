@@ -3,6 +3,6 @@ import type { HeSuffixoidMorphemeFeatures } from "../../../../../types/concrete-
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heSuffixoidMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<HeSuffixoidMorphemeFeatures>;

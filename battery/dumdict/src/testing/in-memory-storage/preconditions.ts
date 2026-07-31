@@ -1,5 +1,11 @@
-import type { PendingLemmaRelation } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
+import {
+	lemmaKey,
+	readingKey,
+	sameLemma,
+	sameReading,
+} from "../../core/identity";
+import type { PendingEntryRelation, Reading } from "../../dto";
+import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { ChangePrecondition } from "../../storage";
 import type { SerializedDictionaryNote } from "../serialized-note";
 
@@ -9,11 +15,22 @@ export type DraftStorageState<L extends SupportedLanguage> = {
 	draftPendingRefs: SerializedDictionaryNote<L>["pendingRefs"];
 };
 
-export function findDraftNoteByLemmaId<L extends SupportedLanguage>(
+export function findDraftBundleByLemma<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
-	lemmaId: string,
+	lemma: Lemma<L>,
 ) {
-	return draft.draftNotes.find(({ lemmaEntry }) => lemmaEntry.id === lemmaId);
+	return draft.draftNotes.find(({ lemmaRecord }) =>
+		sameLemma(lemmaRecord.lemma, lemma),
+	);
+}
+
+export function findDraftBundleByReading<L extends SupportedLanguage>(
+	draft: DraftStorageState<L>,
+	reading: Reading<L>,
+) {
+	return draft.draftNotes.find(({ readingEntries }) =>
+		readingEntries.some((entry) => sameReading(entry.reading, reading)),
+	);
 }
 
 function findDraftSurfaceById<L extends SupportedLanguage>(
@@ -31,6 +48,14 @@ function draftPendingRelations<L extends SupportedLanguage>(
 	return draft.draftNotes.flatMap(({ pendingRelations }) => pendingRelations);
 }
 
+function relationSourceKey<L extends SupportedLanguage>(
+	relation: PendingEntryRelation<L>,
+) {
+	return relation.relationFamily === "lexical"
+		? readingKey(relation.sourceReading)
+		: lemmaKey(relation.sourceLemma);
+}
+
 function findDraftPendingRefById<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	pendingId: string,
@@ -42,11 +67,11 @@ function findDraftPendingRefById<L extends SupportedLanguage>(
 
 function hasDraftPendingRelation<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
-	relation: PendingLemmaRelation<L>,
+	relation: PendingEntryRelation<L>,
 ) {
 	return draftPendingRelations(draft).some(
 		(storedRelation) =>
-			storedRelation.sourceLemmaId === relation.sourceLemmaId &&
+			relationSourceKey(storedRelation) === relationSourceKey(relation) &&
 			storedRelation.relationFamily === relation.relationFamily &&
 			storedRelation.relation === relation.relation &&
 			storedRelation.targetPendingId === relation.targetPendingId,
@@ -61,9 +86,15 @@ export function draftPreconditionFails<L extends SupportedLanguage>(
 		case "revisionMatches":
 			return precondition.revision !== draft.currentRevision();
 		case "lemmaExists":
-			return !findDraftNoteByLemmaId(draft, precondition.lemmaId);
+			return !findDraftBundleByLemma(draft, precondition.lemma);
 		case "lemmaMissing":
-			return Boolean(findDraftNoteByLemmaId(draft, precondition.lemmaId));
+			return Boolean(findDraftBundleByLemma(draft, precondition.lemma));
+		case "readingExists":
+			return !findDraftBundleByReading(draft, precondition.reading);
+		case "readingMissing":
+			return Boolean(
+				findDraftBundleByReading(draft, precondition.reading),
+			);
 		case "surfaceExists":
 			return !findDraftSurfaceById(draft, precondition.surfaceId);
 		case "surfaceMissing":
@@ -83,14 +114,18 @@ export function draftPreconditionFails<L extends SupportedLanguage>(
 				(relation) =>
 					relation.targetPendingId === precondition.pendingId,
 			);
-		case "lemmaAttestationMissing":
-			return Boolean(
-				findDraftNoteByLemmaId(
-					draft,
-					precondition.lemmaId,
-				)?.lemmaEntry.attestations.includes(precondition.value),
+		case "readingAttestationMissing": {
+			const bundle = findDraftBundleByReading(
+				draft,
+				precondition.reading,
 			);
-		default:
-			return false;
+			return Boolean(
+				bundle?.readingEntries
+					.find((entry) =>
+						sameReading(entry.reading, precondition.reading),
+					)
+					?.attestations.includes(precondition.value),
+			);
+		}
 	}
 }

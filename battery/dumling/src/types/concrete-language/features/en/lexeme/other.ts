@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type EnOtherFeatures = {
-	inherent: {
+	core: {
 		extPos: Extract<AbstractFeatureValue<"extPos">, "PROPN"> | null;
 		foreign: AbstractFeatureValue<"foreign"> | null;
 	};

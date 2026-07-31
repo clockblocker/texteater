@@ -1,24 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const smithsPluralProperNounSelection = {
-	language: "en",
-	spelledSelection: "Smiths",
+	segmentedSentenceId: "sentence_KPJsMtTPgqleLq4081" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "Smiths",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "Smiths",
+		normalizedSurface: "Smiths",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Plur",
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "Smith",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PROPN",
-			inherentFeatures: {},
-			meaningInEmojis: "👨‍👩‍👧‍👦",
+			canonicalForm: "Smith",
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "PROPN">;
 

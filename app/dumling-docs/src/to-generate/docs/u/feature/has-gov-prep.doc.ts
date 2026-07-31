@@ -5,7 +5,7 @@ import { attestation as dependOnVerb } from "../../../attestations/en/selection/
 
 const document = defineUniversalConceptPage({
 	description:
-		"Custom Dumling reference for the HasGovPrep feature on lemmas with governed prepositions.",
+		"Custom Dumling reference for the HasGovPrep feature on Lemmas with governed prepositions.",
 	family: "feature",
 	leaf: "HasGovPrep",
 	order: 18022,
@@ -14,36 +14,36 @@ const document = defineUniversalConceptPage({
 	body: `
 \`HasGovPrep\` records the canonical governed preposition associated with a [\`Lemma\`](/u/entity/lemma/).
 
-It is a Dumling-specific feature. The value is a non-empty string and belongs in \`lemma.inherentFeatures\`.
+It is a Dumling-specific feature. The value is a non-empty string and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
 - any non-empty string, such as \`"on"\`, \`"auf"\`, or \`"um"\`
 
-If \`lemma.inherentFeatures.hasGovPrep\` is absent or \`undefined\`, the lemma is treated as not having a recorded governed preposition.
+If \`Lemma.coreFeatures.hasGovPrep\` is absent or \`undefined\`, the Lemma is treated as not having a recorded governed preposition.
 `,
 	examples: [dependOnVerb, wartetVerb, gebetenParticiple],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`hasGovPrep\` when the lemma lexically selects a particular preposition in its complementation pattern, as in English \`depend on\` or German \`warten auf\`.
+Use \`hasGovPrep\` when the Lemma lexically selects a particular preposition in its complementation pattern, as in English \`depend on\` or German \`warten auf\`.
 
-The preposition is recorded as part of the lemma's argument-structure behavior even when the selected token itself is only the verb form, as in \`wartet\` or \`gebeten\`.
+The preposition is recorded as part of the Lemma's argument-structure behavior even when the selected token itself is only the verb form, as in \`wartet\` or \`gebeten\`.
 `,
 		},
 		{
 			heading: "Not The Same As Phrasality",
 			body: `
-\`HasGovPrep\` does not mean the lemma is a phrasal verb or that the preposition is a detachable particle.
+\`HasGovPrep\` does not mean the Lemma is a phrasal verb or that the preposition is a detachable particle.
 
-Use [\`Phrasal\`](/u/feature/phrasal/) for English-style phrasal lemmas such as \`take off\`, and [\`HasSepPrefix\`](/u/feature/has-sep-prefix/) for German separable-prefix lemmas such as \`aufpassen\`.
+Use [\`Phrasal\`](/u/feature/phrasal/) for English-style phrasal Lemmas such as \`take off\`, and [\`HasSepPrefix\`](/u/feature/has-sep-prefix/) for German separable-prefix Lemmas such as \`aufpassen\`.
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-Current concrete Dumling schemas expose \`hasGovPrep\` on English and German [\`VERB\`](/u/entity/lemma/lexeme/verb/) lemmas.
+Current concrete Dumling schemas expose \`hasGovPrep\` on English and German [\`VERB\`](/u/entity/lemma/lexeme/verb/) Lemmas.
 `,
 		},
 	],

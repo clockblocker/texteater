@@ -1,28 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const ochalVerbSelection = {
-	language: "he",
-	spelledSelection: "אוכל",
+	segmentedSentenceId: "sentence_GF8y3HwMn5LfHObFAH" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "אוכל",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "אוכל",
+		normalizedSurface: "אוכל",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Sing",
 			person: "1",
 			tense: "Fut",
+			definite: null,
+			gender: null,
+			mood: null,
+			polarity: null,
+			verbForm: null,
+			voice: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "אכל",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "אכל",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "PAAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "🍽️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HeAuxiliaryFeatures = {
-	inherent: {
+	core: {
 		verbType: Extract<
 			AbstractFeatureValue<"verbType">,
 			"Cop" | "Mod"

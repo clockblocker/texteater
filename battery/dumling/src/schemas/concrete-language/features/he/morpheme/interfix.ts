@@ -3,6 +3,6 @@ import type { HeInterfixMorphemeFeatures } from "../../../../../types/concrete-l
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heInterfixMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<HeInterfixMorphemeFeatures>;

@@ -1,21 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const windNounHomographSelection = {
-	language: "en",
-	spelledSelection: "wind",
+	segmentedSentenceId: "sentence_lae_rssI9T-1eYfcru" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "wind",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "wind",
+		normalizedSurface: "wind",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "wind",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
-			meaningInEmojis: "💨",
+			canonicalForm: "wind",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				numForm: null,
+				numType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 

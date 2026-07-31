@@ -1,27 +1,19 @@
+import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
 import { validateNewNoteSlice } from "../core/validate-slice";
-import {
-	getLanguageApi,
-	makeDumlingIdFor,
-	type SupportedLanguage,
-} from "../dumling";
+import type { SupportedLanguage } from "../dumling";
 import type { AddNewNoteRequest, MutationResult } from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
-import {
-	assertDumlingIdLanguageMatches,
-	assertLanguageMatches,
-} from "./language-guard";
+import { assertLanguageMatches } from "./language-guard";
 import { mutationResultFromCommit } from "./result-mapping";
 
 export async function addNewNote<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: AddNewNoteRequest<L>,
 ): Promise<MutationResult<L>> {
-	assertLanguageMatches(options.language, request.draft.lemma.language);
-	const languageApi = getLanguageApi(options.language);
-	const draftLemmaId = makeDumlingIdFor(
+	assertLanguageMatches(
 		options.language,
-		request.draft.lemma,
+		request.draft.reading.lemma.language,
 	);
 	for (const ownedSurface of request.draft.ownedSurfaces ?? []) {
 		assertLanguageMatches(options.language, ownedSurface.surface.language);
@@ -30,24 +22,14 @@ export async function addNewNote<L extends SupportedLanguage>(
 			ownedSurface.surface.lemma.language,
 		);
 		if (
-			makeDumlingIdFor(
-				options.language,
-				languageApi.extract.lemma(ownedSurface.surface),
-			) !== draftLemmaId
+			!sameLemma(ownedSurface.surface.lemma, request.draft.reading.lemma)
 		) {
 			return {
 				status: "rejected",
 				code: "invalidDraft",
-				message: "Owned surfaces must belong to the draft lemma.",
+				message:
+					"Owned Surfaces must belong to the draft Reading's Lemma.",
 			};
-		}
-	}
-	for (const relation of request.draft.relations ?? []) {
-		if (relation.target.kind === "existing") {
-			assertDumlingIdLanguageMatches(
-				options.language,
-				relation.target.lemmaId,
-			);
 		}
 	}
 

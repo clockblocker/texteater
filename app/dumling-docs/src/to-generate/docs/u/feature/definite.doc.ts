@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { attestation as derArticle } from "../../../attestations/de/selection/Sieh_einmal_hier_steht_er_pfui_der_Struwwelpeter/Sieh_einmal_hier_steht_er_pfui_[der]_Struwwelpeter.ts";
 import { attestation as bateiConstructState } from "../../../attestations/he/selection/בתי_הספר_נסגרו_מוקדם/[בתי]_הספר_נסגרו_מוקדם.ts";
-import { attestation as habayitPartialSelection } from "../../../attestations/he/selection/חזרתי_לבית/חזרתי_ל[בית].ts";
+import { attestation as habayitSelection } from "../../../attestations/he/selection/חזרתי_לבית/חזרתי_ל[בית].ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Definite feature.",
@@ -13,7 +13,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Definite\` marks definiteness-related status on a [\`Lemma\`](/u/entity/lemma/) or a concrete surface.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Definite.html) feature with five public values. In Dumling it may belong either in \`lemma.inherentFeatures\` or in \`surface.inflectionalFeatures\`, depending on whether definiteness is treated as a stable lexical property or as a property of an inflected form.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Definite.html) feature with five public values. In Dumling it may belong either in \`Lemma.coreFeatures\` or in \`surface.inflectionalFeatures\`, depending on whether definiteness is treated as a stable lexical property or as a property of an inflected form.
 
 ## Values
 
@@ -25,12 +25,12 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Definite.html) f
 
 If \`definite\` is absent or \`undefined\`, the item has no recorded definiteness value.
 `,
-	examples: [derArticle, bateiConstructState, habayitPartialSelection],
+	examples: [derArticle, bateiConstructState, habayitSelection],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`definite\` on a [\`Lemma\`](/u/entity/lemma/) when definiteness is lexically built into the item, as with article-like or pronoun-like entries whose lexical identity is already definite or indefinite.
+Use \`definite\` on a [\`Lemma\`](/u/entity/lemma/) when definiteness is grammatically built into the item, as with article-like or pronoun-like Lemmas whose grammatical identity is already definite or indefinite.
 
 Use \`definite\` on \`surface.inflectionalFeatures\` when a language expresses definiteness morphologically on a concrete form, as with Hebrew noun or adjective surfaces.
 
@@ -42,9 +42,9 @@ For Hebrew construct state, use \`Cons\` rather than \`Def\`. The construct form
 			body: `
 The abstract feature enum follows UD and includes all five values above. Current concrete Dumling schemas expose narrower subsets:
 
-- English and German [\`DET\`](/u/entity/lemma/lexeme/det/) lemmas currently use \`Def\` and \`Ind\` in \`lemma.inherentFeatures\`.
+- English and German [\`DET\`](/u/entity/lemma/lexeme/det/) Lemmas currently use \`Def\` and \`Ind\` in \`Lemma.coreFeatures\`.
 - Hebrew concrete schemas currently use \`Cons\` and \`Def\` in \`surface.inflectionalFeatures\` for several lexeme subtypes, including [\`NOUN\`](/u/entity/lemma/lexeme/noun/) and [\`DET\`](/u/entity/lemma/lexeme/det/).
-- Hebrew [\`PRON\`](/u/entity/lemma/lexeme/pron/) lemmas currently expose only inherent \`Def\`.
+- Hebrew [\`PRON\`](/u/entity/lemma/lexeme/pron/) Lemmas currently expose only core \`Def\`.
 
 \`Com\` and \`Spec\` are part of the universal feature definition but are not currently surfaced by the concrete language schemas in this repository.
 `,

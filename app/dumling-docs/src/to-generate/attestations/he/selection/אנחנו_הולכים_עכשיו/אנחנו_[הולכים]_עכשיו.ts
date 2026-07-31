@@ -1,28 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const holchimParticipleSelection = {
-	language: "he",
-	spelledSelection: "הולכים",
+	segmentedSentenceId: "sentence_GrvdiB3mlfIECds4mg" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "הולכים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "הולכים",
+		normalizedSurface: "הולכים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Masc",
 			number: "Plur",
 			verbForm: "Part",
+			definite: null,
+			mood: null,
+			person: null,
+			polarity: null,
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "הלך",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "הלך",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "PAAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "🚶",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

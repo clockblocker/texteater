@@ -1,49 +1,58 @@
-import type { Selection } from "../../../src";
+import { dumling, type Selection } from "../../../src";
 import {
-	hebrewKatvuUnresolvedInflectionSurface,
-	hebrewShanaResolvedLemmaSurface,
-	hebrewUsAbbreviationResolvedLemmaSurface,
+	hebrewKatvuAttestedInflectionSurface,
+	hebrewShanaCitationSurface,
+	hebrewUsAbbreviationCitationSurface,
 } from "./surfaces";
 
 // Attestation: "הם [כתבו] מכתב."
 export const hebrewKatvuStandardFullSelection = {
-	language: "he",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "כתבו",
-	spellingRelation: "Canonical",
-	surface: hebrewKatvuUnresolvedInflectionSurface,
-} satisfies Selection<"he", "Standard", "Inflection", "Lexeme", "VERB">;
+	segmentedSentenceId: dumling.he.create.segmentedSentenceId(
+		"test:hebrewKatvuStandardFullSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "כתבו",
+	surface: hebrewKatvuAttestedInflectionSurface,
+} satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
-export const hebrewShanaResolvedLemmaSelection = {
-	language: "he",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "שנה",
-	spellingRelation: "Canonical",
-	surface: hebrewShanaResolvedLemmaSurface,
-} satisfies Selection<"he", "Standard", "Lemma", "Lexeme", "NOUN">;
+export const hebrewShanaCitationSelection = {
+	segmentedSentenceId: dumling.he.create.segmentedSentenceId(
+		"test:hebrewShanaCitationSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "שנה",
+	surface: hebrewShanaCitationSurface,
+} satisfies Selection<"he", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
 export const hebrewUsAbbreviationSelection = {
-	language: "he",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "ארה״ב",
-	spellingRelation: "Canonical",
-	surface: hebrewUsAbbreviationResolvedLemmaSurface,
-} satisfies Selection<"he", "Standard", "Lemma", "Lexeme", "PROPN">;
+	segmentedSentenceId: dumling.he.create.segmentedSentenceId(
+		"test:hebrewUsAbbreviationSelection",
+	),
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	selectedOrthography: "Standard",
+	attestedSurface: "ארה״ב",
+	surface: hebrewUsAbbreviationCitationSurface,
+} satisfies Selection<"he", "Citation", "Lexeme", "PROPN">;
 
 // Attestation: "הם [כָּתְבוּ] מכתב."
 export const hebrewKatvuPointedVariantSelection = {
-	language: "he",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "כָּתְבוּ",
-	spellingRelation: "Variant",
+	segmentedSentenceId: dumling.he.create.segmentedSentenceId(
+		"test:hebrewKatvuPointedVariantSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "כָּתְבוּ",
 	surface: {
-		...hebrewKatvuUnresolvedInflectionSurface,
-		normalizedFullSurface: "כָּתְבוּ",
+		...hebrewKatvuAttestedInflectionSurface,
+		normalizedSurface: "כָּתְבוּ",
+		spelling: "Variant",
 	},
-} satisfies Selection<"he", "Standard", "Inflection", "Lexeme", "VERB">;
+} satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;

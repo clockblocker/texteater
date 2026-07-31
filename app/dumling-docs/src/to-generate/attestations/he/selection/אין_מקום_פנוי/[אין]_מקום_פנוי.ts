@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const einExistentialSelection = {
-	language: "he",
-	spelledSelection: "אין",
+	segmentedSentenceId: "sentence_tvfOGNGeomuY9EyyIh" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "אין",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "אין",
+		normalizedSurface: "אין",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "אין",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "אין",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebExistential: "Yes",
+				hebBinyan: null,
 			},
-			meaningInEmojis: "❌",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "VERB">;
 

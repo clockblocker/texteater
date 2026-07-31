@@ -1,22 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const accommodationTypoPartialSelection = {
-	language: "en",
-	selectionFeatures: { orthography: "Typo" },
-	spelledSelection: "acommodation",
+	segmentedSentenceId: "sentence_tGjnsoT-1Gd_LqozH4" as SegmentedSentenceId,
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	attestedSurface: "acommodation",
+	selectedOrthography: "Typo",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "accommodation",
+		normalizedSurface: "accommodation",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "accommodation",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
-			meaningInEmojis: "🏨",
+			canonicalForm: "accommodation",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				numForm: null,
+				numType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 

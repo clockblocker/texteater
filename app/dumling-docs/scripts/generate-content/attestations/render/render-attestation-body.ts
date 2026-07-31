@@ -12,7 +12,7 @@ import { typeExpressionForEntity } from "./type-expression";
 
 export function renderAttestationBody(
 	source: AttestationSource,
-	csvId: string,
+	identityCsv: string,
 ): string {
 	const entity = source.entity;
 	const kind = entityKindFor(entity);
@@ -21,10 +21,10 @@ export function renderAttestationBody(
 		isSelection(entity) || isSurface(entity)
 			? surfaceForEntity(entity)
 			: undefined;
-	const displayName = surface?.normalizedFullSurface ?? lemma.canonicalLemma;
+	const displayName = surface?.normalizedSurface ?? lemma.canonicalForm;
 	const variableBase = camelCaseIdentifier(displayName, "attested");
 	const entityVariable = `${variableBase}${kind}`;
-	const idVariable = `${entityVariable}Id`;
+	const identityVariable = `${entityVariable}IdentityCsv`;
 	const importType = typeExpressionForEntity(entity).split("<", 1)[0];
 	const title = source.title ?? displayName;
 	const sentenceBlock =
@@ -32,15 +32,15 @@ export function renderAttestationBody(
 			? ""
 			: `\nAttested Sentence:\n${source.sentenceMarkdown}\n`;
 
-	return `# ${languageLabelFor(entity.language)} attestation: ${title}
+	return `# ${languageLabelFor(lemma.language)} attestation: ${title}
 ${sentenceBlock}
 \`\`\`ts
 import type { ${importType} } from "dumling/types";
 
 export const ${entityVariable} = ${renderTsValue(entity)} satisfies ${typeExpressionForEntity(entity)};
 
-export const ${idVariable} =
-\t${JSON.stringify(csvId)} as const;
+export const ${identityVariable} =
+\t${JSON.stringify(identityCsv)} as const;
 \`\`\`
 `;
 }

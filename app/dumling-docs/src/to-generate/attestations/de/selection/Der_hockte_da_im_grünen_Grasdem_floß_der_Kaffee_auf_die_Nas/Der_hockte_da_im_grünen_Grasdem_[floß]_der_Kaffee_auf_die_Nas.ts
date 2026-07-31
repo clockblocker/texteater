@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "floß",
+	segmentedSentenceId: "sentence_gSC4wQneltmlijMNKZ" as SegmentedSentenceId,
+	clickedSegmentIndex: 15,
+	surfaceSegmentIndices: [15],
+	attestedSurface: "floß",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "floß",
+		normalizedSurface: "floß",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Ind",
@@ -14,15 +23,21 @@ const deSelection = {
 			person: "3",
 			tense: "Past",
 			verbForm: "Fin",
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "fließen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "🌊",
+			canonicalForm: "fließen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				hasGovPrep: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

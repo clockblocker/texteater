@@ -15,145 +15,87 @@ const document = defineGeneratedDocPage({
 | \`dumling/types\` | Public DTOs, feature helpers, descriptors, API result types, and ID types |
 | \`dumling/schema\` | Runtime Zod schema registries |
 
-## Runtime API
-
-The root runtime entrypoint exports:
+## Lemma → Surface → Selection
 
 \`\`\`ts
-import {
-\tdumling,
-\tgetLanguageApi,
-\tinspectId,
-\tsupportedLanguages,
-} from "dumling";
-\`\`\`
+import { dumling } from "dumling";
 
-The language-bound API is the primary workflow surface:
-
-\`\`\`ts
-const de = dumling.de;
-const en = getLanguageApi("en");
-\`\`\`
-
-The implemented language namespaces are:
-
-- \`dumling.de\`
-- \`dumling.en\`
-- \`dumling.he\`
-
-## create
-
-\`create\` constructors set namespace-implied fields such as \`language\` and \`surfaceKind\`.
-
-\`\`\`ts
-const lemma = dumling.en.create.lemma({
-\tcanonicalLemma: "run",
-\tlemmaKind: "Lexeme",
-\tlemmaSubKind: "VERB",
-\tinherentFeatures: {},
-\tmeaningInEmojis: "🏃",
+const runLemma = dumling.en.create.lemma({
+\tcanonicalForm: "run",
+\tfamily: "Lexeme",
+\tkind: "VERB",
+\tcoreFeatures: {
+\t\tabbr: null,
+\t\textPos: null,
+\t\thasGovPrep: null,
+\t\tphrasal: null,
+\t\tstyle: null,
+\t},
 });
 
-const surface = dumling.en.create.surface.inflection({
-\tlemma,
-\tnormalizedFullSurface: "ran",
+const ranSurface = dumling.en.create.surface.inflection({
+\tlemma: runLemma,
+\tnormalizedSurface: "ran",
+\tspelling: "Canonical",
+\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
+\t\tmood: null,
+\t\tnumber: "Sing",
+\t\tperson: "1",
 \t\ttense: "Past",
 \t\tverbForm: "Fin",
+\t\tvoice: null,
 \t},
+\tsurfaceFeatures: null,
 });
 
-const selection = dumling.en.create.selection({
-\tsurface,
-\tspelledSelection: "ran",
-});
-\`\`\`
-
-## convert
-
-\`convert\` derives common linked DTOs.
-
-\`\`\`ts
-const surface = dumling.de.convert.lemma.toSurface(lemma);
-
-const selection = dumling.de.convert.surface.toSelection(surface, {
-\tspelledSelection: "See",
-\tselectionFeatures: {
-\t\tcoverage: "Partial",
-\t},
+const ranSelection = dumling.en.create.selection({
+\tsegmentedSentenceId:
+\t\tdumling.en.create.segmentedSentenceId("sentence:en:i-ran-home"),
+\tclickedSegmentIndex: 2,
+\tsurfaceSegmentIndices: [2],
+\tattestedSurface: "ran",
+\tselectedOrthography: "Standard",
+\tsurface: ranSurface,
 });
 \`\`\`
 
-Defaults for generated selections are:
+## Operations
 
-- \`spelledSelection: surface.normalizedFullSurface\`
-- omitted \`selectionFeatures.orthography\` means standard orthography
-- omitted \`selectionFeatures.coverage\` means full coverage
-- omitted \`selectionFeatures.spelling\` means canonical spelling relation
+- \`create\` constructs branded IDs and strict DTOs.
+- \`convert.lemma.toSurface\` makes the canonical full citation Surface.
+- \`convert.*.toSelection\` requires sentence-local Selection options.
+- \`extract.lemma\` retrieves the Lemma from any hydrated layer.
+- \`parse\` safely validates unknown input.
+- \`describe\` returns compact structural descriptors.
 
-## extract
-
-\`extract\` retrieves the canonical nested entity from any hydrated value:
-
-\`\`\`ts
-const lemmaFromLemma = dumling.de.extract.lemma(lemma);
-const lemmaFromSurface = dumling.de.extract.lemma(surface);
-const lemmaFromSelection = dumling.de.extract.lemma(selection);
-\`\`\`
-
-## parse
-
-\`parse\` validates unknown input against the language runtime schemas.
+## Identity IDs
 
 \`\`\`ts
-const result = dumling.he.parse.selection(input);
+const id = dumling.en.id.encode.asBase64Url(ranSelection);
+const decoded = dumling.en.id.decode.asSelectionIdentity(id);
 
-if (result.success) {
-\tresult.data.surface.lemma;
-} else {
-\tresult.error.code;
-\tresult.error.message;
+if (decoded.success) {
+\tdecoded.data.selectionIdentity.segmentedSentenceId;
+\tdecoded.data.selectionIdentity.clickedSegmentIndex;
 }
 \`\`\`
 
-## describe
+Decoding returns identity keys, not a fabricated hydrated graph. Use
+\`asLemmaIdentity\`, \`asSurfaceIdentity\`, or
+\`asSelectionIdentity\` when the expected layer is known.
 
-\`describe.as\` returns descriptors for routing and indexing:
-
-\`\`\`ts
-dumling.en.describe.as.lemma(lemma);
-dumling.en.describe.as.surface(surface);
-dumling.en.describe.as.selection(selection);
-\`\`\`
-
-## id
-
-Language-bound ID helpers encode and decode hydrated DTOs:
-
-\`\`\`ts
-const id = dumling.en.id.encode(selection);
-const decoded = dumling.en.id.decodeAs("Selection", id);
-\`\`\`
-
-\`decode\` returns both the entity kind and the decoded data. \`decodeAs\` checks that the ID contains the expected entity kind.
-
-## schemas
-
-The schema entrypoint exports concrete and abstract schema registries:
+## Schemas
 
 \`\`\`ts
 import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";
-\`\`\`
 
-Concrete leaf schema getters return Zod schemas:
-
-\`\`\`ts
 schemasFor.de.entity.Lemma.Lexeme.NOUN();
 schemasFor.en.entity.Surface.Inflection.Lexeme.VERB();
 schemasFor.he.entity.Selection.Inflection.Lexeme.NOUN();
+getSchemaTreeFor("de");
+void abstractSchemas.entity.Selection;
 \`\`\`
-
-Use \`getSchemaTreeFor(language)\` when the language is only known at runtime.
 `,
 });
 

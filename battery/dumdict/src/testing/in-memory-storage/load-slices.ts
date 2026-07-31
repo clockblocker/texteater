@@ -1,52 +1,46 @@
-import {
-	derivePendingLemmaId,
-	samePendingLemmaIdentity,
-} from "../../core/pending/identity";
-import { makeDumlingIdFor, type SupportedLanguage } from "../../dumling";
+import { sameLemma } from "../../core/identity";
+import { derivePendingEntryId } from "../../core/pending/identity";
+import { makeSurfaceId, type SupportedLanguage } from "../../dumling";
 import type {
 	CleanupRelationsSlice,
-	FindStoredLemmaSensesStorageRequest,
+	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
-	LemmaPatchSlice,
 	LoadCleanupRelationsContextRequest,
-	LoadLemmaForPatchRequest,
 	LoadNewNoteContextRequest,
+	LoadReadingForPatchRequest,
 	NewNoteSlice,
+	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
-	StoredLemmaSensesSlice,
+	StoredReadingsSlice,
 } from "../../storage";
 import type { InMemoryStorageState } from "./state";
 
-export function findStoredLemmaSenses<L extends SupportedLanguage>(
+export function findStoredReadings<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
-	request: FindStoredLemmaSensesStorageRequest<L>,
-): StoredLemmaSensesSlice<L> {
-	const { lemmaDescription } = request;
+	request: FindStoredReadingsStorageRequest<L>,
+): StoredReadingsSlice<L> {
 	return {
 		revision: state.currentRevision(),
-		candidates: state.storedNotes
-			.filter(({ lemmaEntry }) => {
-				const { lemma } = lemmaEntry;
-				return (
-					lemma.language === lemmaDescription.language &&
-					lemma.canonicalLemma === lemmaDescription.canonicalLemma &&
-					lemma.lemmaKind === lemmaDescription.lemmaKind &&
-					lemma.lemmaSubKind === lemmaDescription.lemmaSubKind
-				);
-			})
-			.map(({ lemmaEntry }) => ({
-				entry: lemmaEntry,
-			})),
+		candidates: state.storedNotes.flatMap((bundle) => {
+			const { lemma } = bundle.lemmaRecord;
+			if (!sameLemma(lemma, request.lemma)) {
+				return [];
+			}
+			return bundle.readingEntries.map((reading) => ({
+				reading,
+				lemma: bundle.lemmaRecord,
+			}));
+		}),
 	};
 }
 
-export function loadLemmaForPatch<L extends SupportedLanguage>(
+export function loadReadingForPatch<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
-	request: LoadLemmaForPatchRequest<L>,
-): LemmaPatchSlice<L> {
+	request: LoadReadingForPatchRequest<L>,
+): ReadingPatchSlice<L> {
 	return {
 		revision: state.currentRevision(),
-		lemma: state.findStoredNoteByLemmaId(request.lemmaId)?.lemmaEntry,
+		reading: state.findStoredReading(request.reading),
 	};
 }
 
@@ -54,14 +48,14 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
 	request: LoadNewNoteContextRequest<L>,
 ): NewNoteSlice<L> {
-	const draftLemmaId = makeDumlingIdFor(state.language, request.draft.lemma);
-	const existingLemma =
-		state.findStoredNoteByLemmaId(draftLemmaId)?.lemmaEntry;
-	const matchingPendingId = derivePendingLemmaId({
+	const { reading } = request.draft;
+	const { lemma } = reading;
+	const existingBundle = state.findStoredBundleByLemma(lemma);
+	const matchingPendingId = derivePendingEntryId({
 		language: state.language,
-		canonicalLemma: request.draft.lemma.canonicalLemma,
-		lemmaKind: request.draft.lemma.lemmaKind,
-		lemmaSubKind: request.draft.lemma.lemmaSubKind,
+		canonicalForm: lemma.canonicalForm,
+		family: lemma.family,
+		kind: lemma.kind,
 	});
 	const matchingPendingRefs = state.storedPendingRefs.filter(
 		(ref) => ref.pendingId === matchingPendingId,
@@ -74,27 +68,46 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 		.filter((relation) => matchingPendingIds.has(relation.targetPendingId));
 	const draftSurfaceIds =
 		request.draft.ownedSurfaces?.map(({ surface }) =>
-			makeDumlingIdFor(state.language, surface),
+			makeSurfaceId(state.language, surface),
 		) ?? [];
-	const explicitExistingRelationTargetIds =
+	const explicitReadings =
 		request.draft.relations
-			?.filter((relation) => relation.target.kind === "existing")
+			?.filter(
+				(relation) =>
+					relation.relationFamily === "lexical" &&
+					relation.target.kind === "existing",
+			)
 			.map((relation) =>
+				relation.relationFamily === "lexical" &&
 				relation.target.kind === "existing"
-					? relation.target.lemmaId
+					? relation.target.reading
 					: undefined,
 			)
-			.filter((lemmaId) => lemmaId !== undefined) ?? [];
+			.filter((target) => target !== undefined) ?? [];
+	const explicitLemmas =
+		request.draft.relations
+			?.filter(
+				(relation) =>
+					relation.relationFamily === "morphological" &&
+					relation.target.kind === "existing",
+			)
+			.map((relation) =>
+				relation.relationFamily === "morphological" &&
+				relation.target.kind === "existing"
+					? relation.target.lemma
+					: undefined,
+			)
+			.filter((target) => target !== undefined) ?? [];
 	const proposedPendingTargetIds =
 		request.draft.relations
 			?.filter((relation) => relation.target.kind === "pending")
 			.map((relation) =>
 				relation.target.kind === "pending"
-					? derivePendingLemmaId({
+					? derivePendingEntryId({
 							language: state.language,
-							canonicalLemma: relation.target.ref.canonicalLemma,
-							lemmaKind: relation.target.ref.lemmaKind,
-							lemmaSubKind: relation.target.ref.lemmaSubKind,
+							canonicalForm: relation.target.ref.canonicalForm,
+							family: relation.target.ref.family,
+							kind: relation.target.ref.kind,
 						})
 					: undefined,
 			)
@@ -102,27 +115,39 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 
 	return {
 		revision: state.currentRevision(),
-		existingLemma,
+		existingLemma: existingBundle?.lemmaRecord,
+		existingReading: state.findStoredReading(reading),
 		existingOwnedSurfaces: draftSurfaceIds
 			.map((surfaceId) => state.findStoredSurfaceById(surfaceId))
 			.filter((surface) => surface !== undefined),
-		explicitExistingRelationTargets: explicitExistingRelationTargetIds
-			.map(
-				(lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry,
-			)
-			.filter((lemmaEntry) => lemmaEntry !== undefined),
+		explicitExistingReadingTargets: explicitReadings
+			.map((reading) => state.findStoredReading(reading))
+			.filter((entry) => entry !== undefined),
+		explicitExistingLemmaTargets: explicitLemmas
+			.map((lemma) => state.findStoredBundleByLemma(lemma)?.lemmaRecord)
+			.filter((entry) => entry !== undefined),
 		existingPendingRefsForProposedPendingTargets: proposedPendingTargetIds
 			.map((pendingId) => state.findStoredPendingRefById(pendingId))
 			.filter((pendingRef) => pendingRef !== undefined),
-		matchingPendingRefsForNewLemma: matchingPendingRefs,
-		incomingPendingRelationsForNewLemma: incomingPendingRelations,
-		incomingPendingSourceLemmas: incomingPendingRelations
-			.map(
-				(relation) =>
-					state.findStoredNoteByLemmaId(relation.sourceLemmaId)
-						?.lemmaEntry,
+		matchingPendingRefsForNewEntry: matchingPendingRefs,
+		incomingPendingRelationsForNewEntry: incomingPendingRelations,
+		incomingPendingSourceReadings: incomingPendingRelations
+			.filter((relation) => relation.relationFamily === "lexical")
+			.map((relation) =>
+				relation.relationFamily === "lexical"
+					? state.findStoredReading(relation.sourceReading)
+					: undefined,
 			)
-			.filter((lemmaEntry) => lemmaEntry !== undefined),
+			.filter((entry) => entry !== undefined),
+		incomingPendingSourceLemmas: incomingPendingRelations
+			.filter((relation) => relation.relationFamily === "morphological")
+			.map((relation) =>
+				relation.relationFamily === "morphological"
+					? state.findStoredBundleByLemma(relation.sourceLemma)
+							?.lemmaRecord
+					: undefined,
+			)
+			.filter((entry) => entry !== undefined),
 	};
 }
 
@@ -130,37 +155,19 @@ export function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
 	request: GetInfoForRelationsCleanupStorageRequest<L>,
 ): RelationsCleanupInfoSlice<L> {
-	const pendingRefs = state.storedPendingRefs.filter((pendingRef) =>
-		samePendingLemmaIdentity(pendingRef, {
-			language: state.language,
-			canonicalLemma: request.canonicalLemma,
-			lemmaKind: pendingRef.lemmaKind,
-			lemmaSubKind: pendingRef.lemmaSubKind,
-		}),
+	const pendingRefs = state.storedPendingRefs.filter(
+		(pendingRef) => pendingRef.canonicalForm === request.canonicalForm,
 	);
 	const pendingIds = new Set(pendingRefs.map(({ pendingId }) => pendingId));
 
 	return {
 		revision: state.currentRevision(),
-		canonicalLemma: request.canonicalLemma,
+		canonicalForm: request.canonicalForm,
 		candidateLemmas: state.storedNotes
-			.filter(({ lemmaEntry }) =>
-				samePendingLemmaIdentity(
-					{
-						language: state.language,
-						canonicalLemma: lemmaEntry.lemma.canonicalLemma,
-						lemmaKind: lemmaEntry.lemma.lemmaKind,
-						lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
-					},
-					{
-						language: state.language,
-						canonicalLemma: request.canonicalLemma,
-						lemmaKind: lemmaEntry.lemma.lemmaKind,
-						lemmaSubKind: lemmaEntry.lemma.lemmaSubKind,
-					},
-				),
-			)
-			.map(({ lemmaEntry }) => lemmaEntry),
+			.map(({ lemmaRecord }) => lemmaRecord)
+			.filter(
+				({ lemma }) => lemma.canonicalForm === request.canonicalForm,
+			),
 		pendingRefs,
 		pendingRelations: state
 			.allPendingRelations()
@@ -175,11 +182,33 @@ export function loadCleanupRelationsContext<L extends SupportedLanguage>(
 	const pendingIds = new Set(
 		request.resolutions.map(({ targetPendingId }) => targetPendingId),
 	);
-	const targetLemmaIds = new Set(
-		request.resolutions
-			.map(({ targetLemmaId }) => targetLemmaId)
-			.filter((targetLemmaId) => targetLemmaId !== undefined),
-	);
+	const targetReadings = request.resolutions
+		.filter((resolution) => resolution.relationFamily === "lexical")
+		.map((resolution) =>
+			resolution.relationFamily === "lexical"
+				? resolution.targetReading
+				: undefined,
+		)
+		.filter((target) => target !== undefined)
+		.map((target) => {
+			const reading = state.findStoredReading(target);
+			const lemma =
+				reading &&
+				state.findStoredBundleByLemma(reading.reading.lemma)
+					?.lemmaRecord;
+			return reading && lemma ? { reading, lemma } : undefined;
+		})
+		.filter((target) => target !== undefined);
+	const targetLemmas = request.resolutions
+		.filter((resolution) => resolution.relationFamily === "morphological")
+		.map((resolution) =>
+			resolution.relationFamily === "morphological"
+				? resolution.targetLemma
+				: undefined,
+		)
+		.filter((target) => target !== undefined)
+		.map((target) => state.findStoredBundleByLemma(target)?.lemmaRecord)
+		.filter((target) => target !== undefined);
 
 	return {
 		revision: state.currentRevision(),
@@ -189,10 +218,7 @@ export function loadCleanupRelationsContext<L extends SupportedLanguage>(
 		pendingRelations: state
 			.allPendingRelations()
 			.filter((relation) => pendingIds.has(relation.targetPendingId)),
-		targetLemmas: Array.from(targetLemmaIds)
-			.map(
-				(lemmaId) => state.findStoredNoteByLemmaId(lemmaId)?.lemmaEntry,
-			)
-			.filter((lemmaEntry) => lemmaEntry !== undefined),
+		targetReadings,
+		targetLemmas,
 	};
 }

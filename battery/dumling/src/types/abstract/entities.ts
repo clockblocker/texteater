@@ -1,27 +1,25 @@
 import type {
 	ConstructionKind,
-	LemmaKind,
+	LemmaFamily,
 	MorphemeKind,
 	PhrasemeKind,
 	Pos,
 	SurfaceKind,
 } from "../core/enums.js";
 import type {
+	AbstractCoreFeatures,
 	AbstractInflectionalFeatures,
-	AbstractInherentFeatures,
 } from "./features/features-catalog.js";
-
-export type SelectionFeatures = {
-	orthography: "Typo" | null;
-	coverage: "Partial" | null;
-	spelling: "Variant" | null;
-};
 
 export type SurfaceFeatures = {
 	historicalStatus: "Archaic" | null;
 };
 
-export type AbstractLemmaSubKindFor<LK extends LemmaKind> = LK extends "Lexeme"
+export type SegmentedSentenceId = string & {
+	readonly __segmentedSentenceIdBrand: unique symbol;
+};
+
+export type AbstractLemmaKindFor<LK extends LemmaFamily> = LK extends "Lexeme"
 	? Pos
 	: LK extends "Morpheme"
 		? MorphemeKind
@@ -31,33 +29,32 @@ export type AbstractLemmaSubKindFor<LK extends LemmaKind> = LK extends "Lexeme"
 				? ConstructionKind
 				: never;
 
-export type AbstractInherentFeaturesFor<
-	LK extends LemmaKind = LemmaKind,
-	_LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
-> = AbstractInherentFeatures;
+export type AbstractCoreFeaturesFor<
+	LK extends LemmaFamily = LemmaFamily,
+	_LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
+> = AbstractCoreFeatures;
 
 export type AbstractInflectionalFeaturesFor<
-	LK extends LemmaKind = LemmaKind,
-	_LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
+	LK extends LemmaFamily = LemmaFamily,
+	_LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
 > = AbstractInflectionalFeatures;
 
 export type AbstractLemma<
 	L extends string = string,
-	LK extends LemmaKind = LemmaKind,
-	LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
+	LK extends LemmaFamily = LemmaFamily,
+	LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
 > = {
 	language: L;
-	canonicalLemma: string;
-	lemmaKind: LK;
-	lemmaSubKind: LSK;
-	inherentFeatures: AbstractInherentFeaturesFor<LK, LSK>;
-	meaningInEmojis: string;
+	canonicalForm: string;
+	family: LK;
+	kind: LSK;
+	coreFeatures: AbstractCoreFeaturesFor<LK, LSK>;
 };
 
 type AbstractSurfacePayload<
 	SK extends SurfaceKind,
-	LK extends LemmaKind,
-	LSK extends AbstractLemmaSubKindFor<LK>,
+	LK extends LemmaFamily,
+	LSK extends AbstractLemmaKindFor<LK>,
 > = SK extends "Citation"
 	? Record<never, never>
 	: SK extends "Inflection"
@@ -69,11 +66,13 @@ type AbstractSurfacePayload<
 export type AbstractSurface<
 	L extends string = string,
 	SK extends SurfaceKind = SurfaceKind,
-	LK extends LemmaKind = LemmaKind,
-	LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
+	LK extends LemmaFamily = LemmaFamily,
+	LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
 > = {
 	language: L;
-	normalizedFullSurface: string;
+	normalizedSurface: string;
+	spelling: "Canonical" | "Variant";
+	realizationCoverage: "Full" | "Partial";
 	surfaceKind: SK;
 	surfaceFeatures: SurfaceFeatures | null;
 	lemma: AbstractLemma<L, LK, LSK>;
@@ -82,11 +81,13 @@ export type AbstractSurface<
 export type AbstractSelection<
 	L extends string = string,
 	SK extends SurfaceKind = SurfaceKind,
-	LK extends LemmaKind = LemmaKind,
-	LSK extends AbstractLemmaSubKindFor<LK> = AbstractLemmaSubKindFor<LK>,
+	LK extends LemmaFamily = LemmaFamily,
+	LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
 > = {
-	language: L;
-	selectionFeatures: SelectionFeatures | null;
-	spelledSelection: string;
+	segmentedSentenceId: SegmentedSentenceId;
+	clickedSegmentIndex: number;
+	surfaceSegmentIndices: number[];
+	attestedSurface: string;
+	selectedOrthography: "Standard" | "Typo";
 	surface: AbstractSurface<L, SK, LK, LSK>;
 };

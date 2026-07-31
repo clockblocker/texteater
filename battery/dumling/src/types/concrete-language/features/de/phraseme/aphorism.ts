@@ -1,4 +1,4 @@
 export type DeAphorismPhrasemeFeatures = {
-	inherent: Record<never, never>;
+	core: Record<never, never>;
 	inflectional: Record<never, never>;
 };

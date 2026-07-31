@@ -5,7 +5,7 @@ import { attestation as entlangPostposition } from "../../../attestations/de/sel
 
 const document = defineUniversalConceptPage({
 	description:
-		"Custom Dumling reference for the GovernedCase feature on adposition lemmas.",
+		"Custom Dumling reference for the GovernedCase feature on adposition Lemmas.",
 	family: "feature",
 	leaf: "GovernedCase",
 	order: 18021,
@@ -14,22 +14,22 @@ const document = defineUniversalConceptPage({
 	body: `
 \`GovernedCase\` records the lexical case government of an adposition [\`Lemma\`](/u/entity/lemma/).
 
-It is a Dumling-specific feature. Its value inventory is the same abstract inventory as [\`Case\`](/u/feature/case/), and it belongs in \`lemma.inherentFeatures\`.
+It is a Dumling-specific feature. Its value inventory is the same abstract inventory as [\`Case\`](/u/feature/case/), and it belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
 - any public [\`Case\`](/u/feature/case/) value, such as \`Acc\`, \`Dat\`, or \`Gen\`
 
-If \`lemma.inherentFeatures.governedCase\` is absent or \`undefined\`, the lemma is treated as not having a single recorded governed case.
+If \`Lemma.coreFeatures.governedCase\` is absent or \`undefined\`, the Lemma is treated as not having a single recorded governed case.
 `,
 	examples: [wegenPreposition, zuPreposition, entlangPostposition],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`governedCase\` when the adposition lexically selects one case as a stable property of the lemma itself.
+Use \`governedCase\` when the adposition lexically selects one case as a stable property of the Lemma itself.
 
-This is different from recording the case of a locally inflected dependent in one sentence. \`GovernedCase\` belongs on the adposition lemma, not on the selected token of the complement phrase.
+This is different from recording the case of a locally inflected dependent in one sentence. \`GovernedCase\` belongs on the adposition Lemma, not on the selected token of the complement phrase.
 `,
 		},
 		{
@@ -37,13 +37,13 @@ This is different from recording the case of a locally inflected dependent in on
 			body: `
 Leave \`governedCase\` unset when the adposition alternates between cases in ordinary use and the schema is not modeling that alternation with one fixed lexical value.
 
-That is why a German two-way preposition such as \`auf\` may appear in accusative or dative phrases without Dumling forcing one permanent \`governedCase\` value onto the lemma.
+That is why a German two-way preposition such as \`auf\` may appear in accusative or dative phrases without Dumling forcing one permanent \`governedCase\` value onto the Lemma.
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-Current concrete Dumling schemas expose \`governedCase\` on German [\`ADP\`](/u/entity/lemma/lexeme/adp/) lemmas.
+Current concrete Dumling schemas expose \`governedCase\` on German [\`ADP\`](/u/entity/lemma/lexeme/adp/) Lemmas.
 `,
 		},
 	],

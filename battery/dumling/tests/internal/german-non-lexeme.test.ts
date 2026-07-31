@@ -2,8 +2,8 @@ import { describe, expect, it } from "bun:test";
 import { schemasFor } from "../../src/schema";
 import {
 	germanAbPrefixLemma,
+	germanAufJedenFallClickedJedenSelection,
 	germanAufJedenFallDiscourseFormulaSelection,
-	germanAufJedenFallPartialSelection,
 	makeConstructionSurfaceReference,
 	makeMorphemeSurfaceReference,
 } from "../helpers";
@@ -22,7 +22,7 @@ describe("German non-lexeme schemas", () => {
 		).toBe(true);
 		expect(
 			schemasFor.de.entity.Selection.Citation.Phraseme.DiscourseFormula().safeParse(
-				germanAufJedenFallPartialSelection,
+				germanAufJedenFallClickedJedenSelection,
 			).success,
 		).toBe(true);
 	});
@@ -31,26 +31,24 @@ describe("German non-lexeme schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Phraseme.DiscourseFormula().safeParse({
 				language: "de",
-				canonicalLemma: "auf jeden fall",
-				lemmaKind: "Phraseme",
-				lemmaSubKind: "DiscourseFormula",
-				inherentFeatures: {
+				canonicalForm: "auf jeden fall",
+				family: "Phraseme",
+				kind: "DiscourseFormula",
+				coreFeatures: {
 					discourseFormulaRole: "Reaction",
 				},
-				meaningInEmojis: "✅",
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.de.entity.Lemma.Phraseme.Aphorism().safeParse({
 				language: "de",
-				canonicalLemma: "zeit ist geld",
-				lemmaKind: "Phraseme",
-				lemmaSubKind: "Aphorism",
-				inherentFeatures: {
+				canonicalForm: "zeit ist geld",
+				family: "Phraseme",
+				kind: "Aphorism",
+				coreFeatures: {
 					discourseFormulaRole: "Reaction",
 				},
-				meaningInEmojis: "⏳💰",
 			}).success,
 		).toBe(false);
 	});
@@ -69,18 +67,18 @@ describe("German non-lexeme schemas", () => {
 		expect(
 			schemasFor.de.entity.Selection.Citation.Morpheme.Suffix().safeParse(
 				{
-					language: "de",
-					selectionFeatures: {
-						orthography: "Typo",
-						coverage: null,
-						spelling: null,
-					},
-					spelledSelection: "hait",
+					segmentedSentenceId: "test:fixture-sentence" as never,
+					clickedSegmentIndex: 0,
+					surfaceSegmentIndices: [0],
+					attestedSurface: "hait",
+					selectedOrthography: "Typo",
 
 					surface: {
 						...makeMorphemeSurfaceReference("de", "Suffix", "heit"),
 						language: "de",
-						normalizedFullSurface: "heit",
+						normalizedSurface: "heit",
+						spelling: "Canonical",
+						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 					},
 				},
@@ -88,24 +86,25 @@ describe("German non-lexeme schemas", () => {
 		).toBe(true);
 	});
 
-	it("accepts construction entities as citation-only entries", () => {
+	it("accepts construction entities as citation-only lemmas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Construction.Fusion().safeParse({
 				language: "de",
-				canonicalLemma: "zum",
-				lemmaKind: "Construction",
-				lemmaSubKind: "Fusion",
-				inherentFeatures: {},
-				meaningInEmojis: "➡️",
+				canonicalForm: "zum",
+				family: "Construction",
+				kind: "Fusion",
+				coreFeatures: {},
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.de.entity.Selection.Citation.Construction.Fusion().safeParse(
 				{
-					language: "de",
-					selectionFeatures: null,
-					spelledSelection: "zum",
+					segmentedSentenceId: "test:fixture-sentence" as never,
+					clickedSegmentIndex: 0,
+					surfaceSegmentIndices: [0],
+					attestedSurface: "zum",
+					selectedOrthography: "Standard",
 
 					surface: {
 						...makeConstructionSurfaceReference(
@@ -114,7 +113,9 @@ describe("German non-lexeme schemas", () => {
 							"zum",
 						),
 						language: "de",
-						normalizedFullSurface: "zum",
+						normalizedSurface: "zum",
+						spelling: "Canonical",
+						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 					},
 				},

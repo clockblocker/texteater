@@ -1,21 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const biglalAdpositionSelection = {
-	language: "he",
-	spelledSelection: "בגלל",
+	segmentedSentenceId: "sentence_00Nbuj_-Asv25VvyzU" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "בגלל",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "בגלל",
+		normalizedSurface: "בגלל",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "בגלל",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADP",
-			inherentFeatures: {},
-			meaningInEmojis: "☔",
+			canonicalForm: "בגלל",
+			family: "Lexeme",
+			kind: "ADP",
+			coreFeatures: {
+				abbr: null,
+				case: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "ADP">;
 

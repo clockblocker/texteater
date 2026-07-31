@@ -20,7 +20,7 @@ type EntityInspection<L extends SupportedLanguage> = {
 export function inspectEntity<L extends SupportedLanguage>(
 	value: EntityValue<L>,
 ): EntityInspection<L> {
-	if ("canonicalLemma" in value) {
+	if ("canonicalForm" in value) {
 		return {
 			language: value.language as L,
 			lemma: value,
@@ -37,7 +37,7 @@ export function inspectEntity<L extends SupportedLanguage>(
 	}
 
 	return {
-		language: value.language as L,
+		language: value.surface.language as L,
 		lemma: value.surface.lemma as unknown as Lemma<L>,
 		surfaceKind: value.surface.surfaceKind,
 	};

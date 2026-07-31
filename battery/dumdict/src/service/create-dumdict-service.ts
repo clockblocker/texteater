@@ -4,15 +4,14 @@ import type { CreateDumdictServiceOptions } from "../storage";
 import { addAttestation } from "./add-attestation";
 import { addNewNote } from "./add-new-note";
 import { cleanupRelations } from "./cleanup-relations";
-import { findStoredLemmaSenses } from "./find-stored-lemma-senses";
+import { findStoredReadings } from "./find-stored-readings";
 import { getInfoForRelationsCleanup } from "./get-info-for-relations-cleanup";
 
 export function createDumdictService<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 ): DumdictService<L> {
 	return {
-		findStoredLemmaSenses: (request) =>
-			findStoredLemmaSenses(options, request),
+		findStoredReadings: (request) => findStoredReadings(options, request),
 		addAttestation: (request) => addAttestation(options, request),
 		addNewNote: (request) => addNewNote(options, request),
 		getInfoForRelationsCleanup: (request) =>

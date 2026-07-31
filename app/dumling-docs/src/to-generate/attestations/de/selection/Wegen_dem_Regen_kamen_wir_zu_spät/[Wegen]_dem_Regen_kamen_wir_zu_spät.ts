@@ -1,24 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection037 = {
-	language: "de",
-	spelledSelection: "Wegen",
+	segmentedSentenceId: "sentence_s9DZmf_EwGCIkah94_" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Wegen",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "wegen",
+		normalizedSurface: "wegen",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "wegen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADP",
-			inherentFeatures: {
+			canonicalForm: "wegen",
+			family: "Lexeme",
+			kind: "ADP",
+			coreFeatures: {
 				adpType: "Prep",
 				governedCase: "Gen",
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				partType: null,
 			},
-			meaningInEmojis: "🌧️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Lexeme", "ADP">;
 
@@ -28,5 +41,5 @@ export const attestation = {
 	classifierNotes:
 		"This is the normative genitive-governing adposition even though the complement phrase is colloquially dative.",
 	classificationMistakes:
-		"`meaningInEmojis` points to the surrounding rain scene (`🌧️`) instead of to the selected adposition `wegen` itself.",
+		"Meaning belongs to a later layer; this Dumling attestation only resolves the selected adposition `wegen`.",
 } as const satisfies AttestedSelection;

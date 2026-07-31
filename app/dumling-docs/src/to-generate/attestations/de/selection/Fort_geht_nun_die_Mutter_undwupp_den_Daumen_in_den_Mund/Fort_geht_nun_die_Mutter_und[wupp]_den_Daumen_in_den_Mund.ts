@@ -1,21 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "wupp",
+	segmentedSentenceId: "sentence_aK7pKbYwdVWR_D7u3k" as SegmentedSentenceId,
+	clickedSegmentIndex: 12,
+	surfaceSegmentIndices: [12],
+	attestedSurface: "wupp",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "wupp",
+		normalizedSurface: "wupp",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "wupp",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "INTJ",
-			inherentFeatures: {},
-			meaningInEmojis: "💥",
+			canonicalForm: "wupp",
+			family: "Lexeme",
+			kind: "INTJ",
+			coreFeatures: {
+				partType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Lexeme", "INTJ">;
 

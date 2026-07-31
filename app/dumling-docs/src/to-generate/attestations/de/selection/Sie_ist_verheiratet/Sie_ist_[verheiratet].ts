@@ -1,25 +1,45 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "verheiratet",
+	segmentedSentenceId: "sentence_PSkpkb2n-Va_On7hrB" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "verheiratet",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "verheiratet",
+		normalizedSurface: "verheiratet",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			aspect: "Perf",
 			verbForm: "Part",
+			gender: null,
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "verheiraten",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "💍",
+			canonicalForm: "verheiraten",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				hasGovPrep: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

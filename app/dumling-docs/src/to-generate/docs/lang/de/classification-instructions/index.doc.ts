@@ -13,12 +13,12 @@ dumling is UD-inspired, not UD-complete.
 
 For German we reuse UD-style POS labels such as \`ADJ\`, \`ADP\`, \`AUX\`, \`DET\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, and \`VERB\`, and we reuse familiar feature names such as \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\`.
 
-But the classifier is not building a dependency tree. It is resolving a learner highlight to the learner-facing unit that actually carries the meaning.
+But the classifier is not building a dependency tree. It is resolving a learner click to the grammatical unit that best explains the text in context.
 
 That is why German dumling can classify:
 
 - [\`zum\`](/de/selection/djEseCx6dW0scyxjLHp1bSxsLGRlLGMsZnVzLHp1bSzinqHvuI8s/) as \`Construction/Fusion\`
-- [\`Bahnhof\`](/de/selection/djEseCxCYWhuaG9mLGNvdj1wLHMsYyxudXIgYmFobmhvZiB2ZXJzdGVoZW4sbCxkZSxwLGlkLG51ciBiYWhuaG9mIHZlcnN0ZWhlbizinZMs/) as a \`Partial\` selection of the idiom \`nur Bahnhof verstehen\`
+- [\`Bahnhof\`](/de/selection/djEseCxCYWhuaG9mLGNvdj1wLHMsYyxudXIgYmFobmhvZiB2ZXJzdGVoZW4sbCxkZSxwLGlkLG51ciBiYWhuaG9mIHZlcnN0ZWhlbizinZMs/) through a discontinuous Surface occurrence of the idiom \`nur Bahnhof verstehen\`
 - [\`auf\`](/de/selection/djEseCxhdWYsY292PXAscyxpLHBhc3MgYXVmLG1vPWltfG51PXN8cGU9cDJ8dmY9ZixsLGRlLGwsdixhdWZwYXNzZW4s8J-RgCxoZ3A9fmF1Znxoc3A9fmF1Zg/) in \`Pass [auf] dich auf!\` as part of the verbal payload for \`aufpassen\`
 
 The main question is therefore not "which token label would UD assign in isolation?" but "which dumling payload best explains the learner-facing unit in this sentence?"
@@ -29,23 +29,27 @@ Every attested German answer has three layers:
 
 | Layer | Role |
 | --- | --- |
-| \`Selection\` | the exact text the learner highlighted |
-| \`Surface\` | the normalized full learner-facing form that the highlight resolves to in context |
-| \`Lemma\` | the canonical lexical item behind that surface |
+| \`Selection\` | sentence-local evidence for one clicked \`ResolvableText\` Segment |
+| \`Surface\` | the normalized grammatical realization resolved in context |
+| \`Lemma\` | normalized grammatical identity behind that Surface |
 
 The direction is one-way:
 
-\`sentence + highlight -> selection -> surface -> lemma\`
+\`SegmentedSentence + clickedSegmentIndex -> Selection -> Surface -> Lemma\`
 
-\`Selection\` is an ingest-time wrapper, not a reversible token record. Two different highlights may legitimately collapse to the same payload when they point to the same learner-facing unit.
+Each click has its own Selection identity, even when several clicks resolve to
+the same Surface. The Selection also records every Segment index participating
+in that Surface occurrence.
 
-That is why both \`Pass [auf] dich auf!\` and \`Pass auf dich [auf]!\` can resolve to the same verbal surface \`pass auf\` and the same lemma \`aufpassen\`.
+That is why clicking either \`auf\` in \`Pass auf dich auf!\` creates a distinct
+Selection while both Selections can resolve to the same verbal Surface
+\`pass auf\` and the same Lemma \`aufpassen\`.
 
 ## Lemma Families
 
-German uses the four public dumling lemma families:
+German uses the four public dumling Lemma families:
 
-| \`lemmaKind\` | German \`lemmaSubKind\` values |
+| \`family\` | German \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
@@ -54,15 +58,15 @@ German uses the four public dumling lemma families:
 
 These families are not interchangeable.
 
-\`Lexeme\` is for ordinary word-level entries.
+\`Lexeme\` is for ordinary word-level Lemmas.
 
 \`Morpheme\` is for bound pieces such as [\`un-\`](/de/selection/djEseCxVbixjb3Y9cHxzcGw9dixzLGMsdW4tLGwsZGUsbSxwZix1bi0s8J-agCw/).
 
 \`Phraseme\` is for learner-facing fixed expressions whose meaning belongs to the larger unit rather than to one token in isolation.
 
-\`Construction\` is for patterned learner-facing entries such as fused forms like \`zum\` and paired frames such as \`um zu\`.
+\`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\` and paired frames such as \`um zu\`.
 
-## Surface Kinds And Selection Features
+## Surface Kinds And Click Evidence
 
 Every surface is either \`Citation\` or \`Inflection\`.
 
@@ -78,34 +82,38 @@ Examples:
 
 The current public model also imposes two important constraints:
 
-- \`Phraseme\` surfaces are citation-shaped in practice, so a partial idiom selection points to the citation form of the larger phraseme.
-- \`Construction\` entries are citation-only and currently featureless.
+- verbal \`Phraseme\` Surfaces may be inflected and may mark
+  \`realizationCoverage: "Partial"\`
+- \`Construction\` Lemmas are citation-only and currently featureless.
 
-\`Selection\` may add a small amount of ingest-side information:
+\`Selection\` records sentence-local clicked evidence:
 
-| \`selectionFeatures\` key | Meaning |
+| Field | Meaning |
 | --- | --- |
-| \`coverage: "Partial"\` | the learner selected only part of the resolved unit |
-| \`spelling: "Variant"\` | the selected spelling differs from the canonical shape in a licensed non-typo way |
-| \`orthography: "Typo"\` | the learner selected an actual misspelling |
+| \`segmentedSentenceId\` | immutable identity of the pre-segmented sentence |
+| \`clickedSegmentIndex\` | the local \`ResolvableText\` Segment the learner clicked |
+| \`surfaceSegmentIndices\` | every segment participating in the Surface occurrence |
+| \`attestedSurface\` | noisy text across those participating segments |
+| \`selectedOrthography\` | \`Standard\` or \`Typo\` for the clicked segment |
 
-These flags are sparse. If there is no \`selectionFeatures\` bag, that means full coverage, ordinary orthography, and no marked spelling mismatch.
+\`Surface.spelling\` owns canonical versus licensed variant spelling.
+\`Surface.realizationCoverage\` owns full versus partial realization.
 
-## Meaning, Features, And Where They Live
+## Identity, Features, And Where They Live
 
 The classifier should keep the payload split cleanly:
 
-- \`lemma\` stores the canonical lexical identity, its \`lemmaKind\`, its \`lemmaSubKind\`, its \`inherentFeatures\`, and \`meaningInEmojis\`
-- \`surface\` stores the resolved full form and any \`inflectionalFeatures\`
-- \`selection\` stores only the highlighted spelling plus any marked ingest-side deviations
+- \`Lemma\` stores grammatical identity: canonical form, family, kind, and core features
+- \`Surface\` stores normalized form, spelling, realization coverage, inflection, and Lemma identity
+- \`Selection\` stores sentence-local clicked evidence
 
 This split matters in German because many tempting distinctions belong in different places.
 
-\`hasGovPrep\`, \`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are lemma-level facts.
+\`hasGovPrep\`, \`hasSepPrefix\`, \`lexicallyReflexive\`, and \`verbType\` are Lemma-level facts.
 
 \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form.
 
-\`meaningInEmojis\` is lemma-level meaning for the selected unit itself, not for the larger scene around it.
+Learner semantic identity is a Reading—one Lemma plus one emoji description—resolved above Dumling and is not stored in these DTOs.
 
 ## High-ROI German Feature Areas
 
@@ -113,7 +121,7 @@ The German pack does not try to encode every imaginable grammatical distinction.
 
 ### Nominal Features
 
-German noun-like entries use \`gender\` as an inherent lexical feature and commonly use \`case\` and \`number\` as inflectional features.
+German noun-like Lemmas use \`gender\` as a core grammatical feature and commonly use \`case\` and \`number\` as inflectional features.
 
 Agreement categories such as \`ADJ\`, \`DET\`, \`PRON\`, and attributive participles may also carry inflectional \`case\`, \`number\`, and \`gender\`.
 
@@ -160,7 +168,7 @@ Some distinctions are German-specific or model-specific rather than plain UD inv
 - \`gender[psor]\` and \`number[psor]\` on possessive determiners when the possessor features are actually disambiguated
 - \`historicalStatus: "Archaic"\` on surfaces when that status is explicitly modeled
 
-These should not be sprayed onto entries by default. They exist to record real learner-facing distinctions, not to make the payload look complete.
+These should not be sprayed onto Lemmas by default. They exist to record real learner-facing distinctions, not to make the payload look complete.
 
 ## Scope
 

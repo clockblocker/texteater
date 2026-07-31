@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const telAvivSelection = {
-	language: "he",
-	spelledSelection: "תל אביב",
+	segmentedSentenceId: "sentence_ukFoVCDzYmTXw_tYrp" as SegmentedSentenceId,
+	clickedSegmentIndex: 3,
+	surfaceSegmentIndices: [3, 5],
+	attestedSurface: "תל אביב",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "תל אביב",
+		normalizedSurface: "תל אביב",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "תל אביב",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PROPN",
-			inherentFeatures: {
+			canonicalForm: "תל אביב",
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures: {
 				gender: "Fem",
+				abbr: null,
 			},
-			meaningInEmojis: "🌆",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "PROPN">;
 

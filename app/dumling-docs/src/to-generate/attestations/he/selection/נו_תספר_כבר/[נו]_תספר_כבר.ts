@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const nuInterjectionSelection = {
-	language: "he",
-	spelledSelection: "נו",
+	segmentedSentenceId: "sentence_I7y-Qal-YpjmYz92Xm" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "נו",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "נו",
+		normalizedSurface: "נו",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "נו",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "INTJ",
-			inherentFeatures: {},
-			meaningInEmojis: "🙄",
+			canonicalForm: "נו",
+			family: "Lexeme",
+			kind: "INTJ",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "INTJ">;
 

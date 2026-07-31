@@ -7,7 +7,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const deNounFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		gender: abstractFeatureAtomSchemas.gender.extract([
 			"Fem",
 			"Masc",

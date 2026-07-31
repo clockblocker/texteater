@@ -14,7 +14,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Case\` marks grammatical or adpositional case.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Case.html) feature with many public values. In Dumling, it may belong either in \`surface.inflectionalFeatures\` for case-inflected forms or in \`lemma.inherentFeatures\` for lexemes whose case value is lexicalized.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Case.html) feature with many public values. In Dumling, it may belong either in \`surface.inflectionalFeatures\` for case-inflected forms or in \`Lemma.coreFeatures\` for lexemes whose case value is lexicalized.
 
 ## Values
 
@@ -52,7 +52,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Case.html) featu
 - \`Sup\`: superessive
 - \`Ter\`: terminative or terminal allative
 
-If \`case\` is absent or \`undefined\`, Dumling records no case value for that lemma or surface. Absence should be read as unspecified, not automatically as caseless.
+If \`case\` is absent or \`undefined\`, Dumling records no case value for that Lemma or surface. Absence should be read as unspecified, not automatically as caseless.
 `,
 	examples: [
 		themAccusative,
@@ -68,7 +68,7 @@ Use \`case\` when the language-specific schema exposes a case distinction for th
 
 Put the value on \`surface.inflectionalFeatures.case\` when the attested form is an inflected surface such as English \`them\` or German \`Ihrem\`.
 
-Put the value on \`lemma.inherentFeatures.case\` when the lexeme itself carries a fixed case-like function, such as Hebrew \`של\` with \`Gen\` or Hebrew \`כאשר\` with \`Tem\`.
+Put the value on \`Lemma.coreFeatures.case\` when the lexeme itself carries a fixed case-like function, such as Hebrew \`של\` with \`Gen\` or Hebrew \`כאשר\` with \`Tem\`.
 
 Concrete language schemas usually expose only a subset of the universal inventory, so do not force values that the local type definition does not allow.
 `,

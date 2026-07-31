@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const heProperNounFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		gender: featureValueSet(
 			abstractFeatureAtomSchemas.gender.extract(["Fem", "Masc"]),

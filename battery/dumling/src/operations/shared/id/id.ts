@@ -89,7 +89,7 @@ function decodeReadableAsSuccess<L extends SupportedLanguage>(
 				format,
 				language,
 				kind: "Lemma",
-				lemma: decoded.data.lemma,
+				lemmaIdentity: decoded.data.lemmaIdentity,
 			},
 		};
 	}
@@ -101,7 +101,7 @@ function decodeReadableAsSuccess<L extends SupportedLanguage>(
 				format,
 				language,
 				kind: "Selection",
-				selection: decoded.data.selection,
+				selectionIdentity: decoded.data.selectionIdentity,
 			},
 		};
 	}
@@ -112,7 +112,7 @@ function decodeReadableAsSuccess<L extends SupportedLanguage>(
 			format,
 			language,
 			kind: "Surface",
-			surface: decoded.data.surface,
+			surfaceIdentity: decoded.data.surfaceIdentity,
 		},
 	};
 }
@@ -171,16 +171,6 @@ function decodeAny<L extends SupportedLanguage>(
 	);
 }
 
-function entityFromDecodeSuccess<L extends SupportedLanguage>(
-	success: IdDecodeSuccess<L>,
-): IdAddressableEntity<L> {
-	return success.kind === "Lemma"
-		? success.lemma
-		: success.kind === "Surface"
-			? success.surface
-			: success.selection;
-}
-
 export function buildIdOperations<L extends SupportedLanguage>(
 	language: L,
 	parse: LanguageApi<L>["parse"],
@@ -210,9 +200,7 @@ export function buildIdOperations<L extends SupportedLanguage>(
 								if (!decoded.success) {
 									throw new Error(decoded.error.message);
 								}
-								return entityToReadableCsv(
-									entityFromDecodeSuccess(decoded.data),
-								);
+								return value;
 							})()
 						: encodeCanonicalCsv(value);
 
@@ -225,7 +213,7 @@ export function buildIdOperations<L extends SupportedLanguage>(
 			any(input) {
 				return decodeAny(language, parse, input);
 			},
-			asLemma(input) {
+			asLemmaIdentity(input) {
 				const decoded = decodeAny(language, parse, input);
 				if (!decoded.success) {
 					return decoded;
@@ -246,7 +234,7 @@ export function buildIdOperations<L extends SupportedLanguage>(
 					IdDecodeError
 				>;
 			},
-			asSurface(input) {
+			asSurfaceIdentity(input) {
 				const decoded = decodeAny(language, parse, input);
 				if (!decoded.success) {
 					return decoded;
@@ -267,7 +255,7 @@ export function buildIdOperations<L extends SupportedLanguage>(
 					IdDecodeError
 				>;
 			},
-			asSelection(input) {
+			asSelectionIdentity(input) {
 				const decoded = decodeAny(language, parse, input);
 				if (!decoded.success) {
 					return decoded;

@@ -1,12 +1,25 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
 
 const document = defineLanguageOverlayPage({
-	description: "Overview of selection features in the public doc-cite tree.",
+	description: "German Selection evidence fields.",
 	family: "feature-selection",
 	order: 8100,
-	subject: "selection-features",
-	title: "Selection Features",
-	body: "Selection-Features beschreiben nicht das Lemma, sondern die Beziehung zwischen markierter Spanne und aufgelöster Surface im konkreten Beleg.\n\nSie sind für doc-cite entscheidend, weil eine Selektion teilweise, orthographisch fehlerhaft oder absichtlich als Variante markiert sein kann, ohne dass sich das zugrunde liegende Lemma ändert.",
+	subject: "selection",
+	title: "Selection",
+	body: `
+Selections preserve sentence-local click evidence without moving linguistic
+properties off the Surface.
+
+- \`segmentedSentenceId\` scopes every local segment index.
+- \`clickedSegmentIndex\` identifies the clicked \`ResolvableText\` Segment.
+- \`surfaceSegmentIndices\` identifies the complete, possibly discontinuous
+  Surface occurrence.
+- \`attestedSurface\` preserves the noisy input across those segments.
+- \`selectedOrthography\` is \`Standard\` or \`Typo\` for the clicked segment.
+
+Canonical versus Variant spelling and Full versus Partial realization are
+Surface properties.
+`,
 });
 
 export default document;

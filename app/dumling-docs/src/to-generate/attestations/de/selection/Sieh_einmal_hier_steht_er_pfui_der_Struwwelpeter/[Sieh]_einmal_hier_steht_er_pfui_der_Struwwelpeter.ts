@@ -1,27 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "Sieh",
+	segmentedSentenceId: "sentence_MhPGzTBSaMzPHnhyp3" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Sieh",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "sieh",
+		normalizedSurface: "sieh",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Imp",
 			number: "Sing",
 			person: "2",
 			verbForm: "Fin",
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "sehen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "👀",
+			canonicalForm: "sehen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				hasGovPrep: null,
+				hasSepPrefix: null,
+				lexicallyReflexive: null,
+				verbType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 
@@ -30,6 +46,6 @@ export const attestation = {
 	sentenceMarkdown: `[Sieh] einmal, hier steht er, 
 pfui, der Struwwelpeter!`,
 	classifierNotes:
-		"I kept Sieh as the imperative inflection of sehen rather than treating Sieh einmal as one larger formula; the sentence-initial capital remains only in spelledSelection.",
+		"I kept Sieh as the imperative inflection of sehen rather than treating Sieh einmal as one larger formula; the sentence-initial capital remains only in clicked Text.",
 	isVerified: true,
 } as const satisfies AttestedSelection;

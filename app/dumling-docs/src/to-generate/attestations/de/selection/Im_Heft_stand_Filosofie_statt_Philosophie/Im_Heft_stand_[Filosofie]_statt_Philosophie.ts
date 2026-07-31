@@ -1,13 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection053 = {
-	language: "de",
-	selectionFeatures: { orthography: "Typo", spelling: "Variant" },
-	spelledSelection: "Filosofie",
+	segmentedSentenceId: "sentence_SSZXrcxOs6-9KzoSZO" as SegmentedSentenceId,
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	attestedSurface: "Filosofie",
+	selectedOrthography: "Typo",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "Filosofie",
+		normalizedSurface: "Philosophie",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Nom",
@@ -15,14 +23,15 @@ const deSelection053 = {
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "Philosophie",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "Philosophie",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Fem",
+				hyph: null,
 			},
-			meaningInEmojis: "📚",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "NOUN">;
 

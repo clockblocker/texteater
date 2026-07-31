@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const hatovotAdjectiveSelection = {
-	language: "he",
-	spelledSelection: "הטובות",
+	segmentedSentenceId: "sentence_UbfPrHSmH3iS1hOk4R" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "הטובות",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "הטובות",
+		normalizedSurface: "הטובות",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			definite: "Def",
@@ -15,12 +24,14 @@ const hatovotAdjectiveSelection = {
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "טוב",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADJ",
-			inherentFeatures: {},
-			meaningInEmojis: "👍",
+			canonicalForm: "טוב",
+			family: "Lexeme",
+			kind: "ADJ",
+			coreFeatures: {
+				abbr: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "ADJ">;
 

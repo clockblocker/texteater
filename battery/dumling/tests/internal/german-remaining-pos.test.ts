@@ -6,14 +6,18 @@ describe("German remaining POS schemas", () => {
 	it("accepts representative feature bundles across implemented POS classes", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
-				language: "de",
-				selectionFeatures: null,
-				spelledSelection: "kleiner",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "kleiner",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "ADJ", "klein"),
 					language: "de",
-					normalizedFullSurface: "kleiner",
+					normalizedSurface: "kleiner",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Dat",
@@ -28,10 +32,10 @@ describe("German remaining POS schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.ADP().safeParse({
 				language: "de",
-				canonicalLemma: "zu",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "ADP",
-				inherentFeatures: {
+				canonicalForm: "zu",
+				family: "Lexeme",
+				kind: "ADP",
+				coreFeatures: {
 					abbr: null,
 					adpType: null,
 					extPos: null,
@@ -39,20 +43,23 @@ describe("German remaining POS schemas", () => {
 					governedCase: "Dat",
 					partType: null,
 				},
-				meaningInEmojis: "➡️",
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.DET().safeParse({
-				language: "de",
-				selectionFeatures: null,
-				spelledSelection: "dieser",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "dieser",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "DET", "dies"),
 					language: "de",
-					normalizedFullSurface: "dieser",
+					normalizedSurface: "dieser",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Nom",
@@ -69,16 +76,15 @@ describe("German remaining POS schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.X().safeParse({
 				language: "de",
-				canonicalLemma: "foobar",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "X",
-				inherentFeatures: {
+				canonicalForm: "foobar",
+				family: "Lexeme",
+				kind: "X",
+				coreFeatures: {
 					abbr: null,
 					foreign: "Yes",
 					hyph: null,
 					numType: null,
 				},
-				meaningInEmojis: "❓",
 			}).success,
 		).toBe(true);
 	});
@@ -105,13 +111,12 @@ describe("German remaining POS schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.ADV().safeParse({
 				language: "de",
-				canonicalLemma: "gern",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "ADV",
-				inherentFeatures: {
+				canonicalForm: "gern",
+				family: "Lexeme",
+				kind: "ADV",
+				coreFeatures: {
 					pronType: "Prs",
 				},
-				meaningInEmojis: "😊",
 			}).success,
 		).toBe(false);
 
@@ -124,13 +129,18 @@ describe("German remaining POS schemas", () => {
 
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.X().safeParse({
-				language: "de",
-				spelledSelection: "foobar",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "foobar",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "X", "foobar"),
 					language: "de",
-					normalizedFullSurface: "foobar",
+					normalizedSurface: "foobar",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						tense: "Past",

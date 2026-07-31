@@ -1,23 +1,34 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const bvgAbbreviationSelection = {
-	language: "de",
-	spelledSelection: "BVG",
+	segmentedSentenceId: "sentence_I2J_J3figIzm4BvN7e" as SegmentedSentenceId,
+	clickedSegmentIndex: 8,
+	surfaceSegmentIndices: [8],
+	attestedSurface: "BVG",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "BVG",
+		normalizedSurface: "BVG",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "BVG",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PROPN",
-			inherentFeatures: {
+			canonicalForm: "BVG",
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures: {
 				abbr: "Yes",
+				foreign: null,
+				gender: null,
 			},
-			meaningInEmojis: "🚇",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Lexeme", "PROPN">;
 
@@ -25,5 +36,5 @@ export const attestation = {
 	selection: bvgAbbreviationSelection,
 	sentenceMarkdown: "In Berlin betreibt die [BVG] die U-Bahn.",
 	classifierNotes:
-		'`BVG` is a proper-noun abbreviation, so `abbr: "Yes"` belongs on the lemma\'s inherent feature bag.',
+		'`BVG` is a proper-noun abbreviation, so `abbr: "Yes"` belongs on the Lemma\'s inherent feature bag.',
 } as const satisfies AttestedSelection;

@@ -1,24 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "ja",
+	segmentedSentenceId: "sentence_GGqcelQ6g5-qiKZ916" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [0, 2],
+	attestedSurface: "Na ja",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "na ja",
+		normalizedSurface: "na ja",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "na ja",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {
+			canonicalForm: "na ja",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {
 				discourseFormulaRole: "Reaction",
 			},
-			meaningInEmojis: "🤷",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "DiscourseFormula">;
 

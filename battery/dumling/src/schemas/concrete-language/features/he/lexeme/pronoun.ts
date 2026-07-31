@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const hePronounFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		definite: abstractFeatureAtomSchemas.definite.extract(["Def"]),
 		pronType: abstractFeatureAtomSchemas.pronType.extract([
 			"Dem",

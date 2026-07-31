@@ -16,141 +16,201 @@ import {
 } from "./lemmas";
 
 // Attestation: "They [walk] home together."
-export const englishWalkResolvedInflectionSurface = {
+export const englishWalkPresentFiniteInflectionSurface = {
 	inflectionalFeatures: {
 		tense: "Pres",
 		verbForm: "Fin",
+		voice: null,
+		person: null,
+		number: null,
+		mood: null,
 	},
 	language: "en",
-	normalizedFullSurface: "walk",
+	normalizedSurface: "walk",
 	surfaceKind: "Inflection",
 	lemma: englishWalkLemma,
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
-export const englishWalkUnresolvedInflectionSurface = {
+export const englishWalkAttestedInflectionSurface = {
 	inflectionalFeatures: {
 		tense: "Pres",
 		verbForm: "Fin",
+		voice: null,
+		person: null,
+		number: null,
+		mood: null,
 	},
 	language: "en",
-	normalizedFullSurface: "walk",
+	normalizedSurface: "walk",
 	surfaceKind: "Inflection",
 	lemma: englishWalkLemma,
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
-export const englishWalkResolvedLemmaSurface = {
+export const englishWalkCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "walk",
-	surfaceKind: "Lemma",
+	normalizedSurface: "walk",
+	surfaceKind: "Citation",
 	lemma: englishWalkLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "VERB">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
-export const englishWalkUnresolvedLemmaSurface = {
+export const englishWalkCanonicalCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "walk",
-	surfaceKind: "Lemma",
+	normalizedSurface: "walk",
+	surfaceKind: "Citation",
 	lemma: englishWalkLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "VERB">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
-export const englishGiveUpTypoUnresolvedInflectionSurface = {
+export const englishGiveUpPastFiniteInflectionSurface = {
 	inflectionalFeatures: {
 		tense: "Past",
 		verbForm: "Fin",
+		voice: null,
+		person: null,
+		number: null,
+		mood: null,
 	},
 	language: "en",
-	normalizedFullSurface: "gave up",
+	normalizedSurface: "gave up",
 	surfaceKind: "Inflection",
 	lemma: englishGiveUpLemma,
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
-export const englishBankFinancialResolvedLemmaSurface = {
+export const englishBankFinancialCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "bank",
-	surfaceKind: "Lemma",
+	normalizedSurface: "bank",
+	surfaceKind: "Citation",
 	lemma: englishBankFinancialLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
-export const englishBankRiverResolvedLemmaSurface = {
+export const englishBankRiverCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "bank",
-	surfaceKind: "Lemma",
+	normalizedSurface: "bank",
+	surfaceKind: "Citation",
 	lemma: englishBankRiverLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
-export const englishPlantOrganismResolvedLemmaSurface = {
+export const englishPlantOrganismCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "plant",
-	surfaceKind: "Lemma",
+	normalizedSurface: "plant",
+	surfaceKind: "Citation",
 	lemma: englishPlantOrganismLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
-export const englishPlantFactoryResolvedLemmaSurface = {
+export const englishPlantFactoryCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "plant",
-	surfaceKind: "Lemma",
+	normalizedSurface: "plant",
+	surfaceKind: "Citation",
 	lemma: englishPlantFactoryLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
-export const englishLightIlluminationResolvedLemmaSurface = {
+export const englishLightIlluminationCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "light",
-	surfaceKind: "Lemma",
+	normalizedSurface: "light",
+	surfaceKind: "Citation",
 	lemma: englishLightIlluminationLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
-export const englishLightWeightResolvedLemmaSurface = {
+export const englishLightWeightCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "light",
-	surfaceKind: "Lemma",
+	normalizedSurface: "light",
+	surfaceKind: "Citation",
 	lemma: englishLightWeightLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "ADJ">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
-export const englishSpringSeasonResolvedLemmaSurface = {
+export const englishSpringSeasonCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "spring",
-	surfaceKind: "Lemma",
+	normalizedSurface: "spring",
+	surfaceKind: "Citation",
 	lemma: englishSpringSeasonLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
-export const englishSpringCoilResolvedLemmaSurface = {
+export const englishSpringCoilCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "spring",
-	surfaceKind: "Lemma",
+	normalizedSurface: "spring",
+	surfaceKind: "Citation",
 	lemma: englishSpringCoilLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
-export const englishRakeToolResolvedLemmaSurface = {
+export const englishRakeToolCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "rake",
-	surfaceKind: "Lemma",
+	normalizedSurface: "rake",
+	surfaceKind: "Citation",
 	lemma: englishRakeToolLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "They [look up] every unknown word."
-export const englishLookUpResolvedLemmaSurface = {
+export const englishLookUpCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "look up",
-	surfaceKind: "Lemma",
+	normalizedSurface: "look up",
+	surfaceKind: "Citation",
 	lemma: englishLookUpLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "VERB">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
-export const englishLookResolvedLemmaSurface = {
+export const englishLookCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "look",
-	surfaceKind: "Lemma",
+	normalizedSurface: "look",
+	surfaceKind: "Citation",
 	lemma: englishLookLemma,
-} satisfies Surface<"en", "Lemma", "Lexeme", "VERB">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;

@@ -27,10 +27,8 @@ feature types define the applicable feature names and value inventories
 [German adposition](../../../dumling/src/types/concrete-language/features/de/lexeme/adposition.ts),
 [English verb](../../../dumling/src/types/concrete-language/features/en/lexeme/verb.ts),
 [English noun](../../../dumling/src/types/concrete-language/features/en/lexeme/noun.ts)).
-The source currently uses `normalizedFullSurface`, nullable Selection feature
-flags, and an emoji on Lemma; this contract deliberately uses the newer map
-names and topology and therefore is not a claim that the current dumling schema
-already implements it
+The Dumling schema now uses this contract's Selection, Surface, and Linguistic
+Entry topology
 ([current entities](../../../dumling/src/types/abstract/entities.ts)).
 
 The Lexeme/Lemma/Sense topology is resolved by
@@ -207,12 +205,10 @@ for arbitrary compositional clauses. This also keeps `CR-07` as the explicit
 control showing that an ordinary compositional phrase must resolve only the
 clicked lexical Surface, not be inflated into a Phraseme.
 
-The `CR-04` Inflection of a Phraseme is required by the newer domain contract
-but is not representable by dumling's current “empty inflectional feature set
-means citation-only” type construction
-([concrete type builder](../../../dumling/src/types/concrete-language/concrete-language-types.ts)).
-That schema gap must be recorded by experiments; it must not be “fixed” by
-inserting `den Wölfen` or changing the gold Linguistic Entry.
+The `CR-04` Inflection of a Phraseme is required by the domain contract. It must
+remain representable without inserting `den Wölfen` or changing the gold
+Linguistic Entry: `heulte mit` is a partial contextual realization of the
+Phraseme whose citation form is `mit den Wölfen heulen`.
 
 ## Deterministic application construction of `attestedSurface`
 

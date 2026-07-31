@@ -3,6 +3,6 @@ import type { DeCircumfixMorphemeFeatures } from "../../../../../types/concrete-
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deCircumfixMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeCircumfixMorphemeFeatures>;

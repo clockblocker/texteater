@@ -1,96 +1,130 @@
-import type { Lemma, Surface } from "../../src";
-import { makeDumlingIdFor } from "../../src";
-import { derivePendingLemmaId } from "../../src/core/pending/identity";
+import type { Lemma, Reading, Surface } from "../../src";
+import { derivePendingEntryId } from "../../src/core/pending/identity";
 import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
 
-export const englishWalkLemma = {
-	canonicalLemma: "walk",
-	inherentFeatures: {},
-	language: "en",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "walk-as-motion",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+const englishVerbFeatures = {
+	style: null,
+	phrasal: null,
+	hasGovPrep: null,
+	extPos: null,
+	abbr: null,
+} as const;
 
-export const englishWalkLemmaId = makeDumlingIdFor("en", englishWalkLemma);
+export const englishWalkLemma = {
+	canonicalForm: "walk",
+	coreFeatures: englishVerbFeatures,
+	language: "en",
+	family: "Lexeme",
+	kind: "VERB",
+} satisfies Lemma<"en", "Lexeme", "VERB">;
 
 export const englishRunLemma = {
-	canonicalLemma: "run",
-	inherentFeatures: {},
+	canonicalForm: "run",
+	coreFeatures: englishVerbFeatures,
 	language: "en",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "run-as-motion",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
-
-export const englishRunLemmaId = makeDumlingIdFor("en", englishRunLemma);
 
 export const englishSwimLemma = {
-	canonicalLemma: "swim",
-	inherentFeatures: {},
+	canonicalForm: "swim",
+	coreFeatures: englishVerbFeatures,
 	language: "en",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "swim-as-motion",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
-export const englishSwimLemmaSurface = {
+export const englishWalkReading = {
+	lemma: englishWalkLemma,
+	emojiDescription: "🚶",
+} satisfies Reading<"en">;
+export const englishRunReading = {
+	lemma: englishRunLemma,
+	emojiDescription: "🏃",
+} satisfies Reading<"en">;
+export const englishSwimReading = {
+	lemma: englishSwimLemma,
+	emojiDescription: "🏊",
+} satisfies Reading<"en">;
+
+export const englishSwimCitationSurface = {
 	language: "en",
 	lemma: englishSwimLemma,
-	normalizedFullSurface: "swim",
-	surfaceKind: "Lemma",
-} satisfies Surface<"en", "Lemma", "Lexeme", "VERB">;
+	normalizedSurface: "swim",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+	surfaceKind: "Citation",
+	surfaceFeatures: null,
+} satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
+
+export const englishSwimDraft = {
+	reading: englishSwimReading,
+	note: {
+		attestedTranslations: ["swim"],
+		attestations: ["They swim every morning."],
+		notes: "Core swimming reading.",
+	},
+};
+
+export const englishRunDraft = {
+	reading: englishRunReading,
+	note: {
+		attestedTranslations: ["run"],
+		attestations: ["They run every morning."],
+		notes: "Core running reading.",
+	},
+};
+
+const walkReading = {
+	reading: englishWalkReading,
+	lexicalRelations: {},
+	attestedTranslations: ["walk"],
+	attestations: ["They walk home together."],
+	notes: "Core motion reading.",
+};
 
 export const enSerializedNotes = [
 	{
-		lemmaEntry: {
-			id: englishWalkLemmaId,
+		lemmaRecord: {
 			lemma: englishWalkLemma,
-			lexicalRelations: {},
 			morphologicalRelations: {},
-			attestedTranslations: ["walk"],
-			attestations: ["They walk home together."],
-			notes: "Move at a regular pace by lifting and setting down each foot.",
 		},
+		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
 ] satisfies SerializedDictionaryNote<"en">[];
 
-export const pendingSwimLemmaId = derivePendingLemmaId({
+export const pendingSwimEntryId = derivePendingEntryId({
 	language: "en",
-	canonicalLemma: "swim",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
+	canonicalForm: "swim",
+	family: "Lexeme",
+	kind: "VERB",
 });
 
 export const enSerializedNotesWithPendingSwimRelation = [
 	{
-		lemmaEntry: {
-			id: englishWalkLemmaId,
+		lemmaRecord: {
 			lemma: englishWalkLemma,
-			lexicalRelations: {},
 			morphologicalRelations: {},
-			attestedTranslations: ["walk"],
-			attestations: ["They walk home together."],
-			notes: "Move at a regular pace by lifting and setting down each foot.",
 		},
+		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],
 		pendingRefs: [
 			{
-				pendingId: pendingSwimLemmaId,
+				pendingId: pendingSwimEntryId,
 				language: "en",
-				canonicalLemma: "swim",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
+				canonicalForm: "swim",
+				family: "Lexeme",
+				kind: "VERB",
 			},
 		],
 		pendingRelations: [
 			{
-				sourceLemmaId: englishWalkLemmaId,
+				sourceReading: englishWalkReading,
 				relationFamily: "lexical",
 				relation: "nearSynonym",
-				targetPendingId: pendingSwimLemmaId,
+				targetPendingId: pendingSwimEntryId,
 			},
 		],
 	},

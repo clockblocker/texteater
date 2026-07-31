@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const covidXTokenSelection = {
-	language: "en",
-	spelledSelection: "COVID-ish",
+	segmentedSentenceId: "sentence_0GvQ8bmaPyYqWW0x2I" as SegmentedSentenceId,
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	attestedSurface: "COVID-ish",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "COVID-ish",
+		normalizedSurface: "COVID-ish",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "COVID-ish",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "X",
-			inherentFeatures: {
+			canonicalForm: "COVID-ish",
+			family: "Lexeme",
+			kind: "X",
+			coreFeatures: {
 				foreign: "Yes",
+				extPos: null,
 			},
-			meaningInEmojis: "🧪",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "X">;
 

@@ -1,27 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const eizeDeterminerSelection = {
-	language: "he",
-	spelledSelection: "איזה",
+	segmentedSentenceId: "sentence_15XuoZ3qMZpEjVESIC" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "איזה",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "איזה",
+		normalizedSurface: "איזה",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Masc",
 			number: "Sing",
+			definite: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "איזה",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "DET",
-			inherentFeatures: {
+			canonicalForm: "איזה",
+			family: "Lexeme",
+			kind: "DET",
+			coreFeatures: {
 				pronType: "Int",
 			},
-			meaningInEmojis: "❓",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "DET">;
 

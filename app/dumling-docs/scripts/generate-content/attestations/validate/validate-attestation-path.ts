@@ -5,7 +5,7 @@ import { expectedEntityKindForPath } from "./expected-entity-kind-for-path";
 
 export function validateAttestationPath(
 	source: AttestationSource,
-	base64UrlId: string,
+	attestationSlug: string,
 ): void {
 	const expectedKind = expectedEntityKindForPath(source.sourcePath);
 	const actualKind = entityKindFor(source.entity);
@@ -19,9 +19,9 @@ export function validateAttestationPath(
 	if (entityKindFor(source.entity) === "Selection") {
 		return;
 	}
-	if (actualBaseName !== base64UrlId) {
+	if (actualBaseName !== attestationSlug) {
 		throw new Error(
-			`${source.sourcePath} must be named ${base64UrlId}.ts for its generated ID.`,
+			`${source.sourcePath} must be named ${attestationSlug}.ts for its structural identity slug.`,
 		);
 	}
 }

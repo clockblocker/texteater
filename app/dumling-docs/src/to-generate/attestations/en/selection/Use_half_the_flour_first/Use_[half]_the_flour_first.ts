@@ -1,24 +1,38 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const halfDeterminerFractionSelection = {
-	language: "en",
-	spelledSelection: "half",
+	segmentedSentenceId: "sentence_ULFtf9AYp5MR1UoGLu" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "half",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "half",
+		normalizedSurface: "half",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "half",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "DET",
-			inherentFeatures: {
+			canonicalForm: "half",
+			family: "Lexeme",
+			kind: "DET",
+			coreFeatures: {
 				numForm: "Word",
 				numType: "Frac",
+				abbr: null,
+				definite: null,
+				extPos: null,
+				pronType: null,
+				style: null,
 			},
-			meaningInEmojis: "½",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "DET">;
 

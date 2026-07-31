@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const lessIsMoreAphorismSelection = {
-	language: "en",
-	spelledSelection: "less is more",
+	segmentedSentenceId: "sentence_ja0FGJPF0l6qXv3O93" as SegmentedSentenceId,
+	clickedSegmentIndex: 7,
+	surfaceSegmentIndices: [7, 9, 11],
+	attestedSurface: "less is more",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "less is more",
+		normalizedSurface: "less is more",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "less is more",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Aphorism",
-			inherentFeatures: {},
-			meaningInEmojis: "➖",
+			canonicalForm: "less is more",
+			family: "Phraseme",
+			kind: "Aphorism",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "Aphorism">;
 

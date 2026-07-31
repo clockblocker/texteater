@@ -10,7 +10,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Deixis\` marks the relative location encoded in demonstrative forms.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Deixis.html) feature with seven public values. It is most common on demonstrative pronouns, determiners, and adverbs, and in dumling it may belong either in \`lemma.inherentFeatures\` or \`surface.inflectionalFeatures\`, depending on whether the contrast is lexical or realized on a concrete surface.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Deixis.html) feature with seven public values. It is most common on demonstrative pronouns, determiners, and adverbs, and in dumling it may belong either in \`Lemma.coreFeatures\` or \`surface.inflectionalFeatures\`, depending on whether the contrast is lexical or realized on a concrete surface.
 
 ## Values
 
@@ -38,7 +38,7 @@ Use \`deixis\` when the selected item itself encodes a distance, visibility, or 
 			body: `
 In dumling, place \`deixis\` where the contrast belongs:
 
-- use \`lemma.inherentFeatures.deixis\` when the deictic contrast is a stable lexical fact of the [\`Lemma\`](/u/entity/lemma/)
+- use \`Lemma.coreFeatures.deixis\` when the deictic contrast is a stable lexical fact of the [\`Lemma\`](/u/entity/lemma/)
 - use \`surface.inflectionalFeatures.deixis\` when the contrast is realized on a concrete inflected surface
 `,
 		},

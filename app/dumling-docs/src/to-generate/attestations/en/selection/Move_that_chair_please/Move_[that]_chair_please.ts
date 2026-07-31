@@ -1,23 +1,38 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const thatDeterminerSelection = {
-	language: "en",
-	spelledSelection: "that",
+	segmentedSentenceId: "sentence_bZLBsv16dQ-Fsg5JOh" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "that",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "that",
+		normalizedSurface: "that",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "that",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "DET",
-			inherentFeatures: {
+			canonicalForm: "that",
+			family: "Lexeme",
+			kind: "DET",
+			coreFeatures: {
 				pronType: "Dem",
+				abbr: null,
+				definite: null,
+				extPos: null,
+				numForm: null,
+				numType: null,
+				style: null,
 			},
-			meaningInEmojis: "👉",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "DET">;
 

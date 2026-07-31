@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type DePrefixMorphemeFeatures = {
-	inherent: {
+	core: {
 		hasSepPrefix: AbstractFeatureValue<"hasSepPrefix"> | null;
 	};
 	inflectional: Record<never, never>;

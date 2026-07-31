@@ -1,38 +1,39 @@
 import type {
-	DumlingId,
+	Lemma,
+	LemmaFamilyFor,
 	LemmaKindFor,
-	LemmaSubKindFor,
 	SupportedLanguage,
 } from "../dumling";
+import type { Reading } from "./reading";
 import type { LexicalRelation, MorphologicalRelation } from "./relations";
 
-export type PendingLemmaId<L extends SupportedLanguage> = string & {
-	readonly __pendingLemmaIdBrand?: unique symbol;
+export type PendingEntryId<L extends SupportedLanguage> = string & {
+	readonly __pendingEntryIdBrand?: unique symbol;
 	readonly __language?: L;
 };
 
-export type PendingLemmaIdentity<L extends SupportedLanguage> = {
+export type PendingEntryIdentity<L extends SupportedLanguage> = {
 	language: L;
-	canonicalLemma: string;
-	lemmaKind: LemmaKindFor<L>;
-	lemmaSubKind: LemmaSubKindFor<L, LemmaKindFor<L>>;
+	canonicalForm: string;
+	family: LemmaFamilyFor<L>;
+	kind: LemmaKindFor<L, LemmaFamilyFor<L>>;
 };
 
-export type PendingLemmaRef<L extends SupportedLanguage> =
-	PendingLemmaIdentity<L> & {
-		pendingId: PendingLemmaId<L>;
+export type PendingEntryRef<L extends SupportedLanguage> =
+	PendingEntryIdentity<L> & {
+		pendingId: PendingEntryId<L>;
 	};
 
-export type PendingLemmaRelation<L extends SupportedLanguage> =
+export type PendingEntryRelation<L extends SupportedLanguage> =
 	| {
-			sourceLemmaId: DumlingId<"Lemma", L>;
+			sourceReading: Reading<L>;
 			relationFamily: "lexical";
 			relation: LexicalRelation;
-			targetPendingId: PendingLemmaId<L>;
+			targetPendingId: PendingEntryId<L>;
 	  }
 	| {
-			sourceLemmaId: DumlingId<"Lemma", L>;
+			sourceLemma: Lemma<L>;
 			relationFamily: "morphological";
 			relation: MorphologicalRelation;
-			targetPendingId: PendingLemmaId<L>;
+			targetPendingId: PendingEntryId<L>;
 	  };

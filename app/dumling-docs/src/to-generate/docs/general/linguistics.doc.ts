@@ -9,79 +9,97 @@ const document = defineGeneratedDocPage({
 
 ## Lemma
 
-A \`Lemma\` is the dictionary entry, or lemma-like entry, behind an observed form.
+A \`Lemma\` is the normalized grammatical identity behind observed forms.
 
-For a word like \`Seen\`, the German lemma might be \`See\`. For an English form like \`ran\`, the lemma might be \`run\`.
+For a word like \`Seen\`, the German Lemma has canonical form \`See\`. For an English form like \`ran\`, the Lemma has canonical form \`run\`.
 
-The lemma owns properties that belong to the lemma entry itself:
+The Lemma owns properties that remain stable across forms and attestations:
 
 - \`language\`: the concrete language, such as \`de\`, \`en\`, or \`he\`
-- \`canonicalLemma\`: the canonical lemma spelling
-- \`lemmaKind\`: the broad class: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
-- \`lemmaSubKind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Idiom\`
-- \`inherentFeatures\`: features that belong to the lemma as a lexical item
-- \`meaningInEmojis\`: a compact meaning hint for learner-facing UI
+- \`canonicalForm\`: the normalized form used to name the Lemma
+- \`family\`: the broad class: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
+- \`kind\`: the concrete subtype, such as \`NOUN\`, \`VERB\`, \`Prefix\`, or \`Idiom\`
+- \`coreFeatures\`: the stable grammatical features that complete its identity
 
-\`Construction\` is the public branch for learner-relevant patterned entries such as fused forms like German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and paired frames such as \`um zu\` or \`entweder oder\`.
+Together these fields are Lemma identity. Grammatically indistinguishable
+homonyms share one Lemma. Homographs with different grammatical analyses—for
+example a noun and verb with the same spelling—are different Lemmas.
+
+\`Construction\` is the public branch for learner-relevant patterned Lemmas such as fused forms like German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and paired frames such as \`um zu\` or \`entweder oder\`.
 
 ## Surface
 
-A \`Surface\` is the normalized full form in context.
+A \`Surface\` is the normalized linguistic realization resolved from noisy text.
 
-The surface always contains a \`Lemma\`. This keeps a normalized word form connected to the lemma entry it realizes.
+The Surface always contains a \`Lemma\`. It owns:
+
+- \`normalizedSurface\`: the normalized form, such as \`gave up\`
+- \`spelling\`: \`Canonical\` or a licensed \`Variant\`, such as \`armor\` / \`armour\`
+- \`realizationCoverage\`: \`Full\` or \`Partial\`; \`heulte mit\` can partially realize \`mit den Wölfen heulen\`
+- inflectional features and Lemma identity
 
 There are two surface kinds:
 
-- \`Citation\`: the surface is the citation form itself
-- \`Inflection\`: the surface is an inflected form of the lemma
+- \`Citation\`: the Surface realizes the Lemma's canonical form
+- \`Inflection\`: the surface is an inflected form of the Lemma
 
-Inflection surfaces carry \`inflectionalFeatures\`, such as number, case, tense, person, gender, degree, definiteness, or verb form, depending on the language and lemma subtype.
+Inflection surfaces carry \`inflectionalFeatures\`, such as number, case, tense, person, gender, degree, definiteness, or verb form, depending on the language and Lemma kind.
 
 ## Selection
 
-A \`Selection\` is the exact string the learner highlighted.
+A \`Selection\` is the sentence-local resolution produced by a learner click.
 
-The selection always contains a \`Surface\`, and that surface always contains a \`Lemma\`. This gives the full chain:
+The Selection stores an immutable \`segmentedSentenceId\`, the local
+\`clickedSegmentIndex\`, all \`surfaceSegmentIndices\`, the noisy
+\`attestedSurface\`, and whether the clicked segment's orthography is
+\`Standard\` or a \`Typo\`.
+
+The full chain is:
 
 \`\`\`txt
 Selection -> Surface -> Lemma
 \`\`\`
 
-Marked selection mismatches live in the optional \`selectionFeatures\` bag:
+Only clicked \`ResolvableText\` segments are selectable today. A click can resolve to a
+discontinuous Surface occurrence: clicking either \`gvae\` or \`up\` may carry
+the same indices and attested text \`gvae up\`, while only the \`gvae\` click is
+marked \`Typo\`.
 
-| Field | Marked value | Meaning |
-| --- | --- | --- |
-| \`orthography\` | \`Typo\` | the observed selection is misspelled |
-| \`coverage\` | \`Partial\` | the learner highlighted only part of the resolved surface |
-| \`spelling\` | \`Variant\` | the observed spelling is licensed but non-canonical |
+## Lemma Families and Kinds
 
-Absence means the unmarked default: standard orthography, full coverage, and canonical spelling.
-
-These axes remain independent. A typo can still be partial, and a partial selection can still point to a full normalized surface.
-
-## Lemma Kinds
-
-\`lemmaKind\` has four values:
+\`family\` has four values:
 
 | Kind | Use |
 | --- | --- |
-| \`Lexeme\` | words and word-like lexical entries, categorized with Universal Dependencies-style POS tags |
+| \`Lexeme\` | words and word-like Lemmas, categorized with Universal Dependencies-style POS tags |
 | \`Morpheme\` | roots, prefixes, suffixes, clitics, and related sub-word units |
 | \`Phraseme\` | multi-word or formulaic expressions such as idioms and proverbs |
-| \`Construction\` | learner-relevant patterned entries such as fused forms like \`zum\` and paired frames like \`um zu\` |
+| \`Construction\` | learner-relevant patterned Lemmas such as fused forms like \`zum\` and paired frames like \`um zu\` |
 
-\`lemmaSubKind\` is the public subtype field for all four families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
+\`kind\` is the public subtype field for all four families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
+
+## Reading Boundary
+
+Dumling stops at Lemma. A learner's semantic identity is a \`Reading\` outside
+this package:
+
+\`Reading = { lemma, emojiDescription }\`
+
+The same Lemma may participate in several Readings. A classifier reuses a
+learner's existing Reading when it is close enough or proposes a new one; a
+Dumling \`Meaning\` or \`Sense\` DTO does not exist.
 
 ## Features
 
 Features are split by where they belong:
 
-- \`inherentFeatures\` describe the lemma itself
+- \`coreFeatures\` describe the Lemma itself
 - \`inflectionalFeatures\` describe a concrete inflected surface
-- \`selectionFeatures\` describe how the attested highlight differs from the resolved surface
+- \`selectedOrthography\` describes the clicked segment
+- \`spelling\` and \`realizationCoverage\` describe the Surface
 - \`surfaceFeatures\` describe marked properties of the resolved surface itself, such as \`historicalStatus: "Archaic"\`
 
-Each language narrows the abstract feature inventory. For example, German nouns support grammatical gender as an inherent feature and case/number as inflectional features. English nouns support number inflection but not grammatical case in the same way. Hebrew supports language-specific features such as \`hebBinyan\` for verbs.
+Each language narrows the abstract feature inventory. For example, German nouns support grammatical gender as a core feature and case/number as inflectional features. English nouns support number inflection but not grammatical case in the same way. Hebrew supports language-specific features such as \`hebBinyan\` for verbs.
 `,
 });
 

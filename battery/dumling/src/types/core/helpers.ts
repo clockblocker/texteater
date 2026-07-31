@@ -1,5 +1,5 @@
 export type PrettifyDeep<T> = T extends string
-	? `${T}`
+	? T
 	: T extends
 				| number
 				| boolean

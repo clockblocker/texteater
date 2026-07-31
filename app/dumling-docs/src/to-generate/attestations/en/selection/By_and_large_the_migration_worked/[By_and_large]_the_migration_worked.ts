@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const byAndLargeIdiomSelection = {
-	language: "en",
-	spelledSelection: "By and large",
+	segmentedSentenceId: "sentence_xztlu_Abq9IEnLf7Gi" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2, 4],
+	attestedSurface: "By and large",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "by and large",
+		normalizedSurface: "by and large",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "by and large",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "📌",
+			canonicalForm: "by and large",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "Idiom">;
 
@@ -23,5 +32,5 @@ export const attestation = {
 	selection: byAndLargeIdiomSelection,
 	sentenceMarkdown: "[By and large], the migration worked.",
 	classifierNotes:
-		"Sentence-initial capitalization is preserved only in spelledSelection.",
+		"Sentence-initial capitalization is preserved only in clicked Text.",
 } as const satisfies AttestedSelection;

@@ -10,7 +10,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`NounClass\` marks a noun class associated with a [\`Lemma\`](/u/entity/lemma/) or with agreement targeting that noun.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/NounClass.html) feature with 35 public values. In Dumling, it will usually belong in \`lemma.inherentFeatures\`, but it may also surface in \`surface.inflectionalFeatures\` where noun-class agreement is morphologically expressed on the concrete form.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/NounClass.html) feature with 35 public values. In Dumling, it will usually belong in \`Lemma.coreFeatures\`, but it may also surface in \`surface.inflectionalFeatures\` where noun-class agreement is morphologically expressed on the concrete form.
 
 ## Values
 
@@ -55,7 +55,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/NounClass.html) 
 - \`Wol11\`: Wolof noun class 11/\`f\`; location
 - \`Wol12\`: Wolof noun class 12/\`n\`; manner
 
-If \`nounClass\` is absent or \`undefined\`, no noun-class value is being asserted for that lemma or surface.
+If \`nounClass\` is absent or \`undefined\`, no noun-class value is being asserted for that Lemma or surface.
 `,
 	subsections: [
 		{
@@ -63,7 +63,7 @@ If \`nounClass\` is absent or \`undefined\`, no noun-class value is being assert
 			body: `
 Use \`nounClass\` when a language has a stable noun-class system and the class distinction is morphologically relevant.
 
-Put the value on \`lemma.inherentFeatures.nounClass\` when the class is a lexical property of the noun. Put the value on \`surface.inflectionalFeatures.nounClass\` when the attested surface form carries noun-class agreement morphology.
+Put the value on \`Lemma.coreFeatures.nounClass\` when the class is a lexical property of the noun. Put the value on \`surface.inflectionalFeatures.nounClass\` when the attested surface form carries noun-class agreement morphology.
 `,
 		},
 		{

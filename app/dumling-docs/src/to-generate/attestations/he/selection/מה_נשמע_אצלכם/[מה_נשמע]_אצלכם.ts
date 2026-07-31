@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const maNishmaFormulaSelection = {
-	language: "he",
-	spelledSelection: "מה נשמע",
+	segmentedSentenceId: "sentence_uRjgaWkeXqv2DgTUkb" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2],
+	attestedSurface: "מה נשמע",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "מה נשמע",
+		normalizedSurface: "מה נשמע",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "מה נשמע",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {},
-			meaningInEmojis: "💬",
+			canonicalForm: "מה נשמע",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "DiscourseFormula">;
 

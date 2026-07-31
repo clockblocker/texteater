@@ -1,4 +1,5 @@
-import type { Lemma, SupportedLanguage, Surface } from "../dumling";
+import type { SupportedLanguage, Surface } from "../dumling";
+import type { Reading } from "./reading";
 import type { ProposedRelation } from "./relations";
 
 export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
@@ -10,8 +11,8 @@ export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
 	};
 };
 
-export type DumdictEntryDraft<L extends SupportedLanguage> = {
-	lemma: Lemma<L>;
+export type DumdictReadingDraft<L extends SupportedLanguage> = {
+	reading: Reading<L>;
 	note: {
 		attestedTranslations: string[];
 		attestations: string[];

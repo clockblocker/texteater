@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const shalomFormulaSelection = {
-	language: "he",
-	spelledSelection: "שלום",
+	segmentedSentenceId: "sentence__h_GBaqdLPo8Ye4EHa" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "שלום",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "שלום",
+		normalizedSurface: "שלום",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "שלום",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {},
-			meaningInEmojis: "👋",
+			canonicalForm: "שלום",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "DiscourseFormula">;
 

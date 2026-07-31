@@ -2,9 +2,12 @@ import type { Surface } from "../../../src";
 import { germanHausLemma } from "./lemmas";
 
 // Attestation: "Das [Haus] steht leer."
-export const germanHausResolvedLemmaSurface = {
+export const germanHausCitationSurface = {
 	language: "de",
-	normalizedFullSurface: "Haus",
-	surfaceKind: "Lemma",
+	normalizedSurface: "Haus",
+	surfaceKind: "Citation",
 	lemma: germanHausLemma,
-} satisfies Surface<"de", "Lemma", "Lexeme", "NOUN">;
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+} satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;

@@ -42,7 +42,7 @@ If \`surface.inflectionalFeatures.mood\` is absent or \`undefined\`, Dumling rec
 			body: `
 Use \`mood\` on verbal or auxiliary surfaces when the analysis needs to record how the clause is grammatically presented, for example as a statement, command, wish, or subjunctive alternative.
 
-\`Mood\` is usually an inflectional property of a concrete form, not a stable lexical property of the lemma, so it normally belongs in \`surface.inflectionalFeatures\` rather than \`lemma.inherentFeatures\`.
+\`Mood\` is usually an inflectional property of a concrete form, not a stable lexical property of the Lemma, so it normally belongs in \`surface.inflectionalFeatures\` rather than \`Lemma.coreFeatures\`.
 `,
 		},
 		{

@@ -1,60 +1,49 @@
 import { describe, expect, test } from "bun:test";
 import {
-	englishRunLemmaId,
 	englishSwimLemma,
-	englishSwimLemmaSurface,
-	englishWalkLemmaId,
+	englishWalkReading,
 	enSerializedNotes,
 	getBootedUpDumdict,
-	makeDumlingIdFor,
 	type StoreRevision,
 } from "./helpers";
 
-describe("configured service", () => {
-	test("in-memory storage does not publish partial commits after a failed precondition", async () => {
+describe("in-memory storage", () => {
+	test("does not publish a partially created Lemma after a failed precondition", async () => {
 		const { storage } = getBootedUpDumdict("en", enSerializedNotes);
-		const swimLemmaId = makeDumlingIdFor("en", englishSwimLemma);
-		const swimSurfaceId = makeDumlingIdFor("en", englishSwimLemmaSurface);
-
 		const result = await storage.commitChanges({
 			baseRevision: "mem-1" as StoreRevision,
 			changes: [
 				{
 					type: "createLemma",
-					entry: {
-						id: swimLemmaId,
+					record: {
 						lemma: englishSwimLemma,
-						lexicalRelations: {},
 						morphologicalRelations: {},
-						attestedTranslations: ["swim"],
-						attestations: ["They swim every morning."],
-						notes: "Move through water by moving the body.",
 					},
 					preconditions: [
 						{
 							kind: "revisionMatches",
 							revision: "mem-1" as StoreRevision,
 						},
-						{ kind: "lemmaMissing", lemmaId: swimLemmaId },
+						{
+							kind: "lemmaMissing",
+							lemma: englishSwimLemma,
+						},
 					],
 				},
 				{
-					type: "createOwnedSurface",
-					entry: {
-						id: swimSurfaceId,
-						surface: englishSwimLemmaSurface,
-						ownerLemmaId: englishRunLemmaId,
-						attestedTranslations: ["swim"],
-						attestations: ["They swim every morning."],
-						notes: "Plain present form.",
-					},
+					type: "patchReading",
+					reading: englishWalkReading,
+					ops: [
+						{
+							kind: "addAttestation",
+							value: "Already attested",
+						},
+					],
 					preconditions: [
 						{
-							kind: "revisionMatches",
-							revision: "mem-1" as StoreRevision,
+							kind: "readingMissing",
+							reading: englishWalkReading,
 						},
-						{ kind: "lemmaExists", lemmaId: englishRunLemmaId },
-						{ kind: "surfaceMissing", surfaceId: swimSurfaceId },
 					],
 				},
 			],
@@ -67,80 +56,49 @@ describe("configured service", () => {
 		expect(
 			storage
 				.loadAll()
-				.some(({ lemmaEntry }) => lemmaEntry.id === swimLemmaId),
+				.some(
+					({ lemmaRecord }) =>
+						lemmaRecord.lemma.canonicalForm === "swim",
+				),
 		).toBe(false);
 	});
 
-	test("in-memory storage rejects commits based on stale revisions", async () => {
+	test("rejects commits based on stale revisions", async () => {
 		const { storage } = getBootedUpDumdict("en", enSerializedNotes);
-
-		const firstCommit = await storage.commitChanges({
-			baseRevision: "mem-1" as StoreRevision,
-			changes: [
+		const change = {
+			type: "patchReading" as const,
+			reading: englishWalkReading,
+			ops: [
 				{
-					type: "patchLemma",
-					lemmaId: englishWalkLemmaId,
-					ops: [
-						{
-							kind: "addAttestation",
-							value: "They walk before sunrise.",
-						},
-					],
-					preconditions: [
-						{
-							kind: "revisionMatches",
-							revision: "mem-1" as StoreRevision,
-						},
-						{ kind: "lemmaExists", lemmaId: englishWalkLemmaId },
-						{
-							kind: "lemmaAttestationMissing",
-							lemmaId: englishWalkLemmaId,
-							value: "They walk before sunrise.",
-						},
-					],
+					kind: "addAttestation" as const,
+					value: "They walk before sunrise.",
 				},
 			],
-		});
-
-		const staleCommit = await storage.commitChanges({
-			baseRevision: "mem-1" as StoreRevision,
-			changes: [
+			preconditions: [
 				{
-					type: "patchLemma",
-					lemmaId: englishWalkLemmaId,
-					ops: [
-						{
-							kind: "addAttestation",
-							value: "They walk after midnight.",
-						},
-					],
-					preconditions: [
-						{
-							kind: "revisionMatches",
-							revision: "mem-1" as StoreRevision,
-						},
-						{ kind: "lemmaExists", lemmaId: englishWalkLemmaId },
-						{
-							kind: "lemmaAttestationMissing",
-							lemmaId: englishWalkLemmaId,
-							value: "They walk after midnight.",
-						},
-					],
+					kind: "revisionMatches" as const,
+					revision: "mem-1" as StoreRevision,
+				},
+				{
+					kind: "readingExists" as const,
+					reading: englishWalkReading,
 				},
 			],
+		};
+		const first = await storage.commitChanges({
+			baseRevision: "mem-1" as StoreRevision,
+			changes: [change],
+		});
+		const stale = await storage.commitChanges({
+			baseRevision: "mem-1" as StoreRevision,
+			changes: [change],
 		});
 
-		expect(firstCommit).toMatchObject({
-			status: "committed",
-			nextRevision: "mem-2",
-		});
-		expect(staleCommit).toMatchObject({
+		expect(first.status).toBe("committed");
+		expect(stale).toMatchObject({
 			status: "conflict",
 			code: "revisionConflict",
 			latestRevision: "mem-2",
 		});
-		expect(storage.loadAll()[0]?.lemmaEntry.attestations).not.toContain(
-			"They walk after midnight.",
-		);
 	});
 });

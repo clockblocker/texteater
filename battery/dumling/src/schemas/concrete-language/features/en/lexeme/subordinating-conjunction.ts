@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enSubordinatingConjunctionFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["ADP", "SCONJ"]),
 		style: abstractFeatureAtomSchemas.style.extract(["Vrnc"]),

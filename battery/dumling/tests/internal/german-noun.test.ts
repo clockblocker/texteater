@@ -8,21 +8,25 @@ import {
 } from "../helpers";
 
 describe("German noun schemas", () => {
-	it("accept supported noun lemmas and inflections", () => {
+	it("accepts supported noun Lemmas and inflections", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.NOUN().safeParse(germanKindLemma)
 				.success,
 		).toBe(true);
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
-				language: "de",
-				selectionFeatures: null,
-				spelledSelection: "kindern",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "kindern",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "NOUN", "kind"),
 					language: "de",
-					normalizedFullSurface: "kindern",
+					normalizedSurface: "kindern",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Dat",
@@ -37,25 +41,29 @@ describe("German noun schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.NOUN().safeParse({
 				language: "de",
-				canonicalLemma: "kind",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
-				inherentFeatures: {
+				canonicalForm: "kind",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: {
 					case: "Nom",
 				},
-				meaningInEmojis: "👶",
 			}).success,
 		).toBe(false);
 
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
-				language: "de",
-				spelledSelection: "kindern",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "kindern",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "NOUN", "kind"),
 					language: "de",
-					normalizedFullSurface: "kindern",
+					normalizedSurface: "kindern",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Ins",

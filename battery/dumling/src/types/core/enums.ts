@@ -8,15 +8,15 @@ export type SupportedLanguage = z.infer<typeof SupportedLanguage>;
 export const AbstractLanguageTag = z.string().min(1);
 export type AbstractLanguageTag = string;
 
-const lemmaKindValues = [
+const familyValues = [
 	"Phraseme",
 	"Lexeme",
 	"Morpheme",
 	"Construction",
 ] as const;
 
-export const LemmaKind = z.enum(lemmaKindValues);
-export type LemmaKind = z.infer<typeof LemmaKind>;
+export const LemmaFamily = z.enum(familyValues);
+export type LemmaFamily = z.infer<typeof LemmaFamily>;
 
 const surfaceKindValues = ["Citation", "Inflection"] as const;
 
@@ -85,12 +85,12 @@ const constructionKindValues = ["Fusion", "PairedFrame"] as const;
 export const ConstructionKind = z.enum(constructionKindValues);
 export type ConstructionKind = z.infer<typeof ConstructionKind>;
 
-const lemmaSubKindValues = [
+const kindValues = [
 	...posValues,
 	...phrasemeKindValues,
 	...morphemeKindValues,
 	...constructionKindValues,
 ] as const;
 
-export const LemmaSubKind = z.enum(lemmaSubKindValues);
-export type LemmaSubKind = z.infer<typeof LemmaSubKind>;
+export const LemmaKind = z.enum(kindValues);
+export type LemmaKind = z.infer<typeof LemmaKind>;

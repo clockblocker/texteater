@@ -4,7 +4,9 @@ import { englishGiveUpLemma, englishWalkLemma } from "./lemmas";
 // Attestation: "They [walk] home together."
 export const englishWalkCitationSurface = {
 	language: "en",
-	normalizedFullSurface: "walk",
+	normalizedSurface: "walk",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: englishWalkLemma,
 
@@ -23,7 +25,9 @@ export const englishWalkInflectionSurface = {
 		mood: null,
 	},
 	language: "en",
-	normalizedFullSurface: "walk",
+	normalizedSurface: "walk",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: englishWalkLemma,
 
@@ -42,7 +46,9 @@ export const englishGiveUpInflectionSurface = {
 		mood: null,
 	},
 	language: "en",
-	normalizedFullSurface: "gave up",
+	normalizedSurface: "gave up",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: englishGiveUpLemma,
 

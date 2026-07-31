@@ -25,7 +25,7 @@ If \`clusivity\` is absent or \`undefined\`, no inclusive-versus-exclusive disti
 			body: `
 Use \`clusivity: "In"\` or \`clusivity: "Ex"\` only together with first-person plural forms.
 
-In many languages this distinction belongs to personal pronouns, so it may live in \`lemma.inherentFeatures\`. In others it is expressed by inflectional agreement on a concrete surface, such as a verb form, so it may instead belong in \`inflectionalFeatures\`.
+In many languages this distinction belongs to personal pronouns, so it may live in \`Lemma.coreFeatures\`. In others it is expressed by inflectional agreement on a concrete surface, such as a verb form, so it may instead belong in \`inflectionalFeatures\`.
 `,
 		},
 		{

@@ -1,24 +1,40 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const bestAdverbSelection = {
-	language: "en",
-	spelledSelection: "best",
+	segmentedSentenceId: "sentence_jVuCQDb4XpaPPvLGwr" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "best",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "best",
+		normalizedSurface: "best",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			degree: "Sup",
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "well",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADV",
-			inherentFeatures: {},
-			meaningInEmojis: "🎯",
+			canonicalForm: "well",
+			family: "Lexeme",
+			kind: "ADV",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				numForm: null,
+				numType: null,
+				pronType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "ADV">;
 

@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection007 = {
-	language: "de",
-	spelledSelection: "Kiefer",
+	segmentedSentenceId: "sentence_zmPisOE9-nR6aoTARL" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "Kiefer",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "Kiefer",
+		normalizedSurface: "Kiefer",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "Kiefer",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "Kiefer",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				hyph: null,
 			},
-			meaningInEmojis: "🦷",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
 

@@ -1,23 +1,22 @@
-import { planAppendLemmaAttestation } from "../core/plan-mutation";
-import { validateLemmaPatchSlice } from "../core/validate-slice";
+import { planAppendReadingAttestation } from "../core/plan-mutation";
+import { validateReadingPatchSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type { AddAttestationRequest, MutationResult } from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
-import { assertDumlingIdLanguageMatches } from "./language-guard";
+import { assertLanguageMatches } from "./language-guard";
 import { mutationResultFromCommit } from "./result-mapping";
 
 export async function addAttestation<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: AddAttestationRequest<L>,
 ): Promise<MutationResult<L>> {
-	assertDumlingIdLanguageMatches(options.language, request.lemmaId);
-
-	const slice = await options.storage.loadLemmaForPatch({
-		lemmaId: request.lemmaId,
+	assertLanguageMatches(options.language, request.reading.lemma.language);
+	const slice = await options.storage.loadReadingForPatch({
+		reading: request.reading,
 	});
-	validateLemmaPatchSlice(options.language, slice, request.lemmaId);
+	validateReadingPatchSlice(options.language, slice, request.reading);
 
-	const plan = planAppendLemmaAttestation(slice, request);
+	const plan = planAppendReadingAttestation(slice, request);
 	if (plan.status === "rejected") {
 		return plan;
 	}

@@ -7,7 +7,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const dePronounFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["DET"]),
 		foreign: abstractFeatureAtomSchemas.foreign,
 		person: abstractFeatureAtomSchemas.person.extract(["1", "2", "3"]),

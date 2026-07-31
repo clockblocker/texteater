@@ -102,7 +102,7 @@ type AbstractFeatureAtoms = {
 	>;
 };
 
-export type AbstractInherentFeatures = {
+export type AbstractCoreFeatures = {
 	[TName in keyof AbstractFeatureAtoms]?: FeatureValueSet<
 		AbstractFeatureAtoms[TName]
 	>;

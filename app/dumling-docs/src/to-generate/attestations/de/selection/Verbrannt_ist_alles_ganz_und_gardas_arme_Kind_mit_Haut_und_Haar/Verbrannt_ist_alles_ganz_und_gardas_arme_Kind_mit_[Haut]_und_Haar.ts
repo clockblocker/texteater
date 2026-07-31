@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "Haut",
+	segmentedSentenceId: "sentence_RQHEa7a4JSv6Tb8uCY" as SegmentedSentenceId,
+	clickedSegmentIndex: 21,
+	surfaceSegmentIndices: [21],
+	attestedSurface: "Haut",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "Haut",
+		normalizedSurface: "Haut",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Dat",
@@ -14,14 +23,15 @@ const deSelection = {
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "Haut",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "Haut",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Fem",
+				hyph: null,
 			},
-			meaningInEmojis: "🧍",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "NOUN">;
 

@@ -3,6 +3,6 @@ import type { DeSuffixMorphemeFeatures } from "../../../../../types/concrete-lan
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deSuffixMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeSuffixMorphemeFeatures>;

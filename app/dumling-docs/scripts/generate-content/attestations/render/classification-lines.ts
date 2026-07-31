@@ -5,22 +5,22 @@ import { lemmaForEntity } from "../entity/helpers";
 export function classificationLinesForEntity(entity: EntityValue): string[] {
 	const lemma = lemmaForEntity(entity);
 	if (isSelection(entity)) {
-		const coverage = entity.selectionFeatures?.coverage ?? "Full";
 		return [
-			`- \`${coverage}\` **Selection**`,
-			`- \`${lemma.lemmaSubKind}\` **${lemma.lemmaKind}**`,
-			`- **Lemma** _"${lemma.canonicalLemma}"_`,
+			`- \`${entity.selectedOrthography}\` **Selection**`,
+			`- \`${entity.surface.realizationCoverage}\` \`${entity.surface.spelling}\` **Surface**`,
+			`- \`${lemma.kind}\` **${lemma.family}**`,
+			`- **Lemma** _"${lemma.canonicalForm}"_`,
 		];
 	}
 	if (isSurface(entity)) {
 		return [
 			`- \`${entity.surfaceKind}\` **Surface**`,
-			`- \`${lemma.lemmaSubKind}\` **${lemma.lemmaKind}**`,
-			`- **Lemma** _"${lemma.canonicalLemma}"_`,
+			`- \`${lemma.kind}\` **${lemma.family}**`,
+			`- **Lemma** _"${lemma.canonicalForm}"_`,
 		];
 	}
 	return [
-		`- **Lemma** _"${lemma.canonicalLemma}"_`,
-		`- \`${lemma.lemmaSubKind}\` **${lemma.lemmaKind}**`,
+		`- **Lemma** _"${lemma.canonicalForm}"_`,
+		`- \`${lemma.kind}\` **${lemma.family}**`,
 	];
 }

@@ -35,11 +35,17 @@ export type SelectionAttestationSource = {
 	classifierNotes?: string;
 	classificationMistakes?: string;
 	entity: {
-		language: SupportedLanguage;
-		spelledSelection: string;
+		attestedSurface: string;
+		clickedSegmentIndex: number;
+		segmentedSentenceId: string;
+		selectedOrthography: "Standard" | "Typo";
 		surface: {
-			normalizedFullSurface: string;
+			normalizedSurface: string;
+			lemma: {
+				language: SupportedLanguage;
+			};
 		};
+		surfaceSegmentIndices: number[];
 	};
 	isVerified?: true;
 	sentenceMarkdown: string;

@@ -1,17 +1,15 @@
 import type {
 	Lemma,
+	LemmaIdentity,
 	Selection,
+	SelectionIdentity,
 	SupportedLanguage,
 	Surface,
+	SurfaceIdentity,
 } from "../../../../types/public-types.js";
-import type {
-	ApiResult,
-	IdDecodeError,
-	LanguageApi,
-} from "../../../api-shape.js";
+import type { ApiResult, IdDecodeError } from "../../../api-shape.js";
 import { isSupportedLanguage } from "../../language-inventory.js";
 import { idError } from "../id-errors.js";
-import { featureNameTokens } from "./tiny-tokens.js";
 
 type CsvValue = string | number | boolean | null | undefined;
 type CsvEntity<L extends SupportedLanguage> =
@@ -19,23 +17,26 @@ type CsvEntity<L extends SupportedLanguage> =
 	| Surface<L>
 	| Selection<L>;
 
-const surfaceFeatureNames = new Set(["historicalStatus"]);
+type IdentityParser<L extends SupportedLanguage> = {
+	lemma(input: unknown): ApiResult<Lemma<L>, { message: string }>;
+	surface(input: unknown): ApiResult<Surface<L>, { message: string }>;
+};
 
 export type ReadableCsvDecodeSuccess<L extends SupportedLanguage> =
 	| {
 			kind: "Lemma";
 			language: L;
-			lemma: Lemma<L>;
+			lemmaIdentity: LemmaIdentity<L>;
 	  }
 	| {
 			kind: "Surface";
 			language: L;
-			surface: Surface<L>;
+			surfaceIdentity: SurfaceIdentity<L>;
 	  }
 	| {
 			kind: "Selection";
 			language: L;
-			selection: Selection<L>;
+			selectionIdentity: SelectionIdentity;
 	  };
 
 function invalidPayload(message: string): ApiResult<never, IdDecodeError> {
@@ -47,11 +48,7 @@ function invalidPayload(message: string): ApiResult<never, IdDecodeError> {
 
 function csvField(value: CsvValue): string {
 	const text = value == null ? "" : String(value);
-
-	if (!/[",\r\n]/u.test(text)) {
-		return text;
-	}
-
+	if (!/[",\r\n]/u.test(text)) return text;
 	return `"${text.replaceAll('"', '""')}"`;
 }
 
@@ -70,7 +67,6 @@ export function parseCsvRow(
 
 	for (let index = 0; index < input.length; index += 1) {
 		const character = input[index];
-
 		if (inQuotes) {
 			if (character === '"') {
 				if (input[index + 1] === '"') {
@@ -85,18 +81,13 @@ export function parseCsvRow(
 			}
 			continue;
 		}
-
 		if (character === ",") {
 			fields.push(field);
 			field = "";
 			closedQuote = false;
 			continue;
 		}
-
-		if (closedQuote) {
-			return invalidPayload("CSV quotes must end a field");
-		}
-
+		if (closedQuote) return invalidPayload("CSV quotes must end a field");
 		if (character === '"') {
 			if (field.length > 0) {
 				return invalidPayload(
@@ -106,47 +97,37 @@ export function parseCsvRow(
 			inQuotes = true;
 			continue;
 		}
-
 		field += character;
 	}
 
 	if (inQuotes) {
 		return invalidPayload("CSV row contains an unterminated quote");
 	}
-
 	fields.push(field);
-
 	if (options.requireCanonical && csvRow(fields) !== input) {
 		return invalidPayload("CSV row is not canonical");
 	}
-
-	return {
-		success: true,
-		data: fields,
-	};
+	return { success: true, data: fields };
 }
 
-function parseCanonicalCsvRowOrThrow(input: string): string[] {
-	const parsed = parseCsvRow(input, { requireCanonical: true });
-	if (!parsed.success) {
-		throw new Error(parsed.error.message);
-	}
-
-	return parsed.data;
-}
-
-function assertNoFeatureDelimiters(value: string, context: string) {
-	if (/[|=+]/u.test(value)) {
-		throw new Error(`${context} must not contain |, =, or +`);
-	}
-}
-
-function valuesForFeature(value: unknown): string[] {
+function canonicalizeJsonValue(value: unknown): unknown {
 	if (Array.isArray(value)) {
-		return value.map((entry) => String(entry));
+		return value
+			.map(canonicalizeJsonValue)
+			.sort((left, right) =>
+				JSON.stringify(left).localeCompare(JSON.stringify(right)),
+			);
 	}
+	if (typeof value !== "object" || value === null) return value;
+	return Object.fromEntries(
+		Object.entries(value)
+			.sort(([left], [right]) => left.localeCompare(right))
+			.map(([key, nested]) => [key, canonicalizeJsonValue(nested)]),
+	);
+}
 
-	return [String(value)];
+function canonicalJson(value: unknown): string {
+	return JSON.stringify(canonicalizeJsonValue(value));
 }
 
 function assertNoDuplicateValues(
@@ -154,8 +135,8 @@ function assertNoDuplicateValues(
 	context: string,
 ) {
 	for (const [key, value] of Object.entries(features)) {
-		if (value === null) continue;
-		const values = valuesForFeature(value);
+		if (!Array.isArray(value)) continue;
+		const values = value.map(String);
 		if (new Set(values).size !== values.length) {
 			throw new Error(`${context}.${key} contains duplicate values`);
 		}
@@ -175,8 +156,8 @@ export function assertEntityIdFeatureConstraints(
 
 	const lemma = "surfaceKind" in entity ? entity.lemma : entity;
 	assertNoDuplicateValues(
-		lemma.inherentFeatures as Record<string, unknown>,
-		"inherentFeatures",
+		lemma.coreFeatures as Record<string, unknown>,
+		"coreFeatures",
 	);
 
 	if ("surfaceKind" in entity && "inflectionalFeatures" in entity) {
@@ -187,121 +168,20 @@ export function assertEntityIdFeatureConstraints(
 	}
 }
 
-function formatFeatureSet(features: Record<string, unknown>): string {
-	const pairs = Object.entries(features)
-		.filter(([, value]) => value !== null)
-		.sort(([left], [right]) => left.localeCompare(right))
-		.map(([key, rawValue]) => {
-			assertNoFeatureDelimiters(key, `Feature key ${key}`);
-			const values = valuesForFeature(rawValue).sort((left, right) =>
-				left.localeCompare(right),
-			);
-
-			if (new Set(values).size !== values.length) {
-				throw new Error(`Feature ${key} contains duplicate values`);
-			}
-
-			for (const value of values) {
-				assertNoFeatureDelimiters(value, `Feature value ${key}`);
-			}
-
-			return `${key}=${values.join("+")}`;
-		});
-
-	return pairs.join("|");
-}
-
-function parseFeatureSet(
-	input: string,
-): ApiResult<Record<string, unknown>, IdDecodeError> {
-	if (input === "") {
-		return { success: true, data: {} };
-	}
-
-	const features: Record<string, unknown> = {};
-	const pairs = input.split("|");
-	const keys: string[] = [];
-
-	for (const pair of pairs) {
-		const separator = pair.indexOf("=");
-		if (separator <= 0 || separator === pair.length - 1) {
-			return invalidPayload("Feature pair must be key=value");
-		}
-
-		const key = pair.slice(0, separator);
-		const valueText = pair.slice(separator + 1);
-
-		if (/[|=+]/u.test(key)) {
-			return invalidPayload(
-				`Feature key ${key} must not contain |, =, or +`,
-			);
-		}
-
-		if (!(key in featureNameTokens)) {
-			return invalidPayload(`Unknown feature key ${key}`);
-		}
-
-		if (key in features) {
-			return invalidPayload(`Duplicate feature key ${key}`);
-		}
-
-		const values = valueText.split("+");
-		if (values.some((value) => value.length === 0)) {
-			return invalidPayload(`Feature ${key} has an empty value`);
-		}
-		for (const value of values) {
-			if (/[|=+]/u.test(value)) {
-				return invalidPayload(
-					`Feature value ${key} must not contain |, =, or +`,
-				);
-			}
-		}
-		if (new Set(values).size !== values.length) {
-			return invalidPayload(`Feature ${key} contains duplicate values`);
-		}
-
-		const sortedValues = [...values].sort((left, right) =>
-			left.localeCompare(right),
-		);
-		if (sortedValues.join("+") !== values.join("+")) {
-			return invalidPayload(`Feature ${key} values are not sorted`);
-		}
-
-		keys.push(key);
-		features[key] = values.length === 1 ? values[0] : values;
-	}
-
-	const sortedKeys = [...keys].sort((left, right) =>
-		left.localeCompare(right),
-	);
-	if (sortedKeys.join("|") !== keys.join("|")) {
-		return invalidPayload("Feature keys are not sorted");
-	}
-
-	return {
-		success: true,
-		data: features,
-	};
-}
-
-function parseMarkedFeatureSet(
+function parseCanonicalJson(
 	input: string,
 	context: string,
-): ApiResult<Record<string, unknown>, IdDecodeError> {
-	const parsed = parseFeatureSet(input);
-	if (!parsed.success) {
-		return parsed;
+): ApiResult<unknown, IdDecodeError> {
+	let value: unknown;
+	try {
+		value = JSON.parse(input);
+	} catch {
+		return invalidPayload(`${context} must be valid JSON`);
 	}
-
-	if (Object.keys(parsed.data).length === 0) {
-		return invalidPayload(`${context} must contain at least one feature`);
+	if (canonicalJson(value) !== input) {
+		return invalidPayload(`${context} JSON is not canonical`);
 	}
-
-	return parsed;
-}
-
-function isSurfaceFeatureSet(features: Record<string, unknown>): boolean {
-	return Object.keys(features).every((key) => surfaceFeatureNames.has(key));
+	return { success: true, data: value };
 }
 
 function assertLanguageForNamespace<L extends SupportedLanguage>(
@@ -317,7 +197,6 @@ function assertLanguageForNamespace<L extends SupportedLanguage>(
 			),
 		};
 	}
-
 	if (payloadLanguage !== namespaceLanguage) {
 		return {
 			success: false,
@@ -327,218 +206,128 @@ function assertLanguageForNamespace<L extends SupportedLanguage>(
 			),
 		};
 	}
-
-	return {
-		success: true,
-		data: true,
-	};
+	return { success: true, data: true };
 }
 
-function parseLemmaFields<L extends SupportedLanguage>(
-	namespaceLanguage: L,
-	fields: string[],
-	parse: LanguageApi<L>["parse"],
-): ApiResult<Lemma<L>, IdDecodeError> {
-	if (fields.length !== 7 || fields[0] !== "Lemma") {
-		return invalidPayload("CSV row is not a Lemma row");
-	}
-
-	const [
-		,
-		payloadLanguage,
-		lemmaKind,
-		lemmaSubKind,
-		canonicalLemma,
-		meaningInEmojis,
-		inherentFeaturesField,
-	] = fields as [string, string, string, string, string, string, string];
-
-	const languageCheck = assertLanguageForNamespace(
-		namespaceLanguage,
-		payloadLanguage,
+function isNormalizedOpaqueId(value: string) {
+	return (
+		value.length > 0 &&
+		value.trim() === value &&
+		value.normalize("NFC") === value
 	);
-	if (!languageCheck.success) {
-		return languageCheck;
-	}
+}
 
-	const inherentFeatures = parseFeatureSet(inherentFeaturesField);
-	if (!inherentFeatures.success) {
-		return inherentFeatures;
-	}
-
-	const parsed = parse.lemma({
-		language: payloadLanguage,
-		lemmaKind,
-		lemmaSubKind,
-		canonicalLemma,
-		meaningInEmojis,
-		inherentFeatures: inherentFeatures.data,
-	});
-
-	if (!parsed.success) {
-		return invalidPayload(parsed.error.message);
-	}
-
-	return parsed;
+function lemmaIdentityFields<L extends SupportedLanguage>(lemma: Lemma<L>) {
+	return [
+		lemma.language,
+		lemma.canonicalForm,
+		lemma.family,
+		lemma.kind,
+		canonicalJson(lemma.coreFeatures),
+	] as const;
 }
 
 export function entityToReadableCsv<L extends SupportedLanguage>(
 	entity: CsvEntity<L>,
 ): string {
-	const lemmaFields = (lemma: Lemma<L>) => [
-		"Lemma",
-		lemma.language,
-		lemma.lemmaKind,
-		lemma.lemmaSubKind,
-		lemma.canonicalLemma,
-		lemma.meaningInEmojis,
-		formatFeatureSet(lemma.inherentFeatures as Record<string, unknown>),
-	];
-
 	if ("surface" in entity) {
-		const selectionFeatures = entity.selectionFeatures
-			? formatFeatureSet(
-					entity.selectionFeatures as Record<string, unknown>,
-				)
-			: "";
-		return csvRow(
-			selectionFeatures === ""
-				? [
-						"Selection",
-						entity.spelledSelection,
-						...parseCanonicalCsvRowOrThrow(
-							entityToReadableCsv(entity.surface as Surface<L>),
-						),
-					]
-				: [
-						"Selection",
-						entity.spelledSelection,
-						selectionFeatures,
-						...parseCanonicalCsvRowOrThrow(
-							entityToReadableCsv(entity.surface as Surface<L>),
-						),
-					],
-		);
+		return csvRow([
+			"Selection",
+			entity.segmentedSentenceId,
+			entity.clickedSegmentIndex,
+		]);
 	}
-
 	if (!("surfaceKind" in entity)) {
-		return csvRow(lemmaFields(entity));
+		return csvRow(["Lemma", ...lemmaIdentityFields(entity)]);
 	}
 
-	const surfaceFields = [
+	return csvRow([
 		"Surface",
+		entity.language,
 		entity.surfaceKind,
-		entity.normalizedFullSurface,
-	];
+		entity.normalizedSurface,
+		...("inflectionalFeatures" in entity
+			? [canonicalJson(entity.inflectionalFeatures)]
+			: []),
+		canonicalJson(entity.lemma),
+	]);
+}
 
-	const surfaceFeatures = entity.surfaceFeatures
-		? formatFeatureSet(entity.surfaceFeatures as Record<string, unknown>)
-		: "";
-	if (surfaceFeatures !== "") {
-		surfaceFields.push(surfaceFeatures);
+function decodeLemma<L extends SupportedLanguage>(
+	namespaceLanguage: L,
+	parse: IdentityParser<L>,
+	fields: string[],
+): ApiResult<LemmaIdentity<L>, IdDecodeError> {
+	if (fields.length !== 6) {
+		return invalidPayload("CSV row is not a valid Lemma identity");
 	}
-
-	if (entity.surfaceKind === "Inflection") {
-		surfaceFields.push(
-			formatFeatureSet(
-				(entity as unknown as { inflectionalFeatures: unknown })
-					.inflectionalFeatures as Record<string, unknown>,
-			),
-		);
-	}
-
-	return csvRow([...surfaceFields, ...lemmaFields(entity.lemma as Lemma<L>)]);
+	const languageCheck = assertLanguageForNamespace(
+		namespaceLanguage,
+		fields[1] ?? "",
+	);
+	if (!languageCheck.success) return languageCheck;
+	const coreFeatures = parseCanonicalJson(
+		fields[5] ?? "",
+		"Lemma coreFeatures",
+	);
+	if (!coreFeatures.success) return coreFeatures;
+	const parsed = parse.lemma({
+		language: namespaceLanguage,
+		canonicalForm: fields[2] ?? "",
+		family: fields[3] ?? "",
+		kind: fields[4] ?? "",
+		coreFeatures: coreFeatures.data,
+	});
+	return parsed.success
+		? { success: true, data: parsed.data }
+		: invalidPayload(`Lemma identity is invalid: ${parsed.error.message}`);
 }
 
 export function decodeReadableCsv<L extends SupportedLanguage>(
 	namespaceLanguage: L,
-	parse: LanguageApi<L>["parse"],
+	parse: IdentityParser<L>,
 	input: string,
 ): ApiResult<ReadableCsvDecodeSuccess<L>, IdDecodeError> {
 	const parsedRow = parseCsvRow(input, { requireCanonical: true });
-	if (!parsedRow.success) {
-		return parsedRow;
-	}
-
+	if (!parsedRow.success) return parsedRow;
 	const fields = parsedRow.data;
-	if (fields[0] === "Lemma") {
-		const lemma = parseLemmaFields(namespaceLanguage, fields, parse);
-		if (!lemma.success) {
-			return lemma;
-		}
-
-		return {
-			success: true,
-			data: {
-				kind: "Lemma",
-				language: namespaceLanguage,
-				lemma: lemma.data,
-			},
-		};
-	}
 
 	if (fields[0] === "Selection") {
-		if (fields.length < 12) {
+		if (fields.length !== 3 || !isNormalizedOpaqueId(fields[1] ?? "")) {
+			return invalidPayload("CSV row is not a valid Selection identity");
+		}
+		const clickedSegmentIndex = Number(fields[2]);
+		if (!Number.isInteger(clickedSegmentIndex) || clickedSegmentIndex < 0) {
 			return invalidPayload(
-				"Selection CSV rows are missing surface fields",
+				"Selection clickedSegmentIndex must be non-negative",
 			);
 		}
-
-		const hasSelectionFeatures = fields[2] !== "Surface";
-		const surfaceOffset = hasSelectionFeatures ? 3 : 2;
-		const selectionFeaturesField = hasSelectionFeatures
-			? fields[2]
-			: undefined;
-		const surface = decodeReadableCsv(
-			namespaceLanguage,
-			parse,
-			csvRow(fields.slice(surfaceOffset)),
-		);
-		if (!surface.success) {
-			return surface;
-		}
-
-		if (surface.data.kind !== "Surface") {
-			return invalidPayload(
-				"Selection CSV rows must contain a Surface row",
-			);
-		}
-
-		let selectionFeatures: Record<string, unknown> | undefined;
-		if (selectionFeaturesField !== undefined) {
-			const parsedSelectionFeatures = parseMarkedFeatureSet(
-				selectionFeaturesField,
-				"selectionFeatures",
-			);
-			if (!parsedSelectionFeatures.success) {
-				return parsedSelectionFeatures;
-			}
-			if (isSurfaceFeatureSet(parsedSelectionFeatures.data)) {
-				return invalidPayload(
-					"Selection feature bag may only contain selection features",
-				);
-			}
-			selectionFeatures = parsedSelectionFeatures.data;
-		}
-
-		const parsedSelection = parse.selection({
-			language: namespaceLanguage,
-			selectionFeatures,
-			spelledSelection: fields[1],
-			surface: surface.data.surface,
-		});
-		if (!parsedSelection.success) {
-			return invalidPayload(parsedSelection.error.message);
-		}
-
 		return {
 			success: true,
 			data: {
 				kind: "Selection",
 				language: namespaceLanguage,
-				selection: parsedSelection.data,
+				selectionIdentity: {
+					segmentedSentenceId:
+						fields[1] as SelectionIdentity["segmentedSentenceId"],
+					clickedSegmentIndex,
+				},
 			},
 		};
+	}
+
+	if (fields[0] === "Lemma") {
+		const lemma = decodeLemma(namespaceLanguage, parse, fields);
+		return lemma.success
+			? {
+					success: true,
+					data: {
+						kind: "Lemma",
+						language: namespaceLanguage,
+						lemmaIdentity: lemma.data,
+					},
+				}
+			: lemma;
 	}
 
 	if (fields[0] !== "Surface") {
@@ -546,126 +335,67 @@ export function decodeReadableCsv<L extends SupportedLanguage>(
 			"CSV row must start with Lemma, Surface, or Selection",
 		);
 	}
+	const isInflection = fields[2] === "Inflection";
+	if (
+		(!isInflection && fields[2] !== "Citation") ||
+		fields.length !== (isInflection ? 6 : 5)
+	) {
+		return invalidPayload("CSV row is not a valid Surface identity");
+	}
+	const languageCheck = assertLanguageForNamespace(
+		namespaceLanguage,
+		fields[1] ?? "",
+	);
+	if (!languageCheck.success) return languageCheck;
+	const inflectionalFeatures = isInflection
+		? parseCanonicalJson(fields[4] ?? "", "Surface inflectionalFeatures")
+		: undefined;
+	if (inflectionalFeatures && !inflectionalFeatures.success) {
+		return inflectionalFeatures;
+	}
+	const lemma = parseCanonicalJson(
+		fields[isInflection ? 5 : 4] ?? "",
+		"Surface lemma",
+	);
+	if (!lemma.success) return lemma;
 
-	if (fields[1] === "Citation") {
-		if (fields.length !== 10 && fields.length !== 11) {
-			return invalidPayload(
-				"Citation surface CSV rows must contain 10 or 11 fields",
-			);
-		}
-
-		let surfaceFeatures: Record<string, unknown> | undefined;
-		let lemmaOffset = 3;
-		if (fields[3] !== "Lemma") {
-			const parsedSurfaceFeatures = parseMarkedFeatureSet(
-				fields[3] ?? "",
-				"surfaceFeatures",
-			);
-			if (!parsedSurfaceFeatures.success) {
-				return parsedSurfaceFeatures;
-			}
-			if (!isSurfaceFeatureSet(parsedSurfaceFeatures.data)) {
-				return invalidPayload(
-					"Citation surface feature bag may only contain surface features",
-				);
-			}
-			surfaceFeatures = parsedSurfaceFeatures.data;
-			lemmaOffset = 4;
-		}
-
-		const lemma = parseLemmaFields(
-			namespaceLanguage,
-			fields.slice(lemmaOffset),
-			parse,
+	const parsedSurface = parse.surface({
+		language: namespaceLanguage,
+		normalizedSurface: fields[3] ?? "",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
+		surfaceKind: fields[2],
+		surfaceFeatures: null,
+		lemma: lemma.data,
+		...(isInflection
+			? { inflectionalFeatures: inflectionalFeatures?.data }
+			: {}),
+	});
+	if (!parsedSurface.success) {
+		return invalidPayload(
+			`Surface identity is invalid: ${parsedSurface.error.message}`,
 		);
-		if (!lemma.success) {
-			return lemma;
-		}
-
-		const parsed = parse.surface({
-			language: namespaceLanguage,
-			surfaceKind: fields[1],
-			normalizedFullSurface: fields[2],
-			surfaceFeatures,
-			lemma: lemma.data,
-		});
-		if (!parsed.success) {
-			return invalidPayload(parsed.error.message);
-		}
-
-		return {
-			success: true,
-			data: {
-				kind: "Surface",
-				language: namespaceLanguage,
-				surface: parsed.data,
-			},
-		};
 	}
 
-	if (fields[1] === "Inflection") {
-		if (fields.length !== 11 && fields.length !== 12) {
-			return invalidPayload(
-				"Inflection surface CSV rows must contain 11 or 12 fields",
-			);
-		}
+	const canonicalSurface = parsedSurface.data;
+	const surfaceIdentity = {
+		language: namespaceLanguage,
+		surfaceKind: canonicalSurface.surfaceKind,
+		normalizedSurface: canonicalSurface.normalizedSurface,
+		...("inflectionalFeatures" in canonicalSurface
+			? {
+					inflectionalFeatures: canonicalSurface.inflectionalFeatures,
+				}
+			: {}),
+		lemma: canonicalSurface.lemma as Lemma<L>,
+	} as SurfaceIdentity<L>;
 
-		let surfaceFeatures: Record<string, unknown> | undefined;
-		let inflectionalFeaturesField = fields[3] ?? "";
-		let lemmaOffset = 4;
-		if (fields.length === 12) {
-			const parsedSurfaceFeatures = parseMarkedFeatureSet(
-				fields[3] ?? "",
-				"surfaceFeatures",
-			);
-			if (!parsedSurfaceFeatures.success) {
-				return parsedSurfaceFeatures;
-			}
-			if (!isSurfaceFeatureSet(parsedSurfaceFeatures.data)) {
-				return invalidPayload(
-					"Inflection surface feature bag may only contain surface features",
-				);
-			}
-			surfaceFeatures = parsedSurfaceFeatures.data;
-			inflectionalFeaturesField = fields[4] ?? "";
-			lemmaOffset = 5;
-		}
-
-		const inflectionalFeatures = parseFeatureSet(inflectionalFeaturesField);
-		if (!inflectionalFeatures.success) {
-			return inflectionalFeatures;
-		}
-
-		const lemma = parseLemmaFields(
-			namespaceLanguage,
-			fields.slice(lemmaOffset),
-			parse,
-		);
-		if (!lemma.success) {
-			return lemma;
-		}
-
-		const parsed = parse.surface({
+	return {
+		success: true,
+		data: {
+			kind: "Surface",
 			language: namespaceLanguage,
-			surfaceKind: fields[1],
-			normalizedFullSurface: fields[2],
-			surfaceFeatures,
-			inflectionalFeatures: inflectionalFeatures.data,
-			lemma: lemma.data,
-		});
-		if (!parsed.success) {
-			return invalidPayload(parsed.error.message);
-		}
-
-		return {
-			success: true,
-			data: {
-				kind: "Surface",
-				language: namespaceLanguage,
-				surface: parsed.data,
-			},
-		};
-	}
-
-	return invalidPayload("CSV surfaceKind is invalid");
+			surfaceIdentity,
+		},
+	};
 }

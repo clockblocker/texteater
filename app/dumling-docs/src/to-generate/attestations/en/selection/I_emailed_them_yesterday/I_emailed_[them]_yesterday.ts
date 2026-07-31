@@ -1,28 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const themAccPronounSelection = {
-	language: "en",
-	spelledSelection: "them",
+	segmentedSentenceId: "sentence_S3Q0QGiVYsBLGgX7oL" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "them",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "them",
+		normalizedSurface: "them",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Acc",
 			number: "Plur",
+			gender: null,
+			reflex: null,
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "they",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "they",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				person: "3",
 				pronType: "Prs",
+				abbr: null,
+				extPos: null,
+				poss: null,
+				style: null,
 			},
-			meaningInEmojis: "👥",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "PRON">;
 

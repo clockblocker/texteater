@@ -1,27 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const habayitPartialSelection = {
-	language: "he",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "בית",
+	segmentedSentenceId: "sentence_Dt7P81zWbu12j8Oru4" as SegmentedSentenceId,
+	clickedSegmentIndex: 3,
+	surfaceSegmentIndices: [3],
+	attestedSurface: "בית",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "הבית",
+		normalizedSurface: "בית",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			definite: "Def",
+			number: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "בית",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "בית",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				abbr: null,
 			},
-			meaningInEmojis: "🏠",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NOUN">;
 

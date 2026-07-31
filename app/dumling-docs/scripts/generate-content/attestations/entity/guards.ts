@@ -20,11 +20,10 @@ export function isLemma(value: unknown): value is Lemma<SupportedLanguage> {
 	return (
 		isRecord(value) &&
 		isSupportedLanguage(value.language) &&
-		typeof value.canonicalLemma === "string" &&
-		typeof value.lemmaKind === "string" &&
-		typeof value.lemmaSubKind === "string" &&
-		isRecord(value.inherentFeatures) &&
-		typeof value.meaningInEmojis === "string"
+		typeof value.canonicalForm === "string" &&
+		typeof value.family === "string" &&
+		typeof value.kind === "string" &&
+		isRecord(value.coreFeatures)
 	);
 }
 
@@ -32,7 +31,10 @@ export function isSurface(value: unknown): value is Surface<SupportedLanguage> {
 	return (
 		isRecord(value) &&
 		isSupportedLanguage(value.language) &&
-		typeof value.normalizedFullSurface === "string" &&
+		typeof value.normalizedSurface === "string" &&
+		(value.spelling === "Canonical" || value.spelling === "Variant") &&
+		(value.realizationCoverage === "Full" ||
+			value.realizationCoverage === "Partial") &&
 		typeof value.surfaceKind === "string" &&
 		isLemma(value.lemma)
 	);
@@ -43,11 +45,13 @@ export function isSelection(
 ): value is Selection<SupportedLanguage> {
 	return (
 		isRecord(value) &&
-		isSupportedLanguage(value.language) &&
-		typeof value.spelledSelection === "string" &&
-		(!("selectionFeatures" in value) ||
-			value.selectionFeatures === undefined ||
-			isRecord(value.selectionFeatures)) &&
+		typeof value.segmentedSentenceId === "string" &&
+		Number.isInteger(value.clickedSegmentIndex) &&
+		Array.isArray(value.surfaceSegmentIndices) &&
+		value.surfaceSegmentIndices.every(Number.isInteger) &&
+		typeof value.attestedSurface === "string" &&
+		(value.selectedOrthography === "Standard" ||
+			value.selectedOrthography === "Typo") &&
 		isSurface(value.surface)
 	);
 }

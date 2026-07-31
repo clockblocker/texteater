@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const heDeterminerFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		pronType: abstractFeatureAtomSchemas.pronType.extract(["Art", "Int"]),
 	}),
 	inflectional: requireNonEmptyFeatureObject(

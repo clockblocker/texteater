@@ -1,29 +1,39 @@
-import type { Lemma } from "../../src";
-import { makeDumlingIdFor } from "../../src";
+import type { Lemma, Reading } from "../../src";
 import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
 
 export const germanGehenLemma = {
-	canonicalLemma: "gehen",
-	inherentFeatures: {},
+	canonicalForm: "gehen",
+	coreFeatures: {
+		verbType: null,
+		lexicallyReflexive: null,
+		hasSepPrefix: null,
+		hasGovPrep: null,
+	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "walk-as-motion",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"de", "Lexeme", "VERB">;
 
-export const germanGehenLemmaId = makeDumlingIdFor("de", germanGehenLemma);
+export const germanGehenReading = {
+	lemma: germanGehenLemma,
+	emojiDescription: "🚶",
+} satisfies Reading<"de">;
 
 export const deSerializedNotes = [
 	{
-		lemmaEntry: {
-			id: germanGehenLemmaId,
+		lemmaRecord: {
 			lemma: germanGehenLemma,
-			lexicalRelations: {},
 			morphologicalRelations: {},
-			attestedTranslations: ["go", "walk"],
-			attestations: ["Wir gehen nach Hause."],
-			notes: "Move on foot or go somewhere.",
 		},
+		readingEntries: [
+			{
+				reading: germanGehenReading,
+				lexicalRelations: {},
+				attestedTranslations: ["go", "walk"],
+				attestations: ["Wir gehen nach Hause."],
+				notes: "Core motion reading.",
+			},
+		],
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},

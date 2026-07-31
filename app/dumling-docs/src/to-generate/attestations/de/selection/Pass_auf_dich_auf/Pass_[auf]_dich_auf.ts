@@ -1,38 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "auf",
+	segmentedSentenceId: "sentence_jpghSyPUpRZLUZcJk8" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "auf",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "pass auf",
-		surfaceKind: "Inflection",
-		inflectionalFeatures: {
-			mood: "Imp",
-			number: "Sing",
-			person: "2",
-			verbForm: "Fin",
-		},
+		normalizedSurface: "auf",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
+		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "aufpassen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
-				hasGovPrep: "auf",
-				hasSepPrefix: "auf",
+			canonicalForm: "auf",
+			family: "Lexeme",
+			kind: "ADP",
+			coreFeatures: {
+				adpType: "Prep",
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				governedCase: null,
+				partType: null,
 			},
-			meaningInEmojis: "👀",
 		},
+		surfaceFeatures: null,
 	},
-} satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
+} satisfies Selection<"de", "Citation", "Lexeme", "ADP">;
 
 export const attestation = {
 	selection: deSelection,
 	sentenceMarkdown: "Pass [auf] dich auf!",
 	classifierNotes:
-		"The governed preposition token still points to the same verbal surface `pass auf`; encode `auf` only in `lemma.inherentFeatures.hasGovPrep`, not as a standalone ADP and not by expanding `normalizedFullSurface`.",
+		"The governed preposition is a standalone `auf` Surface. It is not a member of the separable verb occurrence `Pass … auf`; future valency may relate it to `aufpassen`.",
 	isVerified: true,
 } as const satisfies AttestedSelection;

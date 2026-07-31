@@ -1,26 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const michtavimNounSelection = {
-	language: "he",
-	spelledSelection: "מכתבים",
+	segmentedSentenceId: "sentence_u_KCbNveYbLr7nx5wN" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "מכתבים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "מכתבים",
+		normalizedSurface: "מכתבים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Plur",
+			definite: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "מכתב",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "מכתב",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				abbr: null,
 			},
-			meaningInEmojis: "✉️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NOUN">;
 

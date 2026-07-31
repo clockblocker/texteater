@@ -3,17 +3,21 @@ import { schemasFor } from "../../src/schema";
 import { makeLexemeSurfaceReference } from "../helpers";
 
 describe("German verb schemas", () => {
-	it("accept supported verb inflectional and inherent features", () => {
+	it("accept supported verb inflectional and core features", () => {
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "de",
-				selectionFeatures: null,
-				spelledSelection: "ging",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "ging",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
 					language: "de",
-					normalizedFullSurface: "ging",
+					normalizedSurface: "ging",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						mood: "Sub",
@@ -30,16 +34,15 @@ describe("German verb schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "de",
-				canonicalLemma: "mitkommen",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "mitkommen",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					hasGovPrep: null,
 					hasSepPrefix: "mit",
 					lexicallyReflexive: null,
 					verbType: null,
 				},
-				meaningInEmojis: "🚶",
 			}).success,
 		).toBe(true);
 	});
@@ -48,38 +51,41 @@ describe("German verb schemas", () => {
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "de",
-				canonicalLemma: "mitkommen",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "mitkommen",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					phrasal: "Yes",
 				},
-				meaningInEmojis: "🚶",
 			}).success,
 		).toBe(false);
 
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "de",
-				canonicalLemma: "sich beeilen",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "sich beeilen",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					reflex: "Yes",
 				},
-				meaningInEmojis: "🏃",
 			}).success,
 		).toBe(false);
 
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "de",
-				spelledSelection: "geht",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "geht",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
 					language: "de",
-					normalizedFullSurface: "geht",
+					normalizedSurface: "geht",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						gender: "Fem",
@@ -95,13 +101,18 @@ describe("German verb schemas", () => {
 
 		expect(
 			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "de",
-				spelledSelection: "geh",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "geh",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
 					language: "de",
-					normalizedFullSurface: "geh",
+					normalizedSurface: "geh",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						mood: "Imp",

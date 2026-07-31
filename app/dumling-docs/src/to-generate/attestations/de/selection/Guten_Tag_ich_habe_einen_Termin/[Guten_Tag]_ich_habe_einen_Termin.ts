@@ -1,23 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection048 = {
-	language: "de",
-	spelledSelection: "Guten Tag",
+	segmentedSentenceId: "sentence_y9gjPQS__rtmCpBSJU" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2],
+	attestedSurface: "Guten Tag",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "Guten Tag",
+		normalizedSurface: "Guten Tag",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "Guten Tag",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {
+			canonicalForm: "Guten Tag",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {
 				discourseFormulaRole: "Greeting",
 			},
-			meaningInEmojis: "👋",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "DiscourseFormula">;
 

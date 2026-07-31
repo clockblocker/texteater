@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const doesAuxSelection = {
-	language: "en",
-	spelledSelection: "Does",
+	segmentedSentenceId: "sentence_U9DwIGzOa8TSiZ73Jt" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Does",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "does",
+		normalizedSurface: "does",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Ind",
@@ -17,12 +26,15 @@ const doesAuxSelection = {
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "do",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "AUX",
-			inherentFeatures: {},
-			meaningInEmojis: "❓",
+			canonicalForm: "do",
+			family: "Lexeme",
+			kind: "AUX",
+			coreFeatures: {
+				abbr: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "AUX">;
 
@@ -30,5 +42,5 @@ export const attestation = {
 	selection: doesAuxSelection,
 	sentenceMarkdown: "[Does] this key open the archive?",
 	classifierNotes:
-		"Sentence-initial Does keeps normalizedFullSurface lowercase while spelledSelection preserves casing.",
+		"Sentence-initial Does keeps normalizedSurface lowercase while clicked Text preserves casing.",
 } as const satisfies AttestedSelection;

@@ -1,23 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const noWorriesFormulaSelection = {
-	language: "en",
-	spelledSelection: "No worries",
+	segmentedSentenceId: "sentence_Lv4D00_mEusniYUwFn" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2],
+	attestedSurface: "No worries",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "no worries",
+		normalizedSurface: "no worries",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "no worries",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {
+			canonicalForm: "no worries",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {
 				discourseFormulaRole: "Acknowledgment",
 			},
-			meaningInEmojis: "🙂",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "DiscourseFormula">;
 

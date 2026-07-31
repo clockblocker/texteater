@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const chasVechalilaIdiomSelection = {
-	language: "he",
-	spelledSelection: "חס וחלילה",
+	segmentedSentenceId: "sentence_kLkHCjxG97aBS-wP8S" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2],
+	attestedSurface: "חס וחלילה",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "חס וחלילה",
+		normalizedSurface: "חס וחלילה",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "חס וחלילה",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "🚫",
+			canonicalForm: "חס וחלילה",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "Idiom">;
 

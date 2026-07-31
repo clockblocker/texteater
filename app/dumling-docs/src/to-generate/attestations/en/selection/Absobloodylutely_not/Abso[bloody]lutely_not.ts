@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const bloodyInfixPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "bloody",
+	segmentedSentenceId: "sentence_Q95_kgXeerF1B4Yyb4" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "bloody",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "bloody",
+		normalizedSurface: "bloody",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "bloody",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Infix",
-			inherentFeatures: {},
-			meaningInEmojis: "💢",
+			canonicalForm: "bloody",
+			family: "Morpheme",
+			kind: "Infix",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Morpheme", "Infix">;
 

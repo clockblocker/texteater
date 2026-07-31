@@ -1,21 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const sawNounSelection = {
-	language: "en",
-	spelledSelection: "saw",
+	segmentedSentenceId: "sentence_a6bVhAD6v9qGLtxgDy" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "saw",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "saw",
+		normalizedSurface: "saw",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "saw",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
-			meaningInEmojis: "🪚",
+			canonicalForm: "saw",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				numForm: null,
+				numType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 

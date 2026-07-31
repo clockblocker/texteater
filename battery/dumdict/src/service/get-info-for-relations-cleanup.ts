@@ -11,14 +11,14 @@ export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Promise<GetInfoForRelationsCleanupResult<L>> {
-	const canonicalLemma = request.canonicalLemma.trim();
-	if (!canonicalLemma) {
-		throw new Error("canonicalLemma is required.");
+	const canonicalForm = request.canonicalForm.trim();
+	if (!canonicalForm) {
+		throw new Error("canonicalForm is required.");
 	}
 
 	const slice = await options.storage.getInfoForRelationsCleanup({
-		canonicalLemma,
+		canonicalForm,
 	});
-	validateRelationsCleanupInfoSlice(options.language, slice, canonicalLemma);
+	validateRelationsCleanupInfoSlice(options.language, slice, canonicalForm);
 	return lookupRelationsCleanupInfo(slice);
 }

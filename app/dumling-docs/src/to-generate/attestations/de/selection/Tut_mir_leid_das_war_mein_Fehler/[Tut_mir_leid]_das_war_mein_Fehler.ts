@@ -1,23 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection049 = {
-	language: "de",
-	spelledSelection: "Tut mir leid",
+	segmentedSentenceId: "sentence_PFqS8WIv2GhhkdX5PY" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2, 4],
+	attestedSurface: "Tut mir leid",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "tut mir leid",
+		normalizedSurface: "tut mir leid",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "tut mir leid",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {
+			canonicalForm: "tut mir leid",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {
 				discourseFormulaRole: "Apology",
 			},
-			meaningInEmojis: "🙇",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "DiscourseFormula">;
 

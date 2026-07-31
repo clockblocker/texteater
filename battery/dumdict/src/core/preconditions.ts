@@ -1,26 +1,29 @@
 import type {
-	PendingLemmaId,
-	PendingLemmaRelation,
+	PendingEntryId,
+	PendingEntryRelation,
+	Reading,
 	StoreRevision,
 } from "../dto";
-import type { DumlingId, SupportedLanguage } from "../dumling";
+import type { Lemma, SupportedLanguage, SurfaceId } from "../dumling";
 
 export type ChangePrecondition<L extends SupportedLanguage> =
 	| { kind: "revisionMatches"; revision: StoreRevision }
-	| { kind: "lemmaExists"; lemmaId: DumlingId<"Lemma", L> }
-	| { kind: "lemmaMissing"; lemmaId: DumlingId<"Lemma", L> }
-	| { kind: "surfaceExists"; surfaceId: DumlingId<"Surface", L> }
-	| { kind: "surfaceMissing"; surfaceId: DumlingId<"Surface", L> }
-	| { kind: "pendingRefExists"; pendingId: PendingLemmaId<L> }
-	| { kind: "pendingRefMissing"; pendingId: PendingLemmaId<L> }
-	| { kind: "pendingRelationExists"; relation: PendingLemmaRelation<L> }
-	| { kind: "pendingRelationMissing"; relation: PendingLemmaRelation<L> }
+	| { kind: "lemmaExists"; lemma: Lemma<L> }
+	| { kind: "lemmaMissing"; lemma: Lemma<L> }
+	| { kind: "readingExists"; reading: Reading<L> }
+	| { kind: "readingMissing"; reading: Reading<L> }
+	| { kind: "surfaceExists"; surfaceId: SurfaceId<L> }
+	| { kind: "surfaceMissing"; surfaceId: SurfaceId<L> }
+	| { kind: "pendingRefExists"; pendingId: PendingEntryId<L> }
+	| { kind: "pendingRefMissing"; pendingId: PendingEntryId<L> }
+	| { kind: "pendingRelationExists"; relation: PendingEntryRelation<L> }
+	| { kind: "pendingRelationMissing"; relation: PendingEntryRelation<L> }
 	| {
 			kind: "pendingRefHasNoIncomingRelations";
-			pendingId: PendingLemmaId<L>;
+			pendingId: PendingEntryId<L>;
 	  }
 	| {
-			kind: "lemmaAttestationMissing";
-			lemmaId: DumlingId<"Lemma", L>;
+			kind: "readingAttestationMissing";
+			reading: Reading<L>;
 			value: string;
 	  };

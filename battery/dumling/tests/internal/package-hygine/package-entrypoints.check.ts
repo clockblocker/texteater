@@ -40,9 +40,9 @@ function run(command: string, args: string[]) {
 }
 
 function filesRecursively(directory: string): string[] {
-	return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-		const path = resolve(directory, entry.name);
-		return entry.isDirectory() ? filesRecursively(path) : [path];
+	return readdirSync(directory, { withFileTypes: true }).flatMap((lemma) => {
+		const path = resolve(directory, lemma.name);
+		return lemma.isDirectory() ? filesRecursively(path) : [path];
 	});
 }
 
@@ -71,18 +71,21 @@ describe("published package entrypoints", () => {
 			if ("newSchema" in schemaModule) throw new Error("newSchema export leaked");
 			if ("descriptorSchemas" in schemaModule) throw new Error("descriptor schemas leaked");
 			const lemma = dumling.de.create.lemma({
-				canonicalLemma: "see",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
-				inherentFeatures: { gender: "Masc" },
-				meaningInEmojis: "🌊",
+				canonicalForm: "see",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: { gender: "Masc" },
 			});
 			const selection = dumling.de.convert.lemma.toSelection(lemma, {
-				spelledSelection: "See",
+				segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"),
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "See",
+				selectedOrthography: "Standard",
 			});
 			const parsed = dumling.de.parse.selection(selection);
 			if (!parsed.success) throw new Error(parsed.error.message);
-			const decoded = dumling.de.id.decode.asSelection(dumling.de.id.encode.asBase64Url(parsed.data));
+			const decoded = dumling.de.id.decode.asSelectionIdentity(dumling.de.id.encode.asBase64Url(parsed.data));
 			if (!decoded.success) throw new Error(decoded.error.message);
 			const staticSchema = schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
 			const dynamicSchema = getSchemaTreeFor("de").entity.Selection.Citation.Lexeme.NOUN();
@@ -91,8 +94,8 @@ describe("published package entrypoints", () => {
 			dynamicSchema.parse(parsed.data);
 			if (schemasFor.de.entity.Selection.Citation.Lexeme.NOUN() !== staticSchema) throw new Error("leaf getter should return the stable schema object");
 			if (getSchemaTreeFor("de") !== schemasFor.de) throw new Error("dynamic schema accessor must return registry object");
-			schemasFor.de.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", lemmaKind: "Lexeme", lemmaSubKind: "NOUN" });
-			abstractSchemas.descriptor.Lemma.parse({ language: "fr", lemmaKind: "Lexeme", lemmaSubKind: "NOUN" });
+			schemasFor.de.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", family: "Lexeme", kind: "NOUN" });
+			abstractSchemas.descriptor.Lemma.parse({ language: "fr", family: "Lexeme", kind: "NOUN" });
 		`;
 
 		run("node", ["--input-type=module", "--eval", runtimeSmokeTest]);
@@ -115,20 +118,23 @@ describe("published package entrypoints", () => {
 					"const rootApi: RootLanguageApi<typeof rootLanguage> = dumling.de;",
 					"void rootApi;",
 					'const lemma: Lemma<"de", "Lexeme", "NOUN"> = dumling.de.create.lemma({',
-					'\tcanonicalLemma: "see",',
-					'\tlemmaKind: "Lexeme",',
-					'\tlemmaSubKind: "NOUN",',
-					"\tinherentFeatures: {},",
-					'\tmeaningInEmojis: "🌊",',
+					'\tcanonicalForm: "see",',
+					'\tfamily: "Lexeme",',
+					'\tkind: "NOUN",',
+					'\tcoreFeatures: { gender: "Masc", hyph: null },',
 					"});",
 					"",
 					'const selection: Selection<"de"> = dumling.de.convert.lemma.toSelection(lemma, {',
-					'\tspelledSelection: "See",',
+					'\tsegmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"),',
+					"\tclickedSegmentIndex: 4,",
+					"\tsurfaceSegmentIndices: [4],",
+					'\tattestedSurface: "See",',
+					'\tselectedOrthography: "Standard",',
 					"});",
 					"const parsed = dumling.de.parse.selection(selection);",
 					"if (!parsed.success) throw new Error(parsed.error.message);",
 					'const dynamicApi = getLanguageApi("de");',
-					"const dynamicSelection = dynamicApi.convert.lemma.toSelection(lemma);",
+					'const dynamicSelection = dynamicApi.convert.lemma.toSelection(lemma, { segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"), clickedSegmentIndex: 4, surfaceSegmentIndices: [4], attestedSurface: "See", selectedOrthography: "Standard" });',
 					'dynamicSelection satisfies Selection<"de">;',
 					"function genericApi<L extends SupportedLanguage>(language: L): LanguageApi<L> {",
 					"\treturn getLanguageApi(language);",
@@ -138,19 +144,18 @@ describe("published package entrypoints", () => {
 					'selectionId satisfies DumlingBase64Url<"de">;',
 					"const selectionDescriptorCsv = dumling.de.describe.asCsv.selection(parsed.data);",
 					'selectionDescriptorCsv satisfies DumlingDescriptorCsv<"de", "Selection">;',
-					"const decoded = dumling.de.id.decode.asSelection(selectionId);",
+					"const decoded = dumling.de.id.decode.asSelectionIdentity(selectionId);",
 					'decoded satisfies ApiResult<Extract<IdDecodeSuccess<"de">, { kind: "Selection" }>, IdDecodeError>;',
 					"if (!decoded.success) throw new Error(decoded.error.message);",
 					'decoded.data satisfies IdDecodeSuccess<"de">;',
 					'const entityValue: EntityValue<"de"> = parsed.data;',
-					'const selectionValue: Selection<"de"> = decoded.data.selection;',
+					"decoded.data.selectionIdentity.clickedSegmentIndex satisfies number;",
 					'const entityForKind: EntityForKind<"de", "Selection"> = parsed.data;',
-					'const selectionOptions: SelectionOptionsFor = { spelledSelection: "See" };',
+					'const selectionOptions: SelectionOptionsFor = { segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"), clickedSegmentIndex: 4, surfaceSegmentIndices: [4], attestedSurface: "See", selectedOrthography: "Standard" };',
 					"declare const parseError: ParseError;",
 					'const parseErrorCode: ParseErrorCode = "InvalidInput";',
 					'const idDecodeErrorCode: IdDecodeErrorCode = "MalformedId";',
 					"void entityValue;",
-					"void selectionValue;",
 					"void entityForKind;",
 					"void selectionOptions;",
 					"void selectionDescriptorCsv;",
@@ -163,15 +168,15 @@ describe("published package entrypoints", () => {
 					"const abstractLemmaSchema: z.ZodType<AbstractLemma<string>> = abstractSchemas.entity.Lemma;",
 					'const deTree = getSchemaTreeFor("de");',
 					"deTree.entity.Selection.Citation.Lexeme.NOUN();",
-					'deTree.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", lemmaKind: "Lexeme", lemmaSubKind: "NOUN" });',
+					'deTree.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", family: "Lexeme", kind: "NOUN" });',
 					"declare const language: SupportedLanguage;",
 					"const languageTree = getSchemaTreeFor(language);",
 					"languageTree.entity.Selection.Citation.Lexeme.NOUN();",
 					"getSchemaTreeFor(language).entity.Selection.Citation.Lexeme.NOUN();",
 					"nounLemmaSchema.parse(lemma);",
 					"nounSelectionSchema.parse(parsed.data);",
-					'nounLemmaDescriptorSchema.parse({ language: "de", lemmaKind: "Lexeme", lemmaSubKind: "NOUN" });',
-					'abstractLemmaSchema.parse({ language: "fr", canonicalLemma: "aller", lemmaKind: "Lexeme", lemmaSubKind: "VERB", inherentFeatures: {}, meaningInEmojis: "🚶" });',
+					'nounLemmaDescriptorSchema.parse({ language: "de", family: "Lexeme", kind: "NOUN" });',
+					'abstractLemmaSchema.parse({ language: "fr", canonicalForm: "aller", family: "Lexeme", kind: "VERB", coreFeatures: {} });',
 					"schemasFor.de.entity.Selection.Citation.Lexeme.NOUN().parse(parsed.data);",
 				].join("\n"),
 			);
@@ -193,18 +198,12 @@ describe("published package entrypoints", () => {
 				),
 			);
 
-			run(
-				resolve(
-					projectRoot,
-					"../../node_modules/typescript/bin/tsc",
-				),
-				[
-					"--project",
-					join(typecheckDir, "tsconfig.json"),
-					"--pretty",
-					"false",
-				],
-			);
+			run(resolve(projectRoot, "../../node_modules/typescript/bin/tsc"), [
+				"--project",
+				join(typecheckDir, "tsconfig.json"),
+				"--pretty",
+				"false",
+			]);
 		} finally {
 			rmSync(typecheckDir, { force: true, recursive: true });
 		}

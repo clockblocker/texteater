@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const shelGenitiveSelection = {
-	language: "he",
-	spelledSelection: "של",
+	segmentedSentenceId: "sentence_C6yDqgF-6HIlEsK2Du" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "של",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "של",
+		normalizedSurface: "של",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "של",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADP",
-			inherentFeatures: {
+			canonicalForm: "של",
+			family: "Lexeme",
+			kind: "ADP",
+			coreFeatures: {
 				case: "Gen",
+				abbr: null,
 			},
-			meaningInEmojis: "🔗",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "ADP">;
 

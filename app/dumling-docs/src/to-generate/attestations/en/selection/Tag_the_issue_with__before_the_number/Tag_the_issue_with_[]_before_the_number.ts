@@ -1,21 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const hashSymbolVariantSelection = {
-	language: "en",
-	spelledSelection: "#",
+	segmentedSentenceId: "sentence_DkaQijcDKxy8FR-q4G" as SegmentedSentenceId,
+	clickedSegmentIndex: 8,
+	surfaceSegmentIndices: [8],
+	attestedSurface: "#",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "#",
+		normalizedSurface: "#",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "number sign",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "SYM",
-			inherentFeatures: {},
-			meaningInEmojis: "#️⃣",
+			canonicalForm: "number sign",
+			family: "Lexeme",
+			kind: "SYM",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "SYM">;
 

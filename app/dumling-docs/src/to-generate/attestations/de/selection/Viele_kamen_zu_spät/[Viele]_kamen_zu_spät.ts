@@ -1,27 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "Viele",
+	segmentedSentenceId: "sentence_X1zBl1fux0yhlEQTul" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Viele",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "viele",
+		normalizedSurface: "viele",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Nom",
 			number: "Plur",
+			gender: null,
+			reflex: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "viel",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "viel",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				pronType: "Ind",
+				extPos: null,
+				foreign: null,
+				person: null,
+				polite: null,
+				poss: null,
 			},
-			meaningInEmojis: "👥",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "PRON">;
 

@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type HeAdpositionFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		case: Extract<AbstractFeatureValue<"case">, "Acc" | "Gen"> | null;
 	};

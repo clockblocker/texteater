@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection044 = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "Hase",
+	segmentedSentenceId: "sentence_aLRJpS_aIYm7x1r1zk" as SegmentedSentenceId,
+	clickedSegmentIndex: 8,
+	surfaceSegmentIndices: [2, 4, 6, 8, 10, 12],
+	attestedSurface: "da liegt der Hase im Pfeffer",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "da liegt der Hase im Pfeffer",
+		normalizedSurface: "da liegt der hase im pfeffer",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "da liegt der Hase im Pfeffer",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "🧩",
+			canonicalForm: "da liegt der Hase im Pfeffer",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "Idiom">;
 

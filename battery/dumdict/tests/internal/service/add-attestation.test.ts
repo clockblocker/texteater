@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import {
 	createDumdictService,
-	englishRunLemmaId,
-	englishWalkEntry,
-	englishWalkLemmaId,
+	englishRunReading,
+	englishWalkLemma,
+	englishWalkReading,
+	englishWalkReadingEntry,
 	enSerializedNotes,
 	getBootedUpDumdict,
 	type StoreRevision,
@@ -11,44 +12,44 @@ import {
 } from "./helpers";
 
 describe("configured service", () => {
-	test("addAttestation appends an attestation to an existing lemma", async () => {
+	test("addAttestation appends an attestation to an existing Reading", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
 		const result = await dict.addAttestation({
-			lemmaId: englishWalkLemmaId,
+			reading: englishWalkReading,
 			attestation: "I walk every morning.",
 		});
 
 		expect(result.status).toBe("applied");
-		expect(storage.loadAll()[0]?.lemmaEntry.attestations).toContain(
+		expect(storage.loadAll()[0]?.readingEntries[0]?.attestations).toContain(
 			"I walk every morning.",
 		);
 	});
 
-	test("addAttestation reports a missing lemma cleanly", async () => {
+	test("addAttestation reports a missing Reading cleanly", async () => {
 		const { dict } = getBootedUpDumdict("en", enSerializedNotes);
 
 		const result = await dict.addAttestation({
-			lemmaId: englishRunLemmaId,
+			reading: englishRunReading,
 			attestation: "They run every day.",
 		});
 
 		expect(result).toMatchObject({
 			status: "rejected",
-			code: "lemmaMissing",
+			code: "readingMissing",
 		});
 	});
 
-	test("addAttestation rejects patch slices for a different lemma", async () => {
+	test("addAttestation rejects patch slices for a different Reading", async () => {
 		let commitCalls = 0;
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredLemmaSenses() {
+			async findStoredReadings() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadLemmaForPatch() {
+			async loadReadingForPatch() {
 				return {
 					revision: "patch-1" as StoreRevision,
-					lemma: englishWalkEntry(),
+					reading: englishWalkReadingEntry(),
 				};
 			},
 			async loadNewNoteContext() {
@@ -63,26 +64,34 @@ describe("configured service", () => {
 
 		await expect(
 			dict.addAttestation({
-				lemmaId: englishRunLemmaId,
+				reading: englishRunReading,
 				attestation: "They run every day.",
 			}),
-		).rejects.toThrow("lemma patch slice");
+		).rejects.toThrow("reading patch slice");
 		expect(commitCalls).toBe(0);
 	});
 
 	test("addAttestation reloads patch context instead of using stale lookup revision", async () => {
 		let committedBaseRevision: StoreRevision | undefined;
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredLemmaSenses() {
+			async findStoredReadings() {
 				return {
 					revision: "lookup-1" as StoreRevision,
-					candidates: [{ entry: englishWalkEntry() }],
+					candidates: [
+						{
+							reading: englishWalkReadingEntry(),
+							lemma: {
+								lemma: englishWalkLemma,
+								morphologicalRelations: {},
+							},
+						},
+					],
 				};
 			},
-			async loadLemmaForPatch() {
+			async loadReadingForPatch() {
 				return {
 					revision: "patch-2" as StoreRevision,
-					lemma: englishWalkEntry(),
+					reading: englishWalkReadingEntry(),
 				};
 			},
 			async loadNewNoteContext() {
@@ -98,16 +107,11 @@ describe("configured service", () => {
 		});
 		const dict = createDumdictService({ language: "en", storage });
 
-		await dict.findStoredLemmaSenses({
-			lemmaDescription: {
-				language: "en",
-				canonicalLemma: "walk",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-			},
+		await dict.findStoredReadings({
+			lemma: englishWalkLemma,
 		});
 		const result = await dict.addAttestation({
-			lemmaId: englishWalkLemmaId,
+			reading: englishWalkReading,
 			attestation: "We walk after dinner.",
 		});
 
@@ -121,13 +125,13 @@ describe("configured service", () => {
 
 	test("addAttestation surfaces storage conflicts as mutation results", async () => {
 		const storage = withUnusedCleanupStorageMethods({
-			async findStoredLemmaSenses() {
+			async findStoredReadings() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadLemmaForPatch() {
+			async loadReadingForPatch() {
 				return {
 					revision: "patch-1" as StoreRevision,
-					lemma: englishWalkEntry(),
+					reading: englishWalkReadingEntry(),
 				};
 			},
 			async loadNewNoteContext() {
@@ -144,7 +148,7 @@ describe("configured service", () => {
 		const dict = createDumdictService({ language: "en", storage });
 
 		const result = await dict.addAttestation({
-			lemmaId: englishWalkLemmaId,
+			reading: englishWalkReading,
 			attestation: "We walk after dinner.",
 		});
 

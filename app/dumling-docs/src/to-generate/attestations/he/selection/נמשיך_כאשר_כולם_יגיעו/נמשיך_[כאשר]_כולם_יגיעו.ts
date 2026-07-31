@@ -1,23 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const kaasherSubordinatorSelection = {
-	language: "he",
-	spelledSelection: "כאשר",
+	segmentedSentenceId: "sentence_iHgiJxJU9sYdCZ0QQL" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "כאשר",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "כאשר",
+		normalizedSurface: "כאשר",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "כאשר",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "SCONJ",
-			inherentFeatures: {
+			canonicalForm: "כאשר",
+			family: "Lexeme",
+			kind: "SCONJ",
+			coreFeatures: {
 				case: "Tem",
 			},
-			meaningInEmojis: "⏱️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "SCONJ">;
 

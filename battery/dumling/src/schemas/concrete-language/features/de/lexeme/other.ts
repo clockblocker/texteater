@@ -7,7 +7,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const deOtherFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		foreign: abstractFeatureAtomSchemas.foreign,
 		hyph: abstractFeatureAtomSchemas.hyph,

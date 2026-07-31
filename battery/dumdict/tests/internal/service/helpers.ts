@@ -3,65 +3,77 @@ import {
 	DumdictLanguageMismatchError,
 	type DumdictStoragePort,
 	type Lemma,
-	type LemmaEntry,
-	makeDumlingIdFor,
+	makeSurfaceId,
+	type ReadingEntry,
 	type StoreRevision,
 	type SurfaceEntry,
 } from "../../../src";
-import { derivePendingLemmaId } from "../../../src/core/pending/identity";
+import { derivePendingEntryId } from "../../../src/core/pending/identity";
 import { getBootedUpDumdict } from "../../../src/testing/boot";
 import {
 	deSerializedNotes,
 	germanGehenLemma,
-	germanGehenLemmaId,
+	germanGehenReading,
 } from "../../fixtures/de-notes";
 import {
+	englishRunDraft,
 	englishRunLemma,
-	englishRunLemmaId,
+	englishRunReading,
+	englishSwimCitationSurface,
+	englishSwimDraft,
 	englishSwimLemma,
-	englishSwimLemmaSurface,
+	englishSwimReading,
 	englishWalkLemma,
-	englishWalkLemmaId,
+	englishWalkReading,
 	enSerializedNotes,
 	enSerializedNotesWithPendingSwimRelation,
-	pendingSwimLemmaId,
+	pendingSwimEntryId,
 } from "../../fixtures/en-notes";
-import { hebrewKatavLemmaId, heSerializedNotes } from "../../fixtures/he-notes";
+import {
+	hebrewKatavLemma,
+	hebrewKatavReading,
+	heSerializedNotes,
+} from "../../fixtures/he-notes";
 
 export type {
 	DumdictStoragePort,
 	Lemma,
-	LemmaEntry,
+	ReadingEntry,
 	StoreRevision,
 	SurfaceEntry,
 };
 export {
 	createDumdictService,
 	DumdictLanguageMismatchError,
-	derivePendingLemmaId,
+	derivePendingEntryId,
 	deSerializedNotes,
+	englishRunDraft,
 	englishRunLemma,
-	englishRunLemmaId,
+	englishRunReading,
+	englishSwimCitationSurface,
+	englishSwimDraft,
 	englishSwimLemma,
-	englishSwimLemmaSurface,
+	englishSwimReading,
 	englishWalkLemma,
-	englishWalkLemmaId,
+	englishWalkReading,
 	enSerializedNotes,
 	enSerializedNotesWithPendingSwimRelation,
 	germanGehenLemma,
-	germanGehenLemmaId,
+	germanGehenReading,
 	getBootedUpDumdict,
-	hebrewKatavLemmaId,
+	hebrewKatavLemma,
+	hebrewKatavReading,
 	heSerializedNotes,
-	makeDumlingIdFor,
-	pendingSwimLemmaId,
+	makeSurfaceId,
+	pendingSwimEntryId,
 };
-export const englishWalkEntry = (): LemmaEntry<"en"> => {
-	const note = enSerializedNotes[0];
-	if (!note) {
+
+export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
+	const reading = enSerializedNotes[0]?.readingEntries[0];
+	if (!reading) {
 		throw new Error("Expected English walk fixture.");
 	}
-	return note.lemmaEntry;
+	return reading;
 };
 
 export function withUnusedCleanupStorageMethods<
@@ -86,10 +98,10 @@ export function withUnusedCleanupStorageMethods<
 export const storageRejectingNewNoteContext = () => {
 	let loadNewNoteContextCalls = 0;
 	const storage = withUnusedCleanupStorageMethods({
-		async findStoredLemmaSenses() {
+		async findStoredReadings() {
 			throw new Error("Unexpected storage call");
 		},
-		async loadLemmaForPatch() {
+		async loadReadingForPatch() {
 			throw new Error("Unexpected storage call");
 		},
 		async loadNewNoteContext() {
@@ -97,10 +109,12 @@ export const storageRejectingNewNoteContext = () => {
 			return {
 				revision: "never" as StoreRevision,
 				existingOwnedSurfaces: [],
-				explicitExistingRelationTargets: [],
+				explicitExistingReadingTargets: [],
+				explicitExistingLemmaTargets: [],
 				existingPendingRefsForProposedPendingTargets: [],
-				matchingPendingRefsForNewLemma: [],
-				incomingPendingRelationsForNewLemma: [],
+				matchingPendingRefsForNewEntry: [],
+				incomingPendingRelationsForNewEntry: [],
+				incomingPendingSourceReadings: [],
 				incomingPendingSourceLemmas: [],
 			};
 		},

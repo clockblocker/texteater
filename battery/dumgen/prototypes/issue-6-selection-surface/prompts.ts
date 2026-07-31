@@ -37,8 +37,8 @@ typo: preserve it and mark spelling Variant. An ordinary corrected typo still
 resolves to spelling Canonical, not Variant. normalizedSurface must contain only
 normalized member material—never the surrounding sentence, punctuation, or
 non-member context. realizationCoverage is Partial only when the attested
-Surface realizes only part of its Lemma, such as a fixed idiom whose other
-lexical constituents are absent.
+Surface realizes only part of its Linguistic Entry, such as a fixed idiom whose
+other lexical constituents are absent from the contextual realization.
 `.trim();
 
 export const MONOLITH_INDICES_PROMPT = `

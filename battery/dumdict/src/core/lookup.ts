@@ -1,25 +1,24 @@
 import type { SupportedLanguage } from "../dumling";
 import type {
-	FindStoredLemmaSensesResult,
+	FindStoredReadingsResult,
 	GetInfoForRelationsCleanupResult,
 } from "../public";
 import type {
 	RelationsCleanupInfoSlice,
-	StoredLemmaSensesSlice,
+	StoredReadingsSlice,
 } from "../storage";
 
-export function lookupStoredLemmaSenses<L extends SupportedLanguage>(
-	slice: StoredLemmaSensesSlice<L>,
-): FindStoredLemmaSensesResult<L> {
+export function lookupStoredReadings<L extends SupportedLanguage>(
+	slice: StoredReadingsSlice<L>,
+): FindStoredReadingsResult<L> {
 	return {
 		revision: slice.revision,
-		candidates: slice.candidates.map(({ entry, relationNotes }) => ({
-			lemmaId: entry.id,
+		candidates: slice.candidates.map(({ reading, relationNotes }) => ({
+			reading: reading.reading,
 			note: {
-				lemma: entry.lemma,
-				attestedTranslations: entry.attestedTranslations,
-				attestations: entry.attestations,
-				notes: entry.notes,
+				attestedTranslations: reading.attestedTranslations,
+				attestations: reading.attestations,
+				notes: reading.notes,
 				relations: relationNotes,
 			},
 		})),
@@ -37,8 +36,8 @@ export function lookupRelationsCleanupInfo<L extends SupportedLanguage>(
 
 	return {
 		revision: slice.revision,
-		canonicalLemma: slice.canonicalLemma,
-		candidateLemmaIds: slice.candidateLemmas.map(({ id }) => id),
+		canonicalForm: slice.canonicalForm,
+		candidateLemmas: slice.candidateLemmas.map(({ lemma }) => lemma),
 		pendingRelations: slice.pendingRelations.map((relation) => {
 			const pendingRef = pendingRefsById.get(relation.targetPendingId);
 			if (!pendingRef) {
@@ -48,10 +47,15 @@ export function lookupRelationsCleanupInfo<L extends SupportedLanguage>(
 			}
 
 			return {
-				sourceLemmaId: relation.sourceLemmaId,
+				relationFamily: relation.relationFamily,
+				...(relation.relationFamily === "lexical"
+					? { sourceReading: relation.sourceReading }
+					: {
+							sourceLemma: relation.sourceLemma,
+						}),
 				pendingRef,
 				relation: relation.relation,
-			};
+			} as GetInfoForRelationsCleanupResult<L>["pendingRelations"][number];
 		}),
 	};
 }

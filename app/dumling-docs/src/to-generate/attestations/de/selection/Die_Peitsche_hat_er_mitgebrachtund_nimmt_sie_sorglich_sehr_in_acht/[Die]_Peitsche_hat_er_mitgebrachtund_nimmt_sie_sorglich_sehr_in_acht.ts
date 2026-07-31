@@ -1,28 +1,47 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "Die",
+	segmentedSentenceId: "sentence_pJroeJAAiSmYPgsKOZ" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Die",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "die",
+		normalizedSurface: "die",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Nom",
 			number: "Sing",
+			degree: null,
+			gender: null,
+			"gender[psor]": null,
+			"number[psor]": null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "der",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "DET",
-			inherentFeatures: {
+			canonicalForm: "der",
+			family: "Lexeme",
+			kind: "DET",
+			coreFeatures: {
 				definite: "Def",
 				pronType: "Art",
+				extPos: null,
+				foreign: null,
+				numType: null,
+				person: null,
+				polite: null,
+				poss: null,
 			},
-			meaningInEmojis: "🧩",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "DET">;
 
@@ -33,6 +52,6 @@ und nimmt sie sorglich sehr in acht.`,
 	classifierNotes:
 		"Sentence-initial Die is the capitalized article form of der, not a pronoun; the determiner surface stays nominative singular here without encoding feminine gender.",
 	classificationMistakes:
-		'Do not mark ordinary sentence-initial capitalization as a spelling variant. For this row, the earlier mistake was `{ selectionFeatures: { spelling: "Variant" } }` even though `Die` is just the standard capitalized attested form at the start of the sentence.',
+		"Do not mark ordinary sentence-initial capitalization as a spelling variant. `Die` is a Standard click on a Canonical Surface.",
 	isVerified: true,
 } as const satisfies AttestedSelection;

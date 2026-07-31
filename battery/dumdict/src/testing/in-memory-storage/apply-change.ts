@@ -1,7 +1,34 @@
+import {
+	lemmaKey,
+	readingKey,
+	sameLemma,
+	sameReading,
+} from "../../core/identity";
 import type { PlannedChangeOp } from "../../core/planned-changes";
+import type { PendingEntryRelation } from "../../dto";
 import type { SupportedLanguage } from "../../dumling";
 import type { DraftStorageState } from "./preconditions";
-import { findDraftNoteByLemmaId } from "./preconditions";
+import {
+	findDraftBundleByLemma,
+	findDraftBundleByReading,
+} from "./preconditions";
+
+function sourceKeyFor<L extends SupportedLanguage>(
+	relation: PendingEntryRelation<L>,
+) {
+	return relation.relationFamily === "lexical"
+		? readingKey(relation.sourceReading)
+		: lemmaKey(relation.sourceLemma);
+}
+
+function bundleForPendingRelation<L extends SupportedLanguage>(
+	draft: DraftStorageState<L>,
+	relation: PendingEntryRelation<L>,
+) {
+	return relation.relationFamily === "lexical"
+		? findDraftBundleByReading(draft, relation.sourceReading)
+		: findDraftBundleByLemma(draft, relation.sourceLemma);
+}
 
 export function applyChange<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
@@ -10,49 +37,55 @@ export function applyChange<L extends SupportedLanguage>(
 	switch (change.type) {
 		case "createLemma":
 			draft.draftNotes.push({
-				lemmaEntry: structuredClone(change.entry),
+				lemmaRecord: structuredClone(change.record),
+				readingEntries: [],
 				ownedSurfaceEntries: [],
 				pendingRelations: [],
 			});
 			return true;
-		case "createOwnedSurface": {
-			const storedNote = findDraftNoteByLemmaId(
+		case "createReading": {
+			const bundle = findDraftBundleByLemma(
 				draft,
-				change.entry.ownerLemmaId,
+				change.entry.reading.lemma,
 			);
-			if (!storedNote) {
+			if (!bundle) {
 				return false;
 			}
-			storedNote.ownedSurfaceEntries.push(structuredClone(change.entry));
+			bundle.readingEntries.push(structuredClone(change.entry));
+			return true;
+		}
+		case "createOwnedSurface": {
+			const bundle = findDraftBundleByLemma(
+				draft,
+				change.entry.ownerLemma,
+			);
+			if (!bundle) {
+				return false;
+			}
+			bundle.ownedSurfaceEntries.push(structuredClone(change.entry));
 			return true;
 		}
 		case "createPendingRef":
 			draft.draftPendingRefs?.push(structuredClone(change.ref));
 			return true;
 		case "createPendingRelation": {
-			const storedNote = findDraftNoteByLemmaId(
-				draft,
-				change.relation.sourceLemmaId,
-			);
-			if (!storedNote) {
+			const bundle = bundleForPendingRelation(draft, change.relation);
+			if (!bundle) {
 				return false;
 			}
-			storedNote.pendingRelations.push(structuredClone(change.relation));
+			bundle.pendingRelations.push(structuredClone(change.relation));
 			return true;
 		}
 		case "deletePendingRelation": {
-			const storedNote = findDraftNoteByLemmaId(
-				draft,
-				change.relation.sourceLemmaId,
-			);
-			if (!storedNote) {
+			const bundle = bundleForPendingRelation(draft, change.relation);
+			if (!bundle) {
 				return false;
 			}
-			storedNote.pendingRelations = storedNote.pendingRelations.filter(
+			bundle.pendingRelations = bundle.pendingRelations.filter(
 				(relation) =>
 					!(
-						relation.sourceLemmaId ===
-							change.relation.sourceLemmaId &&
+						sourceKeyFor(relation) ===
+							sourceKeyFor(change.relation) &&
 						relation.relationFamily ===
 							change.relation.relationFamily &&
 						relation.relation === change.relation.relation &&
@@ -72,45 +105,64 @@ export function applyChange<L extends SupportedLanguage>(
 			}
 			return true;
 		}
+		case "patchReading":
+			return applyReadingPatch(draft, change);
 		case "patchLemma":
 			return applyLemmaPatch(draft, change);
 	}
+}
+
+function applyReadingPatch<L extends SupportedLanguage>(
+	draft: DraftStorageState<L>,
+	change: Extract<PlannedChangeOp<L>, { type: "patchReading" }>,
+) {
+	const bundle = findDraftBundleByReading(draft, change.reading);
+	const reading = bundle?.readingEntries.find((entry) =>
+		sameReading(entry.reading, change.reading),
+	);
+	if (!reading) {
+		return false;
+	}
+
+	for (const op of change.ops) {
+		if (op.kind === "addAttestation") {
+			reading.attestations.push(op.value);
+		} else {
+			const existingTargets = reading.lexicalRelations[op.relation] ?? [];
+			if (
+				!existingTargets.some((target) =>
+					sameReading(target, op.targetReading),
+				)
+			) {
+				reading.lexicalRelations[op.relation] = [
+					...existingTargets,
+					op.targetReading,
+				];
+			}
+		}
+	}
+	return true;
 }
 
 function applyLemmaPatch<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	change: Extract<PlannedChangeOp<L>, { type: "patchLemma" }>,
 ) {
-	const storedNote = findDraftNoteByLemmaId(draft, change.lemmaId);
-	if (!storedNote) {
+	const record = findDraftBundleByLemma(draft, change.lemma)?.lemmaRecord;
+	if (!record) {
 		return false;
 	}
-
 	for (const op of change.ops) {
-		if (op.kind === "addAttestation") {
-			storedNote.lemmaEntry.attestations.push(op.value);
-		}
-		if (op.kind === "addRelation") {
-			if (op.family === "lexical") {
-				const existingTargets =
-					storedNote.lemmaEntry.lexicalRelations[op.relation] ?? [];
-				if (!existingTargets.includes(op.targetLemmaId)) {
-					storedNote.lemmaEntry.lexicalRelations[op.relation] = [
-						...existingTargets,
-						op.targetLemmaId,
-					];
-				}
-			} else {
-				const existingTargets =
-					storedNote.lemmaEntry.morphologicalRelations[op.relation] ??
-					[];
-				if (!existingTargets.includes(op.targetLemmaId)) {
-					storedNote.lemmaEntry.morphologicalRelations[op.relation] =
-						[...existingTargets, op.targetLemmaId];
-				}
-			}
+		const existingTargets =
+			record.morphologicalRelations[op.relation] ?? [];
+		if (
+			!existingTargets.some((target) => sameLemma(target, op.targetLemma))
+		) {
+			record.morphologicalRelations[op.relation] = [
+				...existingTargets,
+				op.targetLemma,
+			];
 		}
 	}
-
 	return true;
 }

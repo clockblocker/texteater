@@ -3,6 +3,6 @@ import type { DeCliticMorphemeFeatures } from "../../../../../types/concrete-lan
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deCliticMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeCliticMorphemeFeatures>;

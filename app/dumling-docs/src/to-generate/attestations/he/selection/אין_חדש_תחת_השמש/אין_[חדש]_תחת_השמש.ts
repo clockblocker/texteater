@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const einChadashTachatSelection = {
-	language: "he",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "חדש",
+	segmentedSentenceId: "sentence_hcaAWFc90sl1C2DMuC" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [0, 2, 4, 6],
+	attestedSurface: "אין חדש תחת השמש",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "אין חדש תחת השמש",
+		normalizedSurface: "אין חדש תחת השמש",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "אין חדש תחת השמש",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Proverb",
-			inherentFeatures: {},
-			meaningInEmojis: "☀️",
+			canonicalForm: "אין חדש תחת השמש",
+			family: "Phraseme",
+			kind: "Proverb",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "Proverb">;
 

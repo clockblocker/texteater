@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const bioRootPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "bio",
+	segmentedSentenceId: "sentence_yyuSvaqjy9k_uaYxhC" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "bio",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "bio",
+		normalizedSurface: "bio",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "bio",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Root",
-			inherentFeatures: {},
-			meaningInEmojis: "🧬",
+			canonicalForm: "bio",
+			family: "Morpheme",
+			kind: "Root",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Morpheme", "Root">;
 

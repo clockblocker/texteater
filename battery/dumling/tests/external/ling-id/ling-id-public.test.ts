@@ -1,166 +1,152 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../../src";
 import {
-	englishGiveUpTypoPartialGvaeSelection,
-	englishGiveUpTypoPartialUpSelection,
+	englishGiveUpClickedGvaeSelection,
+	englishGiveUpClickedUpSelection,
 	englishWalkInflectionSurface,
 	englishWalkLemma,
 	englishWalkStandardFullSelection,
 	germanMasculineSeeLemma,
 } from "../../helpers";
 
-describe("ID helpers", () => {
-	it("encodes and decodes readable CSV and base64url IDs", () => {
+describe("identity IDs", () => {
+	it("encodes only the identity key for each layer", () => {
 		const lemmaCsv = dumling.en.id.encode.asCsv(englishWalkLemma);
-		const surfaceId = dumling.en.id.encode.asBase64Url(
+		const surfaceCsv = dumling.en.id.encode.asCsv(
 			englishWalkInflectionSurface,
 		);
 		const selectionCsv = dumling.en.id.encode.asCsv(
 			englishWalkStandardFullSelection,
 		);
+
+		expect(String(lemmaCsv)).toStartWith("Lemma,en,walk,Lexeme,VERB,");
+		expect(String(lemmaCsv)).toContain("phrasal");
+		expect(String(surfaceCsv)).toStartWith("Surface,en,Inflection,walk,");
+		expect(String(surfaceCsv)).toContain("canonicalForm");
+		expect(String(selectionCsv)).toBe(
+			"Selection,test:en:they-walk-home-together:v1,2",
+		);
+	});
+
+	it("decodes identity keys rather than pretending to hydrate DTO graphs", () => {
+		const lemmaIdentityEncoding =
+			dumling.en.id.encode.asBase64Url(englishWalkLemma);
+		const surfaceId = dumling.en.id.encode.asBase64Url(
+			englishWalkInflectionSurface,
+		);
 		const selectionId = dumling.en.id.encode.asBase64Url(
 			englishWalkStandardFullSelection,
 		);
 
-		expect(String(lemmaCsv)).toBe("Lemma,en,Lexeme,VERB,walk,🚶,");
-		expect(surfaceId).not.toStartWith("dumling:");
-		expect(String(selectionCsv)).toBe(
-			"Selection,walk,Surface,Inflection,walk,tense=Pres|verbForm=Fin,Lemma,en,Lexeme,VERB,walk,🚶,",
-		);
-		expect(selectionId).not.toBe(
-			dumling.en.id.encode.asBase64Url(
-				englishWalkStandardFullSelection.surface,
-			),
-		);
-
-		expect(dumling.en.id.decode.asLemma(lemmaCsv)).toEqual({
+		expect(
+			dumling.en.id.decode.asLemmaIdentity(lemmaIdentityEncoding),
+		).toEqual({
 			success: true,
 			data: {
-				format: "csv",
+				format: "base64url",
 				language: "en",
 				kind: "Lemma",
-				lemma: englishWalkLemma,
+				lemmaIdentityEncodingentity: englishWalkLemma,
 			},
 		});
-		expect(dumling.en.id.decode.asSurface(surfaceId)).toEqual({
+		expect(dumling.en.id.decode.asSurfaceIdentity(surfaceId)).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "en",
 				kind: "Surface",
-				surface: englishWalkInflectionSurface,
+				surfaceIdentity: {
+					language: "en",
+					surfaceKind: "Inflection",
+					normalizedSurface: "walk",
+					inflectionalFeatures:
+						englishWalkInflectionSurface.inflectionalFeatures,
+					lemma: englishWalkLemma,
+				},
 			},
 		});
-		expect(dumling.en.id.decode.asSelection(selectionId)).toEqual({
+		expect(dumling.en.id.decode.asSelectionIdentity(selectionId)).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "en",
 				kind: "Selection",
-				selection: englishWalkStandardFullSelection,
+				selectionIdentity: {
+					segmentedSentenceId:
+						englishWalkStandardFullSelection.segmentedSentenceId,
+					clickedSegmentIndex: 2,
+				},
 			},
 		});
 	});
 
-	it("returns structured errors for malformed ids and language mismatch", () => {
-		const malformed = dumling.en.id.decode.any("not-a-dumling-id");
-		const germanLemmaId = dumling.de.id.encode.asBase64Url(
-			germanMasculineSeeLemma,
+	it("keeps two clicks in one sentence distinct", () => {
+		const upSelectionId = dumling.en.id.encode.asBase64Url(
+			englishGiveUpClickedUpSelection,
 		);
-		const mismatch = dumling.en.id.decode.any(germanLemmaId);
+		const gvaeSelectionId = dumling.en.id.encode.asBase64Url(
+			englishGiveUpClickedGvaeSelection,
+		);
 
-		expect(malformed.success).toBe(false);
-		if (malformed.success) {
-			throw new Error("expected malformed ID failure");
-		}
-		expect(malformed.error.code).toBe("MalformedId");
-		expect(mismatch).toEqual({
-			success: false,
-			error: {
-				code: "LanguageMismatch",
-				message: "Expected ID for en, received de",
-			},
-		});
+		expect(upSelectionId).not.toBe(gvaeSelectionId);
+		expect(upSelectionId).not.toBe(
+			dumling.en.id.encode.asBase64Url(
+				englishGiveUpClickedUpSelection.surface,
+			),
+		);
 	});
 
-	it("returns entity mismatch for kind-specific decode requests", () => {
+	it("excludes Surface metadata but includes grammar and Lemma identity", () => {
+		const baseline = dumling.en.id.encode.asCsv(
+			englishWalkInflectionSurface,
+		);
+		const metadataOnly = dumling.en.id.encode.asCsv({
+			...englishWalkInflectionSurface,
+			spelling: "Variant",
+			realizationCoverage: "Partial",
+			surfaceFeatures: { historicalStatus: "Archaic" },
+		});
+		const differentInflection = dumling.en.id.encode.asCsv({
+			...englishWalkInflectionSurface,
+			inflectionalFeatures: {
+				...englishWalkInflectionSurface.inflectionalFeatures,
+				tense: "Past",
+			},
+		});
+		const differentLemma = dumling.en.id.encode.asCsv({
+			...englishWalkInflectionSurface,
+			lemma: {
+				...englishWalkLemma,
+				canonicalForm: "stroll",
+			},
+		});
+
+		expect(metadataOnly).toBe(baseline);
+		expect(differentInflection).not.toBe(baseline);
+		expect(differentLemma).not.toBe(baseline);
+	});
+
+	it("returns structured kind and language mismatches", () => {
 		const selectionId = dumling.en.id.encode.asBase64Url(
 			englishWalkStandardFullSelection,
 		);
+		const germanLemmaIdentityEncoding = dumling.de.id.encode.asBase64Url(
+			germanMasculineSeeLemma,
+		);
 
-		expect(dumling.en.id.decode.asLemma(selectionId)).toEqual({
+		expect(dumling.en.id.decode.asLemmaIdentity(selectionId)).toEqual({
 			success: false,
 			error: {
 				code: "EntityMismatch",
 				message: "Expected Lemma, received Selection",
 			},
 		});
-		expect(dumling.en.id.decode.asSurface(selectionId)).toEqual({
+		expect(dumling.en.id.decode.any(germanLemmaIdentityEncoding)).toEqual({
 			success: false,
 			error: {
-				code: "EntityMismatch",
-				message: "Expected Surface, received Selection",
+				code: "LanguageMismatch",
+				message: "Expected ID for en, received de",
 			},
 		});
-	});
-
-	it("encodes selections as their own identity", () => {
-		const upSelectionId = dumling.en.id.encode.asBase64Url(
-			englishGiveUpTypoPartialUpSelection,
-		);
-		const gvaeSelectionId = dumling.en.id.encode.asBase64Url(
-			englishGiveUpTypoPartialGvaeSelection,
-		);
-
-		expect(upSelectionId).not.toBe(gvaeSelectionId);
-		expect(upSelectionId).not.toBe(
-			dumling.en.id.encode.asBase64Url(
-				englishGiveUpTypoPartialUpSelection.surface,
-			),
-		);
-	});
-
-	it("scopes spelling metadata to the clicked selection", () => {
-		expect(englishGiveUpTypoPartialUpSelection.selectionFeatures).toEqual({
-			coverage: "Partial",
-			orthography: null,
-			spelling: null,
-		});
-		expect(englishGiveUpTypoPartialGvaeSelection.selectionFeatures).toEqual({
-			coverage: "Partial",
-			orthography: "Typo",
-			spelling: null,
-		});
-	});
-
-	it("preserves selection spelling metadata in IDs", () => {
-		const canonicalId = dumling.en.id.encode.asBase64Url(
-			englishWalkStandardFullSelection,
-		);
-		const variantId = dumling.en.id.encode.asBase64Url({
-			...englishWalkStandardFullSelection,
-			selectionFeatures: {
-				spelling: "Variant",
-				coverage: null,
-				orthography: null,
-			},
-		});
-
-		expect(canonicalId).not.toBe(variantId);
-	});
-
-	it("accepts parser-normalizable text casing in readable CSV", () => {
-		const decoded = dumling.en.id.decode.asSurface(
-			"Surface,Inflection,WALKED,tense=Past|verbForm=Fin,Lemma,en,Lexeme,VERB,WALK,🚶,",
-		);
-
-		expect(decoded.success).toBe(true);
-		if (!decoded.success) {
-			throw new Error(decoded.error.message);
-		}
-		expect(decoded.data.surface.normalizedFullSurface).toBe("walked");
-		expect(dumling.en.id.encode.asCsv(decoded.data.surface)).toContain(
-			",walked,",
-		);
 	});
 });

@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type EnDeterminerFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		definite: Extract<
 			AbstractFeatureValue<"definite">,

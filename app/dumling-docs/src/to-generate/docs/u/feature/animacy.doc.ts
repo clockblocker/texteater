@@ -12,7 +12,7 @@ const document = defineUniversalConceptPage({
 
 It is a [UD-compliant](https://universaldependencies.org/u/feat/Animacy.html) feature with four public values.
 
-In dumling, it usually belongs in \`lemma.inherentFeatures\` for nouns and pronouns whose lexical entry carries animacy. In languages where animacy is also expressed through agreement, the same feature may also surface in \`surface.inflectionalFeatures\`.
+In dumling, it usually belongs in \`Lemma.coreFeatures\` for nouns and pronouns whose Lemma carries animacy. In languages where animacy is also expressed through agreement, the same feature may also surface in \`surface.inflectionalFeatures\`.
 
 ## Values
 
@@ -21,7 +21,7 @@ In dumling, it usually belongs in \`lemma.inherentFeatures\` for nouns and prono
 - \`Inan\`: inanimate
 - \`Nhum\`: non-human
 
-If \`animacy\` is absent or \`undefined\`, no animacy value is being asserted for that lemma or surface.
+If \`animacy\` is absent or \`undefined\`, no animacy value is being asserted for that Lemma or surface.
 `,
 	subsections: [
 		{

@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type EnAdjectiveFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		extPos: Extract<
 			AbstractFeatureValue<"extPos">,

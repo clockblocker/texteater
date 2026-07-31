@@ -1,24 +1,32 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const seeYouLaterFormulaPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "See",
+	segmentedSentenceId: "sentence_Gjlc4dcMniQi7bbArN" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2, 4],
+	attestedSurface: "See you later",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "see you later",
+		normalizedSurface: "see you later",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "see you later",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {
+			canonicalForm: "see you later",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {
 				discourseFormulaRole: "Farewell",
 			},
-			meaningInEmojis: "👋",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "DiscourseFormula">;
 

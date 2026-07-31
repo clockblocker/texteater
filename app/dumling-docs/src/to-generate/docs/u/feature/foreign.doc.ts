@@ -11,13 +11,13 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Foreign\` marks that a [\`Lemma\`](/u/entity/lemma/) is a genuinely foreign word appearing inside otherwise native text.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Foreign.html) feature with one public value and belongs in \`lemma.inherentFeatures\`.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Foreign.html) feature with one public value and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
-- \`Yes\`: the lemma is marked as foreign
+- \`Yes\`: the Lemma is marked as foreign
 
-If \`lemma.inherentFeatures.foreign\` is absent or \`undefined\`, the lemma is treated as not marked foreign.
+If \`Lemma.coreFeatures.foreign\` is absent or \`undefined\`, the Lemma is treated as not marked foreign.
 `,
 	examples: [covidishForeignWord],
 	subsections: [
@@ -26,7 +26,7 @@ If \`lemma.inherentFeatures.foreign\` is absent or \`undefined\`, the lemma is t
 			body: `
 Use \`foreign: "Yes"\` when the item is analyzed as a foreign insertion or code-switched word, not as an ordinary established loanword of the matrix language.
 
-Do not use \`Foreign\` just because a lemma has unusual spelling or refers to a foreign person, place, or institution. The feature is for genuinely foreign material embedded in otherwise native text.
+Do not use \`Foreign\` just because a Lemma has unusual spelling or refers to a foreign person, place, or institution. The feature is for genuinely foreign material embedded in otherwise native text.
 
 UD often uses \`Foreign=Yes\` on [\`X\`](/u/entity/lemma/lexeme/x/) when the foreign token is hard to classify internally, but it can also be used on other lexical categories when the original part of speech is known and worth preserving.
 `,

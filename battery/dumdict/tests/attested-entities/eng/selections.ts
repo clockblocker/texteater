@@ -1,167 +1,197 @@
-import type { Selection } from "../../../src";
+import { dumling, type Selection } from "../../../src";
 import {
-	englishBankFinancialResolvedLemmaSurface,
-	englishBankRiverResolvedLemmaSurface,
-	englishGiveUpTypoUnresolvedInflectionSurface,
-	englishLightIlluminationResolvedLemmaSurface,
-	englishLightWeightResolvedLemmaSurface,
-	englishLookResolvedLemmaSurface,
-	englishLookUpResolvedLemmaSurface,
-	englishPlantFactoryResolvedLemmaSurface,
-	englishPlantOrganismResolvedLemmaSurface,
-	englishRakeToolResolvedLemmaSurface,
-	englishSpringCoilResolvedLemmaSurface,
-	englishSpringSeasonResolvedLemmaSurface,
-	englishWalkResolvedLemmaSurface,
-	englishWalkUnresolvedInflectionSurface,
+	englishBankFinancialCitationSurface,
+	englishBankRiverCitationSurface,
+	englishGiveUpPastFiniteInflectionSurface,
+	englishLightIlluminationCitationSurface,
+	englishLightWeightCitationSurface,
+	englishLookCitationSurface,
+	englishLookUpCitationSurface,
+	englishPlantFactoryCitationSurface,
+	englishPlantOrganismCitationSurface,
+	englishRakeToolCitationSurface,
+	englishSpringCoilCitationSurface,
+	englishSpringSeasonCitationSurface,
+	englishWalkAttestedInflectionSurface,
+	englishWalkCitationSurface,
 } from "./surfaces";
 
 // Attestation: "They [walk] home together."
 export const englishWalkStandardFullSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "walk",
-	spellingRelation: "Canonical",
-	surface: englishWalkUnresolvedInflectionSurface,
-} satisfies Selection<"en", "Standard", "Inflection", "Lexeme", "VERB">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishWalkStandardFullSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "walk",
+	surface: englishWalkAttestedInflectionSurface,
+} satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
-export const englishWalkResolvedLemmaSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "walk",
-	spellingRelation: "Canonical",
-	surface: englishWalkResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "VERB">;
+export const englishWalkCitationSelection = {
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishWalkCitationSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "walk",
+	surface: englishWalkCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
-export const englishGiveUpTypoPartialUpSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Partial",
-	spelledSelection: "up",
-	spellingRelation: "Canonical",
-	surface: englishGiveUpTypoUnresolvedInflectionSurface,
-} satisfies Selection<"en", "Standard", "Inflection", "Lexeme", "VERB">;
+export const englishGiveUpClickedUpSelection = {
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:mark-gvae-up-on-it",
+	),
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [2, 4],
+	selectedOrthography: "Standard",
+	attestedSurface: "gvae up",
+	surface: englishGiveUpPastFiniteInflectionSurface,
+} satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "Mark [gvae] up on it."
-export const englishGiveUpTypoPartialGvaeSelection = {
-	language: "en",
-	orthographicStatus: "Typo",
-	selectionCoverage: "Partial",
-	spelledSelection: "gvae",
-	spellingRelation: "Canonical",
-	surface: englishGiveUpTypoUnresolvedInflectionSurface,
-} satisfies Selection<"en", "Typo", "Inflection", "Lexeme", "VERB">;
+export const englishGiveUpClickedGvaeSelection = {
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:mark-gvae-up-on-it",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2, 4],
+	selectedOrthography: "Typo",
+	attestedSurface: "gvae up",
+	surface: englishGiveUpPastFiniteInflectionSurface,
+} satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
 export const englishBankFinancialSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "bank",
-	spellingRelation: "Canonical",
-	surface: englishBankFinancialResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishBankFinancialSelection",
+	),
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	selectedOrthography: "Standard",
+	attestedSurface: "bank",
+	surface: englishBankFinancialCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
 export const englishBankRiverSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "bank",
-	spellingRelation: "Canonical",
-	surface: englishBankRiverResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishBankRiverSelection",
+	),
+	clickedSegmentIndex: 10,
+	surfaceSegmentIndices: [10],
+	selectedOrthography: "Standard",
+	attestedSurface: "bank",
+	surface: englishBankRiverCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
 export const englishPlantOrganismSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "plant",
-	spellingRelation: "Canonical",
-	surface: englishPlantOrganismResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishPlantOrganismSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "plant",
+	surface: englishPlantOrganismCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
 export const englishPlantFactorySelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "plant",
-	spellingRelation: "Canonical",
-	surface: englishPlantFactoryResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishPlantFactorySelection",
+	),
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	selectedOrthography: "Standard",
+	attestedSurface: "plant",
+	surface: englishPlantFactoryCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
 export const englishLightIlluminationSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "light",
-	spellingRelation: "Canonical",
-	surface: englishLightIlluminationResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishLightIlluminationSelection",
+	),
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	selectedOrthography: "Standard",
+	attestedSurface: "light",
+	surface: englishLightIlluminationCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
 export const englishLightWeightSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "light",
-	spellingRelation: "Canonical",
-	surface: englishLightWeightResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "ADJ">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishLightWeightSelection",
+	),
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	selectedOrthography: "Standard",
+	attestedSurface: "light",
+	surface: englishLightWeightCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
 export const englishSpringSeasonSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "spring",
-	spellingRelation: "Canonical",
-	surface: englishSpringSeasonResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishSpringSeasonSelection",
+	),
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	selectedOrthography: "Standard",
+	attestedSurface: "spring",
+	surface: englishSpringSeasonCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
 export const englishSpringCoilSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "spring",
-	spellingRelation: "Canonical",
-	surface: englishSpringCoilResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishSpringCoilSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "spring",
+	surface: englishSpringCoilCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
 export const englishRakeToolSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "rake",
-	spellingRelation: "Canonical",
-	surface: englishRakeToolResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "NOUN">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishRakeToolSelection",
+	),
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	selectedOrthography: "Standard",
+	attestedSurface: "rake",
+	surface: englishRakeToolCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "They [look up] every unknown word."
 export const englishLookUpSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "look up",
-	spellingRelation: "Canonical",
-	surface: englishLookUpResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "VERB">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishLookUpSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2, 4],
+	selectedOrthography: "Standard",
+	attestedSurface: "look up",
+	surface: englishLookUpCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
 export const englishLookSelection = {
-	language: "en",
-	orthographicStatus: "Standard",
-	selectionCoverage: "Full",
-	spelledSelection: "look",
-	spellingRelation: "Canonical",
-	surface: englishLookResolvedLemmaSurface,
-} satisfies Selection<"en", "Standard", "Lemma", "Lexeme", "VERB">;
+	segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+		"test:englishLookSelection",
+	),
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+	attestedSurface: "look",
+	surface: englishLookCitationSurface,
+} satisfies Selection<"en", "Citation", "Lexeme", "VERB">;

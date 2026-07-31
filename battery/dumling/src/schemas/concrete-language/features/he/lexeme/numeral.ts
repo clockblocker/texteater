@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const heNumeralFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: requireNonEmptyFeatureObject(
 		buildOptionalFeatureObjectSchema({
 			definite: abstractFeatureAtomSchemas.definite.extract([

@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const dePunctuationFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		punctType: abstractFeatureAtomSchemas.punctType,
 	}),
 	inflectional: buildOptionalFeatureObjectSchema({}),

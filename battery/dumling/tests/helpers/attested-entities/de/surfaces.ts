@@ -4,7 +4,9 @@ import { germanHausLemma } from "./lemmas";
 // Attestation: "Das [Haus] steht leer."
 export const germanHausCitationSurface = {
 	language: "de",
-	normalizedFullSurface: "Haus",
+	normalizedSurface: "Haus",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: germanHausLemma,
 

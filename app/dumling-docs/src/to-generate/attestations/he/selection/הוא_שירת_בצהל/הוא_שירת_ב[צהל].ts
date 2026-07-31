@@ -1,24 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const tzahalAbbrevSelection = {
-	language: "he",
-	spelledSelection: 'צה"ל',
+	segmentedSentenceId: "sentence_5IDe6wmVYfPz_Rzb4s" as SegmentedSentenceId,
+	clickedSegmentIndex: 5,
+	surfaceSegmentIndices: [5],
+	attestedSurface: 'צה"ל',
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: 'צה"ל',
+		normalizedSurface: 'צה"ל',
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: 'צה"ל',
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PROPN",
-			inherentFeatures: {
+			canonicalForm: 'צה"ל',
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures: {
 				abbr: "Yes",
 				gender: "Masc",
 			},
-			meaningInEmojis: "🪖",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "PROPN">;
 

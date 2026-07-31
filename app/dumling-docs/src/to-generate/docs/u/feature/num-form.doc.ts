@@ -12,7 +12,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`NumForm\` marks the written form used by a numeral or number-related [\`Lemma\`](/u/entity/lemma/).
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/NumForm.html) feature with four public values and belongs in \`lemma.inherentFeatures\`.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/NumForm.html) feature with four public values and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
@@ -21,16 +21,16 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/NumForm.html) fe
 - \`Roman\`: Roman numeral form
 - \`Word\`: fully worded numeral form
 
-If \`lemma.inherentFeatures.numForm\` is absent or \`undefined\`, the lemma has no recorded numeral-form annotation.
+If \`Lemma.coreFeatures.numForm\` is absent or \`undefined\`, the Lemma has no recorded numeral-form annotation.
 `,
 	examples: [twentyFirstOrdinal, halfFraction],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`numForm\` when the shape of the numeral expression is a stable lexical fact of the lemma, such as whether it is written as digits, Roman numerals, or words.
+Use \`numForm\` when the shape of the numeral expression is a stable lexical fact of the Lemma, such as whether it is written as digits, Roman numerals, or words.
 
-\`NumForm\` often works together with [\`NumType\`](/u/feature/num-type/): for example, a lemma can be an ordinal written as a word or a cardinal written as digits. The two features answer different questions, with \`NumType\` covering semantic subtype and \`NumForm\` covering written form.
+\`NumForm\` often works together with [\`NumType\`](/u/feature/num-type/): for example, a Lemma can be an ordinal written as a word or a cardinal written as digits. The two features answer different questions, with \`NumType\` covering semantic subtype and \`NumForm\` covering written form.
 `,
 		},
 		{

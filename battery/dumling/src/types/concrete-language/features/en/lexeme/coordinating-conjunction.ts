@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type EnCoordinatingConjunctionFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		polarity: Extract<AbstractFeatureValue<"polarity">, "Neg"> | null;
 	};

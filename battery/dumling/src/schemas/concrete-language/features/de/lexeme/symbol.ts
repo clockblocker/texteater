@@ -7,7 +7,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const deSymbolFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		foreign: abstractFeatureAtomSchemas.foreign,
 		numType: abstractFeatureAtomSchemas.numType.extract(["Card", "Range"]),
 	}),

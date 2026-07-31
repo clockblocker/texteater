@@ -1,24 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const runningGerundSelection = {
-	language: "en",
-	spelledSelection: "Running",
+	segmentedSentenceId: "sentence_M-BOWUBrPVR33isPve" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Running",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "running",
+		normalizedSurface: "running",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			verbForm: "Ger",
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "run",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "🏃",
+			canonicalForm: "run",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				hasGovPrep: null,
+				phrasal: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 

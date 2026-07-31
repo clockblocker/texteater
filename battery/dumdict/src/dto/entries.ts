@@ -1,20 +1,24 @@
-import type { DumlingId, Lemma, SupportedLanguage, Surface } from "../dumling";
+import type { Lemma, SupportedLanguage, Surface, SurfaceId } from "../dumling";
+import type { Reading } from "./reading";
 import type { LexicalRelations, MorphologicalRelations } from "./relations";
 
-export type LemmaEntry<L extends SupportedLanguage> = {
-	id: DumlingId<"Lemma", L>;
+export type LemmaRecord<L extends SupportedLanguage> = {
 	lemma: Lemma<L>;
-	lexicalRelations: LexicalRelations<L>;
 	morphologicalRelations: MorphologicalRelations<L>;
+};
+
+export type ReadingEntry<L extends SupportedLanguage> = {
+	reading: Reading<L>;
+	lexicalRelations: LexicalRelations<L>;
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;
 };
 
 export type SurfaceEntry<L extends SupportedLanguage> = {
-	id: DumlingId<"Surface", L>;
+	id: SurfaceId<L>;
 	surface: Surface<L>;
-	ownerLemmaId: DumlingId<"Lemma", L>;
+	ownerLemma: Lemma<L>;
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;

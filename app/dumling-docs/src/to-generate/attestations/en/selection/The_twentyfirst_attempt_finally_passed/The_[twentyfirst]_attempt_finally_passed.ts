@@ -1,24 +1,36 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const twentyFirstAdjectiveOrdinalSelection = {
-	language: "en",
-	spelledSelection: "twenty-first",
+	segmentedSentenceId: "sentence_rdzpTeo3Lutu97P4Mz" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "twenty-first",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "twenty-first",
+		normalizedSurface: "twenty-first",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "twenty-first",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADJ",
-			inherentFeatures: {
+			canonicalForm: "twenty-first",
+			family: "Lexeme",
+			kind: "ADJ",
+			coreFeatures: {
 				numForm: "Word",
 				numType: "Ord",
+				abbr: null,
+				extPos: null,
+				style: null,
 			},
-			meaningInEmojis: "🔢",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "ADJ">;
 

@@ -3,6 +3,6 @@ import type { EnToneMarkingMorphemeFeatures } from "../../../../../types/concret
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enToneMarkingMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<EnToneMarkingMorphemeFeatures>;

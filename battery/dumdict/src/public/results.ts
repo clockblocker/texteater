@@ -1,16 +1,18 @@
 import type {
-	LemmaNoteForDisambiguation,
 	LexicalRelation,
 	MorphologicalRelation,
-	PendingLemmaRef,
+	PendingEntryRef,
+	Reading,
+	ReadingNoteForDisambiguation,
 	StoreRevision,
 } from "../dto";
-import type { DumlingId, SupportedLanguage } from "../dumling";
+import type { Lemma, SupportedLanguage, SurfaceId } from "../dumling";
 import type { DumdictDiagnostic } from "./diagnostics";
 
 export type AffectedDictionaryEntities<L extends SupportedLanguage> = {
-	lemmaIds?: DumlingId<"Lemma", L>[];
-	surfaceIds?: DumlingId<"Surface", L>[];
+	lemmas?: Lemma<L>[];
+	readings?: Reading<L>[];
+	surfaceIds?: SurfaceId<L>[];
 	pendingIds?: string[];
 };
 
@@ -18,27 +20,35 @@ export type MutationSummary = {
 	message: string;
 };
 
-export type LemmaSenseCandidate<L extends SupportedLanguage> = {
-	lemmaId: DumlingId<"Lemma", L>;
-	note: LemmaNoteForDisambiguation<L>;
+export type ReadingCandidate<L extends SupportedLanguage> = {
+	reading: Reading<L>;
+	note: ReadingNoteForDisambiguation<L>;
 };
 
-export type FindStoredLemmaSensesResult<L extends SupportedLanguage> = {
+export type FindStoredReadingsResult<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	candidates: LemmaSenseCandidate<L>[];
+	candidates: ReadingCandidate<L>[];
 	diagnostics?: DumdictDiagnostic[];
 };
 
-export type CleanupPendingRelation<L extends SupportedLanguage> = {
-	sourceLemmaId: DumlingId<"Lemma", L>;
-	pendingRef: PendingLemmaRef<L>;
-	relation: LexicalRelation | MorphologicalRelation;
-};
+export type CleanupPendingRelation<L extends SupportedLanguage> =
+	| {
+			relationFamily: "lexical";
+			sourceReading: Reading<L>;
+			pendingRef: PendingEntryRef<L>;
+			relation: LexicalRelation;
+	  }
+	| {
+			relationFamily: "morphological";
+			sourceLemma: Lemma<L>;
+			pendingRef: PendingEntryRef<L>;
+			relation: MorphologicalRelation;
+	  };
 
 export type GetInfoForRelationsCleanupResult<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	canonicalLemma: string;
-	candidateLemmaIds: DumlingId<"Lemma", L>[];
+	canonicalForm: string;
+	candidateLemmas: Lemma<L>[];
 	pendingRelations: CleanupPendingRelation<L>[];
 	diagnostics?: DumdictDiagnostic[];
 };
@@ -72,9 +82,9 @@ export type MutationConflictCode =
 	| "semanticPreconditionFailed";
 
 export type MutationRejectedCode =
-	| "lemmaAlreadyExists"
+	| "readingAlreadyExists"
 	| "ownedSurfaceAlreadyExists"
-	| "lemmaMissing"
+	| "readingMissing"
 	| "invalidDraft"
 	| "invalidRequest"
 	| "selfRelation"

@@ -3,6 +3,6 @@ import type { EnIdiomPhrasemeFeatures } from "../../../../../types/concrete-lang
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enIdiomPhrasemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<EnIdiomPhrasemeFeatures>;

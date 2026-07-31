@@ -1,28 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const boUImperativeSelection = {
-	language: "he",
-	spelledSelection: "בואו",
+	segmentedSentenceId: "sentence_lf_ogzx6FOvszUPkC6" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "בואו",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "בואו",
+		normalizedSurface: "בואו",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Imp",
 			number: "Plur",
 			person: "2",
+			definite: null,
+			gender: null,
+			polarity: null,
+			tense: null,
+			verbForm: null,
+			voice: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "בוא",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "בוא",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "PAAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "👋",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

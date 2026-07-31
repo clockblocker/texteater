@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const alHapanimIdiomSelection = {
-	language: "he",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "פנים",
+	segmentedSentenceId: "sentence_Jkb6m19W5MSKboIxxm" as SegmentedSentenceId,
+	clickedSegmentIndex: 7,
+	surfaceSegmentIndices: [7],
+	attestedSurface: "פנים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "על הפנים",
+		normalizedSurface: "פנים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "על הפנים",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "😖",
+			canonicalForm: "על הפנים",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "Idiom">;
 

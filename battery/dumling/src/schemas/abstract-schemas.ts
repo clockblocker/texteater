@@ -2,28 +2,28 @@ import type { z } from "zod";
 import { z as zod } from "zod";
 import {
 	AbstractLanguageTag,
+	LemmaFamily,
 	LemmaKind,
-	LemmaSubKind,
 	SurfaceKind,
 } from "../types/core/enums.js";
 import type {
 	AbstractLemma,
-	AbstractLemmaSubKindFor,
+	AbstractLemmaKindFor,
 	AbstractSelection,
 	AbstractSurface,
 	EntityKind,
-	LemmaKind as LemmaKindType,
+	LemmaFamily as LemmaFamilyType,
 	SurfaceKind as SurfaceKindType,
 } from "../types/public-types.js";
 import { abstractRuntimeSchemas } from "./abstract/registry.js";
 
 type AbstractLemmaDescriptor = {
-	[LK in LemmaKindType]: {
+	[LK in LemmaFamilyType]: {
 		language: string;
-		lemmaKind: LK;
-		lemmaSubKind: AbstractLemmaSubKindFor<LK>;
+		family: LK;
+		kind: AbstractLemmaKindFor<LK>;
 	};
-}[LemmaKindType];
+}[LemmaFamilyType];
 
 type AbstractSurfaceDescriptor = AbstractLemmaDescriptor & {
 	surfaceKind: SurfaceKindType;
@@ -50,21 +50,21 @@ type AbstractSchemaRegistry = {
 
 const abstractLemmaDescriptorSchema = zod.strictObject({
 	language: AbstractLanguageTag,
-	lemmaKind: LemmaKind,
-	lemmaSubKind: LemmaSubKind,
+	family: LemmaFamily,
+	kind: LemmaKind,
 }) as unknown as z.ZodType<AbstractDescriptor<"Lemma">>;
 
 const abstractSurfaceDescriptorSchema = zod.strictObject({
 	language: AbstractLanguageTag,
-	lemmaKind: LemmaKind,
-	lemmaSubKind: LemmaSubKind,
+	family: LemmaFamily,
+	kind: LemmaKind,
 	surfaceKind: SurfaceKind,
 }) as unknown as z.ZodType<AbstractDescriptor<"Surface">>;
 
 const abstractSelectionDescriptorSchema = zod.strictObject({
 	language: AbstractLanguageTag,
-	lemmaKind: LemmaKind,
-	lemmaSubKind: LemmaSubKind,
+	family: LemmaFamily,
+	kind: LemmaKind,
 	surfaceKind: SurfaceKind,
 }) as unknown as z.ZodType<AbstractDescriptor<"Selection">>;
 

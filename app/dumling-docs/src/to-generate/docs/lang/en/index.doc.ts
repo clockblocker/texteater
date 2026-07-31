@@ -9,16 +9,16 @@ English is available at \`dumling.en\`, \`getLanguageApi("en")\`, and \`schemasF
 
 ## Supported Lemma Families
 
-English supports the same public lemma families as the other implemented language packs:
+English supports the same public Lemma families as the other implemented language packs:
 
-| \`lemmaKind\` | \`lemmaSubKind\` values |
+| \`family\` | \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\`, \`PairedFrame\` |
 
-\`Construction\` is part of the shared public ontology even though the English examples here focus on lexemes, morphemes, and phrasemes. Construction entries are citation-only and currently featureless.
+\`Construction\` is part of the shared public ontology even though the English examples here focus on lexemes, morphemes, and phrasemes. Construction Lemmas are citation-only and currently featureless.
 
 ## Common Feature Areas
 
@@ -36,14 +36,16 @@ English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. English verb 
 
 English attestation source files live in \`src/to-generate/attestations/en\`. Each file exports exactly one attested dumling object and generates exactly one Markdown attestation.
 
-Lemma and surface attestations are generated from files under \`lemma/\` and \`surface/\` with base64url ID basenames. Selection fixtures under \`selection/{sentence}/\` use a sentence directory normalized from \`sentenceMarkdown\` without brackets plus a semantic filename that keeps the bracketed selection span, which allows multiple selections for the same sentence. Generated Markdown attestations are written to \`src/generated/entities/en/{entityKind}/\` and published at \`/en/{entityKind}/{base64urlId}/\`.
+Lemma and Surface attestations are generated from files under
+\`lemma/\` and \`surface/\`. Selection fixtures under
+\`selection/{sentence}/\` allow multiple clicked \`ResolvableText\` Segments in one sentence.
 
 - [walk](/en/selection/djEscyxjLHdhbGssbCxlbixsLG4sd2Fsayzwn5q2LA/)
 - [walk in the park](/en/selection/djEscyxjLHdhbGsgaW4gdGhlIHBhcmssbCxlbixwLGlkLHdhbGsgaW4gdGhlIHBhcmss8J-YjCw/)
-- [run](/en/lemma/djEsbCxlbixsLHYscnVuLPCfj4Ms/)
-- [book](/en/lemma/djEsbCxlbixsLG4sYm9vayzwn5OaLA/)
-- [ran](/en/surface/djEscyxpLHJhbix0ZT1wfHZmPWYsbCxlbixsLHYscnVuLPCfj4Ms/)
-- [books](/en/surface/djEscyxpLGJvb2tzLG51PXAsbCxlbixsLG4sYm9vayzwn5OaLA/)
+- [run](/en/lemma/djIsbCxlbixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
+- [book](/en/lemma/djIsbCxlbixlbnRyeV9tZnhsMGp4WnU1MWJ6a3VTa2M/)
+- [ran](/en/surface/djIscyxlbixpLHJhbixudT1zfHBlPXAxfHRlPXB8dmY9ZixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
+- [books](/en/surface/djIscyxlbixpLGJvb2tzLG51PXAsZW50cnlfbWZ4bDBqeFp1NTFiemt1U2tj/)
 
 ## Example
 
@@ -51,24 +53,41 @@ Lemma and surface attestations are generated from files under \`lemma/\` and \`s
 import { dumling } from "dumling";
 
 const runLemma = dumling.en.create.lemma({
-\tcanonicalLemma: "run",
-\tlemmaKind: "Lexeme",
-\tlemmaSubKind: "VERB",
-\tinherentFeatures: {},
-\tmeaningInEmojis: "🏃",
+\tcanonicalForm: "run",
+\tfamily: "Lexeme",
+\tkind: "VERB",
+\tcoreFeatures: {
+\t\tabbr: null,
+\t\textPos: null,
+\t\thasGovPrep: null,
+\t\tphrasal: null,
+\t\tstyle: null,
+\t},
 });
 
 const ranSurface = dumling.en.create.surface.inflection({
 \tlemma: runLemma,
-\tnormalizedFullSurface: "ran",
+\tnormalizedSurface: "ran",
+\tspelling: "Canonical",
+\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
+\t\tmood: null,
+\t\tnumber: "Sing",
+\t\tperson: "1",
 \t\ttense: "Past",
 \t\tverbForm: "Fin",
+\t\tvoice: null,
 \t},
+\tsurfaceFeatures: null,
 });
 
 const ranSelection = dumling.en.convert.surface.toSelection(ranSurface, {
-\tspelledSelection: "ran",
+\tsegmentedSentenceId:
+\t\tdumling.en.create.segmentedSentenceId("sentence:en:i-ran"),
+\tclickedSegmentIndex: 2,
+\tsurfaceSegmentIndices: [2],
+\tattestedSurface: "ran",
+\tselectedOrthography: "Standard",
 });
 
 dumling.en.parse.selection(ranSelection);

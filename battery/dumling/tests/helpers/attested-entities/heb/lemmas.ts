@@ -2,42 +2,39 @@ import type { Lemma } from "../../../../src/types";
 
 // Attestation: "הוא [כתב] מכתב."
 export const hebrewKatavLemma = {
-	canonicalLemma: "כתב",
-	inherentFeatures: {
+	canonicalForm: "כתב",
+	coreFeatures: {
 		hebBinyan: "PAAL",
 
 		hebExistential: null,
 	},
 	language: "he",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "✍️",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"he", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
 export const hebrewShanaLemma = {
-	canonicalLemma: "שנה",
-	inherentFeatures: {
+	canonicalForm: "שנה",
+	coreFeatures: {
 		gender: ["Fem", "Masc"],
 
 		abbr: null,
 	},
 	language: "he",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "NOUN",
-	meaningInEmojis: "📅",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"he", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
 export const hebrewUsAbbreviationLemma = {
-	canonicalLemma: "ארה״ב",
-	inherentFeatures: {
+	canonicalForm: "ארה״ב",
+	coreFeatures: {
 		abbr: "Yes",
 
 		gender: null,
 	},
 	language: "he",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "PROPN",
-	meaningInEmojis: "🇺🇸",
+	family: "Lexeme",
+	kind: "PROPN",
 } satisfies Lemma<"he", "Lexeme", "PROPN">;

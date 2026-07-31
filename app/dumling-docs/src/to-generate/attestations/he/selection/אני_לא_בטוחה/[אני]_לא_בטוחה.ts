@@ -1,27 +1,39 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const aniPronounSelection = {
-	language: "he",
-	spelledSelection: "אני",
+	segmentedSentenceId: "sentence_cU6JbsMAvHaK_-EuWk" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "אני",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "אני",
+		normalizedSurface: "אני",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Sing",
 			person: "1",
+			gender: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "אני",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "אני",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				pronType: "Prs",
+				definite: null,
+				reflex: null,
 			},
-			meaningInEmojis: "🙋",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "PRON">;
 

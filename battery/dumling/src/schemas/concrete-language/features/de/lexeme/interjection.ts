@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deInterjectionFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		partType: abstractFeatureAtomSchemas.partType.extract(["Res"]),
 	}),
 	inflectional: buildOptionalFeatureObjectSchema({}),

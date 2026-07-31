@@ -23,15 +23,15 @@ function descriptorToCsv<L extends SupportedLanguage>(
 			? [
 					entityKind,
 					descriptor.language,
-					descriptor.lemmaKind,
-					descriptor.lemmaSubKind,
+					descriptor.family,
+					descriptor.kind,
 				]
 			: [
 					entityKind,
 					descriptor.language,
 					descriptor.surfaceKind,
-					descriptor.lemmaKind,
-					descriptor.lemmaSubKind,
+					descriptor.family,
+					descriptor.kind,
 				];
 
 	return csvRow(fields) as DumlingDescriptorCsv<L>;
@@ -45,8 +45,8 @@ export function buildDescribeOperations<
 		return {
 			language: inspection.language,
 			surfaceKind: inspection.surfaceKind,
-			lemmaKind: inspection.lemma.lemmaKind,
-			lemmaSubKind: inspection.lemma.lemmaSubKind,
+			family: inspection.lemma.family,
+			kind: inspection.lemma.kind,
 		};
 	}
 
@@ -56,8 +56,8 @@ export function buildDescribeOperations<
 
 			return {
 				language: lemma.language,
-				lemmaKind: lemma.lemmaKind,
-				lemmaSubKind: lemma.lemmaSubKind,
+				family: lemma.family,
+				kind: lemma.kind,
 			} as never;
 		},
 		surface(value: EntityValue<L>) {

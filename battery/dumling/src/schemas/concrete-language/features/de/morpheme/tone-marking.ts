@@ -3,6 +3,6 @@ import type { DeToneMarkingMorphemeFeatures } from "../../../../../types/concret
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deToneMarkingMorphemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeToneMarkingMorphemeFeatures>;

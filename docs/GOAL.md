@@ -1,35 +1,56 @@
-Build a usefull tool for motivated language learners.
+Build a useful tool for motivated language learners.
 
-Core value proposition of the tool is "build their own dictionary based on the encountered attestations"
+The core value proposition is: learners build their own dictionary from the
+language they actually encounter.
 
-We are to enable any word in a valid text of the supputerd language to be "selectable". 
+Accepted text is replaced by an immutable, forgiving Segmented Sentence.
+Malformed but intelligible material may remain as written, and locally
+unintelligible material may remain as `OpaqueText`. Every Segment is indexed;
+for now, only `ResolvableText` is clickable.
 
-Learner selects "up" in "I got up in 4:00 am". 
-We:
-- resolve it as "got up" -> "get up" -> "⏰ get up"
-- add the word with all of it's features and relations to user's dictionary
-- add "I got up in 4:00 am" to the "attestations" block of the dictionaty entrie for "⏰ get up"
+When a learner clicks `up` in `I got up at 4:00 am`, we:
 
-Key is: while the resolved features for the lemma may still be universal, the attestations are unique to the user
+- create a Selection identified by the Segmented Sentence and clicked index;
+- resolve the participating Segments to the contextual Surface `got up`;
+- resolve that Surface to the Lemma whose Canonical Form is `get up`;
+- reuse or create the learner-owned Reading `⏰ get up`; and
+- attach the attestation to that Reading in the learner's dictionary.
 
-Following from that is the lack of the "avoid all possible meanings infodump" policy:
-When user selects the "chairs" in "We have 4 chairs in our kitchen", we it as "chairs" -> "chair" -> "🪑 chair"
-The existance of "chair" -> "👨🏻‍💼 chair" will not exist in the user's dictionary, until they find the proper context for that “The chair called the meeting to order.”
+The reusable grammatical Lemma and Surface may be shared, while Selections,
+Readings, and their attestations remain learner- or context-owned as
+appropriate.
+
+We deliberately avoid an “all possible meanings” infodump. When a learner
+clicks `chairs` in `We have 4 chairs in our kitchen`, the chain may resolve:
+
+`Selection(chairs) → Surface(chairs) → Lemma(chair) → Reading(🪑 chair)`
+
+The leadership Reading `👨🏻‍💼 chair` need not exist in that learner's
+dictionary until they encounter a context such as `The chair called the
+meeting to order.` Both learner Readings can refer to the same Lemma.
 
 ---
-The tool should be language-agnostic and be extendable with arbitrary linguistic relations (semantics, morphologie, etc)
 
-To achieve that we heavily rely on Universal Dependencies as the base of the custom linguistic system
+The tool should be language-agnostic and extensible with arbitrary linguistic
+relations, including semantic and morphological relations. Universal
+Dependencies is the starting point for the grammatical feature vocabulary, not
+an identity authority.
 
 ---
 
-The tool should treat all stadalone lingistic entities as fist-class sitizens. Core idea is: we pint the user to the biggest semantic win in a given click. But give them a possibility of drilling down to atoms.
+Standalone linguistic entities are first-class. A click should produce the
+largest defensible learner-facing gain while retaining the structure needed to
+drill down later.
 
-Consider:
-- User selects "heulte" in "Obwohl er anderer Meinung war, heulte er mit"
-    - We resolve it as "🐺🗣️🤝 mit den Wölfen heulen"
-    - We add "Obwohl er anderer Meinung war, heulte er mit" to the "attestations" block of the dictionaty entrie for "🐺🗣️🤝 mit den Wölfen heulen"
-- User selects "mit" in "🐺🗣️🤝 mit den Wölfen heulen"
-    - We resolve it as "🗣️🤝 mitheulen" and add the "🐺🗣️🤝 mit den Wölfen heulen" to attestations
-- User selects "mit" in "🗣️🤝 mitheulen"
-    - We resolve it as a separable prefix "mit"
+For example, clicking `heulte` in
+`Obwohl er anderer Meinung war, heulte er mit` may resolve to:
+
+- Selection membership `heulte … mit`;
+- normalized contextual Surface `heulte mit`, with
+  `realizationCoverage: "Partial"`; and
+- the idiom Lemma whose Canonical Form is `mit den Wölfen heulen`, followed by
+  the learner Reading `🐺🗣️🤝`.
+
+The Surface does not invent the unattested words `den Wölfen`. Those belong to
+the Lemma's Canonical Form. Future valency modeling is tracked separately and
+does not change this boundary.

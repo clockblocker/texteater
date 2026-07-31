@@ -1,299 +1,407 @@
 import type {
-	LemmaEntry,
-	LexicalRelation,
+	LemmaRecord,
 	LexicalRelations,
 	MorphologicalRelation,
 	MorphologicalRelations,
-	PendingLemmaRef,
-	PendingLemmaRelation,
+	PendingEntryRef,
+	PendingEntryRelation,
+	ReadingEntry,
 	SurfaceEntry,
 } from "../../dto";
-import type { DumlingId, SupportedLanguage } from "../../dumling";
-import { makeDumlingIdFor } from "../../dumling";
+import type { Lemma, SupportedLanguage } from "../../dumling";
+import { makeSurfaceId } from "../../dumling";
 import type { AddNewNoteRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";
-import { derivePendingLemmaId, makePendingLemmaRef } from "../pending/identity";
+import { lemmaKey, readingKey, sameLemma, sameReading } from "../identity";
+import { derivePendingEntryId, makePendingEntryRef } from "../pending/identity";
 import type { PlannedChangeOp } from "../planned-changes";
 import { inverseRelationFor } from "../relations/rules";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 	const seen = new Set<string>();
-	const uniqueValues: T[] = [];
-	for (const value of values) {
+	return values.filter((value) => {
 		const key = keyFor(value);
 		if (seen.has(key)) {
-			continue;
+			return false;
 		}
 		seen.add(key);
-		uniqueValues.push(value);
+		return true;
+	});
+}
+
+function appendRelation<T extends string, I>(
+	relations: Partial<Record<T, I[]>>,
+	relation: T,
+	target: I,
+	keyFor: (value: I) => string,
+) {
+	const existing = relations[relation] ?? [];
+	if (!existing.some((value) => keyFor(value) === keyFor(target))) {
+		relations[relation] = [...existing, target];
 	}
-	return uniqueValues;
+}
+
+function sourceKeyFor<L extends SupportedLanguage>(
+	relation: PendingEntryRelation<L>,
+) {
+	return relation.relationFamily === "lexical"
+		? readingKey(relation.sourceReading)
+		: lemmaKey(relation.sourceLemma);
 }
 
 function pendingRelationKey<L extends SupportedLanguage>(
-	relation: PendingLemmaRelation<L>,
+	relation: PendingEntryRelation<L>,
 ) {
 	return [
-		relation.sourceLemmaId,
 		relation.relationFamily,
+		sourceKeyFor(relation),
 		relation.relation,
 		relation.targetPendingId,
 	].join("\0");
 }
 
-function appendLexicalRelation<L extends SupportedLanguage>(
-	relations: LexicalRelations<L>,
-	relation: LexicalRelation,
-	targetLemmaId: DumlingId<"Lemma", L>,
-) {
-	const existing = relations[relation] ?? [];
-	if (!existing.includes(targetLemmaId)) {
-		relations[relation] = [...existing, targetLemmaId];
-	}
-}
-
-function appendMorphologicalRelation<L extends SupportedLanguage>(
-	relations: MorphologicalRelations<L>,
-	relation: MorphologicalRelation,
-	targetLemmaId: DumlingId<"Lemma", L>,
-) {
-	const existing = relations[relation] ?? [];
-	if (!existing.includes(targetLemmaId)) {
-		relations[relation] = [...existing, targetLemmaId];
-	}
-}
-
-function planPendingRelationsAndRefs<L extends SupportedLanguage>({
-	slice,
-	request,
-	language,
-	lemmaId,
-}: {
-	slice: NewNoteSlice<L>;
-	request: AddNewNoteRequest<L>;
-	language: L;
-	lemmaId: DumlingId<"Lemma", L>;
-}): {
-	pendingRefsToCreateById: Map<string, PendingLemmaRef<L>>;
-	pendingRelationEntries: PendingLemmaRelation<L>[];
+function makePendingRelations<L extends SupportedLanguage>(
+	slice: NewNoteSlice<L>,
+	request: AddNewNoteRequest<L>,
+): {
+	refs: PendingEntryRef<L>[];
+	relations: PendingEntryRelation<L>[];
 } {
-	const pendingRelations =
-		request.draft.relations?.filter(
-			(relation) => relation.target.kind === "pending",
-		) ?? [];
-	const existingPendingRefIds = new Set(
+	const existingIds = new Set(
 		slice.existingPendingRefsForProposedPendingTargets.map(
 			({ pendingId }) => pendingId,
 		),
 	);
-	const pendingRefsToCreateById = new Map<string, PendingLemmaRef<L>>();
-	const pendingRelationEntries: PendingLemmaRelation<L>[] = uniqueBy(
-		pendingRelations.map((relation) => {
+	const refs = new Map<string, PendingEntryRef<L>>();
+	const relations = (request.draft.relations ?? [])
+		.filter((relation) => relation.target.kind === "pending")
+		.map((relation): PendingEntryRelation<L> => {
 			if (relation.target.kind !== "pending") {
-				throw new Error("Unexpected existing relation target");
+				throw new Error("Unexpected existing relation target.");
 			}
-
-			const pendingRef = makePendingLemmaRef({
-				language,
-				canonicalLemma: relation.target.ref.canonicalLemma,
-				lemmaKind: relation.target.ref.lemmaKind,
-				lemmaSubKind: relation.target.ref.lemmaSubKind,
+			const ref = makePendingEntryRef({
+				language: request.draft.reading.lemma.language as L,
+				...relation.target.ref,
 			});
-			if (!existingPendingRefIds.has(pendingRef.pendingId)) {
-				pendingRefsToCreateById.set(pendingRef.pendingId, pendingRef);
+			if (!existingIds.has(ref.pendingId)) {
+				refs.set(ref.pendingId, ref);
 			}
-
-			if (relation.relationFamily === "lexical") {
-				return {
-					sourceLemmaId: lemmaId,
-					relationFamily: "lexical",
-					relation: relation.relation,
-					targetPendingId: pendingRef.pendingId,
-				};
-			}
-
-			return {
-				sourceLemmaId: lemmaId,
-				relationFamily: "morphological",
-				relation: relation.relation,
-				targetPendingId: pendingRef.pendingId,
-			};
-		}),
-		pendingRelationKey,
-	);
-
-	return { pendingRefsToCreateById, pendingRelationEntries };
+			return relation.relationFamily === "lexical"
+				? {
+						relationFamily: "lexical",
+						sourceReading: request.draft.reading,
+						relation: relation.relation,
+						targetPendingId: ref.pendingId,
+					}
+				: {
+						relationFamily: "morphological",
+						sourceLemma: request.draft.reading.lemma,
+						relation: relation.relation,
+						targetPendingId: ref.pendingId,
+					};
+		});
+	return {
+		refs: Array.from(refs.values()),
+		relations: uniqueBy(relations, pendingRelationKey),
+	};
 }
 
-function planPickupRelationPatches<L extends SupportedLanguage>({
-	slice,
-	lemmaId,
-	lexicalRelations,
-	morphologicalRelations,
-}: {
-	slice: NewNoteSlice<L>;
-	lemmaId: DumlingId<"Lemma", L>;
-	lexicalRelations: LexicalRelations<L>;
-	morphologicalRelations: MorphologicalRelations<L>;
-}): PlannedChangeOp<L>[] {
-	return slice.incomingPendingRelationsForNewLemma.map((relation) => {
-		if (relation.relationFamily === "lexical") {
-			appendLexicalRelation(
-				lexicalRelations,
-				inverseRelationFor(relation.relationFamily, relation.relation),
-				relation.sourceLemmaId,
+function selfRelationExists<L extends SupportedLanguage>(
+	request: AddNewNoteRequest<L>,
+) {
+	const { reading } = request.draft;
+	const { lemma } = reading;
+	const selfPendingId = derivePendingEntryId({
+		language: lemma.language as L,
+		canonicalForm: lemma.canonicalForm,
+		family: lemma.family,
+		kind: lemma.kind,
+	});
+	return (request.draft.relations ?? []).some((relation) => {
+		if (relation.target.kind === "pending") {
+			return (
+				derivePendingEntryId({
+					language: lemma.language as L,
+					...relation.target.ref,
+				}) === selfPendingId
 			);
-			return {
-				type: "patchLemma",
-				lemmaId: relation.sourceLemmaId,
+		}
+		return relation.relationFamily === "lexical"
+			? sameReading(relation.target.reading, reading)
+			: sameLemma(relation.target.lemma, lemma);
+	});
+}
+
+function explicitTargetsArePresent<L extends SupportedLanguage>(
+	slice: NewNoteSlice<L>,
+	request: AddNewNoteRequest<L>,
+) {
+	const readings = new Set(
+		slice.explicitExistingReadingTargets.map(({ reading }) =>
+			readingKey(reading),
+		),
+	);
+	const lemmas = new Set(
+		slice.explicitExistingLemmaTargets.map(({ lemma }) => lemmaKey(lemma)),
+	);
+	return (request.draft.relations ?? []).every((relation) => {
+		if (relation.target.kind === "pending") {
+			return true;
+		}
+		return relation.relationFamily === "lexical"
+			? readings.has(readingKey(relation.target.reading))
+			: lemmas.has(lemmaKey(relation.target.lemma));
+	});
+}
+
+function relationPatches<L extends SupportedLanguage>(
+	slice: NewNoteSlice<L>,
+	request: AddNewNoteRequest<L>,
+	lexicalRelations: LexicalRelations<L>,
+	morphologicalRelations: MorphologicalRelations<L>,
+): PlannedChangeOp<L>[] {
+	const patches: PlannedChangeOp<L>[] = [];
+	const { reading } = request.draft;
+	const { lemma } = reading;
+
+	for (const relation of slice.incomingPendingRelationsForNewEntry) {
+		if (relation.relationFamily === "lexical") {
+			appendRelation(
+				lexicalRelations,
+				inverseRelationFor("lexical", relation.relation),
+				relation.sourceReading,
+				readingKey,
+			);
+			patches.push({
+				type: "patchReading",
+				reading: relation.sourceReading,
 				ops: [
 					{
 						kind: "addRelation",
-						family: "lexical",
 						relation: relation.relation,
-						targetLemmaId: lemmaId,
+						targetReading: reading,
 					},
 				],
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "lemmaExists", lemmaId: relation.sourceLemmaId },
+					{
+						kind: "readingExists",
+						reading: relation.sourceReading,
+					},
 				],
-			};
+			});
+		} else {
+			appendRelation(
+				morphologicalRelations,
+				inverseRelationFor("morphological", relation.relation),
+				relation.sourceLemma,
+				lemmaKey,
+			);
+			patches.push({
+				type: "patchLemma",
+				lemma: relation.sourceLemma,
+				ops: [
+					{
+						kind: "addRelation",
+						relation: relation.relation,
+						targetLemma: lemma,
+					},
+				],
+				preconditions: [
+					{ kind: "revisionMatches", revision: slice.revision },
+					{
+						kind: "lemmaExists",
+						lemma: relation.sourceLemma,
+					},
+				],
+			});
 		}
+	}
 
-		appendMorphologicalRelation(
-			morphologicalRelations,
-			inverseRelationFor(relation.relationFamily, relation.relation),
-			relation.sourceLemmaId,
-		);
-		return {
-			type: "patchLemma",
-			lemmaId: relation.sourceLemmaId,
-			ops: [
-				{
-					kind: "addRelation",
-					family: "morphological",
-					relation: relation.relation,
-					targetLemmaId: lemmaId,
-				},
-			],
-			preconditions: [
-				{ kind: "revisionMatches", revision: slice.revision },
-				{ kind: "lemmaExists", lemmaId: relation.sourceLemmaId },
-			],
-		};
-	});
-}
-
-function planExplicitExistingRelationPatches<L extends SupportedLanguage>({
-	slice,
-	request,
-	lemmaId,
-	lexicalRelations,
-	morphologicalRelations,
-}: {
-	slice: NewNoteSlice<L>;
-	request: AddNewNoteRequest<L>;
-	lemmaId: DumlingId<"Lemma", L>;
-	lexicalRelations: LexicalRelations<L>;
-	morphologicalRelations: MorphologicalRelations<L>;
-}): PlannedChangeOp<L>[] {
-	const explicitExistingRelations =
-		request.draft.relations?.filter(
-			(relation) => relation.target.kind === "existing",
-		) ?? [];
-
-	return explicitExistingRelations.map((relation) => {
+	for (const relation of request.draft.relations ?? []) {
 		if (relation.target.kind !== "existing") {
-			throw new Error("Unexpected pending relation target");
+			continue;
 		}
-
 		if (relation.relationFamily === "lexical") {
-			appendLexicalRelation(
+			appendRelation(
 				lexicalRelations,
 				relation.relation,
-				relation.target.lemmaId,
+				relation.target.reading,
+				readingKey,
 			);
-			return {
-				type: "patchLemma",
-				lemmaId: relation.target.lemmaId,
+			patches.push({
+				type: "patchReading",
+				reading: relation.target.reading,
 				ops: [
 					{
 						kind: "addRelation",
-						family: "lexical",
 						relation: inverseRelationFor(
-							relation.relationFamily,
+							"lexical",
 							relation.relation,
 						),
-						targetLemmaId: lemmaId,
+						targetReading: reading,
 					},
 				],
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "lemmaExists", lemmaId: relation.target.lemmaId },
+					{
+						kind: "readingExists",
+						reading: relation.target.reading,
+					},
 				],
-			};
+			});
+		} else {
+			appendRelation(
+				morphologicalRelations,
+				relation.relation,
+				relation.target.lemma,
+				lemmaKey,
+			);
+			patches.push({
+				type: "patchLemma",
+				lemma: relation.target.lemma,
+				ops: [
+					{
+						kind: "addRelation",
+						relation: inverseRelationFor(
+							"morphological",
+							relation.relation,
+						),
+						targetLemma: lemma,
+					},
+				],
+				preconditions: [
+					{ kind: "revisionMatches", revision: slice.revision },
+					{
+						kind: "lemmaExists",
+						lemma: relation.target.lemma,
+					},
+				],
+			});
 		}
-
-		appendMorphologicalRelation(
-			morphologicalRelations,
-			relation.relation,
-			relation.target.lemmaId,
-		);
-		return {
-			type: "patchLemma",
-			lemmaId: relation.target.lemmaId,
-			ops: [
-				{
-					kind: "addRelation",
-					family: "morphological",
-					relation: inverseRelationFor(
-						relation.relationFamily,
-						relation.relation,
-					),
-					targetLemmaId: lemmaId,
-				},
-			],
-			preconditions: [
-				{ kind: "revisionMatches", revision: slice.revision },
-				{ kind: "lemmaExists", lemmaId: relation.target.lemmaId },
-			],
-		};
-	});
+	}
+	return patches;
 }
 
-function assembleAddNewNoteChanges<L extends SupportedLanguage>({
-	slice,
-	lemmaId,
-	lemmaEntry,
-	ownedSurfaceEntries,
-	pickupRelationPatches,
-	inverseRelationPatches,
-	pendingRefsToCreateById,
-	pendingRelationEntries,
-}: {
-	slice: NewNoteSlice<L>;
-	lemmaId: DumlingId<"Lemma", L>;
-	lemmaEntry: LemmaEntry<L>;
-	ownedSurfaceEntries: SurfaceEntry<L>[];
-	pickupRelationPatches: PlannedChangeOp<L>[];
-	inverseRelationPatches: PlannedChangeOp<L>[];
-	pendingRefsToCreateById: Map<string, PendingLemmaRef<L>>;
-	pendingRelationEntries: PendingLemmaRelation<L>[];
-}): PlannedChangeOp<L>[] {
-	return [
-		{
+export function planAddNewNote<L extends SupportedLanguage>(
+	slice: NewNoteSlice<L>,
+	request: AddNewNoteRequest<L>,
+): PlanMutationResult<L> | PlanMutationRejected {
+	const { reading, note } = request.draft;
+	const { lemma } = reading;
+	if (selfRelationExists(request)) {
+		return {
+			status: "rejected",
+			code: "selfRelation",
+			message: "A Reading or Lemma cannot relate to itself.",
+		};
+	}
+	if (slice.existingReading) {
+		return {
+			status: "rejected",
+			code: "readingAlreadyExists",
+			message: "Reading already exists.",
+		};
+	}
+	if (slice.existingOwnedSurfaces.length > 0) {
+		return {
+			status: "rejected",
+			code: "ownedSurfaceAlreadyExists",
+			message: "An owned surface already exists.",
+		};
+	}
+	if (!explicitTargetsArePresent(slice, request)) {
+		return {
+			status: "rejected",
+			code: "relationTargetMissing",
+			message: "An explicit relation target is missing.",
+		};
+	}
+
+	const lexicalRelations: LexicalRelations<L> = {};
+	const morphologicalRelations: MorphologicalRelations<L> = {};
+	const patches = relationPatches(
+		slice,
+		request,
+		lexicalRelations,
+		morphologicalRelations,
+	);
+	const storedReading: ReadingEntry<L> = {
+		reading,
+		lexicalRelations,
+		...note,
+	};
+	const lemmaRecord: LemmaRecord<L> = {
+		lemma,
+		morphologicalRelations,
+	};
+	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
+		(request.draft.ownedSurfaces ?? []).map(({ surface, note }) => ({
+			id: makeSurfaceId(lemma.language as L, surface),
+			surface,
+			ownerLemma: lemma,
+			...note,
+		})),
+		({ id }) => id,
+	);
+	const pending = makePendingRelations(slice, request);
+
+	const changes: PlannedChangeOp<L>[] = [];
+	if (!slice.existingLemma) {
+		changes.push({
 			type: "createLemma",
-			entry: lemmaEntry,
+			record: lemmaRecord,
 			preconditions: [
 				{ kind: "revisionMatches", revision: slice.revision },
-				{ kind: "lemmaMissing", lemmaId },
+				{
+					kind: "lemmaMissing",
+					lemma,
+				},
+			],
+		});
+	} else {
+		for (const [relation, targetIds] of Object.entries(
+			morphologicalRelations,
+		) as [MorphologicalRelation, Lemma<L>[]][]) {
+			for (const targetLemma of targetIds) {
+				changes.push({
+					type: "patchLemma",
+					lemma,
+					ops: [
+						{
+							kind: "addRelation",
+							relation,
+							targetLemma,
+						},
+					],
+					preconditions: [
+						{ kind: "revisionMatches", revision: slice.revision },
+						{
+							kind: "lemmaExists",
+							lemma,
+						},
+					],
+				});
+			}
+		}
+	}
+
+	changes.push(
+		{
+			type: "createReading",
+			entry: storedReading,
+			preconditions: [
+				{ kind: "revisionMatches", revision: slice.revision },
+				{
+					kind: "lemmaExists",
+					lemma,
+				},
+				{ kind: "readingMissing", reading },
 			],
 		},
-		...pickupRelationPatches,
-		...inverseRelationPatches,
-		...Array.from(pendingRefsToCreateById.values()).map(
+		...patches,
+		...pending.refs.map(
 			(ref): PlannedChangeOp<L> => ({
 				type: "createPendingRef",
 				ref,
@@ -303,13 +411,12 @@ function assembleAddNewNoteChanges<L extends SupportedLanguage>({
 				],
 			}),
 		),
-		...pendingRelationEntries.map(
+		...pending.relations.map(
 			(relation): PlannedChangeOp<L> => ({
 				type: "createPendingRelation",
 				relation,
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "lemmaExists", lemmaId },
 					{
 						kind: "pendingRefExists",
 						pendingId: relation.targetPendingId,
@@ -318,7 +425,7 @@ function assembleAddNewNoteChanges<L extends SupportedLanguage>({
 				],
 			}),
 		),
-		...slice.incomingPendingRelationsForNewLemma.map(
+		...slice.incomingPendingRelationsForNewEntry.map(
 			(relation): PlannedChangeOp<L> => ({
 				type: "deletePendingRelation",
 				relation,
@@ -328,7 +435,7 @@ function assembleAddNewNoteChanges<L extends SupportedLanguage>({
 				],
 			}),
 		),
-		...slice.matchingPendingRefsForNewLemma.map(
+		...slice.matchingPendingRefsForNewEntry.map(
 			(ref): PlannedChangeOp<L> => ({
 				type: "deletePendingRef",
 				pendingId: ref.pendingId,
@@ -348,151 +455,31 @@ function assembleAddNewNoteChanges<L extends SupportedLanguage>({
 				entry,
 				preconditions: [
 					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "lemmaExists", lemmaId },
+					{
+						kind: "lemmaExists",
+						lemma,
+					},
 					{ kind: "surfaceMissing", surfaceId: entry.id },
 				],
 			}),
 		),
-	];
-}
-
-export function planAddNewNote<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
-	request: AddNewNoteRequest<L>,
-): PlanMutationResult<L> | PlanMutationRejected {
-	const language = request.draft.lemma.language as L;
-	const lemmaId = makeDumlingIdFor(language, request.draft.lemma);
-	const pendingLemmaId = derivePendingLemmaId({
-		language,
-		canonicalLemma: request.draft.lemma.canonicalLemma,
-		lemmaKind: request.draft.lemma.lemmaKind,
-		lemmaSubKind: request.draft.lemma.lemmaSubKind,
-	});
-
-	if (
-		request.draft.relations?.some((relation) => {
-			if (relation.target.kind === "existing") {
-				return relation.target.lemmaId === lemmaId;
-			}
-
-			return (
-				derivePendingLemmaId({
-					language,
-					canonicalLemma: relation.target.ref.canonicalLemma,
-					lemmaKind: relation.target.ref.lemmaKind,
-					lemmaSubKind: relation.target.ref.lemmaSubKind,
-				}) === pendingLemmaId
-			);
-		})
-	) {
-		return {
-			status: "rejected",
-			code: "selfRelation",
-			message: "A lemma cannot relate to itself.",
-		};
-	}
-
-	if (slice.existingLemma) {
-		return {
-			status: "rejected",
-			code: "lemmaAlreadyExists",
-			message: "Lemma already exists.",
-		};
-	}
-
-	if (slice.existingOwnedSurfaces.length > 0) {
-		return {
-			status: "rejected",
-			code: "ownedSurfaceAlreadyExists",
-			message: "An owned surface already exists.",
-		};
-	}
-
-	const explicitExistingRelations =
-		request.draft.relations?.filter(
-			(relation) => relation.target.kind === "existing",
-		) ?? [];
-	const existingRelationTargetIds = new Set(
-		slice.explicitExistingRelationTargets.map(({ id }) => id),
 	);
-
-	if (
-		explicitExistingRelations.some(
-			(relation) =>
-				relation.target.kind === "existing" &&
-				!existingRelationTargetIds.has(relation.target.lemmaId),
-		)
-	) {
-		return {
-			status: "rejected",
-			code: "relationTargetMissing",
-			message: "An explicit relation target is missing.",
-		};
-	}
-
-	const lexicalRelations: LexicalRelations<L> = {};
-	const morphologicalRelations: MorphologicalRelations<L> = {};
-	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
-		request.draft.ownedSurfaces?.map((ownedSurface) => ({
-			id: makeDumlingIdFor(language, ownedSurface.surface),
-			surface: ownedSurface.surface,
-			ownerLemmaId: lemmaId,
-			attestedTranslations: ownedSurface.note.attestedTranslations,
-			attestations: ownedSurface.note.attestations,
-			notes: ownedSurface.note.notes,
-		})) ?? [],
-		({ id }) => id,
-	);
-	const { pendingRefsToCreateById, pendingRelationEntries } =
-		planPendingRelationsAndRefs({ slice, request, language, lemmaId });
-	const pickupRelationPatches = planPickupRelationPatches({
-		slice,
-		lemmaId,
-		lexicalRelations,
-		morphologicalRelations,
-	});
-	const inverseRelationPatches = planExplicitExistingRelationPatches({
-		slice,
-		request,
-		lemmaId,
-		lexicalRelations,
-		morphologicalRelations,
-	});
-
-	const lemmaEntry: LemmaEntry<L> = {
-		id: lemmaId,
-		lemma: request.draft.lemma,
-		lexicalRelations,
-		morphologicalRelations,
-		attestedTranslations: request.draft.note.attestedTranslations,
-		attestations: request.draft.note.attestations,
-		notes: request.draft.note.notes,
-	};
-	const changes = assembleAddNewNoteChanges({
-		slice,
-		lemmaId,
-		lemmaEntry,
-		ownedSurfaceEntries,
-		pickupRelationPatches,
-		inverseRelationPatches,
-		pendingRefsToCreateById,
-		pendingRelationEntries,
-	});
 
 	return {
 		status: "planned",
 		baseRevision: slice.revision,
 		changes,
 		affected: {
-			lemmaIds: [lemmaId],
+			lemmas: [lemma],
+			readings: [reading],
 			surfaceIds: ownedSurfaceEntries.map(({ id }) => id),
 			pendingIds: [
-				...Array.from(pendingRefsToCreateById.keys()),
-				...slice.matchingPendingRefsForNewLemma.map(
+				...pending.refs.map(({ pendingId }) => pendingId),
+				...slice.matchingPendingRefsForNewEntry.map(
 					({ pendingId }) => pendingId,
 				),
 			],
 		},
-		summary: { message: "Added new lemma note." },
+		summary: { message: "Added new learner reading." },
 	};
 }

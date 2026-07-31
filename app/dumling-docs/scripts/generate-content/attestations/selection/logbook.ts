@@ -20,9 +20,11 @@ type SelectionLogbookRow = {
 	classifierNotes?: string;
 	classificationMistakes?: string;
 	entity: {
-		language: SupportedLanguage;
 		surface: {
-			normalizedFullSurface: string;
+			normalizedSurface: string;
+			lemma: {
+				language: SupportedLanguage;
+			};
 		};
 	};
 	isVerified?: true;
@@ -37,7 +39,7 @@ export type SelectionLogbookCsvOutput = {
 };
 
 export function selectionLogbookCsvRow(selection: SelectionLogbookRow): string {
-	const language = selection.entity.language;
+	const language = selection.entity.surface.lemma.language;
 	const languageApi = getLanguageApi(language);
 
 	return [
@@ -180,7 +182,8 @@ export function selectionLogbookCsvOutputs(
 	const outputs: SelectionLogbookCsvOutput[] = [];
 
 	for (const selection of selections) {
-		const language = selection.entity.language as SupportedLanguage;
+		const language = selection.entity.surface.lemma
+			.language as SupportedLanguage;
 		const existing = rowsByLanguage.get(language) ?? [];
 		existing.push(selection);
 		rowsByLanguage.set(language, existing);
@@ -212,9 +215,9 @@ export function selectionLogbookCsvOutputs(
 			),
 		];
 		const descriptorLines = [
-			"sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind",
+			"sentence_markdown,normalizedSurface,surfaceKind,family,kind",
 			...selectionsForLanguage.map((selection) => {
-				const language = selection.entity.language;
+				const language = selection.entity.surface.lemma.language;
 				const languageApi = getLanguageApi(language);
 				const descriptorFields = String(
 					languageApi.describe.asCsv.selection(
@@ -225,14 +228,14 @@ export function selectionLogbookCsvOutputs(
 					_entityKind,
 					_descriptorLanguage,
 					surfaceKind,
-					lemmaKind,
-					lemmaSubKind,
+					family,
+					kind,
 				] = descriptorFields;
 
 				if (
 					surfaceKind === undefined ||
-					lemmaKind === undefined ||
-					lemmaSubKind === undefined
+					family === undefined ||
+					kind === undefined
 				) {
 					throw new Error(
 						`Unexpected descriptor CSV shape for ${selectionSemanticSourcePath(selection)}.`,
@@ -243,10 +246,10 @@ export function selectionLogbookCsvOutputs(
 					csvCell(
 						sentenceMarkdownCsvValue(selection.sentenceMarkdown),
 					),
-					csvCell(selection.entity.surface.normalizedFullSurface),
+					csvCell(selection.entity.surface.normalizedSurface),
 					csvCell(surfaceKind),
-					csvCell(lemmaKind),
-					csvCell(lemmaSubKind),
+					csvCell(family),
+					csvCell(kind),
 				].join(",");
 			}),
 		];

@@ -13,10 +13,11 @@ export function hrefForAttestedSelection(
 	attestedSelection: AttestedSelection,
 ): string {
 	const selection = attestedSelection.selection;
-	const languageApi = getLanguageApi(selection.language);
+	const language = selection.surface.lemma.language;
+	const languageApi = getLanguageApi(language);
 	const base64UrlId = String(languageApi.id.encode.asBase64Url(selection));
 
-	return `/${selection.language}/selection/${base64UrlId}/`;
+	return `/${language}/selection/${base64UrlId}/`;
 }
 
 export function withLinkedSelectionSpan(

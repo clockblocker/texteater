@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const hasfarimSelection = {
-	language: "he",
-	spelledSelection: "הספרים",
+	segmentedSentenceId: "sentence_hx1b-nkRHmAWQZQMX4" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "הספרים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "הספרים",
+		normalizedSurface: "הספרים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			definite: "Def",
@@ -14,14 +23,15 @@ const hasfarimSelection = {
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "ספר",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "ספר",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				abbr: null,
 			},
-			meaningInEmojis: "📚",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NOUN">;
 

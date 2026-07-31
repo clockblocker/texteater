@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const kickTheBucketPartialIdiomSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "kicked",
+	segmentedSentenceId: "sentence_gTmrGuO-rLyVxL8Smw" as SegmentedSentenceId,
+	clickedSegmentIndex: 8,
+	surfaceSegmentIndices: [8, 10, 12],
+	attestedSurface: "kicked the bucket",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "kick the bucket",
+		normalizedSurface: "kicked the bucket",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "kick the bucket",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "💀",
+			canonicalForm: "kick the bucket",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "Idiom">;
 

@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const enPronounFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["ADV", "PRON"]),
 		person: abstractFeatureAtomSchemas.person.extract(["1", "2", "3"]),

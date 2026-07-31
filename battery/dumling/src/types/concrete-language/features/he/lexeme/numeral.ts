@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HeNumeralFeatures = {
-	inherent: Record<never, never>;
+	core: Record<never, never>;
 	inflectional: {
 		definite: Extract<
 			AbstractFeatureValue<"definite">,

@@ -4,13 +4,14 @@ import { buildDumgen } from "dumgen";
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
 const generate = buildDumgen();
 
-const semanticIdentity =
-	await generate.production.noteBlock.de.noun.features({
-		canonicalLemma: "bank",
-		descriptor: {
-			language: "de",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-		},
-	});
+const readingDraft = await generate.production.reading.de.noun.draft({
+	language: "de",
+	canonicalForm: "Bank",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: {
+		gender: "Fem",
+		hyph: null,
+	},
+});
 // README_BLOCK:basic-usage:end

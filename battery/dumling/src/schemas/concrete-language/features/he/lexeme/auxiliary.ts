@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const heAuxiliaryFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		verbType: abstractFeatureAtomSchemas.verbType.extract(["Cop", "Mod"]),
 	}),
 	inflectional: requireNonEmptyFeatureObject(

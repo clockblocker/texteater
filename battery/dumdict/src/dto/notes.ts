@@ -1,8 +1,7 @@
-import type { Lemma, SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "../dumling";
 import type { RelationNotesForDisambiguation } from "./relations";
 
-export type LemmaNoteForDisambiguation<L extends SupportedLanguage> = {
-	lemma: Lemma<L>;
+export type ReadingNoteForDisambiguation<L extends SupportedLanguage> = {
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;

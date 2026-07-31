@@ -3,8 +3,8 @@ import type { StoreRevision } from "../dto";
 import type { SupportedLanguage } from "../dumling";
 
 export type {
-	LemmaPatchOp,
 	PlannedChangeOp,
+	ReadingPatchOp,
 } from "../core/planned-changes";
 export type { ChangePrecondition } from "../core/preconditions";
 

@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const unPrefixPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial", spelling: "Variant" },
-	spelledSelection: "un",
+	segmentedSentenceId: "sentence_lohX58SH3DniQsW1An" as SegmentedSentenceId,
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [6],
+	attestedSurface: "un",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "un-",
+		normalizedSurface: "un",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "un-",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Prefix",
-			inherentFeatures: {},
-			meaningInEmojis: "🚫",
+			canonicalForm: "un-",
+			family: "Morpheme",
+			kind: "Prefix",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Morpheme", "Prefix">;
 

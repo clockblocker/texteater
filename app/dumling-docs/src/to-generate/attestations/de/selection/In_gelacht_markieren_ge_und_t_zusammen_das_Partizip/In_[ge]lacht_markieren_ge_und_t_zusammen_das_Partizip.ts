@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection051 = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial", spelling: "Variant" },
-	spelledSelection: "ge",
+	segmentedSentenceId: "sentence_3q0s7Jv0VZUAzqcCTj" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2, 13],
+	attestedSurface: "ge t",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "ge-...-t",
+		normalizedSurface: "ge t",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "ge-...-t",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Circumfix",
-			inherentFeatures: {},
-			meaningInEmojis: "🧬",
+			canonicalForm: "ge-...-t",
+			family: "Morpheme",
+			kind: "Circumfix",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Morpheme", "Circumfix">;
 

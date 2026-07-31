@@ -1,63 +1,69 @@
 import type {
-	DumdictEntryDraft,
-	LemmaEntry,
-	PendingLemmaRef,
-	PendingLemmaRelation,
+	DumdictReadingDraft,
+	LemmaRecord,
+	PendingEntryRef,
+	PendingEntryRelation,
+	Reading,
+	ReadingEntry,
 	RelationNotesForDisambiguation,
 	StoreRevision,
 	SurfaceEntry,
 } from "../dto";
-import type { DumlingId, SupportedLanguage } from "../dumling";
-import type { CleanupRelationResolution, LemmaDescription } from "../public";
+import type { Lemma, SupportedLanguage } from "../dumling";
+import type { CleanupRelationResolution } from "../public";
 
-export type FindStoredLemmaSensesStorageRequest<L extends SupportedLanguage> = {
-	lemmaDescription: LemmaDescription<L>;
+export type FindStoredReadingsStorageRequest<L extends SupportedLanguage> = {
+	lemma: Lemma<L>;
 };
 
-export type StoredLemmaSensesSlice<L extends SupportedLanguage> = {
+export type StoredReadingsSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
 	candidates: Array<{
-		entry: LemmaEntry<L>;
+		reading: ReadingEntry<L>;
+		lemma: LemmaRecord<L>;
 		relationNotes?: RelationNotesForDisambiguation<L>;
 	}>;
 };
 
-export type LoadLemmaForPatchRequest<L extends SupportedLanguage> = {
-	lemmaId: DumlingId<"Lemma", L>;
+export type LoadReadingForPatchRequest<L extends SupportedLanguage> = {
+	reading: Reading<L>;
 };
 
-export type LemmaPatchSlice<L extends SupportedLanguage> = {
+export type ReadingPatchSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	lemma?: LemmaEntry<L>;
+	reading?: ReadingEntry<L>;
 };
 
 export type LoadNewNoteContextRequest<L extends SupportedLanguage> = {
-	draft: DumdictEntryDraft<L>;
+	draft: DumdictReadingDraft<L>;
 };
 
 export type NewNoteSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	existingLemma?: LemmaEntry<L>;
+	existingLemma?: LemmaRecord<L>;
+	existingReading?: ReadingEntry<L>;
 	existingOwnedSurfaces: SurfaceEntry<L>[];
-	explicitExistingRelationTargets: LemmaEntry<L>[];
-	existingPendingRefsForProposedPendingTargets: PendingLemmaRef<L>[];
-	matchingPendingRefsForNewLemma: PendingLemmaRef<L>[];
-	incomingPendingRelationsForNewLemma: PendingLemmaRelation<L>[];
-	incomingPendingSourceLemmas: LemmaEntry<L>[];
+	explicitExistingReadingTargets: ReadingEntry<L>[];
+	explicitExistingLemmaTargets: LemmaRecord<L>[];
+	existingPendingRefsForProposedPendingTargets: PendingEntryRef<L>[];
+	matchingPendingRefsForNewEntry: PendingEntryRef<L>[];
+	incomingPendingRelationsForNewEntry: PendingEntryRelation<L>[];
+	incomingPendingSourceReadings: ReadingEntry<L>[];
+	incomingPendingSourceLemmas: LemmaRecord<L>[];
 };
 
 export type GetInfoForRelationsCleanupStorageRequest<
-	L extends SupportedLanguage,
+	_L extends SupportedLanguage,
 > = {
-	canonicalLemma: string;
+	canonicalForm: string;
 };
 
 export type RelationsCleanupInfoSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	canonicalLemma: string;
-	candidateLemmas: LemmaEntry<L>[];
-	pendingRefs: PendingLemmaRef<L>[];
-	pendingRelations: PendingLemmaRelation<L>[];
+	canonicalForm: string;
+	candidateLemmas: LemmaRecord<L>[];
+	pendingRefs: PendingEntryRef<L>[];
+	pendingRelations: PendingEntryRelation<L>[];
 };
 
 export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
@@ -66,7 +72,11 @@ export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
 
 export type CleanupRelationsSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	pendingRefs: PendingLemmaRef<L>[];
-	pendingRelations: PendingLemmaRelation<L>[];
-	targetLemmas: LemmaEntry<L>[];
+	pendingRefs: PendingEntryRef<L>[];
+	pendingRelations: PendingEntryRelation<L>[];
+	targetReadings: Array<{
+		reading: ReadingEntry<L>;
+		lemma: LemmaRecord<L>;
+	}>;
+	targetLemmas: LemmaRecord<L>[];
 };

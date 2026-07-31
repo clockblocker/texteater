@@ -1,12 +1,12 @@
-sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
+sentence_markdown,normalizedSurface,surfaceKind,family,kind
 [Am] nächsten Morgen war alles anders.,am,Citation,Construction,Fusion
 Am [nächsten] Morgen war alles anders.,nächsten,Inflection,Lexeme,ADJ
 Am nächsten Morgen war alles [anders].,anders,Citation,Lexeme,ADJ
 Auf der Karte sind drei [Seen] eingezeichnet.,Seen,Inflection,Lexeme,NOUN
 Auf der Karte sind drei Seen [eingezeichnet].,eingezeichnet,Inflection,Lexeme,VERB
-Bei dieser Formel verstehe ich nur [Bahnhof].,nur Bahnhof verstehen,Citation,Phraseme,Idiom
+Bei dieser Formel verstehe ich nur [Bahnhof].,verstehe nur Bahnhof,Inflection,Phraseme,Idiom
 Bitte folgen Sie [Ihrem] Ansprechpartner.,Ihrem,Inflection,Lexeme,DET
-Damit triffst du den [Nagel] auf den Kopf.,den Nagel auf den Kopf treffen,Citation,Phraseme,Idiom
+Damit triffst du den [Nagel] auf den Kopf.,den nagel auf den kopf,Citation,Phraseme,Idiom
 Das ist [nicht] mein Problem.,nicht,Citation,Lexeme,PART
 Das ist schwer [zu] erklären.,zu,Citation,Lexeme,PART
 Das [muss] heute noch raus.,muss,Inflection,Lexeme,VERB
@@ -17,7 +17,7 @@ Das rote Band [lag] auf dem Geschenk.,lag,Inflection,Lexeme,VERB
 Das rote Band lag [auf] dem Geschenk.,auf,Citation,Lexeme,ADP
 Das [Schloss] an der Tür klemmt.,Schloss,Citation,Lexeme,NOUN
 Das [Schloss] über dem Fluss wurde renoviert.,Schloss,Citation,Lexeme,NOUN
-Das [Un]- in Unkosten wirkt historisch irritierend.,un-,Citation,Morpheme,Prefix
+Das [Un]- in Unkosten wirkt historisch irritierend.,Un,Citation,Morpheme,Prefix
 Das [wäre] fast schief gewesen.,wäre,Inflection,Lexeme,AUX
 Das wäre [fast] schief gewesen.,fast,Citation,Lexeme,ADV
 Das wäre fast schief [gewesen].,gewesen,Inflection,Lexeme,AUX
@@ -54,12 +54,12 @@ Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat,Infle
 Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Inflection,Lexeme,PRON
 Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,mitgebracht,Inflection,Lexeme,VERB
 Die Peitsche hat er mitgebracht [und] nimmt sie sorglich sehr in acht.,und,Citation,Lexeme,CCONJ
-Die Peitsche hat er mitgebracht und [nimmt] sie sorglich sehr in acht.,in acht nehmen,Citation,Phraseme,Idiom
+Die Peitsche hat er mitgebracht und [nimmt] sie sorglich sehr in acht.,nimmt,Citation,Phraseme,Idiom
 Die Peitsche hat er mitgebracht und nimmt [sie] sorglich sehr in acht.,sie,Inflection,Lexeme,PRON
 Die Peitsche hat er mitgebracht und nimmt sie [sorglich] sehr in acht.,sorglich,Citation,Lexeme,ADV
 Die Peitsche hat er mitgebracht und nimmt sie sorglich [sehr] in acht.,sehr,Citation,Lexeme,ADV
-Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht nehmen,Citation,Phraseme,Idiom
-Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht nehmen,Citation,Phraseme,Idiom
+Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr [in] acht.,in acht,Citation,Phraseme,Idiom
+Die Peitsche hat er mitgebracht und nimmt sie sorglich sehr in [acht].,in acht,Citation,Phraseme,Idiom
 Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Inflection,Lexeme,ADJ
 Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Citation,Lexeme,ADJ
 Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Citation,Phraseme,DiscourseFormula
@@ -94,21 +94,21 @@ Es zog der wilde Jägersmann sein grasgrün neues Röcklein [an];,zog an,Inflect
 [Fort] geht nun die Mutter und wupp! den Daumen in den Mund. ,fort,Citation,Lexeme,ADV
 Fort geht nun die Mutter und [wupp]! den Daumen in den Mund. ,wupp,Citation,Lexeme,INTJ
 [Geh] bitte nicht ohne Jacke raus.,geh,Inflection,Lexeme,VERB
-Genau da liegt der [Hase] im Pfeffer.,da liegt der Hase im Pfeffer,Citation,Phraseme,Idiom
+Genau da liegt der [Hase] im Pfeffer.,da liegt der hase im pfeffer,Citation,Phraseme,Idiom
 "[Guten Tag], ich habe einen Termin.",Guten Tag,Citation,Phraseme,DiscourseFormula
 "Ich gehe Tomaten kaufen, um einen Salat [zu] machen.",um zu,Citation,Construction,PairedFrame
 Ich [lasse] mir morgen die Haare schneiden.,lasse,Inflection,Lexeme,VERB
 Ich suche einen [besseren] Ansatz.,besseren,Inflection,Lexeme,ADJ
 Ich will mir morgen die Haare schneiden [lassen].,lassen,Inflection,Lexeme,VERB
-Im Heft stand [Filosofie] statt Philosophie.,Filosofie,Inflection,Lexeme,NOUN
+Im Heft stand [Filosofie] statt Philosophie.,Philosophie,Inflection,Lexeme,NOUN
 In Berlin betreibt die [BVG] die U-Bahn.,BVG,Citation,Lexeme,PROPN
-In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge-...-t,Citation,Morpheme,Circumfix
+In [ge]lacht markieren ge- und -t zusammen das Partizip.,ge t,Citation,Morpheme,Circumfix
 "Jetzt schien die Sonne gar zu sehr, [da] ward ihm sein Gewehr zu schwer.",da,Citation,Lexeme,ADV
 "Jetzt schien die Sonne gar zu sehr, da [ward] ihm sein Gewehr zu schwer.",ward,Inflection,Lexeme,VERB
 Meine [Mutter] ruft jeden Sonntag an.,Mutter,Citation,Lexeme,NOUN
 Mit den [Kindern] ist es nie langweilig.,Kindern,Inflection,Lexeme,NOUN
 Mit [keinem] Wort erwähnte sie den Plan.,keinem,Inflection,Lexeme,DET
-"[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",Morgenstund hat Gold im Mund,Citation,Phraseme,Proverb
+"[Morgenstund] hat Gold im Mund, sagte sie verschlafen.",morgenstund hat gold im mund,Citation,Phraseme,Proverb
 "[Na ja], ganz überzeugt bin ich nicht.",na ja,Citation,Phraseme,DiscourseFormula
 "Na [ja], ganz überzeugt bin ich nicht.",na ja,Citation,Phraseme,DiscourseFormula
 Nach [manchem] Fehler lernt man schneller.,manchem,Inflection,Lexeme,DET
@@ -117,7 +117,7 @@ Nach [manchem] Fehler lernt man schneller.,manchem,Inflection,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus [ins] Feld geschwind",ins,Citation,Construction,Fusion
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Citation,Lexeme,ADV
 [Pass] auf dich auf!,pass auf,Inflection,Lexeme,VERB
-Pass [auf] dich auf!,pass auf,Inflection,Lexeme,VERB
+Pass [auf] dich auf!,auf,Citation,Lexeme,ADP
 Pass auf [dich] auf!,dich,Inflection,Lexeme,PRON
 Pass auf dich [auf]!,pass auf,Inflection,Lexeme,VERB
 [Schwimmen] ist gesund.,Schwimmen,Citation,Lexeme,NOUN

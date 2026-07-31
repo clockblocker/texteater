@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const bateiConstructSelection = {
-	language: "he",
-	spelledSelection: "בתי",
+	segmentedSentenceId: "sentence_P-2V-8J4Cb2hAg1tWG" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "בתי",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "בתי",
+		normalizedSurface: "בתי",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			definite: "Cons",
@@ -14,14 +23,15 @@ const bateiConstructSelection = {
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "בית",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "בית",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Masc",
+				abbr: null,
 			},
-			meaningInEmojis: "🏠",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NOUN">;
 

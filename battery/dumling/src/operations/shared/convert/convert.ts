@@ -1,30 +1,18 @@
 import type {
 	Lemma,
 	Selection,
-	SelectionFeatures,
+	SelectionOptionsFor,
 	SupportedLanguage,
 	Surface,
 } from "../../../types/public-types.js";
 import type { LanguageApi } from "../../api-shape.js";
-import { requireNonEmptyFeatureBag } from "../feature-bags.js";
-
-type SelectionOptions = {
-	selectionFeatures?: SelectionFeatures;
-	spelledSelection?: string;
-};
 
 function buildSelectionFromSurface<L extends SupportedLanguage>(
 	surface: Surface<L>,
-	options: SelectionOptions = {},
+	options: SelectionOptionsFor,
 ): Selection<L> {
 	return {
-		language: surface.language,
-		selectionFeatures: requireNonEmptyFeatureBag(
-			options.selectionFeatures,
-			"selectionFeatures",
-		),
-		spelledSelection:
-			options.spelledSelection ?? surface.normalizedFullSurface,
+		...options,
 		surface,
 	} as unknown as Selection<L>;
 }
@@ -37,7 +25,9 @@ export function buildConvertOperations<
 			toSurface(lemma: Lemma<L>) {
 				return {
 					language: lemma.language,
-					normalizedFullSurface: lemma.canonicalLemma,
+					normalizedSurface: lemma.canonicalForm,
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 					surfaceFeatures: null,
 					lemma,
@@ -45,11 +35,13 @@ export function buildConvertOperations<
 					LanguageApi<L>["convert"]["lemma"]["toSurface"]
 				>;
 			},
-			toSelection(lemma: Lemma<L>, options = {}) {
+			toSelection(lemma: Lemma<L>, options: SelectionOptionsFor) {
 				return buildSelectionFromSurface(
 					{
 						language: lemma.language,
-						normalizedFullSurface: lemma.canonicalLemma,
+						normalizedSurface: lemma.canonicalForm,
+						spelling: "Canonical",
+						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 						lemma,
@@ -59,7 +51,7 @@ export function buildConvertOperations<
 			},
 		},
 		surface: {
-			toSelection(surface: Surface<L>, options = {}) {
+			toSelection(surface: Surface<L>, options: SelectionOptionsFor) {
 				return buildSelectionFromSurface(surface, options);
 			},
 		},

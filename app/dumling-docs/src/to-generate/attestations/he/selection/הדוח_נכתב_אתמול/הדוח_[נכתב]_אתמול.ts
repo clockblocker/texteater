@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const nichtavVerbSelection = {
-	language: "he",
-	spelledSelection: "נכתב",
+	segmentedSentenceId: "sentence_P198tDtpx_A4VeSVe0" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "נכתב",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "נכתב",
+		normalizedSurface: "נכתב",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Masc",
@@ -14,17 +23,22 @@ const nichtavVerbSelection = {
 			person: "3",
 			tense: "Past",
 			voice: "Pass",
+			definite: null,
+			mood: null,
+			polarity: null,
+			verbForm: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "כתב",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "כתב",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "NIFAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "✍️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

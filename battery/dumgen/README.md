@@ -21,15 +21,16 @@ import { buildDumgen } from "dumgen";
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
 const generate = buildDumgen();
 
-const semanticIdentity =
-	await generate.production.noteBlock.de.noun.features({
-		canonicalLemma: "bank",
-		descriptor: {
-			language: "de",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-		},
-	});
+const readingDraft = await generate.production.reading.de.noun.draft({
+	language: "de",
+	canonicalForm: "Bank",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: {
+		gender: "Fem",
+		hyph: null,
+	},
+});
 ```
 
 ## Vision
@@ -39,13 +40,13 @@ progressively narrower generators as layered defenses against invalid or
 underspecified input:
 
 1. Determine whether the input is meaningful and uses a supported language.
-2. Once it is parsable, classify it into a grammatical entity identity sourced
-   from `dumling`.
-3. Feed that grammatical identity to an identity-specific generator such as
-   `production.noteBlock.de.noun.features`, which establishes a sense-level
-   semantic identity.
-4. Feed the semantic identity to narrowly scoped generators for the remaining
-   NoteBlock fields.
+2. Once it is parsable, resolve it to a reusable structural `Lemma` identity
+	 sourced from `dumling`.
+3. Feed that Lemma to an identity-specific generator such as
+	 `production.reading.de.noun.draft`, which drafts a learner-owned `Reading`
+	 without changing Lemma identity.
+4. Feed the Reading draft to narrowly scoped generators for any remaining
+   learner-note fields.
 
 The classification stages will eventually be available as one full-chain
 method. For now, supported identities and generator paths are registered by

@@ -33,7 +33,7 @@ This feature is relevant only for languages whose demonstrative systems distingu
 			body: `
 In dumling, place \`deixisRef\` wherever the paired \`deixis\` value belongs.
 
-- use \`lemma.inherentFeatures.deixisRef\` when the speaker-versus-hearer contrast is a stable lexical fact of the [\`Lemma\`](/u/entity/lemma/)
+- use \`Lemma.coreFeatures.deixisRef\` when the speaker-versus-hearer contrast is a stable lexical fact of the [\`Lemma\`](/u/entity/lemma/)
 - use \`surface.inflectionalFeatures.deixisRef\` when that contrast is realized on a concrete inflected form
 `,
 		},

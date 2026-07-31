@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const heVerbFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		hebBinyan: abstractFeatureAtomSchemas.hebBinyan,
 		hebExistential: abstractFeatureAtomSchemas.hebExistential,
 	}),

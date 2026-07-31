@@ -1,39 +1,51 @@
 import type {
-	LemmaEntry,
+	LemmaRecord,
 	LexicalRelation,
 	MorphologicalRelation,
-	PendingLemmaId,
-	PendingLemmaRef,
-	PendingLemmaRelation,
+	PendingEntryId,
+	PendingEntryRef,
+	PendingEntryRelation,
+	Reading,
+	ReadingEntry,
 	SurfaceEntry,
 } from "../dto";
-import type { DumlingId, SupportedLanguage } from "../dumling";
+import type { Lemma, SupportedLanguage } from "../dumling";
 import type { ChangePrecondition } from "./preconditions";
 
-export type LemmaPatchOp<L extends SupportedLanguage> =
+export type ReadingPatchOp<L extends SupportedLanguage> =
 	| { kind: "addAttestation"; value: string }
 	| {
 			kind: "addRelation";
-			family: "lexical";
 			relation: LexicalRelation;
-			targetLemmaId: DumlingId<"Lemma", L>;
-	  }
-	| {
-			kind: "addRelation";
-			family: "morphological";
-			relation: MorphologicalRelation;
-			targetLemmaId: DumlingId<"Lemma", L>;
+			targetReading: Reading<L>;
 	  };
+
+type LemmaPatchOp<L extends SupportedLanguage> = {
+	kind: "addRelation";
+	relation: MorphologicalRelation;
+	targetLemma: Lemma<L>;
+};
 
 export type PlannedChangeOp<L extends SupportedLanguage> =
 	| {
 			type: "createLemma";
-			entry: LemmaEntry<L>;
+			record: LemmaRecord<L>;
+			preconditions: ChangePrecondition<L>[];
+	  }
+	| {
+			type: "createReading";
+			entry: ReadingEntry<L>;
+			preconditions: ChangePrecondition<L>[];
+	  }
+	| {
+			type: "patchReading";
+			reading: Reading<L>;
+			ops: ReadingPatchOp<L>[];
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
 			type: "patchLemma";
-			lemmaId: DumlingId<"Lemma", L>;
+			lemma: Lemma<L>;
 			ops: LemmaPatchOp<L>[];
 			preconditions: ChangePrecondition<L>[];
 	  }
@@ -44,21 +56,21 @@ export type PlannedChangeOp<L extends SupportedLanguage> =
 	  }
 	| {
 			type: "createPendingRef";
-			ref: PendingLemmaRef<L>;
+			ref: PendingEntryRef<L>;
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
 			type: "deletePendingRef";
-			pendingId: PendingLemmaId<L>;
+			pendingId: PendingEntryId<L>;
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
 			type: "createPendingRelation";
-			relation: PendingLemmaRelation<L>;
+			relation: PendingEntryRelation<L>;
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
 			type: "deletePendingRelation";
-			relation: PendingLemmaRelation<L>;
+			relation: PendingEntryRelation<L>;
 			preconditions: ChangePrecondition<L>[];
 	  };

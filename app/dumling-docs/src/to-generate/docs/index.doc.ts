@@ -7,7 +7,7 @@ const document = defineGeneratedDocPage({
 	body: `
 **dumling** is a UD-inspired, learner-facing, lexi-semantic classification framework.
 
-It's goal is to provides a language-independent structure for answering questions like:
+Its goal is to provide a language-independent structure for answering questions like:
 "Teacher, what is '[give]' in \`If they can't deliver them they'll just [give] up\`?"
 in the most dummy-friendly way possible, while stil being strict and consistent.
 
@@ -17,11 +17,13 @@ For a learner, the useful answer is not only that [give] is a verb token.
 
 dumling classifies it as:
 
-- a \`Partial\` **Selection** of the normalized full
-- **Surface** _"give up"_, which points to the
-- **Lemma** _"give up"_: a phrasal English \`VERB\`
+- a **Selection** whose clicked Segment is _"give"_ and whose Surface occurrence
+  also includes _"up"_
+- the normalized **Surface** _"give up"_, which points to
+- the **Lemma** _"give up"_: a phrasal English \`VERB\`
 
-That is the core job of dumling: keep the learner's highlighted text connected to the full lexical item that carries the meaning.
+That is the core job of Dumling: resolve one learner click through its
+contextual grammatical form to a normalized grammatical identity.
 
 ## Why It Exists
 
@@ -33,27 +35,36 @@ This also matters for phrasemes:
 
 - _During my [walk] in a park, I saw a squirrel._
 
-    Here [dumdict classifies it](/en/selection/djEscyxjLHdhbGssbCxlbixsLG4sd2Fsayzwn5q2LA/) as a \`Full\` **Selection** of the noun **Lexeme** _"walk"_.
+    Here the click resolves through the noun Surface _"walk"_ to the noun
+    Lemma _"walk"_.
 
 - _This exam was a [walk] in the park._
 
-    Here [dumdict classifies it](/en/selection/djEscyxjLHdhbGsgaW4gdGhlIHBhcmssbCxlbixwLGlkLHdhbGsgaW4gdGhlIHBhcmss8J-YjCw/) as a \`Partial\` **Selection** of the idiomatic **Phraseme** _"walk in the park"_.
+    Here the click resolves through the multi-segment Surface _"walk in the
+    park"_ to the idiomatic Phraseme Lemma _"walk in the park"_.
 
-The spelling on the page is not forced to be the whole lexical object. A small learner highlight can still point to the larger surface and lemma that explain the meaning.
+The clicked Segment is not forced to be the whole Surface occurrence. A click
+on one Segment can record all participating Segment indices and still resolve
+to the larger Surface and Lemma.
+
+That alone does not make the Surface partial. \`realizationCoverage: "Partial"\`
+is for an attested form that omits part of the Lemma, such as _"heulte mit"_
+for _"mit den Wölfen heulen"_.
 
 ## What It Focuses On
 
 Dumling focuses on lexical classification for learning tools:
 
-- **Lemma**: the lexical item behind the expression, such as _"walk"_, _"give up"_, or _"walk in the park"_
-- **Surface**: the normalized full form in context, such as _"gave up"_
-- **Selection**: the exact text the learner highlighted, such as **give**, **up**, or **walk**
-- lexical kind: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
-- learner-relevant selection features: partial coverage, licensed spelling variants, and typos when those facts are marked
-- learner-relevant surface features: properties of the resolved full surface, such as archaic status
+- **Lemma**: normalized grammatical identity, such as _"walk"_, _"give up"_, or _"walk in the park"_
+- **Surface**: the normalized contextual form, such as _"gave up"_
+- **Selection**: sentence-local click evidence, including the clicked Segment and every Segment participating in the Surface occurrence
+- Lemma family: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
+- Selection orthography: whether the clicked Segment is standard text or a typo
+- Surface spelling and realization coverage: licensed variants and genuinely partial realizations
+- learner-relevant Surface features, such as archaic status
 - language-specific lexical inventories built on a shared cross-language model
 
-The framework is implemented as a TypeScript and Zod package so apps can validate, serialize, search, and round-trip these objects through IDs.
+The framework is implemented as a TypeScript and Zod package so apps can validate, serialize, search, and round-trip these objects through identities.
 
 ## What It Omits
 
@@ -61,7 +72,9 @@ Dumling intentionally does not try to be a full grammar model.
 
 It does not model syntactic dependency relations, phrase structure, or sentence-level grammar. It also does not try to explain every grammatical relation between words in a sentence.
 
-The scope is narrower: identify the meaning-bearing lexical unit behind a learner's selection, and describe that unit in a stable, language-aware shape.
+The scope is narrower: resolve a learner click to a Surface and its Lemma, then
+describe that grammatical chain in a stable, language-aware shape. A learner's
+semantic Reading—one Lemma plus one emoji description—belongs outside Dumling.
 
 ## Runtime Scope
 

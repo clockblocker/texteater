@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const llCliticPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial", spelling: "Variant" },
-	spelledSelection: "ll",
+	segmentedSentenceId: "sentence_AIBHcb3olXWJJxUjSM" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "ll",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "ll",
+		normalizedSurface: "ll",
+		spelling: "Variant",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "'ll",
-			lemmaKind: "Morpheme",
-			lemmaSubKind: "Clitic",
-			inherentFeatures: {},
-			meaningInEmojis: "🔮",
+			canonicalForm: "'ll",
+			family: "Morpheme",
+			kind: "Clitic",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Morpheme", "Clitic">;
 
@@ -24,5 +32,5 @@ export const attestation = {
 	selection: llCliticPartialSelection,
 	sentenceMarkdown: "I'[ll] call when I arrive.",
 	classifierNotes:
-		'The apostrophe is outside the selected substring, so `selectionFeatures.spelling: "Variant"` marks the mismatch against the clitic lemma.',
+		'The apostrophe is outside the selected substring, so `surface.spelling: "Variant"` marks the mismatch against the clitic lemma.',
 } as const satisfies AttestedSelection;

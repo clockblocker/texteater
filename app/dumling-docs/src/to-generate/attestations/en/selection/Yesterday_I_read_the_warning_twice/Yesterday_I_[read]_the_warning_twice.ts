@@ -1,25 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const readPastHomographSelection = {
-	language: "en",
-	spelledSelection: "read",
+	segmentedSentenceId: "sentence_JUl1_FcA5xNeHg-eNn" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "read",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "read",
+		normalizedSurface: "read",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			tense: "Past",
 			verbForm: "Fin",
+			mood: null,
+			number: null,
+			person: null,
+			voice: null,
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "read",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "📖",
+			canonicalForm: "read",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				hasGovPrep: null,
+				phrasal: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "VERB">;
 

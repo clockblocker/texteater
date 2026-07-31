@@ -1,26 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const yadayimDualSelection = {
-	language: "he",
-	spelledSelection: "ידיים",
+	segmentedSentenceId: "sentence_UM8ORmKVVIOxRv0SSm" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "ידיים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "ידיים",
+		normalizedSurface: "ידיים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Dual",
+			definite: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "יד",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {
+			canonicalForm: "יד",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
 				gender: "Fem",
+				abbr: null,
 			},
-			meaningInEmojis: "🤲",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NOUN">;
 

@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection034 = {
-	language: "de",
-	spelledSelection: "seinen",
+	segmentedSentenceId: "sentence_YPAmf4Qg-yEzAlQb6N" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "seinen",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "seinen",
+		normalizedSurface: "seinen",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Acc",
@@ -14,19 +23,25 @@ const deSelection034 = {
 			number: "Sing",
 			"gender[psor]": "Masc",
 			"number[psor]": "Sing",
+			degree: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "sein",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "DET",
-			inherentFeatures: {
+			canonicalForm: "sein",
+			family: "Lexeme",
+			kind: "DET",
+			coreFeatures: {
 				person: "3",
 				poss: "Yes",
 				pronType: "Prs",
+				definite: null,
+				extPos: null,
+				foreign: null,
+				numType: null,
+				polite: null,
 			},
-			meaningInEmojis: "👦",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "DET">;
 
@@ -36,6 +51,6 @@ export const attestation = {
 	classifierNotes:
 		"`Seinen` is the accusative masculine singular possessive determiner agreeing with Schlüssel. Here the subject `Er` makes the possessor reading specifically 3rd-person masculine singular, so the separate possessor features are justified.",
 	classificationMistakes:
-		"Do not set meaningInEmojis from the possessed noun phrase when the selection is a possessive determiner. The earlier mistake here was using a key emoji for `seinen` instead of representing the determiner's `his` meaning.",
+		"Meaning belongs to a later layer; Dumling records `seinen` as a possessive determiner Surface.",
 	isVerified: true,
 } as const satisfies AttestedSelection;

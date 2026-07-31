@@ -9,7 +9,8 @@ import {
 	defineAttestationsCodegen,
 	lastAttestationOutputForEachRoute,
 } from "./codegen";
-import { entityKindFor } from "./entity/helpers";
+import { attestationSlugForEntity } from "./entity/attestation-slug";
+import { entityKindFor, lemmaForEntity } from "./entity/helpers";
 import { discoverAttestationsInitialOwnership } from "./initial-ownership";
 import { generatedFrontmatterForAttestation } from "./render/generated-frontmatter";
 import { renderAttestationBody } from "./render/render-attestation-body";
@@ -17,8 +18,8 @@ import {
 	prepareSelectionLogbooks,
 	selectionLogbookCsvOutputs,
 } from "./selection/logbook";
-import { renameSelectionSources } from "./selection/rename-selection-sources";
 import { loadAttestationSource } from "./source/load-attestation-source";
+import { renameAttestationSources } from "./source/rename-attestation-sources";
 import { validateAttestationPath } from "./validate/validate-attestation-path";
 import {
 	isSelectionAttestationSource,
@@ -32,19 +33,21 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 	const initialOwnership = discoverAttestationsInitialOwnership();
 
 	prepareSelectionLogbooks();
-	const sourcePaths = await renameSelectionSources();
+	const sourcePaths = await renameAttestationSources();
 
 	for (const sourcePath of sourcePaths) {
 		const source = await loadAttestationSource(sourcePath);
 		validateSelectionAttestation(source);
-		const languageApi = getLanguageApi(source.entity.language);
-		const base64UrlId = String(
-			languageApi.id.encode.asBase64Url(source.entity),
-		);
-		const entityKind = entityKindFor(source.entity).toLowerCase();
-		validateAttestationPath(source, base64UrlId);
+		const language = lemmaForEntity(source.entity).language;
+		const languageApi = getLanguageApi(language);
+		const attestationSlug = attestationSlugForEntity(source.entity);
+		const entityKind =
+			entityKindFor(source.entity) === "Lemma"
+				? "lemma"
+				: entityKindFor(source.entity).toLowerCase();
+		validateAttestationPath(source, attestationSlug);
 
-		const routeId = `${source.entity.language}/${entityKind}/${base64UrlId}`;
+		const routeId = `${language}/${entityKind}/${attestationSlug}`;
 		const frontmatter = generatedFrontmatterForAttestation(source, routeId);
 		const body = renderAttestationBody(
 			source,
@@ -56,9 +59,9 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 			frontmatter,
 			generatedPath: join(
 				generatedEntitiesDir,
-				source.entity.language,
+				language,
 				entityKind,
-				`${base64UrlId}.md`,
+				`${attestationSlug}.md`,
 			),
 			publicPath: publicMarkdownPathForRouteId(routeId),
 			routeId,

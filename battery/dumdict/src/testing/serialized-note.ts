@@ -1,14 +1,16 @@
 import type {
-	LemmaEntry,
-	PendingLemmaRef,
-	PendingLemmaRelation,
+	LemmaRecord,
+	PendingEntryRef,
+	PendingEntryRelation,
+	ReadingEntry,
 	SurfaceEntry,
 } from "../dto";
 import type { SupportedLanguage } from "../dumling";
 
 export type SerializedDictionaryNote<L extends SupportedLanguage> = {
-	lemmaEntry: LemmaEntry<L>;
+	lemmaRecord: LemmaRecord<L>;
+	readingEntries: ReadingEntry<L>[];
 	ownedSurfaceEntries: SurfaceEntry<L>[];
-	pendingRefs?: PendingLemmaRef<L>[];
-	pendingRelations: PendingLemmaRelation<L>[];
+	pendingRefs?: PendingEntryRef<L>[];
+	pendingRelations: PendingEntryRelation<L>[];
 };

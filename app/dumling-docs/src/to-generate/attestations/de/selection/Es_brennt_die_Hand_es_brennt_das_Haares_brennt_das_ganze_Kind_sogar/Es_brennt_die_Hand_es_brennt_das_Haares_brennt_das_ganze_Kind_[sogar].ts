@@ -1,21 +1,34 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const sogarAdverbSelection = {
-	language: "de",
-	spelledSelection: "sogar",
+	segmentedSentenceId: "sentence_sz9vPqpI5wFjuc-oLv" as SegmentedSentenceId,
+	clickedSegmentIndex: 28,
+	surfaceSegmentIndices: [28],
+	attestedSurface: "sogar",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "sogar",
+		normalizedSurface: "sogar",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "sogar",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADV",
-			inherentFeatures: {},
-			meaningInEmojis: "➕",
+			canonicalForm: "sogar",
+			family: "Lexeme",
+			kind: "ADV",
+			coreFeatures: {
+				foreign: null,
+				numType: null,
+				pronType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Lexeme", "ADV">;
 

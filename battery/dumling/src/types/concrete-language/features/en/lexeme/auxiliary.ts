@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type EnAuxiliaryFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		style: Extract<AbstractFeatureValue<"style">, "Arch" | "Vrnc"> | null;
 	};

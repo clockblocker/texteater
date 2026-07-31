@@ -2,19 +2,31 @@ import type { Surface } from "dumling/types";
 
 export const ranSurface = {
 	language: "en",
-	normalizedFullSurface: "ran",
+	normalizedSurface: "ran",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	inflectionalFeatures: {
+		mood: null,
+		number: "Sing",
+		person: "1",
 		tense: "Past",
 		verbForm: "Fin",
+		voice: null,
 	},
+	surfaceFeatures: null,
 	lemma: {
 		language: "en",
-		canonicalLemma: "run",
-		lemmaKind: "Lexeme",
-		lemmaSubKind: "VERB",
-		inherentFeatures: {},
-		meaningInEmojis: "🏃",
+		canonicalForm: "run",
+		family: "Lexeme",
+		kind: "VERB",
+		coreFeatures: {
+			abbr: null,
+			extPos: null,
+			hasGovPrep: null,
+			phrasal: null,
+			style: null,
+		},
 	},
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 

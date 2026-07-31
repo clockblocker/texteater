@@ -8,7 +8,7 @@ import {
 } from "../../../../shared/feature-helpers.js";
 
 export const enDeterminerFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		abbr: abstractFeatureAtomSchemas.abbr,
 		definite: abstractFeatureAtomSchemas.definite.extract(["Def", "Ind"]),
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["ADV", "PRON"]),

@@ -1,31 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "auf",
+	segmentedSentenceId: "sentence_jpghSyPUpRZLUZcJk8" as SegmentedSentenceId,
+	clickedSegmentIndex: 6,
+	surfaceSegmentIndices: [0, 6],
+	attestedSurface: "Pass auf",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "pass auf",
+		normalizedSurface: "pass auf",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Imp",
 			number: "Sing",
 			person: "2",
 			verbForm: "Fin",
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "aufpassen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "aufpassen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasGovPrep: "auf",
 				hasSepPrefix: "auf",
+				lexicallyReflexive: null,
+				verbType: null,
 			},
-			meaningInEmojis: "👀",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 
@@ -33,6 +45,6 @@ export const attestation = {
 	selection: deSelection,
 	sentenceMarkdown: "Pass auf dich [auf]!",
 	classifierNotes:
-		'The detached prefix token also points to the verbal surface `pass auf`; the governed preposition is kept separately on the lemma as `hasGovPrep: "auf"`.',
+		'The detached prefix token also points to the verbal surface `pass auf`; the governed preposition is kept separately on the Lemma as `hasGovPrep: "auf"`.',
 	isVerified: true,
 } as const satisfies AttestedSelection;

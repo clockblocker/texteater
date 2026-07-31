@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const earlyBirdProverbPartialSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "early bird",
+	segmentedSentenceId: "sentence_5IC-DHAGLIh_JPaQMK" as SegmentedSentenceId,
+	clickedSegmentIndex: 5,
+	surfaceSegmentIndices: [3, 5, 7, 9, 11, 13],
+	attestedSurface: "the early bird catches the worm",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "the early bird catches the worm",
+		normalizedSurface: "the early bird catches the worm",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "the early bird catches the worm",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Proverb",
-			inherentFeatures: {},
-			meaningInEmojis: "🐦",
+			canonicalForm: "the early bird catches the worm",
+			family: "Phraseme",
+			kind: "Proverb",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Phraseme", "Proverb">;
 

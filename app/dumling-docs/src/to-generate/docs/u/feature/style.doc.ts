@@ -11,7 +11,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`Style\` marks the register, sublanguage, or stylistic coloring associated with a word or form.
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feature with eight public values. In Dumling, it may be lexical in \`lemma.inherentFeatures\` or, in principle, inflectional in \`surface.inflectionalFeatures\`, depending on how a language-specific schema exposes it.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feature with eight public values. In Dumling, it may be lexical in \`Lemma.coreFeatures\` or, in principle, inflectional in \`surface.inflectionalFeatures\`, depending on how a language-specific schema exposes it.
 
 ## Values
 
@@ -24,7 +24,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Style.html) feat
 - \`Vrnc\`: vernacular
 - \`Vulg\`: vulgar
 
-If \`style\` is absent or \`undefined\`, Dumling records no style value for that lemma or surface.
+If \`style\` is absent or \`undefined\`, Dumling records no style value for that Lemma or surface.
 `,
 	examples: [likeVernacularSubordinator],
 	subsections: [
@@ -39,9 +39,9 @@ Use \`style\` when the lexical item or form itself belongs to a marked register,
 		{
 			heading: "Layering",
 			body: `
-Some languages treat style mostly as a lexical property of particular lemmas, while others can expose it through recurrent form-level alternations.
+Some languages treat style mostly as a lexical property of particular Lemmas, while others can expose it through recurrent form-level alternations.
 
-That is why the abstract feature is not tied to one layer only: a language pack can place it on the lemma when the stylistic value is part of lexical identity, or on the surface when the stylistic distinction is expressed inflectionally or orthographically.
+That is why the abstract feature is not tied to one layer only: a language pack can place it on the Lemma when the stylistic value is part of lexical identity, or on the surface when the stylistic distinction is expressed inflectionally or orthographically.
 `,
 		},
 		{
@@ -49,7 +49,7 @@ That is why the abstract feature is not tied to one layer only: a language pack 
 			body: `
 The abstract \`Style\` enum exposes all eight UD values above.
 
-Current concrete Dumling schemas use a narrower inherent subset on selected English lexeme classes: \`Arch\`, \`Coll\`, \`Expr\`, \`Slng\`, and \`Vrnc\`. The current ID codec serializes that same five-value subset.
+Current concrete Dumling schemas use a narrower core subset on selected English lexeme classes: \`Arch\`, \`Coll\`, \`Expr\`, \`Slng\`, and \`Vrnc\`. The current ID codec serializes that same five-value subset.
 `,
 		},
 	],

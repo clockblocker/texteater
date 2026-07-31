@@ -11,7 +11,7 @@ const document = defineLanguageOverlayPage({
 	subject: "AdpType",
 	title: "AdpType",
 	body: `
-In German, \`AdpType\` is currently used on [\`ADP\`](/lang/de/entity/lemma/lexeme/adp/) lemmas to distinguish ordinary prepositions from postpositions and, when needed, circumpositions.
+In German, \`AdpType\` is currently used on [\`ADP\`](/lang/de/entity/lemma/lexeme/adp/) Lemmas to distinguish ordinary prepositions from postpositions and, when needed, circumpositions.
 
 The German concrete schema currently allows \`Circ\`, \`Post\`, and \`Prep\`. The repository's verified attestations currently show \`Prep\` and \`Post\`.
 `,

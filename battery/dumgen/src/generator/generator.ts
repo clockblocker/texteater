@@ -116,7 +116,9 @@ function makeGenerator<Definition extends AnyPrompt>(
 		}
 
 		try {
-			return prompt.outputSchema.parse(generated);
+			const parsedOutput = prompt.outputSchema.parse(generated);
+			prompt.outputPostcondition?.assert(parsedInput, parsedOutput);
+			return parsedOutput;
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-output",

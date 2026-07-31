@@ -2,45 +2,46 @@ import type { ZodType } from "zod";
 import { canonicalizeNullableProperties } from "../../../src/operations/shared/parse/canonicalize-nullable";
 import { schemasFor } from "../../../src/schema";
 import type {
-	InherentFeaturesFor,
+	CoreFeaturesFor,
 	Lemma,
+	LemmaFamilyFor,
 	LemmaKindFor,
-	LemmaSubKindFor,
 	SupportedLanguage,
 } from "../../../src/types";
 
 type BuilderOptions<
 	L extends SupportedLanguage,
-	LK extends LemmaKindFor<L>,
-	LSK extends LemmaSubKindFor<L, LK>,
+	LK extends LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK>,
 > = {
-	inherentFeatures?: InherentFeaturesFor<L, LK, LSK>;
-	meaningInEmojis?: string;
+	coreFeatures?: CoreFeaturesFor<L, LK, LSK>;
 };
 
 function makeLemma<
 	L extends SupportedLanguage,
-	LK extends LemmaKindFor<L>,
-	LSK extends LemmaSubKindFor<L, LK>,
+	LK extends LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK>,
 >(
 	language: L,
-	lemmaKind: LK,
-	lemmaSubKind: LSK,
-	canonicalLemma: string,
+	family: LK,
+	kind: LSK,
+	canonicalForm: string,
 	options: BuilderOptions<L, LK, LSK> = {},
 ): Lemma<L, LK, LSK> {
 	const rawLemma = {
 		language,
-		canonicalLemma,
-		lemmaKind,
-		lemmaSubKind,
-		inherentFeatures: (options.inherentFeatures ??
-			{}) as InherentFeaturesFor<L, LK, LSK>,
-		meaningInEmojis: options.meaningInEmojis ?? "🔤",
+		canonicalForm,
+		family,
+		kind,
+		coreFeatures: (options.coreFeatures ?? {}) as CoreFeaturesFor<
+			L,
+			LK,
+			LSK
+		>,
 	};
 	const languageSchemas = Reflect.get(schemasFor, language);
-	const lemmaSchemas = Reflect.get(languageSchemas.entity.Lemma, lemmaKind);
-	const getSchema = Reflect.get(lemmaSchemas, lemmaSubKind) as () => ZodType;
+	const entrySchemas = Reflect.get(languageSchemas.entity.Lemma, family);
+	const getSchema = Reflect.get(entrySchemas, kind) as () => ZodType;
 	const schema = getSchema();
 	return schema.parse(
 		canonicalizeNullableProperties(schema, rawLemma),
@@ -49,19 +50,19 @@ function makeLemma<
 
 export function makeLexemeSurfaceReference<
 	L extends SupportedLanguage,
-	LSK extends LemmaSubKindFor<L, "Lexeme" & LemmaKindFor<L>>,
+	LSK extends LemmaKindFor<L, "Lexeme" & LemmaFamilyFor<L>>,
 >(
 	language: L,
-	lemmaSubKind: LSK,
-	canonicalLemma: string,
-	options: BuilderOptions<L, "Lexeme" & LemmaKindFor<L>, LSK> = {},
+	kind: LSK,
+	canonicalForm: string,
+	options: BuilderOptions<L, "Lexeme" & LemmaFamilyFor<L>, LSK> = {},
 ) {
 	return {
 		lemma: makeLemma(
 			language,
-			"Lexeme" as "Lexeme" & LemmaKindFor<L>,
-			lemmaSubKind,
-			canonicalLemma,
+			"Lexeme" as "Lexeme" & LemmaFamilyFor<L>,
+			kind,
+			canonicalForm,
 			options,
 		),
 		surfaceFeatures: null,
@@ -70,19 +71,19 @@ export function makeLexemeSurfaceReference<
 
 export function makeMorphemeSurfaceReference<
 	L extends SupportedLanguage,
-	LSK extends LemmaSubKindFor<L, "Morpheme" & LemmaKindFor<L>>,
+	LSK extends LemmaKindFor<L, "Morpheme" & LemmaFamilyFor<L>>,
 >(
 	language: L,
-	lemmaSubKind: LSK,
-	canonicalLemma: string,
-	options: BuilderOptions<L, "Morpheme" & LemmaKindFor<L>, LSK> = {},
+	kind: LSK,
+	canonicalForm: string,
+	options: BuilderOptions<L, "Morpheme" & LemmaFamilyFor<L>, LSK> = {},
 ) {
 	return {
 		lemma: makeLemma(
 			language,
-			"Morpheme" as "Morpheme" & LemmaKindFor<L>,
-			lemmaSubKind,
-			canonicalLemma,
+			"Morpheme" as "Morpheme" & LemmaFamilyFor<L>,
+			kind,
+			canonicalForm,
 			options,
 		),
 		surfaceFeatures: null,
@@ -91,19 +92,19 @@ export function makeMorphemeSurfaceReference<
 
 export function makePhrasemeSurfaceReference<
 	L extends SupportedLanguage,
-	LSK extends LemmaSubKindFor<L, "Phraseme" & LemmaKindFor<L>>,
+	LSK extends LemmaKindFor<L, "Phraseme" & LemmaFamilyFor<L>>,
 >(
 	language: L,
-	lemmaSubKind: LSK,
-	canonicalLemma: string,
-	options: BuilderOptions<L, "Phraseme" & LemmaKindFor<L>, LSK> = {},
+	kind: LSK,
+	canonicalForm: string,
+	options: BuilderOptions<L, "Phraseme" & LemmaFamilyFor<L>, LSK> = {},
 ) {
 	return {
 		lemma: makeLemma(
 			language,
-			"Phraseme" as "Phraseme" & LemmaKindFor<L>,
-			lemmaSubKind,
-			canonicalLemma,
+			"Phraseme" as "Phraseme" & LemmaFamilyFor<L>,
+			kind,
+			canonicalForm,
 			options,
 		),
 		surfaceFeatures: null,
@@ -112,19 +113,19 @@ export function makePhrasemeSurfaceReference<
 
 export function makeConstructionSurfaceReference<
 	L extends SupportedLanguage,
-	LSK extends LemmaSubKindFor<L, "Construction" & LemmaKindFor<L>>,
+	LSK extends LemmaKindFor<L, "Construction" & LemmaFamilyFor<L>>,
 >(
 	language: L,
-	lemmaSubKind: LSK,
-	canonicalLemma: string,
-	options: BuilderOptions<L, "Construction" & LemmaKindFor<L>, LSK> = {},
+	kind: LSK,
+	canonicalForm: string,
+	options: BuilderOptions<L, "Construction" & LemmaFamilyFor<L>, LSK> = {},
 ) {
 	return {
 		lemma: makeLemma(
 			language,
-			"Construction" as "Construction" & LemmaKindFor<L>,
-			lemmaSubKind,
-			canonicalLemma,
+			"Construction" as "Construction" & LemmaFamilyFor<L>,
+			kind,
+			canonicalForm,
 			options,
 		),
 		surfaceFeatures: null,

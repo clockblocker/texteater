@@ -19,8 +19,8 @@ import {
 	buildUnionSchema,
 } from "../shared/builders.js";
 import {
+	abstractCoreFeaturesSchema,
 	abstractInflectionalFeaturesSchema,
-	abstractInherentFeaturesSchema,
 } from "./feature-schemas.js";
 
 type AbstractLeafBundle = {
@@ -34,14 +34,14 @@ type AbstractLeafBundle = {
 };
 
 function buildAbstractLeafBundle(
-	lemmaKind: "Lexeme" | "Morpheme" | "Phraseme" | "Construction",
-	lemmaSubKind: string,
+	family: "Lexeme" | "Morpheme" | "Phraseme" | "Construction",
+	kind: string,
 ): AbstractLeafBundle {
 	const lemmaSchema = buildLemmaSchema({
 		languageSchema: AbstractLanguageTag,
-		lemmaKind,
-		lemmaSubKind,
-		inherentFeaturesSchema: abstractInherentFeaturesSchema,
+		family,
+		kind,
+		coreFeaturesSchema: abstractCoreFeaturesSchema,
 	}) as z.ZodType<AbstractLemma<string>>;
 	const citationSurfaceSchema = buildCitationSurfaceSchema({
 		languageSchema: AbstractLanguageTag,
@@ -53,11 +53,9 @@ function buildAbstractLeafBundle(
 		inflectionalFeaturesSchema: abstractInflectionalFeaturesSchema,
 	}) as z.ZodType<AbstractSurface<string, "Inflection">>;
 	const citationSelectionSchema = buildSelectionSchema({
-		languageSchema: AbstractLanguageTag,
 		surfaceSchema: citationSurfaceSchema,
 	}) as z.ZodType<AbstractSelection<string, "Citation">>;
 	const inflectionSelectionSchema = buildSelectionSchema({
-		languageSchema: AbstractLanguageTag,
 		surfaceSchema: inflectionSurfaceSchema,
 	}) as z.ZodType<AbstractSelection<string, "Inflection">>;
 
@@ -73,14 +71,14 @@ const abstractLemmaSchemas: z.ZodType[] = [];
 const abstractSurfaceSchemas: z.ZodType[] = [];
 const abstractSelectionSchemas: z.ZodType[] = [];
 
-for (const [lemmaKind, subKinds] of [
+for (const [family, subKinds] of [
 	["Lexeme", Pos.options],
 	["Morpheme", MorphemeKind.options],
 	["Phraseme", PhrasemeKind.options],
 	["Construction", ConstructionKind.options],
 ] as const) {
-	for (const lemmaSubKind of subKinds) {
-		const bundle = buildAbstractLeafBundle(lemmaKind, lemmaSubKind);
+	for (const kind of subKinds) {
+		const bundle = buildAbstractLeafBundle(family, kind);
 
 		abstractLemmaSchemas.push(bundle.lemmaSchema);
 		abstractSurfaceSchemas.push(

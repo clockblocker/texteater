@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type EnPronounFeatures = {
-	inherent: {
+	core: {
 		abbr: AbstractFeatureValue<"abbr"> | null;
 		extPos: Extract<AbstractFeatureValue<"extPos">, "ADV" | "PRON"> | null;
 		person: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3"> | null;

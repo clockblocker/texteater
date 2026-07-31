@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const etAccusativeSelection = {
-	language: "he",
-	spelledSelection: "את",
+	segmentedSentenceId: "sentence_mvDswpBxQbI64wQt9d" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "את",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "את",
+		normalizedSurface: "את",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "את",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "ADP",
-			inherentFeatures: {
+			canonicalForm: "את",
+			family: "Lexeme",
+			kind: "ADP",
+			coreFeatures: {
 				case: "Acc",
+				abbr: null,
 			},
-			meaningInEmojis: "🎯",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "ADP">;
 

@@ -1,29 +1,44 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const katavVerbSelection = {
-	language: "he",
-	spelledSelection: "כתב",
+	segmentedSentenceId: "sentence_LMbBZu3UiQBPFVZnNL" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "כתב",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "כתב",
+		normalizedSurface: "כתב",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Masc",
 			number: "Sing",
 			person: "3",
 			tense: "Past",
+			definite: null,
+			mood: null,
+			polarity: null,
+			verbForm: null,
+			voice: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "כתב",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "כתב",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "PAAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "✍️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

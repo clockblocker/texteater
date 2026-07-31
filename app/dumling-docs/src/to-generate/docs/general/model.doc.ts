@@ -5,11 +5,11 @@ const document = defineGeneratedDocPage({
 	order: 20,
 	title: "Model",
 	body: `
-The public model is built around three hydrated DTOs:
+The public Dumling model is built around three hydrated DTOs:
 
-- \`Lemma\`: the dictionary or lemma-like entry
-- \`Surface\`: the normalized full form in context
-- \`Selection\`: the exact observed highlight
+- \`Lemma\`: the normalized grammatical identity
+- \`Surface\`: the normalized form resolved from the attested text
+- \`Selection\`: the sentence-local evidence produced by a click
 
 Selections are always hydrated:
 
@@ -20,24 +20,34 @@ Selections are always hydrated:
 
 <!-- DOC_BLOCK:core-lemma -->
 
-A lemma is the canonical lexical object, or a lemma-like fused entry. It is where you put the language, the canonical form, the broad lemma kind, the concrete lemma subtype, inherent features, and a learner-facing meaning hint.
+A Lemma owns its \`language\`, \`canonicalForm\`, \`family\`, \`kind\`, and
+\`coreFeatures\`. Together these fields are grammatical identity. There is no
+separate opaque identity layered above the Lemma.
+
+Grammatically indistinguishable homonyms share one Lemma. Semantic identity is
+a learner-scoped Reading—the pair of a Lemma and an emoji description—and
+belongs outside Dumling.
 
 ## Surface
 
 <!-- DOC_BLOCK:core-surface -->
 
-A citation surface uses \`surfaceKind: "Citation"\` and normally has the canonical lemma spelling as \`normalizedFullSurface\`.
+A citation surface uses \`surfaceKind: "Citation"\`. Every Surface also owns
+\`spelling: "Canonical" | "Variant"\` and
+\`realizationCoverage: "Full" | "Partial"\`.
 
 Marked properties of the resolved surface live in \`surfaceFeatures\`. For example, a historical citation or inflection can carry \`surfaceFeatures: { historicalStatus: "Archaic" }\`.
 
-Construction entries are citation-only today, so \`Construction/Fusion\` and \`Construction/PairedFrame\` only appear under \`Surface<Citation>\` and never under \`Surface<Inflection>\`.
+Construction Lemmas are citation-only today, so \`Construction/Fusion\` and \`Construction/PairedFrame\` only appear under \`Surface<Citation>\` and never under \`Surface<Inflection>\`.
 
 An inflection surface uses \`surfaceKind: "Inflection"\` and adds \`inflectionalFeatures\`:
 
 \`\`\`ts
 const ranSurface = dumling.en.create.surface.inflection({
 \tlemma: runLemma,
-\tnormalizedFullSurface: "ran",
+\tnormalizedSurface: "ran",
+\tspelling: "Canonical",
+\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\ttense: "Past",
 \t\tverbForm: "Fin",
@@ -49,40 +59,39 @@ const ranSurface = dumling.en.create.surface.inflection({
 
 <!-- DOC_BLOCK:core-selection -->
 
-A selection records what was observed in text. The normalized surface stays available through \`selection.surface\`, and the lemma entry stays available through \`selection.surface.lemma\`.
-
-Only marked mismatches are stored on the selection itself. \`selectionFeatures\` can record:
-
-- \`orthography: "Typo"\`
-- \`coverage: "Partial"\`
-- \`spelling: "Variant"\`
-
-When \`selectionFeatures\` is omitted, the selection is implicitly standard, full, and canonically spelled relative to its resolved surface.
+A Selection records the immutable segmented sentence ID, the clicked \`ResolvableText\`
+segment index, every segment index participating in the Surface occurrence,
+the noisy attested text across those segments, and the clicked segment's
+\`selectedOrthography\`. Variant spelling and partial realization live on the
+Surface because they describe the linguistic form, not the click.
 
 ## Descriptors
 
-Descriptors are compact structural summaries of DTOs. They are useful when code needs to route by entity kind, language, lemma kind, or surface kind without carrying the whole object through the branch.
+Descriptors are compact structural summaries of DTOs. They are useful when code needs to route by entity kind, language, Lemma family and kind, or Surface kind without carrying the whole object through the branch.
 
 \`\`\`ts
 const descriptor = dumling.de.describe.as.selection(seeSelection);
 
 descriptor.entityKind; // "Selection"
 descriptor.language; // "de"
-descriptor.lemmaKind; // "Lexeme"
-descriptor.lemmaSubKind; // "NOUN"
+descriptor.family; // "Lexeme"
+descriptor.kind; // "NOUN"
 descriptor.surfaceKind; // "Citation"
 \`\`\`
 
 ## IDs
 
-IDs are stable strings produced from hydrated DTOs. Use the language-bound ID helpers when the caller already knows the language:
+IDs are compact identity keys. Decoding intentionally does not hydrate the
+whole DTO graph:
 
 \`\`\`ts
-const id = dumling.de.id.encode(seeSelection);
-const decoded = dumling.de.id.decodeAs("Selection", id);
+const id = dumling.de.id.encode.asBase64Url(seeSelection);
+const decoded = dumling.de.id.decode.asSelectionIdentity(id);
 \`\`\`
 
-Use \`inspectId(id)\` from the root entrypoint when you need metadata before full decoding.
+Selection identity is the pair
+\`(segmentedSentenceId, clickedSegmentIndex)\`. Lemma identity is its complete
+grammatical tuple: language, canonical form, family, kind, and core features.
 
 ## Runtime Validation
 

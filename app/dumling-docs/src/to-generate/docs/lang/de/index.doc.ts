@@ -14,21 +14,21 @@ The public German classification tree lives under [/de/](/de/).
 Start with:
 
 - [/de/entity/](/de/entity/) for \`Lemma\`, \`Surface\`, and \`Selection\`
-- [/de/entity/lemma/](/de/entity/lemma/) for the four lemma branches
+- [/de/entity/lemma/](/de/entity/lemma/) for the four Lemma branches
 - [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/), [/de/entity/lemma/phraseme/](/de/entity/lemma/phraseme/), and [/de/entity/lemma/construction/](/de/entity/lemma/construction/) for concrete inventories
 - [/de/feature/](/de/feature/) and [/de/feature/selection/](/de/feature/selection/) for feature pages
 - [/de/classification-instructions/](/de/classification-instructions/) for German-specific classifier instructions
 
 ## Supported Lemma Families
 
-| \`lemmaKind\` | \`lemmaSubKind\` values |
+| \`family\` | \`kind\` values |
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\`, \`PairedFrame\` |
 
-German uses \`Construction/Fusion\` for fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and \`Construction/PairedFrame\` for learner-facing paired frames such as \`um zu\`. These are citation-only entries in the current public DTO.
+German uses \`Construction/Fusion\` for fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and \`Construction/PairedFrame\` for learner-facing paired frames such as \`um zu\`. These are citation-only Lemmas in the current public DTO.
 
 ## Common Feature Areas
 
@@ -42,7 +42,7 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
 
-\`Construction/Fusion\` and \`Construction/PairedFrame\` currently carry no additional inherent or inflectional features.
+\`Construction/Fusion\` and \`Construction/PairedFrame\` currently carry no additional core or inflectional features.
 
 ## Example
 
@@ -50,45 +50,57 @@ German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal 
 import { dumling } from "dumling";
 
 const seeLemma = dumling.de.create.lemma({
-\tcanonicalLemma: "See",
-\tlemmaKind: "Lexeme",
-\tlemmaSubKind: "NOUN",
-\tinherentFeatures: {
+\tcanonicalForm: "See",
+\tfamily: "Lexeme",
+\tkind: "NOUN",
+\tcoreFeatures: {
 \t\tgender: "Masc",
+\t\thyph: null,
 \t},
-\tmeaningInEmojis: "🌊",
 });
 
 const seenSurface = dumling.de.create.surface.inflection({
 \tlemma: seeLemma,
-\tnormalizedFullSurface: "Seen",
+\tnormalizedSurface: "Seen",
+\tspelling: "Canonical",
+\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\tcase: "Nom",
 \t\tnumber: "Plur",
 \t},
+\tsurfaceFeatures: null,
 });
 
 const seenSelection = dumling.de.create.selection({
+\tsegmentedSentenceId:
+\t\tdumling.de.create.segmentedSentenceId("sentence:de:drei-seen"),
+\tclickedSegmentIndex: 4,
+\tsurfaceSegmentIndices: [4],
+\tattestedSurface: "Seen",
+\tselectedOrthography: "Standard",
 \tsurface: seenSurface,
-\tspelledSelection: "Seen",
 });
 
-dumling.de.id.encode(seenSelection);
+dumling.de.id.encode.asBase64Url(seenSelection);
 \`\`\`
 
 German fusion example:
 
 \`\`\`ts
 const zumLemma = dumling.de.create.lemma({
-\tcanonicalLemma: "zum",
-\tlemmaKind: "Construction",
-\tlemmaSubKind: "Fusion",
-\tinherentFeatures: {},
-\tmeaningInEmojis: "➡️",
+\tcanonicalForm: "zum",
+\tfamily: "Construction",
+\tkind: "Fusion",
+\tcoreFeatures: {},
 });
 
 const zumSelection = dumling.de.convert.lemma.toSelection(zumLemma, {
-\tspelledSelection: "zum",
+\tsegmentedSentenceId:
+\t\tdumling.de.create.segmentedSentenceId("sentence:de:zum-bahnhof"),
+\tclickedSegmentIndex: 2,
+\tsurfaceSegmentIndices: [2],
+\tattestedSurface: "zum",
+\tselectedOrthography: "Standard",
 });
 \`\`\`
 
@@ -96,18 +108,19 @@ German paired-frame example:
 
 \`\`\`ts
 const umZuLemma = dumling.de.create.lemma({
-\tcanonicalLemma: "um zu",
-\tlemmaKind: "Construction",
-\tlemmaSubKind: "PairedFrame",
-\tinherentFeatures: {},
-\tmeaningInEmojis: "🎯",
+\tcanonicalForm: "um zu",
+\tfamily: "Construction",
+\tkind: "PairedFrame",
+\tcoreFeatures: {},
 });
 
 const umZuSelection = dumling.de.convert.lemma.toSelection(umZuLemma, {
-\tselectionFeatures: {
-\t\tcoverage: "Partial",
-\t},
-\tspelledSelection: "zu",
+\tsegmentedSentenceId:
+\t\tdumling.de.create.segmentedSentenceId("sentence:de:um-zu"),
+\tclickedSegmentIndex: 6,
+\tsurfaceSegmentIndices: [2, 6],
+\tattestedSurface: "um zu",
+\tselectedOrthography: "Standard",
 });
 \`\`\`
 

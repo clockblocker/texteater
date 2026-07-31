@@ -9,9 +9,9 @@ This package ships working runtime surfaces for `de`, `en`, and `he`.
 
 `dumling` keeps three linked DTOs separate:
 
-- `Lemma`: the dictionary or lemma-like entry
-- `Surface`: the normalized full form in context
-- `Selection`: the exact text the learner highlighted
+- `Lemma`: the normalized grammatical identity
+- `Surface`: a normalized form that carries spelling, realization coverage, and inflection
+- `Selection`: the noisy, sentence-local evidence produced by a learner click
 
 ## Entrypoints
 
@@ -30,7 +30,7 @@ Each concrete language namespace (`dumling.de`, `dumling.en`, `dumling.he`) expo
 - `extract`: entity accessors such as `extract.lemma(...)`
 - `parse`: safe parsing returning `ApiResult<T, ParseError>`
 - `describe`: descriptor helpers via `describe.as.*` and canonical descriptor CSV via `describe.asCsv.*`
-- `id`: stable ID encode/decode helpers for hydrated DTOs
+- `id`: stable identity encode/decode helpers; decoding returns identity keys, not hydrated DTO graphs
 
 The root runtime entrypoint also exposes:
 
@@ -43,28 +43,31 @@ The root runtime entrypoint also exposes:
 
 - DTOs: `Lemma`, `Surface`, `Selection`
 - Entity and ID helpers: `EntityValue`, `EntityForKind`, `DumlingCsv`, `DumlingBase64Url`, `SelectionOptionsFor`
-- Language-aware helper types: `LemmaKindFor`, `LemmaSubKindFor`, `SurfaceKindFor`, `LemmaKindForSurfaceKind`
-- Feature typing helpers: `FeatureSet`, `FeatureName`, `FeatureValue`, `InherentFeaturesFor`, `InflectionalFeaturesFor`
+- Language-aware helper types: `LemmaFamilyFor`, `LemmaKindFor`, `SurfaceKindFor`, `LemmaFamilyForSurfaceKind`
+- Feature typing helpers: `FeatureSet`, `FeatureName`, `FeatureValue`, `CoreFeaturesFor`, `InflectionalFeaturesFor`
 - Descriptors and API shapes: `Descriptor`, `DumlingApi`, `LanguageApi`, `DumlingDescriptorCsv`
 - Result and error types: `ApiResult`, `ParseError`, `IdDecodeError`, `IdDecodeSuccess`
 
 ## Core idea
 
-Start with a German noun lemma, build the linked learner-facing entities explicitly, and then use the runtime helpers for parsing and IDs.
+Start with a German noun Lemma, build the linked learner-facing entities explicitly, and then use the runtime helpers for parsing and IDs.
 
-The `Lemma` is the dictionary or lemma-like entry:
+The `Lemma` is the normalized grammatical identity:
 
 <!-- README_BLOCK:core-lemma -->
 
-The `Surface` is the normalized full form that the note belongs to:
+The `Surface` is the normalized contextual form that the note belongs to:
 
 <!-- README_BLOCK:core-surface -->
 
-The `Selection` is the exact observed highlight in the learner's text:
+The `Selection` records which segment was clicked, which segments realize the
+Surface, and the noisy spelling attested in the sentence:
 
 <!-- README_BLOCK:core-selection -->
 
-For that same `Selection`, the readable CSV ID and the tiny CSV payload inside the base64url ID are:
+Readable identities make the ownership boundary explicit. Selection identity
+is local to the immutable Segmented Sentence; Lemma identity carries the full
+grammatical tuple:
 
 <!-- README_BLOCK:core-selection-id-examples -->
 
@@ -88,7 +91,7 @@ People often look for this package using adjacent terms:
 
 - linguistic annotation
 - learner annotation
-- lemma and inflection modeling
+- Lemma and inflection modeling
 - surface form normalization
 - selection DTOs
 - Zod schema registries
@@ -96,20 +99,24 @@ People often look for this package using adjacent terms:
 
 ## Model notes
 
-The public DTO model keeps selection mismatch features sparse:
+The public DTO model assigns each distinction to the layer that owns it:
 
-- `selectionFeatures.orthography: "Typo"` marks misspellings
-- `selectionFeatures.spelling: "Variant"` marks licensed non-canonical spellings
-- `selectionFeatures.coverage: "Partial"` marks partial highlights
-- omitted selection features mean standard orthography, canonical spelling, and full coverage
-- `surfaceFeatures.historicalStatus: "Archaic"` marks the resolved surface itself, not the selection-to-surface relation
+- `Selection.selectedOrthography` says whether the clicked segment is standard text or a typo
+- `Selection.surfaceSegmentIndices` identifies the complete, possibly discontinuous Surface occurrence
+- `Selection.attestedSurface` preserves the noisy text across those segments
+- `Surface.spelling` distinguishes canonical and licensed variant spellings, such as `armor` / `armour`
+- `Surface.realizationCoverage` distinguishes full and partial realizations, such as `heulte mit` for `mit den Wölfen heulen`
+- inflectional features and Lemma identity belong to the Surface
 
 Selections are always hydrated:
 
 - a `Selection` always contains a `Surface`
 - a `Surface` always contains a `Lemma`
 
-Lemma kinds also include `Construction` for learner-facing patterned entries such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction entries are citation-only today.
+Lemma families also include `Construction` for learner-facing patterned entities such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction Lemmas are citation-only today.
+
+Dumling stops at Lemma. Learner-scoped semantic identity is a `Reading`—the
+pair of a Lemma and an emoji description—and belongs outside this package.
 
 ## Scope
 

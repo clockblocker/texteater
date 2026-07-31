@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HePronounFeatures = {
-	inherent: {
+	core: {
 		definite: Extract<AbstractFeatureValue<"definite">, "Def"> | null;
 		pronType: Extract<
 			AbstractFeatureValue<"pronType">,

@@ -1,23 +1,37 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const thatPronounSelection = {
-	language: "en",
-	spelledSelection: "That",
+	segmentedSentenceId: "sentence_DKVDt4T1RxtcaY2dPn" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "That",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "that",
+		normalizedSurface: "that",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "that",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "that",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				pronType: "Dem",
+				abbr: null,
+				extPos: null,
+				person: null,
+				poss: null,
+				style: null,
 			},
-			meaningInEmojis: "👉",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "PRON">;
 

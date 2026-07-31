@@ -4,7 +4,11 @@ import { sourceAttestationsDir } from "../../shared/paths";
 
 type SelectionSemanticSourceInput = {
 	entity: {
-		language: SupportedLanguage;
+		surface: {
+			lemma: {
+				language: SupportedLanguage;
+			};
+		};
 	};
 	sentenceMarkdown: string;
 };
@@ -30,7 +34,7 @@ export function selectionSemanticSourcePath(
 	const semanticBasename = semanticSelectionBasename(source.sentenceMarkdown);
 	return join(
 		sourceAttestationsDir,
-		source.entity.language,
+		source.entity.surface.lemma.language,
 		"selection",
 		semanticSelectionDirectoryBasename(source.sentenceMarkdown),
 		`${semanticBasename}.ts`,

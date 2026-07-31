@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "wäre",
+	segmentedSentenceId: "sentence_LTCnYJqNIvlWTzSpvk" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "wäre",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "wäre",
+		normalizedSurface: "wäre",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Sub",
@@ -14,15 +23,18 @@ const deSelection = {
 			person: "3",
 			tense: "Past",
 			verbForm: "Fin",
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "sein",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "AUX",
-			inherentFeatures: {},
-			meaningInEmojis: "🧩",
+			canonicalForm: "sein",
+			family: "Lexeme",
+			kind: "AUX",
+			coreFeatures: {
+				verbType: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "AUX">;
 

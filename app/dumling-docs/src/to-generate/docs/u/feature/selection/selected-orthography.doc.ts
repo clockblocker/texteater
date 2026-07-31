@@ -2,10 +2,10 @@ import { defineUniversalConceptStubPage } from "../../../../../lib/docs/source-m
 
 const document = defineUniversalConceptStubPage({
 	family: "feature-selection",
-	leaf: "spelling",
-	order: 18103,
-	subject: "spelling",
-	title: "spelling",
+	leaf: "selected-orthography",
+	order: 18101,
+	subject: "selected-orthography",
+	title: "selectedOrthography",
 });
 
 export default document;

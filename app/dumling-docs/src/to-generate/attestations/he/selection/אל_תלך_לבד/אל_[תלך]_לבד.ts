@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const telechNegativeSelection = {
-	language: "he",
-	spelledSelection: "תלך",
+	segmentedSentenceId: "sentence_JFtPA8Ee2kq3-PtuZm" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "תלך",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "תלך",
+		normalizedSurface: "תלך",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Masc",
@@ -14,17 +23,22 @@ const telechNegativeSelection = {
 			person: "2",
 			polarity: "Neg",
 			tense: "Fut",
+			definite: null,
+			mood: null,
+			verbForm: null,
+			voice: null,
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "הלך",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "הלך",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebBinyan: "PAAL",
+				hebExistential: null,
 			},
-			meaningInEmojis: "🚶",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "VERB">;
 

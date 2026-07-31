@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { resolve } from "node:path";
 import { z as z3 } from "zod/v3";
 import { z as z4 } from "zod/v4";
 import { codecBuilder3 } from "../src/v3";
@@ -44,27 +45,38 @@ describe("versioned codec builders", () => {
 	});
 
 	test("bundles each versioned entrypoint without the other Zod runtime", async () => {
+		const packageRoot = resolve(import.meta.dir, "..");
 		const [v3Build, v4Build, rootV3Build, rootV4Build] = await Promise.all([
 			Bun.build({
-				entrypoints: ["src/v3/index.ts"],
+				entrypoints: [resolve(packageRoot, "src/v3/index.ts")],
 				format: "esm",
 				packages: "external",
 				target: "node",
 			}),
 			Bun.build({
-				entrypoints: ["src/v4/index.ts"],
+				entrypoints: [resolve(packageRoot, "src/v4/index.ts")],
 				format: "esm",
 				packages: "external",
 				target: "node",
 			}),
 			Bun.build({
-				entrypoints: ["tests/fixtures/import-v3-from-root.ts"],
+				entrypoints: [
+					resolve(
+						packageRoot,
+						"tests/fixtures/import-v3-from-root.ts",
+					),
+				],
 				format: "esm",
 				packages: "external",
 				target: "node",
 			}),
 			Bun.build({
-				entrypoints: ["tests/fixtures/import-v4-from-root.ts"],
+				entrypoints: [
+					resolve(
+						packageRoot,
+						"tests/fixtures/import-v4-from-root.ts",
+					),
+				],
 				format: "esm",
 				packages: "external",
 				target: "node",

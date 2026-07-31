@@ -12,7 +12,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`AdpType\` marks the subtype of an adposition [\`Lemma\`](/u/entity/lemma/).
 
-It is a [UD-compliant](https://universaldependencies.org/u/feat/AdpType.html) feature and belongs in \`lemma.inherentFeatures\`.
+It is a [UD-compliant](https://universaldependencies.org/u/feat/AdpType.html) feature and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
@@ -21,24 +21,24 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/AdpType.html) fe
 - \`Prep\`: preposition
 - \`Voc\`: vocative adposition or vocative marker
 
-If \`lemma.inherentFeatures.adpType\` is absent or \`undefined\`, the lemma is treated as having no recorded adpositional subtype.
+If \`Lemma.coreFeatures.adpType\` is absent or \`undefined\`, the Lemma is treated as having no recorded adpositional subtype.
 `,
 	examples: [aufPreposition, entlangPostposition],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`adpType\` on [\`ADP\`](/u/entity/lemma/lexeme/adp/) lemmas when the subtype is a stable lexical fact of the lemma itself.
+Use \`adpType\` on [\`ADP\`](/u/entity/lemma/lexeme/adp/) Lemmas when the subtype is a stable lexical fact of the Lemma itself.
 
 Choose \`Prep\` when the adposition normally precedes its complement, \`Post\` when it follows it, and \`Circ\` for circumpositional analyses. Use \`Voc\` only when your UD analysis treats a vocative marker as adpositional.
 
-Do not use \`adpType\` to encode a verb's governed preposition. That is a separate lemma-level fact modeled by [\`HasGovPrep\`](/u/feature/has-gov-prep/).
+Do not use \`adpType\` to encode a verb's governed preposition. That is a separate Lemma-level fact modeled by [\`HasGovPrep\`](/u/feature/has-gov-prep/).
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-The abstract feature enum follows UD and includes all four values above. Current concrete Dumling schemas expose \`AdpType\` only on German [\`ADP\`](/u/entity/lemma/lexeme/adp/) lemmas, and only \`Circ\`, \`Post\`, and \`Prep\` are currently encodable there.
+The abstract feature enum follows UD and includes all four values above. Current concrete Dumling schemas expose \`AdpType\` only on German [\`ADP\`](/u/entity/lemma/lexeme/adp/) Lemmas, and only \`Circ\`, \`Post\`, and \`Prep\` are currently encodable there.
 `,
 		},
 	],

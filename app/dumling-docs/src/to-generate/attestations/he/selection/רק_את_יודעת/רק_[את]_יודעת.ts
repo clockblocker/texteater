@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const atPronounSelection = {
-	language: "he",
-	spelledSelection: "את",
+	segmentedSentenceId: "sentence_0d7c1t9EOW7SWkjgbW" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "את",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "את",
+		normalizedSurface: "את",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			gender: "Fem",
@@ -15,14 +24,16 @@ const atPronounSelection = {
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "את",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "את",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				pronType: "Prs",
+				definite: null,
+				reflex: null,
 			},
-			meaningInEmojis: "👉",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "PRON">;
 

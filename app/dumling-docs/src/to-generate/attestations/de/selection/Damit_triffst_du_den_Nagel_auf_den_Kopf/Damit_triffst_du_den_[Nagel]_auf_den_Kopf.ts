@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection045 = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "Nagel",
+	segmentedSentenceId: "sentence_QvKc2pEtNZ4U5NrDrU" as SegmentedSentenceId,
+	clickedSegmentIndex: 8,
+	surfaceSegmentIndices: [6, 8, 10, 12, 14],
+	attestedSurface: "den Nagel auf den Kopf",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "den Nagel auf den Kopf treffen",
+		normalizedSurface: "den nagel auf den kopf",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "den Nagel auf den Kopf treffen",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "🎯",
+			canonicalForm: "den Nagel auf den Kopf treffen",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "Idiom">;
 

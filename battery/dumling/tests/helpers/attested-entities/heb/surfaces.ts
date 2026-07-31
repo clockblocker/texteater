@@ -20,7 +20,9 @@ export const hebrewKatvuInflectionSurface = {
 		definite: null,
 	},
 	language: "he",
-	normalizedFullSurface: "כתבו",
+	normalizedSurface: "כתבו",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: hebrewKatavLemma,
 
@@ -30,7 +32,9 @@ export const hebrewKatvuInflectionSurface = {
 // Attestation: "עוד [שנה] עברה."
 export const hebrewShanaCitationSurface = {
 	language: "he",
-	normalizedFullSurface: "שנה",
+	normalizedSurface: "שנה",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: hebrewShanaLemma,
 
@@ -40,7 +44,9 @@ export const hebrewShanaCitationSurface = {
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
 export const hebrewUsAbbreviationCitationSurface = {
 	language: "he",
-	normalizedFullSurface: "ארה״ב",
+	normalizedSurface: "ארה״ב",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: hebrewUsAbbreviationLemma,
 

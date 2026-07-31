@@ -2,81 +2,84 @@ import type { Lemma } from "../../../src";
 
 // Attestation: "Am Ufer des [Sees] war es still."
 export const germanMasculineSeeLemma = {
-	canonicalLemma: "See",
-	inherentFeatures: {
+	canonicalForm: "See",
+	coreFeatures: {
 		gender: "Masc",
+		hyph: null,
 	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🏞️",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"de", "Lexeme", "NOUN">;
 
 // Attestation: "Das [Kind] schlief schon."
 export const germanKindLemma = {
-	canonicalLemma: "Kind",
-	inherentFeatures: {
+	canonicalForm: "Kind",
+	coreFeatures: {
 		gender: "Neut",
+		hyph: null,
 	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "👶",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"de", "Lexeme", "NOUN">;
 
 // Attestation: "Das [Haus] steht leer."
 export const germanHausLemma = {
-	canonicalLemma: "Haus",
-	inherentFeatures: {
+	canonicalForm: "Haus",
+	coreFeatures: {
 		gender: "Neut",
+		hyph: null,
 	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🏠",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"de", "Lexeme", "NOUN">;
 
 // Attestation: "Wir [gehen] nach Hause."
 export const germanGehenLemma = {
-	canonicalLemma: "gehen",
-	inherentFeatures: {},
+	canonicalForm: "gehen",
+	coreFeatures: {
+		verbType: null,
+		lexicallyReflexive: null,
+		hasSepPrefix: null,
+		hasGovPrep: null,
+	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🚶",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"de", "Lexeme", "VERB">;
 
 // Attestation: "In Berlin sowie im Umland (Agglomeration Berlin) betreibt die [BVG] die U-Bahn Berlin, die Straßenbahn Berlin, den Busverkehr in Berlin und den Fährverkehr in Berlin, nicht jedoch die S-Bahn."
-// UD-style: multi-word abbreviations keep the abbreviated form as canonicalLemma and mark Abbr=Yes.
+// UD-style: multi-word abbreviations keep the abbreviated form as canonicalForm and mark Abbr=Yes.
 // See https://universaldependencies.org/u/overview/morphology.html
 // We intentionally do not model a built-in link from "BVG" to "Berliner Verkehrsbetriebe" here.
 export const germanBVGLemma = {
-	canonicalLemma: "BVG",
-	inherentFeatures: {
+	canonicalForm: "BVG",
+	coreFeatures: {
 		abbr: "Yes",
+		gender: null,
+		foreign: null,
 	},
 	language: "de",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🚇",
-	lemmaSubKind: "PROPN",
+	family: "Lexeme",
+	kind: "PROPN",
 } satisfies Lemma<"de", "Lexeme", "PROPN">;
 
 // Attestation: "Ich komme [auf jeden Fall] morgen."
 export const germanAufJedenFallLemma = {
-	canonicalLemma: "auf jeden Fall",
-	inherentFeatures: {},
+	canonicalForm: "auf jeden Fall",
+	coreFeatures: { discourseFormulaRole: "Reaction" },
 	language: "de",
-	lemmaKind: "Phraseme",
-	meaningInEmojis: "✅",
-	lemmaSubKind: "DiscourseFormula",
+	family: "Phraseme",
+	kind: "DiscourseFormula",
 } satisfies Lemma<"de", "Phraseme", "DiscourseFormula">;
 
 // Attestation: "[Ab]fahrt nur am Gleis 3."
 export const germanAbPrefixLemma = {
-	canonicalLemma: "ab",
-	inherentFeatures: {},
+	canonicalForm: "ab",
+	coreFeatures: { hasSepPrefix: null },
 	language: "de",
-	lemmaKind: "Morpheme",
-	meaningInEmojis: "🧩",
-	lemmaSubKind: "Prefix",
+	family: "Morpheme",
+	kind: "Prefix",
 } satisfies Lemma<"de", "Morpheme", "Prefix">;

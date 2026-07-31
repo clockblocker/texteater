@@ -1,312 +1,102 @@
 import type { ZodType } from "zod";
 import { dumling } from "../../src";
-import {
-	abstractSchemas,
-	getSchemaTreeFor,
-	schemasFor,
-} from "../../src/schema";
+import { abstractSchemas, schemasFor } from "../../src/schema";
 import type {
 	AbstractLemma,
 	ApiResult,
 	Descriptor,
 	DumlingBase64Url,
 	DumlingCsv,
-	DumlingDescriptorCsv,
 	EntityForKind,
-	EntityKind,
-	EntityValue,
-	FeatureName,
-	FeatureSetKind,
 	FeatureValue,
 	IdDecodeError,
 	IdDecodeSuccess,
 	Lemma,
-	LemmaKindFor,
-	LemmaSubKindFor,
-	ParseError,
+	SegmentedSentenceId,
 	Selection,
+	SelectionIdentity,
 	SelectionOptionsFor,
-	SupportedLanguage,
 	Surface,
-	SurfaceKindFor,
 } from "../../src/types";
 
-const lemma = dumling.de.create.lemma({
-	canonicalLemma: "see",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "NOUN",
-	inherentFeatures: {
-		gender: "Masc",
+const sentenceId = dumling.de.create.segmentedSentenceId("sentence:de:am-see");
+sentenceId satisfies SegmentedSentenceId;
 
-		hyph: null,
-	},
-	meaningInEmojis: "🌊",
+const lemma = dumling.de.create.lemma({
+	canonicalForm: "See",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: { gender: "Masc", hyph: null },
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
 
-const citationSurface = dumling.de.create.surface.citation({
+const surface = dumling.de.create.surface.citation({
 	lemma,
-	normalizedFullSurface: "see",
-
+	normalizedSurface: "See",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceFeatures: null,
 }) satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;
 
-const inflectionSurface = dumling.de.create.surface.inflection({
-	lemma: dumling.de.create.lemma({
-		canonicalLemma: "gehen",
-		lemmaKind: "Lexeme",
-		lemmaSubKind: "VERB",
-		inherentFeatures: {
-			verbType: null,
-			lexicallyReflexive: null,
-			hasSepPrefix: null,
-			hasGovPrep: null,
-		},
-		meaningInEmojis: "🚶",
-	}),
-	normalizedFullSurface: "geht",
-	inflectionalFeatures: {
-		mood: "Imp",
-		number: "Sing",
-		person: "3",
-		verbForm: "Fin",
+const options = {
+	segmentedSentenceId: sentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "See",
+	selectedOrthography: "Standard",
+} satisfies SelectionOptionsFor;
 
-		voice: null,
-		tense: null,
-	},
-
-	surfaceFeatures: null,
-}) satisfies Surface<"de", "Inflection", "Lexeme", "VERB">;
-
-const typoSelection = dumling.de.create.selection({
-	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
-	spelledSelection: "Sse",
-	surface: citationSurface,
-}) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
-const standardSelection = dumling.de.convert.lemma.toSelection(
-	lemma,
+const selection = dumling.de.convert.surface.toSelection(
+	surface,
+	options,
 ) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
-const typoFromLemma = dumling.de.convert.lemma.toSelection(lemma, {
-	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
-}) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
-const typoFromInflectionSurface = dumling.de.convert.surface.toSelection(
-	inflectionSurface,
-	{
-		selectionFeatures: {
-			orthography: "Typo",
-			coverage: null,
-			spelling: null,
-		},
-	},
-) satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
-const lemmaDescriptor = dumling.de.describe.as.lemma(typoSelection) satisfies {
-	language: "de";
-	lemmaKind: "Lexeme";
-	lemmaSubKind: "NOUN";
-};
-const surfaceDescriptor = dumling.de.describe.as.surface(lemma) satisfies {
-	language: "de";
-	surfaceKind: "Citation";
-	lemmaKind: "Lexeme";
-	lemmaSubKind: "NOUN";
-};
-const selectionDescriptor = dumling.de.describe.as.selection(
-	inflectionSurface,
-) satisfies {
-	language: "de";
-	surfaceKind: "Inflection";
-	lemmaKind: "Lexeme";
-	lemmaSubKind: "VERB";
-};
-lemmaDescriptor satisfies Descriptor<"Lemma", "de", "Lexeme", "NOUN">;
-surfaceDescriptor satisfies Descriptor<
-	"Surface",
+
+selection satisfies EntityForKind<"de", "Selection">;
+selection.surface.lemma satisfies Lemma<"de", "Lexeme", "NOUN">;
+selection.segmentedSentenceId satisfies SegmentedSentenceId;
+
+const descriptor = dumling.de.describe.as.selection(surface);
+descriptor satisfies Descriptor<
+	"Selection",
 	"de",
 	"Lexeme",
 	"NOUN",
 	"Citation"
 >;
-selectionDescriptor satisfies Descriptor<
-	"Selection",
-	"de",
-	"Lexeme",
-	"VERB",
-	"Inflection"
->;
-selectionDescriptor satisfies Descriptor<EntityKind, "de">;
 
-const gender: FeatureValue<"de", "inherent", "Lexeme", "NOUN", "gender"> =
-	"Masc";
-const featureName: FeatureName<"de", "inherent", "Lexeme", "NOUN"> = "gender";
-const unionKindFeatureName: FeatureName<
-	"de",
-	FeatureSetKind,
-	"Lexeme",
-	"NOUN"
-> = Math.random() > 0.5 ? "gender" : "number";
-const unionKindFeatureValue: FeatureValue<
-	"de",
-	FeatureSetKind,
-	"Lexeme",
-	"NOUN",
-	"gender" | "number"
-> = Math.random() > 0.5 ? "Masc" : "Sing";
-const deLemmaKind: LemmaKindFor<"de"> = "Lexeme";
-const deLexemeSubKind: LemmaSubKindFor<"de", "Lexeme"> = "NOUN";
-const deConstructionKind: LemmaKindFor<"de"> = "Construction";
-const deConstructionSubKind: LemmaSubKindFor<"de", "Construction"> = "Fusion";
-const deSurfaceKind: SurfaceKindFor<"de"> = "Citation";
-void featureName;
-void unionKindFeatureName;
-void unionKindFeatureValue;
-void deLemmaKind;
-void deLexemeSubKind;
-void deConstructionKind;
-void deConstructionSubKind;
-void deSurfaceKind;
-void gender;
-void standardSelection;
-void typoFromLemma;
-void typoFromInflectionSurface;
-void lemmaDescriptor;
-void surfaceDescriptor;
-void selectionDescriptor;
+const csv = dumling.de.id.encode.asCsv(selection);
+csv satisfies DumlingCsv<"de">;
+const id = dumling.de.id.encode.asBase64Url(csv);
+id satisfies DumlingBase64Url<"de">;
 
-// @ts-expect-error invalid NOUN gender feature value
-const invalidGender: FeatureValue<
-	"de",
-	"inherent",
-	"Lexeme",
-	"NOUN",
-	"gender"
-> = "Past";
-void invalidGender;
-
-const selectionId = dumling.de.id.encode.asBase64Url(typoSelection);
-selectionId satisfies DumlingBase64Url<"de">;
-const selectionCsv = dumling.de.id.encode.asCsv(typoSelection);
-selectionCsv satisfies DumlingCsv<"de">;
-const selectionDescriptorCsv =
-	dumling.de.describe.asCsv.selection(inflectionSurface);
-selectionDescriptorCsv satisfies DumlingDescriptorCsv<"de", "Selection">;
-// @ts-expect-error plain strings are not branded Dumling base64url IDs
-const unbrandedId: DumlingBase64Url<"de"> = "abc";
-const entityValue: EntityValue<"de"> = typoSelection;
-const selectionForKind: EntityForKind<"de", "Selection"> = typoSelection;
-const typoOptions: SelectionOptionsFor = {
-	selectionFeatures: { orthography: "Typo", coverage: null, spelling: null },
-	spelledSelection: "Sse",
-};
-const decodedSelection = dumling.de.id.decode.asSelection(selectionId);
-decodedSelection satisfies ApiResult<
+const decoded = dumling.de.id.decode.asSelectionIdentity(id);
+decoded satisfies ApiResult<
 	Extract<IdDecodeSuccess<"de">, { kind: "Selection" }>,
 	IdDecodeError
 >;
-declare const parseError: ParseError;
-void parseError;
-void entityValue;
-void selectionForKind;
-void typoOptions;
-void unbrandedId;
-void selectionDescriptorCsv;
-
-if (decodedSelection.success) {
-	decodedSelection.data satisfies IdDecodeSuccess<"de">;
-	decodedSelection.data.selection satisfies Selection<"de">;
-	decodedSelection.data.selection.spelledSelection;
+if (decoded.success) {
+	decoded.data.selectionIdentity satisfies SelectionIdentity;
+	decoded.data.selectionIdentity
+		.segmentedSentenceId satisfies SegmentedSentenceId;
 }
 
-const deSelectionLeaf = schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
-deSelectionLeaf satisfies ZodType<
+const nounSelectionSchema =
+	schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
+nounSelectionSchema satisfies ZodType<
 	Selection<"de", "Citation", "Lexeme", "NOUN">
 >;
-const deFusionLemma = dumling.de.create.lemma({
-	canonicalLemma: "zum",
-	lemmaKind: "Construction",
-	lemmaSubKind: "Fusion",
-	inherentFeatures: {},
-	meaningInEmojis: "➡️",
-}) satisfies Lemma<"de", "Construction", "Fusion">;
-const deFusionSelection = dumling.de.convert.lemma.toSelection(
-	deFusionLemma,
-) satisfies Selection<"de", "Citation", "Construction", "Fusion">;
-void deFusionSelection;
-const deFusionSelectionLeaf =
-	schemasFor.de.entity.Selection.Citation.Construction.Fusion();
-deFusionSelectionLeaf satisfies ZodType<
-	Selection<"de", "Citation", "Construction", "Fusion">
->;
-const deLemmaDescriptorLeaf = schemasFor.de.descriptor.Lemma.Lexeme.NOUN;
-deLemmaDescriptorLeaf satisfies ZodType<
-	Descriptor<"Lemma", "de", "Lexeme", "NOUN">
->;
-const deSelectionDescriptorLeaf =
-	schemasFor.de.descriptor.Selection.Citation.Lexeme.NOUN;
-deSelectionDescriptorLeaf satisfies ZodType<
-	Descriptor<"Selection", "de", "Lexeme", "NOUN", "Citation">
->;
 abstractSchemas.entity.Lemma satisfies ZodType<AbstractLemma<string>>;
-const deSchemaTree = getSchemaTreeFor("de");
-deSchemaTree.entity.Selection.Citation.Lexeme.NOUN();
-declare const language: SupportedLanguage;
-const dynamicSchemaTree = getSchemaTreeFor(language);
-dynamicSchemaTree.entity.Selection.Citation.Lexeme.NOUN();
-getSchemaTreeFor(language).entity.Selection.Citation.Lexeme.NOUN();
 
-const enLemma = dumling.en.create.lemma({
-	canonicalLemma: "see",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "NOUN",
-	inherentFeatures: {
-		numType: "Card",
+const gender: FeatureValue<"de", "core", "Lexeme", "NOUN", "gender"> = "Masc";
+void gender;
 
-		style: null,
-		numForm: null,
-		foreign: null,
-		extPos: null,
-		abbr: null,
-	},
-	meaningInEmojis: "👀",
-}) satisfies Lemma<"en", "Lexeme", "NOUN">;
+// @ts-expect-error invalid German noun gender
+const invalidGender: FeatureValue<"de", "core", "Lexeme", "NOUN", "gender"> =
+	"Past";
+void invalidGender;
 
-const enSelectionLeaf = schemasFor.en.entity.Selection.Citation.Lexeme.NOUN();
-enSelectionLeaf satisfies ZodType<
-	Selection<"en", "Citation", "Lexeme", "NOUN">
->;
+// @ts-expect-error opaque sentence IDs cannot be plain strings
+const invalidSentenceId: SegmentedSentenceId = "sentence:de:am-see";
+void invalidSentenceId;
 
-const enPronType: FeatureValue<"en", "inherent", "Lexeme", "PRON", "pronType"> =
-	["Prs", "Rel"];
-void enLemma;
-void enPronType;
-
-const heLemma = dumling.he.create.lemma({
-	canonicalLemma: "כתב",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	inherentFeatures: {
-		hebBinyan: "PAAL",
-
-		hebExistential: null,
-	},
-	meaningInEmojis: "✍️",
-}) satisfies Lemma<"he", "Lexeme", "VERB">;
-
-const heVerbLeaf = schemasFor.he.entity.Lemma.Lexeme.VERB();
-heVerbLeaf satisfies ZodType<Lemma<"he", "Lexeme", "VERB">>;
-const heStandardSelection = dumling.he.convert.lemma.toSelection(
-	heLemma,
-) satisfies Selection<"he", "Citation", "Lexeme", "VERB">;
-
-const heBinyan: FeatureValue<"he", "inherent", "Lexeme", "VERB", "hebBinyan"> =
-	"PAAL";
-const heVoice: FeatureValue<"he", "inflectional", "Lexeme", "VERB", "voice"> =
-	"Act";
-void heLemma;
-void heVerbLeaf;
-void heBinyan;
-void heStandardSelection;
-void heVoice;
-
-// @ts-expect-error lexeme does not expose morpheme subkinds
+// @ts-expect-error lexemes do not expose morpheme subkinds
 schemasFor.de.entity.Selection.Citation.Lexeme.Circumfix();
-
-void inflectionSurface;

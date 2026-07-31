@@ -1,24 +1,40 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const dataPluralSelection = {
-	language: "en",
-	spelledSelection: "data",
+	segmentedSentenceId: "sentence_2p887y04TSv6S_9LiM" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "data",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "data",
+		normalizedSurface: "data",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Plur",
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "datum",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
-			meaningInEmojis: "📊",
+			canonicalForm: "datum",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				numForm: null,
+				numType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "NOUN">;
 

@@ -3,6 +3,6 @@ import type { EnProverbPhrasemeFeatures } from "../../../../../types/concrete-la
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enProverbPhrasemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<EnProverbPhrasemeFeatures>;

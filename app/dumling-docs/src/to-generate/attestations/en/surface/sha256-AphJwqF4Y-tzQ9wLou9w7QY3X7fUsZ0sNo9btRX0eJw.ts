@@ -2,18 +2,27 @@ import type { Surface } from "dumling/types";
 
 export const booksSurface = {
 	language: "en",
-	normalizedFullSurface: "books",
+	normalizedSurface: "books",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	inflectionalFeatures: {
 		number: "Plur",
 	},
+	surfaceFeatures: null,
 	lemma: {
 		language: "en",
-		canonicalLemma: "book",
-		lemmaKind: "Lexeme",
-		lemmaSubKind: "NOUN",
-		inherentFeatures: {},
-		meaningInEmojis: "📚",
+		canonicalForm: "book",
+		family: "Lexeme",
+		kind: "NOUN",
+		coreFeatures: {
+			abbr: null,
+			extPos: null,
+			foreign: null,
+			numForm: null,
+			numType: null,
+			style: null,
+		},
 	},
 } satisfies Surface<"en", "Inflection", "Lexeme", "NOUN">;
 

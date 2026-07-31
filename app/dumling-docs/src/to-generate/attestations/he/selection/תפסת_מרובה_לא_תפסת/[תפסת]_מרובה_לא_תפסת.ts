@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const tafastaMerubeSelection = {
-	language: "he",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "תפסת",
+	segmentedSentenceId: "sentence_fto0ixIkB94Fv9lP-l" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2, 4, 6],
+	attestedSurface: "תפסת מרובה לא תפסת",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "תפסת מרובה לא תפסת",
+		normalizedSurface: "תפסת מרובה לא תפסת",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "תפסת מרובה לא תפסת",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Proverb",
-			inherentFeatures: {},
-			meaningInEmojis: "⚖️",
+			canonicalForm: "תפסת מרובה לא תפסת",
+			family: "Phraseme",
+			kind: "Proverb",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "Proverb">;
 

@@ -2,138 +2,122 @@
 
 ## Typo Handling
 
-Only `selection.spelledSelection` may preserve a misspelling. `selection.surface.normalizedFullSurface` must stay canonical.
+Do not normalize the noisy input on the Selection. Preserve the whole attested
+Surface occurrence in `selection.attestedSurface`, mark only a misspelled
+clicked Segment with `selectedOrthography: "Typo"`, and keep
+`surface.normalizedSurface` linguistically normalized.
 
-Sources:
+Source: `Im_Heft_stand_[Filosofie]_statt_Philosophie.ts`
 
-- `Im_Heft_stand_[Filosofie]_statt_Philosophie.ts`
+## Variant Versus Typo
+
+A licensed spelling is not a typo. Put `spelling: "Variant"` on the Surface and
+keep the clicked Segment `selectedOrthography: "Standard"`. Ordinary
+sentence-initial capitalization remains a Canonical Surface.
 
 ## Non-Fixed Phrases
 
-If the selected material is not part of a fixed expression, do not inflate it into a phraseme analysis. Fall back to UD-style token segmentation instead.
+If the clicked material is not part of a fixed expression, do not inflate it
+into a Phraseme. Resolve the learner-facing token normally.
 
-Sources:
+Source: `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
 
-- `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
+## Learner-Owned Meaning
 
-## Emoji Semantics
+Historical rows incorrectly stored scene-level emoji meaning on Dumling
+entities. Current correction: learner-owned Meaning is resolved downstream
+from the selected learner-facing unit. Dumling stores Entry identity,
+linguistic Surfaces, and clicked Selection evidence; it does not own Meaning.
 
-`meaningInEmojis` must represent the meaning of the selected lexical item itself, not a nearby noun or the general sentence scene.
+## Clicked Segment Versus Surface Coverage
 
-Sources:
+Clicking one component does not mean the Surface is Partial. The clicked index
+identifies the Selection; `surfaceSegmentIndices` identifies all participating
+segments. `realizationCoverage` belongs to the Surface and is Partial only when
+the attested linguistic realization itself is incomplete.
 
-- `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
+## Selection Identity
 
-## Reviewer Hesitation
-
-Do not treat obvious fixed expressions as suspicious just because the selected span covers only one component. `nur Bahnhof verstehen`, `den Nagel auf den Kopf treffen`, `da liegt der Hase im Pfeffer`, and `Morgenstund hat Gold im Mund` are valid partial-phraseme cases.
-
-Sources:
-
-- `Bei_dieser_Formel_verstehe_ich_nur_[Bahnhof].ts`
-- `Damit_triffst_du_den_[Nagel]_auf_den_Kopf.ts`
-- `Genau_da_liegt_der_[Hase]_im_Pfeffer.ts`
-- `[Morgenstund]_hat_Gold_im_Mund_sagte_sie_verschlafen.ts`
-
-## Selection Reversibility
-
-Do not treat `Selection` as a reversible token record. It is only an ingest-time wrapper for choosing the real payload, so distinct highlighted spans may legitimately collapse to the same `surface` and `lemma` when they point to the same learner-facing unit. Example: `Pass [auf] dich auf!` and `Pass auf dich [auf]!` can both resolve to the same verbal payload for `aufpassen`; the difference between governed-preposition `auf` and separable-prefix `auf` does not need to survive serialization unless it changes the chosen payload.
-
-Sources:
-
-- `Pass_[auf]_dich_auf.ts`
-- `Pass_auf_dich_[auf].ts`
+Do not collapse distinct clicks into one Selection. A Selection is a valid
+node identified by `(segmentedSentenceId, clickedSegmentIndex)`. Different
+Selections may resolve to the same Surface and Entry.
 
 # Locked-In Rules
 
 ## Typo Attestations
 
-Keep the typo in `selection.spelledSelection` and keep `selection.surface.normalizedFullSurface` canonical.
+- `attestedSurface` preserves noisy text such as `Filosofie` or `gvae up`.
+- `selectedOrthography` describes only the clicked Segment.
+- `normalizedSurface` stays normalized, such as `Philosophie` or `gave up`.
+- Surface `spelling` remains Canonical when the input is merely misspelled.
 
-Sources:
+## Fixed Expressions And Partial Realization
 
-- `Im_Heft_stand_[Filosofie]_statt_Philosophie.ts`
+For a full fixed expression occurrence, include every participating index and
+use a Full Surface even if the learner clicked only one component. Multiple
+clicked Segments may create distinct Selections pointing to that same Surface.
 
-## Partial Phraseme Selection
+Use a Partial Surface only when the attested realization omits conventional
+material. Example: `heulte mit` can be a Partial inflected Surface of the Entry
+with `citationForm: "mit den Wölfen heulen"`.
 
-For clear idioms, proverbs, and other fixed expressions, `selectionFeatures: { coverage: "Partial" }` plus the full citation-form phraseme surface is the correct analysis.
-
-Multiple different highlighted tokens inside the same fixed phraseme may all point to that same citation-form phraseme surface when they select the same learner-facing unit.
-
-Sources:
+Sources include:
 
 - `Bei_dieser_Formel_verstehe_ich_nur_[Bahnhof].ts`
 - `Damit_triffst_du_den_[Nagel]_auf_den_Kopf.ts`
 - `Genau_da_liegt_der_[Hase]_im_Pfeffer.ts`
 - `[Morgenstund]_hat_Gold_im_Mund_sagte_sie_verschlafen.ts`
-- `Die_Peitsche_hat_er_mitgebrachtund_[nimmt]_sie_sorglich_sehr_in_acht.ts`
-- `Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_[in]_acht.ts`
-- `Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_[acht].ts`
 
 ## Discontinuous Morphemes
 
-A visible segment such as `ge` may be a `Partial` selection of a discontinuous morpheme lemma such as `ge-...-t`. That remains `Citation`, not `Inflection`.
+A click on `ge` can resolve the full discontinuous circumfix occurrence
+`ge … t`. Record both participating indices, preserve the attested form, and
+resolve it to the Entry with `citationForm: "ge-...-t"`.
 
-Sources:
-
-- `In_[ge]lacht_markieren_ge_und_t_zusammen_das_Partizip.ts`
+Source: `In_[ge]lacht_markieren_ge_und_t_zusammen_das_Partizip.ts`
 
 ## Citation-Shaped Nouns
 
-If a German noun token is identical to its learner-facing Grundform, it may stay `Citation` even when the local syntax also supports a nominative-singular reading. Do not force `Inflection` just because nominative singular is recoverable from context when the attested noun itself is citation-shaped.
-
-Sources:
-
-- `Die_[Peitsche]_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht.ts`
-- `Das_rote_[Band]_lag_auf_dem_Geschenk.ts`
-- `Die_[Leiter]_wackelte_auf_dem_nassen_Boden.ts`
+If a German noun token is identical to its learner-facing Grundform, it may
+stay a Citation Surface when local syntax does not decisively resolve an
+inflectional reading.
 
 ## Adpositions
 
-For non-fixed phrases like `[Wegen] dem Regen`, use a plain lexical `ADP` analysis rather than a phraseme-style inflation. Avoid prescriptive inherent features that are not supported by the attested usage.
+For non-fixed phrases like `[Wegen] dem Regen`, use a standalone lexical `ADP`
+Entry rather than a Phraseme. Avoid unsupported prescriptive inherent features.
 
-Sources:
+## Entry And Meaning Identity
 
-- `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
+- `LinguisticEntry.id` is durable identity; `citationForm` is its display form.
+- Equal spelling does not imply equal Entry identity.
+- Different learner-owned Meanings may share one Entry ID when the linguistic
+  identity is the same, as with contextual readings of `Schloss`.
+- Learner-owned Meaning remains outside Dumling.
 
-## Emoji Semantics
+## Split And Governed Verb Constructions
 
-When classifying part of a phrase, `meaningInEmojis` must still describe the selected lexical item.
+Keep the attested verbal form in `normalizedSurface`; do not inflate it with
+valency material. Encode currently supported lexical government on the Entry.
 
-Sources:
+In `Pass auf dich auf!`:
 
-- `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
-
-## Verb
-
-#### Governed Prepositions
-
-Governed prepositions must not be encoded in `normalizedFullSurface`.
-
-Encode verbal government only in `lemma.inherentFeatures.hasGovPrep: "{governed preposition}"`.
-
-Use `normalizedFullSurface` for the attested verbal surface only.
-
-Example:
-
-In `Pass [auf] dich auf!`, the selected `auf` is not a standalone ADP. It remains anchored to the verb lemma `aufpassen`, with:
-
-- `normalizedFullSurface: "pass auf"`
-- `lemma.inherentFeatures.hasGovPrep: "auf"`
-- `lemma.inherentFeatures.hasSepPrefix: "auf"`
-
-Do not create a surface such as `aufpassen auf` just to represent the governed preposition.
-
-Sources:
-
-- `Pass_[auf]_dich_auf.ts`
-- `Er_[wartet]_auf_den_Nachtbus.ts`
-
-## Selection Directionality
-
-Treat `Selection` as an ingest-only wrapper around the real payload. The authoritative linguistic content is the selected `surface` and `lemma`, and distinct highlighted spans may map to the same payload when they point to the same learner-facing unit. Example: `Pass [auf] dich auf!` and `Pass auf dich [auf]!` can both map to the verbal payload `normalizedFullSurface: "pass auf"` with lemma `aufpassen`; token-role differences do not need to survive serialization unless they change the chosen payload.
+- clicking the middle `auf` resolves the standalone ADP Surface at its own
+  Segment index;
+- clicking `Pass` or the final `auf` resolves the inflected verb Surface
+  `pass auf` with `surfaceSegmentIndices` containing `Pass` and the final
+  particle;
+- all three clicks remain distinct Selection identities.
 
 Sources:
 
 - `Pass_[auf]_dich_auf.ts`
 - `Pass_auf_dich_[auf].ts`
+- `[Pass]_auf_dich_auf.ts`
+
+## Selection Resolution
+
+A Selection is a persisted clicked-text node, not a temporary ingest wrapper.
+Its clicked identity survives even when several clicks resolve to the same
+Surface and Entry. The original unsegmented text need not survive once the
+immutable segmented sentence and local indices exist.

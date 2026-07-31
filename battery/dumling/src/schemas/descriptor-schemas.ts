@@ -3,14 +3,14 @@ import { z as zod } from "zod";
 import type { ConcreteLanguage } from "../types/concrete-language/features/feature-registry.js";
 import type { Descriptor } from "../types/descriptor.js";
 import type {
+	LemmaFamilyFor,
+	LemmaFamilyForSurfaceKind,
 	LemmaKindFor,
-	LemmaKindForSurfaceKind,
-	LemmaSubKindFor,
 	SurfaceKindFor,
 } from "../types/public-types.js";
 import type {
 	LanguageDescriptorSchemaTree,
-	LemmaSubKindForSurfaceKind,
+	LemmaKindForSurfaceKind,
 	RawEntitySchemaRegistry,
 } from "./shared/schema-helper-types.js";
 
@@ -42,55 +42,55 @@ function ensureFamily<TValue>(
 
 function buildLemmaDescriptorSchema<
 	L extends ConcreteLanguage,
-	const LK extends LemmaKindFor<L>,
-	const LSK extends LemmaSubKindFor<L, LK>,
+	const LK extends LemmaFamilyFor<L>,
+	const LSK extends LemmaKindFor<L, LK>,
 >(
 	language: L,
-	lemmaKind: LK,
-	lemmaSubKind: LSK,
+	family: LK,
+	kind: LSK,
 ): DescriptorSchema<Descriptor<"Lemma", L, LK, LSK>> {
 	return zod.strictObject({
 		language: zod.literal(language),
-		lemmaKind: zod.literal(lemmaKind),
-		lemmaSubKind: zod.literal(lemmaSubKind),
+		family: zod.literal(family),
+		kind: zod.literal(kind),
 	}) as DescriptorSchema<Descriptor<"Lemma", L, LK, LSK>>;
 }
 
 function buildSurfaceDescriptorSchema<
 	L extends ConcreteLanguage,
 	const SK extends SurfaceKindFor<L>,
-	const LK extends LemmaKindForSurfaceKind<L, SK>,
-	const LSK extends LemmaSubKindForSurfaceKind<L, SK, LK>,
+	const LK extends LemmaFamilyForSurfaceKind<L, SK>,
+	const LSK extends LemmaKindForSurfaceKind<L, SK, LK>,
 >(
 	language: L,
 	surfaceKind: SK,
-	lemmaKind: LK,
-	lemmaSubKind: LSK,
+	family: LK,
+	kind: LSK,
 ): DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>> {
 	return zod.strictObject({
 		language: zod.literal(language),
 		surfaceKind: zod.literal(surfaceKind),
-		lemmaKind: zod.literal(lemmaKind),
-		lemmaSubKind: zod.literal(lemmaSubKind),
+		family: zod.literal(family),
+		kind: zod.literal(kind),
 	}) as DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>>;
 }
 
 function buildSelectionDescriptorSchema<
 	L extends ConcreteLanguage,
 	const SK extends SurfaceKindFor<L>,
-	const LK extends LemmaKindForSurfaceKind<L, SK>,
-	const LSK extends LemmaSubKindForSurfaceKind<L, SK, LK>,
+	const LK extends LemmaFamilyForSurfaceKind<L, SK>,
+	const LSK extends LemmaKindForSurfaceKind<L, SK, LK>,
 >(
 	language: L,
 	surfaceKind: SK,
-	lemmaKind: LK,
-	lemmaSubKind: LSK,
+	family: LK,
+	kind: LSK,
 ): DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>> {
 	return zod.strictObject({
 		language: zod.literal(language),
 		surfaceKind: zod.literal(surfaceKind),
-		lemmaKind: zod.literal(lemmaKind),
-		lemmaSubKind: zod.literal(lemmaSubKind),
+		family: zod.literal(family),
+		kind: zod.literal(kind),
 	}) as DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>>;
 }
 
@@ -111,66 +111,62 @@ function buildLanguageDescriptorSchemas<L extends ConcreteLanguage>(
 	};
 	const iterableSchemaTree = schemaTree;
 
-	for (const [lemmaKind, subKindSchemas] of Object.entries(
+	for (const [family, subKindSchemas] of Object.entries(
 		iterableSchemaTree.Lemma,
 	)) {
-		const lemmaFamily = ensureFamily(descriptorTree.Lemma, lemmaKind);
+		const lemmaFamily = ensureFamily(descriptorTree.Lemma, family);
 
-		for (const lemmaSubKind of Object.keys(subKindSchemas)) {
-			lemmaFamily[lemmaSubKind] = buildLemmaDescriptorSchema(
+		for (const kind of Object.keys(subKindSchemas)) {
+			lemmaFamily[kind] = buildLemmaDescriptorSchema(
 				language,
-				lemmaKind as LemmaKindFor<L>,
-				lemmaSubKind as LemmaSubKindFor<L, LemmaKindFor<L>>,
+				family as LemmaFamilyFor<L>,
+				kind as LemmaKindFor<L, LemmaFamilyFor<L>>,
 			);
 		}
 	}
 
-	for (const [surfaceKind, lemmaKindSchemas] of Object.entries(
+	for (const [surfaceKind, familySchemas] of Object.entries(
 		iterableSchemaTree.Surface,
 	)) {
 		descriptorTree.Surface[surfaceKind] ??= {};
 		const surfaceKindTree = descriptorTree.Surface[surfaceKind];
 
-		for (const [lemmaKind, subKindSchemas] of Object.entries(
-			lemmaKindSchemas,
-		)) {
-			const surfaceFamily = ensureFamily(surfaceKindTree, lemmaKind);
+		for (const [family, subKindSchemas] of Object.entries(familySchemas)) {
+			const surfaceFamily = ensureFamily(surfaceKindTree, family);
 
-			for (const lemmaSubKind of Object.keys(subKindSchemas)) {
-				surfaceFamily[lemmaSubKind] = buildSurfaceDescriptorSchema(
+			for (const kind of Object.keys(subKindSchemas)) {
+				surfaceFamily[kind] = buildSurfaceDescriptorSchema(
 					language,
 					surfaceKind as SurfaceKindFor<L>,
-					lemmaKind as LemmaKindForSurfaceKind<L, SurfaceKindFor<L>>,
-					lemmaSubKind as LemmaSubKindForSurfaceKind<
+					family as LemmaFamilyForSurfaceKind<L, SurfaceKindFor<L>>,
+					kind as LemmaKindForSurfaceKind<
 						L,
 						SurfaceKindFor<L>,
-						LemmaKindForSurfaceKind<L, SurfaceKindFor<L>>
+						LemmaFamilyForSurfaceKind<L, SurfaceKindFor<L>>
 					>,
 				);
 			}
 		}
 	}
 
-	for (const [surfaceKind, lemmaKindSchemas] of Object.entries(
+	for (const [surfaceKind, familySchemas] of Object.entries(
 		iterableSchemaTree.Selection,
 	)) {
 		descriptorTree.Selection[surfaceKind] ??= {};
 		const surfaceKindTree = descriptorTree.Selection[surfaceKind];
 
-		for (const [lemmaKind, subKindSchemas] of Object.entries(
-			lemmaKindSchemas,
-		)) {
-			const selectionFamily = ensureFamily(surfaceKindTree, lemmaKind);
+		for (const [family, subKindSchemas] of Object.entries(familySchemas)) {
+			const selectionFamily = ensureFamily(surfaceKindTree, family);
 
-			for (const lemmaSubKind of Object.keys(subKindSchemas)) {
-				selectionFamily[lemmaSubKind] = buildSelectionDescriptorSchema(
+			for (const kind of Object.keys(subKindSchemas)) {
+				selectionFamily[kind] = buildSelectionDescriptorSchema(
 					language,
 					surfaceKind as SurfaceKindFor<L>,
-					lemmaKind as LemmaKindForSurfaceKind<L, SurfaceKindFor<L>>,
-					lemmaSubKind as LemmaSubKindForSurfaceKind<
+					family as LemmaFamilyForSurfaceKind<L, SurfaceKindFor<L>>,
+					kind as LemmaKindForSurfaceKind<
 						L,
 						SurfaceKindFor<L>,
-						LemmaKindForSurfaceKind<L, SurfaceKindFor<L>>
+						LemmaFamilyForSurfaceKind<L, SurfaceKindFor<L>>
 					>,
 				);
 			}

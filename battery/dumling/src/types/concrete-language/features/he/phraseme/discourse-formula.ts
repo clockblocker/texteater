@@ -1,4 +1,4 @@
 export type HeDiscourseFormulaPhrasemeFeatures = {
-	inherent: Record<never, never>;
+	core: Record<never, never>;
 	inflectional: Record<never, never>;
 };

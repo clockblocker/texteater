@@ -1,24 +1,40 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const scissorsPluralTantumSelection = {
-	language: "en",
-	spelledSelection: "scissors",
+	segmentedSentenceId: "sentence_kQD1L38oATY9CFuyu9" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "scissors",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "scissors",
+		normalizedSurface: "scissors",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Ptan",
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "scissors",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
-			inherentFeatures: {},
-			meaningInEmojis: "✂️",
+			canonicalForm: "scissors",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: {
+				abbr: null,
+				extPos: null,
+				foreign: null,
+				numForm: null,
+				numType: null,
+				style: null,
+			},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "NOUN">;
 

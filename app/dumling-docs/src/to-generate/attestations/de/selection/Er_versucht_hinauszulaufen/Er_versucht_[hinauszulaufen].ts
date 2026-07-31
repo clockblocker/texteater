@@ -1,26 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "hinauszulaufen",
+	segmentedSentenceId: "sentence_g2BWy2sB3y9nBi24nC" as SegmentedSentenceId,
+	clickedSegmentIndex: 5,
+	surfaceSegmentIndices: [5],
+	attestedSurface: "hinauszulaufen",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "hinauszulaufen",
+		normalizedSurface: "hinauszulaufen",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			verbForm: "Inf",
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "hinauslaufen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "hinauslaufen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasSepPrefix: "hinaus",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
-			meaningInEmojis: "🏃",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

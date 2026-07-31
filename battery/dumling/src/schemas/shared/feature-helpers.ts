@@ -63,7 +63,7 @@ export function requireNonEmptyFeatureObject<T extends object>(
 ): z.ZodType<T> {
 	return markInflectionSurface(
 		schema.superRefine((value, ctx) => {
-			if (!Object.values(value).some((entry) => entry !== null)) {
+			if (!Object.values(value).some((lemma) => lemma !== null)) {
 				ctx.addIssue({
 					code: "custom",
 					message: `${fieldName} must not be empty`,

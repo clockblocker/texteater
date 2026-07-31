@@ -1,12 +1,12 @@
 import { defineLanguageOverlayPage } from "../../../../../../lib/docs/source-mirrored-doc-pages.ts";
 
 const document = defineLanguageOverlayPage({
-	description: "German spelling.",
+	description: "German clicked-segment orthography.",
 	family: "feature-selection",
-	leaf: "spelling",
-	order: 8103,
-	subject: "spelling",
-	title: "spelling",
+	leaf: "selected-orthography",
+	order: 8101,
+	subject: "selected-orthography",
+	title: "selectedOrthography",
 });
 
 export default document;

@@ -1,52 +1,50 @@
 import type {
-	DumdictEntryDraft,
+	DumdictReadingDraft,
 	LexicalRelation,
 	MorphologicalRelation,
-	PendingLemmaId,
+	PendingEntryId,
+	Reading,
 	StoreRevision,
 } from "../dto";
+import type { Lemma, SupportedLanguage } from "../dumling";
 import type {
-	DumlingId,
-	LemmaKindFor,
-	LemmaSubKindFor,
-	SupportedLanguage,
-} from "../dumling";
-import type {
-	FindStoredLemmaSensesResult,
+	FindStoredReadingsResult,
 	GetInfoForRelationsCleanupResult,
 	MutationResult,
 } from "./results";
 
-export type LemmaDescription<L extends SupportedLanguage> = {
-	language: L;
-	canonicalLemma: string;
-	lemmaKind: LemmaKindFor<L>;
-	lemmaSubKind: LemmaSubKindFor<L, LemmaKindFor<L>>;
-};
-
-export type FindStoredLemmaSensesRequest<L extends SupportedLanguage> = {
-	lemmaDescription: LemmaDescription<L>;
+export type FindStoredReadingsRequest<L extends SupportedLanguage> = {
+	lemma: Lemma<L>;
 };
 
 export type AddAttestationRequest<L extends SupportedLanguage> = {
-	lemmaId: DumlingId<"Lemma", L>;
+	reading: Reading<L>;
 	attestation: string;
 };
 
 export type AddNewNoteRequest<L extends SupportedLanguage> = {
-	draft: DumdictEntryDraft<L>;
+	draft: DumdictReadingDraft<L>;
 };
 
-export type GetInfoForRelationsCleanupRequest<L extends SupportedLanguage> = {
-	canonicalLemma: string;
+export type GetInfoForRelationsCleanupRequest<_L extends SupportedLanguage> = {
+	canonicalForm: string;
 };
 
-export type CleanupRelationResolution<L extends SupportedLanguage> = {
-	sourceLemmaId: DumlingId<"Lemma", L>;
-	relation: LexicalRelation | MorphologicalRelation;
-	targetPendingId: PendingLemmaId<L>;
-	targetLemmaId?: DumlingId<"Lemma", L>;
-};
+export type CleanupRelationResolution<L extends SupportedLanguage> =
+	| {
+			relationFamily: "lexical";
+			sourceReading: Reading<L>;
+			relation: LexicalRelation;
+			targetPendingId: PendingEntryId<L>;
+			targetReading?: Reading<L>;
+	  }
+	| {
+			relationFamily: "morphological";
+			sourceLemma: Lemma<L>;
+			relation: MorphologicalRelation;
+			targetPendingId: PendingEntryId<L>;
+			targetLemma?: Lemma<L>;
+	  };
 
 export type CleanupRelationsRequest<L extends SupportedLanguage> = {
 	baseRevision: StoreRevision;
@@ -54,9 +52,9 @@ export type CleanupRelationsRequest<L extends SupportedLanguage> = {
 };
 
 export type DumdictService<L extends SupportedLanguage> = {
-	findStoredLemmaSenses(
-		request: FindStoredLemmaSensesRequest<L>,
-	): Promise<FindStoredLemmaSensesResult<L>>;
+	findStoredReadings(
+		request: FindStoredReadingsRequest<L>,
+	): Promise<FindStoredReadingsResult<L>>;
 
 	addAttestation(
 		request: AddAttestationRequest<L>,

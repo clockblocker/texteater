@@ -102,7 +102,7 @@ are explicitly marked out of scope rather than counted as passes.
   variant distinction two, three, and three times respectively.
 - Every strategy was unreliable on `heulte mit`: even when membership and
   normalized text were correct, it was generally labeled `Full` instead of
-  `Partial`. Coverage relative to a Lemma remains the clearest weak
+  `Partial`. Coverage relative to a Linguistic Entry remains the clearest weak
   intermediate contract.
 - The discontinuous `ge-…-t` case was often inflated to the whole participle by
   including the stem, showing that structural validation alone cannot decide
@@ -141,8 +141,9 @@ whitespace-free member item, so it must not be described as an insertion-safety
 boundary.
 
 `realizationCoverage` should be tested again with a larger accessible model or
-with a later stage that has explicit Lemma evidence. The current nano results
-do not justify persisting a coverage decision produced by these prompts.
+with a later stage that has explicit Linguistic Entry evidence. The current
+nano results do not justify persisting a coverage decision produced by these
+prompts.
 
 ## Reproduction and verification
 

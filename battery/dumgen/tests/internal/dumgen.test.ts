@@ -10,23 +10,21 @@ import { z } from "zod";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
 import type { PromptTree } from "../../src/promtsmith/prompt";
 
-const grammaticalIdentity = {
-	canonicalLemma: "bank",
-	descriptor: {
-		language: "de",
-		lemmaKind: "Lexeme",
-		lemmaSubKind: "NOUN",
+const lemma = {
+	language: "de",
+	canonicalForm: "Bank",
+	family: "Lexeme",
+	kind: "NOUN",
+	coreFeatures: {
+		gender: "Fem",
+		hyph: null,
 	},
 } as const;
 
-const semanticIdentity = {
-	entity: grammaticalIdentity,
-	features: {
-		coreDescription: "a financial institution",
-		meaningInEmojis: "🏦💶",
-	},
-	engTranslation: "bank",
-} as const;
+const readingDraft = {
+	lemma,
+	emojiDescription: "🏦💶",
+};
 
 describe("buildDumgen", () => {
 	test("turns the prompt catalog into inferred executable generators", async () => {
@@ -38,7 +36,7 @@ describe("buildDumgen", () => {
 		const sdk: AiSdk = {
 			async structuredGeneration(input, schema, params) {
 				calls.push({ input, params, schema });
-				return semanticIdentity as never;
+				return readingDraft as never;
 			},
 			async unstructuredGeneration() {
 				throw new Error("not used");
@@ -46,17 +44,14 @@ describe("buildDumgen", () => {
 		};
 
 		const generate = buildDumgen({ sdk });
-		const result =
-			await generate.production.noteBlock.de.noun.features(
-				grammaticalIdentity,
-			);
+		const result = await generate.production.reading.de.noun.draft(lemma);
 
-		expect(result).toEqual(semanticIdentity);
+		expect(result).toEqual(readingDraft);
 		expect(generate.laboratory).toEqual({});
 		expect(generate.production.classification).toEqual({});
 		expect(calls).toHaveLength(1);
 		expect(calls[0]).toMatchObject({
-			input: '{"canonicalLemma":"bank","descriptor":{"language":"de","lemmaKind":"Lexeme","lemmaSubKind":"NOUN"}}',
+			input: '{"canonicalForm":"Bank","coreFeatures":{"gender":"Fem","hyph":null},"family":"Lexeme","kind":"NOUN","language":"de"}',
 			params: {
 				maxOutputTokens: 256,
 				model: "gpt-5-nano",
@@ -64,17 +59,17 @@ describe("buildDumgen", () => {
 			},
 		});
 
-		type FeatureInput = Parameters<
-			typeof generate.production.noteBlock.de.noun.features
+		type ReadingInput = Parameters<
+			typeof generate.production.reading.de.noun.draft
 		>[0];
-		type FeatureOutput = Awaited<
-			ReturnType<typeof generate.production.noteBlock.de.noun.features>
+		type ReadingOutput = Awaited<
+			ReturnType<typeof generate.production.reading.de.noun.draft>
 		>;
 
-		const inferredInput: FeatureInput = grammaticalIdentity;
-		const inferredOutput: FeatureOutput = semanticIdentity;
-		expect(inferredInput).toEqual(grammaticalIdentity);
-		expect(inferredOutput).toEqual(semanticIdentity);
+		const inferredInput: ReadingInput = lemma;
+		const inferredOutput: ReadingOutput = readingDraft;
+		expect(inferredInput).toEqual(lemma);
+		expect(inferredOutput).toEqual(readingDraft);
 	});
 
 	test("rejects invalid input before calling the model", async () => {
@@ -82,7 +77,7 @@ describe("buildDumgen", () => {
 		const sdk: AiSdk = {
 			async structuredGeneration() {
 				callCount += 1;
-				return semanticIdentity as never;
+				return readingDraft as never;
 			},
 			async unstructuredGeneration() {
 				callCount += 1;
@@ -92,9 +87,9 @@ describe("buildDumgen", () => {
 		const generate = buildDumgen({ sdk });
 
 		await expect(
-			generate.production.noteBlock.de.noun.features({
-				...grammaticalIdentity,
-				canonicalLemma: "",
+			generate.production.reading.de.noun.draft({
+				...lemma,
+				canonicalForm: "",
 			}),
 		).rejects.toMatchObject({
 			code: "invalid-input",
@@ -116,9 +111,7 @@ describe("buildDumgen", () => {
 		});
 
 		await expect(
-			providerFailure.production.noteBlock.de.noun.features(
-				grammaticalIdentity,
-			),
+			providerFailure.production.reading.de.noun.draft(lemma),
 		).rejects.toMatchObject({
 			code: "generation-failed",
 			name: "DumgenError",
@@ -135,11 +128,35 @@ describe("buildDumgen", () => {
 			},
 		});
 
-		const error = await invalidOutput.production.noteBlock.de.noun
-			.features(grammaticalIdentity)
+		const error = await invalidOutput.production.reading.de.noun
+			.draft(lemma)
 			.catch((cause: unknown) => cause);
 		expect(error).toBeInstanceOf(DumgenError);
 		expect(error).toMatchObject({
+			code: "invalid-output",
+			name: "DumgenError",
+		});
+
+		const wrongLemma = buildDumgen({
+			sdk: {
+				async structuredGeneration() {
+					return {
+						...readingDraft,
+						lemma: {
+							...lemma,
+							canonicalForm: "Sparkasse",
+						},
+					} as never;
+				},
+				async unstructuredGeneration() {
+					throw new Error("not used");
+				},
+			},
+		});
+
+		await expect(
+			wrongLemma.production.reading.de.noun.draft(lemma),
+		).rejects.toMatchObject({
 			code: "invalid-output",
 			name: "DumgenError",
 		});

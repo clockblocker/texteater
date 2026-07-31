@@ -14,7 +14,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`HebBinyan\` marks the Hebrew verbal binyan of a [\`Lemma\`](/u/entity/lemma/).
 
-It is a Hebrew-specific feature aligned with [UD Hebrew treebank practice](https://universaldependencies.org/treebanks/he_htb/index.html) and belongs in \`lemma.inherentFeatures\`.
+It is a Hebrew-specific feature aligned with [UD Hebrew treebank practice](https://universaldependencies.org/treebanks/he_htb/index.html) and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
@@ -26,16 +26,16 @@ It is a Hebrew-specific feature aligned with [UD Hebrew treebank practice](https
 - \`PIEL\`: pi'el pattern
 - \`PUAL\`: pu'al pattern
 
-If \`lemma.inherentFeatures.hebBinyan\` is absent or \`undefined\`, the lemma is treated as having no recorded binyan.
+If \`Lemma.coreFeatures.hebBinyan\` is absent or \`undefined\`, the Lemma is treated as having no recorded binyan.
 `,
 	examples: [paalVerb, nifalVerb, hitpaelVerb],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`hebBinyan\` when the lemma is a Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) and its stem class is part of the lexical analysis.
+Use \`hebBinyan\` when the Lemma is a Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) and its stem class is part of the lexical analysis.
 
-In dumling, binyan is modeled as an inherent lemma-level fact rather than an inflectional surface feature. Different inflected surfaces of the same verb keep the same \`hebBinyan\` value.
+In dumling, binyan is modeled as a core Lemma-level fact rather than an inflectional Surface feature. Different inflected Surfaces of the same verb keep the same \`hebBinyan\` value.
 `,
 		},
 		{
@@ -43,13 +43,13 @@ In dumling, binyan is modeled as an inherent lemma-level fact rather than an inf
 			body: `
 \`HebBinyan\` does not replace inflectional features such as [\`Voice\`](/u/feature/voice/), [\`Tense\`](/u/feature/tense/), or [\`VerbForm\`](/u/feature/verb-form/).
 
-Some binyanim often correlate with voice-like behavior, but the features remain distinct. For example, a \`NIFAL\` or \`HITPAEL\` lemma may still carry explicit surface-level \`voice\` values where the analysis needs them.
+Some binyanim often correlate with voice-like behavior, but the features remain distinct. For example, a \`NIFAL\` or \`HITPAEL\` Lemma may still carry explicit surface-level \`voice\` values where the analysis needs them.
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-The abstract feature enum includes all seven values above. Current concrete Dumling schemas expose \`hebBinyan\` on Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) lemmas.
+The abstract feature enum includes all seven values above. Current concrete Dumling schemas expose \`hebBinyan\` on Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) Lemmas.
 `,
 		},
 	],

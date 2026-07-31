@@ -1,13 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection017 = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "fuhr",
+	segmentedSentenceId: "sentence_IYTIHaMfzuooemR0N-" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4, 10],
+	attestedSurface: "fuhr um",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "fuhr um",
+		normalizedSurface: "fuhr um",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Ind",
@@ -15,17 +23,21 @@ const deSelection017 = {
 			person: "3",
 			tense: "Past",
 			verbForm: "Fin",
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "umfahren",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "umfahren",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasSepPrefix: "um",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
-			meaningInEmojis: "💥",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

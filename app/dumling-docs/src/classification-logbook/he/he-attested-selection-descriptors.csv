@@ -1,9 +1,9 @@
-sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
+sentence_markdown,normalizedSurface,surfaceKind,family,kind
 [איזה] רחוב זה?,איזה,Inflection,Lexeme,DET
 אין [חדש] תחת השמש.,אין חדש תחת השמש,Citation,Phraseme,Proverb
 [אין] מקום פנוי.,אין,Citation,Lexeme,VERB
 אל [תלך] לבד.,תלך,Inflection,Lexeme,VERB
-[אמא] התקשרה.,אימא,Citation,Lexeme,NOUN
+[אמא] התקשרה.,אמא,Citation,Lexeme,NOUN
 אמרת [ש]תבוא.,ש,Citation,Morpheme,Prefix
 אנחנו [הולכים] עכשיו.,הולכים,Inflection,Lexeme,VERB
 [אני] לא בטוחה.,אני,Inflection,Lexeme,PRON
@@ -23,11 +23,11 @@ sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
 הם נפגשו [ב]בית.,ב,Citation,Morpheme,Prefix
 הספר [של] נועה נשאר כאן.,של,Citation,Lexeme,ADP
 [הספרים] על השולחן.,הספרים,Inflection,Lexeme,NOUN
-הראיון היה על ה[פנים].,על הפנים,Citation,Phraseme,Idiom
+הראיון היה על ה[פנים].,פנים,Citation,Phraseme,Idiom
 השאלות [הטובות] נשארו לסוף.,הטובות,Inflection,Lexeme,ADJ
 [ו]דנה כבר חיכתה בחוץ.,ו,Citation,Morpheme,Clitic
 זו טעות [גדולה].,גדולה,Inflection,Lexeme,ADJ
-חזרתי ל[בית].,הבית,Inflection,Lexeme,NOUN
+חזרתי ל[בית].,בית,Inflection,Lexeme,NOUN
 [חס וחלילה] שנאחר שוב.,חס וחלילה,Citation,Phraseme,Idiom
 יצאתי [ל]עבודה מוקדם.,ל,Citation,Morpheme,Prefix
 [ירושלים] יפה בלילה.,ירושלים,Inflection,Lexeme,PROPN

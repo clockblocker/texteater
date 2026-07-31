@@ -3,6 +3,6 @@ import type { DeAphorismPhrasemeFeatures } from "../../../../../types/concrete-l
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deAphorismPhrasemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<DeAphorismPhrasemeFeatures>;

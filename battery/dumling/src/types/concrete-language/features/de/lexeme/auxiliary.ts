@@ -76,7 +76,7 @@ type DeVerbalInflectionalFeatures =
 	  };
 
 export type DeAuxiliaryFeatures = {
-	inherent: {
+	core: {
 		verbType: "Mod" | null;
 	};
 	inflectional: DeVerbalInflectionalFeatures;

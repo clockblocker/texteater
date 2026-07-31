@@ -5,7 +5,7 @@ import {
 } from "../helpers/attested-selection";
 import type { AttestedSelectionRenderer } from "../types";
 
-export const asSentenceAndLemmaSubKind: AttestedSelectionRenderer = (
+export const asSentenceAndLemmaKind: AttestedSelectionRenderer = (
 	attestedSelection: AttestedSelection,
 ): string =>
-	`- ${JSON.stringify(asSingleLineSentence(attestedSelection.sentenceMarkdown))} -> [${attestedSelection.selection.surface.lemma.lemmaSubKind}](${hrefForAttestedSelection(attestedSelection)})`;
+	`- ${JSON.stringify(asSingleLineSentence(attestedSelection.sentenceMarkdown))} -> [${attestedSelection.selection.surface.lemma.kind}](${hrefForAttestedSelection(attestedSelection)})`;

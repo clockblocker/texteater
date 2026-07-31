@@ -3,6 +3,6 @@ import type { HeDiscourseFormulaPhrasemeFeatures } from "../../../../../types/co
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heDiscourseFormulaPhrasemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<HeDiscourseFormulaPhrasemeFeatures>;

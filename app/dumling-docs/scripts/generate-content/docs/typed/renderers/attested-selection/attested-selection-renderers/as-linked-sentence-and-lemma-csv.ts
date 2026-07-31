@@ -7,10 +7,10 @@ export const asLinkedSentenceAndLemmaCsv: AttestedSelectionRenderer = (
 	attestedSelection: AttestedSelection,
 ): string => {
 	const selection = attestedSelection.selection;
-	const languageApi = getLanguageApi(selection.language);
-	const lemmaCsvId = String(
+	const languageApi = getLanguageApi(selection.surface.lemma.language);
+	const entryCsvId = String(
 		languageApi.id.encode.asCsv(selection.surface.lemma),
 	);
 
-	return `- ${JSON.stringify(withLinkedSelectionSpan(attestedSelection))} -> ${lemmaCsvId}`;
+	return `- ${JSON.stringify(withLinkedSelectionSpan(attestedSelection))} -> ${entryCsvId}`;
 };

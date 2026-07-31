@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const deDiscourseFormulaPhrasemeFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		discourseFormulaRole: abstractFeatureAtomSchemas.discourseFormulaRole,
 	}),
 	inflectional: buildOptionalFeatureObjectSchema({}),

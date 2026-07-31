@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heSubordinatingConjunctionFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		case: abstractFeatureAtomSchemas.case.extract(["Tem"]),
 	}),
 	inflectional: buildOptionalFeatureObjectSchema({}),

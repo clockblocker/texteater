@@ -4,7 +4,7 @@ import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const enOtherFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		extPos: abstractFeatureAtomSchemas.extPos.extract(["PROPN"]),
 		foreign: abstractFeatureAtomSchemas.foreign,
 	}),

@@ -3,6 +3,6 @@ import type { HeConstructionPairedFrameFeatures } from "../../../../../types/con
 import { buildOptionalFeatureObjectSchema } from "../../../../shared/feature-helpers.js";
 
 export const heConstructionPairedFrameFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({}),
+	core: buildOptionalFeatureObjectSchema({}),
 	inflectional: buildOptionalFeatureObjectSchema({}),
 }) satisfies z.ZodSchema<HeConstructionPairedFrameFeatures>;

@@ -1,24 +1,36 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const lookUpPartialPhrasalVerbSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "look",
+	segmentedSentenceId: "sentence_2LCAEi1T9sTRgWEpBh" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2, 6],
+	attestedSurface: "look up",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "look up",
+		normalizedSurface: "look up",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "look up",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "look up",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				phrasal: "Yes",
+				abbr: null,
+				extPos: null,
+				hasGovPrep: null,
+				style: null,
 			},
-			meaningInEmojis: "🔎",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 

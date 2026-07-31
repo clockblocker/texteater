@@ -2,8 +2,8 @@ import type { Lemma } from "../../../../src/types";
 
 // Attestation: "They [walk] home together."
 export const englishWalkLemma = {
-	canonicalLemma: "walk",
-	inherentFeatures: {
+	canonicalForm: "walk",
+	coreFeatures: {
 		style: null,
 		phrasal: null,
 		hasGovPrep: null,
@@ -11,16 +11,15 @@ export const englishWalkLemma = {
 		abbr: null,
 	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "🚶",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
 export const englishGiveUpLemma = {
-	canonicalLemma: "give up",
-	inherentFeatures: {
-		hasGovPrep: "up",
+	canonicalForm: "give up",
+	coreFeatures: {
+		hasGovPrep: null,
 		phrasal: "Yes",
 
 		style: null,
@@ -28,7 +27,6 @@ export const englishGiveUpLemma = {
 		abbr: null,
 	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "🏳️",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;

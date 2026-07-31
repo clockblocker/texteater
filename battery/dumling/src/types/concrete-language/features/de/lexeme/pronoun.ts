@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type DePronounFeatures = {
-	inherent: {
+	core: {
 		extPos: Extract<AbstractFeatureValue<"extPos">, "DET"> | null;
 		foreign: AbstractFeatureValue<"foreign"> | null;
 		person: Extract<AbstractFeatureValue<"person">, "1" | "2" | "3"> | null;

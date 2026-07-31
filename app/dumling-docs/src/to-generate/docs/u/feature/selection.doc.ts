@@ -3,8 +3,8 @@ import { defineUniversalConceptStubPage } from "../../../../lib/docs/source-mirr
 const document = defineUniversalConceptStubPage({
 	family: "feature-selection",
 	order: 18100,
-	subject: "selection-features",
-	title: "Selection Features",
+	subject: "selection-evidence",
+	title: "Selection Evidence",
 });
 
 export default document;

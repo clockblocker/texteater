@@ -1,12 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const shteiNumeralSelection = {
-	language: "he",
-	spelledSelection: "שתי",
+	segmentedSentenceId: "sentence_nFZ5yBE0seRxFzuipm" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2],
+	attestedSurface: "שתי",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "שתי",
+		normalizedSurface: "שתי",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			definite: "Cons",
@@ -15,12 +24,12 @@ const shteiNumeralSelection = {
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "שתיים",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NUM",
-			inherentFeatures: {},
-			meaningInEmojis: "2️⃣",
+			canonicalForm: "שתיים",
+			family: "Lexeme",
+			kind: "NUM",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "NUM">;
 

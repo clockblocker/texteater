@@ -100,7 +100,7 @@ const deAuxiliaryInflectionalFeaturesSchema = markInflectionSurface(
 ) as unknown as z.ZodType<DeAuxiliaryFeatures["inflectional"]>;
 
 export const deAuxiliaryFeaturesSchema = z.strictObject({
-	inherent: buildOptionalFeatureObjectSchema({
+	core: buildOptionalFeatureObjectSchema({
 		verbType: z.literal("Mod"),
 	}),
 	inflectional: deAuxiliaryInflectionalFeaturesSchema,

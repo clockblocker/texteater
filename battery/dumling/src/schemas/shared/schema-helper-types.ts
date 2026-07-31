@@ -1,8 +1,8 @@
 import type {
 	Lemma,
+	LemmaFamilyFor,
+	LemmaFamilyForSurfaceKind,
 	LemmaKindFor,
-	LemmaKindForSurfaceKind,
-	LemmaSubKindFor,
 	Selection,
 	SupportedLanguage,
 	Surface,
@@ -13,26 +13,26 @@ import type { Descriptor } from "../../types/descriptor.js";
 
 type SchemaGetter<T> = () => z.ZodType<T>;
 
-export type LemmaSubKindForSurfaceKind<
+export type LemmaKindForSurfaceKind<
 	L extends SupportedLanguage,
 	SK extends SurfaceKindFor<L>,
-	LK extends LemmaKindForSurfaceKind<L, SK>,
+	LK extends LemmaFamilyForSurfaceKind<L, SK>,
 > =
 	Extract<
 		Surface<L>,
 		{
 			lemma: {
-				lemmaKind: LK;
+				family: LK;
 			};
 			surfaceKind: SK;
 		}
 	> extends infer TSurface
 		? TSurface extends {
 				lemma: {
-					lemmaSubKind: infer LSK;
+					kind: infer LSK;
 				};
 			}
-			? Extract<LSK, LemmaSubKindFor<L, LK>>
+			? Extract<LSK, LemmaKindFor<L, LK>>
 			: never
 		: never;
 
@@ -56,15 +56,15 @@ export type SchemaRegistry = {
 };
 
 type RawLemmaSchemaSubtree<L extends SupportedLanguage> = {
-	[LK in LemmaKindFor<L>]: {
-		[LSK in LemmaSubKindFor<L, LK>]: z.ZodType<Lemma<L, LK, LSK>>;
+	[LK in LemmaFamilyFor<L>]: {
+		[LSK in LemmaKindFor<L, LK>]: z.ZodType<Lemma<L, LK, LSK>>;
 	};
 };
 
 type RawSurfaceSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: z.ZodType<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: z.ZodType<
 				Surface<L, SK, LK, LSK>
 			>;
 		};
@@ -73,8 +73,8 @@ type RawSurfaceSchemaSubtree<L extends SupportedLanguage> = {
 
 type RawSelectionSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: z.ZodType<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: z.ZodType<
 				Selection<L, SK, LK, LSK>
 			>;
 		};
@@ -88,15 +88,15 @@ export type LanguageEntitySchemaTree<L extends SupportedLanguage> = {
 };
 
 type LemmaSchemaSubtree<L extends SupportedLanguage> = {
-	[LK in LemmaKindFor<L>]: {
-		[LSK in LemmaSubKindFor<L, LK>]: SchemaGetter<Lemma<L, LK, LSK>>;
+	[LK in LemmaFamilyFor<L>]: {
+		[LSK in LemmaKindFor<L, LK>]: SchemaGetter<Lemma<L, LK, LSK>>;
 	};
 };
 
 type SurfaceSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: SchemaGetter<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: SchemaGetter<
 				Surface<L, SK, LK, LSK>
 			>;
 		};
@@ -105,8 +105,8 @@ type SurfaceSchemaSubtree<L extends SupportedLanguage> = {
 
 type SelectionSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: SchemaGetter<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: SchemaGetter<
 				Selection<L, SK, LK, LSK>
 			>;
 		};
@@ -122,8 +122,8 @@ export type LanguageDescriptorSchemaTree<L extends SupportedLanguage> = {
 };
 
 type LemmaDescriptorSchemaSubtree<L extends SupportedLanguage> = {
-	[LK in LemmaKindFor<L>]: {
-		[LSK in LemmaSubKindFor<L, LK>]: DescriptorSchema<
+	[LK in LemmaFamilyFor<L>]: {
+		[LSK in LemmaKindFor<L, LK>]: DescriptorSchema<
 			Descriptor<"Lemma", L, LK, LSK>
 		>;
 	};
@@ -131,8 +131,8 @@ type LemmaDescriptorSchemaSubtree<L extends SupportedLanguage> = {
 
 type SurfaceDescriptorSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: DescriptorSchema<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: DescriptorSchema<
 				Descriptor<"Surface", L, LK, LSK, SK>
 			>;
 		};
@@ -141,8 +141,8 @@ type SurfaceDescriptorSchemaSubtree<L extends SupportedLanguage> = {
 
 type SelectionDescriptorSchemaSubtree<L extends SupportedLanguage> = {
 	[SK in SurfaceKindFor<L>]: {
-		[LK in LemmaKindForSurfaceKind<L, SK>]: {
-			[LSK in LemmaSubKindForSurfaceKind<L, SK, LK>]: DescriptorSchema<
+		[LK in LemmaFamilyForSurfaceKind<L, SK>]: {
+			[LSK in LemmaKindForSurfaceKind<L, SK, LK>]: DescriptorSchema<
 				Descriptor<"Selection", L, LK, LSK, SK>
 			>;
 		};

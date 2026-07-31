@@ -35,7 +35,7 @@ Use \`aspect\` when the analysis needs to record how the event unfolds in time, 
 			body: `
 In dumling, \`aspect\` may belong in different places depending on the language and analysis:
 
-- use \`lemma.inherentFeatures.aspect\` when aspect is lexical and part of the lemma identity
+- use \`Lemma.coreFeatures.aspect\` when aspect is lexical and part of the Lemma identity
 - use \`surface.inflectionalFeatures.aspect\` when aspect is realized on a concrete inflected form
 
 This matches UD practice, where aspect is often verbal but may be lexical in some languages and inflectional in others.

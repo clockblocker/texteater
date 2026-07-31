@@ -15,7 +15,7 @@ export function generatedFrontmatterForAttestation(
 			? surfaceForEntity(entity)
 			: undefined;
 	const displayName =
-		source.title ?? surface?.normalizedFullSurface ?? lemma.canonicalLemma;
+		source.title ?? surface?.normalizedSurface ?? lemma.canonicalForm;
 	const generatedTitle =
 		isSelection(entity) && source.sentenceMarkdown !== undefined
 			? semanticSelectionBasename(source.sentenceMarkdown)

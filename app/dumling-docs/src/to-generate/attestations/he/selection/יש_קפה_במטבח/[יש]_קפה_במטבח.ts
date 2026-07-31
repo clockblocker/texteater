@@ -1,23 +1,33 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const yeshExistentialSelection = {
-	language: "he",
-	spelledSelection: "יש",
+	segmentedSentenceId: "sentence_kExxXHPdBSNe10DP0m" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "יש",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "יש",
+		normalizedSurface: "יש",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "יש",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "יש",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hebExistential: "Yes",
+				hebBinyan: null,
 			},
-			meaningInEmojis: "✅",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Lexeme", "VERB">;
 

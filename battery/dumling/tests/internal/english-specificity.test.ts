@@ -6,14 +6,18 @@ describe("English schema specificity", () => {
 	it("keeps English adjective and noun morphology narrow", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "smaller",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "smaller",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "ADJ", "small"),
 					language: "en",
-					normalizedFullSurface: "smaller",
+					normalizedSurface: "smaller",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						degree: "Cmp",
@@ -24,14 +28,18 @@ describe("English schema specificity", () => {
 
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "small",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "small",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "ADJ", "small"),
 					language: "en",
-					normalizedFullSurface: "small",
+					normalizedSurface: "small",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Dat",
@@ -42,14 +50,18 @@ describe("English schema specificity", () => {
 
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "scissors",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "scissors",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "NOUN", "scissors"),
 					language: "en",
-					normalizedFullSurface: "scissors",
+					normalizedSurface: "scissors",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						number: "Ptan",
@@ -61,13 +73,12 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Lemma.Lexeme.NOUN().safeParse({
 				language: "en",
-				canonicalLemma: "dog",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
-				inherentFeatures: {
+				canonicalForm: "dog",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: {
 					gender: "Masc",
 				},
-				meaningInEmojis: "🐕",
 			}).success,
 		).toBe(false);
 	});
@@ -76,43 +87,45 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "en",
-				canonicalLemma: "look",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "look",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					abbr: null,
 					extPos: null,
 					hasGovPrep: "to",
 					phrasal: "Yes",
 					style: null,
 				},
-				meaningInEmojis: "👀",
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.en.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "en",
-				canonicalLemma: "wash",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "wash",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					hasSepPrefix: "up",
 				},
-				meaningInEmojis: "🧼",
 			}).success,
 		).toBe(false);
 
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "washing",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "washing",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "VERB", "wash"),
 					language: "en",
-					normalizedFullSurface: "washing",
+					normalizedSurface: "washing",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						mood: null,
@@ -128,14 +141,18 @@ describe("English schema specificity", () => {
 
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "washed",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "washed",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "VERB", "wash"),
 					language: "en",
-					normalizedFullSurface: "washed",
+					normalizedSurface: "washed",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						gender: "Fem",
@@ -148,14 +165,18 @@ describe("English schema specificity", () => {
 	it("keeps pronoun, determiner, and symbol features aligned with the English catalog", () => {
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.PRON().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "him",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "him",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "PRON", "him"),
 					language: "en",
-					normalizedFullSurface: "him",
+					normalizedSurface: "him",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Acc",
@@ -170,10 +191,10 @@ describe("English schema specificity", () => {
 		expect(
 			schemasFor.en.entity.Lemma.Lexeme.DET().safeParse({
 				language: "en",
-				canonicalLemma: "half",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "DET",
-				inherentFeatures: {
+				canonicalForm: "half",
+				family: "Lexeme",
+				kind: "DET",
+				coreFeatures: {
 					abbr: "Yes",
 					definite: null,
 					extPos: "ADV",
@@ -182,20 +203,23 @@ describe("English schema specificity", () => {
 					pronType: "Rcp",
 					style: "Vrnc",
 				},
-				meaningInEmojis: "🧮",
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.en.entity.Selection.Inflection.Lexeme.SYM().safeParse({
-				language: "en",
-				selectionFeatures: null,
-				spelledSelection: "%",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "%",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("en", "SYM", "%"),
 					language: "en",
-					normalizedFullSurface: "%",
+					normalizedSurface: "%",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						number: "Sing",

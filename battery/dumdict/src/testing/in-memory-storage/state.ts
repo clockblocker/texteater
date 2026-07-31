@@ -1,16 +1,19 @@
+import { sameLemma, sameReading } from "../../core/identity";
 import type {
-	PendingLemmaRef,
-	PendingLemmaRelation,
+	PendingEntryRef,
+	PendingEntryRelation,
+	Reading,
+	ReadingEntry,
 	StoreRevision,
 } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
+import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { DumdictStoragePort } from "../../storage";
 import type { SerializedDictionaryNote } from "../serialized-note";
 
 function dedupePendingRefs<L extends SupportedLanguage>(
-	pendingRefs: PendingLemmaRef<L>[],
+	pendingRefs: PendingEntryRef<L>[],
 ) {
-	const byId = new Map<string, PendingLemmaRef<L>>();
+	const byId = new Map<string, PendingEntryRef<L>>();
 	for (const pendingRef of pendingRefs) {
 		byId.set(pendingRef.pendingId, pendingRef);
 	}
@@ -26,16 +29,20 @@ export type InMemoryStorageState<L extends SupportedLanguage> = {
 	language: L;
 	revisionNumber: number;
 	storedNotes: SerializedDictionaryNote<L>[];
-	storedPendingRefs: PendingLemmaRef<L>[];
+	storedPendingRefs: PendingEntryRef<L>[];
 	currentRevision(): StoreRevision;
-	findStoredNoteByLemmaId(
-		lemmaId: string,
+	findStoredBundleByLemma(
+		lemma: Lemma<L>,
+	): SerializedDictionaryNote<L> | undefined;
+	findStoredReading(reading: Reading<L>): ReadingEntry<L> | undefined;
+	findStoredBundleByReading(
+		reading: Reading<L>,
 	): SerializedDictionaryNote<L> | undefined;
 	findStoredSurfaceById(
 		surfaceId: string,
 	): SerializedDictionaryNote<L>["ownedSurfaceEntries"][number] | undefined;
-	allPendingRelations(): PendingLemmaRelation<L>[];
-	findStoredPendingRefById(pendingId: string): PendingLemmaRef<L> | undefined;
+	allPendingRelations(): PendingEntryRelation<L>[];
+	findStoredPendingRefById(pendingId: string): PendingEntryRef<L> | undefined;
 };
 
 export function createInMemoryStorageState<L extends SupportedLanguage>(
@@ -53,12 +60,24 @@ export function createInMemoryStorageState<L extends SupportedLanguage>(
 		currentRevision() {
 			return `mem-${state.revisionNumber}` as StoreRevision;
 		},
-		findStoredNoteByLemmaId(lemmaId: string) {
-			return state.storedNotes.find(
-				({ lemmaEntry }) => lemmaEntry.id === lemmaId,
+		findStoredBundleByLemma(lemma) {
+			return state.storedNotes.find(({ lemmaRecord }) =>
+				sameLemma(lemmaRecord.lemma, lemma),
 			);
 		},
-		findStoredSurfaceById(surfaceId: string) {
+		findStoredReading(reading) {
+			return state.storedNotes
+				.flatMap(({ readingEntries }) => readingEntries)
+				.find((entry) => sameReading(entry.reading, reading));
+		},
+		findStoredBundleByReading(reading) {
+			return state.storedNotes.find(({ readingEntries }) =>
+				readingEntries.some((entry) =>
+					sameReading(entry.reading, reading),
+				),
+			);
+		},
+		findStoredSurfaceById(surfaceId) {
 			return state.storedNotes
 				.flatMap(({ ownedSurfaceEntries }) => ownedSurfaceEntries)
 				.find(({ id }) => id === surfaceId);
@@ -68,7 +87,7 @@ export function createInMemoryStorageState<L extends SupportedLanguage>(
 				({ pendingRelations }) => pendingRelations,
 			);
 		},
-		findStoredPendingRefById(pendingId: string) {
+		findStoredPendingRefById(pendingId) {
 			return state.storedPendingRefs.find(
 				({ pendingId: id }) => id === pendingId,
 			);

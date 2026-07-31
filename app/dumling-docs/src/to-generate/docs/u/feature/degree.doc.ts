@@ -34,7 +34,7 @@ If \`surface.inflectionalFeatures.degree\` is absent or \`undefined\`, the surfa
 			body: `
 Use \`degree\` when the selected surface overtly expresses comparison, superlative force, or another UD-recognized degree distinction.
 
-In Dumling, \`Degree\` is modeled on the inflected surface rather than the lemma, because contrasts such as \`good\` / \`better\` / \`best\` are different surface realizations of the same lexical item.
+In Dumling, \`Degree\` is modeled on the inflected surface rather than the Lemma, because contrasts such as \`good\` / \`better\` / \`best\` are different surface realizations of the same lexical item.
 `,
 		},
 		{

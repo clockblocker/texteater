@@ -1,23 +1,34 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const likeSubordinatorSelection = {
-	language: "en",
-	spelledSelection: "like",
+	segmentedSentenceId: "sentence_gU2tt-YrhhwxU1J3kY" as SegmentedSentenceId,
+	clickedSegmentIndex: 4,
+	surfaceSegmentIndices: [4],
+	attestedSurface: "like",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "like",
+		normalizedSurface: "like",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "like",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "SCONJ",
-			inherentFeatures: {
+			canonicalForm: "like",
+			family: "Lexeme",
+			kind: "SCONJ",
+			coreFeatures: {
 				style: "Vrnc",
+				abbr: null,
+				extPos: null,
 			},
-			meaningInEmojis: "↔️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "SCONJ">;
 

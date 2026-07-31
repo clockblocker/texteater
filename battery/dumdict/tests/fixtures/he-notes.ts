@@ -1,31 +1,37 @@
-import type { Lemma } from "../../src";
-import { makeDumlingIdFor } from "../../src";
+import type { Lemma, Reading } from "../../src";
 import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
 
 export const hebrewKatavLemma = {
-	canonicalLemma: "כתב",
-	inherentFeatures: {
+	canonicalForm: "כתב",
+	coreFeatures: {
 		hebBinyan: "PAAL",
+		hebExistential: null,
 	},
 	language: "he",
-	lemmaKind: "Lexeme",
-	lemmaSubKind: "VERB",
-	meaningInEmojis: "write",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"he", "Lexeme", "VERB">;
 
-export const hebrewKatavLemmaId = makeDumlingIdFor("he", hebrewKatavLemma);
+export const hebrewKatavReading = {
+	lemma: hebrewKatavLemma,
+	emojiDescription: "✍️",
+} satisfies Reading<"he">;
 
 export const heSerializedNotes = [
 	{
-		lemmaEntry: {
-			id: hebrewKatavLemmaId,
+		lemmaRecord: {
 			lemma: hebrewKatavLemma,
-			lexicalRelations: {},
 			morphologicalRelations: {},
-			attestedTranslations: ["write"],
-			attestations: ["הוא כתב מכתב."],
-			notes: "Write a text or letter.",
 		},
+		readingEntries: [
+			{
+				reading: hebrewKatavReading,
+				lexicalRelations: {},
+				attestedTranslations: ["write"],
+				attestations: ["הוא כתב מכתב."],
+				notes: "Core writing reading.",
+			},
+		],
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},

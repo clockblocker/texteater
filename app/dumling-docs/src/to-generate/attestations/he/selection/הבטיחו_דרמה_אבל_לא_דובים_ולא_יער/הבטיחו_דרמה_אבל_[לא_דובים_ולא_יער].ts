@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const loDubimVeloYaarSelection = {
-	language: "he",
-	spelledSelection: "לא דובים ולא יער",
+	segmentedSentenceId: "sentence_pHdw3Ar3yaTM9V7Eg9" as SegmentedSentenceId,
+	clickedSegmentIndex: 7,
+	surfaceSegmentIndices: [7, 9, 11, 13],
+	attestedSurface: "לא דובים ולא יער",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "לא דובים ולא יער",
+		normalizedSurface: "לא דובים ולא יער",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "לא דובים ולא יער",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Idiom",
-			inherentFeatures: {},
-			meaningInEmojis: "🫥",
+			canonicalForm: "לא דובים ולא יער",
+			family: "Phraseme",
+			kind: "Idiom",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "Idiom">;
 

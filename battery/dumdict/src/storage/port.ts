@@ -2,29 +2,29 @@ import type { SupportedLanguage } from "../dumling";
 import type { CommitChangesRequest, CommitChangesResult } from "./commit";
 import type {
 	CleanupRelationsSlice,
-	FindStoredLemmaSensesStorageRequest,
+	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
-	LemmaPatchSlice,
 	LoadCleanupRelationsContextRequest,
-	LoadLemmaForPatchRequest,
 	LoadNewNoteContextRequest,
+	LoadReadingForPatchRequest,
 	NewNoteSlice,
+	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
-	StoredLemmaSensesSlice,
+	StoredReadingsSlice,
 } from "./slices";
 
 export type DumdictStoragePort<L extends SupportedLanguage> = {
-	findStoredLemmaSenses(
-		request: FindStoredLemmaSensesStorageRequest<L>,
-	): Promise<StoredLemmaSensesSlice<L>>;
+	findStoredReadings(
+		request: FindStoredReadingsStorageRequest<L>,
+	): Promise<StoredReadingsSlice<L>>;
 
 	getInfoForRelationsCleanup(
 		request: GetInfoForRelationsCleanupStorageRequest<L>,
 	): Promise<RelationsCleanupInfoSlice<L>>;
 
-	loadLemmaForPatch(
-		request: LoadLemmaForPatchRequest<L>,
-	): Promise<LemmaPatchSlice<L>>;
+	loadReadingForPatch(
+		request: LoadReadingForPatchRequest<L>,
+	): Promise<ReadingPatchSlice<L>>;
 
 	loadNewNoteContext(
 		request: LoadNewNoteContextRequest<L>,

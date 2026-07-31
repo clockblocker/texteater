@@ -1,4 +1,10 @@
-import type { DumlingId, SupportedLanguage } from "../dumling";
+import type {
+	Lemma,
+	LemmaFamilyFor,
+	LemmaKindFor,
+	SupportedLanguage,
+} from "../dumling";
+import type { Reading } from "./reading";
 
 export type RelationFamily = "lexical" | "morphological";
 
@@ -18,11 +24,11 @@ export type MorphologicalRelation =
 	| "sourceFor";
 
 export type LexicalRelations<L extends SupportedLanguage> = Partial<
-	Record<LexicalRelation, DumlingId<"Lemma", L>[]>
+	Record<LexicalRelation, Reading<L>[]>
 >;
 
 export type MorphologicalRelations<L extends SupportedLanguage> = Partial<
-	Record<MorphologicalRelation, DumlingId<"Lemma", L>[]>
+	Record<MorphologicalRelation, Lemma<L>[]>
 >;
 
 export type RelationNotesForDisambiguation<L extends SupportedLanguage> = {
@@ -34,26 +40,30 @@ export type ProposedRelation<L extends SupportedLanguage> =
 	| {
 			relationFamily: "lexical";
 			relation: LexicalRelation;
-			target: ProposedRelationTarget<L>;
+			target: ProposedLexicalRelationTarget<L>;
 	  }
 	| {
 			relationFamily: "morphological";
 			relation: MorphologicalRelation;
-			target: ProposedRelationTarget<L>;
+			target: ProposedMorphologicalRelationTarget<L>;
 	  };
 
-export type ProposedRelationTarget<L extends SupportedLanguage> =
-	| { kind: "existing"; lemmaId: DumlingId<"Lemma", L> }
+export type ProposedLexicalRelationTarget<L extends SupportedLanguage> =
+	| { kind: "existing"; reading: Reading<L> }
+	| {
+			kind: "pending";
+			ref: PendingRelationTargetRef<L>;
+	  };
+
+export type ProposedMorphologicalRelationTarget<L extends SupportedLanguage> =
+	| { kind: "existing"; lemma: Lemma<L> }
 	| {
 			kind: "pending";
 			ref: PendingRelationTargetRef<L>;
 	  };
 
 export type PendingRelationTargetRef<L extends SupportedLanguage> = {
-	canonicalLemma: string;
-	lemmaKind: import("../dumling").LemmaKindFor<L>;
-	lemmaSubKind: import("../dumling").LemmaSubKindFor<
-		L,
-		import("../dumling").LemmaKindFor<L>
-	>;
+	canonicalForm: string;
+	family: LemmaFamilyFor<L>;
+	kind: LemmaKindFor<L, LemmaFamilyFor<L>>;
 };

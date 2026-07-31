@@ -1,4 +1,4 @@
 export type HeConstructionPairedFrameFeatures = {
-	inherent: Record<never, never>;
+	core: Record<never, never>;
 	inflectional: Record<never, never>;
 };

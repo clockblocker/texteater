@@ -1,8 +1,8 @@
 import type {
 	EntityKind,
+	LemmaFamilyFor,
+	LemmaFamilyForSurfaceKind,
 	LemmaKindFor,
-	LemmaKindForSurfaceKind,
-	LemmaSubKindFor,
 	SupportedLanguage,
 	SurfaceKindFor,
 } from "./public-types.js";
@@ -10,27 +10,27 @@ import type {
 export type Descriptor<
 	K extends EntityKind = EntityKind,
 	L extends SupportedLanguage = SupportedLanguage,
-	LK extends LemmaKindFor<L> = LemmaKindFor<L>,
-	LSK extends LemmaSubKindFor<L, LK> = LemmaSubKindFor<L, LK>,
+	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
 	SK extends SurfaceKindFor<L> = SurfaceKindFor<L>,
 > = K extends "Lemma"
 	? {
 			language: L;
-			lemmaKind: LK;
-			lemmaSubKind: LSK;
+			family: LK;
+			kind: LSK;
 		}
 	: K extends "Surface"
 		? {
 				language: L;
 				surfaceKind: SK;
-				lemmaKind: LK & LemmaKindForSurfaceKind<L, SK>;
-				lemmaSubKind: LSK &
-					LemmaSubKindFor<L, LK & LemmaKindForSurfaceKind<L, SK>>;
+				family: LK & LemmaFamilyForSurfaceKind<L, SK>;
+				kind: LSK &
+					LemmaKindFor<L, LK & LemmaFamilyForSurfaceKind<L, SK>>;
 			}
 		: {
 				language: L;
 				surfaceKind: SK;
-				lemmaKind: LK & LemmaKindForSurfaceKind<L, SK>;
-				lemmaSubKind: LSK &
-					LemmaSubKindFor<L, LK & LemmaKindForSurfaceKind<L, SK>>;
+				family: LK & LemmaFamilyForSurfaceKind<L, SK>;
+				kind: LSK &
+					LemmaKindFor<L, LK & LemmaFamilyForSurfaceKind<L, SK>>;
 			};

@@ -1,26 +1,36 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const yerushalayimSelection = {
-	language: "he",
-	spelledSelection: "ירושלים",
+	segmentedSentenceId: "sentence_Is83G4_lpOBFkOza7v" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "ירושלים",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "ירושלים",
+		normalizedSurface: "ירושלים",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			number: "Sing",
 		},
 		lemma: {
 			language: "he",
-			canonicalLemma: "ירושלים",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PROPN",
-			inherentFeatures: {
+			canonicalForm: "ירושלים",
+			family: "Lexeme",
+			kind: "PROPN",
+			coreFeatures: {
 				gender: "Fem",
+				abbr: null,
 			},
-			meaningInEmojis: "🏙️",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Inflection", "Lexeme", "PROPN">;
 

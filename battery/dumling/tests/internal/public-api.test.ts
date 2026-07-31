@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import * as runtimeEntry from "../../src";
+import * as runtimeLemma from "../../src";
 import { dumling, getLanguageApi, supportedLanguages } from "../../src";
 import {
 	abstractSchemas,
@@ -9,40 +9,52 @@ import {
 
 describe("public API usage", () => {
 	it("exposes the curated root runtime surface", () => {
-		expect(runtimeEntry.dumling).toBe(dumling);
-		expect(Object.keys(runtimeEntry).sort()).toEqual([
+		expect(runtimeLemma.dumling).toBe(dumling);
+		expect(Object.keys(runtimeLemma).sort()).toEqual([
 			"dumling",
 			"getLanguageApi",
 			"supportedLanguages",
 		]);
-		expect("schema" in runtimeEntry).toBe(false);
-		expect("Language" in runtimeEntry).toBe(false);
+		expect("schema" in runtimeLemma).toBe(false);
+		expect("Language" in runtimeLemma).toBe(false);
 	});
 
-	it("exposes dynamic language helpers and language-scoped ID decoding", () => {
+	it("exposes dynamic language helpers and language-scoped identity decoding", () => {
 		expect(supportedLanguages).toEqual(["de", "en", "he"]);
 		for (const language of supportedLanguages) {
-			expect(getLanguageApi(language)).toBe(dumling[language]);
+			expect(Object.is(getLanguageApi(language), dumling[language])).toBe(
+				true,
+			);
 		}
 
 		const selection = getLanguageApi("de").convert.lemma.toSelection(
 			dumling.de.create.lemma({
-				canonicalLemma: "see",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
-				inherentFeatures: { gender: "Masc", hyph: null },
-				meaningInEmojis: "🌊",
+				canonicalForm: "see",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: { gender: "Masc", hyph: null },
 			}),
+			{
+				segmentedSentenceId:
+					dumling.de.create.segmentedSentenceId("sentence:de:am-see"),
+				clickedSegmentIndex: 4,
+				surfaceSegmentIndices: [4],
+				attestedSurface: "See",
+				selectedOrthography: "Standard",
+			},
 		);
 		const id = dumling.de.id.encode.asBase64Url(selection);
 
-		expect(dumling.de.id.decode.asSelection(id)).toEqual({
+		expect(dumling.de.id.decode.asSelectionIdentity(id)).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "de",
 				kind: "Selection",
-				selection,
+				selectionIdentity: {
+					segmentedSentenceId: selection.segmentedSentenceId,
+					clickedSegmentIndex: 4,
+				},
 			},
 		});
 	});
@@ -68,16 +80,16 @@ describe("public API usage", () => {
 		expect(
 			nounDescriptorSchema.safeParse({
 				language: "de",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
+				family: "Lexeme",
+				kind: "NOUN",
 			}).success,
 		).toBe(true);
 		expect(
 			schemasFor.de.descriptor.Surface.Citation.Lexeme.NOUN.safeParse({
 				language: "de",
 				surfaceKind: "Citation",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "NOUN",
+				family: "Lexeme",
+				kind: "NOUN",
 			}).success,
 		).toBe(true);
 	});
@@ -85,11 +97,10 @@ describe("public API usage", () => {
 	it("exposes abstract entity and descriptor schemas by entity kind", () => {
 		const abstractLemma = {
 			language: "fr",
-			canonicalLemma: "aller",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {},
-			meaningInEmojis: "🚶",
+			canonicalForm: "aller",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {},
 		};
 
 		expect(
@@ -99,8 +110,8 @@ describe("public API usage", () => {
 			abstractSchemas.descriptor.Selection.safeParse({
 				language: "fr",
 				surfaceKind: "Citation",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
+				family: "Lexeme",
+				kind: "VERB",
 			}).success,
 		).toBe(true);
 	});

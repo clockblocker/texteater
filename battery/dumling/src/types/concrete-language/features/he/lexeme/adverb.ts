@@ -1,7 +1,7 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
 export type HeAdverbFeatures = {
-	inherent: {
+	core: {
 		prefix: AbstractFeatureValue<"prefix"> | null;
 	};
 	inflectional: Record<never, never>;

@@ -1,4 +1,4 @@
-sentence_markdown,normalizedFullSurface,surfaceKind,lemmaKind,lemmaSubKind
+sentence_markdown,normalizedSurface,surfaceKind,family,kind
 Abso-[bloody]-lutely not.,bloody,Citation,Morpheme,Infix
 "[By and large], the migration worked.",by and large,Citation,Phraseme,Idiom
 Could you [wind] the old clock?,wind,Citation,Lexeme,VERB
@@ -13,7 +13,7 @@ I [saw] the comet through binoculars.,saw,Inflection,Lexeme,VERB
 "If I [were] you, I would wait.",were,Inflection,Lexeme,AUX
 I'[ll] call when I arrive.,ll,Citation,Morpheme,Clitic
 Is [OK] still acceptable here?,OK,Citation,Lexeme,INTJ
-Mira finally [spilled] the beans.,spill the beans,Citation,Phraseme,Idiom
+Mira finally [spilled] the beans.,spilled the beans,Citation,Phraseme,Idiom
 "Move [that] chair, please.",that,Citation,Lexeme,DET
 "[My bad], I merged the wrong branch.",my bad,Citation,Phraseme,DiscourseFormula
 "[No worries], I already fixed it.",no worries,Citation,Phraseme,DiscourseFormula
@@ -23,16 +23,16 @@ Please [look] it up before replying.,look up,Citation,Lexeme,VERB
 [Running] before breakfast clears my head.,running,Inflection,Lexeme,VERB
 [See] you later at the station.,see you later,Citation,Phraseme,DiscourseFormula
 Send the [e-mail] before noon.,e-mail,Citation,Lexeme,NOUN
-She gave [up] after midnight.,up,Citation,Lexeme,PART
+She gave [up] after midnight.,gave up,Inflection,Lexeme,VERB
 She performed [best] under pressure.,best,Inflection,Lexeme,ADV
 Tag the issue with [#] before the number.,#,Citation,Lexeme,SYM
-That answer was [un]believable.,un-,Citation,Morpheme,Prefix
+That answer was [un]believable.,un,Citation,Morpheme,Prefix
 [That] was unexpected.,that,Citation,Lexeme,PRON
 The [bio]reactor failed overnight.,bio,Citation,Morpheme,Root
 The [data] are still inconsistent.,data,Inflection,Lexeme,NOUN
-The estimate was thirty[ish] minutes.,-ish,Citation,Morpheme,Suffix
+The estimate was thirty[ish] minutes.,ish,Citation,Morpheme,Suffix
 The note was [written] in pencil.,written,Inflection,Lexeme,VERB
-The old laptop finally [kicked] the bucket.,kick the bucket,Citation,Phraseme,Idiom
+The old laptop finally [kicked] the bucket.,kicked the bucket,Citation,Phraseme,Idiom
 The pipe contained traces of [lead].,lead,Citation,Lexeme,NOUN
 The plane will [take] off at dawn.,take off,Citation,Lexeme,VERB
 The report says [COVID-ish] twice.,COVID-ish,Citation,Lexeme,X

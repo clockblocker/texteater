@@ -1,22 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection046 = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "Morgenstund",
+	segmentedSentenceId: "sentence_vdNF9z_gAdiB0W6ibh" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0, 2, 4, 6, 8],
+	attestedSurface: "Morgenstund hat Gold im Mund",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "Morgenstund hat Gold im Mund",
+		normalizedSurface: "morgenstund hat gold im mund",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "de",
-			canonicalLemma: "Morgenstund hat Gold im Mund",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "Proverb",
-			inherentFeatures: {},
-			meaningInEmojis: "🌅",
+			canonicalForm: "Morgenstund hat Gold im Mund",
+			family: "Phraseme",
+			kind: "Proverb",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Citation", "Phraseme", "Proverb">;
 

@@ -7,27 +7,30 @@ describe("Hebrew schema specificity", () => {
 		expect(
 			schemasFor.he.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "he",
-				canonicalLemma: "כתב",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "כתב",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					hebBinyan: "PAAL",
 					hebExistential: null,
 				},
-				meaningInEmojis: "✍️",
 			}).success,
 		).toBe(true);
 
 		expect(
 			schemasFor.he.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				language: "he",
-				selectionFeatures: null,
-				spelledSelection: "כתבו",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "כתבו",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("he", "VERB", "כתב"),
 					language: "he",
-					normalizedFullSurface: "כתבו",
+					normalizedSurface: "כתבו",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						definite: null,
@@ -46,14 +49,18 @@ describe("Hebrew schema specificity", () => {
 
 		expect(
 			schemasFor.he.entity.Selection.Inflection.Lexeme.NOUN().safeParse({
-				language: "he",
-				selectionFeatures: null,
-				spelledSelection: "שנתיים",
+				segmentedSentenceId: "test:fixture-sentence" as never,
+				clickedSegmentIndex: 0,
+				surfaceSegmentIndices: [0],
+				attestedSurface: "שנתיים",
+				selectedOrthography: "Standard",
 
 				surface: {
 					...makeLexemeSurfaceReference("he", "NOUN", "שנה"),
 					language: "he",
-					normalizedFullSurface: "שנתיים",
+					normalizedSurface: "שנתיים",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						definite: null,
@@ -75,13 +82,12 @@ describe("Hebrew schema specificity", () => {
 		expect(
 			schemasFor.he.entity.Lemma.Lexeme.VERB().safeParse({
 				language: "he",
-				canonicalLemma: "כתב",
-				lemmaKind: "Lexeme",
-				lemmaSubKind: "VERB",
-				inherentFeatures: {
+				canonicalForm: "כתב",
+				family: "Lexeme",
+				kind: "VERB",
+				coreFeatures: {
 					hasSepPrefix: "ab",
 				},
-				meaningInEmojis: "✍️",
 			}).success,
 		).toBe(false);
 	});

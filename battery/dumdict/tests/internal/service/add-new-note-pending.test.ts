@@ -1,12 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import {
-	englishRunLemma,
-	englishRunLemmaId,
-	englishSwimLemma,
-	englishWalkLemmaId,
+	englishRunDraft,
+	englishRunReading,
+	englishSwimDraft,
+	englishSwimReading,
+	englishWalkReading,
 	enSerializedNotesWithPendingSwimRelation,
 	getBootedUpDumdict,
-	pendingSwimLemmaId,
+	pendingSwimEntryId,
 } from "./helpers";
 
 describe("configured service", () => {
@@ -18,12 +19,7 @@ describe("configured service", () => {
 
 		const result = await dict.addNewNote({
 			draft: {
-				lemma: englishRunLemma,
-				note: {
-					attestedTranslations: ["run"],
-					attestations: ["They run every morning."],
-					notes: "Move quickly on foot.",
-				},
+				...englishRunDraft,
 				relations: [
 					{
 						relationFamily: "lexical",
@@ -31,9 +27,9 @@ describe("configured service", () => {
 						target: {
 							kind: "pending",
 							ref: {
-								canonicalLemma: "swim",
-								lemmaKind: "Lexeme",
-								lemmaSubKind: "VERB",
+								canonicalForm: "swim",
+								family: "Lexeme",
+								kind: "VERB",
 							},
 						},
 					},
@@ -53,41 +49,38 @@ describe("configured service", () => {
 		expect(pendingRefs).toHaveLength(2);
 		expect(
 			pendingRefs.every(
-				({ pendingId }) => pendingId === pendingSwimLemmaId,
+				({ pendingId }) => pendingId === pendingSwimEntryId,
 			),
 		).toBe(true);
 		expect(pendingRelations).toContainEqual({
-			sourceLemmaId: englishRunLemmaId,
+			sourceReading: englishRunReading,
 			relationFamily: "lexical",
 			relation: "nearSynonym",
-			targetPendingId: pendingSwimLemmaId,
+			targetPendingId: pendingSwimEntryId,
 		});
 	});
 
-	test("addNewNote picks up matching pending refs for the inserted lemma", async () => {
+	test("addNewNote picks up matching pending refs for the inserted Lemma", async () => {
 		const { dict, storage } = getBootedUpDumdict(
 			"en",
 			enSerializedNotesWithPendingSwimRelation,
 		);
 
 		const result = await dict.addNewNote({
-			draft: {
-				lemma: englishSwimLemma,
-				note: {
-					attestedTranslations: ["swim"],
-					attestations: ["They swim every morning."],
-					notes: "Move through water by moving the body.",
-				},
-			},
+			draft: englishSwimDraft,
 		});
 
 		const storedNotes = storage.loadAll();
-		const storedWalk = storedNotes.find(
-			({ lemmaEntry }) => lemmaEntry.id === englishWalkLemmaId,
-		)?.lemmaEntry;
+		const storedWalk = storedNotes.find(({ readingEntries }) =>
+			readingEntries.some(
+				({ reading }) =>
+					reading.emojiDescription ===
+					englishWalkReading.emojiDescription,
+			),
+		)?.readingEntries[0];
 		const storedSwim = storedNotes.find(
-			({ lemmaEntry }) => lemmaEntry.lemma.canonicalLemma === "swim",
-		)?.lemmaEntry;
+			({ lemmaRecord }) => lemmaRecord.lemma.canonicalForm === "swim",
+		)?.readingEntries[0];
 		const pendingRelations = storedNotes.flatMap(
 			({ pendingRelations }) => pendingRelations,
 		);
@@ -96,11 +89,11 @@ describe("configured service", () => {
 		);
 
 		expect(result.status).toBe("applied");
-		expect(storedWalk?.lexicalRelations.nearSynonym).toContain(
-			storedSwim?.id,
+		expect(storedWalk?.lexicalRelations.nearSynonym).toContainEqual(
+			englishSwimReading,
 		);
-		expect(storedSwim?.lexicalRelations.nearSynonym).toContain(
-			englishWalkLemmaId,
+		expect(storedSwim?.lexicalRelations.nearSynonym).toContainEqual(
+			englishWalkReading,
 		);
 		expect(pendingRelations).toHaveLength(0);
 		expect(pendingRefs).toHaveLength(0);

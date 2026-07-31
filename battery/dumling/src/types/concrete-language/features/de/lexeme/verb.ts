@@ -1,6 +1,6 @@
 import type { AbstractFeatureValue } from "../../../../abstract/features/features-catalog.js";
 
-type DeVerbalInflectionalFeatures =
+export type DeVerbalInflectionalFeatures =
 	| {
 			number: Extract<
 				AbstractFeatureValue<"number">,
@@ -76,7 +76,7 @@ type DeVerbalInflectionalFeatures =
 	  };
 
 export type DeVerbFeatures = {
-	inherent: {
+	core: {
 		hasGovPrep: AbstractFeatureValue<"hasGovPrep"> | null;
 		hasSepPrefix: AbstractFeatureValue<"hasSepPrefix"> | null;
 		lexicallyReflexive: AbstractFeatureValue<"lexicallyReflexive"> | null;

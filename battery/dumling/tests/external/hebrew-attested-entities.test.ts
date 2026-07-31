@@ -81,83 +81,79 @@ describe("Hebrew attested entities", () => {
 		).toEqual({
 			language: "he",
 			surfaceKind: "Inflection",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
+			family: "Lexeme",
+			kind: "VERB",
 		});
 	});
 
-	it("round-trips through the Hebrew ID helpers", () => {
-		const lemmaId = dumling.he.id.encode.asBase64Url(hebrewKatavLemma);
+	it("encodes Hebrew entities and decodes their identity keys", () => {
+		const lemmaIdentityEncoding =
+			dumling.he.id.encode.asBase64Url(hebrewKatavLemma);
 		const surfaceId = dumling.he.id.encode.asBase64Url(
 			hebrewKatvuInflectionSurface,
 		);
 		const selectionId = dumling.he.id.encode.asBase64Url(
 			hebrewKatvuStandardFullSelection,
 		);
-		const pointedVariantId = dumling.he.id.encode.asBase64Url(
-			hebrewKatvuPointedVariantSelection,
-		);
-		const abbreviationLemmaId = dumling.he.id.encode.asBase64Url(
-			hebrewUsAbbreviationLemma,
-		);
 		const abbreviationSelectionId = dumling.he.id.encode.asBase64Url(
 			hebrewUsAbbreviationSelection,
 		);
 
-		expect(dumling.he.id.decode.asLemma(lemmaId)).toEqual({
+		expect(
+			dumling.he.id.decode.asLemmaIdentity(lemmaIdentityEncoding),
+		).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "he",
 				kind: "Lemma",
-				lemma: hebrewKatavLemma,
+				lemmaIdentityEncodingentity: hebrewKatavLemma,
 			},
 		});
-		expect(dumling.he.id.decode.asSurface(surfaceId)).toEqual({
+		expect(dumling.he.id.decode.asSurfaceIdentity(surfaceId)).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "he",
 				kind: "Surface",
-				surface: hebrewKatvuInflectionSurface,
+				surfaceIdentity: {
+					language: "he",
+					surfaceKind: "Inflection",
+					normalizedSurface: "כתבו",
+					inflectionalFeatures:
+						hebrewKatvuInflectionSurface.inflectionalFeatures,
+					lemma: hebrewKatavLemma,
+				},
 			},
 		});
-		expect(dumling.he.id.decode.asSelection(selectionId)).toEqual({
+		expect(dumling.he.id.decode.asSelectionIdentity(selectionId)).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "he",
 				kind: "Selection",
-				selection: hebrewKatvuStandardFullSelection,
-			},
-		});
-		expect(dumling.he.id.decode.asSelection(pointedVariantId)).toEqual({
-			success: true,
-			data: {
-				format: "base64url",
-				language: "he",
-				kind: "Selection",
-				selection: hebrewKatvuPointedVariantSelection,
-			},
-		});
-		expect(dumling.he.id.decode.asLemma(abbreviationLemmaId)).toEqual({
-			success: true,
-			data: {
-				format: "base64url",
-				language: "he",
-				kind: "Lemma",
-				lemma: hebrewUsAbbreviationLemma,
+				selectionIdentity: {
+					segmentedSentenceId:
+						hebrewKatvuStandardFullSelection.segmentedSentenceId,
+					clickedSegmentIndex:
+						hebrewKatvuStandardFullSelection.clickedSegmentIndex,
+				},
 			},
 		});
 		expect(
-			dumling.he.id.decode.asSelection(abbreviationSelectionId),
+			dumling.he.id.decode.asSelectionIdentity(abbreviationSelectionId),
 		).toEqual({
 			success: true,
 			data: {
 				format: "base64url",
 				language: "he",
 				kind: "Selection",
-				selection: hebrewUsAbbreviationSelection,
+				selectionIdentity: {
+					segmentedSentenceId:
+						hebrewUsAbbreviationSelection.segmentedSentenceId,
+					clickedSegmentIndex:
+						hebrewUsAbbreviationSelection.clickedSegmentIndex,
+				},
 			},
 		});
 	});

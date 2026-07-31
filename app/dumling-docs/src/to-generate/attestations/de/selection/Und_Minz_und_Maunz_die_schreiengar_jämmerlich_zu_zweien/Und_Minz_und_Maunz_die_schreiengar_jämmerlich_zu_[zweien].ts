@@ -1,26 +1,39 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	spelledSelection: "zweien",
+	segmentedSentenceId: "sentence_VWX7Q8sPV5qaSg76hi" as SegmentedSentenceId,
+	clickedSegmentIndex: 19,
+	surfaceSegmentIndices: [19],
+	attestedSurface: "zweien",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "zweien",
+		normalizedSurface: "zweien",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Dat",
+			gender: null,
+			number: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "zwei",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NUM",
-			inherentFeatures: {
+			canonicalForm: "zwei",
+			family: "Lexeme",
+			kind: "NUM",
+			coreFeatures: {
 				numType: "Card",
+				abbr: null,
+				foreign: null,
 			},
-			meaningInEmojis: "2️⃣",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "NUM">;
 

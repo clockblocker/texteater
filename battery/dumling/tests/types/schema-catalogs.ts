@@ -16,8 +16,8 @@ schemasFor.de.entity.Selection.Inflection.Lexeme.ADJ() satisfies z.ZodType<
 
 getSchemaTreeFor("en").descriptor.Lemma.Lexeme.NOUN satisfies z.ZodType<{
 	language: "en";
-	lemmaKind: "Lexeme";
-	lemmaSubKind: "NOUN";
+	family: "Lexeme";
+	kind: "NOUN";
 }>;
 
 // @ts-expect-error ADP has no inflection surface schema in German.

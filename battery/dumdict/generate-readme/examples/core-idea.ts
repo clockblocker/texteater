@@ -1,107 +1,126 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
 import {
 	type Lemma,
-	type LemmaEntry,
-	makeDumlingIdFor,
+	type LemmaRecord,
+	makeSurfaceId,
+	type Reading,
+	type ReadingEntry,
 	type Surface,
 	type SurfaceEntry,
 } from "../../src";
 import { getBootedUpDumdict } from "../../src/testing/boot";
 
 const walkLemma = {
-	canonicalLemma: "walk",
-	inherentFeatures: {},
+	canonicalForm: "walk",
+	coreFeatures: {
+		style: null,
+		phrasal: null,
+		hasGovPrep: null,
+		extPos: null,
+		abbr: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "walk-as-motion",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
 const runLemma = {
-	canonicalLemma: "run",
-	inherentFeatures: {},
-	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "run-as-motion",
-	lemmaSubKind: "VERB",
-} satisfies Lemma<"en", "Lexeme", "VERB">;
+	...walkLemma,
+	canonicalForm: "run",
+};
+
+const walkReading = {
+	lemma: walkLemma,
+	emojiDescription: "🚶",
+} satisfies Reading<"en">;
+
+const runReading = {
+	lemma: runLemma,
+	emojiDescription: "🏃",
+} satisfies Reading<"en">;
 
 const walkSurface = {
 	inflectionalFeatures: {
+		mood: null,
+		number: null,
+		person: null,
 		tense: "Pres",
 		verbForm: "Fin",
+		voice: null,
 	},
 	language: "en",
-	normalizedFullSurface: "walk",
+	normalizedSurface: "walk",
 	surfaceKind: "Inflection",
 	lemma: walkLemma,
+	surfaceFeatures: null,
+	spelling: "Canonical",
+	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
-// README_BLOCK:english-walk-lemma-entry:start
-const walkEntry = {
-	id: makeDumlingIdFor("en", walkLemma),
+// README_BLOCK:english-walk-entry-record:start
+const walkLemmaRecord = {
 	lemma: walkLemma,
-	lexicalRelations: {},
 	morphologicalRelations: {},
+} satisfies LemmaRecord<"en">;
+// README_BLOCK:english-walk-entry-record:end
+
+// README_BLOCK:english-walk-reading-entry:start
+const walkReadingEntry = {
+	reading: walkReading,
+	lexicalRelations: {},
 	attestedTranslations: ["caminar", "gehen"],
 	attestations: ["They walk home together."],
-	notes: "Core motion verb.",
-} satisfies LemmaEntry<"en">;
-// README_BLOCK:english-walk-lemma-entry:end
+	notes: "Core motion sense.",
+} satisfies ReadingEntry<"en">;
+// README_BLOCK:english-walk-reading-entry:end
 
 // README_BLOCK:english-walk-surface-entry:start
 const walkSurfaceEntry = {
-	id: makeDumlingIdFor("en", walkSurface),
+	id: makeSurfaceId("en", walkSurface),
 	surface: walkSurface,
-	ownerLemmaId: walkEntry.id,
+	ownerLemma: walkLemma,
 	attestedTranslations: ["walk"],
 	attestations: ["They walk home together."],
 	notes: "Present finite surface.",
 } satisfies SurfaceEntry<"en">;
 // README_BLOCK:english-walk-surface-entry:end
 
-// README_BLOCK:service-lookup:start
-const { dict: lookupDict } = getBootedUpDumdict("en", [
-	{
-		lemmaEntry: walkEntry,
-		ownedSurfaceEntries: [walkSurfaceEntry],
-		pendingRelations: [],
-	},
-]);
+const serializedWalk = {
+	lemmaRecord: walkLemmaRecord,
+	readingEntries: [walkReadingEntry],
+	ownedSurfaceEntries: [walkSurfaceEntry],
+	pendingRelations: [],
+};
 
-const walkSenses = await lookupDict.findStoredLemmaSenses({
-	lemmaDescription: {
-		language: "en",
-		canonicalLemma: "walk",
-		lemmaKind: "Lexeme",
-		lemmaSubKind: "VERB",
-	},
+// README_BLOCK:service-lookup:start
+const { dict: lookupDict } = getBootedUpDumdict("en", [serializedWalk]);
+
+const walkReadings = await lookupDict.findStoredReadings({
+	lemma: walkLemma,
 });
 
-const foundLemmaIds = walkSenses.candidates.map(({ lemmaId }) => lemmaId);
+const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 // README_BLOCK:service-lookup:end
 
 // README_BLOCK:quickstart-walk:start
-const { dict, storage } = getBootedUpDumdict("en", [
-	{
-		lemmaEntry: walkEntry,
-		ownedSurfaceEntries: [walkSurfaceEntry],
-		pendingRelations: [],
-	},
-]);
+const { dict, storage } = getBootedUpDumdict("en", [serializedWalk]);
 
 const addRunResult = await dict.addNewNote({
 	draft: {
-		lemma: runLemma,
+		reading: runReading,
 		note: {
 			attestedTranslations: ["correr", "laufen"],
 			attestations: ["They run before breakfast."],
-			notes: "Core fast-motion verb.",
+			notes: "Core fast-motion sense.",
 		},
 	},
 });
 
-const storedRunNote = storage
+const storedRunReading = storage
 	.loadAll()
-	.find(({ lemmaEntry }) => lemmaEntry.id === makeDumlingIdFor("en", runLemma));
+	.flatMap(({ readingEntries }) => readingEntries)
+	.find(
+		({ reading }) =>
+			reading.emojiDescription === runReading.emojiDescription,
+	);
 // README_BLOCK:quickstart-walk:end

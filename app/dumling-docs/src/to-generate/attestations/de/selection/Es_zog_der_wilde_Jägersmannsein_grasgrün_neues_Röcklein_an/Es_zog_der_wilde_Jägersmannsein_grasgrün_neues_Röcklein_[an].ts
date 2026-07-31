@@ -1,13 +1,21 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const deSelection = {
-	language: "de",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "an",
+	segmentedSentenceId: "sentence_hrY3GZA_T_nLlgF-kt" as SegmentedSentenceId,
+	clickedSegmentIndex: 18,
+	surfaceSegmentIndices: [2, 18],
+	attestedSurface: "zog an",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "de",
-		normalizedFullSurface: "zog an",
+		normalizedSurface: "zog an",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			mood: "Ind",
@@ -15,17 +23,21 @@ const deSelection = {
 			person: "3",
 			tense: "Past",
 			verbForm: "Fin",
+			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalLemma: "anziehen",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "anziehen",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasSepPrefix: "an",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
+				verbType: null,
 			},
-			meaningInEmojis: "🧥",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"de", "Inflection", "Lexeme", "VERB">;
 

@@ -1,27 +1,43 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const whosePronounPossessiveSelection = {
-	language: "en",
-	spelledSelection: "Whose",
+	segmentedSentenceId: "sentence_10r0wzYy5dykiepx3j" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "Whose",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "whose",
+		normalizedSurface: "whose",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
 			case: "Gen",
+			gender: null,
+			number: null,
+			reflex: null,
 		},
 		lemma: {
 			language: "en",
-			canonicalLemma: "who",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "PRON",
-			inherentFeatures: {
+			canonicalForm: "who",
+			family: "Lexeme",
+			kind: "PRON",
+			coreFeatures: {
 				poss: "Yes",
 				pronType: "Int",
+				abbr: null,
+				extPos: null,
+				person: null,
+				style: null,
 			},
-			meaningInEmojis: "❔",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Inflection", "Lexeme", "PRON">;
 

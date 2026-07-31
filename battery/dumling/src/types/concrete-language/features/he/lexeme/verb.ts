@@ -3,7 +3,7 @@ import type { AbstractFeatureValue } from "../../../../abstract/features/feature
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
 
 export type HeVerbFeatures = {
-	inherent: {
+	core: {
 		hebBinyan: AbstractFeatureValue<"hebBinyan"> | null;
 		hebExistential: AbstractFeatureValue<"hebExistential"> | null;
 	};

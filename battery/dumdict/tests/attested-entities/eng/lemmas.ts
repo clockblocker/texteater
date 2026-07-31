@@ -2,134 +2,203 @@ import type { Lemma } from "../../../src";
 
 // Attestation: "They [walk] home together."
 export const englishWalkLemma = {
-	canonicalLemma: "walk",
-	inherentFeatures: {},
+	canonicalForm: "walk",
+	coreFeatures: {
+		style: null,
+		phrasal: null,
+		hasGovPrep: null,
+		extPos: null,
+		abbr: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🚶",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
 // Attestation: "Mark gave [up] on it."
 export const englishGiveUpLemma = {
-	canonicalLemma: "give up",
-	inherentFeatures: {
+	canonicalForm: "give up",
+	coreFeatures: {
 		phrasal: "Yes",
+		hasGovPrep: null,
+		style: null,
+		extPos: null,
+		abbr: null,
 	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🙅",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
 export const englishBankFinancialLemma = {
-	canonicalLemma: "bank",
-	inherentFeatures: {},
+	canonicalForm: "bank",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🏦",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
 export const englishBankRiverLemma = {
-	canonicalLemma: "bank",
-	inherentFeatures: {},
+	canonicalForm: "bank",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🏞️",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
 export const englishPlantOrganismLemma = {
-	canonicalLemma: "plant",
-	inherentFeatures: {},
+	canonicalForm: "plant",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🌱",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
 export const englishPlantFactoryLemma = {
-	canonicalLemma: "plant",
-	inherentFeatures: {},
+	canonicalForm: "plant",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🏭",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
 export const englishLightIlluminationLemma = {
-	canonicalLemma: "light",
-	inherentFeatures: {},
+	canonicalForm: "light",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "💡",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
 export const englishLightWeightLemma = {
-	canonicalLemma: "light",
-	inherentFeatures: {},
+	canonicalForm: "light",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🪶",
-	lemmaSubKind: "ADJ",
+	family: "Lexeme",
+	kind: "ADJ",
 } satisfies Lemma<"en", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
 export const englishSpringSeasonLemma = {
-	canonicalLemma: "spring",
-	inherentFeatures: {},
+	canonicalForm: "spring",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🌷",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
 export const englishSpringCoilLemma = {
-	canonicalLemma: "spring",
-	inherentFeatures: {},
+	canonicalForm: "spring",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🌀",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
 export const englishRakeToolLemma = {
-	canonicalLemma: "rake",
-	inherentFeatures: {},
+	canonicalForm: "rake",
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		foreign: null,
+		numForm: null,
+		numType: null,
+		style: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🧹",
-	lemmaSubKind: "NOUN",
+	family: "Lexeme",
+	kind: "NOUN",
 } satisfies Lemma<"en", "Lexeme", "NOUN">;
 
 // Attestation: "They [look up] every unknown word."
 export const englishLookUpLemma = {
-	canonicalLemma: "look up",
-	inherentFeatures: {
+	canonicalForm: "look up",
+	coreFeatures: {
 		phrasal: "Yes",
+		hasGovPrep: null,
+		style: null,
+		extPos: null,
+		abbr: null,
 	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "🔎",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
 export const englishLookLemma = {
-	canonicalLemma: "look",
-	inherentFeatures: {},
+	canonicalForm: "look",
+	coreFeatures: {
+		style: null,
+		phrasal: null,
+		hasGovPrep: null,
+		extPos: null,
+		abbr: null,
+	},
 	language: "en",
-	lemmaKind: "Lexeme",
-	meaningInEmojis: "👀",
-	lemmaSubKind: "VERB",
+	family: "Lexeme",
+	kind: "VERB",
 } satisfies Lemma<"en", "Lexeme", "VERB">;

@@ -1,24 +1,36 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const dependOnGovernedPrepSelection = {
-	language: "en",
-	selectionFeatures: { coverage: "Partial" },
-	spelledSelection: "depend",
+	segmentedSentenceId: "sentence_XzH7eRJjNlh1q17rUs" as SegmentedSentenceId,
+	clickedSegmentIndex: 2,
+	surfaceSegmentIndices: [2, 4],
+	attestedSurface: "depend on",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "en",
-		normalizedFullSurface: "depend on",
+		normalizedSurface: "depend on",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "en",
-			canonicalLemma: "depend on",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
-			inherentFeatures: {
+			canonicalForm: "depend on",
+			family: "Lexeme",
+			kind: "VERB",
+			coreFeatures: {
 				hasGovPrep: "on",
+				abbr: null,
+				extPos: null,
+				phrasal: null,
+				style: null,
 			},
-			meaningInEmojis: "🔗",
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"en", "Citation", "Lexeme", "VERB">;
 

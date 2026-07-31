@@ -13,22 +13,22 @@ const document = defineUniversalConceptPage({
 	body: `
 \`HebExistential\` marks that a Hebrew [\`Lemma\`](/u/entity/lemma/) is an existential verb.
 
-It is a Hebrew-specific feature aligned with [UD Hebrew guidance](https://universaldependencies.org/he/index.html) and belongs in \`lemma.inherentFeatures\`.
+It is a Hebrew-specific feature aligned with [UD Hebrew guidance](https://universaldependencies.org/he/index.html) and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
-- \`Yes\`: the lemma is marked as existential
+- \`Yes\`: the Lemma is marked as existential
 
-If \`lemma.inherentFeatures.hebExistential\` is absent or \`undefined\`, the lemma is treated as not being marked existential.
+If \`Lemma.coreFeatures.hebExistential\` is absent or \`undefined\`, the Lemma is treated as not being marked existential.
 `,
 	examples: [yeshExistentialVerb, einExistentialVerb],
 	subsections: [
 		{
 			heading: "Use",
 			body: `
-Use \`hebExistential: "Yes"\` when the lemma is a Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) whose lexical analysis is existential, such as \`יש\` or \`אין\`.
+Use \`hebExistential: "Yes"\` when the Lemma is a Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) whose lexical analysis is existential, such as \`יש\` or \`אין\`.
 
-In dumling, this is an inherent lemma-level fact. Different inflected or cited uses of the same existential verb keep the same \`hebExistential\` value.
+In dumling, this is a core Lemma-level fact. Different inflected or cited uses of the same existential verb keep the same \`hebExistential\` value.
 `,
 		},
 		{
@@ -36,13 +36,13 @@ In dumling, this is an inherent lemma-level fact. Different inflected or cited u
 			body: `
 \`HebExistential\` does not replace [\`Polarity\`](/u/feature/polarity/).
 
-For example, \`אין\` is modeled as a negative existential verb because that negativity is lexical to the lemma itself, not an inflectional polarity marking added on top of some separate non-existential base verb.
+For example, \`אין\` is modeled as a negative existential verb because that negativity is lexical to the Lemma itself, not an inflectional polarity marking added on top of some separate non-existential base verb.
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-The abstract feature schema currently exposes one public value, \`"Yes"\`. Current concrete Dumling schemas expose \`hebExistential\` on Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) lemmas.
+The abstract feature schema currently exposes one public value, \`"Yes"\`. Current concrete Dumling schemas expose \`hebExistential\` on Hebrew [\`VERB\`](/u/entity/lemma/lexeme/verb/) Lemmas.
 `,
 		},
 	],

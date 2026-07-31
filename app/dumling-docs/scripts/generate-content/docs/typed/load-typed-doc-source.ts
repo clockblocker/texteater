@@ -86,7 +86,11 @@ function isAttestedSelection(value: unknown): value is AttestedSelection {
 	if (!isRecord(value.selection)) {
 		return false;
 	}
-	return typeof value.selection.language === "string";
+	return (
+		isRecord(value.selection.surface) &&
+		isRecord(value.selection.surface.lemma) &&
+		typeof value.selection.surface.lemma.language === "string"
+	);
 }
 
 function parseRuleExample(

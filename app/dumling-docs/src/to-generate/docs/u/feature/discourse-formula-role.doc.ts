@@ -5,7 +5,7 @@ import { attestation as noWorriesAcknowledgment } from "../../../attestations/en
 
 const document = defineUniversalConceptPage({
 	description:
-		"Custom Dumling reference for the DiscourseFormulaRole feature on discourse-formula lemmas.",
+		"Custom Dumling reference for the DiscourseFormulaRole feature on discourse-formula Lemmas.",
 	family: "feature",
 	leaf: "DiscourseFormulaRole",
 	order: 18016,
@@ -14,7 +14,7 @@ const document = defineUniversalConceptPage({
 	body: `
 \`DiscourseFormulaRole\` records the communicative role of a [\`DiscourseFormula\`](/u/entity/lemma/phraseme/discourse-formula/) [\`Lemma\`](/u/entity/lemma/).
 
-It is a Dumling-specific feature with ten public values and belongs in \`lemma.inherentFeatures\`.
+It is a Dumling-specific feature with ten public values and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
@@ -29,7 +29,7 @@ It is a Dumling-specific feature with ten public values and belongs in \`lemma.i
 - \`Initiation\`
 - \`Transition\`
 
-If \`lemma.inherentFeatures.discourseFormulaRole\` is absent or \`undefined\`, the discourse formula is treated as having no recorded role in the current payload.
+If \`Lemma.coreFeatures.discourseFormulaRole\` is absent or \`undefined\`, the discourse formula is treated as having no recorded role in the current payload.
 `,
 	examples: [gutenTagGreeting, tutMirLeidApology, noWorriesAcknowledgment],
 	subsections: [
@@ -44,15 +44,18 @@ The value should capture the formula's pragmatic function in interaction, such a
 		{
 			heading: "Layer",
 			body: `
-\`DiscourseFormulaRole\` is a lemma-level fact about the formula as a whole.
+\`DiscourseFormulaRole\` is a Lemma-level fact about the formula as a whole.
 
-Selections may cover the full formula, as in \`Guten Tag\`, or only part of it, as in a partial selection of \`see you later\`. In both cases the feature still belongs on the underlying phraseme lemma.
+A click may select one Segment while its Surface occurrence spans the whole
+formula. If the attested formula itself omits lexical material,
+\`Surface.realizationCoverage\` may be \`Partial\`. In both cases the feature
+still belongs on the underlying phraseme Lemma.
 `,
 		},
 		{
 			heading: "Current Dumling support",
 			body: `
-Current concrete Dumling schemas expose \`discourseFormulaRole\` on [\`DiscourseFormula\`](/u/entity/lemma/phraseme/discourse-formula/) phraseme lemmas in the English and German packs.
+Current concrete Dumling schemas expose \`discourseFormulaRole\` on [\`DiscourseFormula\`](/u/entity/lemma/phraseme/discourse-formula/) phraseme Lemmas in the English and German packs.
 `,
 		},
 	],

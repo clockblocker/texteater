@@ -1,20 +1,20 @@
 import type { SupportedLanguage } from "../../dumling";
 import type {
 	CommitChangesRequest,
-	FindStoredLemmaSensesStorageRequest,
+	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
 	LoadCleanupRelationsContextRequest,
-	LoadLemmaForPatchRequest,
 	LoadNewNoteContextRequest,
+	LoadReadingForPatchRequest,
 } from "../../storage";
 import type { SerializedDictionaryNote } from "../serialized-note";
 import { commitChanges } from "./commit";
 import {
-	findStoredLemmaSenses,
+	findStoredReadings,
 	getInfoForRelationsCleanup,
 	loadCleanupRelationsContext,
-	loadLemmaForPatch,
 	loadNewNoteContext,
+	loadReadingForPatch,
 } from "./load-slices";
 import { createInMemoryStorageState, type InMemoryTestStorage } from "./state";
 
@@ -27,10 +27,8 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 	const state = createInMemoryStorageState(language, notes);
 
 	return {
-		async findStoredLemmaSenses(
-			request: FindStoredLemmaSensesStorageRequest<L>,
-		) {
-			return findStoredLemmaSenses(state, request);
+		async findStoredReadings(request: FindStoredReadingsStorageRequest<L>) {
+			return findStoredReadings(state, request);
 		},
 
 		async getInfoForRelationsCleanup(
@@ -39,8 +37,8 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 			return getInfoForRelationsCleanup(state, request);
 		},
 
-		async loadLemmaForPatch(request: LoadLemmaForPatchRequest<L>) {
-			return loadLemmaForPatch(state, request);
+		async loadReadingForPatch(request: LoadReadingForPatchRequest<L>) {
+			return loadReadingForPatch(state, request);
 		},
 
 		async loadNewNoteContext(request: LoadNewNoteContextRequest<L>) {

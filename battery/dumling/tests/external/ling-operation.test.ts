@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../src";
+import type { SelectionOptionsFor } from "../../src/types";
 import {
 	englishWalkCitationSelection,
 	englishWalkCitationSurface,
@@ -10,7 +11,7 @@ import {
 } from "../helpers";
 
 describe("operations", () => {
-	it("extracts the exact lemma from surfaces and selections", () => {
+	it("extracts the exact Lemma from surfaces and selections", () => {
 		expect(dumling.en.extract.lemma(englishWalkCitationSurface)).toBe(
 			englishWalkLemma,
 		);
@@ -22,56 +23,60 @@ describe("operations", () => {
 		);
 	});
 
-	it("builds valid surfaces and selections from lower-level helpers", () => {
+	it("builds valid surfaces and attestation-local selections", () => {
 		expect(dumling.en.convert.lemma.toSurface(englishWalkLemma)).toEqual(
 			englishWalkCitationSurface,
 		);
+
+		const selectionOptions = {
+			segmentedSentenceId: dumling.en.create.segmentedSentenceId(
+				"test:en:walk-conversion:v1",
+			),
+			clickedSegmentIndex: 2,
+			surfaceSegmentIndices: [2],
+			attestedSurface: "Walk",
+			selectedOrthography: "Standard",
+		} satisfies SelectionOptionsFor;
 		expect(
 			dumling.en.convert.surface.toSelection(
 				englishWalkInflectionSurface,
-				{
-					spelledSelection: "Walk",
-				},
+				selectionOptions,
 			),
 		).toEqual({
-			language: "en",
-			spelledSelection: "Walk",
-
+			...selectionOptions,
 			surface: englishWalkInflectionSurface,
-
-			selectionFeatures: null,
 		});
 	});
 
-	it("derives stable descriptors from lemmas, surfaces, and selections", () => {
+	it("derives structural descriptors without semantic content", () => {
 		expect(
 			dumling.en.describe.as.lemma(englishWalkCitationSelection),
 		).toEqual({
 			language: "en",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
+			family: "Lexeme",
+			kind: "VERB",
 		});
 		expect(dumling.en.describe.as.surface(englishWalkLemma)).toEqual({
 			language: "en",
 			surfaceKind: "Citation",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
+			family: "Lexeme",
+			kind: "VERB",
 		});
 		expect(
 			dumling.en.describe.as.selection(englishWalkInflectionSurface),
 		).toEqual({
 			language: "en",
 			surfaceKind: "Inflection",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "VERB",
+			family: "Lexeme",
+			kind: "VERB",
 		});
 		expect(
 			dumling.de.describe.as.selection(germanHausCitationSurface),
 		).toEqual({
 			language: "de",
 			surfaceKind: "Citation",
-			lemmaKind: "Lexeme",
-			lemmaSubKind: "NOUN",
+			family: "Lexeme",
+			kind: "NOUN",
 		});
 		expect(
 			String(

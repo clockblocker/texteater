@@ -1,21 +1,30 @@
-import type { AttestedSelection, Selection } from "dumling/types";
+import type {
+	AttestedSelection,
+	SegmentedSentenceId,
+	Selection,
+} from "dumling/types";
 
 const todaFormulaSelection = {
-	language: "he",
-	spelledSelection: "תודה",
+	segmentedSentenceId: "sentence_zITBcP65ZJJTtDPgQM" as SegmentedSentenceId,
+	clickedSegmentIndex: 0,
+	surfaceSegmentIndices: [0],
+	attestedSurface: "תודה",
+	selectedOrthography: "Standard",
 
 	surface: {
 		language: "he",
-		normalizedFullSurface: "תודה",
+		normalizedSurface: "תודה",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
 		surfaceKind: "Citation",
 		lemma: {
 			language: "he",
-			canonicalLemma: "תודה",
-			lemmaKind: "Phraseme",
-			lemmaSubKind: "DiscourseFormula",
-			inherentFeatures: {},
-			meaningInEmojis: "🙏",
+			canonicalForm: "תודה",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			coreFeatures: {},
 		},
+		surfaceFeatures: null,
 	},
 } satisfies Selection<"he", "Citation", "Phraseme", "DiscourseFormula">;
 

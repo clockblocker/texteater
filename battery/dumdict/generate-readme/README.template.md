@@ -21,22 +21,24 @@ A `dumdict` service is bound to one language and one storage adapter:
 const dict = createDumdictService({ language: "en", storage });
 ```
 
-The runtime service has three UI-facing operations:
+The runtime service has five UI-facing operations:
 
-- `findStoredLemmaSenses`: return stored candidates for a resolved lemma description
-- `addAttestation`: append evidence to an existing stored sense
-- `addNewNote`: create a new note and plan related semantic changes
+- `findStoredReadings`: return learner Readings for an exact structural Lemma
+- `addAttestation`: append evidence to an existing Reading
+- `addNewNote`: store a Lemma and a new learner Reading
+- `getInfoForRelationsCleanup`: inspect unresolved relation targets
+- `cleanupRelations`: link or discard unresolved relation targets
 
 The surrounding application owns the workflow around those calls. In the normal
-flow, the user selects a word, the UI resolves the lemma through its own LLM
-flow, `dumdict` returns candidate stored senses, and the UI asks its LLM whether
+flow, the user clicks a text segment, the UI resolves its Surface and Lemma
+through its own LLM flow, `dumdict` returns candidate stored Readings, and the UI asks its LLM whether
 one candidate matches. If one does, the UI calls `addAttestation`; otherwise it
 collects a full note draft and calls `addNewNote`.
 
 `dumdict` owns the dictionary semantics behind those calls:
 
-- validating language and `dumling` ID consistency
-- deriving stable IDs from typed `dumling` DTOs
+- validating language and structural identity consistency
+- keeping Lemma, Surface, and learner Reading identities distinct
 - loading only the storage slice required for the operation
 - planning semantic changes and preconditions
 - maintaining inverse-paired relations and pending unresolved relation targets
@@ -45,23 +47,29 @@ Host storage owns the actual writes. Obsidian can translate planned changes into
 markdown edits, SQLite into a transaction, and Electron into server/cache writes.
 Normal app flows do not load the full dictionary.
 
-## Entry model
+## Reading model
 
 `dumdict` keeps three data concerns separate:
 
-- `LemmaEntry`: the stored dictionary node
-- `SurfaceEntry`: the owned resolved surface entry
-- pending lemma refs: unresolved relation targets that can be linked later
+- `LemmaRecord`: a grammatical Lemma plus morphological relations
+- `ReadingEntry`: learner-facing notes for one structural Reading
+- `SurfaceEntry`: an owned normalized Surface tied to a Lemma
+- pending Lemma refs: unresolved relation targets that can be linked later
 
-A `LemmaEntry` stores the stable lemma payload plus graph-level dictionary metadata:
+A `LemmaRecord` stores the grammatical identity:
 
-<!-- README_BLOCK:english-walk-lemma-entry -->
+<!-- README_BLOCK:english-walk-entry-record -->
 
-A `SurfaceEntry` stores a resolved surface plus an explicit owning lemma ID:
+A `Reading` is exactly `{ lemma, emojiDescription }`. Multiple Readings may
+share the same Lemma while their emoji descriptions distinguish them:
+
+<!-- README_BLOCK:english-walk-reading-entry -->
+
+A `SurfaceEntry` stores a normalized Surface plus its owning structural Lemma:
 
 <!-- README_BLOCK:english-walk-surface-entry -->
 
-Service reads return storage-facing lemma sense candidates:
+Service reads return learner Reading candidates:
 
 <!-- README_BLOCK:service-lookup -->
 
@@ -84,9 +92,9 @@ the host's persistence model.
 The root export is intentionally focused:
 
 - `createDumdictService`: creates a language-bound service over a storage port
-- DTO types such as `LemmaEntry`, `SurfaceEntry`, `DumdictEntryDraft`, and relation payloads
+- DTO types such as `ReadingEntry`, `SurfaceEntry`, `DumdictReadingDraft`, and relation payloads
 - storage port types for host adapters
-- dumling helpers such as `makeDumlingIdFor` and `inspectDumlingId`
+- dumling helpers such as `dumling`, `makeSurfaceId`, and `inspectDumlingId`
 
 ## Scope
 
