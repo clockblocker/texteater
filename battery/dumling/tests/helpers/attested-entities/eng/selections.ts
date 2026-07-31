@@ -29,8 +29,8 @@ export const englishWalkCitationSelection = {
 export const englishGiveUpTypoPartialUpSelection = {
 	language: "en",
 	selectionFeatures: {
-		orthography: "Typo",
 		coverage: "Partial",
+		orthography: null,
 		spelling: null,
 	},
 	spelledSelection: "up",
@@ -44,7 +44,7 @@ export const englishGiveUpTypoPartialGvaeSelection = {
 	selectionFeatures: {
 		orthography: "Typo",
 		coverage: "Partial",
-		spelling: "Variant",
+		spelling: null,
 	},
 	spelledSelection: "gvae",
 

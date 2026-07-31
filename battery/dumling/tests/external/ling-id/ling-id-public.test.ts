@@ -120,6 +120,19 @@ describe("ID helpers", () => {
 		);
 	});
 
+	it("scopes spelling metadata to the clicked selection", () => {
+		expect(englishGiveUpTypoPartialUpSelection.selectionFeatures).toEqual({
+			coverage: "Partial",
+			orthography: null,
+			spelling: null,
+		});
+		expect(englishGiveUpTypoPartialGvaeSelection.selectionFeatures).toEqual({
+			coverage: "Partial",
+			orthography: "Typo",
+			spelling: null,
+		});
+	});
+
 	it("preserves selection spelling metadata in IDs", () => {
 		const canonicalId = dumling.en.id.encode.asBase64Url(
 			englishWalkStandardFullSelection,

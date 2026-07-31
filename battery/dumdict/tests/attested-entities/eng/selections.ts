@@ -39,12 +39,12 @@ export const englishWalkResolvedLemmaSelection = {
 // Attestation: "Mark gvae [up] on it."
 export const englishGiveUpTypoPartialUpSelection = {
 	language: "en",
-	orthographicStatus: "Typo",
+	orthographicStatus: "Standard",
 	selectionCoverage: "Partial",
 	spelledSelection: "up",
 	spellingRelation: "Canonical",
 	surface: englishGiveUpTypoUnresolvedInflectionSurface,
-} satisfies Selection<"en", "Typo", "Inflection", "Lexeme", "VERB">;
+} satisfies Selection<"en", "Standard", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "Mark [gvae] up on it."
 export const englishGiveUpTypoPartialGvaeSelection = {
@@ -52,7 +52,7 @@ export const englishGiveUpTypoPartialGvaeSelection = {
 	orthographicStatus: "Typo",
 	selectionCoverage: "Partial",
 	spelledSelection: "gvae",
-	spellingRelation: "Variant",
+	spellingRelation: "Canonical",
 	surface: englishGiveUpTypoUnresolvedInflectionSurface,
 } satisfies Selection<"en", "Typo", "Inflection", "Lexeme", "VERB">;
 
