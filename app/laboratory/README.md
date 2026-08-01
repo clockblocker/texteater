@@ -21,3 +21,9 @@ Then open <http://127.0.0.1:5173/?variant=A>.
 Set `OPENAI_API_KEY` in the server environment. The Bun API invokes the real
 Dumgen laboratory prompts and Dumgen's configured OpenAI Responses API adapter;
 credentials never enter the browser. Segmented sentences live in memory only.
+
+Each server run starts a laboratory session. Every segmentation and click
+resolution attempt is appended as JSONL under
+`battery/dumgen/.laboratory/sessions/<session-id>/events.jsonl`. **Reset
+session** rotates the session ID and clears in-memory results without deleting
+earlier logs.

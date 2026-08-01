@@ -118,6 +118,31 @@ button {
 .resolution--dumgen {
 	color: var(--accent);
 }
+.session-controls {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 8px;
+}
+.reset-session {
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	padding: 6px 10px;
+	background: transparent;
+	font:
+		700 0.62rem / 1 ui-monospace,
+		monospace;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	cursor: pointer;
+}
+.reset-session:hover:not(:disabled) {
+	border-color: var(--accent);
+}
+.reset-session:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
 
 .source-panel textarea {
 	width: 100%;

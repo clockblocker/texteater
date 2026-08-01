@@ -94,3 +94,7 @@ export type ClickResolutionResponse = {
 		prompt: "laboratory.clickResolution.de.resolve";
 	};
 };
+
+export type LaboratorySessionResponse = {
+	sessionId: string;
+};

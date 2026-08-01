@@ -8,6 +8,7 @@ import {
 import type {
 	ClickResolutionResponse,
 	EntityRepresentation,
+	LaboratorySessionResponse,
 	Segment,
 	SegmentationResponse,
 } from "../shared/contract";
@@ -29,6 +30,10 @@ type LaboratoryState = {
 	error: string | null;
 	resolutionBusy: boolean;
 	resolutionError: string | null;
+	sessionId: string | null;
+	resetSession: () => Promise<void>;
+	resetBusy: boolean;
+	sessionError: string | null;
 };
 
 function useLaboratory(): LaboratoryState {
@@ -44,6 +49,66 @@ function useLaboratory(): LaboratoryState {
 	const [error, setError] = useState<string | null>(null);
 	const [resolutionBusy, setResolutionBusy] = useState(false);
 	const [resolutionError, setResolutionError] = useState<string | null>(null);
+	const [sessionId, setSessionId] = useState<string | null>(null);
+	const [resetBusy, setResetBusy] = useState(false);
+	const [sessionError, setSessionError] = useState<string | null>(null);
+
+	useEffect(() => {
+		let active = true;
+		void (async () => {
+			try {
+				const response = await fetch("/api/session");
+				const payload =
+					(await response.json()) as LaboratorySessionResponse & {
+						error?: string;
+					};
+				if (!response.ok) {
+					throw new Error(payload.error ?? "Could not load session.");
+				}
+				if (active) setSessionId(payload.sessionId);
+			} catch (cause) {
+				if (active) {
+					setSessionError(
+						cause instanceof Error
+							? cause.message
+							: "Could not load session.",
+					);
+				}
+			}
+		})();
+		return () => {
+			active = false;
+		};
+	}, []);
+
+	const resetSession = useCallback(async () => {
+		setResetBusy(true);
+		setSessionError(null);
+		try {
+			const response = await fetch("/api/session", { method: "POST" });
+			const payload =
+				(await response.json()) as LaboratorySessionResponse & {
+					error?: string;
+				};
+			if (!response.ok) {
+				throw new Error(payload.error ?? "Could not reset session.");
+			}
+			setSessionId(payload.sessionId);
+			setResult(null);
+			setActiveIndex(null);
+			setEntity(null);
+			setError(null);
+			setResolutionError(null);
+		} catch (cause) {
+			setSessionError(
+				cause instanceof Error
+					? cause.message
+					: "Could not reset session.",
+			);
+		} finally {
+			setResetBusy(false);
+		}
+	}, []);
 
 	const segment = useCallback(async () => {
 		setBusy(true);
@@ -125,6 +190,10 @@ function useLaboratory(): LaboratoryState {
 		error,
 		resolutionBusy,
 		resolutionError,
+		sessionId,
+		resetSession,
+		resetBusy,
+		sessionError,
 	};
 }
 
@@ -144,7 +213,25 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 					<p className="eyebrow">Input · de only</p>
 					<h2>Source text</h2>
 				</div>
-				<span className="status-dot">live Dumgen</span>
+				<div className="session-controls">
+					<span className="status-dot">
+						{state.sessionId
+							? `session ${state.sessionId.slice(0, 8)}`
+							: "loading session"}
+					</span>
+					<button
+						type="button"
+						className="reset-session"
+						onClick={() => void state.resetSession()}
+						disabled={
+							state.busy ||
+							state.resolutionBusy ||
+							state.resetBusy
+						}
+					>
+						{state.resetBusy ? "Resetting…" : "Reset session"}
+					</button>
+				</div>
 			</div>
 			<textarea
 				ref={ref}
@@ -176,6 +263,9 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 			</div>
 			{state.error ? (
 				<p className="error-message">{state.error}</p>
+			) : null}
+			{state.sessionError ? (
+				<p className="error-message">{state.sessionError}</p>
 			) : null}
 		</section>
 	);
