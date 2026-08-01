@@ -47,7 +47,8 @@ describe("buildDumgen", () => {
 		const result = await generate.production.reading.de.noun.draft(lemma);
 
 		expect(result).toEqual(readingDraft);
-		expect(generate.laboratory).toEqual({});
+		expect(generate.laboratory.segmentation.de.segment).toBeFunction();
+		expect(generate.laboratory.clickResolution.de.resolve).toBeFunction();
 		expect(generate.production.classification).toEqual({});
 		expect(calls).toHaveLength(1);
 		expect(calls[0]).toMatchObject({

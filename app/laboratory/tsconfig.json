@@ -1,0 +1,14 @@
+{
+	"extends": "../../tooling/typescript/base.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"types": ["bun-types", "vite/client"]
+	},
+	"include": [
+		"scripts/**/*.ts",
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"vite.config.ts"
+	]
+}

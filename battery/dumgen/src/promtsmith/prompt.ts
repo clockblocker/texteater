@@ -1,5 +1,6 @@
 import type { output, ZodType } from "zod";
-
+import { deClickResolutionPrompt } from "./laboratory/de-click-resolution";
+import { deSegmentationPrompt } from "./laboratory/de-segmentation";
 import {
 	deNounReadingPrompt,
 	type GermanNounReadingPrompt,
@@ -51,7 +52,22 @@ export type ProductionPromptCatalog = {
 			};
 		};
 	};
-	readonly laboratory: Record<never, never>;
+	readonly laboratory: {
+		readonly segmentation: {
+			readonly de: {
+				readonly segment: PromptCatalogEntry<
+					typeof deSegmentationPrompt
+				>;
+			};
+		};
+		readonly clickResolution: {
+			readonly de: {
+				readonly resolve: PromptCatalogEntry<
+					typeof deClickResolutionPrompt
+				>;
+			};
+		};
+	};
 };
 
 // Generated manifest. Do not edit by hand.
@@ -71,5 +87,22 @@ export const PROMPT_CATALOG: ProductionPromptCatalog = {
 			},
 		},
 	},
-	laboratory: {},
+	laboratory: {
+		segmentation: {
+			de: {
+				segment: {
+					meta: { kind: "prompt" },
+					prompt: deSegmentationPrompt,
+				},
+			},
+		},
+		clickResolution: {
+			de: {
+				resolve: {
+					meta: { kind: "prompt" },
+					prompt: deClickResolutionPrompt,
+				},
+			},
+		},
+	},
 };

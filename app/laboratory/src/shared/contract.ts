@@ -1,0 +1,96 @@
+export type SegmentKind =
+	| "ResolvableText"
+	| "OpaqueText"
+	| "Whitespace"
+	| "Punctuation";
+
+export type FeatureValue = string | number | boolean;
+
+export type Lemma = {
+	language: "de";
+	canonicalForm: string;
+	family: "Lexeme" | "Phraseme" | "Morpheme" | "Construction";
+	kind: string;
+	coreFeatures: Record<string, FeatureValue>;
+};
+
+export type Selection = {
+	segmentedSentenceId: string;
+	clickedSegmentIndex: number;
+	surfaceSegmentIndices: number[];
+	attestedSurface: string;
+	selectedOrthography: "Standard" | "Typo";
+};
+
+export type Surface = {
+	language: "de";
+	normalizedSurface: string;
+	kind: "Citation" | "Inflection";
+	inflectionalFeatures: Record<string, FeatureValue>;
+	spelling: "Canonical" | "Variant";
+	realizationCoverage: "Full" | "Partial";
+	lemma: Lemma;
+};
+
+export type Reading = {
+	lemma: Lemma;
+	emojiDescription: string;
+};
+
+export type EntityRepresentation = {
+	selection: Selection;
+	surface: Surface;
+	reading: Reading;
+	resolution: "dumgen";
+	model: "gpt-5-nano";
+};
+
+export type Segment = {
+	index: number;
+	text: string;
+	kind: SegmentKind;
+	start: number;
+	end: number;
+};
+
+export type SegmentationRequest = {
+	text: string;
+	selection: {
+		start: number;
+		end: number;
+	};
+};
+
+export type SegmentationResponse = {
+	decision: "Accepted" | "UnsupportedLanguage" | "Unintelligible";
+	sentence: SegmentedSentence | null;
+	generation: {
+		model: "gpt-5-nano";
+		prompt: "laboratory.segmentation.de.segment";
+	};
+};
+
+export type SegmentedSentence = {
+	id: string;
+	language: "de";
+	sourceText: string;
+	selectedText: string;
+	selection: {
+		start: number;
+		end: number;
+	};
+	segments: Segment[];
+};
+
+export type ClickResolutionRequest = {
+	segmentedSentenceId: string;
+	clickedSegmentIndex: number;
+};
+
+export type ClickResolutionResponse = {
+	entity: EntityRepresentation;
+	generation: {
+		model: "gpt-5-nano";
+		prompt: "laboratory.clickResolution.de.resolve";
+	};
+};
