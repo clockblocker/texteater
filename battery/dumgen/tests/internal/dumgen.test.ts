@@ -12,8 +12,8 @@ import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
 import { buildGeneratorCatalog } from "../../src/generator/generator";
-import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/promtsmith/laboratory/de-routes";
-import { PROMPT_CATALOG, type PromptTree } from "../../src/promtsmith/prompt";
+import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/promptsmith/laboratory/de-routes";
+import { PROMPT_CATALOG, type PromptTree } from "../../src/promptsmith/prompt";
 
 const segments = [
 	{ kind: "ResolvableText", text: "Die" },
