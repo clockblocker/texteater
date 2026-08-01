@@ -12,9 +12,11 @@ export type Prompt<
 	InputSchema extends ZodType = ZodType,
 	OutputSchema extends ZodType | null = ZodType | null,
 	Result = GeneratedOutput<OutputSchema>,
+	ModelInputSchema extends ZodType = InputSchema,
 > = {
 	readonly systemPrompt: string;
 	readonly inputSchema: InputSchema;
+	readonly modelInputSchema?: ModelInputSchema;
 	readonly outputSchema: OutputSchema;
 	readonly outputPostcondition?: {
 		assert(
@@ -22,7 +24,7 @@ export type Prompt<
 			generated: GeneratedOutput<OutputSchema>,
 		): void;
 	};
-	projectInput?(input: output<InputSchema>): unknown;
+	projectInput?(input: output<InputSchema>): output<ModelInputSchema>;
 	projectOutput?(
 		input: output<InputSchema>,
 		generated: GeneratedOutput<OutputSchema>,

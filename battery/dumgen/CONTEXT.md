@@ -154,6 +154,16 @@ classification prompts violate the `ResolvableText` promise. Material known to
 be unresolvable is handled during segmentation as `OpaqueText`; `Unresolvable`
 is not a downstream classification outcome.
 
+### Resolution Route Not Implemented
+A Dumgen application result produced when Target Classification selects a valid
+language, Lemma family, and Lemma kind whose downstream resolution route is not
+enabled yet.
+
+It is represented as `decision: "NotImplemented"` together with the missing
+stage and selected route. It stops the chain before another model call, creates
+no Selection, and remains distinct from `Unresolved`: the classification is
+valid, but implementation is intentionally incremental.
+
 ### Analysis Target
 A Dumgen-owned, transient, presentation-facing result that groups the ordered
 Segments resolved as one unit by a Target Classification policy and names the
@@ -299,7 +309,11 @@ The initial structured Prompt Source scope is Intake, Segmentation<de>, Target
 Classification<de, HighLevelWholeUnit>, Grammatical Resolution<de, Lexeme,
 NOUN>, and Reading Resolution<de, Lexeme, NOUN>. Target Classification retains
 its explicit policy dimension so later target policies can have distinct
-contracts. Other existing laboratory routes remain unmigrated work in progress.
+contracts. Only the German Lexeme/NOUN route is initially enabled through the
+complete post-click chain. When classification selects another route, the
+application returns Resolution Route Not Implemented and stops. Other existing
+laboratory prompts remain unmigrated work in progress and are not automatically
+enabled by their presence in the catalog.
 
 There is no production prompt namespace. Laboratory results and prompt paths do
 not claim production readiness.

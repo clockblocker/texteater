@@ -30,6 +30,8 @@
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
+		"generate:system-prompts": "bun run src/promptsmith/assembly/generate-system-prompts.ts",
+		"check:system-prompts": "bun run src/promptsmith/assembly/generate-system-prompts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
@@ -42,6 +44,7 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
+		"codec-builder-library": "workspace:^",
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
 		"openai": "^7.0.0",

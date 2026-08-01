@@ -5,6 +5,7 @@
 			"**",
 			"!generate-readme/examples/**/*.ts",
 			"!docs/prototypes/**/runs/**",
+			"!src/promptsmith/laboratory/generated-system-prompt/**",
 			"!prototypes/**/results/**"
 		]
 	},

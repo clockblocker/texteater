@@ -1,4 +1,4 @@
-import type { Lemma, Surface } from "dumling/types";
+import type { Lemma, SupportedLanguage, Surface } from "dumling/types";
 
 import type {
 	GermanHighLevelFamily,
@@ -6,6 +6,14 @@ import type {
 } from "./promptsmith/laboratory/de-routes";
 
 export type Unresolved = { readonly decision: "Unresolved" };
+
+export type IntakeDecision =
+	| { readonly decision: "Accepted"; readonly language: SupportedLanguage }
+	| {
+			readonly decision: "UnsupportedLanguage";
+			readonly language: string;
+	  }
+	| { readonly decision: "Unintelligible"; readonly language: null };
 
 export type AnalysisTarget = {
 	[Family in GermanHighLevelFamily]: {

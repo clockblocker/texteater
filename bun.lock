@@ -102,6 +102,7 @@
       "name": "dumgen",
       "version": "0.1.0",
       "dependencies": {
+        "codec-builder-library": "workspace:^",
         "dumdict": "workspace:^",
         "dumling": "workspace:^",
         "openai": "^7.0.0",

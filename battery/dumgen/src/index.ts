@@ -8,6 +8,7 @@ export {
 	type DumgenModelExchangeObserver,
 	type DumgenOptions,
 	type GrammaticalResolution,
+	type IntakeDecision,
 	type ReadingResolution,
 	type Unresolved,
 } from "./dumgen";

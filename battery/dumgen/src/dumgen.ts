@@ -15,6 +15,7 @@ import { PROMPT_CATALOG } from "./promptsmith/prompt";
 export type {
 	AnalysisTarget,
 	GrammaticalResolution,
+	IntakeDecision,
 	ReadingResolution,
 	Unresolved,
 } from "./types";

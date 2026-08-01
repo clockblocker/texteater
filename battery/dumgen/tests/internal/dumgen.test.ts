@@ -29,29 +29,27 @@ const analysisTarget = {
 
 const modelGrammar = {
 	decision: "Resolved",
-	resolution: {
-		memberOrthographies: ["Standard"],
-		surface: {
-			normalizedSurface: "Banken",
-			spelling: "Canonical",
-			realizationCoverage: "Full",
-			surfaceKind: "Inflection",
-			surfaceFeatures: null,
-			inflectionalFeatures: { case: "Nom", number: "Plur" },
-		},
-		lemma: {
-			canonicalForm: "Bank",
-			coreFeatures: { gender: "Fem", hyph: null },
-		},
+	memberOrthographies: ["Standard"],
+	surface: {
+		normalizedSurface: "Banken",
+		spelling: "Canonical",
+		realizationCoverage: "Full",
+		surfaceKind: "Inflection",
+		surfaceFeatures: null,
+		inflectionalFeatures: { case: "Nom", number: "Plur" },
+	},
+	lemma: {
+		canonicalForm: "Bank",
+		coreFeatures: { gender: "Fem", hyph: null },
 	},
 } as const;
 
 describe("settled German laboratory topology", () => {
 	test("executes distinct intake, segmentation, target, grammatical, and reading leaves", async () => {
 		const outputs: unknown[] = [
-			{ decision: "Accepted" },
+			{ decision: "Accepted", language: "de" },
 			{ segments },
-			{ decision: "Resolved", target: analysisTarget },
+			{ decision: "Resolved", ...analysisTarget },
 			modelGrammar,
 			{ decision: "New", emojiDescription: "🏦 Bank" },
 		];
@@ -78,6 +76,7 @@ describe("settled German laboratory topology", () => {
 			await generate.laboratory.intake({ text: "Die Banken" }),
 		).toEqual({
 			decision: "Accepted",
+			language: "de",
 		});
 		expect(
 			await generate.laboratory.segmentation.de({ text: "Die Banken" }),
@@ -102,13 +101,13 @@ describe("settled German laboratory topology", () => {
 			memberOrthographies: ["Standard"],
 			surface: {
 				language: "de",
-				...modelGrammar.resolution.surface,
+				...modelGrammar.surface,
 			},
 			lemma: {
 				language: "de",
 				family: "Lexeme",
 				kind: "NOUN",
-				...modelGrammar.resolution.lemma,
+				...modelGrammar.lemma,
 			},
 		});
 
@@ -119,7 +118,7 @@ describe("settled German laboratory topology", () => {
 					language: "de",
 					family: "Lexeme",
 					kind: "NOUN",
-					...modelGrammar.resolution.lemma,
+					...modelGrammar.lemma,
 				},
 				existingEmojiDescriptions: [],
 			});
@@ -173,7 +172,7 @@ describe("settled German laboratory topology", () => {
 	test("returns payload-free Unresolved without leaking a model DTO", async () => {
 		const unresolved: Unresolved = { decision: "Unresolved" };
 		const outputs = [
-			{ decision: "Unresolved", target: null },
+			{ decision: "Unresolved" },
 			{ decision: "Unresolved", resolution: null },
 		];
 		const generate = buildDumgen({
@@ -208,11 +207,9 @@ describe("settled German laboratory topology", () => {
 				async structuredGeneration() {
 					return {
 						decision: "Resolved",
-						target: {
-							memberSegmentIndices: [0],
-							family: "Morpheme",
-							kind: "Prefix",
-						},
+						memberSegmentIndices: [0],
+						family: "Morpheme",
+						kind: "Prefix",
 					} as never;
 				},
 				async unstructuredGeneration() {

@@ -30,6 +30,13 @@ settled stage:
 The prompts live only under `laboratory`. The application orchestrates the
 stages; there is deliberately no production namespace or production claim.
 
+The initial five Prompt Sources live under
+`src/promptsmith/laboratory/prompt-part` in stage-first routes. Each leaf owns
+its input schema, output schema, instructions, use examples, and test examples.
+`bun run generate:system-prompts` deterministically rebuilds the committed
+system-prompt modules; `bun run check:system-prompts` checks them without
+modifying the workspace.
+
 See [persistent prompt-chain decisions](./docs/persistent/prompt-chains.md) for
 the agreed chain topology and the distinction between runtime stages and test
 infrastructure.

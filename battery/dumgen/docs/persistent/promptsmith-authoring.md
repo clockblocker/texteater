@@ -16,6 +16,13 @@ The first structured Prompt Sources are:
 
 Other existing laboratory routes remain unmigrated work in progress.
 
+Only `<de, Lexeme, NOUN>` is initially enabled through the complete
+Grammatical and Reading Resolution chain. Target Classification may return a
+different valid route; application orchestration then returns Resolution Route
+Not Implemented and stops before another model call. The presence of another
+WIP catalog prompt does not enable that route. After noun prompts are adjusted
+and verified by hand, routes are added one part of speech at a time.
+
 ## Stage-first routes
 
 Prompt Sources use a stage-first filesystem hierarchy:

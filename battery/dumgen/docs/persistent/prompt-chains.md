@@ -252,6 +252,36 @@ another member creates only a new lightweight click-local Selection. Selection
 identity continues to include `clickedSegmentIndex`, and `selectedOrthography`
 continues to describe only that clicked Segment.
 
+### Incremental resolution-route rollout
+
+Target Classification may select any valid route allowed by its policy, but a
+route is not part of the executable resolution chain merely because a WIP
+catalog prompt exists for it.
+
+The initial enabled post-click route is exactly
+`<de, Lexeme, NOUN>` through both Grammatical Resolution and Reading
+Resolution. When Target Classification selects a route without an enabled next
+stage, application orchestration returns:
+
+```ts
+type ResolutionRouteNotImplemented = {
+  decision: "NotImplemented";
+  stage: "GrammaticalResolution" | "ReadingResolution";
+  language: string;
+  family: string;
+  kind: string;
+};
+```
+
+The chain stops before another model call and creates no Selection. This result
+is visible and logged in the laboratory. It is not `Unresolved`: Target
+Classification made a valid judgment, but the selected downstream route has
+not been implemented yet.
+
+Hands-on development stabilizes German nouns first. After that slice is
+accepted, one new part-of-speech route is selected, implemented, and verified
+at a time.
+
 ### Resolution expectation
 
 `ResolvableText` is a happy-path promise made by Segmentation<de>: clicking it

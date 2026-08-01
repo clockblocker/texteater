@@ -126,7 +126,20 @@ function makeGenerator<Definition extends AnyPrompt>(
 			);
 		}
 
-		const modelInput = prompt.projectInput?.(parsedInput) ?? parsedInput;
+		let modelInput: unknown;
+		try {
+			const projectedInput =
+				prompt.projectInput?.(parsedInput) ?? parsedInput;
+			modelInput = (prompt.modelInputSchema ?? prompt.inputSchema).parse(
+				projectedInput,
+			);
+		} catch (cause) {
+			throw new DumgenError(
+				"invalid-input",
+				"The projected model input does not match its prompt schema.",
+				{ cause },
+			);
+		}
 		const serializedInput = serializeInput(modelInput);
 		const params = {
 			...prompt.generationParams,
