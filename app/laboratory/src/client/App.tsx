@@ -10,7 +10,13 @@ import {
 	RouteIcon,
 	ScissorsIcon,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import {
+	type KeyboardEvent,
+	type SyntheticEvent,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
 import type { Layout, LayoutChangedMeta } from "react-resizable-panels";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -43,7 +49,8 @@ import type {
 	SegmentationStageResult,
 } from "../shared/contract";
 
-const sampleText = "Guten Morgen! Fritz steht sofort auf.";
+const sampleText =
+	"Guten Morgen! Fritz steht sofort auf. Draußen ist es noch still, und in der Küche wartet schon der erste Kaffee.";
 const layoutStoragePrefix = "texteater.laboratory.layout.v2";
 
 function loadLayout(storageKey: string, fallback: Layout): Layout {
@@ -99,7 +106,7 @@ type LaboratoryState = {
 	resolution: ClickResolutionResponse | null;
 	activeIndex: number | null;
 	selectSegment: (index: number) => Promise<void>;
-	segment: () => Promise<void>;
+	segment: (selectedText: string) => Promise<void>;
 	busy: boolean;
 	error: string | null;
 	resolutionBusy: boolean;
@@ -185,7 +192,7 @@ function useLaboratory(): LaboratoryState {
 		}
 	}, [clearResults]);
 
-	const segment = useCallback(async () => {
+	const segment = useCallback(async (selectedText: string) => {
 		setBusy(true);
 		setError(null);
 		setResolution(null);
@@ -195,7 +202,7 @@ function useLaboratory(): LaboratoryState {
 			const response = await fetch("/api/segment", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ text }),
+				body: JSON.stringify({ text: selectedText }),
 			});
 			const payload = (await response.json()) as SegmentationResponse & {
 				error?: string;
@@ -211,7 +218,7 @@ function useLaboratory(): LaboratoryState {
 		} finally {
 			setBusy(false);
 		}
-	}, [text]);
+	}, []);
 
 	const selectSegment = useCallback(
 		async (index: number) => {
@@ -273,29 +280,39 @@ function useLaboratory(): LaboratoryState {
 }
 
 function SourceEditor({ state }: { state: LaboratoryState }) {
-	useEffect(() => {
-		function runSegmentation(event: KeyboardEvent) {
-			if (
-				(!event.metaKey && !event.ctrlKey) ||
-				event.shiftKey ||
-				event.altKey ||
-				event.key !== "Enter"
-			) {
-				return;
-			}
+	const [selection, setSelection] = useState({ start: 0, end: 0 });
+	const selectedText = state.text.slice(selection.start, selection.end);
+	const hasSelection = selectedText.trim().length > 0;
 
-			event.preventDefault();
-			if (event.repeat || state.text.trim().length === 0 || state.busy)
-				return;
-			void state.segment();
+	function updateSelection(event: SyntheticEvent<HTMLTextAreaElement>) {
+		setSelection({
+			start: event.currentTarget.selectionStart,
+			end: event.currentTarget.selectionEnd,
+		});
+	}
+
+	function runSegmentation(event: KeyboardEvent<HTMLTextAreaElement>) {
+		if (
+			!event.metaKey ||
+			!event.shiftKey ||
+			event.ctrlKey ||
+			event.altKey ||
+			event.key.toLowerCase() !== "s"
+		) {
+			return;
 		}
 
-		window.addEventListener("keydown", runSegmentation);
-		return () => window.removeEventListener("keydown", runSegmentation);
-	}, [state.busy, state.segment, state.text]);
+		event.preventDefault();
+		const text = event.currentTarget.value.slice(
+			event.currentTarget.selectionStart,
+			event.currentTarget.selectionEnd,
+		);
+		if (event.repeat || text.trim().length === 0 || state.busy) return;
+		void state.segment(text);
+	}
 
 	return (
-		<section className="flex h-full min-h-0 flex-col gap-5 overflow-auto p-4 sm:p-6">
+		<section className="flex h-full min-h-0 flex-col gap-5 overflow-auto bg-muted/10 p-4 sm:p-6">
 			<div className="flex flex-wrap items-start justify-between gap-4">
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-2">
@@ -305,12 +322,8 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 						<Badge variant="secondary">German only</Badge>
 					</div>
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Source sentence
+						Source text
 					</h2>
-					<p className="max-w-md text-sm text-muted-foreground">
-						Enter one real sentence, then run Intake and
-						Segmentation&lt;de&gt;.
-					</p>
 				</div>
 				<div className="flex flex-wrap items-center justify-end gap-2">
 					<Badge variant="outline">
@@ -341,45 +354,53 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 
 			<Field className="min-h-0 flex-1">
 				<FieldLabel className="sr-only" htmlFor="laboratory-source">
-					German source sentence
+					German source text
 				</FieldLabel>
 				<Textarea
 					id="laboratory-source"
 					value={state.text}
-					onChange={(event) => state.setText(event.target.value)}
+					onChange={(event) => {
+						state.setText(event.currentTarget.value);
+						updateSelection(event);
+					}}
+					onKeyDown={runSegmentation}
+					onSelect={updateSelection}
 					className="min-h-64 flex-1 resize-none p-4 sm:min-h-80"
+					placeholder="Paste a German text, then select one sentence…"
 					spellCheck="false"
 				/>
 			</Field>
 
 			<div className="flex flex-wrap items-center justify-between gap-3">
 				<p className="text-sm text-muted-foreground" aria-live="polite">
-					{state.text.length > 0
-						? `${state.text.length} characters · whole input is authoritative`
-						: "Enter a source sentence to continue"}
+					{hasSelection
+						? `${state.text.length} characters · ${selectedText.length} selected for segmentation`
+						: state.text.length > 0
+							? `${state.text.length} characters · select one sentence to continue`
+							: "Paste a source text to continue"}
 				</p>
 				<div className="group relative">
 					<Button
 						type="button"
-						onClick={() => void state.segment()}
-						disabled={state.text.trim().length === 0 || state.busy}
+						onClick={() => void state.segment(selectedText)}
+						disabled={!hasSelection || state.busy}
 						aria-describedby="run-segmentation-shortcut"
-						aria-keyshortcuts="Meta+Enter Control+Enter"
+						aria-keyshortcuts="Meta+Shift+S"
 					>
 						{state.busy ? (
 							<Spinner data-icon="inline-start" />
 						) : (
 							<PlayIcon data-icon="inline-start" />
 						)}
-						{state.busy ? "Running…" : "Run Intake + Segmentation"}
+						{state.busy ? "Running…" : "Segment selection"}
 					</Button>
 					<div
 						id="run-segmentation-shortcut"
 						role="tooltip"
 						className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
 					>
-						Run both stages
-						<span className="ml-2 font-mono opacity-80">⌘↵</span>
+						Segment selected sentence
+						<span className="ml-2 font-mono opacity-80">⌘⇧S</span>
 					</div>
 				</div>
 			</div>
@@ -416,7 +437,7 @@ function PipelineStage({
 			className={cn(
 				"flex min-w-0 flex-1 items-center gap-3 rounded-lg border p-3",
 				status === "complete" && "border-primary/25 bg-primary/5",
-				status !== "complete" && "bg-muted/20",
+				status !== "complete" && "bg-muted/30",
 			)}
 		>
 			<div
@@ -457,14 +478,9 @@ function Segments({ state }: { state: LaboratoryState }) {
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto p-4">
 			<div className="flex items-end justify-between gap-4">
-				<div className="flex flex-col gap-1">
-					<p className="text-xs font-medium text-muted-foreground">
-						Pre-click chain
-					</p>
-					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Intake &amp; segmentation
-					</h2>
-				</div>
+				<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+					Intake &amp; segmentation
+				</h2>
 				<Badge variant={segments.length > 0 ? "secondary" : "outline"}>
 					{state.result?.decision ?? "Waiting"}
 				</Badge>
@@ -525,10 +541,6 @@ function Segments({ state }: { state: LaboratoryState }) {
 								<ScissorsIcon />
 							</EmptyMedia>
 							<EmptyTitle>No segmented sentence yet</EmptyTitle>
-							<EmptyDescription>
-								Enter real German input and run the pre-click
-								chain.
-							</EmptyDescription>
 						</EmptyHeader>
 					</Empty>
 				) : (
@@ -558,12 +570,7 @@ function Segments({ state }: { state: LaboratoryState }) {
 						{target.family} {target.kind}
 					</span>
 				</div>
-			) : (
-				<p className="text-xs text-muted-foreground">
-					Only ResolvableText is clickable. Indices remain local to
-					this immutable sentence.
-				</p>
-			)}
+			) : null}
 
 			{state.result?.sentence ? (
 				<p className="text-xs text-muted-foreground">
@@ -646,7 +653,7 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 	const target = resolution?.target;
 
 	return (
-		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto p-4 sm:p-6">
+		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto bg-muted/10 p-4 sm:p-6">
 			<div className="flex flex-wrap items-start justify-between gap-4">
 				<div className="flex flex-col gap-1">
 					<p className="text-xs font-medium text-muted-foreground">
