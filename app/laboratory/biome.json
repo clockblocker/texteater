@@ -1,5 +1,5 @@
 {
-	"extends": ["../../tooling/biome/base.json"],
+	"extends": "//",
 	"css": {
 		"parser": {
 			"tailwindDirectives": true

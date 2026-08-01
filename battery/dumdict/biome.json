@@ -1,5 +1,5 @@
 {
-	"extends": ["../../tooling/biome/base.json"],
+	"extends": "//",
 	"formatter": {
 		"includes": ["**", "!generate-readme/examples/**/*.ts"]
 	},

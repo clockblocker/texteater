@@ -1,0 +1,105 @@
+{
+	"auto_install_extensions": {
+		"biome": true,
+		"tsgo": true
+	},
+	"hover_popover_enabled": true,
+	"lsp": {
+		"biome": {
+			"binary": {
+				"path": "./node_modules/.bin/biome",
+				"arguments": ["lsp-proxy"]
+			},
+			"settings": {
+				"require_config_file": true
+			}
+		},
+		"typescript-ls": {
+			"settings": {
+				"package_version": "7.0.2"
+			}
+		}
+	},
+	"languages": {
+		"Astro": {
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JavaScript": {
+			"language_servers": [
+				"typescript-ls",
+				"biome",
+				"!vtsls",
+				"!typescript-language-server"
+			],
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JSX": {
+			"language_servers": [
+				"typescript-ls",
+				"biome",
+				"!vtsls",
+				"!typescript-language-server"
+			],
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JSON": {
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JSONC": {
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"TSX": {
+			"language_servers": [
+				"typescript-ls",
+				"biome",
+				"!vtsls",
+				"!typescript-language-server"
+			],
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"TypeScript": {
+			"language_servers": [
+				"typescript-ls",
+				"biome",
+				"!vtsls",
+				"!typescript-language-server"
+			],
+			"formatter": { "language_server": { "name": "biome" } },
+			"format_on_save": "on",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		}
+	}
+}
