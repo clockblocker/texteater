@@ -102,6 +102,15 @@ classification prompts violate the `ResolvableText` promise. Material known to
 be unresolvable is handled during segmentation as `OpaqueText`; `Unresolvable`
 is not a downstream classification outcome.
 
+### Analysis Target
+A Dumgen-owned, transient, presentation-facing result that groups the ordered
+Segments resolved as one unit by a Target Classification policy and names the
+Lemma Family and Kind to which that unit is routed.
+
+An Analysis Target lets a view present and reuse the resolved unit before the
+Surface and Lemma exist. It is not a Selection, a persisted linguistic entity,
+part of Dumling, or a raw model response.
+
 ### Selection
 A successfully resolved, attestation-local node identified by one
 `(SegmentedSentenceId, clickedSegmentIndex)` pair.
