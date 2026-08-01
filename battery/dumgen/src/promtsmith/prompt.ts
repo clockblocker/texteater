@@ -1,9 +1,14 @@
-import { deLemmaPrompt } from "./laboratory/de-lemma";
-import { deReadingPrompt } from "./laboratory/de-reading";
+import { createDeGrammaticalResolutionPrompt } from "./laboratory/de-grammatical-resolution";
+import { createDeReadingResolutionPrompt } from "./laboratory/de-reading-resolution";
+import {
+	GERMAN_HIGH_LEVEL_ROUTES,
+	type GermanHighLevelFamily,
+	type GermanHighLevelKind,
+} from "./laboratory/de-routes";
 import { deSegmentationPrompt } from "./laboratory/de-segmentation";
-import { deSelectionPrompt } from "./laboratory/de-selection";
-import { deSurfacePrompt } from "./laboratory/de-surface";
-import type { PromptCatalogEntry } from "./prompt-definition";
+import { deHighLevelWholeUnitTargetPrompt } from "./laboratory/de-target-classification";
+import { intakePrompt } from "./laboratory/intake";
+import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
 export type {
 	Prompt,
@@ -11,58 +16,88 @@ export type {
 	PromptTree,
 } from "./prompt-definition";
 
+type GrammaticalPrompt = ReturnType<typeof createDeGrammaticalResolutionPrompt>;
+type ReadingPrompt = ReturnType<typeof createDeReadingResolutionPrompt>;
+
+type GermanRoutePromptCatalog<Definition extends Prompt> = {
+	readonly [Family in GermanHighLevelFamily]: {
+		readonly [Kind in GermanHighLevelKind<Family>]: PromptCatalogEntry<Definition>;
+	};
+};
+
 export type LaboratoryPromptCatalog = {
 	readonly laboratory: {
-		readonly classification: {
+		readonly intake: PromptCatalogEntry<typeof intakePrompt>;
+		readonly segmentation: {
+			readonly de: PromptCatalogEntry<typeof deSegmentationPrompt>;
+		};
+		readonly targetClassification: {
 			readonly de: {
-				readonly selection: PromptCatalogEntry<
-					typeof deSelectionPrompt
+				readonly highLevelWholeUnit: PromptCatalogEntry<
+					typeof deHighLevelWholeUnitTargetPrompt
 				>;
-				readonly surface: PromptCatalogEntry<typeof deSurfacePrompt>;
-				readonly lemma: PromptCatalogEntry<typeof deLemmaPrompt>;
-				readonly reading: PromptCatalogEntry<typeof deReadingPrompt>;
 			};
 		};
-		readonly segmentation: {
-			readonly de: {
-				readonly segment: PromptCatalogEntry<
-					typeof deSegmentationPrompt
-				>;
-			};
+		readonly grammaticalResolution: {
+			readonly de: GermanRoutePromptCatalog<GrammaticalPrompt>;
+		};
+		readonly readingResolution: {
+			readonly de: GermanRoutePromptCatalog<ReadingPrompt>;
 		};
 	};
 };
 
+function promptEntry<Definition extends Prompt>(
+	prompt: Definition,
+): PromptCatalogEntry<Definition> {
+	return { meta: { kind: "prompt" }, prompt };
+}
+
+function buildGermanRouteCatalog<Definition extends Prompt>(
+	createPrompt: (
+		family: GermanHighLevelFamily,
+		kind: GermanHighLevelKind<GermanHighLevelFamily>,
+	) => Definition,
+): GermanRoutePromptCatalog<Definition> {
+	const families = Object.entries(GERMAN_HIGH_LEVEL_ROUTES).map(
+		([family, kinds]) => [
+			family,
+			Object.fromEntries(
+				kinds.map((kind) => [
+					kind,
+					promptEntry(
+						createPrompt(
+							family as GermanHighLevelFamily,
+							kind as GermanHighLevelKind<GermanHighLevelFamily>,
+						),
+					),
+				]),
+			),
+		],
+	);
+	return Object.fromEntries(families) as GermanRoutePromptCatalog<Definition>;
+}
+
+const grammaticalResolutionCatalog = buildGermanRouteCatalog(
+	createDeGrammaticalResolutionPrompt,
+);
+const readingResolutionCatalog = buildGermanRouteCatalog(
+	createDeReadingResolutionPrompt,
+);
+
 // Generated manifest. Do not edit by hand.
 export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 	laboratory: {
-		classification: {
+		intake: promptEntry(intakePrompt),
+		segmentation: { de: promptEntry(deSegmentationPrompt) },
+		targetClassification: {
 			de: {
-				selection: {
-					meta: { kind: "prompt" },
-					prompt: deSelectionPrompt,
-				},
-				surface: {
-					meta: { kind: "prompt" },
-					prompt: deSurfacePrompt,
-				},
-				lemma: {
-					meta: { kind: "prompt" },
-					prompt: deLemmaPrompt,
-				},
-				reading: {
-					meta: { kind: "prompt" },
-					prompt: deReadingPrompt,
-				},
+				highLevelWholeUnit: promptEntry(
+					deHighLevelWholeUnitTargetPrompt,
+				),
 			},
 		},
-		segmentation: {
-			de: {
-				segment: {
-					meta: { kind: "prompt" },
-					prompt: deSegmentationPrompt,
-				},
-			},
-		},
+		grammaticalResolution: { de: grammaticalResolutionCatalog },
+		readingResolution: { de: readingResolutionCatalog },
 	},
 };

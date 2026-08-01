@@ -1,8 +1,9 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { DumgenModelExchange } from "dumgen";
 
-export type LaboratoryOperation = "segmentation" | "click-resolution";
+export type LaboratoryOperation = "segmentation-chain" | "click-resolution";
 
 export type LoggedError = {
 	name: string;
@@ -14,9 +15,12 @@ export type LaboratorySessionEvent = {
 	sessionId: string;
 	operation: LaboratoryOperation;
 	input: unknown;
-	promptName: string;
+	promptNames: string[];
 	model: string;
-	validatedOutput: unknown;
+	trace: {
+		stages: unknown;
+		modelExchanges: readonly DumgenModelExchange[];
+	};
 	applicationResult: unknown;
 	latencyMs: number;
 	errors: LoggedError[];

@@ -11,6 +11,7 @@ type GeneratedOutput<OutputSchema extends ZodType | null> =
 export type Prompt<
 	InputSchema extends ZodType = ZodType,
 	OutputSchema extends ZodType | null = ZodType | null,
+	Result = GeneratedOutput<OutputSchema>,
 > = {
 	readonly systemPrompt: string;
 	readonly inputSchema: InputSchema;
@@ -21,6 +22,11 @@ export type Prompt<
 			generated: GeneratedOutput<OutputSchema>,
 		): void;
 	};
+	projectInput?(input: output<InputSchema>): unknown;
+	projectOutput?(
+		input: output<InputSchema>,
+		generated: GeneratedOutput<OutputSchema>,
+	): Result;
 	readonly generationParams: PromptGenerationParams;
 };
 

@@ -18,12 +18,14 @@ Example usage:
 
 ## Vision
 
-The current German-only laboratory path uses progressively narrower generators
-to inspect the clickable-word dictionary chain:
+The current German-only laboratory path uses pointed generators for each
+settled stage:
 
-1. Segment accepted German text.
-2. Classify the clicked Segment through `Selection → Surface → Lemma → Reading`.
-3. Validate the assembled grammatical entities with Dumling's German schemas.
+1. Run language-agnostic Intake, then `Segmentation<de>`.
+2. Classify one click with `Target Classification<de, HighLevelWholeUnit>`.
+3. Dispatch through physically distinct grammatical and Reading routes for the
+   target's German Lemma Family and Kind.
+4. Validate projected grammatical results with Dumling's concrete schemas.
 
 The prompts live only under `laboratory`. The application orchestrates the
 stages; there is deliberately no production namespace or production claim.

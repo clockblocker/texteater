@@ -5,18 +5,47 @@ import type {
 	Prompt,
 	PromptCatalogEntry,
 	PromptTree,
-} from "../promtsmith/prompt";
+} from "../promtsmith/prompt-definition";
 import { DumgenError } from "./generator-error";
 
-type AnyPrompt = Prompt<ZodType, ZodType | null>;
+type AnyPrompt = Prompt;
+
+type ModelExchangeBase = {
+	readonly promptPath: string;
+	readonly modelInput: unknown;
+	readonly modelOutput: unknown;
+};
+
+export type ModelExchange =
+	| (ModelExchangeBase & { readonly phase: "received" })
+	| (ModelExchangeBase & {
+			readonly phase: "accepted";
+			readonly validatedModelOutput: unknown;
+	  })
+	| (ModelExchangeBase & {
+			readonly phase: "rejected";
+			readonly validatedModelOutput?: unknown;
+			readonly validationError: {
+				readonly name: string;
+				readonly message: string;
+			};
+	  });
+
+export type GeneratorCatalogOptions = {
+	readonly onModelExchange?: (exchange: ModelExchange) => void;
+};
+
+type ResultOf<Definition extends AnyPrompt> = Definition extends {
+	readonly projectOutput: (...args: never[]) => infer Result;
+}
+	? Result
+	: Definition["outputSchema"] extends ZodType
+		? output<Definition["outputSchema"]>
+		: string;
 
 type GeneratorFor<Definition extends AnyPrompt> = (
 	input: input<Definition["inputSchema"]>,
-) => Promise<
-	Definition["outputSchema"] extends ZodType
-		? output<Definition["outputSchema"]>
-		: string
->;
+) => Promise<ResultOf<Definition>>;
 
 export type GeneratorCatalog<Catalog> =
 	Catalog extends PromptCatalogEntry<infer Definition>
@@ -32,23 +61,31 @@ export type GeneratorCatalog<Catalog> =
 export function buildGeneratorCatalog<const Catalog extends PromptTree>(
 	catalog: Catalog,
 	sdk: AiSdk,
+	options: GeneratorCatalogOptions = {},
 ): GeneratorCatalog<Catalog> {
-	return transformNode(catalog, sdk) as GeneratorCatalog<Catalog>;
+	return transformNode(
+		catalog,
+		sdk,
+		options,
+		[],
+	) as GeneratorCatalog<Catalog>;
 }
 
 function transformNode(
 	node: PromptTree | PromptCatalogEntry,
 	sdk: AiSdk,
+	options: GeneratorCatalogOptions,
+	path: readonly string[],
 ): unknown {
 	if (isPromptCatalogEntry(node)) {
-		return makeGenerator(node.prompt, sdk);
+		return makeGenerator(node.prompt, sdk, options, path);
 	}
 
 	return Object.freeze(
 		Object.fromEntries(
 			Object.entries(node).map(([key, child]) => [
 				key,
-				transformNode(child, sdk),
+				transformNode(child, sdk, options, [...path, key]),
 			]),
 		),
 	);
@@ -72,6 +109,8 @@ function isPromptCatalogEntry(
 function makeGenerator<Definition extends AnyPrompt>(
 	prompt: Definition,
 	sdk: AiSdk,
+	options: GeneratorCatalogOptions,
+	path: readonly string[],
 ): GeneratorFor<Definition> {
 	return (async (rawInput: input<Definition["inputSchema"]>) => {
 		let parsedInput: output<Definition["inputSchema"]>;
@@ -87,7 +126,8 @@ function makeGenerator<Definition extends AnyPrompt>(
 			);
 		}
 
-		const serializedInput = serializeInput(parsedInput);
+		const modelInput = prompt.projectInput?.(parsedInput) ?? parsedInput;
+		const serializedInput = serializeInput(modelInput);
 		const params = {
 			...prompt.generationParams,
 			systemPrompt: prompt.systemPrompt,
@@ -110,16 +150,67 @@ function makeGenerator<Definition extends AnyPrompt>(
 				{ cause },
 			);
 		}
+		notifyModelExchange(options, {
+			phase: "received",
+			promptPath: path.join("."),
+			modelInput,
+			modelOutput: generated,
+		});
 
 		if (prompt.outputSchema === null) {
-			return generated;
+			try {
+				const result = prompt.projectOutput
+					? prompt.projectOutput(parsedInput, generated as string)
+					: generated;
+				notifyModelExchange(options, {
+					phase: "accepted",
+					promptPath: path.join("."),
+					modelInput,
+					modelOutput: generated,
+					validatedModelOutput: generated,
+				});
+				return result;
+			} catch (cause) {
+				notifyRejectedModelExchange(
+					options,
+					path,
+					modelInput,
+					generated,
+					generated,
+					cause,
+				);
+				throw new DumgenError(
+					"invalid-output",
+					"The generated output does not match its prompt schema.",
+					{ cause },
+				);
+			}
 		}
 
+		let parsedOutput: unknown;
 		try {
-			const parsedOutput = prompt.outputSchema.parse(generated);
+			parsedOutput = prompt.outputSchema.parse(generated);
 			prompt.outputPostcondition?.assert(parsedInput, parsedOutput);
-			return parsedOutput;
+			const result = prompt.projectOutput
+				? prompt.projectOutput(parsedInput, parsedOutput)
+				: parsedOutput;
+			notifyModelExchange(options, {
+				phase: "accepted",
+				promptPath: path.join("."),
+				modelInput,
+				modelOutput: generated,
+				validatedModelOutput: parsedOutput,
+			});
+			return result;
 		} catch (cause) {
+			notifyRejectedModelExchange(
+				options,
+				path,
+				modelInput,
+				generated,
+				parsedOutput,
+				cause,
+			);
 			throw new DumgenError(
 				"invalid-output",
 				"The generated output does not match its prompt schema.",
@@ -127,6 +218,63 @@ function makeGenerator<Definition extends AnyPrompt>(
 			);
 		}
 	}) as GeneratorFor<Definition>;
+}
+
+function notifyRejectedModelExchange(
+	options: GeneratorCatalogOptions,
+	path: readonly string[],
+	modelInput: unknown,
+	modelOutput: unknown,
+	validatedModelOutput: unknown,
+	cause: unknown,
+): void {
+	notifyModelExchange(options, {
+		phase: "rejected",
+		promptPath: path.join("."),
+		modelInput,
+		modelOutput,
+		...(validatedModelOutput === undefined
+			? undefined
+			: { validatedModelOutput }),
+		validationError: describeError(cause),
+	});
+}
+
+function notifyModelExchange(
+	options: GeneratorCatalogOptions,
+	exchange: ModelExchange,
+): void {
+	try {
+		options.onModelExchange?.({
+			...exchange,
+			modelInput: normalizeForSerialization(exchange.modelInput),
+			modelOutput: normalizeForSerialization(exchange.modelOutput),
+			...(exchange.phase === "received"
+				? undefined
+				: exchange.phase === "accepted"
+					? {
+							validatedModelOutput: normalizeForSerialization(
+								exchange.validatedModelOutput,
+							),
+						}
+					: exchange.validatedModelOutput === undefined
+						? undefined
+						: {
+								validatedModelOutput: normalizeForSerialization(
+									exchange.validatedModelOutput,
+								),
+							}),
+		});
+	} catch {
+		// Instrumentation must never change generation behavior or mask its error.
+	}
+}
+
+function describeError(cause: unknown): { name: string; message: string } {
+	if (cause instanceof Error) {
+		return { name: cause.name, message: cause.message };
+	}
+	return { name: "Error", message: String(cause) };
 }
 
 function serializeInput(value: unknown): string {

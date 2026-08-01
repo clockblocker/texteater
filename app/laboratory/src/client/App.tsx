@@ -1,17 +1,16 @@
 import {
+	BracesIcon,
+	CheckIcon,
 	CircleAlertIcon,
+	CircleDotIcon,
+	DatabaseZapIcon,
 	MousePointerClickIcon,
+	PlayIcon,
 	RotateCcwIcon,
+	RouteIcon,
 	ScissorsIcon,
 } from "lucide-react";
-import {
-	Fragment,
-	type ReactNode,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Layout, LayoutChangedMeta } from "react-resizable-panels";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -35,15 +34,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type {
+	ClassificationStageResult,
 	ClickResolutionResponse,
-	EntityRepresentation,
 	LaboratorySessionResponse,
+	MemberOrthography,
 	Segment,
 	SegmentationResponse,
+	SegmentationStageResult,
 } from "../shared/contract";
 
-const sampleText = "Der Hund läuft schnell. Der Kaffee ist heiß.";
-const layoutStoragePrefix = "texteater.laboratory.layout";
+const sampleText = "Guten Morgen! Fritz steht sofort auf.";
+const layoutStoragePrefix = "texteater.laboratory.layout.v2";
 
 function loadLayout(storageKey: string, fallback: Layout): Layout {
 	if (typeof window === "undefined") return fallback;
@@ -94,11 +95,9 @@ function saveLayout(
 type LaboratoryState = {
 	text: string;
 	setText: (value: string) => void;
-	selection: { start: number; end: number };
-	setSelection: (selection: { start: number; end: number }) => void;
 	result: SegmentationResponse | null;
+	resolution: ClickResolutionResponse | null;
 	activeIndex: number | null;
-	entity: EntityRepresentation | null;
 	selectSegment: (index: number) => Promise<void>;
 	segment: () => Promise<void>;
 	busy: boolean;
@@ -112,14 +111,11 @@ type LaboratoryState = {
 };
 
 function useLaboratory(): LaboratoryState {
-	const [text, setText] = useState(sampleText);
-	const [selection, setSelection] = useState({
-		start: 0,
-		end: sampleText.length,
-	});
+	const [text, setTextValue] = useState(sampleText);
 	const [result, setResult] = useState<SegmentationResponse | null>(null);
+	const [resolution, setResolution] =
+		useState<ClickResolutionResponse | null>(null);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
-	const [entity, setEntity] = useState<EntityRepresentation | null>(null);
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [resolutionBusy, setResolutionBusy] = useState(false);
@@ -156,6 +152,14 @@ function useLaboratory(): LaboratoryState {
 		};
 	}, []);
 
+	const clearResults = useCallback(() => {
+		setResult(null);
+		setResolution(null);
+		setActiveIndex(null);
+		setError(null);
+		setResolutionError(null);
+	}, []);
+
 	const resetSession = useCallback(async () => {
 		setResetBusy(true);
 		setSessionError(null);
@@ -169,11 +173,7 @@ function useLaboratory(): LaboratoryState {
 				throw new Error(payload.error ?? "Could not reset session.");
 			}
 			setSessionId(payload.sessionId);
-			setResult(null);
-			setActiveIndex(null);
-			setEntity(null);
-			setError(null);
-			setResolutionError(null);
+			clearResults();
 		} catch (cause) {
 			setSessionError(
 				cause instanceof Error
@@ -183,25 +183,26 @@ function useLaboratory(): LaboratoryState {
 		} finally {
 			setResetBusy(false);
 		}
-	}, []);
+	}, [clearResults]);
 
 	const segment = useCallback(async () => {
 		setBusy(true);
 		setError(null);
-		setEntity(null);
+		setResolution(null);
 		setActiveIndex(null);
 		setResolutionError(null);
 		try {
 			const response = await fetch("/api/segment", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ text, selection }),
+				body: JSON.stringify({ text }),
 			});
 			const payload = (await response.json()) as SegmentationResponse & {
 				error?: string;
 			};
-			if (!response.ok)
+			if (!response.ok) {
 				throw new Error(payload.error ?? "Segmentation failed.");
+			}
 			setResult(payload);
 		} catch (cause) {
 			setError(
@@ -210,13 +211,12 @@ function useLaboratory(): LaboratoryState {
 		} finally {
 			setBusy(false);
 		}
-	}, [selection, text]);
+	}, [text]);
 
 	const selectSegment = useCallback(
 		async (index: number) => {
-			if (!result?.sentence) return;
+			if (!result?.sentence || resolutionBusy) return;
 			setActiveIndex(index);
-			setEntity(null);
 			setResolutionBusy(true);
 			setResolutionError(null);
 			try {
@@ -232,10 +232,12 @@ function useLaboratory(): LaboratoryState {
 					(await response.json()) as ClickResolutionResponse & {
 						error?: string;
 					};
-				if (!response.ok)
+				if (!response.ok) {
 					throw new Error(payload.error ?? "Resolution failed.");
-				setEntity(payload.entity);
+				}
+				setResolution(payload);
 			} catch (cause) {
+				setResolution(null);
 				setResolutionError(
 					cause instanceof Error
 						? cause.message
@@ -245,20 +247,18 @@ function useLaboratory(): LaboratoryState {
 				setResolutionBusy(false);
 			}
 		},
-		[result],
+		[result, resolutionBusy],
 	);
 
 	return {
 		text,
 		setText(value) {
-			setText(value);
-			setSelection({ start: 0, end: 0 });
+			setTextValue(value);
+			clearResults();
 		},
-		selection,
-		setSelection,
 		result,
+		resolution,
 		activeIndex,
-		entity,
 		selectSegment,
 		segment,
 		busy,
@@ -273,35 +273,27 @@ function useLaboratory(): LaboratoryState {
 }
 
 function SourceEditor({ state }: { state: LaboratoryState }) {
-	const ref = useRef<HTMLTextAreaElement>(null);
 	useEffect(() => {
-		ref.current?.setSelectionRange(
-			state.selection.start,
-			state.selection.end,
-		);
-	}, [state.selection.end, state.selection.start]);
-	const selectedCount = state.selection.end - state.selection.start;
-	useEffect(() => {
-		function segmentSelection(event: KeyboardEvent) {
+		function runSegmentation(event: KeyboardEvent) {
 			if (
-				!event.metaKey ||
-				!event.shiftKey ||
-				event.ctrlKey ||
+				(!event.metaKey && !event.ctrlKey) ||
+				event.shiftKey ||
 				event.altKey ||
-				event.key.toLowerCase() !== "s"
+				event.key !== "Enter"
 			) {
 				return;
 			}
 
 			event.preventDefault();
-			if (event.repeat || selectedCount === 0 || state.busy) return;
-
+			if (event.repeat || state.text.trim().length === 0 || state.busy)
+				return;
 			void state.segment();
 		}
 
-		window.addEventListener("keydown", segmentSelection);
-		return () => window.removeEventListener("keydown", segmentSelection);
-	}, [selectedCount, state.busy, state.segment]);
+		window.addEventListener("keydown", runSegmentation);
+		return () => window.removeEventListener("keydown", runSegmentation);
+	}, [state.busy, state.segment, state.text]);
+
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-5 overflow-auto p-4 sm:p-6">
 			<div className="flex flex-wrap items-start justify-between gap-4">
@@ -313,10 +305,11 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 						<Badge variant="secondary">German only</Badge>
 					</div>
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Source text
+						Source sentence
 					</h2>
 					<p className="max-w-md text-sm text-muted-foreground">
-						Select the passage you want Dumgen to segment.
+						Enter one real sentence, then run Intake and
+						Segmentation&lt;de&gt;.
 					</p>
 				</div>
 				<div className="flex flex-wrap items-center justify-end gap-2">
@@ -348,20 +341,12 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 
 			<Field className="min-h-0 flex-1">
 				<FieldLabel className="sr-only" htmlFor="laboratory-source">
-					German source text
+					German source sentence
 				</FieldLabel>
 				<Textarea
 					id="laboratory-source"
-					ref={ref}
 					value={state.text}
 					onChange={(event) => state.setText(event.target.value)}
-					onSelect={(event) => {
-						const target = event.currentTarget;
-						state.setSelection({
-							start: target.selectionStart,
-							end: target.selectionEnd,
-						});
-					}}
 					className="min-h-64 flex-1 resize-none p-4 sm:min-h-80"
 					spellCheck="false"
 				/>
@@ -369,32 +354,32 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 
 			<div className="flex flex-wrap items-center justify-between gap-3">
 				<p className="text-sm text-muted-foreground" aria-live="polite">
-					{selectedCount > 0
-						? `${selectedCount} characters selected`
-						: "Select text to continue"}
+					{state.text.length > 0
+						? `${state.text.length} characters · whole input is authoritative`
+						: "Enter a source sentence to continue"}
 				</p>
 				<div className="group relative">
 					<Button
 						type="button"
-						onClick={state.segment}
-						disabled={selectedCount === 0 || state.busy}
-						aria-describedby="segment-selection-shortcut"
-						aria-keyshortcuts="Meta+Shift+S"
+						onClick={() => void state.segment()}
+						disabled={state.text.trim().length === 0 || state.busy}
+						aria-describedby="run-segmentation-shortcut"
+						aria-keyshortcuts="Meta+Enter Control+Enter"
 					>
 						{state.busy ? (
 							<Spinner data-icon="inline-start" />
 						) : (
-							<ScissorsIcon data-icon="inline-start" />
+							<PlayIcon data-icon="inline-start" />
 						)}
-						{state.busy ? "Segmenting…" : "Segment selection"}
+						{state.busy ? "Running…" : "Run Intake + Segmentation"}
 					</Button>
 					<div
-						id="segment-selection-shortcut"
+						id="run-segmentation-shortcut"
 						role="tooltip"
 						className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
 					>
-						Segment selection
-						<span className="ml-2 font-mono opacity-80">⌘⇧S</span>
+						Run both stages
+						<span className="ml-2 font-mono opacity-80">⌘↵</span>
 					</div>
 				</div>
 			</div>
@@ -402,7 +387,7 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 			{state.error ? (
 				<Alert variant="destructive">
 					<CircleAlertIcon />
-					<AlertTitle>Segmentation failed</AlertTitle>
+					<AlertTitle>Segmentation chain failed</AlertTitle>
 					<AlertDescription>{state.error}</AlertDescription>
 				</Alert>
 			) : null}
@@ -417,35 +402,119 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 	);
 }
 
+function PipelineStage({
+	name,
+	stage,
+	status,
+}: {
+	name: string;
+	stage?: SegmentationStageResult;
+	status: "waiting" | "complete" | "skipped";
+}) {
+	return (
+		<div
+			className={cn(
+				"flex min-w-0 flex-1 items-center gap-3 rounded-lg border p-3",
+				status === "complete" && "border-primary/25 bg-primary/5",
+				status !== "complete" && "bg-muted/20",
+			)}
+		>
+			<div
+				className={cn(
+					"flex size-7 shrink-0 items-center justify-center rounded-full border",
+					status === "complete" &&
+						"border-primary/30 bg-primary/10 text-primary",
+				)}
+			>
+				{status === "complete" ? (
+					<CheckIcon className="size-3.5" />
+				) : (
+					<CircleDotIcon className="size-3.5 text-muted-foreground" />
+				)}
+			</div>
+			<div className="min-w-0">
+				<p className="text-xs font-semibold">{name}</p>
+				<p className="truncate font-mono text-[11px] text-muted-foreground">
+					{stage?.prompt ??
+						(status === "skipped" ? "Not dispatched" : "Waiting")}
+				</p>
+			</div>
+		</div>
+	);
+}
+
 function Segments({ state }: { state: LaboratoryState }) {
 	const segments = state.result?.sentence?.segments ?? [];
+	const target = state.resolution?.target;
+	const orthographies =
+		state.resolution?.decision === "Resolved"
+			? state.resolution.memberOrthographies
+			: undefined;
+	const targetMembers = new Set(target?.memberSegmentIndices ?? []);
+	const intake = state.result?.stages.intake;
+	const segmentation = state.result?.stages.segmentation;
+
 	return (
-		<section className="flex h-full min-h-0 flex-col gap-3 overflow-auto p-4">
+		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto p-4">
 			<div className="flex items-end justify-between gap-4">
 				<div className="flex flex-col gap-1">
 					<p className="text-xs font-medium text-muted-foreground">
-						Output
+						Pre-click chain
 					</p>
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Segments
+						Intake &amp; segmentation
 					</h2>
 				</div>
 				<Badge variant={segments.length > 0 ? "secondary" : "outline"}>
-					{segments.length > 0
-						? `${segments.length} indexed`
-						: "Waiting"}
+					{state.result?.decision ?? "Waiting"}
 				</Badge>
 			</div>
-			<div className="flex min-h-32 flex-wrap items-center gap-2 rounded-lg border bg-muted/20 p-3">
+
+			<div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+				<PipelineStage
+					name="1. Intake"
+					stage={intake}
+					status={intake ? "complete" : "waiting"}
+				/>
+				<RouteIcon className="mx-auto hidden size-4 text-muted-foreground sm:block" />
+				<PipelineStage
+					name="2. Segmentation<de>"
+					stage={segmentation}
+					status={
+						segmentation
+							? "complete"
+							: state.result &&
+									state.result.decision !== "Accepted"
+								? "skipped"
+								: "waiting"
+					}
+				/>
+			</div>
+			{intake ? (
+				<details className="rounded-lg border bg-muted/10">
+					<summary className="cursor-pointer px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground">
+						Inspect Intake and Segmentation stage results
+					</summary>
+					<div className="flex flex-col gap-5 border-t p-3">
+						<StageTrace stage={intake} />
+						{segmentation ? (
+							<StageTrace stage={segmentation} />
+						) : null}
+					</div>
+				</details>
+			) : null}
+
+			<div className="flex min-h-32 flex-wrap content-center items-center gap-2 rounded-lg border bg-muted/20 p-3">
 				{state.result && state.result.decision !== "Accepted" ? (
 					<Empty className="min-h-24 gap-2 p-2">
 						<EmptyHeader className="gap-1">
 							<EmptyMedia variant="icon">
 								<CircleAlertIcon />
 							</EmptyMedia>
-							<EmptyTitle>Selection not accepted</EmptyTitle>
+							<EmptyTitle>Sentence not accepted</EmptyTitle>
 							<EmptyDescription>
-								Dumgen returned {state.result.decision}.
+								Intake returned {state.result.decision}; German
+								segmentation was not run.
 							</EmptyDescription>
 						</EmptyHeader>
 					</Empty>
@@ -455,9 +524,10 @@ function Segments({ state }: { state: LaboratoryState }) {
 							<EmptyMedia variant="icon">
 								<ScissorsIcon />
 							</EmptyMedia>
-							<EmptyTitle>No segments yet</EmptyTitle>
+							<EmptyTitle>No segmented sentence yet</EmptyTitle>
 							<EmptyDescription>
-								Select source text and run the segmenter.
+								Enter real German input and run the pre-click
+								chain.
 							</EmptyDescription>
 						</EmptyHeader>
 					</Empty>
@@ -467,6 +537,9 @@ function Segments({ state }: { state: LaboratoryState }) {
 							key={`${segment.index}-${segment.text}`}
 							segment={segment}
 							active={state.activeIndex === segment.index}
+							targetMember={targetMembers.has(segment.index)}
+							orthography={orthographies?.[segment.index]}
+							busy={state.resolutionBusy}
 							onClick={() =>
 								void state.selectSegment(segment.index)
 							}
@@ -474,10 +547,29 @@ function Segments({ state }: { state: LaboratoryState }) {
 					))
 				)}
 			</div>
+
+			{target ? (
+				<div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+					<span className="inline-block size-2.5 rounded-sm bg-primary/30 ring-1 ring-primary/60" />
+					<span>
+						Shared Analysis Target:{" "}
+						{target.memberSegmentIndices.length} member
+						{target.memberSegmentIndices.length === 1 ? "" : "s"} ·{" "}
+						{target.family} {target.kind}
+					</span>
+				</div>
+			) : (
+				<p className="text-xs text-muted-foreground">
+					Only ResolvableText is clickable. Indices remain local to
+					this immutable sentence.
+				</p>
+			)}
+
 			{state.result?.sentence ? (
 				<p className="text-xs text-muted-foreground">
-					Sentence {state.result.sentence.id.slice(0, 8)} · gpt-5-nano
-					· local indices shown
+					Sentence {state.result.sentence.id.slice(0, 8)} ·{" "}
+					{segments.length} indexed segments ·{" "}
+					{state.result.generation.model}
 				</p>
 			) : null}
 		</section>
@@ -487,10 +579,16 @@ function Segments({ state }: { state: LaboratoryState }) {
 function SegmentToken({
 	segment,
 	active,
+	targetMember,
+	orthography,
+	busy,
 	onClick,
 }: {
 	segment: Segment;
 	active: boolean;
+	targetMember: boolean;
+	orthography?: MemberOrthography;
+	busy: boolean;
 	onClick: () => void;
 }) {
 	if (segment.kind === "Whitespace") {
@@ -503,6 +601,7 @@ function SegmentToken({
 			</span>
 		);
 	}
+
 	const clickable = segment.kind === "ResolvableText";
 	return (
 		<Button
@@ -510,162 +609,326 @@ function SegmentToken({
 			variant={active ? "default" : "outline"}
 			size="sm"
 			className={cn(
-				"h-auto min-h-10",
+				"relative h-auto min-h-10",
 				clickable && "hover:-translate-y-0.5",
+				targetMember &&
+					!active &&
+					"border-primary/60 bg-primary/10 ring-2 ring-primary/20",
+				orthography === "Typo" && "border-amber-500/70",
 			)}
-			disabled={!clickable}
+			disabled={!clickable || busy}
 			onClick={onClick}
-			title={`#${segment.index} ${segment.kind}`}
+			aria-pressed={active}
+			title={`#${segment.index} ${segment.kind}${targetMember ? " · Analysis Target member" : ""}${orthography ? ` · ${orthography}` : ""}`}
 		>
 			<span className="text-xs opacity-60">{segment.index}</span>
 			{segment.text}
+			{targetMember ? (
+				<span
+					className="size-1.5 rounded-full bg-current opacity-60"
+					aria-hidden="true"
+				/>
+			) : null}
+			{orthography === "Typo" ? (
+				<span className="absolute -top-2 -right-1 rounded-full border border-amber-500/40 bg-background px-1 text-[9px] font-semibold text-amber-700 dark:text-amber-300">
+					Typo
+				</span>
+			) : null}
 		</Button>
 	);
 }
 
-function EntityTabs({ state }: { state: LaboratoryState }) {
-	const { entity } = state;
+function ResolutionInspector({ state }: { state: LaboratoryState }) {
+	const { resolution } = state;
+	const diagnostics = resolution?.diagnostics ?? [];
+	const entity =
+		resolution?.decision === "Resolved" ? resolution.entity : null;
+	const target = resolution?.target;
+
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto p-4 sm:p-6">
 			<div className="flex flex-wrap items-start justify-between gap-4">
 				<div className="flex flex-col gap-1">
 					<p className="text-xs font-medium text-muted-foreground">
-						Selected segment
+						Post-click chain
 					</p>
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Entity representation
+						Resolution stages
 					</h2>
+					{entity ? (
+						<p className="text-sm text-muted-foreground">
+							Click #{entity.selection.clickedSegmentIndex}{" "}
+							remains its own Selection inside the shared target.
+						</p>
+					) : null}
 				</div>
-				{entity ? (
-					<Badge variant="secondary">Dumgen · {entity.model}</Badge>
+				{resolution ? (
+					<ResolutionBadges resolution={resolution} />
 				) : null}
 			</div>
-			<Tabs defaultValue="reading" className="min-h-0 flex-1">
-				<TabsList
-					variant="line"
-					className="grid w-full grid-cols-3"
-					aria-label="Entity representation"
+
+			{state.resolutionBusy ? (
+				<Empty className="min-h-48 flex-1 p-4">
+					<EmptyHeader>
+						<EmptyMedia variant="icon">
+							<Spinner />
+						</EmptyMedia>
+						<EmptyTitle>Resolving click</EmptyTitle>
+						<EmptyDescription>
+							Checking the member cache, then running only the
+							necessary stages.
+						</EmptyDescription>
+					</EmptyHeader>
+				</Empty>
+			) : state.resolutionError ? (
+				<Alert variant="destructive">
+					<CircleAlertIcon />
+					<AlertTitle>Resolution request failed</AlertTitle>
+					<AlertDescription>{state.resolutionError}</AlertDescription>
+				</Alert>
+			) : resolution ? (
+				<Tabs
+					key={`${state.activeIndex}-${resolution.decision}`}
+					defaultValue={
+						resolution.decision === "Unresolved"
+							? "diagnostics"
+							: "target"
+					}
+					className="min-h-0 flex-1"
 				>
-					<TabsTrigger value="reading">Reading</TabsTrigger>
-					<TabsTrigger value="surface">Surface</TabsTrigger>
-					<TabsTrigger value="selection">Selection</TabsTrigger>
-				</TabsList>
-				<div className="min-h-0 flex-1 overflow-auto rounded-lg border bg-muted/20 p-4">
-					{state.resolutionBusy ? (
-						<Empty className="min-h-48 p-4">
-							<EmptyHeader>
-								<EmptyMedia variant="icon">
-									<Spinner />
-								</EmptyMedia>
-								<EmptyTitle>Resolving segment</EmptyTitle>
-								<EmptyDescription>
-									Dumgen is running the German classification
-									chain.
-								</EmptyDescription>
-							</EmptyHeader>
-						</Empty>
-					) : state.resolutionError ? (
-						<Alert variant="destructive">
-							<CircleAlertIcon />
-							<AlertTitle>Resolution failed</AlertTitle>
-							<AlertDescription>
-								{state.resolutionError}
-							</AlertDescription>
-						</Alert>
-					) : entity ? (
-						<>
-							<TabsContent value="reading">
-								<EntityDetails
-									label="reading"
-									value={entity.reading}
-								/>
-							</TabsContent>
-							<TabsContent value="surface">
-								<EntityDetails
-									label="surface"
-									value={entity.surface}
-								/>
-							</TabsContent>
-							<TabsContent value="selection">
-								<EntityDetails
-									label="selection"
-									value={entity.selection}
-								/>
-							</TabsContent>
-						</>
-					) : (
-						<Empty className="min-h-48 p-4">
-							<EmptyHeader>
-								<EmptyMedia variant="icon">
-									<MousePointerClickIcon />
-								</EmptyMedia>
-								<EmptyTitle>No segment selected</EmptyTitle>
-								<EmptyDescription>
-									Choose a resolvable segment above to inspect
-									it.
-								</EmptyDescription>
-							</EmptyHeader>
-						</Empty>
-					)}
-				</div>
-			</Tabs>
+					<TabsList
+						variant="line"
+						className="grid w-full grid-cols-4"
+						aria-label="Classification stage results"
+					>
+						<TabsTrigger value="target">Target</TabsTrigger>
+						<TabsTrigger value="grammatical">
+							Grammatical
+						</TabsTrigger>
+						<TabsTrigger value="reading">Reading</TabsTrigger>
+						<TabsTrigger value="diagnostics">
+							Diagnostics
+							{diagnostics.length > 0 ? (
+								<Badge variant="destructive">
+									{diagnostics.length}
+								</Badge>
+							) : null}
+						</TabsTrigger>
+					</TabsList>
+					<div className="min-h-0 flex-1 overflow-auto rounded-lg border bg-muted/20 p-4">
+						<TabsContent value="target">
+							<StagePanel
+								label="Analysis Target"
+								value={target}
+								stage={resolution.stages.target}
+								empty="Target Classification returned Unresolved."
+							/>
+						</TabsContent>
+						<TabsContent value="grammatical">
+							<StagePanel
+								label="Canonical Selection + Surface + Lemma"
+								value={
+									entity
+										? {
+												selection: entity.selection,
+												surface: entity.surface,
+											}
+										: undefined
+								}
+								stage={resolution.stages.grammatical}
+								empty="Grammatical Resolution returned Unresolved."
+							/>
+						</TabsContent>
+						<TabsContent value="reading">
+							<StagePanel
+								label="Learner Reading"
+								value={entity?.reading}
+								stage={resolution.stages.reading}
+								empty="Reading Resolution was not reached."
+							/>
+						</TabsContent>
+						<TabsContent value="diagnostics">
+							<Diagnostics diagnostics={diagnostics} />
+						</TabsContent>
+					</div>
+				</Tabs>
+			) : (
+				<Empty className="min-h-48 flex-1 p-4">
+					<EmptyHeader>
+						<EmptyMedia variant="icon">
+							<MousePointerClickIcon />
+						</EmptyMedia>
+						<EmptyTitle>No segment selected</EmptyTitle>
+						<EmptyDescription>
+							Choose ResolvableText above to inspect Target,
+							Grammatical, and Reading outputs.
+						</EmptyDescription>
+					</EmptyHeader>
+				</Empty>
+			)}
 		</section>
 	);
 }
 
-function EntityDetails({ label, value }: { label: string; value: unknown }) {
+function ResolutionBadges({
+	resolution,
+}: {
+	resolution: ClickResolutionResponse;
+}) {
+	const selection =
+		resolution.decision === "Resolved" ? resolution.entity.selection : null;
 	return (
-		<div className="flex flex-col gap-3">
-			<p className="font-mono text-xs text-primary">entity.{label}</p>
-			<ObjectRows value={value as Record<string, unknown>} />
+		<div className="flex flex-wrap items-center justify-end gap-2">
+			<Badge
+				variant={
+					resolution.decision === "Resolved"
+						? "secondary"
+						: "destructive"
+				}
+			>
+				{resolution.decision}
+			</Badge>
+			{selection ? (
+				<Badge variant="outline">
+					Click #{selection.clickedSegmentIndex} ·{" "}
+					{selection.selectedOrthography}
+				</Badge>
+			) : null}
+			<Badge
+				variant={
+					resolution.generation.cache === "member-hit"
+						? "default"
+						: "outline"
+				}
+				className={cn(
+					resolution.generation.cache === "member-hit" &&
+						"bg-emerald-700 text-white dark:bg-emerald-500 dark:text-emerald-950",
+				)}
+			>
+				<DatabaseZapIcon />
+				{resolution.generation.cache === "member-hit"
+					? "Member cache hit"
+					: "Fresh resolution"}
+			</Badge>
+			<Badge variant="outline">
+				{resolution.generation.modelCalls} model call
+				{resolution.generation.modelCalls === 1 ? "" : "s"}
+			</Badge>
 		</div>
 	);
 }
 
-function ObjectRows({
+function StagePanel({
+	label,
 	value,
-	depth = 0,
+	stage,
+	empty,
 }: {
-	value: Record<string, unknown>;
-	depth?: number;
+	label: string;
+	value: unknown;
+	stage?: ClassificationStageResult;
+	empty: string;
 }) {
-	const entries = Object.entries(value);
 	return (
-		<dl className={cn("flex flex-col", depth > 0 && "pl-3")}>
-			{entries.map(([key, item], index) => {
-				const isObject =
-					item !== null &&
-					typeof item === "object" &&
-					!Array.isArray(item);
-				return (
-					<Fragment key={key}>
-						<div className="grid gap-2 py-3 sm:grid-cols-[minmax(7rem,0.65fr)_minmax(0,1.35fr)] sm:gap-4">
-							<dt className="font-mono text-xs text-muted-foreground">
-								{key}
-							</dt>
-							<dd className="min-w-0 [overflow-wrap:anywhere] text-sm">
-								{isObject ? (
-									<ObjectRows
-										value={item as Record<string, unknown>}
-										depth={depth + 1}
-									/>
-								) : (
-									formatValue(item)
-								)}
-							</dd>
-						</div>
-						{index < entries.length - 1 ? <Separator /> : null}
-					</Fragment>
-				);
-			})}
-		</dl>
+		<div className="flex flex-col gap-5">
+			<div className="flex items-center justify-between gap-3">
+				<p className="font-mono text-xs font-medium text-primary">
+					{label}
+				</p>
+				{stage ? (
+					<Badge variant="secondary">Complete</Badge>
+				) : (
+					<Badge variant="outline">Not reached</Badge>
+				)}
+			</div>
+			{value === undefined ? (
+				<Alert variant="destructive">
+					<CircleAlertIcon />
+					<AlertTitle>No canonical result</AlertTitle>
+					<AlertDescription>{empty}</AlertDescription>
+				</Alert>
+			) : (
+				<JsonCard title="Canonical application result" value={value} />
+			)}
+			{stage ? <StageTrace stage={stage} /> : null}
+		</div>
 	);
 }
 
-function formatValue(value: unknown): ReactNode {
-	if (Array.isArray(value)) return value.join(", ");
-	if (typeof value === "boolean") return value ? "true" : "false";
-	return String(value);
+function StageTrace({ stage }: { stage: ClassificationStageResult }) {
+	return (
+		<div className="flex flex-col gap-3 border-t pt-4">
+			<div className="flex flex-wrap items-center justify-between gap-2">
+				<div className="flex items-center gap-2">
+					<BracesIcon className="size-4 text-muted-foreground" />
+					<p className="text-xs font-semibold">Laboratory trace</p>
+				</div>
+				<Badge variant="outline" className="max-w-full font-mono">
+					<span className="truncate">{stage.prompt}</span>
+				</Badge>
+			</div>
+			<div className="grid gap-3 xl:grid-cols-2">
+				<JsonCard title="Minimal prompt input" value={stage.input} />
+				<JsonCard title="Validated model output" value={stage.output} />
+			</div>
+		</div>
+	);
+}
+
+function JsonCard({ title, value }: { title: string; value: unknown }) {
+	return (
+		<div className="min-w-0 rounded-lg border bg-background/70">
+			<p className="border-b px-3 py-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+				{title}
+			</p>
+			<pre className="max-h-80 overflow-auto p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]">
+				{JSON.stringify(value, null, 2)}
+			</pre>
+		</div>
+	);
+}
+
+function Diagnostics({
+	diagnostics,
+}: {
+	diagnostics: ClickResolutionResponse["diagnostics"];
+}) {
+	if (diagnostics.length === 0) {
+		return (
+			<Empty className="min-h-40 p-4">
+				<EmptyHeader>
+					<EmptyMedia variant="icon">
+						<CheckIcon />
+					</EmptyMedia>
+					<EmptyTitle>No diagnostics</EmptyTitle>
+					<EmptyDescription>
+						Every reached stage produced a consistent result.
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+		);
+	}
+
+	return (
+		<div className="flex flex-col gap-3">
+			{diagnostics.map((diagnostic, index) => (
+				<Alert
+					variant="destructive"
+					key={`${diagnostic.stage}-${diagnostic.kind}-${index}`}
+				>
+					<CircleAlertIcon />
+					<AlertTitle>
+						{diagnostic.stage} · {diagnostic.kind}
+					</AlertTitle>
+					<AlertDescription>{diagnostic.message}</AlertDescription>
+				</Alert>
+			))}
+			<p className="text-xs text-muted-foreground">
+				Unresolved is a prompt-quality failure to capture and fix, not a
+				normal learner outcome.
+			</p>
+		</div>
+	);
 }
 
 function DesktopWorkbench({
@@ -681,8 +944,8 @@ function DesktopWorkbench({
 		<ResizablePanelGroup
 			className="min-h-0"
 			defaultLayout={loadLayout(mainLayoutKey, {
-				"laboratory-results": 0.55,
-				"laboratory-source": 0.45,
+				"laboratory-results": 0.58,
+				"laboratory-source": 0.42,
 			})}
 			id="laboratory-main-layout-horizontal"
 			onLayoutChanged={(layout, meta) =>
@@ -691,15 +954,15 @@ function DesktopWorkbench({
 			orientation="horizontal"
 		>
 			<ResizablePanel
-				defaultSize="55%"
+				defaultSize="58%"
 				id="laboratory-results"
-				minSize="30%"
+				minSize="34%"
 			>
 				<ResizablePanelGroup
 					className="min-h-0"
 					defaultLayout={loadLayout(resultsLayoutKey, {
-						"laboratory-segments": 0.38,
-						"laboratory-entity": 0.62,
+						"laboratory-segments": 0.43,
+						"laboratory-resolution": 0.57,
 					})}
 					id="laboratory-results-layout"
 					onLayoutChanged={(layout, meta) =>
@@ -708,27 +971,27 @@ function DesktopWorkbench({
 					orientation="vertical"
 				>
 					<ResizablePanel
-						defaultSize="38%"
+						defaultSize="43%"
 						id="laboratory-segments"
-						minSize="20%"
+						minSize="25%"
 					>
 						<Segments state={state} />
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel
-						defaultSize="62%"
-						id="laboratory-entity"
+						defaultSize="57%"
+						id="laboratory-resolution"
 						minSize="25%"
 					>
-						<EntityTabs state={state} />
+						<ResolutionInspector state={state} />
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel
-				defaultSize="45%"
+				defaultSize="42%"
 				id="laboratory-source"
-				minSize="30%"
+				minSize="28%"
 			>
 				<SourceEditor state={state} />
 			</ResizablePanel>
@@ -770,7 +1033,7 @@ function Laboratory({ state }: { state: LaboratoryState }) {
 						<Separator />
 						<Segments state={state} />
 						<Separator />
-						<EntityTabs state={state} />
+						<ResolutionInspector state={state} />
 					</div>
 				</div>
 			) : (

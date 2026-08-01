@@ -22,30 +22,31 @@ import { buildDumgen } from "dumgen";
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
 const generate = buildDumgen();
 
-const selection = await generate.laboratory.classification.de.selection({
-	language: "de",
-	segmentedSentenceId: "laboratory-sentence-1",
+const target =
+	await generate.laboratory.targetClassification.de.highLevelWholeUnit({
 	clickedSegmentIndex: 2,
 	segments: [
-		{ index: 0, kind: "ResolvableText", text: "Er" },
-		{ index: 1, kind: "Whitespace", text: " " },
-		{ index: 2, kind: "ResolvableText", text: "steht" },
-		{ index: 3, kind: "Whitespace", text: " " },
-		{ index: 4, kind: "ResolvableText", text: "auf" },
+		{ kind: "ResolvableText", text: "Er" },
+		{ kind: "Whitespace", text: " " },
+		{ kind: "ResolvableText", text: "steht" },
+		{ kind: "Whitespace", text: " " },
+		{ kind: "ResolvableText", text: "auf" },
 	],
 });
 
-console.log(selection.surfaceSegmentIndices);
+if (!("decision" in target)) console.log(target.memberSegmentIndices);
 ```
 
 ## Vision
 
-The current German-only laboratory path uses progressively narrower generators
-to inspect the clickable-word dictionary chain:
+The current German-only laboratory path uses pointed generators for each
+settled stage:
 
-1. Segment accepted German text.
-2. Classify the clicked Segment through `Selection → Surface → Lemma → Reading`.
-3. Validate the assembled grammatical entities with Dumling's German schemas.
+1. Run language-agnostic Intake, then `Segmentation<de>`.
+2. Classify one click with `Target Classification<de, HighLevelWholeUnit>`.
+3. Dispatch through physically distinct grammatical and Reading routes for the
+   target's German Lemma Family and Kind.
+4. Validate projected grammatical results with Dumling's concrete schemas.
 
 The prompts live only under `laboratory`. The application orchestrates the
 stages; there is deliberately no production namespace or production claim.

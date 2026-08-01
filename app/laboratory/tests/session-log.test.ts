@@ -26,9 +26,29 @@ function event(
 		sessionId,
 		operation,
 		input: { text: "Der Hund" },
-		promptName: `laboratory.${operation}`,
+		promptNames: [`laboratory.${operation}`],
 		model: "gpt-5-nano",
-		validatedOutput: { decision: "Accepted" },
+		trace: {
+			stages: { intake: { output: { decision: "Accepted" } } },
+			modelExchanges:
+				operation === "click-resolution"
+					? [
+							{
+								phase: "rejected" as const,
+								promptPath:
+									"laboratory.grammaticalResolution.de.Lexeme.NOUN",
+								modelInput: {
+									markedContext: "<TARGET>Hund</TARGET>",
+								},
+								modelOutput: { decision: "Resolved" },
+								validationError: {
+									name: "ZodError",
+									message: "resolution payload missing",
+								},
+							},
+						]
+					: [],
+		},
 		applicationResult: { status: 200, body: { ok: true } },
 		latencyMs: 12.3,
 		errors: [],
@@ -40,7 +60,7 @@ describe("laboratory session logging", () => {
 		const root = await mkdtemp(join(tmpdir(), "laboratory-session-log-"));
 		temporaryRoots.push(root);
 		const sessionId = crypto.randomUUID();
-		const first = event(sessionId, "segmentation");
+		const first = event(sessionId, "segmentation-chain");
 		const second = event(sessionId, "click-resolution");
 
 		await Promise.all([

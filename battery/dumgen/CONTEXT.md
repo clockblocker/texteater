@@ -211,9 +211,15 @@ itself an experiment.
 ### Laboratory Prompt Namespace
 
 The current executable prompts are early-WIP laboratory instruments. German is
-the only registered language. Post-click classification is registered as four
-ordered prompt leaves under `laboratory.classification.de`:
-`selection`, `surface`, `lemma`, and `reading`.
+the only registered language. The pre-click chain is registered as
+`laboratory.intake` followed by `laboratory.segmentation.de`. Post-click
+classification begins at
+`laboratory.targetClassification.de.highLevelWholeUnit`, then dispatches to
+physically distinct
+`laboratory.grammaticalResolution.de.<Family>.<Kind>` and
+`laboratory.readingResolution.de.<Family>.<Kind>` leaves. The high-level policy
+registers Lexeme, Phraseme, and Construction routes; it deliberately excludes
+Morpheme routes.
 
 There is no production prompt namespace. Laboratory results and prompt paths do
 not claim production readiness.
