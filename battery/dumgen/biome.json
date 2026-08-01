@@ -6,6 +6,7 @@
 			"!generate-readme/examples/**/*.ts",
 			"!docs/prototypes/**/runs/**",
 			"!src/promptsmith/laboratory/generated-system-prompt/**",
+			"!src/promptsmith/laboratory/experiments/**/generated-system-prompt/**",
 			"!prototypes/**/results/**"
 		]
 	},

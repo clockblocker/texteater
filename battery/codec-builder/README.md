@@ -73,6 +73,40 @@ numericString.out; // output schema
 The schema-less `buildStrictFieldAdapter()` also uses the `decode` and
 `encode` names, but cannot provide Zod validation because it has no schemas.
 
+### Fixed object fields in Zod 4
+
+Use `buildFixedFieldsCodec()` when the application owns constant fields that
+must stay out of a smaller external representation:
+
+```ts
+import { codecBuilder4 } from "codec-builder-library/v4";
+import { z } from "zod/v4";
+
+const canonicalSchema = z.strictObject({
+	language: z.literal("de"),
+	family: z.enum(["Lexeme", "Phraseme"]),
+	canonicalForm: z.string(),
+});
+
+const codec = codecBuilder4.buildFixedFieldsCodec(canonicalSchema, {
+	language: "de",
+	family: "Lexeme",
+});
+
+codec.in; // strict { canonicalForm: string } schema
+codec.out; // canonicalSchema
+codec.decode({ canonicalForm: "Bank" }); // restores language and family
+codec.encode({
+	language: "de",
+	family: "Lexeme",
+	canonicalForm: "Bank",
+}); // removes language and family
+```
+
+Encoding rejects canonical values whose fixed fields differ from the codec
+configuration. The codec can also be nested directly inside a larger Zod 4
+schema.
+
 ## Development
 
 ```bash

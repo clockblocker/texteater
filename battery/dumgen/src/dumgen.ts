@@ -10,7 +10,7 @@ export {
 	type DumgenErrorCode,
 } from "./generator/generator-error";
 
-import { PROMPT_CATALOG } from "./promptsmith/prompt";
+import { PROMPT_CATALOG } from "./catalog/prompt-catalog";
 
 export type {
 	AnalysisTarget,

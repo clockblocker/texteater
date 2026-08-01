@@ -15,9 +15,11 @@ export const examplesForTest = [
 		},
 		idealOutput: {
 			decision: "Resolved",
-			memberSegmentIndices: [2],
-			family: "Lexeme",
-			kind: "NOUN",
+			target: {
+				memberSegmentIndices: [2],
+				family: "Lexeme",
+				kind: "NOUN",
+			},
 		},
 	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

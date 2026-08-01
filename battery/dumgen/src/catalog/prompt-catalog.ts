@@ -1,44 +1,51 @@
 import type { z } from "zod";
-
-import type {
-	AnalysisTarget,
-	GrammaticalResolution,
-	ReadingResolution,
-	Unresolved,
-} from "../types";
-import { createDeGrammaticalResolutionPrompt } from "./laboratory/de-grammatical-resolution";
+import { systemPrompt as grammarNounSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/grammatical-resolution/de/lexeme/noun";
+import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
+import { systemPrompt as readingNounSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de/lexeme/noun";
+import { systemPrompt as segmentationSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/segmentation/de";
+import { systemPrompt as targetSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
+import { inputSchema as grammarNounInputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/input-schema";
+import { outputSchema as grammarNounOutputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
+import { inputSchema as intakeInputSchema } from "../promptsmith/laboratory/prompt-part/intake/input-schema";
+import { outputSchema as intakeOutputSchema } from "../promptsmith/laboratory/prompt-part/intake/output-schema";
+import { inputSchema as readingNounModelInputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/lexeme/noun/input-schema";
+import { outputSchema as readingNounOutputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
+import { inputSchema as segmentationInputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/input-schema";
+import { outputSchema as segmentationOutputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/output-schema";
+import { inputSchema as targetInputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/input-schema";
+import { outputSchema as targetOutputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/output-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
 	deNounLemmaCodec,
-} from "./laboratory/de-noun-codecs";
-import { createDeReadingResolutionPrompt } from "./laboratory/de-reading-resolution";
+} from "../schema/de-noun-codecs";
 import {
 	GERMAN_HIGH_LEVEL_ROUTES,
 	type GermanHighLevelFamily,
 	type GermanHighLevelKind,
 	isGermanHighLevelRoute,
-} from "./laboratory/de-routes";
-import { systemPrompt as grammarNounSystemPrompt } from "./laboratory/generated-system-prompt/grammatical-resolution/de/lexeme/noun";
-import { systemPrompt as intakeSystemPrompt } from "./laboratory/generated-system-prompt/intake";
-import { systemPrompt as readingNounSystemPrompt } from "./laboratory/generated-system-prompt/reading-resolution/de/lexeme/noun";
-import { systemPrompt as segmentationSystemPrompt } from "./laboratory/generated-system-prompt/segmentation/de";
-import { systemPrompt as targetSystemPrompt } from "./laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
-import { inputSchema as grammarNounInputSchema } from "./laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as grammarNounOutputSchema } from "./laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
-import { inputSchema as intakeInputSchema } from "./laboratory/prompt-part/intake/input-schema";
-import { outputSchema as intakeOutputSchema } from "./laboratory/prompt-part/intake/output-schema";
-import { inputSchema as readingNounModelInputSchema } from "./laboratory/prompt-part/reading-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as readingNounOutputSchema } from "./laboratory/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
-import { inputSchema as segmentationInputSchema } from "./laboratory/prompt-part/segmentation/de/input-schema";
-import { outputSchema as segmentationOutputSchema } from "./laboratory/prompt-part/segmentation/de/output-schema";
-import { inputSchema as targetInputSchema } from "./laboratory/prompt-part/target-classification/de/high-level-whole-unit/input-schema";
-import { outputSchema as targetOutputSchema } from "./laboratory/prompt-part/target-classification/de/high-level-whole-unit/output-schema";
+} from "../schema/german-high-level-routes";
+import type {
+	AnalysisTarget,
+	GrammaticalResolution,
+	IntakeDecision,
+	ReadingResolution,
+	Unresolved,
+} from "../types";
+import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
+import { createDeReadingResolutionPrompt } from "./laboratory/create-de-reading-resolution-prompt";
 import type {
 	Prompt,
 	PromptCatalogEntry,
 	PromptTree,
 } from "./prompt-definition";
+
+function omitLinkedLemma<LinkedSurface extends { readonly lemma: unknown }>(
+	linkedSurface: LinkedSurface,
+): Omit<LinkedSurface, "lemma"> {
+	const { lemma: _linkedLemma, ...surface } = linkedSurface;
+	return surface;
+}
 
 export type {
 	Prompt,
@@ -50,8 +57,32 @@ const intakePrompt = {
 	systemPrompt: intakeSystemPrompt,
 	inputSchema: intakeInputSchema,
 	outputSchema: intakeOutputSchema,
+	outputPostcondition: {
+		assert(_input, generated) {
+			const valid =
+				(generated.decision === "Accepted" &&
+					generated.language === "de") ||
+				(generated.decision === "UnsupportedLanguage" &&
+					generated.language !== null &&
+					generated.language !== "de") ||
+				(generated.decision === "Unintelligible" &&
+					generated.language === null);
+			if (!valid) {
+				throw new Error(
+					"Intake decision and resolved language are inconsistent.",
+				);
+			}
+		},
+	},
+	projectOutput(_input, generated): IntakeDecision {
+		return generated as IntakeDecision;
+	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 64 },
-} satisfies Prompt<typeof intakeInputSchema, typeof intakeOutputSchema>;
+} satisfies Prompt<
+	typeof intakeInputSchema,
+	typeof intakeOutputSchema,
+	IntakeDecision
+>;
 
 const segmentationPrompt = {
 	systemPrompt: segmentationSystemPrompt,
@@ -69,13 +100,28 @@ const targetPrompt = {
 	outputSchema: targetOutputSchema,
 	outputPostcondition: {
 		assert(input, generated) {
-			if (generated.decision === "Unresolved") return;
-			if (!isGermanHighLevelRoute(generated.family, generated.kind)) {
+			if (generated.decision === "Unresolved") {
+				if (generated.target !== null) {
+					throw new Error(
+						"Unresolved Target must not include a target.",
+					);
+				}
+				return;
+			}
+			if (generated.target === null) {
+				throw new Error("Resolved Target requires a target.");
+			}
+			if (
+				!isGermanHighLevelRoute(
+					generated.target.family,
+					generated.target.kind,
+				)
+			) {
 				throw new Error(
 					"Target must select a reachable German high-level route.",
 				);
 			}
-			const indices = generated.memberSegmentIndices;
+			const indices = generated.target.memberSegmentIndices;
 			if (!indices.includes(input.clickedSegmentIndex)) {
 				throw new Error(
 					"Target members must include the clicked Segment.",
@@ -100,12 +146,13 @@ const targetPrompt = {
 		},
 	},
 	projectOutput(_input, generated): AnalysisTarget | Unresolved {
-		if (generated.decision === "Unresolved") return generated;
-		return {
-			memberSegmentIndices: generated.memberSegmentIndices,
-			family: generated.family,
-			kind: generated.kind,
-		} as AnalysisTarget;
+		if (generated.decision === "Unresolved") {
+			return { decision: "Unresolved" };
+		}
+		if (generated.target === null) {
+			throw new Error("Resolved Target requires a target.");
+		}
+		return generated.target as AnalysisTarget;
 	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 1024 },
 } satisfies Prompt<
@@ -120,7 +167,19 @@ const grammarNounPrompt = {
 	outputSchema: grammarNounOutputSchema,
 	outputPostcondition: {
 		assert(input, generated) {
-			if (generated.decision === "Unresolved") return;
+			if (generated.decision === "Unresolved") {
+				if (generated.resolution !== null) {
+					throw new Error(
+						"Unresolved Grammatical Resolution must not include a resolution.",
+					);
+				}
+				return;
+			}
+			if (generated.resolution === null) {
+				throw new Error(
+					"Resolved Grammatical Resolution requires a resolution.",
+				);
+			}
 			const markerCount =
 				input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
 			const closingCount =
@@ -128,7 +187,7 @@ const grammarNounPrompt = {
 			if (
 				markerCount < 1 ||
 				markerCount !== closingCount ||
-				generated.memberOrthographies.length !== markerCount
+				generated.resolution.memberOrthographies.length !== markerCount
 			) {
 				throw new Error(
 					"Member orthographies must align one-to-one with TARGET markers.",
@@ -137,20 +196,34 @@ const grammarNounPrompt = {
 		},
 	},
 	projectOutput(_input, generated): GrammaticalResolution {
-		if (generated.decision === "Unresolved") return generated;
-		const lemma = deNounLemmaCodec.decode(generated.lemma);
-		const surfaceCodec =
-			generated.surface.surfaceKind === "Inflection"
-				? buildDeNounInflectionSurfaceCodec(lemma)
-				: buildDeNounCitationSurfaceCodec(lemma);
-		const linkedSurface = surfaceCodec.decode(generated.surface as never);
-		const { lemma: _linkedLemma, ...surface } = linkedSurface;
+		if (generated.decision === "Unresolved") {
+			return { decision: "Unresolved" };
+		}
+		if (generated.resolution === null) {
+			throw new Error(
+				"Resolved Grammatical Resolution requires a resolution.",
+			);
+		}
+		const resolution = generated.resolution;
+		const lemma = deNounLemmaCodec.decode(resolution.lemma);
+		const surface =
+			resolution.surface.surfaceKind === "Inflection"
+				? omitLinkedLemma(
+						buildDeNounInflectionSurfaceCodec(lemma).decode(
+							resolution.surface,
+						),
+					)
+				: omitLinkedLemma(
+						buildDeNounCitationSurfaceCodec(lemma).decode(
+							resolution.surface,
+						),
+					);
 		return {
 			decision: "Resolved",
-			memberOrthographies: generated.memberOrthographies,
+			memberOrthographies: resolution.memberOrthographies,
 			surface,
 			lemma,
-		} as GrammaticalResolution;
+		};
 	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 1024 },
 } satisfies Prompt<

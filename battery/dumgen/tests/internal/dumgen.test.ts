@@ -11,9 +11,12 @@ import {
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
+import {
+	PROMPT_CATALOG,
+	type PromptTree,
+} from "../../src/catalog/prompt-catalog";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
-import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/promptsmith/laboratory/de-routes";
-import { PROMPT_CATALOG, type PromptTree } from "../../src/promptsmith/prompt";
+import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
 
 const segments = [
 	{ kind: "ResolvableText", text: "Die" },
@@ -28,7 +31,6 @@ const analysisTarget = {
 } as const satisfies AnalysisTarget;
 
 const modelGrammar = {
-	decision: "Resolved",
 	memberOrthographies: ["Standard"],
 	surface: {
 		normalizedSurface: "Banken",
@@ -49,8 +51,8 @@ describe("settled German laboratory topology", () => {
 		const outputs: unknown[] = [
 			{ decision: "Accepted", language: "de" },
 			{ segments },
-			{ decision: "Resolved", ...analysisTarget },
-			modelGrammar,
+			{ decision: "Resolved", target: analysisTarget },
+			{ decision: "Resolved", resolution: modelGrammar },
 			{ decision: "New", emojiDescription: "🏦 Bank" },
 		];
 		const calls: Array<{
@@ -169,10 +171,54 @@ describe("settled German laboratory topology", () => {
 		);
 	});
 
+	test("keeps an unmigrated Reading route executable with a minimal model DTO", async () => {
+		let serializedInput: string | undefined;
+		const generate = buildDumgen({
+			sdk: {
+				async structuredGeneration(input) {
+					serializedInput = input;
+					return {
+						decision: "New",
+						emojiDescription: "🚶 gehen",
+					} as never;
+				},
+				async unstructuredGeneration() {
+					throw new Error("not used");
+				},
+			},
+		});
+
+		await expect(
+			generate.laboratory.readingResolution.de.Lexeme.VERB({
+				markedContext: "Wir <TARGET>gehen</TARGET> nach Hause.",
+				lemma: {
+					canonicalForm: "gehen",
+					coreFeatures: {
+						hasGovPrep: null,
+						hasSepPrefix: null,
+						lexicallyReflexive: null,
+						verbType: null,
+					},
+					language: "de",
+					family: "Lexeme",
+					kind: "VERB",
+				},
+				existingEmojiDescriptions: [],
+			}),
+		).resolves.toEqual({
+			decision: "New",
+			emojiDescription: "🚶 gehen",
+		});
+		expect(serializedInput).toContain('"canonicalForm":"gehen"');
+		expect(serializedInput).not.toContain('"language"');
+		expect(serializedInput).not.toContain('"family"');
+		expect(serializedInput).not.toContain('"kind"');
+	});
+
 	test("returns payload-free Unresolved without leaking a model DTO", async () => {
 		const unresolved: Unresolved = { decision: "Unresolved" };
 		const outputs = [
-			{ decision: "Unresolved" },
+			{ decision: "Unresolved", target: null },
 			{ decision: "Unresolved", resolution: null },
 		];
 		const generate = buildDumgen({
@@ -207,9 +253,11 @@ describe("settled German laboratory topology", () => {
 				async structuredGeneration() {
 					return {
 						decision: "Resolved",
-						memberSegmentIndices: [0],
-						family: "Morpheme",
-						kind: "Prefix",
+						target: {
+							memberSegmentIndices: [0],
+							family: "Morpheme",
+							kind: "Prefix",
+						},
 					} as never;
 				},
 				async unstructuredGeneration() {
@@ -230,7 +278,10 @@ describe("settled German laboratory topology", () => {
 		const grammarGenerator = buildDumgen({
 			sdk: {
 				async structuredGeneration() {
-					return modelGrammar as never;
+					return {
+						decision: "Resolved",
+						resolution: modelGrammar,
+					} as never;
 				},
 				async unstructuredGeneration() {
 					return "";

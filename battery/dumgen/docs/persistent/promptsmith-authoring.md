@@ -118,14 +118,15 @@ Promptsmith does not own public-domain projection, postconditions, model
 selection, generation parameters, or Dumling entity construction.
 
 Minimal model schemas omit route-owned fields such as `language`, `family`, and
-`kind`. Dumgen restores and removes those fields with chained
-`codecBuilder4.buildReshapeCodec` codecs. The codec direction starts at the
-minimal model schema and decodes toward the public domain schema by adding
-literal route fields. Encoding validates and removes those fields for the model
-boundary.
+`kind`. Dumgen restores and removes those fields with
+`codecBuilder4.buildFixedFieldsCodec`. The codec derives the minimal model
+schema from the canonical Dumling object, decodes by restoring the fixed route
+fields, and encodes by validating and removing them.
 
-Runtime mapping has separate codec and end-to-end tests. Prompt examples remain
-focused on the model exchange.
+Runtime prompt definitions and catalog assembly live under `src/catalog`;
+shared Dumling-backed schema/codecs live under `src/schema`. Runtime mapping has
+separate codec and end-to-end tests. Prompt examples remain focused on the
+model exchange.
 
 ## Intake language routing
 

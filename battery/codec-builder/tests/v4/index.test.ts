@@ -180,6 +180,7 @@ describe("codecBuilder.helpers", () => {
 
 	test("namespaces helper builders under helpers", () => {
 		expect(codecBuilder.buildStrictFieldAdapter).toBeDefined();
+		expect(codecBuilder.buildFixedFieldsCodec).toBeDefined();
 		expect(codecBuilder.helpers.toArrayOf).toBeDefined();
 		expect(codecBuilder.helpers.toOptional).toBeDefined();
 		expect(codecBuilder.helpers.toNullable).toBeDefined();

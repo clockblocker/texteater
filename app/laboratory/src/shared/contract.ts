@@ -85,7 +85,7 @@ export type ClassificationStageResult = {
 
 export type ResolutionDiagnostic = {
 	stage: ClassificationStageName;
-	kind: "Unresolved" | "DecisionMismatch";
+	kind: "Unresolved" | "DecisionMismatch" | "ResolutionRouteNotImplemented";
 	message: string;
 };
 
@@ -102,6 +102,19 @@ export type ClickResolutionResponse =
 			target: AnalysisTarget;
 			entity: EntityRepresentation;
 			memberOrthographies: Record<number, MemberOrthography>;
+			stages: Partial<
+				Record<ClassificationStageName, ClassificationStageResult>
+			>;
+			diagnostics: ResolutionDiagnostic[];
+			generation: ClassificationGeneration;
+	  }
+	| {
+			decision: "NotImplemented";
+			stage: "GrammaticalResolution" | "ReadingResolution";
+			language: "de";
+			family: AnalysisTarget["family"];
+			kind: AnalysisTarget["kind"];
+			target: AnalysisTarget;
 			stages: Partial<
 				Record<ClassificationStageName, ClassificationStageResult>
 			>;

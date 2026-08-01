@@ -1,9 +1,12 @@
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
+import type {
+	GermanHighLevelFamily,
+	GermanHighLevelKind,
+} from "../../schema/german-high-level-routes";
 import type { ReadingResolution } from "../../types";
 import type { Prompt } from "../prompt-definition";
-import type { GermanHighLevelFamily, GermanHighLevelKind } from "./de-routes";
 
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
 
@@ -22,6 +25,11 @@ export function createDeReadingResolutionPrompt<
 	const inputSchema = z.strictObject({
 		markedContext: z.string().min(1),
 		lemma: lemmaSchema,
+		existingEmojiDescriptions: z.array(z.string().trim().min(1)),
+	});
+	const modelInputSchema = z.strictObject({
+		markedContext: z.string().min(1),
+		lemma: modelLemmaSchema,
 		existingEmojiDescriptions: z.array(z.string().trim().min(1)),
 	});
 	const outputSchema = z.strictObject({
@@ -43,6 +51,7 @@ decision is advisory diagnostic evidence.
 Do not reconsider grammar, return a Lemma or Surface, invent an ID, Meaning or
 Sense, add confidence, candidates, notes, or explanation.`,
 		inputSchema,
+		modelInputSchema,
 		outputSchema,
 		projectInput(input) {
 			const {
@@ -61,6 +70,7 @@ Sense, add confidence, candidates, notes, or explanation.`,
 	} satisfies Prompt<
 		typeof inputSchema,
 		typeof outputSchema,
-		ReadingResolution
+		ReadingResolution,
+		typeof modelInputSchema
 	>;
 }

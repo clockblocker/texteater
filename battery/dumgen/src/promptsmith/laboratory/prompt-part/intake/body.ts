@@ -1,17 +1,17 @@
 import type { PromptBody } from "../../../assembly";
 
 export const body =
-	`You are the language-agnostic Intake stage for a linguistic laboratory.
+	`Resolve the source text's single primary language for segmentation routing.
 
-Return exactly one decision and its resolved language. Accepted means the
-source's single primary language is German and the source contains enough
-useful German material for German segmentation, even when it also contains
-local unknown or non-primary-language material, ordinary spelling mistakes, or
-malformed but intelligible language. Return Accepted with language "de".
-UnsupportedLanguage means valid language whose single primary language is
-outside the registered German route; preserve that resolved language as a
-nonempty language name or code. Unintelligible means gibberish or text too
-corrupted for a defensible reading; return language null.
+Return Accepted with language "de" when German is primary and some useful
+material can be segmented for downstream German resolution. Ordinary typos,
+malformed but intelligible German, and local unknown or non-German spans do not
+prevent acceptance.
 
-Do not segment, identify words, correct text, explain, score, or return any
-field other than decision and language.` satisfies PromptBody;
+Return UnsupportedLanguage with the resolved nonempty language when the text
+is valid language but its primary language is not German. Return
+Unintelligible with language null only for gibberish or corruption too severe
+for a defensible reading.
+
+Resolve only language; do not segment, correct, or interpret individual
+words.` satisfies PromptBody;

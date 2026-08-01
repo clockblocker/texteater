@@ -57,6 +57,29 @@ type ReadingResolution = {
 	emojiDescription: string;
 };
 
+type AnalysisRoute = {
+	readonly [Family in AnalysisTarget["family"]]: readonly [
+		family: Family,
+		kind: Extract<AnalysisTarget, { readonly family: Family }>["kind"],
+	];
+}[AnalysisTarget["family"]];
+
+const enabledGrammaticalRoutes = [
+	["Lexeme", "NOUN"],
+] as const satisfies readonly AnalysisRoute[];
+const enabledReadingRoutes = [
+	["Lexeme", "NOUN"],
+] as const satisfies readonly AnalysisRoute[];
+
+function isRouteEnabled(
+	enabledRoutes: readonly AnalysisRoute[],
+	target: AnalysisTarget,
+): boolean {
+	return enabledRoutes.some(
+		([family, kind]) => family === target.family && kind === target.kind,
+	);
+}
+
 type GermanGenerator = {
 	laboratory: {
 		targetClassification: {
@@ -236,6 +259,38 @@ function unresolvedResponse(
 	};
 }
 
+function routeNotImplementedResponse(
+	stageName: "GrammaticalResolution" | "ReadingResolution",
+	target: AnalysisTarget,
+	stages: GermanClassificationTrace,
+	prompts: string[],
+): ClickResolutionResponse {
+	const stage =
+		stageName === "GrammaticalResolution" ? "grammatical" : "reading";
+	return {
+		decision: "NotImplemented",
+		stage: stageName,
+		language: "de",
+		family: target.family,
+		kind: target.kind,
+		target,
+		stages,
+		diagnostics: [
+			{
+				stage,
+				kind: "ResolutionRouteNotImplemented",
+				message: `${stageName} is not enabled for de/${target.family}/${target.kind}.`,
+			},
+		],
+		generation: {
+			model: "gpt-5-nano",
+			prompts,
+			cache: "miss",
+			modelCalls: prompts.length,
+		},
+	};
+}
+
 export class GermanClassificationResolver {
 	readonly #generate: GermanGenerator;
 	readonly #unitsByMember = new Map<string, ResolvedUnit>();
@@ -291,6 +346,14 @@ export class GermanClassificationResolver {
 		}
 		const target = targetOutput;
 		this.#assertTarget(sentence, clickedSegmentIndex, target);
+		if (!isRouteEnabled(enabledGrammaticalRoutes, target)) {
+			return routeNotImplementedResponse(
+				"GrammaticalResolution",
+				target,
+				stages,
+				[targetClassificationPrompt],
+			);
+		}
 
 		const markedContext = constructMarkedContext(
 			sentence.segments,
@@ -360,6 +423,14 @@ export class GermanClassificationResolver {
 			lemma,
 			existingEmojiDescriptions,
 		};
+		if (!isRouteEnabled(enabledReadingRoutes, target)) {
+			return routeNotImplementedResponse(
+				"ReadingResolution",
+				target,
+				stages,
+				[targetClassificationPrompt, grammaticalPrompt],
+			);
+		}
 		const readingPrompt = readingResolutionPrompt(target);
 		const reading = this.#route(
 			this.#generate.laboratory.readingResolution.de,

@@ -1,7 +1,7 @@
 # Laboratory
 
-> THROWAWAY PROTOTYPE — this is evidence for a future implementation, not the
-> implementation itself.
+> EARLY-WIP LABORATORY — this is a prompt-development surface, not a production
+> prompt namespace or production-readiness claim.
 
 Question: does the hands-on settled Dumgen topology feel coherent when every
 prompt stage, resolved-unit member, cache decision, and canonical result stays
@@ -35,9 +35,11 @@ After a `ResolvableText` click, the result panel exposes the Target,
 Grammatical, and Reading stages, including each stage's minimal prompt input and
 validated model output. The canonical Grammatical result uses the matching
 concrete German Dumling Selection and Surface contracts. `Unresolved` and
-Reading decision mismatches remain visible as prompt-quality diagnostics. This
-application and its prompts are an early WIP laboratory bench, not production
-behavior.
+Reading decision mismatches remain visible as prompt-quality diagnostics. A
+valid non-noun Target stops visibly as `ResolutionRouteNotImplemented` before
+another model call; only German Lexeme/NOUN is enabled through Grammatical and
+Reading Resolution. This application and its prompts are an early WIP
+laboratory bench, not production behavior.
 
 Target Classification may group several contiguous or discontinuous Segments
 into one Analysis Target. Every member is marked in the segmented sentence.

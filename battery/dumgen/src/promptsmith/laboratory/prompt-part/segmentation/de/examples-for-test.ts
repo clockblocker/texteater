@@ -4,17 +4,17 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "segmentation-test-opaque-span",
-		input: { text: "Wir treffen quux42 später." },
+		id: "segmentation-use-simple-sentence",
+		input: { text: "Der Kaffee ist heiß." },
 		idealOutput: {
 			segments: [
-				{ kind: "ResolvableText", text: "Wir" },
+				{ kind: "ResolvableText", text: "Der" },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "treffen" },
+				{ kind: "ResolvableText", text: "Kaffee" },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "OpaqueText", text: "quux42" },
+				{ kind: "ResolvableText", text: "ist" },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "später" },
+				{ kind: "ResolvableText", text: "heiß" },
 				{ kind: "Punctuation", text: "." },
 			],
 		},

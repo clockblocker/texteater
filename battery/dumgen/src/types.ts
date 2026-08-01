@@ -3,7 +3,7 @@ import type { Lemma, SupportedLanguage, Surface } from "dumling/types";
 import type {
 	GermanHighLevelFamily,
 	GermanHighLevelKind,
-} from "./promptsmith/laboratory/de-routes";
+} from "./schema/german-high-level-routes";
 
 export type Unresolved = { readonly decision: "Unresolved" };
 

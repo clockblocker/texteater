@@ -1,0 +1,613 @@
+{
+  "runnerVersion": "issue-22-compact-noun-dtos-v1",
+  "startedAt": "2026-08-01T10:43:02.007Z",
+  "model": "gpt-5-nano",
+  "boundedCalls": 8,
+  "retries": 0,
+  "store": false,
+  "deterministic": {
+    "method": "UTF-8 byte counts over generated system prompts and stable JSON; token estimates are ceil(UTF-8 bytes / 4), not provider tokenizer counts.",
+    "measurements": [
+      {
+        "arm": "verbose",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-library-dative",
+        "systemPromptBytes": 1906,
+        "serializedInputBytes": 66,
+        "serializedOutputBytes": 357,
+        "estimatedInputTokens": 493,
+        "estimatedOutputTokens": 90,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-library-dative",
+        "systemPromptBytes": 1692,
+        "serializedInputBytes": 54,
+        "serializedOutputBytes": 143,
+        "estimatedInputTokens": 437,
+        "estimatedOutputTokens": 36,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-bank-plural",
+        "systemPromptBytes": 1906,
+        "serializedInputBytes": 63,
+        "serializedOutputBytes": 347,
+        "estimatedInputTokens": 493,
+        "estimatedOutputTokens": 87,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-bank-plural",
+        "systemPromptBytes": 1692,
+        "serializedInputBytes": 51,
+        "serializedOutputBytes": 133,
+        "estimatedInputTokens": 436,
+        "estimatedOutputTokens": 34,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "readingResolution",
+        "caseId": "reading-library-new",
+        "systemPromptBytes": 1205,
+        "serializedInputBytes": 180,
+        "serializedOutputBytes": 55,
+        "estimatedInputTokens": 347,
+        "estimatedOutputTokens": 14,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "readingResolution",
+        "caseId": "reading-library-new",
+        "systemPromptBytes": 1151,
+        "serializedInputBytes": 101,
+        "serializedOutputBytes": 31,
+        "estimatedInputTokens": 313,
+        "estimatedOutputTokens": 8,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "readingResolution",
+        "caseId": "reading-tea-reuse",
+        "systemPromptBytes": 1205,
+        "serializedInputBytes": 169,
+        "serializedOutputBytes": 49,
+        "estimatedInputTokens": 344,
+        "estimatedOutputTokens": 13,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "readingResolution",
+        "caseId": "reading-tea-reuse",
+        "systemPromptBytes": 1151,
+        "serializedInputBytes": 89,
+        "serializedOutputBytes": 23,
+        "estimatedInputTokens": 310,
+        "estimatedOutputTokens": 6,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      }
+    ],
+    "totals": [
+      {
+        "stage": "grammaticalResolution",
+        "metric": "systemPromptBytes",
+        "verbose": 3812,
+        "compact": 3384,
+        "percentDelta": -11.23
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "serializedInputBytes",
+        "verbose": 129,
+        "compact": 105,
+        "percentDelta": -18.6
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "serializedOutputBytes",
+        "verbose": 704,
+        "compact": 276,
+        "percentDelta": -60.8
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "estimatedInputTokens",
+        "verbose": 986,
+        "compact": 873,
+        "percentDelta": -11.46
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "estimatedOutputTokens",
+        "verbose": 177,
+        "compact": 70,
+        "percentDelta": -60.45
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "systemPromptBytes",
+        "verbose": 2410,
+        "compact": 2302,
+        "percentDelta": -4.48
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "serializedInputBytes",
+        "verbose": 349,
+        "compact": 190,
+        "percentDelta": -45.56
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "serializedOutputBytes",
+        "verbose": 104,
+        "compact": 54,
+        "percentDelta": -48.08
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "estimatedInputTokens",
+        "verbose": 691,
+        "compact": 623,
+        "percentDelta": -9.84
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "estimatedOutputTokens",
+        "verbose": 27,
+        "compact": 14,
+        "percentDelta": -48.15
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "arm": "verbose",
+      "stage": "grammaticalResolution",
+      "caseId": "grammar-library-dative",
+      "systemPromptBytes": 1906,
+      "serializedInputBytes": 66,
+      "rawOutputBytes": 357,
+      "usage": {
+        "input_tokens": 880,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 112,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 992
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_039c35e08b59a5c4016a6dcdabbe10819f9953c543db237bd8",
+      "latencyMs": 2550,
+      "rawModelOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Bibliothek",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "BiblioTHEK",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "canonicalResult": {
+        "decision": "Resolved",
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "surface": {
+          "language": "de",
+          "normalizedSurface": "Bibliothek",
+          "spelling": "Canonical",
+          "realizationCoverage": "Full",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "language": "de",
+          "canonicalForm": "BiblioTHEK",
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "canonicalMatchesReference": false,
+      "codecSuccess": true
+    },
+    {
+      "arm": "compact",
+      "stage": "grammaticalResolution",
+      "caseId": "grammar-library-dative",
+      "systemPromptBytes": 1692,
+      "serializedInputBytes": 54,
+      "rawOutputBytes": 130,
+      "usage": {
+        "input_tokens": 864,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 949
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d96b8554e82b9c8016a6dcdae23c881a383dcb15a8e665e6e",
+      "latencyMs": 1303,
+      "rawModelOutput": {
+        "d": "R",
+        "r": {
+          "o": [
+            "S"
+          ],
+          "s": {
+            "n": "Bibliothek",
+            "p": "C",
+            "r": "F",
+            "h": null,
+            "k": "C",
+            "i": null
+          },
+          "l": {
+            "c": "Bibliothek",
+            "g": "F",
+            "h": null
+          }
+        }
+      },
+      "canonicalResult": {
+        "decision": "Resolved",
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "surface": {
+          "language": "de",
+          "normalizedSurface": "Bibliothek",
+          "spelling": "Canonical",
+          "realizationCoverage": "Full",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "language": "de",
+          "canonicalForm": "Bibliothek",
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "canonicalMatchesReference": false,
+      "codecSuccess": true
+    },
+    {
+      "arm": "verbose",
+      "stage": "grammaticalResolution",
+      "caseId": "grammar-bank-plural",
+      "systemPromptBytes": 1906,
+      "serializedInputBytes": 63,
+      "rawOutputBytes": 347,
+      "usage": {
+        "input_tokens": 879,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 987
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_054299d681e2f71b016a6dcdaf6e4081a0941f4b3f50818bd1",
+      "latencyMs": 1782,
+      "rawModelOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Banken",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Bank",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "canonicalResult": {
+        "decision": "Resolved",
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "surface": {
+          "language": "de",
+          "normalizedSurface": "Banken",
+          "spelling": "Canonical",
+          "realizationCoverage": "Full",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "language": "de",
+          "canonicalForm": "Bank",
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "canonicalMatchesReference": true,
+      "codecSuccess": true
+    },
+    {
+      "arm": "compact",
+      "stage": "grammaticalResolution",
+      "caseId": "grammar-bank-plural",
+      "systemPromptBytes": 1692,
+      "serializedInputBytes": 51,
+      "rawOutputBytes": 120,
+      "usage": {
+        "input_tokens": 863,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 947
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0f81d2156fff2ea7016a6dcdb13aa081a181fc4513c919f4c0",
+      "latencyMs": 1476,
+      "rawModelOutput": {
+        "d": "R",
+        "r": {
+          "o": [
+            "S"
+          ],
+          "s": {
+            "n": "Banken",
+            "p": "C",
+            "r": "F",
+            "h": null,
+            "k": "C",
+            "i": null
+          },
+          "l": {
+            "c": "Bank",
+            "g": "F",
+            "h": null
+          }
+        }
+      },
+      "canonicalResult": {
+        "decision": "Resolved",
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "surface": {
+          "language": "de",
+          "normalizedSurface": "Banken",
+          "spelling": "Canonical",
+          "realizationCoverage": "Full",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "language": "de",
+          "canonicalForm": "Bank",
+          "family": "Lexeme",
+          "kind": "NOUN",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "canonicalMatchesReference": false,
+      "codecSuccess": true
+    },
+    {
+      "arm": "verbose",
+      "stage": "readingResolution",
+      "caseId": "reading-library-new",
+      "systemPromptBytes": 1205,
+      "serializedInputBytes": 180,
+      "rawOutputBytes": 55,
+      "usage": {
+        "input_tokens": 360,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 400
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09d3f50a71d8f351016a6dcdb2ac7081a298bdde6f76d5ba6f",
+      "latencyMs": 854,
+      "rawModelOutput": {
+        "decision": "New",
+        "emojiDescription": "📚 Bibliothek"
+      },
+      "canonicalResult": {
+        "decision": "New",
+        "emojiDescription": "📚 Bibliothek"
+      },
+      "canonicalMatchesReference": true,
+      "codecSuccess": true
+    },
+    {
+      "arm": "compact",
+      "stage": "readingResolution",
+      "caseId": "reading-library-new",
+      "systemPromptBytes": 1151,
+      "serializedInputBytes": 101,
+      "rawOutputBytes": 31,
+      "usage": {
+        "input_tokens": 394,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 434
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06466d37244ab048016a6dcdb3893081a2849e0bafbab415f5",
+      "latencyMs": 791,
+      "rawModelOutput": {
+        "d": "N",
+        "e": "📚 Bibliothek"
+      },
+      "canonicalResult": {
+        "decision": "New",
+        "emojiDescription": "📚 Bibliothek"
+      },
+      "canonicalMatchesReference": true,
+      "codecSuccess": true
+    },
+    {
+      "arm": "verbose",
+      "stage": "readingResolution",
+      "caseId": "reading-tea-reuse",
+      "systemPromptBytes": 1205,
+      "serializedInputBytes": 169,
+      "rawOutputBytes": 49,
+      "usage": {
+        "input_tokens": 362,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 39,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 401
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01754cd6c8fdd894016a6dcdb45418819cbd847a8aca9ef228",
+      "latencyMs": 906,
+      "rawModelOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "☕ Tee"
+      },
+      "canonicalResult": {
+        "decision": "Reuse",
+        "emojiDescription": "☕ Tee"
+      },
+      "canonicalMatchesReference": true,
+      "codecSuccess": true
+    },
+    {
+      "arm": "compact",
+      "stage": "readingResolution",
+      "caseId": "reading-tea-reuse",
+      "systemPromptBytes": 1151,
+      "serializedInputBytes": 89,
+      "rawOutputBytes": 23,
+      "usage": {
+        "input_tokens": 396,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 39,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 435
+      },
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0af79d1c5b4463fd016a6dcdb53ccc819f8a1a606e613beb04",
+      "latencyMs": 886,
+      "rawModelOutput": {
+        "d": "R",
+        "e": "☕ Tee"
+      },
+      "canonicalResult": {
+        "decision": "Reuse",
+        "emojiDescription": "☕ Tee"
+      },
+      "canonicalMatchesReference": true,
+      "codecSuccess": true
+    }
+  ]
+}

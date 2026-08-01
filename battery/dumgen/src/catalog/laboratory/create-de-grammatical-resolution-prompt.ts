@@ -1,9 +1,12 @@
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
+import type {
+	GermanHighLevelFamily,
+	GermanHighLevelKind,
+} from "../../schema/german-high-level-routes";
 import type { GrammaticalResolution } from "../../types";
 import type { Prompt } from "../prompt-definition";
-import type { GermanHighLevelFamily, GermanHighLevelKind } from "./de-routes";
 
 const inputSchema = z.strictObject({ markedContext: z.string().min(1) });
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;

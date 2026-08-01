@@ -4,17 +4,32 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "segmentation-use-simple-sentence",
-		input: { text: "Der Kaffee ist heiß." },
+		id: "segmentation-use-attached-punctuation",
+		input: { text: "Still, aber wach!" },
 		idealOutput: {
 			segments: [
-				{ kind: "ResolvableText", text: "Der" },
+				{ kind: "ResolvableText", text: "Still" },
+				{ kind: "Punctuation", text: "," },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "Kaffee" },
+				{ kind: "ResolvableText", text: "aber" },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "ist" },
+				{ kind: "ResolvableText", text: "wach" },
+				{ kind: "Punctuation", text: "!" },
+			],
+		},
+	},
+	{
+		id: "segmentation-test-opaque-span",
+		input: { text: "Wir treffen quux42 später." },
+		idealOutput: {
+			segments: [
+				{ kind: "ResolvableText", text: "Wir" },
 				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "heiß" },
+				{ kind: "ResolvableText", text: "treffen" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "OpaqueText", text: "quux42" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "später" },
 				{ kind: "Punctuation", text: "." },
 			],
 		},

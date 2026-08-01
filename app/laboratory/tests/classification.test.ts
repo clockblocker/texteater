@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import type { buildDumgen, DumgenModelExchange } from "dumgen";
+import type { AnalysisTarget, buildDumgen, DumgenModelExchange } from "dumgen";
 
 import {
 	constructMarkedContext,
 	GermanClassificationResolver,
+	targetClassificationPrompt,
 } from "../src/classification";
 import type { SegmentedSentence } from "../src/shared/contract";
 
@@ -60,7 +61,7 @@ const modelBankLemma = {
 } as const;
 
 function fakeGenerator(options?: {
-	target?: { decision: "Unresolved" };
+	target?: AnalysisTarget | { decision: "Unresolved" };
 	grammatical?: { decision: "Unresolved" };
 	grammaticalFailure?: Error;
 	readingDecisions?: Array<"Reuse" | "New">;
@@ -366,6 +367,95 @@ describe("German classification orchestration", () => {
 			diagnostics: [{ stage: "grammatical", kind: "Unresolved" }],
 			generation: { modelCalls: 2 },
 		});
+	});
+
+	test("stops each named unimplemented-route probe before a resolver model call", async () => {
+		const probes: Array<{
+			name: string;
+			sentence: SegmentedSentence;
+			clickedSegmentIndex: number;
+			target: AnalysisTarget;
+		}> = [
+			{
+				name: "Guten Morgen discourse formula",
+				sentence: sentence("guten-morgen", [
+					{ kind: "ResolvableText", text: "Guten" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "Morgen" },
+					{ kind: "Punctuation", text: "!" },
+				]),
+				clickedSegmentIndex: 0,
+				target: {
+					memberSegmentIndices: [0, 2],
+					family: "Phraseme",
+					kind: "DiscourseFormula",
+				},
+			},
+			{
+				name: "separable verb",
+				sentence: sentence("separable-verb", [
+					{ kind: "ResolvableText", text: "Fritz" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "steht" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "sofort" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "auf" },
+					{ kind: "Punctuation", text: "." },
+				]),
+				clickedSegmentIndex: 2,
+				target: {
+					memberSegmentIndices: [2, 6],
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			},
+			{
+				name: "non-noun Lexeme",
+				sentence: sentence("non-noun-lexeme", [
+					{ kind: "ResolvableText", text: "der" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "Kaffee" },
+				]),
+				clickedSegmentIndex: 0,
+				target: {
+					memberSegmentIndices: [0],
+					family: "Lexeme",
+					kind: "DET",
+				},
+			},
+		];
+
+		for (const probe of probes) {
+			const fake = fakeGenerator({ target: probe.target });
+			const result = await new GermanClassificationResolver(
+				fake.generate,
+			).resolve(
+				probe.sentence,
+				probe.clickedSegmentIndex,
+				fake.modelExchanges,
+			);
+
+			expect(fake.calls, probe.name).toEqual(["Target"]);
+			expect(result, probe.name).toMatchObject({
+				decision: "NotImplemented",
+				stage: "GrammaticalResolution",
+				language: "de",
+				family: probe.target.family,
+				kind: probe.target.kind,
+				target: probe.target,
+				diagnostics: [
+					{
+						stage: "grammatical",
+						kind: "ResolutionRouteNotImplemented",
+					},
+				],
+				generation: {
+					prompts: [targetClassificationPrompt],
+					modelCalls: 1,
+				},
+			});
+		}
 	});
 
 	test("retains the attempted prompt path when the provider fails before an exchange", async () => {

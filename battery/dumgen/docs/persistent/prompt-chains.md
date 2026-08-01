@@ -61,12 +61,13 @@ generation task. Those DTOs may differ freely from Dumling shapes. Deterministic
 Dumgen mapping converts between the external Dumling contract and the minimal
 model-facing representation; model DTOs do not leak across the Dumgen boundary.
 
-Schema-shape mapping uses chained `codecBuilder4.buildReshapeCodec` codecs. The
-codec direction starts at the minimal model schema and decodes toward the
-public domain schema by adding route-owned literal fields such as `language`,
-`family`, and `kind`; encoding validates and removes those fields for the model
-boundary. Bespoke prompt projections are not needed for omission and
-restoration of route-owned fields.
+Schema-shape mapping for settled routes uses
+`codecBuilder4.buildFixedFieldsCodec`. The codec derives the minimal model
+schema from the canonical Dumling object, decodes by restoring route-owned
+fields such as `language`, `family`, and `kind`, and encodes by validating and
+removing those fields. Shared Dumling-backed schema/codecs live outside
+Promptsmith so authored Prompt Sources and runtime projection use one model
+shape without duplicate omit masks.
 
 `AnalysisTarget` is deliberately exposed as a stable Dumgen-owned,
 presentation-facing contract; it is not added to Dumling. It is not a leaked

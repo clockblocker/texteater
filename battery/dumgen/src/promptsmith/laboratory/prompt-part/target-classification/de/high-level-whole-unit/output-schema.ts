@@ -1,19 +1,33 @@
 import { z } from "zod";
 
+import { GERMAN_HIGH_LEVEL_ROUTES } from "../../../../../../schema/german-high-level-routes";
 import type { PromptOutputSchema } from "../../../../../assembly";
-import { GERMAN_HIGH_LEVEL_ROUTES } from "../../../../de-routes";
 
-export const outputSchema = z.discriminatedUnion("decision", [
-	z.strictObject({
-		decision: z.literal("Resolved"),
-		memberSegmentIndices: z.array(z.number().int().nonnegative()).min(1),
-		family: z.enum(
-			Object.keys(GERMAN_HIGH_LEVEL_ROUTES) as [
-				keyof typeof GERMAN_HIGH_LEVEL_ROUTES,
-				...(keyof typeof GERMAN_HIGH_LEVEL_ROUTES)[],
-			],
-		),
-		kind: z.string().min(1),
-	}),
-	z.strictObject({ decision: z.literal("Unresolved") }),
-]) satisfies PromptOutputSchema;
+export const outputSchema = z.strictObject({
+	decision: z.enum(["Resolved", "Unresolved"]),
+	target: z
+		.discriminatedUnion("family", [
+			z.strictObject({
+				family: z.literal("Lexeme"),
+				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Lexeme),
+				memberSegmentIndices: z
+					.array(z.number().int().nonnegative())
+					.min(1),
+			}),
+			z.strictObject({
+				family: z.literal("Phraseme"),
+				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Phraseme),
+				memberSegmentIndices: z
+					.array(z.number().int().nonnegative())
+					.min(1),
+			}),
+			z.strictObject({
+				family: z.literal("Construction"),
+				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Construction),
+				memberSegmentIndices: z
+					.array(z.number().int().nonnegative())
+					.min(1),
+			}),
+		])
+		.nullable(),
+}) satisfies PromptOutputSchema;

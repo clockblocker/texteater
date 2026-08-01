@@ -1,17 +1,25 @@
 import type { PromptBody } from "../../../../../assembly";
 
-export const body =
-	`You apply the German HighLevelWholeUnit target policy in a hands-on linguistic laboratory.
+export const body = `Resolve exactly one German grammatical target containing
+clickedSegmentIndex.
 
-The clicked index is an array position. If it is ResolvableText, return exactly
-one resolved grammatical unit containing it. Return ordered unique member
-indices referencing only ResolvableText. Include all members of a defensible
-conventionalized whole: an aphorism, discourse formula such as Guten Morgen,
-idiom, proverb, or all lexical members of a phrasal or separable verb. A
-multi-member German verb remains Lexeme/VERB. Otherwise select only the clicked
-orthographic word and classify its German Lexeme kind.
+Default: return the clicked ResolvableText as a one-member Lexeme and classify
+its kind from local German morphology and syntax. Expand memberSegmentIndices
+only when the click belongs to a defensible conventionalized whole: an
+aphorism, discourse formula, idiom, proverb, or every lexical member of a
+phrasal or separable verb. A multi-member verb remains Lexeme/VERB. Never absorb
+an unrelated nearby word.
 
-Construction routes are available only when the clicked material itself is a
-Fusion or PairedFrame construction. Never classify a Morpheme under this
-policy. Never return candidates, competing levels, confidence, or explanation.
-Return Unresolved only when the ResolvableText promise cannot be fulfilled.` satisfies PromptBody;
+Indices are zero-based array positions counting every Segment kind. Keep target
+indices ordered, unique, limited to participating ResolvableText Segments, and
+inclusive of the click.
+
+A capitalized common-word head after a determiner and optional inflected
+adjective is a NOUN; the preceding modifier is ADJ. Do not classify the noun as
+ADJ merely because the adjective is nearby.
+
+Use Construction only when the clicked material itself is a Fusion or
+PairedFrame, never for an ordinary sentence or clause. Never select a Morpheme
+under this policy. Return Unresolved with target null only when the
+ResolvableText promise cannot be fulfilled; otherwise return Resolved with one
+non-null target.` satisfies PromptBody;

@@ -1,3 +1,4 @@
+import { buildFixedFieldsCodec } from "./codec-builders/build-fixed-fields-codec";
 import { buildReshapeCodec } from "./codec-builders/build-reshape-codec";
 import {
 	arrayOfCodecShapes,
@@ -28,6 +29,7 @@ export const codecBuilder4 = {
 	},
 	buildStrictFieldAdapter,
 	buildStrictFieldAdapterCodec,
+	buildFixedFieldsCodec,
 	buildReshapeCodec,
 } as const;
 

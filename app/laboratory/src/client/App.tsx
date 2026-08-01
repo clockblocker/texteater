@@ -697,7 +697,7 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 				<Tabs
 					key={`${state.activeIndex}-${resolution.decision}`}
 					defaultValue={
-						resolution.decision === "Unresolved"
+						resolution.decision !== "Resolved"
 							? "diagnostics"
 							: "target"
 					}
@@ -716,7 +716,13 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 						<TabsTrigger value="diagnostics">
 							Diagnostics
 							{diagnostics.length > 0 ? (
-								<Badge variant="destructive">
+								<Badge
+									variant={
+										resolution.decision === "NotImplemented"
+											? "outline"
+											: "destructive"
+									}
+								>
 									{diagnostics.length}
 								</Badge>
 							) : null}
@@ -743,7 +749,14 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 										: undefined
 								}
 								stage={resolution.stages.grammatical}
-								empty="Grammatical Resolution returned Unresolved."
+								empty={
+									resolution.decision === "NotImplemented"
+										? resolution.stage ===
+											"GrammaticalResolution"
+											? `${resolution.stage} is not enabled for de/${resolution.family}/${resolution.kind}.`
+											: "Reading Resolution is not enabled, so the complete canonical result was not constructed."
+										: "Grammatical Resolution returned Unresolved."
+								}
 							/>
 						</TabsContent>
 						<TabsContent value="reading">
@@ -790,7 +803,9 @@ function ResolutionBadges({
 				variant={
 					resolution.decision === "Resolved"
 						? "secondary"
-						: "destructive"
+						: resolution.decision === "NotImplemented"
+							? "outline"
+							: "destructive"
 				}
 			>
 				{resolution.decision}
@@ -920,7 +935,11 @@ function Diagnostics({
 		<div className="flex flex-col gap-3">
 			{diagnostics.map((diagnostic, index) => (
 				<Alert
-					variant="destructive"
+					variant={
+						diagnostic.kind === "ResolutionRouteNotImplemented"
+							? "default"
+							: "destructive"
+					}
 					key={`${diagnostic.stage}-${diagnostic.kind}-${index}`}
 				>
 					<CircleAlertIcon />
@@ -931,8 +950,9 @@ function Diagnostics({
 				</Alert>
 			))}
 			<p className="text-xs text-muted-foreground">
-				Unresolved is a prompt-quality failure to capture and fix, not a
-				normal learner outcome.
+				Unresolved is a prompt-quality failure;
+				ResolutionRouteNotImplemented is an intentional incremental
+				rollout boundary.
 			</p>
 		</div>
 	);

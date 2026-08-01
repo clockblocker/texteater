@@ -1,0 +1,191 @@
+{
+  "runnerVersion": "issue-22-compact-noun-dtos-v2",
+  "model": "gpt-5-nano",
+  "cases": [
+    "grammar-library-dative",
+    "grammar-bank-plural",
+    "reading-library-new",
+    "reading-tea-reuse"
+  ],
+  "deterministic": {
+    "method": "UTF-8 byte counts over generated system prompts and stable JSON; token estimates are ceil(UTF-8 bytes / 4), not provider tokenizer counts.",
+    "measurements": [
+      {
+        "arm": "verbose",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-library-dative",
+        "systemPromptBytes": 1906,
+        "systemPromptSha256": "8aeaa38323342acad2779a5a0371a8a96afb9f10637be3c9d2524531fffefb65",
+        "serializedInputBytes": 66,
+        "serializedOutputBytes": 357,
+        "estimatedInputTokens": 493,
+        "estimatedOutputTokens": 90,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-library-dative",
+        "systemPromptBytes": 2106,
+        "systemPromptSha256": "4c2fde8670250b4ef71129320328f6c9519971c9899f06121f991e394d225ccf",
+        "serializedInputBytes": 54,
+        "serializedOutputBytes": 143,
+        "estimatedInputTokens": 540,
+        "estimatedOutputTokens": 36,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-bank-plural",
+        "systemPromptBytes": 1906,
+        "systemPromptSha256": "8aeaa38323342acad2779a5a0371a8a96afb9f10637be3c9d2524531fffefb65",
+        "serializedInputBytes": 63,
+        "serializedOutputBytes": 347,
+        "estimatedInputTokens": 493,
+        "estimatedOutputTokens": 87,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "grammaticalResolution",
+        "caseId": "grammar-bank-plural",
+        "systemPromptBytes": 2106,
+        "systemPromptSha256": "4c2fde8670250b4ef71129320328f6c9519971c9899f06121f991e394d225ccf",
+        "serializedInputBytes": 51,
+        "serializedOutputBytes": 133,
+        "estimatedInputTokens": 540,
+        "estimatedOutputTokens": 34,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "readingResolution",
+        "caseId": "reading-library-new",
+        "systemPromptBytes": 1205,
+        "systemPromptSha256": "d72922039dbfd10125557889414d7036cabd27978e8420a6febce363bb0868ba",
+        "serializedInputBytes": 180,
+        "serializedOutputBytes": 55,
+        "estimatedInputTokens": 347,
+        "estimatedOutputTokens": 14,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "readingResolution",
+        "caseId": "reading-library-new",
+        "systemPromptBytes": 1242,
+        "systemPromptSha256": "13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
+        "serializedInputBytes": 101,
+        "serializedOutputBytes": 31,
+        "estimatedInputTokens": 336,
+        "estimatedOutputTokens": 8,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "verbose",
+        "stage": "readingResolution",
+        "caseId": "reading-tea-reuse",
+        "systemPromptBytes": 1205,
+        "systemPromptSha256": "d72922039dbfd10125557889414d7036cabd27978e8420a6febce363bb0868ba",
+        "serializedInputBytes": 169,
+        "serializedOutputBytes": 49,
+        "estimatedInputTokens": 344,
+        "estimatedOutputTokens": 13,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      },
+      {
+        "arm": "compact",
+        "stage": "readingResolution",
+        "caseId": "reading-tea-reuse",
+        "systemPromptBytes": 1242,
+        "systemPromptSha256": "13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
+        "serializedInputBytes": 89,
+        "serializedOutputBytes": 23,
+        "estimatedInputTokens": 333,
+        "estimatedOutputTokens": 6,
+        "codecSuccess": true,
+        "canonicalMatchesReference": true
+      }
+    ],
+    "totals": [
+      {
+        "stage": "grammaticalResolution",
+        "metric": "systemPromptBytes",
+        "verbose": 3812,
+        "compact": 4212,
+        "percentDelta": 10.49
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "serializedInputBytes",
+        "verbose": 129,
+        "compact": 105,
+        "percentDelta": -18.6
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "serializedOutputBytes",
+        "verbose": 704,
+        "compact": 276,
+        "percentDelta": -60.8
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "estimatedInputTokens",
+        "verbose": 986,
+        "compact": 1080,
+        "percentDelta": 9.53
+      },
+      {
+        "stage": "grammaticalResolution",
+        "metric": "estimatedOutputTokens",
+        "verbose": 177,
+        "compact": 70,
+        "percentDelta": -60.45
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "systemPromptBytes",
+        "verbose": 2410,
+        "compact": 2484,
+        "percentDelta": 3.07
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "serializedInputBytes",
+        "verbose": 349,
+        "compact": 190,
+        "percentDelta": -45.56
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "serializedOutputBytes",
+        "verbose": 104,
+        "compact": 54,
+        "percentDelta": -48.08
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "estimatedInputTokens",
+        "verbose": 691,
+        "compact": 669,
+        "percentDelta": -3.18
+      },
+      {
+        "stage": "readingResolution",
+        "metric": "estimatedOutputTokens",
+        "verbose": 27,
+        "compact": 14,
+        "percentDelta": -48.15
+      }
+    ]
+  }
+}

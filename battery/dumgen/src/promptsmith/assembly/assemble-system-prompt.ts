@@ -1,3 +1,4 @@
+import { stableJson } from "../../lib/stable-json";
 import type {
 	ExampleSet,
 	ParsedExampleSet,
@@ -73,21 +74,4 @@ export function assembleSystemPrompt(source: PromptSourceForAssembly): string {
 			`Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${stableJson(example.idealOutput)}`,
 	);
 	return `${body}\n\nExamples to follow:\n\n${renderedExamples.join("\n\n")}`;
-}
-
-export function stableJson(value: unknown): string {
-	return JSON.stringify(normalize(value));
-}
-
-function normalize(value: unknown): unknown {
-	if (value === null) return null;
-	if (Array.isArray(value)) return value.map(normalize);
-	if (typeof value === "object") {
-		return Object.fromEntries(
-			Object.entries(value)
-				.toSorted(([left], [right]) => left.localeCompare(right))
-				.map(([key, nested]) => [key, normalize(nested)]),
-		);
-	}
-	return value;
 }

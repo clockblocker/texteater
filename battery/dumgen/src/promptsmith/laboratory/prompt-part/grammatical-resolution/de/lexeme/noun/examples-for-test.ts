@@ -4,22 +4,26 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "grammar-noun-test-plural",
-		input: { markedContext: "Die <TARGET>Banken</TARGET>" },
+		id: "grammar-noun-use-dative-feminine",
+		input: {
+			markedContext: "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
+		},
 		idealOutput: {
 			decision: "Resolved",
-			memberOrthographies: ["Standard"],
-			surface: {
-				normalizedSurface: "Banken",
-				spelling: "Canonical",
-				realizationCoverage: "Full",
-				surfaceKind: "Inflection",
-				surfaceFeatures: null,
-				inflectionalFeatures: { case: "Nom", number: "Plur" },
-			},
-			lemma: {
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
+			resolution: {
+				memberOrthographies: ["Standard"],
+				surface: {
+					normalizedSurface: "Bibliothek",
+					spelling: "Canonical",
+					realizationCoverage: "Full",
+					surfaceKind: "Inflection",
+					surfaceFeatures: null,
+					inflectionalFeatures: { case: "Dat", number: "Sing" },
+				},
+				lemma: {
+					canonicalForm: "Bibliothek",
+					coreFeatures: { gender: "Fem", hyph: null },
+				},
 			},
 		},
 	},

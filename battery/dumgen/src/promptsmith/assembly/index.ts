@@ -1,7 +1,7 @@
-export { asObjectSchema } from "./as-object-schema";
+export { stableJson } from "../../lib/stable-json";
+export { asObjectSchema } from "../../schema/as-object-schema";
 export {
 	assembleSystemPrompt,
-	stableJson,
 	validateExamples,
 } from "./assemble-system-prompt";
 export type {

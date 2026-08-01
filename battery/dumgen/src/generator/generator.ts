@@ -5,7 +5,7 @@ import type {
 	Prompt,
 	PromptCatalogEntry,
 	PromptTree,
-} from "../promptsmith/prompt-definition";
+} from "../catalog/prompt-definition";
 import { DumgenError } from "./generator-error";
 
 type AnyPrompt = Prompt;
