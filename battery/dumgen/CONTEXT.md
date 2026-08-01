@@ -82,14 +82,25 @@ Each Segment has exactly one structural kind:
 - `Whitespace`
 - `Punctuation`
 
-`ResolvableText` means that the material can be passed to click resolution. It
-does not assert a part of speech, Lexeme, morpheme, or other linguistic
-identity.
-`OpaqueText` preserves local material that cannot be interpreted defensibly
-without making the rest of an accepted sentence non-interactive.
+`ResolvableText` means that the segmenter asserts the material can be resolved
+defensibly by the downstream Click Resolution Chain. It does not yet assert
+which part of speech, Lexeme, morpheme, or other linguistic identity will be
+resolved.
+`OpaqueText` preserves local material for which the segmenter cannot make that
+resolution assertion without making the rest of an accepted sentence
+non-interactive.
 
 For now, only `ResolvableText` is clickable. All four Segment kinds remain
 indexed.
+
+### Unresolved
+A domain error produced when a click on `ResolvableText` fails to yield exactly
+one defensible result from the Click Resolution Chain.
+
+`Unresolved` creates no Selection and indicates that the segmentation or
+classification prompts violate the `ResolvableText` promise. Material known to
+be unresolvable is handled during segmentation as `OpaqueText`; `Unresolvable`
+is not a downstream classification outcome.
 
 ### Selection
 A successfully resolved, attestation-local node identified by one
@@ -111,6 +122,12 @@ prompt candidate is not a Selection. The canonical Selection requires Segment
 indices, although experiments may compare whether a model should emit those
 indices directly or an adapter should resolve another output representation to
 them.
+
+Clicks on different member Segments of one resolved unit create distinct
+Selections because their clicked indices differ. Under the same Target
+Classification policy, those clicks must nevertheless resolve to the same
+ordered Surface membership and grammatical route. Their clicked-only
+`selectedOrthography` values may differ.
 
 ### Surface
 A reusable global grammatical form shared by normalized-equivalent Selections.
