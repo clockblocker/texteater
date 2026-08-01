@@ -13,15 +13,7 @@ import type {
 } from "../shared/contract";
 
 const sampleText = "Der Hund läuft schnell. Der Kaffee ist heiß.";
-const variants = ["A", "B", "C"] as const;
-type Variant = (typeof variants)[number];
 type Tab = "reading" | "surface" | "selection";
-
-const variantNames: Record<Variant, string> = {
-	A: "Split bench",
-	B: "Evidence stack",
-	C: "Three-rail inspector",
-};
 
 type LaboratoryState = {
 	text: string;
@@ -136,13 +128,7 @@ function useLaboratory(): LaboratoryState {
 	};
 }
 
-function SourceEditor({
-	state,
-	compact = false,
-}: {
-	state: LaboratoryState;
-	compact?: boolean;
-}) {
+function SourceEditor({ state }: { state: LaboratoryState }) {
 	const ref = useRef<HTMLTextAreaElement>(null);
 	useEffect(() => {
 		ref.current?.setSelectionRange(
@@ -152,9 +138,7 @@ function SourceEditor({
 	}, [state.selection.end, state.selection.start]);
 	const selectedCount = state.selection.end - state.selection.start;
 	return (
-		<section
-			className={`source-panel ${compact ? "source-panel--compact" : ""}`}
-		>
+		<section className="source-panel">
 			<div className="section-heading">
 				<div>
 					<p className="eyebrow">Input · de only</p>
@@ -197,18 +181,10 @@ function SourceEditor({
 	);
 }
 
-function Segments({
-	state,
-	vertical = false,
-}: {
-	state: LaboratoryState;
-	vertical?: boolean;
-}) {
+function Segments({ state }: { state: LaboratoryState }) {
 	const segments = state.result?.sentence?.segments ?? [];
 	return (
-		<section
-			className={`segments-panel ${vertical ? "segments-panel--vertical" : ""}`}
-		>
+		<section className="segments-panel">
 			<div className="section-heading section-heading--small">
 				<div>
 					<p className="eyebrow">Output</p>
@@ -391,9 +367,9 @@ function formatValue(value: unknown): ReactNode {
 	return String(value);
 }
 
-function VariantA({ state }: { state: LaboratoryState }) {
+function Laboratory({ state }: { state: LaboratoryState }) {
 	return (
-		<main className="variant variant-a">
+		<main className="laboratory">
 			<div className="workbench">
 				<div className="results-column">
 					<Segments state={state} />
@@ -405,119 +381,7 @@ function VariantA({ state }: { state: LaboratoryState }) {
 	);
 }
 
-function VariantB({ state }: { state: LaboratoryState }) {
-	return (
-		<main className="variant variant-b">
-			<header className="lab-header">
-				<p className="eyebrow">Laboratory / 001</p>
-				<h1>German segmentation evidence</h1>
-				<p>
-					The source, emitted segments, and resolved entity stay in
-					one vertical reading path.
-				</p>
-			</header>
-			<SourceEditor state={state} compact />
-			<Segments state={state} />
-			<EntityTabs state={state} />
-		</main>
-	);
-}
-
-function VariantC({ state }: { state: LaboratoryState }) {
-	return (
-		<main className="variant variant-c">
-			<div className="rail rail-source">
-				<SourceEditor state={state} compact />
-			</div>
-			<div className="rail rail-segments">
-				<Segments state={state} vertical />
-			</div>
-			<div className="rail rail-entity">
-				<EntityTabs state={state} />
-			</div>
-		</main>
-	);
-}
-
-function variantFromUrl(): Variant {
-	const candidate = new URLSearchParams(window.location.search)
-		.get("variant")
-		?.toUpperCase();
-	return variants.includes(candidate as Variant)
-		? (candidate as Variant)
-		: "A";
-}
-
-function PrototypeSwitcher({
-	variant,
-	onChange,
-}: {
-	variant: Variant;
-	onChange: (variant: Variant) => void;
-}) {
-	const cycle = useCallback(
-		(direction: -1 | 1) => {
-			const index = variants.indexOf(variant);
-			onChange(
-				variants[
-					(index + direction + variants.length) % variants.length
-				] ?? "A",
-			);
-		},
-		[onChange, variant],
-	);
-
-	useEffect(() => {
-		function onKeyDown(event: KeyboardEvent): void {
-			const target = event.target as HTMLElement | null;
-			if (target?.matches("input, textarea, [contenteditable]")) return;
-			if (event.key === "ArrowLeft") cycle(-1);
-			if (event.key === "ArrowRight") cycle(1);
-		}
-		window.addEventListener("keydown", onKeyDown);
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [cycle]);
-
-	if (import.meta.env.PROD) return null;
-	return (
-		<nav className="prototype-switcher" aria-label="Prototype variants">
-			<button
-				type="button"
-				onClick={() => cycle(-1)}
-				aria-label="Previous variant"
-			>
-				←
-			</button>
-			<span>
-				<strong>{variant}</strong> — {variantNames[variant]}
-			</span>
-			<button
-				type="button"
-				onClick={() => cycle(1)}
-				aria-label="Next variant"
-			>
-				→
-			</button>
-		</nav>
-	);
-}
-
 export function App() {
 	const state = useLaboratory();
-	const [variant, setVariant] = useState<Variant>(variantFromUrl);
-	const changeVariant = useCallback((next: Variant) => {
-		const url = new URL(window.location.href);
-		url.searchParams.set("variant", next);
-		window.history.replaceState({}, "", url);
-		setVariant(next);
-	}, []);
-
-	return (
-		<>
-			{variant === "A" ? <VariantA state={state} /> : null}
-			{variant === "B" ? <VariantB state={state} /> : null}
-			{variant === "C" ? <VariantC state={state} /> : null}
-			<PrototypeSwitcher variant={variant} onChange={changeVariant} />
-		</>
-	);
+	return <Laboratory state={state} />;
 }
