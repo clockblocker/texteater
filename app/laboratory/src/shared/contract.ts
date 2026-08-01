@@ -4,38 +4,10 @@ export type SegmentKind =
 	| "Whitespace"
 	| "Punctuation";
 
-export type FeatureValue = string | number | boolean;
-
-export type Lemma = {
-	language: "de";
-	canonicalForm: string;
-	family: "Lexeme" | "Phraseme" | "Morpheme" | "Construction";
-	kind: string;
-	coreFeatures: Record<string, FeatureValue>;
-};
-
-export type Selection = {
-	segmentedSentenceId: string;
-	clickedSegmentIndex: number;
-	surfaceSegmentIndices: number[];
-	attestedSurface: string;
-	selectedOrthography: "Standard" | "Typo";
-};
-
-export type Surface = {
-	language: "de";
-	normalizedSurface: string;
-	kind: "Citation" | "Inflection";
-	inflectionalFeatures: Record<string, FeatureValue>;
-	spelling: "Canonical" | "Variant";
-	realizationCoverage: "Full" | "Partial";
-	lemma: Lemma;
-};
-
-export type Reading = {
-	lemma: Lemma;
-	emojiDescription: string;
-};
+export type Lemma = DumlingLemma<"de">;
+export type Selection = DumlingSelection<"de">;
+export type Surface = DumlingSurface<"de">;
+export type Reading = DumdictReading<"de">;
 
 export type EntityRepresentation = {
 	selection: Selection;
@@ -91,10 +63,22 @@ export type ClickResolutionResponse = {
 	entity: EntityRepresentation;
 	generation: {
 		model: "gpt-5-nano";
-		prompt: "laboratory.clickResolution.de.resolve";
+		prompts: readonly [
+			"laboratory.classification.de.selection",
+			"laboratory.classification.de.surface",
+			"laboratory.classification.de.lemma",
+			"laboratory.classification.de.reading",
+		];
 	};
 };
 
 export type LaboratorySessionResponse = {
 	sessionId: string;
 };
+
+import type { Reading as DumdictReading } from "dumdict";
+import type {
+	Lemma as DumlingLemma,
+	Selection as DumlingSelection,
+	Surface as DumlingSurface,
+} from "dumling";

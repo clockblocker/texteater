@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { Prompt } from "../prompt";
+import type { Prompt } from "../prompt-definition";
 
 const segmentKindSchema = z.enum([
 	"ResolvableText",

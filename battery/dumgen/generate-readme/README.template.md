@@ -1,10 +1,11 @@
-# `dumgen`
+# `dumgen` laboratory
 
-Composable generation helpers with the same Bun and Biome stack as `dumdict`.
+Early-WIP generation helpers for hands-on prompt experiments. Nothing in this
+package is production-ready.
 
 ## Core idea
 
-`dumgen` exposes a typed catalog of executable generators:
+`dumgen` exposes a typed laboratory catalog of executable generators:
 
 - the OpenAI Responses API
 - automatic prompt caching for repeated prompt prefixes
@@ -17,23 +18,19 @@ Example usage:
 
 ## Vision
 
-`dumgen` is the generation layer behind the clickable-word dictionary. It uses
-progressively narrower generators as layered defenses against invalid or
-underspecified input:
+The current German-only laboratory path uses progressively narrower generators
+to inspect the clickable-word dictionary chain:
 
-1. Determine whether the input is meaningful and uses a supported language.
-2. Once it is parsable, resolve it to a reusable structural `Lemma` identity
-	 sourced from `dumling`.
-3. Feed that Lemma to an identity-specific generator such as
-	 `production.reading.de.noun.draft`, which drafts a learner-owned `Reading`
-	 without changing Lemma identity.
-4. Feed the Reading draft to narrowly scoped generators for any remaining
-   learner-note fields.
+1. Segment accepted German text.
+2. Classify the clicked Segment through `Selection → Surface → Lemma → Reading`.
+3. Validate the assembled grammatical entities with Dumling's German schemas.
 
-The classification stages will eventually be available as one full-chain
-method. For now, supported identities and generator paths are registered by
-hand. As the catalog grows, a map of possible NoteBlocks for every identity
-will let TypeScript infer each valid input, output, and generator path.
+The prompts live only under `laboratory`. The application orchestrates the
+stages; there is deliberately no production namespace or production claim.
+
+See [persistent prompt-chain decisions](./docs/persistent/prompt-chains.md) for
+the agreed chain topology and the distinction between runtime stages and test
+infrastructure.
 
 ## Scope
 

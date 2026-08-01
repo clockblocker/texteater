@@ -10,6 +10,57 @@ import { z } from "zod";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
 import type { PromptTree } from "../../src/promtsmith/prompt";
 
+const segments: Array<{
+	index: number;
+	kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
+	text: string;
+}> = [
+	{ index: 0, kind: "ResolvableText", text: "Die" },
+	{ index: 1, kind: "Whitespace", text: " " },
+	{ index: 2, kind: "ResolvableText", text: "Banken" },
+];
+
+const selectionInput = {
+	language: "de",
+	segmentedSentenceId: "sentence-1",
+	clickedSegmentIndex: 2,
+	segments,
+} as const;
+
+const selectionOutput: {
+	surfaceSegmentIndices: number[];
+	selectedOrthography: "Standard" | "Typo";
+} = {
+	surfaceSegmentIndices: [2],
+	selectedOrthography: "Standard",
+};
+
+const surfaceOutput: {
+	normalizedSurface: string;
+	spelling: "Canonical" | "Variant";
+	realizationCoverage: "Full" | "Partial";
+	surfaceKind: "Citation" | "Inflection";
+	surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
+	inflectionalFeatures: Array<{
+		name: string;
+		value: string | number | boolean | null;
+	}>;
+	lemmaFamily: string;
+	lemmaKind: string;
+} = {
+	normalizedSurface: "Banken",
+	spelling: "Canonical",
+	realizationCoverage: "Full",
+	surfaceKind: "Inflection",
+	surfaceFeatures: null,
+	inflectionalFeatures: [
+		{ name: "case", value: "Nom" },
+		{ name: "number", value: "Plur" },
+	],
+	lemmaFamily: "Lexeme",
+	lemmaKind: "NOUN",
+};
+
 const lemma = {
 	language: "de",
 	canonicalForm: "Bank",
@@ -21,13 +72,19 @@ const lemma = {
 	},
 } as const;
 
-const readingDraft = {
+const reading = {
 	lemma,
-	emojiDescription: "🏦💶",
-};
+	emojiDescription: "🏦 Bank",
+} as const;
 
 describe("buildDumgen", () => {
-	test("turns the prompt catalog into inferred executable generators", async () => {
+	test("exposes only the German laboratory classification chain", async () => {
+		const outputs: unknown[] = [
+			selectionOutput,
+			surfaceOutput,
+			lemma,
+			reading,
+		];
 		const calls: Array<{
 			readonly input: string;
 			readonly params: unknown;
@@ -36,7 +93,7 @@ describe("buildDumgen", () => {
 		const sdk: AiSdk = {
 			async structuredGeneration(input, schema, params) {
 				calls.push({ input, params, schema });
-				return readingDraft as never;
+				return outputs.shift() as never;
 			},
 			async unstructuredGeneration() {
 				throw new Error("not used");
@@ -44,53 +101,88 @@ describe("buildDumgen", () => {
 		};
 
 		const generate = buildDumgen({ sdk });
-		const result = await generate.production.reading.de.noun.draft(lemma);
-
-		expect(result).toEqual(readingDraft);
+		expect("production" in generate).toBe(false);
 		expect(generate.laboratory.segmentation.de.segment).toBeFunction();
-		expect(generate.laboratory.clickResolution.de.resolve).toBeFunction();
-		expect(generate.production.classification).toEqual({});
-		expect(calls).toHaveLength(1);
+
+		const selected =
+			await generate.laboratory.classification.de.selection(
+				selectionInput,
+			);
+		const surface = await generate.laboratory.classification.de.surface({
+			language: "de",
+			clickedSegmentIndex: 2,
+			segments,
+			selection: {
+				...selected,
+				attestedSurface: "Banken",
+			},
+		});
+		const resolvedLemma = await generate.laboratory.classification.de.lemma(
+			{
+				language: "de",
+				context: {
+					sentenceText: "Die Banken",
+					attestedSurface: "Banken",
+				},
+				surface,
+			},
+		);
+		const resolvedReading =
+			await generate.laboratory.classification.de.reading({
+				language: "de",
+				context: {
+					sentenceText: "Die Banken",
+					attestedSurface: "Banken",
+					normalizedSurface: "Banken",
+				},
+				lemma: resolvedLemma,
+				existingReadings: [],
+			});
+
+		expect(selected).toEqual(selectionOutput);
+		expect(surface).toEqual(surfaceOutput);
+		expect(resolvedLemma).toEqual(lemma);
+		expect(resolvedReading).toEqual(reading);
+		expect(calls).toHaveLength(4);
 		expect(calls[0]).toMatchObject({
-			input: '{"canonicalForm":"Bank","coreFeatures":{"gender":"Fem","hyph":null},"family":"Lexeme","kind":"NOUN","language":"de"}',
+			input: expect.stringContaining('"language":"de"'),
 			params: {
-				maxOutputTokens: 256,
 				model: "gpt-5-nano",
 				systemPrompt: expect.any(String),
 			},
 		});
 
-		type ReadingInput = Parameters<
-			typeof generate.production.reading.de.noun.draft
+		type SelectionInput = Parameters<
+			typeof generate.laboratory.classification.de.selection
 		>[0];
 		type ReadingOutput = Awaited<
-			ReturnType<typeof generate.production.reading.de.noun.draft>
+			ReturnType<typeof generate.laboratory.classification.de.reading>
 		>;
-
-		const inferredInput: ReadingInput = lemma;
-		const inferredOutput: ReadingOutput = readingDraft;
-		expect(inferredInput).toEqual(lemma);
-		expect(inferredOutput).toEqual(readingDraft);
+		const inferredInput: SelectionInput = selectionInput;
+		const inferredOutput: ReadingOutput = reading;
+		expect(inferredInput).toEqual(selectionInput);
+		expect(inferredOutput).toEqual(reading);
 	});
 
-	test("rejects invalid input before calling the model", async () => {
+	test("rejects invalid German chain input before calling the model", async () => {
 		let callCount = 0;
-		const sdk: AiSdk = {
-			async structuredGeneration() {
-				callCount += 1;
-				return readingDraft as never;
+		const generate = buildDumgen({
+			sdk: {
+				async structuredGeneration() {
+					callCount += 1;
+					return selectionOutput as never;
+				},
+				async unstructuredGeneration() {
+					callCount += 1;
+					return "";
+				},
 			},
-			async unstructuredGeneration() {
-				callCount += 1;
-				return "";
-			},
-		};
-		const generate = buildDumgen({ sdk });
+		});
 
 		await expect(
-			generate.production.reading.de.noun.draft({
-				...lemma,
-				canonicalForm: "",
+			generate.laboratory.classification.de.selection({
+				...selectionInput,
+				segmentedSentenceId: "",
 			}),
 		).rejects.toMatchObject({
 			code: "invalid-input",
@@ -99,7 +191,7 @@ describe("buildDumgen", () => {
 		expect(callCount).toBe(0);
 	});
 
-	test("rejects provider failures and malformed structured output from a closed error set", async () => {
+	test("wraps provider failures and invariant violations in the closed error set", async () => {
 		const providerFailure = buildDumgen({
 			sdk: {
 				async structuredGeneration() {
@@ -112,16 +204,21 @@ describe("buildDumgen", () => {
 		});
 
 		await expect(
-			providerFailure.production.reading.de.noun.draft(lemma),
+			providerFailure.laboratory.classification.de.selection(
+				selectionInput,
+			),
 		).rejects.toMatchObject({
 			code: "generation-failed",
 			name: "DumgenError",
 		});
 
-		const invalidOutput = buildDumgen({
+		const invalidMembership = buildDumgen({
 			sdk: {
 				async structuredGeneration() {
-					return { nope: true } as never;
+					return {
+						surfaceSegmentIndices: [0],
+						selectedOrthography: "Standard",
+					} as never;
 				},
 				async unstructuredGeneration() {
 					return "";
@@ -129,35 +226,11 @@ describe("buildDumgen", () => {
 			},
 		});
 
-		const error = await invalidOutput.production.reading.de.noun
-			.draft(lemma)
+		const error = await invalidMembership.laboratory.classification.de
+			.selection(selectionInput)
 			.catch((cause: unknown) => cause);
 		expect(error).toBeInstanceOf(DumgenError);
 		expect(error).toMatchObject({
-			code: "invalid-output",
-			name: "DumgenError",
-		});
-
-		const wrongLemma = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					return {
-						...readingDraft,
-						lemma: {
-							...lemma,
-							canonicalForm: "Sparkasse",
-						},
-					} as never;
-				},
-				async unstructuredGeneration() {
-					throw new Error("not used");
-				},
-			},
-		});
-
-		await expect(
-			wrongLemma.production.reading.de.noun.draft(lemma),
-		).rejects.toMatchObject({
 			code: "invalid-output",
 			name: "DumgenError",
 		});
@@ -173,7 +246,7 @@ describe("buildDumgen", () => {
 			},
 		} satisfies AiSdk;
 
-		// @ts-expect-error The production key and injected SDK are exclusive.
+		// @ts-expect-error The API key and injected SDK are exclusive.
 		const invalidOptions: DumgenOptions = { apiKey: "secret", sdk };
 
 		expect(invalidOptions).toBeDefined();

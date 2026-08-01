@@ -182,6 +182,16 @@ selects an existing learner-owned Reading or drafts a new one.
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
 itself an experiment.
 
+### Laboratory Prompt Namespace
+
+The current executable prompts are early-WIP laboratory instruments. German is
+the only registered language. Post-click classification is registered as four
+ordered prompt leaves under `laboratory.classification.de`:
+`selection`, `surface`, `lemma`, and `reading`.
+
+There is no production prompt namespace. Laboratory results and prompt paths do
+not claim production readiness.
+
 ## Relationships
 
 - A **Segmented Sentence** contains one or more indexed **Segments**.

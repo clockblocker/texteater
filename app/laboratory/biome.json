@@ -1,5 +1,10 @@
 {
 	"extends": ["../../tooling/biome/base.json"],
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
 	"files": {
 		"includes": ["!!dist", "!!node_modules"]
 	}

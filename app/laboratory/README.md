@@ -21,9 +21,24 @@ Then open <http://127.0.0.1:5173/?variant=A>.
 Set `OPENAI_API_KEY` in the server environment. The Bun API invokes the real
 Dumgen laboratory prompts and Dumgen's configured OpenAI Responses API adapter;
 credentials never enter the browser. Segmented sentences live in memory only.
+German is the only supported language.
 
-Each server run starts a laboratory session. Every segmentation and click
-resolution attempt is appended as JSONL under
+After a `ResolvableText` Segment click, the API executes the laboratory-only
+classification chain in order:
+
+```text
+laboratory.classification.de.selection
+→ laboratory.classification.de.surface
+→ laboratory.classification.de.lemma
+→ laboratory.classification.de.reading
+```
+
+The chain's final Surface and Selection are validated with the matching
+concrete German Dumling schemas. This application and its prompts are an early
+WIP laboratory bench, not production behavior.
+
+Each server run starts a laboratory session. Every segmentation and full
+classification-chain attempt is appended as JSONL under
 `battery/dumgen/.laboratory/sessions/<session-id>/events.jsonl`. **Reset
 session** rotates the session ID and clears in-memory results without deleting
 earlier logs.

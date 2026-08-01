@@ -1,6 +1,8 @@
 .DS_Store
 .git.pre-monorepo/
 .npm-cache/
+.bun-cache/
+.bun-tmp/
 .types-temp/
 .astro/
 coverage/

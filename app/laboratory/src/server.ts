@@ -1,5 +1,10 @@
 import { buildDumgen } from "dumgen";
 import {
+	classificationPromptNames,
+	classifyGermanSegment,
+	createGermanClassificationTrace,
+} from "./classification";
+import {
 	appendSessionEvent,
 	describeErrors,
 	type LaboratoryOperation,
@@ -7,9 +12,6 @@ import {
 } from "./session-log";
 import type {
 	ClickResolutionRequest,
-	EntityRepresentation,
-	FeatureValue,
-	Segment,
 	SegmentationRequest,
 	SegmentedSentence,
 } from "./shared/contract";
@@ -17,7 +19,7 @@ import type {
 const generate = buildDumgen();
 const model = "gpt-5-nano";
 const segmentationPrompt = "laboratory.segmentation.de.segment";
-const clickResolutionPrompt = "laboratory.clickResolution.de.resolve";
+const classificationPrompt = classificationPromptNames.join(" -> ");
 const sentences = new Map<
 	string,
 	{ sessionId: string; sentence: SegmentedSentence }
@@ -44,34 +46,6 @@ function selectionBounds(input: SegmentationRequest): {
 	if (start === end)
 		throw new Error("Select at least one character before segmenting.");
 	return { start, end };
-}
-
-function featureRecord(
-	features: ReadonlyArray<{ name: string; value: FeatureValue }>,
-): Record<string, FeatureValue> {
-	return Object.fromEntries(features.map(({ name, value }) => [name, value]));
-}
-
-function constructAttestedSurface(
-	segments: readonly Segment[],
-	indices: readonly number[],
-): string {
-	let result = "";
-	for (let position = 0; position < indices.length; position += 1) {
-		const index = indices[position] ?? 0;
-		if (position > 0) {
-			const previous = indices[position - 1] ?? index;
-			if (
-				segments
-					.slice(previous + 1, index)
-					.some((segment) => segment.kind === "Whitespace")
-			) {
-				result += " ";
-			}
-		}
-		result += segments[index]?.text ?? "";
-	}
-	return result;
 }
 
 function errorResult(error: unknown): ApplicationResult {
@@ -253,8 +227,7 @@ const server = Bun.serve({
 				const startedAt = performance.now();
 				const sessionId = currentSessionId;
 				let requestInput: unknown = null;
-				let promptInput: unknown = null;
-				let validatedOutput: unknown = null;
+				const trace = createGermanClassificationTrace();
 				let applicationResult: ApplicationResult | null = null;
 				let errors: LoggedError[] = [];
 				try {
@@ -306,65 +279,12 @@ const server = Bun.serve({
 							status: 400,
 						});
 					}
-					const prompt = {
-						language: "de" as const,
-						clickedSegmentIndex: input.clickedSegmentIndex,
-						segments: sentence.segments.map(
-							({ index, kind, text }) => ({
-								index,
-								kind,
-								text,
-							}),
-						),
-					};
-					promptInput = prompt;
-					const generated =
-						await generate.laboratory.clickResolution.de.resolve(
-							prompt,
-						);
-					validatedOutput = generated;
-					const lemma = {
-						language: "de" as const,
-						canonicalForm: generated.lemma.canonicalForm,
-						family: generated.lemma.family,
-						kind: generated.lemma.kind,
-						coreFeatures: featureRecord(
-							generated.lemma.coreFeatures,
-						),
-					};
-					const entity: EntityRepresentation = {
-						resolution: "dumgen",
-						model,
-						selection: {
-							segmentedSentenceId: sentence.id,
-							clickedSegmentIndex: input.clickedSegmentIndex,
-							surfaceSegmentIndices:
-								generated.surfaceSegmentIndices,
-							attestedSurface: constructAttestedSurface(
-								sentence.segments,
-								generated.surfaceSegmentIndices,
-							),
-							selectedOrthography: generated.selectedOrthography,
-						},
-						surface: {
-							language: "de",
-							normalizedSurface:
-								generated.surface.normalizedSurface,
-							kind: generated.surface.kind,
-							inflectionalFeatures: featureRecord(
-								generated.surface.inflectionalFeatures,
-							),
-							spelling: generated.surface.spelling,
-							realizationCoverage:
-								generated.surface.realizationCoverage,
-							lemma,
-						},
-						reading: {
-							lemma,
-							emojiDescription:
-								generated.reading.emojiDescription,
-						},
-					};
+					const entity = await classifyGermanSegment(
+						generate,
+						sentence,
+						input.clickedSegmentIndex,
+						trace,
+					);
 					if (sessionId !== currentSessionId) {
 						throw new Error(
 							"Laboratory session was reset during click resolution.",
@@ -376,7 +296,7 @@ const server = Bun.serve({
 							entity,
 							generation: {
 								model,
-								prompt: clickResolutionPrompt,
+								prompts: classificationPromptNames,
 							},
 						},
 					};
@@ -393,9 +313,9 @@ const server = Bun.serve({
 						sessionId,
 						operation: "click-resolution",
 						requestInput,
-						promptInput,
-						promptName: clickResolutionPrompt,
-						validatedOutput,
+						promptInput: trace.inputs,
+						promptName: classificationPrompt,
+						validatedOutput: trace.outputs,
 						applicationResult,
 						startedAt,
 						errors,
