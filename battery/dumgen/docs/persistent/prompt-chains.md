@@ -11,11 +11,18 @@ The intended runtime chain has exactly two prompt stages:
 Source Sentence -> Intake -> Segmentation<Lang>
 ```
 
-1. **Intake** decides whether the Source Sentence is `Accepted`,
-   `UnsupportedLanguage`, or `Unintelligible`.
+1. **Intake** resolves the Source Sentence language. `Accepted` carries the
+   supported language used to dispatch `Segmentation<Lang>`;
+   `UnsupportedLanguage` retains the resolved but unsupported language;
+   `Unintelligible` carries no language.
 2. **Segmentation<Lang>** performs language-specific segmentation for an
    accepted Source Sentence. The current scope supports only
    `Segmentation<de>`.
+
+For the current scope, Intake resolves exactly one primary language per Source
+Sentence and dispatches exactly one Segmentation route. Segmentation preserves
+non-primary-language spans as `OpaqueText`. A future multilingual model is
+tracked in [texteater#19](https://github.com/clockblocker/texteater/issues/19).
 
 A strict finalizer is evaluation and testing infrastructure, not a third stage
 of the intended runtime chain. It exists to expose contract violations during
@@ -53,6 +60,13 @@ Each prompt owns internal Dumgen DTOs optimized for its pointed structured
 generation task. Those DTOs may differ freely from Dumling shapes. Deterministic
 Dumgen mapping converts between the external Dumling contract and the minimal
 model-facing representation; model DTOs do not leak across the Dumgen boundary.
+
+Schema-shape mapping uses chained `codecBuilder4.buildReshapeCodec` codecs. The
+codec direction starts at the minimal model schema and decodes toward the
+public domain schema by adding route-owned literal fields such as `language`,
+`family`, and `kind`; encoding validates and removes those fields for the model
+boundary. Bespoke prompt projections are not needed for omission and
+restoration of route-owned fields.
 
 `AnalysisTarget` is deliberately exposed as a stable Dumgen-owned,
 presentation-facing contract; it is not added to Dumling. It is not a leaked
