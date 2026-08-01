@@ -1,6 +1,5 @@
 import {
 	CircleAlertIcon,
-	FlaskConicalIcon,
 	MousePointerClickIcon,
 	RotateCcwIcon,
 	ScissorsIcon,
@@ -282,6 +281,27 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 		);
 	}, [state.selection.end, state.selection.start]);
 	const selectedCount = state.selection.end - state.selection.start;
+	useEffect(() => {
+		function segmentSelection(event: KeyboardEvent) {
+			if (
+				!event.metaKey ||
+				!event.shiftKey ||
+				event.ctrlKey ||
+				event.altKey ||
+				event.key.toLowerCase() !== "s"
+			) {
+				return;
+			}
+
+			event.preventDefault();
+			if (event.repeat || selectedCount === 0 || state.busy) return;
+
+			void state.segment();
+		}
+
+		window.addEventListener("keydown", segmentSelection);
+		return () => window.removeEventListener("keydown", segmentSelection);
+	}, [selectedCount, state.busy, state.segment]);
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-5 overflow-auto p-4 sm:p-6">
 			<div className="flex flex-wrap items-start justify-between gap-4">
@@ -353,18 +373,30 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 						? `${selectedCount} characters selected`
 						: "Select text to continue"}
 				</p>
-				<Button
-					type="button"
-					onClick={state.segment}
-					disabled={selectedCount === 0 || state.busy}
-				>
-					{state.busy ? (
-						<Spinner data-icon="inline-start" />
-					) : (
-						<ScissorsIcon data-icon="inline-start" />
-					)}
-					{state.busy ? "Segmenting…" : "Segment selection"}
-				</Button>
+				<div className="group relative">
+					<Button
+						type="button"
+						onClick={state.segment}
+						disabled={selectedCount === 0 || state.busy}
+						aria-describedby="segment-selection-shortcut"
+						aria-keyshortcuts="Meta+Shift+S"
+					>
+						{state.busy ? (
+							<Spinner data-icon="inline-start" />
+						) : (
+							<ScissorsIcon data-icon="inline-start" />
+						)}
+						{state.busy ? "Segmenting…" : "Segment selection"}
+					</Button>
+					<div
+						id="segment-selection-shortcut"
+						role="tooltip"
+						className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+					>
+						Segment selection
+						<span className="ml-2 font-mono opacity-80">⌘⇧S</span>
+					</div>
+				</div>
 			</div>
 
 			{state.error ? (
@@ -636,6 +668,74 @@ function formatValue(value: unknown): ReactNode {
 	return String(value);
 }
 
+function DesktopWorkbench({
+	state,
+	mainLayoutKey,
+	resultsLayoutKey,
+}: {
+	state: LaboratoryState;
+	mainLayoutKey: string;
+	resultsLayoutKey: string;
+}) {
+	return (
+		<ResizablePanelGroup
+			className="min-h-0"
+			defaultLayout={loadLayout(mainLayoutKey, {
+				"laboratory-results": 0.55,
+				"laboratory-source": 0.45,
+			})}
+			id="laboratory-main-layout-horizontal"
+			onLayoutChanged={(layout, meta) =>
+				saveLayout(mainLayoutKey, layout, meta)
+			}
+			orientation="horizontal"
+		>
+			<ResizablePanel
+				defaultSize="55%"
+				id="laboratory-results"
+				minSize="30%"
+			>
+				<ResizablePanelGroup
+					className="min-h-0"
+					defaultLayout={loadLayout(resultsLayoutKey, {
+						"laboratory-segments": 0.38,
+						"laboratory-entity": 0.62,
+					})}
+					id="laboratory-results-layout"
+					onLayoutChanged={(layout, meta) =>
+						saveLayout(resultsLayoutKey, layout, meta)
+					}
+					orientation="vertical"
+				>
+					<ResizablePanel
+						defaultSize="38%"
+						id="laboratory-segments"
+						minSize="20%"
+					>
+						<Segments state={state} />
+					</ResizablePanel>
+					<ResizableHandle withHandle />
+					<ResizablePanel
+						defaultSize="62%"
+						id="laboratory-entity"
+						minSize="25%"
+					>
+						<EntityTabs state={state} />
+					</ResizablePanel>
+				</ResizablePanelGroup>
+			</ResizablePanel>
+			<ResizableHandle withHandle />
+			<ResizablePanel
+				defaultSize="45%"
+				id="laboratory-source"
+				minSize="30%"
+			>
+				<SourceEditor state={state} />
+			</ResizablePanel>
+		</ResizablePanelGroup>
+	);
+}
+
 function Laboratory({ state }: { state: LaboratoryState }) {
 	const [orientation, setOrientation] = useState<"horizontal" | "vertical">(
 		"horizontal",
@@ -652,89 +752,64 @@ function Laboratory({ state }: { state: LaboratoryState }) {
 			mediaQuery.removeEventListener("change", updateOrientation);
 	}, []);
 
-	const mainLayoutKey = `${layoutStoragePrefix}.main.${orientation}`;
+	const outerLayoutKey = `${layoutStoragePrefix}.outer`;
+	const mainLayoutKey = `${layoutStoragePrefix}.main.horizontal`;
 	const resultsLayoutKey = `${layoutStoragePrefix}.results`;
 
 	return (
-		<main className="flex h-svh min-h-[44rem] flex-col bg-background p-3 text-foreground sm:p-5 lg:p-6">
-			<header className="mx-auto flex w-full max-w-[1800px] flex-wrap items-center justify-between gap-4 pb-4">
-				<div className="flex items-center gap-3">
-					<div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-						<FlaskConicalIcon className="size-5" />
-					</div>
-					<div>
-						<h1 className="text-lg font-semibold tracking-tight">
-							Dumgen Laboratory
-						</h1>
-						<p className="text-sm text-muted-foreground">
-							Inspect segmentation and entity resolution
-						</p>
+		<main
+			className={cn(
+				"min-h-svh bg-background p-3 text-foreground sm:p-5 lg:p-6",
+				orientation === "horizontal" && "h-svh min-h-[44rem]",
+			)}
+		>
+			{orientation === "vertical" ? (
+				<div className="mx-auto w-full overflow-hidden rounded-xl border bg-card shadow-sm">
+					<div className="flex flex-col">
+						<SourceEditor state={state} />
+						<Separator />
+						<Segments state={state} />
+						<Separator />
+						<EntityTabs state={state} />
 					</div>
 				</div>
-				<div className="flex items-center gap-2">
-					<Badge variant="outline">Developer tool</Badge>
-					<Badge variant="secondary">Dark mode</Badge>
-				</div>
-			</header>
-
-			<div className="mx-auto min-h-0 w-full max-w-[1800px] flex-1 overflow-hidden rounded-xl border bg-card shadow-sm">
+			) : (
 				<ResizablePanelGroup
-					key={orientation}
-					className="min-h-0"
-					defaultLayout={loadLayout(mainLayoutKey, {
-						"laboratory-results": 0.55,
-						"laboratory-source": 0.45,
+					className="mx-auto min-h-0 w-full max-w-[1800px]"
+					defaultLayout={loadLayout(outerLayoutKey, {
+						"laboratory-left-gutter": 0.04,
+						"laboratory-workbench": 0.96,
 					})}
-					id={`laboratory-main-layout-${orientation}`}
+					id="laboratory-outer-layout"
 					onLayoutChanged={(layout, meta) =>
-						saveLayout(mainLayoutKey, layout, meta)
+						saveLayout(outerLayoutKey, layout, meta)
 					}
-					orientation={orientation}
+					orientation="horizontal"
 				>
 					<ResizablePanel
-						defaultSize="55%"
-						id="laboratory-results"
-						minSize="30%"
+						defaultSize="4%"
+						id="laboratory-left-gutter"
+						maxSize="35%"
+						minSize="0%"
 					>
-						<ResizablePanelGroup
-							className="min-h-0"
-							defaultLayout={loadLayout(resultsLayoutKey, {
-								"laboratory-segments": 0.38,
-								"laboratory-entity": 0.62,
-							})}
-							id="laboratory-results-layout"
-							onLayoutChanged={(layout, meta) =>
-								saveLayout(resultsLayoutKey, layout, meta)
-							}
-							orientation="vertical"
-						>
-							<ResizablePanel
-								defaultSize="38%"
-								id="laboratory-segments"
-								minSize="20%"
-							>
-								<Segments state={state} />
-							</ResizablePanel>
-							<ResizableHandle withHandle />
-							<ResizablePanel
-								defaultSize="62%"
-								id="laboratory-entity"
-								minSize="25%"
-							>
-								<EntityTabs state={state} />
-							</ResizablePanel>
-						</ResizablePanelGroup>
+						<div className="h-full" />
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel
-						defaultSize="45%"
-						id="laboratory-source"
-						minSize="30%"
+						defaultSize="96%"
+						id="laboratory-workbench"
+						minSize="65%"
 					>
-						<SourceEditor state={state} />
+						<div className="h-full overflow-hidden rounded-xl border bg-card shadow-sm">
+							<DesktopWorkbench
+								state={state}
+								mainLayoutKey={mainLayoutKey}
+								resultsLayoutKey={resultsLayoutKey}
+							/>
+						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
-			</div>
+			)}
 		</main>
 	);
 }
