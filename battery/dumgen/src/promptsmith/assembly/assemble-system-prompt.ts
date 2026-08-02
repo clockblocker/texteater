@@ -48,10 +48,15 @@ export function validateExamples<
 				cause: parsedOutput.error,
 			});
 		}
+		const explanation = example.explanation?.trim();
+		if (explanation !== undefined && explanation.length === 0) {
+			throw new Error(`${location} has an empty explanation.`);
+		}
 		return {
 			id: example.id,
 			input: parsedInput.data,
 			idealOutput: parsedOutput.data,
+			...(explanation === undefined ? {} : { explanation }),
 		};
 	}) as ParsedExampleSet<InputSchema, OutputSchema>;
 }
@@ -69,9 +74,12 @@ export function assembleSystemPrompt(source: PromptSourceForAssembly): string {
 	);
 	if (examples.length === 0) return body;
 
-	const renderedExamples = examples.map(
-		(example, index) =>
-			`Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${stableJson(example.idealOutput)}`,
-	);
+	const renderedExamples = examples.map((example, index) => {
+		const explanation =
+			example.explanation === undefined
+				? ""
+				: `\nExplanation (guidance only; not part of the output):\n${example.explanation}`;
+		return `Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${stableJson(example.idealOutput)}${explanation}`;
+	});
 	return `${body}\n\nExamples to follow:\n\n${renderedExamples.join("\n\n")}`;
 }

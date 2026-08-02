@@ -63,6 +63,7 @@ type Example<Input, Output> = {
 	readonly id: string;
 	readonly input: Input;
 	readonly idealOutput: Output;
+	readonly explanation?: string;
 };
 ```
 
@@ -72,13 +73,19 @@ without changing shape. There is no numeric split or second registry.
 Examples match the minimal model schemas and omit fields restored outside
 Promptsmith. An ideal output is a typed reference answer. Route-specific
 evaluators decide correctness; exact equality applies only to authoritative
-values.
+values. An optional explanation gives a concise, decision-relevant reason that
+the ideal output follows from the input and prompt instructions. It should
+highlight observable evidence or a rule that transfers to new inputs, rather
+than restate the output or add fields absent from the output schema. Empty
+explanations are invalid.
 
 ## Generated System Prompt
 
 The body contains instructions only. Prompt Assembly owns few-shot formatting.
 Codegen appends use examples in authored order, writes inputs and ideal outputs
-as stable JSON, and omits IDs. It never reads test examples.
+as stable JSON, and omits IDs. When an explanation is present, Codegen places
+it after the ideal output under an explicit guidance-only label so the model
+does not treat it as part of the required output. It never reads test examples.
 
 Codegen writes a TypeScript module under
 `laboratory/generated-system-prompt`, mirroring the source route. The module

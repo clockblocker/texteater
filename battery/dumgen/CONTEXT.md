@@ -39,6 +39,7 @@ A gold example with:
 - `id`
 - `input`
 - `idealOutput`
+- optional `explanation`
 
 Examples to use and examples for test share this same schema-derived contract.
 Examples are ordered, and their order is semantic rather than cosmetic. IDs
@@ -49,6 +50,9 @@ Example inputs and ideal outputs match the minimal model-facing schemas, not
 the public Dumgen domain shapes. Runtime mapping and its tests are outside the
 Prompt Source. An ideal output is a typed reference answer, not a universal
 exact-match assertion; route-specific evaluators decide correctness.
+An explanation is concise authoring guidance that connects observable input
+evidence and prompt rules to the ideal output. Prompt Assembly renders it after
+the ideal output and labels it as guidance that is not part of the output.
 
 ### Generated System Prompt
 A deterministic `systemPrompt` artifact derived from a Prompt Source.

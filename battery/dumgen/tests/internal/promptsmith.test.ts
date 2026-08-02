@@ -83,6 +83,43 @@ describe("Prompt Assembly", () => {
 		).toThrow(/Prompt Source "segmentation\/de".*duplicate example ID/);
 	});
 
+	test("renders optional explanations as guidance outside the ideal output", () => {
+		const explanation =
+			"The comma and exclamation mark are punctuation, while the words remain resolvable text.";
+		const prompt = assembleSystemPrompt({
+			route: "segmentation/de",
+			inputSchema: segmentationInputSchema,
+			outputSchema: segmentationOutputSchema,
+			body: segmentationBody,
+			examplesToUse: [
+				{
+					...segmentationUseExamples[0],
+					explanation: `  ${explanation}  `,
+				},
+			],
+		});
+
+		expect(prompt).toContain(
+			`Ideal output:\n${JSON.stringify(segmentationUseExamples[0].idealOutput)}\nExplanation (guidance only; not part of the output):\n${explanation}`,
+		);
+		expect(prompt).not.toContain(`  ${explanation}  `);
+		expect(() =>
+			validateExamples(
+				"segmentation/de",
+				segmentationInputSchema,
+				segmentationOutputSchema,
+				[
+					{
+						...segmentationUseExamples[0],
+						explanation: "   ",
+					},
+				],
+			),
+		).toThrow(
+			/Prompt Source "segmentation\/de" example 1.*empty explanation/,
+		);
+	});
+
 	test("committed generated system prompts are current", async () => {
 		const result = await runCodegen(systemPromptRecipe, { mode: "check" });
 		expect(result.status).toBe("clean");

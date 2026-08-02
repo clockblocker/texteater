@@ -8,6 +8,7 @@ export type Example<Input, Output> = {
 	readonly id: string;
 	readonly input: Input;
 	readonly idealOutput: Output;
+	readonly explanation?: string;
 };
 
 export type ExampleSet<
