@@ -1,5 +1,8 @@
 import type { PromptBody } from "../../../../assembly";
 
+/**
+ * Should follow `battery/dumgen/docs/persistent/prompting-philosophie.md`
+ */
 export const body =
 	`We are helping a language learner distinguish meanings that are useful to distinguish.
 

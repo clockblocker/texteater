@@ -5,9 +5,12 @@ import type { outputSchema } from "../output-schema";
 /**
  * ADP emoji rules:
  * - Name relation, not complement or scene.
- * - Same broad relation reuses one emoji, even across domains.
+ * - Within a lemma, reuse one emoji for the same broad relation across domains.
+ * - Different lemmas may use the same emoji independently.
  * - Clear stable relation gets semantic emoji; material change gets new emoji.
  * - No clear standalone relation: use generic connector 🔗.
+ *
+ * Related: `battery/dumgen/docs/persistent/prompting-philosophie.md`
  */
 export const adpExamples = [
 	{
@@ -77,17 +80,18 @@ export const adpExamples = [
 		explanation: "Clock point. New.",
 	},
 	{
-		id: "reading-de-use-adp-nach-reuse-connector",
+		id: "reading-de-use-adp-nach-new-sensory-characteristic",
 		input: {
 			markedContext: "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
 			lemma: "nach",
 			existingEmojiDescriptions: ["🧭", "⏭️", "🔗"],
 		},
 		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "🔗",
+			decision: "New",
+			emojiDescription: "🪞",
 		},
-		explanation: "Smell from phrase. nach only links.",
+		explanation:
+			'Sensory characteristic ("smells of"), not direction or sequence. New.',
 	},
 	{
 		id: "reading-de-use-adp-vor-reuse-broad-precedence",
@@ -103,17 +107,17 @@ export const adpExamples = [
 		explanation: "Still before. Reuse.",
 	},
 	{
-		id: "reading-de-use-adp-vor-reuse-connector",
+		id: "reading-de-use-adp-vor-new-cause",
 		input: {
 			markedContext: "Das Kind zittert <TARGET>vor</TARGET> Angst.",
 			lemma: "vor",
 			existingEmojiDescriptions: ["⏮️", "🔗"],
 		},
 		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "🔗",
+			decision: "New",
+			emojiDescription: "⚡",
 		},
-		explanation: "No before. Cause phrase. Use link.",
+		explanation: "Cause, not before. New.",
 	},
 	{
 		id: "reading-de-use-adp-gegen-reuse-counteraction",

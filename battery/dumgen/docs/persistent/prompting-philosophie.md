@@ -1,5 +1,9 @@
 # Prompting Philosophy
 
+## Body is big picture
+
+Use explanations in examples for edge cases and policy details.
+
 ## Instruction language
 
 DTOs use English. System prompts can too. `de` means the analyzed language, not
