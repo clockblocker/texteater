@@ -16,6 +16,15 @@ export type ExampleSet<
 	OutputSchema extends PromptOutputSchema,
 > = readonly Example<input<InputSchema>, input<OutputSchema>>[];
 
+export type ExampleSetTree<
+	InputSchema extends PromptInputSchema,
+	OutputSchema extends PromptOutputSchema,
+> = {
+	readonly [key: string]:
+		| ExampleSet<InputSchema, OutputSchema>
+		| ExampleSetTree<InputSchema, OutputSchema>;
+};
+
 export type ParsedExampleSet<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,

@@ -7,6 +7,7 @@ export {
 export type {
 	Example,
 	ExampleSet,
+	ExampleSetTree,
 	ParsedExampleSet,
 	PromptBody,
 	PromptInputSchema,

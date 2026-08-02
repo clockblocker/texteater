@@ -1,4 +1,4 @@
-import type { ExampleSet } from "../../../../../assembly";
+import type { ExampleSet, ExampleSetTree } from "../../../../../assembly";
 import type { inputSchema } from "../input-schema";
 import type { outputSchema } from "../output-schema";
 
@@ -68,138 +68,141 @@ const ueberStorytelling = [
  *
  * Related: `battery/dumgen/docs/persistent/prompting-philosophie.md`
  */
-export const adpExamples = [
-	...ueberStorytelling,
-	{
-		id: "reading-de-use-adp-mit-new-means",
-		input: {
-			markedContext:
-				"Mara schneidet das Brot <TARGET>mit</TARGET> einem Messer.",
-			lemma: "mit",
-			existingEmojiDescriptions: ["🤝", "🔗"],
+export const adpExamples = {
+	ueberStorytelling,
+	rest: [
+		{
+			id: "reading-de-use-adp-mit-new-means",
+			input: {
+				markedContext:
+					"Mara schneidet das Brot <TARGET>mit</TARGET> einem Messer.",
+				lemma: "mit",
+				existingEmojiDescriptions: ["🤝", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "🛠️",
+			},
+			explanation: "Means, not companion. New.",
 		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "🛠️",
+		{
+			id: "reading-de-use-adp-mit-reuse-connector",
+			input: {
+				markedContext: "Wir rechnen <TARGET>mit</TARGET> Regen.",
+				lemma: "mit",
+				existingEmojiDescriptions: ["🤝", "🛠️", "🔗"],
+			},
+			idealOutput: {
+				decision: "Reuse",
+				emojiDescription: "🔗",
+			},
+			explanation: "rechnen mit fixed. mit only links.",
 		},
-		explanation: "Means, not companion. New.",
-	},
-	{
-		id: "reading-de-use-adp-mit-reuse-connector",
-		input: {
-			markedContext: "Wir rechnen <TARGET>mit</TARGET> Regen.",
-			lemma: "mit",
-			existingEmojiDescriptions: ["🤝", "🛠️", "🔗"],
+		{
+			id: "reading-de-use-adp-um-new-topic",
+			input: {
+				markedContext: "Der Streit geht <TARGET>um</TARGET> Geld.",
+				lemma: "um",
+				existingEmojiDescriptions: ["🔄", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "💬",
+			},
+			explanation: "Topic, not around. New.",
 		},
-		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "🔗",
+		{
+			id: "reading-de-use-adp-um-new-clock-time",
+			input: {
+				markedContext: "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
+				lemma: "um",
+				existingEmojiDescriptions: ["🔄", "💬", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "⏰",
+			},
+			explanation: "Clock point. New.",
 		},
-		explanation: "rechnen mit fixed. mit only links.",
-	},
-	{
-		id: "reading-de-use-adp-um-new-topic",
-		input: {
-			markedContext: "Der Streit geht <TARGET>um</TARGET> Geld.",
-			lemma: "um",
-			existingEmojiDescriptions: ["🔄", "🔗"],
+		{
+			id: "reading-de-use-adp-nach-new-sensory-characteristic",
+			input: {
+				markedContext: "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
+				lemma: "nach",
+				existingEmojiDescriptions: ["🧭", "⏭️", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "🪞",
+			},
+			explanation: "Seems like. Not direction. New.",
 		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "💬",
+		{
+			id: "reading-de-use-adp-vor-reuse-broad-precedence",
+			input: {
+				markedContext:
+					"Sie ruft mich <TARGET>vor</TARGET> dem Essen an.",
+				lemma: "vor",
+				existingEmojiDescriptions: ["⏮️", "🔗"],
+			},
+			idealOutput: {
+				decision: "Reuse",
+				emojiDescription: "⏮️",
+			},
+			explanation: "Still before. Reuse.",
 		},
-		explanation: "Topic, not around. New.",
-	},
-	{
-		id: "reading-de-use-adp-um-new-clock-time",
-		input: {
-			markedContext: "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
-			lemma: "um",
-			existingEmojiDescriptions: ["🔄", "💬", "🔗"],
+		{
+			id: "reading-de-use-adp-vor-new-cause",
+			input: {
+				markedContext: "Das Kind zittert <TARGET>vor</TARGET> Angst.",
+				lemma: "vor",
+				existingEmojiDescriptions: ["⏮️", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "⚡",
+			},
+			explanation: "Cause, not before. New.",
 		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "⏰",
+		{
+			id: "reading-de-use-adp-gegen-reuse-counteraction",
+			input: {
+				markedContext:
+					"Sie nimmt eine Tablette <TARGET>gegen</TARGET> Kopfschmerzen.",
+				lemma: "gegen",
+				existingEmojiDescriptions: ["⚔️"],
+			},
+			idealOutput: {
+				decision: "Reuse",
+				emojiDescription: "⚔️",
+			},
+			explanation: "Medicine fights pain. Same against.",
 		},
-		explanation: "Clock point. New.",
-	},
-	{
-		id: "reading-de-use-adp-nach-new-sensory-characteristic",
-		input: {
-			markedContext: "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
-			lemma: "nach",
-			existingEmojiDescriptions: ["🧭", "⏭️", "🔗"],
+		{
+			id: "reading-de-use-adp-gegen-new-approximation",
+			input: {
+				markedContext: "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
+				lemma: "gegen",
+				existingEmojiDescriptions: ["⚔️"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "🤏",
+			},
+			explanation: "Rough time, not against. New.",
 		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "🪞",
+		{
+			id: "reading-de-test-lexeme-adp-mit-instrument-vs-accompaniment",
+			input: {
+				markedContext:
+					"Die Mechanikerin löst die Schraube <TARGET>mit</TARGET> einem Schlüssel.",
+				lemma: "mit",
+				existingEmojiDescriptions: ["🤝", "🔗"],
+			},
+			idealOutput: {
+				decision: "New",
+				emojiDescription: "🛠️",
+			},
 		},
-		explanation: "Seems like. Not direction. New.",
-	},
-	{
-		id: "reading-de-use-adp-vor-reuse-broad-precedence",
-		input: {
-			markedContext: "Sie ruft mich <TARGET>vor</TARGET> dem Essen an.",
-			lemma: "vor",
-			existingEmojiDescriptions: ["⏮️", "🔗"],
-		},
-		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "⏮️",
-		},
-		explanation: "Still before. Reuse.",
-	},
-	{
-		id: "reading-de-use-adp-vor-new-cause",
-		input: {
-			markedContext: "Das Kind zittert <TARGET>vor</TARGET> Angst.",
-			lemma: "vor",
-			existingEmojiDescriptions: ["⏮️", "🔗"],
-		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "⚡",
-		},
-		explanation: "Cause, not before. New.",
-	},
-	{
-		id: "reading-de-use-adp-gegen-reuse-counteraction",
-		input: {
-			markedContext:
-				"Sie nimmt eine Tablette <TARGET>gegen</TARGET> Kopfschmerzen.",
-			lemma: "gegen",
-			existingEmojiDescriptions: ["⚔️"],
-		},
-		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "⚔️",
-		},
-		explanation: "Medicine fights pain. Same against.",
-	},
-	{
-		id: "reading-de-use-adp-gegen-new-approximation",
-		input: {
-			markedContext: "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
-			lemma: "gegen",
-			existingEmojiDescriptions: ["⚔️"],
-		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "🤏",
-		},
-		explanation: "Rough time, not against. New.",
-	},
-	{
-		id: "reading-de-test-lexeme-adp-mit-instrument-vs-accompaniment",
-		input: {
-			markedContext:
-				"Die Mechanikerin löst die Schraube <TARGET>mit</TARGET> einem Schlüssel.",
-			lemma: "mit",
-			existingEmojiDescriptions: ["🤝", "🔗"],
-		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "🛠️",
-		},
-	},
-] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;
+	],
+} as const satisfies ExampleSetTree<typeof inputSchema, typeof outputSchema>;
