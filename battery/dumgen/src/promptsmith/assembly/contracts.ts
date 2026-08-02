@@ -24,6 +24,36 @@ export type GoldenCaseRegistry<
 	Record<string, GoldenCase<input<InputSchema>, input<OutputSchema>>>
 >;
 
+declare const goldenCaseGroupCases: unique symbol;
+
+export interface GoldenCaseGroup<
+	Cases extends Readonly<Record<string, object>> = Readonly<
+		Record<string, object>
+	>,
+> {
+	readonly [goldenCaseGroupCases]: Cases;
+}
+
+export type GoldenCaseGroupRegistry = Readonly<Record<string, GoldenCaseGroup>>;
+
+declare const goldenCaseCollectionDefinition: unique symbol;
+
+export interface GoldenCaseCollection<
+	Groups extends GoldenCaseGroupRegistry = GoldenCaseGroupRegistry,
+	Cases extends Readonly<Record<string, object>> = Readonly<
+		Record<string, object>
+	>,
+> {
+	readonly [goldenCaseCollectionDefinition]: {
+		readonly groups: Groups;
+		readonly cases: Cases;
+	};
+}
+
+export type GoldenCaseCollectionRegistry = Readonly<
+	Record<string, GoldenCaseCollection>
+>;
+
 export type ParsedGoldenCase<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
@@ -44,20 +74,22 @@ export interface LocalDemonstrations<
 	>[];
 }
 
-export type GoldenGroupTree = {
-	readonly [key: string]: readonly string[] | GoldenGroupTree;
-};
-
 export type ResolvedGoldenGroups<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
-	Groups extends GoldenGroupTree,
+	Collections extends GoldenCaseCollectionRegistry,
 > = {
-	readonly [Key in keyof Groups]: Groups[Key] extends readonly string[]
-		? CaseSelection<InputSchema, OutputSchema>
-		: Groups[Key] extends GoldenGroupTree
-			? ResolvedGoldenGroups<InputSchema, OutputSchema, Groups[Key]>
-			: never;
+	readonly [CollectionName in keyof Collections]: Collections[CollectionName] extends GoldenCaseCollection<
+		infer Groups,
+		Readonly<Record<string, object>>
+	>
+		? {
+				readonly [GroupName in keyof Groups]: CaseSelection<
+					InputSchema,
+					OutputSchema
+				>;
+			}
+		: never;
 };
 
 export interface CaseSelection<
@@ -83,7 +115,8 @@ export interface CaseSelection<
 export interface GoldenCorpus<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
-	Groups extends GoldenGroupTree = GoldenGroupTree,
+	Collections extends
+		GoldenCaseCollectionRegistry = GoldenCaseCollectionRegistry,
 > {
 	readonly route: string;
 	readonly inputSchema: InputSchema;
@@ -91,7 +124,11 @@ export interface GoldenCorpus<
 	readonly cases: Readonly<
 		Record<string, ParsedGoldenCase<InputSchema, OutputSchema>>
 	>;
-	readonly groups: ResolvedGoldenGroups<InputSchema, OutputSchema, Groups>;
+	readonly groups: ResolvedGoldenGroups<
+		InputSchema,
+		OutputSchema,
+		Collections
+	>;
 	select(ids: readonly string[]): CaseSelection<InputSchema, OutputSchema>;
 	all(): CaseSelection<InputSchema, OutputSchema>;
 }

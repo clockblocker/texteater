@@ -4,6 +4,8 @@ import { z } from "zod";
 
 import {
 	defineExperiment,
+	defineGoldenCaseCollection,
+	defineGoldenCaseGroup,
 	defineGoldenCorpus,
 	defineLocalDemonstrations,
 	definePromptSource,
@@ -25,22 +27,29 @@ function corpus(
 	options: {
 		readonly route?: string;
 		readonly groups?: Readonly<
-			Record<
-				string,
-				readonly string[] | Record<string, readonly string[]>
-			>
+			Record<string, Readonly<Record<string, Case>>>
 		>;
 		readonly fingerprintInput?: (input: {
 			readonly text: string;
 		}) => string;
 	} = {},
 ) {
+	const groups = Object.fromEntries(
+		Object.entries(options.groups ?? {}).map(([name, groupCases]) => [
+			name,
+			defineGoldenCaseGroup(groupCases),
+		]),
+	);
 	return defineGoldenCorpus({
 		route: options.route ?? "test/route",
 		inputSchema,
 		outputSchema,
-		cases,
-		groups: options.groups ?? {},
+		collections: {
+			test: defineGoldenCaseCollection(import.meta.url, {
+				groups,
+				cases,
+			}),
+		},
 		...(options.fingerprintInput === undefined
 			? {}
 			: { fingerprintInput: options.fingerprintInput }),
@@ -85,9 +94,20 @@ describe("Golden Corpus", () => {
 						idealOutput: { value: "x" },
 					},
 				},
-				{ groups: { invalid: ["missing"] } },
+				{
+					groups: {
+						invalid: {
+							known: {
+								input: { text: "duplicate" },
+								idealOutput: { value: "x" },
+							},
+						},
+					},
+				},
 			),
-		).toThrow(/group "invalid" is invalid/);
+		).toThrow(
+			/repeats case ID "known".*group "invalid".*collection "test"/,
+		);
 		expect(() =>
 			corpus({
 				invalid: {
@@ -130,6 +150,36 @@ describe("Golden Corpus", () => {
 				" ": { input: { text: "id" }, idealOutput: { value: "x" } },
 			}),
 		).toThrow(/Golden Case ID must not be empty/);
+
+		const first = defineGoldenCaseCollection("first.ts", {
+			cases: {
+				shared: {
+					input: { text: "first" },
+					idealOutput: { value: "x" },
+				},
+			},
+		});
+		const second = defineGoldenCaseCollection("second.ts", {
+			groups: {
+				related: defineGoldenCaseGroup({
+					shared: {
+						input: { text: "second" },
+						idealOutput: { value: "x" },
+					},
+				}),
+			},
+			cases: {},
+		});
+		expect(() =>
+			defineGoldenCorpus({
+				route: "test/route",
+				inputSchema,
+				outputSchema,
+				collections: { first, second },
+			}),
+		).toThrow(
+			/repeats case ID "shared".*collection "first".*collection "second" group "related"/,
+		);
 	});
 
 	test("implements immutable, ordered CaseSelection algebra", () => {
@@ -296,12 +346,23 @@ describe("Prompt Experiments", () => {
 
 	test("does not treat composition groups as contamination", () => {
 		const goldenCorpus = corpus(
+			{},
 			{
-				demo: { input: { text: "demo" }, idealOutput: { value: "x" } },
-				eval: { input: { text: "eval" }, idealOutput: { value: "x" } },
+				groups: {
+					related: {
+						demo: {
+							input: { text: "demo" },
+							idealOutput: { value: "x" },
+						},
+						eval: {
+							input: { text: "eval" },
+							idealOutput: { value: "x" },
+						},
+					},
+				},
 			},
-			{ groups: { related: ["demo", "eval"] } },
 		);
+		expect(goldenCorpus.groups.test.related?.ids).toEqual(["demo", "eval"]);
 		expect(() =>
 			defineExperiment({
 				promptSource: promptSource(goldenCorpus, ["demo"]),

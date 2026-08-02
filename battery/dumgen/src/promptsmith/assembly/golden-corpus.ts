@@ -3,9 +3,13 @@ import { fileURLToPath } from "node:url";
 import { stableJson } from "../../lib/stable-json";
 import type {
 	CaseSelection,
+	GoldenCase,
+	GoldenCaseCollection,
+	GoldenCaseCollectionRegistry,
+	GoldenCaseGroup,
+	GoldenCaseGroupRegistry,
 	GoldenCaseRegistry,
 	GoldenCorpus,
-	GoldenGroupTree,
 	ParsedGoldenCase,
 	PromptInputSchema,
 	PromptOutputSchema,
@@ -30,47 +34,105 @@ type CorpusState = {
 	readonly fingerprintInput?: (input: unknown) => string;
 };
 
+type GoldenCaseGroupState = {
+	readonly cases: Readonly<Record<string, object>>;
+};
+
+type GoldenCaseCollectionState = {
+	readonly sourcePath: string;
+	readonly groups: Readonly<Record<string, GoldenCaseGroupState>>;
+	readonly cases: Readonly<Record<string, object>>;
+};
+
+type SchemaGoldenCaseCollection<
+	InputSchema extends PromptInputSchema,
+	OutputSchema extends PromptOutputSchema,
+> = GoldenCaseCollection<
+	Readonly<
+		Record<
+			string,
+			GoldenCaseGroup<GoldenCaseRegistry<InputSchema, OutputSchema>>
+		>
+	>,
+	GoldenCaseRegistry<InputSchema, OutputSchema>
+>;
+
 export type SelectionState = {
 	readonly corpus: CorpusState;
 	readonly entries: readonly ParsedCaseEntry[];
 };
 
-const goldenCaseSources = new WeakMap<object, string>();
+const goldenCaseGroupStates = new WeakMap<object, GoldenCaseGroupState>();
+const goldenCaseCollectionStates = new WeakMap<
+	object,
+	GoldenCaseCollectionState
+>();
 const corpusStates = new WeakMap<object, CorpusState>();
 const selectionStates = new WeakMap<object, SelectionState>();
 
-export function defineGoldenCases<
+export function defineGoldenCaseGroup<
 	const Cases extends Readonly<Record<string, object>>,
->(source: string, cases: Cases): Cases {
-	const sourcePath = source.startsWith("file:")
-		? fileURLToPath(source)
-		: source;
-	for (const goldenCase of Object.values(cases)) {
-		goldenCaseSources.set(goldenCase, sourcePath);
+>(cases: Cases): GoldenCaseGroup<Cases> {
+	const group = Object.freeze({}) as GoldenCaseGroup<Cases>;
+	goldenCaseGroupStates.set(group, { cases });
+	return group;
+}
+
+export function defineGoldenCaseCollection<
+	const Groups extends GoldenCaseGroupRegistry = Record<never, never>,
+	const Cases extends Readonly<Record<string, object>> = Record<never, never>,
+>(
+	source: string,
+	definition: {
+		readonly groups?: Groups;
+		readonly cases: Cases;
+	},
+): GoldenCaseCollection<Groups, Cases> {
+	const groups: Record<string, GoldenCaseGroupState> = {};
+	for (const [name, group] of Object.entries(definition.groups ?? {})) {
+		const state = goldenCaseGroupStates.get(group);
+		if (state === undefined) {
+			throw new Error(
+				`Golden Case group "${name}" was not created by defineGoldenCaseGroup.`,
+			);
+		}
+		groups[name] = state;
 	}
-	return cases;
+
+	const collection = Object.freeze({}) as GoldenCaseCollection<Groups, Cases>;
+	goldenCaseCollectionStates.set(collection, {
+		sourcePath: source.startsWith("file:") ? fileURLToPath(source) : source,
+		groups: Object.freeze(groups),
+		cases: definition.cases,
+	});
+	return collection;
 }
 
 export function defineGoldenCorpus<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
-	const Groups extends GoldenGroupTree = Record<never, never>,
+	const Collections extends Readonly<
+		Record<string, SchemaGoldenCaseCollection<InputSchema, OutputSchema>>
+	>,
 >(args: {
 	readonly route: string;
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;
-	readonly cases: GoldenCaseRegistry<InputSchema, OutputSchema>;
-	readonly groups?: Groups;
+	readonly collections: Collections;
 	readonly fingerprintInput?: (
 		input: import("zod").output<InputSchema>,
 	) => string;
-}): GoldenCorpus<InputSchema, OutputSchema, Groups> {
+}): GoldenCorpus<InputSchema, OutputSchema, Collections> {
 	assertNonEmpty(args.route, "Golden Corpus route");
 	const identity = {};
 	const parsedEntries = new Map<string, ParsedCaseEntry>();
 	const exactFingerprints = new Map<string, string>();
+	const { cases: flattenedCases, groups: groupIds } = flattenCollections(
+		args.collections,
+		args.route,
+	);
 
-	for (const [id, goldenCase] of Object.entries(args.cases)) {
+	for (const { id, goldenCase, sourcePath } of flattenedCases) {
 		assertNonEmpty(id, "Golden Case ID");
 		const location = `Golden Case "${id}" for route "${args.route}"`;
 		const parsedInput = args.inputSchema.safeParse(goldenCase.input);
@@ -126,7 +188,7 @@ export function defineGoldenCorpus<
 			exactFingerprint,
 			...(routeFingerprint === undefined ? {} : { routeFingerprint }),
 			contaminationKeys,
-			sourcePath: goldenCaseSources.get(goldenCase),
+			sourcePath,
 		});
 	}
 
@@ -150,12 +212,7 @@ export function defineGoldenCorpus<
 			[...parsedEntries].map(([id, entry]) => [id, entry.value]),
 		),
 	) as Readonly<Record<string, ParsedGoldenCase<InputSchema, OutputSchema>>>;
-	const groups = resolveGroups(
-		args.groups ?? ({} as Groups),
-		select,
-		args.route,
-		[],
-	);
+	const groups = resolveGroups(groupIds, select, args.route);
 
 	const corpus = Object.freeze({
 		route: args.route,
@@ -165,7 +222,7 @@ export function defineGoldenCorpus<
 		groups,
 		select,
 		all: () => select([...parsedEntries.keys()]),
-	}) as GoldenCorpus<InputSchema, OutputSchema, Groups>;
+	}) as GoldenCorpus<InputSchema, OutputSchema, Collections>;
 	corpusStates.set(corpus, state);
 	return corpus;
 }
@@ -286,34 +343,100 @@ function assertSameCorpus(
 	return otherState;
 }
 
+function flattenCollections(
+	collections: GoldenCaseCollectionRegistry,
+	route: string,
+): {
+	readonly cases: readonly {
+		readonly id: string;
+		readonly goldenCase: GoldenCase<unknown, unknown>;
+		readonly sourcePath: string;
+	}[];
+	readonly groups: Readonly<
+		Record<string, Readonly<Record<string, readonly string[]>>>
+	>;
+} {
+	const cases: {
+		id: string;
+		goldenCase: GoldenCase<unknown, unknown>;
+		sourcePath: string;
+	}[] = [];
+	const groups: Record<
+		string,
+		Readonly<Record<string, readonly string[]>>
+	> = {};
+	const caseLocations = new Map<string, string>();
+
+	for (const [collectionName, collection] of Object.entries(collections)) {
+		assertNonEmpty(collectionName, "Golden Case collection name");
+		const state = goldenCaseCollectionStates.get(collection);
+		if (state === undefined) {
+			throw new Error(
+				`Golden Corpus "${route}" collection "${collectionName}" was not created by defineGoldenCaseCollection.`,
+			);
+		}
+
+		const collectionGroups: Record<string, readonly string[]> = {};
+		for (const [groupName, group] of Object.entries(state.groups)) {
+			assertNonEmpty(groupName, "Golden Case group name");
+			const location = `collection "${collectionName}" group "${groupName}"`;
+			const ids = Object.keys(group.cases);
+			collectionGroups[groupName] = Object.freeze(ids);
+			for (const [id, goldenCase] of Object.entries(group.cases)) {
+				addFlattenedCase(id, goldenCase, state.sourcePath, location);
+			}
+		}
+		groups[collectionName] = Object.freeze(collectionGroups);
+
+		const location = `collection "${collectionName}"`;
+		for (const [id, goldenCase] of Object.entries(state.cases)) {
+			addFlattenedCase(id, goldenCase, state.sourcePath, location);
+		}
+	}
+
+	return { cases: Object.freeze(cases), groups: Object.freeze(groups) };
+
+	function addFlattenedCase(
+		id: string,
+		goldenCase: object,
+		sourcePath: string,
+		location: string,
+	): void {
+		assertNonEmpty(id, "Golden Case ID");
+		const previousLocation = caseLocations.get(id);
+		if (previousLocation !== undefined) {
+			throw new Error(
+				`Golden Corpus "${route}" repeats case ID "${id}" in ${previousLocation} and ${location}.`,
+			);
+		}
+		caseLocations.set(id, location);
+		cases.push({
+			id,
+			goldenCase: goldenCase as GoldenCase<unknown, unknown>,
+			sourcePath,
+		});
+	}
+}
+
 function resolveGroups(
-	groups: GoldenGroupTree,
+	groups: Readonly<
+		Record<string, Readonly<Record<string, readonly string[]>>>
+	>,
 	select: (ids: readonly string[]) => CaseSelection,
 	route: string,
-	parents: readonly string[],
 ): unknown {
 	const resolved: Record<string, unknown> = {};
-	for (const [name, value] of Object.entries(groups)) {
-		const path = [...parents, name];
-		const location = `Golden Corpus "${route}" group "${path.join(".")}"`;
-		if (Array.isArray(value)) {
+	for (const [collectionName, collectionGroups] of Object.entries(groups)) {
+		const resolvedCollection: Record<string, CaseSelection> = {};
+		for (const [groupName, ids] of Object.entries(collectionGroups)) {
+			const location = `Golden Corpus "${route}" group "${collectionName}.${groupName}"`;
 			try {
-				resolved[name] = select(value);
+				resolvedCollection[groupName] = select(ids);
 			} catch (cause) {
 				throw new Error(`${location} is invalid.`, { cause });
 			}
-		} else if (value !== null && typeof value === "object") {
-			resolved[name] = resolveGroups(
-				value as GoldenGroupTree,
-				select,
-				route,
-				path,
-			);
-		} else {
-			throw new Error(
-				`${location} must be an ID list or nested group object.`,
-			);
 		}
+		resolved[collectionName] = Object.freeze(resolvedCollection);
 	}
 	return Object.freeze(resolved);
 }
