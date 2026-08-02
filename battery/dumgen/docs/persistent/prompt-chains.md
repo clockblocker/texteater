@@ -6,8 +6,14 @@ laboratory work in progress.
 ## Segmentation chain
 
 ```text
-Source Sentence -> Intake -> Segmentation<Lang>
+Source Sentence
+  -> Intake model call
+  -> if Accepted: Segmentation<Lang> model call
 ```
+
+This is always a chain of two distinct, sequential model calls. Intake and
+Segmentation are never combined into one prompt or call. A rejected Intake
+Decision stops the chain before Segmentation.
 
 Intake returns one of:
 

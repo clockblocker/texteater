@@ -26,6 +26,10 @@ Then open <http://127.0.0.1:5173/>. Paste a longer German source text, select on
 complete sentence, and run Intake plus Segmentation. Only `ResolvableText`
 Segments are clickable.
 
+Intake and Segmentation are two distinct sequential model calls. The server
+calls `Segmentation<de>` only after Intake returns `Accepted`; they are never
+combined into one prompt or call.
+
 Set `OPENAI_API_KEY` in the server environment. The Bun API invokes the real
 Dumgen laboratory prompts and Dumgen's configured OpenAI Responses API adapter;
 credentials never enter the browser. Segmented sentences live in memory only.

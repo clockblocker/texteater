@@ -42,7 +42,8 @@ if (!("decision" in target)) console.log(target.memberSegmentIndices);
 The current German-only laboratory path uses pointed generators for each
 settled stage:
 
-1. Run language-agnostic Intake, then `Segmentation<de>`.
+1. Make a language-agnostic Intake model call. If it returns `Accepted`, make a
+   second model call to `Segmentation<de>`; the two stages are never combined.
 2. Classify one click with `Target Classification<de, HighLevelWholeUnit>`.
 3. Dispatch through physically distinct grammatical and Reading routes for the
    target's German Lemma Family and Kind.

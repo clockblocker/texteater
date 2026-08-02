@@ -309,9 +309,17 @@ _Avoid_: Emoji gloss, emoji-plus-gloss label
 ### Segmentation Chain
 The pre-click chain.
 
-It takes source text through language-resolving Intake and, for accepted input,
-uses the resolved language to route to language-specific segmentation. Its
-successful result is the Segmented Sentence the learner can click.
+It is exactly two sequential model calls:
+
+1. Intake resolves the Source Sentence's language and returns an Intake
+   Decision.
+2. Only when Intake returns `Accepted`, the application uses the resolved
+   language to call the corresponding language-specific Segmentation prompt.
+
+Intake and Segmentation are never combined into one prompt or model call. An
+`UnsupportedLanguage` or `Unintelligible` Intake Decision stops the chain after
+the first call. A successful second call returns the Segmented Sentence the
+learner can click.
 
 ### Click Resolution Chain
 The post-click chain.
@@ -327,9 +335,9 @@ itself an experiment.
 ### Laboratory Prompt Namespace
 
 The current executable prompts are early-WIP laboratory instruments. German is
-the only registered language. The pre-click chain is registered as
-`laboratory.intake` followed by `laboratory.segmentation.de`. Post-click
-classification begins at
+the only registered language. The pre-click chain makes two distinct sequential
+model calls, registered as `laboratory.intake` followed on acceptance by
+`laboratory.segmentation.de`. Post-click classification begins at
 `laboratory.targetClassification.de.highLevelWholeUnit`, then dispatches to
 physically distinct `laboratory.grammaticalResolution.de.<Family>.<Kind>`
 leaves. Reading Resolution depends only on the language and is registered once
