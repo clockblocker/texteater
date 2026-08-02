@@ -449,9 +449,9 @@ describe("Prompt Experiments", () => {
 		expect(
 			paths.some((path) => path.endsWith("golden-corpus/corpus.ts")),
 		).toBe(true);
-		expect(
-			paths.some((path) => path.endsWith("cases/hand-verivied/noun.ts")),
-		).toBe(true);
+		expect(paths.some((path) => path.endsWith("cases/wip/noun.ts"))).toBe(
+			true,
+		);
 		expect(
 			paths.some((path) => path.endsWith("cases/hand-verivied/adp.ts")),
 		).toBe(true);

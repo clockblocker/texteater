@@ -41,6 +41,10 @@ presentation data, and validation. Reading Resolution's `decision` is the sole
 deliberate redundancy; it helps expose hallucination without controlling
 application behavior.
 
+Consumers enter these chains through `segment`, `resolve.grammatical`, and
+`resolve.reading`. The prompt catalog and its stage topology are internal to
+Dumgen. `onModelExchange` is the instrumentation seam for laboratory traces.
+
 ### Model boundary
 
 Where a canonical Dumling contract exists, Dumgen uses it for external results.
@@ -54,9 +58,10 @@ from a Dumling object. Decode restores route fields such as `language`,
 schemas and codecs live outside Promptsmith so authored sources and runtime use
 the same model shape.
 
-`AnalysisTarget` is the exception to the private-DTO rule: it is a stable,
-presentation-facing Dumgen contract. It contains only member Segment indices,
-Lemma Family, and Lemma Kind. It does not belong in Dumling.
+`AnalysisTarget` is an internal intermediate. It contains only member Segment
+indices, Lemma Family, and Lemma Kind, and does not belong in Dumling. A
+successful public operation returns the constructed Selection; a disabled route
+returns only its correlated Family and Kind.
 
 ### 1. Target Classification
 
@@ -99,7 +104,7 @@ The complete prompt input is:
 { markedContext: string }
 ```
 
-Its projected public result contains one orthography per `<TARGET>` marker:
+Its internal projected result contains one orthography per `<TARGET>` marker:
 
 ```ts
 type GrammaticalResolution =
@@ -112,10 +117,10 @@ type GrammaticalResolution =
   | { decision: "Unresolved" };
 ```
 
-The application aligns orthographies with cached Analysis Target members. It
-owns Segmented Sentence identity, the click and member indices, and
-`attestedSurface`; it constructs the Selection and links the Surface to the
-Lemma.
+Dumgen aligns orthographies with Analysis Target members. It owns Segmented
+Sentence identity, the click and member indices, and `attestedSurface`; it
+constructs the Selection and links the Surface to the Lemma before returning a
+public grammatical result.
 
 ### 3. Reading Resolution
 
@@ -138,18 +143,8 @@ An empty set therefore means `New`.
 The caller supplies descriptions only from the current learner's Readings for
 the exact resolved Lemma. It excludes other learners and Lemmas.
 
-The system input retains the full Lemma so the application can select Readings
-for its exact identity:
-
-```ts
-{
-  markedContext: string;
-  lemma: Lemma<Lang>;
-  existingEmojiDescriptions: string[];
-}
-```
-
-Before the model call, family, kind, and core features are projected out:
+The public operation accepts the canonical spelling already selected from the
+fixed Lemma:
 
 ```ts
 {
@@ -172,9 +167,9 @@ authoritative sentence text is:
 const sentenceText = segments.map(({ text }) => text).join("");
 ```
 
-The application also derives prompt-only marked context from the cached
-Analysis Target. Every member gets its own markers, including discontinuous
-members:
+Dumgen also derives prompt-only marked context from the authoritative Segmented
+Sentence and internal Analysis Target. Every member gets its own markers,
+including discontinuous members:
 
 ```text
 Fritz, <TARGET>steh</TARGET> sofort <TARGET>auf</TARGET>!
@@ -232,10 +227,8 @@ route, orchestration stops before Grammatical Resolution and returns:
 ```ts
 type ResolutionRouteNotImplemented = {
   decision: "NotImplemented";
-  stage: "GrammaticalResolution";
-  language: string;
-  family: string;
-  kind: string;
+  language: Lang;
+  route: GrammaticalRoute<Lang>;
 };
 ```
 

@@ -14,7 +14,6 @@ import type {
 	SegmentationRequest,
 	SegmentationResponse,
 	SegmentedSentence,
-	SegmentKind,
 } from "./shared/contract";
 
 const modelExchangeContext = new AsyncLocalStorage<DumgenModelExchange[]>();
@@ -156,20 +155,33 @@ const server = Bun.serve({
 						});
 					}
 
-					const intakeInput = { text: input.text };
-					promptNames.push(intakePrompt);
-					const intakeOutput = await modelExchangeContext.run(
+					const segmentationResult = await modelExchangeContext.run(
 						modelExchanges,
-						() => generate.laboratory.intake(intakeInput),
+						() => generate.segment(input.text),
 					);
+					promptNames.push(
+						...modelExchanges
+							.filter(({ phase }) => phase === "accepted")
+							.map(({ promptPath }) => promptPath),
+					);
+					const intakeResult =
+						segmentationResult.outcome === "Segmented"
+							? {
+									decision: "Accepted",
+									language: segmentationResult.language,
+								}
+							: {
+									decision: segmentationResult.reason,
+									language: segmentationResult.language,
+								};
 					trace.intake = acceptedStage(
 						intakePrompt,
-						intakeOutput,
+						intakeResult,
 						modelExchanges,
 					);
-					if (intakeOutput.decision !== "Accepted") {
+					if (segmentationResult.outcome === "Unavailable") {
 						const body: SegmentationResponse = {
-							decision: intakeOutput.decision,
+							decision: segmentationResult.reason,
 							sentence: null,
 							stages: {
 								intake: trace.intake as SegmentationResponse["stages"]["intake"],
@@ -180,41 +192,12 @@ const server = Bun.serve({
 						return Response.json(body);
 					}
 
-					const segmentationInput = { text: input.text };
-					promptNames.push(segmentationPrompt);
-					const segmentationOutput = await modelExchangeContext.run(
-						modelExchanges,
-						() =>
-							generate.laboratory.segmentation.de(
-								segmentationInput,
-							),
-					);
 					trace.segmentation = acceptedStage(
 						segmentationPrompt,
-						segmentationOutput,
+						segmentationResult.sentence,
 						modelExchanges,
 					);
-					let offset = 0;
-					const sentence: SegmentedSentence = {
-						id: crypto.randomUUID(),
-						language: "de",
-						sourceText: input.text,
-						segments: segmentationOutput.segments.map(
-							(
-								segment: { kind: SegmentKind; text: string },
-								index: number,
-							) => {
-								const start = offset;
-								offset += segment.text.length;
-								return {
-									...segment,
-									index,
-									start,
-									end: offset,
-								};
-							},
-						),
-					};
+					const sentence = segmentationResult.sentence;
 					if (sessionId !== currentSessionId) {
 						throw new Error(
 							"Laboratory session was reset during segmentation.",

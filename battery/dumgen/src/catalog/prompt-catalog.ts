@@ -1,4 +1,3 @@
-import type { z } from "zod";
 import { systemPrompt as grammarNounSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/grammatical-resolution/de/lexeme/noun";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
@@ -24,7 +23,6 @@ import {
 	inputSchema as targetInputSchema,
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas";
-import { deLemmaSchema } from "../schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -253,40 +251,16 @@ const grammarNounPrompt = {
 	GrammaticalResolution
 >;
 
-type ReadingInputShape = Omit<typeof readingModelInputSchema.shape, "lemma"> & {
-	readonly lemma: typeof deLemmaSchema;
-};
-
-// These boundary types keep Dumling's internal helpers out of emitted declarations.
-const readingInputSchema: z.ZodObject<ReadingInputShape> =
-	readingModelInputSchema.extend({
-		lemma: deLemmaSchema,
-	});
-type ReadingPromptDefinition = Prompt<
-	typeof readingInputSchema,
-	typeof readingOutputSchema,
-	ReadingResolution,
-	typeof readingModelInputSchema
->;
-type ReadingPrompt = ReadingPromptDefinition &
-	Required<
-		Pick<ReadingPromptDefinition, "modelInputSchema" | "projectInput">
-	>;
-
-const readingPrompt: ReadingPrompt = {
+const readingPrompt = {
 	systemPrompt: readingSystemPrompt,
-	inputSchema: readingInputSchema,
-	modelInputSchema: readingModelInputSchema,
+	inputSchema: readingModelInputSchema,
 	outputSchema: readingOutputSchema,
-	projectInput(input): z.output<typeof readingModelInputSchema> {
-		return {
-			markedContext: input.markedContext,
-			lemma: input.lemma.canonicalForm,
-			existingEmojiDescriptions: input.existingEmojiDescriptions,
-		};
-	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 192 },
-};
+} satisfies Prompt<
+	typeof readingModelInputSchema,
+	typeof readingOutputSchema,
+	ReadingResolution
+>;
 
 type GermanRoutePromptCatalog<Definition extends Prompt> = {
 	readonly [Family in GermanHighLevelFamily]: {

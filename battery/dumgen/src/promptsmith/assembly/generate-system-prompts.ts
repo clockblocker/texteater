@@ -6,6 +6,7 @@ import { promptSource as intakePromptSource } from "../laboratory/prompt-source/
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as segmentationPromptSource } from "../laboratory/prompt-source/segmentation/de/prompt-source";
 import { promptSource as targetPromptSource } from "../laboratory/prompt-source/target-classification/de/high-level-whole-unit/prompt-source";
+import type { SystemPromptRecipe } from "./system-prompt-codegen";
 import { defineSystemPromptCodegen } from "./system-prompt-codegen";
 
 const promptsmithRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -29,6 +30,6 @@ const codegen = defineSystemPromptCodegen({
 	staleLabel: "Generated system prompts are stale",
 });
 
-export const systemPromptRecipe = codegen.recipe;
+export const systemPromptRecipe: SystemPromptRecipe = codegen.recipe;
 
 if (import.meta.main) await codegen.run();

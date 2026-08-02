@@ -5,7 +5,7 @@ import { zodTextFormat } from "openai/helpers/zod";
 
 import type { AiSdk } from "../../src/ai-sdk/ai-sdk";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
-import { buildDumgen } from "../../src/dumgen";
+import { buildGeneratorCatalog } from "../../src/generator/generator";
 import {
 	assembleSystemPrompt,
 	defineLocalDemonstrations,
@@ -15,7 +15,6 @@ import { systemPrompt as generatedSegmentationSystemPrompt } from "../../src/pro
 import { corpus as readingCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
 import { promptSource as segmentationPromptSource } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/prompt-source";
 import { outputSchema as segmentationOutputSchema } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/schemas";
-import { deLemmaSchema } from "../../src/schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -159,11 +158,7 @@ describe("German prompt projections", () => {
 			deNounModelInflectionSurfaceSchema,
 		]);
 		expect(
-			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.inputSchema
-				.shape.lemma,
-		).toBe(deLemmaSchema);
-		expect(
-			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.modelInputSchema.shape.lemma.safeParse(
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.inputSchema.shape.lemma.safeParse(
 				"Bank",
 			).success,
 		).toBe(true);
@@ -276,7 +271,7 @@ test("Intake preserves language for every decision", async () => {
 			throw new Error("not used");
 		},
 	};
-	const generate = buildDumgen({ sdk });
+	const generate = buildGeneratorCatalog(PROMPT_CATALOG, sdk);
 
 	expect(await generate.laboratory.intake({ text: "Hallo" })).toEqual({
 		decision: "Accepted",

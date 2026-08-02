@@ -7,12 +7,13 @@ package is production-ready.
 
 ## Core idea
 
-`dumgen` exposes a typed laboratory catalog of executable generators:
+`dumgen` exposes a typed, language-routed module for sentence segmentation and
+click resolution:
 
 - the OpenAI Responses API
 - automatic prompt caching for repeated prompt prefixes
 - Zod-backed input and output validation
-- inferred input and output types at every generator leaf
+- validated Dumgen and Dumling domain results
 
 Example usage:
 
@@ -20,37 +21,43 @@ Example usage:
 import { buildDumgen } from "dumgen";
 
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
-const generate = buildDumgen();
+const dumgen = buildDumgen();
 
-const target =
-	await generate.laboratory.targetClassification.de.highLevelWholeUnit({
-	clickedSegmentIndex: 2,
-	segments: [
-		{ kind: "ResolvableText", text: "Er" },
-		{ kind: "Whitespace", text: " " },
-		{ kind: "ResolvableText", text: "steht" },
-		{ kind: "Whitespace", text: " " },
-		{ kind: "ResolvableText", text: "auf" },
-	],
-});
+const segmented = await dumgen.segment("Die Bank ist geöffnet.");
 
-if (!("decision" in target)) console.log(target.memberSegmentIndices);
+if (segmented.outcome === "Segmented") {
+	const grammatical = await dumgen.resolve.grammatical("de", {
+		sentence: segmented.sentence,
+		clickedSegmentIndex: 2,
+	});
+
+	if (grammatical.decision === "Resolved") {
+		const reading = await dumgen.resolve.reading("de", {
+			markedContext: grammatical.markedContext,
+			lemma: grammatical.selection.surface.lemma.canonicalForm,
+			existingEmojiDescriptions: [],
+		});
+		console.log(reading);
+	}
+}
 ```
 
 ## Vision
 
-The current German-only laboratory path uses pointed generators for each
-settled stage:
+The current German-only module owns each settled chain:
 
 1. Make a language-agnostic Intake model call. If it returns `Accepted`, make a
    second model call to `Segmentation<de>`; the two stages are never combined.
 2. Classify one click with `Target Classification<de, HighLevelWholeUnit>`.
-3. Dispatch through physically distinct grammatical and Reading routes for the
+3. Dispatch internally through physically distinct grammatical routes for the
    target's German Lemma Family and Kind.
-4. Validate projected grammatical results with Dumling's concrete schemas.
+4. Resolve the selected Lemma against learner Reading candidates through the
+   language-routed Reading operation.
+5. Validate projected grammatical results with Dumling's concrete schemas.
 
-The prompts live only under `laboratory`. The application orchestrates the
-stages; there is deliberately no production namespace or production claim.
+The prompt catalog remains internal under `laboratory`; consumers do not
+coordinate prompt leaves or depend on their topology. There is deliberately no
+production namespace or production claim.
 
 The initial five Prompt Sources live under
 `src/promptsmith/laboratory/prompt-source` in stage-first routes. Each leaf owns

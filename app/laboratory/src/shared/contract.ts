@@ -1,16 +1,14 @@
 import type { Reading as DumdictReading } from "dumdict";
-import type { AnalysisTarget as DumgenAnalysisTarget } from "dumgen";
+import type {
+	Segment as DumgenSegment,
+	SegmentedSentence as DumgenSegmentedSentence,
+	GrammaticalRoute,
+} from "dumgen";
 import type {
 	Lemma as DumlingLemma,
 	Selection as DumlingSelection,
 	Surface as DumlingSurface,
 } from "dumling";
-
-export type SegmentKind =
-	| "ResolvableText"
-	| "OpaqueText"
-	| "Whitespace"
-	| "Punctuation";
 
 export type Lemma = DumlingLemma<"de">;
 export type Selection = DumlingSelection<"de">;
@@ -18,7 +16,9 @@ export type Surface = DumlingSurface<"de">;
 export type Reading = DumdictReading<"de">;
 export type MemberOrthography = "Standard" | "Typo";
 
-export type AnalysisTarget = DumgenAnalysisTarget;
+export type AnalysisTarget = GrammaticalRoute<"de"> & {
+	readonly memberSegmentIndices: readonly number[];
+};
 
 export type EntityRepresentation = {
 	selection: Selection;
@@ -28,13 +28,7 @@ export type EntityRepresentation = {
 	model: "gpt-5-nano";
 };
 
-export type Segment = {
-	index: number;
-	text: string;
-	kind: SegmentKind;
-	start: number;
-	end: number;
-};
+export type Segment = DumgenSegment;
 
 export type SegmentationRequest = {
 	text: string;
@@ -61,12 +55,7 @@ export type SegmentationResponse = {
 	};
 };
 
-export type SegmentedSentence = {
-	id: string;
-	language: "de";
-	sourceText: string;
-	segments: Segment[];
-};
+export type SegmentedSentence = DumgenSegmentedSentence<"de">;
 
 export type ClickResolutionRequest = {
 	segmentedSentenceId: string;

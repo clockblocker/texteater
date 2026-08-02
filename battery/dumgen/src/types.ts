@@ -1,42 +1,144 @@
-import type { Lemma, SupportedLanguage, Surface } from "dumling/types";
+import type {
+	SegmentedSentenceId,
+	Selection,
+	SupportedLanguage,
+} from "dumling/types";
 
 import type {
 	GermanHighLevelFamily,
 	GermanHighLevelKind,
 } from "./schema/german-high-level-routes";
 
-export type Unresolved = { readonly decision: "Unresolved" };
+export type EnabledSegmentationLanguage = "de";
+export type GrammaticalResolutionLanguage = "de";
+export type ReadingResolutionLanguage = "de";
 
-export type IntakeDecision =
-	| { readonly decision: "Accepted"; readonly language: SupportedLanguage }
+export type SegmentKind =
+	| "ResolvableText"
+	| "OpaqueText"
+	| "Whitespace"
+	| "Punctuation";
+
+export type Segment = {
+	readonly index: number;
+	readonly text: string;
+	readonly kind: SegmentKind;
+	readonly start: number;
+	readonly end: number;
+};
+
+export type SegmentedSentence<
+	L extends SupportedLanguage = EnabledSegmentationLanguage,
+> = {
+	readonly id: SegmentedSentenceId;
+	readonly language: L;
+	readonly sourceText: string;
+	readonly segments: readonly Segment[];
+};
+
+export type SegmentationResult =
 	| {
-			readonly decision: "UnsupportedLanguage";
+			readonly outcome: "Segmented";
+			readonly language: EnabledSegmentationLanguage;
+			readonly sentence: SegmentedSentence<EnabledSegmentationLanguage>;
+	  }
+	| {
+			readonly outcome: "Unavailable";
+			readonly reason: "UnsupportedLanguage";
 			readonly language: string;
 	  }
-	| { readonly decision: "Unintelligible"; readonly language: null };
+	| {
+			readonly outcome: "Unavailable";
+			readonly reason: "Unintelligible";
+			readonly language: null;
+	  };
 
-export type AnalysisTarget = {
-	[Family in GermanHighLevelFamily]: {
-		readonly memberSegmentIndices: readonly number[];
+type GermanGrammaticalRoute = {
+	readonly [Family in GermanHighLevelFamily]: {
 		readonly family: Family;
 		readonly kind: GermanHighLevelKind<Family>;
 	};
 }[GermanHighLevelFamily];
 
-type WithoutLemma<Value> = Value extends { readonly lemma: unknown }
-	? Omit<Value, "lemma">
-	: never;
+export type GrammaticalRoute<
+	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
+> = L extends "de" ? GermanGrammaticalRoute : never;
 
-export type GrammaticalResolution =
-	| Unresolved
+export type GrammaticalResult<
+	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
+> =
 	| {
 			readonly decision: "Resolved";
-			readonly memberOrthographies: readonly ("Standard" | "Typo")[];
-			readonly surface: WithoutLemma<Surface<"de">>;
-			readonly lemma: Lemma<"de">;
+			readonly language: L;
+			readonly markedContext: string;
+			readonly selection: Selection<L>;
+	  }
+	| {
+			readonly decision: "NotImplemented";
+			readonly language: L;
+			readonly route: GrammaticalRoute<L>;
+	  }
+	| {
+			readonly decision: "Unresolved";
+			readonly language: L;
 	  };
 
 export type ReadingResolution = {
 	readonly decision: "Reuse" | "New";
 	readonly emojiDescription: string;
 };
+
+export type Dumgen = {
+	segment(text: string): Promise<SegmentationResult>;
+	readonly resolve: {
+		grammatical<L extends GrammaticalResolutionLanguage>(
+			language: L,
+			input: {
+				readonly sentence: SegmentedSentence<L>;
+				readonly clickedSegmentIndex: number;
+			},
+		): Promise<GrammaticalResult<L>>;
+		reading<L extends ReadingResolutionLanguage>(
+			language: L,
+			input: {
+				readonly markedContext: string;
+				readonly lemma: string;
+				readonly existingEmojiDescriptions: readonly string[];
+			},
+		): Promise<ReadingResolution>;
+	};
+};
+
+export type Unresolved = { readonly decision: "Unresolved" };
+
+export type IntakeDecision =
+	| {
+			readonly decision: "Accepted";
+			readonly language: EnabledSegmentationLanguage;
+	  }
+	| {
+			readonly decision: "UnsupportedLanguage";
+			readonly language: string;
+	  }
+	| { readonly decision: "Unintelligible"; readonly language: null };
+
+/** Internal result of Target Classification. */
+export type AnalysisTarget = GrammaticalRoute<"de"> & {
+	readonly memberSegmentIndices: readonly number[];
+};
+
+type WithoutLemma<Value> = Value extends { readonly lemma: unknown }
+	? Omit<Value, "lemma">
+	: never;
+
+/** Internal result of a Grammatical Resolution prompt. */
+export type GrammaticalResolution =
+	| Unresolved
+	| {
+			readonly decision: "Resolved";
+			readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+			readonly surface: WithoutLemma<
+				import("dumling/types").Surface<"de">
+			>;
+			readonly lemma: import("dumling/types").Lemma<"de">;
+	  };

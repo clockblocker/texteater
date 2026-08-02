@@ -144,7 +144,7 @@ It has exactly one outcome:
 Unsupported language input is not malformed input.
 Malformed but intelligible language remains accepted. An accepted sentence may
 contain local `OpaqueText`; intake does not require a count or percentage of
-resolvable material. The application dispatches an accepted result to
+resolvable material. The Dumgen module dispatches an accepted result to
 `Segmentation<language>`; it does not hardcode a segmentation language after
 Intake. For now, Intake resolves exactly one primary language per Source
 Sentence, and Segmentation preserves non-primary-language spans as
@@ -200,19 +200,20 @@ A Dumgen application result produced when Target Classification selects a valid
 language, Lemma family, and Lemma kind whose downstream resolution route is not
 enabled yet.
 
-It is represented as `decision: "NotImplemented"` together with the missing
-stage and selected route. It stops the chain before another model call, creates
-no Selection, and remains distinct from `Unresolved`: the classification is
-valid, but implementation is intentionally incremental.
+It is represented as `decision: "NotImplemented"` together with the selected
+correlated route. It stops the chain before another model call, creates no
+Selection, and remains distinct from `Unresolved`: the classification is valid,
+but implementation is intentionally incremental.
 
 ### Analysis Target
-A Dumgen-owned, transient, presentation-facing result that groups the ordered
-Segments resolved as one unit by a Target Classification policy and names the
-Lemma Family and Kind to which that unit is routed.
+A Dumgen-owned internal intermediate that groups the ordered Segments resolved
+as one unit by a Target Classification policy and names the Lemma Family and
+Kind to which that unit is routed.
 
-An Analysis Target lets a view present and reuse the resolved unit before the
-Surface and Lemma exist. It is not a Selection, a persisted linguistic entity,
-part of Dumling, or a raw model response.
+An Analysis Target is not exposed by the public grammatical operation. It is
+not a Selection, a persisted linguistic entity, part of Dumling, or a raw model
+response. Laboratory instrumentation may reconstruct it from prompt exchanges
+for diagnostics.
 
 The target level is policy-owned. For a German support-verb Collocation such as
 `eine Entscheidung treffen`, a whole-unit target resolves the
@@ -375,7 +376,7 @@ contracts. Only the German Lexeme/NOUN Grammatical Resolution route is
 initially enabled through the complete post-click chain. Every successfully
 resolved German Lemma continues through the shared German Reading Resolution
 prompt. When classification selects a route without an enabled Grammatical
-Resolution prompt, the application returns Resolution Route Not Implemented
+Resolution prompt, the Dumgen module returns Resolution Route Not Implemented
 and stops. Other existing laboratory prompts remain unmigrated work in progress
 and are not automatically enabled by their presence in the catalog.
 

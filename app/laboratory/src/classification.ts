@@ -1,5 +1,5 @@
-import type { buildDumgen, DumgenModelExchange } from "dumgen";
-import { schemasFor } from "dumling/schema";
+import type { Dumgen, DumgenModelExchange, GrammaticalResult } from "dumgen";
+import { dumling } from "dumling";
 
 import type {
 	AnalysisTarget,
@@ -7,14 +7,11 @@ import type {
 	ClassificationStageResult,
 	ClickResolutionResponse,
 	EntityRepresentation,
-	Lemma,
 	MemberOrthography,
 	Reading,
 	ResolutionDiagnostic,
-	Segment,
 	SegmentedSentence,
 	Selection,
-	Surface,
 } from "./shared/contract";
 
 export const targetClassificationPrompt =
@@ -36,170 +33,39 @@ export function createGermanClassificationTrace(): GermanClassificationTrace {
 
 type ResolvedUnit = {
 	target: AnalysisTarget;
-	surface: Surface;
+	selection: Selection;
 	reading: Reading;
 	memberOrthographies: Record<number, MemberOrthography>;
 	stages: GermanClassificationTrace;
 	diagnostics: ResolutionDiagnostic[];
 };
 
-type Unresolved = { decision: "Unresolved" };
-type GrammaticalResolution =
-	| Unresolved
-	| {
-			decision: "Resolved";
-			memberOrthographies: MemberOrthography[];
-			surface: Omit<Surface, "lemma">;
-			lemma: Lemma;
-	  };
-type ReadingResolution = {
-	decision: "Reuse" | "New";
-	emojiDescription: string;
-};
+type AcceptedExchange = Extract<
+	DumgenModelExchange,
+	{ readonly phase: "accepted" }
+>;
 
-type AnalysisRoute = {
-	readonly [Family in AnalysisTarget["family"]]: readonly [
-		family: Family,
-		kind: Extract<AnalysisTarget, { readonly family: Family }>["kind"],
-	];
-}[AnalysisTarget["family"]];
-
-const enabledGrammaticalRoutes = [
-	["Lexeme", "NOUN"],
-] as const satisfies readonly AnalysisRoute[];
-
-function isRouteEnabled(
-	enabledRoutes: readonly AnalysisRoute[],
-	target: AnalysisTarget,
-): boolean {
-	return enabledRoutes.some(
-		([family, kind]) => family === target.family && kind === target.kind,
-	);
-}
-
-type GermanGenerator = {
-	laboratory: {
-		targetClassification: {
-			de: {
-				highLevelWholeUnit(input: {
-					clickedSegmentIndex: number;
-					segments: Array<{ kind: Segment["kind"]; text: string }>;
-				}): Promise<AnalysisTarget | Unresolved>;
-			};
-		};
-		grammaticalResolution: {
-			de: Record<
-				string,
-				Record<
-					string,
-					(input: {
-						markedContext: string;
-					}) => Promise<GrammaticalResolution>
-				>
-			>;
-		};
-		readingResolution: {
-			de(input: {
-				markedContext: string;
-				lemma: Lemma;
-				existingEmojiDescriptions: string[];
-			}): Promise<ReadingResolution>;
-		};
-	};
-};
-
-function constructAttestedSurface(
-	segments: readonly Segment[],
-	indices: readonly number[],
-): string {
-	let result = "";
-	for (let position = 0; position < indices.length; position += 1) {
-		const index = indices[position] ?? 0;
-		if (position > 0) {
-			const previous = indices[position - 1] ?? index;
-			if (
-				segments
-					.slice(previous + 1, index)
-					.some((segment) => segment.kind === "Whitespace")
-			) {
-				result += " ";
-			}
-		}
-		result += segments[index]?.text ?? "";
-	}
-	return result;
-}
-
-export function constructMarkedContext(
-	segments: readonly Segment[],
-	memberSegmentIndices: readonly number[],
-): string {
-	const members = new Set(memberSegmentIndices);
-	return segments
-		.map((segment) => {
-			const escapedText = segment.text
-				.replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;");
-			return members.has(segment.index)
-				? `<TARGET>${escapedText}</TARGET>`
-				: escapedText;
-		})
-		.join("");
-}
-
-function parseGermanEntity<T extends Surface | Selection>(
-	entityKind: "Surface" | "Selection",
-	value: unknown,
-	surfaceKind: Surface["surfaceKind"],
-	lemma: Lemma,
-): T {
-	type Getter = () => { parse(value: unknown): T };
-	const entities = schemasFor.de.entity as unknown as Record<
-		string,
-		Record<string, Record<string, Record<string, Getter>>>
-	>;
-	const getSchema =
-		entities[entityKind]?.[surfaceKind]?.[lemma.family]?.[lemma.kind];
-	if (!getSchema) {
-		throw new Error(
-			`No German Dumling ${entityKind} schema exists for ${surfaceKind} ${lemma.family} ${lemma.kind}.`,
+function acceptedExchange(
+	modelExchanges: readonly DumgenModelExchange[],
+	prompt: string,
+	startIndex = 0,
+): AcceptedExchange | undefined {
+	return modelExchanges
+		.slice(startIndex)
+		.find(
+			(exchange): exchange is AcceptedExchange =>
+				exchange.phase === "accepted" && exchange.promptPath === prompt,
 		);
-	}
-	return getSchema().parse(value);
-}
-
-function stableJson(value: unknown): string {
-	if (Array.isArray(value)) {
-		return `[${value.map(stableJson).join(",")}]`;
-	}
-	if (value !== null && typeof value === "object") {
-		return `{${Object.entries(value)
-			.sort(([left], [right]) => left.localeCompare(right))
-			.map(
-				([key, entry]) => `${JSON.stringify(key)}:${stableJson(entry)}`,
-			)
-			.join(",")}}`;
-	}
-	return JSON.stringify(value);
-}
-
-function isUnresolved(
-	value: AnalysisTarget | GrammaticalResolution,
-): value is Unresolved {
-	return "decision" in value && value.decision === "Unresolved";
 }
 
 function stage(
 	prompt: string,
 	result: unknown,
 	modelExchanges: readonly DumgenModelExchange[],
+	startIndex: number,
 ): ClassificationStageResult {
-	const exchange = modelExchanges.find(
-		(candidate) =>
-			candidate.phase === "accepted" && candidate.promptPath === prompt,
-	);
-	if (exchange?.phase !== "accepted") {
+	const exchange = acceptedExchange(modelExchanges, prompt, startIndex);
+	if (!exchange) {
 		throw new Error(
 			`No accepted model exchange was captured for ${prompt}.`,
 		);
@@ -213,6 +79,102 @@ function stage(
 	};
 }
 
+function promptsFromExchanges(
+	modelExchanges: readonly DumgenModelExchange[],
+	startIndex: number,
+): string[] {
+	return modelExchanges
+		.slice(startIndex)
+		.filter(
+			(exchange): exchange is AcceptedExchange =>
+				exchange.phase === "accepted",
+		)
+		.map(({ promptPath }) => promptPath);
+}
+
+function targetFromExchange(
+	modelExchanges: readonly DumgenModelExchange[],
+	clickedSegmentIndex: number,
+	startIndex: number,
+): AnalysisTarget | undefined {
+	const exchange = acceptedExchange(
+		modelExchanges,
+		targetClassificationPrompt,
+		startIndex,
+	);
+	const output = exchange?.validatedModelOutput as
+		| {
+				decision?: unknown;
+				target?: {
+					additionalMemberSegmentIndices?: unknown;
+					family?: unknown;
+					kind?: unknown;
+				} | null;
+		  }
+		| undefined;
+	if (
+		output?.decision !== "Resolved" ||
+		!output.target ||
+		!Array.isArray(output.target.additionalMemberSegmentIndices) ||
+		typeof output.target.family !== "string" ||
+		typeof output.target.kind !== "string"
+	) {
+		return undefined;
+	}
+	return {
+		family: output.target.family,
+		kind: output.target.kind,
+		memberSegmentIndices: [
+			clickedSegmentIndex,
+			...output.target.additionalMemberSegmentIndices,
+		].toSorted((left, right) => left - right),
+	} as AnalysisTarget;
+}
+
+function targetFromResolved(
+	result: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
+): AnalysisTarget {
+	return {
+		family: result.selection.surface.lemma.family,
+		kind: result.selection.surface.lemma.kind,
+		memberSegmentIndices: result.selection.surfaceSegmentIndices,
+	} as AnalysisTarget;
+}
+
+function memberOrthographiesFromExchange(
+	modelExchanges: readonly DumgenModelExchange[],
+	target: AnalysisTarget,
+	startIndex: number,
+): Record<number, MemberOrthography> {
+	const exchange = acceptedExchange(
+		modelExchanges,
+		grammaticalResolutionPrompt(target),
+		startIndex,
+	);
+	const output = exchange?.validatedModelOutput as
+		| {
+				resolution?: {
+					memberOrthographies?: unknown;
+				} | null;
+		  }
+		| undefined;
+	const orthographies = output?.resolution?.memberOrthographies;
+	if (
+		!Array.isArray(orthographies) ||
+		orthographies.length !== target.memberSegmentIndices.length
+	) {
+		throw new Error(
+			"The grammatical model exchange has no aligned member orthographies.",
+		);
+	}
+	return Object.fromEntries(
+		target.memberSegmentIndices.map((index, position) => [
+			index,
+			orthographies[position] as MemberOrthography,
+		]),
+	);
+}
+
 function cachedStages(
 	stages: GermanClassificationTrace,
 ): GermanClassificationTrace {
@@ -224,69 +186,26 @@ function cachedStages(
 	) as GermanClassificationTrace;
 }
 
-function unresolvedResponse(
-	stageName: "target" | "grammatical",
-	stages: GermanClassificationTrace,
-	prompts: string[],
-	target?: AnalysisTarget,
-): ClickResolutionResponse {
-	return {
-		decision: "Unresolved",
-		...(target ? { target } : {}),
-		stages,
-		diagnostics: [
-			{
-				stage: stageName,
-				kind: "Unresolved",
-				message: `${stageName === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
-			},
-		],
-		generation: {
-			model: "gpt-5-nano",
-			prompts,
-			cache: "miss",
-			modelCalls: prompts.length,
-		},
-	};
-}
-
-function routeNotImplementedResponse(
-	stageName: "GrammaticalResolution",
-	target: AnalysisTarget,
-	stages: GermanClassificationTrace,
-	prompts: string[],
-): ClickResolutionResponse {
-	return {
-		decision: "NotImplemented",
-		stage: stageName,
-		language: "de",
-		family: target.family,
-		kind: target.kind,
-		target,
-		stages,
-		diagnostics: [
-			{
-				stage: "grammatical",
-				kind: "ResolutionRouteNotImplemented",
-				message: `${stageName} is not enabled for de/${target.family}/${target.kind}.`,
-			},
-		],
-		generation: {
-			model: "gpt-5-nano",
-			prompts,
-			cache: "miss",
-			modelCalls: prompts.length,
-		},
-	};
+function stableJson(value: unknown): string {
+	if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+	if (value !== null && typeof value === "object") {
+		return `{${Object.entries(value)
+			.sort(([left], [right]) => left.localeCompare(right))
+			.map(
+				([key, entry]) => `${JSON.stringify(key)}:${stableJson(entry)}`,
+			)
+			.join(",")}}`;
+	}
+	return JSON.stringify(value);
 }
 
 export class GermanClassificationResolver {
-	readonly #generate: GermanGenerator;
+	readonly #dumgen: Dumgen;
 	readonly #unitsByMember = new Map<string, ResolvedUnit>();
 	readonly #emojiDescriptionsByLemma = new Map<string, string[]>();
 
-	constructor(generate: ReturnType<typeof buildDumgen>) {
-		this.#generate = generate as unknown as GermanGenerator;
+	constructor(dumgen: Dumgen) {
+		this.#dumgen = dumgen;
 	}
 
 	clear(): void {
@@ -312,139 +231,179 @@ export class GermanClassificationResolver {
 			);
 		}
 
-		const stages = createGermanClassificationTrace();
-		const segments = sentence.segments.map(({ kind, text }) => ({
-			kind,
-			text,
-		}));
-		const targetInput = { clickedSegmentIndex, segments };
-		attemptedPrompts.push(targetClassificationPrompt);
-		const targetOutput =
-			await this.#generate.laboratory.targetClassification.de.highLevelWholeUnit(
-				targetInput,
+		const exchangeStart = modelExchanges.length;
+		let grammatical: GrammaticalResult<"de">;
+		try {
+			grammatical = await this.#dumgen.resolve.grammatical("de", {
+				sentence,
+				clickedSegmentIndex,
+			});
+		} catch (error) {
+			attemptedPrompts.push(
+				...promptsFromExchanges(modelExchanges, exchangeStart),
 			);
+			const target = targetFromExchange(
+				modelExchanges,
+				clickedSegmentIndex,
+				exchangeStart,
+			);
+			if (
+				target &&
+				!attemptedPrompts.includes(grammaticalResolutionPrompt(target))
+			) {
+				attemptedPrompts.push(grammaticalResolutionPrompt(target));
+			}
+			throw error;
+		}
+
+		const stages = createGermanClassificationTrace();
+		const target =
+			grammatical.decision === "Resolved"
+				? targetFromResolved(grammatical)
+				: targetFromExchange(
+						modelExchanges,
+						clickedSegmentIndex,
+						exchangeStart,
+					);
 		stages.target = stage(
 			targetClassificationPrompt,
-			targetOutput,
+			target ?? { decision: "Unresolved" },
 			modelExchanges,
+			exchangeStart,
 		);
-		if (isUnresolved(targetOutput)) {
-			return unresolvedResponse("target", stages, [
-				targetClassificationPrompt,
-			]);
-		}
-		const target = targetOutput;
-		this.#assertTarget(sentence, clickedSegmentIndex, target);
-		if (!isRouteEnabled(enabledGrammaticalRoutes, target)) {
-			return routeNotImplementedResponse(
-				"GrammaticalResolution",
+
+		if (grammatical.decision === "NotImplemented") {
+			if (!target) {
+				throw new Error(
+					"NotImplemented requires an observable Analysis Target.",
+				);
+			}
+			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
+			attemptedPrompts.push(...prompts);
+			return {
+				decision: "NotImplemented",
+				stage: "GrammaticalResolution",
+				language: grammatical.language,
+				family: grammatical.route.family,
+				kind: grammatical.route.kind,
 				target,
 				stages,
-				[targetClassificationPrompt],
-			);
-		}
-
-		const markedContext = constructMarkedContext(
-			sentence.segments,
-			target.memberSegmentIndices,
-		);
-		const grammaticalInput = { markedContext };
-		const grammaticalPrompt = grammaticalResolutionPrompt(target);
-		const grammatical = this.#route(
-			this.#generate.laboratory.grammaticalResolution.de,
-			target,
-			"Grammatical Resolution",
-		);
-		attemptedPrompts.push(grammaticalPrompt);
-		const grammaticalOutput = await grammatical(grammaticalInput);
-		stages.grammatical = stage(
-			grammaticalPrompt,
-			grammaticalOutput,
-			modelExchanges,
-		);
-		if (isUnresolved(grammaticalOutput)) {
-			return unresolvedResponse(
-				"grammatical",
-				stages,
-				[targetClassificationPrompt, grammaticalPrompt],
-				target,
-			);
-		}
-		if (
-			grammaticalOutput.memberOrthographies.length !==
-			target.memberSegmentIndices.length
-		) {
-			throw new Error(
-				"Grammatical Resolution must return one orthography result per target member.",
-			);
-		}
-
-		const lemma = grammaticalOutput.lemma;
-		if (lemma.family !== target.family || lemma.kind !== target.kind) {
-			throw new Error(
-				"Grammatical Resolution returned a Lemma outside its catalog route.",
-			);
-		}
-		const surfaceValue = { ...grammaticalOutput.surface, lemma } as Surface;
-		const surface = parseGermanEntity<Surface>(
-			"Surface",
-			surfaceValue,
-			surfaceValue.surfaceKind,
-			lemma,
-		);
-		const memberOrthographies = Object.fromEntries(
-			target.memberSegmentIndices.map(
-				(index: number, position: number) => [
-					index,
-					grammaticalOutput.memberOrthographies[
-						position
-					] as MemberOrthography,
+				diagnostics: [
+					{
+						stage: "grammatical",
+						kind: "ResolutionRouteNotImplemented",
+						message: `GrammaticalResolution is not enabled for de/${grammatical.route.family}/${grammatical.route.kind}.`,
+					},
 				],
-			),
-		);
+				generation: {
+					model: "gpt-5-nano",
+					prompts,
+					cache: "miss",
+					modelCalls: prompts.length,
+				},
+			};
+		}
 
+		if (grammatical.decision === "Unresolved") {
+			const grammaticalPrompt = target
+				? grammaticalResolutionPrompt(target)
+				: undefined;
+			if (grammaticalPrompt) {
+				stages.grammatical = stage(
+					grammaticalPrompt,
+					grammatical,
+					modelExchanges,
+					exchangeStart,
+				);
+			}
+			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
+			attemptedPrompts.push(...prompts);
+			const failedStage = target ? "grammatical" : "target";
+			return {
+				decision: "Unresolved",
+				...(target ? { target } : undefined),
+				stages,
+				diagnostics: [
+					{
+						stage: failedStage,
+						kind: "Unresolved",
+						message: `${failedStage === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
+					},
+				],
+				generation: {
+					model: "gpt-5-nano",
+					prompts,
+					cache: "miss",
+					modelCalls: prompts.length,
+				},
+			};
+		}
+		if (!target) {
+			throw new Error("Resolved grammar requires an Analysis Target.");
+		}
+
+		stages.grammatical = stage(
+			grammaticalResolutionPrompt(target),
+			grammatical,
+			modelExchanges,
+			exchangeStart,
+		);
+		const memberOrthographies = memberOrthographiesFromExchange(
+			modelExchanges,
+			target,
+			exchangeStart,
+		);
+		const lemma = grammatical.selection.surface.lemma;
 		const lemmaKey = stableJson(lemma);
 		const existingEmojiDescriptions = [
 			...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
 		];
-		const readingInput = {
-			markedContext,
-			lemma,
+		const reading = await this.#dumgen.resolve.reading("de", {
+			markedContext: grammatical.markedContext,
+			lemma: lemma.canonicalForm,
 			existingEmojiDescriptions,
-		};
-		attemptedPrompts.push(readingResolutionPrompt);
-		const readingOutput =
-			await this.#generate.laboratory.readingResolution.de(readingInput);
+		});
 		stages.reading = stage(
 			readingResolutionPrompt,
-			readingOutput,
+			reading,
 			modelExchanges,
+			exchangeStart,
 		);
 
-		const exactMember = existingEmojiDescriptions.includes(
-			readingOutput.emojiDescription,
-		);
-		const authoritativeDecision = exactMember ? "Reuse" : "New";
 		const diagnostics: ResolutionDiagnostic[] = [];
-		if (readingOutput.decision !== authoritativeDecision) {
+		const readingExchange = acceptedExchange(
+			modelExchanges,
+			readingResolutionPrompt,
+			exchangeStart,
+		);
+		const advisoryDecision = (
+			readingExchange?.validatedModelOutput as
+				| { decision?: unknown }
+				| undefined
+		)?.decision;
+		if (
+			(advisoryDecision === "Reuse" || advisoryDecision === "New") &&
+			advisoryDecision !== reading.decision
+		) {
 			diagnostics.push({
 				stage: "reading",
 				kind: "DecisionMismatch",
-				message: `Model advised ${readingOutput.decision}, but exact Emoji Description membership requires ${authoritativeDecision}.`,
+				message: `Model advised ${advisoryDecision}, but exact Emoji Description membership requires ${reading.decision}.`,
 			});
 		}
-		if (!exactMember) {
+		if (reading.decision === "New") {
 			this.#emojiDescriptionsByLemma.set(lemmaKey, [
 				...existingEmojiDescriptions,
-				readingOutput.emojiDescription,
+				reading.emojiDescription,
 			]);
 		}
+
 		const resolvedUnit: ResolvedUnit = {
 			target,
-			surface,
+			selection: grammatical.selection,
 			reading: {
 				lemma,
-				emojiDescription: readingOutput.emojiDescription,
+				emojiDescription: reading.emojiDescription,
 			} as Reading,
 			memberOrthographies,
 			stages,
@@ -456,16 +415,14 @@ export class GermanClassificationResolver {
 				resolvedUnit,
 			);
 		}
+		const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
+		attemptedPrompts.push(...prompts);
 		return this.#resolvedResponse(
 			sentence,
 			clickedSegmentIndex,
 			resolvedUnit,
 			"miss",
-			[
-				targetClassificationPrompt,
-				grammaticalPrompt,
-				readingResolutionPrompt,
-			],
+			prompts,
 		);
 	}
 
@@ -483,27 +440,23 @@ export class GermanClassificationResolver {
 				"Cached resolution has no orthography for clicked member.",
 			);
 		}
-		const selection = parseGermanEntity<Selection>(
-			"Selection",
-			{
-				segmentedSentenceId: sentence.id,
-				clickedSegmentIndex,
-				surfaceSegmentIndices: unit.target.memberSegmentIndices,
-				attestedSurface: constructAttestedSurface(
-					sentence.segments,
-					unit.target.memberSegmentIndices,
-				),
-				selectedOrthography,
-				surface: unit.surface,
-			},
-			unit.surface.surfaceKind,
-			unit.surface.lemma,
-		);
+		const selection =
+			clickedSegmentIndex === unit.selection.clickedSegmentIndex
+				? unit.selection
+				: dumling.de.create.selection({
+						...unit.selection,
+						segmentedSentenceId: sentence.id,
+						clickedSegmentIndex,
+						surfaceSegmentIndices: [
+							...unit.selection.surfaceSegmentIndices,
+						],
+						selectedOrthography,
+					});
 		const entity: EntityRepresentation = {
 			resolution: "dumgen",
 			model: "gpt-5-nano",
 			selection,
-			surface: unit.surface,
+			surface: selection.surface,
 			reading: unit.reading,
 		};
 		return {
@@ -525,69 +478,20 @@ export class GermanClassificationResolver {
 		};
 	}
 
-	#route<T extends (...args: never[]) => unknown>(
-		catalog: Record<string, Record<string, T>>,
-		target: AnalysisTarget,
-		stageName: string,
-	): T {
-		const route = catalog[target.family]?.[target.kind];
-		if (!route) {
-			throw new Error(
-				`No ${stageName} prompt exists for de/${target.family}/${target.kind}.`,
-			);
-		}
-		return route;
-	}
-
 	#cacheKey(sentenceId: string, segmentIndex: number): string {
 		return `${sentenceId}:${segmentIndex}`;
-	}
-
-	#assertTarget(
-		sentence: SegmentedSentence,
-		clickedSegmentIndex: number,
-		target: AnalysisTarget,
-	): void {
-		if ((target.family as string) === "Morpheme") {
-			throw new Error(
-				"HighLevelWholeUnit Target Classification cannot route to Morpheme.",
-			);
-		}
-		if (!target.memberSegmentIndices.includes(clickedSegmentIndex)) {
-			throw new Error(
-				"AnalysisTarget must include the clicked Segment index.",
-			);
-		}
-		for (
-			let position = 0;
-			position < target.memberSegmentIndices.length;
-			position += 1
-		) {
-			const index = target.memberSegmentIndices[position];
-			if (
-				typeof index !== "number" ||
-				(position > 0 &&
-					index <=
-						(target.memberSegmentIndices[position - 1] ?? -1)) ||
-				sentence.segments[index]?.kind !== "ResolvableText"
-			) {
-				throw new Error(
-					"AnalysisTarget member indices must be ordered, unique ResolvableText Segment positions.",
-				);
-			}
-		}
 	}
 }
 
 export async function classifyGermanSegment(
-	generate: ReturnType<typeof buildDumgen>,
+	dumgen: Dumgen,
 	sentence: SegmentedSentence,
 	clickedSegmentIndex: number,
 	trace?: GermanClassificationTrace,
 	modelExchanges: readonly DumgenModelExchange[] = [],
 	attemptedPrompts: string[] = [],
 ): Promise<ClickResolutionResponse> {
-	const result = await new GermanClassificationResolver(generate).resolve(
+	const result = await new GermanClassificationResolver(dumgen).resolve(
 		sentence,
 		clickedSegmentIndex,
 		modelExchanges,

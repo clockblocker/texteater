@@ -102,9 +102,12 @@ export function buildDeterministicComparison(): DeterministicComparison {
 	}
 
 	for (const comparisonCase of READING_COMPARISON_CASES) {
-		const verboseInput = verboseReadingPrompt.projectInput(
-			comparisonCase.input,
-		);
+		const verboseInput = {
+			markedContext: comparisonCase.input.markedContext,
+			lemma: comparisonCase.input.lemma.canonicalForm,
+			existingEmojiDescriptions:
+				comparisonCase.input.existingEmojiDescriptions,
+		};
 		const verboseOutput = comparisonCase.verboseReferenceOutput;
 		measurements.push(
 			measure({

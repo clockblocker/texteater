@@ -2,34 +2,19 @@ import { describe, expect, test } from "bun:test";
 import {
 	type AiSdk,
 	AiSdkGenerationError,
-	type AnalysisTarget,
 	buildDumgen,
 	DumgenError,
+	type DumgenModelExchange,
 	type DumgenOptions,
-	type ReadingResolution,
-	type Unresolved,
+	type SegmentedSentence,
 } from "dumgen";
-import { schemasFor } from "dumling/schema";
+import { dumling } from "dumling";
 import { z } from "zod";
 
-import {
-	PROMPT_CATALOG,
-	type PromptTree,
-} from "../../src/catalog/prompt-catalog";
+import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
+import type { PromptTree } from "../../src/catalog/prompt-definition";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
 import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
-
-const segments = [
-	{ kind: "ResolvableText", text: "Die" },
-	{ kind: "Whitespace", text: " " },
-	{ kind: "ResolvableText", text: "Banken" },
-] as const;
-
-const analysisTarget = {
-	memberSegmentIndices: [2],
-	family: "Lexeme",
-	kind: "NOUN",
-} as const satisfies AnalysisTarget;
 
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
@@ -47,11 +32,156 @@ const modelGrammar = {
 	},
 } as const;
 
-describe("settled German laboratory topology", () => {
-	test("executes distinct intake, segmentation, target, grammatical, and reading leaves", async () => {
-		const outputs: unknown[] = [
+function sentence(
+	parts: Array<{
+		kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
+		text: string;
+	}>,
+): SegmentedSentence<"de"> {
+	let offset = 0;
+	return {
+		id: dumling.de.create.segmentedSentenceId(crypto.randomUUID()),
+		language: "de",
+		sourceText: parts.map(({ text }) => text).join(""),
+		segments: parts.map((part, index) => {
+			const start = offset;
+			offset += part.text.length;
+			return { ...part, index, start, end: offset };
+		}),
+	};
+}
+
+function queueSdk(outputs: unknown[]) {
+	const calls: Array<{ input: string; params: unknown; schema: unknown }> =
+		[];
+	const sdk: AiSdk = {
+		async structuredGeneration(input, schema, params) {
+			calls.push({ input, params, schema });
+			return outputs.shift() as never;
+		},
+		async unstructuredGeneration() {
+			throw new Error("not used");
+		},
+	};
+	return { calls, sdk };
+}
+
+describe("Dumgen module interface", () => {
+	test("exposes exactly the three high-level operations", () => {
+		const { sdk } = queueSdk([]);
+		const dumgen = buildDumgen({ sdk });
+
+		expect(Object.keys(dumgen)).toEqual(["segment", "resolve"]);
+		expect(Object.keys(dumgen.resolve)).toEqual(["grammatical", "reading"]);
+		expect("laboratory" in dumgen).toBe(false);
+		expect("promptCatalog" in dumgen).toBe(false);
+		expect("de" in dumgen.resolve).toBe(false);
+		expect(Object.isFrozen(dumgen)).toBe(true);
+		expect(Object.isFrozen(dumgen.resolve)).toBe(true);
+	});
+
+	test("segments German through Intake and its language route", async () => {
+		const { calls, sdk } = queueSdk([
 			{ decision: "Accepted", language: "de" },
-			{ segments },
+			{
+				segments: [
+					{ kind: "ResolvableText", text: "Die" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "Banken" },
+				],
+			},
+		]);
+		const exchanges: DumgenModelExchange[] = [];
+		const dumgen = buildDumgen({
+			sdk,
+			onModelExchange(exchange) {
+				exchanges.push(exchange);
+			},
+		});
+
+		const result = await dumgen.segment("Die Banken");
+
+		expect(result.outcome).toBe("Segmented");
+		if (result.outcome !== "Segmented") return;
+		expect(result.language).toBe(result.sentence.language);
+		expect(result.sentence).toMatchObject({
+			language: "de",
+			sourceText: "Die Banken",
+			segments: [
+				{
+					index: 0,
+					kind: "ResolvableText",
+					text: "Die",
+					start: 0,
+					end: 3,
+				},
+				{
+					index: 1,
+					kind: "Whitespace",
+					text: " ",
+					start: 3,
+					end: 4,
+				},
+				{
+					index: 2,
+					kind: "ResolvableText",
+					text: "Banken",
+					start: 4,
+					end: 10,
+				},
+			],
+		});
+		expect(typeof result.sentence.id).toBe("string");
+		expect(Object.isFrozen(result.sentence)).toBe(true);
+		expect(Object.isFrozen(result.sentence.segments)).toBe(true);
+		expect(calls).toHaveLength(2);
+		expect(
+			exchanges
+				.filter(({ phase }) => phase === "accepted")
+				.map(({ promptPath }) => promptPath),
+		).toEqual(["laboratory.intake", "laboratory.segmentation.de"]);
+	});
+
+	test("stops after rejected Intake decisions", async () => {
+		for (const [output, expected] of [
+			[
+				{ decision: "UnsupportedLanguage", language: "fr" },
+				{
+					outcome: "Unavailable",
+					reason: "UnsupportedLanguage",
+					language: "fr",
+				},
+			],
+			[
+				{ decision: "Unintelligible", language: null },
+				{
+					outcome: "Unavailable",
+					reason: "Unintelligible",
+					language: null,
+				},
+			],
+		] as const) {
+			const { calls, sdk } = queueSdk([output]);
+			await expect(
+				buildDumgen({ sdk }).segment("input"),
+			).resolves.toEqual(expected);
+			expect(calls).toHaveLength(1);
+		}
+	});
+
+	test("rejects empty source text before a model call", async () => {
+		const { calls, sdk } = queueSdk([]);
+		await expect(buildDumgen({ sdk }).segment("")).rejects.toMatchObject({
+			code: "invalid-input",
+			name: "DumgenError",
+		});
+		expect(calls).toHaveLength(0);
+	});
+});
+
+describe("grammatical resolution", () => {
+	test("owns classification, route dispatch, linking, and marked context", async () => {
+		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
 				target: {
@@ -61,223 +191,177 @@ describe("settled German laboratory topology", () => {
 				},
 			},
 			{ decision: "Resolved", resolution: modelGrammar },
-			{ decision: "New", emojiDescription: "🏦" },
-		];
-		const calls: Array<{
-			input: string;
-			params: unknown;
-			schema: unknown;
-		}> = [];
-		const sdk: AiSdk = {
-			async structuredGeneration(input, schema, params) {
-				calls.push({ input, params, schema });
-				return outputs.shift() as never;
-			},
-			async unstructuredGeneration() {
-				throw new Error("not used");
-			},
-		};
-
-		const generate = buildDumgen({ sdk });
-		expect("production" in generate).toBe(false);
-		expect("classification" in generate.laboratory).toBe(false);
-
-		expect(
-			await generate.laboratory.intake({ text: "Die Banken" }),
-		).toEqual({
-			decision: "Accepted",
-			language: "de",
+		]);
+		const exchanges: DumgenModelExchange[] = [];
+		const dumgen = buildDumgen({
+			sdk,
+			onModelExchange: (exchange) => exchanges.push(exchange),
 		});
-		expect(
-			await generate.laboratory.segmentation.de({ text: "Die Banken" }),
-		).toEqual({ segments: [...segments] });
+		const bankSentence = sentence([
+			{ kind: "ResolvableText", text: "Die" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Banken" },
+		]);
 
-		const target =
-			await generate.laboratory.targetClassification.de.highLevelWholeUnit(
-				{
-					clickedSegmentIndex: 2,
-					segments: [...segments],
-				},
-			);
-		expect(target).toEqual(analysisTarget);
-		expect("decision" in target).toBe(false);
+		const result = await dumgen.resolve.grammatical("de", {
+			sentence: bankSentence,
+			clickedSegmentIndex: 2,
+		});
 
-		const grammar =
-			await generate.laboratory.grammaticalResolution.de.Lexeme.NOUN({
-				markedContext: "Die <TARGET>Banken</TARGET>",
-			});
-		expect(grammar).toEqual({
+		expect(result).toMatchObject({
 			decision: "Resolved",
-			memberOrthographies: ["Standard"],
-			surface: {
-				language: "de",
-				...modelGrammar.surface,
-			},
-			lemma: {
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				...modelGrammar.lemma,
-			},
-		});
-
-		const reading: ReadingResolution =
-			await generate.laboratory.readingResolution.de({
-				markedContext: "Die <TARGET>Banken</TARGET>",
-				lemma: {
+			language: "de",
+			markedContext: "Die <TARGET>Banken</TARGET>",
+			selection: {
+				segmentedSentenceId: bankSentence.id,
+				clickedSegmentIndex: 2,
+				surfaceSegmentIndices: [2],
+				attestedSurface: "Banken",
+				selectedOrthography: "Standard",
+				surface: {
 					language: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-					...modelGrammar.lemma,
+					lemma: {
+						language: "de",
+						family: "Lexeme",
+						kind: "NOUN",
+						canonicalForm: "Bank",
+					},
 				},
-				existingEmojiDescriptions: [],
-			});
-		expect(reading).toEqual({
-			decision: "New",
-			emojiDescription: "🏦",
+			},
 		});
-
-		expect(calls).toHaveLength(5);
-		expect(calls[2]?.input).toBe(
-			'{"clickedSegmentIndex":2,"segments":[{"kind":"ResolvableText","text":"Die"},{"kind":"Whitespace","text":" "},{"kind":"ResolvableText","text":"Banken"}]}',
-		);
-		expect(calls[3]?.input).toBe(
+		expect("target" in result).toBe(false);
+		expect("memberOrthographies" in result).toBe(false);
+		expect(calls).toHaveLength(2);
+		expect(calls[0]?.input).toContain('"clickedSegmentIndex":2');
+		expect(calls[1]?.input).toBe(
 			'{"markedContext":"Die <TARGET>Banken</TARGET>"}',
 		);
-		expect(calls[4]?.input).toContain('"lemma":"Bank"');
-		expect(calls[4]?.input).not.toContain('"coreFeatures"');
-		expect(calls[4]?.input).not.toContain('"family"');
+		expect(
+			exchanges
+				.filter(({ phase }) => phase === "accepted")
+				.map(({ promptPath }) => promptPath),
+		).toEqual([
+			"laboratory.targetClassification.de.highLevelWholeUnit",
+			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
+		]);
 	});
 
-	test("registers route-specific grammatical leaves and one language-specific reading leaf", () => {
-		const expected = Object.fromEntries(
-			Object.entries(schemasFor.de.entity.Lemma)
-				.filter(([family]) => family !== "Morpheme")
-				.map(([family, kinds]) => [family, Object.keys(kinds)]),
-		);
-		expect(GERMAN_HIGH_LEVEL_ROUTES).toEqual(expected as never);
-
-		const grammatical = PROMPT_CATALOG.laboratory.grammaticalResolution.de;
-		const reading = PROMPT_CATALOG.laboratory.readingResolution.de;
-		const grammaticalPrompts = Object.values(grammatical).flatMap(
-			(family) => Object.values(family).map((entry) => entry.prompt),
-		);
-
-		expect(grammaticalPrompts).toHaveLength(24);
-		expect(new Set(grammaticalPrompts).size).toBe(24);
-		expect(reading.meta).toEqual({ kind: "prompt" });
-		expect(grammatical.Lexeme.NOUN.prompt.systemPrompt).toContain(
-			"Lexeme/NOUN",
-		);
-		expect(grammatical.Phraseme.Proverb.prompt.outputSchema).not.toBe(
-			grammatical.Lexeme.VERB.prompt.outputSchema,
-		);
-	});
-
-	test("accepts any German Lemma while hiding its route fields from the model", async () => {
-		let serializedInput: string | undefined;
-		const generate = buildDumgen({
-			sdk: {
-				async structuredGeneration(input) {
-					serializedInput = input;
-					return {
-						decision: "Reuse",
-						emojiDescription: "🚶",
-					} as never;
-				},
-				async unstructuredGeneration() {
-					throw new Error("not used");
+	test("escapes literal source markers and marks every target member", async () => {
+		const { calls, sdk } = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [4],
+					family: "Lexeme",
+					kind: "NOUN",
 				},
 			},
+			{
+				decision: "Unresolved",
+				resolution: null,
+			},
+		]);
+		const source = sentence([
+			{ kind: "ResolvableText", text: "sage" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "OpaqueText", text: "<TARGET>" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "auf&" },
+		]);
+
+		await buildDumgen({ sdk }).resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
 		});
 
+		expect(calls[1]?.input).toBe(
+			'{"markedContext":"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>"}',
+		);
+	});
+
+	test("returns expected Unresolved and NotImplemented outcomes", async () => {
+		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
+		const targetUnresolved = queueSdk([
+			{ decision: "Unresolved", target: null },
+		]);
 		await expect(
-			generate.laboratory.readingResolution.de({
-				markedContext: "Wir <TARGET>gehen</TARGET> nach Hause.",
-				lemma: {
-					canonicalForm: "gehen",
-					coreFeatures: {
-						hasGovPrep: null,
-						hasSepPrefix: null,
-						lexicallyReflexive: null,
-						verbType: null,
-					},
-					language: "de",
+			buildDumgen({ sdk: targetUnresolved.sdk }).resolve.grammatical(
+				"de",
+				{ sentence: source, clickedSegmentIndex: 0 },
+			),
+		).resolves.toEqual({ decision: "Unresolved", language: "de" });
+		expect(targetUnresolved.calls).toHaveLength(1);
+
+		const disabled = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
 					kind: "VERB",
 				},
-				existingEmojiDescriptions: ["🚶"],
+			},
+		]);
+		await expect(
+			buildDumgen({ sdk: disabled.sdk }).resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
 			}),
 		).resolves.toEqual({
-			decision: "Reuse",
-			emojiDescription: "🚶",
+			decision: "NotImplemented",
+			language: "de",
+			route: { family: "Lexeme", kind: "VERB" },
 		});
-		expect(serializedInput).toContain('"lemma":"gehen"');
-		expect(serializedInput).toContain('"existingEmojiDescriptions":["🚶"]');
-		expect(serializedInput).not.toContain('"language"');
-		expect(serializedInput).not.toContain('"family"');
-		expect(serializedInput).not.toContain('"kind"');
-		expect(serializedInput).not.toContain('"coreFeatures"');
-	});
+		expect(disabled.calls).toHaveLength(1);
 
-	test("returns payload-free Unresolved without leaking a model DTO", async () => {
-		const unresolved: Unresolved = { decision: "Unresolved" };
-		const outputs = [
-			{ decision: "Unresolved", target: null },
+		const grammarUnresolved = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
 			{ decision: "Unresolved", resolution: null },
-		];
-		const generate = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					return outputs.shift() as never;
-				},
-				async unstructuredGeneration() {
-					throw new Error("not used");
-				},
-			},
-		});
-
-		expect(
-			await generate.laboratory.targetClassification.de.highLevelWholeUnit(
-				{
-					clickedSegmentIndex: 0,
-					segments: [{ kind: "ResolvableText", text: "quux" }],
-				},
+		]);
+		await expect(
+			buildDumgen({ sdk: grammarUnresolved.sdk }).resolve.grammatical(
+				"de",
+				{ sentence: source, clickedSegmentIndex: 0 },
 			),
-		).toEqual(unresolved);
-		expect(
-			await generate.laboratory.grammaticalResolution.de.Lexeme.X({
-				markedContext: "<TARGET>quux</TARGET>",
-			}),
-		).toEqual(unresolved);
+		).resolves.toEqual({ decision: "Unresolved", language: "de" });
+		expect(grammarUnresolved.calls).toHaveLength(2);
 	});
 
-	test("constructs target membership from the click and validates additional members", async () => {
-		const outputs = [
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [2],
-					family: "Phraseme",
-					kind: "DiscourseFormula",
-				},
-			},
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [2, 2],
-					family: "Phraseme",
-					kind: "DiscourseFormula",
-				},
-			},
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [0, 2],
-					family: "Phraseme",
-					kind: "DiscourseFormula",
-				},
-			},
+	test("validates sentence language, aggregate, and click before dispatch", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const dumgen = buildDumgen({ sdk });
+		const source = sentence([
+			{ kind: "ResolvableText", text: "Bank" },
+			{ kind: "Whitespace", text: " " },
+		]);
+
+		for (const invalid of [
+			{ sentence: { ...source, language: "en" }, clickedSegmentIndex: 0 },
+			{ sentence: source, clickedSegmentIndex: -1 },
+			{ sentence: source, clickedSegmentIndex: 1 },
+			{ sentence: source, clickedSegmentIndex: 9 },
+		]) {
+			await expect(
+				dumgen.resolve.grammatical("de", invalid as never),
+			).rejects.toMatchObject({ code: "invalid-input" });
+		}
+		expect(calls).toHaveLength(0);
+	});
+
+	test("rejects invalid target membership and orthography counts", async () => {
+		const source = sentence([
+			{ kind: "ResolvableText", text: "Die" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Banken" },
+		]);
+		const invalidTarget = queueSdk([
 			{
 				decision: "Resolved",
 				target: {
@@ -286,156 +370,129 @@ describe("settled German laboratory topology", () => {
 					kind: "NOUN",
 				},
 			},
-		];
-		const generate = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					return outputs.shift() as never;
-				},
-				async unstructuredGeneration() {
-					return "";
-				},
-			},
-		});
-
+		]);
 		await expect(
-			generate.laboratory.targetClassification.de.highLevelWholeUnit({
+			buildDumgen({ sdk: invalidTarget.sdk }).resolve.grammatical("de", {
+				sentence: source,
 				clickedSegmentIndex: 0,
-				segments: [...segments],
-			}),
-		).resolves.toEqual({
-			memberSegmentIndices: [0, 2],
-			family: "Phraseme",
-			kind: "DiscourseFormula",
-		});
-		for (let invalidOutput = 0; invalidOutput < 3; invalidOutput += 1) {
-			await expect(
-				generate.laboratory.targetClassification.de.highLevelWholeUnit({
-					clickedSegmentIndex: 0,
-					segments: [...segments],
-				}),
-			).rejects.toMatchObject({ code: "invalid-output" });
-		}
-	});
-
-	test("rejects invalid routes and marker alignment as invalid output", async () => {
-		const targetGenerator = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					return {
-						decision: "Resolved",
-						target: {
-							additionalMemberSegmentIndices: [],
-							family: "Morpheme",
-							kind: "Prefix",
-						},
-					} as never;
-				},
-				async unstructuredGeneration() {
-					return "";
-				},
-			},
-		});
-
-		await expect(
-			targetGenerator.laboratory.targetClassification.de.highLevelWholeUnit(
-				{
-					clickedSegmentIndex: 0,
-					segments: [{ kind: "ResolvableText", text: "un" }],
-				},
-			),
-		).rejects.toMatchObject({ code: "invalid-output" });
-
-		const grammarGenerator = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					return {
-						decision: "Resolved",
-						resolution: modelGrammar,
-					} as never;
-				},
-				async unstructuredGeneration() {
-					return "";
-				},
-			},
-		});
-		await expect(
-			grammarGenerator.laboratory.grammaticalResolution.de.Lexeme.NOUN({
-				markedContext: "<TARGET>Die</TARGET> <TARGET>Banken</TARGET>",
 			}),
 		).rejects.toMatchObject({ code: "invalid-output" });
-	});
+		expect(invalidTarget.calls).toHaveLength(1);
 
-	test("rejects invalid input before calling the model and types provider failures", async () => {
-		let callCount = 0;
-		const generate = buildDumgen({
-			sdk: {
-				async structuredGeneration() {
-					callCount += 1;
-					throw new Error("offline");
-				},
-				async unstructuredGeneration() {
-					throw new Error("offline");
+		const invalidCount = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2],
+					family: "Lexeme",
+					kind: "NOUN",
 				},
 			},
-		});
-
+			{ decision: "Resolved", resolution: modelGrammar },
+		]);
 		await expect(
-			generate.laboratory.targetClassification.de.highLevelWholeUnit({
-				clickedSegmentIndex: 1,
-				segments: [...segments],
+			buildDumgen({ sdk: invalidCount.sdk }).resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
 			}),
-		).rejects.toMatchObject({ code: "invalid-input" });
-		expect(callCount).toBe(0);
-
-		await expect(
-			generate.laboratory.intake({ text: "Hallo" }),
-		).rejects.toMatchObject({
-			code: "provider-error",
-			name: "DumgenError",
-		});
-		expect(callCount).toBe(1);
-	});
-
-	test("preserves typed generation failure reasons", async () => {
-		for (const reason of [
-			"refusal",
-			"max-output-tokens",
-			"content-filter",
-		] as const) {
-			const generate = buildDumgen({
-				sdk: {
-					async structuredGeneration() {
-						throw new AiSdkGenerationError(reason, reason);
-					},
-					async unstructuredGeneration() {
-						throw new AiSdkGenerationError(reason, reason);
-					},
-				},
-			});
-
-			await expect(
-				generate.laboratory.intake({ text: "Hallo" }),
-			).rejects.toMatchObject({ code: reason, name: "DumgenError" });
-		}
+		).rejects.toMatchObject({ code: "invalid-output" });
+		expect(invalidCount.calls).toHaveLength(2);
 	});
 });
 
-test("accepts either an API key or an SDK, never both", () => {
-	const sdk = {
-		async structuredGeneration() {
-			return {} as never;
-		},
-		async unstructuredGeneration() {
-			return "";
-		},
-	} satisfies AiSdk;
+describe("reading resolution", () => {
+	test("passes only the minimal input and makes membership authoritative", async () => {
+		const { calls, sdk } = queueSdk([
+			{ decision: "New", emojiDescription: "🏦" },
+			{ decision: "Reuse", emojiDescription: "📚" },
+		]);
+		const dumgen = buildDumgen({ sdk });
+		await expect(
+			dumgen.resolve.reading("de", {
+				markedContext: "Die <TARGET>Bank</TARGET>.",
+				lemma: "Bank",
+				existingEmojiDescriptions: ["🏦"],
+			}),
+		).resolves.toEqual({ decision: "Reuse", emojiDescription: "🏦" });
+		await expect(
+			dumgen.resolve.reading("de", {
+				markedContext: "Die <TARGET>Bibliothek</TARGET>.",
+				lemma: "Bibliothek",
+				existingEmojiDescriptions: [],
+			}),
+		).resolves.toEqual({ decision: "New", emojiDescription: "📚" });
 
+		expect(JSON.parse(calls[0]?.input ?? "{}")).toEqual({
+			markedContext: "Die <TARGET>Bank</TARGET>.",
+			lemma: "Bank",
+			existingEmojiDescriptions: ["🏦"],
+		});
+		expect(calls[0]?.input).not.toContain("canonicalForm");
+		expect(calls[0]?.input).not.toContain("coreFeatures");
+	});
+
+	test("validates its language and minimal input before dispatch", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const dumgen = buildDumgen({ sdk });
+		for (const input of [
+			{ markedContext: "", lemma: "Bank", existingEmojiDescriptions: [] },
+			{
+				markedContext: "<TARGET>Bank</TARGET>",
+				lemma: "",
+				existingEmojiDescriptions: [],
+			},
+		]) {
+			await expect(
+				dumgen.resolve.reading("de", input),
+			).rejects.toMatchObject({ code: "invalid-input" });
+		}
+		expect(calls).toHaveLength(0);
+	});
+});
+
+test("preserves typed provider failures and isolates instrumentation", async () => {
+	for (const reason of [
+		"refusal",
+		"max-output-tokens",
+		"content-filter",
+	] as const) {
+		const dumgen = buildDumgen({
+			sdk: {
+				async structuredGeneration() {
+					throw new AiSdkGenerationError(reason, reason);
+				},
+				async unstructuredGeneration() {
+					throw new AiSdkGenerationError(reason, reason);
+				},
+			},
+			onModelExchange() {
+				throw new Error("observer failure");
+			},
+		});
+		await expect(dumgen.segment("Hallo")).rejects.toMatchObject({
+			code: reason,
+			name: "DumgenError",
+		});
+	}
+});
+
+test("accepts either an API key or an SDK, never both", () => {
+	const { sdk } = queueSdk([]);
 	// @ts-expect-error The API key and injected SDK are exclusive.
 	const invalidOptions: DumgenOptions = { apiKey: "secret", sdk };
 	expect(invalidOptions).toBeDefined();
 	expect(buildDumgen({ sdk })).toBeDefined();
 	expect(buildDumgen({ apiKey: "secret" })).toBeDefined();
+});
+
+test("keeps the complete prompt catalog internal for authoring tests", () => {
+	const grammatical = PROMPT_CATALOG.laboratory.grammaticalResolution.de;
+	const grammaticalPrompts = Object.values(grammatical).flatMap((family) =>
+		Object.values(family).map((entry) => entry.prompt),
+	);
+	expect(grammaticalPrompts).toHaveLength(24);
+	expect(new Set(grammaticalPrompts).size).toBe(24);
+	expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("NOUN");
 });
 
 test("null output schemas create unstructured string generators", async () => {

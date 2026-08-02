@@ -2,6 +2,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { defineSystemPromptCodegen } from "../../../assembly";
+import type { SystemPromptRecipe } from "../../../assembly/system-prompt-codegen";
 import { promptSource as grammarPromptSource } from "./prompt-source/grammatical-resolution/de/lexeme/noun/prompt-source";
 import { promptSource as readingPromptSource } from "./prompt-source/reading-resolution/de/lexeme/noun/prompt-source";
 
@@ -17,6 +18,6 @@ const codegen = defineSystemPromptCodegen({
 	staleLabel: "Issue #22 generated system prompts are stale",
 });
 
-export const compactSystemPromptRecipe = codegen.recipe;
+export const compactSystemPromptRecipe: SystemPromptRecipe = codegen.recipe;
 
 if (import.meta.main) await codegen.run();

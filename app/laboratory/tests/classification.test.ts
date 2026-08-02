@@ -1,13 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import {
-	type AiSdk,
-	type AnalysisTarget,
-	buildDumgen,
-	type DumgenModelExchange,
-} from "dumgen";
+import { type AiSdk, buildDumgen, type DumgenModelExchange } from "dumgen";
+import { dumling } from "dumling";
 
 import {
-	constructMarkedContext,
 	GermanClassificationResolver,
 	readingResolutionPrompt,
 	targetClassificationPrompt,
@@ -23,7 +18,7 @@ function sentence(
 ): SegmentedSentence {
 	let offset = 0;
 	return {
-		id,
+		id: dumling.de.create.segmentedSentenceId(id),
 		language: "de",
 		sourceText: parts.map(({ text }) => text).join(""),
 		segments: parts.map((part, index) => {
@@ -34,390 +29,168 @@ function sentence(
 	};
 }
 
-const bankLemma = {
-	language: "de",
-	canonicalForm: "Bank",
-	family: "Lexeme",
-	kind: "NOUN",
-	coreFeatures: { gender: "Fem", hyph: null },
-} as const;
-
-const bankSurface = {
-	language: "de",
-	normalizedSurface: "Bank Bank",
-	spelling: "Canonical",
-	realizationCoverage: "Full",
-	surfaceKind: "Inflection",
-	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Sing" },
-} as const;
-
-const modelBankSurface = {
-	normalizedSurface: "Bank Bank",
-	spelling: "Canonical",
-	realizationCoverage: "Full",
-	surfaceKind: "Inflection",
-	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Sing" },
-} as const;
-
-const modelBankLemma = {
-	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
-} as const;
-
-function fakeGenerator(options?: {
-	target?: AnalysisTarget | { decision: "Unresolved" };
-	grammatical?: { decision: "Unresolved" };
-	grammaticalFailure?: Error;
-	readingDecisions?: Array<"Reuse" | "New">;
-}) {
-	const calls: string[] = [];
-	const readingInputs: unknown[] = [];
-	const modelExchanges: DumgenModelExchange[] = [];
-	function accept(
-		promptPath: string,
-		modelInput: unknown,
-		modelOutput: unknown,
-	) {
-		modelExchanges.push(
-			{
-				phase: "received",
-				promptPath,
-				modelInput,
-				modelOutput,
-			},
-			{
-				phase: "accepted",
-				promptPath,
-				modelInput,
-				modelOutput,
-				validatedModelOutput: modelOutput,
-			},
-		);
-	}
-	let readingIndex = 0;
-	const generate = {
-		laboratory: {
-			targetClassification: {
-				de: {
-					async highLevelWholeUnit(input: unknown) {
-						calls.push("Target");
-						const { clickedSegmentIndex } = input as {
-							clickedSegmentIndex: number;
-						};
-						const result = options?.target ?? {
-							memberSegmentIndices: [0, 2],
-							family: "Lexeme" as const,
-							kind: "NOUN" as const,
-						};
-						accept(
-							"laboratory.targetClassification.de.highLevelWholeUnit",
-							input,
-							"decision" in result
-								? { decision: "Unresolved", target: null }
-								: {
-										decision: "Resolved",
-										target: {
-											additionalMemberSegmentIndices:
-												result.memberSegmentIndices.filter(
-													(index) =>
-														index !==
-														clickedSegmentIndex,
-												),
-											family: result.family,
-											kind: result.kind,
-										},
-									},
-						);
-						return result;
-					},
-				},
-			},
-			grammaticalResolution: {
-				de: {
-					Lexeme: {
-						async NOUN(input: unknown) {
-							calls.push("Grammatical");
-							if (options?.grammaticalFailure) {
-								throw options.grammaticalFailure;
-							}
-							const result = options?.grammatical ?? {
-								decision: "Resolved" as const,
-								memberOrthographies: [
-									"Typo" as const,
-									"Standard" as const,
-								],
-								surface: bankSurface,
-								lemma: bankLemma,
-							};
-							accept(
-								"laboratory.grammaticalResolution.de.Lexeme.NOUN",
-								input,
-								result.decision === "Unresolved"
-									? {
-											decision: "Unresolved",
-											resolution: null,
-										}
-									: {
-											decision: "Resolved",
-											resolution: {
-												memberOrthographies:
-													result.memberOrthographies,
-												surface: modelBankSurface,
-												lemma: modelBankLemma,
-											},
-										},
-							);
-							return result;
-						},
-					},
-				},
-			},
-			readingResolution: {
-				async de(input: unknown) {
-					calls.push("Reading");
-					readingInputs.push(input);
-					const result = {
-						decision:
-							options?.readingDecisions?.[readingIndex++] ??
-							"New",
-						emojiDescription: "🏦",
-					};
-					const { lemma: _lemma, ...modelInput } = input as {
-						markedContext: string;
-						lemma: typeof bankLemma;
-						existingEmojiDescriptions: string[];
-					};
-					accept(
-						readingResolutionPrompt,
-						{ ...modelInput, lemma: modelBankLemma.canonicalForm },
-						result,
-					);
-					return result;
-				},
-			},
-		},
-	} as unknown as ReturnType<typeof buildDumgen>;
-	return {
-		generate,
-		calls,
-		readingInputs,
-		modelExchanges,
-		resetModelExchanges() {
-			modelExchanges.length = 0;
-		},
-	};
-}
-
 const multiMemberSentence = sentence("sentence-1", [
 	{ kind: "ResolvableText", text: "Bnak" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "Bank" },
 ]);
 
-describe("German classification orchestration", () => {
-	test("runs through Dumgen's current model DTOs", async () => {
-		const outputs: unknown[] = [
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [],
-					family: "Lexeme",
-					kind: "NOUN",
-				},
-			},
-			{
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					surface: {
-						normalizedSurface: "Bank",
-						spelling: "Canonical",
-						realizationCoverage: "Full",
-						surfaceKind: "Inflection",
-						surfaceFeatures: { historicalStatus: null },
-						inflectionalFeatures: {
-							case: "Nom",
-							number: "Sing",
-						},
-					},
-					lemma: {
-						canonicalForm: "Bank",
-						coreFeatures: { gender: "Fem", hyph: null },
-					},
-				},
-			},
+const targetOutput = {
+	decision: "Resolved",
+	target: {
+		additionalMemberSegmentIndices: [2],
+		family: "Lexeme",
+		kind: "NOUN",
+	},
+} as const;
+
+const grammarOutput = {
+	decision: "Resolved",
+	resolution: {
+		memberOrthographies: ["Typo", "Standard"],
+		surface: {
+			normalizedSurface: "Bank Bank",
+			spelling: "Canonical",
+			realizationCoverage: "Full",
+			surfaceKind: "Inflection",
+			surfaceFeatures: null,
+			inflectionalFeatures: { case: "Nom", number: "Sing" },
+		},
+		lemma: {
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+		},
+	},
+} as const;
+
+function harness(outputs: Array<unknown | Error>) {
+	const calls: string[] = [];
+	const modelExchanges: DumgenModelExchange[] = [];
+	const sdk: AiSdk = {
+		async structuredGeneration(input) {
+			calls.push(input);
+			const output = outputs.shift();
+			if (output instanceof Error) throw output;
+			return output as never;
+		},
+		async unstructuredGeneration() {
+			throw new Error("not used");
+		},
+	};
+	const dumgen = buildDumgen({
+		sdk,
+		onModelExchange(exchange) {
+			modelExchanges.push(exchange);
+		},
+	});
+	return {
+		calls,
+		modelExchanges,
+		resolver: new GermanClassificationResolver(dumgen),
+	};
+}
+
+describe("German classification through the Dumgen module", () => {
+	test("composes grammatical and reading operations while deriving rich traces from instrumentation", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
 			{ decision: "New", emojiDescription: "🏦" },
-		];
-		const sdk: AiSdk = {
-			async structuredGeneration() {
-				return outputs.shift() as never;
-			},
-			async unstructuredGeneration() {
-				throw new Error("not used");
-			},
-		};
-		const modelExchanges: DumgenModelExchange[] = [];
-		const generate = buildDumgen({
-			sdk,
-			onModelExchange(exchange) {
-				modelExchanges.push(exchange);
-			},
-		});
-		const bankSentence = sentence("current-dumgen", [
-			{ kind: "ResolvableText", text: "Bank" },
 		]);
 
-		const result = await new GermanClassificationResolver(generate).resolve(
-			bankSentence,
-			0,
-			modelExchanges,
-		);
-
-		expect(result.decision).toBe("Resolved");
-		if (result.decision !== "Resolved") return;
-		expect(result.entity.surface.surfaceFeatures).toBeNull();
-		expect(result.stages.target?.output).toMatchObject({
-			target: { additionalMemberSegmentIndices: [] },
-		});
-		expect(outputs).toHaveLength(0);
-	});
-
-	test("marks every target member in authoritative joined context", () => {
-		const discontinuous = sentence("sentence-discontinuous", [
-			{ kind: "ResolvableText", text: "steh" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "ResolvableText", text: "sofort" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "ResolvableText", text: "auf" },
-			{ kind: "Punctuation", text: "!" },
-		]);
-
-		expect(constructMarkedContext(discontinuous.segments, [0, 4])).toBe(
-			"<TARGET>steh</TARGET> sofort <TARGET>auf</TARGET>!",
-		);
-	});
-
-	test("escapes literal source markers before adding application markers", () => {
-		const collision = sentence("sentence-marker-collision", [
-			{ kind: "ResolvableText", text: "sage" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "OpaqueText", text: "<TARGET>" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "ResolvableText", text: "auf&" },
-			{ kind: "OpaqueText", text: "</TARGET>" },
-		]);
-
-		const marked = constructMarkedContext(collision.segments, [0, 4]);
-
-		expect(marked).toBe(
-			"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>&lt;/TARGET&gt;",
-		);
-		expect(marked.match(/<TARGET>/gu)).toHaveLength(2);
-		expect(marked.match(/<\/TARGET>/gu)).toHaveLength(2);
-	});
-
-	test("executes Target -> route-specific Grammatical -> route-specific Reading", async () => {
-		const fake = fakeGenerator();
-		const resolver = new GermanClassificationResolver(fake.generate);
-
-		const result = await resolver.resolve(
+		const result = await testHarness.resolver.resolve(
 			multiMemberSentence,
 			0,
-			fake.modelExchanges,
+			testHarness.modelExchanges,
 		);
 
-		expect(fake.calls).toEqual(["Target", "Grammatical", "Reading"]);
 		expect(result.decision).toBe("Resolved");
 		if (result.decision !== "Resolved") return;
 		expect(result.generation).toEqual({
 			model: "gpt-5-nano",
 			prompts: [
-				"laboratory.targetClassification.de.highLevelWholeUnit",
+				targetClassificationPrompt,
 				"laboratory.grammaticalResolution.de.Lexeme.NOUN",
 				readingResolutionPrompt,
 			],
 			cache: "miss",
 			modelCalls: 3,
 		});
-		expect(result.stages.target?.input).toEqual({
-			clickedSegmentIndex: 0,
-			segments: [
-				{ kind: "ResolvableText", text: "Bnak" },
-				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "Bank" },
-			],
+		expect(result.target).toEqual({
+			memberSegmentIndices: [0, 2],
+			family: "Lexeme",
+			kind: "NOUN",
 		});
-		expect(result.stages.grammatical?.input).toEqual({
-			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
-		});
-		expect(result.stages.reading?.input).toEqual({
-			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
-			lemma: modelBankLemma.canonicalForm,
-			existingEmojiDescriptions: [],
-		});
-		expect(fake.readingInputs[0]).toEqual({
-			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
-			lemma: bankLemma,
-			existingEmojiDescriptions: [],
-		});
-		expect(result.stages.target).toMatchObject({
-			traceOrigin: "generated",
-			output: {
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [2],
-					family: "Lexeme",
-					kind: "NOUN",
-				},
-			},
-			result: {
-				memberSegmentIndices: [0, 2],
-				family: "Lexeme",
-				kind: "NOUN",
-			},
-		});
-		expect(fake.modelExchanges).toHaveLength(6);
 		expect(result.entity.selection).toMatchObject({
 			clickedSegmentIndex: 0,
 			surfaceSegmentIndices: [0, 2],
 			attestedSurface: "Bnak Bank",
 			selectedOrthography: "Typo",
 		});
-		expect(result.entity.surface.lemma).toEqual(bankLemma);
-		expect(result.entity.reading).toEqual({
-			lemma: bankLemma,
-			emojiDescription: "🏦",
+		expect(result.entity.surface.lemma).toMatchObject({
+			language: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+			canonicalForm: "Bank",
 		});
+		expect(result.entity.reading).toMatchObject({
+			emojiDescription: "🏦",
+			lemma: { canonicalForm: "Bank" },
+		});
+		expect(result.memberOrthographies).toEqual({
+			0: "Typo",
+			2: "Standard",
+		});
+		expect(result.stages.target).toMatchObject({
+			prompt: targetClassificationPrompt,
+			traceOrigin: "generated",
+			result: {
+				memberSegmentIndices: [0, 2],
+				family: "Lexeme",
+				kind: "NOUN",
+			},
+		});
+		expect(result.stages.grammatical?.input).toEqual({
+			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
+		});
+		expect(result.stages.reading?.input).toEqual({
+			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
+			lemma: "Bank",
+			existingEmojiDescriptions: [],
+		});
+		expect(testHarness.modelExchanges).toHaveLength(6);
 	});
 
-	test("indexes the full resolution by every member and rebuilds click-local Selection without model calls", async () => {
-		const fake = fakeGenerator();
-		const resolver = new GermanClassificationResolver(fake.generate);
-		const first = await resolver.resolve(
+	test("indexes a full resolution by every member and rebuilds click-local Selection without model calls", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
+			{ decision: "New", emojiDescription: "🏦" },
+		]);
+		const first = await testHarness.resolver.resolve(
 			multiMemberSentence,
 			0,
-			fake.modelExchanges,
+			testHarness.modelExchanges,
 		);
-		fake.resetModelExchanges();
-		const second = await resolver.resolve(
+		testHarness.modelExchanges.length = 0;
+		const second = await testHarness.resolver.resolve(
 			multiMemberSentence,
 			2,
-			fake.modelExchanges,
+			testHarness.modelExchanges,
 		);
 
-		expect(fake.calls).toEqual(["Target", "Grammatical", "Reading"]);
+		expect(testHarness.calls).toHaveLength(3);
 		expect(first.decision).toBe("Resolved");
 		expect(second.decision).toBe("Resolved");
-		if (first.decision !== "Resolved" || second.decision !== "Resolved")
+		if (first.decision !== "Resolved" || second.decision !== "Resolved") {
 			return;
+		}
 		expect(second.generation).toMatchObject({
 			cache: "member-hit",
 			modelCalls: 0,
 			prompts: [],
 		});
-		expect(fake.modelExchanges).toEqual([]);
+		expect(testHarness.modelExchanges).toEqual([]);
 		expect(second.stages.target?.traceOrigin).toBe("cached");
 		expect(second.entity.selection).toMatchObject({
 			clickedSegmentIndex: 2,
@@ -425,33 +198,33 @@ describe("German classification orchestration", () => {
 			surfaceSegmentIndices: [0, 2],
 		});
 		expect(second.entity.surface).toEqual(first.entity.surface);
-		expect(second.entity.reading).toEqual(first.entity.reading);
-		expect(second.memberOrthographies).toEqual({
-			0: "Typo",
-			2: "Standard",
-		});
 	});
 
 	test("surfaces Target and Grammatical Unresolved as prompt diagnostics", async () => {
-		const targetFake = fakeGenerator({
-			target: { decision: "Unresolved" },
-		});
-		const targetResult = await new GermanClassificationResolver(
-			targetFake.generate,
-		).resolve(multiMemberSentence, 0, targetFake.modelExchanges);
+		const targetHarness = harness([
+			{ decision: "Unresolved", target: null },
+		]);
+		const targetResult = await targetHarness.resolver.resolve(
+			multiMemberSentence,
+			0,
+			targetHarness.modelExchanges,
+		);
 		expect(targetResult).toMatchObject({
 			decision: "Unresolved",
 			diagnostics: [{ stage: "target", kind: "Unresolved" }],
 			generation: { modelCalls: 1 },
 		});
 
-		const grammaticalFake = fakeGenerator({
-			grammatical: { decision: "Unresolved" },
-		});
-		const grammaticalResult = await new GermanClassificationResolver(
-			grammaticalFake.generate,
-		).resolve(multiMemberSentence, 0, grammaticalFake.modelExchanges);
-		expect(grammaticalResult).toMatchObject({
+		const grammarHarness = harness([
+			targetOutput,
+			{ decision: "Unresolved", resolution: null },
+		]);
+		const grammarResult = await grammarHarness.resolver.resolve(
+			multiMemberSentence,
+			0,
+			grammarHarness.modelExchanges,
+		);
+		expect(grammarResult).toMatchObject({
 			decision: "Unresolved",
 			target: { memberSegmentIndices: [0, 2] },
 			diagnostics: [{ stage: "grammatical", kind: "Unresolved" }],
@@ -459,137 +232,96 @@ describe("German classification orchestration", () => {
 		});
 	});
 
-	test("stops each named unimplemented-route probe before a resolver model call", async () => {
-		const probes: Array<{
-			name: string;
-			sentence: SegmentedSentence;
-			clickedSegmentIndex: number;
-			target: AnalysisTarget;
-		}> = [
+	test("stops a disabled route before Grammatical Resolution", async () => {
+		const testHarness = harness([
 			{
-				name: "Guten Morgen discourse formula",
-				sentence: sentence("guten-morgen", [
-					{ kind: "ResolvableText", text: "Guten" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "Morgen" },
-					{ kind: "Punctuation", text: "!" },
-				]),
-				clickedSegmentIndex: 0,
+				decision: "Resolved",
 				target: {
-					memberSegmentIndices: [0, 2],
+					additionalMemberSegmentIndices: [2],
 					family: "Phraseme",
 					kind: "DiscourseFormula",
 				},
 			},
-			{
-				name: "separable verb",
-				sentence: sentence("separable-verb", [
-					{ kind: "ResolvableText", text: "Fritz" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "steht" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "sofort" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "auf" },
-					{ kind: "Punctuation", text: "." },
-				]),
-				clickedSegmentIndex: 2,
-				target: {
-					memberSegmentIndices: [2, 6],
-					family: "Lexeme",
-					kind: "VERB",
-				},
-			},
-			{
-				name: "non-noun Lexeme",
-				sentence: sentence("non-noun-lexeme", [
-					{ kind: "ResolvableText", text: "der" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "Kaffee" },
-				]),
-				clickedSegmentIndex: 0,
-				target: {
-					memberSegmentIndices: [0],
-					family: "Lexeme",
-					kind: "DET",
-				},
-			},
-		];
-
-		for (const probe of probes) {
-			const fake = fakeGenerator({ target: probe.target });
-			const result = await new GermanClassificationResolver(
-				fake.generate,
-			).resolve(
-				probe.sentence,
-				probe.clickedSegmentIndex,
-				fake.modelExchanges,
-			);
-
-			expect(fake.calls, probe.name).toEqual(["Target"]);
-			expect(result, probe.name).toMatchObject({
-				decision: "NotImplemented",
-				stage: "GrammaticalResolution",
-				language: "de",
-				family: probe.target.family,
-				kind: probe.target.kind,
-				target: probe.target,
-				diagnostics: [
-					{
-						stage: "grammatical",
-						kind: "ResolutionRouteNotImplemented",
-					},
-				],
-				generation: {
-					prompts: [targetClassificationPrompt],
-					modelCalls: 1,
-				},
-			});
-		}
-	});
-
-	test("retains the attempted prompt path when the provider fails before an exchange", async () => {
-		const fake = fakeGenerator({
-			grammaticalFailure: new Error("provider unavailable"),
-		});
-		const attemptedPrompts: string[] = [];
-		const resolver = new GermanClassificationResolver(fake.generate);
-
-		await expect(
-			resolver.resolve(
-				multiMemberSentence,
-				0,
-				fake.modelExchanges,
-				attemptedPrompts,
-			),
-		).rejects.toThrow("provider unavailable");
-		expect(attemptedPrompts).toEqual([
-			"laboratory.targetClassification.de.highLevelWholeUnit",
-			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
 		]);
-		expect(fake.modelExchanges).toHaveLength(2);
-	});
 
-	test("uses exact Emoji Description membership as authority and logs advisory disagreement", async () => {
-		const fake = fakeGenerator({ readingDecisions: ["New", "New"] });
-		const resolver = new GermanClassificationResolver(fake.generate);
-		await resolver.resolve(multiMemberSentence, 0, fake.modelExchanges);
-		fake.resetModelExchanges();
-		const anotherSentence = {
-			...multiMemberSentence,
-			id: "sentence-2",
-		};
-		const second = await resolver.resolve(
-			anotherSentence,
+		const result = await testHarness.resolver.resolve(
+			multiMemberSentence,
 			0,
-			fake.modelExchanges,
+			testHarness.modelExchanges,
 		);
 
-		expect(fake.readingInputs[1]).toMatchObject({
-			existingEmojiDescriptions: ["🏦"],
+		expect(testHarness.calls).toHaveLength(1);
+		expect(result).toMatchObject({
+			decision: "NotImplemented",
+			stage: "GrammaticalResolution",
+			language: "de",
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+			target: { memberSegmentIndices: [0, 2] },
+			diagnostics: [
+				{
+					stage: "grammatical",
+					kind: "ResolutionRouteNotImplemented",
+				},
+			],
+			generation: {
+				prompts: [targetClassificationPrompt],
+				modelCalls: 1,
+			},
 		});
+	});
+
+	test("retains the inferred attempted route when the provider fails", async () => {
+		const testHarness = harness([
+			targetOutput,
+			new Error("provider unavailable"),
+		]);
+		const attemptedPrompts: string[] = [];
+
+		await expect(
+			testHarness.resolver.resolve(
+				multiMemberSentence,
+				0,
+				testHarness.modelExchanges,
+				attemptedPrompts,
+			),
+		).rejects.toThrow("language-model provider");
+		expect(attemptedPrompts).toEqual([
+			targetClassificationPrompt,
+			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
+		]);
+		expect(testHarness.modelExchanges).toHaveLength(2);
+	});
+
+	test("uses exact Emoji Description membership and reports model disagreement", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
+			{ decision: "New", emojiDescription: "🏦" },
+			targetOutput,
+			grammarOutput,
+			{ decision: "New", emojiDescription: "🏦" },
+		]);
+		await testHarness.resolver.resolve(
+			multiMemberSentence,
+			0,
+			testHarness.modelExchanges,
+		);
+		testHarness.modelExchanges.length = 0;
+		const second = await testHarness.resolver.resolve(
+			{
+				...multiMemberSentence,
+				id: dumling.de.create.segmentedSentenceId("sentence-2"),
+			},
+			0,
+			testHarness.modelExchanges,
+		);
+
 		expect(second.decision).toBe("Resolved");
 		if (second.decision !== "Resolved") return;
+		expect(second.stages.reading?.input).toMatchObject({
+			existingEmojiDescriptions: ["🏦"],
+		});
 		expect(second.diagnostics).toEqual([
 			{
 				stage: "reading",

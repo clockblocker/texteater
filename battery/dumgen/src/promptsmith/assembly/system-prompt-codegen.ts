@@ -11,7 +11,7 @@ import type {
 } from "./contracts";
 import { selectedCaseSourcePaths, tryGetSelectionState } from "./golden-corpus";
 
-type SystemPromptRecipe = CodegenRecipe<
+export type SystemPromptRecipe = CodegenRecipe<
 	Record<never, never>,
 	{ readonly generated: { readonly root: string } },
 	{ readonly route: string }
