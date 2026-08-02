@@ -94,3 +94,14 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
   supplied Emoji Descriptions.
 - No model was called for this correction. Verification covered deterministic
   generation, schemas, catalog behavior, and package tests.
+
+## 2026-08-02 — adposition examples distinguish relations without semantic over-splitting
+
+- Spatial and temporal uses of `vor` reuse one broad precedence Reading rather
+  than splitting the same relational shape by domain. A contrastive use example
+  chooses `⏮️` over an existing generic `🔗` connector.
+- Approximate-time `gegen` is distinct from counteraction. A contrastive use
+  example creates `🤏` when only the existing counteraction description `⚔️` is
+  available.
+- These examples encode learner-facing relation identity without copying the
+  complement's content into the adposition's Emoji Description.

@@ -1,4 +1,5 @@
 import type { ExampleSet } from "../../../../assembly";
+import { adpExamples } from "./examples/adp";
 import type { inputSchema } from "./input-schema";
 import type { outputSchema } from "./output-schema";
 
@@ -130,19 +131,7 @@ export const examplesForTest = [
 			emojiDescription: "📄",
 		},
 	},
-	{
-		id: "reading-de-test-lexeme-adp-mit-instrument-vs-accompaniment",
-		input: {
-			markedContext:
-				"Die Mechanikerin löst die Schraube <TARGET>mit</TARGET> einem Schlüssel.",
-			lemma: "mit",
-			existingEmojiDescriptions: ["🤝", "🔗"],
-		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "🛠️",
-		},
-	},
+	adpExamples[10],
 	{
 		id: "reading-de-test-lexeme-adv-sonst-usual-vs-consequence",
 		input: {
