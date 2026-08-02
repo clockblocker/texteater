@@ -121,9 +121,19 @@ const targetPrompt = {
 					"Target must select a reachable German high-level route.",
 				);
 			}
+			const additionalIndices =
+				generated.target.additionalMemberSegmentIndices;
+			if (additionalIndices.includes(input.clickedSegmentIndex)) {
+				throw new Error(
+					"Additional target members must not repeat the clicked Segment.",
+				);
+			}
+			if (new Set(additionalIndices).size !== additionalIndices.length) {
+				throw new Error("Additional target members must be unique.");
+			}
 			const indices = targetMemberSegmentIndices(
 				input.clickedSegmentIndex,
-				generated.target.additionalMemberSegmentIndices,
+				additionalIndices,
 			);
 			for (const index of indices) {
 				if (input.segments[index]?.kind !== "ResolvableText") {
@@ -161,9 +171,9 @@ function targetMemberSegmentIndices(
 	clickedSegmentIndex: number,
 	additionalMemberSegmentIndices: readonly number[],
 ): number[] {
-	return [
-		...new Set([clickedSegmentIndex, ...additionalMemberSegmentIndices]),
-	].toSorted((left, right) => left - right);
+	return [clickedSegmentIndex, ...additionalMemberSegmentIndices].toSorted(
+		(left, right) => left - right,
+	);
 }
 
 const grammarNounPrompt = {

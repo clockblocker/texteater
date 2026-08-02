@@ -63,8 +63,9 @@ export function buildOpenAiSdk(options: BuildOpenAiSdkOptions = {}) {
 				},
 			});
 
+			assertResponseCompleted(response);
 			if (response.output_parsed === null) {
-				throw createEmptyResponseError(response);
+				throw createResponseError(response);
 			}
 
 			return response.output_parsed as output<OutputSchema>;
@@ -83,8 +84,9 @@ export function buildOpenAiSdk(options: BuildOpenAiSdkOptions = {}) {
 				}),
 			);
 
+			assertResponseCompleted(response);
 			if (!response.output_text) {
-				throw createEmptyResponseError(response);
+				throw createResponseError(response);
 			}
 
 			return response.output_text;
@@ -143,11 +145,21 @@ function hashString(value: string): string {
 	return createHash("sha256").update(value).digest("hex");
 }
 
-function createEmptyResponseError(response: {
+type ResponseFailureMetadata = {
 	readonly incomplete_details?: { readonly reason?: string } | null;
 	readonly output?: readonly unknown[];
 	readonly status?: string;
-}): AiSdkGenerationError {
+};
+
+function assertResponseCompleted(response: ResponseFailureMetadata): void {
+	if (response.status !== undefined && response.status !== "completed") {
+		throw createResponseError(response);
+	}
+}
+
+function createResponseError(
+	response: ResponseFailureMetadata,
+): AiSdkGenerationError {
 	const refusal = findRefusal(response.output);
 	if (refusal) {
 		return new AiSdkGenerationError(

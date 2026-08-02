@@ -107,14 +107,27 @@ describe("Prompt Assembly", () => {
 		}
 	});
 
-	test("rejects empty segmentation and prose-bearing emoji descriptions", () => {
+	test("rejects empty segmentation and invalid emoji descriptions", () => {
 		expect(
 			segmentationOutputSchema.safeParse({ segments: [] }).success,
 		).toBe(false);
 
 		const readingOutputSchema =
 			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.outputSchema;
-		for (const emojiDescription of ["🍳", "🇩🇪", "👩🏽‍💻", "☕📚"]) {
+		const englandFlag =
+			"\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}";
+		const scotlandFlag =
+			"\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}";
+		for (const emojiDescription of [
+			"🍳",
+			"🇩🇪",
+			englandFlag,
+			scotlandFlag,
+			"👩🏽‍💻",
+			"☕️",
+			"☕📚",
+			"🍳☕📚🏦",
+		]) {
 			expect(
 				readingOutputSchema.safeParse({
 					decision: "New",
@@ -122,7 +135,16 @@ describe("Prompt Assembly", () => {
 				}).success,
 			).toBe(true);
 		}
-		for (const emojiDescription of ["🍳 Küche", "Kaffee", "1", "🍳1"]) {
+		for (const emojiDescription of [
+			" 🍳 ",
+			"🍳 Küche",
+			"Kaffee",
+			"1",
+			"🍳1",
+			"☕\uFE0E",
+			"👩🏽🏽",
+			"🍳☕📚🏦🚶",
+		]) {
 			expect(
 				readingOutputSchema.safeParse({
 					decision: "New",

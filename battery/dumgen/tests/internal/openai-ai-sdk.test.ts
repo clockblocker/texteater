@@ -104,3 +104,24 @@ test("the OpenAI adapter types empty response reasons", async () => {
 		).rejects.toMatchObject({ name: "AiSdkGenerationError", reason });
 	}
 });
+
+test("the OpenAI adapter rejects incomplete unstructured output", async () => {
+	const client = {
+		responses: {
+			async create() {
+				return {
+					incomplete_details: { reason: "max_output_tokens" },
+					output_text: "partial",
+					status: "incomplete",
+				};
+			},
+		},
+	} as unknown as OpenAI;
+
+	await expect(
+		buildOpenAiSdk({ client }).unstructuredGeneration("input"),
+	).rejects.toMatchObject({
+		name: "AiSdkGenerationError",
+		reason: "max-output-tokens",
+	});
+});

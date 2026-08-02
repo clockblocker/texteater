@@ -1,11 +1,36 @@
+import emojiRegex from "emoji-regex";
 import { z } from "zod";
 
 import type { PromptOutputSchema } from "../../../../assembly";
 
-const emojiDescriptionPattern =
-	/^(?:(?:\p{Regional_Indicator}{2})|(?:[0-9#*]\uFE0F?\u20E3)|(?:\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?(?:\p{Emoji_Modifier})?(?:\u200D\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?(?:\p{Emoji_Modifier})?)*))+$/u;
+const MAX_EMOJI_GRAPHEMES = 4;
+const emojiPatternSource = emojiRegex().source;
+const compactEmojiSequencePattern = new RegExp(
+	`^(?:${emojiPatternSource}){1,${MAX_EMOJI_GRAPHEMES}}$`,
+);
+const singleEmojiPattern = new RegExp(`^(?:${emojiPatternSource})$`);
+const standaloneEmojiModifierPattern = /^\p{Emoji_Modifier}$/u;
+const graphemeSegmenter = new Intl.Segmenter(undefined, {
+	granularity: "grapheme",
+});
+
+function isCompactEmojiSequence(value: string): boolean {
+	const graphemes = [...graphemeSegmenter.segment(value)];
+	return (
+		graphemes.length <= MAX_EMOJI_GRAPHEMES &&
+		graphemes.every(
+			({ segment }) =>
+				singleEmojiPattern.test(segment) &&
+				!standaloneEmojiModifierPattern.test(segment),
+		)
+	);
+}
 
 export const outputSchema = z.strictObject({
 	decision: z.enum(["Reuse", "New"]),
-	emojiDescription: z.string().trim().min(1).regex(emojiDescriptionPattern),
+	emojiDescription: z
+		.string()
+		.min(1)
+		.regex(compactEmojiSequencePattern)
+		.refine(isCompactEmojiSequence),
 }) satisfies PromptOutputSchema;

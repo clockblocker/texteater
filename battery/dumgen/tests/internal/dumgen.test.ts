@@ -257,7 +257,23 @@ describe("settled German laboratory topology", () => {
 			{
 				decision: "Resolved",
 				target: {
-					additionalMemberSegmentIndices: [2, 0, 2],
+					additionalMemberSegmentIndices: [2],
+					family: "Phraseme",
+					kind: "DiscourseFormula",
+				},
+			},
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2, 2],
+					family: "Phraseme",
+					kind: "DiscourseFormula",
+				},
+			},
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [0, 2],
 					family: "Phraseme",
 					kind: "DiscourseFormula",
 				},
@@ -292,12 +308,14 @@ describe("settled German laboratory topology", () => {
 			family: "Phraseme",
 			kind: "DiscourseFormula",
 		});
-		await expect(
-			generate.laboratory.targetClassification.de.highLevelWholeUnit({
-				clickedSegmentIndex: 0,
-				segments: [...segments],
-			}),
-		).rejects.toMatchObject({ code: "invalid-output" });
+		for (let invalidOutput = 0; invalidOutput < 3; invalidOutput += 1) {
+			await expect(
+				generate.laboratory.targetClassification.de.highLevelWholeUnit({
+					clickedSegmentIndex: 0,
+					segments: [...segments],
+				}),
+			).rejects.toMatchObject({ code: "invalid-output" });
+		}
 	});
 
 	test("rejects invalid routes and marker alignment as invalid output", async () => {

@@ -14,7 +14,7 @@ this lemma:
 - Choose *New* when none is close enough, or when there are no existing
   descriptions. Create a description that is not already in the supplied list.
 
-An emojiDescription contains only one emoji or a compact emoji sequence.
+An emojiDescription contains only one to four Unicode RGI emoji graphemes.
 Never include the lemma, a gloss, or explanatory text.
 
 We follow a "do not split semantic pennies" policy:
