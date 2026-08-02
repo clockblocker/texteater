@@ -30,7 +30,7 @@ The decision and description must agree: *Reuse* requires an exact member of
 *existingEmojiDescriptions*; *New* requires a description that is not an exact
 member.`;
 
-const demonstrations = corpus
+export const demonstrations = corpus
 	.select([
 		"reading-de-tea",
 		"reading-de-kitchen-room",
