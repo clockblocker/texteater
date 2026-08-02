@@ -127,10 +127,11 @@ export function defineGoldenCorpus<
 	const identity = {};
 	const parsedEntries = new Map<string, ParsedCaseEntry>();
 	const exactFingerprints = new Map<string, string>();
-	const { cases: flattenedCases, groups: groupIds } = flattenCollections(
-		args.collections,
-		args.route,
-	);
+	const {
+		cases: flattenedCases,
+		collections: collectionIds,
+		groups: groupIds,
+	} = flattenCollections(args.collections, args.route);
 
 	for (const { id, goldenCase, sourcePath } of flattenedCases) {
 		assertNonEmpty(id, "Golden Case ID");
@@ -213,12 +214,18 @@ export function defineGoldenCorpus<
 		),
 	) as Readonly<Record<string, ParsedGoldenCase<InputSchema, OutputSchema>>>;
 	const groups = resolveGroups(groupIds, select, args.route);
+	const resolvedCollections = resolveCollections(
+		collectionIds,
+		select,
+		args.route,
+	);
 
 	const corpus = Object.freeze({
 		route: args.route,
 		inputSchema: args.inputSchema,
 		outputSchema: args.outputSchema,
 		cases,
+		collections: resolvedCollections,
 		groups,
 		select,
 		all: () => select([...parsedEntries.keys()]),
@@ -355,6 +362,7 @@ function flattenCollections(
 	readonly groups: Readonly<
 		Record<string, Readonly<Record<string, readonly string[]>>>
 	>;
+	readonly collections: Readonly<Record<string, readonly string[]>>;
 } {
 	const cases: {
 		id: string;
@@ -365,6 +373,7 @@ function flattenCollections(
 		string,
 		Readonly<Record<string, readonly string[]>>
 	> = {};
+	const collectionIds: Record<string, readonly string[]> = {};
 	const caseLocations = new Map<string, string>();
 
 	for (const [collectionName, collection] of Object.entries(collections)) {
@@ -377,13 +386,15 @@ function flattenCollections(
 		}
 
 		const collectionGroups: Record<string, readonly string[]> = {};
+		const collectionCaseIds: string[] = [];
 		for (const [groupName, group] of Object.entries(state.groups)) {
 			assertNonEmpty(groupName, "Golden Case group name");
 			const location = `collection "${collectionName}" group "${groupName}"`;
-			const ids = Object.keys(group.cases);
-			collectionGroups[groupName] = Object.freeze(ids);
+			const groupIds = Object.keys(group.cases);
+			collectionGroups[groupName] = Object.freeze(groupIds);
 			for (const [id, goldenCase] of Object.entries(group.cases)) {
 				addFlattenedCase(id, goldenCase, state.sourcePath, location);
+				collectionCaseIds.push(id);
 			}
 		}
 		groups[collectionName] = Object.freeze(collectionGroups);
@@ -391,10 +402,16 @@ function flattenCollections(
 		const location = `collection "${collectionName}"`;
 		for (const [id, goldenCase] of Object.entries(state.cases)) {
 			addFlattenedCase(id, goldenCase, state.sourcePath, location);
+			collectionCaseIds.push(id);
 		}
+		collectionIds[collectionName] = Object.freeze(collectionCaseIds);
 	}
 
-	return { cases: Object.freeze(cases), groups: Object.freeze(groups) };
+	return {
+		cases: Object.freeze(cases),
+		collections: Object.freeze(collectionIds),
+		groups: Object.freeze(groups),
+	};
 
 	function addFlattenedCase(
 		id: string,
@@ -416,6 +433,25 @@ function flattenCollections(
 			sourcePath,
 		});
 	}
+}
+
+function resolveCollections(
+	collections: Readonly<Record<string, readonly string[]>>,
+	select: (ids: readonly string[]) => CaseSelection,
+	route: string,
+): unknown {
+	const resolved: Record<string, CaseSelection> = {};
+	for (const [collectionName, ids] of Object.entries(collections)) {
+		try {
+			resolved[collectionName] = select(ids);
+		} catch (cause) {
+			throw new Error(
+				`Golden Corpus "${route}" collection "${collectionName}" is invalid.`,
+				{ cause },
+			);
+		}
+	}
+	return Object.freeze(resolved);
 }
 
 function resolveGroups(

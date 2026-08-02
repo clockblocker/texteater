@@ -19,6 +19,7 @@ export type {
 	PromptInputSchema,
 	PromptOutputSchema,
 	PromptSource,
+	ResolvedGoldenCollections,
 	ResolvedGoldenGroups,
 } from "./contracts";
 export { defineExperiment } from "./define-experiment";

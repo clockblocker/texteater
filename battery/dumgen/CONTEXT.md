@@ -6,12 +6,14 @@
 A leaf directory that is the complete human-authored source for exactly one
 executable laboratory prompt.
 
-`prompt-source.ts` is its only interface to Prompt Assembly and exports one
+`prompt-source.ts` is its interface to Prompt Assembly and exports one
 `promptSource` value. That value owns the route, model-facing schemas,
-instruction body, and immutable ordered demonstration selection. `schemas.ts`
-keeps the input and output schemas together and is the runtime catalog's schema
-interface. A route with canonical semantic cases also owns a route-local Golden
-Corpus; a route without such cases omits that directory.
+instruction body, and immutable ordered demonstration selection. A
+corpus-backed Prompt Source may also expose that Demonstration Selection for
+experiment composition. `schemas.ts` keeps the input and output schemas together
+and is the runtime catalog's schema interface. A route with canonical semantic
+cases also owns a route-local Golden Corpus; a route without such cases omits
+that directory.
 
 Demonstrations are either schema-validated local examples owned directly by the
 Prompt Source or a Case Selection from that source's canonical Golden Corpus.
@@ -36,12 +38,29 @@ rejects duplicate exact parsed inputs, and validates contamination keys and
 named composition groups. A corpus may add a route-specific stimulus
 fingerprint, but exact parsed-input fingerprinting always remains active.
 
+### Golden Case Collection
+A named semantic subdivision of one Golden Corpus, such as ADP or Phraseme.
+Collection membership describes what a case exercises and never assigns
+demonstration or evaluation roles.
+_Avoid_: Sub-corpus, ADP corpus, demonstration collection, evaluation collection
+
 ### Case Selection
 An immutable ordered set of Golden Case IDs bound to one Golden Corpus.
 
 Selection and set algebra preserve deterministic order. Named groups resolve to
 Case Selections and carry composition meaning only; contamination is expressed
 only through IDs, fingerprints, and contamination keys.
+
+### Demonstration Selection
+The ordered cases embedded in one Prompt Source as model guidance. Corpus-backed
+demonstrations remain members of their semantic Golden Case Collections.
+_Avoid_: Examples to use, training set
+
+### Evaluation Selection
+The held-out Case Selection evaluated by one Prompt Experiment. It is chosen
+independently of corpus organization and excludes the Prompt Source's
+Demonstration Selection.
+_Avoid_: Examples for test, test set
 
 ### Local Demonstrations
 An immutable ordered list of examples parsed with a Prompt Source's exact schema

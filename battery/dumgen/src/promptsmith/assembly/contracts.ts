@@ -92,6 +92,17 @@ export type ResolvedGoldenGroups<
 		: never;
 };
 
+export type ResolvedGoldenCollections<
+	InputSchema extends PromptInputSchema,
+	OutputSchema extends PromptOutputSchema,
+	Collections extends GoldenCaseCollectionRegistry,
+> = {
+	readonly [CollectionName in keyof Collections]: CaseSelection<
+		InputSchema,
+		OutputSchema
+	>;
+};
+
 export interface CaseSelection<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
@@ -123,6 +134,11 @@ export interface GoldenCorpus<
 	readonly outputSchema: OutputSchema;
 	readonly cases: Readonly<
 		Record<string, ParsedGoldenCase<InputSchema, OutputSchema>>
+	>;
+	readonly collections: ResolvedGoldenCollections<
+		InputSchema,
+		OutputSchema,
+		Collections
 	>;
 	readonly groups: ResolvedGoldenGroups<
 		InputSchema,

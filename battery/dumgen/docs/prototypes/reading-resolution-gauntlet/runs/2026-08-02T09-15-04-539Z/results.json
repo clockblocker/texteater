@@ -1,0 +1,242 @@
+{
+  "runnerVersion": "reading-resolution-gauntlet-v1",
+  "startedAt": "2026-08-02T09:15:04.539Z",
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 192,
+  "runMaxOutputTokens": 1024,
+  "promptSha256": "d2db45396be630c072253ff892658a4b65c3605f4d403a1ae54da76ceeb025e3",
+  "boundedCalls": 6,
+  "retries": 0,
+  "store": false,
+  "contractScore": 6,
+  "attempts": [
+    {
+      "caseId": "reading-de-adp-um-clock-time",
+      "input": {
+        "markedContext": "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
+        "lemma": "um",
+        "existingEmojiDescriptions": [
+          "🔄",
+          "💬",
+          "🔗"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "⏰"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🕗"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3585,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d6916097e6088c9016a6f0a893464819f9de030fa77c50193",
+      "usage": {
+        "input_tokens": 1136,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 344,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1480
+      }
+    },
+    {
+      "caseId": "reading-de-adp-nach-sensory-characteristic",
+      "input": {
+        "markedContext": "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
+        "lemma": "nach",
+        "existingEmojiDescriptions": [
+          "🧭",
+          "⏭️",
+          "🔗"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🪞"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "👃💨"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2625,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d56dc0f52d3ad8d016a6f0a8bf288819db8060d14c3bbe073",
+      "usage": {
+        "input_tokens": 1140,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 291,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1431
+      }
+    },
+    {
+      "caseId": "reading-de-adp-vor-broad-precedence",
+      "input": {
+        "markedContext": "Sie ruft mich <TARGET>vor</TARGET> dem Essen an.",
+        "lemma": "vor",
+        "existingEmojiDescriptions": [
+          "⏮️",
+          "🔗"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "⏮️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "⏮️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 2100,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_04ddbd3cb3b8915d016a6f0a8e9abc819d9129379fae6040d9",
+      "usage": {
+        "input_tokens": 1137,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 171,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1308
+      }
+    },
+    {
+      "caseId": "reading-de-adp-vor-cause",
+      "input": {
+        "markedContext": "Das Kind zittert <TARGET>vor</TARGET> Angst.",
+        "lemma": "vor",
+        "existingEmojiDescriptions": [
+          "⏮️",
+          "🔗"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "⚡"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "😨"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2551,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b8f3d638d8ddae3016a6f0a90a5e881a39be230f696c4757a",
+      "usage": {
+        "input_tokens": 1136,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 268,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1404
+      }
+    },
+    {
+      "caseId": "reading-de-adp-gegen-counteraction",
+      "input": {
+        "markedContext": "Sie nimmt eine Tablette <TARGET>gegen</TARGET> Kopfschmerzen.",
+        "lemma": "gegen",
+        "existingEmojiDescriptions": [
+          "⚔️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "⚔️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "⚔️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 2680,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0eaff7a94d8d7b62016a6f0a9332448192a1cfd0deb5bbfe4c",
+      "usage": {
+        "input_tokens": 1134,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 375,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1509
+      }
+    },
+    {
+      "caseId": "reading-de-adp-gegen-approximation",
+      "input": {
+        "markedContext": "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
+        "lemma": "gegen",
+        "existingEmojiDescriptions": [
+          "⚔️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🤏"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "⏰"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2801,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_010cd7618c392c11016a6f0a95e27081918ba2cf9b3463f9ea",
+      "usage": {
+        "input_tokens": 1130,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 392,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1522
+      }
+    }
+  ]
+}

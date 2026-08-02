@@ -2,6 +2,9 @@ import { definePromptSource } from "../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
+/**
+ * Follows the `battery/dumgen/docs/persistent/prompting-philosophie.md`
+ */
 const body = `We are helping a language learner distinguish meanings that are useful to distinguish.
 
 The supplied *lemma* is already resolved and fixed. Do not revise it.

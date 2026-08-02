@@ -11,6 +11,11 @@ import {
 	definePromptSource,
 } from "../../src/promptsmith/assembly";
 import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
+import { corpus as readingResolutionCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
+import {
+	demonstrations as readingResolutionDemonstrations,
+	promptSource as readingResolutionPromptSource,
+} from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/prompt-source";
 
 const inputSchema = z.strictObject({ text: z.string().min(1) });
 const outputSchema = z.strictObject({ value: z.string().min(1) });
@@ -195,12 +200,34 @@ describe("Golden Corpus", () => {
 		expect(left.union(right).ids).toEqual(["b", "a", "c"]);
 		expect(left.intersection(right).ids).toEqual(["a"]);
 		expect(left.difference(right).ids).toEqual(["b"]);
+		expect(goldenCorpus.collections.test.ids).toEqual(["a", "b", "c"]);
 		expect(left.isDisjointFrom(right)).toBe(false);
 		expect(left.isEmpty).toBe(false);
 		expect(goldenCorpus.select([]).isEmpty).toBe(true);
 		expect(Object.isFrozen(left.ids)).toBe(true);
 		expect(Object.isFrozen(left.cases)).toBe(true);
 		expect(Object.isFrozen(left.cases[0])).toBe(true);
+		expect(Object.isFrozen(goldenCorpus.collections)).toBe(true);
+
+		const groupedCorpus = corpus(
+			{ c: { input: { text: "c" }, idealOutput: { value: "c" } } },
+			{
+				groups: {
+					related: {
+						a: {
+							input: { text: "a" },
+							idealOutput: { value: "a" },
+						},
+						b: {
+							input: { text: "b" },
+							idealOutput: { value: "b" },
+						},
+					},
+				},
+			},
+		);
+		expect(groupedCorpus.collections.test.ids).toEqual(["a", "b", "c"]);
+		expect(groupedCorpus.groups.test.related?.ids).toEqual(["a", "b"]);
 
 		const other = corpus({
 			a: { input: { text: "other" }, idealOutput: { value: "a" } },
@@ -212,6 +239,28 @@ describe("Golden Corpus", () => {
 });
 
 describe("Prompt Experiments", () => {
+	test("runs the complete ADP collection not used as demonstrations", () => {
+		const evaluation = readingResolutionCorpus.collections.adp.difference(
+			readingResolutionDemonstrations,
+		);
+
+		expect(evaluation.ids).toEqual([
+			"reading-de-adp-um-clock-time",
+			"reading-de-adp-nach-sensory-characteristic",
+			"reading-de-adp-vor-broad-precedence",
+			"reading-de-adp-vor-cause",
+			"reading-de-adp-gegen-counteraction",
+			"reading-de-adp-gegen-approximation",
+		]);
+		expect(() =>
+			defineExperiment({
+				promptSource: readingResolutionPromptSource,
+				evaluation,
+				evaluator: () => true,
+			}),
+		).not.toThrow();
+	});
+
 	test("binds evaluation selections to the Prompt Source's canonical corpus", () => {
 		const canonical = corpus({
 			demo: { input: { text: "demo" }, idealOutput: { value: "x" } },

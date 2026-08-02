@@ -38,9 +38,10 @@ golden-corpus/       # omitted when the route has no canonical cases
 
 `prompt-source.ts` exports one `promptSource` value and is Prompt Assembly's
 only route import. It owns the route, schemas, instruction body, and ordered
-demonstration selection. The body and selection remain private module details.
-`schemas.ts` exports `inputSchema` and `outputSchema`; runtime catalog code
-imports model-facing schemas there.
+demonstration selection. The body remains private. A corpus-backed Prompt Source
+may additionally export its `demonstrations` Case Selection so experiments can
+exclude it through set algebra. `schemas.ts` exports `inputSchema` and
+`outputSchema`; runtime catalog code imports model-facing schemas there.
 
 Sources are self-contained: bodies and demonstration selections are never
 inherited or shared between routes. Schemas may reuse Dumling and Prompt
@@ -65,6 +66,10 @@ a semantic stimulus fingerprint in addition to the mandatory exact parsed-input
 fingerprint. Composition groups are named, ordered selections; positional
 groups such as `rest`, `slice`, or array indices are not allowed.
 
+Each semantic collection is available as a complete Case Selection under
+`corpus.collections`. Named composition groups remain available separately
+under `corpus.groups`.
+
 `corpus.select(ids)` returns an immutable ordered Case Selection. Published
 demonstration and evaluation selections pin explicit IDs. Adding a corpus case
 must not silently add it to an evaluation suite.
@@ -80,6 +85,12 @@ Experiment combines one Prompt Source, an independently selected evaluation
 suite, and its evaluator. Construction requires the suite to come from the
 Prompt Source's canonical corpus and rejects leakage by ID, exact fingerprint,
 route fingerprint, or shared contamination key.
+
+A collection-scoped experiment derives its candidate evaluation selection with
+set algebra, for example
+`corpus.collections.adp.difference(demonstrations)`. Experiment construction
+still rejects non-identical cases related by fingerprints or contamination
+keys.
 
 Executable prototype runners live under `docs/prototypes`. They own provider
 clients, call limits, retries, persistence, and reporting. Retained run evidence
