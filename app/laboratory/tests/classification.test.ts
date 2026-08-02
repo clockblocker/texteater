@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import type { AnalysisTarget, buildDumgen, DumgenModelExchange } from "dumgen";
+import {
+	type AiSdk,
+	type AnalysisTarget,
+	buildDumgen,
+	type DumgenModelExchange,
+} from "dumgen";
 
 import {
 	constructMarkedContext,
@@ -98,6 +103,9 @@ function fakeGenerator(options?: {
 				de: {
 					async highLevelWholeUnit(input: unknown) {
 						calls.push("Target");
+						const { clickedSegmentIndex } = input as {
+							clickedSegmentIndex: number;
+						};
 						const result = options?.target ?? {
 							memberSegmentIndices: [0, 2],
 							family: "Lexeme" as const,
@@ -108,7 +116,19 @@ function fakeGenerator(options?: {
 							input,
 							"decision" in result
 								? { decision: "Unresolved", target: null }
-								: { decision: "Resolved", target: result },
+								: {
+										decision: "Resolved",
+										target: {
+											additionalMemberSegmentIndices:
+												result.memberSegmentIndices.filter(
+													(index) =>
+														index !==
+														clickedSegmentIndex,
+												),
+											family: result.family,
+											kind: result.kind,
+										},
+									},
 						);
 						return result;
 					},
@@ -197,6 +217,73 @@ const multiMemberSentence = sentence("sentence-1", [
 ]);
 
 describe("German classification orchestration", () => {
+	test("runs through Dumgen's current model DTOs", async () => {
+		const outputs: unknown[] = [
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+			{
+				decision: "Resolved",
+				resolution: {
+					memberOrthographies: ["Standard"],
+					surface: {
+						normalizedSurface: "Bank",
+						spelling: "Canonical",
+						realizationCoverage: "Full",
+						surfaceKind: "Inflection",
+						surfaceFeatures: { historicalStatus: null },
+						inflectionalFeatures: {
+							case: "Nom",
+							number: "Sing",
+						},
+					},
+					lemma: {
+						canonicalForm: "Bank",
+						coreFeatures: { gender: "Fem", hyph: null },
+					},
+				},
+			},
+			{ decision: "New", emojiDescription: "🏦" },
+		];
+		const sdk: AiSdk = {
+			async structuredGeneration() {
+				return outputs.shift() as never;
+			},
+			async unstructuredGeneration() {
+				throw new Error("not used");
+			},
+		};
+		const modelExchanges: DumgenModelExchange[] = [];
+		const generate = buildDumgen({
+			sdk,
+			onModelExchange(exchange) {
+				modelExchanges.push(exchange);
+			},
+		});
+		const bankSentence = sentence("current-dumgen", [
+			{ kind: "ResolvableText", text: "Bank" },
+		]);
+
+		const result = await new GermanClassificationResolver(generate).resolve(
+			bankSentence,
+			0,
+			modelExchanges,
+		);
+
+		expect(result.decision).toBe("Resolved");
+		if (result.decision !== "Resolved") return;
+		expect(result.entity.surface.surfaceFeatures).toBeNull();
+		expect(result.stages.target?.output).toMatchObject({
+			target: { additionalMemberSegmentIndices: [] },
+		});
+		expect(outputs).toHaveLength(0);
+	});
+
 	test("marks every target member in authoritative joined context", () => {
 		const discontinuous = sentence("sentence-discontinuous", [
 			{ kind: "ResolvableText", text: "steh" },
@@ -280,7 +367,7 @@ describe("German classification orchestration", () => {
 			output: {
 				decision: "Resolved",
 				target: {
-					memberSegmentIndices: [0, 2],
+					additionalMemberSegmentIndices: [2],
 					family: "Lexeme",
 					kind: "NOUN",
 				},

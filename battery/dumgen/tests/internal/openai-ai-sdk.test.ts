@@ -63,6 +63,40 @@ test("the OpenAI adapter sends structured and unstructured requests", async () =
 	});
 });
 
+test("the OpenAI adapter retries structured output with a larger token budget", async () => {
+	const requests: Array<{ max_output_tokens?: number }> = [];
+	const responses = [
+		{
+			incomplete_details: { reason: "max_output_tokens" },
+			output_parsed: null,
+			status: "incomplete",
+		},
+		{
+			output_parsed: { answer: "structured text" },
+			status: "completed",
+		},
+	];
+	const client = {
+		responses: {
+			async parse(request: { max_output_tokens?: number }) {
+				requests.push(request);
+				return responses.shift();
+			},
+		},
+	} as unknown as OpenAI;
+
+	await expect(
+		buildOpenAiSdk({ client }).structuredGeneration(
+			"input",
+			z.strictObject({ answer: z.string() }),
+			{ maxOutputTokens: 192 },
+		),
+	).resolves.toEqual({ answer: "structured text" });
+	expect(requests.map(({ max_output_tokens }) => max_output_tokens)).toEqual([
+		192, 1024,
+	]);
+});
+
 test("the OpenAI adapter types empty response reasons", async () => {
 	const responses = [
 		{

@@ -223,6 +223,12 @@ describe("German prompt projections", () => {
 			language: "de",
 			lemma,
 		});
+		expect(
+			surfaceCodec.decode({
+				...modelSurface,
+				surfaceFeatures: { historicalStatus: null },
+			}),
+		).toEqual(surface);
 		expect(surfaceCodec.encode(surface)).toEqual(modelSurface);
 	});
 

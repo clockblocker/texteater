@@ -10,6 +10,7 @@ const GPT_5_NANO_MODEL = "gpt-5-nano";
 
 const DEFAULT_MAX_OUTPUT_TOKENS = 256;
 const RESPONSE_SCHEMA_NAME = "dumgen_response";
+const STRUCTURED_OUTPUT_RETRY_MIN_TOKENS = 1024;
 
 type GenerationParams = {
 	readonly maxOutputTokens?: number;
@@ -50,25 +51,41 @@ export function buildOpenAiSdk(options: BuildOpenAiSdkOptions = {}) {
 			outputSchema: OutputSchema,
 			params: GenerationParams = {},
 		): Promise<output<OutputSchema>> {
-			const response = await getClient().responses.parse({
-				...createCommonRequest({
-					defaultMaxOutputTokens,
-					defaultModel,
-					input,
-					params,
-				}),
-				text: {
-					format: zodTextFormat(outputSchema, RESPONSE_SCHEMA_NAME),
-					verbosity: "low",
-				},
-			});
+			let maxOutputTokens =
+				params.maxOutputTokens ?? defaultMaxOutputTokens;
+			for (let attempt = 0; attempt < 2; attempt += 1) {
+				const response = await getClient().responses.parse({
+					...createCommonRequest({
+						defaultMaxOutputTokens,
+						defaultModel,
+						input,
+						params: { ...params, maxOutputTokens },
+					}),
+					text: {
+						format: zodTextFormat(
+							outputSchema,
+							RESPONSE_SCHEMA_NAME,
+						),
+						verbosity: "low",
+					},
+				});
 
-			assertResponseCompleted(response);
-			if (response.output_parsed === null) {
-				throw createResponseError(response);
+				if (attempt === 0 && exhaustedOutputTokenBudget(response)) {
+					maxOutputTokens = Math.max(
+						STRUCTURED_OUTPUT_RETRY_MIN_TOKENS,
+						maxOutputTokens * 2,
+					);
+					validateMaxOutputTokens(maxOutputTokens);
+					continue;
+				}
+				assertResponseCompleted(response);
+				if (response.output_parsed === null) {
+					throw createResponseError(response);
+				}
+
+				return response.output_parsed as output<OutputSchema>;
 			}
-
-			return response.output_parsed as output<OutputSchema>;
+			throw new Error("Structured generation retry loop exhausted.");
 		},
 
 		async unstructuredGeneration(
@@ -150,6 +167,15 @@ type ResponseFailureMetadata = {
 	readonly output?: readonly unknown[];
 	readonly status?: string;
 };
+
+function exhaustedOutputTokenBudget(
+	response: ResponseFailureMetadata,
+): boolean {
+	return (
+		response.status === "incomplete" &&
+		response.incomplete_details?.reason === "max_output_tokens"
+	);
+}
 
 function assertResponseCompleted(response: ResponseFailureMetadata): void {
 	if (response.status !== undefined && response.status !== "completed") {

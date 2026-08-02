@@ -13,7 +13,7 @@ Source Text -> Selected Sentence -> Intake -> Segmentation<de>
 Segmented Sentence + Click
   -> Target Classification<de, HighLevelWholeUnit>
   -> Grammatical Resolution<de, Family, Kind>
-  -> Reading Resolution<de, Family, Kind>
+  -> Reading Resolution<de>
 ```
 
 Run the React/Vite UI and Bun API together:
