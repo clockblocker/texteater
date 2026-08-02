@@ -10,105 +10,104 @@ Prompt Sources use a stage-first filesystem hierarchy:
 ```text
 src/promptsmith/
 ├── assembly/
-├── laboratory/
-│   ├── prompt-part/
-│   │   ├── intake/
-│   │   ├── segmentation/de/
-│   │   ├── target-classification/de/high-level-whole-unit/
-│   │   ├── grammatical-resolution/de/lexeme/noun/
-│   │   └── reading-resolution/de/
-│   └── generated-system-prompt/
-└── production/
+└── laboratory/
+    ├── prompt-source/
+    │   ├── intake/
+    │   ├── segmentation/de/
+    │   ├── target-classification/de/high-level-whole-unit/
+    │   ├── grammatical-resolution/de/lexeme/noun/
+    │   └── reading-resolution/de/
+    ├── experiments/
+    └── generated-system-prompt/
 ```
 
-These are the migrated Prompt Sources. Other catalog routes remain unmigrated
-work in progress.
-
-Filesystem routes use lowercase kebab-case. The typed catalog preserves Dumling
-discriminants and uses camelCase stage names:
-
-```ts
-laboratory.intake;
-laboratory.segmentation.de;
-laboratory.targetClassification.de.highLevelWholeUnit;
-laboratory.grammaticalResolution.de.Lexeme.NOUN;
-laboratory.readingResolution.de;
-```
+Filesystem routes use lowercase kebab-case. The typed catalog preserves
+Dumling discriminants and uses camelCase stage names.
 
 ## Prompt Source contract
 
-Each leaf directory is the complete human-authored source for one catalog
-prompt. It contains five modules:
+Each leaf is the complete human-authored source for one catalog prompt:
 
 ```text
-input-schema.ts
-output-schema.ts
-body.ts
-examples-to-use.ts
-examples-for-test.ts
+prompt-source.ts
+schemas.ts
+golden-corpus/       # omitted when the route has no canonical cases
+├── corpus.ts
+└── cases/
 ```
 
-Each module exports exactly one value satisfying a generic contract from
-`promptsmith/assembly`. Example types derive from the leaf schemas.
+`prompt-source.ts` exports one `promptSource` value and is Prompt Assembly's
+only route import. It owns the route, schemas, instruction body, and ordered
+demonstration selection. The body and selection remain private module details.
+`schemas.ts` exports `inputSchema` and `outputSchema`; runtime catalog code
+imports model-facing schemas there.
 
-Sources are self-contained: bodies and examples are never inherited or shared.
-Schemas may reuse Dumling and Prompt Assembly helpers.
+Sources are self-contained: bodies and demonstration selections are never
+inherited or shared between routes. Schemas may reuse Dumling and Prompt
+Assembly helpers.
 
-## Examples
+Demonstrations that teach DTO shape or prompt mechanics are declared with
+`defineLocalDemonstrations` in `prompt-source.ts`. Prompt Assembly parses them
+with the leaf's exact schema instances and preserves their order. Local
+demonstrations are not canonical semantic evidence and do not require a Golden
+Corpus.
 
-Both example modules export ordered arrays of the same gold-example type:
+## Golden Corpora
 
-```ts
-type Example<Input, Output> = {
-	readonly id: string;
-	readonly input: Input;
-	readonly idealOutput: Output;
-	readonly explanation?: string;
-};
-```
+A Golden Case has `input`, `idealOutput`, optional `explanation`, and optional
+`contaminationKeys`. Its stable ID is its corpus registry key, not a field in
+the case. Inputs and ideal outputs derive from the route schemas and use the
+minimal model exchange rather than public Dumgen shapes.
 
-IDs are stable, unique within a source, and named only for their stimulus. They
-do not encode set placement or an expected verdict, so an example can move
-between sets without changing shape. There is no numeric split or second
-registry.
+Corpus construction parses all cases, trims explanations, rejects invalid or
+duplicate exact inputs, and validates every named group member. A route may add
+a semantic stimulus fingerprint in addition to the mandatory exact parsed-input
+fingerprint. Composition groups are named, ordered selections; positional
+groups such as `rest`, `slice`, or array indices are not allowed.
 
-Examples match the minimal model schemas and omit fields restored outside
-Promptsmith. An ideal output is a typed reference answer. Route-specific
-evaluators decide correctness; exact equality applies only to authoritative
-values. An optional explanation gives a concise, decision-relevant reason that
-the ideal output follows from the input and prompt instructions. It should
-highlight observable evidence or a rule that transfers to new inputs, rather
-than restate the output or add fields absent from the output schema. Empty
-explanations are invalid.
+`corpus.select(ids)` returns an immutable ordered Case Selection. Published
+demonstration and evaluation selections pin explicit IDs. Adding a corpus case
+must not silently add it to an evaluation suite.
 
-## Generated System Prompt
+Case modules are organized by semantic subject, never by consumer role.
+`prompt-source.ts` and evaluation-suite modules are the only places that assign
+demonstration and evaluation roles.
 
-The body contains instructions only. Prompt Assembly owns few-shot formatting.
-Codegen appends use examples in authored order, writes inputs and ideal outputs
-as stable JSON, and omits IDs. When an explanation is present, Codegen places
-it after the ideal output under an explicit guidance-only label so the model
-does not treat it as part of the required output. It never reads test examples.
+## Experiments and prototypes
 
-Codegen writes a TypeScript module under
-`laboratory/generated-system-prompt`, mirroring the source route. The module
-supplies only the matching `PROMPT_CATALOG` entry's `systemPrompt`. Authored
-schemas remain direct catalog inputs.
+Reusable evaluation selections and pure evaluators live under `src`. A Prompt
+Experiment combines one Prompt Source, an independently selected evaluation
+suite, and its evaluator. Construction requires the suite to come from the
+Prompt Source's canonical corpus and rejects leakage by ID, exact fingerprint,
+route fingerprint, or shared contamination key.
 
-Generated modules are committed, deterministic, and never edited by hand. This
-keeps model text reviewable and lets fresh checkouts typecheck. Run
-`bun run check:system-prompts` to detect stale output.
+Executable prototype runners live under `docs/prototypes`. They own provider
+clients, call limits, retries, persistence, and reporting. Retained run evidence
+stays beside the runner.
+
+## Generated System Prompts
+
+Prompt Assembly owns few-shot formatting. Codegen appends local demonstrations
+or selected Golden Cases in order, writes inputs and ideal outputs as stable
+JSON, and omits IDs.
+Explanations appear after the ideal output under a guidance-only label.
+
+Codegen writes committed deterministic modules under
+`laboratory/generated-system-prompt`, mirroring route paths. Provenance is
+derived from the Prompt Source and always includes `prompt-source.ts` and
+`schemas.ts`. Corpus-backed demonstrations additionally include the corpus
+module and only the semantic case modules that contribute selected cases.
+
+Run `bun run check:system-prompts` to detect stale generated output.
 
 ## Runtime boundary
 
-For migrated Prompt Sources, Promptsmith owns prompt bodies, model schemas, and
-examples. It does not own public projection, postconditions, model selection,
-generation parameters, or Dumling entity construction.
+Promptsmith owns prompt bodies, model schemas, Golden Cases, selections, and
+pure experiment scoring. It does not own public projection, runtime
+postconditions, model selection, generation parameters, provider calls, or
+Dumling entity construction.
 
 Settled Dumling-backed model schemas omit route-owned fields such as `language`,
 `family`, and `kind`. Dumgen's `codecBuilder4.buildFixedFieldsCodec` restores
-them on decode and validates and removes them on encode.
-
-Runtime definitions and catalog assembly live under `src/catalog`; shared
-Dumling-backed schemas and codecs live under `src/schema`. Runtime mapping has
-separate codec and end-to-end tests. Prompt examples cover only the model
-exchange.
+them on decode and validates and removes them on encode. Runtime definitions
+live under `src/catalog`; shared schemas and codecs live under `src/schema`.

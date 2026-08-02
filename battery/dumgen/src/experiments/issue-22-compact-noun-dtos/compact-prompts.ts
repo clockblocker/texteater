@@ -7,10 +7,14 @@ import type {
 import { buildGeneratorCatalog } from "../../generator/generator";
 import { systemPrompt as grammaticalSystemPrompt } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/generated-system-prompt/grammatical-resolution/de/lexeme/noun";
 import { systemPrompt as readingSystemPrompt } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/generated-system-prompt/reading-resolution/de/lexeme/noun";
-import { inputSchema as grammaticalModelInputSchema } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-part/grammatical-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as grammaticalModelOutputSchema } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
-import { inputSchema as readingModelInputSchema } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-part/reading-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as readingModelOutputSchema } from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
+import {
+	inputSchema as grammaticalModelInputSchema,
+	outputSchema as grammaticalModelOutputSchema,
+} from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-source/grammatical-resolution/de/lexeme/noun/schemas";
+import {
+	inputSchema as readingModelInputSchema,
+	outputSchema as readingModelOutputSchema,
+} from "../../promptsmith/laboratory/experiments/issue-22-compact-noun-dtos/prompt-source/reading-resolution/de/lexeme/noun/schemas";
 import type { GrammaticalResolution, ReadingResolution } from "../../types";
 import {
 	compactGrammaticalInputCodec,

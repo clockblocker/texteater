@@ -4,16 +4,26 @@ import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/ge
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
 import { systemPrompt as segmentationSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/segmentation/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
-import { inputSchema as grammarNounInputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as grammarNounOutputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
-import { inputSchema as intakeInputSchema } from "../promptsmith/laboratory/prompt-part/intake/input-schema";
-import { outputSchema as intakeOutputSchema } from "../promptsmith/laboratory/prompt-part/intake/output-schema";
-import { inputSchema as readingModelInputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/input-schema";
-import { outputSchema as readingOutputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/output-schema";
-import { inputSchema as segmentationInputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/input-schema";
-import { outputSchema as segmentationOutputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/output-schema";
-import { inputSchema as targetInputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/input-schema";
-import { outputSchema as targetOutputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/output-schema";
+import {
+	inputSchema as grammarNounInputSchema,
+	outputSchema as grammarNounOutputSchema,
+} from "../promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/schemas";
+import {
+	inputSchema as intakeInputSchema,
+	outputSchema as intakeOutputSchema,
+} from "../promptsmith/laboratory/prompt-source/intake/schemas";
+import {
+	inputSchema as readingModelInputSchema,
+	outputSchema as readingOutputSchema,
+} from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
+import {
+	inputSchema as segmentationInputSchema,
+	outputSchema as segmentationOutputSchema,
+} from "../promptsmith/laboratory/prompt-source/segmentation/de/schemas";
+import {
+	inputSchema as targetInputSchema,
+	outputSchema as targetOutputSchema,
+} from "../promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas";
 import { deLemmaSchema } from "../schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,

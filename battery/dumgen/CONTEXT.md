@@ -6,49 +6,59 @@
 A leaf directory that is the complete human-authored source for exactly one
 executable laboratory prompt.
 
-It contains exactly five kinds of Prompt Part: input schema, output schema,
-prompt body, examples to use, and examples for test. A Prompt Source is
-language-specific only when its stage is language-specific.
+`prompt-source.ts` is its only interface to Prompt Assembly and exports one
+`promptSource` value. That value owns the route, model-facing schemas,
+instruction body, and immutable ordered demonstration selection. `schemas.ts`
+keeps the input and output schemas together and is the runtime catalog's schema
+interface. A route with canonical semantic cases also owns a route-local Golden
+Corpus; a route without such cases omits that directory.
 
-Every Prompt Part is a TypeScript module that exports exactly one value
-satisfying its generic Prompt Assembly contract. A Prompt Source contains
-`input-schema.ts`, `output-schema.ts`, `body.ts`, `examples-to-use.ts`, and
-`examples-for-test.ts`. Example input and output types derive from that leaf's
-schemas.
+Demonstrations are either schema-validated local examples owned directly by the
+Prompt Source or a Case Selection from that source's canonical Golden Corpus.
+DTO-shape examples remain local; they do not become Golden Cases merely because
+they are rendered into a prompt.
 
-Each Prompt Source is self-contained. Its prompt body and example sets cannot
-be inherited from another Prompt Source or a shared prompt-content directory.
-Schemas may reuse code-level Dumling and Prompt Assembly helpers. Shared
-rendering and authoring infrastructure belongs to Prompt Assembly.
+Prompt Source bodies and demonstration selections cannot be inherited from a
+different route or maintained in parallel files. Schemas may reuse code-level
+Dumling and Prompt Assembly helpers. Shared selection, validation, rendering,
+and authoring infrastructure belongs to Prompt Assembly.
 
-### Prompt Part
-A human-authored input schema, output schema, prompt body, use example set, or
-test example set that contributes to one executable catalog prompt.
+### Golden Case
+A canonical semantic case containing `input`, `idealOutput`, an optional
+trimmed `explanation`, and optional `contaminationKeys`. Its stable ID is the
+key in one route-local Golden Corpus and is not repeated inside the case.
 
-_Avoid_: Promt Part
+### Golden Corpus
+The canonical keyed Golden Case registry for one Prompt Source route.
+
+Construction parses every input and ideal output with the route schemas,
+rejects duplicate exact parsed inputs, and validates contamination keys and
+named composition groups. A corpus may add a route-specific stimulus
+fingerprint, but exact parsed-input fingerprinting always remains active.
+
+### Case Selection
+An immutable ordered set of Golden Case IDs bound to one Golden Corpus.
+
+Selection and set algebra preserve deterministic order. Named groups resolve to
+Case Selections and carry composition meaning only; contamination is expressed
+only through IDs, fingerprints, and contamination keys.
+
+### Local Demonstrations
+An immutable ordered list of examples parsed with a Prompt Source's exact schema
+instances. Local Demonstrations teach model exchange shape or route-local prompt
+behavior without claiming canonical semantic evidence.
 
 ### Prompt Assembly
-The stable authoring contracts that Prompt Parts must satisfy together with the
+The stable authoring contracts that Prompt Sources satisfy together with the
 code generator that compiles Prompt Sources into Generated System Prompts.
 
 Prompt Assembly lives under `promptsmith/assembly`; it is authoring
 infrastructure, not application runtime integration.
 
-### Example
-A gold example with:
-- `id`
-- `input`
-- `idealOutput`
-- optional `explanation`
-
-Examples to use and examples for test share this same schema-derived contract.
-Examples are ordered, and their order is semantic rather than cosmetic. IDs
-are stable and unique within one Prompt Source. Prompt Assembly omits IDs when
-rendering examples to use into the Generated System Prompt.
-
-Example inputs and ideal outputs match the minimal model-facing schemas, not
-the public Dumgen domain shapes. Runtime mapping and its tests are outside the
-Prompt Source. An ideal output is a typed reference answer, not a universal
+Demonstration and Golden Case inputs and ideal outputs match the minimal
+model-facing schemas, not the public Dumgen domain shapes. Runtime mapping and
+its tests are outside Prompt Assembly. An ideal output is a typed reference
+answer, not a universal
 exact-match assertion; route-specific evaluators decide correctness.
 An explanation is concise authoring guidance that connects observable input
 evidence and prompt rules to the ideal output. Prompt Assembly renders it after
@@ -57,8 +67,8 @@ the ideal output and labels it as guidance that is not part of the output.
 ### Generated System Prompt
 A deterministic `systemPrompt` artifact derived from a Prompt Source.
 
-It combines the prompt body and examples to use, and supplies only the
-`systemPrompt` property of a `PROMPT_CATALOG` entry. It contains no test
+It combines the prompt body and selected demonstrations, and supplies only the
+`systemPrompt` property of a `PROMPT_CATALOG` entry. It contains no evaluation
 examples, runtime integration, or model-run results. It is disposable,
 generated by Prompt Assembly, and never edited manually.
 
@@ -68,22 +78,24 @@ Prompt Assembly generation is deterministic, and CI fails when committed
 artifacts are stale.
 
 The prompt body contains instructions only. Prompt Assembly is the sole owner
-of demonstration formatting: it appends examples to use in their authored
-order, serializes inputs and ideal outputs as stable JSON, and omits example
-IDs. Examples for test are never read during generation.
+of demonstration formatting: it appends local demonstrations or selected
+Golden Cases in order, serializes inputs and ideal outputs as stable JSON, and
+omits case IDs. Evaluation selections are never read during generation.
 
 ### Prompt Experiment
-A validated, owned Prompt Source together with its Generated System Prompt and
-fixed examples-to-use and examples-for-test sets.
+A Prompt Source, independently selected evaluation suite, and pure
+route-specific evaluator validated as one unit.
 
-Callers create an experiment once, inspect its generated artifact, and evaluate
-through the same experiment. Evaluation does not accept a separate source and
-Generated System Prompt pair, so a run cannot accidentally combine mismatched
-artifacts.
+Experiment construction binds evaluation to the Prompt Source's canonical
+Golden Corpus identity and exact schema instances, then rejects
+demonstration/evaluation contamination by case ID, exact parsed-input
+fingerprint, additional route fingerprint, and shared contamination key before
+a provider runner can make a call. Published suites pin explicit case IDs so
+corpus growth cannot silently change an evaluation.
 
 ### Evaluation Run
-An observation produced by running a catalog prompt against a model on the test
-examples.
+An observation produced by running a catalog prompt against a model on an
+evaluation suite.
 
 It contains per-example results and run metadata, and is separate from the
 Generated System Prompt. Evaluation uses a route-specific evaluator; exact
@@ -299,8 +311,8 @@ leaves. Reading Resolution depends only on the language and is registered once
 as `laboratory.readingResolution.de`. The high-level policy registers Lexeme,
 Phraseme, and Construction routes; it deliberately excludes Morpheme routes.
 
-Human-authored Prompt Parts use a stage-first hierarchy under
-`laboratory/prompt-part`: Intake has no language level; every language-specific
+Human-authored Prompt Sources use a stage-first hierarchy under
+`laboratory/prompt-source`: Intake has no language level; every language-specific
 stage places the language immediately after the stage, followed only by the
 dimensions on which that stage depends. Language-first authoring paths are not
 used.
@@ -308,13 +320,13 @@ used.
 Filesystem routes use lowercase kebab-case, while the shared typed catalog uses
 camelCase stage names and preserves canonical Dumling discriminants. For
 example,
-`prompt-part/grammatical-resolution/de/lexeme/noun` supplies
+`prompt-source/grammatical-resolution/de/lexeme/noun` supplies
 `laboratory.grammaticalResolution.de.Lexeme.NOUN`.
 
 Prompt Assembly writes disposable `systemPrompt` assets under
 `laboratory/generated-system-prompt`, mirroring the Prompt Source routes. The
-handwritten `PROMPT_CATALOG` imports those assets together with the authored
-input and output schemas.
+handwritten `PROMPT_CATALOG` imports those assets together with each authored
+`schemas.ts` module.
 
 The initial structured Prompt Source scope is Intake, Segmentation<de>, Target
 Classification<de, HighLevelWholeUnit>, Grammatical Resolution<de, Lexeme,

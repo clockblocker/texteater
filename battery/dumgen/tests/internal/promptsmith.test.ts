@@ -8,15 +8,13 @@ import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import { buildDumgen } from "../../src/dumgen";
 import {
 	assembleSystemPrompt,
-	validateExamples,
+	defineLocalDemonstrations,
 } from "../../src/promptsmith/assembly";
 import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
 import { systemPrompt as generatedSegmentationSystemPrompt } from "../../src/promptsmith/laboratory/generated-system-prompt/segmentation/de";
-import { body as segmentationBody } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/body";
-import { examplesForTest as segmentationTestExamples } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/examples-for-test";
-import { examplesToUse as segmentationUseExamples } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/examples-to-use";
-import { inputSchema as segmentationInputSchema } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/input-schema";
-import { outputSchema as segmentationOutputSchema } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/output-schema";
+import { corpus as readingCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
+import { promptSource as segmentationPromptSource } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/prompt-source";
+import { outputSchema as segmentationOutputSchema } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/schemas";
 import { deLemmaSchema } from "../../src/schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
@@ -29,94 +27,52 @@ import {
 
 describe("Prompt Assembly", () => {
 	test("renders stable use examples without IDs or test examples", () => {
-		const source = {
-			route: "segmentation/de",
-			inputSchema: segmentationInputSchema,
-			outputSchema: segmentationOutputSchema,
-			body: segmentationBody,
-			examplesToUse: segmentationUseExamples,
-		};
-		const first = assembleSystemPrompt(source);
-		const second = assembleSystemPrompt(source);
+		const first = assembleSystemPrompt(segmentationPromptSource);
+		const second = assembleSystemPrompt(segmentationPromptSource);
 
 		expect(first).toBe(second);
 		expect(first).toBe(generatedSegmentationSystemPrompt);
 		expect(first).toContain('{"text":"Still, aber wach!"}');
 		expect(first).toContain("quux42");
-		expect(first).not.toContain(segmentationUseExamples[0].id);
-		expect(first).not.toContain(segmentationTestExamples[0].id);
+		expect(first).not.toContain("segmentation-attached-punctuation");
+		expect(first).not.toContain("segmentation-simple-sentence");
 		expect(first).not.toContain('{"text":"Der Kaffee ist heiß."}');
 		expect(
 			assembleSystemPrompt({
-				...source,
-				body: `${source.body}\nChanged.`,
+				...segmentationPromptSource,
+				body: `${segmentationPromptSource.body}\nChanged.`,
 			}),
 		).not.toBe(first);
 		expect(
 			assembleSystemPrompt({
-				...source,
-				examplesToUse: [
-					...source.examplesToUse,
-					{
-						id: "segmentation-hallo-punctuation",
-						input: { text: "Hallo!" },
-						idealOutput: {
-							segments: [
-								{ kind: "ResolvableText", text: "Hallo" },
-								{ kind: "Punctuation", text: "!" },
-							],
-						},
-					},
-				],
+				...segmentationPromptSource,
+				demonstrations: defineLocalDemonstrations({
+					inputSchema: segmentationPromptSource.inputSchema,
+					outputSchema: segmentationPromptSource.outputSchema,
+					cases: [],
+				}),
 			}),
 		).not.toBe(first);
 	});
 
-	test("reports route-specific example contract errors", () => {
+	test("reports route-specific selection contract errors", () => {
 		expect(() =>
-			validateExamples(
-				"segmentation/de",
-				segmentationInputSchema,
-				segmentationOutputSchema,
-				[segmentationUseExamples[0], segmentationUseExamples[0]],
-			),
-		).toThrow(/Prompt Source "segmentation\/de".*duplicate example ID/);
+			readingCorpus.select(["reading-de-tea", "reading-de-tea"]),
+		).toThrow(/CaseSelection.*repeats case ID/);
+		expect(() => readingCorpus.select(["missing"])).toThrow(
+			/CaseSelection.*unknown case ID/,
+		);
 	});
 
 	test("renders optional explanations as guidance outside the ideal output", () => {
-		const explanation =
-			"The comma and exclamation mark are punctuation, while the words remain resolvable text.";
-		const prompt = assembleSystemPrompt({
-			route: "segmentation/de",
-			inputSchema: segmentationInputSchema,
-			outputSchema: segmentationOutputSchema,
-			body: segmentationBody,
-			examplesToUse: [
-				{
-					...segmentationUseExamples[0],
-					explanation: `  ${explanation}  `,
-				},
-			],
-		});
+		const prompt = assembleSystemPrompt(segmentationPromptSource);
+		const explanation = "Revolt, not leave bed. New.";
+		const readingPrompt =
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
 
-		expect(prompt).toContain(
-			`Ideal output:\n${JSON.stringify(segmentationUseExamples[0].idealOutput)}\nExplanation (guidance only; not part of the output):\n${explanation}`,
-		);
-		expect(prompt).not.toContain(`  ${explanation}  `);
-		expect(() =>
-			validateExamples(
-				"segmentation/de",
-				segmentationInputSchema,
-				segmentationOutputSchema,
-				[
-					{
-						...segmentationUseExamples[0],
-						explanation: "   ",
-					},
-				],
-			),
-		).toThrow(
-			/Prompt Source "segmentation\/de" example 1.*empty explanation/,
+		expect(prompt).not.toContain("Explanation (guidance only");
+		expect(readingPrompt.systemPrompt).toContain(
+			`Explanation (guidance only; not part of the output):\n${explanation}`,
 		);
 	});
 

@@ -1,7 +1,7 @@
 // PROTOTYPE ONLY — bounded live evaluation of the current Reading Resolution prompt.
 //
 // Question: does the current German Reading Resolution prompt apply the
-// no-splitting-semantic-pennies policy on the agreed examples-for-test cases?
+// no-splitting-semantic-pennies policy on the pinned evaluation suite?
 
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -9,12 +9,10 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
-import type { output } from "zod";
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import { stableJson } from "../../../src/lib/stable-json";
-import { examplesForTest } from "../../../src/promptsmith/laboratory/prompt-part/reading-resolution/de/examples-for-test";
-import type { inputSchema } from "../../../src/promptsmith/laboratory/prompt-part/reading-resolution/de/input-schema";
-import type { outputSchema } from "../../../src/promptsmith/laboratory/prompt-part/reading-resolution/de/output-schema";
+import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
+import { readingResolutionGauntlet } from "../../../src/promptsmith/laboratory/experiments/reading-resolution-gauntlet/evaluation-suite";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
@@ -22,15 +20,17 @@ const RUNNER_VERSION = "reading-resolution-gauntlet-v1";
 const RUN_MAX_OUTPUT_TOKENS = 1024;
 const MAX_TEST_CASES = 25;
 const prompt = PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
-const testCases: readonly {
-	readonly id: string;
-	readonly input: output<typeof inputSchema>;
-	readonly idealOutput: output<typeof outputSchema>;
-}[] = examplesForTest;
+const systemPrompt = assembleSystemPrompt(
+	readingResolutionGauntlet.promptSource,
+);
+const testCases = readingResolutionGauntlet.evaluation.ids.map((id, index) => ({
+	id,
+	...readingResolutionGauntlet.evaluation.cases[index],
+}));
 
 if (testCases.length > MAX_TEST_CASES) {
 	throw new Error(
-		`The Reading Resolution gauntlet is capped at ${MAX_TEST_CASES} examples-for-test cases; found ${testCases.length}.`,
+		`The Reading Resolution gauntlet is capped at ${MAX_TEST_CASES} evaluation cases; found ${testCases.length}.`,
 	);
 }
 
@@ -50,7 +50,7 @@ for (const [index, testCase] of testCases.entries()) {
 		const response = await client.responses.create({
 			model: prompt.generationParams.model,
 			input: [
-				{ role: "system", content: prompt.systemPrompt },
+				{ role: "system", content: systemPrompt },
 				{ role: "user", content: stableJson(input) },
 			],
 			max_output_tokens: RUN_MAX_OUTPUT_TOKENS,
@@ -72,40 +72,25 @@ for (const [index, testCase] of testCases.entries()) {
 		const output = prompt.outputSchema.parse(
 			JSON.parse(response.output_text),
 		);
-		const expectedDecisionPass =
-			output.decision === testCase.idealOutput.decision;
-		const newEmojiAbsentFromExisting =
-			testCase.idealOutput.decision === "New"
-				? !input.existingEmojiDescriptions.includes(
-						output.emojiDescription,
-					)
-				: null;
-		const reusedExpectedDescription =
-			testCase.idealOutput.decision === "Reuse"
-				? output.emojiDescription ===
-					testCase.idealOutput.emojiDescription
-				: null;
-		const contractPass =
-			expectedDecisionPass &&
-			(testCase.idealOutput.decision === "New"
-				? newEmojiAbsentFromExisting
-				: reusedExpectedDescription);
+		const evaluation = readingResolutionGauntlet.evaluator({
+			caseId: testCase.id,
+			input,
+			idealOutput: testCase.idealOutput,
+			output,
+		});
 		attempts.push({
 			caseId: testCase.id,
 			input,
 			idealOutput: testCase.idealOutput,
 			output,
-			contractPass,
-			expectedDecisionPass,
-			newEmojiAbsentFromExisting,
-			reusedExpectedDescription,
+			...evaluation,
 			latencyMs: Math.round(performance.now() - started),
 			resolvedModel: response.model,
 			responseId: response.id,
 			usage: response.usage,
 		});
 		console.log(
-			`${contractPass ? "PASS" : "FAIL"} ${index + 1}/${testCases.length} ${testCase.id}: expected ${stableJson(testCase.idealOutput)}, received ${stableJson(output)}`,
+			`${evaluation.contractPass ? "PASS" : "FAIL"} ${index + 1}/${testCases.length} ${testCase.id}: expected ${stableJson(testCase.idealOutput)}, received ${stableJson(output)}`,
 		);
 	} catch (cause) {
 		const error = describeError(cause);
@@ -140,7 +125,7 @@ const result = {
 	catalogMaxOutputTokens: prompt.generationParams.maxOutputTokens,
 	runMaxOutputTokens: RUN_MAX_OUTPUT_TOKENS,
 	promptSha256: createHash("sha256")
-		.update(prompt.systemPrompt, "utf8")
+		.update(systemPrompt, "utf8")
 		.digest("hex"),
 	boundedCalls: testCases.length,
 	retries: 0,

@@ -52,8 +52,9 @@ The prompts live only under `laboratory`. The application orchestrates the
 stages; there is deliberately no production namespace or production claim.
 
 The initial five Prompt Sources live under
-`src/promptsmith/laboratory/prompt-part` in stage-first routes. Each leaf owns
-its input schema, output schema, instructions, use examples, and test examples.
+`src/promptsmith/laboratory/prompt-source` in stage-first routes. Each leaf owns
+its combined model schemas, instructions, and validated demonstrations. Routes
+with canonical semantic cases additionally own a route-local Golden Corpus.
 `bun run generate:system-prompts` deterministically rebuilds the committed
 system-prompt modules; `bun run check:system-prompts` checks them without
 modifying the workspace.

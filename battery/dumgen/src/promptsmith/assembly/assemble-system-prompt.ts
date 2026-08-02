@@ -1,77 +1,12 @@
 import { stableJson } from "../../lib/stable-json";
-import type {
-	ExampleSet,
-	ParsedExampleSet,
-	PromptInputSchema,
-	PromptOutputSchema,
-} from "./contracts";
+import type { PromptSource } from "./contracts";
 
-type PromptSourceForAssembly = {
-	readonly route: string;
-	readonly inputSchema: PromptInputSchema;
-	readonly outputSchema: PromptOutputSchema;
-	readonly body: string;
-	readonly examplesToUse: ExampleSet<PromptInputSchema, PromptOutputSchema>;
-};
-
-export function validateExamples<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
->(
-	route: string,
-	inputSchema: InputSchema,
-	outputSchema: OutputSchema,
-	examples: ExampleSet<InputSchema, OutputSchema>,
-): ParsedExampleSet<InputSchema, OutputSchema> {
-	const ids = new Set<string>();
-	return examples.map((example, index) => {
-		const location = `Prompt Source "${route}" example ${index + 1}`;
-		if (example.id.trim().length === 0) {
-			throw new Error(`${location} has an empty ID.`);
-		}
-		if (ids.has(example.id)) {
-			throw new Error(
-				`Prompt Source "${route}" has duplicate example ID "${example.id}".`,
-			);
-		}
-		ids.add(example.id);
-
-		const parsedInput = inputSchema.safeParse(example.input);
-		if (!parsedInput.success) {
-			throw new Error(`${location} has invalid input.`, {
-				cause: parsedInput.error,
-			});
-		}
-		const parsedOutput = outputSchema.safeParse(example.idealOutput);
-		if (!parsedOutput.success) {
-			throw new Error(`${location} has invalid ideal output.`, {
-				cause: parsedOutput.error,
-			});
-		}
-		const explanation = example.explanation?.trim();
-		if (explanation !== undefined && explanation.length === 0) {
-			throw new Error(`${location} has an empty explanation.`);
-		}
-		return {
-			id: example.id,
-			input: parsedInput.data,
-			idealOutput: parsedOutput.data,
-			...(explanation === undefined ? {} : { explanation }),
-		};
-	}) as ParsedExampleSet<InputSchema, OutputSchema>;
-}
-
-export function assembleSystemPrompt(source: PromptSourceForAssembly): string {
+export function assembleSystemPrompt(source: PromptSource): string {
 	const body = source.body.trim();
 	if (body.length === 0) {
 		throw new Error(`Prompt Source "${source.route}" has an empty body.`);
 	}
-	const examples = validateExamples(
-		source.route,
-		source.inputSchema,
-		source.outputSchema,
-		source.examplesToUse,
-	);
+	const examples = source.demonstrations?.cases ?? [];
 	if (examples.length === 0) return body;
 
 	const renderedExamples = examples.map((example, index) => {
