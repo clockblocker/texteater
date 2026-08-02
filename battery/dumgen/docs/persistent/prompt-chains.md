@@ -164,6 +164,9 @@ remain private and may appear only in laboratory traces.
    disagreement between `decision` and exact membership is retained as a prompt
    quality diagnostic rather than used for application behavior.
 
+   An Emoji Description contains only one emoji or a compact emoji sequence.
+   It never includes the Lemma text, a gloss, or explanatory prose.
+
    The supplied membership set contains only Emoji Descriptions from the
    current learner's existing Readings for the exact resolved Lemma. Readings
    owned by other learners or attached to other Lemmas are excluded. An empty
@@ -174,7 +177,7 @@ remain private and may appear only in laboratory traces.
    ```ts
    {
      markedContext: string;
-     lemma: ModelLemmaFields;
+     lemma: string; // canonicalForm
      existingEmojiDescriptions: string[];
    }
    ```

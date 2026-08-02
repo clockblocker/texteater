@@ -164,7 +164,7 @@ function fakeGenerator(options?: {
 									options?.readingDecisions?.[
 										readingIndex++
 									] ?? "New",
-								emojiDescription: "🏦 Bank",
+								emojiDescription: "🏦",
 							};
 							accept(
 								"laboratory.readingResolution.de.Lexeme.NOUN",
@@ -298,7 +298,7 @@ describe("German classification orchestration", () => {
 		expect(result.entity.surface.lemma).toEqual(bankLemma);
 		expect(result.entity.reading).toEqual({
 			lemma: bankLemma,
-			emojiDescription: "🏦 Bank",
+			emojiDescription: "🏦",
 		});
 	});
 
@@ -496,7 +496,7 @@ describe("German classification orchestration", () => {
 		);
 
 		expect(fake.readingInputs[1]).toMatchObject({
-			existingEmojiDescriptions: ["🏦 Bank"],
+			existingEmojiDescriptions: ["🏦"],
 		});
 		expect(second.decision).toBe("Resolved");
 		if (second.decision !== "Resolved") return;

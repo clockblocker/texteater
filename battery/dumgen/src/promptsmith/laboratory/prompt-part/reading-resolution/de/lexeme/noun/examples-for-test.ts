@@ -7,12 +7,9 @@ export const examplesForTest = [
 		id: "reading-noun-test-new-bank",
 		input: {
 			markedContext: "Die <TARGET>Banken</TARGET>",
-			lemma: {
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
-			},
+			lemma: "Bank",
 			existingEmojiDescriptions: [],
 		},
-		idealOutput: { decision: "New", emojiDescription: "🏦 Bank" },
+		idealOutput: { decision: "New", emojiDescription: "🏦" },
 	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

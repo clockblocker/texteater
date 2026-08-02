@@ -111,7 +111,7 @@ describe("issue #22 compact German noun DTO codecs", () => {
 		expect(compactInput).toEqual({
 			c: "Der <TARGET>Tee</TARGET> duftet.",
 			l: { c: "Tee", g: "M", h: null },
-			e: ["☕ Tee"],
+			e: ["☕"],
 		});
 		expect(compactReadingInputCodec.decode(compactInput)).toEqual(
 			comparisonCase.input,
@@ -120,7 +120,7 @@ describe("issue #22 compact German noun DTO codecs", () => {
 		const compactOutput = compactReadingOutputCodec.encode(
 			comparisonCase.expectedCanonical,
 		);
-		expect(compactOutput).toEqual({ d: "R", e: "☕ Tee" });
+		expect(compactOutput).toEqual({ d: "R", e: "☕" });
 		expect(compactReadingOutputCodec.decode(compactOutput)).toEqual(
 			comparisonCase.expectedCanonical,
 		);
@@ -374,11 +374,22 @@ describe("issue #22 Promptsmith experiment", () => {
 		)) {
 			expect(total.compact).toBeLessThan(total.verbose);
 		}
-		for (const total of comparison.totals.filter(
-			(total) => total.metric === "systemPromptBytes",
-		)) {
-			expect(total.compact).toBeGreaterThan(total.verbose);
-		}
+		expect(
+			comparison.totals.filter(
+				(total) => total.metric === "systemPromptBytes",
+			),
+		).toMatchObject([
+			{
+				stage: "grammaticalResolution",
+				verbose: 3812,
+				compact: 4212,
+			},
+			{
+				stage: "readingResolution",
+				verbose: 2552,
+				compact: 2550,
+			},
+		]);
 		const estimatedInputs = comparison.totals.filter(
 			(total) => total.metric === "estimatedInputTokens",
 		);
@@ -390,8 +401,8 @@ describe("issue #22 Promptsmith experiment", () => {
 			},
 			{
 				stage: "readingResolution",
-				verbose: 691,
-				compact: 669,
+				verbose: 694,
+				compact: 684,
 			},
 		]);
 		const currentCompactPromptFingerprints = comparison.measurements
@@ -416,15 +427,15 @@ describe("issue #22 Promptsmith experiment", () => {
 			},
 			{
 				stage: "readingResolution",
-				systemPromptBytes: 1242,
+				systemPromptBytes: 1275,
 				systemPromptSha256:
-					"13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
+					"ae2bd888515bf702344a5f61c8eebc63ea463f02c492aabbf3a3b31c7cd64028",
 			},
 			{
 				stage: "readingResolution",
-				systemPromptBytes: 1242,
+				systemPromptBytes: 1275,
 				systemPromptSha256:
-					"13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
+					"ae2bd888515bf702344a5f61c8eebc63ea463f02c492aabbf3a3b31c7cd64028",
 			},
 		]);
 	});

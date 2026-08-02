@@ -53,7 +53,7 @@ describe("settled German laboratory topology", () => {
 			{ segments },
 			{ decision: "Resolved", target: analysisTarget },
 			{ decision: "Resolved", resolution: modelGrammar },
-			{ decision: "New", emojiDescription: "🏦 Bank" },
+			{ decision: "New", emojiDescription: "🏦" },
 		];
 		const calls: Array<{
 			input: string;
@@ -126,7 +126,7 @@ describe("settled German laboratory topology", () => {
 			});
 		expect(reading).toEqual({
 			decision: "New",
-			emojiDescription: "🏦 Bank",
+			emojiDescription: "🏦",
 		});
 
 		expect(calls).toHaveLength(5);
@@ -136,9 +136,8 @@ describe("settled German laboratory topology", () => {
 		expect(calls[3]?.input).toBe(
 			'{"markedContext":"Die <TARGET>Banken</TARGET>"}',
 		);
-		expect(calls[4]?.input).toContain(
-			'"lemma":{"canonicalForm":"Bank","coreFeatures":{"gender":"Fem","hyph":null}}',
-		);
+		expect(calls[4]?.input).toContain('"lemma":"Bank"');
+		expect(calls[4]?.input).not.toContain('"coreFeatures"');
 		expect(calls[4]?.input).not.toContain('"family"');
 	});
 
@@ -179,7 +178,7 @@ describe("settled German laboratory topology", () => {
 					serializedInput = input;
 					return {
 						decision: "New",
-						emojiDescription: "🚶 gehen",
+						emojiDescription: "🚶",
 					} as never;
 				},
 				async unstructuredGeneration() {
@@ -207,7 +206,7 @@ describe("settled German laboratory topology", () => {
 			}),
 		).resolves.toEqual({
 			decision: "New",
-			emojiDescription: "🚶 gehen",
+			emojiDescription: "🚶",
 		});
 		expect(serializedInput).toContain('"canonicalForm":"gehen"');
 		expect(serializedInput).not.toContain('"language"');

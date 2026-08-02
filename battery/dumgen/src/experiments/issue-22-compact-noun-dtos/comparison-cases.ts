@@ -133,11 +133,11 @@ export const READING_COMPARISON_CASES = [
 		},
 		expectedCanonical: {
 			decision: "New",
-			emojiDescription: "📚 Bibliothek",
+			emojiDescription: "📚",
 		},
 		verboseReferenceOutput: {
 			decision: "New",
-			emojiDescription: "📚 Bibliothek",
+			emojiDescription: "📚",
 		},
 	},
 	{
@@ -151,15 +151,15 @@ export const READING_COMPARISON_CASES = [
 				family: "Lexeme",
 				kind: "NOUN",
 			},
-			existingEmojiDescriptions: ["☕ Tee"],
+			existingEmojiDescriptions: ["☕"],
 		},
 		expectedCanonical: {
 			decision: "Reuse",
-			emojiDescription: "☕ Tee",
+			emojiDescription: "☕",
 		},
 		verboseReferenceOutput: {
 			decision: "Reuse",
-			emojiDescription: "☕ Tee",
+			emojiDescription: "☕",
 		},
 	},
 ] satisfies readonly ReadingComparisonCase[];

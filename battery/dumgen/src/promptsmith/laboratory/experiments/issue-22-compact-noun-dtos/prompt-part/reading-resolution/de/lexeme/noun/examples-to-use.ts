@@ -10,15 +10,15 @@ export const examplesToUse = [
 			l: { c: "Bibliothek", g: "F", h: null },
 			e: [],
 		},
-		idealOutput: { d: "N", e: "📚 Bibliothek" },
+		idealOutput: { d: "N", e: "📚" },
 	},
 	{
 		id: "compact-reading-use-reuse-tea",
 		input: {
 			c: "Der <TARGET>Tee</TARGET> duftet.",
 			l: { c: "Tee", g: "M", h: null },
-			e: ["☕ Tee"],
+			e: ["☕"],
 		},
-		idealOutput: { d: "R", e: "☕ Tee" },
+		idealOutput: { d: "R", e: "☕" },
 	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

@@ -7,8 +7,9 @@ export const body =
 The marked context shows one use of the supplied fixed Lemma. Do not revise the
 Lemma. If an existing description is close enough for the learner-facing
 concept, copy it exactly and answer Reuse. Otherwise answer New with one compact
-emoji plus a plain-language German or learner-friendly gloss. Exact description
-membership remains authoritative. Return only the compact schema.
+emoji description. An emojiDescription contains only emoji: never append the
+Lemma, a gloss, or explanatory text. Exact description membership remains
+authoritative. Return only the compact schema.
 
 Compact legend:
 ${readingLegend}

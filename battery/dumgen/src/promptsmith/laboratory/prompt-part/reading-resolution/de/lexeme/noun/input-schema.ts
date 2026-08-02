@@ -5,6 +5,6 @@ import type { PromptInputSchema } from "../../../../../../assembly";
 
 export const inputSchema = z.strictObject({
 	markedContext: z.string().min(1),
-	lemma: deNounModelLemmaSchema,
+	lemma: deNounModelLemmaSchema.shape.canonicalForm,
 	existingEmojiDescriptions: z.array(z.string().trim().min(1)),
 }) satisfies PromptInputSchema;

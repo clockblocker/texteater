@@ -82,17 +82,18 @@ authoritative for the live result.
 | Grammar | serialized-output bytes | 704 | 276 | -60.80% |
 | Grammar | estimated input tokens | 986 | 1,080 | +9.53% |
 | Grammar | estimated output tokens | 177 | 70 | -60.45% |
-| Reading | system-prompt bytes, two calls | 2,410 | 2,484 | +3.07% |
-| Reading | serialized-input bytes | 349 | 190 | -45.56% |
-| Reading | serialized-output bytes | 104 | 54 | -48.08% |
-| Reading | estimated input tokens | 691 | 669 | -3.18% |
-| Reading | estimated output tokens | 27 | 14 | -48.15% |
+| Reading | system-prompt bytes, two calls | 2,552 | 2,550 | -0.08% |
+| Reading | serialized-input bytes | 220 | 186 | -15.45% |
+| Reading | serialized-output bytes | 89 | 39 | -56.18% |
+| Reading | estimated input tokens | 694 | 684 | -1.44% |
+| Reading | estimated output tokens | 23 | 10 | -56.52% |
 
-Compact JSON is substantially smaller, but the now-complete legends make the
-current compact system prompts larger than their verbose counterparts. The
-byte-based token estimate remains only a fallback because long canonical
-property names and enum values are often single tokenizer tokens, while
-one-character codes still cost tokens and require a legend.
+Compact JSON is substantially smaller, but the complete legends offset much of
+that reduction: the compact Grammar prompt is larger, while the two Reading
+prompts are nearly identical in size. The byte-based token estimate remains
+only a fallback because long canonical property names and enum values are often
+single tokenizer tokens, while one-character codes still cost tokens and
+require a legend.
 
 ## Retained v1 live provider token comparison
 
@@ -112,15 +113,15 @@ returned structured JSON and all compact codecs decoded successfully.
 | --- | --- | --- | --- |
 | Grammar: library dative | mismatch | mismatch | Verbose returned canonical form `BiblioTHEK`; compact returned `Citation` instead of contextual `Inflection`. |
 | Grammar: bank plural | match | mismatch | Compact again selected `Citation`, losing case and number. |
-| Reading: new library | match | match | Both returned `📚 Bibliothek`. |
-| Reading: reuse tea | match | match | Both reused `☕ Tee`. |
+| Reading: new library | match | match | Both returned `📚`. |
+| Reading: reuse tea | match | match | Both reused `☕`. |
 
 The compact Grammar schema is syntactically valid and lossless, but its
 `Citation`/`Inflection` branch codes did not preserve useful behavior in this
 sample even after an explicit rule and an Inflection example. This is a prompt
 and schema-legibility failure, not a codec failure.
 
-## Recommendation
+## Recommendation  
 
 Keep the experiment isolated. A revision should first test whether a pointed
 Inflection-only experimental output or a less abbreviated surface discriminator

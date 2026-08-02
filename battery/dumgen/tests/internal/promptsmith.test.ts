@@ -120,7 +120,7 @@ describe("German noun projection codecs", () => {
 		expect(
 			PROMPT_CATALOG.laboratory.readingResolution.de.Lexeme.NOUN.prompt
 				.modelInputSchema.shape.lemma,
-		).toBe(deNounModelLemmaSchema);
+		).toBe(deNounModelLemmaSchema.shape.canonicalForm);
 	});
 
 	test("round-trips model and canonical Lemma and Surface fields", () => {

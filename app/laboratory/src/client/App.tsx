@@ -559,26 +559,6 @@ function Segments({ state }: { state: LaboratoryState }) {
 					))
 				)}
 			</div>
-
-			{target ? (
-				<div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-					<span className="inline-block size-2.5 rounded-sm bg-primary/30 ring-1 ring-primary/60" />
-					<span>
-						Shared Analysis Target:{" "}
-						{target.memberSegmentIndices.length} member
-						{target.memberSegmentIndices.length === 1 ? "" : "s"} ·{" "}
-						{target.family} {target.kind}
-					</span>
-				</div>
-			) : null}
-
-			{state.result?.sentence ? (
-				<p className="text-xs text-muted-foreground">
-					Sentence {state.result.sentence.id.slice(0, 8)} ·{" "}
-					{segments.length} indexed segments ·{" "}
-					{state.result.generation.model}
-				</p>
-			) : null}
 		</section>
 	);
 }

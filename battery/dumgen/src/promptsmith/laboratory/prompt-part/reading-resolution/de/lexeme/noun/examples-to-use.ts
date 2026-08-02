@@ -7,30 +7,24 @@ export const examplesToUse = [
 		id: "reading-noun-use-reuse-tea",
 		input: {
 			markedContext: "Der <TARGET>Tee</TARGET> duftet.",
-			lemma: {
-				canonicalForm: "Tee",
-				coreFeatures: { gender: "Masc", hyph: null },
-			},
-			existingEmojiDescriptions: ["☕ Tee"],
+			lemma: "Tee",
+			existingEmojiDescriptions: ["☕"],
 		},
 		idealOutput: {
 			decision: "Reuse",
-			emojiDescription: "☕ Tee",
+			emojiDescription: "☕",
 		},
 	},
 	{
 		id: "reading-noun-use-kitchen-as-room",
 		input: {
 			markedContext: "Wir trinken Kaffee in der <TARGET>Küche</TARGET>.",
-			lemma: {
-				canonicalForm: "Küche",
-				coreFeatures: { gender: "Fem", hyph: null },
-			},
+			lemma: "Küche",
 			existingEmojiDescriptions: [],
 		},
 		idealOutput: {
 			decision: "New",
-			emojiDescription: "🍳 Küche",
+			emojiDescription: "🍳",
 		},
 	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

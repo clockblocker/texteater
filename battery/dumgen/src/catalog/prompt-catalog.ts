@@ -243,7 +243,7 @@ const readingNounPrompt = {
 	projectInput(input): z.output<typeof readingNounModelInputSchema> {
 		return {
 			markedContext: input.markedContext,
-			lemma: deNounLemmaCodec.encode(input.lemma),
+			lemma: input.lemma.canonicalForm,
 			existingEmojiDescriptions: input.existingEmojiDescriptions,
 		};
 	},

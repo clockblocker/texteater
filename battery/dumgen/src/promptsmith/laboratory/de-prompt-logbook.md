@@ -82,3 +82,15 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - No model was called for this rewrite. Verification covered authored examples,
   deterministic assembly, generated freshness, codecs, catalog behavior, and
   package gates only.
+
+## 2026-08-02 — Emoji Descriptions corrected to emoji-only labels
+
+- An Emoji Description is one emoji or a compact emoji sequence. It never
+  includes the Lemma, a gloss, or explanatory prose.
+- Earlier Reading prompts and examples incorrectly concatenated text, such as
+  `☕ Tee`. Settled and experimental prompts now use emoji-only values such as
+  `☕` and explicitly prohibit appended text.
+- Existing Reading reuse still requires exact membership in the learner's
+  supplied Emoji Descriptions.
+- No model was called for this correction. Verification covered deterministic
+  generation, schemas, catalog behavior, and package tests.

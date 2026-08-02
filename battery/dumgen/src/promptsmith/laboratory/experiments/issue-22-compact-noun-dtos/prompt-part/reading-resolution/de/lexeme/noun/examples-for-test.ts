@@ -10,6 +10,6 @@ export const examplesForTest = [
 			l: { c: "Bank", g: "F", h: null },
 			e: [],
 		},
-		idealOutput: { d: "N", e: "🏦 Bank" },
+		idealOutput: { d: "N", e: "🏦" },
 	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

@@ -46,9 +46,10 @@ Reading {
 
 A Reading is identified by the pair `(Lemma, emojiDescription)` within one
 learner's dictionary. The emoji description is a stable semantic label for
-that learner. The classifier receives the learner's existing Lemmas and emoji
-descriptions, reuses an existing Reading when it is close enough, or proposes
-a new Reading. Learners do not manually split semantic identity.
+that learner. It contains one emoji or a compact emoji sequence, never Lemma
+text, a gloss, or prose. The classifier receives the learner's existing Lemmas
+and emoji descriptions, reuses an existing Reading when it is close enough, or
+proposes a new Reading. Learners do not manually split semantic identity.
 
 This deliberately accepts that grammatically indistinguishable homonyms and
 polysemous uses reach the same Lemma first. Reading performs the semantic split
