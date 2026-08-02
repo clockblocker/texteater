@@ -124,14 +124,20 @@ equality is used only when the route's semantics make it authoritative.
 The exact source text submitted to sentence-first discovery, before any learner
 click is interpreted.
 
+### Enabled Segmentation Language
+A Dumling Supported Language for which Dumgen has an enabled language-specific
+Segmentation route. German is the only Enabled Segmentation Language for now;
+the intended inventory is eventually every Dumling Supported Language.
+_Avoid_: Supported language, when referring specifically to Dumgen route availability
+
 ### Intake Decision
 The result of resolving a Source Sentence to its language before segmentation.
 
 It has exactly one outcome:
-- `Accepted`, with the supported language to which some useful material can be
-  dispatched for segmentation as `ResolvableText`
+- `Accepted`, with the Enabled Segmentation Language to which some useful
+  material can be dispatched for segmentation as `ResolvableText`
 - `UnsupportedLanguage`, with the resolved language for valid language input
-  outside the supported inventory
+  that has no enabled Dumgen Segmentation route
 - `Unintelligible`, for gibberish or input too corrupted to support a
   defensible interpretation
 
