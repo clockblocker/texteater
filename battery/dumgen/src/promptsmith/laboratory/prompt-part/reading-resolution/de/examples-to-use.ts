@@ -66,4 +66,7 @@ export const examplesToUse = [
 	adpExamples[7],
 	adpExamples[8],
 	adpExamples[9],
+	adpExamples[10],
+	adpExamples[11],
+	adpExamples[12],
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

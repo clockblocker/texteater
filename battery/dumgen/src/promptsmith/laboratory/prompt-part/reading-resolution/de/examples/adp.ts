@@ -2,7 +2,7 @@ import type { ExampleSet } from "../../../../../assembly";
 import type { inputSchema } from "../input-schema";
 import type { outputSchema } from "../output-schema";
 
-const uberStorytellig = [
+const ueberStorytelling = [
 	{
 		id: "reading-de-use-adp-ueber-new-connector",
 		input: {
@@ -69,7 +69,7 @@ const uberStorytellig = [
  * Related: `battery/dumgen/docs/persistent/prompting-philosophie.md`
  */
 export const adpExamples = [
-	...uberStorytellig,
+	...ueberStorytelling,
 	{
 		id: "reading-de-use-adp-mit-new-means",
 		input: {
@@ -134,8 +134,7 @@ export const adpExamples = [
 			decision: "New",
 			emojiDescription: "🪞",
 		},
-		explanation:
-			'Sensory characteristic ("smells of"), not direction or sequence. New.',
+		explanation: "Seems like. Not direction. New.",
 	},
 	{
 		id: "reading-de-use-adp-vor-reuse-broad-precedence",

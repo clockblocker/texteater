@@ -131,7 +131,7 @@ export const examplesForTest = [
 			emojiDescription: "📄",
 		},
 	},
-	adpExamples[10],
+	adpExamples[13],
 	{
 		id: "reading-de-test-lexeme-adv-sonst-usual-vs-consequence",
 		input: {
