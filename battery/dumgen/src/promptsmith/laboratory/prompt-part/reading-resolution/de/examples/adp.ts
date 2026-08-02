@@ -2,8 +2,64 @@ import type { ExampleSet } from "../../../../../assembly";
 import type { inputSchema } from "../input-schema";
 import type { outputSchema } from "../output-schema";
 
+const uberStorytellig = [
+	{
+		id: "reading-de-use-adp-ueber-new-connector",
+		input: {
+			markedContext:
+				"Das Hotel verfügt <TARGET>über</TARGET> einen Pool.",
+			lemma: "über",
+			existingEmojiDescriptions: [],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "🔗",
+		},
+		explanation: "verfügen über fixed. über only links. New.",
+	},
+	{
+		id: "reading-de-use-adp-ueber-new-above",
+		input: {
+			markedContext: "Die Lampe hängt <TARGET>über</TARGET> dem Tisch.",
+			lemma: "über",
+			existingEmojiDescriptions: ["🔗"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "⬆️",
+		},
+		explanation: "Above, not a generic connector. New.",
+	},
+	{
+		id: "reading-de-use-adp-ueber-new-topic",
+		input: {
+			markedContext: "Sie sprechen <TARGET>über</TARGET> den Unfall.",
+			lemma: "über",
+			existingEmojiDescriptions: ["⬆️", "🔗"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "💬",
+		},
+		explanation: "Topic, not above. New.",
+	},
+	{
+		id: "reading-de-use-adp-ueber-reuse-topic",
+		input: {
+			markedContext: "Wir reden <TARGET>über</TARGET> das Wetter.",
+			lemma: "über",
+			existingEmojiDescriptions: ["⬆️", "💬", "🔗"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "💬",
+		},
+		explanation: "Topic. Reuse.",
+	},
+] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;
+
 /**
- * ADP emoji rules:
+ * ADP emoji-picking rules:
  * - Name relation, not complement or scene.
  * - Within a lemma, reuse one emoji for the same broad relation across domains.
  * - Different lemmas may use the same emoji independently.
@@ -13,6 +69,7 @@ import type { outputSchema } from "../output-schema";
  * Related: `battery/dumgen/docs/persistent/prompting-philosophie.md`
  */
 export const adpExamples = [
+	...uberStorytellig,
 	{
 		id: "reading-de-use-adp-mit-new-means",
 		input: {
@@ -39,19 +96,6 @@ export const adpExamples = [
 			emojiDescription: "🔗",
 		},
 		explanation: "rechnen mit fixed. mit only links.",
-	},
-	{
-		id: "reading-de-use-adp-ueber-new-topic",
-		input: {
-			markedContext: "Sie sprechen <TARGET>über</TARGET> den Unfall.",
-			lemma: "über",
-			existingEmojiDescriptions: ["⬆️", "🔗"],
-		},
-		idealOutput: {
-			decision: "New",
-			emojiDescription: "💬",
-		},
-		explanation: "Topic, not above. New.",
 	},
 	{
 		id: "reading-de-use-adp-um-new-topic",
