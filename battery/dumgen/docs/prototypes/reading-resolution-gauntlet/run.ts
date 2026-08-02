@@ -1,7 +1,7 @@
 // PROTOTYPE ONLY — bounded live evaluation of the current Reading Resolution prompt.
 //
 // Question: does the current German Reading Resolution prompt apply the
-// no-splitting-semantic-pennies policy on ten deliberately tricky cases?
+// no-splitting-semantic-pennies policy on the agreed examples-for-test cases?
 
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -20,6 +20,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "reading-resolution-gauntlet-v1";
 const RUN_MAX_OUTPUT_TOKENS = 1024;
+const MAX_TEST_CASES = 25;
 const prompt = PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
 const testCases: readonly {
 	readonly id: string;
@@ -27,9 +28,9 @@ const testCases: readonly {
 	readonly idealOutput: output<typeof outputSchema>;
 }[] = examplesForTest;
 
-if (testCases.length !== 10) {
+if (testCases.length > MAX_TEST_CASES) {
 	throw new Error(
-		`The Reading Resolution gauntlet runs only with exactly ten agreed examples-for-test cases; found ${testCases.length}.`,
+		`The Reading Resolution gauntlet is capped at ${MAX_TEST_CASES} examples-for-test cases; found ${testCases.length}.`,
 	);
 }
 

@@ -130,4 +130,195 @@ export const examplesForTest = [
 			emojiDescription: "📄",
 		},
 	},
+	{
+		id: "reading-de-test-lexeme-adp-mit-instrument-vs-accompaniment",
+		input: {
+			markedContext:
+				"Die Mechanikerin löst die Schraube <TARGET>mit</TARGET> einem Schlüssel.",
+			lemma: "mit",
+			existingEmojiDescriptions: ["🤝", "🔗"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "🛠️",
+		},
+	},
+	{
+		id: "reading-de-test-lexeme-adv-sonst-usual-vs-consequence",
+		input: {
+			markedContext:
+				"Er arbeitet <TARGET>sonst</TARGET> im Homeoffice, heute aber im Büro.",
+			lemma: "sonst",
+			existingEmojiDescriptions: ["⚠️"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "🔁",
+		},
+	},
+	{
+		id: "reading-de-test-lexeme-aux-werden-passive-vs-future",
+		input: {
+			markedContext: "Der Antrag <TARGET>wird</TARGET> morgen geprüft.",
+			lemma: "werden",
+			existingEmojiDescriptions: ["🔮"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "🔄",
+		},
+	},
+	{
+		id: "reading-de-test-lexeme-sconj-waehrend-adversative-vs-temporal",
+		input: {
+			markedContext:
+				"<TARGET>Während</TARGET> Lea gern früh beginnt, arbeitet Amir lieber abends.",
+			lemma: "während",
+			existingEmojiDescriptions: ["⏳"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "↔️",
+		},
+	},
+	{
+		id: "reading-de-test-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+		input: {
+			markedContext:
+				"Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+			lemma: "Das tut mir leid",
+			existingEmojiDescriptions: ["😔", "🙏"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "😔",
+		},
+	},
+	{
+		id: "reading-de-test-phraseme-aphorism-zeit-ist-geld-reuse",
+		input: {
+			markedContext:
+				"Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
+			lemma: "Zeit ist Geld",
+			existingEmojiDescriptions: ["⚖️", "⏳💰", "🏭"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "⏳💰",
+		},
+	},
+	{
+		id: "reading-de-test-phraseme-proverb-viele-koeche-reuse",
+		input: {
+			markedContext:
+				"Im Projekt durfte nun jeder mitentscheiden – <TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.",
+			lemma: "Viele Köche verderben den Brei",
+			existingEmojiDescriptions: ["🍲", "🧑‍🍳", "👥💥"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "👥💥",
+		},
+	},
+	{
+		id: "reading-de-test-phraseme-idiom-den-faden-verlieren-reuse",
+		input: {
+			markedContext:
+				"Bei der dritten Zwischenfrage <TARGET>verlor</TARGET> die Rednerin <TARGET>den</TARGET> <TARGET>Faden</TARGET>.",
+			lemma: "den Faden verlieren",
+			existingEmojiDescriptions: ["🧵❌"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "🧵❌",
+		},
+	},
+	{
+		id: "reading-de-test-morpheme-prefix-un-intensifier-vs-negation",
+		input: {
+			markedContext:
+				"Eine <TARGET>Un</TARGET>menge von Anträgen blieb unbearbeitet.",
+			lemma: "un-",
+			existingEmojiDescriptions: ["🚫", "👎"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "📈",
+		},
+	},
+	{
+		id: "reading-de-test-morpheme-suffix-chen-smallness-reuse",
+		input: {
+			markedContext:
+				"Im Karton lag ein winziges Häus<TARGET>chen</TARGET> aus Holz.",
+			lemma: "-chen",
+			existingEmojiDescriptions: ["🤏", "🥰"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "🤏",
+		},
+	},
+	{
+		id: "reading-de-test-morpheme-suffixoid-frei-absence-vs-cost",
+		input: {
+			markedContext: "Der Saft ist zucker<TARGET>frei</TARGET>.",
+			lemma: "-frei",
+			existingEmojiDescriptions: ["🆓", "♿"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "🚫",
+		},
+	},
+	{
+		id: "reading-de-test-morpheme-interfix-t-linking-reuse",
+		input: {
+			markedContext: "Die Verhandlung war öffen<TARGET>t</TARGET>lich.",
+			lemma: "-t-",
+			existingEmojiDescriptions: ["🔗"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "🔗",
+		},
+	},
+	{
+		id: "reading-de-test-morpheme-circumfix-ge-t-participle-reuse",
+		input: {
+			markedContext:
+				"Das Paket wurde sorgfältig <TARGET>ge</TARGET>pack<TARGET>t</TARGET>.",
+			lemma: "ge-…-t",
+			existingEmojiDescriptions: ["✅"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "✅",
+		},
+	},
+	{
+		id: "reading-de-test-construction-fusion-am-temporal-vs-locative",
+		input: {
+			markedContext: "Der Kurs beginnt <TARGET>am</TARGET> Montag.",
+			lemma: "am",
+			existingEmojiDescriptions: ["📍"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "📅",
+		},
+	},
+	{
+		id: "reading-de-test-construction-paired-frame-entweder-oder-reuse",
+		input: {
+			markedContext:
+				"Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
+			lemma: "entweder … oder",
+			existingEmojiDescriptions: ["➕", "🔀", "⚖️"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "🔀",
+		},
+	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

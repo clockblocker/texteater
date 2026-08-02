@@ -1,14 +1,16 @@
 # Reading Resolution gauntlet
 
 **Question:** Does the current German Reading Resolution prompt apply the
-learner-facing “do not split semantic pennies” policy on ten deliberately
-tricky cases?
+learner-facing “do not split semantic pennies” policy on the current set of
+deliberately tricky test cases?
 
-This is a throwaway, bounded live evaluation. It makes ten serial calls through
-the current prompt catalog using `gpt-5-nano`, no retries, and `store: false`.
-The runner uses a 1,024-token output budget to isolate prompt behavior from the
-catalog's production token budget; both values are retained in each run. It
-records each output and one contract score:
+This is a throwaway, bounded live evaluation. It makes one serial call per
+example in the current German Reading Resolution `examplesForTest` array using
+`gpt-5-nano`, with no retries and `store: false`. The denominator therefore
+tracks the authored array length. A safety cap prevents the runner from making
+more than 25 calls. The runner uses a 1,024-token output budget to isolate prompt
+behavior from the catalog's production token budget; both values are retained
+in each run. It records each output and one contract score:
 
 - **Contract score:** `Reuse` must copy the expected existing description;
   expected `New` cases must return `New` with a description outside the existing
@@ -17,9 +19,7 @@ records each output and one contract score:
 
 Cases come directly from
 `src/promptsmith/laboratory/prompt-part/reading-resolution/de/examples-for-test.ts`.
-They are added one at a time only after their input and ideal output have been
-discussed and agreed. The runner refuses to make API calls until that file
-contains exactly ten cases.
+The runner refuses to make API calls if that file contains more than 25 cases.
 
 Run it from `battery/dumgen`:
 
