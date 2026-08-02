@@ -1,0 +1,284 @@
+{
+  "runnerVersion": "reading-resolution-gauntlet-v1",
+  "startedAt": "2026-08-02T05:19:58.405Z",
+  "model": "gpt-5-nano",
+  "promptSha256": "6d44a45f11cb4ab2a23ae80565b1d25140819636bf637fcc4bb277ea2d85bbd9",
+  "boundedCalls": 10,
+  "retries": 0,
+  "store": false,
+  "contractScore": 3,
+  "attempts": [
+    {
+      "caseId": "reading-de-test-bank-financial-vs-bench",
+      "input": {
+        "markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
+        "lemma": "Bank",
+        "existingEmojiDescriptions": [
+          "🪑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3364,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_035a769dad9a2cbb016a6ed3627468819da5377b618c8f4ee6",
+      "usage": {
+        "input_tokens": 606,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 150,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 756
+      }
+    },
+    {
+      "caseId": "reading-de-test-key-metaphor-reuse",
+      "input": {
+        "markedContext": "Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
+        "lemma": "Schlüssel",
+        "existingEmojiDescriptions": [
+          "🔑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🔑"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔑"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 7494,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_05dfca3f6d579930016a6ed366ae2881a3ba3ebd5bd59977a1",
+      "usage": {
+        "input_tokens": 441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 180,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 621
+      }
+    },
+    {
+      "caseId": "reading-de-test-bank-park-bench-reuse",
+      "input": {
+        "markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
+        "lemma": "Bank",
+        "existingEmojiDescriptions": [
+          "🪑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🪑"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": false,
+      "latencyMs": 1749,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-separable-aufstehen-new",
+      "input": {
+        "markedContext": "Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
+        "lemma": "aufstehen",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🛏️⬆️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2560,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-aufstehen-uprising-vs-bed",
+      "input": {
+        "markedContext": "Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
+        "lemma": "aufstehen",
+        "existingEmojiDescriptions": [
+          "🛏️⬆️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "✊⬆️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2472,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-idiom-mit-den-woelfen-heulen",
+      "input": {
+        "markedContext": "Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET>.",
+        "lemma": "mit den Wölfen heulen",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🐺🗣️🤝"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 1790,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-leitung-management-vs-cable",
+      "input": {
+        "markedContext": "Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
+        "lemma": "Leitung",
+        "existingEmojiDescriptions": [
+          "🔌"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🧑‍💼"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2125,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-scharf-spicy-vs-sharp",
+      "input": {
+        "markedContext": "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
+        "lemma": "scharf",
+        "existingEmojiDescriptions": [
+          "🔪"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🌶️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 1907,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    },
+    {
+      "caseId": "reading-de-test-scharf-select-sharp",
+      "input": {
+        "markedContext": "Das Messer ist <TARGET>scharf</TARGET> genug, um das Brot zu schneiden.",
+        "lemma": "scharf",
+        "existingEmojiDescriptions": [
+          "🌶️",
+          "🔪"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🔪"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔪"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 3507,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03782e9a7c219b98016a6ed37ac69481a28dc22fd41946f82c",
+      "usage": {
+        "input_tokens": 450,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 151,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 601
+      }
+    },
+    {
+      "caseId": "reading-de-test-zug-select-chess-move",
+      "input": {
+        "markedContext": "Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
+        "lemma": "Zug",
+        "existingEmojiDescriptions": [
+          "🚆",
+          "💨",
+          "🧲",
+          "♟️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "♟️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": false,
+      "latencyMs": 2021,
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text."
+      }
+    }
+  ]
+}

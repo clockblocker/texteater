@@ -167,6 +167,8 @@ remain private and may appear only in laboratory traces.
 
    An Emoji Description contains only one emoji or a compact emoji sequence.
    It never includes the Lemma text, a gloss, or explanatory prose.
+   Persistent selection and composition rules live in
+   [Emoji Description Authoring](./emoji-description-authoring.md).
 
    The supplied membership set contains only Emoji Descriptions from the
    current learner's existing Readings for the exact resolved Lemma. Readings

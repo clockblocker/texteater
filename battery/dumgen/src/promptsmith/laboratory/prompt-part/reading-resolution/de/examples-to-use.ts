@@ -27,4 +27,30 @@ export const examplesToUse = [
 			emojiDescription: "🍳",
 		},
 	},
+	{
+		id: "reading-de-use-aufstehen-uprising-vs-bed",
+		input: {
+			markedContext:
+				"Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
+			lemma: "aufstehen",
+			existingEmojiDescriptions: ["🛏️⬆️"],
+		},
+		idealOutput: {
+			decision: "New",
+			emojiDescription: "✊⬆️",
+		},
+	},
+	{
+		id: "reading-de-use-zug-select-chess-move",
+		input: {
+			markedContext:
+				"Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
+			lemma: "Zug",
+			existingEmojiDescriptions: ["🚆", "💨", "🧲", "➡️"],
+		},
+		idealOutput: {
+			decision: "Reuse",
+			emojiDescription: "➡️",
+		},
+	},
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

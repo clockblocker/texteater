@@ -1,0 +1,384 @@
+{
+  "runnerVersion": "reading-resolution-gauntlet-v1",
+  "startedAt": "2026-08-02T05:22:36.173Z",
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 192,
+  "runMaxOutputTokens": 1024,
+  "promptSha256": "6d44a45f11cb4ab2a23ae80565b1d25140819636bf637fcc4bb277ea2d85bbd9",
+  "boundedCalls": 10,
+  "retries": 0,
+  "store": false,
+  "contractScore": 8,
+  "attempts": [
+    {
+      "caseId": "reading-de-test-bank-financial-vs-bench",
+      "input": {
+        "markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
+        "lemma": "Bank",
+        "existingEmojiDescriptions": [
+          "🪑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 4579,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_07f9892129b87978016a6ed3f93b0c81a1a8ed32b038009530",
+      "usage": {
+        "input_tokens": 440,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 229,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 669
+      }
+    },
+    {
+      "caseId": "reading-de-test-key-metaphor-reuse",
+      "input": {
+        "markedContext": "Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
+        "lemma": "Schlüssel",
+        "existingEmojiDescriptions": [
+          "🔑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🔑"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔑"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1424,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06186d2aa0173776016a6ed3fb3684819da7af640fd4249298",
+      "usage": {
+        "input_tokens": 441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 575
+      }
+    },
+    {
+      "caseId": "reading-de-test-bank-park-bench-reuse",
+      "input": {
+        "markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
+        "lemma": "Bank",
+        "existingEmojiDescriptions": [
+          "🪑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🪑"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🪑"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1790,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0ae6c79c5665a1c2016a6ed3fca2ac81a0a5abb82ea6f8be36",
+      "usage": {
+        "input_tokens": 440,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 212,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 652
+      }
+    },
+    {
+      "caseId": "reading-de-test-separable-aufstehen-new",
+      "input": {
+        "markedContext": "Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
+        "lemma": "aufstehen",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🛏️⬆️"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🛏️➡️🌞"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3022,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_046bff58b876de85016a6ed3fe6b08819cacd603f5d8a154b8",
+      "usage": {
+        "input_tokens": 444,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 395,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 839
+      }
+    },
+    {
+      "caseId": "reading-de-test-aufstehen-uprising-vs-bed",
+      "input": {
+        "markedContext": "Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
+        "lemma": "aufstehen",
+        "existingEmojiDescriptions": [
+          "🛏️⬆️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "✊⬆️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🛏️⬆️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 11737,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b469474da8cc484016a6ed402229081a28aee4d8d8821e981",
+      "usage": {
+        "input_tokens": 454,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 807,
+        "output_tokens_details": {
+          "reasoning_tokens": 768
+        },
+        "total_tokens": 1261
+      }
+    },
+    {
+      "caseId": "reading-de-test-idiom-mit-den-woelfen-heulen",
+      "input": {
+        "markedContext": "Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET>.",
+        "lemma": "mit den Wölfen heulen",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🐺🗣️🤝"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "👥🐺"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3039,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b0ab49fa8247146016a6ed40d3498819db8d517356863026b",
+      "usage": {
+        "input_tokens": 452,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 445,
+        "output_tokens_details": {
+          "reasoning_tokens": 384
+        },
+        "total_tokens": 897
+      }
+    },
+    {
+      "caseId": "reading-de-test-leitung-management-vs-cable",
+      "input": {
+        "markedContext": "Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
+        "lemma": "Leitung",
+        "existingEmojiDescriptions": [
+          "🔌"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🧑‍💼"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "👔"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3042,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0bfd7b0e96d1dd90016a6ed41039ec81a08d0d963fb156067f",
+      "usage": {
+        "input_tokens": 441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 400,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 841
+      }
+    },
+    {
+      "caseId": "reading-de-test-scharf-spicy-vs-sharp",
+      "input": {
+        "markedContext": "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
+        "lemma": "scharf",
+        "existingEmojiDescriptions": [
+          "🔪"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🌶️"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🌶️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 3081,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e9dcec7c48bc5a2016a6ed41342e481a1a52b907fd78a3cfb",
+      "usage": {
+        "input_tokens": 441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 457,
+        "output_tokens_details": {
+          "reasoning_tokens": 384
+        },
+        "total_tokens": 898
+      }
+    },
+    {
+      "caseId": "reading-de-test-scharf-select-sharp",
+      "input": {
+        "markedContext": "Das Messer ist <TARGET>scharf</TARGET> genug, um das Brot zu schneiden.",
+        "lemma": "scharf",
+        "existingEmojiDescriptions": [
+          "🌶️",
+          "🔪"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🔪"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔪"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1333,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0794bfa8d5abd56a016a6ed4165ba881a2b655c2dac9a5c07e",
+      "usage": {
+        "input_tokens": 450,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 585
+      }
+    },
+    {
+      "caseId": "reading-de-test-zug-select-chess-move",
+      "input": {
+        "markedContext": "Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
+        "lemma": "Zug",
+        "existingEmojiDescriptions": [
+          "🚆",
+          "💨",
+          "🧲",
+          "♟️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "♟️"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "➡️"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": false,
+      "latencyMs": 4666,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03b67dc991b1226c016a6ed417c56081a1930ab5f358e1d615",
+      "usage": {
+        "input_tokens": 455,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 444,
+        "output_tokens_details": {
+          "reasoning_tokens": 384
+        },
+        "total_tokens": 899
+      }
+    }
+  ]
+}

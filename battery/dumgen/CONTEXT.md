@@ -259,8 +259,10 @@ no-splitting-semantic-pennies policy: semantic identity is learner-local and is
 split only when a separate learner-facing Reading is useful.
 
 ### Emoji Description
-The emoji-only learner-facing semantic label for a Reading: one to four Unicode
-RGI emoji graphemes, never Lemma text, a gloss, or prose.
+The emoji-only learner-facing semantic label for a Reading: a minimum sufficient
+lexical mnemonic of one to four Unicode RGI emoji graphemes, never Lemma text, a
+gloss, prose, or incidental scene detail. Simple concepts prefer one direct
+emoji; transparent lexical components may use a consistent compact sequence.
 _Avoid_: Emoji gloss, emoji-plus-gloss label
 
 ### Segmentation Chain
