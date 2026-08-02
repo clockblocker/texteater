@@ -57,5 +57,5 @@ export const examplesToUse = [
 		explanation: "Chess move. ➡️ already fits.",
 	},
 	...adpExamples.ueberStorytelling,
-	...adpExamples.rest.slice(0, -1),
+	...adpExamples.rest.slice(0, 3),
 ] as const satisfies ExampleSet<typeof inputSchema, typeof outputSchema>;

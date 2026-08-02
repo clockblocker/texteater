@@ -6,7 +6,8 @@ const deLemmaLeafSchemas = Object.values(schemasFor.de.entity.Lemma).flatMap(
 	(family) => Object.values(family).map((getSchema) => getSchema()),
 );
 
-export const deLemmaSchema = z.union(
+// Keep Dumling's internal schema helper types out of Dumgen's declarations.
+export const deLemmaSchema: z.ZodType<Lemma<"de">> = z.union(
 	deLemmaLeafSchemas as unknown as readonly [
 		z.ZodType<Lemma<"de">>,
 		z.ZodType<Lemma<"de">>,

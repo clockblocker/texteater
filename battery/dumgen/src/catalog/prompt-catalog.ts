@@ -34,11 +34,7 @@ import type {
 	Unresolved,
 } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
-import type {
-	Prompt,
-	PromptCatalogEntry,
-	PromptTree,
-} from "./prompt-definition";
+import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
 function omitLinkedLemma<LinkedSurface extends { readonly lemma: unknown }>(
 	linkedSurface: LinkedSurface,
@@ -247,10 +243,27 @@ const grammarNounPrompt = {
 	GrammaticalResolution
 >;
 
-const readingInputSchema = readingModelInputSchema.extend({
-	lemma: deLemmaSchema,
-});
-const readingPrompt = {
+type ReadingInputShape = Omit<typeof readingModelInputSchema.shape, "lemma"> & {
+	readonly lemma: typeof deLemmaSchema;
+};
+
+// These boundary types keep Dumling's internal helpers out of emitted declarations.
+const readingInputSchema: z.ZodObject<ReadingInputShape> =
+	readingModelInputSchema.extend({
+		lemma: deLemmaSchema,
+	});
+type ReadingPromptDefinition = Prompt<
+	typeof readingInputSchema,
+	typeof readingOutputSchema,
+	ReadingResolution,
+	typeof readingModelInputSchema
+>;
+type ReadingPrompt = ReadingPromptDefinition &
+	Required<
+		Pick<ReadingPromptDefinition, "modelInputSchema" | "projectInput">
+	>;
+
+const readingPrompt: ReadingPrompt = {
 	systemPrompt: readingSystemPrompt,
 	inputSchema: readingInputSchema,
 	modelInputSchema: readingModelInputSchema,
@@ -263,12 +276,7 @@ const readingPrompt = {
 		};
 	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 192 },
-} satisfies Prompt<
-	typeof readingInputSchema,
-	typeof readingOutputSchema,
-	ReadingResolution,
-	typeof readingModelInputSchema
->;
+};
 
 type GermanRoutePromptCatalog<Definition extends Prompt> = {
 	readonly [Family in GermanHighLevelFamily]: {
@@ -318,7 +326,29 @@ const grammaticalResolutionCatalog = {
 	},
 };
 
-export const PROMPT_CATALOG = {
+export type LaboratoryPromptCatalog = {
+	readonly laboratory: {
+		readonly intake: PromptCatalogEntry<typeof intakePrompt>;
+		readonly segmentation: {
+			readonly de: PromptCatalogEntry<typeof segmentationPrompt>;
+		};
+		readonly targetClassification: {
+			readonly de: {
+				readonly highLevelWholeUnit: PromptCatalogEntry<
+					typeof targetPrompt
+				>;
+			};
+		};
+		readonly grammaticalResolution: {
+			readonly de: typeof grammaticalResolutionCatalog;
+		};
+		readonly readingResolution: {
+			readonly de: PromptCatalogEntry<typeof readingPrompt>;
+		};
+	};
+};
+
+export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 	laboratory: {
 		intake: promptEntry(intakePrompt),
 		segmentation: { de: promptEntry(segmentationPrompt) },
@@ -328,6 +358,4 @@ export const PROMPT_CATALOG = {
 		grammaticalResolution: { de: grammaticalResolutionCatalog },
 		readingResolution: { de: promptEntry(readingPrompt) },
 	},
-} as const satisfies PromptTree;
-
-export type LaboratoryPromptCatalog = typeof PROMPT_CATALOG;
+};
