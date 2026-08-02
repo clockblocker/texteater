@@ -1,38 +1,26 @@
 # Prompt Chains
 
-Persistent decisions about Dumgen prompt-chain topology. The prompts themselves
-remain early work in progress under the laboratory namespace.
+Decisions about Dumgen prompt topology and boundaries. The prompts remain
+laboratory work in progress.
 
-## German segmentation chain
-
-The intended runtime chain has exactly two prompt stages:
+## Segmentation chain
 
 ```text
 Source Sentence -> Intake -> Segmentation<Lang>
 ```
 
-1. **Intake** resolves the Source Sentence language. `Accepted` carries the
-   supported language used to dispatch `Segmentation<Lang>`;
-   `UnsupportedLanguage` retains the resolved but unsupported language;
-   `Unintelligible` carries no language.
-2. **Segmentation<Lang>** performs language-specific segmentation for an
-   accepted Source Sentence. The current scope supports only
-   `Segmentation<de>`.
+Intake returns one of:
 
-For the current scope, Intake resolves exactly one primary language per Source
-Sentence and dispatches exactly one Segmentation route. Segmentation preserves
-non-primary-language spans as `OpaqueText`. A future multilingual model is
-tracked in [texteater#19](https://github.com/clockblocker/texteater/issues/19).
+- `Accepted` with a supported language, used to dispatch `Segmentation<Lang>`
+- `UnsupportedLanguage` with the resolved language
+- `Unintelligible` without a language
 
-A strict finalizer is evaluation and testing infrastructure, not a third stage
-of the intended runtime chain. It exists to expose contract violations during
-prompt development, not to compensate for them in runtime operation. The
-working assumption is that the configured nano model must follow each stage's
-contract consistently once its prompt is sufficiently precise.
+For now, Intake resolves one primary language and dispatches one route. Only
+`Segmentation<de>` is supported. It preserves non-primary-language spans as
+`OpaqueText`. Multilingual routing is deferred to
+[texteater#19](https://github.com/clockblocker/texteater/issues/19).
 
 ## Classification chain
-
-The intended runtime chain follows three distinct linguistic problems:
 
 ```text
 Segmented Sentence + Click
@@ -41,248 +29,192 @@ Segmented Sentence + Click
   -> Reading Resolution<Lang>
 ```
 
-### Minimal contracts
+Each prompt receives only the data needed for its judgment. The prompt path
+owns static routing data. Code owns identity, copied input, derivable values,
+presentation data, and validation. Reading Resolution's `decision` is the sole
+deliberate redundancy; it helps expose hallucination without controlling
+application behavior.
 
-Every model-facing prompt has the smallest input and output that its own
-judgment requires. Static routing information belongs in the prompt path.
-Application-owned identity, copied input, derivable values, presentation data,
-and intermediate structures that the next judgment does not need are excluded
-from model schemas. The advisory `decision` in Reading Resolution is the one
-deliberate redundancy retained as a hallucination guard.
+### Model boundary
 
-### Contract layers
+Where a canonical Dumling contract exists, Dumgen uses it for external results.
+Each migrated prompt uses a private, minimal Dumgen DTO. Deterministic mapping
+connects the two. Model DTOs never become domain results, though laboratory
+traces may expose them.
 
-Dumgen communicates with external callers through the canonical Dumling domain
-contracts. Dumling schemas may validate those contracts inside the process, but
-they do not constrain the shapes sent to or received from a model.
+For settled routes, `codecBuilder4.buildFixedFieldsCodec` derives a model schema
+from a Dumling object. Decode restores route fields such as `language`,
+`family`, and `kind`; encode validates and removes them. Shared Dumling-backed
+schemas and codecs live outside Promptsmith so authored sources and runtime use
+the same model shape.
 
-Each prompt owns internal Dumgen DTOs optimized for its pointed structured
-generation task. Those DTOs may differ freely from Dumling shapes. Deterministic
-Dumgen mapping converts between the external Dumling contract and the minimal
-model-facing representation; model DTOs do not leak across the Dumgen boundary.
+`AnalysisTarget` is the exception to the private-DTO rule: it is a stable,
+presentation-facing Dumgen contract. It contains only member Segment indices,
+Lemma Family, and Lemma Kind. It does not belong in Dumling.
 
-Schema-shape mapping for settled routes uses
-`codecBuilder4.buildFixedFieldsCodec`. The codec derives the minimal model
-schema from the canonical Dumling object, decodes by restoring route-owned
-fields such as `language`, `family`, and `kind`, and encodes by validating and
-removing those fields. Shared Dumling-backed schema/codecs live outside
-Promptsmith so authored Prompt Sources and runtime projection use one model
-shape without duplicate omit masks.
+### 1. Target Classification
 
-`AnalysisTarget` is deliberately exposed as a stable Dumgen-owned,
-presentation-facing contract; it is not added to Dumling. It is not a leaked
-model DTO: Dumgen maps the private Target
-Classification output into the public Analysis Target containing only member
-Segment indices, Lemma Family, and Lemma Kind. Other intermediate model DTOs
-remain private and may appear only in laboratory traces.
+`Target Classification<Lang, Policy>` decides which attested Segments form the
+target and which grammatical route handles it. It is the only classification
+stage that receives the Segment array.
 
-1. **Target Classification<Lang, Policy>** is a family of distinct prompts.
-   Each prompt applies one targeting policy to decide which attested Segments
-   form the target of analysis and which Lemma Family and Kind should handle
-   it. It returns exactly one ephemeral Analysis Target containing the ordered
-   Segment indices and grammatical route, or the `Unresolved` domain error. An
-   Analysis Target is not yet a Selection because no Surface has been resolved.
-   This is the only classification stage that receives the indexed Segment
-   array.
+```ts
+type TargetClassificationInput = {
+  clickedSegmentIndex: number;
+  segments: { kind: SegmentKind; text: string }[];
+};
 
-   Its complete runtime input and output are:
+type TargetClassification =
+  | {
+      memberSegmentIndices: number[];
+      family: Family;
+      kind: KindFor<Family>;
+    }
+  | { decision: "Unresolved" };
+```
 
-   ```ts
-   type TargetClassificationInput = {
-     clickedSegmentIndex: number;
-     segments: { kind: SegmentKind; text: string }[];
-   };
+Member indices are ordered, unique, point only to `ResolvableText`, and include
+the clicked index. Language and policy come from the prompt path. An Analysis
+Target is not a Selection because no Surface has been resolved.
 
-   type TargetClassification =
-     | {
-         decision: "Resolved";
-         memberSegmentIndices: number[];
-         family: Family;
-         kind: KindFor<Family>;
-       }
-     | { decision: "Unresolved" };
-   ```
+### 2. Grammatical Resolution
 
-   Segment indices are array positions and are not copied into each input
-   Segment. Resolved member indices are ordered, unique, reference only
-   `ResolvableText`, and include the clicked index. Language and targeting
-   policy are fixed by the prompt path.
-2. **Grammatical Resolution<Lang, Family, Kind>** receives that Analysis Target
-   and its context, then produces the linguistic judgments needed for the
-   application to construct the Selection, Surface, and Lemma. It owns member
-   orthography, Surface normalization, spelling, realization coverage, Surface
-   kind and features, canonical form, and Lemma core features. Each supported
-   `<Lang, Family, Kind>` route is a physically distinct prompt with its own
-   instructions and pointed model-facing schema; there is no generic union
-   prompt that receives Family and Kind as runtime options.
-   The dispatched prompt must preserve its route exactly or return `Unresolved`;
-   it cannot silently change Family or Kind.
+`Grammatical Resolution<Lang, Family, Kind>` receives the marked target in
+context. It resolves member orthography, Surface normalization, spelling,
+realization coverage, Surface kind and features, canonical form, and Lemma core
+features.
 
-   Its complete runtime prompt input is:
+Each supported route is a separate prompt with its own schema. It must preserve
+its route or return `Unresolved`; it cannot change Family or Kind.
 
-   ```ts
-   { markedContext: string }
-   ```
+The complete prompt input is:
 
-   Language, Family, and Kind are fixed by the prompt path. The resolver emits
-   one ordered orthography value per `<TARGET>` marker; the application aligns
-   those values with the cached Analysis Target member indices.
+```ts
+{ markedContext: string }
+```
 
-   Its output contains only model-owned judgments:
+Its projected public result contains one orthography per `<TARGET>` marker:
 
-   ```ts
-   type GrammaticalResolution =
-     | {
-         decision: "Resolved";
-         memberOrthographies: ("Standard" | "Typo")[];
-         surface: ModelSurfaceFields;
-         lemma: ModelLemmaFields;
-       }
-     | { decision: "Unresolved" };
-   ```
+```ts
+type GrammaticalResolution =
+  | {
+      decision: "Resolved";
+      memberOrthographies: ("Standard" | "Typo")[];
+      surface: Omit<Surface<Lang>, "lemma">;
+      lemma: Lemma<Lang>;
+    }
+  | { decision: "Unresolved" };
+```
 
-   The application owns Segmented Sentence identity, clicked index, member
-   indices, and `attestedSurface`. It constructs the click-local Selection and
-   links the returned Surface to the returned Lemma.
-3. **Reading Resolution<Lang>** receives the fixed Lemma,
-   contextual evidence, and the learner's existing Readings for that Lemma. It
-   either reuses an existing Reading or drafts a new one. It must not revise or
-   otherwise reconsider the resolved Lemma. There is one physically distinct
-   prompt per language because its judgment does not depend on Lemma family or
-   kind.
+The application aligns orthographies with cached Analysis Target members. It
+owns Segmented Sentence identity, the click and member indices, and
+`attestedSurface`; it constructs the Selection and links the Surface to the
+Lemma.
 
-   ```ts
-   type ReadingResolution =
-     | { decision: "Reuse"; emojiDescription: string }
-     | { decision: "New"; emojiDescription: string };
-   ```
+### 3. Reading Resolution
 
-   Exact `emojiDescription` membership in the supplied existing descriptions is
-   authoritative. A match means reuse; a miss means the application combines
-   the new description with the already-fixed Lemma. The model's `decision`
-   field is advisory redundancy intended to discourage hallucination and expose
-   inconsistent reasoning. It never overrides the match-derived result. A
-   disagreement between `decision` and exact membership is retained as a prompt
-   quality diagnostic rather than used for application behavior.
+`Reading Resolution<Lang>` receives a fixed Lemma, marked context, and the
+learner's existing Readings for that exact Lemma. It reuses one Reading or
+drafts a new one. It never revisits the Lemma. Routes vary only by language.
 
-   An Emoji Description contains only one emoji or a compact emoji sequence.
-   It never includes the Lemma text, a gloss, or explanatory prose.
-   Persistent selection and composition rules live in
-   [Emoji Description Authoring](./emoji-description-authoring.md).
+```ts
+type ReadingResolution = {
+  decision: "Reuse" | "New";
+  emojiDescription: string;
+};
+```
 
-   The supplied membership set contains only Emoji Descriptions from the
-   current learner's existing Readings for the exact resolved Lemma. Readings
-   owned by other learners or attached to other Lemmas are excluded. An empty
-   set necessarily makes the match-derived result `New`.
+Exact membership in `existingEmojiDescriptions` determines the result. A match
+means `Reuse`; a miss means `New`. The model's `decision` is diagnostic only and
+never overrides membership. Log disagreement instead of changing the result.
+An empty set therefore means `New`.
 
-   Its system-facing input retains the complete Lemma so the application can
-   select descriptions for the matching Lemma identity, including family and
-   kind:
+The caller supplies descriptions only from the current learner's Readings for
+the exact resolved Lemma. It excludes other learners and Lemmas.
 
-   ```ts
-   {
-     markedContext: string;
-     lemma: Lemma<Lang>;
-     existingEmojiDescriptions: string[];
-   }
-   ```
+The system input retains the full Lemma so the application can select Readings
+for its exact identity:
 
-   Family, kind, and core features are system-owned routing and identity data.
-   They are projected out before the LLM call. The complete model input is:
+```ts
+{
+  markedContext: string;
+  lemma: Lemma<Lang>;
+  existingEmojiDescriptions: string[];
+}
+```
 
-   ```ts
-   {
-     markedContext: string;
-     lemma: string; // canonicalForm
-     existingEmojiDescriptions: string[];
-   }
-   ```
+Before the model call, family, kind, and core features are projected out:
 
-   Selection and Surface data are not repeated in Reading Resolution.
+```ts
+{
+  markedContext: string;
+  lemma: string; // canonicalForm
+  existingEmojiDescriptions: string[];
+}
+```
 
-### Context after target classification
+Selection and Surface data are not repeated. An Emoji Description contains one
+to four Unicode RGI emoji graphemes, never Lemma text, a gloss, or prose. See
+[Emoji Description Authoring](./emoji-description-authoring.md).
 
-After Target Classification, classifiers do not receive the Segment array.
-The authoritative sentence context is:
+## Context and target markers
+
+After Target Classification, the Segment array is no longer model input. The
+authoritative sentence text is:
 
 ```ts
 const sentenceText = segments.map(({ text }) => text).join("");
 ```
 
-Grammatical Resolution and Reading Resolution receive this string together
-with the already-resolved target, Surface, Lemma, or Reading evidence required
-by their own pointed contracts. Segment indices remain application-owned
-bookkeeping for Selection identity, reuse, and visual resolved-unit state.
-
-Because repeated text can make an unmarked target ambiguous, the application
-also derives a prompt-only marked-context string from the cached Analysis
-Target. Every participating member is wrapped independently, including members
-of a discontinuous unit:
+The application also derives prompt-only marked context from the cached
+Analysis Target. Every member gets its own markers, including discontinuous
+members:
 
 ```text
 Fritz, <TARGET>steh</TARGET> sofort <TARGET>auf</TARGET>!
 ```
 
-Both downstream classifiers receive this same marked context. The markers are
-prompt evidence only; they never alter the authoritative Segmented Sentence,
-Surface, Lemma, Reading, or attestation.
+Both downstream prompts receive this marked context. Markers never alter
+Segmented Sentence, Surface, Lemma, Reading, or attestation data.
 
-### Target classification policies
+## Target policy
 
-Each clickable region is bound by its view to exactly one policy-specific
-Target Classification prompt. One click produces one classification; a prompt
-never returns several targets or levels.
+Each clickable region binds to one policy-specific Target Classification
+prompt. One click produces one target at one level.
 
-Drill-down happens through a new clickable region exposed by the resulting
-entry. That region invokes its own Target Classification policy. It is a new
-click in a new view, not a reclassification of the original click. Dumling
-entities at every supported level remain first-class targets.
+Drill-down uses a new clickable region and its own policy. It is a new click,
+not reclassification of the original one. Dumling entities at every supported
+level remain first-class targets.
 
-The current work covers only the high-level, whole-unit policy. It selects a
-defensible conventionalized unit containing the click, so proverbs, discourse
-formulae such as `Guten Morgen`, and phrasal or separable verbs can be treated
-as one target. When no larger conventionalized unit contains the click, this
-policy falls back to the ordinary word-level Lexeme.
+The current `HighLevelWholeUnit` policy selects a defensible conventionalized
+unit containing the click, including proverbs, discourse formulae such as
+`Guten Morgen`, and separable verbs. Otherwise it selects the word-level
+Lexeme. It never selects a Morpheme; a future morpheme policy will handle that
+through drill-down.
 
-The high-level policy never selects a Morpheme as the initial target. Morphemes
-are reached only through a new clickable region in a drill-down view bound to a
-dedicated morpheme-level Target Classification policy. Other lower-level
-targeting policies are deferred.
+## Resolved-unit reuse
 
-### Resolved-unit reuse
+Under one policy, every Segment in a conventionalized unit must resolve to the
+same ordered member indices, Family, and Kind. Only the clicked index may vary.
 
-Every clickable Segment participating in one conventionalized unit must resolve
-under the same policy to the same Analysis Target: identical ordered member
-indices, Lemma Family, and Lemma Kind. The originally clicked index may differ.
+The intended application cache is scoped to Segmented Sentence, view, and
+policy. After the first complete resolution it stores the Analysis Target,
+Surface, Lemma, Reading, and member orthographies. Every member index points to
+that result. Clicking another member makes no model call; it creates only a
+click-local Selection using that member's cached `selectedOrthography`.
 
-After the first complete resolution, the application retains the Analysis
-Target, Surface, Lemma, and Reading in memory for its Segmented Sentence, view,
-and policy, and associates every member Segment index with that result. Clicking
-another member reuses the complete linguistic resolution without another model
-call.
+The view marks all members of the unit, including discontinuous ones. Selection
+identity still includes `clickedSegmentIndex`, and `selectedOrthography` still
+describes only that Segment.
 
-The first Grammatical Resolution classifies `Standard` or `Typo` orthography
-for every member Segment and retains those member-indexed values with the cached
-result. When another member is clicked, the application copies that member's
-cached value into the new Selection's clicked-only `selectedOrthography`.
+## Incremental route rollout
 
-The view visually marks every member Segment as belonging to the resolved unit.
-This applies to discontinuous units as well as contiguous ones. A later click on
-another member creates only a new lightweight click-local Selection. Selection
-identity continues to include `clickedSegmentIndex`, and `selectedOrthography`
-continues to describe only that clicked Segment.
+Target Classification may select any valid route allowed by its policy. A WIP
+catalog prompt does not enable that route.
 
-### Incremental resolution-route rollout
-
-Target Classification may select any valid route allowed by its policy, but a
-route is not part of the executable resolution chain merely because a WIP
-catalog prompt exists for it.
-
-The initial enabled post-click grammatical route is exactly
-`<de, Lexeme, NOUN>`. Every successfully resolved German Lemma then uses the
-shared `Reading Resolution<de>` prompt. When Target Classification selects a
-route without an enabled Grammatical Resolution prompt, application
-orchestration returns:
+Initially, only `<de, Lexeme, NOUN>` Grammatical Resolution is enabled. Every
+resolved German Lemma then uses `Reading Resolution<de>`. For another valid
+route, orchestration stops before Grammatical Resolution and returns:
 
 ```ts
 type ResolutionRouteNotImplemented = {
@@ -294,25 +226,18 @@ type ResolutionRouteNotImplemented = {
 };
 ```
 
-The chain stops before another model call and creates no Selection. This result
-is visible and logged in the laboratory. It is not `Unresolved`: Target
-Classification made a valid judgment, but the selected downstream route has
-not been implemented yet.
+This is not `Unresolved`: classification succeeded, but its resolver is not
+enabled. It creates no Selection and remains visible in laboratory logs. Add
+and verify one part-of-speech route at a time.
 
-Hands-on development stabilizes German nouns first. After that slice is
-accepted, one new part-of-speech route is selected, implemented, and verified
-at a time.
+## Resolution failure
 
-### Resolution expectation
+For an enabled route, `ResolvableText` promises that a click should produce an
+Analysis Target, Selection, Surface, and Lemma. A valid disabled route ends in
+`NotImplemented`. Known unresolvable material must be `OpaqueText` and never
+reach Target Classification.
 
-`ResolvableText` is a happy-path promise made by Segmentation<de>: clicking it
-is expected to produce a defensible Analysis Target and then a `Selection`,
-`Surface`, and `Lemma`. Material for which that promise cannot be made belongs
-in `OpaqueText`.
-
-Every Target Classification policy must nevertheless support the explicit
-`Unresolved` domain error. `Unresolved` creates no Selection and is a diagnostic
-failure, not an acceptable normal branch of the learner flow. Each occurrence
-identifies a segmentation or classification prompt problem to capture as a
-problematic case and fix. Material known to be unresolvable is classified as
-`OpaqueText` by Segmentation<Lang> and never reaches Target Classification.
+Target Classification and Grammatical Resolution still support `Unresolved`.
+`Unresolved` creates no Selection and is a diagnostic failure, not a normal
+learner-flow branch. Record each case and fix the responsible Segmentation,
+Target Classification, or Grammatical Resolution prompt.

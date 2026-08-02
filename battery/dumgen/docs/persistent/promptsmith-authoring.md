@@ -1,28 +1,7 @@
 # Promptsmith Authoring
 
-Persistent decisions for authoring and generating Dumgen laboratory prompts.
-All prompts in this document remain work in progress; this structure makes
-them inspectable and executable without claiming production readiness.
-
-## Initial scope
-
-The first structured Prompt Sources are:
-
-1. Intake
-2. Segmentation<de>
-3. Target Classification<de, HighLevelWholeUnit>
-4. Grammatical Resolution<de, Lexeme, NOUN>
-5. Reading Resolution<de>
-
-Other existing laboratory routes remain unmigrated work in progress.
-
-Only `<de, Lexeme, NOUN>` Grammatical Resolution is initially enabled. Every
-successfully resolved German Lemma continues through the shared German Reading
-Resolution prompt. Target Classification may return a different valid route;
-application orchestration then returns Resolution Route Not Implemented and
-stops before another model call. The presence of another WIP grammatical prompt
-does not enable that route. After noun prompts are adjusted and verified by
-hand, grammatical routes are added one part of speech at a time.
+Rules for authoring and generating Dumgen laboratory prompts. All remain work
+in progress.
 
 ## Stage-first routes
 
@@ -42,6 +21,9 @@ src/promptsmith/
 └── production/
 ```
 
+These are the migrated Prompt Sources. Other catalog routes remain unmigrated
+work in progress.
+
 Filesystem routes use lowercase kebab-case. The typed catalog preserves Dumling
 discriminants and uses camelCase stage names:
 
@@ -55,8 +37,8 @@ laboratory.readingResolution.de;
 
 ## Prompt Source contract
 
-One leaf directory is the complete human-authored Prompt Source for exactly one
-catalog prompt. It contains five TypeScript modules:
+Each leaf directory is the complete human-authored source for one catalog
+prompt. It contains five modules:
 
 ```text
 input-schema.ts
@@ -66,13 +48,11 @@ examples-to-use.ts
 examples-for-test.ts
 ```
 
-Each module exports exactly one value satisfying a generic contract owned by
-`promptsmith/assembly`. Example types derive from the leaf's input and output
-schemas.
+Each module exports exactly one value satisfying a generic contract from
+`promptsmith/assembly`. Example types derive from the leaf schemas.
 
-Prompt Sources are self-contained. Bodies and examples cannot be inherited
-from another Prompt Source or a shared prompt-content directory. Schemas may
-reuse code-level Dumling and Prompt Assembly helpers.
+Sources are self-contained: bodies and examples are never inherited or shared.
+Schemas may reuse Dumling and Prompt Assembly helpers.
 
 ## Examples
 
@@ -86,56 +66,40 @@ type Example<Input, Output> = {
 };
 ```
 
-IDs are stable and unique within one Prompt Source. An example can move between
-the test and use sets without changing shape. There is no numeric split and no
-second example registry.
+IDs are stable and unique within a source. An example can move between sets
+without changing shape. There is no numeric split or second registry.
 
-Example inputs and ideal outputs match the minimal model-facing schemas. They
-do not include public-domain fields that Dumgen restores outside Promptsmith.
-An ideal output is a typed reference answer. Route-specific evaluators decide
-correctness; exact equality is used only where the route makes it authoritative.
+Examples match the minimal model schemas and omit fields restored outside
+Promptsmith. An ideal output is a typed reference answer. Route-specific
+evaluators decide correctness; exact equality applies only to authoritative
+values.
 
 ## Generated System Prompt
 
-The prompt body contains instructions only. Prompt Assembly is the sole owner
-of few-shot formatting. Codegen appends examples to use in authored order,
-serializes inputs and ideal outputs as stable JSON, and omits example IDs.
-Examples for test are never read during generation.
+The body contains instructions only. Prompt Assembly owns few-shot formatting.
+Codegen appends use examples in authored order, writes inputs and ideal outputs
+as stable JSON, and omits IDs. It never reads test examples.
 
-Codegen writes a disposable TypeScript module under
+Codegen writes a TypeScript module under
 `laboratory/generated-system-prompt`, mirroring the source route. The module
-supplies only the `systemPrompt` property of the corresponding
-`PROMPT_CATALOG` entry. Authored input and output schemas remain direct catalog
-inputs.
+supplies only the matching `PROMPT_CATALOG` entry's `systemPrompt`. Authored
+schemas remain direct catalog inputs.
 
-Generated modules are committed so exact model text is reviewable and a fresh
-checkout can typecheck without first mutating the workspace. Generation is
-deterministic, and CI fails when committed output is stale. Generated modules
-are never edited manually.
+Generated modules are committed, deterministic, and never edited by hand. This
+keeps model text reviewable and lets fresh checkouts typecheck. Run
+`bun run check:system-prompts` to detect stale output.
 
 ## Runtime boundary
 
-Promptsmith does not own public-domain projection, postconditions, model
-selection, generation parameters, or Dumling entity construction.
+For migrated Prompt Sources, Promptsmith owns prompt bodies, model schemas, and
+examples. It does not own public projection, postconditions, model selection,
+generation parameters, or Dumling entity construction.
 
-Minimal model schemas omit route-owned fields such as `language`, `family`, and
-`kind`. Dumgen restores and removes those fields with
-`codecBuilder4.buildFixedFieldsCodec`. The codec derives the minimal model
-schema from the canonical Dumling object, decodes by restoring the fixed route
-fields, and encodes by validating and removing them.
+Settled Dumling-backed model schemas omit route-owned fields such as `language`,
+`family`, and `kind`. Dumgen's `codecBuilder4.buildFixedFieldsCodec` restores
+them on decode and validates and removes them on encode.
 
-Runtime prompt definitions and catalog assembly live under `src/catalog`;
-shared Dumling-backed schema/codecs live under `src/schema`. Runtime mapping has
-separate codec and end-to-end tests. Prompt examples remain focused on the
-model exchange.
-
-## Intake language routing
-
-Intake resolves language. `Accepted` carries the supported language used to
-dispatch `Segmentation<Lang>`; `UnsupportedLanguage` retains the resolved but
-unsupported language; `Unintelligible` has no language.
-
-For now, Intake resolves exactly one primary language and dispatches exactly
-one segmentation route. Non-primary-language spans become `OpaqueText`.
-Multilingual and code-switched routing is deferred to
-[texteater#19](https://github.com/clockblocker/texteater/issues/19).
+Runtime definitions and catalog assembly live under `src/catalog`; shared
+Dumling-backed schemas and codecs live under `src/schema`. Runtime mapping has
+separate codec and end-to-end tests. Prompt examples cover only the model
+exchange.

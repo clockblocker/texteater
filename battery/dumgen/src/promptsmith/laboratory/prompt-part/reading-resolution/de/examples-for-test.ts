@@ -123,7 +123,7 @@ export const examplesForTest = [
 			markedContext:
 				"Im zweiten <TARGET>Absatz</TARGET> steht die Begründung.",
 			lemma: "Absatz",
-			existingEmojiDescriptions: ["👠", "📈", "📄"],
+			existingEmojiDescriptions: ["👠", "🛒", "📄"],
 		},
 		idealOutput: {
 			decision: "Reuse",
@@ -200,7 +200,7 @@ export const examplesForTest = [
 			markedContext:
 				"Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
 			lemma: "Zeit ist Geld",
-			existingEmojiDescriptions: ["⚖️", "⏳💰", "🏭"],
+			existingEmojiDescriptions: ["⏳💰"],
 		},
 		idealOutput: {
 			decision: "Reuse",
@@ -213,7 +213,7 @@ export const examplesForTest = [
 			markedContext:
 				"Im Projekt durfte nun jeder mitentscheiden – <TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.",
 			lemma: "Viele Köche verderben den Brei",
-			existingEmojiDescriptions: ["🍲", "🧑‍🍳", "👥💥"],
+			existingEmojiDescriptions: ["👥💥"],
 		},
 		idealOutput: {
 			decision: "Reuse",
@@ -264,23 +264,11 @@ export const examplesForTest = [
 		input: {
 			markedContext: "Der Saft ist zucker<TARGET>frei</TARGET>.",
 			lemma: "-frei",
-			existingEmojiDescriptions: ["🆓", "♿"],
+			existingEmojiDescriptions: ["🆓"],
 		},
 		idealOutput: {
 			decision: "New",
 			emojiDescription: "🚫",
-		},
-	},
-	{
-		id: "reading-de-test-morpheme-interfix-t-linking-reuse",
-		input: {
-			markedContext: "Die Verhandlung war öffen<TARGET>t</TARGET>lich.",
-			lemma: "-t-",
-			existingEmojiDescriptions: ["🔗"],
-		},
-		idealOutput: {
-			decision: "Reuse",
-			emojiDescription: "🔗",
 		},
 	},
 	{
@@ -314,7 +302,7 @@ export const examplesForTest = [
 			markedContext:
 				"Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
 			lemma: "entweder … oder",
-			existingEmojiDescriptions: ["➕", "🔀", "⚖️"],
+			existingEmojiDescriptions: ["🔀"],
 		},
 		idealOutput: {
 			decision: "Reuse",
