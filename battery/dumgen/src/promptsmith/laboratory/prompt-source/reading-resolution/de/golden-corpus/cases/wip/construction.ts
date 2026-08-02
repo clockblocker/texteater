@@ -1,8 +1,8 @@
 import {
 	defineGoldenCaseCollection,
 	type GoldenCaseRegistry,
-} from "../../../../../../assembly";
-import type { inputSchema, outputSchema } from "../../schemas";
+} from "../../../../../../../assembly";
+import type { inputSchema, outputSchema } from "../../../schemas";
 
 export const constructions = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
