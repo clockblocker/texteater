@@ -106,6 +106,31 @@ describe("Prompt Assembly", () => {
 			).not.toThrow();
 		}
 	});
+
+	test("rejects empty segmentation and prose-bearing emoji descriptions", () => {
+		expect(
+			segmentationOutputSchema.safeParse({ segments: [] }).success,
+		).toBe(false);
+
+		const readingOutputSchema =
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.outputSchema;
+		for (const emojiDescription of ["🍳", "🇩🇪", "👩🏽‍💻", "☕📚"]) {
+			expect(
+				readingOutputSchema.safeParse({
+					decision: "New",
+					emojiDescription,
+				}).success,
+			).toBe(true);
+		}
+		for (const emojiDescription of ["🍳 Küche", "Kaffee", "1", "🍳1"]) {
+			expect(
+				readingOutputSchema.safeParse({
+					decision: "New",
+					emojiDescription,
+				}).success,
+			).toBe(false);
+		}
+	});
 });
 
 describe("German prompt projections", () => {

@@ -1,6 +1,7 @@
 import type { input, output, ZodType } from "zod";
 
 import type { AiSdk } from "../ai-sdk/ai-sdk";
+import { AiSdkGenerationError } from "../ai-sdk/ai-sdk-generation-error";
 import type {
 	Prompt,
 	PromptCatalogEntry,
@@ -158,7 +159,9 @@ function makeGenerator<Definition extends AnyPrompt>(
 						);
 		} catch (cause) {
 			throw new DumgenError(
-				"generation-failed",
+				cause instanceof AiSdkGenerationError
+					? cause.reason
+					: "provider-error",
 				"The language-model provider could not complete the generation.",
 				{ cause },
 			);

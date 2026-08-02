@@ -16,7 +16,7 @@ export const examplesForTest = [
 		idealOutput: {
 			decision: "Resolved",
 			target: {
-				memberSegmentIndices: [2],
+				additionalMemberSegmentIndices: [],
 				family: "Lexeme",
 				kind: "NOUN",
 			},

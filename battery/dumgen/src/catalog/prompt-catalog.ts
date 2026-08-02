@@ -121,38 +121,34 @@ const targetPrompt = {
 					"Target must select a reachable German high-level route.",
 				);
 			}
-			const indices = generated.target.memberSegmentIndices;
-			if (!indices.includes(input.clickedSegmentIndex)) {
-				throw new Error(
-					"Target members must include the clicked Segment.",
-				);
-			}
-			for (let position = 0; position < indices.length; position += 1) {
-				const index = indices[position];
-				if (
-					index === undefined ||
-					input.segments[index]?.kind !== "ResolvableText"
-				) {
+			const indices = targetMemberSegmentIndices(
+				input.clickedSegmentIndex,
+				generated.target.additionalMemberSegmentIndices,
+			);
+			for (const index of indices) {
+				if (input.segments[index]?.kind !== "ResolvableText") {
 					throw new Error(
 						"Target members must reference ResolvableText.",
-					);
-				}
-				if (position > 0 && (indices[position - 1] ?? index) >= index) {
-					throw new Error(
-						"Target members must be ordered and unique.",
 					);
 				}
 			}
 		},
 	},
-	projectOutput(_input, generated): AnalysisTarget | Unresolved {
+	projectOutput(input, generated): AnalysisTarget | Unresolved {
 		if (generated.decision === "Unresolved") {
 			return { decision: "Unresolved" };
 		}
 		if (generated.target === null) {
 			throw new Error("Resolved Target requires a target.");
 		}
-		return generated.target as AnalysisTarget;
+		return {
+			family: generated.target.family,
+			kind: generated.target.kind,
+			memberSegmentIndices: targetMemberSegmentIndices(
+				input.clickedSegmentIndex,
+				generated.target.additionalMemberSegmentIndices,
+			),
+		} as AnalysisTarget;
 	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 1024 },
 } satisfies Prompt<
@@ -160,6 +156,15 @@ const targetPrompt = {
 	typeof targetOutputSchema,
 	AnalysisTarget | Unresolved
 >;
+
+function targetMemberSegmentIndices(
+	clickedSegmentIndex: number,
+	additionalMemberSegmentIndices: readonly number[],
+): number[] {
+	return [
+		...new Set([clickedSegmentIndex, ...additionalMemberSegmentIndices]),
+	].toSorted((left, right) => left - right);
+}
 
 const grammarNounPrompt = {
 	systemPrompt: grammarNounSystemPrompt,

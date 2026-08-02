@@ -1,4 +1,9 @@
-export { type AiSdk, buildAiSdk } from "./ai-sdk/ai-sdk";
+export {
+	type AiSdk,
+	AiSdkGenerationError,
+	buildAiSdk,
+	type GenerationFailureReason,
+} from "./ai-sdk/ai-sdk";
 export {
 	type AnalysisTarget,
 	buildDumgen,

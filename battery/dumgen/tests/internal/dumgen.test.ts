@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
 	type AiSdk,
+	AiSdkGenerationError,
 	type AnalysisTarget,
 	buildDumgen,
 	DumgenError,
@@ -51,7 +52,14 @@ describe("settled German laboratory topology", () => {
 		const outputs: unknown[] = [
 			{ decision: "Accepted", language: "de" },
 			{ segments },
-			{ decision: "Resolved", target: analysisTarget },
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
 			{ decision: "Resolved", resolution: modelGrammar },
 			{ decision: "New", emojiDescription: "🏦" },
 		];
@@ -244,14 +252,62 @@ describe("settled German laboratory topology", () => {
 		).toEqual(unresolved);
 	});
 
-	test("rejects invalid membership and marker alignment as invalid output", async () => {
+	test("constructs target membership from the click and validates additional members", async () => {
+		const outputs = [
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2, 0, 2],
+					family: "Phraseme",
+					kind: "DiscourseFormula",
+				},
+			},
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [1],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+		];
+		const generate = buildDumgen({
+			sdk: {
+				async structuredGeneration() {
+					return outputs.shift() as never;
+				},
+				async unstructuredGeneration() {
+					return "";
+				},
+			},
+		});
+
+		await expect(
+			generate.laboratory.targetClassification.de.highLevelWholeUnit({
+				clickedSegmentIndex: 0,
+				segments: [...segments],
+			}),
+		).resolves.toEqual({
+			memberSegmentIndices: [0, 2],
+			family: "Phraseme",
+			kind: "DiscourseFormula",
+		});
+		await expect(
+			generate.laboratory.targetClassification.de.highLevelWholeUnit({
+				clickedSegmentIndex: 0,
+				segments: [...segments],
+			}),
+		).rejects.toMatchObject({ code: "invalid-output" });
+	});
+
+	test("rejects invalid routes and marker alignment as invalid output", async () => {
 		const targetGenerator = buildDumgen({
 			sdk: {
 				async structuredGeneration() {
 					return {
 						decision: "Resolved",
 						target: {
-							memberSegmentIndices: [0],
+							additionalMemberSegmentIndices: [],
 							family: "Morpheme",
 							kind: "Prefix",
 						},
@@ -292,7 +348,7 @@ describe("settled German laboratory topology", () => {
 		).rejects.toMatchObject({ code: "invalid-output" });
 	});
 
-	test("rejects invalid input before calling the model and wraps provider failures", async () => {
+	test("rejects invalid input before calling the model and types provider failures", async () => {
 		let callCount = 0;
 		const generate = buildDumgen({
 			sdk: {
@@ -317,10 +373,33 @@ describe("settled German laboratory topology", () => {
 		await expect(
 			generate.laboratory.intake({ text: "Hallo" }),
 		).rejects.toMatchObject({
-			code: "generation-failed",
+			code: "provider-error",
 			name: "DumgenError",
 		});
 		expect(callCount).toBe(1);
+	});
+
+	test("preserves typed generation failure reasons", async () => {
+		for (const reason of [
+			"refusal",
+			"max-output-tokens",
+			"content-filter",
+		] as const) {
+			const generate = buildDumgen({
+				sdk: {
+					async structuredGeneration() {
+						throw new AiSdkGenerationError(reason, reason);
+					},
+					async unstructuredGeneration() {
+						throw new AiSdkGenerationError(reason, reason);
+					},
+				},
+			});
+
+			await expect(
+				generate.laboratory.intake({ text: "Hallo" }),
+			).rejects.toMatchObject({ code: reason, name: "DumgenError" });
+		}
 	});
 });
 

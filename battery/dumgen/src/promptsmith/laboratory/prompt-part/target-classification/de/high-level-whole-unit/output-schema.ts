@@ -10,23 +10,23 @@ export const outputSchema = z.strictObject({
 			z.strictObject({
 				family: z.literal("Lexeme"),
 				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Lexeme),
-				memberSegmentIndices: z
-					.array(z.number().int().nonnegative())
-					.min(1),
+				additionalMemberSegmentIndices: z.array(
+					z.number().int().nonnegative(),
+				),
 			}),
 			z.strictObject({
 				family: z.literal("Phraseme"),
 				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Phraseme),
-				memberSegmentIndices: z
-					.array(z.number().int().nonnegative())
-					.min(1),
+				additionalMemberSegmentIndices: z.array(
+					z.number().int().nonnegative(),
+				),
 			}),
 			z.strictObject({
 				family: z.literal("Construction"),
 				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Construction),
-				memberSegmentIndices: z
-					.array(z.number().int().nonnegative())
-					.min(1),
+				additionalMemberSegmentIndices: z.array(
+					z.number().int().nonnegative(),
+				),
 			}),
 		])
 		.nullable(),

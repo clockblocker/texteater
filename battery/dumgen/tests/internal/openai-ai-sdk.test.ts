@@ -62,3 +62,45 @@ test("the OpenAI adapter sends structured and unstructured requests", async () =
 		text: { verbosity: "low" },
 	});
 });
+
+test("the OpenAI adapter types empty response reasons", async () => {
+	const responses = [
+		{
+			output_parsed: null,
+			output: [
+				{
+					content: [{ type: "refusal", refusal: "cannot comply" }],
+				},
+			],
+		},
+		{
+			output_parsed: null,
+			incomplete_details: { reason: "max_output_tokens" },
+		},
+		{
+			output_parsed: null,
+			incomplete_details: { reason: "content_filter" },
+		},
+		{ output_parsed: null, status: "failed" },
+	];
+	const client = {
+		responses: {
+			async parse() {
+				return responses.shift();
+			},
+		},
+	} as unknown as OpenAI;
+	const sdk = buildOpenAiSdk({ client });
+	const outputSchema = z.strictObject({ answer: z.string() });
+
+	for (const reason of [
+		"refusal",
+		"max-output-tokens",
+		"content-filter",
+		"provider-error",
+	] as const) {
+		await expect(
+			sdk.structuredGeneration("input", outputSchema),
+		).rejects.toMatchObject({ name: "AiSdkGenerationError", reason });
+	}
+});

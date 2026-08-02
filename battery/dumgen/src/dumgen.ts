@@ -1,4 +1,10 @@
 import { type AiSdk, buildAiSdk } from "./ai-sdk/ai-sdk";
+
+export {
+	AiSdkGenerationError,
+	type GenerationFailureReason,
+} from "./ai-sdk/ai-sdk";
+
 import {
 	buildGeneratorCatalog,
 	type GeneratorCatalog,

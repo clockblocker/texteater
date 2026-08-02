@@ -4,6 +4,8 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import type { output, ZodType } from "zod";
 
+import { AiSdkGenerationError } from "./ai-sdk-generation-error";
+
 const GPT_5_NANO_MODEL = "gpt-5-nano";
 
 const DEFAULT_MAX_OUTPUT_TOKENS = 256;
@@ -24,13 +26,6 @@ type BuildOpenAiSdkOptions = {
 	readonly maxOutputTokens?: number;
 	readonly model?: string;
 };
-
-class DumgenOpenAIResponseError extends Error {
-	constructor(message: string) {
-		super(message);
-		this.name = "DumgenOpenAIResponseError";
-	}
-}
 
 /**
  * Creates a server-side AiSdk backed by the OpenAI Responses API.
@@ -152,16 +147,24 @@ function createEmptyResponseError(response: {
 	readonly incomplete_details?: { readonly reason?: string } | null;
 	readonly output?: readonly unknown[];
 	readonly status?: string;
-}): DumgenOpenAIResponseError {
+}): AiSdkGenerationError {
 	const refusal = findRefusal(response.output);
 	if (refusal) {
-		return new DumgenOpenAIResponseError(
+		return new AiSdkGenerationError(
+			"refusal",
 			`OpenAI refused the request: ${refusal}`,
 		);
 	}
 
 	const detail = response.incomplete_details?.reason ?? response.status;
-	return new DumgenOpenAIResponseError(
+	const reason =
+		detail === "max_output_tokens"
+			? "max-output-tokens"
+			: detail === "content_filter"
+				? "content-filter"
+				: "provider-error";
+	return new AiSdkGenerationError(
+		reason,
 		detail
 			? `OpenAI returned no usable output (${detail}).`
 			: "OpenAI returned no usable output.",

@@ -1,5 +1,7 @@
+import type { GenerationFailureReason } from "../ai-sdk/ai-sdk-generation-error";
+
 export type DumgenErrorCode =
-	| "generation-failed"
+	| GenerationFailureReason
 	| "invalid-input"
 	| "invalid-output";
 

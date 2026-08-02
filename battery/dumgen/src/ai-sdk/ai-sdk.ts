@@ -2,6 +2,11 @@ import type { output, ZodType } from "zod";
 
 import { buildOpenAiSdk } from "./openai";
 
+export {
+	AiSdkGenerationError,
+	type GenerationFailureReason,
+} from "./ai-sdk-generation-error";
+
 type GenerationParams = {
 	readonly maxOutputTokens?: number;
 	readonly model?: string;

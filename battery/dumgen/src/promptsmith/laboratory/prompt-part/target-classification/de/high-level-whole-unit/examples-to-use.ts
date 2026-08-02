@@ -17,7 +17,7 @@ export const examplesToUse = [
 		idealOutput: {
 			decision: "Resolved",
 			target: {
-				memberSegmentIndices: [0, 2],
+				additionalMemberSegmentIndices: [2],
 				family: "Phraseme",
 				kind: "DiscourseFormula",
 			},
@@ -38,7 +38,7 @@ export const examplesToUse = [
 		idealOutput: {
 			decision: "Resolved",
 			target: {
-				memberSegmentIndices: [4],
+				additionalMemberSegmentIndices: [],
 				family: "Lexeme",
 				kind: "NOUN",
 			},
@@ -62,7 +62,7 @@ export const examplesToUse = [
 		idealOutput: {
 			decision: "Resolved",
 			target: {
-				memberSegmentIndices: [2, 6],
+				additionalMemberSegmentIndices: [6],
 				family: "Lexeme",
 				kind: "VERB",
 			},
