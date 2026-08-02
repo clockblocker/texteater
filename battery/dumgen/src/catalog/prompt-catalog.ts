@@ -1,19 +1,20 @@
 import type { z } from "zod";
 import { systemPrompt as grammarNounSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/grammatical-resolution/de/lexeme/noun";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
-import { systemPrompt as readingNounSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de/lexeme/noun";
+import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
 import { systemPrompt as segmentationSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/segmentation/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import { inputSchema as grammarNounInputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/input-schema";
 import { outputSchema as grammarNounOutputSchema } from "../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
 import { inputSchema as intakeInputSchema } from "../promptsmith/laboratory/prompt-part/intake/input-schema";
 import { outputSchema as intakeOutputSchema } from "../promptsmith/laboratory/prompt-part/intake/output-schema";
-import { inputSchema as readingNounModelInputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as readingNounOutputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
+import { inputSchema as readingModelInputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/input-schema";
+import { outputSchema as readingOutputSchema } from "../promptsmith/laboratory/prompt-part/reading-resolution/de/output-schema";
 import { inputSchema as segmentationInputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/input-schema";
 import { outputSchema as segmentationOutputSchema } from "../promptsmith/laboratory/prompt-part/segmentation/de/output-schema";
 import { inputSchema as targetInputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/input-schema";
 import { outputSchema as targetOutputSchema } from "../promptsmith/laboratory/prompt-part/target-classification/de/high-level-whole-unit/output-schema";
+import { deLemmaSchema } from "../schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -33,7 +34,6 @@ import type {
 	Unresolved,
 } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
-import { createDeReadingResolutionPrompt } from "./laboratory/create-de-reading-resolution-prompt";
 import type {
 	Prompt,
 	PromptCatalogEntry,
@@ -232,15 +232,15 @@ const grammarNounPrompt = {
 	GrammaticalResolution
 >;
 
-const readingNounInputSchema = readingNounModelInputSchema.extend({
-	lemma: deNounLemmaCodec.out,
+const readingInputSchema = readingModelInputSchema.extend({
+	lemma: deLemmaSchema,
 });
-const readingNounPrompt = {
-	systemPrompt: readingNounSystemPrompt,
-	inputSchema: readingNounInputSchema,
-	modelInputSchema: readingNounModelInputSchema,
-	outputSchema: readingNounOutputSchema,
-	projectInput(input): z.output<typeof readingNounModelInputSchema> {
+const readingPrompt = {
+	systemPrompt: readingSystemPrompt,
+	inputSchema: readingInputSchema,
+	modelInputSchema: readingModelInputSchema,
+	outputSchema: readingOutputSchema,
+	projectInput(input): z.output<typeof readingModelInputSchema> {
 		return {
 			markedContext: input.markedContext,
 			lemma: input.lemma.canonicalForm,
@@ -249,10 +249,10 @@ const readingNounPrompt = {
 	},
 	generationParams: { model: "gpt-5-nano", maxOutputTokens: 192 },
 } satisfies Prompt<
-	typeof readingNounInputSchema,
-	typeof readingNounOutputSchema,
+	typeof readingInputSchema,
+	typeof readingOutputSchema,
 	ReadingResolution,
-	typeof readingNounModelInputSchema
+	typeof readingModelInputSchema
 >;
 
 type GermanRoutePromptCatalog<Definition extends Prompt> = {
@@ -295,21 +295,11 @@ function buildGermanRouteCatalog<Definition extends Prompt>(
 const legacyGrammaticalCatalog = buildGermanRouteCatalog(
 	createDeGrammaticalResolutionPrompt,
 );
-const legacyReadingCatalog = buildGermanRouteCatalog(
-	createDeReadingResolutionPrompt,
-);
 const grammaticalResolutionCatalog = {
 	...legacyGrammaticalCatalog,
 	Lexeme: {
 		...legacyGrammaticalCatalog.Lexeme,
 		NOUN: promptEntry(grammarNounPrompt),
-	},
-};
-const readingResolutionCatalog = {
-	...legacyReadingCatalog,
-	Lexeme: {
-		...legacyReadingCatalog.Lexeme,
-		NOUN: promptEntry(readingNounPrompt),
 	},
 };
 
@@ -321,7 +311,7 @@ export const PROMPT_CATALOG = {
 			de: { highLevelWholeUnit: promptEntry(targetPrompt) },
 		},
 		grammaticalResolution: { de: grammaticalResolutionCatalog },
-		readingResolution: { de: readingResolutionCatalog },
+		readingResolution: { de: promptEntry(readingPrompt) },
 	},
 } as const satisfies PromptTree;
 

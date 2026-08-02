@@ -1,6 +1,6 @@
 import type { output } from "zod";
 import type { outputSchema as verboseGrammarOutputSchema } from "../../promptsmith/laboratory/prompt-part/grammatical-resolution/de/lexeme/noun/output-schema";
-import type { outputSchema as verboseReadingOutputSchema } from "../../promptsmith/laboratory/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
+import type { outputSchema as verboseReadingOutputSchema } from "../../promptsmith/laboratory/prompt-part/reading-resolution/de/output-schema";
 import type { GrammaticalResolution, ReadingResolution } from "../../types";
 import type {
 	grammaticalInputSchema,

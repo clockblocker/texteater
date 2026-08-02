@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { PromptOutputSchema } from "../../../../../../assembly";
+import type { PromptOutputSchema } from "../../../../assembly";
 
 export const outputSchema = z.strictObject({
 	decision: z.enum(["Reuse", "New"]),

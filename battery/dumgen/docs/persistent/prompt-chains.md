@@ -38,7 +38,7 @@ The intended runtime chain follows three distinct linguistic problems:
 Segmented Sentence + Click
   -> Target Classification<Lang, Policy>
   -> Grammatical Resolution<Lang, Family, Kind>
-  -> Reading Resolution<Lang, Family, Kind>
+  -> Reading Resolution<Lang>
 ```
 
 ### Minimal contracts
@@ -144,11 +144,12 @@ remain private and may appear only in laboratory traces.
    The application owns Segmented Sentence identity, clicked index, member
    indices, and `attestedSurface`. It constructs the click-local Selection and
    links the returned Surface to the returned Lemma.
-3. **Reading Resolution<Lang, Family, Kind>** receives the fixed Lemma,
+3. **Reading Resolution<Lang>** receives the fixed Lemma,
    contextual evidence, and the learner's existing Readings for that Lemma. It
    either reuses an existing Reading or drafts a new one. It must not revise or
-   otherwise reconsider the resolved Lemma. Each route is likewise a physically
-   distinct prompt with a pointed structured-output schema.
+   otherwise reconsider the resolved Lemma. There is one physically distinct
+   prompt per language because its judgment does not depend on Lemma family or
+   kind.
 
    ```ts
    type ReadingResolution =
@@ -172,7 +173,20 @@ remain private and may appear only in laboratory traces.
    owned by other learners or attached to other Lemmas are excluded. An empty
    set necessarily makes the match-derived result `New`.
 
-   Its complete prompt input is intentionally minimal:
+   Its system-facing input retains the complete Lemma so the application can
+   select descriptions for the matching Lemma identity, including family and
+   kind:
+
+   ```ts
+   {
+     markedContext: string;
+     lemma: Lemma<Lang>;
+     existingEmojiDescriptions: string[];
+   }
+   ```
+
+   Family, kind, and core features are system-owned routing and identity data.
+   They are projected out before the LLM call. The complete model input is:
 
    ```ts
    {
@@ -262,15 +276,16 @@ Target Classification may select any valid route allowed by its policy, but a
 route is not part of the executable resolution chain merely because a WIP
 catalog prompt exists for it.
 
-The initial enabled post-click route is exactly
-`<de, Lexeme, NOUN>` through both Grammatical Resolution and Reading
-Resolution. When Target Classification selects a route without an enabled next
-stage, application orchestration returns:
+The initial enabled post-click grammatical route is exactly
+`<de, Lexeme, NOUN>`. Every successfully resolved German Lemma then uses the
+shared `Reading Resolution<de>` prompt. When Target Classification selects a
+route without an enabled Grammatical Resolution prompt, application
+orchestration returns:
 
 ```ts
 type ResolutionRouteNotImplemented = {
   decision: "NotImplemented";
-  stage: "GrammaticalResolution" | "ReadingResolution";
+  stage: "GrammaticalResolution";
   language: string;
   family: string;
   kind: string;

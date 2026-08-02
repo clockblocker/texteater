@@ -111,8 +111,8 @@ if (mode === "measure") {
 				arm: "verbose",
 				stage: "readingResolution",
 				caseId: comparisonCase.id,
-				prompt: PROMPT_CATALOG.laboratory.readingResolution.de.Lexeme
-					.NOUN.prompt as LoosePrompt,
+				prompt: PROMPT_CATALOG.laboratory.readingResolution.de
+					.prompt as LoosePrompt,
 				input: comparisonCase.input,
 				expectedCanonical: comparisonCase.expectedCanonical,
 			}),

@@ -50,7 +50,7 @@ const verboseGrammarPrompt =
 const compactGrammarPrompt =
 	COMPACT_NOUN_EXPERIMENT_CATALOG.grammaticalResolution.prompt;
 const verboseReadingPrompt =
-	PROMPT_CATALOG.laboratory.readingResolution.de.Lexeme.NOUN.prompt;
+	PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
 const compactReadingPrompt =
 	COMPACT_NOUN_EXPERIMENT_CATALOG.readingResolution.prompt;
 

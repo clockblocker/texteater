@@ -1,10 +1,10 @@
-import type { ExampleSet } from "../../../../../../assembly";
+import type { ExampleSet } from "../../../../assembly";
 import type { inputSchema } from "./input-schema";
 import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "reading-noun-test-new-bank",
+		id: "reading-de-test-new-bank",
 		input: {
 			markedContext: "Die <TARGET>Banken</TARGET>",
 			lemma: "Bank",

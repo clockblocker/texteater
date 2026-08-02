@@ -4,6 +4,7 @@ import type { AnalysisTarget, buildDumgen, DumgenModelExchange } from "dumgen";
 import {
 	constructMarkedContext,
 	GermanClassificationResolver,
+	readingResolutionPrompt,
 	targetClassificationPrompt,
 } from "../src/classification";
 import type { SegmentedSentence } from "../src/shared/contract";
@@ -154,29 +155,26 @@ function fakeGenerator(options?: {
 				},
 			},
 			readingResolution: {
-				de: {
-					Lexeme: {
-						async NOUN(input: unknown) {
-							calls.push("Reading");
-							readingInputs.push(input);
-							const result = {
-								decision:
-									options?.readingDecisions?.[
-										readingIndex++
-									] ?? "New",
-								emojiDescription: "🏦",
-							};
-							accept(
-								"laboratory.readingResolution.de.Lexeme.NOUN",
-								{
-									...(input as { markedContext: string }),
-									lemma: modelBankLemma,
-								},
-								result,
-							);
-							return result;
-						},
-					},
+				async de(input: unknown) {
+					calls.push("Reading");
+					readingInputs.push(input);
+					const result = {
+						decision:
+							options?.readingDecisions?.[readingIndex++] ??
+							"New",
+						emojiDescription: "🏦",
+					};
+					const { lemma: _lemma, ...modelInput } = input as {
+						markedContext: string;
+						lemma: typeof bankLemma;
+						existingEmojiDescriptions: string[];
+					};
+					accept(
+						readingResolutionPrompt,
+						{ ...modelInput, lemma: modelBankLemma.canonicalForm },
+						result,
+					);
+					return result;
 				},
 			},
 		},
@@ -251,7 +249,7 @@ describe("German classification orchestration", () => {
 			prompts: [
 				"laboratory.targetClassification.de.highLevelWholeUnit",
 				"laboratory.grammaticalResolution.de.Lexeme.NOUN",
-				"laboratory.readingResolution.de.Lexeme.NOUN",
+				readingResolutionPrompt,
 			],
 			cache: "miss",
 			modelCalls: 3,
@@ -269,7 +267,12 @@ describe("German classification orchestration", () => {
 		});
 		expect(result.stages.reading?.input).toEqual({
 			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
-			lemma: modelBankLemma,
+			lemma: modelBankLemma.canonicalForm,
+			existingEmojiDescriptions: [],
+		});
+		expect(fake.readingInputs[0]).toEqual({
+			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
+			lemma: bankLemma,
 			existingEmojiDescriptions: [],
 		});
 		expect(result.stages.target).toMatchObject({

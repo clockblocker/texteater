@@ -17,6 +17,7 @@ import { examplesForTest as segmentationTestExamples } from "../../src/promptsmi
 import { examplesToUse as segmentationUseExamples } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/examples-to-use";
 import { inputSchema as segmentationInputSchema } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/input-schema";
 import { outputSchema as segmentationOutputSchema } from "../../src/promptsmith/laboratory/prompt-part/segmentation/de/output-schema";
+import { deLemmaSchema } from "../../src/schema/de-lemma-schema";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -96,7 +97,7 @@ describe("Prompt Assembly", () => {
 				.prompt,
 			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN
 				.prompt,
-			PROMPT_CATALOG.laboratory.readingResolution.de.Lexeme.NOUN.prompt,
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt,
 		];
 
 		for (const [index, prompt] of prompts.entries()) {
@@ -107,7 +108,7 @@ describe("Prompt Assembly", () => {
 	});
 });
 
-describe("German noun projection codecs", () => {
+describe("German prompt projections", () => {
 	test("derive the Promptsmith model schemas from the runtime codecs", () => {
 		const resolvedSchema =
 			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN.prompt.outputSchema.shape.resolution.unwrap();
@@ -118,9 +119,14 @@ describe("German noun projection codecs", () => {
 			deNounModelInflectionSurfaceSchema,
 		]);
 		expect(
-			PROMPT_CATALOG.laboratory.readingResolution.de.Lexeme.NOUN.prompt
-				.modelInputSchema.shape.lemma,
-		).toBe(deNounModelLemmaSchema.shape.canonicalForm);
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.inputSchema
+				.shape.lemma,
+		).toBe(deLemmaSchema);
+		expect(
+			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.modelInputSchema.shape.lemma.safeParse(
+				"Bank",
+			).success,
+		).toBe(true);
 	});
 
 	test("round-trips model and canonical Lemma and Surface fields", () => {

@@ -114,7 +114,7 @@ describe("settled German laboratory topology", () => {
 		});
 
 		const reading: ReadingResolution =
-			await generate.laboratory.readingResolution.de.Lexeme.NOUN({
+			await generate.laboratory.readingResolution.de({
 				markedContext: "Die <TARGET>Banken</TARGET>",
 				lemma: {
 					language: "de",
@@ -141,7 +141,7 @@ describe("settled German laboratory topology", () => {
 		expect(calls[4]?.input).not.toContain('"family"');
 	});
 
-	test("registers physically distinct grammatical and reading leaves for every reachable route", () => {
+	test("registers route-specific grammatical leaves and one language-specific reading leaf", () => {
 		const expected = Object.fromEntries(
 			Object.entries(schemasFor.de.entity.Lemma)
 				.filter(([family]) => family !== "Morpheme")
@@ -154,14 +154,10 @@ describe("settled German laboratory topology", () => {
 		const grammaticalPrompts = Object.values(grammatical).flatMap(
 			(family) => Object.values(family).map((entry) => entry.prompt),
 		);
-		const readingPrompts = Object.values(reading).flatMap((family) =>
-			Object.values(family).map((entry) => entry.prompt),
-		);
 
 		expect(grammaticalPrompts).toHaveLength(23);
-		expect(readingPrompts).toHaveLength(23);
 		expect(new Set(grammaticalPrompts).size).toBe(23);
-		expect(new Set(readingPrompts).size).toBe(23);
+		expect(reading.meta).toEqual({ kind: "prompt" });
 		expect(grammatical.Lexeme.NOUN.prompt.systemPrompt).toContain(
 			"Lexeme/NOUN",
 		);
@@ -170,14 +166,14 @@ describe("settled German laboratory topology", () => {
 		);
 	});
 
-	test("keeps an unmigrated Reading route executable with a minimal model DTO", async () => {
+	test("accepts any German Lemma while hiding its route fields from the model", async () => {
 		let serializedInput: string | undefined;
 		const generate = buildDumgen({
 			sdk: {
 				async structuredGeneration(input) {
 					serializedInput = input;
 					return {
-						decision: "New",
+						decision: "Reuse",
 						emojiDescription: "🚶",
 					} as never;
 				},
@@ -188,7 +184,7 @@ describe("settled German laboratory topology", () => {
 		});
 
 		await expect(
-			generate.laboratory.readingResolution.de.Lexeme.VERB({
+			generate.laboratory.readingResolution.de({
 				markedContext: "Wir <TARGET>gehen</TARGET> nach Hause.",
 				lemma: {
 					canonicalForm: "gehen",
@@ -202,16 +198,18 @@ describe("settled German laboratory topology", () => {
 					family: "Lexeme",
 					kind: "VERB",
 				},
-				existingEmojiDescriptions: [],
+				existingEmojiDescriptions: ["🚶"],
 			}),
 		).resolves.toEqual({
-			decision: "New",
+			decision: "Reuse",
 			emojiDescription: "🚶",
 		});
-		expect(serializedInput).toContain('"canonicalForm":"gehen"');
+		expect(serializedInput).toContain('"lemma":"gehen"');
+		expect(serializedInput).toContain('"existingEmojiDescriptions":["🚶"]');
 		expect(serializedInput).not.toContain('"language"');
 		expect(serializedInput).not.toContain('"family"');
 		expect(serializedInput).not.toContain('"kind"');
+		expect(serializedInput).not.toContain('"coreFeatures"');
 	});
 
 	test("returns payload-free Unresolved without leaking a model DTO", async () => {

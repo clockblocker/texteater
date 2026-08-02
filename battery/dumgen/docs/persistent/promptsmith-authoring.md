@@ -12,16 +12,17 @@ The first structured Prompt Sources are:
 2. Segmentation<de>
 3. Target Classification<de, HighLevelWholeUnit>
 4. Grammatical Resolution<de, Lexeme, NOUN>
-5. Reading Resolution<de, Lexeme, NOUN>
+5. Reading Resolution<de>
 
 Other existing laboratory routes remain unmigrated work in progress.
 
-Only `<de, Lexeme, NOUN>` is initially enabled through the complete
-Grammatical and Reading Resolution chain. Target Classification may return a
-different valid route; application orchestration then returns Resolution Route
-Not Implemented and stops before another model call. The presence of another
-WIP catalog prompt does not enable that route. After noun prompts are adjusted
-and verified by hand, routes are added one part of speech at a time.
+Only `<de, Lexeme, NOUN>` Grammatical Resolution is initially enabled. Every
+successfully resolved German Lemma continues through the shared German Reading
+Resolution prompt. Target Classification may return a different valid route;
+application orchestration then returns Resolution Route Not Implemented and
+stops before another model call. The presence of another WIP grammatical prompt
+does not enable that route. After noun prompts are adjusted and verified by
+hand, grammatical routes are added one part of speech at a time.
 
 ## Stage-first routes
 
@@ -36,7 +37,7 @@ src/promptsmith/
 │   │   ├── segmentation/de/
 │   │   ├── target-classification/de/high-level-whole-unit/
 │   │   ├── grammatical-resolution/de/lexeme/noun/
-│   │   └── reading-resolution/de/lexeme/noun/
+│   │   └── reading-resolution/de/
 │   └── generated-system-prompt/
 └── production/
 ```
@@ -49,7 +50,7 @@ laboratory.intake;
 laboratory.segmentation.de;
 laboratory.targetClassification.de.highLevelWholeUnit;
 laboratory.grammaticalResolution.de.Lexeme.NOUN;
-laboratory.readingResolution.de.Lexeme.NOUN;
+laboratory.readingResolution.de;
 ```
 
 ## Prompt Source contract

@@ -23,8 +23,8 @@ export const targetClassificationPrompt =
 export const grammaticalResolutionPrompt = (target: AnalysisTarget): string =>
 	`laboratory.grammaticalResolution.de.${target.family}.${target.kind}`;
 
-export const readingResolutionPrompt = (target: AnalysisTarget): string =>
-	`laboratory.readingResolution.de.${target.family}.${target.kind}`;
+export const readingResolutionPrompt =
+	"laboratory.readingResolution.de" as const;
 
 export type GermanClassificationTrace = Partial<
 	Record<ClassificationStageName, ClassificationStageResult>
@@ -67,9 +67,6 @@ type AnalysisRoute = {
 const enabledGrammaticalRoutes = [
 	["Lexeme", "NOUN"],
 ] as const satisfies readonly AnalysisRoute[];
-const enabledReadingRoutes = [
-	["Lexeme", "NOUN"],
-] as const satisfies readonly AnalysisRoute[];
 
 function isRouteEnabled(
 	enabledRoutes: readonly AnalysisRoute[],
@@ -102,17 +99,11 @@ type GermanGenerator = {
 			>;
 		};
 		readingResolution: {
-			de: Record<
-				string,
-				Record<
-					string,
-					(input: {
-						markedContext: string;
-						lemma: Lemma;
-						existingEmojiDescriptions: string[];
-					}) => Promise<ReadingResolution>
-				>
-			>;
+			de(input: {
+				markedContext: string;
+				lemma: Lemma;
+				existingEmojiDescriptions: string[];
+			}): Promise<ReadingResolution>;
 		};
 	};
 };
@@ -260,13 +251,11 @@ function unresolvedResponse(
 }
 
 function routeNotImplementedResponse(
-	stageName: "GrammaticalResolution" | "ReadingResolution",
+	stageName: "GrammaticalResolution",
 	target: AnalysisTarget,
 	stages: GermanClassificationTrace,
 	prompts: string[],
 ): ClickResolutionResponse {
-	const stage =
-		stageName === "GrammaticalResolution" ? "grammatical" : "reading";
 	return {
 		decision: "NotImplemented",
 		stage: stageName,
@@ -277,7 +266,7 @@ function routeNotImplementedResponse(
 		stages,
 		diagnostics: [
 			{
-				stage,
+				stage: "grammatical",
 				kind: "ResolutionRouteNotImplemented",
 				message: `${stageName} is not enabled for de/${target.family}/${target.kind}.`,
 			},
@@ -423,23 +412,14 @@ export class GermanClassificationResolver {
 			lemma,
 			existingEmojiDescriptions,
 		};
-		if (!isRouteEnabled(enabledReadingRoutes, target)) {
-			return routeNotImplementedResponse(
-				"ReadingResolution",
-				target,
-				stages,
-				[targetClassificationPrompt, grammaticalPrompt],
-			);
-		}
-		const readingPrompt = readingResolutionPrompt(target);
-		const reading = this.#route(
-			this.#generate.laboratory.readingResolution.de,
-			target,
-			"Reading Resolution",
+		attemptedPrompts.push(readingResolutionPrompt);
+		const readingOutput =
+			await this.#generate.laboratory.readingResolution.de(readingInput);
+		stages.reading = stage(
+			readingResolutionPrompt,
+			readingOutput,
+			modelExchanges,
 		);
-		attemptedPrompts.push(readingPrompt);
-		const readingOutput = await reading(readingInput);
-		stages.reading = stage(readingPrompt, readingOutput, modelExchanges);
 
 		const exactMember = existingEmojiDescriptions.includes(
 			readingOutput.emojiDescription,
@@ -481,7 +461,11 @@ export class GermanClassificationResolver {
 			clickedSegmentIndex,
 			resolvedUnit,
 			"miss",
-			[targetClassificationPrompt, grammaticalPrompt, readingPrompt],
+			[
+				targetClassificationPrompt,
+				grammaticalPrompt,
+				readingResolutionPrompt,
+			],
 		);
 	}
 

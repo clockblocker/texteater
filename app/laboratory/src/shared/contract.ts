@@ -110,7 +110,7 @@ export type ClickResolutionResponse =
 	  }
 	| {
 			decision: "NotImplemented";
-			stage: "GrammaticalResolution" | "ReadingResolution";
+			stage: "GrammaticalResolution";
 			language: "de";
 			family: AnalysisTarget["family"];
 			kind: AnalysisTarget["kind"];

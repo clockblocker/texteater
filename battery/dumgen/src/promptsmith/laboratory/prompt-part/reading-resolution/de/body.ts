@@ -1,4 +1,4 @@
-import type { PromptBody } from "../../../../../../assembly";
+import type { PromptBody } from "../../../../assembly";
 
 export const body =
 	`We are helping a language learner to make sense of the encountered word or phrase.

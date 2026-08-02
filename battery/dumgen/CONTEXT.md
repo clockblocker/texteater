@@ -288,16 +288,16 @@ the only registered language. The pre-click chain is registered as
 `laboratory.intake` followed by `laboratory.segmentation.de`. Post-click
 classification begins at
 `laboratory.targetClassification.de.highLevelWholeUnit`, then dispatches to
-physically distinct
-`laboratory.grammaticalResolution.de.<Family>.<Kind>` and
-`laboratory.readingResolution.de.<Family>.<Kind>` leaves. The high-level policy
-registers Lexeme, Phraseme, and Construction routes; it deliberately excludes
-Morpheme routes.
+physically distinct `laboratory.grammaticalResolution.de.<Family>.<Kind>`
+leaves. Reading Resolution depends only on the language and is registered once
+as `laboratory.readingResolution.de`. The high-level policy registers Lexeme,
+Phraseme, and Construction routes; it deliberately excludes Morpheme routes.
 
 Human-authored Prompt Parts use a stage-first hierarchy under
 `laboratory/prompt-part`: Intake has no language level; every language-specific
-stage places the language immediately after the stage, followed by any Lemma
-family and kind route. Language-first authoring paths are not used.
+stage places the language immediately after the stage, followed only by the
+dimensions on which that stage depends. Language-first authoring paths are not
+used.
 
 Filesystem routes use lowercase kebab-case, while the shared typed catalog uses
 camelCase stage names and preserves canonical Dumling discriminants. For
@@ -312,13 +312,15 @@ input and output schemas.
 
 The initial structured Prompt Source scope is Intake, Segmentation<de>, Target
 Classification<de, HighLevelWholeUnit>, Grammatical Resolution<de, Lexeme,
-NOUN>, and Reading Resolution<de, Lexeme, NOUN>. Target Classification retains
+NOUN>, and Reading Resolution<de>. Target Classification retains
 its explicit policy dimension so later target policies can have distinct
-contracts. Only the German Lexeme/NOUN route is initially enabled through the
-complete post-click chain. When classification selects another route, the
-application returns Resolution Route Not Implemented and stops. Other existing
-laboratory prompts remain unmigrated work in progress and are not automatically
-enabled by their presence in the catalog.
+contracts. Only the German Lexeme/NOUN Grammatical Resolution route is
+initially enabled through the complete post-click chain. Every successfully
+resolved German Lemma continues through the shared German Reading Resolution
+prompt. When classification selects a route without an enabled Grammatical
+Resolution prompt, the application returns Resolution Route Not Implemented
+and stops. Other existing laboratory prompts remain unmigrated work in progress
+and are not automatically enabled by their presence in the catalog.
 
 There is no production prompt namespace. Laboratory results and prompt paths do
 not claim production readiness.

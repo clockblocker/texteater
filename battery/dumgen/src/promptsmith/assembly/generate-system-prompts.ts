@@ -12,10 +12,10 @@ import { body as intakeBody } from "../laboratory/prompt-part/intake/body";
 import { examplesToUse as intakeExamples } from "../laboratory/prompt-part/intake/examples-to-use";
 import { inputSchema as intakeInputSchema } from "../laboratory/prompt-part/intake/input-schema";
 import { outputSchema as intakeOutputSchema } from "../laboratory/prompt-part/intake/output-schema";
-import { body as readingNounBody } from "../laboratory/prompt-part/reading-resolution/de/lexeme/noun/body";
-import { examplesToUse as readingNounExamples } from "../laboratory/prompt-part/reading-resolution/de/lexeme/noun/examples-to-use";
-import { inputSchema as readingNounInputSchema } from "../laboratory/prompt-part/reading-resolution/de/lexeme/noun/input-schema";
-import { outputSchema as readingNounOutputSchema } from "../laboratory/prompt-part/reading-resolution/de/lexeme/noun/output-schema";
+import { body as readingBody } from "../laboratory/prompt-part/reading-resolution/de/body";
+import { examplesToUse as readingExamples } from "../laboratory/prompt-part/reading-resolution/de/examples-to-use";
+import { inputSchema as readingInputSchema } from "../laboratory/prompt-part/reading-resolution/de/input-schema";
+import { outputSchema as readingOutputSchema } from "../laboratory/prompt-part/reading-resolution/de/output-schema";
 import { body as segmentationBody } from "../laboratory/prompt-part/segmentation/de/body";
 import { examplesToUse as segmentationExamples } from "../laboratory/prompt-part/segmentation/de/examples-to-use";
 import { inputSchema as segmentationInputSchema } from "../laboratory/prompt-part/segmentation/de/input-schema";
@@ -72,11 +72,11 @@ const promptSources = [
 		examplesToUse: grammarNounExamples,
 	},
 	{
-		route: "reading-resolution/de/lexeme/noun",
-		inputSchema: readingNounInputSchema,
-		outputSchema: readingNounOutputSchema,
-		body: readingNounBody,
-		examplesToUse: readingNounExamples,
+		route: "reading-resolution/de",
+		inputSchema: readingInputSchema,
+		outputSchema: readingOutputSchema,
+		body: readingBody,
+		examplesToUse: readingExamples,
 	},
 ] as const;
 

@@ -77,7 +77,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
   | Segmentation<de> | 1740 / 1738 | 1626 / 1624 | Compressed repeated kind rules, moved the clean path to tests, and kept punctuation plus `OpaqueText` boundaries in-prompt. |
   | Target Classification<de, HighLevelWholeUnit> | 913 / 913 | 2351 / 2350 | Added three contrastive policy examples and retained the observed index and noun-versus-adjective safeguards missing from `HEAD`. |
   | Grammatical Resolution<de, Lexeme, NOUN> | 1157 / 1157 | 1906 / 1906 | Removed ceremony but added plural-inflection and typo-repair examples that expose the Surface/Lemma and Standard/Typo boundaries. |
-  | Reading Resolution<de, Lexeme, NOUN> | 653 / 653 | 1205 / 1195 | Added exact Reuse and nearby-object New examples; retained fixed-Lemma and authoritative-membership rules. |
+  | Reading Resolution<de> | 653 / 653 | 1205 / 1195 | Added exact Reuse and nearby-object New examples; retained fixed-Lemma and authoritative-membership rules. |
 
 - No model was called for this rewrite. Verification covered authored examples,
   deterministic assembly, generated freshness, codecs, catalog behavior, and
