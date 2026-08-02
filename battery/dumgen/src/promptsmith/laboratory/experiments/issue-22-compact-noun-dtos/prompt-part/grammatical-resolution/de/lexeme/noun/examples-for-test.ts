@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "compact-grammar-test-bank-plural",
+		id: "compact-grammar-bank-plural",
 		input: { c: "Die <TARGET>Banken</TARGET> sind geöffnet." },
 		idealOutput: {
 			d: "R",

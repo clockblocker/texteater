@@ -4,7 +4,7 @@ import type { outputSchema } from "../output-schema";
 
 const ueberStorytelling = [
 	{
-		id: "reading-de-use-adp-ueber-new-connector",
+		id: "reading-de-adp-ueber-connector",
 		input: {
 			markedContext:
 				"Das Hotel verfügt <TARGET>über</TARGET> einen Pool.",
@@ -18,7 +18,7 @@ const ueberStorytelling = [
 		explanation: "verfügen über fixed. über only links. New.",
 	},
 	{
-		id: "reading-de-use-adp-ueber-new-above",
+		id: "reading-de-adp-ueber-above",
 		input: {
 			markedContext: "Die Lampe hängt <TARGET>über</TARGET> dem Tisch.",
 			lemma: "über",
@@ -31,7 +31,7 @@ const ueberStorytelling = [
 		explanation: "Above, not a generic connector. New.",
 	},
 	{
-		id: "reading-de-use-adp-ueber-new-topic",
+		id: "reading-de-adp-ueber-topic-unfall",
 		input: {
 			markedContext: "Sie sprechen <TARGET>über</TARGET> den Unfall.",
 			lemma: "über",
@@ -44,7 +44,7 @@ const ueberStorytelling = [
 		explanation: "Topic, not above. New.",
 	},
 	{
-		id: "reading-de-use-adp-ueber-reuse-topic",
+		id: "reading-de-adp-ueber-topic-wetter",
 		input: {
 			markedContext: "Wir reden <TARGET>über</TARGET> das Wetter.",
 			lemma: "über",
@@ -72,7 +72,7 @@ export const adpExamples = {
 	ueberStorytelling,
 	rest: [
 		{
-			id: "reading-de-use-adp-mit-new-means",
+			id: "reading-de-adp-mit-means",
 			input: {
 				markedContext:
 					"Mara schneidet das Brot <TARGET>mit</TARGET> einem Messer.",
@@ -86,7 +86,7 @@ export const adpExamples = {
 			explanation: "Means, not companion. New.",
 		},
 		{
-			id: "reading-de-use-adp-mit-reuse-connector",
+			id: "reading-de-adp-mit-connector",
 			input: {
 				markedContext: "Wir rechnen <TARGET>mit</TARGET> Regen.",
 				lemma: "mit",
@@ -99,7 +99,7 @@ export const adpExamples = {
 			explanation: "rechnen mit fixed. mit only links.",
 		},
 		{
-			id: "reading-de-use-adp-um-new-topic",
+			id: "reading-de-adp-um-topic",
 			input: {
 				markedContext: "Der Streit geht <TARGET>um</TARGET> Geld.",
 				lemma: "um",
@@ -112,7 +112,7 @@ export const adpExamples = {
 			explanation: "Topic, not around. New.",
 		},
 		{
-			id: "reading-de-use-adp-um-new-clock-time",
+			id: "reading-de-adp-um-clock-time",
 			input: {
 				markedContext: "Der Zug fährt <TARGET>um</TARGET> acht Uhr.",
 				lemma: "um",
@@ -125,7 +125,7 @@ export const adpExamples = {
 			explanation: "Clock point. New.",
 		},
 		{
-			id: "reading-de-use-adp-nach-new-sensory-characteristic",
+			id: "reading-de-adp-nach-sensory-characteristic",
 			input: {
 				markedContext: "Die Jacke riecht <TARGET>nach</TARGET> Rauch.",
 				lemma: "nach",
@@ -138,7 +138,7 @@ export const adpExamples = {
 			explanation: "Seems like. Not direction. New.",
 		},
 		{
-			id: "reading-de-use-adp-vor-reuse-broad-precedence",
+			id: "reading-de-adp-vor-broad-precedence",
 			input: {
 				markedContext:
 					"Sie ruft mich <TARGET>vor</TARGET> dem Essen an.",
@@ -152,7 +152,7 @@ export const adpExamples = {
 			explanation: "Still before. Reuse.",
 		},
 		{
-			id: "reading-de-use-adp-vor-new-cause",
+			id: "reading-de-adp-vor-cause",
 			input: {
 				markedContext: "Das Kind zittert <TARGET>vor</TARGET> Angst.",
 				lemma: "vor",
@@ -165,7 +165,7 @@ export const adpExamples = {
 			explanation: "Cause, not before. New.",
 		},
 		{
-			id: "reading-de-use-adp-gegen-reuse-counteraction",
+			id: "reading-de-adp-gegen-counteraction",
 			input: {
 				markedContext:
 					"Sie nimmt eine Tablette <TARGET>gegen</TARGET> Kopfschmerzen.",
@@ -179,7 +179,7 @@ export const adpExamples = {
 			explanation: "Medicine fights pain. Same against.",
 		},
 		{
-			id: "reading-de-use-adp-gegen-new-approximation",
+			id: "reading-de-adp-gegen-approximation",
 			input: {
 				markedContext: "Wir kommen <TARGET>gegen</TARGET> acht Uhr.",
 				lemma: "gegen",
@@ -192,7 +192,7 @@ export const adpExamples = {
 			explanation: "Rough time, not against. New.",
 		},
 		{
-			id: "reading-de-test-lexeme-adp-mit-instrument-vs-accompaniment",
+			id: "reading-de-adp-mit-instrument",
 			input: {
 				markedContext:
 					"Die Mechanikerin löst die Schraube <TARGET>mit</TARGET> einem Schlüssel.",

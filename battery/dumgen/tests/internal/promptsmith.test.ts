@@ -58,7 +58,7 @@ describe("Prompt Assembly", () => {
 				examplesToUse: [
 					...source.examplesToUse,
 					{
-						id: "segmentation-use-second",
+						id: "segmentation-hallo-punctuation",
 						input: { text: "Hallo!" },
 						idealOutput: {
 							segments: [

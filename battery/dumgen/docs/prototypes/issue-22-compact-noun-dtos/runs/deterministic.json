@@ -4,8 +4,8 @@
   "cases": [
     "grammar-library-dative",
     "grammar-bank-plural",
-    "reading-library-new",
-    "reading-tea-reuse"
+    "reading-library",
+    "reading-tea"
   ],
   "deterministic": {
     "method": "UTF-8 byte counts over generated system prompts and stable JSON; token estimates are ceil(UTF-8 bytes / 4), not provider tokenizer counts.",
@@ -65,7 +65,7 @@
       {
         "arm": "verbose",
         "stage": "readingResolution",
-        "caseId": "reading-library-new",
+        "caseId": "reading-library",
         "systemPromptBytes": 1205,
         "systemPromptSha256": "d72922039dbfd10125557889414d7036cabd27978e8420a6febce363bb0868ba",
         "serializedInputBytes": 180,
@@ -78,7 +78,7 @@
       {
         "arm": "compact",
         "stage": "readingResolution",
-        "caseId": "reading-library-new",
+        "caseId": "reading-library",
         "systemPromptBytes": 1242,
         "systemPromptSha256": "13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
         "serializedInputBytes": 101,
@@ -91,7 +91,7 @@
       {
         "arm": "verbose",
         "stage": "readingResolution",
-        "caseId": "reading-tea-reuse",
+        "caseId": "reading-tea",
         "systemPromptBytes": 1205,
         "systemPromptSha256": "d72922039dbfd10125557889414d7036cabd27978e8420a6febce363bb0868ba",
         "serializedInputBytes": 169,
@@ -104,7 +104,7 @@
       {
         "arm": "compact",
         "stage": "readingResolution",
-        "caseId": "reading-tea-reuse",
+        "caseId": "reading-tea",
         "systemPromptBytes": 1242,
         "systemPromptSha256": "13d94cb8f66f7f9804a4c15a5ae453614c5bedca214c6531d51cca516b76ea07",
         "serializedInputBytes": 89,

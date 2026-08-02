@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "target-use-discourse-formula",
+		id: "target-discourse-formula",
 		input: {
 			clickedSegmentIndex: 0,
 			segments: [
@@ -24,7 +24,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "target-use-noun-after-adjective",
+		id: "target-noun-after-adjective",
 		input: {
 			clickedSegmentIndex: 4,
 			segments: [
@@ -45,7 +45,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "target-use-separable-verb",
+		id: "target-separable-verb",
 		input: {
 			clickedSegmentIndex: 2,
 			segments: [

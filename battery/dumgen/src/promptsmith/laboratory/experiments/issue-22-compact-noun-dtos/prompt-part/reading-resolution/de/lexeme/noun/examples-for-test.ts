@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "compact-reading-test-new-bank",
+		id: "compact-reading-bank",
 		input: {
 			c: "Die <TARGET>Banken</TARGET> sind geöffnet.",
 			l: { c: "Bank", g: "F", h: null },

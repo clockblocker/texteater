@@ -119,7 +119,7 @@ export const GRAMMATICAL_COMPARISON_CASES = [
 
 export const READING_COMPARISON_CASES = [
 	{
-		id: "reading-library-new",
+		id: "reading-library",
 		input: {
 			markedContext: "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
 			lemma: {
@@ -141,7 +141,7 @@ export const READING_COMPARISON_CASES = [
 		},
 	},
 	{
-		id: "reading-tea-reuse",
+		id: "reading-tea",
 		input: {
 			markedContext: "Der <TARGET>Tee</TARGET> duftet.",
 			lemma: {

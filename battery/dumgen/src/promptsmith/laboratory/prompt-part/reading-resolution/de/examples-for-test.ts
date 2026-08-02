@@ -5,7 +5,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "reading-de-test-bank-financial-vs-bench",
+		id: "reading-de-bank-financial",
 		input: {
 			markedContext: "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
 			lemma: "Bank",
@@ -17,7 +17,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-key-metaphor-reuse",
+		id: "reading-de-key-metaphor",
 		input: {
 			markedContext:
 				"Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
@@ -30,7 +30,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-bank-park-bench-reuse",
+		id: "reading-de-bank-park-bench",
 		input: {
 			markedContext:
 				"Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
@@ -43,7 +43,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-separable-aufstehen-new",
+		id: "reading-de-aufstehen-morning-six",
 		input: {
 			markedContext:
 				"Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
@@ -56,7 +56,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-maus-computer-vs-animal",
+		id: "reading-de-maus-computer",
 		input: {
 			markedContext: "Bewege den Zeiger mit der <TARGET>Maus</TARGET>.",
 			lemma: "Maus",
@@ -68,7 +68,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-idiom-mit-den-woelfen-heulen",
+		id: "reading-de-idiom-mit-den-woelfen-heulen",
 		input: {
 			markedContext:
 				"Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET>.",
@@ -81,7 +81,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-leitung-management-vs-cable",
+		id: "reading-de-leitung-management",
 		input: {
 			markedContext:
 				"Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
@@ -94,7 +94,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-scharf-spicy-vs-sharp",
+		id: "reading-de-scharf-spicy",
 		input: {
 			markedContext: "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
 			lemma: "scharf",
@@ -106,7 +106,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-scharf-select-sharp",
+		id: "reading-de-scharf-sharp",
 		input: {
 			markedContext:
 				"Das Messer ist <TARGET>scharf</TARGET> genug, um das Brot zu schneiden.",
@@ -119,7 +119,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-absatz-select-paragraph",
+		id: "reading-de-absatz-paragraph",
 		input: {
 			markedContext:
 				"Im zweiten <TARGET>Absatz</TARGET> steht die Begründung.",
@@ -133,7 +133,7 @@ export const examplesForTest = [
 	},
 	adpExamples.rest[9],
 	{
-		id: "reading-de-test-lexeme-adv-sonst-usual-vs-consequence",
+		id: "reading-de-lexeme-adv-sonst-usual",
 		input: {
 			markedContext:
 				"Er arbeitet <TARGET>sonst</TARGET> im Homeoffice, heute aber im Büro.",
@@ -146,7 +146,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-lexeme-aux-werden-passive-vs-future",
+		id: "reading-de-lexeme-aux-werden-passive",
 		input: {
 			markedContext: "Der Antrag <TARGET>wird</TARGET> morgen geprüft.",
 			lemma: "werden",
@@ -158,7 +158,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-lexeme-sconj-waehrend-adversative-vs-temporal",
+		id: "reading-de-lexeme-sconj-waehrend-adversative",
 		input: {
 			markedContext:
 				"<TARGET>Während</TARGET> Lea gern früh beginnt, arbeitet Amir lieber abends.",
@@ -171,7 +171,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+		id: "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
 		input: {
 			markedContext:
 				"Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
@@ -184,7 +184,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-phraseme-aphorism-zeit-ist-geld-reuse",
+		id: "reading-de-phraseme-aphorism-zeit-ist-geld",
 		input: {
 			markedContext:
 				"Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
@@ -197,7 +197,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-phraseme-proverb-viele-koeche-reuse",
+		id: "reading-de-phraseme-proverb-viele-koeche",
 		input: {
 			markedContext:
 				"Im Projekt durfte nun jeder mitentscheiden – <TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.",
@@ -210,7 +210,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-phraseme-idiom-den-faden-verlieren-reuse",
+		id: "reading-de-phraseme-idiom-den-faden-verlieren",
 		input: {
 			markedContext:
 				"Bei der dritten Zwischenfrage <TARGET>verlor</TARGET> die Rednerin <TARGET>den</TARGET> <TARGET>Faden</TARGET>.",
@@ -223,7 +223,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-morpheme-prefix-un-intensifier-vs-negation",
+		id: "reading-de-morpheme-prefix-un-intensifier",
 		input: {
 			markedContext:
 				"Eine <TARGET>Un</TARGET>menge von Anträgen blieb unbearbeitet.",
@@ -236,7 +236,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-morpheme-suffix-chen-smallness-reuse",
+		id: "reading-de-morpheme-suffix-chen-smallness",
 		input: {
 			markedContext:
 				"Im Karton lag ein winziges Häus<TARGET>chen</TARGET> aus Holz.",
@@ -249,7 +249,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-morpheme-suffixoid-frei-absence-vs-cost",
+		id: "reading-de-morpheme-suffixoid-frei-absence",
 		input: {
 			markedContext: "Der Saft ist zucker<TARGET>frei</TARGET>.",
 			lemma: "-frei",
@@ -261,7 +261,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-morpheme-circumfix-ge-t-participle-reuse",
+		id: "reading-de-morpheme-circumfix-ge-t-participle",
 		input: {
 			markedContext:
 				"Das Paket wurde sorgfältig <TARGET>ge</TARGET>pack<TARGET>t</TARGET>.",
@@ -274,7 +274,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-construction-fusion-am-temporal-vs-locative",
+		id: "reading-de-construction-fusion-am-temporal",
 		input: {
 			markedContext: "Der Kurs beginnt <TARGET>am</TARGET> Montag.",
 			lemma: "am",
@@ -286,7 +286,7 @@ export const examplesForTest = [
 		},
 	},
 	{
-		id: "reading-de-test-construction-paired-frame-entweder-oder-reuse",
+		id: "reading-de-construction-paired-frame-entweder-oder",
 		input: {
 			markedContext:
 				"Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",

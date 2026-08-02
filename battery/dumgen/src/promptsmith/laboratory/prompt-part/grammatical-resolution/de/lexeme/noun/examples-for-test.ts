@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "grammar-noun-use-dative-feminine",
+		id: "grammar-noun-bibliothek-dative",
 		input: {
 			markedContext: "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
 		},

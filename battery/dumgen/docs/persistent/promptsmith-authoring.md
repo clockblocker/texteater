@@ -67,8 +67,10 @@ type Example<Input, Output> = {
 };
 ```
 
-IDs are stable and unique within a source. An example can move between sets
-without changing shape. There is no numeric split or second registry.
+IDs are stable, unique within a source, and named only for their stimulus. They
+do not encode set placement or an expected verdict, so an example can move
+between sets without changing shape. There is no numeric split or second
+registry.
 
 Examples match the minimal model schemas and omit fields restored outside
 Promptsmith. An ideal output is a typed reference answer. Route-specific

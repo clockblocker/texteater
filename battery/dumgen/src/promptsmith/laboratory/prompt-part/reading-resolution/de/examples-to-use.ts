@@ -5,7 +5,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "reading-de-use-reuse-tea",
+		id: "reading-de-tea",
 		input: {
 			markedContext: "Der <TARGET>Tee</TARGET> duftet.",
 			lemma: "Tee",
@@ -17,7 +17,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "reading-de-use-kitchen-as-room",
+		id: "reading-de-kitchen-room",
 		input: {
 			markedContext: "Wir trinken Kaffee in der <TARGET>Küche</TARGET>.",
 			lemma: "Küche",
@@ -29,7 +29,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "reading-de-use-aufstehen-uprising-vs-bed",
+		id: "reading-de-aufstehen-uprising",
 		input: {
 			markedContext:
 				"Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
@@ -43,7 +43,7 @@ export const examplesToUse = [
 		explanation: "Revolt, not leave bed. New.",
 	},
 	{
-		id: "reading-de-use-zug-select-chess-move",
+		id: "reading-de-zug-chess-move",
 		input: {
 			markedContext:
 				"Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",

@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "intake-use-german-with-local-noise",
+		id: "intake-german-with-local-noise",
 		input: { text: "Der Kaffe ist heiß, see you!" },
 		idealOutput: { decision: "Accepted", language: "de" },
 	},

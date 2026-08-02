@@ -11,7 +11,7 @@
   "contractScore": 7,
   "attempts": [
     {
-      "caseId": "reading-de-test-bank-financial-vs-bench",
+      "caseId": "reading-de-bank-financial",
       "input": {
         "markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
         "lemma": "Bank",
@@ -48,7 +48,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-key-metaphor-reuse",
+      "caseId": "reading-de-key-metaphor",
       "input": {
         "markedContext": "Geduld ist der <TARGET>Schlüssel</TARGET> zum Erfolg.",
         "lemma": "Schlüssel",
@@ -85,7 +85,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-bank-park-bench-reuse",
+      "caseId": "reading-de-bank-park-bench",
       "input": {
         "markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
         "lemma": "Bank",
@@ -122,7 +122,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-separable-aufstehen-new",
+      "caseId": "reading-de-aufstehen-morning-six",
       "input": {
         "markedContext": "Morgen <TARGET>steht</TARGET> sie um sechs Uhr <TARGET>auf</TARGET>.",
         "lemma": "aufstehen",
@@ -157,7 +157,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-aufstehen-uprising-vs-bed",
+      "caseId": "reading-de-aufstehen-uprising",
       "input": {
         "markedContext": "Die Bürger <TARGET>stehen</TARGET> gegen die Unterdrückung <TARGET>auf</TARGET>.",
         "lemma": "aufstehen",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-idiom-mit-den-woelfen-heulen",
+      "caseId": "reading-de-idiom-mit-den-woelfen-heulen",
       "input": {
         "markedContext": "Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET>.",
         "lemma": "mit den Wölfen heulen",
@@ -201,7 +201,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-leitung-management-vs-cable",
+      "caseId": "reading-de-leitung-management",
       "input": {
         "markedContext": "Die <TARGET>Leitung</TARGET> berief eine Sitzung ein.",
         "lemma": "Leitung",
@@ -238,7 +238,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-scharf-spicy-vs-sharp",
+      "caseId": "reading-de-scharf-spicy",
       "input": {
         "markedContext": "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
         "lemma": "scharf",
@@ -275,7 +275,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-scharf-select-sharp",
+      "caseId": "reading-de-scharf-sharp",
       "input": {
         "markedContext": "Das Messer ist <TARGET>scharf</TARGET> genug, um das Brot zu schneiden.",
         "lemma": "scharf",
@@ -313,7 +313,7 @@
       }
     },
     {
-      "caseId": "reading-de-test-zug-select-chess-move",
+      "caseId": "reading-de-zug-chess-move",
       "input": {
         "markedContext": "Mit diesem <TARGET>Zug</TARGET> setzt sie den König schachmatt.",
         "lemma": "Zug",

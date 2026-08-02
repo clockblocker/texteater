@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "compact-grammar-use-library-dative",
+		id: "compact-grammar-library-dative",
 		input: { c: "Wir sitzen in der <TARGET>Bibliothek</TARGET>." },
 		idealOutput: {
 			d: "R",

@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "target-test-single-noun",
+		id: "target-single-noun",
 		input: {
 			clickedSegmentIndex: 2,
 			segments: [

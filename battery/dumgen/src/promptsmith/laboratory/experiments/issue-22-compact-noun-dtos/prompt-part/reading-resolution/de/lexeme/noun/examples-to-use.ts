@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "compact-reading-use-new-library",
+		id: "compact-reading-library",
 		input: {
 			c: "Wir sitzen in der <TARGET>Bibliothek</TARGET>.",
 			l: { c: "Bibliothek", g: "F", h: null },
@@ -13,7 +13,7 @@ export const examplesToUse = [
 		idealOutput: { d: "N", e: "📚" },
 	},
 	{
-		id: "compact-reading-use-reuse-tea",
+		id: "compact-reading-tea",
 		input: {
 			c: "Der <TARGET>Tee</TARGET> duftet.",
 			l: { c: "Tee", g: "M", h: null },

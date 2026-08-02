@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "segmentation-use-simple-sentence",
+		id: "segmentation-simple-sentence",
 		input: { text: "Der Kaffee ist heiß." },
 		idealOutput: {
 			segments: [

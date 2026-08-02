@@ -4,17 +4,17 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesForTest = [
 	{
-		id: "intake-test-accepted-de",
+		id: "intake-german-coffee",
 		input: { text: "Der Kaffee ist heiß." },
 		idealOutput: { decision: "Accepted", language: "de" },
 	},
 	{
-		id: "intake-test-unsupported-fr",
+		id: "intake-french-greeting",
 		input: { text: "Bonjour tout le monde." },
 		idealOutput: { decision: "UnsupportedLanguage", language: "fr" },
 	},
 	{
-		id: "intake-test-unintelligible",
+		id: "intake-symbol-noise",
 		input: { text: "xqz %%% 111" },
 		idealOutput: { decision: "Unintelligible", language: null },
 	},

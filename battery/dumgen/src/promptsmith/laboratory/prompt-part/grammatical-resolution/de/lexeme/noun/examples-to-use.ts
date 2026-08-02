@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "grammar-noun-test-plural",
+		id: "grammar-noun-banken-plural",
 		input: { markedContext: "Die <TARGET>Banken</TARGET>" },
 		idealOutput: {
 			decision: "Resolved",
@@ -26,7 +26,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "grammar-noun-use-typo-repaired-on-surface",
+		id: "grammar-noun-kaffe-typo",
 		input: { markedContext: "Der <TARGET>Kaffe</TARGET> duftet." },
 		idealOutput: {
 			decision: "Resolved",

@@ -59,7 +59,7 @@
       {
         "arm": "verbose",
         "stage": "readingResolution",
-        "caseId": "reading-library-new",
+        "caseId": "reading-library",
         "systemPromptBytes": 1205,
         "serializedInputBytes": 180,
         "serializedOutputBytes": 55,
@@ -71,7 +71,7 @@
       {
         "arm": "compact",
         "stage": "readingResolution",
-        "caseId": "reading-library-new",
+        "caseId": "reading-library",
         "systemPromptBytes": 1151,
         "serializedInputBytes": 101,
         "serializedOutputBytes": 31,
@@ -83,7 +83,7 @@
       {
         "arm": "verbose",
         "stage": "readingResolution",
-        "caseId": "reading-tea-reuse",
+        "caseId": "reading-tea",
         "systemPromptBytes": 1205,
         "serializedInputBytes": 169,
         "serializedOutputBytes": 49,
@@ -95,7 +95,7 @@
       {
         "arm": "compact",
         "stage": "readingResolution",
-        "caseId": "reading-tea-reuse",
+        "caseId": "reading-tea",
         "systemPromptBytes": 1151,
         "serializedInputBytes": 89,
         "serializedOutputBytes": 23,
@@ -350,7 +350,7 @@
     {
       "arm": "verbose",
       "stage": "readingResolution",
-      "caseId": "reading-library-new",
+      "caseId": "reading-library",
       "systemPromptBytes": 1205,
       "serializedInputBytes": 180,
       "rawOutputBytes": 55,
@@ -383,7 +383,7 @@
     {
       "arm": "compact",
       "stage": "readingResolution",
-      "caseId": "reading-library-new",
+      "caseId": "reading-library",
       "systemPromptBytes": 1151,
       "serializedInputBytes": 101,
       "rawOutputBytes": 31,
@@ -416,7 +416,7 @@
     {
       "arm": "verbose",
       "stage": "readingResolution",
-      "caseId": "reading-tea-reuse",
+      "caseId": "reading-tea",
       "systemPromptBytes": 1205,
       "serializedInputBytes": 169,
       "rawOutputBytes": 49,
@@ -449,7 +449,7 @@
     {
       "arm": "compact",
       "stage": "readingResolution",
-      "caseId": "reading-tea-reuse",
+      "caseId": "reading-tea",
       "systemPromptBytes": 1151,
       "serializedInputBytes": 89,
       "rawOutputBytes": 23,

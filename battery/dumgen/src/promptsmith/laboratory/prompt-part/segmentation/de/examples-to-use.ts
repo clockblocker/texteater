@@ -4,7 +4,7 @@ import type { outputSchema } from "./output-schema";
 
 export const examplesToUse = [
 	{
-		id: "segmentation-use-attached-punctuation",
+		id: "segmentation-attached-punctuation",
 		input: { text: "Still, aber wach!" },
 		idealOutput: {
 			segments: [
@@ -19,7 +19,7 @@ export const examplesToUse = [
 		},
 	},
 	{
-		id: "segmentation-test-opaque-span",
+		id: "segmentation-opaque-span",
 		input: { text: "Wir treffen quux42 später." },
 		idealOutput: {
 			segments: [
