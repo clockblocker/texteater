@@ -53,7 +53,7 @@ German uses the four public dumling Lemma families:
 | --- | --- |
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
-| \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
+| \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
 | \`Construction\` | \`Fusion\`, \`PairedFrame\` |
 
 These families are not interchangeable.
@@ -62,7 +62,11 @@ These families are not interchangeable.
 
 \`Morpheme\` is for bound pieces such as [\`un-\`](/de/selection/djEseCxVbixjb3Y9cHxzcGw9dixzLGMsdW4tLGwsZGUsbSxwZix1bi0s8J-agCw/).
 
-\`Phraseme\` is for learner-facing fixed expressions whose meaning belongs to the larger unit rather than to one token in isolation.
+\`Phraseme\` is for learner-facing conventionalized expressions whose identity
+belongs to the larger unit rather than to one token in isolation. A
+\`Collocation\` is conventional but non-idiomatic; German support-verb
+expressions such as \`eine Entscheidung treffen\` belong here rather than under
+\`Idiom\`.
 
 \`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\` and paired frames such as \`um zu\`.
 

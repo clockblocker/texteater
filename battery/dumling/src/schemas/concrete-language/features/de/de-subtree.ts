@@ -30,6 +30,7 @@ import { deSuffixoidMorphemeFeaturesSchema } from "./morpheme/suffixoid.js";
 import { deToneMarkingMorphemeFeaturesSchema } from "./morpheme/tone-marking.js";
 import { deTransfixMorphemeFeaturesSchema } from "./morpheme/transfix.js";
 import { deAphorismPhrasemeFeaturesSchema } from "./phraseme/aphorism.js";
+import { deCollocationPhrasemeFeaturesSchema } from "./phraseme/collocation.js";
 import { deDiscourseFormulaPhrasemeFeaturesSchema } from "./phraseme/discourse-formula.js";
 import { deIdiomPhrasemeFeaturesSchema } from "./phraseme/idiom.js";
 import { deProverbPhrasemeFeaturesSchema } from "./phraseme/proverb.js";
@@ -69,6 +70,7 @@ export const deSubtree = buildLanguageSchema("de", {
 	},
 	Phraseme: {
 		Aphorism: deAphorismPhrasemeFeaturesSchema,
+		Collocation: deCollocationPhrasemeFeaturesSchema,
 		DiscourseFormula: deDiscourseFormulaPhrasemeFeaturesSchema,
 		Idiom: deIdiomPhrasemeFeaturesSchema,
 		Proverb: deProverbPhrasemeFeaturesSchema,

@@ -20,7 +20,13 @@ export const GERMAN_HIGH_LEVEL_ROUTES = {
 		"VERB",
 		"X",
 	],
-	Phraseme: ["Aphorism", "DiscourseFormula", "Idiom", "Proverb"],
+	Phraseme: [
+		"Aphorism",
+		"Collocation",
+		"DiscourseFormula",
+		"Idiom",
+		"Proverb",
+	],
 	Construction: ["Fusion", "PairedFrame"],
 } as const satisfies {
 	readonly [Family in Exclude<

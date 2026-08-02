@@ -188,9 +188,16 @@ level remain first-class targets.
 
 The current `HighLevelWholeUnit` policy selects a defensible conventionalized
 unit containing the click, including proverbs, discourse formulae such as
-`Guten Morgen`, and separable verbs. Otherwise it selects the word-level
-Lexeme. It never selects a Morpheme; a future morpheme policy will handle that
-through drill-down.
+`Guten Morgen`, support-verb Collocations such as `eine Entscheidung treffen`,
+and separable verbs. Otherwise it selects the word-level Lexeme. It never
+selects a Morpheme; a future morpheme policy will handle that through
+drill-down.
+
+Target markup fixes the resolution level. A whole-unit target on `eine
+Entscheidung treffen` resolves its `Phraseme/Collocation` Lemma. An explicit
+verb drill-down in the same context resolves the ordinary `Lexeme/VERB` Lemma
+`treffen`; the contextual support use does not introduce a `Light` Core Feature
+or a second Lemma identity.
 
 ## Resolved-unit reuse
 

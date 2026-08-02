@@ -208,6 +208,12 @@ An Analysis Target lets a view present and reuse the resolved unit before the
 Surface and Lemma exist. It is not a Selection, a persisted linguistic entity,
 part of Dumling, or a raw model response.
 
+The target level is policy-owned. For a German support-verb Collocation such as
+`eine Entscheidung treffen`, a whole-unit target resolves the
+`Phraseme/Collocation` Lemma `eine Entscheidung treffen`. An explicit target on
+the verb alone resolves the ordinary `Lexeme/VERB` Lemma `treffen`. Its
+contextual support use does not create a separate `Light` Lemma or Core Feature.
+
 ### Selection
 A successfully resolved, attestation-local node identified by one
 `(SegmentedSentenceId, clickedSegmentIndex)` pair.

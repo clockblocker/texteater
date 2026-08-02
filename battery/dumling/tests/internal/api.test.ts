@@ -175,6 +175,54 @@ describe("language API", () => {
 		);
 	});
 
+	it("represents an inflected support-verb collocation", () => {
+		const lemma = dumling.de.create.lemma({
+			canonicalForm: "eine Entscheidung treffen",
+			family: "Phraseme",
+			kind: "Collocation",
+			coreFeatures: {},
+		});
+		const surface: Surface<"de", "Inflection", "Phraseme", "Collocation"> =
+			dumling.de.create.surface.inflection({
+				lemma,
+				normalizedSurface: "trifft eine Entscheidung",
+				spelling: "Canonical",
+				realizationCoverage: "Full",
+				inflectionalFeatures: {
+					mood: "Ind",
+					number: "Sing",
+					person: "3",
+					tense: "Pres",
+					verbForm: "Fin",
+					voice: null,
+				},
+				surfaceFeatures: null,
+			});
+		const selection: Selection<
+			"de",
+			"Inflection",
+			"Phraseme",
+			"Collocation"
+		> = dumling.de.create.selection({
+			segmentedSentenceId: dumling.de.create.segmentedSentenceId(
+				"sentence:de:eine-entscheidung-treffen",
+			),
+			clickedSegmentIndex: 2,
+			surfaceSegmentIndices: [2, 4, 6],
+			attestedSurface: "trifft eine Entscheidung",
+			selectedOrthography: "Standard",
+			surface,
+		});
+
+		expect(selection.surface.lemma.family).toBe("Phraseme");
+		expect(selection.surface.lemma.kind).toBe("Collocation");
+		expect(selection.surface.realizationCoverage).toBe("Full");
+		expect(dumling.de.parse.selection(selection)).toEqual({
+			success: true,
+			data: selection,
+		});
+	});
+
 	it("keeps clicked text local while a settled phrasal verb spans several indices", () => {
 		expect(englishGiveUpClickedGvaeSelection.surfaceSegmentIndices).toEqual(
 			[2, 4],

@@ -29,6 +29,7 @@ import type { DeSuffixoidMorphemeFeatures } from "./de/morpheme/suffixoid.js";
 import type { DeToneMarkingMorphemeFeatures } from "./de/morpheme/tone-marking.js";
 import type { DeTransfixMorphemeFeatures } from "./de/morpheme/transfix.js";
 import type { DeAphorismPhrasemeFeatures } from "./de/phraseme/aphorism.js";
+import type { DeCollocationPhrasemeFeatures } from "./de/phraseme/collocation.js";
 import type { DeDiscourseFormulaPhrasemeFeatures } from "./de/phraseme/discourse-formula.js";
 import type { DeIdiomPhrasemeFeatures } from "./de/phraseme/idiom.js";
 import type { DeProverbPhrasemeFeatures } from "./de/phraseme/proverb.js";
@@ -137,6 +138,7 @@ export type LanguagePackFeatureRegistry = {
 		};
 		Phraseme: {
 			Aphorism: DeAphorismPhrasemeFeatures;
+			Collocation: DeCollocationPhrasemeFeatures;
 			DiscourseFormula: DeDiscourseFormulaPhrasemeFeatures;
 			Idiom: DeIdiomPhrasemeFeatures;
 			Proverb: DeProverbPhrasemeFeatures;

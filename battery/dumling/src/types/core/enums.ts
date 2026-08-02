@@ -58,6 +58,7 @@ const phrasemeKindValues = [
 	"Aphorism",
 	"Proverb",
 	"Idiom",
+	"Collocation",
 ] as const;
 
 export const PhrasemeKind = z.enum(phrasemeKindValues);

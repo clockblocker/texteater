@@ -163,8 +163,8 @@ describe("settled German laboratory topology", () => {
 			(family) => Object.values(family).map((entry) => entry.prompt),
 		);
 
-		expect(grammaticalPrompts).toHaveLength(23);
-		expect(new Set(grammaticalPrompts).size).toBe(23);
+		expect(grammaticalPrompts).toHaveLength(24);
+		expect(new Set(grammaticalPrompts).size).toBe(24);
 		expect(reading.meta).toEqual({ kind: "prompt" });
 		expect(grammatical.Lexeme.NOUN.prompt.systemPrompt).toContain(
 			"Lexeme/NOUN",

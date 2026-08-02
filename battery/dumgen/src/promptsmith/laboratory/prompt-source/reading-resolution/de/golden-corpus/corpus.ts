@@ -1,6 +1,8 @@
 import { defineGoldenCorpus } from "../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
+import { adjectives } from "./cases/wip/adjective";
 import { adpositions } from "./cases/hand-verivied/adp";
+import { nouns } from "./cases/wip/noun";
 import { constructions } from "./cases/wip/construction";
 import { lexemes } from "./cases/wip/lexeme";
 import { morphemes } from "./cases/wip/morpheme";
@@ -11,7 +13,9 @@ export const corpus = defineGoldenCorpus({
 	inputSchema,
 	outputSchema,
 	collections: {
+		adj: adjectives,
 		adp: adpositions,
+		noun: nouns,
 		constructions,
 		lexemes,
 		morphemes,

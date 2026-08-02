@@ -15,6 +15,12 @@ _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 **Lexeme**:
 A word-like Lemma. A Lexeme is one Lemma Family, not a synonym for Lemma.
 
+**Collocation**:
+A conventional multiword Phraseme whose lexical component choices are
+restricted while its overall meaning remains non-idiomatic. German support-verb
+expressions such as `eine Entscheidung treffen` are Collocations.
+_Avoid_: Idiom, free phrase
+
 **Canonical Form**:
 The normalized form used to name a Lemma. It participates in Lemma identity
 but is not sufficient to identify a Lemma without its language, Family, Kind,
