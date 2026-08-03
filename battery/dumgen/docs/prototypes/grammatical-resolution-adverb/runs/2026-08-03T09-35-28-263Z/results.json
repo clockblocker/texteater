@@ -1,0 +1,1073 @@
+{
+  "runnerVersion": "grammatical-resolution-adverb-v9",
+  "startedAt": "2026-08-03T09:35:28.263Z",
+  "completedAt": "2026-08-03T09:36:35.748Z",
+  "finalizedAt": "2026-08-03T09:37:40.520Z",
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 4096,
+  "reasoningEffort": "low",
+  "textVerbosity": "low",
+  "promptSha256": "f866692b3440527c80d7915c5b1d943e72dbbb0c9ca90b70ccc1a85283b280d4",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "f6a3c1df12aabe00d0f37fda187bd59748502c8e36d21091fc6024194ff1d64b",
+  "evaluationCaseIds": [
+    "grammar-de-adv-morgen",
+    "grammar-de-adv-demonstrative-damit",
+    "grammar-de-adv-comparative-oefter",
+    "grammar-de-adv-demonstrative-dort",
+    "grammar-de-adv-interrogative-warum",
+    "grammar-de-adv-negative-keineswegs",
+    "grammar-de-adv-multiplicative-zweimal",
+    "grammar-de-adv-causal-deshalb",
+    "grammar-de-adv-sentence-initial-vielleicht",
+    "grammar-de-adv-typo-vielleich",
+    "grammar-de-adv-unresolved-attributive-adjective",
+    "grammar-de-adv-unresolved-modal-particle-doch",
+    "grammar-de-adv-unresolved-subordinating-conjunction",
+    "grammar-de-adv-unresolved-overbroad-target",
+    "grammar-de-adv-unresolved-two-unrelated-targets"
+  ],
+  "boundedCalls": 15,
+  "maximumEvaluationCases": 15,
+  "retries": 0,
+  "store": false,
+  "contractScore": 13,
+  "scoreRatio": 0.8666666666666667,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adv-morgen",
+      "input": {
+        "markedContext": "Der Zug fährt <TARGET>morgen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "morgen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "morgen",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "morgen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "morgen",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3022,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03a99414056a0564016a7060e0a0fc8192a59d19f4ad49e601",
+      "usage": {
+        "input_tokens": 2553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 338,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2891
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-demonstrative-damit",
+      "input": {
+        "markedContext": "<TARGET>Damit</TARGET> öffnen wir die Tür."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "damit",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "damit",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": "Dem"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 18309,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09582f33e67db6a4016a7060e3dbe4819d9b52c10777bd3204",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 851,
+        "output_tokens_details": {
+          "reasoning_tokens": 768
+        },
+        "total_tokens": 3405
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The current prompt explicitly says that a pronominal adverb may occupy the prefield of a verb-second matrix clause and identifies damit as PronType Dem; in Damit öffnen wir die Tür, the finite verb immediately follows the target, but the model returned Unresolved."
+    },
+    {
+      "caseId": "grammar-de-adv-comparative-oefter",
+      "input": {
+        "markedContext": "Seitdem kommt sie <TARGET>öfter</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "öfter",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "degree": "Cmp"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "oft",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "öfter",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "degree": "Cmp"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "oft",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3214,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_001e1c6c89ebfa1f016a7060f5ce54819fa99d3d055275d0ba",
+      "usage": {
+        "input_tokens": 2555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 420,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 2975
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-demonstrative-dort",
+      "input": {
+        "markedContext": "Der Schlüssel liegt <TARGET>dort</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "dort",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "dort",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "dort",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "dort",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2252,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01f21eb1742f995c016a7060f904a081919f9aa06a52751834",
+      "usage": {
+        "input_tokens": 2553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 236,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2789
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-interrogative-warum",
+      "input": {
+        "markedContext": "<TARGET>Warum</TARGET> gehst du schon?"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "warum",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "warum",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": "Int"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "warum",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "warum",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": "Int"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3328,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0520d707e243956e016a7060fb48908191936c64d515da0ed5",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 344,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2898
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-negative-keineswegs",
+      "input": {
+        "markedContext": "Das Ergebnis ist <TARGET>keineswegs</TARGET> sicher."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "keineswegs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "keineswegs",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": "Neg"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "keineswegs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "keineswegs",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": "Neg"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 6926,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c832386af989357016a7060fe9edc819f819ebe7a02d40224",
+      "usage": {
+        "input_tokens": 2556,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 852,
+        "output_tokens_details": {
+          "reasoning_tokens": 704
+        },
+        "total_tokens": 3408
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-multiplicative-zweimal",
+      "input": {
+        "markedContext": "Sie klingelte <TARGET>zweimal</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zweimal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zweimal",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": "Mult",
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zweimal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zweimal",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": "Mult",
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3645,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0173c1b532f90790016a7061058a8c8191ae2a25ca68dad179",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 352,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2906
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-causal-deshalb",
+      "input": {
+        "markedContext": "Der Bus fiel aus; <TARGET>deshalb</TARGET> kam sie später."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "deshalb",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "deshalb",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "deshalb",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "deshalb",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3354,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0716659cfe4ef6c6016a706109317c8192856ef4dfad6a32a5",
+      "usage": {
+        "input_tokens": 2559,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 361,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2920
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-sentence-initial-vielleicht",
+      "input": {
+        "markedContext": "<TARGET>Vielleicht</TARGET> regnet es später."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vielleicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielleicht",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Vielleicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielleicht",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5918,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0ae4d50137db99e0016a70610c86cc81a083824b3ba1ef3aeb",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 759,
+        "output_tokens_details": {
+          "reasoning_tokens": 640
+        },
+        "total_tokens": 3313
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The current prompt explicitly says that Standard includes ordinary sentence-initial capitalization and normalizedSurface lowercases ordinary capitalization; the model otherwise matched the oracle but incorrectly retained uppercase Vielleicht."
+    },
+    {
+      "caseId": "grammar-de-adv-typo-vielleich",
+      "input": {
+        "markedContext": "Sie kommt <TARGET>vielleich</TARGET> später."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "vielleicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielleicht",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "vielleicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielleicht",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null,
+              "pronType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4843,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06635b28ebe1210f016a7061127244819da708cf07bf707692",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 565,
+        "output_tokens_details": {
+          "reasoning_tokens": 448
+        },
+        "total_tokens": 3119
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-unresolved-attributive-adjective",
+      "input": {
+        "markedContext": "Sie nimmt den <TARGET>schnellen</TARGET> Zug."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2035,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0891b248a14de474016a706117556481a09e2a2d75f4a6b5b2",
+      "usage": {
+        "input_tokens": 2555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 165,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2720
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-unresolved-modal-particle-doch",
+      "input": {
+        "markedContext": "Komm <TARGET>doch</TARGET> morgen vorbei."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2970,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03344ad238dfe851016a706119cdf481a09ca49e9439636d9f",
+      "usage": {
+        "input_tokens": 2554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 244,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2798
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-unresolved-subordinating-conjunction",
+      "input": {
+        "markedContext": "Wir bleiben zu Hause, <TARGET>weil</TARGET> es regnet."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1737,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_070fec9550ad8c84016a70611c49d481a1bddc2028e34ac462",
+      "usage": {
+        "input_tokens": 2558,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 156,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2714
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-unresolved-overbroad-target",
+      "input": {
+        "markedContext": "Sie besucht uns <TARGET>sehr oft</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3122,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0cb6ef236feef008016a70611e163c81a3a8c3b79dcab707c8",
+      "usage": {
+        "input_tokens": 2555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 372,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 2927
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-unresolved-two-unrelated-targets",
+      "input": {
+        "markedContext": "<TARGET>Heute</TARGET> arbeitet sie, <TARGET>morgen</TARGET> ruht sie sich aus."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2804,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_05153c019a6ddfc6016a70612128508192b71fd661e47bc6ca",
+      "usage": {
+        "input_tokens": 2565,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2432
+        },
+        "output_tokens": 328,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2893
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

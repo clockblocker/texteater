@@ -1,0 +1,10 @@
+{
+  "grammar-de-adv-demonstrative-damit": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt explicitly says that a pronominal adverb may occupy the prefield of a verb-second matrix clause and identifies damit as PronType Dem; in Damit öffnen wir die Tür, the finite verb immediately follows the target, but the model returned Unresolved."
+  },
+  "grammar-de-adv-sentence-initial-vielleicht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt explicitly says that Standard includes ordinary sentence-initial capitalization and normalizedSurface lowercases ordinary capitalization; the model otherwise matched the oracle but incorrectly retained uppercase Vielleicht."
+  }
+}

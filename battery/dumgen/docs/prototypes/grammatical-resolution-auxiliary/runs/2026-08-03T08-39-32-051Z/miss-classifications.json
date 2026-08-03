@@ -1,0 +1,14 @@
+{
+  "grammar-de-aux-participle-gewesen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The v2 prompt explicitly requires German AUX participles such as gewesen to use verbForm Part with aspect null; the model instead emitted aspect Perf."
+  },
+  "grammar-de-aux-infinitive-sein": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The v2 prompt explicitly says that an auxiliary infinitive used in a clause remains an Inflection Surface and must use verbForm Inf with null mood, person, and tense; the model misclassified sein as a finite indicative form."
+  },
+  "grammar-de-aux-modal-wollen-citation": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The input explicitly identifies wollen as a Lexikon Modalauxiliar, and the v2 prompt and analogous dürfen demonstration require Citation for such entry labels; the model incorrectly emitted an Inflection Surface."
+  }
+}

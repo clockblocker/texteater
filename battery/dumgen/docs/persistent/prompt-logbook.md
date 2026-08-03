@@ -117,3 +117,119 @@ is worth revisiting.
 - **Current take:** Treat `hmm` as a Standard member of a Variant Surface for
   `hm` in the draft, while flagging the exact Variant-versus-Lemma boundary for
   human lexicographic review.
+
+### ADV features that the current codecs cannot state cleanly
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-demo-contextual-heute`,
+  `grammar-de-adv-provisional-ordinal-erstens`, and
+  `grammar-de-adv-provisional-cardinal-indefinite-viel`
+- **Raised by:** Wayfinder issue #34
+- **Question:** Should an ordinary ungraded contextual ADV be a Citation
+  Surface because the Inflection codec requires a non-null Degree, how should
+  ordinal `erstens` be represented when ADV excludes `NumType=Ord`, and should
+  quantitative `viel` carry both `NumType=Card` and `PronType=Ind`?
+- **Current take:** Keep the ungraded Citation rule in the draft because it is
+  the only valid current DTO. Keep `erstens` and `viel` corpus-only until the
+  domain codecs and German annotation policy are reconciled.
+
+### Foreign status of lexicalized circa
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-provisional-foreign-circa`
+- **Raised by:** Wayfinder issue #34
+- **Question:** Does established German adverb `circa` retain
+  `foreign: Yes`, or has lexicalization made that Core Feature inappropriate?
+- **Current take:** Retain the proposed foreign reading only as a corpus-only
+  probe; do not teach or score it until lexical policy chooses a boundary.
+
+### Split pronominal adverb da … für
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-provisional-split-pronominal-dafuer`
+- **Raised by:** Wayfinder issue #34
+- **Question:** Is split `da … für` one discontinuous ADV Surface of `dafür`,
+  and if so should normalizedSurface retain an ellipsis marker or join the
+  members canonically?
+- **Current take:** A single Dem pronominal-adverb identity is plausible, but
+  route ownership and discontinuous Surface normalization need domain review;
+  keep the case corpus-only.
+
+### Canonical Lemma for contextual möchte
+
+- **Route:** `grammatical-resolution/de/lexeme/auxiliary`
+- **Golden Case:** `grammar-de-aux-modal-moechte-bleiben`
+- **Raised by:** Wayfinder issue #35
+- **Question:** Should contextual `möchte` resolve to canonical `mögen`, or to
+  an independently lexicalized `möchten` Lemma?
+- **Current take:** The draft provisionally models the traditional subjunctive
+  analysis under `mögen`, but excludes the case from demonstrations and scoring
+  because current sources and dictionaries do not provide one uncontested
+  canonical policy.
+
+### Feminine DET agreement missing from the codec
+
+- **Route:** `grammatical-resolution/de/lexeme/determiner`
+- **Golden Case:** `grammar-de-det-provisional-feminine-die`
+- **Raised by:** Wayfinder issue #37
+- **Question:** How should German feminine agreement be represented when the
+  exact DET Inflection codec excludes `Gender=Fem` despite attested German use?
+- **Current take:** Preserve the linguistically feminine example as a
+  corpus-only probe with `gender: null`; do not score that lossy representation
+  until the domain codec is corrected or the omission is explicitly adopted.
+
+### Contextual uninflected derlei as Citation or Inflection
+
+- **Route:** `grammatical-resolution/de/lexeme/determiner`
+- **Golden Case:** `grammar-de-det-provisional-uninflected-derlei`
+- **Raised by:** Wayfinder issue #37
+- **Question:** Should contextual uninflected DET `derlei` use Citation because
+  the Inflection codec requires a non-empty feature bag, or should the domain
+  permit an Inflection Surface with no overt agreement features?
+- **Current take:** Use Citation provisionally and keep the example corpus-only;
+  the Surface distinction needs a domain decision before it becomes evidence.
+
+### Ambiguous Lemma behind am häufigsten
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-superlative-am-haeufigsten`
+- **Raised by:** Wayfinder issue #34 live evaluation
+- **Question:** The Surface `am häufigsten` can realize regular `häufig` or the
+  suppletive superlative of `oft`; can context ever select one Lemma reliably,
+  or must exact single-Lemma resolution remain Unresolved?
+- **Current take:** Return Unresolved when the supplied context does not choose
+  between the two defensible Lemmas. Do not impose an arbitrary corpus tie-break.
+
+### Contextual versus syncretic possessor gender for seinen
+
+- **Route:** `grammatical-resolution/de/lexeme/determiner`
+- **Golden Case:** `grammar-de-det-possessive-seinen`
+- **Raised by:** Wayfinder issue #37 live evaluation review
+- **Question:** Should `Gender[psor]` preserve the morphological Masc/Neut
+  syncretism of `sein`, or may an explicit contextual antecedent such as `Er`
+  collapse it to Masc during Grammatical Resolution?
+- **Current take:** Follow the existing Dumling contextual precedent and emit
+  Masc when the antecedent explicitly resolves the possessor. Record that this
+  differs from broader German GSD annotation and revisit it at domain audit.
+
+### Lexical versus contextual PronType for relative wo
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-interrogative-identity-wo`
+- **Raised by:** Wayfinder issue #34 live evaluation review
+- **Question:** German GSD keeps ADV lemma `wo` lexically `PronType=Int`, even
+  in relative-clause attestations; should lexical Core Feature identity or the
+  contextual relative use govern learner-facing Grammatical Resolution?
+- **Current take:** Preserve the GSD-based Int oracle as a corpus-only probe,
+  but do not score it until the domain chooses lexical or contextual policy.
+
+### Degree-modifier etwas as ADV or PART
+
+- **Route:** `grammatical-resolution/de/lexeme/adverb`
+- **Golden Case:** `grammar-de-adv-indefinite-etwas`
+- **Raised by:** Wayfinder issue #34 live evaluation review
+- **Question:** Degree-modifier `etwas` is attested as ADV with
+  `PronType=Ind`, but should this use remain ADV or cross the project boundary
+  to PART, and must the lexical feature survive that contextual use?
+- **Current take:** Keep the ADV/Ind analysis as a corpus-only probe rather
+  than treating either route or feature policy as authoritative evidence.

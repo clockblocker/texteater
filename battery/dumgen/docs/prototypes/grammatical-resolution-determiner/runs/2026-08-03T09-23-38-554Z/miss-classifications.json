@@ -1,0 +1,10 @@
+{
+  "grammar-de-det-possessive-seinen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The v6 prompt explicitly says that Er ... seinen establishes gender[psor] Masc; the model instead left gender[psor] null while matching every other scored field."
+  },
+  "grammar-de-det-formal-possessive-ihrem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The v6 prompt separates agreement number from possessor number, assigns fixed possessor number only to mein/dein/sein and unser/euer, and requires unsupported or unestablished values to remain null. This formal Ihr context does not establish whether the addressee is singular or plural, but the model invented number[psor] Sing."
+  }
+}
