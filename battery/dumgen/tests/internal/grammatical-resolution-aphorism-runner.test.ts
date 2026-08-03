@@ -7,6 +7,7 @@ import type OpenAI from "openai";
 import {
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
+	BATCH_EVIDENCE_TRANSPORT,
 	currentEvidenceBinding,
 	finalizeEvidence,
 	parseRetainedRun,
@@ -46,6 +47,7 @@ function draftResult() {
 	const attempts = passingAttempts();
 	return {
 		...currentEvidenceBinding(),
+		batchProvenance: null,
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -55,12 +57,104 @@ function draftResult() {
 	};
 }
 
+function batchDraftResult() {
+	const attempts = passingAttempts().map((attempt) => ({
+		...attempt,
+		latencyMs: null,
+	}));
+	return {
+		...currentEvidenceBinding(BATCH_EVIDENCE_TRANSPORT),
+		batchProvenance: {
+			batchId: "batch-test",
+			inputFileId: "file-input",
+			outputFileId: "file-output",
+			errorFileId: null,
+			submissionManifestSha256: "a".repeat(64),
+			inputJsonlSha256: "b".repeat(64),
+			outputJsonlSha256: "c".repeat(64),
+			errorJsonlSha256: null,
+			endpoint: "/v1/responses" as const,
+			completionWindow: "24h" as const,
+			createdAt: startedAt,
+			completedAt,
+			requestCounts: { total: 100, completed: 100, failed: 0 },
+		},
+		startedAt,
+		completedAt,
+		finalizedAt: null,
+		boundedCalls: attempts.length,
+		...summarizeEvidence(attempts, false),
+		attempts,
+	};
+}
+
+test("Aphorism Batch evidence has strict provenance and honest timing", () => {
+	const valid = parseRetainedRun(batchDraftResult());
+	expect(valid.transport).toBe(BATCH_EVIDENCE_TRANSPORT);
+	expect(valid.attempts.every(({ latencyMs }) => latencyMs === null)).toBe(
+		true,
+	);
+	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
+	expect(() =>
+		parseRetainedRun({
+			...valid,
+			batchProvenance: {
+				...valid.batchProvenance,
+				submissionManifestSha256: "not-a-hash",
+			},
+		}),
+	).toThrow();
+	expect(() =>
+		parseRetainedRun({
+			...valid,
+			attempts: valid.attempts.map((attempt, index) => ({
+				...attempt,
+				latencyMs: index,
+			})),
+		}),
+	).toThrow(/Batch attempts require null latency/);
+	expect(() =>
+		parseRetainedRun({
+			...draftResult(),
+			batchProvenance: valid.batchProvenance,
+		}),
+	).toThrow(/direct transport requires null provenance/);
+});
+
+test("Aphorism finalizes Batch evidence without changing transport", async () => {
+	const directory = await mkdtemp(join(tmpdir(), "aphorism-batch-test-"));
+	const resultsPath = join(directory, "results.json");
+	const classificationsPath = join(directory, "miss-classifications.json");
+	try {
+		await writeFile(
+			resultsPath,
+			JSON.stringify(batchDraftResult()),
+			"utf8",
+		);
+		await writeFile(classificationsPath, "{}", "utf8");
+		const finalized = await finalizeEvidence(
+			resultsPath,
+			classificationsPath,
+		);
+		expect(finalized.transport).toBe(BATCH_EVIDENCE_TRANSPORT);
+		expect(finalized.batchProvenance?.submissionManifestSha256).toBe(
+			"a".repeat(64),
+		);
+		expect(
+			finalized.attempts.every(({ latencyMs }) => latencyMs === null),
+		).toBe(true);
+		expect(finalized.evidenceThresholdMet).toBe(true);
+	} finally {
+		await rm(directory, { recursive: true, force: true });
+	}
+});
+
 test("Aphorism runner import and preflight make no provider call", async () => {
 	expect(currentEvidenceBinding().route).toBe(
 		"grammatical-resolution/de/phraseme/aphorism",
 	);
 	expect(currentEvidenceBinding().runnerVersion).toBe(
-		"grammatical-resolution-aphorism-v6",
+		"grammatical-resolution-aphorism-v7",
 	);
 	expect(currentEvidenceBinding().model).toBe("gpt-5.6-luna");
 	expect(currentEvidenceBinding().reasoningEffort).toBe("none");

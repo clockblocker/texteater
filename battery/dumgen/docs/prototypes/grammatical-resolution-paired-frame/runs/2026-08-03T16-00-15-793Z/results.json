@@ -1,0 +1,1336 @@
+{
+  "runnerVersion": "grammatical-resolution-paired-frame-v5",
+  "route": "grammatical-resolution/de/construction/paired-frame",
+  "transport": "openai-batch-v1",
+  "batchProvenance": {
+    "batchId": "batch_6a70bb12264c8190a67deb3eea8e5b09",
+    "inputFileId": "file-6qnEnS9VCrzT7cpwNVMNE2",
+    "outputFileId": "file-FXiR42tx6fFYwEMB5vJyk3",
+    "errorFileId": null,
+    "submissionManifestSha256": "e710f21d9800dacfad522284db98779923aa7ed018fedb1b1bbb623dd609bff3",
+    "inputJsonlSha256": "14056e989c74d1908dfce939265997829356b2afe8c198776ba8e66c8f0e16e8",
+    "outputJsonlSha256": "e32b2b66ed48cb3ea624956a57280db79cd5f1bec43e3cb9bd02c76a1e04a7f0",
+    "errorJsonlSha256": null,
+    "endpoint": "/v1/responses",
+    "completionWindow": "24h",
+    "createdAt": "2026-08-03T16:00:18.000Z",
+    "completedAt": "2026-08-03T16:03:22.000Z",
+    "requestCounts": {
+      "total": 100,
+      "completed": 100,
+      "failed": 0
+    }
+  },
+  "startedAt": "2026-08-03T16:00:18.000Z",
+  "completedAt": "2026-08-03T16:03:22.000Z",
+  "finalizedAt": "2026-08-03T16:06:31.112Z",
+  "model": "gpt-5.6-luna",
+  "promptMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 16384,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptSha256": "2b79893a8d3dc6c906e9d36e5b33716216d1ae8fcb847301cb41b6e382f0dcc9",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "70cb69137f936729a4467105202380b0f434f5fb03fc7b78211f3ac8242fc6d5",
+  "evaluationCaseIds": [
+    "grammar-de-paired-frame-entweder-oder-friday",
+    "grammar-de-paired-frame-entweder-oder-clauses",
+    "grammar-de-paired-frame-weder-noch-nouns",
+    "grammar-de-paired-frame-sowohl-wie",
+    "grammar-de-paired-frame-je-umso-night",
+    "grammar-de-paired-frame-je-desto",
+    "grammar-de-paired-frame-je-umso",
+    "grammar-de-paired-frame-um-zu-learn",
+    "grammar-de-paired-frame-um-zu-purpose",
+    "grammar-de-paired-frame-ohne-zu",
+    "grammar-de-paired-frame-entweder-typo",
+    "grammar-de-paired-frame-desto-typo",
+    "grammar-de-paired-frame-unresolved-single-arm-entweder",
+    "grammar-de-paired-frame-unresolved-single-arm-noch",
+    "grammar-de-paired-frame-unresolved-overselected-conjunct",
+    "grammar-de-paired-frame-unresolved-mixed-occurrences",
+    "grammar-de-paired-frame-unresolved-unrelated-um-zu",
+    "grammar-de-paired-frame-unresolved-mismatched-arms",
+    "grammar-de-paired-frame-unresolved-single-cconj-sowie",
+    "grammar-de-paired-frame-unresolved-unmarked-third-member"
+  ],
+  "boundedCalls": 20,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 20,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-paired-frame-entweder-oder-friday",
+      "input": {
+        "markedContext": "Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"entweder … oder\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"entweder oder\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_023ffb8e7e66aa4f016a70bb62418c819488c66cd75a9dc24f",
+      "usage": {
+        "input_tokens": 1499,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1577
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-entweder-oder-clauses",
+      "input": {
+        "markedContext": "<TARGET>Entweder</TARGET> fährt Mia heute, <TARGET>oder</TARGET> sie bleibt bis morgen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"entweder … oder\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"entweder oder\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02bd7cc01af91ea9016a70bb5cb6e0819782865e1608d55c9c",
+      "usage": {
+        "input_tokens": 1501,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1579
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-weder-noch-nouns",
+      "input": {
+        "markedContext": "Sie trinkt <TARGET>weder</TARGET> Tee <TARGET>noch</TARGET> Kaffee."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "weder noch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "weder … noch",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "weder noch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "weder … noch",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"weder … noch\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"weder noch\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09385f237068448d016a70bb64c1648197b209eae861c9a88a",
+      "usage": {
+        "input_tokens": 1496,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1572
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-sowohl-wie",
+      "input": {
+        "markedContext": "Die Regel gilt <TARGET>sowohl</TARGET> für Kinder <TARGET>wie</TARGET> für Erwachsene."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sowohl wie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sowohl … wie",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sowohl wie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sowohl … wie",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"sowohl … wie\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"sowohl wie\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b4e7071293292a0016a70bb5f8e3c81908f7683e3062b4388",
+      "usage": {
+        "input_tokens": 1499,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1577
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-je-umso-night",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> länger die Nacht, <TARGET>umso</TARGET> heller der Morgen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je umso",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … umso",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je umso",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … umso",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"je … umso\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"je umso\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_027e60d15cc7400c016a70bb67885481908fc15d521aa88942",
+      "usage": {
+        "input_tokens": 1499,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1575
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-je-desto",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> länger er wartet, <TARGET>desto</TARGET> unruhiger wird er."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je desto",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … desto",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je desto",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … desto",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"je … desto\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"je desto\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ad936934d38e62b016a70bb6281b88193b392b851a50dd667",
+      "usage": {
+        "input_tokens": 1500,
+        "input_tokens_details": {
+          "cache_write_tokens": 33,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 74,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1574
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-je-umso",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> genauer wir messen, <TARGET>umso</TARGET> sicherer wird das Ergebnis."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je umso",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … umso",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "je umso",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … umso",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"je … umso\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"je umso\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06e089cb3cc7e763016a70bb655d0481969e8b121f591f7075",
+      "usage": {
+        "input_tokens": 1501,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1577
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-um-zu-learn",
+      "input": {
+        "markedContext": "Sie liest täglich, <TARGET>um</TARGET> schneller <TARGET>zu</TARGET> lernen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "um zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "um … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "um zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "um … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"um … zu\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"um zu\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06ceae85fa80d2df016a70bb6a26b081909a2ec195e41bdbfc",
+      "usage": {
+        "input_tokens": 1497,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 74,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1571
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-um-zu-purpose",
+      "input": {
+        "markedContext": "Noah spart, <TARGET>um</TARGET> im Sommer verreisen <TARGET>zu</TARGET> können."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "um zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "um … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "um zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "um … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"um … zu\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"um zu\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0102b7c8915b58d0016a70bb687b888190988c0aceb0fccd07",
+      "usage": {
+        "input_tokens": 1500,
+        "input_tokens_details": {
+          "cache_write_tokens": 33,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 74,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1574
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-ohne-zu",
+      "input": {
+        "markedContext": "Er ging, <TARGET>ohne</TARGET> sich <TARGET>zu</TARGET> verabschieden."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ohne zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ohne … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ohne zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ohne … zu",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ohne … zu\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"ohne zu\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_017c643636daebdf016a70bb6d538c8197bf8a949a13a3fd5b",
+      "usage": {
+        "input_tokens": 1498,
+        "input_tokens_details": {
+          "cache_write_tokens": 1495,
+          "cached_tokens": 0
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1574
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-entweder-typo",
+      "input": {
+        "markedContext": "Wir nehmen <TARGET>endweder</TARGET> den Bus <TARGET>oder</TARGET> die Bahn."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "entweder oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "entweder … oder",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"entweder … oder\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Typo\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"entweder oder\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0647110707c026ce016a70bb6b34508194bf14a4bc86ccb471",
+      "usage": {
+        "input_tokens": 1498,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 79,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1577
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-desto-typo",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> höher der Druck, <TARGET>desdo</TARGET> größer das Risiko."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "je desto",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … desto",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "je desto",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je … desto",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"je … desto\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\",\"Typo\"],\"surface\":{\"normalizedSurface\":\"je desto\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02ced440586655a1016a70bb720fc48194aaf0ad2911a7b0a5",
+      "usage": {
+        "input_tokens": 1499,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 75,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1574
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-single-arm-entweder",
+      "input": {
+        "markedContext": "Wir wählen <TARGET>entweder</TARGET> den Bus oder die Bahn."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02963aca8a6054e6016a70bb71eb308195b16da5c9892c42c2",
+      "usage": {
+        "input_tokens": 1493,
+        "input_tokens_details": {
+          "cache_write_tokens": 26,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1516
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-single-arm-noch",
+      "input": {
+        "markedContext": "Sie trinkt weder Tee <TARGET>noch</TARGET> Kaffee."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d3cbc6b48be8e07016a70bb74def4819791ba2d2522cf875a",
+      "usage": {
+        "input_tokens": 1490,
+        "input_tokens_details": {
+          "cache_write_tokens": 23,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1513
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-overselected-conjunct",
+      "input": {
+        "markedContext": "Sie trinkt <TARGET>weder</TARGET> <TARGET>Tee</TARGET> <TARGET>noch</TARGET> Kaffee."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05480a5a2a14c5bb016a70bb74b050819699dce9e385e0a526",
+      "usage": {
+        "input_tokens": 1502,
+        "input_tokens_details": {
+          "cache_write_tokens": 35,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1525
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-mixed-occurrences",
+      "input": {
+        "markedContext": "<TARGET>Entweder</TARGET> fährt Mia oder sie bleibt; entweder kommt Noah <TARGET>oder</TARGET> Lea."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d92976f75f0ab8a016a70bb77743881968298cc9f7be317cf",
+      "usage": {
+        "input_tokens": 1503,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1526
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-unrelated-um-zu",
+      "input": {
+        "markedContext": "Er geht <TARGET>um</TARGET> das Haus und kommt <TARGET>zu</TARGET> spät."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03ea9f1d1bee05ad016a70bb7749088193a312e35eb8ac2109",
+      "usage": {
+        "input_tokens": 1498,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1521
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-mismatched-arms",
+      "input": {
+        "markedContext": "Wir nehmen <TARGET>weder</TARGET> den Bus <TARGET>oder</TARGET> die Bahn."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02d3f95e459c0680016a70bb79e6248190b1a576457962f5c4",
+      "usage": {
+        "input_tokens": 1497,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1520
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-single-cconj-sowie",
+      "input": {
+        "markedContext": "Brot <TARGET>sowie</TARGET> Käse werden serviert."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_061dac8cdb36559a016a70bb5a3aa481978542f37c121a191f",
+      "usage": {
+        "input_tokens": 1491,
+        "input_tokens_details": {
+          "cache_write_tokens": 1488,
+          "cached_tokens": 0
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1514
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-unresolved-unmarked-third-member",
+      "input": {
+        "markedContext": "Sie hat <TARGET>sowohl</TARGET> den Film gesehen <TARGET>als</TARGET> auch das Buch gelesen."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ccf284a49ccc811016a70bb79fde881959191392cba35181c",
+      "usage": {
+        "input_tokens": 1501,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 23,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1524
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

@@ -18,7 +18,7 @@ import { aphorismGrammaticalResolutionExperiment } from "../../../src/promptsmit
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const RUNNER_VERSION = "grammatical-resolution-aphorism-v6";
+const RUNNER_VERSION = "grammatical-resolution-aphorism-v7";
 const RUN_ROUTE = "grammatical-resolution/de/phraseme/aphorism";
 const PROMPT_MAX_OUTPUT_TOKENS = 1024;
 const RUN_MAX_OUTPUT_TOKENS = 32768;
@@ -26,6 +26,11 @@ const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
 const TEXT_VERBOSITY = "low";
+export const DIRECT_EVIDENCE_TRANSPORT = "openai-responses-direct-v1";
+export const BATCH_EVIDENCE_TRANSPORT = "openai-batch-v1";
+export type EvidenceTransport =
+	| typeof DIRECT_EVIDENCE_TRANSPORT
+	| typeof BATCH_EVIDENCE_TRANSPORT;
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",
 	"corpus-or-evaluator-defect",
@@ -88,6 +93,76 @@ const currentSystemPrompt = assembleSystemPrompt(
 
 const isoTimestampSchema = z.iso.datetime({ offset: true });
 const nonEmptyIdSchema = z.string().trim().min(1);
+const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/u);
+const batchProvenanceSchema = z
+	.strictObject({
+		batchId: nonEmptyIdSchema,
+		inputFileId: nonEmptyIdSchema,
+		outputFileId: nonEmptyIdSchema.nullable(),
+		errorFileId: nonEmptyIdSchema.nullable(),
+		submissionManifestSha256: sha256Schema,
+		inputJsonlSha256: sha256Schema,
+		outputJsonlSha256: sha256Schema.nullable(),
+		errorJsonlSha256: sha256Schema.nullable(),
+		endpoint: z.literal("/v1/responses"),
+		completionWindow: z.literal("24h"),
+		createdAt: isoTimestampSchema,
+		completedAt: isoTimestampSchema,
+		requestCounts: z.strictObject({
+			total: z.number().int().finite().nonnegative(),
+			completed: z.number().int().finite().nonnegative(),
+			failed: z.number().int().finite().nonnegative(),
+		}),
+	})
+	.superRefine((provenance, context) => {
+		if (
+			Date.parse(provenance.completedAt) <
+			Date.parse(provenance.createdAt)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["completedAt"],
+				message: "Batch completion cannot precede batch creation.",
+			});
+		}
+		for (const [idField, hashField] of [
+			["outputFileId", "outputJsonlSha256"],
+			["errorFileId", "errorJsonlSha256"],
+		] as const) {
+			if (
+				(provenance[idField] === null) !==
+				(provenance[hashField] === null)
+			) {
+				context.addIssue({
+					code: "custom",
+					path: [hashField],
+					message: `${idField} and ${hashField} must both be present or both be null.`,
+				});
+			}
+		}
+		if (
+			provenance.outputFileId === null &&
+			provenance.errorFileId === null
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["outputFileId"],
+				message:
+					"Completed Batch provenance must retain an output or error file.",
+			});
+		}
+		if (
+			provenance.requestCounts.completed +
+				provenance.requestCounts.failed !==
+			provenance.requestCounts.total
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["requestCounts"],
+				message: "Batch request counts must add up to the total.",
+			});
+		}
+	});
 const missClassificationSchema = z.enum(MISS_CLASSIFICATIONS);
 const retainedErrorSchema = z.strictObject({
 	name: z.string().min(1),
@@ -117,7 +192,7 @@ const retainedAttemptSchema = z
 		idealOutput: outputSchema,
 		output: outputSchema.optional(),
 		...diagnosticShape,
-		latencyMs: z.number().int().finite().nonnegative(),
+		latencyMs: z.number().int().finite().nonnegative().nullable(),
 		rawOutputText: z.string().optional(),
 		resolvedModel: z.string().min(1).optional(),
 		responseId: z.string().min(1).optional(),
@@ -192,6 +267,11 @@ const retainedRunSchema = z
 	.strictObject({
 		runnerVersion: z.literal(RUNNER_VERSION),
 		route: z.literal(RUN_ROUTE),
+		transport: z.enum([
+			DIRECT_EVIDENCE_TRANSPORT,
+			BATCH_EVIDENCE_TRANSPORT,
+		]),
+		batchProvenance: batchProvenanceSchema.nullable(),
 		startedAt: isoTimestampSchema,
 		completedAt: isoTimestampSchema,
 		finalizedAt: isoTimestampSchema.nullable(),
@@ -200,9 +280,9 @@ const retainedRunSchema = z
 		runMaxOutputTokens: z.literal(RUN_MAX_OUTPUT_TOKENS),
 		reasoningEffort: z.literal(REASONING_EFFORT),
 		textVerbosity: z.literal(TEXT_VERBOSITY),
-		promptSha256: z.string().regex(/^[0-9a-f]{64}$/u),
-		inputSchemaSha256: z.string().regex(/^[0-9a-f]{64}$/u),
-		outputSchemaSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+		promptSha256: sha256Schema,
+		inputSchemaSha256: sha256Schema,
+		outputSchemaSha256: sha256Schema,
 		evaluationCaseIds: z
 			.array(nonEmptyIdSchema)
 			.min(1)
@@ -242,6 +322,39 @@ const retainedRunSchema = z
 				code: "custom",
 				path: ["finalizedAt"],
 				message: "finalizedAt must not precede completedAt.",
+			});
+		}
+		const isBatch = result.transport === BATCH_EVIDENCE_TRANSPORT;
+		if (isBatch !== (result.batchProvenance !== null)) {
+			context.addIssue({
+				code: "custom",
+				path: ["batchProvenance"],
+				message:
+					"Batch transport requires Batch provenance; direct transport requires null provenance.",
+			});
+		}
+		if (
+			result.attempts.some(({ latencyMs }) =>
+				isBatch ? latencyMs !== null : latencyMs === null,
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["attempts"],
+				message:
+					"Direct attempts require measured latency; Batch attempts require null latency.",
+			});
+		}
+		if (
+			result.batchProvenance !== null &&
+			(result.startedAt !== result.batchProvenance.createdAt ||
+				result.completedAt !== result.batchProvenance.completedAt)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["batchProvenance"],
+				message:
+					"Batch result timestamps must equal the retained Batch timestamps.",
 			});
 		}
 		const attemptedCaseIds = result.attempts.map(({ caseId }) => caseId);
@@ -292,6 +405,7 @@ const missClassificationsSchema = z.record(
 
 export type RetainedAttempt = z.output<typeof retainedAttemptSchema>;
 export type RetainedRun = z.output<typeof retainedRunSchema>;
+export type BatchProvenance = z.output<typeof batchProvenanceSchema>;
 
 type PreparedTestCase = {
 	readonly id: string;
@@ -420,6 +534,7 @@ export async function runLiveEvaluation(
 
 	const result = retainedRunSchema.parse({
 		...currentEvidenceBinding(),
+		batchProvenance: null,
 		startedAt,
 		completedAt: new Date().toISOString(),
 		finalizedAt: null,
@@ -490,7 +605,7 @@ export async function finalizeEvidence(
 	});
 	const finalized = retainedRunSchema.parse({
 		...retained,
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(retained.transport),
 		finalizedAt: new Date().toISOString(),
 		...summarizeEvidence(attempts, true),
 		attempts,
@@ -548,10 +663,13 @@ export function summarizeEvidence(
 	return computeEvidenceSummary(attempts, finalized);
 }
 
-export function currentEvidenceBinding() {
+export function currentEvidenceBinding(
+	transport: EvidenceTransport = DIRECT_EVIDENCE_TRANSPORT,
+) {
 	return {
 		runnerVersion: RUNNER_VERSION,
 		route: RUN_ROUTE,
+		transport,
 		model: MODEL,
 		promptMaxOutputTokens: PROMPT_MAX_OUTPUT_TOKENS,
 		runMaxOutputTokens: RUN_MAX_OUTPUT_TOKENS,
@@ -575,10 +693,11 @@ export function assertCurrentEvidenceBinding(
 	result: RetainedRun,
 	currentCases: readonly PreparedTestCase[] = prepareCurrentTestCases(),
 ): void {
-	const binding = currentEvidenceBinding();
+	const binding = currentEvidenceBinding(result.transport);
 	for (const field of [
 		"runnerVersion",
 		"route",
+		"transport",
 		"model",
 		"promptMaxOutputTokens",
 		"runMaxOutputTokens",

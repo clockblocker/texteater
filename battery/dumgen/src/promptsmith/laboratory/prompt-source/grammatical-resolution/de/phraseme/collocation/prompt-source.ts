@@ -28,7 +28,9 @@ current Collocation occurrence. Every marked token must be one of those members
 in that same occurrence. Return Unresolved if marked tokens mix occurrences or
 if any marked token is an auxiliary, subject, external object, modifier, or
 other dependent. A marked support verb alone is Lexeme/VERB and is always
-Unresolved here. Every Resolved Collocation has at least two marked members.
+Unresolved here. Unmarked arguments and modifiers may intervene between marked
+members; they are context and do not make an otherwise valid inventory fail.
+Every Resolved Collocation has at least two marked members.
 
 Gate 3 — Full realization. There is no proven positive Partial policy for this
 initial route. Every canonical lexical member that occurs in the current
@@ -37,7 +39,9 @@ there. Return Unresolved if a present canonical member is unmarked or if a
 canonical member is absent through ellipsis. Do not complete an ellipsis from
 an earlier or later occurrence. Unmarked auxiliaries and infinitival zu are
 grammatical context, not canonical Collocation members, so they do not make an
-otherwise Full occurrence fail this gate.
+otherwise Full occurrence fail this gate. A determiner in the settled
+canonicalForm is a canonical member and must have its own TARGET pair when it
+occurs; never silently drop it from the Surface.
 
 Only after all three gates pass, return Resolved. Emit exactly one
 memberOrthographies value per supplied TARGET pair in textual order.
@@ -93,6 +97,7 @@ export const demonstrations = corpus.select([
 	"grammar-de-coll-decision-present-full",
 	"grammar-de-coll-frage-citation",
 	"grammar-de-coll-verfuegung-present-full",
+	"grammar-de-coll-anerkennung-participle-typo-full",
 	"grammar-de-coll-unresolved-free-book-read",
 ]);
 

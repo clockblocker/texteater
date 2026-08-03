@@ -37,12 +37,13 @@ const expectedEvaluationIds = [
 ] as const;
 
 describe("Phraseme/Collocation route-local corpus", () => {
-	test("keeps four demonstrations and 20 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(27);
+	test("keeps five demonstrations and 20 disjoint held-out cases", () => {
+		expect(corpus.all().ids).toHaveLength(28);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-coll-decision-present-full",
 			"grammar-de-coll-frage-citation",
 			"grammar-de-coll-verfuegung-present-full",
+			"grammar-de-coll-anerkennung-participle-typo-full",
 			"grammar-de-coll-unresolved-free-book-read",
 		]);
 		expect(evaluation.ids).toEqual(expectedEvaluationIds);
@@ -50,7 +51,7 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			collocationGrammaticalResolutionExperiment.evaluation,
 		);
 		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
+		expect(demonstrations.union(evaluation).ids).toHaveLength(25);
 		expect(corpus.all().ids.some((id) => /-(?:demo|eval)-/u.test(id))).toBe(
 			false,
 		);
@@ -87,6 +88,12 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		expect(prompt).toContain("Core Features are exactly {}");
 		expect(prompt).toContain("no proven positive Partial policy");
 		expect(prompt).toContain("a present canonical member is unmarked");
+		expect(prompt).toMatch(
+			/Unmarked arguments and modifiers may intervene between marked\s+members/u,
+		);
+		expect(prompt).toMatch(
+			/A determiner in the settled\s+canonicalForm is a canonical member/u,
+		);
 		expect(prompt).toContain("Never borrow grammatical features");
 		expect(prompt).toContain("A marked support verb alone");
 		expect(prompt).toContain(
@@ -95,6 +102,7 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		expect(prompt).toContain("<TARGET>trifft</TARGET>");
 		expect(prompt).toContain("<TARGET>Frage</TARGET>");
 		expect(prompt).toContain("<TARGET>Verfügung</TARGET>");
+		expect(prompt).toContain("<TARGET>Anerkenung</TARGET>");
 		expect(prompt).toContain("<TARGET>Buch</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Antrag</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Löffel</TARGET>");

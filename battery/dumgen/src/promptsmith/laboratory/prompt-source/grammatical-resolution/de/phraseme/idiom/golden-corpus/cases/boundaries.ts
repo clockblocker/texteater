@@ -20,6 +20,19 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				"de-idiom-boundary:literal-reading-ins-gras",
 			],
 		},
+		"grammar-de-idiom-unresolved-grass-underselected-without-head": {
+			input: {
+				markedContext:
+					"Nach langer Krankheit biss der Bösewicht <TARGET>ins</TARGET> <TARGET>Gras</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The context clearly realizes the idiomatic meaning, but the contextual Inflection omits its finite verbal head biss from the selected members and must not borrow that head from unselected context.",
+			contaminationKeys: [
+				"de-idiom-lemma:ins-gras-beissen",
+				"de-idiom-boundary:underselection-without-head-ins-gras",
+			],
+		},
 		"grammar-de-idiom-unresolved-underselected-without-head": {
 			input: {
 				markedContext:
@@ -30,7 +43,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				"A contextual Inflection Surface must select its inflecting verbal head; the route must not borrow head grammar from unselected context.",
 			contaminationKeys: [
 				"de-idiom-lemma:sich-ins-faeustchen-lachen",
-				"de-idiom-boundary:underselection-without-head",
+				"de-idiom-boundary:underselection-without-head-faeustchen",
 			],
 		},
 		"grammar-de-idiom-provisional-faeustchen-underselected-head": {
@@ -90,7 +103,23 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 			idealOutput: unresolved,
 			explanation:
 				"The complete anonymous generalizing saying belongs to Proverb, even though it is figurative.",
-			contaminationKeys: ["de-idiom-boundary:proverb"],
+			contaminationKeys: [
+				"de-proverb:morgenstund-hat-gold-im-mund",
+				"de-idiom-boundary:proverb-morgenstund",
+			],
+		},
+		"grammar-de-idiom-unresolved-proverb-grube": {
+			input: {
+				markedContext:
+					"<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET>, <TARGET>fällt</TARGET> <TARGET>selbst</TARGET> <TARGET>hinein</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The fully selected OWID-backed saying is a complete anonymous generalizing Proverb; its figurative wording does not make it an Idiom.",
+			contaminationKeys: [
+				"de-proverb:wer-anderen-eine-grube-graebt",
+				"de-idiom-boundary:proverb-grube",
+			],
 		},
 		"grammar-de-idiom-unresolved-discourse-formula": {
 			input: {

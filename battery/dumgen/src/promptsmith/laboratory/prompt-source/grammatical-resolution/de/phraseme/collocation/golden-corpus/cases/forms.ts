@@ -51,6 +51,30 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				"Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full.",
 			contaminationKeys: ["de-coll-lemma:verfuegung-stellen"],
 		},
+		"grammar-de-coll-anerkennung-participle-typo-full": {
+			input: {
+				markedContext:
+					"Der Vorschlag hat <TARGET>Anerkenung</TARGET> <TARGET>gefunden</TARGET>.",
+			},
+			idealOutput: inflection({
+				normalizedSurface: "Anerkennung gefunden",
+				canonicalForm: "Anerkennung finden",
+				memberOrthographies: ["Typo", "Standard"],
+				inflectionalFeatures: {
+					aspect: null,
+					gender: null,
+					mood: null,
+					number: null,
+					person: null,
+					tense: null,
+					verbForm: "Part",
+					voice: null,
+				},
+			}),
+			explanation:
+				"The established two-member Funktionsverbgefüge remains Resolved when one marked member has a repairable typo and the support verb is Partizip II; the unmarked auxiliary contributes no Surface member or tense.",
+			contaminationKeys: ["de-coll-lemma:anerkennung-finden"],
+		},
 		"grammar-de-coll-antrag-present-full": {
 			input: {
 				markedContext:

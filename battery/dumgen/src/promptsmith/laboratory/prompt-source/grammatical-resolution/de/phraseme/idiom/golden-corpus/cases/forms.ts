@@ -22,6 +22,36 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				"The globally figurative verbal idiom is complete despite discontinuous sentence order; its Surface follows marked textual order.",
 			contaminationKeys: ["de-idiom-lemma:flinte-ins-korn-werfen"],
 		},
+		"grammar-de-idiom-flinte-participle-typo-full": {
+			input: {
+				markedContext:
+					"Nach der Niederlage hat die Trainerin <TARGET>die</TARGET> <TARGET>Flintte</TARGET> <TARGET>ins</TARGET> <TARGET>Korn</TARGET> <TARGET>geworfen</TARGET>.",
+			},
+			idealOutput: inflection({
+				normalizedSurface: "die Flinte ins Korn geworfen",
+				canonicalForm: "die Flinte ins Korn werfen",
+				memberOrthographies: [
+					"Standard",
+					"Typo",
+					"Standard",
+					"Standard",
+					"Standard",
+				],
+				inflectionalFeatures: {
+					aspect: null,
+					gender: null,
+					mood: null,
+					number: null,
+					person: null,
+					tense: null,
+					verbForm: "Part",
+					voice: null,
+				},
+			}),
+			explanation:
+				"The complete figurative Idiom has a selected Partizip II head and one unambiguous member typo; the typo is repaired while the selected participle, not its unmarked auxiliary, determines verbForm Part.",
+			contaminationKeys: ["de-idiom-lemma:flinte-ins-korn-werfen"],
+		},
 		"grammar-de-idiom-grass-citation": {
 			input: {
 				markedContext:

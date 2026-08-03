@@ -92,16 +92,23 @@ bun test tests/internal/grammatical-resolution-fusion.test.ts \
   tests/internal/grammatical-resolution-fusion-runner.test.ts
 ```
 
-Live evidence is required before issue #52 can close: at least 15 attempted
-held-outs, an 80% score, zero execution/provider errors, and a classification
-with a non-empty explanation for every scored miss. The configured project
-currently receives HTTP 403 for `gpt-5.6-luna`, so evidence is access-blocked
-and the threshold is not met. Once Luna access is available, start the bounded
-run from `battery/dumgen` with:
+Final evidence requires at least 15 attempted held-outs, an 80% score, zero
+execution/provider errors, and a classification with a non-empty explanation
+for every scored miss. The current finalized evidence is the 20-case
+`gpt-5.6-luna` Batch API run at
+`runs/2026-08-03T16-00-15-793Z/results.json`. It scores 18/20 (90%), with zero
+execution errors and zero unclassified misses, so `evidenceThresholdMet` is
+true. The retained record identifies the `openai-batch-v1` transport, Batch and
+file IDs, request counts, and content hashes; per-request latency is null
+because Batch does not expose it. Both misses are accepted model limitations
+in which the model extracted the fused word while ignoring additional marked
+material despite the explicit all-and-only-one-member gate.
+
+The route-local direct runner remains available from `battery/dumgen` with:
 
 ```sh
 bun run prototype:grammatical-resolution-fusion
 ```
 
-Then classify every miss and finalize the retained draft offline with the
-runner's `finalize` mode before recording the final score and reviewer verdict.
+Any new run must classify every miss and finalize the retained draft offline
+with the runner's `finalize` mode.

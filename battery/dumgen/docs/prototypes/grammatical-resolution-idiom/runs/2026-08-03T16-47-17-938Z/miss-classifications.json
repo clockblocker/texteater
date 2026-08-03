@@ -1,0 +1,6 @@
+{
+	"grammar-de-idiom-unresolved-underselected-without-head": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model ignored Gate 2's repeated requirement that a contextual Inflection select its verbal head. It resolved the three selected non-head members and borrowed finite past features from the explicitly unselected contextual verb lachte, despite the prompt requiring Unresolved for exactly that condition."
+	}
+}

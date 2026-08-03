@@ -2,8 +2,8 @@
 
 This route-local prototype covers exactly
 `grammatical-resolution/de/construction/paired-frame`. Its package command and
-generated prompt are registered; catalog/runtime dispatch and live evidence
-remain outstanding.
+generated prompt are registered; catalog/runtime dispatch remains outside this
+route-local prototype.
 The Golden Corpus has 24 cases: four minimized demonstrations and exactly 20
 held-out cases. Promptsmith rejects overlap by case fingerprint and explicit
 contamination key.
@@ -108,9 +108,12 @@ parsed output that differs from the retained raw text and requires every
 scored miss to be classified. Evidence requires at least 15 attempts, at least
 80%, no execution errors, and no unclassified misses.
 
-No live run was completed for this route-local slice. The configured project
-currently receives HTTP 403 for `gpt-5.6-luna`; the required retained evidence
-remains access-blocked, and no fallback model is used.
+The current finalized evidence is the 20-case `gpt-5.6-luna` Batch API run at
+`runs/2026-08-03T16-00-15-793Z/results.json`. It scores 20/20 (100%), with zero
+execution errors, no misses to classify, and `evidenceThresholdMet` true. The
+retained record identifies the `openai-batch-v1` transport, Batch and file IDs,
+request counts, and content hashes; per-request latency is correctly null
+because Batch does not expose it. No fallback model was used.
 
 ## Taxonomy decisions still needing integration review
 

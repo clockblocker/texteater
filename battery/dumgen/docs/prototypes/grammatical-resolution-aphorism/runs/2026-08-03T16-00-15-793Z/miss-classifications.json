@@ -1,0 +1,14 @@
+{
+  "grammar-de-aphorism-streiten": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model produced the exact decision, Lemma, and Surface but emitted twelve memberOrthographies values for eleven validated TARGET members, despite the prompt's explicit one-value-per-member rule."
+  },
+  "grammar-de-aphorism-casing-menschen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model correctly repaired the initial casing and the normalized Surface, but inserted source punctuation into canonicalForm and emitted fifteen memberOrthographies values for fourteen validated TARGET members despite explicit punctuation-exclusion and cardinality rules."
+  },
+  "grammar-de-aphorism-unresolved-partial": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved only the three marked opening words even though the remaining unmarked clause visibly completes the Aphorism; the prompt explicitly makes partial target scope decisive for Unresolved."
+  }
+}

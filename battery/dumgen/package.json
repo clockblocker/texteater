@@ -41,6 +41,7 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run generate:readme && bun run build",
 		"prototype:grammatical-resolution-aphorism": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-aphorism/run.ts",
+		"prototype:grammatical-resolution-batch": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-batch/run.ts",
 		"prototype:grammatical-resolution-adjective": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-adjective/run.ts",
 		"prototype:grammatical-resolution-adposition": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-adposition/run.ts",
 		"prototype:grammatical-resolution-adverb": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-adverb/run.ts",

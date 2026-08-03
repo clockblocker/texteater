@@ -42,20 +42,31 @@ const expectedEvaluationIds = [
 ] as const;
 
 describe("Phraseme/Idiom route-local corpus", () => {
-	test("keeps four minimized demonstrations and 20 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(28);
+	test("keeps five minimized demonstrations and 20 disjoint held-out cases", () => {
+		expect(corpus.all().ids).toHaveLength(31);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-idiom-flinte-past-full",
+			"grammar-de-idiom-flinte-participle-typo-full",
 			"grammar-de-idiom-grass-citation",
 			"grammar-de-idiom-woelfe-past-partial",
-			"grammar-de-idiom-unresolved-literal-grass",
+			"grammar-de-idiom-unresolved-proverb-grube",
 		]);
 		expect(evaluation.ids).toEqual(expectedEvaluationIds);
 		expect(evaluation).toBe(
 			idiomGrammaticalResolutionExperiment.evaluation,
 		);
 		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
+		expect(demonstrations.union(evaluation).ids).toHaveLength(25);
+		expect(
+			corpus.all().difference(demonstrations.union(evaluation)).ids,
+		).toEqual([
+			"grammar-de-idiom-unresolved-literal-grass",
+			"grammar-de-idiom-unresolved-grass-underselected-without-head",
+			"grammar-de-idiom-provisional-faeustchen-underselected-head",
+			"grammar-de-idiom-unresolved-separable-verb",
+			"grammar-de-idiom-unresolved-mixed-occurrences",
+			"grammar-de-idiom-unresolved-two-occurrences",
+		]);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"forms",
 			"boundaries",
@@ -84,36 +95,102 @@ describe("Phraseme/Idiom route-local corpus", () => {
 
 	test("assembles the semantic boundary, Partial tension, and selected-head policy", () => {
 		const prompt = assembleSystemPrompt(promptSource);
+		const normalizedPrompt = prompt.replaceAll(/\s+/gu, " ");
+		expect(normalizedPrompt).toContain(
+			"Apply these gates in order and stop at the first failure",
+		);
 		expect(prompt).toContain("conventional global or figurative meaning");
+		expect(normalizedPrompt).toContain(
+			"An independently enacted greeting is always DiscourseFormula",
+		);
+		expect(normalizedPrompt).toContain(
+			"nonverbal Citation allowance never overrides this route gate",
+		);
+		expect(normalizedPrompt).toContain(
+			"A verb-plus-noun shape alone does not make a Collocation",
+		);
 		expect(prompt).toContain("Idiom Core Features are exactly {}");
-		expect(prompt).toContain(
+		expect(normalizedPrompt).toContain(
 			"only authoritative positive Partial evidence",
 		);
-		expect(prompt).toContain("Do\nnot generalize that one example");
+		expect(normalizedPrompt).toContain(
+			"Do not generalize that one example",
+		);
 		expect(prompt).toContain("include the inflecting\nverbal head");
+		expect(normalizedPrompt).toContain(
+			"an omitted contextual verbal head forces Unresolved",
+		);
+		expect(normalizedPrompt).toContain(
+			"An unambiguous spelling error does not fail the route or fixed-member gate",
+		);
+		expect(normalizedPrompt).toContain(
+			"For a contextual clause, inspect the selected members themselves before using surrounding grammar",
+		);
+		expect(normalizedPrompt).toContain(
+			"Determine verbForm from the selected verbal member itself before assigning clause-level features",
+		);
+		expect(normalizedPrompt).toContain(
+			"Only a selected finite verb licenses verbForm Fin",
+		);
 		expect(prompt).toContain(
 			"normalizedSurface contains only normalized selected",
 		);
+		expect(normalizedPrompt).toContain(
+			"unmarked infinitival zu never appears in normalizedSurface",
+		);
 		expect(prompt).toContain("Konjunktiv I receives tense Pres");
 		expect(prompt).toContain("Konjunktiv II receives tense Past");
+		expect(normalizedPrompt).toContain(
+			"singular second-person imperative has number Sing and person 2",
+		);
+		expect(normalizedPrompt).toContain(
+			"A marked Partizip II remains verbForm Part",
+		);
 		expect(prompt).toContain("imperative Blase\nnormalizes to blase");
-		expect(prompt).toContain("<TARGET>Flinte</TARGET>");
+		expect(normalizedPrompt).toContain(
+			"A Typo repair does not make Surface spelling Variant",
+		);
+		expect(prompt).toContain("<TARGET>Flintte</TARGET>");
+		expect(prompt).toContain("<TARGET>warf</TARGET>");
 		expect(prompt).toContain("<TARGET>beißen</TARGET>");
 		expect(prompt).toContain("<TARGET>heulte</TARGET>");
 		expect(prompt).toContain("<TARGET>Gras</TARGET>");
+		expect(prompt).not.toContain(
+			"Nach langer Krankheit biss der Bösewicht <TARGET>ins</TARGET> <TARGET>Gras</TARGET>.",
+		);
+		expect(prompt).not.toContain(
+			"Nach dem verlorenen Duell musste der Schurke <TARGET>ins</TARGET> <TARGET>Gras</TARGET> beißen.",
+		);
+		expect(prompt).not.toContain("Das Kalb <TARGET>biss</TARGET>");
+		expect(prompt).toContain(
+			"<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET>, <TARGET>fällt</TARGET> <TARGET>selbst</TARGET> <TARGET>hinein</TARGET>.",
+		);
+		expect(prompt).not.toContain("<TARGET>Morgenstund</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Fäustchen</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Löffel</TARGET>");
 	});
 
 	test("pins Full, Citation, and repository-authoritative Partial payloads", () => {
 		expect(
-			corpus.cases["grammar-de-idiom-flinte-past-full"]?.idealOutput,
+			corpus.cases["grammar-de-idiom-flinte-participle-typo-full"]
+				?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				memberOrthographies: [
+					"Standard",
+					"Typo",
+					"Standard",
+					"Standard",
+					"Standard",
+				],
 				surface: {
-					normalizedSurface: "warf die Flinte ins Korn",
+					normalizedSurface: "die Flinte ins Korn geworfen",
 					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
+					inflectionalFeatures: {
+						verbForm: "Part",
+						tense: null,
+					},
 				},
 				lemma: {
 					canonicalForm: "die Flinte ins Korn werfen",
@@ -121,6 +198,10 @@ describe("Phraseme/Idiom route-local corpus", () => {
 				},
 			},
 		});
+		expect(
+			corpus.cases["grammar-de-idiom-flinte-participle-typo-full"]
+				?.contaminationKeys,
+		).toEqual(["de-idiom-lemma:flinte-ins-korn-werfen"]);
 		expect(
 			corpus.cases["grammar-de-idiom-grass-citation"]?.idealOutput,
 		).toMatchObject({
@@ -146,6 +227,61 @@ describe("Phraseme/Idiom route-local corpus", () => {
 			);
 		});
 		expect(partialIds).toEqual(["grammar-de-idiom-woelfe-past-partial"]);
+	});
+
+	test("keeps selected-head probes stimulus-distinct and corpus-only", () => {
+		const corpusOnlyProbe =
+			corpus.cases[
+				"grammar-de-idiom-unresolved-grass-underselected-without-head"
+			];
+		const heldOut =
+			corpus.cases[
+				"grammar-de-idiom-unresolved-underselected-without-head"
+			];
+		expect(corpusOnlyProbe?.idealOutput).toEqual({
+			decision: "Unresolved",
+			resolution: null,
+		});
+		expect(corpusOnlyProbe?.input.markedContext).toBe(
+			"Nach langer Krankheit biss der Bösewicht <TARGET>ins</TARGET> <TARGET>Gras</TARGET>.",
+		);
+		expect(corpusOnlyProbe?.input.markedContext).not.toBe(
+			"Nach dem verlorenen Duell musste der Schurke <TARGET>ins</TARGET> <TARGET>Gras</TARGET> beißen.",
+		);
+		expect(corpusOnlyProbe?.contaminationKeys).toEqual([
+			"de-idiom-lemma:ins-gras-beissen",
+			"de-idiom-boundary:underselection-without-head-ins-gras",
+		]);
+		expect(heldOut?.contaminationKeys).toEqual([
+			"de-idiom-lemma:sich-ins-faeustchen-lachen",
+			"de-idiom-boundary:underselection-without-head-faeustchen",
+		]);
+		expect(heldOut?.input.markedContext).toBe(
+			"Sie lachte <TARGET>sich</TARGET> <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET>.",
+		);
+		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
+	});
+
+	test("demonstrates a source-backed Proverb boundary without held-out leakage", () => {
+		const demonstration =
+			corpus.cases["grammar-de-idiom-unresolved-proverb-grube"];
+		const heldOut = corpus.cases["grammar-de-idiom-unresolved-proverb"];
+		expect(demonstration?.idealOutput).toEqual({
+			decision: "Unresolved",
+			resolution: null,
+		});
+		expect(demonstration?.input.markedContext).toBe(
+			"<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET>, <TARGET>fällt</TARGET> <TARGET>selbst</TARGET> <TARGET>hinein</TARGET>.",
+		);
+		expect(demonstration?.contaminationKeys).toEqual([
+			"de-proverb:wer-anderen-eine-grube-graebt",
+			"de-idiom-boundary:proverb-grube",
+		]);
+		expect(heldOut?.contaminationKeys).toEqual([
+			"de-proverb:morgenstund-hat-gold-im-mund",
+			"de-idiom-boundary:proverb-morgenstund",
+		]);
+		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
 	});
 
 	test("pins finite, imperative, subjunctive, infinitive, and participle feature shapes", () => {

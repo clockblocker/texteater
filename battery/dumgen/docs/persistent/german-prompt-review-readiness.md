@@ -6,20 +6,14 @@ Audit date: 2026-08-03. Scope: Wayfinder issue
 
 ## Verdict
 
-**NO-GO for detailed maintainer review.** Nineteen of the 24 scoped prompts
-have retained, finalized evidence at or above 80%. Five current routes still
-need a successful bounded run under the current `gpt-5.6-luna` / `none` policy:
+**GO for detailed maintainer review.** All 24 scoped prompts have retained,
+finalized evidence at or above 80%, with no execution errors or unclassified
+misses.
 
-- `grammatical-resolution/de/phraseme/aphorism`
-- `grammatical-resolution/de/phraseme/collocation`
-- `grammatical-resolution/de/phraseme/idiom`
-- `grammatical-resolution/de/construction/fusion`
-- `grammatical-resolution/de/construction/paired-frame`
-
-The configured OpenAI project does not currently have access to that model. Do
-not substitute a different model or reinterpret an older diagnostic as current
-evidence. The successful runs below predate the policy change and retain their
-recorded `gpt-5-nano` model and reasoning metadata; they have not been relabeled.
+The five newest artifacts use the current `gpt-5.6-luna` / `none` policy and
+OpenAI Batch transport. The older 19 passing artifacts predate that policy
+change and retain their recorded `gpt-5-nano` model and reasoning metadata;
+they have not been relabeled or represented as Luna runs.
 
 The human-review queue for policy questions is the
 [Prompt Logbook](./prompt-logbook.md).
@@ -56,13 +50,13 @@ artifacts, not issue-summary prose.
 | Lexeme `SYM` | 29 / 4 / 18 | [17/18 (94.4%)](../prototypes/grammatical-resolution-symbol/runs/2026-08-03T12-55-20-295Z/results.json) | [Yes](../prototypes/grammatical-resolution-symbol/runs/2026-08-03T12-55-20-295Z/miss-classifications.json) |
 | Lexeme `VERB` | 31 / 4 / 20 | [16/20 (80.0%)](../prototypes/grammatical-resolution-verb/runs/2026-08-03T13-14-03-973Z/results.json) | [Yes](../prototypes/grammatical-resolution-verb/runs/2026-08-03T13-14-03-973Z/miss-classifications.json) |
 | Lexeme `X` | 26 / 4 / 19 | [19/19 (100%)](../prototypes/grammatical-resolution-other/runs/2026-08-03T12-55-20-418Z/results.json) | No misses |
-| Phraseme `Aphorism` | 26 / 4 / 20 | **Missing.** Latest historical diagnostic: [13/20 (65.0%)](../prototypes/grammatical-resolution-aphorism/runs/2026-08-03T14-25-00-963Z/results.json) | [Diagnostic misses classified](../prototypes/grammatical-resolution-aphorism/runs/2026-08-03T14-25-00-963Z/miss-classifications.json); threshold not met |
-| Phraseme `Collocation` | 27 / 4 / 20 | **Missing.** Historical [10/20 diagnostic](../prototypes/grammatical-resolution-collocation/runs/2026-08-03T14-10-54-907Z/results.json) is unfinalized and has one execution error | No finalized evidence |
+| Phraseme `Aphorism` | 26 / 4 / 20 | [17/20 (85.0%)](../prototypes/grammatical-resolution-aphorism/runs/2026-08-03T16-00-15-793Z/results.json) | [Yes](../prototypes/grammatical-resolution-aphorism/runs/2026-08-03T16-00-15-793Z/miss-classifications.json) |
+| Phraseme `Collocation` | 28 / 5 / 20 | [16/20 (80.0%)](../prototypes/grammatical-resolution-collocation/runs/2026-08-03T16-12-57-637Z/results.json) | [Yes](../prototypes/grammatical-resolution-collocation/runs/2026-08-03T16-12-57-637Z/miss-classifications.json) |
 | Phraseme `DiscourseFormula` | 29 / 4 / 20 | [16/20 (80.0%)](../prototypes/grammatical-resolution-discourse-formula/runs/2026-08-03T14-31-39-814Z/results.json) | [Yes](../prototypes/grammatical-resolution-discourse-formula/runs/2026-08-03T14-31-39-814Z/miss-classifications.json) |
-| Phraseme `Idiom` | 28 / 4 / 20 | **Missing.** No completed retained run | Not applicable yet |
+| Phraseme `Idiom` | 31 / 5 / 20 | [19/20 (95.0%)](../prototypes/grammatical-resolution-idiom/runs/2026-08-03T16-47-17-938Z/results.json) | [Yes](../prototypes/grammatical-resolution-idiom/runs/2026-08-03T16-47-17-938Z/miss-classifications.json) |
 | Phraseme `Proverb` | 26 / 4 / 20 | [19/20 (95.0%)](../prototypes/grammatical-resolution-proverb/runs/2026-08-03T14-47-28-312Z/results.json) | [Yes](../prototypes/grammatical-resolution-proverb/runs/2026-08-03T14-47-28-312Z/miss-classifications.json) |
-| Construction `Fusion` | 25 / 4 / 20 | **Missing.** No completed retained run | Not applicable yet |
-| Construction `PairedFrame` | 24 / 4 / 20 | **Missing.** No completed retained run | Not applicable yet |
+| Construction `Fusion` | 25 / 4 / 20 | [18/20 (90.0%)](../prototypes/grammatical-resolution-fusion/runs/2026-08-03T16-00-15-793Z/results.json) | [Yes](../prototypes/grammatical-resolution-fusion/runs/2026-08-03T16-00-15-793Z/miss-classifications.json) |
+| Construction `PairedFrame` | 24 / 4 / 20 | [20/20 (100%)](../prototypes/grammatical-resolution-paired-frame/runs/2026-08-03T16-00-15-793Z/results.json) | No misses |
 
 ## Scope guardrails
 
@@ -89,13 +83,16 @@ artifacts, not issue-summary prose.
   not 23/23; and INTJ is **15/18**, not 18/18. All three actual artifacts still
   meet the 80% threshold. The summary prose should be corrected before final
   handoff.
-- Aphorism's latest finalized diagnostic is below threshold. Collocation's
-  diagnostic cannot be finalized because of an execution error. Idiom, Fusion,
-  and PairedFrame have no completed run. These five routes are the only current
-  readiness blockers.
-- The retained passing artifacts use the historical model/reasoning policy.
-  Current runner configuration is Luna/none, but no successful Luna run should
-  be claimed until model access is available.
+- The five current-policy artifacts retain `transport: "openai-batch-v1"`,
+  Batch and file IDs, request counts, input/output JSONL hashes, the endpoint,
+  and the 24-hour completion window. Their timestamps are the Batch job's
+  created/completed wall-clock times; they do not claim per-request latency.
+  Aphorism, Fusion, and PairedFrame came from one 100-request Batch;
+  Collocation came from a later 40-request Batch; and the final Idiom evidence
+  came from a 20-request Batch. Every cited Batch reports zero failed requests.
+- The other 19 retained passing artifacts use the historical model/reasoning
+  policy. This mixed-policy evidence set is explicit review context, not a
+  claim that those older prompts have been rerun under Luna/none.
 - This index establishes laboratory prompt evidence only. Catalog/runtime
   integration is owned by issue #54 and is deliberately outside this audit.
 
@@ -112,11 +109,13 @@ Sources.
 
 Verification on 2026-08-03:
 
-- the structural audit imported all 24 routes and passed every corpus,
-  held-out-count, selection-disjointness, and demo-smaller-than-evaluation
-  assertion;
-- the artifact audit validated 19 finalized threshold artifacts and their miss
-  sidecars;
-- the scoped Grammatical Resolution and Reading runner suite passed 316 tests
-  across 49 files with zero failures;
-- all 41 local links in this index resolve, and `git diff --check` passes.
+- the structural audit imported all 24 current Prompt Sources and runner
+  selections (722 Golden Cases, 115 demonstrations, and 460 held-outs) and
+  passed every held-out-count, selection-uniqueness, selection-disjointness,
+  and demo-smaller-than-evaluation assertion;
+- the artifact audit validated 24 finalized threshold artifacts, with zero
+  execution errors and zero unclassified misses; every scored miss has a
+  resolving sidecar entry (54 classified misses total), and all five Batch
+  artifacts passed their retained transport-provenance checks;
+- the full Dumgen suite passed 380 tests across 54 files with zero failures;
+- all 47 local links in this index resolve, and `git diff --check` passes.

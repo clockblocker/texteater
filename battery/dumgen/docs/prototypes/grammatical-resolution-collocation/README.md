@@ -2,7 +2,7 @@
 
 This route-local vertical slice evaluates the exact
 `grammatical-resolution/de/phraseme/collocation` Prompt Source. Its Golden
-Corpus has 27 cases: four necessary demonstrations, 20 authoritative disjoint
+Corpus has 28 cases: five necessary demonstrations, 20 authoritative disjoint
 held-out cases, and three alternant/member-identity cases.
 
 ## Initial policy
@@ -27,10 +27,12 @@ support verb is also Unresolved because its Surface cannot borrow inflectional
 features from another occurrence. Every Resolved output has at least two
 aligned `memberOrthographies` values.
 
-The four demonstrations have separate burdens: `eine Entscheidung treffen`
+The five demonstrations have separate burdens: `eine Entscheidung treffen`
 shows full contextual Inflection and three-member orthography alignment; `eine
 Frage stellen` shows Citation; `zur Verfügung stellen` shows a discontinuous
-but Full contextual realization with every canonical member marked; and `ein
+but Full contextual realization with every canonical member marked;
+`Anerkennung finden` jointly shows a two-member inventory, typo repair, and
+Partizip-II morphology without borrowing tense from its auxiliary; and `ein
 Buch lesen` establishes the free-combination boundary. The held-out suite
 covers finite present and past, imperative, infinitive, Partizip II, Citation,
 typo repair, intervening modifiers, and the Idiom, Construction, verb-only,
@@ -54,8 +56,8 @@ Language's grammis resources rather than inferred from plausible co-occurrence:
   `zum Ende kommen` families.
 - [IDS Nominalisierungsverb und Funktionsverb](https://grammis.ids-mannheim.de/systematische-grammatik/514)
   explicitly lists `eine Frage stellen`, `eine Vereinbarung treffen`, `zur
-  Kenntnis nehmen`, and `Abbitte leisten`, and documents restrictions on
-  determiner, attribute, and number variation.
+  Kenntnis nehmen`, `Abbitte leisten`, and `Anerkennung finden`, and documents
+  restrictions on determiner, attribute, and number variation.
 - The IDS [`stellen` valency entry](https://grammis.ids-mannheim.de/verbvalenz/400931)
   explicitly identifies `einen Antrag stellen` and `zur Verfügung stellen` as
   Funktionsverbgefüge.
@@ -70,15 +72,19 @@ Language's grammis resources rather than inferred from plausible co-occurrence:
 
 ## Bounded evidence runner
 
-The runner makes one serial call per held-out case with `gpt-5.6-luna`, no
-reasoning effort, no retries, `store: false`, and a 32,768-token output cap. It
-preflights 15–20 cases before constructing a provider client. Retained evidence
-binds the ordered Golden Cases, assembled prompt and schema hashes, model,
-reasoning policy, and runner version. Provider output text and complete response
-metadata survive parse or schema failures. Imports, tests, checks, and offline
-finalization make no model calls. Finalization reparses every successful raw
-provider output with the current output schema and requires exact equality with
-the retained parsed output before recomputing diagnostics.
+The evidence tooling supports direct Responses calls and OpenAI Batch transport.
+Both modes use `gpt-5.6-luna`, no reasoning effort, no retries, `store: false`,
+and a 32,768-token output cap, and preflight 15–20 cases before any provider
+work. Retained evidence binds the ordered Golden Cases, assembled prompt and
+schema hashes, model, reasoning policy, runner version, and transport. Batch
+evidence additionally retains the Batch and file IDs, request counts,
+submission and JSONL hashes, endpoint, completion window, and provider
+timestamps; per-request latency remains null because Batch does not expose it.
+Provider output text and complete response metadata survive parse or schema
+failures. Imports, tests, checks, and offline finalization make no model calls.
+Finalization reparses every successful raw provider output with the current
+output schema and requires exact equality with the retained parsed output before
+recomputing diagnostics.
 
 An explicit live run from `battery/dumgen` can later use:
 
@@ -101,3 +107,12 @@ Finalization rejects stale bindings, recomputes every diagnostic and score,
 rejects provider errors, and requires every scored miss classification.
 Evidence qualifies only with at least 15 attempts, at least 80% exact accuracy,
 zero execution errors, and zero unclassified misses.
+
+## Final evidence
+
+The qualifying remediation run is
+[`runs/2026-08-03T16-12-57-637Z/results.json`](runs/2026-08-03T16-12-57-637Z/results.json).
+It scored 16/20 (80%) with zero execution errors and four independently
+classified model limitations. The run used the `openai-batch-v1` transport with
+`gpt-5.6-luna`, reasoning effort `none`, `store: false`, and complete Batch
+provenance retained in the result.

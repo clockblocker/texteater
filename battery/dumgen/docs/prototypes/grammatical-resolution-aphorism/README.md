@@ -2,7 +2,7 @@
 
 This route-local prototype covers exactly
 `grammatical-resolution/de/phraseme/aphorism`. It adds no catalog or runtime
-wiring and retains no live evidence. The Golden Corpus has 26 cases: four
+wiring. The Golden Corpus has 26 cases: four
 necessary demonstrations, 20 explicitly pinned held-out cases, and two
 corpus-only authorship boundaries. Demonstration and
 evaluation selections are disjoint by case, normalized input, and explicit
@@ -43,7 +43,7 @@ Form, and the empty Core Feature object. It canonicalizes only an all-null
 `surfaceFeatures` bag to `null`, matching the route-local codec.
 
 The bounded runner makes one serial `gpt-5.6-luna` call per held-out case with
-no reasoning, no retries, `store: false`, and a 2,048-token route-local response
+no reasoning, no retries, `store: false`, and a 32,768-token route-local response
 budget. Import and preflight make no provider call. Draft evidence is written
 atomically and cannot meet the evidence threshold until offline finalization.
 The retained schema binds the exact prompt, schemas, ordered case IDs, model
@@ -52,6 +52,16 @@ retained even when response parsing fails. Runs with an execution/provider
 error cannot be finalized. For successful attempts, offline finalization
 reparses `rawOutputText` through the current output schema and exact-compares it
 with the retained parsed `output`; a mismatch is rejected before scoring.
+
+The current finalized evidence is the 20-case `gpt-5.6-luna` Batch API run at
+`runs/2026-08-03T16-00-15-793Z/results.json`. It scores 17/20 (85%), with zero
+execution errors and zero unclassified misses, so `evidenceThresholdMet` is
+true. The retained record identifies the `openai-batch-v1` transport, Batch and
+file IDs, request counts, and content hashes; per-request latency is correctly
+left null because Batch does not expose it. The three misses are classified as
+accepted model limitations: two member-cardinality mistakes (one also retained
+punctuation in `canonicalForm`) and one incorrect resolution of partial target
+scope.
 
 A deliberate live run can be started from `battery/dumgen` through the package
 command or by invoking the runner directly with an explicit environment file.

@@ -1,0 +1,1312 @@
+{
+  "runnerVersion": "grammatical-resolution-fusion-v2",
+  "route": "grammatical-resolution/de/construction/fusion",
+  "transport": "openai-batch-v1",
+  "batchProvenance": {
+    "batchId": "batch_6a70bb12264c8190a67deb3eea8e5b09",
+    "inputFileId": "file-6qnEnS9VCrzT7cpwNVMNE2",
+    "outputFileId": "file-FXiR42tx6fFYwEMB5vJyk3",
+    "errorFileId": null,
+    "submissionManifestSha256": "e710f21d9800dacfad522284db98779923aa7ed018fedb1b1bbb623dd609bff3",
+    "inputJsonlSha256": "14056e989c74d1908dfce939265997829356b2afe8c198776ba8e66c8f0e16e8",
+    "outputJsonlSha256": "e32b2b66ed48cb3ea624956a57280db79cd5f1bec43e3cb9bd02c76a1e04a7f0",
+    "errorJsonlSha256": null,
+    "endpoint": "/v1/responses",
+    "completionWindow": "24h",
+    "createdAt": "2026-08-03T16:00:18.000Z",
+    "completedAt": "2026-08-03T16:03:22.000Z",
+    "requestCounts": {
+      "total": 100,
+      "completed": 100,
+      "failed": 0
+    }
+  },
+  "startedAt": "2026-08-03T16:00:18.000Z",
+  "completedAt": "2026-08-03T16:03:22.000Z",
+  "finalizedAt": "2026-08-03T16:06:30.933Z",
+  "model": "gpt-5.6-luna",
+  "promptMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 16384,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptSha256": "d4e1aebaaa98c41829c608fdfbf917c524a57ff86536eb89d8ab3b1d9f95e6da",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "913969530c8c5df0e223583097d43c7f47a73b2ff8e4a69f139ba56749b87f69",
+  "evaluationCaseIds": [
+    "grammar-de-fusion-am",
+    "grammar-de-fusion-beim-typo",
+    "grammar-de-fusion-vom",
+    "grammar-de-fusion-ins",
+    "grammar-de-fusion-ans",
+    "grammar-de-fusion-aufs",
+    "grammar-de-fusion-fuers",
+    "grammar-de-fusion-ums",
+    "grammar-de-fusion-durchs",
+    "grammar-de-fusion-uebers",
+    "grammar-de-fusion-beim-initial",
+    "grammar-de-fusion-unresolved-adp-mit",
+    "grammar-de-fusion-unresolved-am-superlative",
+    "grammar-de-fusion-unresolved-overbroad-noun",
+    "grammar-de-fusion-unresolved-two-fusions",
+    "grammar-de-fusion-unresolved-mixed-fusion-adp",
+    "grammar-de-fusion-unresolved-valid-ihm",
+    "grammar-de-fusion-unresolved-idiom-whole",
+    "grammar-de-fusion-unresolved-discourse-whole",
+    "grammar-de-fusion-unresolved-paired-frame"
+  ],
+  "boundedCalls": 20,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 0.9,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-fusion-am",
+      "input": {
+        "markedContext": "Wir warten <TARGET>am</TARGET> Bahnhof."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "am",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "am",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "am",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "am",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"am\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"am\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00adc609dc5fa805016a70bb99a360819398b0b7c95f815eaf",
+      "usage": {
+        "input_tokens": 1190,
+        "input_tokens_details": {
+          "cache_write_tokens": 1187,
+          "cached_tokens": 0
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1258
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-beim-typo",
+      "input": {
+        "markedContext": "Er half <TARGET>beimm</TARGET> Umzug."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "beim",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "beim",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "beim",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "beim",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"beim\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Typo\"],\"surface\":{\"normalizedSurface\":\"beim\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d791b892617b75a016a70bbbe049081938d822dab1a269a78",
+      "usage": {
+        "input_tokens": 1192,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 71,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1263
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-vom",
+      "input": {
+        "markedContext": "Der Brief kommt <TARGET>vom</TARGET> Arzt."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vom",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vom",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vom",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vom",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"vom\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"vom\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09bee6708bf4ccbc016a70bb59af9881968016f487da490792",
+      "usage": {
+        "input_tokens": 1191,
+        "input_tokens_details": {
+          "cache_write_tokens": 1188,
+          "cached_tokens": 0
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1259
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-ins",
+      "input": {
+        "markedContext": "Sie geht <TARGET>ins</TARGET> Haus."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ins",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ins",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ins",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ins",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ins\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ins\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01d63b733d0bc4f1016a70bbb11200819686d322b5d72e159c",
+      "usage": {
+        "input_tokens": 1190,
+        "input_tokens_details": {
+          "cache_write_tokens": 20,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1258
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-ans",
+      "input": {
+        "markedContext": "Wir fahren <TARGET>ans</TARGET> Meer."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ans",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ans",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ans",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ans",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ans\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ans\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01b670157ddf62b6016a70bba95e2081959989bb4d4a84adfc",
+      "usage": {
+        "input_tokens": 1190,
+        "input_tokens_details": {
+          "cache_write_tokens": 20,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1258
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-aufs",
+      "input": {
+        "markedContext": "Die Katze springt <TARGET>aufs</TARGET> Dach."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "aufs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "aufs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "aufs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "aufs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"aufs\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"aufs\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e792aa089edccfd016a70bbb42ce08195bdb3ffbca8881668",
+      "usage": {
+        "input_tokens": 1192,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1260
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-fuers",
+      "input": {
+        "markedContext": "Das Geld ist <TARGET>fürs</TARGET> Essen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "fürs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "fürs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "fürs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "fürs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"fürs\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"fürs\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bcb15c8ce7fc1fd016a70bb9f689481958aa7e376dc12d256",
+      "usage": {
+        "input_tokens": 1192,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1262
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-ums",
+      "input": {
+        "markedContext": "Sie läuft <TARGET>ums</TARGET> Haus."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ums",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ums",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ums",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ums",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ums\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ums\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07f5f88b26834850016a70bbafd1a48195a735045b5ea49037",
+      "usage": {
+        "input_tokens": 1190,
+        "input_tokens_details": {
+          "cache_write_tokens": 20,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1258
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-durchs",
+      "input": {
+        "markedContext": "Wir gehen <TARGET>durchs</TARGET> Tor."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "durchs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "durchs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "durchs",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "durchs",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"durchs\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"durchs\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cc41aeaf939cf9f016a70bb6376e48190bbe55f356152570f",
+      "usage": {
+        "input_tokens": 1191,
+        "input_tokens_details": {
+          "cache_write_tokens": 21,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1261
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-uebers",
+      "input": {
+        "markedContext": "Sie spricht <TARGET>übers</TARGET> Wetter."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "übers",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "übers",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "übers",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "übers",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"übers\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"übers\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00486e8c84f80f4d016a70bbb26dac819790dbfa0dd4eb5f04",
+      "usage": {
+        "input_tokens": 1190,
+        "input_tokens_details": {
+          "cache_write_tokens": 20,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1258
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-beim-initial",
+      "input": {
+        "markedContext": "<TARGET>Beim</TARGET> Lesen vergaß sie die Zeit."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "beim",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "beim",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "beim",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "beim",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"beim\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"beim\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03f95946052eb596016a70bb6657b8819587439e0cbac1e957",
+      "usage": {
+        "input_tokens": 1194,
+        "input_tokens_details": {
+          "cache_write_tokens": 24,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1264
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-adp-mit",
+      "input": {
+        "markedContext": "Sie fährt <TARGET>mit</TARGET> dem Bus."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05b28de1a709eb85016a70bba5ad7c8190b7178052be7875b1",
+      "usage": {
+        "input_tokens": 1191,
+        "input_tokens_details": {
+          "cache_write_tokens": 21,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1213
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-am-superlative",
+      "input": {
+        "markedContext": "Mia läuft <TARGET>am</TARGET> schnellsten."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_073750aebac41ca6016a70bbb523c4819793f83ad704ace466",
+      "usage": {
+        "input_tokens": 1192,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1214
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-overbroad-noun",
+      "input": {
+        "markedContext": "Wir fahren <TARGET>ans</TARGET> <TARGET>Meer</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ans",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ans",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ans\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ans\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_062d46e4fd33b461016a70bb695e548197aaa3e2a61359f742",
+      "usage": {
+        "input_tokens": 1196,
+        "input_tokens_details": {
+          "cache_write_tokens": 26,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1264
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model extracted and resolved ans while ignoring that Meer was also marked. The prompt explicitly requires all and only one marked orthographic Fusion and rejects a larger noun phrase."
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-two-fusions",
+      "input": {
+        "markedContext": "Er war <TARGET>am</TARGET> See und kam <TARGET>vom</TARGET> Bahnhof."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06c057485b39f47a016a70bba7fc548197a65d37b3216aff9f",
+      "usage": {
+        "input_tokens": 1200,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1222
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-mixed-fusion-adp",
+      "input": {
+        "markedContext": "Er ging <TARGET>ins</TARGET> Haus <TARGET>mit</TARGET> Garten."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ins",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ins",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"lemma\":{\"canonicalForm\":\"ins\",\"coreFeatures\":{}},\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ins\",\"realizationCoverage\":\"Full\",\"spelling\":\"Canonical\",\"surfaceFeatures\":null,\"surfaceKind\":\"Citation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04db2503c019e0de016a70bbb7b0188194a30658e900fec107",
+      "usage": {
+        "input_tokens": 1198,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1266
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model extracted and resolved ins while ignoring the separately marked adposition mit. The prompt explicitly rejects material spanning a Fusion and additional marked material."
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-valid-ihm",
+      "input": {
+        "markedContext": "Sie hilft <TARGET>ihm</TARGET> im Haus."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ec233c64f702e4a016a70bb5a3b888193bd5c17d60831ac5e",
+      "usage": {
+        "input_tokens": 1192,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1214
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-idiom-whole",
+      "input": {
+        "markedContext": "Er musste <TARGET>ins</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0649a0183d7e1727016a70bb5d3cb481958ecfc218d20eded1",
+      "usage": {
+        "input_tokens": 1205,
+        "input_tokens_details": {
+          "cache_write_tokens": 35,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1227
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-discourse-whole",
+      "input": {
+        "markedContext": "Sie sagte: „<TARGET>Zum</TARGET> <TARGET>Wohl</TARGET>!“"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03a817b8c7a24baa016a70bb5fb6188194bef2e78a85d1542b",
+      "usage": {
+        "input_tokens": 1199,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1221
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-unresolved-paired-frame",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> mehr, <TARGET>desto</TARGET> besser."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": null,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_052efb43db39102e016a70bb5a48948196a6b44b9a9f50e29e",
+      "usage": {
+        "input_tokens": 1197,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 1167
+        },
+        "output_tokens": 22,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1219
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

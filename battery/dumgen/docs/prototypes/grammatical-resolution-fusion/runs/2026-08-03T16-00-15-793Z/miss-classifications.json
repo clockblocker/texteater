@@ -1,0 +1,10 @@
+{
+  "grammar-de-fusion-unresolved-overbroad-noun": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model extracted and resolved ans while ignoring that Meer was also marked. The prompt explicitly requires all and only one marked orthographic Fusion and rejects a larger noun phrase."
+  },
+  "grammar-de-fusion-unresolved-mixed-fusion-adp": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model extracted and resolved ins while ignoring the separately marked adposition mit. The prompt explicitly rejects material spanning a Fusion and additional marked material."
+  }
+}

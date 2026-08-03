@@ -1,0 +1,18 @@
+{
+  "grammar-de-coll-zustimmung-present-full": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model conservatively returned Unresolved for the source-grounded Zustimmung erteilen support-verb Collocation even though the complete two-member occurrence passes the prompt's route, inventory, and Full-realization gates."
+  },
+  "grammar-de-coll-ende-imperative-full": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model conservatively returned Unresolved for the source-grounded zum Ende kommen Collocation even though all three canonical members are marked and the prompt explicitly defines singular second-person imperative handling."
+  },
+  "grammar-de-coll-unresolved-elliptic-kenntnis": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved the two marked nominal members and invented infinitive morphology even though the support verb is absent from this occurrence and the prompt explicitly forbids completing ellipsis or borrowing grammar from another occurrence."
+  },
+  "grammar-de-coll-unresolved-present-member-unmarked": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved an underselected occurrence after silently dropping the present unmarked determiner einen, despite the prompt's explicit rule that canonical determiners must be marked and that this route has no positive Partial policy."
+  }
+}
