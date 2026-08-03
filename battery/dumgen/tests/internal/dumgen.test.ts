@@ -177,6 +177,39 @@ describe("Dumgen module interface", () => {
 		});
 		expect(calls).toHaveLength(0);
 	});
+
+	test("observes every attempted segmentation prompt when its provider fails", async () => {
+		const promptPaths: string[] = [];
+		let callCount = 0;
+		const sdk: AiSdk = {
+			async structuredGeneration() {
+				callCount += 1;
+				if (callCount === 1) {
+					return { decision: "Accepted", language: "de" } as never;
+				}
+				throw new Error("segmentation provider unavailable");
+			},
+			async unstructuredGeneration() {
+				throw new Error("not used");
+			},
+		};
+		const dumgen = buildDumgen({
+			sdk,
+			onModelExchange(exchange) {
+				if (exchange.phase === "attempted") {
+					promptPaths.push(exchange.promptPath);
+				}
+			},
+		});
+
+		await expect(dumgen.segment("Die Bank")).rejects.toMatchObject({
+			code: "provider-error",
+		});
+		expect(promptPaths).toEqual([
+			"laboratory.intake",
+			"laboratory.segmentation.de",
+		]);
+	});
 });
 
 describe("grammatical resolution", () => {
@@ -244,6 +277,64 @@ describe("grammatical resolution", () => {
 			"laboratory.targetClassification.de.highLevelWholeUnit",
 			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
 		]);
+		const targetExchange = exchanges.find(
+			(exchange) =>
+				exchange.phase === "accepted" &&
+				exchange.promptPath ===
+					"laboratory.targetClassification.de.highLevelWholeUnit",
+		);
+		expect(targetExchange).toMatchObject({
+			phase: "accepted",
+			result: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [2],
+			},
+		});
+	});
+
+	test("keeps projected instrumentation diagnostic-only", async () => {
+		const { sdk } = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+			{ decision: "Resolved", resolution: modelGrammar },
+		]);
+		const source = sentence([{ kind: "ResolvableText", text: "Banken" }]);
+		const dumgen = buildDumgen({
+			sdk,
+			onModelExchange(exchange) {
+				if (
+					exchange.phase === "accepted" &&
+					exchange.promptPath ===
+						"laboratory.grammaticalResolution.de.Lexeme.NOUN"
+				) {
+					const diagnostic = exchange.result as {
+						lemma?: { canonicalForm?: string };
+					};
+					if (diagnostic.lemma) {
+						diagnostic.lemma.canonicalForm = "mutated trace";
+					}
+				}
+			},
+		});
+
+		const result = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		});
+
+		expect(result).toMatchObject({
+			decision: "Resolved",
+			selection: {
+				surface: { lemma: { canonicalForm: "Bank" } },
+			},
+		});
 	});
 
 	test("escapes literal source markers and marks every target member", async () => {
@@ -397,6 +488,101 @@ describe("grammatical resolution", () => {
 			}),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(invalidCount.calls).toHaveLength(2);
+	});
+
+	test("reuses a resolved unit for another member within one instance", async () => {
+		const source = sentence([
+			{ kind: "ResolvableText", text: "Bnak" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Bank" },
+		]);
+		const { calls, sdk } = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+			{
+				decision: "Resolved",
+				resolution: {
+					...modelGrammar,
+					memberOrthographies: ["Typo", "Standard"],
+					surface: {
+						...modelGrammar.surface,
+						normalizedSurface: "Bank Bank",
+						inflectionalFeatures: {
+							case: "Nom",
+							number: "Sing",
+						},
+					},
+				},
+			},
+		]);
+		const dumgen = buildDumgen({ sdk });
+
+		const first = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		});
+		const second = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 2,
+		});
+
+		expect(calls).toHaveLength(2);
+		expect(first).toMatchObject({
+			decision: "Resolved",
+			selection: {
+				clickedSegmentIndex: 0,
+				selectedOrthography: "Typo",
+				surfaceSegmentIndices: [0, 2],
+			},
+		});
+		expect(second).toMatchObject({
+			decision: "Resolved",
+			selection: {
+				clickedSegmentIndex: 2,
+				selectedOrthography: "Standard",
+				surfaceSegmentIndices: [0, 2],
+			},
+		});
+	});
+
+	test("rejects generated grammatical route fields instead of accepting drift", async () => {
+		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
+		const drifting = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+			{
+				decision: "Resolved",
+				resolution: {
+					...modelGrammar,
+					lemma: {
+						...modelGrammar.lemma,
+						language: "en",
+						family: "Phraseme",
+						kind: "Idiom",
+					},
+				},
+			},
+		]);
+
+		await expect(
+			buildDumgen({ sdk: drifting.sdk }).resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			}),
+		).rejects.toMatchObject({ code: "invalid-output" });
+		expect(drifting.calls).toHaveLength(2);
 	});
 });
 

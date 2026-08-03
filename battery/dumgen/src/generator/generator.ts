@@ -11,19 +11,24 @@ import { DumgenError } from "./generator-error";
 
 type AnyPrompt = Prompt;
 
-type ModelExchangeBase = {
+type ModelExchangeAttempt = {
 	readonly promptPath: string;
 	readonly modelInput: unknown;
+};
+
+type ModelExchangeResult = ModelExchangeAttempt & {
 	readonly modelOutput: unknown;
 };
 
 export type ModelExchange =
-	| (ModelExchangeBase & { readonly phase: "received" })
-	| (ModelExchangeBase & {
+	| (ModelExchangeAttempt & { readonly phase: "attempted" })
+	| (ModelExchangeResult & { readonly phase: "received" })
+	| (ModelExchangeResult & {
 			readonly phase: "accepted";
 			readonly validatedModelOutput: unknown;
+			readonly result: unknown;
 	  })
-	| (ModelExchangeBase & {
+	| (ModelExchangeResult & {
 			readonly phase: "rejected";
 			readonly validatedModelOutput?: unknown;
 			readonly validationError: {
@@ -146,6 +151,11 @@ function makeGenerator<Definition extends AnyPrompt>(
 			...prompt.generationParams,
 			systemPrompt: prompt.systemPrompt,
 		};
+		notifyModelExchange(options, {
+			phase: "attempted",
+			promptPath: path.join("."),
+			modelInput,
+		});
 
 		let generated: unknown;
 		try {
@@ -184,6 +194,7 @@ function makeGenerator<Definition extends AnyPrompt>(
 					modelInput,
 					modelOutput: generated,
 					validatedModelOutput: generated,
+					result,
 				});
 				return result;
 			} catch (cause) {
@@ -216,6 +227,7 @@ function makeGenerator<Definition extends AnyPrompt>(
 				modelInput,
 				modelOutput: generated,
 				validatedModelOutput: parsedOutput,
+				result,
 			});
 			return result;
 		} catch (cause) {
@@ -264,14 +276,21 @@ function notifyModelExchange(
 		options.onModelExchange?.({
 			...exchange,
 			modelInput: normalizeForSerialization(exchange.modelInput),
-			modelOutput: normalizeForSerialization(exchange.modelOutput),
-			...(exchange.phase === "received"
+			...(exchange.phase === "attempted"
+				? undefined
+				: {
+						modelOutput: normalizeForSerialization(
+							exchange.modelOutput,
+						),
+					}),
+			...(exchange.phase === "attempted" || exchange.phase === "received"
 				? undefined
 				: exchange.phase === "accepted"
 					? {
 							validatedModelOutput: normalizeForSerialization(
 								exchange.validatedModelOutput,
 							),
+							result: normalizeForSerialization(exchange.result),
 						}
 					: exchange.validatedModelOutput === undefined
 						? undefined

@@ -1,5 +1,9 @@
-import type { Dumgen, DumgenModelExchange, GrammaticalResult } from "dumgen";
-import { dumling } from "dumling";
+import type {
+	Dumgen,
+	DumgenModelExchange,
+	GrammaticalResult,
+	ReadingResolution,
+} from "dumgen";
 
 import type {
 	AnalysisTarget,
@@ -27,15 +31,17 @@ export type GermanClassificationTrace = Partial<
 	Record<ClassificationStageName, ClassificationStageResult>
 >;
 
+export type DumgenFactory = () => Dumgen;
+
 export function createGermanClassificationTrace(): GermanClassificationTrace {
 	return {};
 }
 
 type ResolvedUnit = {
 	target: AnalysisTarget;
-	selection: Selection;
 	reading: Reading;
 	memberOrthographies: Record<number, MemberOrthography>;
+	selectionsByMember: Record<number, Selection>;
 	stages: GermanClassificationTrace;
 	diagnostics: ResolutionDiagnostic[];
 };
@@ -43,6 +49,11 @@ type ResolvedUnit = {
 type AcceptedExchange = Extract<
 	DumgenModelExchange,
 	{ readonly phase: "accepted" }
+>;
+
+type AttemptedExchange = Extract<
+	DumgenModelExchange,
+	{ readonly phase: "attempted" }
 >;
 
 function acceptedExchange(
@@ -60,7 +71,6 @@ function acceptedExchange(
 
 function stage(
 	prompt: string,
-	result: unknown,
 	modelExchanges: readonly DumgenModelExchange[],
 	startIndex: number,
 ): ClassificationStageResult {
@@ -75,7 +85,7 @@ function stage(
 		traceOrigin: "generated",
 		input: exchange.modelInput,
 		output: exchange.validatedModelOutput,
-		result,
+		result: exchange.result,
 	};
 }
 
@@ -86,15 +96,14 @@ function promptsFromExchanges(
 	return modelExchanges
 		.slice(startIndex)
 		.filter(
-			(exchange): exchange is AcceptedExchange =>
-				exchange.phase === "accepted",
+			(exchange): exchange is AttemptedExchange =>
+				exchange.phase === "attempted",
 		)
 		.map(({ promptPath }) => promptPath);
 }
 
 function targetFromExchange(
 	modelExchanges: readonly DumgenModelExchange[],
-	clickedSegmentIndex: number,
 	startIndex: number,
 ): AnalysisTarget | undefined {
 	const exchange = acceptedExchange(
@@ -102,32 +111,27 @@ function targetFromExchange(
 		targetClassificationPrompt,
 		startIndex,
 	);
-	const output = exchange?.validatedModelOutput as
+	const output = exchange?.result as
 		| {
 				decision?: unknown;
-				target?: {
-					additionalMemberSegmentIndices?: unknown;
-					family?: unknown;
-					kind?: unknown;
-				} | null;
+				memberSegmentIndices?: unknown;
+				family?: unknown;
+				kind?: unknown;
 		  }
 		| undefined;
 	if (
-		output?.decision !== "Resolved" ||
-		!output.target ||
-		!Array.isArray(output.target.additionalMemberSegmentIndices) ||
-		typeof output.target.family !== "string" ||
-		typeof output.target.kind !== "string"
+		!output ||
+		output.decision === "Unresolved" ||
+		!Array.isArray(output.memberSegmentIndices) ||
+		typeof output.family !== "string" ||
+		typeof output.kind !== "string"
 	) {
 		return undefined;
 	}
 	return {
-		family: output.target.family,
-		kind: output.target.kind,
-		memberSegmentIndices: [
-			clickedSegmentIndex,
-			...output.target.additionalMemberSegmentIndices,
-		].toSorted((left, right) => left - right),
+		family: output.family,
+		kind: output.kind,
+		memberSegmentIndices: output.memberSegmentIndices,
 	} as AnalysisTarget;
 }
 
@@ -139,40 +143,6 @@ function targetFromResolved(
 		kind: result.selection.surface.lemma.kind,
 		memberSegmentIndices: result.selection.surfaceSegmentIndices,
 	} as AnalysisTarget;
-}
-
-function memberOrthographiesFromExchange(
-	modelExchanges: readonly DumgenModelExchange[],
-	target: AnalysisTarget,
-	startIndex: number,
-): Record<number, MemberOrthography> {
-	const exchange = acceptedExchange(
-		modelExchanges,
-		grammaticalResolutionPrompt(target),
-		startIndex,
-	);
-	const output = exchange?.validatedModelOutput as
-		| {
-				resolution?: {
-					memberOrthographies?: unknown;
-				} | null;
-		  }
-		| undefined;
-	const orthographies = output?.resolution?.memberOrthographies;
-	if (
-		!Array.isArray(orthographies) ||
-		orthographies.length !== target.memberSegmentIndices.length
-	) {
-		throw new Error(
-			"The grammatical model exchange has no aligned member orthographies.",
-		);
-	}
-	return Object.fromEntries(
-		target.memberSegmentIndices.map((index, position) => [
-			index,
-			orthographies[position] as MemberOrthography,
-		]),
-	);
 }
 
 function cachedStages(
@@ -200,15 +170,18 @@ function stableJson(value: unknown): string {
 }
 
 export class GermanClassificationResolver {
-	readonly #dumgen: Dumgen;
+	#dumgen: Dumgen;
+	readonly #createDumgen: DumgenFactory;
 	readonly #unitsByMember = new Map<string, ResolvedUnit>();
 	readonly #emojiDescriptionsByLemma = new Map<string, string[]>();
 
-	constructor(dumgen: Dumgen) {
-		this.#dumgen = dumgen;
+	constructor(createDumgen: DumgenFactory) {
+		this.#createDumgen = createDumgen;
+		this.#dumgen = createDumgen();
 	}
 
 	clear(): void {
+		this.#dumgen = this.#createDumgen();
 		this.#unitsByMember.clear();
 		this.#emojiDescriptionsByLemma.clear();
 	}
@@ -222,10 +195,16 @@ export class GermanClassificationResolver {
 		const cacheKey = this.#cacheKey(sentence.id, clickedSegmentIndex);
 		const cached = this.#unitsByMember.get(cacheKey);
 		if (cached) {
+			const selection = cached.selectionsByMember[clickedSegmentIndex];
+			if (!selection) {
+				throw new Error(
+					"The view cache has no Selection for a known target member.",
+				);
+			}
 			return this.#resolvedResponse(
-				sentence,
 				clickedSegmentIndex,
 				cached,
+				selection,
 				"member-hit",
 				[],
 			);
@@ -242,17 +221,6 @@ export class GermanClassificationResolver {
 			attemptedPrompts.push(
 				...promptsFromExchanges(modelExchanges, exchangeStart),
 			);
-			const target = targetFromExchange(
-				modelExchanges,
-				clickedSegmentIndex,
-				exchangeStart,
-			);
-			if (
-				target &&
-				!attemptedPrompts.includes(grammaticalResolutionPrompt(target))
-			) {
-				attemptedPrompts.push(grammaticalResolutionPrompt(target));
-			}
 			throw error;
 		}
 
@@ -260,14 +228,9 @@ export class GermanClassificationResolver {
 		const target =
 			grammatical.decision === "Resolved"
 				? targetFromResolved(grammatical)
-				: targetFromExchange(
-						modelExchanges,
-						clickedSegmentIndex,
-						exchangeStart,
-					);
+				: targetFromExchange(modelExchanges, exchangeStart);
 		stages.target = stage(
 			targetClassificationPrompt,
-			target ?? { decision: "Unresolved" },
 			modelExchanges,
 			exchangeStart,
 		);
@@ -311,7 +274,6 @@ export class GermanClassificationResolver {
 			if (grammaticalPrompt) {
 				stages.grammatical = stage(
 					grammaticalPrompt,
-					grammatical,
 					modelExchanges,
 					exchangeStart,
 				);
@@ -344,28 +306,31 @@ export class GermanClassificationResolver {
 
 		stages.grammatical = stage(
 			grammaticalResolutionPrompt(target),
-			grammatical,
 			modelExchanges,
 			exchangeStart,
 		);
-		const memberOrthographies = memberOrthographiesFromExchange(
-			modelExchanges,
-			target,
-			exchangeStart,
-		);
+		const { memberOrthographies, selectionsByMember } =
+			await this.#resolveMemberSelections(sentence, target, grammatical);
 		const lemma = grammatical.selection.surface.lemma;
 		const lemmaKey = stableJson(lemma);
 		const existingEmojiDescriptions = [
 			...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
 		];
-		const reading = await this.#dumgen.resolve.reading("de", {
-			markedContext: grammatical.markedContext,
-			lemma: lemma.canonicalForm,
-			existingEmojiDescriptions,
-		});
+		let reading: ReadingResolution;
+		try {
+			reading = await this.#dumgen.resolve.reading("de", {
+				markedContext: grammatical.markedContext,
+				lemma: lemma.canonicalForm,
+				existingEmojiDescriptions,
+			});
+		} catch (error) {
+			attemptedPrompts.push(
+				...promptsFromExchanges(modelExchanges, exchangeStart),
+			);
+			throw error;
+		}
 		stages.reading = stage(
 			readingResolutionPrompt,
-			reading,
 			modelExchanges,
 			exchangeStart,
 		);
@@ -377,9 +342,7 @@ export class GermanClassificationResolver {
 			exchangeStart,
 		);
 		const advisoryDecision = (
-			readingExchange?.validatedModelOutput as
-				| { decision?: unknown }
-				| undefined
+			readingExchange?.result as { decision?: unknown } | undefined
 		)?.decision;
 		if (
 			(advisoryDecision === "Reuse" || advisoryDecision === "New") &&
@@ -400,12 +363,12 @@ export class GermanClassificationResolver {
 
 		const resolvedUnit: ResolvedUnit = {
 			target,
-			selection: grammatical.selection,
 			reading: {
 				lemma,
 				emojiDescription: reading.emojiDescription,
 			} as Reading,
 			memberOrthographies,
+			selectionsByMember,
 			stages,
 			diagnostics,
 		};
@@ -418,40 +381,26 @@ export class GermanClassificationResolver {
 		const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
 		attemptedPrompts.push(...prompts);
 		return this.#resolvedResponse(
-			sentence,
 			clickedSegmentIndex,
 			resolvedUnit,
+			grammatical.selection,
 			"miss",
 			prompts,
 		);
 	}
 
 	#resolvedResponse(
-		sentence: SegmentedSentence,
 		clickedSegmentIndex: number,
 		unit: ResolvedUnit,
+		selection: Selection,
 		cache: "miss" | "member-hit",
 		prompts: string[],
 	): ClickResolutionResponse {
-		const selectedOrthography =
-			unit.memberOrthographies[clickedSegmentIndex];
-		if (!selectedOrthography) {
+		if (selection.clickedSegmentIndex !== clickedSegmentIndex) {
 			throw new Error(
-				"Cached resolution has no orthography for clicked member.",
+				"Dumgen returned a Selection for a different clicked member.",
 			);
 		}
-		const selection =
-			clickedSegmentIndex === unit.selection.clickedSegmentIndex
-				? unit.selection
-				: dumling.de.create.selection({
-						...unit.selection,
-						segmentedSentenceId: sentence.id,
-						clickedSegmentIndex,
-						surfaceSegmentIndices: [
-							...unit.selection.surfaceSegmentIndices,
-						],
-						selectedOrthography,
-					});
 		const entity: EntityRepresentation = {
 			resolution: "dumgen",
 			model: "gpt-5-nano",
@@ -478,20 +427,60 @@ export class GermanClassificationResolver {
 		};
 	}
 
+	async #resolveMemberSelections(
+		sentence: SegmentedSentence,
+		target: AnalysisTarget,
+		initial: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
+	): Promise<{
+		memberOrthographies: Record<number, MemberOrthography>;
+		selectionsByMember: Record<number, Selection>;
+	}> {
+		const orthographyEntries: Array<[number, MemberOrthography]> = [];
+		const selectionEntries: Array<[number, Selection]> = [];
+		for (const memberIndex of target.memberSegmentIndices) {
+			const result =
+				memberIndex === initial.selection.clickedSegmentIndex
+					? initial
+					: await this.#dumgen.resolve.grammatical("de", {
+							sentence,
+							clickedSegmentIndex: memberIndex,
+						});
+			if (
+				result.decision !== "Resolved" ||
+				result.selection.clickedSegmentIndex !== memberIndex ||
+				stableJson(result.selection.surfaceSegmentIndices) !==
+					stableJson(target.memberSegmentIndices)
+			) {
+				throw new Error(
+					"Dumgen did not preserve the resolved grammatical unit for every member.",
+				);
+			}
+			orthographyEntries.push([
+				memberIndex,
+				result.selection.selectedOrthography,
+			]);
+			selectionEntries.push([memberIndex, result.selection]);
+		}
+		return {
+			memberOrthographies: Object.fromEntries(orthographyEntries),
+			selectionsByMember: Object.fromEntries(selectionEntries),
+		};
+	}
+
 	#cacheKey(sentenceId: string, segmentIndex: number): string {
 		return `${sentenceId}:${segmentIndex}`;
 	}
 }
 
 export async function classifyGermanSegment(
-	dumgen: Dumgen,
+	createDumgen: DumgenFactory,
 	sentence: SegmentedSentence,
 	clickedSegmentIndex: number,
 	trace?: GermanClassificationTrace,
 	modelExchanges: readonly DumgenModelExchange[] = [],
 	attemptedPrompts: string[] = [],
 ): Promise<ClickResolutionResponse> {
-	const result = await new GermanClassificationResolver(dumgen).resolve(
+	const result = await new GermanClassificationResolver(createDumgen).resolve(
 		sentence,
 		clickedSegmentIndex,
 		modelExchanges,

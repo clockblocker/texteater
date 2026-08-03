@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { DumgenModelExchange } from "dumgen";
 import { buildDumgen } from "dumgen";
 import { GermanClassificationResolver } from "./classification";
+import { attemptedPromptPaths, segmentForLaboratory } from "./segmentation";
 import {
 	appendSessionEvent,
 	describeErrors,
@@ -17,15 +18,17 @@ import type {
 } from "./shared/contract";
 
 const modelExchangeContext = new AsyncLocalStorage<DumgenModelExchange[]>();
-const generate = buildDumgen({
-	onModelExchange(exchange) {
-		modelExchangeContext.getStore()?.push(exchange);
-	},
-});
-let resolver = new GermanClassificationResolver(generate);
+function buildLaboratoryDumgen() {
+	return buildDumgen({
+		onModelExchange(exchange) {
+			modelExchangeContext.getStore()?.push(exchange);
+		},
+	});
+}
+
+const generate = buildLaboratoryDumgen();
+let resolver = new GermanClassificationResolver(buildLaboratoryDumgen);
 const model = "gpt-5-nano" as const;
-const intakePrompt = "laboratory.intake";
-const segmentationPrompt = "laboratory.segmentation.de";
 const sentences = new Map<
 	string,
 	{ sessionId: string; sentence: SegmentedSentence }
@@ -79,29 +82,6 @@ async function logAttempt(input: {
 	}
 }
 
-function acceptedStage(
-	prompt: string,
-	result: unknown,
-	modelExchanges: readonly DumgenModelExchange[],
-): SegmentationResponse["stages"]["intake"] {
-	const exchange = modelExchanges.find(
-		(candidate) =>
-			candidate.phase === "accepted" && candidate.promptPath === prompt,
-	);
-	if (exchange?.phase !== "accepted") {
-		throw new Error(
-			`No accepted model exchange was captured for ${prompt}.`,
-		);
-	}
-	return {
-		prompt,
-		traceOrigin: "generated",
-		input: exchange.modelInput,
-		output: exchange.validatedModelOutput,
-		result,
-	};
-}
-
 const server = Bun.serve({
 	hostname: "127.0.0.1",
 	port: 3100,
@@ -120,7 +100,9 @@ const server = Bun.serve({
 			POST() {
 				currentSessionId = crypto.randomUUID();
 				sentences.clear();
-				resolver = new GermanClassificationResolver(generate);
+				resolver = new GermanClassificationResolver(
+					buildLaboratoryDumgen,
+				);
 				return Response.json({ sessionId: currentSessionId });
 			},
 		},
@@ -130,7 +112,7 @@ const server = Bun.serve({
 				const startedAt = performance.now();
 				const sessionId = currentSessionId;
 				let requestInput: unknown = null;
-				const trace: Record<string, unknown> = {};
+				const trace: Partial<SegmentationResponse["stages"]> = {};
 				const promptNames: string[] = [];
 				const modelExchanges: DumgenModelExchange[] = [];
 				let applicationResult: ApplicationResult | null = null;
@@ -155,61 +137,27 @@ const server = Bun.serve({
 						});
 					}
 
-					const segmentationResult = await modelExchangeContext.run(
+					const body = await segmentForLaboratory(
+						generate,
+						input.text,
 						modelExchanges,
-						() => generate.segment(input.text),
+						(operation) =>
+							modelExchangeContext.run(modelExchanges, operation),
 					);
-					promptNames.push(
-						...modelExchanges
-							.filter(({ phase }) => phase === "accepted")
-							.map(({ promptPath }) => promptPath),
-					);
-					const intakeResult =
-						segmentationResult.outcome === "Segmented"
-							? {
-									decision: "Accepted",
-									language: segmentationResult.language,
-								}
-							: {
-									decision: segmentationResult.reason,
-									language: segmentationResult.language,
-								};
-					trace.intake = acceptedStage(
-						intakePrompt,
-						intakeResult,
-						modelExchanges,
-					);
-					if (segmentationResult.outcome === "Unavailable") {
-						const body: SegmentationResponse = {
-							decision: segmentationResult.reason,
-							sentence: null,
-							stages: {
-								intake: trace.intake as SegmentationResponse["stages"]["intake"],
-							},
-							generation: { model, prompts: promptNames },
-						};
+					promptNames.push(...body.generation.prompts);
+					Object.assign(trace, body.stages);
+					if (!body.sentence) {
 						applicationResult = { status: 200, body };
 						return Response.json(body);
 					}
 
-					trace.segmentation = acceptedStage(
-						segmentationPrompt,
-						segmentationResult.sentence,
-						modelExchanges,
-					);
-					const sentence = segmentationResult.sentence;
+					const sentence = body.sentence;
 					if (sessionId !== currentSessionId) {
 						throw new Error(
 							"Laboratory session was reset during segmentation.",
 						);
 					}
 					sentences.set(sentence.id, { sessionId, sentence });
-					const body: SegmentationResponse = {
-						decision: "Accepted",
-						sentence,
-						stages: trace as SegmentationResponse["stages"],
-						generation: { model, prompts: promptNames },
-					};
 					applicationResult = { status: 200, body };
 					return Response.json(body);
 				} catch (error) {
@@ -225,7 +173,7 @@ const server = Bun.serve({
 						operation: "segmentation-chain",
 						requestInput,
 						trace,
-						promptNames,
+						promptNames: attemptedPromptPaths(modelExchanges),
 						modelExchanges,
 						applicationResult,
 						startedAt,
@@ -326,7 +274,10 @@ const server = Bun.serve({
 						requestInput,
 						trace: result?.stages ?? {},
 						promptNames:
-							result?.generation.prompts ?? attemptedPrompts,
+							result?.generation.prompts ??
+							(attemptedPrompts.length > 0
+								? attemptedPrompts
+								: attemptedPromptPaths(modelExchanges)),
 						modelExchanges,
 						applicationResult,
 						startedAt,

@@ -17,12 +17,13 @@ Decision stops the chain before Segmentation.
 
 Intake returns one of:
 
-- `Accepted` with a supported language, used to dispatch `Segmentation<Lang>`
+- `Accepted` with an Enabled Segmentation Language, used to dispatch
+  `Segmentation<Lang>`
 - `UnsupportedLanguage` with the resolved language
 - `Unintelligible` without a language
 
 For now, Intake resolves one primary language and dispatches one route. Only
-`Segmentation<de>` is supported. It preserves non-primary-language spans as
+`Segmentation<de>` is enabled. It preserves non-primary-language spans as
 `OpaqueText`. Multilingual routing is deferred to
 [texteater#19](https://github.com/clockblocker/texteater/issues/19).
 
@@ -205,11 +206,11 @@ or a second Lemma identity.
 Under one policy, every Segment in a conventionalized unit must resolve to the
 same ordered member indices, Family, and Kind. Only the clicked index may vary.
 
-The intended application cache is scoped to Segmented Sentence, view, and
-policy. After the first complete resolution it stores the Analysis Target,
-Surface, Lemma, Reading, and member orthographies. Every member index points to
-that result. Clicking another member makes no model call; it creates only a
-click-local Selection using that member's cached `selectedOrthography`.
+The cache is scoped to Segmented Sentence, view, and policy. Each view owns a
+dedicated Dumgen instance, which caches the validated grammatical unit and its
+member orthographies. After the first complete resolution, the application
+stores the Analysis Target, Surface, Lemma, Reading, and click-local Selection
+for every member. Clicking another member makes no model call.
 
 The view marks all members of the unit, including discontinuous ones. Selection
 identity still includes `clickedSegmentIndex`, and `selectedOrthography` still

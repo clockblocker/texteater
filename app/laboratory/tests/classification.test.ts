@@ -77,16 +77,18 @@ function harness(outputs: Array<unknown | Error>) {
 			throw new Error("not used");
 		},
 	};
-	const dumgen = buildDumgen({
-		sdk,
-		onModelExchange(exchange) {
-			modelExchanges.push(exchange);
-		},
-	});
+	const createDumgen = () =>
+		buildDumgen({
+			sdk,
+			onModelExchange(exchange) {
+				modelExchanges.push(exchange);
+			},
+		});
 	return {
 		calls,
+		createDumgen,
 		modelExchanges,
-		resolver: new GermanClassificationResolver(dumgen),
+		resolver: new GermanClassificationResolver(createDumgen),
 	};
 }
 
@@ -153,12 +155,19 @@ describe("German classification through the Dumgen module", () => {
 		expect(result.stages.grammatical?.input).toEqual({
 			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
 		});
+		expect(result.stages.grammatical?.result).toMatchObject({
+			decision: "Resolved",
+			memberOrthographies: ["Typo", "Standard"],
+		});
+		expect(result.stages.grammatical?.result).not.toHaveProperty(
+			"selection",
+		);
 		expect(result.stages.reading?.input).toEqual({
 			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
 			lemma: "Bank",
 			existingEmojiDescriptions: [],
 		});
-		expect(testHarness.modelExchanges).toHaveLength(6);
+		expect(testHarness.modelExchanges).toHaveLength(9);
 	});
 
 	test("indexes a full resolution by every member and rebuilds click-local Selection without model calls", async () => {
@@ -271,7 +280,7 @@ describe("German classification through the Dumgen module", () => {
 		});
 	});
 
-	test("retains the inferred attempted route when the provider fails", async () => {
+	test("retains observed attempted routes when the grammatical provider fails", async () => {
 		const testHarness = harness([
 			targetOutput,
 			new Error("provider unavailable"),
@@ -290,7 +299,31 @@ describe("German classification through the Dumgen module", () => {
 			targetClassificationPrompt,
 			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
 		]);
-		expect(testHarness.modelExchanges).toHaveLength(2);
+		expect(testHarness.modelExchanges).toHaveLength(4);
+	});
+
+	test("retains every observed attempted route when the reading provider fails", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
+			new Error("reading provider unavailable"),
+		]);
+		const attemptedPrompts: string[] = [];
+
+		await expect(
+			testHarness.resolver.resolve(
+				multiMemberSentence,
+				0,
+				testHarness.modelExchanges,
+				attemptedPrompts,
+			),
+		).rejects.toThrow("language-model provider");
+		expect(attemptedPrompts).toEqual([
+			targetClassificationPrompt,
+			"laboratory.grammaticalResolution.de.Lexeme.NOUN",
+			readingResolutionPrompt,
+		]);
+		expect(testHarness.modelExchanges).toHaveLength(7);
 	});
 
 	test("uses exact Emoji Description membership and reports model disagreement", async () => {
@@ -330,5 +363,40 @@ describe("German classification through the Dumgen module", () => {
 					"Model advised New, but exact Emoji Description membership requires Reuse.",
 			},
 		]);
+	});
+
+	test("keeps resolved-unit caches isolated between views", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
+			{ decision: "New", emojiDescription: "🏦" },
+			targetOutput,
+			grammarOutput,
+			{ decision: "New", emojiDescription: "🏦" },
+		]);
+		const otherView = new GermanClassificationResolver(
+			testHarness.createDumgen,
+		);
+
+		const first = await testHarness.resolver.resolve(
+			multiMemberSentence,
+			0,
+			testHarness.modelExchanges,
+		);
+		const second = await otherView.resolve(
+			multiMemberSentence,
+			0,
+			testHarness.modelExchanges,
+		);
+
+		expect(first).toMatchObject({
+			decision: "Resolved",
+			generation: { cache: "miss", modelCalls: 3 },
+		});
+		expect(second).toMatchObject({
+			decision: "Resolved",
+			generation: { cache: "miss", modelCalls: 3 },
+		});
+		expect(testHarness.calls).toHaveLength(6);
 	});
 });

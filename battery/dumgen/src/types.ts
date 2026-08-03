@@ -83,30 +83,20 @@ export type GrammaticalResult<
 			readonly language: L;
 	  };
 
+export type GrammaticalInput<L extends GrammaticalResolutionLanguage> = {
+	readonly sentence: SegmentedSentence<L>;
+	readonly clickedSegmentIndex: number;
+};
+
+export type ReadingInput = {
+	readonly markedContext: string;
+	readonly lemma: string;
+	readonly existingEmojiDescriptions: readonly string[];
+};
+
 export type ReadingResolution = {
 	readonly decision: "Reuse" | "New";
 	readonly emojiDescription: string;
-};
-
-export type Dumgen = {
-	segment(text: string): Promise<SegmentationResult>;
-	readonly resolve: {
-		grammatical<L extends GrammaticalResolutionLanguage>(
-			language: L,
-			input: {
-				readonly sentence: SegmentedSentence<L>;
-				readonly clickedSegmentIndex: number;
-			},
-		): Promise<GrammaticalResult<L>>;
-		reading<L extends ReadingResolutionLanguage>(
-			language: L,
-			input: {
-				readonly markedContext: string;
-				readonly lemma: string;
-				readonly existingEmojiDescriptions: readonly string[];
-			},
-		): Promise<ReadingResolution>;
-	};
 };
 
 export type Unresolved = { readonly decision: "Unresolved" };
