@@ -3,10 +3,11 @@ import { inputSchema, outputSchema } from "../schemas";
 import { adpositions } from "./cases/hand-verivied/adp";
 import { adjectives } from "./cases/wip/adjective";
 import { constructions } from "./cases/wip/construction";
-import { lexemes } from "./cases/wip/lexeme";
-import { morphemes } from "./cases/wip/morpheme";
+import { functionWords } from "./cases/wip/function-words";
+import { labelsAndNames } from "./cases/wip/labels-and-names";
 import { nouns } from "./cases/wip/noun";
 import { phrasemes } from "./cases/wip/phraseme";
+import { verbs } from "./cases/wip/verb";
 
 export const corpus = defineGoldenCorpus({
 	route: "reading-resolution/de",
@@ -17,9 +18,10 @@ export const corpus = defineGoldenCorpus({
 		adp: adpositions,
 		noun: nouns,
 		constructions,
-		lexemes,
-		morphemes,
+		functionWords,
+		labelsAndNames,
 		phrasemes,
+		verbs,
 	},
 	fingerprintInput(input) {
 		return normalizeMarkedContext(input.markedContext);

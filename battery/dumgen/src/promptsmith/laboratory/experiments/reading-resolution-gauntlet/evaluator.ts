@@ -8,6 +8,7 @@ import type {
 export type ReadingResolutionEvaluation = {
 	readonly contractPass: boolean;
 	readonly expectedDecisionPass: boolean;
+	readonly membershipConsistent: boolean;
 	readonly newEmojiAbsentFromExisting: boolean | null;
 	readonly reusedExpectedDescription: boolean | null;
 };
@@ -20,6 +21,11 @@ export function evaluateReadingResolution(args: {
 }): ReadingResolutionEvaluation {
 	const expectedDecisionPass =
 		args.output.decision === args.idealOutput.decision;
+	const outputIsExisting = args.input.existingEmojiDescriptions.includes(
+		args.output.emojiDescription,
+	);
+	const membershipConsistent =
+		args.output.decision === "Reuse" ? outputIsExisting : !outputIsExisting;
 	const newEmojiAbsentFromExisting =
 		args.idealOutput.decision === "New"
 			? !args.input.existingEmojiDescriptions.includes(
@@ -33,10 +39,12 @@ export function evaluateReadingResolution(args: {
 	return {
 		contractPass:
 			expectedDecisionPass &&
+			membershipConsistent &&
 			(args.idealOutput.decision === "New"
 				? newEmojiAbsentFromExisting === true
 				: reusedExpectedDescription === true),
 		expectedDecisionPass,
+		membershipConsistent,
 		newEmojiAbsentFromExisting,
 		reusedExpectedDescription,
 	};

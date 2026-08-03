@@ -223,6 +223,8 @@ export const nouns = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Reuse",
 				emojiDescription: "☕",
 			},
+			explanation:
+				"The supplied cup already represents the stable tea concept. Reuse.",
 		},
 		"reading-de-kitchen-room": {
 			input: {
@@ -235,6 +237,8 @@ export const nouns = defineGoldenCaseCollection(import.meta.url, {
 				decision: "New",
 				emojiDescription: "🍳",
 			},
+			explanation:
+				"The kitchen room, independent of the coffee-drinking scene. New.",
 		},
 		"reading-de-zug-chess-move": {
 			input: {

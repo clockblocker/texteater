@@ -1,0 +1,14 @@
+{
+  "reading-de-lexeme-aux-werden-passive": {
+    "classification": "accepted model limitation",
+    "explanation": "The context unambiguously uses werden as a passive auxiliary, while the existing 🔮 label denotes future prediction; reusing it would materially mislead a beginner. The prompt already requires New in that situation, and the evaluator accepts any valid new emoji, so this is a bounded-model decision miss."
+  },
+  "reading-de-lexeme-sconj-waehrend-adversative": {
+    "classification": "accepted model limitation",
+    "explanation": "The opposed preferences for starting early and working evenings make während adversative rather than temporal, so the existing ⏳ label is materially misleading. The prompt states the applicable New boundary and the evaluator does not require the illustrative ↔️ emoji, making the reuse a bounded-model decision miss."
+  },
+  "reading-de-construction-fusion-am-temporal": {
+    "classification": "accepted model limitation",
+    "explanation": "In am Montag the fused form marks a calendar-time relation, whereas the existing 📍 label represents place; treating the temporal use as place would materially mislead a beginner. The prompt already directs New for that boundary and the evaluator accepts any absent new emoji, so the reuse is a bounded-model decision miss."
+  }
+}

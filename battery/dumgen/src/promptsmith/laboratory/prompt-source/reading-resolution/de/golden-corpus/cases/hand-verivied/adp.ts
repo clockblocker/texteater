@@ -133,9 +133,10 @@ export const adpositions = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: {
 				decision: "New",
-				emojiDescription: "🪞",
+				emojiDescription: "🟰",
 			},
-			explanation: "Seems like. Not direction. New.",
+			explanation:
+				"A perceived characteristic resembles the complement; this remains broader than the particular smell and is not directional. New.",
 		},
 		"reading-de-adp-vor-broad-precedence": {
 			input: {

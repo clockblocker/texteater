@@ -1,0 +1,1463 @@
+{
+  "runnerVersion": "grammatical-resolution-noun-v3",
+  "startedAt": "2026-08-03T07:14:56.863Z",
+  "completedAt": "2026-08-03T07:15:26.123Z",
+  "finalizedAt": null,
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 1024,
+  "reasoningEffort": "minimal",
+  "textVerbosity": "low",
+  "promptSha256": "74f23a99ba2309c71745c89a2cd7933f0bc231a09baac5151ae192f4612989c0",
+  "evaluationCaseIds": [
+    "grammar-de-noun-citation-haus",
+    "grammar-de-noun-inflection-nom-plur-banken",
+    "grammar-de-noun-inflection-acc-sing-hund",
+    "grammar-de-noun-inflection-acc-plur-buecher",
+    "grammar-de-noun-inflection-dat-plur-kindern",
+    "grammar-de-noun-inflection-gen-sing-mannes",
+    "grammar-de-noun-inflection-gen-plur-frauen",
+    "grammar-de-noun-vocative-leute-unmarked-case",
+    "grammar-de-noun-hyphenated-u-bahn",
+    "grammar-de-noun-variant-photographie",
+    "grammar-de-noun-casing-typo-katze",
+    "grammar-de-noun-archaic-odem",
+    "grammar-de-noun-partial-coordinate-ellipse-kinderbuch",
+    "grammar-de-noun-repeated-token-second-bank",
+    "grammar-de-noun-unresolved-verb-route",
+    "grammar-de-noun-unresolved-ambiguous-leiter",
+    "grammar-de-noun-unresolved-overbroad-phrase",
+    "grammar-de-noun-unresolved-two-unrelated-targets"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 6,
+  "scoreRatio": 0.3333333333333333,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 12,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-noun-citation-haus",
+      "input": {
+        "markedContext": "Wörterbucheintrag: <TARGET>Haus</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Haus",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "Haus",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Haus",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Haus",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3726,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d43b212d28e127a016a703ff15a0081a185c19691861249ee",
+      "usage": {
+        "input_tokens": 1113,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 104,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1217
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-nom-plur-banken",
+      "input": {
+        "markedContext": "Die <TARGET>Banken</TARGET> sind geöffnet."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Banken",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Bank",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Banken",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Bank",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1462,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d82a5fb22715884016a703ff4cc4c81a185249321cedcc639",
+      "usage": {
+        "input_tokens": 1112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1217
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-acc-sing-hund",
+      "input": {
+        "markedContext": "Sie sieht den <TARGET>Hund</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Hund",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Hund",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Hund",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": {
+              "historicalStatus": null
+            },
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Hund",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2263,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0791f1dbcdd8cee3016a703ff67a1881a39b2d795ed7871dfd",
+      "usage": {
+        "input_tokens": 1111,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1218
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-acc-plur-buecher",
+      "input": {
+        "markedContext": "Sie kauft die <TARGET>Bücher</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Bücher",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Buch",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "Bücher",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": {
+              "historicalStatus": null
+            },
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Buch",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1711,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0313de53a1efe3e4016a703ff8867c81918292e33d63e58a82",
+      "usage": {
+        "input_tokens": 1112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 115,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1227
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-dat-plur-kindern",
+      "input": {
+        "markedContext": "Er hilft den <TARGET>Kindern</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Kindern",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Kind",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Kindern",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": {
+              "historicalStatus": null
+            },
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Kind",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1524,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e07ece9371c3b63016a703ffa3dc081a3bc9d970b650d332b",
+      "usage": {
+        "input_tokens": 1112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 111,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1223
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-gen-sing-mannes",
+      "input": {
+        "markedContext": "Das Fahrrad des <TARGET>Mannes</TARGET> ist neu."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Mannes",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Gen",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Mann",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Mannes",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Gen",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Mann",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1856,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08740b8ba7053c98016a703ffbc71081a0bd5cedf2fd601c2d",
+      "usage": {
+        "input_tokens": 1113,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1218
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-inflection-gen-plur-frauen",
+      "input": {
+        "markedContext": "Die Stimmen der <TARGET>Frauen</TARGET> waren deutlich."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Frauen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Gen",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Frau",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Frauen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Frau",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1539,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0cc5f3518704b6bc016a703ffd9f3c81a090d3a99defb10dbf",
+      "usage": {
+        "input_tokens": 1114,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1220
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-vocative-leute-unmarked-case",
+      "input": {
+        "markedContext": "Hallo, <TARGET>Leute</TARGET>!"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Leute",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Leute",
+            "coreFeatures": {
+              "gender": null,
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Leute",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Person",
+            "coreFeatures": {
+              "gender": null,
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 1419,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_042e8d8c424ef810016a703fff2aec81a197aab2219212f696",
+      "usage": {
+        "input_tokens": 1111,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1216
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-hyphenated-u-bahn",
+      "input": {
+        "markedContext": "Sie nimmt die <TARGET>U-Bahn</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "U-Bahn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "U-Bahn",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": "Yes"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "U-Bahn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "U-Bahn",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": "Yes"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1564,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0a5efe8e9a7931bb016a704000923481a1a75d67b27cd40d94",
+      "usage": {
+        "input_tokens": 1112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1222
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-variant-photographie",
+      "input": {
+        "markedContext": "Die <TARGET>Photographie</TARGET> hängt an der Wand."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Photographie",
+            "spelling": "Variant",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Fotografie",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 916,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09770e70becf119e016a70400221b881a1b3a3944b9f35af5e",
+      "usage": {
+        "input_tokens": 1114,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1150
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-casing-typo-katze",
+      "input": {
+        "markedContext": "Sie streichelt die <TARGET>katze</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "Katze",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Katze",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "katze",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Katze",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1815,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08808a2ba2463dcf016a704003333c819f97f735e43f149f40",
+      "usage": {
+        "input_tokens": 1114,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1219
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-archaic-odem",
+      "input": {
+        "markedContext": "Der <TARGET>Odem</TARGET> des Greises ging schwer."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Odem",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": {
+              "historicalStatus": "Archaic"
+            },
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Odem",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Odem",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Odem",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": false,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2098,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_057375b2e4343e3a016a704004f9dc819db43958c086751b25",
+      "usage": {
+        "input_tokens": 1115,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1220
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-partial-coordinate-ellipse-kinderbuch",
+      "input": {
+        "markedContext": "Sie verkauft <TARGET>Kinder</TARGET>- und Jugendbücher."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Kinder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Partial",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Kinderbuch",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 974,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06f0ed5ca88e209a016a704006f760819db678efe1a2bfff6f",
+      "usage": {
+        "input_tokens": 1114,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1150
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-repeated-token-second-bank",
+      "input": {
+        "markedContext": "Die Bank steht neben der <TARGET>Bank</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Bank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Bank",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "Bank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Bank",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1536,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fc8f59a2736c8e5016a704007f018819ea3e9fb964aba0c0b",
+      "usage": {
+        "input_tokens": 1113,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1219
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-unresolved-verb-route",
+      "input": {
+        "markedContext": "Sie <TARGET>laufen</TARGET> schnell."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 950,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b2d35437747f6b9016a7040097b10819180c40e1d662ea9b1",
+      "usage": {
+        "input_tokens": 1110,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1146
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-unresolved-ambiguous-leiter",
+      "input": {
+        "markedContext": "Stichwort ohne Kontext: <TARGET>Leiter</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Leiter",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Leiter",
+            "coreFeatures": {
+              "gender": "Masc",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 1508,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0ac99079fbed2fdb016a70400a6ca481a2b592a0a74caae978",
+      "usage": {
+        "input_tokens": 1114,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1219
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-unresolved-overbroad-phrase",
+      "input": {
+        "markedContext": "Sie sieht das <TARGET>rote Haus</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "rote Haus",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Haus",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 1522,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fa1c530d63e3cd8016a70400bfbe0819e859ae478de1b65ba",
+      "usage": {
+        "input_tokens": 1112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1219
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-unresolved-two-unrelated-targets",
+      "input": {
+        "markedContext": "Die <TARGET>Bank</TARGET> steht neben der <TARGET>Kirche</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 865,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01ecde64fac74230016a70400d74f8819eab495bc2f2844714",
+      "usage": {
+        "input_tokens": 1120,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1024
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1156
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

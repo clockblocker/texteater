@@ -1,0 +1,14 @@
+{
+  "grammar-de-noun-archaic-odem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires identifiable archaic nouns to resolve with historicalStatus Archaic and provides the analogous Antlitz demonstration. The model resolved every other Odem field correctly but omitted that register feature."
+  },
+  "grammar-de-noun-repeated-token-second-bank": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly directs the model to use the marked occurrence's own determiner and preposition rather than another repeated token. The target is unambiguously dative singular under the domain model, and the identical prompt hash passed this case in the preceding run."
+  },
+  "grammar-de-noun-unresolved-overbroad-phrase": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires Unresolved when a target contains a modifier and includes the structurally equivalent alte Rathaus demonstration. Resolving rote Haus despite that guidance is a model-compliance miss; the identical prompt hash passed this case in the preceding run."
+  }
+}

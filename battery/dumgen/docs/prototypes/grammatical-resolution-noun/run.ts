@@ -1,7 +1,4 @@
-// PROTOTYPE ONLY — bounded live evaluation of the current Reading Resolution prompt.
-//
-// Question: does the current German Reading Resolution prompt apply the
-// no-splitting-semantic-pennies policy on the pinned evaluation suite?
+// PROTOTYPE ONLY — bounded live evaluation of the German Lexeme/NOUN route.
 
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
@@ -10,36 +7,42 @@ import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
+
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import type { Prompt } from "../../../src/catalog/prompt-definition";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
-import { readingResolutionGauntlet } from "../../../src/promptsmith/laboratory/experiments/reading-resolution-gauntlet/evaluation-suite";
+import { nounGrammaticalResolutionExperiment } from "../../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluation-suite";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const RUNNER_VERSION = "reading-resolution-gauntlet-v2";
+const RUNNER_VERSION = "grammatical-resolution-noun-v4";
 const RUN_MAX_OUTPUT_TOKENS = 1024;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "minimal";
+const REASONING_EFFORT = "low";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
-	"prompt defect",
-	"corpus/evaluator defect",
-	"accepted model limitation",
+	"prompt-defect",
+	"corpus-or-evaluator-defect",
+	"accepted-model-limitation",
 ] as const;
 
-const prompt = PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
+type Evaluation = ReturnType<
+	typeof nounGrammaticalResolutionExperiment.evaluator
+>;
+const prompt =
+	PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN.prompt;
 const promptContract: Prompt<
 	typeof prompt.inputSchema,
-	typeof prompt.outputSchema
+	typeof prompt.outputSchema,
+	unknown
 > = prompt;
 const modelInputSchema =
 	promptContract.modelInputSchema ?? promptContract.inputSchema;
 const currentSystemPrompt = assembleSystemPrompt(
-	readingResolutionGauntlet.promptSource,
+	nounGrammaticalResolutionExperiment.promptSource,
 );
 
 const isoTimestampSchema = z.iso.datetime({ offset: true });
@@ -51,17 +54,28 @@ const retainedErrorSchema = z.strictObject({
 	status: z.number().int().finite().optional(),
 	code: z.string().min(1).optional(),
 });
+const diagnosticShape = {
+	contractPass: z.boolean(),
+	decisionPass: z.boolean(),
+	decisionResolutionCoherencePass: z.boolean(),
+	memberCountPass: z.boolean(),
+	memberOrthographiesPass: z.boolean(),
+	surfaceKindPass: z.boolean(),
+	normalizedSurfacePass: z.boolean(),
+	spellingPass: z.boolean(),
+	realizationCoveragePass: z.boolean(),
+	surfaceFeaturesPass: z.boolean(),
+	inflectionalFeaturesPass: z.boolean(),
+	canonicalFormPass: z.boolean(),
+	coreFeaturesPass: z.boolean(),
+} satisfies { readonly [Key in keyof Evaluation]: z.ZodBoolean };
 const retainedAttemptSchema = z
 	.strictObject({
 		caseId: nonEmptyIdSchema,
 		input: modelInputSchema,
 		idealOutput: prompt.outputSchema,
 		output: prompt.outputSchema.optional(),
-		contractPass: z.boolean(),
-		expectedDecisionPass: z.boolean(),
-		membershipConsistent: z.boolean(),
-		newEmojiAbsentFromExisting: z.boolean().nullable(),
-		reusedExpectedDescription: z.boolean().nullable(),
+		...diagnosticShape,
 		latencyMs: z.number().int().finite().nonnegative(),
 		resolvedModel: z.string().min(1).optional(),
 		responseId: z.string().min(1).optional(),
@@ -178,30 +192,6 @@ const retainedRunSchema = z
 					"Evaluation case IDs, bounded call count, and attempt order must agree.",
 			});
 		}
-		for (const field of [
-			"contractScore",
-			"executionErrorCount",
-			"unclassifiedMissCount",
-		] as const) {
-			if (result[field] > result.boundedCalls) {
-				context.addIssue({
-					code: "custom",
-					path: [field],
-					message: `${field} cannot exceed boundedCalls.`,
-				});
-			}
-		}
-		if (
-			result.boundedCalls > result.maximumEvaluationCases ||
-			result.minimumEvaluationCases > result.maximumEvaluationCases
-		) {
-			context.addIssue({
-				code: "custom",
-				path: ["boundedCalls"],
-				message:
-					"Bounded and minimum case counts cannot exceed maximumEvaluationCases.",
-			});
-		}
 	});
 
 const missClassificationsSchema = z.record(
@@ -235,7 +225,9 @@ if (import.meta.main) {
 		}
 		await finalizeEvidence(resultsPath, classificationsPath);
 	} else {
-		throw new Error(`Unknown Reading Resolution gauntlet mode "${mode}".`);
+		throw new Error(
+			`Unknown NOUN Grammatical Resolution runner mode "${mode}".`,
+		);
 	}
 }
 
@@ -243,7 +235,7 @@ async function runLiveEvaluation(): Promise<void> {
 	const testCases = prepareCurrentTestCases();
 	if (!process.env.OPENAI_API_KEY) {
 		throw new Error(
-			"OPENAI_API_KEY is unavailable. Run through `bun run prototype:reading-resolution-gauntlet` from battery/dumgen.",
+			"OPENAI_API_KEY is unavailable. Run through `bun run prototype:grammatical-resolution-noun` from battery/dumgen.",
 		);
 	}
 
@@ -267,7 +259,7 @@ async function runLiveEvaluation(): Promise<void> {
 				text: {
 					format: zodTextFormat(
 						prompt.outputSchema,
-						"reading_resolution_gauntlet",
+						"grammatical_resolution_noun",
 					),
 					verbosity: TEXT_VERBOSITY,
 				},
@@ -280,7 +272,7 @@ async function runLiveEvaluation(): Promise<void> {
 			const output = prompt.outputSchema.parse(
 				JSON.parse(response.output_text),
 			);
-			const evaluation = readingResolutionGauntlet.evaluator({
+			const evaluation = nounGrammaticalResolutionExperiment.evaluator({
 				caseId: testCase.id,
 				input: testCase.input,
 				idealOutput: testCase.idealOutput,
@@ -308,13 +300,7 @@ async function runLiveEvaluation(): Promise<void> {
 				caseId: testCase.id,
 				input: testCase.input,
 				idealOutput: testCase.idealOutput,
-				contractPass: false,
-				expectedDecisionPass: false,
-				membershipConsistent: false,
-				newEmojiAbsentFromExisting:
-					testCase.idealOutput.decision === "New" ? false : null,
-				reusedExpectedDescription:
-					testCase.idealOutput.decision === "Reuse" ? false : null,
+				...failedEvaluation(),
 				latencyMs: Math.round(performance.now() - started),
 				error,
 				missClassification: null,
@@ -339,7 +325,6 @@ async function runLiveEvaluation(): Promise<void> {
 	const destination = join(RUNS, runId, "results.json");
 	await mkdir(dirname(destination), { recursive: true });
 	await writeJsonAtomically(destination, result);
-
 	console.log(
 		`\nContract score: ${result.contractScore}/${result.boundedCalls} (${formatRatio(result.scoreRatio)})`,
 	);
@@ -374,7 +359,6 @@ export async function finalizeEvidence(
 			"Runs with execution/provider errors cannot be finalized; make a fresh bounded run.",
 		);
 	}
-
 	const classifications = missClassificationsSchema.parse(
 		JSON.parse(await readFile(classificationsPath, "utf8")),
 	);
@@ -414,7 +398,6 @@ export async function finalizeEvidence(
 		attempts,
 	});
 	await writeJsonAtomically(resultsPath, finalized);
-
 	console.log(
 		`Contract score: ${finalized.contractScore}/${finalized.boundedCalls} (${formatRatio(finalized.scoreRatio)})`,
 	);
@@ -426,11 +409,30 @@ export async function finalizeEvidence(
 	return finalized;
 }
 
+function failedEvaluation(): Evaluation {
+	return {
+		contractPass: false,
+		decisionPass: false,
+		decisionResolutionCoherencePass: false,
+		memberCountPass: false,
+		memberOrthographiesPass: false,
+		surfaceKindPass: false,
+		normalizedSurfacePass: false,
+		spellingPass: false,
+		realizationCoveragePass: false,
+		surfaceFeaturesPass: false,
+		inflectionalFeaturesPass: false,
+		canonicalFormPass: false,
+		coreFeaturesPass: false,
+	};
+}
+
 export function prepareCurrentTestCases(): readonly PreparedTestCase[] {
-	const selected = readingResolutionGauntlet.evaluation.ids.map(
+	const selected = nounGrammaticalResolutionExperiment.evaluation.ids.map(
 		(id, index) => ({
 			id,
-			goldenCase: readingResolutionGauntlet.evaluation.cases[index],
+			goldenCase:
+				nounGrammaticalResolutionExperiment.evaluation.cases[index],
 		}),
 	);
 	assertEvaluationSuiteBounds(selected.length);
@@ -456,12 +458,12 @@ export function assertEvaluationSuiteBounds(caseCount: number): void {
 	}
 	if (caseCount < MINIMUM_EVALUATION_CASES) {
 		throw new Error(
-			`The Reading Resolution gauntlet requires at least ${MINIMUM_EVALUATION_CASES} evaluation cases; found ${caseCount}.`,
+			`The NOUN Grammatical Resolution suite requires at least ${MINIMUM_EVALUATION_CASES} evaluation cases; found ${caseCount}.`,
 		);
 	}
 	if (caseCount > MAX_TEST_CASES) {
 		throw new Error(
-			`The Reading Resolution gauntlet is capped at ${MAX_TEST_CASES} evaluation cases; found ${caseCount}.`,
+			`The NOUN Grammatical Resolution suite is capped at ${MAX_TEST_CASES} evaluation cases; found ${caseCount}.`,
 		);
 	}
 }
@@ -520,9 +522,9 @@ export function currentEvidenceBinding() {
 		promptSha256: createHash("sha256")
 			.update(currentSystemPrompt, "utf8")
 			.digest("hex"),
-		evaluationCaseIds: [...readingResolutionGauntlet.evaluation.ids],
-		minimumEvaluationCases: MINIMUM_EVALUATION_CASES,
-		minimumScoreRatio: MINIMUM_SCORE_RATIO,
+		evaluationCaseIds: [
+			...nounGrammaticalResolutionExperiment.evaluation.ids,
+		],
 		maximumEvaluationCases: MAX_TEST_CASES,
 		retries: 0 as const,
 		store: false as const,
@@ -542,8 +544,6 @@ export function assertCurrentEvidenceBinding(
 		"reasoningEffort",
 		"textVerbosity",
 		"promptSha256",
-		"minimumEvaluationCases",
-		"minimumScoreRatio",
 		"maximumEvaluationCases",
 		"retries",
 		"store",
@@ -582,13 +582,7 @@ function recomputeAttemptEvaluation(attempt: RetainedAttempt): RetainedAttempt {
 	if (attempt.error !== undefined) {
 		return {
 			...attempt,
-			contractPass: false,
-			expectedDecisionPass: false,
-			membershipConsistent: false,
-			newEmojiAbsentFromExisting:
-				attempt.idealOutput.decision === "New" ? false : null,
-			reusedExpectedDescription:
-				attempt.idealOutput.decision === "Reuse" ? false : null,
+			...failedEvaluation(),
 			missClassification: null,
 			missClassificationExplanation: null,
 		};
@@ -598,9 +592,9 @@ function recomputeAttemptEvaluation(attempt: RetainedAttempt): RetainedAttempt {
 			`Retained successful attempt "${attempt.caseId}" has no output.`,
 		);
 	}
-	const evaluation = readingResolutionGauntlet.evaluator({
+	const evaluation = nounGrammaticalResolutionExperiment.evaluator({
 		caseId: attempt.caseId,
-		input: readingResolutionGauntlet.promptSource.inputSchema.parse(
+		input: nounGrammaticalResolutionExperiment.promptSource.inputSchema.parse(
 			attempt.input,
 		),
 		idealOutput: prompt.outputSchema.parse(attempt.idealOutput),

@@ -13,6 +13,8 @@ export const constructions = defineGoldenCaseCollection(import.meta.url, {
 				existingEmojiDescriptions: ["📍"],
 			},
 			idealOutput: { decision: "New", emojiDescription: "📅" },
+			explanation:
+				"The fused form marks a calendar-time relation, not a place. New.",
 		},
 		"reading-de-construction-paired-frame-entweder-oder": {
 			input: {
@@ -22,6 +24,7 @@ export const constructions = defineGoldenCaseCollection(import.meta.url, {
 				existingEmojiDescriptions: ["🔀"],
 			},
 			idealOutput: { decision: "Reuse", emojiDescription: "🔀" },
+			explanation: "The paired frame presents alternatives. Reuse.",
 		},
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,

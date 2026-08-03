@@ -21,6 +21,11 @@ this lemma:
 An emojiDescription contains only one to four Unicode RGI emoji graphemes.
 Never include the lemma, a gloss, or explanatory text.
 
+Describe only meaning that stays stable across attestations. Omit scenery,
+participants, tense, and other incidental details from the marked context.
+Prefer one conventional emoji by default. Use multiple emoji only when they
+preserve stable, useful lexical structure that one emoji cannot.
+
 We follow a "do not split semantic pennies" policy:
 
 1. Different homonyms need different emoji descriptions.
@@ -33,21 +38,13 @@ The decision and description must agree: *Reuse* requires an exact member of
 *existingEmojiDescriptions*; *New* requires a description that is not an exact
 member.`;
 
-export const demonstrations = corpus
-	.select([
-		"reading-de-tea",
-		"reading-de-kitchen-room",
-		"reading-de-aufstehen-uprising",
-		"reading-de-zug-chess-move",
-	])
-	.union(corpus.groups.adp.ueberStorytelling)
-	.union(
-		corpus.select([
-			"reading-de-adp-mit-means",
-			"reading-de-adp-mit-connector",
-			"reading-de-adp-um-topic",
-		]),
-	);
+export const demonstrations = corpus.select([
+	"reading-de-key-metaphor",
+	"reading-de-maus-computer",
+	"reading-de-aufstehen-uprising",
+	"reading-de-adp-mit-connector",
+	"reading-de-idiom-mit-den-woelfen-heulen",
+]);
 
 export const promptSource = definePromptSource({
 	route: "reading-resolution/de",

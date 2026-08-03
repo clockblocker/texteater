@@ -1,0 +1,973 @@
+{
+  "runnerVersion": "reading-resolution-gauntlet-v2",
+  "startedAt": "2026-08-03T07:09:02.584Z",
+  "completedAt": "2026-08-03T07:10:02.556Z",
+  "finalizedAt": "2026-08-03T07:11:57.090Z",
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 192,
+  "runMaxOutputTokens": 1024,
+  "reasoningEffort": "minimal",
+  "textVerbosity": "low",
+  "promptSha256": "8f12e924c920cea886cf54b6f89c08ac34bea6f400db37f2443e7d75312e84f8",
+  "evaluationCaseIds": [
+    "reading-de-scharf-spicy",
+    "reading-de-adp-vor-cause",
+    "reading-de-lexeme-adv-sonst-usual",
+    "reading-de-lexeme-aux-werden-passive",
+    "reading-de-lexeme-cconj-aber-contrast-reuse",
+    "reading-de-lexeme-det-dieser-demonstrative-reuse",
+    "reading-de-lexeme-intj-hurra-celebration-new",
+    "reading-de-bank-financial",
+    "reading-de-lexeme-num-drei-cardinal-reuse",
+    "reading-de-lexeme-part-nicht-negation-reuse",
+    "reading-de-lexeme-pron-jemand-person-reuse",
+    "reading-de-lexeme-propn-berlin-city-reuse",
+    "reading-de-lexeme-sconj-waehrend-adversative",
+    "reading-de-lexeme-sym-euro-currency-reuse",
+    "reading-de-lexeme-verb-laufen-operate-reuse",
+    "reading-de-lexeme-x-lol-laughter-reuse",
+    "reading-de-phraseme-aphorism-zeit-ist-geld",
+    "reading-de-phraseme-collocation-entscheidung-treffen-reuse",
+    "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+    "reading-de-phraseme-idiom-den-faden-verlieren",
+    "reading-de-phraseme-proverb-viele-koeche",
+    "reading-de-construction-fusion-am-temporal",
+    "reading-de-construction-paired-frame-entweder-oder"
+  ],
+  "boundedCalls": 23,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 20,
+  "scoreRatio": 0.8695652173913043,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "reading-de-scharf-spicy",
+      "input": {
+        "markedContext": "Die Suppe ist sehr <TARGET>scharf</TARGET>.",
+        "lemma": "scharf",
+        "existingEmojiDescriptions": [
+          "🔪"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🌶️"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🌶️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 4835,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_07be4de3015f540a016a703e8eff548191ae04c2cafb76ffe4",
+      "usage": {
+        "input_tokens": 846,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 205,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1051
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-adp-vor-cause",
+      "input": {
+        "markedContext": "Das Kind zittert <TARGET>vor</TARGET> Angst.",
+        "lemma": "vor",
+        "existingEmojiDescriptions": [
+          "⏮️",
+          "🔗"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "⚡"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "😨"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2942,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_04deebdf8017f438016a703e939fc881a085c349935d4ce0d6",
+      "usage": {
+        "input_tokens": 849,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 341,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1190
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-adv-sonst-usual",
+      "input": {
+        "markedContext": "Er arbeitet <TARGET>sonst</TARGET> im Homeoffice, heute aber im Büro.",
+        "lemma": "sonst",
+        "existingEmojiDescriptions": [
+          "⚠️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🔁"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🔁"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 5240,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_057b309ad443bb2d016a703e9692ec81929367c5bb38c9fe91",
+      "usage": {
+        "input_tokens": 851,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 687,
+        "output_tokens_details": {
+          "reasoning_tokens": 640
+        },
+        "total_tokens": 1538
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-aux-werden-passive",
+      "input": {
+        "markedContext": "Der Antrag <TARGET>wird</TARGET> morgen geprüft.",
+        "lemma": "werden",
+        "existingEmojiDescriptions": [
+          "🔮"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🔄"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔮"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2291,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e73f6e034d3b89b016a703e9bcd34819e927b5e0c27d0a281",
+      "usage": {
+        "input_tokens": 842,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 269,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1111
+      },
+      "missClassification": "accepted model limitation",
+      "missClassificationExplanation": "The context unambiguously uses werden as a passive auxiliary, while the existing 🔮 label denotes future prediction; reusing it would materially mislead a beginner. The prompt already requires New in that situation, and the evaluator accepts any valid new emoji, so this is a bounded-model decision miss."
+    },
+    {
+      "caseId": "reading-de-lexeme-cconj-aber-contrast-reuse",
+      "input": {
+        "markedContext": "Sie ist müde, <TARGET>aber</TARGET> zufrieden.",
+        "lemma": "aber",
+        "existingEmojiDescriptions": [
+          "↔️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "↔️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "↔️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1760,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b5bf03d85264c06016a703e9e18e481a0a51ff0c30d86839e",
+      "usage": {
+        "input_tokens": 845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 154,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 999
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-det-dieser-demonstrative-reuse",
+      "input": {
+        "markedContext": "Ich nehme <TARGET>diesen</TARGET> Stuhl.",
+        "lemma": "dieser",
+        "existingEmojiDescriptions": [
+          "👉"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "👉"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "👉"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1625,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b53521f5cde04ef016a703e9fda688191aabfe702cacae8f9",
+      "usage": {
+        "input_tokens": 842,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 158,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1000
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-intj-hurra-celebration-new",
+      "input": {
+        "markedContext": "<TARGET>Hurra</TARGET>, wir haben gewonnen!",
+        "lemma": "Hurra",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🎉"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🎉"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 1529,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_027742a50a837ce0016a703ea17990819d8b0ebc3fa4aca829",
+      "usage": {
+        "input_tokens": 840,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 142,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 982
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-bank-financial",
+      "input": {
+        "markedContext": "Sie hebt Geld bei der <TARGET>Bank</TARGET> ab.",
+        "lemma": "Bank",
+        "existingEmojiDescriptions": [
+          "🪑"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏦"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": true,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2374,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06884d4b4fca4394016a703ea3067081a2bbec544d3a1c8e4b",
+      "usage": {
+        "input_tokens": 845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 191,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1036
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-num-drei-cardinal-reuse",
+      "input": {
+        "markedContext": "Sie kauft <TARGET>drei</TARGET> Äpfel.",
+        "lemma": "drei",
+        "existingEmojiDescriptions": [
+          "3️⃣"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "3️⃣"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "3️⃣"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1892,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c7b43fff0e69cda016a703ea5b6c0819fbcfe71d6c2708b0c",
+      "usage": {
+        "input_tokens": 845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 950
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-part-nicht-negation-reuse",
+      "input": {
+        "markedContext": "Das stimmt <TARGET>nicht</TARGET>.",
+        "lemma": "nicht",
+        "existingEmojiDescriptions": [
+          "🚫"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🚫"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🚫"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1980,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0323a42b0a9a90e4016a703ea750cc819db84ad6821c76f2ec",
+      "usage": {
+        "input_tokens": 840,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 154,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 994
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-pron-jemand-person-reuse",
+      "input": {
+        "markedContext": "<TARGET>Jemand</TARGET> wartet vor der Tür.",
+        "lemma": "jemand",
+        "existingEmojiDescriptions": [
+          "👤"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "👤"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "👤"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 2190,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0934f405bd43a1c7016a703ea94828819c9638fe060b55a164",
+      "usage": {
+        "input_tokens": 844,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 156,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1000
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-propn-berlin-city-reuse",
+      "input": {
+        "markedContext": "Sie lebt seit Jahren in <TARGET>Berlin</TARGET>.",
+        "lemma": "Berlin",
+        "existingEmojiDescriptions": [
+          "🏙️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🏙️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🏙️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1742,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_084be396545176fa016a703eab71648192bc07fc4b5155e3af",
+      "usage": {
+        "input_tokens": 844,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 117,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 961
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-sconj-waehrend-adversative",
+      "input": {
+        "markedContext": "<TARGET>Während</TARGET> Lea gern früh beginnt, arbeitet Amir lieber abends.",
+        "lemma": "während",
+        "existingEmojiDescriptions": [
+          "⏳"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "↔️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "⏳"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 2156,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_02d2d16218d7272b016a703ead302481a3864d7a2d39d2f435",
+      "usage": {
+        "input_tokens": 850,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 228,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1078
+      },
+      "missClassification": "accepted model limitation",
+      "missClassificationExplanation": "The opposed preferences for starting early and working evenings make während adversative rather than temporal, so the existing ⏳ label is materially misleading. The prompt states the applicable New boundary and the evaluator does not require the illustrative ↔️ emoji, making the reuse a bounded-model decision miss."
+    },
+    {
+      "caseId": "reading-de-lexeme-sym-euro-currency-reuse",
+      "input": {
+        "markedContext": "Das kostet zehn <TARGET>€</TARGET>.",
+        "lemma": "€",
+        "existingEmojiDescriptions": [
+          "💶"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "💶"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "💶"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1560,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08df60639257830a016a703eaf591881a1926a3b07f88b5646",
+      "usage": {
+        "input_tokens": 841,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 976
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-verb-laufen-operate-reuse",
+      "input": {
+        "markedContext": "Der Motor <TARGET>läuft</TARGET> ruhig.",
+        "lemma": "laufen",
+        "existingEmojiDescriptions": [
+          "🏃",
+          "⚙️"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "⚙️"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "⚙️"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 2146,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_082e7367df3d69f3016a703eb0eca08191829918ea6a1182fa",
+      "usage": {
+        "input_tokens": 845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 172,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1017
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-x-lol-laughter-reuse",
+      "input": {
+        "markedContext": "Er antwortete im Chat nur mit <TARGET>lol</TARGET>.",
+        "lemma": "lol",
+        "existingEmojiDescriptions": [
+          "😂"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "😂"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "😂"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1437,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08da5749d7c03478016a703eb30a2081a393856e679ec0f94c",
+      "usage": {
+        "input_tokens": 844,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 952
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-phraseme-aphorism-zeit-ist-geld",
+      "input": {
+        "markedContext": "Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
+        "lemma": "Zeit ist Geld",
+        "existingEmojiDescriptions": [
+          "⏳💰"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "⏳💰"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "⏳💰"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 2838,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0aef8fac61f1c518016a703eb4f41081a3b63d3f637d2ce1ee",
+      "usage": {
+        "input_tokens": 866,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 229,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1095
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-phraseme-collocation-entscheidung-treffen-reuse",
+      "input": {
+        "markedContext": "Wir müssen bald <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET> <TARGET>treffen</TARGET>.",
+        "lemma": "eine Entscheidung treffen",
+        "existingEmojiDescriptions": [
+          "🤔✅"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🤔✅"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🤔✅"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1943,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fc30ff2989dddad016a703eb77fe481a0bd37e78a1be50c15",
+      "usage": {
+        "input_tokens": 861,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 166,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1027
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-phraseme-discourse-formula-das-tut-mir-leid-sympathy",
+      "input": {
+        "markedContext": "Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+        "lemma": "Das tut mir leid",
+        "existingEmojiDescriptions": [
+          "😔",
+          "🙏"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "😔"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "😔"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 4609,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_082d057e3d5c01cd016a703ebbe74c819d9644da1b36f70be5",
+      "usage": {
+        "input_tokens": 877,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 214,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1091
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-phraseme-idiom-den-faden-verlieren",
+      "input": {
+        "markedContext": "Bei der dritten Zwischenfrage <TARGET>verlor</TARGET> die Rednerin <TARGET>den</TARGET> <TARGET>Faden</TARGET>.",
+        "lemma": "den Faden verlieren",
+        "existingEmojiDescriptions": [
+          "🧵❌"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🧵❌"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🧵❌"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1772,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_008466d9809ebb57016a703ebde24881a18dcc95cadfbd383f",
+      "usage": {
+        "input_tokens": 869,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 157,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1026
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-phraseme-proverb-viele-koeche",
+      "input": {
+        "markedContext": "Im Projekt durfte nun jeder mitentscheiden – <TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.",
+        "lemma": "Viele Köche verderben den Brei",
+        "existingEmojiDescriptions": [
+          "👥💥"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "👥💥"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "👥💥"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 1986,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06dc6205ceec221c016a703ebfa6b881a395d430bc12ee9057",
+      "usage": {
+        "input_tokens": 888,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 204,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1092
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-construction-fusion-am-temporal",
+      "input": {
+        "markedContext": "Der Kurs beginnt <TARGET>am</TARGET> Montag.",
+        "lemma": "am",
+        "existingEmojiDescriptions": [
+          "📍"
+        ]
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "📅"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "📍"
+      },
+      "contractPass": false,
+      "expectedDecisionPass": false,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": false,
+      "reusedExpectedDescription": null,
+      "latencyMs": 4342,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d2f65b4782db4fd016a703ec1a29881a1804e15fb4ba87387",
+      "usage": {
+        "input_tokens": 842,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 576,
+        "output_tokens_details": {
+          "reasoning_tokens": 512
+        },
+        "total_tokens": 1418
+      },
+      "missClassification": "accepted model limitation",
+      "missClassificationExplanation": "In am Montag the fused form marks a calendar-time relation, whereas the existing 📍 label represents place; treating the temporal use as place would materially mislead a beginner. The prompt already directs New for that boundary and the evaluator accepts any absent new emoji, so the reuse is a bounded-model decision miss."
+    },
+    {
+      "caseId": "reading-de-construction-paired-frame-entweder-oder",
+      "input": {
+        "markedContext": "Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
+        "lemma": "entweder … oder",
+        "existingEmojiDescriptions": [
+          "🔀"
+        ]
+      },
+      "idealOutput": {
+        "decision": "Reuse",
+        "emojiDescription": "🔀"
+      },
+      "output": {
+        "decision": "Reuse",
+        "emojiDescription": "🔀"
+      },
+      "contractPass": true,
+      "expectedDecisionPass": true,
+      "membershipConsistent": true,
+      "newEmojiAbsentFromExisting": null,
+      "reusedExpectedDescription": true,
+      "latencyMs": 4780,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_033332365973d7d5016a703ec5fe00819d9e0c3218491c6fba",
+      "usage": {
+        "input_tokens": 857,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 499,
+        "output_tokens_details": {
+          "reasoning_tokens": 448
+        },
+        "total_tokens": 1356
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}
