@@ -382,3 +382,49 @@ is worth revisiting.
   diagnostic leaf. Its DTO still represents Dumling Citation and non-empty
   Inflection Surfaces, but any downstream X target currently identifies an
   upstream Segmentation or Target Classification contract defect.
+
+### Aphorism identity versus proverb and quotation
+
+- **Route:** `grammatical-resolution/de/phraseme/aphorism`
+- **Golden Case:** `grammar-de-aphorism-provisional-proverb-boundary`,
+  `grammar-de-aphorism-provisional-literary-quotation`, and
+  `grammar-de-aphorism-provisional-punctuation-identity`
+- **Raised by:** Wayfinder issue #47
+- **Question:** Which editorial or attribution evidence makes a concise maxim
+  an authored Aphorism rather than a traditional Proverb, famous quotation, or
+  arbitrary sentence, and should terminal punctuation participate in a
+  Phraseme Canonical Form when punctuation is not `ResolvableText`?
+- **Current take:** Resolve source-backed entries from a public-domain
+  aphorism collection and exclude punctuation from member identity. Keep
+  proverb/quotation and punctuation alternatives corpus-only where editorial
+  classification is not independently settled.
+
+### Collocation alternants and partial realization
+
+- **Route:** `grammatical-resolution/de/phraseme/collocation`
+- **Golden Case:** `grammar-de-collocation-provisional-determiner-alternant`,
+  `grammar-de-collocation-provisional-plural-nominal`, and
+  `grammar-de-collocation-provisional-support-verb-alternant`
+- **Raised by:** Wayfinder issue #48
+- **Question:** When do determiner, nominal-number, or support-verb alternants
+  remain Surfaces of one conventional Collocation Lemma, and what incomplete
+  member set is sufficient for a defensible Partial realization?
+- **Current take:** Authoritatively cover settled support-verb combinations.
+  Partial requires at least two distinctive marked members and preserves only
+  their attested order; alternant identity remains corpus-only. Dumling reuses
+  VERB inflection here, so nominal case and number are not inferred into the
+  DTO.
+
+### Polyfunctional discourse formulae in a scalar role codec
+
+- **Route:** `grammatical-resolution/de/phraseme/discourse-formula`
+- **Golden Case:** `grammar-de-discourse-formula-provisional-bitte-schoen-request`
+  and `grammar-de-discourse-formula-provisional-bitte-schoen-reaction`
+- **Raised by:** Wayfinder issue #49
+- **Question:** Should a polyfunctional formula carry several stable roles, or
+  should Grammatical Resolution select the single discourse function enacted
+  by the marked context when the current Core Feature codec is scalar?
+- **Current take:** Select one context-enacted role only when the discourse
+  function is explicit. Keep the paired `bitte schön` uses contamination-linked
+  and corpus-only rather than collapsing polyfunctionality into one lexical
+  identity or inventing a multi-valued codec.

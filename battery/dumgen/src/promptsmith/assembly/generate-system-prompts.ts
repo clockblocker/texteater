@@ -17,6 +17,9 @@ import { promptSource as grammarProperNounPromptSource } from "../laboratory/pro
 import { promptSource as grammarSubordinatingConjunctionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/prompt-source";
 import { promptSource as grammarSymbolPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/prompt-source";
 import { promptSource as grammarVerbPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/prompt-source";
+import { promptSource as grammarAphorismPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/prompt-source";
+import { promptSource as grammarCollocationPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/prompt-source";
+import { promptSource as grammarDiscourseFormulaPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as segmentationPromptSource } from "../laboratory/prompt-source/segmentation/de/prompt-source";
@@ -46,6 +49,9 @@ const codegen = defineSystemPromptCodegen({
 		grammarSymbolPromptSource,
 		grammarVerbPromptSource,
 		grammarOtherPromptSource,
+		grammarAphorismPromptSource,
+		grammarCollocationPromptSource,
+		grammarDiscourseFormulaPromptSource,
 		readingPromptSource,
 	],
 	promptSourceRoot: join(promptsmithRoot, "laboratory", "prompt-source"),
