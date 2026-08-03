@@ -1,0 +1,6 @@
+{
+  "grammar-de-sconj-citation-dass": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The input explicitly labels dass as a subordinating conjunction, so the route identity and Citation oracle are unambiguous. The prompt already resolves a complete single-word SCONJ when context establishes that identity and separately rejects only an ambiguous bare label; the model nevertheless returned Unresolved while both contextual dass cases passed. This isolated over-conservatism is an accepted model limitation, not a prompt or corpus/evaluator defect."
+  }
+}

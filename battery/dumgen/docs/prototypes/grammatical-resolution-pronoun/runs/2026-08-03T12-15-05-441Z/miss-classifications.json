@@ -1,0 +1,18 @@
+{
+  "grammar-de-pron-negative-niemandem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly distinguishes negative PronType=Neg from indefinite PronType=Ind and says never to widen Neg; the model nevertheless returned Ind while matching every Surface and other Lemma field. The Golden expectation is authoritative and no prompt or evaluator defect is indicated."
+  },
+  "grammar-de-pron-variant-nix": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires licensed colloquial variants to preserve the Surface spelling, use spelling Variant, and take the standard Lemma, while negative identities use PronType=Neg. The model instead promoted nix to a canonical Ind Lemma, contrary to the pinned GSD-backed expectation."
+  },
+  "grammar-de-pron-typo-ihc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires typo repair and says an ordinary contextual form with established case and number is Inflection. The model repaired ihc and marked the member Typo but then mislabeled the repaired form as a Variant Citation, so the miss is model behavior rather than a corpus or prompt defect."
+  },
+  "grammar-de-pron-unresolved-overbroad-mit-ihm": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly returns Unresolved when the target contains an adposition or another dependent and forbids discarding marked material. The model ignored marked mit and resolved only ihm, directly violating the route-scope contract; the Golden expectation and evaluator are correct."
+  }
+}

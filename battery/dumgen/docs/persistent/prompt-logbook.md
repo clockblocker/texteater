@@ -295,3 +295,45 @@ is worth revisiting.
   Polarity/Foreign features on this route?
 - **Current take:** The draft resolves settled modal uses with nullable Core
   Features but keeps affirmative and foreign feature assertions corpus-only.
+
+### Multi-valued German PronType identities in a scalar codec
+
+- **Route:** `grammatical-resolution/de/lexeme/pronoun`
+- **Golden Case:** `grammar-de-pron-provisional-dem-rel-der`,
+  `grammar-de-pron-provisional-int-rel-wer`, and
+  `grammar-de-pron-provisional-int-rel-was`
+- **Raised by:** Wayfinder issue #41
+- **Question:** German GSD assigns combined lexical identities such as
+  `Dem,Rel` and `Int,Rel`, while the current PRON Core Feature codec accepts
+  only one scalar `pronType`. Should the domain support multiple values, choose
+  a contextual value, or preserve a different lexical split?
+- **Current take:** Keep these cases corpus-only and Unresolved. Do not collapse
+  an established multi-valued identity merely to satisfy the current codec.
+
+### PROPN numerical components and unstable Core identity
+
+- **Route:** `grammatical-resolution/de/lexeme/proper-noun`
+- **Golden Case:** `grammar-de-propn-provisional-numeric-ii`,
+  `grammar-de-propn-provisional-organization-gender`, and
+  `grammar-de-propn-provisional-abbreviation-ard`
+- **Raised by:** Wayfinder issue #42
+- **Question:** How should numeric name components retain `NumType` when the
+  PROPN codec cannot express it, and when may contextual organization Gender
+  or acronym shape become stable Lemma Core `gender` or `abbr` identity?
+- **Current take:** Keep these cases corpus-only. Resolve only identities whose
+  route and stable Core Features are independently established rather than
+  inferred from numeric, article, or all-caps shape alone.
+
+### Complex and non-final German subordinators at a word-like boundary
+
+- **Route:** `grammatical-resolution/de/lexeme/subordinating-conjunction`
+- **Golden Case:** `grammar-de-sconj-provisional-multiword-so-dass` and
+  `grammar-de-sconj-provisional-v2-weil`
+- **Raised by:** Wayfinder issue #43
+- **Question:** Should complex markers such as `so dass` remain multiple
+  word-like Lexemes or become a Phraseme, and how should spoken V2 uses of
+  `weil` and `obwohl` affect SCONJ identity when the usual verb-final signal is
+  absent?
+- **Current take:** Keep complex and V2 examples corpus-only. The route resolves
+  settled single-word markers, including established reduced clauses, without
+  treating verb-final order as an absolute or absorbing multiword material.

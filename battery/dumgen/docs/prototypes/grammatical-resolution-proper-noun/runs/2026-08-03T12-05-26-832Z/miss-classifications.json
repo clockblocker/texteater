@@ -1,0 +1,10 @@
+{
+  "grammar-de-propn-dat-plur-niederlanden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly states that a lexical plural-only name has no modeled Gender because German plural does not distinguish grammatical gender, and the corrected Golden Case documents Niederlande as plural-only. The model matched the decision, Surface, inflection, canonical form, abbreviation, and Foreign values but added gender Fem. This isolated feature overgeneration despite a direct rule is an accepted model limitation."
+  },
+  "grammar-de-propn-canonical-acronym-nato": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly states that Foreign=Yes is only for genuinely foreign material in German context and that an established German loan or name is not Foreign merely because its origin or spelling is foreign. The corrected NATO oracle is an established abbreviated feminine German proper-name identity. The model matched every other field but added foreign Yes, so this isolated origin-to-Foreign overgeneralization is an accepted model limitation."
+  }
+}
