@@ -71,3 +71,49 @@ is worth revisiting.
 - **Current take:** Provisionally pin `Fotografie` as canonical and
   `Photographie` as Variant while keeping its member orthography Standard. The
   evaluator remains exact; this direction needs lexicographic policy review.
+
+### Circumpositional von … an route identity
+
+- **Route:** `grammatical-resolution/de/lexeme/adposition`
+- **Golden Case:** `grammar-de-adp-provisional-circumposition-von-an`
+- **Raised by:** Wayfinder issue #33
+- **Question:** Is discontinuous `von … an` one `Lexeme/ADP` with
+  `adpType: Circ`, or does the gap make it a Construction, and how should the
+  gap appear in `canonicalForm` and `normalizedSurface`?
+- **Current take:** Keep the case corpus-only. A resolved ADP reading is
+  plausible, but route ownership and gap representation need a domain decision
+  before demonstration or scoring.
+
+### Clausal anstatt as ADP with ExtPos or SCONJ
+
+- **Route:** `grammatical-resolution/de/lexeme/adposition`
+- **Golden Case:** `grammar-de-adp-provisional-ext-pos-sconj-anstatt`
+- **Raised by:** Wayfinder issue #33
+- **Question:** Does clausal `anstatt` retain an ADP Lemma with
+  `extPos: SCONJ`, or should Target Classification route it directly to
+  `Lexeme/SCONJ`?
+- **Current take:** Keep the case corpus-only and avoid teaching either route
+  until the intended ExtPos boundary is reviewed.
+
+### Historical status of adversative allein
+
+- **Route:** `grammatical-resolution/de/lexeme/coordinating-conjunction`
+- **Golden Case:** `grammar-de-cconj-provisional-archaic-allein`
+- **Raised by:** Wayfinder issue #36
+- **Question:** Is adversative conjunction `allein` sufficiently historical to
+  require `surfaceFeatures.historicalStatus: Archaic`, or is it better treated
+  as current but elevated/literary?
+- **Current take:** The CCONJ identity is defensible, but the historical-status
+  boundary is not. Keep it corpus-only and unscored pending review.
+
+### Expressive lengthening in interjections
+
+- **Route:** `grammatical-resolution/de/lexeme/interjection`
+- **Golden Case:** `grammar-de-intj-demo-hmm-variant`
+- **Raised by:** Wayfinder issue #38
+- **Question:** Should productive expressive `hmm` be a Variant Surface of the
+  `hm` Lemma, or can lengthening establish a separate Lemma under some lexical
+  policy?
+- **Current take:** Treat `hmm` as a Standard member of a Variant Surface for
+  `hm` in the draft, while flagging the exact Variant-versus-Lemma boundary for
+  human lexicographic review.

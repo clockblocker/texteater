@@ -1,0 +1,14 @@
+{
+  "grammar-de-intj-hallo-greeting": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt treats ordinary sentence-initial capitalization as Standard, requires ordinary casing to be normalized, and demonstrates Ja normalizing to ja; the model nevertheless preserved the capital H only in normalizedSurface."
+  },
+  "grammar-de-intj-typo-huraa": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly limits licensed lengthening to spellings that preserve the canonical character sequence and classifies deletion, transposition, or substitution as Typo; the model nevertheless treated huraa as Standard instead of classifying and repairing the spelling error."
+  },
+  "grammar-de-intj-unresolved-nominalized-ach": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly excludes a marked form used as a noun under a possessive or adjective; despite both Sein and ständiges marking Ach as nominalized here, the model resolved it as INTJ."
+  }
+}

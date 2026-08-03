@@ -1,0 +1,14 @@
+{
+  "grammar-de-adp-two-way-vor-acc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The marked vor is an identifiable ordinary two-way preposition in directional context. The prompt explicitly names vor as two-way and requires stable governedCase to remain null, but the model incorrectly returned Unresolved."
+  },
+  "grammar-de-adp-archaic-ob": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The genitive phrase establishes the identifiable archaic preposition ob. The prompt explicitly says an identifiable archaic preposition remains Resolved, but the model incorrectly returned Unresolved."
+  },
+  "grammar-de-adp-unresolved-fusion-im": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The target im is an article-preposition fusion assigned to another route. The prompt explicitly requires article-preposition fusions to return Unresolved, but the model incorrectly resolved im as an abbreviated ADP."
+  }
+}

@@ -1,0 +1,109 @@
+import {
+	defineGoldenCaseCollection,
+	type GoldenCaseRegistry,
+} from "../../../../../../../../assembly";
+import type { inputSchema, outputSchema } from "../../schemas";
+
+export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
+	import.meta.url,
+	{
+		cases: {
+			"grammar-de-intj-demo-hmm-variant": {
+				input: {
+					markedContext: "Sie überlegte: <TARGET>hmm</TARGET>.",
+				},
+				idealOutput: {
+					decision: "Resolved",
+					resolution: {
+						memberOrthographies: ["Standard"],
+						surface: {
+							normalizedSurface: "hmm",
+							spelling: "Variant",
+							realizationCoverage: "Full",
+							surfaceKind: "Citation",
+							surfaceFeatures: null,
+						},
+						lemma: {
+							canonicalForm: "hm",
+							coreFeatures: { partType: null },
+						},
+					},
+				},
+				explanation:
+					"Expressive lengthening is a licensed written Variant, not a spelling error and not a Partial realization.",
+			},
+			"grammar-de-intj-sentence-initial-ach": {
+				input: {
+					markedContext: "<TARGET>Ach</TARGET>, das ist schade.",
+				},
+				idealOutput: {
+					decision: "Resolved",
+					resolution: {
+						memberOrthographies: ["Standard"],
+						surface: {
+							normalizedSurface: "ach",
+							spelling: "Canonical",
+							realizationCoverage: "Full",
+							surfaceKind: "Citation",
+							surfaceFeatures: null,
+						},
+						lemma: {
+							canonicalForm: "ach",
+							coreFeatures: { partType: null },
+						},
+					},
+				},
+			},
+			"grammar-de-intj-typo-huraa": {
+				input: { markedContext: "Alle riefen <TARGET>huraa</TARGET>." },
+				idealOutput: {
+					decision: "Resolved",
+					resolution: {
+						memberOrthographies: ["Typo"],
+						surface: {
+							normalizedSurface: "hurra",
+							spelling: "Canonical",
+							realizationCoverage: "Full",
+							surfaceKind: "Citation",
+							surfaceFeatures: null,
+						},
+						lemma: {
+							canonicalForm: "hurra",
+							coreFeatures: { partType: null },
+						},
+					},
+				},
+			},
+			"grammar-de-intj-archaic-juchhei": {
+				input: {
+					markedContext:
+						"Veralteter Ausruf: <TARGET>juchhei</TARGET>",
+				},
+				idealOutput: {
+					decision: "Resolved",
+					resolution: {
+						memberOrthographies: ["Standard"],
+						surface: {
+							normalizedSurface: "juchhei",
+							spelling: "Canonical",
+							realizationCoverage: "Full",
+							surfaceKind: "Citation",
+							surfaceFeatures: {
+								historicalStatus: "Archaic",
+							},
+						},
+						lemma: {
+							canonicalForm: "juchhei",
+							coreFeatures: { partType: null },
+						},
+					},
+				},
+				explanation:
+					"Corpus-only taxonomy probe: juchhei is veraltend, but mapping that label to the schema's stronger Archaic Surface status requires human confirmation before scoring.",
+			},
+		} as const satisfies GoldenCaseRegistry<
+			typeof inputSchema,
+			typeof outputSchema
+		>,
+	},
+);

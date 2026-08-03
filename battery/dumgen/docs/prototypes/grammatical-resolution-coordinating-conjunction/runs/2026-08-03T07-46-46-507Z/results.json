@@ -1,0 +1,1263 @@
+{
+  "runnerVersion": "grammatical-resolution-coordinating-conjunction-v2",
+  "startedAt": "2026-08-03T07:46:46.507Z",
+  "completedAt": "2026-08-03T07:47:44.834Z",
+  "finalizedAt": "2026-08-03T07:51:04.661Z",
+  "model": "gpt-5-nano",
+  "promptMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 1024,
+  "reasoningEffort": "low",
+  "textVerbosity": "low",
+  "promptSha256": "caa45f14f0f0e911e74362f004d6d06f13af2a95b263aa13e0388a736edd54ee",
+  "evaluationCaseIds": [
+    "grammar-de-cconj-citation-oder",
+    "grammar-de-cconj-und-noun-phrases",
+    "grammar-de-cconj-oder-clauses",
+    "grammar-de-cconj-aber-clauses",
+    "grammar-de-cconj-denn-clauses",
+    "grammar-de-cconj-coordinating-doch",
+    "grammar-de-cconj-sondern-adjectives",
+    "grammar-de-cconj-sowie-noun-phrases",
+    "grammar-de-cconj-correlative-noch",
+    "grammar-de-cconj-repeated-second-und",
+    "grammar-de-cconj-sentence-initial-und",
+    "grammar-de-cconj-comparative-wie",
+    "grammar-de-cconj-typo-odre",
+    "grammar-de-cconj-unresolved-ambiguous-denn",
+    "grammar-de-cconj-unresolved-subordinator-weil",
+    "grammar-de-cconj-unresolved-overbroad-und-kaffee",
+    "grammar-de-cconj-unresolved-two-targets",
+    "grammar-de-cconj-unresolved-particle-aber"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 16,
+  "scoreRatio": 0.8888888888888888,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-cconj-citation-oder",
+      "input": {
+        "markedContext": "Wörterbucheintrag: <TARGET>oder</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2750,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b6414dc6dd8c355016a704766cb688192ab6411e2e88f037d",
+      "usage": {
+        "input_tokens": 1271,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 257,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1528
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-und-noun-phrases",
+      "input": {
+        "markedContext": "Tee <TARGET>und</TARGET> Kaffee stehen bereit."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "und",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "und",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "und",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "und",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2338,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0aabc36869adffda016a704769662c81a191aedaf030906ec1",
+      "usage": {
+        "input_tokens": 1271,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 219,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1490
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-oder-clauses",
+      "input": {
+        "markedContext": "Wir fahren heute, <TARGET>oder</TARGET> wir bleiben zu Hause."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2313,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08fa05e957844a4f016a70476bbeec819f92202a00f67c25ba",
+      "usage": {
+        "input_tokens": 1274,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 268,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1542
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-aber-clauses",
+      "input": {
+        "markedContext": "Sie ist müde, <TARGET>aber</TARGET> sie arbeitet weiter."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "aber",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "aber",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "aber",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "aber",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4512,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e417ab6ea0f857f016a70476e45c081a1a8720c4b0085559e",
+      "usage": {
+        "input_tokens": 1274,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 307,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1581
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-denn-clauses",
+      "input": {
+        "markedContext": "Wir gehen, <TARGET>denn</TARGET> es wird spät."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "denn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "denn",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "denn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "denn",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2426,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_04bf02b648160ef5016a70477292e4819e986a9bc92525013f",
+      "usage": {
+        "input_tokens": 1273,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 243,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1516
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-coordinating-doch",
+      "input": {
+        "markedContext": "Er wollte kommen, <TARGET>doch</TARGET> er wurde krank."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2891,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d052142299a2af4016a7047750fd481928cbb9fef43543490",
+      "usage": {
+        "input_tokens": 1273,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 269,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1542
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-sondern-adjectives",
+      "input": {
+        "markedContext": "Das Wasser ist nicht kalt, <TARGET>sondern</TARGET> warm."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sondern",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sondern",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sondern",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sondern",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5017,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00b7f7b89e3b9a2e016a704779cb4081a3b7dbc7ab2f9c4919",
+      "usage": {
+        "input_tokens": 1274,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 330,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1604
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-sowie-noun-phrases",
+      "input": {
+        "markedContext": "Brot <TARGET>sowie</TARGET> Käse werden serviert."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sowie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sowie",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sowie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "sowie",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 9527,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0880989424f41204016a70477d33f88191afb40682374aa927",
+      "usage": {
+        "input_tokens": 1273,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 293,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1566
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-correlative-noch",
+      "input": {
+        "markedContext": "Sie trinkt weder Tee <TARGET>noch</TARGET> Kaffee."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "noch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "noch",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "noch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "noch",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3898,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03408b586c3194b3016a7047866f5481a29b5061aeb7c6502f",
+      "usage": {
+        "input_tokens": 1272,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 475,
+        "output_tokens_details": {
+          "reasoning_tokens": 384
+        },
+        "total_tokens": 1747
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-repeated-second-und",
+      "input": {
+        "markedContext": "Anna und Ben singen <TARGET>und</TARGET> Carla tanzt."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "und",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "und",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 2723,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fcfee4273e05823016a70478a54b0819c9d4db4a90a98f9c5",
+      "usage": {
+        "input_tokens": 1274,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 268,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1542
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt requires exactly one TARGET pair around one complete CCONJ and resolution when the marked syntax supports coordination. The second marked und unambiguously coordinates two clauses; the earlier unmarked und does not violate the target contract, so Unresolved is a bounded-model compliance miss."
+    },
+    {
+      "caseId": "grammar-de-cconj-sentence-initial-und",
+      "input": {
+        "markedContext": "<TARGET>Und</TARGET> dann gingen wir nach Hause."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "und",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "und",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "und",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "und",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3207,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_016c56d74f90e6ff016a70478d0e188192b79d43fbe467bfe0",
+      "usage": {
+        "input_tokens": 1271,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 325,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1596
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-comparative-wie",
+      "input": {
+        "markedContext": "Mira ist so groß <TARGET>wie</TARGET> ihre Schwester."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "wie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "wie",
+            "coreFeatures": {
+              "conjType": "Comp"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "wie",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "wie",
+            "coreFeatures": {
+              "conjType": "Comp"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3997,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0860ab5f5d3be1b8016a70479045a48191a4ccfb0bb039f06c",
+      "usage": {
+        "input_tokens": 1273,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 214,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1487
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-typo-odre",
+      "input": {
+        "markedContext": "Nimm den Bus <TARGET>odre</TARGET> geh zu Fuß."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "oder",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "oder",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3042,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c4578bb3f91b8a8016a7047944284819db6fbd20cc8ac6d9e",
+      "usage": {
+        "input_tokens": 1274,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 340,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1614
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-unresolved-ambiguous-denn",
+      "input": {
+        "markedContext": "Stichwort ohne Kontext: <TARGET>denn</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1890,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_04f3e51ed67f465e016a704797549c819c8ae97cd7cad224e3",
+      "usage": {
+        "input_tokens": 1272,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 178,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1450
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-unresolved-subordinator-weil",
+      "input": {
+        "markedContext": "Wir bleiben, <TARGET>weil</TARGET> es regnet."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1820,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00be3ee9520cec30016a70479932fc81a3b46ba04c79df1b67",
+      "usage": {
+        "input_tokens": 1272,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 144,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 1416
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-unresolved-overbroad-und-kaffee",
+      "input": {
+        "markedContext": "Tee <TARGET>und Kaffee</TARGET> stehen bereit."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2252,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0cc9e08ea2a37368016a70479b0554819dae26595ce445b70f",
+      "usage": {
+        "input_tokens": 1271,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 230,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1501
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-unresolved-two-targets",
+      "input": {
+        "markedContext": "Tee <TARGET>und</TARGET> Kaffee <TARGET>oder</TARGET> Wasser stehen bereit."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1425,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_072908caafa22e0d016a70479d4618819f9a25999e4b344692",
+      "usage": {
+        "input_tokens": 1279,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 129,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 1408
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-unresolved-particle-aber",
+      "input": {
+        "markedContext": "Das ist <TARGET>aber</TARGET> schön!"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "aber",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "aber",
+            "coreFeatures": {
+              "conjType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 2296,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_048c4926a4096d82016a70479eafc081928a834b996d667c87",
+      "usage": {
+        "input_tokens": 1269,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1152
+        },
+        "output_tokens": 259,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1528
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt explicitly identifies aber as route-ambiguous and permits resolution only when its syntax supports a coordinating use. In the exclamation Das ist aber schön!, the marked aber is an intensifying particle, so resolving it as CCONJ is a bounded-model decision miss."
+    }
+  ]
+}

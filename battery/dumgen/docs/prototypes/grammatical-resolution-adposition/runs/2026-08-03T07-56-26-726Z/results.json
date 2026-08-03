@@ -1,0 +1,1243 @@
+{
+  "runnerVersion": "grammatical-resolution-adposition-v3",
+  "startedAt": "2026-08-03T07:56:26.726Z",
+  "completedAt": "2026-08-03T07:57:43.548Z",
+  "finalizedAt": null,
+  "model": "gpt-5-nano",
+  "catalogMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 2048,
+  "reasoningEffort": "low",
+  "textVerbosity": "low",
+  "promptSha256": "94334b74e702281353a969df16c472b472c8542703f839aa12acacd0a07d6569",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "ea240c55a4bc999d13ce2eec56e961653231090cf4cc8316ec1e59bb1ce36e79",
+  "evaluationCaseIds": [
+    "grammar-de-adp-preposition-durch-acc",
+    "grammar-de-adp-preposition-zu-dat",
+    "grammar-de-adp-two-way-vor-acc",
+    "grammar-de-adp-abbreviation-inkl",
+    "grammar-de-adp-postposition-zuliebe-dat",
+    "grammar-de-adp-preposition-seit-dat",
+    "grammar-de-adp-citation-label-jenseits",
+    "grammar-de-adp-mid-sentence-casing-typo-unter",
+    "grammar-de-adp-lexical-typo-gegen",
+    "grammar-de-adp-archaic-ob",
+    "grammar-de-adp-repeated-second-bei",
+    "grammar-de-adp-unresolved-sconj-weil",
+    "grammar-de-adp-unresolved-verb-particle-auf",
+    "grammar-de-adp-unresolved-fusion-im",
+    "grammar-de-adp-unresolved-two-unrelated-targets",
+    "grammar-de-adp-unresolved-target-includes-adverb",
+    "grammar-de-adp-unresolved-adjective-route"
+  ],
+  "boundedCalls": 17,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 13,
+  "scoreRatio": 0.7647058823529411,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 4,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adp-preposition-durch-acc",
+      "input": {
+        "markedContext": "Wir gehen <TARGET>durch</TARGET> den Park."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "durch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "durch",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Acc",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "durch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "durch",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Acc",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4081,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b17bd2d888ac57e016a7049ab1060819dbacd071da0ad6b3f",
+      "usage": {
+        "input_tokens": 1813,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 393,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2206
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-preposition-zu-dat",
+      "input": {
+        "markedContext": "Sie geht <TARGET>zu</TARGET> ihrer Ärztin."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zu",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zu",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2813,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d4afb0d796836e1016a7049af182881a2a08a99bebf3d958f",
+      "usage": {
+        "input_tokens": 1815,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 258,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2073
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-two-way-vor-acc",
+      "input": {
+        "markedContext": "Er stellt die Kiste <TARGET>vor</TARGET> die Tür."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vor",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vor",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": null,
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vor",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vor",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": null,
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5303,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09d6bbad58c953a4016a7049b1ca8c819dbb81c11da5c2718a",
+      "usage": {
+        "input_tokens": 1816,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 642,
+        "output_tokens_details": {
+          "reasoning_tokens": 512
+        },
+        "total_tokens": 2458
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-abbreviation-inkl",
+      "input": {
+        "markedContext": "Preis <TARGET>inkl.</TARGET> Versand: zehn Euro."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "inkl.",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "inkl.",
+            "coreFeatures": {
+              "abbr": "Yes",
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Gen",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "inkl.",
+            "spelling": "Variant",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "inklusive",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Gen",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": false,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 15400,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_098c2a4220a788c5016a7049b76afc819cb31115ef3ee364de",
+      "usage": {
+        "input_tokens": 1814,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 1785,
+        "output_tokens_details": {
+          "reasoning_tokens": 1664
+        },
+        "total_tokens": 3599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-postposition-zuliebe-dat",
+      "input": {
+        "markedContext": "Den Kindern <TARGET>zuliebe</TARGET> blieb sie noch."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zuliebe",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zuliebe",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Post",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zuliebe",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zuliebe",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Post",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5838,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c6905429192486e016a7049c6994481a3ae7690477a3e5288",
+      "usage": {
+        "input_tokens": 1815,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 775,
+        "output_tokens_details": {
+          "reasoning_tokens": 640
+        },
+        "total_tokens": 2590
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-preposition-seit-dat",
+      "input": {
+        "markedContext": "Sie wohnt <TARGET>seit</TARGET> einem Jahr hier."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "seit",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "seit",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "seit",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "seit",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": "SCONJ",
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 4518,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03cd4357530f7b12016a7049cc5b308191a20c50c0a13b8f63",
+      "usage": {
+        "input_tokens": 1815,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 309,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2124
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-citation-label-jenseits",
+      "input": {
+        "markedContext": "Wörterbucheintrag: <TARGET>jenseits</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "jenseits",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "jenseits",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Gen",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "jenseits",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "jenseits",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Gen",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5379,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03fd6bcb24503717016a7049d0d50c819d9054c44e16cc5c22",
+      "usage": {
+        "input_tokens": 1816,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 569,
+        "output_tokens_details": {
+          "reasoning_tokens": 448
+        },
+        "total_tokens": 2385
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-mid-sentence-casing-typo-unter",
+      "input": {
+        "markedContext": "Das liegt <TARGET>Unter</TARGET> dem Tisch."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "unter",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "unter",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": null,
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "unter",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "unter",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 3235,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_084569e71cf708e0016a7049d64d288192928713bf96654552",
+      "usage": {
+        "input_tokens": 1813,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 259,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2072
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-lexical-typo-gegen",
+      "input": {
+        "markedContext": "Sie protestiert <TARGET>egen</TARGET> den Plan."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "gegen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gegen",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Acc",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "gegen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gegen",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Acc",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4371,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03361950d3b77c61016a7049d9792481a28f2bd960f9163c12",
+      "usage": {
+        "input_tokens": 1814,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 475,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 2289
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-archaic-ob",
+      "input": {
+        "markedContext": "<TARGET>Ob</TARGET> des Unwetters blieb das Tor geschlossen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ob",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": {
+              "historicalStatus": "Archaic"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "ob",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Gen",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 3208,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0303186c8b43ee7f016a7049ddd0f8819eb2d92e248d187531",
+      "usage": {
+        "input_tokens": 1817,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 343,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 2160
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-repeated-second-bei",
+      "input": {
+        "markedContext": "Bei Anna war er schon, nun ist er <TARGET>bei</TARGET> Ben."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bei",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bei",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bei",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bei",
+            "coreFeatures": {
+              "abbr": null,
+              "adpType": "Prep",
+              "extPos": null,
+              "foreign": null,
+              "governedCase": "Dat",
+              "partType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2923,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d04b455f686e73e016a7049e10a5c81a0b5c09848b6b00dbf",
+      "usage": {
+        "input_tokens": 1819,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 303,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2122
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-sconj-weil",
+      "input": {
+        "markedContext": "Wir bleiben drinnen, <TARGET>weil</TARGET> es regnet."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2249,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06ff0d86479104d1016a7049e3fa188191bc719b57637ac898",
+      "usage": {
+        "input_tokens": 1817,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 227,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2044
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-verb-particle-auf",
+      "input": {
+        "markedContext": "Sie steht früh <TARGET>auf</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3706,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_012c5dad0bfe2695016a7049e632b881a2a17ee7438317ea0c",
+      "usage": {
+        "input_tokens": 1812,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 401,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 2213
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-fusion-im",
+      "input": {
+        "markedContext": "Das Buch liegt <TARGET>im</TARGET> Regal."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4788,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b1df1fa6a78b701016a7049ea0c5c8191b1dac5c048c7aad4",
+      "usage": {
+        "input_tokens": 1813,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 225,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2038
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-two-unrelated-targets",
+      "input": {
+        "markedContext": "Sie kam <TARGET>mit</TARGET> Jacke, aber <TARGET>ohne</TARGET> Schal."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1847,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0407b43cb7693d74016a7049eeb4b481a0b39876df7a85349b",
+      "usage": {
+        "input_tokens": 1824,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 190,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 2014
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-target-includes-adverb",
+      "input": {
+        "markedContext": "Der Weg führt <TARGET>direkt durch</TARGET> den Wald."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4807,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0819df269086a4f1016a7049f08b00819faf737243d38e1aae",
+      "usage": {
+        "input_tokens": 1816,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 591,
+        "output_tokens_details": {
+          "reasoning_tokens": 512
+        },
+        "total_tokens": 2407
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-unresolved-adjective-route",
+      "input": {
+        "markedContext": "Der Weg ist <TARGET>lang</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2348,
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0eeb81fd88de01d6016a7049f5586481a09095006d86bda1ca",
+      "usage": {
+        "input_tokens": 1812,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1664
+        },
+        "output_tokens": 230,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 2042
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

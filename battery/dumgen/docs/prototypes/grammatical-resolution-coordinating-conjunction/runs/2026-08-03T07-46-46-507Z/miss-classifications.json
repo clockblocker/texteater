@@ -1,0 +1,10 @@
+{
+  "grammar-de-cconj-repeated-second-und": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt requires exactly one TARGET pair around one complete CCONJ and resolution when the marked syntax supports coordination. The second marked und unambiguously coordinates two clauses; the earlier unmarked und does not violate the target contract, so Unresolved is a bounded-model compliance miss."
+  },
+  "grammar-de-cconj-unresolved-particle-aber": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly identifies aber as route-ambiguous and permits resolution only when its syntax supports a coordinating use. In the exclamation Das ist aber schön!, the marked aber is an intensifying particle, so resolving it as CCONJ is a bounded-model decision miss."
+  }
+}
