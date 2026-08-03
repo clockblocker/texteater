@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+	DUMGEN_GENERATION_MODEL as RUN_MODEL,
+} from "../../../src/ai-sdk/model-policy";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
 import { numeralGrammaticalResolutionExperiment } from "../../../src/promptsmith/laboratory/experiments/grammatical-resolution-numeral/evaluation-suite";
@@ -15,7 +19,6 @@ import { numeralGrammaticalResolutionExperiment } from "../../../src/promptsmith
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "grammatical-resolution-numeral-v1";
-const RUN_MODEL = "gpt-5-nano";
 const REGISTRATION_MAX_OUTPUT_TOKENS = 1024;
 // NUM has a union of Citation and feature-bearing Inflection Surfaces. The
 // route-local live budget keeps reasoning truncation from masquerading as
@@ -24,7 +27,6 @@ const RUN_MAX_OUTPUT_TOKENS = 16384;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "high";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",

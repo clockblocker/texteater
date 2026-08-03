@@ -16,31 +16,33 @@ import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/gra
 const expectedEvaluationIds = [
 	"grammar-de-coll-antrag-present-full",
 	"grammar-de-coll-antrag-past-full",
-	"grammar-de-coll-kritik-present-full",
-	"grammar-de-coll-hilfe-plural-full",
+	"grammar-de-coll-vereinbarung-present-full",
+	"grammar-de-coll-abbitte-plural-full",
 	"grammar-de-coll-abschied-past-full",
-	"grammar-de-coll-massnahmen-present-full",
-	"grammar-de-coll-stellung-imperative-full",
+	"grammar-de-coll-zustimmung-present-full",
+	"grammar-de-coll-ende-imperative-full",
 	"grammar-de-coll-anspruch-participle-full",
 	"grammar-de-coll-ausdruck-infinitive-full",
 	"grammar-de-coll-einfluss-present-full",
-	"grammar-de-coll-rolle-modified-full",
-	"grammar-de-coll-anspruch-partial",
-	"grammar-de-coll-kritik-citation",
-	"grammar-de-coll-hilfe-typo",
+	"grammar-de-coll-erscheinung-modified-full",
+	"grammar-de-coll-abschied-citation",
+	"grammar-de-coll-abbitte-typo",
 	"grammar-de-coll-unresolved-idiom-loeffel",
 	"grammar-de-coll-unresolved-construction-je-desto",
 	"grammar-de-coll-unresolved-verb-only-antrag",
-	"grammar-de-coll-unresolved-overbroad-clause",
+	"grammar-de-coll-unresolved-mixed-occurrences",
+	"grammar-de-coll-unresolved-marked-dependent",
+	"grammar-de-coll-unresolved-elliptic-kenntnis",
+	"grammar-de-coll-unresolved-present-member-unmarked",
 ] as const;
 
 describe("Phraseme/Collocation route-local corpus", () => {
-	test("keeps four demonstrations and 18 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(25);
+	test("keeps four demonstrations and 20 disjoint held-out cases", () => {
+		expect(corpus.all().ids).toHaveLength(27);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-coll-decision-present-full",
-			"grammar-de-coll-betracht-citation",
-			"grammar-de-coll-verfuegung-partial",
+			"grammar-de-coll-frage-citation",
+			"grammar-de-coll-verfuegung-present-full",
 			"grammar-de-coll-unresolved-free-book-read",
 		]);
 		expect(evaluation.ids).toEqual(expectedEvaluationIds);
@@ -48,14 +50,14 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			collocationGrammaticalResolutionExperiment.evaluation,
 		);
 		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(22);
+		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
 		expect(corpus.all().ids.some((id) => /-(?:demo|eval)-/u.test(id))).toBe(
 			false,
 		);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"forms",
 			"boundaries",
-			"policyProbes",
+			"alternants",
 		]);
 	});
 
@@ -83,20 +85,151 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		const prompt = assembleSystemPrompt(promptSource);
 		expect(prompt).toContain("German verbal support-verb");
 		expect(prompt).toContain("Core Features are exactly {}");
-		expect(prompt).toContain("at least two\nmarked distinctive components");
+		expect(prompt).toContain("no proven positive Partial policy");
+		expect(prompt).toContain("a present canonical member is unmarked");
+		expect(prompt).toContain("Never borrow grammatical features");
 		expect(prompt).toContain("A marked support verb alone");
 		expect(prompt).toContain(
-			"normalizedSurface contains only normalized marked",
+			"normalizedSurface contains only normalized attested",
 		);
 		expect(prompt).toContain("<TARGET>trifft</TARGET>");
-		expect(prompt).toContain("<TARGET>Betracht</TARGET>");
+		expect(prompt).toContain("<TARGET>Frage</TARGET>");
 		expect(prompt).toContain("<TARGET>Verfügung</TARGET>");
 		expect(prompt).toContain("<TARGET>Buch</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Antrag</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Löffel</TARGET>");
 	});
 
-	test("pins Full, Partial, Citation, and member-aligned payloads", () => {
+	test("makes Collocation eligibility an ordered fail-closed decision procedure", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain(
+			"Apply these gates in order and stop at the first failure",
+		);
+		expect(prompt).toContain("Gate 1 — Route boundary");
+		expect(prompt).toContain(
+			"Gate 2 — One occurrence and marked inventory",
+		);
+		expect(prompt).toContain("Gate 3 — Full realization");
+		expect(prompt).toContain("Only after all three gates pass");
+		expect(prompt.indexOf("Gate 1 — Route boundary")).toBeLessThan(
+			prompt.indexOf("Gate 2 — One occurrence and marked inventory"),
+		);
+		expect(
+			prompt.indexOf("Gate 2 — One occurrence and marked inventory"),
+		).toBeLessThan(prompt.indexOf("Gate 3 — Full realization"));
+	});
+
+	test("pins every retained-run surface and morphology regression", () => {
+		const regressionPayload = (caseId: keyof typeof corpus.cases) => {
+			const idealOutput = corpus.cases[caseId]?.idealOutput;
+			if (
+				idealOutput?.decision !== "Resolved" ||
+				idealOutput.resolution === null ||
+				idealOutput.resolution.surface.surfaceKind !== "Inflection"
+			) {
+				throw new Error(
+					`Missing resolved Inflection fixture ${caseId}.`,
+				);
+			}
+			return {
+				normalizedSurface:
+					idealOutput.resolution.surface.normalizedSurface,
+				inflectionalFeatures:
+					idealOutput.resolution.surface.inflectionalFeatures,
+				canonicalForm: idealOutput.resolution.lemma.canonicalForm,
+			};
+		};
+
+		expect(regressionPayload("grammar-de-coll-abschied-past-full")).toEqual(
+			{
+				normalizedSurface: "nahmen Abschied",
+				inflectionalFeatures: {
+					mood: "Ind",
+					number: "Plur",
+					person: "1",
+					tense: "Past",
+					verbForm: "Fin",
+					voice: null,
+				},
+				canonicalForm: "Abschied nehmen",
+			},
+		);
+		expect(
+			regressionPayload("grammar-de-coll-ende-imperative-full"),
+		).toEqual({
+			normalizedSurface: "komm zum Ende",
+			inflectionalFeatures: {
+				mood: "Imp",
+				number: "Sing",
+				person: "2",
+				tense: null,
+				verbForm: "Fin",
+				voice: null,
+			},
+			canonicalForm: "zum Ende kommen",
+		});
+		expect(
+			regressionPayload("grammar-de-coll-anspruch-participle-full"),
+		).toEqual({
+			normalizedSurface: "in Anspruch genommen",
+			inflectionalFeatures: {
+				aspect: null,
+				gender: null,
+				mood: null,
+				number: null,
+				person: null,
+				tense: null,
+				verbForm: "Part",
+				voice: null,
+			},
+			canonicalForm: "in Anspruch nehmen",
+		});
+		expect(
+			regressionPayload("grammar-de-coll-ausdruck-infinitive-full"),
+		).toEqual({
+			normalizedSurface: "zum Ausdruck bringen",
+			inflectionalFeatures: {
+				mood: null,
+				number: null,
+				person: null,
+				tense: null,
+				verbForm: "Inf",
+				voice: null,
+			},
+			canonicalForm: "zum Ausdruck bringen",
+		});
+		expect(
+			regressionPayload("grammar-de-coll-einfluss-present-full"),
+		).toEqual({
+			normalizedSurface: "nimmt Einfluss",
+			inflectionalFeatures: {
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				verbForm: "Fin",
+				voice: null,
+			},
+			canonicalForm: "Einfluss nehmen",
+		});
+	});
+
+	test("pins every retained-run boundary contradiction as Unresolved", () => {
+		for (const caseId of [
+			"grammar-de-coll-unresolved-idiom-loeffel",
+			"grammar-de-coll-unresolved-construction-je-desto",
+			"grammar-de-coll-unresolved-marked-dependent",
+			"grammar-de-coll-unresolved-elliptic-kenntnis",
+			"grammar-de-coll-unresolved-present-member-unmarked",
+		] as const) {
+			expect(corpus.cases[caseId]?.idealOutput).toEqual({
+				decision: "Unresolved",
+				resolution: null,
+			});
+		}
+	});
+
+	test("pins Full, Citation, and member-aligned payloads", () => {
 		expect(
 			corpus.cases["grammar-de-coll-decision-present-full"]?.idealOutput,
 		).toMatchObject({
@@ -114,25 +247,36 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			},
 		});
 		expect(
-			corpus.cases["grammar-de-coll-verfuegung-partial"]?.idealOutput,
+			corpus.cases["grammar-de-coll-verfuegung-present-full"]
+				?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
+				memberOrthographies: ["Standard", "Standard", "Standard"],
 				surface: {
-					normalizedSurface: "stellen Verfügung",
-					realizationCoverage: "Partial",
+					normalizedSurface: "stellen zur Verfügung",
+					realizationCoverage: "Full",
 				},
 				lemma: { canonicalForm: "zur Verfügung stellen" },
 			},
 		});
 		expect(
-			corpus.cases["grammar-de-coll-betracht-citation"]?.idealOutput,
+			corpus.cases["grammar-de-coll-frage-citation"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
 				surface: { surfaceKind: "Citation" },
-				lemma: { canonicalForm: "in Betracht ziehen" },
+				lemma: { canonicalForm: "eine Frage stellen" },
 			},
 		});
+		for (const testCase of corpus.all().cases) {
+			if (
+				testCase.idealOutput.decision === "Resolved" &&
+				testCase.idealOutput.resolution !== null
+			) {
+				expect(
+					testCase.idealOutput.resolution.surface.realizationCoverage,
+				).not.toBe("Partial");
+			}
+		}
 	});
 
 	test("pins the support verb feature shape for finite, infinitive, and participle Surfaces", () => {
@@ -176,13 +320,16 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		});
 	});
 
-	test("covers route boundaries and keeps component-identity questions corpus-only", () => {
+	test("covers semantic route boundaries and keeps alternant identity separate", () => {
 		for (const caseId of [
 			"grammar-de-coll-unresolved-free-book-read",
 			"grammar-de-coll-unresolved-idiom-loeffel",
 			"grammar-de-coll-unresolved-construction-je-desto",
 			"grammar-de-coll-unresolved-verb-only-antrag",
-			"grammar-de-coll-unresolved-overbroad-clause",
+			"grammar-de-coll-unresolved-mixed-occurrences",
+			"grammar-de-coll-unresolved-marked-dependent",
+			"grammar-de-coll-unresolved-elliptic-kenntnis",
+			"grammar-de-coll-unresolved-present-member-unmarked",
 		]) {
 			expect(corpus.cases[caseId]?.idealOutput).toEqual({
 				decision: "Unresolved",
@@ -190,9 +337,9 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			});
 		}
 		for (const caseId of [
-			"grammar-de-coll-provisional-determiner-alternant",
-			"grammar-de-coll-provisional-plural-alternant",
-			"grammar-de-coll-provisional-support-verb-alternant",
+			"grammar-de-coll-determiner-alternant",
+			"grammar-de-coll-plural-member-alternant",
+			"grammar-de-coll-support-verb-alternant",
 		]) {
 			expect(corpus.cases[caseId]).toBeDefined();
 			expect(demonstrations.ids).not.toContain(caseId);
@@ -232,6 +379,34 @@ describe("Phraseme/Collocation route-local corpus", () => {
 				},
 			}).success,
 		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...testCase.idealOutput,
+				resolution: {
+					...testCase.idealOutput.resolution,
+					memberOrthographies: ["Standard"],
+				},
+			}).success,
+		).toBe(false);
+	});
+
+	test("keeps corpus TARGET spans structurally preflightable", () => {
+		for (const testCase of corpus.all().cases) {
+			const openings =
+				testCase.input.markedContext.match(/<TARGET>/gu) ?? [];
+			const closings =
+				testCase.input.markedContext.match(/<\/TARGET>/gu) ?? [];
+			const spans = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<]+)<\/TARGET>/gu,
+				),
+			];
+			expect(openings.length).toBe(closings.length);
+			expect(spans).toHaveLength(openings.length);
+			expect(spans.every((match) => !/\s/u.test(match[1] ?? ""))).toBe(
+				true,
+			);
+		}
 	});
 });
 

@@ -54,7 +54,7 @@ in held-out scoring.
 
 ## Bounded evidence runner
 
-The runner makes one serial call per held-out case with `gpt-5-nano`, high
+The runner makes one serial call per held-out case with `gpt-5.6-luna`, no
 reasoning effort, no retries, `store: false`, and a 16,384-token route-local
 output cap. It preflights 15–25 cases before constructing a provider client.
 Retained evidence binds the ordered Golden Cases, assembled prompt and schema

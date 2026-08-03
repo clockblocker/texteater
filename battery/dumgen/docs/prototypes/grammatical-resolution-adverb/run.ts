@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+	DUMGEN_GENERATION_MODEL as RUN_MODEL,
+} from "../../../src/ai-sdk/model-policy";
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
@@ -16,14 +20,12 @@ import { adverbGrammaticalResolutionExperiment } from "../../../src/promptsmith/
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "grammatical-resolution-adverb-v9";
-const RUN_MODEL = "gpt-5-nano";
 // ADV has three nullable Core Features plus a Citation/Inflection union. Keep a
 // route-local budget large enough that provider truncation is not evidence.
 const RUN_MAX_OUTPUT_TOKENS = 4096;
 const MAX_TEST_CASES = 15;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "low";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",

@@ -42,20 +42,25 @@ type InflectionalFeatures =
 	| InfinitiveFeatures
 	| ParticipleFeatures;
 
+type MemberOrthography = "Standard" | "Typo";
+type MemberOrthographies = readonly [
+	MemberOrthography,
+	MemberOrthography,
+	...MemberOrthography[],
+];
+
 export const emptyCore = {};
 
 export function citation(args: {
 	readonly normalizedSurface: string;
 	readonly canonicalForm: string;
-	readonly memberOrthographies?: readonly ("Standard" | "Typo")[];
+	readonly memberOrthographies: MemberOrthographies;
 	readonly realizationCoverage?: "Full" | "Partial";
 }) {
 	return {
 		decision: "Resolved" as const,
 		resolution: {
-			memberOrthographies: [
-				...(args.memberOrthographies ?? ["Standard" as const]),
-			],
+			memberOrthographies: [...args.memberOrthographies],
 			surface: {
 				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
@@ -76,15 +81,13 @@ export function inflection(args: {
 	readonly normalizedSurface: string;
 	readonly canonicalForm: string;
 	readonly inflectionalFeatures: InflectionalFeatures;
-	readonly memberOrthographies?: readonly ("Standard" | "Typo")[];
+	readonly memberOrthographies: MemberOrthographies;
 	readonly realizationCoverage?: "Full" | "Partial";
 }) {
 	return {
 		decision: "Resolved" as const,
 		resolution: {
-			memberOrthographies: [
-				...(args.memberOrthographies ?? ["Standard" as const]),
-			],
+			memberOrthographies: [...args.memberOrthographies],
 			surface: {
 				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
@@ -106,7 +109,7 @@ export function finite(
 	normalizedSurface: string,
 	canonicalForm: string,
 	features: Omit<FiniteFeatures, "verbForm" | "voice">,
-	memberOrthographies: readonly ("Standard" | "Typo")[],
+	memberOrthographies: MemberOrthographies,
 	realizationCoverage: "Full" | "Partial" = "Full",
 ) {
 	return inflection({

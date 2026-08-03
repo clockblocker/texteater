@@ -32,7 +32,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -56,13 +56,13 @@ function draftResult() {
 test("DiscourseFormula runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
 	expect(binding.runnerVersion).toBe(
-		"grammatical-resolution-discourse-formula-v1",
+		"grammatical-resolution-discourse-formula-v2",
 	);
 	expect(binding.route).toBe(
 		"grammatical-resolution/de/phraseme/discourse-formula",
 	);
-	expect(binding.model).toBe("gpt-5-nano");
-	expect(binding.reasoningEffort).toBe("high");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
 	expect(prepareCurrentTestCases()).toHaveLength(20);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
@@ -178,6 +178,46 @@ test("DiscourseFormula finalization is offline, atomic, and recomputed", async (
 		expect(
 			finalizeEvidence(resultsPath, classificationsPath),
 		).rejects.toThrow(/already been finalized/);
+	} finally {
+		await rm(directory, { recursive: true, force: true });
+	}
+});
+
+test("DiscourseFormula finalization rejects retained-output tampering", async () => {
+	const directory = await mkdtemp(
+		join(tmpdir(), "discourse-formula-tamper-test-"),
+	);
+	const resultsPath = join(directory, "results.json");
+	const classificationsPath = join(directory, "miss-classifications.json");
+	try {
+		const draft = draftResult();
+		const firstAttempt = draft.attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		draft.attempts[0] = {
+			...firstAttempt,
+			output: { decision: "Unresolved", resolution: null },
+		};
+		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
+		await writeFile(classificationsPath, "{}", "utf8");
+
+		expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(/does not exactly match its retained output/);
+
+		const rawTextDraft = draftResult();
+		const rawTextAttempt = rawTextDraft.attempts[0];
+		if (rawTextAttempt === undefined)
+			throw new Error("Expected an attempt.");
+		rawTextDraft.attempts[0] = {
+			...rawTextAttempt,
+			rawOutputText: "{",
+		};
+		await writeFile(resultsPath, JSON.stringify(rawTextDraft), "utf8");
+		expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(
+			/cannot be reparsed against the current output schema/,
+		);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

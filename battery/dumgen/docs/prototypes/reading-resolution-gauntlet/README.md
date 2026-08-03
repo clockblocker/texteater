@@ -5,8 +5,8 @@ learner-facing “do not split semantic pennies” policy on the current set of
 deliberately tricky test cases?
 
 This is a throwaway, bounded live evaluation. It makes one serial call per case
-in the pinned Reading Resolution evaluation suite using `gpt-5-nano`, with no
-retries and `store: false`. The denominator therefore tracks the explicit suite
+in the pinned Reading Resolution evaluation suite using `gpt-5.6-luna` with no
+reasoning, no retries, and `store: false`. The denominator tracks the explicit suite
 length. A safety cap prevents the runner from making more than 25 calls. The
 runner uses a 1,024-token output budget to isolate prompt behavior from the
 catalog's production token budget; both values are retained in each run.

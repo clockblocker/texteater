@@ -9,7 +9,7 @@ cases remain corpus-only for human review, and one earlier happy path remains
 unassigned after demonstration minimization.
 
 The bounded live runner makes one serial call per evaluation case with
-`gpt-5-nano`, low reasoning effort, no retries, `store: false`, and a 1,024-token output cap. Before
+`gpt-5.6-luna`, no reasoning effort, no retries, `store: false`, and a 1,024-token output cap. Before
 creating a provider client, it requires 15–25 cases and parses and projects
 every selected input and ideal output. It assembles the prompt from the
 validated Prompt Source and records the exact ordered case IDs, prompt SHA-256,

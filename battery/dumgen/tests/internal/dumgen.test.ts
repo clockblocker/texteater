@@ -389,7 +389,7 @@ describe("grammatical resolution", () => {
 				target: {
 					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
-					kind: "VERB",
+					kind: "PUNCT",
 				},
 			},
 		]);
@@ -401,7 +401,7 @@ describe("grammatical resolution", () => {
 		).resolves.toEqual({
 			decision: "NotImplemented",
 			language: "de",
-			route: { family: "Lexeme", kind: "VERB" },
+			route: { family: "Lexeme", kind: "PUNCT" },
 		});
 		expect(disabled.calls).toHaveLength(1);
 

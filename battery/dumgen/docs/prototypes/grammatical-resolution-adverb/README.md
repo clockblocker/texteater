@@ -41,14 +41,14 @@ optional just because their fields are nullable; `Mult` marks occurrence-count
 and `-mal` adverbs while `Card` marks cardinal quantity; and literal TARGET
 counts do not license an overbroad modifier-plus-head span.
 
-The bounded runner makes one serial call per held-out case with the route-local
-`gpt-5-nano` evidence model, low reasoning, a 4,096-token output budget, no
+The bounded runner makes one serial call per held-out case with the shared
+`gpt-5.6-luna` model, no reasoning, a 4,096-token output budget, no
 retries, and `store: false`. Higher reasoning did not improve the authoritative
 outcomes, while independent review identified three recurring failures as
 unsettled corpus policy rather than honest scoreable contracts. The exact
 15-case suite remains at the acceptance minimum and preserves the settled Core
 Feature, degree, normalization, route, and target-scope coverage. Integration
-ticket #54 must configure ADV with the same `gpt-5-nano` and low-reasoning
+ticket #54 must configure ADV with the same `gpt-5.6-luna` and no-reasoning
 policy. The runner preflights exactly 15 cases against the authored Prompt
 Source schemas before creating a provider client.
 Retained evidence binds the exact ordered suite, Golden Case values, assembled

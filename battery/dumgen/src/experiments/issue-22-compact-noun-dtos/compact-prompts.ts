@@ -1,4 +1,5 @@
 import type { AiSdk } from "../../ai-sdk/ai-sdk";
+import { DUMGEN_GENERATION_MODEL } from "../../ai-sdk/model-policy";
 import type {
 	Prompt,
 	PromptCatalogEntry,
@@ -55,7 +56,7 @@ const grammaticalPrompt = {
 	projectOutput(_input, generated): GrammaticalResolution {
 		return compactGrammaticalOutputCodec.decode(generated);
 	},
-	generationParams: { model: "gpt-5-nano", maxOutputTokens: 1024 },
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 1024 },
 } satisfies Prompt<
 	typeof grammaticalInputSchema,
 	typeof grammaticalModelOutputSchema,
@@ -74,7 +75,7 @@ const readingPrompt = {
 	projectOutput(_input, generated): ReadingResolution {
 		return compactReadingOutputCodec.decode(generated);
 	},
-	generationParams: { model: "gpt-5-nano", maxOutputTokens: 192 },
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 192 },
 } satisfies Prompt<
 	typeof readingInputSchema,
 	typeof readingModelOutputSchema,

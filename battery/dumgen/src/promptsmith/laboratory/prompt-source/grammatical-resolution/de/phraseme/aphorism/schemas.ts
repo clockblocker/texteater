@@ -3,9 +3,10 @@ import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
+import {
+	grammaticalResolutionMarkedContextSchema,
+	type PromptInputSchema,
+	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
 const canonicalLemmaSchema = asObjectSchema(
@@ -70,8 +71,25 @@ const schemaProjectionLemma = {
 export const deAphorismModelCitationSurfaceSchema =
 	buildDeAphorismCitationSurfaceCodec(schemaProjectionLemma).in;
 
+const targetPairPattern = /<TARGET>(.*?)<\/TARGET>/gsu;
+const aphorismMarkedContextSchema =
+	grammaticalResolutionMarkedContextSchema.superRefine(
+		(markedContext, context) => {
+			const members = [...markedContext.matchAll(targetPairPattern)].map(
+				(match) => match[1] ?? "",
+			);
+			if (members.length < 2) {
+				context.addIssue({
+					code: "custom",
+					message:
+						"Aphorism input requires at least two TARGET members.",
+				});
+			}
+		},
+	);
+
 export const inputSchema = z.strictObject({
-	markedContext: z.string().min(1),
+	markedContext: aphorismMarkedContextSchema,
 }) satisfies PromptInputSchema;
 
 export const outputSchema = z.strictObject({

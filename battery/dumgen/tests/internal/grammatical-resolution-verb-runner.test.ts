@@ -32,7 +32,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -57,8 +57,8 @@ test("VERB runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
 	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v1");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/verb");
-	expect(binding.model).toBe("gpt-5-nano");
-	expect(binding.reasoningEffort).toBe("high");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
 	expect(prepareCurrentTestCases()).toHaveLength(20);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);

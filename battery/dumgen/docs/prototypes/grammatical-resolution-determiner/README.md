@@ -52,8 +52,8 @@ Before returning, the prompt now requires a normalization self-check:
 characters forces `Typo`, and the model must not copy `canonicalForm` into the
 Surface unless it actually matches the normalized contextual form.
 
-The bounded runner makes one serial call per held-out case with the explicit
-route-local `gpt-5-nano` model, high reasoning effort, no retries,
+The bounded runner makes one serial call per held-out case with the shared
+`gpt-5.6-luna` model, no reasoning effort, no retries,
 `store: false`, and a 16,384-token output cap. Before constructing a provider
 client it parses the 19-case suite through the authored Prompt Source's exact
 schemas. Every retained run binds the ordered case IDs and current Golden Cases,
@@ -83,17 +83,19 @@ every held-out input, and the repeatedly missed `unserem` case remains held out.
 Demonstration and evaluation selections remain guarded by exact ID,
 input-fingerprint, contamination-key, and resolved-Lemma disjointness checks.
 
-Current-bound `gpt-5-nano` runs at both low and medium reasoning plateaued
+Historical `gpt-5-nano` runs at both low and medium reasoning plateaued
 between 9 and 15 exact passes out of 19 despite explicit route rules and the
 targeted demonstration. Runner v5 attempted to isolate model capability with
 `gpt-5-mini`, but every case returned HTTP 403; the project model listing
-confirms that only `gpt-5-nano` is accessible. No v5 result can qualify as
-evidence. Runner v6 therefore pins `gpt-5-nano` with high reasoning. Because a
+then exposed only `gpt-5-nano`. No v5 result qualifies as evidence. The retained
+historical Runner v6 evidence therefore pins `gpt-5-nano` with high reasoning.
+Because a
 medium-reasoning probe already exhausted 4,096 output tokens once, v6 raises the
 safety allowance to 16,384 so reasoning truncation does not become a false
-grammatical miss. The retained schema rejects mini and v5 results. Production
-integration in [#54](https://github.com/clockblocker/texteater/issues/54) must
-use the same route-local nano/high policy.
+grammatical miss. The retained schema rejects mini and v5 results. All future
+Dumgen generation, including
+[#54](https://github.com/clockblocker/texteater/issues/54), uses the shared
+`gpt-5.6-luna`/none policy described above.
 
 After root integration registers the Prompt Source and package command, run the
 live evaluation explicitly from `battery/dumgen`:

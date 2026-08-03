@@ -1,0 +1,1337 @@
+{
+  "runnerVersion": "grammatical-resolution-discourse-formula-v2",
+  "route": "grammatical-resolution/de/phraseme/discourse-formula",
+  "startedAt": "2026-08-03T14:14:40.081Z",
+  "completedAt": "2026-08-03T14:27:25.026Z",
+  "finalizedAt": "2026-08-03T14:28:10.809Z",
+  "model": "gpt-5-nano",
+  "maxOutputTokens": 16384,
+  "reasoningEffort": "high",
+  "textVerbosity": "low",
+  "promptSha256": "f431f85d4381a388a152dc70d8dcf1917a9b331764fffb1eec792580a9008f57",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "14fb482467f29a1c9b85d5c7fdd069b781f77e1bfd8095c92e3b3ad4152a1d0f",
+  "evaluationCaseIds": [
+    "grammar-de-discourse-formula-auf-wiedersehen",
+    "grammar-de-discourse-formula-vielen-dank",
+    "grammar-de-discourse-formula-gern-geschehen",
+    "grammar-de-discourse-formula-nein-danke",
+    "grammar-de-discourse-formula-ach-du-meine-guete",
+    "grammar-de-discourse-formula-darf-ich-bitten",
+    "grammar-de-discourse-formula-dann-wollen-wir-mal",
+    "grammar-de-discourse-formula-bis-bald",
+    "grammar-de-discourse-formula-besten-dank",
+    "grammar-de-discourse-formula-herzlich-wilkommen-typo",
+    "grammar-de-discourse-formula-unresolved-compositional-request",
+    "grammar-de-discourse-formula-unresolved-collocation",
+    "grammar-de-discourse-formula-unresolved-idiom",
+    "grammar-de-discourse-formula-unresolved-proverb",
+    "grammar-de-discourse-formula-unresolved-arbitrary-quote",
+    "grammar-de-discourse-formula-unresolved-partial-formula",
+    "grammar-de-discourse-formula-unresolved-compositional-gute-reise-np",
+    "grammar-de-discourse-formula-unresolved-repeated-occurrence",
+    "grammar-de-discourse-formula-unresolved-unrelated-targets",
+    "grammar-de-discourse-formula-unresolved-bitte-intj"
+  ],
+  "boundedCalls": 20,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 15,
+  "scoreRatio": 0.75,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-discourse-formula-auf-wiedersehen",
+      "input": {
+        "markedContext": "Zum Abschied sagte sie: „<TARGET>Auf</TARGET> <TARGET>Wiedersehen</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "auf Wiedersehen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "auf wiedersehen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "auf Wiedersehen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "auf wiedersehen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 41054,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"auf Wiedersehen\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"auf wiedersehen\",\"coreFeatures\":{\"discourseFormulaRole\":\"Farewell\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_024617045871a7a6016a70a250796481a1adcfb2013612ecd4",
+      "usage": {
+        "input_tokens": 1419,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 4821,
+        "output_tokens_details": {
+          "reasoning_tokens": 4736
+        },
+        "total_tokens": 6240
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-vielen-dank",
+      "input": {
+        "markedContext": "Sie nahm das Paket entgegen und sagte: „<TARGET>Vielen</TARGET> <TARGET>Dank</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vielen Dank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielen dank",
+            "coreFeatures": {
+              "discourseFormulaRole": "Thanks"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "vielen Dank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "vielen dank",
+            "coreFeatures": {
+              "discourseFormulaRole": "Thanks"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 44648,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"vielen Dank\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"vielen dank\",\"coreFeatures\":{\"discourseFormulaRole\":\"Thanks\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09609f2a8d753be8016a70a27961e481a0baaf94264d0a4792",
+      "usage": {
+        "input_tokens": 1419,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 5385,
+        "output_tokens_details": {
+          "reasoning_tokens": 5248
+        },
+        "total_tokens": 6804
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-gern-geschehen",
+      "input": {
+        "markedContext": "Auf seinen Dank antwortete sie: „<TARGET>Gern</TARGET> <TARGET>geschehen</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "gern geschehen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gern geschehen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Acknowledgment"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "gern geschehen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gern geschehen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Reaction"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 41039,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"gern geschehen\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gern geschehen\",\"coreFeatures\":{\"discourseFormulaRole\":\"Reaction\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_05b284662698e7b6016a70a2a60bd881a3b1c382bd5fe2cf3b",
+      "usage": {
+        "input_tokens": 1420,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 4054,
+        "output_tokens_details": {
+          "reasoning_tokens": 3968
+        },
+        "total_tokens": 5474
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The prompt did not distinguish a conventional response acknowledging thanks sharply enough from the broad Reaction role, so the model selected the wrong Core identity."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-nein-danke",
+      "input": {
+        "markedContext": "„Möchten Sie mitfahren?“ – „<TARGET>Nein</TARGET> <TARGET>danke</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nein danke",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nein danke",
+            "coreFeatures": {
+              "discourseFormulaRole": "Refusal"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nein danke",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nein danke",
+            "coreFeatures": {
+              "discourseFormulaRole": "Refusal"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 86707,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"nein danke\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nein danke\",\"coreFeatures\":{\"discourseFormulaRole\":\"Refusal\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fe5878879b1cbd3016a70a2cf30ec819cb252d0c91a725adc",
+      "usage": {
+        "input_tokens": 1420,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 5042,
+        "output_tokens_details": {
+          "reasoning_tokens": 4928
+        },
+        "total_tokens": 6462
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-ach-du-meine-guete",
+      "input": {
+        "markedContext": "Als der Schrank plötzlich umstürzte, rief sie: „<TARGET>Ach</TARGET> <TARGET>du</TARGET> <TARGET>meine</TARGET> <TARGET>Güte</TARGET>!“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ach du meine Güte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ach du meine güte",
+            "coreFeatures": {
+              "discourseFormulaRole": "Reaction"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ach du meine güte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ach du meine güte",
+            "coreFeatures": {
+              "discourseFormulaRole": "Reaction"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 36695,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"ach du meine güte\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ach du meine güte\",\"coreFeatures\":{\"discourseFormulaRole\":\"Reaction\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00cc265a8d81c009016a70a325cb1c819c8b16e6a0bf9b3ae5",
+      "usage": {
+        "input_tokens": 1441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 4283,
+        "output_tokens_details": {
+          "reasoning_tokens": 4160
+        },
+        "total_tokens": 5724
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model resolved the correct formula and Reaction identity but incorrectly lowercased the noun Güte in the contextual normalized Surface."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-darf-ich-bitten",
+      "input": {
+        "markedContext": "Er verbeugte sich vor der Tänzerin: „<TARGET>Darf</TARGET> <TARGET>ich</TARGET> <TARGET>bitten</TARGET>?“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "darf ich bitten",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "darf ich bitten",
+            "coreFeatures": {
+              "discourseFormulaRole": "Request"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "darf ich bitten",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "darf ich bitten",
+            "coreFeatures": {
+              "discourseFormulaRole": "Request"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 50480,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"darf ich bitten\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"darf ich bitten\",\"coreFeatures\":{\"discourseFormulaRole\":\"Request\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_082dbef69275c2fb016a70a34a786081a08f4a3f32dd646598",
+      "usage": {
+        "input_tokens": 1431,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 5550,
+        "output_tokens_details": {
+          "reasoning_tokens": 5440
+        },
+        "total_tokens": 6981
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-dann-wollen-wir-mal",
+      "input": {
+        "markedContext": "Als alle bereit waren, sagte sie: „<TARGET>Dann</TARGET> <TARGET>wollen</TARGET> <TARGET>wir</TARGET> <TARGET>mal</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "dann wollen wir mal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "dann wollen wir mal",
+            "coreFeatures": {
+              "discourseFormulaRole": "Initiation"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "dann wollen wir mal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "dann wollen wir mal",
+            "coreFeatures": {
+              "discourseFormulaRole": "Initiation"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 35177,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"dann wollen wir mal\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dann wollen wir mal\",\"coreFeatures\":{\"discourseFormulaRole\":\"Initiation\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b51f614fb06e14a016a70a37cfd008191a3092dd302d53f5a",
+      "usage": {
+        "input_tokens": 1433,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 4001,
+        "output_tokens_details": {
+          "reasoning_tokens": 3904
+        },
+        "total_tokens": 5434
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-bis-bald",
+      "input": {
+        "markedContext": "An der Tür verabschiedete er sich: „<TARGET>Bis</TARGET> <TARGET>bald</TARGET>!“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bis bald",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bis bald",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bis bald",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bis bald",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 28650,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"bis bald\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bis bald\",\"coreFeatures\":{\"discourseFormulaRole\":\"Farewell\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d53526ee23cac5c016a70a3a02584819d9ea42e2c4692d5d5",
+      "usage": {
+        "input_tokens": 1420,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 2945,
+        "output_tokens_details": {
+          "reasoning_tokens": 2816
+        },
+        "total_tokens": 4365
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-besten-dank",
+      "input": {
+        "markedContext": "Nach der Auskunft sagte er: „<TARGET>Besten</TARGET> <TARGET>Dank</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "besten Dank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "besten dank",
+            "coreFeatures": {
+              "discourseFormulaRole": "Thanks"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "besten Dank",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "besten dank",
+            "coreFeatures": {
+              "discourseFormulaRole": "Thanks"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 39387,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"besten Dank\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"besten dank\",\"coreFeatures\":{\"discourseFormulaRole\":\"Thanks\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0cd874d7ac80b7da016a70a3bccfe881a091b2b9c59dae1b8c",
+      "usage": {
+        "input_tokens": 1419,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 4095,
+        "output_tokens_details": {
+          "reasoning_tokens": 3968
+        },
+        "total_tokens": 5514
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-herzlich-wilkommen-typo",
+      "input": {
+        "markedContext": "Die Gastgeberin begrüßte ihn: „<TARGET>Herzlich</TARGET> <TARGET>wilkommen</TARGET>!“"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "herzlich willkommen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "herzlich willkommen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Greeting"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "herzlich Willkommen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "herzlich willkommen",
+            "coreFeatures": {
+              "discourseFormulaRole": "Greeting"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 78367,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Typo\"],\"surface\":{\"normalizedSurface\":\"herzlich Willkommen\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"herzlich willkommen\",\"coreFeatures\":{\"discourseFormulaRole\":\"Greeting\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0869154e0ae4b358016a70a3e42fc881a3859359ed2ed5ff4b",
+      "usage": {
+        "input_tokens": 1420,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 9481,
+        "output_tokens_details": {
+          "reasoning_tokens": 9344
+        },
+        "total_tokens": 10901
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The stimulus spelled adjectival willkommen correctly while the oracle marked it Typo, so the intended spelling-repair burden was absent from the input."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-compositional-request",
+      "input": {
+        "markedContext": "<TARGET>Kannst</TARGET> <TARGET>du</TARGET> <TARGET>mir</TARGET> <TARGET>bitte</TARGET> <TARGET>das</TARGET> <TARGET>Fenster</TARGET> <TARGET>öffnen</TARGET>?"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 24147,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0bc203e5dae6b5f0016a70a4328d4c8192ad99d5aa8a06bec1",
+      "usage": {
+        "input_tokens": 1449,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 2047,
+        "output_tokens_details": {
+          "reasoning_tokens": 1984
+        },
+        "total_tokens": 3496
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-collocation",
+      "input": {
+        "markedContext": "Sie musste <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET> <TARGET>treffen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 12798,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08ff8a8d0fca4d03016a70a44ab01481a1aa0f99ffba70d687",
+      "usage": {
+        "input_tokens": 1422,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 1549,
+        "output_tokens_details": {
+          "reasoning_tokens": 1472
+        },
+        "total_tokens": 2971
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-idiom",
+      "input": {
+        "markedContext": "Im Western musste der Bösewicht <TARGET>ins</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 13243,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_075a81836d859c42016a70a4578f9c81a1bcc2fb379bdfbe35",
+      "usage": {
+        "input_tokens": 1426,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 1448,
+        "output_tokens_details": {
+          "reasoning_tokens": 1408
+        },
+        "total_tokens": 2874
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-proverb",
+      "input": {
+        "markedContext": "Die Großmutter sagte: „<TARGET>Morgenstund</TARGET> <TARGET>hat</TARGET> <TARGET>Gold</TARGET> <TARGET>im</TARGET> <TARGET>Mund</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 25620,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01d95a0665cbc5b1016a70a464bb3c81a0943e597bc2557db9",
+      "usage": {
+        "input_tokens": 1440,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 3305,
+        "output_tokens_details": {
+          "reasoning_tokens": 3264
+        },
+        "total_tokens": 4745
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-arbitrary-quote",
+      "input": {
+        "markedContext": "Auf der Anzeige stand: „<TARGET>Der</TARGET> <TARGET>Zug</TARGET> <TARGET>kommt</TARGET> <TARGET>später</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 11333,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0889c8a560614fa3016a70a47ea5c881a3a5db94da2bce0a17",
+      "usage": {
+        "input_tokens": 1431,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1300,
+        "output_tokens_details": {
+          "reasoning_tokens": 1216
+        },
+        "total_tokens": 2731
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-partial-formula",
+      "input": {
+        "markedContext": "Beim Abschied sagte sie: „<TARGET>Schönen</TARGET> Tag!“"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "schönen Tag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "schönen tag",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 56296,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"schönen Tag\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"schönen tag\",\"coreFeatures\":{\"discourseFormulaRole\":\"Farewell\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01df954b13473499016a70a489ebb4819da84fc8d4e9c87c34",
+      "usage": {
+        "input_tokens": 1412,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 6667,
+        "output_tokens_details": {
+          "reasoning_tokens": 6528
+        },
+        "total_tokens": 8079
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The prompt did not make present-but-unmarked canonical formula membership operational enough, so the model invented a second member and resolved an underselected occurrence."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-compositional-gute-reise-np",
+      "input": {
+        "markedContext": "Nach der Buchung hoffte sie auf eine <TARGET>gute</TARGET> <TARGET>Reise</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "gute Reise",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gute reise",
+            "coreFeatures": {
+              "discourseFormulaRole": "Farewell"
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 60053,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"gute Reise\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gute reise\",\"coreFeatures\":{\"discourseFormulaRole\":\"Farewell\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e4526aff6e35d88016a70a4c1fc2c81a3afe7fc49e08f9a78",
+      "usage": {
+        "input_tokens": 1421,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 5918,
+        "output_tokens_details": {
+          "reasoning_tokens": 5824
+        },
+        "total_tokens": 7339
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The prompt did not sharply operationalize the interactional-act requirement, so the model treated an ordinary compositional noun phrase as the homographic farewell formula."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-repeated-occurrence",
+      "input": {
+        "markedContext": "Sie sagte erst „<TARGET>Bis</TARGET> <TARGET>morgen</TARGET>“ und später erneut „<TARGET>Bis</TARGET> <TARGET>morgen</TARGET>“."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 7007,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c5b09db9a8e6d1b016a70a4fe0fac819da44d8138a0d01024",
+      "usage": {
+        "input_tokens": 1434,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 632,
+        "output_tokens_details": {
+          "reasoning_tokens": 576
+        },
+        "total_tokens": 2066
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-unrelated-targets",
+      "input": {
+        "markedContext": "Morgens sagte er <TARGET>Guten</TARGET> Tag, abends auf <TARGET>Wiedersehen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 27445,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09e9291da3081ae3016a70a50507ec819fbaa6e46fac93db18",
+      "usage": {
+        "input_tokens": 1423,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 2228,
+        "output_tokens_details": {
+          "reasoning_tokens": 2176
+        },
+        "total_tokens": 3651
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-unresolved-bitte-intj",
+      "input": {
+        "markedContext": "Beim Bäcker sagte er: „Noch einen Kaffee, <TARGET>bitte</TARGET>.“"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 44807,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0449d3aab9070ed8016a70a5207c4081a0aee01cee091e0c40",
+      "usage": {
+        "input_tokens": 1416,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 5065,
+        "output_tokens_details": {
+          "reasoning_tokens": 4992
+        },
+        "total_tokens": 6481
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

@@ -2,6 +2,10 @@ import { expect, test } from "bun:test";
 import type OpenAI from "openai";
 import { z } from "zod";
 
+import {
+	DUMGEN_GENERATION_MODEL,
+	DUMGEN_REASONING_EFFORT,
+} from "../../src/ai-sdk/model-policy";
 import { buildOpenAiSdk } from "../../src/ai-sdk/openai";
 
 test("the OpenAI adapter sends structured and unstructured requests", async () => {
@@ -41,7 +45,7 @@ test("the OpenAI adapter sends structured and unstructured requests", async () =
 		],
 		max_output_tokens: 42,
 		model: "test-model",
-		reasoning: { effort: "minimal" },
+		reasoning: { effort: DUMGEN_REASONING_EFFORT },
 		store: false,
 		text: {
 			format: {
@@ -61,6 +65,27 @@ test("the OpenAI adapter sends structured and unstructured requests", async () =
 		model: "test-model",
 		text: { verbosity: "low" },
 	});
+});
+
+test("the OpenAI adapter applies the shared Dumgen model policy by default", async () => {
+	const requests: unknown[] = [];
+	const client = {
+		responses: {
+			async create(request: unknown) {
+				requests.push(request);
+				return { output_text: "raw text" };
+			},
+		},
+	} as unknown as OpenAI;
+
+	await buildOpenAiSdk({ client }).unstructuredGeneration("input");
+
+	expect(requests).toEqual([
+		expect.objectContaining({
+			model: DUMGEN_GENERATION_MODEL,
+			reasoning: { effort: DUMGEN_REASONING_EFFORT },
+		}),
+	]);
 });
 
 test("the OpenAI adapter retries structured output with a larger token budget", async () => {

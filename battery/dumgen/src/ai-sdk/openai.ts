@@ -5,8 +5,10 @@ import { zodTextFormat } from "openai/helpers/zod";
 import type { output, ZodType } from "zod";
 
 import { AiSdkGenerationError } from "./ai-sdk-generation-error";
-
-const GPT_5_NANO_MODEL = "gpt-5-nano";
+import {
+	DUMGEN_GENERATION_MODEL,
+	DUMGEN_REASONING_EFFORT,
+} from "./model-policy";
 
 const DEFAULT_MAX_OUTPUT_TOKENS = 256;
 const RESPONSE_SCHEMA_NAME = "dumgen_response";
@@ -34,7 +36,7 @@ type BuildOpenAiSdkOptions = {
  * Keep the returned adapter and its API key out of browser bundles.
  */
 export function buildOpenAiSdk(options: BuildOpenAiSdkOptions = {}) {
-	const defaultModel = options.model ?? GPT_5_NANO_MODEL;
+	const defaultModel = options.model ?? DUMGEN_GENERATION_MODEL;
 	const defaultMaxOutputTokens =
 		options.maxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS;
 	validateMaxOutputTokens(defaultMaxOutputTokens);
@@ -143,7 +145,7 @@ function createCommonRequest(args: {
 			? { prompt_cache_key: hashString(systemPrompt) }
 			: undefined),
 		reasoning: {
-			effort: "minimal" as const,
+			effort: DUMGEN_REASONING_EFFORT,
 		},
 		store: false,
 		text: {

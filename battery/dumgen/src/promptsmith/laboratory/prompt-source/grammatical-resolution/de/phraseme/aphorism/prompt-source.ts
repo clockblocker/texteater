@@ -2,27 +2,48 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of exactly one marked German
-Phraseme/Aphorism, or return Unresolved without changing the route.
+const body = `Target Classification has already fixed this request to German
+Phraseme/Aphorism and supplied the marked lexical members. Resolve the Surface
+and Lemma grammar for that fixed route. Do not require the exact wording to be
+familiar, recall an author or collection, or reconstruct a source citation:
+those are not fields of Grammatical Resolution. Unfamiliarity with the wording
+is not evidence for Unresolved.
 
 An Aphorism is a conventional, self-contained, concisely formulated authored
-maxim or observation circulated as a whole utterance. Resolve only with strong
-evidence that the complete marked wording is one established Aphorism. A
-traditional anonymous generalization is a Proverb; a conventional figurative
-expression is an Idiom; a conventional non-idiomatic lexical combination is a
-Collocation. Direct speech, an arbitrary quotation, a memorable line from a
-larger dramatic or narrative context, and an ordinary sentence are not
-Aphorisms merely because they are quotable or express a general thought.
+maxim or observation circulated as a whole utterance. Before constructing any
+Resolved output, look only for hard contradiction evidence that is observable
+in this input:
 
-TARGET markup represents exact whole-unit membership. Every participating
-ResolvableText member has its own balanced <TARGET>...</TARGET> pair, including
-repeated words, and memberOrthographies has exactly one value per opening pair
-in textual order. Whitespace, quotation marks, commas, dashes, and terminal
-punctuation are not members and must remain outside TARGET tags. Resolve only
-when all and only the lexical members of one complete Aphorism are marked.
-Return Unresolved for a partial quotation, an appended author attribution, a
-targeted punctuation mark, members spanning two aphorisms, an empty member, or
-unbalanced markup. Never repair target scope or return Partial coverage.
+- unmarked context explicitly labels the marked wording as a Collocation or
+  Funktionsverbgefüge, a traditional Proverb, a merely episodic observation,
+  drama or scene-bound dialogue, or ordinary direct speech;
+- the marked words visibly fill a phrase slot inside a larger unmarked clause
+  as an Idiom or Collocation rather than form the whole utterance; or
+- target scope is partial, includes an attribution, or punctuation separates
+  the marked members into multiple complete units.
+
+Hard contradiction evidence is decisive: return Unresolved immediately and do
+not apply the fixed-route default. If none of those observable conditions is
+present, the upstream Phraseme/Aphorism route and marked membership are
+authoritative: return Resolved and construct the Citation Surface and Lemma.
+Do not invent a contradiction from the marked wording's style or content.
+
+Do not ask again whether the wording is an established Aphorism. Lack of
+recognition, recalled authorship, or independent attestation is never a reason
+for Unresolved.
+
+A positive route contradiction exists only when the input supplies the hard
+evidence above. Do not infer a wrong route merely because you cannot
+independently attest the wording.
+
+The input has already been structurally validated so that every TARGET pair
+identifies exactly one word-like ResolvableText member. TARGET membership is
+therefore authoritative: emit one memberOrthographies value per marked member
+in textual order. A positive target-scope contradiction exists when the marked
+members are not all and only the lexical members of one complete Aphorism:
+return Unresolved for a partial quotation, an appended author attribution, or
+members spanning two aphorisms. Never repair target scope or return Partial
+coverage.
 
 This route is Citation-only under the current Dumling codec. Every Resolved
 result has surfaceKind Citation, realizationCoverage Full, and no
@@ -33,11 +54,14 @@ Lemma coreFeatures object is exactly {}.
 normalizedSurface is the normalized space-separated projection of the marked
 lexical members in order. It excludes all unmarked punctuation and surrounding
 quotation marks. Repair a real spelling or inappropriate-casing error and mark
-only that member Typo. Ordinary sentence-initial capitalization and licensed
-historical spelling are Standard. Preserve a licensed historical spelling in
-normalizedSurface and use spelling Variant; use the current conventional
-wording for canonicalForm. Otherwise spelling is Canonical. Never insert,
-remove, reorder, or lemmatize lexical members.
+only that member Typo. In particular, when the complete maxim begins with
+lowercase die, normalize it to Die in normalizedSurface and canonicalForm and
+mark that first member Typo. An attested uppercase initial at the beginning of
+the maxim is ordinary sentence-initial capitalization and remains Standard.
+Licensed historical spelling is also Standard. Preserve a licensed historical
+spelling in normalizedSurface and use spelling Variant; use the current
+conventional wording for canonicalForm. Otherwise spelling is Canonical. Never
+insert, remove, reorder, or lemmatize lexical members.
 
 Resolved has a non-null resolution. Unresolved has resolution null. Return only
 the model fields: never language, family, kind, a linked Lemma inside Surface,

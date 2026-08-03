@@ -22,34 +22,33 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				"The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features.",
 			contaminationKeys: ["de-coll-lemma:entscheidung-treffen"],
 		},
-		"grammar-de-coll-betracht-citation": {
+		"grammar-de-coll-frage-citation": {
 			input: {
 				markedContext:
-					"Wörterbucheintrag: <TARGET>in</TARGET> <TARGET>Betracht</TARGET> <TARGET>ziehen</TARGET>",
+					"Wörterbucheintrag: <TARGET>eine</TARGET> <TARGET>Frage</TARGET> <TARGET>stellen</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "in Betracht ziehen",
-				canonicalForm: "in Betracht ziehen",
+				normalizedSurface: "eine Frage stellen",
+				canonicalForm: "eine Frage stellen",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 			}),
 			explanation:
 				"An explicit dictionary entry is Citation rather than a contextual Inflection.",
-			contaminationKeys: ["de-coll-lemma:betracht-ziehen"],
+			contaminationKeys: ["de-coll-lemma:frage-stellen"],
 		},
-		"grammar-de-coll-verfuegung-partial": {
+		"grammar-de-coll-verfuegung-present-full": {
 			input: {
 				markedContext:
-					"Wir <TARGET>stellen</TARGET> die Daten zur <TARGET>Verfügung</TARGET>.",
+					"Wir <TARGET>stellen</TARGET> die Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
 			},
 			idealOutput: finite(
-				"stellen Verfügung",
+				"stellen zur Verfügung",
 				"zur Verfügung stellen",
 				{ mood: "Ind", number: "Plur", person: "1", tense: "Pres" },
-				["Standard", "Standard"],
-				"Partial",
+				["Standard", "Standard", "Standard"],
 			),
 			explanation:
-				"The two marked distinctive components identify the collocation, but normalizedSurface cannot insert the unmarked zur member, so realization coverage is Partial.",
+				"Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full.",
 			contaminationKeys: ["de-coll-lemma:verfuegung-stellen"],
 		},
 		"grammar-de-coll-antrag-present-full": {
@@ -78,31 +77,31 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 			contaminationKeys: ["de-coll-lemma:antrag-stellen"],
 		},
-		"grammar-de-coll-kritik-present-full": {
+		"grammar-de-coll-vereinbarung-present-full": {
 			input: {
 				markedContext:
-					"Der Autor <TARGET>übt</TARGET> <TARGET>Kritik</TARGET>.",
+					"Die Parteien <TARGET>treffen</TARGET> <TARGET>eine</TARGET> <TARGET>Vereinbarung</TARGET>.",
 			},
 			idealOutput: finite(
-				"übt Kritik",
-				"Kritik üben",
-				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
-				["Standard", "Standard"],
+				"treffen eine Vereinbarung",
+				"eine Vereinbarung treffen",
+				{ mood: "Ind", number: "Plur", person: "3", tense: "Pres" },
+				["Standard", "Standard", "Standard"],
 			),
-			contaminationKeys: ["de-coll-lemma:kritik-ueben"],
+			contaminationKeys: ["de-coll-lemma:vereinbarung-treffen"],
 		},
-		"grammar-de-coll-hilfe-plural-full": {
+		"grammar-de-coll-abbitte-plural-full": {
 			input: {
 				markedContext:
-					"Die Helfer <TARGET>leisten</TARGET> <TARGET>Hilfe</TARGET>.",
+					"Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
 			},
 			idealOutput: finite(
-				"leisten Hilfe",
-				"Hilfe leisten",
+				"leisten Abbitte",
+				"Abbitte leisten",
 				{ mood: "Ind", number: "Plur", person: "3", tense: "Pres" },
 				["Standard", "Standard"],
 			),
-			contaminationKeys: ["de-coll-lemma:hilfe-leisten"],
+			contaminationKeys: ["de-coll-lemma:abbitte-leisten"],
 		},
 		"grammar-de-coll-abschied-past-full": {
 			input: {
@@ -117,28 +116,28 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 			contaminationKeys: ["de-coll-lemma:abschied-nehmen"],
 		},
-		"grammar-de-coll-massnahmen-present-full": {
+		"grammar-de-coll-zustimmung-present-full": {
 			input: {
 				markedContext:
-					"Die Regierung <TARGET>ergreift</TARGET> <TARGET>Maßnahmen</TARGET>.",
+					"Der Rat <TARGET>erteilt</TARGET> <TARGET>Zustimmung</TARGET>.",
 			},
 			idealOutput: finite(
-				"ergreift Maßnahmen",
-				"Maßnahmen ergreifen",
+				"erteilt Zustimmung",
+				"Zustimmung erteilen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard"],
 			),
-			contaminationKeys: ["de-coll-lemma:massnahmen-ergreifen"],
+			contaminationKeys: ["de-coll-lemma:zustimmung-erteilen"],
 		},
-		"grammar-de-coll-stellung-imperative-full": {
+		"grammar-de-coll-ende-imperative-full": {
 			input: {
 				markedContext:
-					"<TARGET>Nimm</TARGET> endlich <TARGET>Stellung</TARGET>!",
+					"<TARGET>Komm</TARGET> endlich <TARGET>zum</TARGET> <TARGET>Ende</TARGET>!",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "nimm Stellung",
-				canonicalForm: "Stellung nehmen",
-				memberOrthographies: ["Standard", "Standard"],
+				normalizedSurface: "komm zum Ende",
+				canonicalForm: "zum Ende kommen",
+				memberOrthographies: ["Standard", "Standard", "Standard"],
 				inflectionalFeatures: {
 					mood: "Imp",
 					number: "Sing",
@@ -148,7 +147,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					voice: null,
 				},
 			}),
-			contaminationKeys: ["de-coll-lemma:stellung-nehmen"],
+			contaminationKeys: ["de-coll-lemma:ende-kommen"],
 		},
 		"grammar-de-coll-anspruch-participle-full": {
 			input: {
@@ -205,57 +204,43 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 			contaminationKeys: ["de-coll-lemma:einfluss-nehmen"],
 		},
-		"grammar-de-coll-rolle-modified-full": {
+		"grammar-de-coll-erscheinung-modified-full": {
 			input: {
 				markedContext:
-					"Er <TARGET>spielt</TARGET> <TARGET>eine</TARGET> wichtige <TARGET>Rolle</TARGET>.",
+					"Das Problem <TARGET>tritt</TARGET> plötzlich <TARGET>in</TARGET> <TARGET>Erscheinung</TARGET>.",
 			},
 			idealOutput: finite(
-				"spielt eine Rolle",
-				"eine Rolle spielen",
+				"tritt in Erscheinung",
+				"in Erscheinung treten",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
 			),
-			contaminationKeys: ["de-coll-lemma:rolle-spielen"],
+			contaminationKeys: ["de-coll-lemma:erscheinung-treten"],
 		},
-		"grammar-de-coll-anspruch-partial": {
+		"grammar-de-coll-abschied-citation": {
 			input: {
 				markedContext:
-					"Sie <TARGET>nimmt</TARGET> den Dienst in <TARGET>Anspruch</TARGET>.",
-			},
-			idealOutput: finite(
-				"nimmt Anspruch",
-				"in Anspruch nehmen",
-				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
-				["Standard", "Standard"],
-				"Partial",
-			),
-			contaminationKeys: ["de-coll-lemma:anspruch-nehmen"],
-		},
-		"grammar-de-coll-kritik-citation": {
-			input: {
-				markedContext:
-					"Wörterbucheintrag: <TARGET>Kritik</TARGET> <TARGET>üben</TARGET>",
+					"Wörterbucheintrag: <TARGET>Abschied</TARGET> <TARGET>nehmen</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "Kritik üben",
-				canonicalForm: "Kritik üben",
+				normalizedSurface: "Abschied nehmen",
+				canonicalForm: "Abschied nehmen",
 				memberOrthographies: ["Standard", "Standard"],
 			}),
-			contaminationKeys: ["de-coll-lemma:kritik-ueben"],
+			contaminationKeys: ["de-coll-lemma:abschied-nehmen"],
 		},
-		"grammar-de-coll-hilfe-typo": {
+		"grammar-de-coll-abbitte-typo": {
 			input: {
 				markedContext:
-					"Sie <TARGET>leistet</TARGET> <TARGET>Hilffe</TARGET>.",
+					"Sie <TARGET>leistet</TARGET> <TARGET>Abbite</TARGET>.",
 			},
 			idealOutput: finite(
-				"leistet Hilfe",
-				"Hilfe leisten",
+				"leistet Abbitte",
+				"Abbitte leisten",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Typo"],
 			),
-			contaminationKeys: ["de-coll-lemma:hilfe-leisten"],
+			contaminationKeys: ["de-coll-lemma:abbitte-leisten"],
 		},
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,

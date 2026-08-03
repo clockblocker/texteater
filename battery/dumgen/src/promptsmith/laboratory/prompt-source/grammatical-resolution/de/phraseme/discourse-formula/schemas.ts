@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import {
 	asObjectSchema,
+	grammaticalResolutionMarkedContextSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -36,14 +37,14 @@ const citationSurfaceCodec = codecBuilder4.buildFixedFieldsCodec(
 export const modelCitationSurfaceSchema = citationSurfaceCodec.in;
 
 export const inputSchema = z.strictObject({
-	markedContext: z.string().min(1),
+	markedContext: grammaticalResolutionMarkedContextSchema,
 }) satisfies PromptInputSchema;
 
 export const outputSchema = z.strictObject({
 	decision: z.enum(["Resolved", "Unresolved"]),
 	resolution: z
 		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
 			surface: modelCitationSurfaceSchema,
 			lemma: modelLemmaSchema,
 		})

@@ -31,7 +31,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -56,8 +56,8 @@ test("DET runner import and preflight make no provider call", () => {
 	expect(prepareCurrentTestCases()).toHaveLength(19);
 	expect(currentEvidenceBinding()).toMatchObject({
 		runnerVersion: "grammatical-resolution-determiner-v6",
-		model: "gpt-5-nano",
-		reasoningEffort: "high",
+		model: "gpt-5.6-luna",
+		reasoningEffort: "none",
 		runMaxOutputTokens: 16384,
 	});
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
@@ -86,7 +86,7 @@ test("DET retained evidence is strict and current-bound", () => {
 		}),
 	).toThrow(/obsolete evidence policy/);
 	expect(() =>
-		parseRetainedRun({ ...valid, reasoningEffort: "low" }),
+		parseRetainedRun({ ...valid, reasoningEffort: "obsolete-policy" }),
 	).toThrow();
 	expect(() =>
 		parseRetainedRun({

@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+	DUMGEN_GENERATION_MODEL as RUN_MODEL,
+} from "../../../src/ai-sdk/model-policy";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
 import { pronounGrammaticalResolutionExperiment } from "../../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluation-suite";
@@ -16,12 +20,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "grammatical-resolution-pronoun-v1";
 const RUN_ROUTE = "grammatical-resolution/de/lexeme/pronoun";
-const RUN_MODEL = "gpt-5-nano";
 const RUN_MAX_OUTPUT_TOKENS = 16384;
 const MINIMUM_EVALUATION_CASES = 15;
 const MAXIMUM_EVALUATION_CASES = 25;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "high";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",

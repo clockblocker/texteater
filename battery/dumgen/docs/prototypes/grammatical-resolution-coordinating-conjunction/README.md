@@ -14,7 +14,7 @@ corpus-only pending human confirmation, and the context-sensitive `jedoch`
 boundary is also corpus-only.
 
 The bounded live runner makes one serial call per evaluation case with
-`gpt-5-nano`, low reasoning effort, no retries, `store: false`, and a
+`gpt-5.6-luna`, no reasoning effort, no retries, `store: false`, and a
 1,024-token output cap. Before creating a provider client, it requires 15–25
 cases and schema-parses every selected input and ideal output. It records the
 ordered case IDs, assembled-prompt SHA-256, pinned model and generation policy,

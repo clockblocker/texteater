@@ -34,7 +34,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -59,6 +59,12 @@ test("Aphorism runner import and preflight make no provider call", async () => {
 	expect(currentEvidenceBinding().route).toBe(
 		"grammatical-resolution/de/phraseme/aphorism",
 	);
+	expect(currentEvidenceBinding().runnerVersion).toBe(
+		"grammatical-resolution-aphorism-v6",
+	);
+	expect(currentEvidenceBinding().model).toBe("gpt-5.6-luna");
+	expect(currentEvidenceBinding().reasoningEffort).toBe("none");
+	expect(currentEvidenceBinding().runMaxOutputTokens).toBe(32768);
 	expect(prepareCurrentTestCases()).toHaveLength(20);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
 	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
@@ -93,6 +99,43 @@ test("Aphorism retained evidence is strict and current-bound", () => {
 			outputSchemaSha256: "0".repeat(64),
 		}),
 	).toThrow(/obsolete evidence policy/);
+});
+
+test("Aphorism finalization rejects a parsed output that differs from retained raw output", async () => {
+	const directory = await mkdtemp(join(tmpdir(), "aphorism-tamper-test-"));
+	const resultsPath = join(directory, "results.json");
+	const classificationsPath = join(directory, "miss-classifications.json");
+	try {
+		const currentDraft = draftResult();
+		const firstAttempt = currentDraft.attempts[0];
+		if (firstAttempt === undefined)
+			throw new Error("Expected a current case.");
+		const attempts = [
+			{
+				...firstAttempt,
+				rawOutputText: JSON.stringify({
+					decision: "Unresolved",
+					resolution: null,
+				}),
+			},
+			...currentDraft.attempts.slice(1),
+		];
+		await writeFile(
+			resultsPath,
+			JSON.stringify({
+				...currentDraft,
+				...summarizeEvidence(attempts, false),
+				attempts,
+			}),
+			"utf8",
+		);
+		await writeFile(classificationsPath, "{}", "utf8");
+		await expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(/does not match its raw provider output/);
+	} finally {
+		await rm(directory, { recursive: true, force: true });
+	}
 });
 
 test("Aphorism retains complete provider metadata for parse failures", () => {

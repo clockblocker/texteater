@@ -21,8 +21,8 @@ const expectedEvaluationIds = [
 	"grammar-de-discourse-formula-auf-wiedersehen",
 	"grammar-de-discourse-formula-vielen-dank",
 	"grammar-de-discourse-formula-gern-geschehen",
-	"grammar-de-discourse-formula-auf-keinen-fall",
-	"grammar-de-discourse-formula-auf-jeden-fall",
+	"grammar-de-discourse-formula-nein-danke",
+	"grammar-de-discourse-formula-ach-du-meine-guete",
 	"grammar-de-discourse-formula-darf-ich-bitten",
 	"grammar-de-discourse-formula-dann-wollen-wir-mal",
 	"grammar-de-discourse-formula-bis-bald",
@@ -34,7 +34,7 @@ const expectedEvaluationIds = [
 	"grammar-de-discourse-formula-unresolved-proverb",
 	"grammar-de-discourse-formula-unresolved-arbitrary-quote",
 	"grammar-de-discourse-formula-unresolved-partial-formula",
-	"grammar-de-discourse-formula-unresolved-overbroad-punctuation",
+	"grammar-de-discourse-formula-unresolved-compositional-gute-reise-np",
 	"grammar-de-discourse-formula-unresolved-repeated-occurrence",
 	"grammar-de-discourse-formula-unresolved-unrelated-targets",
 	"grammar-de-discourse-formula-unresolved-bitte-intj",
@@ -85,6 +85,16 @@ describe("Phraseme/DiscourseFormula exact model contract", () => {
 				inflectionalFeatures: {},
 			}).success,
 		).toBe(false);
+
+		const resolved = {
+			decision: "Resolved" as const,
+			resolution: {
+				memberOrthographies: ["Standard" as const],
+				surface: citation,
+				lemma,
+			},
+		};
+		expect(outputSchema.safeParse(resolved).success).toBe(false);
 	});
 });
 
@@ -110,7 +120,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			"formulas",
 			"orthography",
 			"boundaries",
-			"policyProbes",
+			"roleAmbiguityAndBoundaries",
 		]);
 
 		const demonstrationLemmas = new Set(
@@ -132,7 +142,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 		).toEqual([]);
 	});
 
-	test("covers every scalar role and keeps policy tensions unscored", () => {
+	test("covers every scalar role and separates ambiguous identity controls", () => {
 		const roles = demonstrations
 			.union(evaluation)
 			.cases.flatMap((testCase) => {
@@ -166,32 +176,89 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			);
 		expect(corpusOnlyIds).toHaveLength(5);
 		for (const id of [
-			"grammar-de-discourse-formula-provisional-bitte-schoen-acknowledgment",
-			"grammar-de-discourse-formula-provisional-bitte-schoen-request",
-			"grammar-de-discourse-formula-provisional-aphorism-zeit-ist-geld",
-			"grammar-de-discourse-formula-provisional-auf-keinen-fall-adverbial",
-			"grammar-de-discourse-formula-provisional-guten-morgen-all-caps",
+			"grammar-de-discourse-formula-bitte-schoen-presentation-role-gap",
+			"grammar-de-discourse-formula-bitte-schoen-request-role-identity",
+			"grammar-de-discourse-formula-tut-mir-leid-sympathy-role-gap",
+			"grammar-de-discourse-formula-auf-keinen-fall-adverbial-boundary",
+			"grammar-de-discourse-formula-auf-jeden-fall-affirmative-role-gap",
 		]) {
 			expect(corpusOnlyIds).toContain(id);
 		}
 		expect(
 			corpus.cases[
-				"grammar-de-discourse-formula-provisional-bitte-schoen-acknowledgment"
+				"grammar-de-discourse-formula-bitte-schoen-presentation-role-gap"
 			]?.contaminationKeys,
-		).toEqual(["de-discourse-formula:bitte-schoen-polyfunction"]);
+		).toEqual(["de-discourse-formula:bitte-schoen-role-identity"]);
 		expect(
 			corpus.cases[
-				"grammar-de-discourse-formula-provisional-bitte-schoen-request"
+				"grammar-de-discourse-formula-bitte-schoen-request-role-identity"
 			]?.contaminationKeys,
-		).toEqual(["de-discourse-formula:bitte-schoen-polyfunction"]);
+		).toEqual(["de-discourse-formula:bitte-schoen-role-identity"]);
+		expect(
+			corpus.cases[
+				"grammar-de-discourse-formula-bitte-schoen-presentation-role-gap"
+			]?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				lemma: { coreFeatures: { discourseFormulaRole: null } },
+			},
+		});
+		expect(
+			corpus.cases[
+				"grammar-de-discourse-formula-auf-jeden-fall-affirmative-role-gap"
+			]?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				lemma: { coreFeatures: { discourseFormulaRole: null } },
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-discourse-formula-ach-du-meine-guete"]
+				?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				lemma: { coreFeatures: { discourseFormulaRole: "Reaction" } },
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-discourse-formula-gern-geschehen"]
+				?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				lemma: {
+					coreFeatures: {
+						discourseFormulaRole: "Acknowledgment",
+					},
+				},
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-discourse-formula-nein-danke"]
+				?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				lemma: { coreFeatures: { discourseFormulaRole: "Refusal" } },
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-discourse-formula-tut-mir-leid"]
+				?.contaminationKeys,
+		).toContain("de-discourse-formula:tut-mir-leid-role-identity");
+		expect(
+			corpus.cases[
+				"grammar-de-discourse-formula-tut-mir-leid-sympathy-role-gap"
+			]?.contaminationKeys,
+		).toContain("de-discourse-formula:tut-mir-leid-role-identity");
 	});
 
-	test("assembles only demonstrations and explicit scalar-role policy", () => {
+	test("assembles only demonstrations and explicit grammatical identity rules", () => {
 		const prompt = assembleSystemPrompt(promptSource);
 		expect(prompt).toContain(
 			"<TARGET>Guten</TARGET> <TARGET>Morgen</TARGET>",
 		);
 		expect(prompt).toContain("<TARGET>Tut</TARGET> <TARGET>mir</TARGET>");
+		expect(prompt).toContain("Nachdem er ihr Fahrrad beschädigt hatte");
+		expect(prompt).toContain("entschuldigte er sich ausdrücklich");
 		expect(prompt).toContain("<TARGET>Wie</TARGET> <TARGET>dem</TARGET>");
 		expect(prompt).toContain("<TARGET>Danke</TARGET>");
 		expect(prompt).not.toContain(
@@ -200,14 +267,47 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 		expect(prompt).not.toContain(
 			"<TARGET>Bitte</TARGET> <TARGET>schön</TARGET>",
 		);
+		expect(prompt).toContain(
+			"Core Features participate in grammatical Lemma identity",
+		);
+		expect(prompt).toMatch(/two distinct grammatical\s+Lemmas/u);
+		expect(prompt).toMatch(/does not change a\s+single Lemma's role/u);
+		expect(prompt).toMatch(/no enum\s+role is grammatically established/u);
 		expect(prompt).toMatch(
-			/Choose one\s+scalar role enacted by this occurrence/u,
+			/Acknowledgment covers a conventional reply that\s+acknowledges another speaker's thanks/u,
+		);
+		expect(prompt).toMatch(
+			/Reaction covers\s+an expressive response to an event or situation/u,
+		);
+		expect(prompt).toContain(
+			"it does not subsume a conventional response to thanks",
+		);
+		expect(prompt).toMatch(
+			/All present canonical lexical members of one\s+formula occurrence must be TARGET-marked/u,
+		);
+		expect(prompt).toMatch(
+			/Never invent an orthography value for an\s+unmarked member/u,
+		);
+		expect(prompt).toContain(
+			"The formula must independently enact that act in this occurrence",
+		);
+		expect(prompt).toMatch(
+			/auf eine gute\s+Reise hoffen contains an attributive, compositional noun phrase/u,
+		);
+		expect(prompt).toMatch(
+			/Do not blindly copy the lowercase Lemma canonicalForm into\s+normalizedSurface/u,
 		);
 		expect(prompt).toContain("Citation Surfaces only");
 		expect(prompt).toContain("single-word interjection");
+		expect(prompt).not.toContain("Require balanced TARGET pairs");
+		expect(prompt).not.toContain("punctuation or surrounding whitespace");
 	});
 
 	test("pins member-level typo attribution and strict decision payloads", () => {
+		expect(
+			corpus.cases["grammar-de-discourse-formula-herzlich-wilkommen-typo"]
+				?.input.markedContext,
+		).toContain("<TARGET>wilkommen</TARGET>");
 		expect(
 			corpus.cases["grammar-de-discourse-formula-herzlich-wilkommen-typo"]
 				?.idealOutput,
@@ -225,6 +325,43 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			outputSchema.safeParse({ decision: "Unresolved", resolution: {} })
 				.success,
 		).toBe(false);
+	});
+
+	test("pins underselection, interactional use, and contextual noun casing", () => {
+		const partial =
+			corpus.cases[
+				"grammar-de-discourse-formula-unresolved-partial-formula"
+			];
+		expect(partial?.input.markedContext.match(/<TARGET>/gu)).toHaveLength(
+			1,
+		);
+		expect(partial?.input.markedContext).toContain("</TARGET> Tag");
+		expect(partial?.idealOutput).toEqual({
+			decision: "Unresolved",
+			resolution: null,
+		});
+
+		const compositional =
+			corpus.cases[
+				"grammar-de-discourse-formula-unresolved-compositional-gute-reise-np"
+			];
+		expect(compositional?.input.markedContext).toContain(
+			"hoffte sie auf eine <TARGET>gute</TARGET> <TARGET>Reise</TARGET>",
+		);
+		expect(compositional?.idealOutput).toEqual({
+			decision: "Unresolved",
+			resolution: null,
+		});
+
+		expect(
+			corpus.cases["grammar-de-discourse-formula-ach-du-meine-guete"]
+				?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				surface: { normalizedSurface: "ach du meine Güte" },
+				lemma: { canonicalForm: "ach du meine güte" },
+			},
+		});
 	});
 });
 

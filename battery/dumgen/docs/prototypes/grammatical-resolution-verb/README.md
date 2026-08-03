@@ -44,7 +44,7 @@ logbook registration is owned by root integration.
 ## Bounded evidence runner
 
 The runner makes exactly one serial call for each of the 20 held-out cases
-with `gpt-5-nano`, high reasoning, a 16,384-token output budget, zero retries,
+with `gpt-5.6-luna`, no reasoning, a 16,384-token output budget, zero retries,
 and `store: false`. Import and preflight make no provider call. Transport,
 JSON, or exact-schema failures retain the available raw response text,
 response ID, resolved model, usage, and error metadata.

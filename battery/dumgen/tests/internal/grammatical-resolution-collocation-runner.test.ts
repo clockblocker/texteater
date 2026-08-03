@@ -32,7 +32,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -55,14 +55,14 @@ function draftResult() {
 
 test("COLLOCATION runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-collocation-v1");
+	expect(binding.runnerVersion).toBe("grammatical-resolution-collocation-v2");
 	expect(binding.route).toBe(
 		"grammatical-resolution/de/phraseme/collocation",
 	);
-	expect(binding.model).toBe("gpt-5-nano");
-	expect(binding.reasoningEffort).toBe("high");
-	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(18);
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
+	expect(binding.maxOutputTokens).toBe(32768);
+	expect(prepareCurrentTestCases()).toHaveLength(20);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
 	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
@@ -158,6 +158,26 @@ test("COLLOCATION finalization is offline, atomic, and recomputed", async () => 
 		};
 		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 		await writeFile(classificationsPath, "{}", "utf8");
+
+		const tamperedAttempt = {
+			...attempts[0],
+			rawOutputText: JSON.stringify({
+				decision: "Unresolved",
+				resolution: null,
+			}),
+		};
+		await writeFile(
+			resultsPath,
+			JSON.stringify({
+				...draft,
+				attempts: [tamperedAttempt, ...attempts.slice(1)],
+			}),
+			"utf8",
+		);
+		expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(/raw output does not exactly match/);
+		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 
 		const finalized = await finalizeEvidence(
 			resultsPath,

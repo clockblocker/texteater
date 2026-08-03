@@ -88,8 +88,8 @@ the codec-equivalent null-only Surface Feature bag.
 
 ## Bounded evidence runner
 
-Runner v1 makes one serial call for each of the 19 held-out cases using
-route-local `gpt-5-nano`, low reasoning, a 2,048-token output budget, zero
+Runner v1 makes one serial call for each of the 19 held-out cases using the
+shared `gpt-5.6-luna` model, no reasoning, a 2,048-token output budget, zero
 retries, and `store: false`. A 25-case cap prevents accidental corpus growth
 from expanding a live run. No live call was made while authoring this slice.
 

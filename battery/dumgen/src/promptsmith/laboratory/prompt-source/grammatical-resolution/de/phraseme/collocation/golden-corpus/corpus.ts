@@ -1,8 +1,8 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
+import { alternantCases } from "./cases/alternants";
 import { boundaryCases } from "./cases/boundaries";
 import { formCases } from "./cases/forms";
-import { policyProbeCases } from "./cases/policy-probes";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/phraseme/collocation",
@@ -11,7 +11,7 @@ export const corpus = defineGoldenCorpus({
 	collections: {
 		forms: formCases,
 		boundaries: boundaryCases,
-		policyProbes: policyProbeCases,
+		alternants: alternantCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

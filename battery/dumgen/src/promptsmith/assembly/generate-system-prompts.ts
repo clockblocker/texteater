@@ -1,5 +1,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promptSource as grammarFusionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/construction/fusion/prompt-source";
+import { promptSource as grammarPairedFramePromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/construction/paired-frame/prompt-source";
 
 import { promptSource as grammarAdjectivePromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/prompt-source";
 import { promptSource as grammarAdpositionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/prompt-source";
@@ -20,6 +22,8 @@ import { promptSource as grammarVerbPromptSource } from "../laboratory/prompt-so
 import { promptSource as grammarAphorismPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/prompt-source";
 import { promptSource as grammarCollocationPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/prompt-source";
 import { promptSource as grammarDiscourseFormulaPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
+import { promptSource as grammarIdiomPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/prompt-source";
+import { promptSource as grammarProverbPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/proverb/prompt-source";
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as segmentationPromptSource } from "../laboratory/prompt-source/segmentation/de/prompt-source";
@@ -33,6 +37,8 @@ const codegen = defineSystemPromptCodegen({
 		intakePromptSource,
 		segmentationPromptSource,
 		targetPromptSource,
+		grammarFusionPromptSource,
+		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,
 		grammarAdpositionPromptSource,
 		grammarAdverbPromptSource,
@@ -52,6 +58,8 @@ const codegen = defineSystemPromptCodegen({
 		grammarAphorismPromptSource,
 		grammarCollocationPromptSource,
 		grammarDiscourseFormulaPromptSource,
+		grammarIdiomPromptSource,
+		grammarProverbPromptSource,
 		readingPromptSource,
 	],
 	promptSourceRoot: join(promptsmithRoot, "laboratory", "prompt-source"),

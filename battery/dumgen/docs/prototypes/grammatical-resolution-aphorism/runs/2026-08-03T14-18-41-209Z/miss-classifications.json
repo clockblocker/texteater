@@ -1,0 +1,38 @@
+{
+  "grammar-de-aphorism-nachsicht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-alter": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-jugend": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-gegenwart": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The low-reasoning nano run otherwise produced the exact resolved DTO but emitted thirteen orthography values for fourteen mechanically marked members."
+  },
+  "grammar-de-aphorism-streiten": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-unbezahlbar": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-grundsaetze": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and no contextual contradiction, the low-reasoning nano run conservatively returned Unresolved for this source-verified complete Aphorism."
+  },
+  "grammar-de-aphorism-casing-menschen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite the corrected fixed-route instruction and explicit typo policy, the low-reasoning nano run returned Unresolved instead of repairing the source-verified complete Aphorism's initial casing."
+  },
+  "grammar-de-aphorism-unresolved-literary-quotation": {
+    "classification": "prompt-defect",
+    "explanation": "The first fixed-route correction over-weighted upstream classification and did not make the positive dramatic-dialogue contradiction operational enough, so the model resolved a Faust line as an Aphorism."
+  }
+}

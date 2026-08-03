@@ -17,7 +17,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 		},
 		"grammar-de-aphorism-unresolved-proverb-grube": {
 			...unresolved(
-				`${markEveryMember("Wer anderen eine Grube gräbt fällt selbst hinein")}.`,
+				`Das traditionelle Sprichwort lautet: ${markEveryMember("Wer anderen eine Grube gräbt fällt selbst hinein")}.`,
 			),
 			contaminationKeys: ["de-proverb:wer-anderen-eine-grube-graebt"],
 			explanation:
@@ -31,7 +31,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 		},
 		"grammar-de-aphorism-unresolved-collocation": {
 			...unresolved(
-				`Sie musste ${markEveryMember("eine Entscheidung treffen")}.`,
+				`Das Grammatikbeispiel ist ausdrücklich als Funktionsverbgefüge eingeordnet: Sie musste ${markEveryMember("eine Entscheidung treffen")}.`,
 			),
 			contaminationKeys: ["de-collocation:eine-entscheidung-treffen"],
 		},
@@ -44,12 +44,12 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 		},
 		"grammar-de-aphorism-unresolved-ordinary-sentence": {
 			...unresolved(
-				`${markEveryMember("Die Katze sitzt auf dem Sofa")}.`,
+				`Als rein episodische Beobachtung steht im Protokoll: ${markEveryMember("Die Katze sitzt auf dem Sofa")}.`,
 			),
 		},
 		"grammar-de-aphorism-unresolved-literary-quotation": {
 			...unresolved(
-				`„${markEveryMember("Da steh ich nun ich armer Tor")}.“`,
+				`In Goethes Drama klagt Faust in einer konkreten Bühnenszene: „${markEveryMember("Da steh ich nun ich armer Tor")}.“`,
 			),
 			contaminationKeys: ["de-literary-quotation:faust-da-steh-ich-nun"],
 			explanation:

@@ -1,0 +1,1640 @@
+{
+  "runnerVersion": "grammatical-resolution-collocation-v1",
+  "route": "grammatical-resolution/de/phraseme/collocation",
+  "startedAt": "2026-08-03T14:10:54.907Z",
+  "completedAt": "2026-08-03T14:35:32.241Z",
+  "finalizedAt": null,
+  "model": "gpt-5-nano",
+  "maxOutputTokens": 16384,
+  "reasoningEffort": "high",
+  "textVerbosity": "low",
+  "promptSha256": "57782d18c94835481a1be917fddea19d473dfb78222af702945c9d65358bf72d",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "cb25476171c0f1618f6f1fae37c2a93852c2bbffede786c8e43a26f080bf5b70",
+  "evaluationCaseIds": [
+    "grammar-de-coll-antrag-present-full",
+    "grammar-de-coll-antrag-past-full",
+    "grammar-de-coll-vereinbarung-present-full",
+    "grammar-de-coll-abbitte-plural-full",
+    "grammar-de-coll-abschied-past-full",
+    "grammar-de-coll-zustimmung-present-full",
+    "grammar-de-coll-ende-imperative-full",
+    "grammar-de-coll-anspruch-participle-full",
+    "grammar-de-coll-ausdruck-infinitive-full",
+    "grammar-de-coll-einfluss-present-full",
+    "grammar-de-coll-erscheinung-modified-full",
+    "grammar-de-coll-abschied-citation",
+    "grammar-de-coll-abbitte-typo",
+    "grammar-de-coll-unresolved-idiom-loeffel",
+    "grammar-de-coll-unresolved-construction-je-desto",
+    "grammar-de-coll-unresolved-verb-only-antrag",
+    "grammar-de-coll-unresolved-mixed-occurrences",
+    "grammar-de-coll-unresolved-marked-dependent",
+    "grammar-de-coll-unresolved-elliptic-kenntnis",
+    "grammar-de-coll-unresolved-present-member-unmarked"
+  ],
+  "boundedCalls": 20,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 10,
+  "scoreRatio": 0.5,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 1,
+  "unclassifiedMissCount": 9,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-coll-antrag-present-full",
+      "input": {
+        "markedContext": "Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellt einen Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellt einen Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 63239,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"stellt einen Antrag\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"einen Antrag stellen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0388f1fa9536c382016a70a16fd5e481a0925ec3861008e771",
+      "usage": {
+        "input_tokens": 2166,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 8895,
+        "output_tokens_details": {
+          "reasoning_tokens": 8768
+        },
+        "total_tokens": 11061
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-antrag-past-full",
+      "input": {
+        "markedContext": "Gestern <TARGET>stellte</TARGET> sie <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellte einen Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Past",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellte einen Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Past",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 48052,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"stellte einen Antrag\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"einen Antrag stellen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00f96f9464c87a48016a70a1ae703c81a1a17972324a1a2b3f",
+      "usage": {
+        "input_tokens": 2169,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 6821,
+        "output_tokens_details": {
+          "reasoning_tokens": 6656
+        },
+        "total_tokens": 8990
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-vereinbarung-present-full",
+      "input": {
+        "markedContext": "Die Parteien <TARGET>treffen</TARGET> <TARGET>eine</TARGET> <TARGET>Vereinbarung</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "treffen eine Vereinbarung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "eine Vereinbarung treffen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "treffen eine Vereinbarung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "eine Vereinbarung treffen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 34078,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"treffen eine Vereinbarung\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"eine Vereinbarung treffen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_05c6ed3767c0181c016a70a1de7b60819d98834d219d71f6a9",
+      "usage": {
+        "input_tokens": 2169,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 5070,
+        "output_tokens_details": {
+          "reasoning_tokens": 4928
+        },
+        "total_tokens": 7239
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-abbitte-plural-full",
+      "input": {
+        "markedContext": "Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "leisten Abbitte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abbitte leisten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "leisten Abbitte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abbitte leisten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 60713,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"leisten Abbitte\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Abbitte leisten\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03954cc5af95dc70016a70a2008ef881a0bdacab58de2f76e7",
+      "usage": {
+        "input_tokens": 2162,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 9404,
+        "output_tokens_details": {
+          "reasoning_tokens": 9280
+        },
+        "total_tokens": 11566
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-abschied-past-full",
+      "input": {
+        "markedContext": "Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nahmen Abschied",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "1",
+              "tense": "Past",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abschied nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nehmen Abschied",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Plur",
+              "person": "1",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abschied nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 102329,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"nehmen Abschied\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"1\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Abschied nehmen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08cc462b9ee6bb00016a70a23d5ae881a1becf3d3f6eaba934",
+      "usage": {
+        "input_tokens": 2160,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 10036,
+        "output_tokens_details": {
+          "reasoning_tokens": 9920
+        },
+        "total_tokens": 12196
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-zustimmung-present-full",
+      "input": {
+        "markedContext": "Der Rat <TARGET>erteilt</TARGET> <TARGET>Zustimmung</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "erteilt Zustimmung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Zustimmung erteilen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "erteilt Zustimmung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Zustimmung erteilen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 70970,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"erteilt Zustimmung\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Zustimmung erteilen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0a6b528bf3b376f3016a70a2a3a2a881a182a5de12d1c4d4f1",
+      "usage": {
+        "input_tokens": 2161,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 9063,
+        "output_tokens_details": {
+          "reasoning_tokens": 8896
+        },
+        "total_tokens": 11224
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-ende-imperative-full",
+      "input": {
+        "markedContext": "<TARGET>Komm</TARGET> endlich <TARGET>zum</TARGET> <TARGET>Ende</TARGET>!"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "komm zum Ende",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Imp",
+              "number": "Sing",
+              "person": "2",
+              "tense": null,
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "zum Ende kommen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Komm zum Ende",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Imp",
+              "number": null,
+              "person": null,
+              "tense": null,
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "zum Ende kommen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 88332,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"Komm zum Ende\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Imp\",\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"zum Ende kommen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b3ae516250621cc016a70a2ea9640819d988a8c885591229f",
+      "usage": {
+        "input_tokens": 2166,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 13455,
+        "output_tokens_details": {
+          "reasoning_tokens": 13312
+        },
+        "total_tokens": 15621
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-anspruch-participle-full",
+      "input": {
+        "markedContext": "Sie hat Hilfe <TARGET>in</TARGET> <TARGET>Anspruch</TARGET> <TARGET>genommen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "in Anspruch genommen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "aspect": null,
+              "gender": null,
+              "mood": null,
+              "number": null,
+              "person": null,
+              "tense": null,
+              "verbForm": "Part",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "in Anspruch nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 83204,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_020be70a9d82ea12016a70a342e85081a09e70cdc453e62c8a",
+      "usage": {
+        "input_tokens": 2168,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 12267,
+        "output_tokens_details": {
+          "reasoning_tokens": 12224
+        },
+        "total_tokens": 14435
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-ausdruck-infinitive-full",
+      "input": {
+        "markedContext": "Sie versucht, ihre Sorge <TARGET>zum</TARGET> <TARGET>Ausdruck</TARGET> zu <TARGET>bringen</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zum Ausdruck bringen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": null,
+              "number": null,
+              "person": null,
+              "tense": null,
+              "verbForm": "Inf",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "zum Ausdruck bringen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": false,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": false,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 121140,
+      "rawOutputText": "",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_015916ed19fbedbd016a70a3961f2881a1b926a3613c102add",
+      "usage": {
+        "input_tokens": 2171,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 16384,
+        "output_tokens_details": {
+          "reasoning_tokens": 16384
+        },
+        "total_tokens": 18555
+      },
+      "error": {
+        "name": "Error",
+        "message": "Provider returned no structured output text (status: incomplete; incomplete reason: max_output_tokens)."
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-einfluss-present-full",
+      "input": {
+        "markedContext": "Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> auf die Planung."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nimmt Einfluss",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Einfluss nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nimmt Einfluss auf die Planung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Einfluss nehmen auf die Planung",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 92982,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"nimmt Einfluss auf die Planung\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Einfluss nehmen auf die Planung\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0fddfe81bc04fbfe016a70a40f4d808192a3c773b944e07a01",
+      "usage": {
+        "input_tokens": 2163,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 7949,
+        "output_tokens_details": {
+          "reasoning_tokens": 7808
+        },
+        "total_tokens": 10112
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-erscheinung-modified-full",
+      "input": {
+        "markedContext": "Das Problem <TARGET>tritt</TARGET> plötzlich <TARGET>in</TARGET> <TARGET>Erscheinung</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "tritt in Erscheinung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "in Erscheinung treten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "tritt in Erscheinung",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "in Erscheinung treten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 38874,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"tritt in Erscheinung\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"in Erscheinung treten\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d6744ce956d1304016a70a46c4d2881a28ee2b308c5776e7e",
+      "usage": {
+        "input_tokens": 2168,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 5676,
+        "output_tokens_details": {
+          "reasoning_tokens": 5504
+        },
+        "total_tokens": 7844
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-abschied-citation",
+      "input": {
+        "markedContext": "Wörterbucheintrag: <TARGET>Abschied</TARGET> <TARGET>nehmen</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Abschied nehmen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "Abschied nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Abschied nehmen",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "Abschied nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 27121,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"Abschied nehmen\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Abschied nehmen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0ec6fd6dab423b22016a70a4931f6881a39d108843e0372c08",
+      "usage": {
+        "input_tokens": 2164,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 3052,
+        "output_tokens_details": {
+          "reasoning_tokens": 2944
+        },
+        "total_tokens": 5216
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-abbitte-typo",
+      "input": {
+        "markedContext": "Sie <TARGET>leistet</TARGET> <TARGET>Abbite</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "leistet Abbitte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abbitte leisten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "leistet Abbitte",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "Abbitte leisten",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 72402,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Typo\"],\"surface\":{\"normalizedSurface\":\"leistet Abbitte\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Abbitte leisten\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_046b9c00290d2bb4016a70a4ae38d0819ebbab1fbad5b0808e",
+      "usage": {
+        "input_tokens": 2160,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 9057,
+        "output_tokens_details": {
+          "reasoning_tokens": 8896
+        },
+        "total_tokens": 11217
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-idiom-loeffel",
+      "input": {
+        "markedContext": "Irgendwann wird er <TARGET>den</TARGET> <TARGET>Löffel</TARGET> <TARGET>abgeben</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "den Löffel abgeben",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": null,
+              "number": null,
+              "person": null,
+              "tense": null,
+              "verbForm": "Inf",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "den Löffel abgeben",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 91750,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"den Löffel abgeben\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"den Löffel abgeben\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03d451c40d240ec1016a70a4f6afc881a19fa8cc03a2604d83",
+      "usage": {
+        "input_tokens": 2172,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 12164,
+        "output_tokens_details": {
+          "reasoning_tokens": 12032
+        },
+        "total_tokens": 14336
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-construction-je-desto",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> länger er wartet, <TARGET>desto</TARGET> unruhiger wird er."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "Je desto",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "je desto",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 101451,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"Je desto\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"je desto\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0dd780d1acd153e2016a70a55262c4819c9b62f1d66cbef6e0",
+      "usage": {
+        "input_tokens": 2166,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 15332,
+        "output_tokens_details": {
+          "reasoning_tokens": 15232
+        },
+        "total_tokens": 17498
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-verb-only-antrag",
+      "input": {
+        "markedContext": "Sie <TARGET>stellt</TARGET> einen Antrag."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 33474,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_07ead9e435c2468e016a70a5b7db14819c96f0c1f046824619",
+      "usage": {
+        "input_tokens": 2153,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 4288,
+        "output_tokens_details": {
+          "reasoning_tokens": 4224
+        },
+        "total_tokens": 6441
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-mixed-occurrences",
+      "input": {
+        "markedContext": "Sie <TARGET>stellt</TARGET> einen Antrag, und er leistet <TARGET>Abbitte</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 14347,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_02d6d9380cb2b0e9016a70a5d95904819c9e05704563519b17",
+      "usage": {
+        "input_tokens": 2167,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 1968,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 4135
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-marked-dependent",
+      "input": {
+        "markedContext": "Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>dringenden</TARGET> <TARGET>Antrag</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard",
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellt einen dringenden Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen dringenden Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 90972,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"stellt einen dringenden Antrag\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"einen dringenden Antrag stellen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_09d204a08ac9b160016a70a5e7fb0881a291440135c653c39d",
+      "usage": {
+        "input_tokens": 2175,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 11948,
+        "output_tokens_details": {
+          "reasoning_tokens": 11776
+        },
+        "total_tokens": 14123
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-elliptic-kenntnis",
+      "input": {
+        "markedContext": "Sie nahm den Bericht zur Kenntnis. Und die Warnung? – Ebenfalls <TARGET>zur</TARGET> <TARGET>Kenntnis</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nahm den Bericht zur Kenntnis",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Past",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "zur Kenntnis nehmen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 162489,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"nahm den Bericht zur Kenntnis\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"zur Kenntnis nehmen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_026f22cd395fd110016a70a642bf7881a2a1713b5713cbac9c",
+      "usage": {
+        "input_tokens": 2175,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 14018,
+        "output_tokens_details": {
+          "reasoning_tokens": 13888
+        },
+        "total_tokens": 16193
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-coll-unresolved-present-member-unmarked",
+      "input": {
+        "markedContext": "Sie <TARGET>stellt</TARGET> einen <TARGET>Antrag</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard",
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "stellt einen Antrag",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "mood": "Ind",
+              "number": "Sing",
+              "person": "3",
+              "tense": "Pres",
+              "verbForm": "Fin",
+              "voice": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "einen Antrag stellen",
+            "coreFeatures": {}
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 79406,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"surface\":{\"normalizedSurface\":\"stellt einen Antrag\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"einen Antrag stellen\",\"coreFeatures\":{}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_07316a3c8d32f7c4016a70a6e51df4819c9346b1a228099e68",
+      "usage": {
+        "input_tokens": 2159,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2048
+        },
+        "output_tokens": 11125,
+        "output_tokens_details": {
+          "reasoning_tokens": 11008
+        },
+        "total_tokens": 13284
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

@@ -32,7 +32,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,

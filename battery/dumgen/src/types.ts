@@ -3,7 +3,7 @@ import type {
 	Selection,
 	SupportedLanguage,
 } from "dumling/types";
-
+import type { GermanGrammaticalRoute } from "./schema/de-grammatical-resolution-inventory";
 import type {
 	GermanHighLevelFamily,
 	GermanHighLevelKind,
@@ -52,13 +52,6 @@ export type SegmentationResult =
 			readonly reason: "Unintelligible";
 			readonly language: null;
 	  };
-
-type GermanGrammaticalRoute = {
-	readonly [Family in GermanHighLevelFamily]: {
-		readonly family: Family;
-		readonly kind: GermanHighLevelKind<Family>;
-	};
-}[GermanHighLevelFamily];
 
 export type GrammaticalRoute<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
@@ -113,7 +106,12 @@ export type IntakeDecision =
 	| { readonly decision: "Unintelligible"; readonly language: null };
 
 /** Internal result of Target Classification. */
-export type AnalysisTarget = GrammaticalRoute<"de"> & {
+export type AnalysisTarget = {
+	readonly [Family in GermanHighLevelFamily]: {
+		readonly family: Family;
+		readonly kind: GermanHighLevelKind<Family>;
+	};
+}[GermanHighLevelFamily] & {
 	readonly memberSegmentIndices: readonly number[];
 };
 

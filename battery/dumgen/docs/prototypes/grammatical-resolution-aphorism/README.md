@@ -1,10 +1,10 @@
 # German Phraseme/Aphorism Grammatical Resolution evaluation
 
 This route-local prototype covers exactly
-`grammatical-resolution/de/phraseme/aphorism`. It adds no shared prompt
-generation, package command, catalog, runtime wiring, or live evidence. The
-Golden Corpus has 27 cases: four necessary demonstrations, 20 explicitly pinned
-held-out cases, and three corpus-only policy probes. Demonstration and
+`grammatical-resolution/de/phraseme/aphorism`. It adds no catalog or runtime
+wiring and retains no live evidence. The Golden Corpus has 26 cases: four
+necessary demonstrations, 20 explicitly pinned held-out cases, and two
+corpus-only authorship boundaries. Demonstration and
 evaluation selections are disjoint by case, normalized input, and explicit
 lemma contamination keys.
 
@@ -26,31 +26,36 @@ Feature object is `{}`. Aphorism exposes no Dumling Inflection Surface, so
 `surfaceKind` is always `Citation` and `inflectionalFeatures` is never emitted.
 
 Whole-unit membership follows the Selection contract rather than treating the
-quotation as one opaque string. Every participating `ResolvableText` member has
-its own `<TARGET>...</TARGET>` pair, and `memberOrthographies` maps one-to-one
-to those pairs in textual order. Whitespace and punctuation remain untagged.
-The normalized Surface is the space-separated projection of targeted lexical
-members, so it excludes commas, quotation marks, and terminal punctuation.
-Only a complete, single conventional Aphorism can resolve; partial, overbroad,
-or two-unit scope is `Unresolved` rather than `Partial`.
+quotation as one opaque string. The input schema preflights TARGET structure:
+it requires at least two balanced pairs and exactly one word-like lexical member
+inside each pair, rejecting empty, whitespace-only, punctuation-only, multiword,
+and unbalanced targets before a model call. The prompt therefore reasons only
+about linguistic membership and does not delegate markup validation to the
+model. `memberOrthographies` maps one-to-one to validated members in textual
+order. The normalized Surface is their space-separated projection, so it
+excludes commas, quotation marks, and terminal punctuation. Only a complete,
+single conventional Aphorism can resolve; partial, overbroad, or two-unit scope
+is `Unresolved` rather than `Partial`.
 
 The pure evaluator reports exact diagnostics for decision/coherence, mechanical
 TARGET-member count and orthographies, every Citation Surface field, Canonical
 Form, and the empty Core Feature object. It canonicalizes only an all-null
 `surfaceFeatures` bag to `null`, matching the route-local codec.
 
-The bounded runner makes one serial `gpt-5-nano` call per held-out case with low
-reasoning, no retries, `store: false`, and a 2,048-token route-local response
+The bounded runner makes one serial `gpt-5.6-luna` call per held-out case with
+no reasoning, no retries, `store: false`, and a 2,048-token route-local response
 budget. Import and preflight make no provider call. Draft evidence is written
 atomically and cannot meet the evidence threshold until offline finalization.
 The retained schema binds the exact prompt, schemas, ordered case IDs, model
 policy, attempts, and recomputed summary. Provider metadata and raw output are
 retained even when response parsing fails. Runs with an execution/provider
-error cannot be finalized.
+error cannot be finalized. For successful attempts, offline finalization
+reparses `rawOutputText` through the current output schema and exact-compares it
+with the retained parsed `output`; a mismatch is rejected before scoring.
 
-After root integration registers a package command, a deliberate live run can
-be started from `battery/dumgen`. Until then, invoke the runner directly with an
-explicit environment file. Finalization is offline:
+A deliberate live run can be started from `battery/dumgen` through the package
+command or by invoking the runner directly with an explicit environment file.
+Finalization is offline:
 
 ```sh
 bun --env-file ../../.env.local \
@@ -85,14 +90,20 @@ source's licensed historical spelling in `normalizedSurface` while its
 1893 spelling differs materially from current standard spelling. Author names
 are provenance only and never Phraseme members.
 
-The three corpus-only probes preserve uncertain or structurally invalid inputs
-without using them as model evidence: an anonymous maxim-like saying whose
-Proverb/Aphorism status lacks authorship evidence, an author attribution
-incorrectly included in scope, and punctuation incorrectly tagged as a member.
+This single-source design gives unusually strong editorial evidence that every
+positive is an Aphorism, but it is also a generalization risk: a passing score
+does not establish cross-author, cross-period, or cross-editorial behavior.
+Future route expansion should add independently sourced public-domain
+Aphorisms and same-author non-Aphorism boundaries before making a broader German
+coverage claim.
 
-## Deferred shared registration
+The two corpus-only authorship boundaries preserve an anonymous maxim-like
+saying whose Proverb/Aphorism status lacks evidence and an author attribution
+incorrectly included in lexical scope. Structurally invalid TARGET inputs are
+schema/preflight tests, not Golden Cases or model evidence.
 
-Root integration must register the Prompt Source with the generated-prompt
-manifest, add any package prototype command, generate the committed prompt
-module, and decide whether a policy tension belongs in the persistent prompt
-logbook. Catalog and runtime wiring remain outside this route slice.
+## Deferred runtime registration
+
+The Prompt Source is registered for generated-prompt assembly and package-level
+prototype invocation. Catalog and runtime wiring remain outside this route
+slice.

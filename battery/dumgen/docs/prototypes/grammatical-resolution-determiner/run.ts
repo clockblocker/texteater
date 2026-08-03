@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+	DUMGEN_GENERATION_MODEL as RUN_MODEL,
+} from "../../../src/ai-sdk/model-policy";
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
@@ -16,7 +20,6 @@ import { determinerGrammaticalResolutionExperiment } from "../../../src/promptsm
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "grammatical-resolution-determiner-v6";
-const RUN_MODEL = "gpt-5-nano";
 // The DET schema carries broad nullable Core and Inflection Feature bags. This
 // bounded prototype uses a route-local budget large enough to keep provider
 // truncation from masquerading as grammatical evidence.
@@ -24,7 +27,6 @@ const RUN_MAX_OUTPUT_TOKENS = 16384;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "high";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",

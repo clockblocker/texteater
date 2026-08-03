@@ -49,16 +49,57 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				"de-coll-lemma:antrag-stellen",
 			],
 		},
-		"grammar-de-coll-unresolved-overbroad-clause": {
+		"grammar-de-coll-unresolved-mixed-occurrences": {
 			input: {
-				markedContext: "Der Autor <TARGET>übt Kritik</TARGET>.",
+				markedContext:
+					"Sie <TARGET>stellt</TARGET> einen Antrag, und er leistet <TARGET>Abbitte</TARGET>.",
 			},
 			idealOutput: unresolved,
 			explanation:
-				"One TARGET pair contains several whitespace-separated lexical members; each member requires its own pair.",
+				"The two well-formed marked tokens belong to different Collocation occurrences and cannot form one Surface.",
 			contaminationKeys: [
-				"de-coll-boundary:overbroad-target",
-				"de-coll-lemma:kritik-ueben",
+				"de-coll-boundary:mixed-occurrences",
+				"de-coll-lemma:antrag-stellen",
+				"de-coll-lemma:abbitte-leisten",
+			],
+		},
+		"grammar-de-coll-unresolved-marked-dependent": {
+			input: {
+				markedContext:
+					"Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>dringenden</TARGET> <TARGET>Antrag</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The adjective is a contextual modifier, not a lexical member of einen Antrag stellen; marking it makes the proposed Collocation Surface overbroad.",
+			contaminationKeys: [
+				"de-coll-boundary:marked-dependent",
+				"de-coll-lemma:antrag-stellen",
+			],
+		},
+		"grammar-de-coll-unresolved-elliptic-kenntnis": {
+			input: {
+				markedContext:
+					"Sie nahm den Bericht zur Kenntnis. Und die Warnung? – Ebenfalls <TARGET>zur</TARGET> <TARGET>Kenntnis</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The support verb is absent from this elliptic occurrence, so the route cannot construct a feature-bearing Collocation Surface without borrowing grammar from another occurrence.",
+			contaminationKeys: [
+				"de-coll-boundary:ellipsis",
+				"de-coll-lemma:kenntnis-nehmen",
+			],
+		},
+		"grammar-de-coll-unresolved-present-member-unmarked": {
+			input: {
+				markedContext:
+					"Sie <TARGET>stellt</TARGET> einen <TARGET>Antrag</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The canonical member einen is present but unmarked; underselection cannot be reclassified as a Partial Surface.",
+			contaminationKeys: [
+				"de-coll-boundary:present-member-unmarked",
+				"de-coll-lemma:antrag-stellen",
 			],
 		},
 	} as const satisfies GoldenCaseRegistry<

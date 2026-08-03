@@ -27,7 +27,7 @@ export const formulaCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-discourse-formula-tut-mir-leid": {
 			input: {
 				markedContext:
-					"Nach dem Missgeschick sagte er: „<TARGET>Tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
+					"Nachdem er ihr Fahrrad beschädigt hatte, entschuldigte er sich ausdrücklich: „<TARGET>Tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>, dass ich dein Fahrrad beschädigt habe.“",
 			},
 			idealOutput: citation({
 				normalizedSurface: "tut mir leid",
@@ -35,8 +35,11 @@ export const formulaCases = defineGoldenCaseCollection(import.meta.url, {
 				role: "Apology",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 			}),
+			contaminationKeys: [
+				"de-discourse-formula:tut-mir-leid-role-identity",
+			],
 			explanation:
-				"In this repair context Tut mir leid directly performs an apology rather than merely describing regret.",
+				"The speaker caused the harm and explicitly apologizes for it, establishing the Apology grammatical Lemma identity rather than sympathy or regret.",
 		},
 		"grammar-de-discourse-formula-wie-dem-auch-sei": {
 			input: {
@@ -93,29 +96,38 @@ export const formulaCases = defineGoldenCaseCollection(import.meta.url, {
 				memberOrthographies: ["Standard", "Standard"],
 			}),
 		},
-		"grammar-de-discourse-formula-auf-keinen-fall": {
+		"grammar-de-discourse-formula-nein-danke": {
 			input: {
 				markedContext:
-					"„Kommst du mit?“ – „<TARGET>Auf</TARGET> <TARGET>keinen</TARGET> <TARGET>Fall</TARGET>.“",
+					"„Möchten Sie mitfahren?“ – „<TARGET>Nein</TARGET> <TARGET>danke</TARGET>.“",
 			},
 			idealOutput: citation({
-				normalizedSurface: "auf keinen Fall",
-				canonicalForm: "auf keinen fall",
+				normalizedSurface: "nein danke",
+				canonicalForm: "nein danke",
 				role: "Refusal",
-				memberOrthographies: ["Standard", "Standard", "Standard"],
+				memberOrthographies: ["Standard", "Standard"],
 			}),
+			explanation:
+				"The conventional politeness formula directly refuses the offered ride.",
 		},
-		"grammar-de-discourse-formula-auf-jeden-fall": {
+		"grammar-de-discourse-formula-ach-du-meine-guete": {
 			input: {
 				markedContext:
-					"„Schaffst du es bis morgen?“ – „<TARGET>Auf</TARGET> <TARGET>jeden</TARGET> <TARGET>Fall</TARGET>.“",
+					"Als der Schrank plötzlich umstürzte, rief sie: „<TARGET>Ach</TARGET> <TARGET>du</TARGET> <TARGET>meine</TARGET> <TARGET>Güte</TARGET>!“",
 			},
 			idealOutput: citation({
-				normalizedSurface: "auf jeden Fall",
-				canonicalForm: "auf jeden fall",
+				normalizedSurface: "ach du meine Güte",
+				canonicalForm: "ach du meine güte",
 				role: "Reaction",
-				memberOrthographies: ["Standard", "Standard", "Standard"],
+				memberOrthographies: [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+				],
 			}),
+			explanation:
+				"The conventional exclamation directly reacts with fright and surprise to the sudden event.",
 		},
 		"grammar-de-discourse-formula-darf-ich-bitten": {
 			input: {

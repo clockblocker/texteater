@@ -7,6 +7,10 @@ import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import type { ZodType } from "zod";
+import {
+	DUMGEN_GENERATION_MODEL as MODEL,
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+} from "../../../src/ai-sdk/model-policy";
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import { COMPACT_NOUN_EXPERIMENT_CATALOG } from "../../../src/experiments/issue-22-compact-noun-dtos/compact-prompts";
 import { buildDeterministicComparison } from "../../../src/experiments/issue-22-compact-noun-dtos/comparison";
@@ -18,7 +22,6 @@ import { stableJson } from "../../../src/lib/stable-json";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const MODEL = "gpt-5-nano";
 const RUNNER_VERSION = "issue-22-compact-noun-dtos-v2";
 
 type LoosePrompt = {
@@ -186,13 +189,13 @@ async function runAttempt(
 	let rawModelOutput: unknown;
 	try {
 		const response = await client.responses.create({
-			model: args.prompt.generationParams.model,
+			model: MODEL,
 			input: [
 				{ role: "system", content: args.prompt.systemPrompt },
 				{ role: "user", content: serializedInput },
 			],
 			max_output_tokens: args.prompt.generationParams.maxOutputTokens,
-			reasoning: { effort: "minimal" },
+			reasoning: { effort: REASONING_EFFORT },
 			store: false,
 			text: {
 				format: zodTextFormat(

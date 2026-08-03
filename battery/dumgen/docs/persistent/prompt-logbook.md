@@ -386,45 +386,122 @@ is worth revisiting.
 ### Aphorism identity versus proverb and quotation
 
 - **Route:** `grammatical-resolution/de/phraseme/aphorism`
-- **Golden Case:** `grammar-de-aphorism-provisional-proverb-boundary`,
-  `grammar-de-aphorism-provisional-literary-quotation`, and
-  `grammar-de-aphorism-provisional-punctuation-identity`
+- **Golden Case:** `grammar-de-aphorism-unresolved-proverb`,
+  `grammar-de-aphorism-unresolved-literary-quotation`, and
+  `grammar-de-aphorism-authorship-anonymous-maxim`
 - **Raised by:** Wayfinder issue #47
 - **Question:** Which editorial or attribution evidence makes a concise maxim
   an authored Aphorism rather than a traditional Proverb, famous quotation, or
   arbitrary sentence, and should terminal punctuation participate in a
   Phraseme Canonical Form when punctuation is not `ResolvableText`?
 - **Current take:** Resolve source-backed entries from a public-domain
-  aphorism collection and exclude punctuation from member identity. Keep
-  proverb/quotation and punctuation alternatives corpus-only where editorial
-  classification is not independently settled.
+  aphorism collection and exclude punctuation from member identity. Score
+  explicit Proverb and literary-quotation boundaries, while keeping uncertain
+  anonymous authorship outside evaluation until editorial classification is
+  independently settled.
+
+### Proverb punctuation and documented wording variants
+
+- **Route:** `grammatical-resolution/de/phraseme/proverb`
+- **Golden Case:** `grammar-de-proverb-ende-gut`,
+  `grammar-de-proverb-variant-andere-zeiten-andere-sitten`, and
+  `grammar-de-proverb-variant-wer-rastet-rostet`
+- **Raised by:** Wayfinder issue #51
+- **Question:** Should the punctuation displayed in an OWID sentence-valued
+  Kernform participate in Dumling Lemma identity when punctuation is not
+  `ResolvableText`, and do OWID-documented shortened forms or recurrent
+  component replacements realize the same empty-Core Lemma or distinct
+  Canonical Forms?
+- **Current take:** Exclude internal and terminal punctuation from target
+  membership, normalized Surface, and Canonical Form, matching the existing
+  Aphorism route. Score only exact modern OWID Kernformen. Keep the shortened
+  `Wer rastet, rostet` and component-replaced `Andere Zeiten, andere Sitten`
+  corpus-only and `Unresolved`: `spelling: Variant` clearly covers licensed
+  orthography, but does not by itself establish Lemma identity across omitted
+  or replaced lexical members.
 
 ### Collocation alternants and partial realization
 
 - **Route:** `grammatical-resolution/de/phraseme/collocation`
-- **Golden Case:** `grammar-de-collocation-provisional-determiner-alternant`,
-  `grammar-de-collocation-provisional-plural-nominal`, and
-  `grammar-de-collocation-provisional-support-verb-alternant`
+- **Golden Case:** `grammar-de-coll-determiner-alternant`,
+  `grammar-de-coll-plural-member-alternant`, and
+  `grammar-de-coll-support-verb-alternant`
 - **Raised by:** Wayfinder issue #48
 - **Question:** When do determiner, nominal-number, or support-verb alternants
   remain Surfaces of one conventional Collocation Lemma, and what incomplete
   member set is sufficient for a defensible Partial realization?
 - **Current take:** Authoritatively cover settled support-verb combinations.
-  Partial requires at least two distinctive marked members and preserves only
-  their attested order; alternant identity remains corpus-only. Dumling reuses
-  VERB inflection here, so nominal case and number are not inferred into the
-  DTO.
+  Every canonical member present in the occurrence must be marked; omitting a
+  present member is underselection, not Partial. The route has no authoritative
+  positive Partial policy yet: ellipsis with an absent support verb remains
+  Unresolved because its verbal features cannot be borrowed from another
+  occurrence. Alternant identity remains corpus-only. Dumling reuses VERB
+  inflection here, so nominal case and number are not inferred into the DTO.
 
 ### Polyfunctional discourse formulae in a scalar role codec
 
 - **Route:** `grammatical-resolution/de/phraseme/discourse-formula`
-- **Golden Case:** `grammar-de-discourse-formula-provisional-bitte-schoen-request`
-  and `grammar-de-discourse-formula-provisional-bitte-schoen-reaction`
+- **Golden Case:** `grammar-de-discourse-formula-bitte-schoen-request-role-identity`
+  and `grammar-de-discourse-formula-bitte-schoen-presentation-role-gap`
 - **Raised by:** Wayfinder issue #49
 - **Question:** Should a polyfunctional formula carry several stable roles, or
   should Grammatical Resolution select the single discourse function enacted
   by the marked context when the current Core Feature codec is scalar?
 - **Current take:** Select one context-enacted role only when the discourse
-  function is explicit. Keep the paired `bitte schön` uses contamination-linked
-  and corpus-only rather than collapsing polyfunctionality into one lexical
-  identity or inventing a multi-valued codec.
+  function is explicit. Because the role is a Lemma Core Feature, two role
+  values create distinct grammatical Lemmas rather than mutating one identity.
+  Keep the paired `bitte schön` uses contamination-linked and outside
+  evaluation while that identity split receives wider human review.
+
+### Idiom Partial realization versus whole-unit target selection
+
+- **Route:** `grammatical-resolution/de/phraseme/idiom`
+- **Golden Case:** `grammar-de-idiom-woelfe-past-partial` and
+  `grammar-de-idiom-provisional-faeustchen-underselected-head`
+- **Raised by:** Wayfinder issue #50
+- **Question:** Dumling authoritatively represents selected `heulte mit` as a
+  Partial Surface of `mit den Wölfen heulen`, while whole-unit Target
+  Classification normally selects every member of a conventionalized Idiom.
+  Does that example license Partial for other head-plus-member selections, or
+  is it a family-specific exception pending a broader Selection policy?
+- **Current take:** Preserve only the exact repository-backed `heulte mit`
+  positive. Keep `lachte ins` corpus-only and Unresolved; do not generalize a
+  Partial rule to other Idioms until Selection and whole-unit classification
+  define the boundary together.
+
+### Fusion identity for polyfunctional `am`
+
+- **Route:** `grammatical-resolution/de/construction/fusion`
+- **Golden Case:** `grammar-de-fusion-am` and
+  `grammar-de-fusion-unresolved-am-superlative`
+- **Raised by:** Wayfinder issue #52
+- **Question:** When the written form `am` is contextually nondecomposable, as
+  in a superlative (`am schönsten`) or progressive construction (`am Essen
+  sein`), should it ever reach Construction/Fusion merely because the same
+  orthography elsewhere realizes `an dem`?
+- **Current take:** No. Resolve `am` on this route only when the occurrence
+  supports the conventional preposition-plus-article expansion `an dem`.
+  Nondecomposable superlative and progressive uses are distinct grammatical
+  constructions and should be excluded by Target Classification rather than
+  coerced into the empty-Core Fusion Lemma.
+
+### Paired-frame lexical alternants are distinct Lemmas, not spelling variants
+
+- **Route:** `grammatical-resolution/de/construction/paired-frame`
+- **Golden Case:** `grammar-de-paired-frame-je-desto`,
+  `grammar-de-paired-frame-je-umso`,
+  `grammar-de-paired-frame-sowohl-als-auch`, and
+  `grammar-de-paired-frame-sowohl-wie`, and
+  `grammar-de-paired-frame-sowohl-wie-auch`
+- **Raised by:** Wayfinder issue #53 and the independent route review
+- **Question:** Do IDS-licensed alternative arms or member inventories such as
+  `desto`/`umso`, `als`/`wie`, and `wie`/`wie auch` realize one PairedFrame
+  Lemma as `spelling: Variant`, or do they create separate empty-Core Lemmas?
+- **Current take:** Separate Lemmas. Dumling spelling variation is
+  orthographic, while these alternatives replace lexical frame members.
+  Preserve each exact member inventory in `canonicalForm`, including the
+  independently licensed two-member `sowohl ... wie`; keep each full Surface
+  `Canonical`, and use one `memberOrthographies` value per marked word.
+  The related route placement of `weder ... noch`, `sowohl ...`, `je ...`, and
+  IDS-parallel `ohne/anstatt ... zu` remains a product inventory decision for
+  Target Classification; issue #54 owns runtime dispatch.

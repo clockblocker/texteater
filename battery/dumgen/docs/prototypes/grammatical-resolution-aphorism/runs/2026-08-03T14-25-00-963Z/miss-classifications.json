@@ -1,0 +1,30 @@
+{
+  "grammar-de-aphorism-jugend": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The high-reasoning run still returned Unresolved for this source-verified complete Aphorism despite the fixed-route default and no contextual contradiction."
+  },
+  "grammar-de-aphorism-casing-menschen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved the exact Aphorism and canonical form but failed to repair and mark the deliberately lowercase initial member as Typo."
+  },
+  "grammar-de-aphorism-unresolved-collocation": {
+    "classification": "prompt-defect",
+    "explanation": "The fixed-route default overrode the positive Collocation contradiction, so the model resolved a support-verb combination as an Aphorism."
+  },
+  "grammar-de-aphorism-unresolved-ordinary-sentence": {
+    "classification": "prompt-defect",
+    "explanation": "The fixed-route default overrode the evident episodic ordinary-sentence boundary."
+  },
+  "grammar-de-aphorism-unresolved-literary-quotation": {
+    "classification": "prompt-defect",
+    "explanation": "The fixed-route default overrode explicit context identifying a concrete dramatic scene and dialogue line."
+  },
+  "grammar-de-aphorism-unresolved-two-whole-units": {
+    "classification": "prompt-defect",
+    "explanation": "The fixed-route default overrode the target-scope rule even though punctuation visibly separated two complete marked units."
+  },
+  "grammar-de-aphorism-unresolved-proverb-grube": {
+    "classification": "prompt-defect",
+    "explanation": "The fixed-route default overrode the traditional Proverb boundary despite an analogous Proverb demonstration."
+  }
+}

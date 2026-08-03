@@ -1,7 +1,7 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
+import { authorshipBoundaryCases } from "./cases/authorship-boundaries";
 import { boundaryCases } from "./cases/boundaries";
-import { policyProbeCases } from "./cases/policy-probes";
 import { resolvedCases } from "./cases/resolved";
 
 export const corpus = defineGoldenCorpus({
@@ -11,7 +11,7 @@ export const corpus = defineGoldenCorpus({
 	collections: {
 		resolved: resolvedCases,
 		boundaries: boundaryCases,
-		policyProbes: policyProbeCases,
+		authorshipBoundaries: authorshipBoundaryCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

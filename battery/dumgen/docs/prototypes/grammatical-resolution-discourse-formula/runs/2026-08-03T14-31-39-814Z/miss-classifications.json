@@ -1,0 +1,18 @@
+{
+  "grammar-de-discourse-formula-darf-ich-bitten": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved the sourced formula with the exact member inventory but preserved sentence-initial casing and chose Initiation instead of the context-enacted Request role despite the explicit role policy."
+  },
+  "grammar-de-discourse-formula-herzlich-wilkommen-typo": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model correctly identified and repaired the typo and Greeting role but incorrectly capitalized adjectival willkommen in normalizedSurface despite the contextual casing rule."
+  },
+  "grammar-de-discourse-formula-unresolved-compositional-request": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model ignored the explicit lexicalized-formula boundary and resolved a freely composed request sentence as a DiscourseFormula."
+  },
+  "grammar-de-discourse-formula-unresolved-compositional-gute-reise-np": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model ignored the explicit independent-interactional-act test and resolved the homographic attributive noun phrase gute Reise as a farewell formula."
+  }
+}

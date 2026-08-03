@@ -32,7 +32,7 @@ function passingAttempts(): RetainedAttempt[] {
 		}),
 		latencyMs: index,
 		rawOutputText: JSON.stringify(testCase.idealOutput),
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -57,8 +57,8 @@ test("PROPN runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
 	expect(binding.runnerVersion).toBe("grammatical-resolution-proper-noun-v1");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/proper-noun");
-	expect(binding.model).toBe("gpt-5-nano");
-	expect(binding.reasoningEffort).toBe("high");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
 	expect(prepareCurrentTestCases()).toHaveLength(18);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);

@@ -6,8 +6,8 @@ model-bound tokens?
 
 This is an opt-in prototype. It is not imported by Dumgen's default
 `PROMPT_CATALOG` or public API. The two arms use the same four fixed cases and
-`gpt-5-nano` configuration; only model DTO schemas, prompt legends, and examples
-differ.
+shared `gpt-5.6-luna`/no-reasoning policy; only model DTO schemas, prompt
+legends, and examples differ.
 
 Write the deterministic byte and estimated-token comparison:
 

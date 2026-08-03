@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_GENERATION_MODEL as MODEL,
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+} from "../../../src/ai-sdk/model-policy";
 import { PROMPT_CATALOG } from "../../../src/catalog/prompt-catalog";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
@@ -24,7 +28,6 @@ const RUN_MAX_OUTPUT_TOKENS = 2048;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "low";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",
@@ -242,7 +245,7 @@ async function runLiveEvaluation(): Promise<void> {
 		const started = performance.now();
 		try {
 			const response = await client.responses.create({
-				model: catalogPrompt.generationParams.model,
+				model: MODEL,
 				input: [
 					{ role: "system", content: currentSystemPrompt },
 					{ role: "user", content: stableJson(testCase.input) },
@@ -414,7 +417,7 @@ export function summarizeEvidence(
 export function currentEvidenceBinding() {
 	return {
 		runnerVersion: RUNNER_VERSION,
-		model: catalogPrompt.generationParams.model,
+		model: MODEL,
 		catalogMaxOutputTokens: catalogPrompt.generationParams.maxOutputTokens,
 		runMaxOutputTokens: RUN_MAX_OUTPUT_TOKENS,
 		reasoningEffort: REASONING_EFFORT,

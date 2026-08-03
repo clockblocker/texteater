@@ -31,8 +31,8 @@ TARGET-member count and orthographies, every Surface field, Canonical Form, and
 the complete Core Feature object. It canonicalizes only the all-null
 `surfaceFeatures` bag in the same way as the route-local Surface codec.
 
-The bounded runner makes one serial `gpt-5-nano` call per held-out case with low
-reasoning, no retries, `store: false`, and a 2,048-token route-local response
+The bounded runner makes one serial `gpt-5.6-luna` call per held-out case with
+no reasoning, no retries, `store: false`, and a 2,048-token route-local response
 budget. Import and preflight make no provider call. Draft evidence is written
 atomically and cannot meet the evidence threshold until offline finalization.
 The retained schema binds the exact prompt, input/output schemas, ordered cases,

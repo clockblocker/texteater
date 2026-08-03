@@ -1,0 +1,22 @@
+{
+  "grammar-de-discourse-formula-gern-geschehen": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not distinguish a conventional response acknowledging thanks sharply enough from the broad Reaction role, so the model selected the wrong Core identity."
+  },
+  "grammar-de-discourse-formula-ach-du-meine-guete": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved the correct formula and Reaction identity but incorrectly lowercased the noun Güte in the contextual normalized Surface."
+  },
+  "grammar-de-discourse-formula-herzlich-wilkommen-typo": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The stimulus spelled adjectival willkommen correctly while the oracle marked it Typo, so the intended spelling-repair burden was absent from the input."
+  },
+  "grammar-de-discourse-formula-unresolved-partial-formula": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not make present-but-unmarked canonical formula membership operational enough, so the model invented a second member and resolved an underselected occurrence."
+  },
+  "grammar-de-discourse-formula-unresolved-compositional-gute-reise-np": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not sharply operationalize the interactional-act requirement, so the model treated an ordinary compositional noun phrase as the homographic farewell formula."
+  }
+}

@@ -14,6 +14,7 @@ import {
 import {
 	deAphorismModelCitationSurfaceSchema,
 	deAphorismModelLemmaSchema,
+	inputSchema,
 	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/schemas";
 
@@ -41,6 +42,27 @@ const expectedEvaluationIds = [
 ] as const;
 
 describe("Phraseme/Aphorism route-local schemas and corpus", () => {
+	test("rejects mechanically invalid TARGET markup before model evaluation", () => {
+		for (const markedContext of [
+			"<TARGET>Alt</TARGET> werden",
+			"<TARGET>Alt</TARGET> <TARGET>werden",
+			"<TARGET></TARGET> <TARGET>werden</TARGET>",
+			"<TARGET> </TARGET> <TARGET>werden</TARGET>",
+			"<TARGET>Alt werden</TARGET> <TARGET>heißt</TARGET>",
+			"<TARGET>Alt</TARGET><TARGET>,</TARGET> <TARGET>werden</TARGET>",
+		]) {
+			expect(inputSchema.safeParse({ markedContext }).success).toBe(
+				false,
+			);
+		}
+		expect(
+			inputSchema.safeParse({
+				markedContext:
+					"<TARGET>Alt</TARGET> <TARGET>werden</TARGET>, <TARGET>heißt</TARGET> <TARGET>sehend</TARGET> <TARGET>werden</TARGET>.",
+			}).success,
+		).toBe(true);
+	});
+
 	test("projects the exact empty-Core Citation-only DTO", () => {
 		expect(
 			deAphorismModelLemmaSchema.parse({
@@ -86,7 +108,7 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 	});
 
 	test("pins 20 held-outs disjoint from four minimized demonstrations", () => {
-		expect(corpus.all().ids).toHaveLength(27);
+		expect(corpus.all().ids).toHaveLength(26);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-aphorism-alt-werden",
 			"grammar-de-aphorism-typo-hoert",
@@ -130,11 +152,15 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 		).toEqual([]);
 	});
 
-	test("keeps three uncertainty and invalid-scope probes corpus-only", () => {
+	test("keeps two authorship boundaries corpus-only", () => {
+		expect(Object.keys(corpus.collections)).toEqual([
+			"resolved",
+			"boundaries",
+			"authorshipBoundaries",
+		]);
 		for (const caseId of [
-			"grammar-de-aphorism-provisional-anonymous-maxim",
-			"grammar-de-aphorism-provisional-targeted-attribution",
-			"grammar-de-aphorism-provisional-targeted-punctuation",
+			"grammar-de-aphorism-authorship-anonymous-maxim",
+			"grammar-de-aphorism-authorship-overbroad-attribution",
 		] as const) {
 			expect(corpus.cases[caseId]).toBeDefined();
 			expect(demonstrations.ids).not.toContain(caseId);
@@ -193,12 +219,141 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 
 	test("assembles only demonstrations", () => {
 		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain(
+			"Target Classification has already fixed this request",
+		);
+		expect(prompt).toContain(
+			"Unfamiliarity with the wording\nis not evidence for Unresolved",
+		);
+		expect(prompt).toContain(
+			"look only for hard contradiction evidence that is observable",
+		);
+		expect(prompt).toMatch(
+			/unmarked context explicitly labels the marked wording as a Collocation or\s+Funktionsverbgefüge/u,
+		);
+		expect(prompt).toMatch(
+			/a traditional Proverb, a merely episodic observation/u,
+		);
+		expect(prompt).toMatch(
+			/drama or scene-bound dialogue, or ordinary direct speech/u,
+		);
+		expect(prompt).toMatch(
+			/punctuation separates\s+the marked members into multiple complete units/u,
+		);
+		expect(prompt).toContain("Hard contradiction evidence is decisive");
+		expect(prompt).toContain(
+			"Do not invent a contradiction from the marked wording's style or content",
+		);
+		expect(prompt).toContain(
+			"recognition, recalled authorship, or independent attestation is never a reason",
+		);
+		expect(prompt).not.toContain(
+			"Resolve only when all and only the lexical members of one complete Aphorism",
+		);
+		expect(prompt).not.toContain(
+			"Resolve only with strong evidence that the complete marked wording",
+		);
 		expect(prompt).toContain("<TARGET>Alt</TARGET>");
 		expect(prompt).toContain("<TARGET>höhrt</TARGET>");
 		expect(prompt).toContain("<TARGET>muß</TARGET>");
 		expect(prompt).toContain("<TARGET>Morgenstund</TARGET>");
 		expect(prompt).not.toContain("<TARGET>Nachahmer</TARGET>");
 		expect(prompt).not.toContain("Marie</TARGET> <TARGET>von</TARGET>");
+		expect(prompt).not.toContain("balanced <TARGET>");
+		expect(prompt).not.toContain("an empty member");
+		expect(prompt).not.toContain("targeted punctuation mark");
+		expect(prompt).toMatch(
+			/when the complete maxim begins with\s+lowercase die, normalize it to Die/u,
+		);
+		expect(prompt).toMatch(
+			/An attested uppercase initial at the beginning of\s+the maxim is ordinary sentence-initial capitalization and remains Standard/u,
+		);
+	});
+
+	test("keeps source-verified held-outs free of bibliographic hints", () => {
+		const sourced = corpus.cases["grammar-de-aphorism-nachahmer"];
+		expect(sourced?.idealOutput.decision).toBe("Resolved");
+		expect(sourced?.input.markedContext).not.toMatch(
+			/Marie|Ebner|Aphorism|Quelle|Sammlung/u,
+		);
+	});
+
+	test("makes the dramatic-quotation contradiction observable in context", () => {
+		const literary =
+			corpus.cases["grammar-de-aphorism-unresolved-literary-quotation"];
+		expect(literary?.input.markedContext).toContain("Bühnenszene");
+		expect(literary?.idealOutput.decision).toBe("Unresolved");
+	});
+
+	test("pins every classified v4 decision and initial-casing regression", () => {
+		expect(
+			corpus.cases["grammar-de-aphorism-jugend"]?.idealOutput,
+		).toMatchObject({
+			decision: "Resolved",
+			resolution: {
+				surface: {
+					normalizedSurface:
+						"In der Jugend lernt im Alter versteht man",
+				},
+			},
+		});
+
+		const casing =
+			corpus.cases["grammar-de-aphorism-casing-menschen"]?.idealOutput;
+		expect(casing).toMatchObject({
+			decision: "Resolved",
+			resolution: {
+				surface: {
+					normalizedSurface:
+						"Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
+				},
+				lemma: {
+					canonicalForm:
+						"Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
+				},
+			},
+		});
+		if (casing?.resolution === null || casing === undefined) {
+			throw new Error("Missing resolved initial-casing fixture.");
+		}
+		expect(casing.resolution.memberOrthographies).toEqual([
+			"Typo",
+			...Array.from({ length: 13 }, () => "Standard" as const),
+		]);
+
+		for (const caseId of [
+			"grammar-de-aphorism-unresolved-collocation",
+			"grammar-de-aphorism-unresolved-ordinary-sentence",
+			"grammar-de-aphorism-unresolved-literary-quotation",
+			"grammar-de-aphorism-unresolved-two-whole-units",
+			"grammar-de-aphorism-unresolved-proverb-grube",
+		] as const) {
+			expect(corpus.cases[caseId]?.idealOutput).toEqual({
+				decision: "Unresolved",
+				resolution: null,
+			});
+		}
+
+		expect(
+			corpus.cases["grammar-de-aphorism-unresolved-collocation"]?.input
+				.markedContext,
+		).toContain("ausdrücklich als Funktionsverbgefüge");
+		expect(
+			corpus.cases["grammar-de-aphorism-unresolved-ordinary-sentence"]
+				?.input.markedContext,
+		).toContain("rein episodische Beobachtung");
+		expect(
+			corpus.cases["grammar-de-aphorism-unresolved-literary-quotation"]
+				?.input.markedContext,
+		).toContain("konkreten Bühnenszene");
+		expect(
+			corpus.cases["grammar-de-aphorism-unresolved-two-whole-units"]
+				?.input.markedContext,
+		).toMatch(/<\/TARGET>\. <TARGET>/u);
+		expect(
+			corpus.cases["grammar-de-aphorism-unresolved-proverb-grube"]?.input
+				.markedContext,
+		).toContain("traditionelle Sprichwort");
 	});
 });
 

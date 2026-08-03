@@ -1,0 +1,38 @@
+{
+  "grammar-de-coll-abschied-past-full": {
+    "classification": "prompt-defect",
+    "explanation": "The model lemmatized the selected contextual verb and changed its tense instead of preserving the marked past form in normalizedSurface and Surface features."
+  },
+  "grammar-de-coll-ende-imperative-full": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not make ordinary sentence-initial normalization and mandatory second-person singular imperative features operational enough."
+  },
+  "grammar-de-coll-anspruch-participle-full": {
+    "classification": "prompt-defect",
+    "explanation": "The model rejected a complete marked participial Collocation even though the unmarked auxiliary is contextual and every canonical member is selected."
+  },
+  "grammar-de-coll-einfluss-present-full": {
+    "classification": "prompt-defect",
+    "explanation": "The model inserted unmarked complement words into normalizedSurface and canonicalForm instead of projecting only selected lexical members."
+  },
+  "grammar-de-coll-unresolved-idiom-loeffel": {
+    "classification": "prompt-defect",
+    "explanation": "The route-boundary rule did not override the fixed Collocation route when context positively established the figurative Idiom den Löffel abgeben."
+  },
+  "grammar-de-coll-unresolved-construction-je-desto": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not make the productive paired-frame Construction boundary operational enough, so the model flattened je...desto into a Collocation."
+  },
+  "grammar-de-coll-unresolved-marked-dependent": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt did not enforce that a marked contextual adjective is a dependent rather than a canonical Collocation member."
+  },
+  "grammar-de-coll-unresolved-elliptic-kenntnis": {
+    "classification": "prompt-defect",
+    "explanation": "The model borrowed an unmarked support verb and morphology from a separate prior occurrence despite the explicit absent-head and no-borrowing policy."
+  },
+  "grammar-de-coll-unresolved-present-member-unmarked": {
+    "classification": "prompt-defect",
+    "explanation": "The model inserted the present but unmarked determiner and resolved underselection instead of returning Unresolved."
+  }
+}

@@ -3,7 +3,7 @@ import { inputSchema, outputSchema } from "../schemas";
 import { boundaryCases } from "./cases/boundaries";
 import { formulaCases } from "./cases/formulas";
 import { orthographyCases } from "./cases/orthography";
-import { policyProbeCases } from "./cases/policy-probes";
+import { roleAmbiguityAndBoundaryCases } from "./cases/role-ambiguity-and-boundaries";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/phraseme/discourse-formula",
@@ -13,7 +13,7 @@ export const corpus = defineGoldenCorpus({
 		formulas: formulaCases,
 		orthography: orthographyCases,
 		boundaries: boundaryCases,
-		policyProbes: policyProbeCases,
+		roleAmbiguityAndBoundaries: roleAmbiguityAndBoundaryCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

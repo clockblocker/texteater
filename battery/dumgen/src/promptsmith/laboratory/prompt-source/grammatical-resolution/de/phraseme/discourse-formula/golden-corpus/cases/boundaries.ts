@@ -70,14 +70,14 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 			explanation:
 				"Only one member of the candidate formula is marked, so this route cannot emit a Full Surface.",
 		},
-		"grammar-de-discourse-formula-unresolved-overbroad-punctuation": {
+		"grammar-de-discourse-formula-unresolved-compositional-gute-reise-np": {
 			input: {
 				markedContext:
-					"Vor der Abfahrt rief sie: „<TARGET>Gute Reise!</TARGET>“",
+					"Nach der Buchung hoffte sie auf eine <TARGET>gute</TARGET> <TARGET>Reise</TARGET>.",
 			},
 			idealOutput: unresolved,
 			explanation:
-				"One TARGET spans multiple lexical members and punctuation instead of marking members separately.",
+				"The marked noun phrase describes a hoped-for journey and does not independently perform the conventional Gute Reise wish.",
 		},
 		"grammar-de-discourse-formula-unresolved-repeated-occurrence": {
 			input: {

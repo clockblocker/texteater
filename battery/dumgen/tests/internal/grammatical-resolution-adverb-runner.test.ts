@@ -31,7 +31,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
-		resolvedModel: "gpt-5-nano-test-snapshot",
+		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
 		missClassification: null,
@@ -55,8 +55,8 @@ function draftResult() {
 test("ADV runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
 	expect(binding.runnerVersion).toBe("grammatical-resolution-adverb-v9");
-	expect(binding.model).toBe("gpt-5-nano");
-	expect(binding.reasoningEffort).toBe("low");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.runMaxOutputTokens).toBe(4096);
 	expect(prepareCurrentTestCases()).toHaveLength(15);
 	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);

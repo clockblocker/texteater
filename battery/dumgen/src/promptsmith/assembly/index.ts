@@ -29,5 +29,6 @@ export {
 	defineGoldenCaseGroup,
 	defineGoldenCorpus,
 } from "./golden-corpus";
+export { grammaticalResolutionMarkedContextSchema } from "./grammatical-resolution-marked-context";
 export { defineLocalDemonstrations } from "./local-demonstrations";
 export { defineSystemPromptCodegen } from "./system-prompt-codegen";

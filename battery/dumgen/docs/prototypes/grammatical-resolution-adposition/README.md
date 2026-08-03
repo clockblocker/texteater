@@ -23,8 +23,8 @@ The seven demonstrations each carry a distinct burden:
 - context-free `entlang` establishes Unresolved when Core Features cannot be
   chosen defensibly.
 
-The bounded runner makes one serial call per held-out case with the catalog's
-current model and token policy, low reasoning effort, no retries, `store:
+The bounded runner makes one serial call per held-out case with the shared
+`gpt-5.6-luna` model, no reasoning effort, no retries, `store:
 false`, and a 1,024-token output cap. It preflights 15–25 cases against the
 authored Prompt Source's exact input and output schemas before constructing a
 provider client; the legacy catalog schemas are not evaluation authority. A

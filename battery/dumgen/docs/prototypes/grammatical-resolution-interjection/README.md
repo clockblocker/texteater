@@ -23,7 +23,7 @@ The demonstrations are intentionally limited to five non-redundant rules:
 - the marked `o` in `o wei` preserves the larger Phraseme route; and
 - `pfui!` rejects punctuation included inside a lexical TARGET.
 
-The bounded runner pins `gpt-5-nano`, low reasoning effort, low text verbosity,
+The bounded runner pins `gpt-5.6-luna`, no reasoning effort, low text verbosity,
 no retries, `store: false`, a 1,024-token output cap, and one serial call per
 case. Before constructing a provider client it parses the exact 18-case suite,
 enforces the 15–25 case bound, and requires an API key. Importing the runner,

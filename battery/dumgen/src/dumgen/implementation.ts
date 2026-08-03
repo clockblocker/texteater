@@ -45,8 +45,53 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 	const enabledGrammaticalRoutes: Readonly<
 		Partial<Record<GrammaticalRouteKey, GrammaticalGenerator>>
 	> = Object.freeze({
+		"de/Lexeme/ADJ":
+			generators.laboratory.grammaticalResolution.de.Lexeme.ADJ,
+		"de/Lexeme/ADP":
+			generators.laboratory.grammaticalResolution.de.Lexeme.ADP,
+		"de/Lexeme/ADV":
+			generators.laboratory.grammaticalResolution.de.Lexeme.ADV,
+		"de/Lexeme/AUX":
+			generators.laboratory.grammaticalResolution.de.Lexeme.AUX,
+		"de/Lexeme/CCONJ":
+			generators.laboratory.grammaticalResolution.de.Lexeme.CCONJ,
+		"de/Lexeme/DET":
+			generators.laboratory.grammaticalResolution.de.Lexeme.DET,
+		"de/Lexeme/INTJ":
+			generators.laboratory.grammaticalResolution.de.Lexeme.INTJ,
 		"de/Lexeme/NOUN":
 			generators.laboratory.grammaticalResolution.de.Lexeme.NOUN,
+		"de/Lexeme/NUM":
+			generators.laboratory.grammaticalResolution.de.Lexeme.NUM,
+		"de/Lexeme/PART":
+			generators.laboratory.grammaticalResolution.de.Lexeme.PART,
+		"de/Lexeme/PRON":
+			generators.laboratory.grammaticalResolution.de.Lexeme.PRON,
+		"de/Lexeme/PROPN":
+			generators.laboratory.grammaticalResolution.de.Lexeme.PROPN,
+		"de/Lexeme/SCONJ":
+			generators.laboratory.grammaticalResolution.de.Lexeme.SCONJ,
+		"de/Lexeme/SYM":
+			generators.laboratory.grammaticalResolution.de.Lexeme.SYM,
+		"de/Lexeme/VERB":
+			generators.laboratory.grammaticalResolution.de.Lexeme.VERB,
+		"de/Lexeme/X": generators.laboratory.grammaticalResolution.de.Lexeme.X,
+		"de/Phraseme/Aphorism":
+			generators.laboratory.grammaticalResolution.de.Phraseme.Aphorism,
+		"de/Phraseme/Collocation":
+			generators.laboratory.grammaticalResolution.de.Phraseme.Collocation,
+		"de/Phraseme/DiscourseFormula":
+			generators.laboratory.grammaticalResolution.de.Phraseme
+				.DiscourseFormula,
+		"de/Phraseme/Idiom":
+			generators.laboratory.grammaticalResolution.de.Phraseme.Idiom,
+		"de/Phraseme/Proverb":
+			generators.laboratory.grammaticalResolution.de.Phraseme.Proverb,
+		"de/Construction/Fusion":
+			generators.laboratory.grammaticalResolution.de.Construction.Fusion,
+		"de/Construction/PairedFrame":
+			generators.laboratory.grammaticalResolution.de.Construction
+				.PairedFrame,
 	});
 	const readingRoutes = Object.freeze({
 		de: generators.laboratory.readingResolution.de,

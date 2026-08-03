@@ -30,8 +30,8 @@ The five demonstrations each carry one burden:
 - misspelled `sol` establishes orthographic repair; and
 - full-verb `schläft` establishes fixed-route rejection.
 
-The bounded runner makes one serial call per held-out case with the catalog's
-current model, low reasoning effort, no retries, `store: false`, and a
+The bounded runner makes one serial call per held-out case with the shared
+`gpt-5.6-luna` model, no reasoning effort, no retries, `store: false`, and a
 2,048-token route-local output cap. It preflights 15–25 cases against the exact
 authored schemas before constructing a provider client. Retained evidence binds
 the ordered cases and Golden Case values, assembled prompt and schema hashes,

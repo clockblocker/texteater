@@ -8,21 +8,23 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_GENERATION_MODEL as MODEL,
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+} from "../../../src/ai-sdk/model-policy";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
 import { aphorismGrammaticalResolutionExperiment } from "../../../src/promptsmith/laboratory/experiments/grammatical-resolution-aphorism/evaluation-suite";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const RUNNER_VERSION = "grammatical-resolution-aphorism-v1";
+const RUNNER_VERSION = "grammatical-resolution-aphorism-v6";
 const RUN_ROUTE = "grammatical-resolution/de/phraseme/aphorism";
-const MODEL = "gpt-5-nano";
 const PROMPT_MAX_OUTPUT_TOKENS = 1024;
-const RUN_MAX_OUTPUT_TOKENS = 2048;
+const RUN_MAX_OUTPUT_TOKENS = 32768;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "low";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",
@@ -633,11 +635,23 @@ function recomputeAttemptEvaluation(attempt: RetainedAttempt): RetainedAttempt {
 			`Retained successful attempt "${attempt.caseId}" has no output.`,
 		);
 	}
+	if (attempt.rawOutputText === undefined) {
+		throw new Error(
+			`Retained successful attempt "${attempt.caseId}" has no raw provider output.`,
+		);
+	}
+	const retainedOutput = outputSchema.parse(attempt.output);
+	const rawOutput = outputSchema.parse(JSON.parse(attempt.rawOutputText));
+	if (stableJson(rawOutput) !== stableJson(retainedOutput)) {
+		throw new Error(
+			`Retained successful attempt "${attempt.caseId}" does not match its raw provider output.`,
+		);
+	}
 	const evaluation = aphorismGrammaticalResolutionExperiment.evaluator({
 		caseId: attempt.caseId,
 		input: inputSchema.parse(attempt.input),
 		idealOutput: outputSchema.parse(attempt.idealOutput),
-		output: outputSchema.parse(attempt.output),
+		output: retainedOutput,
 	});
 	return { ...attempt, ...evaluation };
 }

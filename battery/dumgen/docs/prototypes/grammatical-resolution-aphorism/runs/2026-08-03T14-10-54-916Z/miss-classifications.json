@@ -1,0 +1,42 @@
+{
+  "grammar-de-aphorism-nachahmer": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-nachsicht": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-alter": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-jugend": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-tadel": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-gegenwart": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-streiten": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-unbezahlbar": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-grundsaetze": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  },
+  "grammar-de-aphorism-casing-menschen": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required memorized attestation after upstream Target Classification had already fixed the Aphorism route; this source-verified positive returned Unresolved despite no contextual route or scope contradiction."
+  }
+}

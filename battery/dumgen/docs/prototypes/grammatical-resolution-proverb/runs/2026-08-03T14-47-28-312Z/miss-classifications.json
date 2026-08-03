@@ -1,0 +1,6 @@
+{
+  "grammar-de-proverb-unresolved-idiom": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model ignored the explicit phrase-level Idiom boundary and resolved den Nagel auf den Kopf treffen as a sentence-valued Proverb."
+  }
+}

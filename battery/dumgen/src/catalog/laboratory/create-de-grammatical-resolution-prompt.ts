@@ -1,6 +1,8 @@
+import { codecBuilder4 } from "codec-builder-library/v4";
 import { schemasFor } from "dumling/schema";
-import { z } from "zod";
+import type { z } from "zod";
 
+import { DUMGEN_GENERATION_MODEL } from "../../ai-sdk/model-policy";
 import type {
 	GermanHighLevelFamily,
 	GermanHighLevelKind,
@@ -8,81 +10,101 @@ import type {
 import type { GrammaticalResolution } from "../../types";
 import type { Prompt } from "../prompt-definition";
 
-const inputSchema = z.strictObject({ markedContext: z.string().min(1) });
+type AuthoredGrammarPromptOptions<
+	InputSchema extends z.ZodType,
+	OutputSchema extends z.ZodType,
+	Family extends GermanHighLevelFamily,
+> = {
+	readonly family: Family;
+	readonly kind: GermanHighLevelKind<Family>;
+	readonly systemPrompt: string;
+	readonly inputSchema: InputSchema;
+	readonly outputSchema: OutputSchema;
+};
+
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
 
+type AuthoredGrammarPrompt<
+	InputSchema extends z.ZodType,
+	OutputSchema extends z.ZodType,
+> = Prompt<InputSchema, OutputSchema, GrammaticalResolution> & {
+	readonly projectOutput: (
+		input: z.output<InputSchema>,
+		generated: z.output<OutputSchema>,
+	) => GrammaticalResolution;
+};
+
+type ModelSurface = Readonly<Record<string, unknown>> & {
+	readonly surfaceKind: "Citation" | "Inflection";
+};
+
+type ModelGrammarOutput = {
+	readonly decision: "Resolved" | "Unresolved";
+	readonly resolution: {
+		readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+		readonly lemma: Readonly<Record<string, unknown>>;
+		readonly surface: ModelSurface;
+	} | null;
+};
+
+/**
+ * Binds one authored German route's exact model schemas and generated prompt to
+ * Dumling's canonical linked entities. Language, Family, Kind, and linked
+ * Lemma are fixed codec fields and therefore cannot drift in model output.
+ */
 export function createDeGrammaticalResolutionPrompt<
+	InputSchema extends z.ZodType,
+	OutputSchema extends z.ZodType,
 	const Family extends GermanHighLevelFamily,
-	const Kind extends GermanHighLevelKind<Family>,
->(family: Family, kind: Kind) {
-	const lemmaSchema = schemasFor.de.entity.Lemma[family][
-		kind
-	]() as unknown as ObjectSchema;
-	const modelLemmaSchema = lemmaSchema.omit({
-		language: true,
-		family: true,
-		kind: true,
-	});
-
-	const citationSchema = schemasFor.de.entity.Surface.Citation[family][
-		kind
-	]() as unknown as ObjectSchema;
-	const modelCitationSchema = citationSchema.omit({
-		language: true,
-		lemma: true,
-	});
-
+>(
+	options: AuthoredGrammarPromptOptions<InputSchema, OutputSchema, Family>,
+): AuthoredGrammarPrompt<InputSchema, OutputSchema> {
+	const { family, kind } = options;
+	const lemmaSchema = routeObjectSchema(
+		schemasFor.de.entity.Lemma,
+		family,
+		kind,
+	);
+	const lemmaCodec = codecBuilder4.buildFixedFieldsCodec(lemmaSchema, {
+		language: "de",
+		family,
+		kind,
+	} as const);
+	const citationSchema = routeObjectSchema(
+		schemasFor.de.entity.Surface.Citation,
+		family,
+		kind,
+	);
 	const inflectionGetter = (
 		schemasFor.de.entity.Surface.Inflection as unknown as Record<
 			string,
 			Record<string, (() => z.ZodType) | undefined>
 		>
 	)[family]?.[kind];
-	const inflectionSchema = inflectionGetter?.() as ObjectSchema | undefined;
-	const modelSurfaceSchema = inflectionSchema
-		? z.union([
-				modelCitationSchema,
-				inflectionSchema.omit({ language: true, lemma: true }),
-			])
-		: modelCitationSchema;
-
-	const resolvedGrammarSchema = z.strictObject({
-		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-		surface: modelSurfaceSchema,
-		lemma: modelLemmaSchema,
-	});
-	const outputSchema = z.strictObject({
-		decision: z.enum(["Resolved", "Unresolved"]),
-		resolution: resolvedGrammarSchema.nullable(),
-	});
+	const inflectionSchema: ObjectSchema | undefined = inflectionGetter
+		? (inflectionGetter() as ObjectSchema)
+		: undefined;
 
 	return {
-		systemPrompt: `You are the German ${family}/${kind} Grammatical Resolution
-route in a hands-on linguistic laboratory.
-
-The marked context contains one or more <TARGET>...</TARGET> members of exactly
-one ${family}/${kind}. Resolve only that fixed route or return Unresolved. Emit
-one memberOrthographies value per TARGET pair in textual order. Standard covers
-standard and licensed variant spelling; Typo means an actual spelling error.
-
-normalizedSurface may repair typos and casing but must preserve attested
-inflection, lexical-member order, and the number of attested lexical members.
-Never lemmatize the Surface or insert material absent from it.
-realizationCoverage is Partial only when this attestation omits lexical material
-from the complete Lemma. Citation means citation form; Inflection means a
-contextual inflection. Emit exactly the fields required by the structured
-schema, with null for unmarked nullable features. canonicalForm is the complete
-normalized citation form. coreFeatures describe grammatical identity only.
-
-Do not return language, family, kind, target indices, a linked Surface, Reading,
-meaning, confidence, candidates, explanation, or a different route.`,
-		inputSchema,
-		outputSchema,
+		systemPrompt: options.systemPrompt,
+		inputSchema: options.inputSchema,
+		outputSchema: options.outputSchema,
 		outputPostcondition: {
-			assert(input, generated) {
-				if (generated.decision === "Unresolved") return;
+			assert(rawInput, rawGenerated) {
+				const input = rawInput as { readonly markedContext: string };
+				const generated = rawGenerated as unknown as ModelGrammarOutput;
+				if (generated.decision === "Unresolved") {
+					if (generated.resolution !== null) {
+						throw new Error(
+							"Unresolved Grammatical Resolution must not include a resolution.",
+						);
+					}
+					return;
+				}
 				if (generated.resolution === null) {
-					throw new Error("Resolved grammar requires a resolution.");
+					throw new Error(
+						"Resolved Grammatical Resolution requires a resolution.",
+					);
 				}
 				const markerCount =
 					input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
@@ -100,44 +122,82 @@ meaning, confidence, candidates, explanation, or a different route.`,
 				}
 			},
 		},
-		projectOutput(_input, generated): GrammaticalResolution {
+		projectOutput(_input, rawGenerated): GrammaticalResolution {
+			const generated = rawGenerated as unknown as ModelGrammarOutput;
 			if (generated.decision === "Unresolved") {
 				return { decision: "Unresolved" };
 			}
 			if (generated.resolution === null) {
-				throw new Error("Resolved grammar requires a resolution.");
+				throw new Error(
+					"Resolved Grammatical Resolution requires a resolution.",
+				);
 			}
-			const resolution = generated.resolution;
 
-			const lemma = lemmaSchema.parse({
-				...resolution.lemma,
-				language: "de",
-				family,
-				kind,
-			});
-			const linkedSurface = (
-				resolution.surface.surfaceKind === "Inflection" &&
-				inflectionSchema
+			const lemma = lemmaCodec.decode(
+				generated.resolution.lemma as z.input<typeof lemmaCodec>,
+			);
+			const surfaceSchema =
+				generated.resolution.surface.surfaceKind === "Inflection"
 					? inflectionSchema
-					: citationSchema
-			).parse({
-				...resolution.surface,
-				language: "de",
-				lemma,
-			});
+					: citationSchema;
+			if (!surfaceSchema) {
+				throw new Error(
+					`${family}/${kind} does not expose an Inflection Surface.`,
+				);
+			}
+			const surfaceCodec = codecBuilder4.buildFixedFieldsCodec(
+				surfaceSchema,
+				{ language: "de", lemma },
+			);
+			const linkedSurface = surfaceCodec.decode(
+				normalizeModelSurfaceFeatures(
+					generated.resolution.surface,
+				) as z.input<typeof surfaceCodec>,
+			);
 			const { lemma: _linkedLemma, ...surface } = linkedSurface;
 
 			return {
 				decision: "Resolved",
-				memberOrthographies: resolution.memberOrthographies,
+				memberOrthographies: generated.resolution.memberOrthographies,
 				surface,
 				lemma,
 			} as unknown as GrammaticalResolution;
 		},
-		generationParams: { model: "gpt-5-nano", maxOutputTokens: 1024 },
-	} satisfies Prompt<
-		typeof inputSchema,
-		typeof outputSchema,
-		GrammaticalResolution
-	>;
+		generationParams: {
+			model: DUMGEN_GENERATION_MODEL,
+			maxOutputTokens: 1024,
+		},
+	};
+}
+
+function routeObjectSchema(
+	registry: unknown,
+	family: string,
+	kind: string,
+): ObjectSchema {
+	const getter = (
+		registry as Record<
+			string,
+			Record<string, (() => z.ZodType) | undefined> | undefined
+		>
+	)[family]?.[kind];
+	if (!getter) {
+		throw new Error(`Dumling schema is missing for ${family}/${kind}.`);
+	}
+	return getter() as ObjectSchema;
+}
+
+function normalizeModelSurfaceFeatures(
+	surface: ModelSurface,
+): Readonly<Record<string, unknown>> {
+	const features = surface.surfaceFeatures;
+	if (
+		typeof features === "object" &&
+		features !== null &&
+		"historicalStatus" in features &&
+		features.historicalStatus === null
+	) {
+		return { ...surface, surfaceFeatures: null };
+	}
+	return surface;
 }

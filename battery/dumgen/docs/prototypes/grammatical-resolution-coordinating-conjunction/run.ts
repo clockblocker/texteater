@@ -8,6 +8,10 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 
+import {
+	DUMGEN_GENERATION_MODEL as MODEL,
+	DUMGEN_REASONING_EFFORT as REASONING_EFFORT,
+} from "../../../src/ai-sdk/model-policy";
 import { stableJson } from "../../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../../src/promptsmith/assembly";
 import { coordinatingConjunctionGrammaticalResolutionExperiment } from "../../../src/promptsmith/laboratory/experiments/grammatical-resolution-coordinating-conjunction/evaluation-suite";
@@ -15,13 +19,11 @@ import { coordinatingConjunctionGrammaticalResolutionExperiment } from "../../..
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
 const RUNNER_VERSION = "grammatical-resolution-coordinating-conjunction-v2";
-const MODEL = "gpt-5-nano";
 const PROMPT_MAX_OUTPUT_TOKENS = 1024;
 const RUN_MAX_OUTPUT_TOKENS = 1024;
 const MAX_TEST_CASES = 25;
 const MINIMUM_EVALUATION_CASES = 15;
 const MINIMUM_SCORE_RATIO = 0.8;
-const REASONING_EFFORT = "low";
 const TEXT_VERBOSITY = "low";
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",
