@@ -1,0 +1,10 @@
+{
+  "grammar-de-num-citation-hundert": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt requires Lemma canonicalForm to be the dictionary form of the same orthographic numeral identity. The target is the lowercase NUM citation hundert, and the model matched every other scored field but incorrectly capitalized canonicalForm as Hundert."
+  },
+  "grammar-de-num-unresolved-adjective-60er": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt reserves German NUM for definite cardinal numerals and requires context to determine whether a digit-like form is actually a numeral. In Die 60-er Jahre, the target is an adjectival decade modifier (ADJ in German GSD), so the corpus correctly expects Unresolved; the model instead resolved it as a Card lemma 60er."
+  }
+}

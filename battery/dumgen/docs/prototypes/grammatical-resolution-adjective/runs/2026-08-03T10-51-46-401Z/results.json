@@ -1,0 +1,1437 @@
+{
+  "runnerVersion": "grammatical-resolution-adjective-v3",
+  "route": "grammatical-resolution/de/lexeme/adjective",
+  "startedAt": "2026-08-03T10:51:46.401Z",
+  "completedAt": "2026-08-03T11:02:46.327Z",
+  "finalizedAt": "2026-08-03T11:03:46.048Z",
+  "model": "gpt-5-nano",
+  "maxOutputTokens": 16384,
+  "reasoningEffort": "high",
+  "textVerbosity": "low",
+  "promptSha256": "326cb725c471b388faf50421e78d2c67cf8d8825df8683dc772dcae3860c4738",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "af98b2770f07db33efa03806b2e725e684b2c8dacdd4590794bb5e3088dd3687",
+  "evaluationCaseIds": [
+    "grammar-de-adj-attributive-acc-fem-rot",
+    "grammar-de-adj-attributive-dat-neut-kalt",
+    "grammar-de-adj-attributive-gen-plur-neu",
+    "grammar-de-adj-predicative-blau",
+    "grammar-de-adj-adverbial-leise",
+    "grammar-de-adj-participial-geschlossen",
+    "grammar-de-adj-irregular-comparative-besser",
+    "grammar-de-adj-attributive-comparative-teuer",
+    "grammar-de-adj-attributive-superlative-hoch",
+    "grammar-de-adj-adverbial-superlative-sorgfaeltig",
+    "grammar-de-adj-ordinal-erste",
+    "grammar-de-adj-typo-grsser",
+    "grammar-de-adj-unresolved-lexical-adverb",
+    "grammar-de-adj-unresolved-perfect-participle",
+    "grammar-de-adj-unresolved-overbroad-modifier",
+    "grammar-de-adj-unresolved-repeated-surfaces",
+    "grammar-de-adj-unresolved-unrelated-targets"
+  ],
+  "boundedCalls": 17,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 15,
+  "scoreRatio": 0.8823529411764706,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adj-attributive-acc-fem-rot",
+      "input": {
+        "markedContext": "Sie trägt die <TARGET>rote</TARGET> Tasche."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "rote",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "rot",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "rote",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "rot",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 23755,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"rote\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"rot\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0254c3d0b7a95531016a7072c2c208819ebc2b8acbe559928e",
+      "usage": {
+        "input_tokens": 1679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 3914,
+        "output_tokens_details": {
+          "reasoning_tokens": 3776
+        },
+        "total_tokens": 5593
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-attributive-dat-neut-kalt",
+      "input": {
+        "markedContext": "Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drin."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "kaltem",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "degree": "Pos",
+              "gender": "Neut",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "kalt",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "kaltem",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "degree": "Pos",
+              "gender": "Neut",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "kalt",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 87416,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"kaltem\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":\"Pos\",\"gender\":\"Neut\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"kalt\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08c9599f31044173016a7072da78a0819c87090c25869c5573",
+      "usage": {
+        "input_tokens": 1681,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 5515,
+        "output_tokens_details": {
+          "reasoning_tokens": 5376
+        },
+        "total_tokens": 7196
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-attributive-gen-plur-neu",
+      "input": {
+        "markedContext": "Aufgrund <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "neuer",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Gen",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "neu",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "neuer",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Gen",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Plur"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "neu",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 44655,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"neuer\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Gen\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Plur\"}}, \"lemma\":{\"canonicalForm\":\"neu\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b434d1e9593d116016a707331d64481a1bb2396bb15b756b3",
+      "usage": {
+        "input_tokens": 1684,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 5958,
+        "output_tokens_details": {
+          "reasoning_tokens": 5824
+        },
+        "total_tokens": 7642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-predicative-blau",
+      "input": {
+        "markedContext": "<TARGET>Blau</TARGET> ist der Himmel."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "blau",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Pos",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "blau",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "blau",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Pos",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "blau",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 43327,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"blau\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Pos\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"blau\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_07783ac29785ccf6016a70735e6cc481a2b0c5303819f33d8c",
+      "usage": {
+        "input_tokens": 1679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 6859,
+        "output_tokens_details": {
+          "reasoning_tokens": 6720
+        },
+        "total_tokens": 8538
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-adverbial-leise",
+      "input": {
+        "markedContext": "Sie schließt die Tür <TARGET>leise</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "leise",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Pos",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "leise",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "leise",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Pos",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "leise",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 40778,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"leise\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Pos\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"leise\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0eb5112d93b7fa1a016a707389c280819d8f4bbeeef808f003",
+      "usage": {
+        "input_tokens": 1681,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 6392,
+        "output_tokens_details": {
+          "reasoning_tokens": 6272
+        },
+        "total_tokens": 8073
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-participial-geschlossen",
+      "input": {
+        "markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt zu."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "geschlossene",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "geschlossen",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "geschlossene",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Pos",
+              "gender": "Fem",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "geschlossen",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 44310,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"geschlossene\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"geschlossen\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01ab8a814bf5865a016a7073b2864881a1bf6cddbaf6a5feb8",
+      "usage": {
+        "input_tokens": 1680,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 6872,
+        "output_tokens_details": {
+          "reasoning_tokens": 6720
+        },
+        "total_tokens": 8552
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-irregular-comparative-besser",
+      "input": {
+        "markedContext": "Der zweite Plan ist <TARGET>besser</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "besser",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Cmp",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "gut",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "besser",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Cmp",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "gut",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 39348,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"besser\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Cmp\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"gut\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_02f20e2d2e335f94016a7073ded44c819c8cdda8d7849b4440",
+      "usage": {
+        "input_tokens": 1679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 5719,
+        "output_tokens_details": {
+          "reasoning_tokens": 5568
+        },
+        "total_tokens": 7398
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-attributive-comparative-teuer",
+      "input": {
+        "markedContext": "Er kaufte ein <TARGET>teureres</TARGET> Gerät."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "teureres",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "degree": "Cmp",
+              "gender": "Neut",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "teuer",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "teureres",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Acc",
+              "degree": "Cmp",
+              "gender": "Neut",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "teuer",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 34842,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"teureres\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Cmp\",\"gender\":\"Neut\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"teuer\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_048ad9ad3cb6331a016a7074062f3c819fa82ad7b842d634ad",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 4960,
+        "output_tokens_details": {
+          "reasoning_tokens": 4800
+        },
+        "total_tokens": 6642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-attributive-superlative-hoch",
+      "input": {
+        "markedContext": "Der <TARGET>höchste</TARGET> Turm steht am Fluss."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "höchste",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Sup",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "hoch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "höchste",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Sup",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "hoch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 28541,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"höchste\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Sup\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"hoch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0ae32750067a3229016a707429046481928086172116e8dd57",
+      "usage": {
+        "input_tokens": 1684,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 4658,
+        "output_tokens_details": {
+          "reasoning_tokens": 4544
+        },
+        "total_tokens": 6342
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-adverbial-superlative-sorgfaeltig",
+      "input": {
+        "markedContext": "Sie arbeitet am <TARGET>sorgfältigsten</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sorgfältigsten",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Sup",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "sorgfältig",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "sorgfältigsten",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": null,
+              "degree": "Sup",
+              "gender": null,
+              "number": null
+            }
+          },
+          "lemma": {
+            "canonicalForm": "sorgfältig",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 44911,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"sorgfältigsten\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Sup\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"sorgfältig\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03c251c94468fc04016a7074458edc819db32d82b1a1a5b278",
+      "usage": {
+        "input_tokens": 1681,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 6535,
+        "output_tokens_details": {
+          "reasoning_tokens": 6400
+        },
+        "total_tokens": 8216
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-ordinal-erste",
+      "input": {
+        "markedContext": "Der <TARGET>erste</TARGET> Versuch gelang."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "erste",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Pos",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "erst",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": "Ord",
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "erste",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Pos",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "erste",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": "Ord",
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 34542,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"erste\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"erste\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Ord\",\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08dead48a7aa4b4a016a707472760c81a2854533ee3fa998e8",
+      "usage": {
+        "input_tokens": 1678,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 5273,
+        "output_tokens_details": {
+          "reasoning_tokens": 5120
+        },
+        "total_tokens": 6951
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The response correctly resolved the ordinal adjective, including NumType=Ord and all contextual inflectional features, but used the inflected Surface form erste as canonicalForm instead of the adjective Lemma erst. The prompt requires the dictionary positive adjective as canonicalForm, the klein demonstration establishes removal of attributive inflection, and German GSD attests erste with Lemma erst, so the Golden Case and evaluator expectation are sound."
+    },
+    {
+      "caseId": "grammar-de-adj-typo-grsser",
+      "input": {
+        "markedContext": "Ein <TARGET>grßer</TARGET> Hund wartet draußen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "großer",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Pos",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "groß",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "größer",
+            "spelling": "Variant",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Nom",
+              "degree": "Cmp",
+              "gender": "Masc",
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "groß",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 65208,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Typo\"],\"surface\":{\"normalizedSurface\":\"größer\",\"spelling\":\"Variant\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Cmp\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"groß\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_02ecf16b9ba9e713016a70749501e8819f8a903ca08d200f84",
+      "usage": {
+        "input_tokens": 1680,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 10252,
+        "output_tokens_details": {
+          "reasoning_tokens": 10112
+        },
+        "total_tokens": 11932
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The response repaired grßer to größer and assigned Degree=Cmp while also claiming an attributive nominative masculine singular analysis. In Ein ___ Hund, that comparative analysis would require the agreement-bearing Surface größerer; größer is not contextually or internally compatible with the emitted Case, Gender, and Number. Inserting the missing o yields the unambiguous positive form großer, preserves the attested sharp-s spelling, and matches Degree=Pos. The Golden Case is sound, so this is a model morphology-repair limitation."
+    },
+    {
+      "caseId": "grammar-de-adj-unresolved-lexical-adverb",
+      "input": {
+        "markedContext": "Wir treffen uns <TARGET>heute</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 8670,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06d5aac5423998de016a7074d637e481a2b7073132baf6ce18",
+      "usage": {
+        "input_tokens": 1679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1115,
+        "output_tokens_details": {
+          "reasoning_tokens": 1088
+        },
+        "total_tokens": 2794
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-unresolved-perfect-participle",
+      "input": {
+        "markedContext": "Er hat gestern <TARGET>gearbeitet</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 13136,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_011debab1f9f26cb016a7074dee6c481a2b48224f8c2c672c7",
+      "usage": {
+        "input_tokens": 1679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1948,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 3627
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-unresolved-overbroad-modifier",
+      "input": {
+        "markedContext": "Sie spricht <TARGET>sehr leise</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 22070,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_073acd22e3c07125016a7074ec079881a39139d7afc81ff583",
+      "usage": {
+        "input_tokens": 1680,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2840,
+        "output_tokens_details": {
+          "reasoning_tokens": 2816
+        },
+        "total_tokens": 4520
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-unresolved-repeated-surfaces",
+      "input": {
+        "markedContext": "Der <TARGET>helle</TARGET> Raum führt in den <TARGET>hellen</TARGET> Flur."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 57512,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_030c2d69912ab7c2016a7075021644819f9229118682876696",
+      "usage": {
+        "input_tokens": 1690,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 7802,
+        "output_tokens_details": {
+          "reasoning_tokens": 7744
+        },
+        "total_tokens": 9492
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-unresolved-unrelated-targets",
+      "input": {
+        "markedContext": "Sie öffnet die Tür <TARGET>leise</TARGET> und geht <TARGET>ruhig</TARGET> hinaus."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 26907,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01a20a27f14fd8e4016a70753b9984819f95b93a9d253166b3",
+      "usage": {
+        "input_tokens": 1692,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 3652,
+        "output_tokens_details": {
+          "reasoning_tokens": 3584
+        },
+        "total_tokens": 5344
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

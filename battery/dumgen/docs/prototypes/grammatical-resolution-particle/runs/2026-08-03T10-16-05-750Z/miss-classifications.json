@@ -1,0 +1,10 @@
+{
+  "grammar-de-part-unresolved-adverb-gerne": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt explicitly rejects ADV and limits modal PART to clause-dependent speaker stance. In Wir helfen gerne., gerne is a lexical preference/manner adverb, so the Unresolved oracle and exact evaluator are correct; the model instead returned a coherent but wrong-route PART resolution."
+  },
+  "grammar-de-part-unresolved-phraseme-na-ja": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current prompt explicitly rejects a particle that is a member of a larger discourse Phraseme. In Na ja, dann gehen wir eben., the marked ja belongs to the established na ja Phraseme boundary, so the Unresolved oracle and exact evaluator are correct; the model improperly detached ja and resolved it as a modal PART."
+  }
+}

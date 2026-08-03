@@ -1,0 +1,1541 @@
+{
+  "runnerVersion": "grammatical-resolution-particle-v1",
+  "startedAt": "2026-08-03T10:16:05.750Z",
+  "completedAt": "2026-08-03T10:17:23.155Z",
+  "finalizedAt": "2026-08-03T10:18:46.287Z",
+  "model": "gpt-5-nano",
+  "promptMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 2048,
+  "reasoningEffort": "low",
+  "textVerbosity": "low",
+  "promptSha256": "4a4709b474bfd9b5276ec9fe31e3be8c61c66ef03613fb505a04193af47cf0b5",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "2d99aa3b215c7231a0773eb2c413111c27abbb9e97ef4d31ea0de8f297bb1221",
+  "evaluationCaseIds": [
+    "grammar-de-part-negative-nicht",
+    "grammar-de-part-negative-sentence-initial-nicht",
+    "grammar-de-part-negative-typo-nicth",
+    "grammar-de-part-infinitival-zu",
+    "grammar-de-part-modal-doch",
+    "grammar-de-part-modal-denn",
+    "grammar-de-part-modal-wohl",
+    "grammar-de-part-modal-bloss",
+    "grammar-de-part-modal-mal",
+    "grammar-de-part-modal-ja",
+    "grammar-de-part-modal-label-eigentlich",
+    "grammar-de-part-repeated-second-doch",
+    "grammar-de-part-unresolved-verb-particle-an",
+    "grammar-de-part-unresolved-adverb-gerne",
+    "grammar-de-part-unresolved-response-ja",
+    "grammar-de-part-unresolved-cconj-aber",
+    "grammar-de-part-unresolved-sconj-weil",
+    "grammar-de-part-unresolved-phraseme-na-ja",
+    "grammar-de-part-unresolved-adposition-zu",
+    "grammar-de-part-unresolved-overbroad-doch-mal",
+    "grammar-de-part-unresolved-two-targets",
+    "grammar-de-part-unresolved-ambiguous-doch-label"
+  ],
+  "boundedCalls": 22,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 20,
+  "scoreRatio": 0.9090909090909091,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-part-negative-nicht",
+      "input": {
+        "markedContext": "Mara kommt heute <TARGET>nicht</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2964,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"nicht\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nicht\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Neg\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0987ca92c7f5ac1c016a706a6623b081a285fc284a6a5996c5",
+      "usage": {
+        "input_tokens": 1438,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 285,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1723
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-negative-sentence-initial-nicht",
+      "input": {
+        "markedContext": "<TARGET>Nicht</TARGET> alle Gäste kamen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3516,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"nicht\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nicht\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Neg\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0740607bc9597e57016a706a690170819d875baabc9507c9ff",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 329,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1766
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-negative-typo-nicth",
+      "input": {
+        "markedContext": "Das stimmt <TARGET>nicth</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Typo"
+          ],
+          "surface": {
+            "normalizedSurface": "nicht",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "nicht",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": "Neg"
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4217,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Typo\"],\"surface\":{\"normalizedSurface\":\"nicht\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nicht\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Neg\"}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0482ebdf82d48d6e016a706a6c7304819e9746780ab2bf855c",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 447,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1884
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-infinitival-zu",
+      "input": {
+        "markedContext": "Sie versucht, <TARGET>zu</TARGET> schlafen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zu",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": "Inf",
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "zu",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "zu",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": "Inf",
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3767,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"zu\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zu\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":\"Inf\",\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00538f221fc8054c016a706a70abb88192bf9ae037feb2599e",
+      "usage": {
+        "input_tokens": 1438,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 405,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1843
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-doch",
+      "input": {
+        "markedContext": "Komm <TARGET>doch</TARGET> mit!"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3175,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"doch\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01c6c7dac9febc8b016a706a746e5081a08d0231649e4691bf",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 326,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1763
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-denn",
+      "input": {
+        "markedContext": "Was machst du <TARGET>denn</TARGET>?"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "denn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "denn",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "denn",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "denn",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3606,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"denn\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"denn\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0afc9b13515bc1bd016a706a779fb0819281ebf2be471c954d",
+      "usage": {
+        "input_tokens": 1439,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 332,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1771
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-wohl",
+      "input": {
+        "markedContext": "Er wird <TARGET>wohl</TARGET> später kommen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "wohl",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "wohl",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "wohl",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "wohl",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3158,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"wohl\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wohl\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0bcb90eb63958c03016a706a7b38a0819f8c2a9ecc6dcc96e5",
+      "usage": {
+        "input_tokens": 1438,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 373,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1811
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-bloss",
+      "input": {
+        "markedContext": "Was soll ich <TARGET>bloß</TARGET> tun?"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bloß",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bloß",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "bloß",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "bloß",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2967,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"bloß\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bloß\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_00ed42c8102cb1dc016a706a7e5cd881a0999a6b53799407cb",
+      "usage": {
+        "input_tokens": 1439,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 351,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1790
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-mal",
+      "input": {
+        "markedContext": "Schau <TARGET>mal</TARGET> her."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "mal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "mal",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "mal",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "mal",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5158,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"mal\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"mal\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d05fe4f600d2c09016a706a815eb4819186434899b487e495",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 343,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 1780
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-ja",
+      "input": {
+        "markedContext": "Das ist <TARGET>ja</TARGET> erstaunlich."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ja",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ja",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ja",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ja",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4309,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ja\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ja\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0f046db4884d2d64016a706a8686ac819fac1dd53419541b78",
+      "usage": {
+        "input_tokens": 1438,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 322,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1760
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-modal-label-eigentlich",
+      "input": {
+        "markedContext": "Bezeichnung als Modalpartikel: <TARGET>eigentlich</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "eigentlich",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "eigentlich",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "eigentlich",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "eigentlich",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3637,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"eigentlich\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"eigentlich\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0f7b43c3f63c0ce1016a706a8ad2b4819cbddaa710485014bd",
+      "usage": {
+        "input_tokens": 1441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 291,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1732
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-repeated-second-doch",
+      "input": {
+        "markedContext": "Komm doch mit und sag <TARGET>doch</TARGET> Bescheid."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "doch",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "doch",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4435,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"doch\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e2c7c1287f1b530016a706a8fd91881a1b9833d295a754f25",
+      "usage": {
+        "input_tokens": 1442,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 313,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1755
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-verb-particle-an",
+      "input": {
+        "markedContext": "Der Zug kommt <TARGET>an</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1658,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_039352ea3adc54be016a706a92e440819eb087373beb5db1ea",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 139,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 1576
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-adverb-gerne",
+      "input": {
+        "markedContext": "Wir helfen <TARGET>gerne</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "gerne",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "gerne",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 7945,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"gerne\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gerne\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c11a94f1126c055016a706a94cfd8819ca24850dbaaf3c0b5",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 432,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1869
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The current prompt explicitly rejects ADV and limits modal PART to clause-dependent speaker stance. In Wir helfen gerne., gerne is a lexical preference/manner adverb, so the Unresolved oracle and exact evaluator are correct; the model instead returned a coherent but wrong-route PART resolution."
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-response-ja",
+      "input": {
+        "markedContext": "Kommst du mit? – <TARGET>Ja</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2253,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e0c7af08669b8da016a706a9c7b6881a39927e877dd87eb6b",
+      "usage": {
+        "input_tokens": 1441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 246,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1687
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-cconj-aber",
+      "input": {
+        "markedContext": "Sie ist müde, <TARGET>aber</TARGET> sie arbeitet weiter."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3274,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_02cf4bb5c29f1f8f016a706a9ebd7081a2b58fd3898e0ee0d2",
+      "usage": {
+        "input_tokens": 1442,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 215,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1657
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-sconj-weil",
+      "input": {
+        "markedContext": "Wir bleiben, <TARGET>weil</TARGET> es regnet."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2329,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_044f08aca52b922a016a706aa202f081a2bb3fbe45906de126",
+      "usage": {
+        "input_tokens": 1440,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 249,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1689
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-phraseme-na-ja",
+      "input": {
+        "markedContext": "Na <TARGET>ja</TARGET>, dann gehen wir eben."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "ja",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "ja",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "partType": null,
+              "polarity": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": false,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": false,
+      "memberOrthographiesPass": false,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": false,
+      "realizationCoveragePass": false,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 3905,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"ja\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ja\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0cb140e04104690e016a706aa458f881a3b963f7257f737aa2",
+      "usage": {
+        "input_tokens": 1439,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 318,
+        "output_tokens_details": {
+          "reasoning_tokens": 192
+        },
+        "total_tokens": 1757
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The current prompt explicitly rejects a particle that is a member of a larger discourse Phraseme. In Na ja, dann gehen wir eben., the marked ja belongs to the established na ja Phraseme boundary, so the Unresolved oracle and exact evaluator are correct; the model improperly detached ja and resolved it as a modal PART."
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-adposition-zu",
+      "input": {
+        "markedContext": "Wir fahren <TARGET>zu</TARGET> Maria."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3083,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0a28e541b76792c6016a706aa83b50819d8068779fe59eb847",
+      "usage": {
+        "input_tokens": 1437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 354,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1791
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-overbroad-doch-mal",
+      "input": {
+        "markedContext": "Komm <TARGET>doch mal</TARGET> mit!"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2091,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0bc60e806ffb6883016a706aab6b68819eae3bafc7ae53c04d",
+      "usage": {
+        "input_tokens": 1438,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 184,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 1622
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-two-targets",
+      "input": {
+        "markedContext": "Komm <TARGET>doch</TARGET> <TARGET>mal</TARGET> mit!"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1801,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0e2f40ee6c852dc3016a706aad694c819f8a8064751ed8e8fa",
+      "usage": {
+        "input_tokens": 1444,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 1577
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-unresolved-ambiguous-doch-label",
+      "input": {
+        "markedContext": "Stichwort ohne Kontext: <TARGET>doch</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4096,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d1f1ec6bbb2175e016a706aaf35ac81a19a646b467647dbc4",
+      "usage": {
+        "input_tokens": 1439,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 384,
+        "output_tokens_details": {
+          "reasoning_tokens": 320
+        },
+        "total_tokens": 1823
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

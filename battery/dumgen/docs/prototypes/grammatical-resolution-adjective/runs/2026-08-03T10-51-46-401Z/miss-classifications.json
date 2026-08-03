@@ -1,0 +1,10 @@
+{
+  "grammar-de-adj-ordinal-erste": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The response correctly resolved the ordinal adjective, including NumType=Ord and all contextual inflectional features, but used the inflected Surface form erste as canonicalForm instead of the adjective Lemma erst. The prompt requires the dictionary positive adjective as canonicalForm, the klein demonstration establishes removal of attributive inflection, and German GSD attests erste with Lemma erst, so the Golden Case and evaluator expectation are sound."
+  },
+  "grammar-de-adj-typo-grsser": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The response repaired grßer to größer and assigned Degree=Cmp while also claiming an attributive nominative masculine singular analysis. In Ein ___ Hund, that comparative analysis would require the agreement-bearing Surface größerer; größer is not contextually or internally compatible with the emitted Case, Gender, and Number. Inserting the missing o yields the unambiguous positive form großer, preserves the attested sharp-s spelling, and matches Degree=Pos. The Golden Case is sound, so this is a model morphology-repair limitation."
+  }
+}

@@ -233,3 +233,65 @@ is worth revisiting.
   to PART, and must the lexical feature survive that contextual use?
 - **Current take:** Keep the ADV/Ind analysis as a corpus-only probe rather
   than treating either route or feature policy as authoritative evidence.
+
+### Contextual Short variant stored on an ADJ Lemma
+
+- **Route:** `grammatical-resolution/de/lexeme/adjective`
+- **Golden Case:** `grammar-de-adj-provisional-short-moeglich`
+- **Raised by:** Wayfinder issue #32
+- **Question:** UD `Variant=Short` describes a contextual short-form Surface,
+  while Dumling currently stores `variant` in Lemma Core Features. Should that
+  feature move to Surface, remain lexical, or collapse to null?
+- **Current take:** Keep the case corpus-only and avoid teaching a lexical
+  Short identity until the domain location of the feature is settled.
+
+### Participial ADJ features unsupported by the codec
+
+- **Route:** `grammatical-resolution/de/lexeme/adjective`
+- **Golden Case:** `grammar-de-adj-provisional-participial-geschlossen`
+- **Raised by:** Wayfinder issue #32
+- **Question:** German treebanks retain verbal `VerbForm` and `Tense` on many
+  ADJ participles, but the current ADJ codec cannot express those features or
+  consistently preserve a verbal Lemma. Should these resolve as ADJ, require a
+  codec extension, or remain Unresolved?
+- **Current take:** Keep the participial analysis corpus-only pending a domain
+  decision; ordinary perfect-participle VERB uses remain out of route.
+
+### ADJ Core Feature and route boundaries
+
+- **Route:** `grammatical-resolution/de/lexeme/adjective`
+- **Golden Case:** `grammar-de-adj-provisional-card-siebenhundert`,
+  `grammar-de-adj-provisional-foreign-cool`, and
+  `grammar-de-adj-provisional-abbreviation-sog`
+- **Raised by:** Wayfinder issue #32
+- **Question:** When does numeric `siebenhundert` remain ADJ versus NUM, when
+  does lexicalized `cool` retain `Foreign=Yes`, and how should abbreviated
+  `sog.` preserve punctuation, canonical form, and agreement?
+- **Current take:** Preserve all three as corpus-only probes; do not score their
+  Core Features or route ownership until shared German lexical policy exists.
+
+### NUM compact form representation gaps
+
+- **Route:** `grammatical-resolution/de/lexeme/numeral`
+- **Golden Case:** `grammar-de-num-provisional-fraction-half`,
+  `grammar-de-num-provisional-range-10-12`, and
+  `grammar-de-num-provisional-multiplicative-2x`
+- **Raised by:** Wayfinder issue #39
+- **Question:** How should fraction glyphs, compact numeric ranges, and `2x`
+  multiplicatives be represented when the NUM codec has no NumForm/range model
+  and multiplicatives ordinarily belong to ADV?
+- **Current take:** Keep the three forms corpus-only and Unresolved rather than
+  inventing a canonical identity or silently crossing routes.
+
+### German PART inventory versus modal-particle taxonomy
+
+- **Route:** `grammatical-resolution/de/lexeme/particle`
+- **Golden Case:** `grammar-de-part-provisional-affirmative-ja` and
+  `grammar-de-part-provisional-foreign-not`
+- **Raised by:** Wayfinder issue #40
+- **Question:** How should the narrow UD German PART inventory (`nicht`, `zu`)
+  reconcile with the broader IDS modal-particle taxonomy when Dumling excludes
+  `PartType=Mod`, and should affirmative `ja` or code-switched `not` carry
+  Polarity/Foreign features on this route?
+- **Current take:** The draft resolves settled modal uses with nullable Core
+  Features but keeps affirmative and foreign feature assertions corpus-only.

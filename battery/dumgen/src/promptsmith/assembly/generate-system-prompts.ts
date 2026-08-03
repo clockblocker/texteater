@@ -1,6 +1,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { promptSource as grammarAdjectivePromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/prompt-source";
 import { promptSource as grammarAdpositionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/prompt-source";
 import { promptSource as grammarAdverbPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/prompt-source";
 import { promptSource as grammarAuxiliaryPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/auxiliary/prompt-source";
@@ -8,6 +9,8 @@ import { promptSource as grammarCoordinatingConjunctionPromptSource } from "../l
 import { promptSource as grammarDeterminerPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/determiner/prompt-source";
 import { promptSource as grammarInterjectionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/prompt-source";
 import { promptSource as grammarNounPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/prompt-source";
+import { promptSource as grammarNumeralPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral/prompt-source";
+import { promptSource as grammarParticlePromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/prompt-source";
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as segmentationPromptSource } from "../laboratory/prompt-source/segmentation/de/prompt-source";
@@ -21,6 +24,7 @@ const codegen = defineSystemPromptCodegen({
 		intakePromptSource,
 		segmentationPromptSource,
 		targetPromptSource,
+		grammarAdjectivePromptSource,
 		grammarAdpositionPromptSource,
 		grammarAdverbPromptSource,
 		grammarAuxiliaryPromptSource,
@@ -28,6 +32,8 @@ const codegen = defineSystemPromptCodegen({
 		grammarDeterminerPromptSource,
 		grammarInterjectionPromptSource,
 		grammarNounPromptSource,
+		grammarNumeralPromptSource,
+		grammarParticlePromptSource,
 		readingPromptSource,
 	],
 	promptSourceRoot: join(promptsmithRoot, "laboratory", "prompt-source"),
