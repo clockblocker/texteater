@@ -1,0 +1,1297 @@
+{
+  "runnerVersion": "grammatical-resolution-symbol-v1",
+  "route": "grammatical-resolution/de/lexeme/symbol",
+  "startedAt": "2026-08-03T12:55:20.295Z",
+  "completedAt": "2026-08-03T13:00:33.304Z",
+  "finalizedAt": "2026-08-03T13:10:17.409Z",
+  "model": "gpt-5-nano",
+  "registrationMaxOutputTokens": 1024,
+  "runMaxOutputTokens": 16384,
+  "reasoningEffort": "high",
+  "textVerbosity": "low",
+  "promptSha256": "590b06b8ce4a0baf6b9bc3324aebc3668b297a01ff569f9d2f7d36a730483d1b",
+  "inputSchemaSha256": "9ccb0bfceba8a25c8a84ff85abcd963a276103b200f86a9fd5cf360ffc64ae04",
+  "outputSchemaSha256": "580b8f9b96df14575a82d00f6088718af2ed0035c9fec6ba0753bc5a70ef459e",
+  "evaluationCaseIds": [
+    "grammar-de-sym-equals-equation",
+    "grammar-de-sym-slash-per",
+    "grammar-de-sym-plus-operator",
+    "grammar-de-sym-ampersand-symbolic-coordinator",
+    "grammar-de-sym-euro-currency",
+    "grammar-de-sym-degree-unit",
+    "grammar-de-sym-asterisk-birth",
+    "grammar-de-sym-emoticon-smile",
+    "grammar-de-sym-emoji-smile",
+    "grammar-de-sym-hashtag-sign",
+    "grammar-de-sym-letter-x-multiplication",
+    "grammar-de-sym-middle-dot-dative",
+    "grammar-de-sym-unresolved-numeral-seven",
+    "grammar-de-sym-unresolved-noun-prozent",
+    "grammar-de-sym-unresolved-proper-name-plus",
+    "grammar-de-sym-unresolved-function-word-und",
+    "grammar-de-sym-unresolved-overbroad-emoji-punctuation",
+    "grammar-de-sym-unresolved-two-symbol-occurrences"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 17,
+  "scoreRatio": 0.9444444444444444,
+  "minimumEvaluationCases": 15,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-sym-equals-equation",
+      "input": {
+        "markedContext": "In der Formel gilt: a <TARGET>=</TARGET> b."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "=",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "=",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "=",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "=",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 16165,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"=\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"=\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_088544bc21b3c3f0016a708fb93a10819287e2539073805829",
+      "usage": {
+        "input_tokens": 1636,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 2002,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 3638
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-slash-per",
+      "input": {
+        "markedContext": "Die Geschwindigkeit beträgt 50 Kilometer <TARGET>/</TARGET> Stunde."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "/",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "/",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "/",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "/",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 15482,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"/\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"/\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_06f5cc506e645c69016a708fc8a55081a097dc4f5b5d80949c",
+      "usage": {
+        "input_tokens": 1636,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2146,
+        "output_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "total_tokens": 3782
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-plus-operator",
+      "input": {
+        "markedContext": "Die Rechnung lautet 2 <TARGET>+</TARGET> 3."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "+",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "+",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "+",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "+",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 16767,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"+\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"+\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_08af6add26ec3bdb016a708fd826b881a2bf9d3d49b95053cc",
+      "usage": {
+        "input_tokens": 1636,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1818,
+        "output_tokens_details": {
+          "reasoning_tokens": 1728
+        },
+        "total_tokens": 3454
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-ampersand-symbolic-coordinator",
+      "input": {
+        "markedContext": "Auf dem Schild steht Brot <TARGET>&</TARGET> Kuchen."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "&",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "&",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "&",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "&",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 14685,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"&\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"&\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_088e4818e3b95ba6016a708fe8e530819dbc774c02b50d634f",
+      "usage": {
+        "input_tokens": 1635,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2004,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 3639
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-euro-currency",
+      "input": {
+        "markedContext": "Der Eintritt kostet 12 <TARGET>€</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "€",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "€",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "€",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "€",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 17390,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"€\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"€\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c8685bdd3036c16016a708ff7caf481a08433a1b9924e1129",
+      "usage": {
+        "input_tokens": 1635,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2229,
+        "output_tokens_details": {
+          "reasoning_tokens": 2112
+        },
+        "total_tokens": 3864
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-degree-unit",
+      "input": {
+        "markedContext": "Heute werden 18 <TARGET>°</TARGET> C erwartet."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "°",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "°",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "°",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "°",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 14843,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"°\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"°\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d9135aeb228e61b016a709008fbac81a2a1b9adb82144c29b",
+      "usage": {
+        "input_tokens": 1636,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1996,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 3632
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-asterisk-birth",
+      "input": {
+        "markedContext": "Im Kurzlebenslauf steht: Ada Beispiel (<TARGET>*</TARGET> 1980)."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "*",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "*",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "*",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "*",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 20854,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"*\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"*\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b2e46612f0788c8016a709017d1d8819f930da78c116d0560",
+      "usage": {
+        "input_tokens": 1641,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 2898,
+        "output_tokens_details": {
+          "reasoning_tokens": 2816
+        },
+        "total_tokens": 4539
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-emoticon-smile",
+      "input": {
+        "markedContext": "Danke für die Hilfe <TARGET>:-)</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": ":-)",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": ":-)",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": ":-)",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": ":-)",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 14108,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\":-)\", \"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\":-)\", \"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b571e5864fe8f05016a70902caf68819c9668742fd03abf4c",
+      "usage": {
+        "input_tokens": 1633,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1682,
+        "output_tokens_details": {
+          "reasoning_tokens": 1600
+        },
+        "total_tokens": 3315
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-emoji-smile",
+      "input": {
+        "markedContext": "Das freut mich <TARGET>😀</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "😀",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "😀",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "😀",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "😀",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 15224,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"😀\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"😀\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_03e0ae9ac51cc675016a70903ac40c8192a9c19545103be959",
+      "usage": {
+        "input_tokens": 1632,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1744,
+        "output_tokens_details": {
+          "reasoning_tokens": 1664
+        },
+        "total_tokens": 3376
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-hashtag-sign",
+      "input": {
+        "markedContext": "Setze ein <TARGET>#</TARGET> vor das Stichwort, um es zu markieren."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "#",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "#",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "#",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "#",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 21152,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"#\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"#\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0914cb164505de01016a70904a030881a0847e65e7182de2a9",
+      "usage": {
+        "input_tokens": 1641,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2123,
+        "output_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "total_tokens": 3764
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-letter-x-multiplication",
+      "input": {
+        "markedContext": "Die Abmessungen sind 20 <TARGET>x</TARGET> 30 Zentimeter."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "x",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "x",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "x",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "x",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 24736,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"x\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"x\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_01281526c3089162016a70905f2df081a2a752abc256c7db87",
+      "usage": {
+        "input_tokens": 1640,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 3101,
+        "output_tokens_details": {
+          "reasoning_tokens": 3008
+        },
+        "total_tokens": 4741
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-middle-dot-dative",
+      "input": {
+        "markedContext": "Mit einem <TARGET>·</TARGET> trennt sie die beiden Faktoren."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "·",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Inflection",
+            "surfaceFeatures": null,
+            "inflectionalFeatures": {
+              "case": "Dat",
+              "gender": null,
+              "number": "Sing"
+            }
+          },
+          "lemma": {
+            "canonicalForm": "·",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "resolution": {
+          "memberOrthographies": [
+            "Standard"
+          ],
+          "surface": {
+            "normalizedSurface": "·",
+            "spelling": "Canonical",
+            "realizationCoverage": "Full",
+            "surfaceKind": "Citation",
+            "surfaceFeatures": null
+          },
+          "lemma": {
+            "canonicalForm": "·",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          }
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 12945,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"resolution\":{\"memberOrthographies\":[\"Standard\"],\"surface\":{\"normalizedSurface\":\"·\",\"spelling\":\"Canonical\",\"realizationCoverage\":\"Full\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"·\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0886ab3ee4f56c0f016a709077e4b0819e81701283ea85cf3b",
+      "usage": {
+        "input_tokens": 1638,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1837,
+        "output_tokens_details": {
+          "reasoning_tokens": 1728
+        },
+        "total_tokens": 3475
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt explicitly requires Inflection when a symbol is used nominally and surrounding German establishes any inflectional feature, and demonstrates an unchanged nominal multiplication sign as Inflection. In Mit einem middle dot, mit establishes dative and einem singular while gender remains syncretically unsupported; the model instead emitted Citation and omitted those features."
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-numeral-seven",
+      "input": {
+        "markedContext": "Die Lösung lautet <TARGET>7</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 14876,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0b58f85d644696fa016a709084fe30819e98cb5b0ef19e93ca",
+      "usage": {
+        "input_tokens": 1633,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1977,
+        "output_tokens_details": {
+          "reasoning_tokens": 1920
+        },
+        "total_tokens": 3610
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-noun-prozent",
+      "input": {
+        "markedContext": "Der Anteil beträgt zehn <TARGET>Prozent</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 46300,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0bf16e95d26c9071016a709093bb8481a0bfe616535caebc95",
+      "usage": {
+        "input_tokens": 1635,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 5272,
+        "output_tokens_details": {
+          "reasoning_tokens": 5248
+        },
+        "total_tokens": 6907
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-proper-name-plus",
+      "input": {
+        "markedContext": "Die Serie läuft auf Disney<TARGET>+</TARGET>."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 16600,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0c32a5c7cab60d7f016a7090c201ac81a0b400a47490de82d8",
+      "usage": {
+        "input_tokens": 1634,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 2100,
+        "output_tokens_details": {
+          "reasoning_tokens": 2048
+        },
+        "total_tokens": 3734
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-function-word-und",
+      "input": {
+        "markedContext": "Tee <TARGET>und</TARGET> Gebäck stehen bereit."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 9297,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0d05de048bb9d95c016a7090d2b2b081a1b397a98e7f9bf1e5",
+      "usage": {
+        "input_tokens": 1636,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 991,
+        "output_tokens_details": {
+          "reasoning_tokens": 960
+        },
+        "total_tokens": 2627
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-overbroad-emoji-punctuation",
+      "input": {
+        "markedContext": "Das ist schön<TARGET>! 😀</TARGET>"
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 15894,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0db686bd006ae95b016a7090dbe7a481a29dfc79ea7414c0a9",
+      "usage": {
+        "input_tokens": 1633,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 1818,
+        "output_tokens_details": {
+          "reasoning_tokens": 1792
+        },
+        "total_tokens": 3451
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-unresolved-two-symbol-occurrences",
+      "input": {
+        "markedContext": "Er schrieb <TARGET>+</TARGET> links und <TARGET>−</TARGET> rechts."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "resolution": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "decisionResolutionCoherencePass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5690,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"resolution\":null}",
+      "resolvedModel": "gpt-5-nano-2025-08-07",
+      "responseId": "resp_0944bdb1a75248a3016a7090ebcc1881a09881a728667910f4",
+      "usage": {
+        "input_tokens": 1641,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1536
+        },
+        "output_tokens": 624,
+        "output_tokens_details": {
+          "reasoning_tokens": 576
+        },
+        "total_tokens": 2265
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

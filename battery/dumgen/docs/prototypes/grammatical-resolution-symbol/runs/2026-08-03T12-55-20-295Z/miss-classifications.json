@@ -1,0 +1,6 @@
+{
+  "grammar-de-sym-middle-dot-dative": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires Inflection when a symbol is used nominally and surrounding German establishes any inflectional feature, and demonstrates an unchanged nominal multiplication sign as Inflection. In Mit einem middle dot, mit establishes dative and einem singular while gender remains syncretically unsupported; the model instead emitted Citation and omitted those features."
+  }
+}

@@ -10,10 +10,13 @@ import { promptSource as grammarDeterminerPromptSource } from "../laboratory/pro
 import { promptSource as grammarInterjectionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/prompt-source";
 import { promptSource as grammarNounPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/prompt-source";
 import { promptSource as grammarNumeralPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral/prompt-source";
+import { promptSource as grammarOtherPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/other/prompt-source";
 import { promptSource as grammarParticlePromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/prompt-source";
 import { promptSource as grammarPronounPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/prompt-source";
 import { promptSource as grammarProperNounPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/proper-noun/prompt-source";
 import { promptSource as grammarSubordinatingConjunctionPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/prompt-source";
+import { promptSource as grammarSymbolPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/prompt-source";
+import { promptSource as grammarVerbPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/prompt-source";
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as segmentationPromptSource } from "../laboratory/prompt-source/segmentation/de/prompt-source";
@@ -40,6 +43,9 @@ const codegen = defineSystemPromptCodegen({
 		grammarPronounPromptSource,
 		grammarProperNounPromptSource,
 		grammarSubordinatingConjunctionPromptSource,
+		grammarSymbolPromptSource,
+		grammarVerbPromptSource,
+		grammarOtherPromptSource,
 		readingPromptSource,
 	],
 	promptSourceRoot: join(promptsmithRoot, "laboratory", "prompt-source"),

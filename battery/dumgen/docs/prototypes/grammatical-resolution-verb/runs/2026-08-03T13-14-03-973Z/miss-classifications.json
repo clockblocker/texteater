@@ -1,0 +1,18 @@
+{
+  "grammar-de-verb-past-ging": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model produced the correct decision, Surface, inflection, Lemma form, and all other Core Features, but incorrectly treated the replaceable directional phrase nach Hause as lexically governed and emitted hasGovPrep=nach. The prompt restricts hasGovPrep to a lexically selected preposition, so the null oracle is authoritative."
+  },
+  "grammar-de-verb-infinitive-hinauszulaufen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model produced the correct Inflection Surface and Core Features but copied the contextual zu-infinitive hinauszulaufen into Lemma canonicalForm instead of returning the dictionary infinitive hinauslaufen. The prompt explicitly defines canonicalForm as the dictionary infinitive, and this case passed in the prior run."
+  },
+  "grammar-de-verb-participle-mitgebracht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model produced the correct participial analysis and every other field but emitted aspect=Perf. The prompt gives the exact required Partizip-II feature object and explicitly forbids Aspect=Perf; the authoritative null-aspect oracle follows the adopted German GSD policy."
+  },
+  "grammar-de-verb-unresolved-modal-aux-kann": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Können governing the bare infinitive schwimmen is a modal AUX use and must remain Unresolved on the fixed VERB route. The prompt states this boundary explicitly, but the model produced a coherent AUX-like modal analysis on the wrong route; this case passed in the prior run."
+  }
+}

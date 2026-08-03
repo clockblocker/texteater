@@ -337,3 +337,48 @@ is worth revisiting.
 - **Current take:** Keep complex and V2 examples corpus-only. The route resolves
   settled single-word markers, including established reduced clauses, without
   treating verb-final order as an absolute or absorbing multiword material.
+
+### German SYM feature identity versus contextual agreement
+
+- **Route:** `grammatical-resolution/de/lexeme/symbol`
+- **Golden Case:** `grammar-de-sym-provisional-foreign-ampersand`,
+  `grammar-de-sym-provisional-numtype-range-dash`, and
+  `grammar-de-sym-provisional-keycap`
+- **Raised by:** Wayfinder issue #44
+- **Question:** When may treebank `Foreign` or `NumType` annotations become
+  stable Core identity for a language-independent symbol, and how should
+  multi-code-point symbols interact with segmentation and contextual nominal
+  agreement?
+- **Current take:** Keep those feature and segmentation claims corpus-only.
+  Authoritative symbol Lemmas use all-null Core Features, while an Inflection
+  Surface records agreement only when the surrounding German context supports
+  a non-empty feature bundle.
+
+### German lexical participles and periphrastic features
+
+- **Route:** `grammatical-resolution/de/lexeme/verb`
+- **Golden Case:** `grammar-de-verb-provisional-passive-participle` and
+  `grammar-de-verb-provisional-predicative-participle`
+- **Raised by:** Wayfinder issue #45
+- **Question:** Should `Voice` or other periphrastic information belong to a
+  lexical participle Surface, the surrounding construction, or neither, and
+  when has a predicative participle crossed into ADJ?
+- **Current take:** Keep passive and predicative boundary cases corpus-only.
+  Authoritative German lexical participles use `VerbForm=Part` with
+  `Aspect=null`; `Aspect=Perf` is perfective aspect, not a Partizip-II marker.
+
+### Lexeme/X is unreachable under the current German segmentation boundary
+
+- **Route:** `grammatical-resolution/de/lexeme/other`
+- **Golden Case:** `grammar-de-x-foreign-code-switch`,
+  `grammar-de-x-unintelligible-gibberish`, and
+  `grammar-de-x-truncated-fragment`
+- **Raised by:** Wayfinder issue #46 and the independent route review
+- **Question:** UD X covers unanalyzed code-switching, gibberish, and word
+  fragments, but current Dumgen policy makes all three `OpaqueText` before a
+  click. Is a positive Lexeme/X Selection ever reachable without changing the
+  German-only segmentation and language-routing model tracked by issue #19?
+- **Current take:** No. Keep the X prompt as an intentionally all-`Unresolved`
+  diagnostic leaf. Its DTO still represents Dumling Citation and non-empty
+  Inflection Surfaces, but any downstream X target currently identifies an
+  upstream Segmentation or Target Classification contract defect.
