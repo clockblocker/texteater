@@ -43,14 +43,13 @@ largest defensible learner-facing gain while retaining the structure needed to
 drill down later.
 
 For example, clicking `heulte` in
-`Obwohl er anderer Meinung war, heulte er mit` may resolve to:
+`Obwohl er anderer Meinung war, heulte er mit` user-provided text will resolve to:
+the idiom `mit den Wölfen heulen`, with Reading `🐺🗣️🤝`.
 
-- Selection membership `heulte … mit`;
-- normalized contextual Surface `heulte mit`, with
-  `realizationCoverage: "Partial"`; and
-- the idiom Lemma whose Canonical Form is `mit den Wölfen heulen`, followed by
-  the learner Reading `🐺🗣️🤝`.
+When in the dictonary note for the `mit den Wölfen heulen` user click on `heulen`, we will resolve to:
+the verb `heulen`
 
-The Surface does not invent the unattested words `den Wölfen`. Those belong to
-the Lemma's Canonical Form. Future valency modeling is tracked separately and
-does not change this boundary.
+When in the dictonary note for the `heulen` user click on `heul`, we will resolve to:
+the morpheme root `heul`
+
+This is how we do the drilldown to the atoms, while keeping all in one system.
