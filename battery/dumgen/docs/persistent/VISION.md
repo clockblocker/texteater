@@ -99,8 +99,7 @@ C) DEFINETELY we need to split collapced together units in diff segments "[אֲ�
 
 Although we would prefer to have A and B here, they could be later handeled in LLM calls responcible for the classifiaction of a clicked segment. 
 
-C is a core reason this step exists. hopefully, Intl.Segmenter (or some like Stanza) can help here
-
+C is a core reason this step exists. Hopefully, Intl.Segmenter (or some like Stanza) can help here
 
 
 ## 2. Dumling resolution of a clicked segemnt
@@ -111,8 +110,44 @@ As a learner facing tool, we resolse the biggest semantic unit first
 
 click on "Good" in "[Good] [morning], [mother]" we resolve as "Good morning"
 
+click on `heulte` in `Obwohl er anderer Meinung war, heulte er mit` we resolve to: `mit den Wölfen heulen`
+
+We are not shure if target resolution is: 
+A) 2 prompts (one picks all segments for the unit, teh clickled one is pointing to), the otehr resolves the POS
+B) 1 prompt for both thing in A
+C) 1 promot + some Stanza magic
+
+But we do know, that in the end  of 2.1 we should know:
+- Family / Kind of the targeted biggest semantic unit 
+- Indices of the segmets that are all facing to the same unit, the clicked segment was pointing to
+
+### 2.2 Dumling (Grammatical) resolution 
+The system selects the approp promt for resolved {Lang, Family, Kind}, passess in the marked context `Obwohl er anderer Meinung war, <target>heulte</target> er <target>mit</target>` and recieves the structured dumling output for teh full resoluton 
+
+Once again, we are not shure if the "Normal form of the lemma" (ie `mit den Wölfen heulen`) could be resolved in 2.1 or we have to do that in 2.2 
+
+### 2.3 Reading (Meaning) resolution 
+This is how we resolve holonyms / plasemy. The "emoji as semantic identity" + "do not split semntic penneis policy".
+
+The only piece, that we have working prompt for (as per 8 Aug 2026).
+
+Read
+`battery/dumgen/src/promptsmith/laboratory/prompt-source/reading-resolution/de/prompt-source.ts`
+`battery/dumgen/src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/cases/hand-verivied/adp.ts`
+
+
+## 3 Relations 
+// out of scope for now
+// how we treat the traslations, definitions, synonyms, etc
+
+
+---
+---
 
 # Drill down into the resolved dummling unit 
 
 // out of scope for now, but we do keep it in mind
 
+TLDR: "Intake" is skipped. "Segmentation" and "Target resolution" will be done differently: in Phrasemes' notes, the lexemes will become the targetes. In Lexemes' notes the morphenmes will become the targets.
+
+The rest of teh resolution is the same
