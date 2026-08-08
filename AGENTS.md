@@ -13,3 +13,7 @@ Use the default five-role triage vocabulary. See `docs/agents/triage-labels.md`.
 ### Domain docs
 
 Use the multi-context domain-documentation layout. See `docs/agents/domain.md`.
+
+### Important
+
+Do NOT EDIT `**/GOAL.md` or `**/VISION.md` unless explicitly asted for.
