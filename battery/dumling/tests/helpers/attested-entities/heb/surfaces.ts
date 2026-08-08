@@ -22,7 +22,6 @@ export const hebrewKatvuInflectionSurface = {
 	language: "he",
 	normalizedSurface: "כתבו",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: hebrewKatavLemma,
 
@@ -34,7 +33,6 @@ export const hebrewShanaCitationSurface = {
 	language: "he",
 	normalizedSurface: "שנה",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: hebrewShanaLemma,
 
@@ -46,7 +44,6 @@ export const hebrewUsAbbreviationCitationSurface = {
 	language: "he",
 	normalizedSurface: "ארה״ב",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: hebrewUsAbbreviationLemma,
 

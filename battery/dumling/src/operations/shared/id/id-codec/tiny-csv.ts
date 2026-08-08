@@ -45,13 +45,8 @@ export function readableCsvToTinyCsv(input: string): string {
 			...fields.slice(2),
 		]);
 	}
-	if (fields[0] === "Selection") {
-		return csvRow(["v3", entityKindTokens.Selection, fields[1], fields[2]]);
-	}
 	if (fields[0] !== "Surface") {
-		throw new Error(
-			"Readable CSV row must start with Lemma, Surface, or Selection",
-		);
+		throw new Error("Readable CSV row must start with Lemma or Surface");
 	}
 
 	const language = languageTokens[fields[1] as keyof typeof languageTokens];
@@ -92,14 +87,6 @@ export function tinyCsvToReadableCsv(input: string): TinyResult {
 					data: csvRow([kind, language, ...fields.slice(3)]),
 				}
 			: invalid("Tiny Lemma identity is invalid");
-	}
-	if (kind === "Selection") {
-		return fields.length === 4
-			? {
-					success: true,
-					data: csvRow([kind, fields[2], fields[3]]),
-				}
-			: invalid("Tiny Selection identity is invalid");
 	}
 	if (kind !== "Surface") return invalid("Tiny row kind is invalid");
 

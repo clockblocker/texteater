@@ -10,8 +10,8 @@ This package ships working runtime surfaces for `de`, `en`, and `he`.
 `dumling` keeps three linked DTOs separate:
 
 - `Lemma`: the normalized grammatical identity
-- `Surface`: a normalized form that carries spelling, realization coverage, and inflection
-- `Selection`: the noisy, sentence-local evidence produced by a learner click
+- `Surface`: a persistent normalized form that carries licensed spelling and inflection
+- `Attestation`: fleeting, click-independent occurrence evidence linked to one Surface
 
 ## Entrypoints
 
@@ -25,8 +25,8 @@ This package ships working runtime surfaces for `de`, `en`, and `he`.
 
 Each concrete language namespace (`dumling.de`, `dumling.en`, `dumling.he`) exposes:
 
-- `create`: explicit constructors for `lemma`, `surface.citation`, `surface.inflection`, and `selection`
-- `convert`: convenience projections from `lemma -> surface`, `lemma -> selection`, and `surface -> selection`
+- `create`: explicit constructors for `lemma`, `surface.citation`, `surface.inflection`, and `attestation`
+- `convert`: convenience projections from `lemma -> surface`, `lemma -> attestation`, and `surface -> attestation`
 - `extract`: entity accessors such as `extract.lemma(...)`
 - `parse`: safe parsing returning `ApiResult<T, ParseError>`
 - `describe`: descriptor helpers via `describe.as.*` and canonical descriptor CSV via `describe.asCsv.*`
@@ -41,8 +41,8 @@ The root runtime entrypoint also exposes:
 
 `dumling/types` exports:
 
-- DTOs: `Lemma`, `Surface`, `Selection`
-- Entity and ID helpers: `EntityValue`, `EntityForKind`, `DumlingCsv`, `DumlingBase64Url`, `SelectionOptionsFor`
+- DTOs: `Lemma`, `Surface`, `Attestation`
+- Entity and ID helpers: `EntityValue`, `EntityForKind`, `DumlingCsv`, `DumlingBase64Url`, `AttestationOptionsFor`
 - Language-aware helper types: `LemmaFamilyFor`, `LemmaKindFor`, `SurfaceKindFor`, `LemmaFamilyForSurfaceKind`
 - Feature typing helpers: `FeatureSet`, `FeatureName`, `FeatureValue`, `CoreFeaturesFor`, `InflectionalFeaturesFor`
 - Descriptors and API shapes: `Descriptor`, `DumlingApi`, `LanguageApi`, `DumlingDescriptorCsv`
@@ -60,16 +60,15 @@ The `Surface` is the normalized contextual form that the note belongs to:
 
 <!-- README_BLOCK:core-surface -->
 
-The `Selection` records which segment was clicked, which segments realize the
-Surface, and the noisy spelling attested in the sentence:
+The `Attestation` records non-empty ordered member evidence, per-member
+orthography, and whether the occurrence fully or partially realizes the Surface:
 
-<!-- README_BLOCK:core-selection -->
+<!-- README_BLOCK:core-attestation -->
 
-Readable identities make the ownership boundary explicit. Selection identity
-is local to the immutable Segmented Sentence; Lemma identity carries the full
-grammatical tuple:
+Readable identities make the ownership boundary explicit. Lemma and Surface
+have stable identities; Attestation deliberately has no identity or ID codec:
 
-<!-- README_BLOCK:core-selection-id-examples -->
+<!-- README_BLOCK:core-attestation-id-examples -->
 
 ## Quickstart
 
@@ -93,7 +92,7 @@ People often look for this package using adjacent terms:
 - learner annotation
 - Lemma and inflection modeling
 - surface form normalization
-- selection DTOs
+- attestation DTOs
 - Zod schema registries
 - stable linguistic IDs
 
@@ -101,16 +100,14 @@ People often look for this package using adjacent terms:
 
 The public DTO model assigns each distinction to the layer that owns it:
 
-- `Selection.selectedOrthography` says whether the clicked segment is standard text or a typo
-- `Selection.surfaceSegmentIndices` identifies the complete, possibly discontinuous Surface occurrence
-- `Selection.attestedSurface` preserves the noisy text across those segments
+- `Attestation.members` preserves ordered, possibly discontinuous source text with `Standard | Typo` evidence per member
+- `Attestation.realizationCoverage` distinguishes full and partial realizations, such as `heulte mit` for `mit den Wölfen heulen`
 - `Surface.spelling` distinguishes canonical and licensed variant spellings, such as `armor` / `armour`
-- `Surface.realizationCoverage` distinguishes full and partial realizations, such as `heulte mit` for `mit den Wölfen heulen`
 - inflectional features and Lemma identity belong to the Surface
 
-Selections are always hydrated:
+Attestations are always hydrated:
 
-- a `Selection` always contains a `Surface`
+- an `Attestation` always contains a `Surface`
 - a `Surface` always contains a `Lemma`
 
 Lemma families also include `Construction` for learner-facing patterned entities such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction Lemmas are citation-only today.

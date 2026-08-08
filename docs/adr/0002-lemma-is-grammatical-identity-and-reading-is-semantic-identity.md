@@ -1,9 +1,14 @@
 ---
 status: accepted
 supersedes: 0001-separate-entry-identity-from-lemma-form.md
+partially-superseded-by: 0003-attestation-supersedes-selection-and-owns-realization-coverage.md
 ---
 
 # Lemma is grammatical identity and Reading is semantic identity
+
+The Selection topology, Selection identity, and Surface realization-coverage
+clauses in this ADR are superseded by ADR 0003. Its Lemma identity,
+Surface-to-Lemma, and semantic-identity decisions remain accepted.
 
 The system will use `Lemma` for the normalized, identity-bearing grammatical
 node shared by every Dumling family. Dumling's complete resolution chain is:

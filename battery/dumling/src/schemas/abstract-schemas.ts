@@ -7,9 +7,9 @@ import {
 	SurfaceKind,
 } from "../types/core/enums.js";
 import type {
+	AbstractAttestation,
 	AbstractLemma,
 	AbstractLemmaKindFor,
-	AbstractSelection,
 	AbstractSurface,
 	EntityKind,
 	LemmaFamily as LemmaFamilyType,
@@ -29,13 +29,13 @@ type AbstractSurfaceDescriptor = AbstractLemmaDescriptor & {
 	surfaceKind: SurfaceKindType;
 };
 
-type AbstractSelectionDescriptor = AbstractSurfaceDescriptor;
+type AbstractAttestationDescriptor = AbstractSurfaceDescriptor;
 
 type AbstractDescriptor<K extends EntityKind> = K extends "Lemma"
 	? AbstractLemmaDescriptor
 	: K extends "Surface"
 		? AbstractSurfaceDescriptor
-		: AbstractSelectionDescriptor;
+		: AbstractAttestationDescriptor;
 
 type AbstractSchemaRegistry = {
 	descriptor: {
@@ -44,7 +44,7 @@ type AbstractSchemaRegistry = {
 	entity: {
 		Lemma: z.ZodType<AbstractLemma<string>>;
 		Surface: z.ZodType<AbstractSurface<string>>;
-		Selection: z.ZodType<AbstractSelection<string>>;
+		Attestation: z.ZodType<AbstractAttestation<string>>;
 	};
 };
 
@@ -61,22 +61,22 @@ const abstractSurfaceDescriptorSchema = zod.strictObject({
 	surfaceKind: SurfaceKind,
 }) as unknown as z.ZodType<AbstractDescriptor<"Surface">>;
 
-const abstractSelectionDescriptorSchema = zod.strictObject({
+const abstractAttestationDescriptorSchema = zod.strictObject({
 	language: AbstractLanguageTag,
 	family: LemmaFamily,
 	kind: LemmaKind,
 	surfaceKind: SurfaceKind,
-}) as unknown as z.ZodType<AbstractDescriptor<"Selection">>;
+}) as unknown as z.ZodType<AbstractDescriptor<"Attestation">>;
 
 export const abstractSchemas = {
 	entity: {
 		Lemma: abstractRuntimeSchemas.lemma,
 		Surface: abstractRuntimeSchemas.surface,
-		Selection: abstractRuntimeSchemas.selection,
+		Attestation: abstractRuntimeSchemas.attestation,
 	},
 	descriptor: {
 		Lemma: abstractLemmaDescriptorSchema,
 		Surface: abstractSurfaceDescriptorSchema,
-		Selection: abstractSelectionDescriptorSchema,
+		Attestation: abstractAttestationDescriptorSchema,
 	},
 } satisfies AbstractSchemaRegistry;

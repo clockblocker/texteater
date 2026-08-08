@@ -76,23 +76,20 @@ describe("published package entrypoints", () => {
 				kind: "NOUN",
 				coreFeatures: { gender: "Masc" },
 			});
-			const selection = dumling.de.convert.lemma.toSelection(lemma, {
-				segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"),
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "See",
-				selectedOrthography: "Standard",
+			const attestation = dumling.de.convert.lemma.toAttestation(lemma, {
+				members: [{ attested: "See", orthography: "Standard" }],
+				realizationCoverage: "Full",
 			});
-			const parsed = dumling.de.parse.selection(selection);
+			const parsed = dumling.de.parse.attestation(attestation);
 			if (!parsed.success) throw new Error(parsed.error.message);
-			const decoded = dumling.de.id.decode.asSelectionIdentity(dumling.de.id.encode.asBase64Url(parsed.data));
+			const decoded = dumling.de.id.decode.asSurfaceIdentity(dumling.de.id.encode.asBase64Url(parsed.data.surface));
 			if (!decoded.success) throw new Error(decoded.error.message);
-			const staticSchema = schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
-			const dynamicSchema = getSchemaTreeFor("de").entity.Selection.Citation.Lexeme.NOUN();
+			const staticSchema = schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN();
+			const dynamicSchema = getSchemaTreeFor("de").entity.Attestation.Citation.Lexeme.NOUN();
 			if (typeof staticSchema.parse !== "function") throw new Error("schema entrypoint is missing german schemas");
 			staticSchema.parse(parsed.data);
 			dynamicSchema.parse(parsed.data);
-			if (schemasFor.de.entity.Selection.Citation.Lexeme.NOUN() !== staticSchema) throw new Error("leaf getter should return the stable schema object");
+			if (schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN() !== staticSchema) throw new Error("leaf getter should return the stable schema object");
 			if (getSchemaTreeFor("de") !== schemasFor.de) throw new Error("dynamic schema accessor must return registry object");
 			schemasFor.de.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", family: "Lexeme", kind: "NOUN" });
 			abstractSchemas.descriptor.Lemma.parse({ language: "fr", family: "Lexeme", kind: "NOUN" });
@@ -110,7 +107,7 @@ describe("published package entrypoints", () => {
 					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
 					'import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";',
 					'import type * as z from "zod";',
-					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Selection, SelectionOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
+					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',
 					"void languages;",
@@ -124,60 +121,59 @@ describe("published package entrypoints", () => {
 					'\tcoreFeatures: { gender: "Masc", hyph: null },',
 					"});",
 					"",
-					'const selection: Selection<"de"> = dumling.de.convert.lemma.toSelection(lemma, {',
-					'\tsegmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"),',
-					"\tclickedSegmentIndex: 4,",
-					"\tsurfaceSegmentIndices: [4],",
-					'\tattestedSurface: "See",',
-					'\tselectedOrthography: "Standard",',
+					'const attestation: Attestation<"de"> = dumling.de.convert.lemma.toAttestation(lemma, {',
+					'\tmembers: [{ attested: "See", orthography: "Standard" }],',
+					'\trealizationCoverage: "Full",',
 					"});",
-					"const parsed = dumling.de.parse.selection(selection);",
+					"const parsed = dumling.de.parse.attestation(attestation);",
 					"if (!parsed.success) throw new Error(parsed.error.message);",
 					'const dynamicApi = getLanguageApi("de");',
-					'const dynamicSelection = dynamicApi.convert.lemma.toSelection(lemma, { segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"), clickedSegmentIndex: 4, surfaceSegmentIndices: [4], attestedSurface: "See", selectedOrthography: "Standard" });',
-					'dynamicSelection satisfies Selection<"de">;',
+					'const dynamicAttestation = dynamicApi.convert.lemma.toAttestation(lemma, { members: [{ attested: "See", orthography: "Standard" }], realizationCoverage: "Full" });',
+					'dynamicAttestation satisfies Attestation<"de">;',
 					"function genericApi<L extends SupportedLanguage>(language: L): LanguageApi<L> {",
 					"\treturn getLanguageApi(language);",
 					"}",
 					"void genericApi;",
-					"const selectionId = dumling.de.id.encode.asBase64Url(parsed.data);",
-					'selectionId satisfies DumlingBase64Url<"de">;',
-					"const selectionDescriptorCsv = dumling.de.describe.asCsv.selection(parsed.data);",
-					'selectionDescriptorCsv satisfies DumlingDescriptorCsv<"de", "Selection">;',
-					"const decoded = dumling.de.id.decode.asSelectionIdentity(selectionId);",
-					'decoded satisfies ApiResult<Extract<IdDecodeSuccess<"de">, { kind: "Selection" }>, IdDecodeError>;',
+					"const surfaceId = dumling.de.id.encode.asBase64Url(parsed.data.surface);",
+					'surfaceId satisfies DumlingBase64Url<"de">;',
+					"const attestationDescriptorCsv = dumling.de.describe.asCsv.attestation(parsed.data);",
+					'attestationDescriptorCsv satisfies DumlingDescriptorCsv<"de", "Attestation">;',
+					"const decoded = dumling.de.id.decode.asSurfaceIdentity(surfaceId);",
+					'decoded satisfies ApiResult<Extract<IdDecodeSuccess<"de">, { kind: "Surface" }>, IdDecodeError>;',
 					"if (!decoded.success) throw new Error(decoded.error.message);",
 					'decoded.data satisfies IdDecodeSuccess<"de">;',
 					'const entityValue: EntityValue<"de"> = parsed.data;',
-					"decoded.data.selectionIdentity.clickedSegmentIndex satisfies number;",
-					'const entityForKind: EntityForKind<"de", "Selection"> = parsed.data;',
-					'const selectionOptions: SelectionOptionsFor = { segmentedSentenceId: dumling.de.create.segmentedSentenceId("sentence:de:am-see"), clickedSegmentIndex: 4, surfaceSegmentIndices: [4], attestedSurface: "See", selectedOrthography: "Standard" };',
+					"decoded.data.surfaceIdentity.normalizedSurface satisfies string;",
+					'const entityForKind: EntityForKind<"de", "Attestation"> = parsed.data;',
+					'const attestationOptions: AttestationOptionsFor = { members: [{ attested: "See", orthography: "Standard" }], realizationCoverage: "Full" };',
+					"// @ts-expect-error Attestation has no ID codec.",
+					"dumling.de.id.encode.asCsv(parsed.data);",
 					"declare const parseError: ParseError;",
 					'const parseErrorCode: ParseErrorCode = "InvalidInput";',
 					'const idDecodeErrorCode: IdDecodeErrorCode = "MalformedId";',
 					"void entityValue;",
 					"void entityForKind;",
-					"void selectionOptions;",
-					"void selectionDescriptorCsv;",
+					"void attestationOptions;",
+					"void attestationDescriptorCsv;",
 					"void parseError;",
 					"void parseErrorCode;",
 					"void idDecodeErrorCode;",
 					'const nounLemmaSchema: z.ZodType<Lemma<"de", "Lexeme", "NOUN">> = schemasFor.de.entity.Lemma.Lexeme.NOUN();',
-					'const nounSelectionSchema: z.ZodType<Selection<"de", "Citation", "Lexeme", "NOUN">> = schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();',
+					'const nounAttestationSchema: z.ZodType<Attestation<"de", "Citation", "Lexeme", "NOUN">> = schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN();',
 					'const nounLemmaDescriptorSchema: z.ZodType<Descriptor<"Lemma", "de", "Lexeme", "NOUN">> = schemasFor.de.descriptor.Lemma.Lexeme.NOUN;',
 					"const abstractLemmaSchema: z.ZodType<AbstractLemma<string>> = abstractSchemas.entity.Lemma;",
 					'const deTree = getSchemaTreeFor("de");',
-					"deTree.entity.Selection.Citation.Lexeme.NOUN();",
+					"deTree.entity.Attestation.Citation.Lexeme.NOUN();",
 					'deTree.descriptor.Lemma.Lexeme.NOUN.parse({ language: "de", family: "Lexeme", kind: "NOUN" });',
 					"declare const language: SupportedLanguage;",
 					"const languageTree = getSchemaTreeFor(language);",
-					"languageTree.entity.Selection.Citation.Lexeme.NOUN();",
-					"getSchemaTreeFor(language).entity.Selection.Citation.Lexeme.NOUN();",
+					"languageTree.entity.Attestation.Citation.Lexeme.NOUN();",
+					"getSchemaTreeFor(language).entity.Attestation.Citation.Lexeme.NOUN();",
 					"nounLemmaSchema.parse(lemma);",
-					"nounSelectionSchema.parse(parsed.data);",
+					"nounAttestationSchema.parse(parsed.data);",
 					'nounLemmaDescriptorSchema.parse({ language: "de", family: "Lexeme", kind: "NOUN" });',
 					'abstractLemmaSchema.parse({ language: "fr", canonicalForm: "aller", family: "Lexeme", kind: "VERB", coreFeatures: {} });',
-					"schemasFor.de.entity.Selection.Citation.Lexeme.NOUN().parse(parsed.data);",
+					"schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN().parse(parsed.data);",
 				].join("\n"),
 			);
 			writeFileSync(

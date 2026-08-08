@@ -1,7 +1,7 @@
 import type {
+	AbstractAttestation,
 	AbstractLemma,
 	AbstractLemmaKindFor,
-	AbstractSelection,
 	AbstractSurface,
 } from "../abstract/entities.js";
 import type { LemmaFamily } from "../core/enums.js";
@@ -95,22 +95,22 @@ type ConcreteInflectionSurfaceForLanguage<
 	}
 >;
 
-type ConcreteCitationSelectionForLanguage<
+type ConcreteCitationAttestationForLanguage<
 	L extends ConcreteLanguage,
 	LK extends LemmaFamilyForLanguage<L>,
 	LSK extends LemmaKindForLanguage<L, LK>,
 > = Replace<
-	AbstractSelection<L, "Citation", LK, LSK>,
+	AbstractAttestation<L, "Citation", LK, LSK>,
 	"surface",
 	ConcreteCitationSurfaceForLanguage<L, LK, LSK>
 >;
 
-type ConcreteInflectionSelectionForLanguage<
+type ConcreteInflectionAttestationForLanguage<
 	L extends ConcreteLanguage,
 	LK extends LemmaFamilyForLanguage<L>,
 	LSK extends InflectableLemmaKindsForLanguage<L, LK>,
 > = Replace<
-	AbstractSelection<L, "Inflection", LK, LSK>,
+	AbstractAttestation<L, "Inflection", LK, LSK>,
 	"surface",
 	ConcreteInflectionSurfaceForLanguage<L, LK, LSK>
 >;
@@ -163,27 +163,27 @@ export type SurfaceByKindForLanguage<L extends ConcreteLanguage> = {
 	Inflection: InflectionSurfaceByKindForLanguage<L>;
 };
 
-type CitationSelectionByKindForLanguage<L extends ConcreteLanguage> = {
+type CitationAttestationByKindForLanguage<L extends ConcreteLanguage> = {
 	[LK in LemmaFamilyForLanguage<L>]: {
 		[LSK in LemmaKindForLanguage<
 			L,
 			LK
-		>]: ConcreteCitationSelectionForLanguage<L, LK, LSK>;
+		>]: ConcreteCitationAttestationForLanguage<L, LK, LSK>;
 	};
 };
 
-type InflectionSelectionByKindForLanguage<L extends ConcreteLanguage> = {
+type InflectionAttestationByKindForLanguage<L extends ConcreteLanguage> = {
 	[LK in InflectableLemmaFamiliesForLanguage<L>]: {
 		[LSK in InflectableLemmaKindsForLanguage<
 			L,
 			LK
-		>]: ConcreteInflectionSelectionForLanguage<L, LK, LSK>;
+		>]: ConcreteInflectionAttestationForLanguage<L, LK, LSK>;
 	};
 };
 
-type SelectionByKindForLanguage<L extends ConcreteLanguage> = {
-	Citation: CitationSelectionByKindForLanguage<L>;
-	Inflection: InflectionSelectionByKindForLanguage<L>;
+type AttestationByKindForLanguage<L extends ConcreteLanguage> = {
+	Citation: CitationAttestationByKindForLanguage<L>;
+	Inflection: InflectionAttestationByKindForLanguage<L>;
 };
 
 export type LanguageLemmaUnionMap = {
@@ -196,6 +196,6 @@ export type LanguageSurfaceUnionMap = {
 	>;
 };
 
-export type LanguageSelectionByKindMap = {
-	[L in ConcreteLanguage]: SelectionByKindForLanguage<L>;
+export type LanguageAttestationByKindMap = {
+	[L in ConcreteLanguage]: AttestationByKindForLanguage<L>;
 };

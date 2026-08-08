@@ -4,14 +4,14 @@ import { schemasFor } from "../../src/schema";
 import {
 	hebrewKatavLemma,
 	hebrewKatvuInflectionSurface,
-	hebrewKatvuPointedVariantSelection,
-	hebrewKatvuStandardFullSelection,
-	hebrewShanaCitationSelection,
+	hebrewKatvuPointedVariantAttestation,
+	hebrewKatvuStandardFullAttestation,
+	hebrewShanaCitationAttestation,
 	hebrewShanaCitationSurface,
 	hebrewShanaLemma,
+	hebrewUsAbbreviationAttestation,
 	hebrewUsAbbreviationCitationSurface,
 	hebrewUsAbbreviationLemma,
-	hebrewUsAbbreviationSelection,
 } from "../helpers";
 
 describe("Hebrew attested entities", () => {
@@ -45,31 +45,31 @@ describe("Hebrew attested entities", () => {
 			).success,
 		).toBe(true);
 		expect(
-			schemasFor.he.entity.Selection.Inflection.Lexeme.VERB().safeParse(
-				hebrewKatvuStandardFullSelection,
+			schemasFor.he.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				hebrewKatvuStandardFullAttestation,
 			).success,
 		).toBe(true);
 		expect(
-			schemasFor.he.entity.Selection.Citation.Lexeme.NOUN().safeParse(
-				hebrewShanaCitationSelection,
+			schemasFor.he.entity.Attestation.Citation.Lexeme.NOUN().safeParse(
+				hebrewShanaCitationAttestation,
 			).success,
 		).toBe(true);
 		expect(
-			schemasFor.he.entity.Selection.Citation.Lexeme.PROPN().safeParse(
-				hebrewUsAbbreviationSelection,
+			schemasFor.he.entity.Attestation.Citation.Lexeme.PROPN().safeParse(
+				hebrewUsAbbreviationAttestation,
 			).success,
 		).toBe(true);
 		expect(
-			schemasFor.he.entity.Selection.Inflection.Lexeme.VERB().safeParse(
-				hebrewKatvuPointedVariantSelection,
+			schemasFor.he.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				hebrewKatvuPointedVariantAttestation,
 			).success,
 		).toBe(true);
 	});
 
 	it("work with the public operation helpers", () => {
-		expect(dumling.he.extract.lemma(hebrewKatvuStandardFullSelection)).toBe(
-			hebrewKatavLemma,
-		);
+		expect(
+			dumling.he.extract.lemma(hebrewKatvuStandardFullAttestation),
+		).toBe(hebrewKatavLemma);
 		expect(dumling.he.extract.lemma(hebrewShanaCitationSurface)).toBe(
 			hebrewShanaLemma,
 		);
@@ -77,7 +77,7 @@ describe("Hebrew attested entities", () => {
 			hebrewShanaCitationSurface,
 		);
 		expect(
-			dumling.he.describe.as.selection(hebrewKatvuInflectionSurface),
+			dumling.he.describe.as.attestation(hebrewKatvuInflectionSurface),
 		).toEqual({
 			language: "he",
 			surfaceKind: "Inflection",
@@ -92,13 +92,6 @@ describe("Hebrew attested entities", () => {
 		const surfaceId = dumling.he.id.encode.asBase64Url(
 			hebrewKatvuInflectionSurface,
 		);
-		const selectionId = dumling.he.id.encode.asBase64Url(
-			hebrewKatvuStandardFullSelection,
-		);
-		const abbreviationSelectionId = dumling.he.id.encode.asBase64Url(
-			hebrewUsAbbreviationSelection,
-		);
-
 		expect(
 			dumling.he.id.decode.asLemmaIdentity(lemmaIdentityEncoding),
 		).toEqual({
@@ -107,7 +100,7 @@ describe("Hebrew attested entities", () => {
 				format: "base64url",
 				language: "he",
 				kind: "Lemma",
-				lemmaIdentityEncodingentity: hebrewKatavLemma,
+				lemmaIdentity: hebrewKatavLemma,
 			},
 		});
 		expect(dumling.he.id.decode.asSurfaceIdentity(surfaceId)).toEqual({
@@ -123,36 +116,6 @@ describe("Hebrew attested entities", () => {
 					inflectionalFeatures:
 						hebrewKatvuInflectionSurface.inflectionalFeatures,
 					lemma: hebrewKatavLemma,
-				},
-			},
-		});
-		expect(dumling.he.id.decode.asSelectionIdentity(selectionId)).toEqual({
-			success: true,
-			data: {
-				format: "base64url",
-				language: "he",
-				kind: "Selection",
-				selectionIdentity: {
-					segmentedSentenceId:
-						hebrewKatvuStandardFullSelection.segmentedSentenceId,
-					clickedSegmentIndex:
-						hebrewKatvuStandardFullSelection.clickedSegmentIndex,
-				},
-			},
-		});
-		expect(
-			dumling.he.id.decode.asSelectionIdentity(abbreviationSelectionId),
-		).toEqual({
-			success: true,
-			data: {
-				format: "base64url",
-				language: "he",
-				kind: "Selection",
-				selectionIdentity: {
-					segmentedSentenceId:
-						hebrewUsAbbreviationSelection.segmentedSentenceId,
-					clickedSegmentIndex:
-						hebrewUsAbbreviationSelection.clickedSegmentIndex,
 				},
 			},
 		});

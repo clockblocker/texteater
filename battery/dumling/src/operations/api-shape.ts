@@ -1,5 +1,7 @@
 import type { Descriptor } from "../types/descriptor.js";
 import type {
+	Attestation,
+	AttestationOptionsFor,
 	CoreFeaturesFor,
 	DumlingBase64Url,
 	DumlingCsv,
@@ -11,10 +13,6 @@ import type {
 	LemmaFamilyForSurfaceKind,
 	LemmaIdentity,
 	LemmaKindFor,
-	SegmentedSentenceId,
-	Selection,
-	SelectionIdentity,
-	SelectionOptionsFor,
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
@@ -65,15 +63,10 @@ export type IdDecodeSuccess<L extends SupportedLanguage = SupportedLanguage> = {
 			kind: "Surface";
 			surfaceIdentity: SurfaceIdentity<L>;
 	  }
-	| {
-			kind: "Selection";
-			selectionIdentity: SelectionIdentity;
-	  }
 );
 
 export type LanguageApi<L extends SupportedLanguage> = {
 	create: {
-		segmentedSentenceId(input: string): SegmentedSentenceId;
 		lemma<
 			LK extends LemmaFamilyFor<L>,
 			LSK extends LemmaKindFor<L, LK>,
@@ -112,9 +105,9 @@ export type LanguageApi<L extends SupportedLanguage> = {
 				},
 			): TSurface;
 		};
-		selection<TSelection extends Selection<L>>(
-			input: TSelection,
-		): TSelection;
+		attestation<TAttestation extends Attestation<L>>(
+			input: TAttestation,
+		): TAttestation;
 	};
 	convert: {
 		lemma: {
@@ -128,25 +121,25 @@ export type LanguageApi<L extends SupportedLanguage> = {
 				TLemma["kind"] &
 					LemmaKindFor<L, TLemma["family"] & LemmaFamilyFor<L>>
 			>;
-			toSelection<TLemma extends Lemma<L>>(
+			toAttestation<TLemma extends Lemma<L>>(
 				lemma: TLemma,
-				options: SelectionOptionsFor,
-			): SelectionFromLemma<L, TLemma>;
+				options: AttestationOptionsFor,
+			): AttestationFromLemma<L, TLemma>;
 		};
 		surface: {
-			toSelection<TSurface extends Surface<L>>(
+			toAttestation<TSurface extends Surface<L>>(
 				surface: TSurface,
-				options: SelectionOptionsFor,
-			): SelectionFromSurface<L, TSurface>;
+				options: AttestationOptionsFor,
+			): AttestationFromSurface<L, TSurface>;
 		};
 	};
 	extract: {
-		lemma(value: Lemma<L> | Surface<L> | Selection<L>): Lemma<L>;
+		lemma(value: Lemma<L> | Surface<L> | Attestation<L>): Lemma<L>;
 	};
 	parse: {
 		lemma(input: unknown): ApiResult<Lemma<L>, ParseError>;
 		surface(input: unknown): ApiResult<Surface<L>, ParseError>;
-		selection(input: unknown): ApiResult<Selection<L>, ParseError>;
+		attestation(input: unknown): ApiResult<Attestation<L>, ParseError>;
 	};
 	describe: {
 		as: {
@@ -179,10 +172,10 @@ export type LanguageApi<L extends SupportedLanguage> = {
 					>,
 				EntitySurfaceKind<TValue> & SurfaceKindFor<L>
 			>;
-			selection<TValue extends EntityValue<L>>(
+			attestation<TValue extends EntityValue<L>>(
 				value: TValue,
 			): Descriptor<
-				"Selection",
+				"Attestation",
 				L,
 				EntityLemmaFamily<TValue> &
 					LemmaFamilyForSurfaceKind<
@@ -204,16 +197,16 @@ export type LanguageApi<L extends SupportedLanguage> = {
 			surface<TValue extends EntityValue<L>>(
 				value: TValue,
 			): DumlingDescriptorCsv<L, "Surface">;
-			selection<TValue extends EntityValue<L>>(
+			attestation<TValue extends EntityValue<L>>(
 				value: TValue,
-			): DumlingDescriptorCsv<L, "Selection">;
+			): DumlingDescriptorCsv<L, "Attestation">;
 		};
 	};
 	id: {
 		encode: {
-			asCsv(value: Lemma<L> | Surface<L> | Selection<L>): DumlingCsv<L>;
+			asCsv(value: Lemma<L> | Surface<L>): DumlingCsv<L>;
 			asBase64Url(
-				value: Lemma<L> | Surface<L> | Selection<L> | DumlingCsv<L>,
+				value: Lemma<L> | Surface<L> | DumlingCsv<L>,
 			): DumlingBase64Url<L>;
 		};
 		decode: {
@@ -230,12 +223,6 @@ export type LanguageApi<L extends SupportedLanguage> = {
 				Extract<IdDecodeSuccess<L>, { kind: "Surface" }>,
 				IdDecodeError
 			>;
-			asSelectionIdentity(
-				id: string,
-			): ApiResult<
-				Extract<IdDecodeSuccess<L>, { kind: "Selection" }>,
-				IdDecodeError
-			>;
 		};
 	};
 };
@@ -248,11 +235,14 @@ type InflectionSurfaceKind<L extends SupportedLanguage> = Extract<
 	SurfaceKindFor<L>,
 	"Inflection"
 >;
-type SelectionFromLemma<L extends SupportedLanguage, TLemma extends Lemma<L>> =
+type AttestationFromLemma<
+	L extends SupportedLanguage,
+	TLemma extends Lemma<L>,
+> =
 	Lemma<L> extends TLemma
-		? Selection<L>
-		: Selection<L> &
-				Selection<
+		? Attestation<L>
+		: Attestation<L> &
+				Attestation<
 					L,
 					CitationSurfaceKind<L>,
 					TLemma["family"] &
@@ -260,14 +250,14 @@ type SelectionFromLemma<L extends SupportedLanguage, TLemma extends Lemma<L>> =
 					TLemma["kind"] &
 						LemmaKindFor<L, TLemma["family"] & LemmaFamilyFor<L>>
 				>;
-type SelectionFromSurface<
+type AttestationFromSurface<
 	L extends SupportedLanguage,
 	TSurface extends Surface<L>,
 > =
 	Surface<L> extends TSurface
-		? Selection<L>
-		: Selection<L> &
-				Selection<
+		? Attestation<L>
+		: Attestation<L> &
+				Attestation<
 					L,
 					TSurface["surfaceKind"] & SurfaceKindFor<L>,
 					TSurface["lemma"]["family"] &

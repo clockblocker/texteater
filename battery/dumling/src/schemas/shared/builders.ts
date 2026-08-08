@@ -67,7 +67,6 @@ export function buildCitationSurfaceSchema<
 	lemma: TLemma;
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
-	realizationCoverage: "Full" | "Partial";
 	surfaceKind: "Citation";
 	surfaceFeatures: {
 		historicalStatus: "Archaic" | null;
@@ -77,7 +76,6 @@ export function buildCitationSurfaceSchema<
 		language: options.languageSchema,
 		normalizedSurface: normalizedStringSchema(),
 		spelling: z.enum(["Canonical", "Variant"]),
-		realizationCoverage: z.enum(["Full", "Partial"]),
 		surfaceKind: z.literal("Citation"),
 		surfaceFeatures: nullableNonEmptyObjectSchema({
 			historicalStatus: z.literal("Archaic").nullable(),
@@ -88,7 +86,6 @@ export function buildCitationSurfaceSchema<
 		lemma: TLemma;
 		normalizedSurface: string;
 		spelling: "Canonical" | "Variant";
-		realizationCoverage: "Full" | "Partial";
 		surfaceKind: "Citation";
 		surfaceFeatures: {
 			historicalStatus: "Archaic" | null;
@@ -110,7 +107,6 @@ export function buildInflectionSurfaceSchema<
 	lemma: TLemma;
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
-	realizationCoverage: "Full" | "Partial";
 	surfaceKind: "Inflection";
 	surfaceFeatures: {
 		historicalStatus: "Archaic" | null;
@@ -120,7 +116,6 @@ export function buildInflectionSurfaceSchema<
 		language: options.languageSchema,
 		normalizedSurface: normalizedStringSchema(),
 		spelling: z.enum(["Canonical", "Variant"]),
-		realizationCoverage: z.enum(["Full", "Partial"]),
 		surfaceKind: z.literal("Inflection"),
 		surfaceFeatures: nullableNonEmptyObjectSchema({
 			historicalStatus: z.literal("Archaic").nullable(),
@@ -133,7 +128,6 @@ export function buildInflectionSurfaceSchema<
 		lemma: TLemma;
 		normalizedSurface: string;
 		spelling: "Canonical" | "Variant";
-		realizationCoverage: "Full" | "Partial";
 		surfaceKind: "Inflection";
 		surfaceFeatures: {
 			historicalStatus: "Archaic" | null;
@@ -141,67 +135,34 @@ export function buildInflectionSurfaceSchema<
 	}>;
 }
 
-export function buildSelectionSchema<
+export function buildAttestationSchema<
 	TLanguage extends string,
 	TSurface extends { language: TLanguage },
 >(options: {
 	surfaceSchema: z.ZodType<TSurface>;
 }): z.ZodType<{
-	segmentedSentenceId: string;
-	clickedSegmentIndex: number;
-	surfaceSegmentIndices: number[];
-	attestedSurface: string;
-	selectedOrthography: "Standard" | "Typo";
+	members: readonly [
+		{ attested: string; orthography: "Standard" | "Typo" },
+		...{ attested: string; orthography: "Standard" | "Typo" }[],
+	];
+	realizationCoverage: "Full" | "Partial";
 	surface: TSurface;
 }> {
-	return z
-		.strictObject({
-			segmentedSentenceId: z
-				.string()
-				.min(1)
-				.refine(
-					(value) =>
-						value.trim() === value &&
-						value.normalize("NFC") === value,
-					"SegmentedSentenceId must be a non-empty normalized string",
-				),
-			clickedSegmentIndex: z.number().int().nonnegative(),
-			surfaceSegmentIndices: z
-				.array(z.number().int().nonnegative())
-				.min(1),
-			attestedSurface: z.string().min(1),
-			selectedOrthography: z.enum(["Standard", "Typo"]),
-			surface: options.surfaceSchema,
-		})
-		.superRefine((value, context) => {
-			const indices = value.surfaceSegmentIndices;
-			if (!indices.includes(value.clickedSegmentIndex)) {
-				context.addIssue({
-					code: "custom",
-					path: ["surfaceSegmentIndices"],
-					message:
-						"Surface segment indices must include the clicked segment",
-				});
-			}
-			if (
-				indices.some(
-					(index, position) =>
-						position > 0 && index <= (indices[position - 1] ?? -1),
-				)
-			) {
-				context.addIssue({
-					code: "custom",
-					path: ["surfaceSegmentIndices"],
-					message:
-						"Surface segment indices must be ordered and unique",
-				});
-			}
-		}) as unknown as z.ZodType<{
-		segmentedSentenceId: string;
-		clickedSegmentIndex: number;
-		surfaceSegmentIndices: number[];
-		attestedSurface: string;
-		selectedOrthography: "Standard" | "Typo";
+	const memberSchema = z.strictObject({
+		attested: z.string().min(1),
+		orthography: z.enum(["Standard", "Typo"]),
+	});
+
+	return z.strictObject({
+		members: z.array(memberSchema).min(1),
+		realizationCoverage: z.enum(["Full", "Partial"]),
+		surface: options.surfaceSchema,
+	}) as unknown as z.ZodType<{
+		members: readonly [
+			{ attested: string; orthography: "Standard" | "Typo" },
+			...{ attested: string; orthography: "Standard" | "Typo" }[],
+		];
+		realizationCoverage: "Full" | "Partial";
 		surface: TSurface;
 	}>;
 }
@@ -235,15 +196,15 @@ type FeatureSchemaTree<L extends ConcreteLanguage> = {
 
 type LeafSchemas = {
 	lemma: z.ZodType;
-	citationSelection: z.ZodType;
+	citationAttestation: z.ZodType;
 	citationSurface: z.ZodType;
-	inflectionSelection?: z.ZodType;
+	inflectionAttestation?: z.ZodType;
 	inflectionSurface?: z.ZodType;
 };
 
 type MutableSchemaTree = {
+	Attestation: Record<string, Record<string, Record<string, z.ZodType>>>;
 	Lemma: Record<string, Record<string, z.ZodType>>;
-	Selection: Record<string, Record<string, Record<string, z.ZodType>>>;
 	Surface: Record<string, Record<string, Record<string, z.ZodType>>>;
 };
 
@@ -276,14 +237,14 @@ function buildLeafSchemas<
 		lemmaSchema,
 	});
 
-	const citationSelectionSchema = buildSelectionSchema({
+	const citationAttestationSchema = buildAttestationSchema({
 		surfaceSchema: citationSurfaceSchema,
 	});
 
 	const leaf = {
 		lemma: lemmaSchema,
 		citationSurface: citationSurfaceSchema,
-		citationSelection: citationSelectionSchema,
+		citationAttestation: citationAttestationSchema,
 	};
 
 	if (!hasInflectionSurface(featuresSchema.shape.inflectional)) {
@@ -296,14 +257,14 @@ function buildLeafSchemas<
 		inflectionalFeaturesSchema: featuresSchema.shape.inflectional,
 	});
 
-	const inflectionSelectionSchema = buildSelectionSchema({
+	const inflectionAttestationSchema = buildAttestationSchema({
 		surfaceSchema: inflectionSurfaceSchema,
 	});
 
 	return {
 		...leaf,
 		inflectionSurface: inflectionSurfaceSchema,
-		inflectionSelection: inflectionSelectionSchema,
+		inflectionAttestation: inflectionAttestationSchema,
 	};
 }
 
@@ -325,7 +286,7 @@ export function buildLanguageSchema<L extends ConcreteLanguage>(
 			Citation: {},
 			Inflection: {},
 		},
-		Selection: {
+		Attestation: {
 			Citation: {},
 			Inflection: {},
 		},
@@ -347,8 +308,8 @@ export function buildLanguageSchema<L extends ConcreteLanguage>(
 			schemaTree.Surface.Citation,
 			family,
 		);
-		const citationSelectionFamily = ensureFamily(
-			schemaTree.Selection.Citation,
+		const citationAttestationFamily = ensureFamily(
+			schemaTree.Attestation.Citation,
 			family,
 		);
 
@@ -365,9 +326,9 @@ export function buildLanguageSchema<L extends ConcreteLanguage>(
 
 			lemmaFamily[kind] = leaf.lemma;
 			citationSurfaceFamily[kind] = leaf.citationSurface;
-			citationSelectionFamily[kind] = leaf.citationSelection;
+			citationAttestationFamily[kind] = leaf.citationAttestation;
 
-			if (!leaf.inflectionSurface || !leaf.inflectionSelection) {
+			if (!leaf.inflectionSurface || !leaf.inflectionAttestation) {
 				continue;
 			}
 
@@ -375,13 +336,13 @@ export function buildLanguageSchema<L extends ConcreteLanguage>(
 				schemaTree.Surface.Inflection,
 				family,
 			);
-			const inflectionSelectionFamily = ensureFamily(
-				schemaTree.Selection.Inflection,
+			const inflectionAttestationFamily = ensureFamily(
+				schemaTree.Attestation.Inflection,
 				family,
 			);
 
 			inflectionSurfaceFamily[kind] = leaf.inflectionSurface;
-			inflectionSelectionFamily[kind] = leaf.inflectionSelection;
+			inflectionAttestationFamily[kind] = leaf.inflectionAttestation;
 		}
 	}
 

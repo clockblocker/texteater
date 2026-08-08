@@ -15,10 +15,6 @@ export type SurfaceFeatures = {
 	historicalStatus: "Archaic" | null;
 };
 
-export type SegmentedSentenceId = string & {
-	readonly __segmentedSentenceIdBrand: unique symbol;
-};
-
 export type AbstractLemmaKindFor<LK extends LemmaFamily> = LK extends "Lexeme"
 	? Pos
 	: LK extends "Morpheme"
@@ -72,22 +68,23 @@ export type AbstractSurface<
 	language: L;
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
-	realizationCoverage: "Full" | "Partial";
 	surfaceKind: SK;
 	surfaceFeatures: SurfaceFeatures | null;
 	lemma: AbstractLemma<L, LK, LSK>;
 } & AbstractSurfacePayload<SK, LK, LSK>;
 
-export type AbstractSelection<
+export type AttestationMember = {
+	attested: string;
+	orthography: "Standard" | "Typo";
+};
+
+export type AbstractAttestation<
 	L extends string = string,
 	SK extends SurfaceKind = SurfaceKind,
 	LK extends LemmaFamily = LemmaFamily,
 	LSK extends AbstractLemmaKindFor<LK> = AbstractLemmaKindFor<LK>,
 > = {
-	segmentedSentenceId: SegmentedSentenceId;
-	clickedSegmentIndex: number;
-	surfaceSegmentIndices: number[];
-	attestedSurface: string;
-	selectedOrthography: "Standard" | "Typo";
+	members: readonly [AttestationMember, ...AttestationMember[]];
+	realizationCoverage: "Full" | "Partial";
 	surface: AbstractSurface<L, SK, LK, LSK>;
 };

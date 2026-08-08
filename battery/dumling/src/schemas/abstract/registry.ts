@@ -7,15 +7,15 @@ import {
 	Pos,
 } from "../../types/core/enums.js";
 import type {
+	AbstractAttestation,
 	AbstractLemma,
-	AbstractSelection,
 	AbstractSurface,
 } from "../../types/public-types.js";
 import {
+	buildAttestationSchema,
 	buildCitationSurfaceSchema,
 	buildInflectionSurfaceSchema,
 	buildLemmaSchema,
-	buildSelectionSchema,
 	buildUnionSchema,
 } from "../shared/builders.js";
 import {
@@ -27,9 +27,9 @@ type AbstractLeafBundle = {
 	citationSurfaceSchema: z.ZodType<AbstractSurface<string, "Citation">>;
 	inflectionSurfaceSchema: z.ZodType<AbstractSurface<string, "Inflection">>;
 	lemmaSchema: z.ZodType<AbstractLemma<string>>;
-	selectionSchemas: readonly [
-		z.ZodType<AbstractSelection<string, "Citation">>,
-		z.ZodType<AbstractSelection<string, "Inflection">>,
+	attestationSchemas: readonly [
+		z.ZodType<AbstractAttestation<string, "Citation">>,
+		z.ZodType<AbstractAttestation<string, "Inflection">>,
 	];
 };
 
@@ -52,24 +52,27 @@ function buildAbstractLeafBundle(
 		lemmaSchema,
 		inflectionalFeaturesSchema: abstractInflectionalFeaturesSchema,
 	}) as z.ZodType<AbstractSurface<string, "Inflection">>;
-	const citationSelectionSchema = buildSelectionSchema({
+	const citationAttestationSchema = buildAttestationSchema({
 		surfaceSchema: citationSurfaceSchema,
-	}) as z.ZodType<AbstractSelection<string, "Citation">>;
-	const inflectionSelectionSchema = buildSelectionSchema({
+	}) as z.ZodType<AbstractAttestation<string, "Citation">>;
+	const inflectionAttestationSchema = buildAttestationSchema({
 		surfaceSchema: inflectionSurfaceSchema,
-	}) as z.ZodType<AbstractSelection<string, "Inflection">>;
+	}) as z.ZodType<AbstractAttestation<string, "Inflection">>;
 
 	return {
 		lemmaSchema,
 		citationSurfaceSchema,
 		inflectionSurfaceSchema,
-		selectionSchemas: [citationSelectionSchema, inflectionSelectionSchema],
+		attestationSchemas: [
+			citationAttestationSchema,
+			inflectionAttestationSchema,
+		],
 	};
 }
 
 const abstractLemmaSchemas: z.ZodType[] = [];
 const abstractSurfaceSchemas: z.ZodType[] = [];
-const abstractSelectionSchemas: z.ZodType[] = [];
+const abstractAttestationSchemas: z.ZodType[] = [];
 
 for (const [family, subKinds] of [
 	["Lexeme", Pos.options],
@@ -85,7 +88,7 @@ for (const [family, subKinds] of [
 			bundle.citationSurfaceSchema,
 			bundle.inflectionSurfaceSchema,
 		);
-		abstractSelectionSchemas.push(...bundle.selectionSchemas);
+		abstractAttestationSchemas.push(...bundle.attestationSchemas);
 	}
 }
 
@@ -96,7 +99,7 @@ export const abstractRuntimeSchemas = {
 	surface: buildUnionSchema(
 		abstractSurfaceSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
 	) as z.ZodType<AbstractSurface<string>>,
-	selection: buildUnionSchema(
-		abstractSelectionSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
-	) as z.ZodType<AbstractSelection<string>>,
+	attestation: buildUnionSchema(
+		abstractAttestationSchemas as [z.ZodType, z.ZodType, ...z.ZodType[]],
+	) as z.ZodType<AbstractAttestation<string>>,
 } as const;

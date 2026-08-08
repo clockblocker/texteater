@@ -1,6 +1,6 @@
 import type {
+	Attestation,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 	SurfaceKind,
@@ -9,7 +9,7 @@ import type {
 type EntityValue<L extends SupportedLanguage> =
 	| Lemma<L>
 	| Surface<L>
-	| Selection<L>;
+	| Attestation<L>;
 
 type EntityInspection<L extends SupportedLanguage> = {
 	language: L;

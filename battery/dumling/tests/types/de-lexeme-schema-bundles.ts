@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import { schemasFor } from "../../src/schema";
-import type { Lemma, Selection, Surface } from "../../src/types/public-types";
+import type { Attestation, Lemma, Surface } from "../../src/types/public-types";
 
 const adjectiveLemma = schemasFor.de.entity.Lemma.Lexeme.ADJ();
 const adpositionLemma = schemasFor.de.entity.Lemma.Lexeme.ADP();
@@ -12,8 +12,8 @@ schemasFor.de.entity.Surface.Citation.Lexeme.ADP() satisfies z.ZodType<
 	Surface<"de", "Citation", "Lexeme", "ADP">
 >;
 
-schemasFor.de.entity.Selection.Citation.Lexeme.ADP() satisfies z.ZodType<
-	Selection<"de", "Citation", "Lexeme", "ADP">
+schemasFor.de.entity.Attestation.Citation.Lexeme.ADP() satisfies z.ZodType<
+	Attestation<"de", "Citation", "Lexeme", "ADP">
 >;
 
 schemasFor.de.entity.Surface.Inflection.Lexeme.ADJ() satisfies z.ZodType<

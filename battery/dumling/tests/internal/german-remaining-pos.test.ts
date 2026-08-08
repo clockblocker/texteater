@@ -5,19 +5,15 @@ import { makeLexemeSurfaceReference } from "../helpers";
 describe("German remaining POS schemas", () => {
 	it("accepts representative feature bundles across implemented POS classes", () => {
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.ADJ().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "kleiner",
-				selectedOrthography: "Standard",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.ADJ().safeParse({
+				members: [{ attested: "kleiner", orthography: "Standard" }],
+				realizationCoverage: "Full",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "ADJ", "klein"),
 					language: "de",
 					normalizedSurface: "kleiner",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Dat",
@@ -47,19 +43,15 @@ describe("German remaining POS schemas", () => {
 		).toBe(true);
 
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.DET().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "dieser",
-				selectedOrthography: "Standard",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.DET().safeParse({
+				members: [{ attested: "dieser", orthography: "Standard" }],
+				realizationCoverage: "Full",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "DET", "dies"),
 					language: "de",
 					normalizedSurface: "dieser",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						case: "Nom",
@@ -90,20 +82,20 @@ describe("German remaining POS schemas", () => {
 	});
 
 	it("keeps non-inflecting classes strict", () => {
-		expect("ADP" in schemasFor.de.entity.Selection.Inflection.Lexeme).toBe(
-			false,
-		);
 		expect(
-			"CCONJ" in schemasFor.de.entity.Selection.Inflection.Lexeme,
-		).toBe(false);
-		expect("INTJ" in schemasFor.de.entity.Selection.Inflection.Lexeme).toBe(
-			false,
-		);
-		expect(
-			"PUNCT" in schemasFor.de.entity.Selection.Inflection.Lexeme,
+			"ADP" in schemasFor.de.entity.Attestation.Inflection.Lexeme,
 		).toBe(false);
 		expect(
-			"SCONJ" in schemasFor.de.entity.Selection.Inflection.Lexeme,
+			"CCONJ" in schemasFor.de.entity.Attestation.Inflection.Lexeme,
+		).toBe(false);
+		expect(
+			"INTJ" in schemasFor.de.entity.Attestation.Inflection.Lexeme,
+		).toBe(false);
+		expect(
+			"PUNCT" in schemasFor.de.entity.Attestation.Inflection.Lexeme,
+		).toBe(false);
+		expect(
+			"SCONJ" in schemasFor.de.entity.Attestation.Inflection.Lexeme,
 		).toBe(false);
 	});
 
@@ -122,25 +114,21 @@ describe("German remaining POS schemas", () => {
 
 		expect(
 			Reflect.get(
-				schemasFor.de.entity.Selection.Inflection.Lexeme,
+				schemasFor.de.entity.Attestation.Inflection.Lexeme,
 				"ADP",
 			),
 		).toBeUndefined();
 
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.X().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "foobar",
-				selectedOrthography: "Standard",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.X().safeParse({
+				members: [{ attested: "foobar", orthography: "Standard" }],
+				realizationCoverage: "Full",
 
 				surface: {
 					...makeLexemeSurfaceReference("de", "X", "foobar"),
 					language: "de",
 					normalizedSurface: "foobar",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						tense: "Past",

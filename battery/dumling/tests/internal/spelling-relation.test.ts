@@ -1,15 +1,14 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../src";
 import { schemasFor } from "../../src/schema";
-import type { Selection, Surface } from "../../src/types";
+import type { Attestation, Surface } from "../../src/types";
 import {
-	englishGiveUpClickedGvaeSelection,
-	englishGiveUpClickedUpSelection,
-	hebrewKatvuPointedVariantSelection,
+	englishGiveUpTypoFullAttestation,
+	hebrewKatvuPointedVariantAttestation,
 } from "../helpers";
 
 describe("orthography and spelling ownership", () => {
-	it("models armour as a Standard click on a Variant Surface of the armor Lemma", () => {
+	it("models armour as Standard evidence on a Variant Surface of the armor Lemma", () => {
 		const armorLemma = dumling.en.create.lemma({
 			canonicalForm: "armor",
 			family: "Lexeme",
@@ -32,7 +31,6 @@ describe("orthography and spelling ownership", () => {
 			lemma: armorLemma,
 			normalizedSurface: "armor",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceFeatures: null,
 		});
 		const variantArmourSurface: Surface<
@@ -44,69 +42,59 @@ describe("orthography and spelling ownership", () => {
 			lemma: armorLemma,
 			normalizedSurface: "armour",
 			spelling: "Variant",
-			realizationCoverage: "Full",
 			surfaceFeatures: null,
 		});
-		const armourSelection: Selection<"en", "Citation", "Lexeme", "NOUN"> =
-			dumling.en.create.selection({
-				segmentedSentenceId: dumling.en.create.segmentedSentenceId(
-					"sentence:en:polished-armour",
-				),
-				clickedSegmentIndex: 4,
-				surfaceSegmentIndices: [4],
-				attestedSurface: "armour",
-				selectedOrthography: "Standard",
-				surface: variantArmourSurface,
-			});
+		const armourAttestation: Attestation<
+			"en",
+			"Citation",
+			"Lexeme",
+			"NOUN"
+		> = dumling.en.create.attestation({
+			members: [{ attested: "armour", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: variantArmourSurface,
+		});
 
-		expect(armourSelection.selectedOrthography).toBe("Standard");
-		expect(armourSelection.surface.spelling).toBe("Variant");
-		expect(armourSelection.surface.normalizedSurface).toBe("armour");
-		expect(armourSelection.surface.lemma.canonicalForm).toBe("armor");
-		expect(armourSelection.surface.lemma).toEqual(
+		expect(armourAttestation.members[0].orthography).toBe("Standard");
+		expect(armourAttestation.surface.spelling).toBe("Variant");
+		expect(armourAttestation.surface.normalizedSurface).toBe("armour");
+		expect(armourAttestation.surface.lemma.canonicalForm).toBe("armor");
+		expect(armourAttestation.surface.lemma).toEqual(
 			canonicalArmorSurface.lemma,
 		);
 		expect(
-			schemasFor.en.entity.Selection.Citation.Lexeme.NOUN().safeParse(
-				armourSelection,
+			schemasFor.en.entity.Attestation.Citation.Lexeme.NOUN().safeParse(
+				armourAttestation,
 			).success,
 		).toBe(true);
 	});
 
-	it("keeps a typo on the clicked Selection while the resolved Surface stays canonical", () => {
-		expect(englishGiveUpClickedGvaeSelection.selectedOrthography).toBe(
-			"Typo",
-		);
-		expect(englishGiveUpClickedUpSelection.selectedOrthography).toBe(
-			"Standard",
-		);
-		expect(englishGiveUpClickedGvaeSelection.surface).toBe(
-			englishGiveUpClickedUpSelection.surface,
-		);
-		expect(englishGiveUpClickedGvaeSelection.surface.spelling).toBe(
+	it("keeps mixed typo evidence on Attestation while Surface stays canonical", () => {
+		expect(englishGiveUpTypoFullAttestation.members).toEqual([
+			{ attested: "gvae", orthography: "Typo" },
+			{ attested: "up", orthography: "Standard" },
+		]);
+		expect(englishGiveUpTypoFullAttestation.surface.spelling).toBe(
 			"Canonical",
 		);
-		expect(
-			englishGiveUpClickedGvaeSelection.surface.realizationCoverage,
-		).toBe("Full");
-		expect(englishGiveUpClickedGvaeSelection.attestedSurface).toBe(
-			"gvae up",
+		expect(englishGiveUpTypoFullAttestation.realizationCoverage).toBe(
+			"Full",
 		);
-		expect(
-			englishGiveUpClickedGvaeSelection.surface.normalizedSurface,
-		).toBe("gave up");
+		expect(englishGiveUpTypoFullAttestation.surface.normalizedSurface).toBe(
+			"gave up",
+		);
 	});
 
 	it("accepts Hebrew pointed text as a Variant Surface, not a special Surface kind", () => {
-		expect(hebrewKatvuPointedVariantSelection.selectedOrthography).toBe(
-			"Standard",
-		);
-		expect(hebrewKatvuPointedVariantSelection.surface.spelling).toBe(
+		expect(
+			hebrewKatvuPointedVariantAttestation.members[0].orthography,
+		).toBe("Standard");
+		expect(hebrewKatvuPointedVariantAttestation.surface.spelling).toBe(
 			"Variant",
 		);
 		expect(
-			schemasFor.he.entity.Selection.Inflection.Lexeme.VERB().safeParse(
-				hebrewKatvuPointedVariantSelection,
+			schemasFor.he.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				hebrewKatvuPointedVariantAttestation,
 			).success,
 		).toBe(true);
 	});

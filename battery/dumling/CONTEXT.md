@@ -55,36 +55,39 @@ creates a new Reading; learners do not manually split semantic identity.
 **Surface**:
 A reusable global grammatical form that realizes exactly one Lemma
 under one grammatical analysis. It carries the normalized contextual form,
-canonical-or-variant spelling status, full-or-partial realization coverage,
-Surface kind, applicable inflectional features, and the Lemma it realizes.
+canonical-or-variant spelling status, Surface kind, applicable inflectional
+features, and the Lemma it realizes.
 
 Surface identity is the tuple of language, normalized contextual form, Surface
-kind, applicable inflectional features, and Lemma identity. Neither coverage
-nor an embedded copy of the Lemma's fields establishes a different Surface
-identity.
+kind, applicable inflectional features, and Lemma identity. An embedded copy of
+the Lemma's fields does not establish a different Surface identity.
 
 `normalizedSurface` may repair a typo or ordinary casing, but it preserves the
 attested constituent order and contextual inflection. It never inserts missing
 lexical constituents or replaces a contextual realization with the Lemma's
 Canonical Form.
 
-**Selection**:
-The attestation-local result of resolving one learner click to a Surface. Its
-identity is exactly `(segmentedSentenceId, clickedSegmentIndex)`; it has no
-independent generated ID.
+**Attestation**:
+A fleeting, click-independent occurrence value linked to one Surface. It has a
+non-empty ordered list of members, `Full | Partial` realization coverage, and
+the linked Surface. It has value equality only: no identity, ID codec,
+repository, durable lifecycle, or standalone archival contract.
 
-A Selection records ordered unique `surfaceSegmentIndices`, the
-application-constructed `attestedSurface`, and whether the clicked Segment's
-orthography is `Standard` or a `Typo`. Typo status belongs to Selection because
-it describes noisy input; licensed orthographic variation belongs to Surface.
-Only successfully resolved clicks become Selections.
+Each member pairs its exact non-empty attested text with `Standard | Typo`
+orthography evidence. Typo evidence belongs to the occurrence; licensed
+Canonical or Variant spelling belongs to Surface.
+
+`Full` means the occurrence completely realizes the linked grammatical entity
+under a licensed realization. `Partial` means entity-owned realization material
+is absent while the exact Surface and Lemma remain defensible. Missing
+arguments, governed complements, discontinuity, intervening context, typo
+repair, and casing repair do not themselves make an Attestation Partial.
+_Avoid_: Selection, click result, selected Surface
 
 ## Segmentation boundary
 
-The segmenter owns the immutable Segmented Sentence aggregate and its indexed
-`ResolvableText`, `OpaqueText`, `Whitespace`, and `Punctuation` Segments.
-Dumling owns only the branded foreign `SegmentedSentenceId` reference and the
-indices recorded by Selection. Consequently, Dumling can validate index shape,
-order, uniqueness, and inclusion of the clicked index, but the segmenter must
-validate bounds, Segment kinds, and construct `attestedSurface` from the
-authoritative sentence.
+Dumgen and the segmenter own the immutable Segmented Sentence aggregate,
+clicks, target membership, member Segment indices, marked context, bounds, and
+Segment-kind validation. They project ordered member strings into Dumling.
+Dumling validates only the strict Attestation value: non-empty paired member
+evidence, realization coverage, and the linked grammatical Surface.

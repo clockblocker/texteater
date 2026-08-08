@@ -2,25 +2,18 @@ import type { ZodType } from "zod";
 import { dumling } from "../../src";
 import { abstractSchemas, schemasFor } from "../../src/schema";
 import type {
+	AbstractAttestation,
 	AbstractLemma,
-	ApiResult,
+	Attestation,
+	AttestationOptionsFor,
 	Descriptor,
 	DumlingBase64Url,
 	DumlingCsv,
 	EntityForKind,
 	FeatureValue,
-	IdDecodeError,
-	IdDecodeSuccess,
 	Lemma,
-	SegmentedSentenceId,
-	Selection,
-	SelectionIdentity,
-	SelectionOptionsFor,
 	Surface,
 } from "../../src/types";
-
-const sentenceId = dumling.de.create.segmentedSentenceId("sentence:de:am-see");
-sentenceId satisfies SegmentedSentenceId;
 
 const lemma = dumling.de.create.lemma({
 	canonicalForm: "See",
@@ -33,58 +26,51 @@ const surface = dumling.de.create.surface.citation({
 	lemma,
 	normalizedSurface: "See",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceFeatures: null,
 }) satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;
 
 const options = {
-	segmentedSentenceId: sentenceId,
-	clickedSegmentIndex: 4,
-	surfaceSegmentIndices: [4],
-	attestedSurface: "See",
-	selectedOrthography: "Standard",
-} satisfies SelectionOptionsFor;
+	members: [{ attested: "See", orthography: "Standard" }],
+	realizationCoverage: "Full",
+} satisfies AttestationOptionsFor;
 
-const selection = dumling.de.convert.surface.toSelection(
+const attestation = dumling.de.convert.surface.toAttestation(
 	surface,
 	options,
-) satisfies Selection<"de", "Citation", "Lexeme", "NOUN">;
+) satisfies Attestation<"de", "Citation", "Lexeme", "NOUN">;
 
-selection satisfies EntityForKind<"de", "Selection">;
-selection.surface.lemma satisfies Lemma<"de", "Lexeme", "NOUN">;
-selection.segmentedSentenceId satisfies SegmentedSentenceId;
+attestation satisfies EntityForKind<"de", "Attestation">;
+attestation.surface.lemma satisfies Lemma<"de", "Lexeme", "NOUN">;
+attestation.members[0].attested satisfies string;
 
-const descriptor = dumling.de.describe.as.selection(surface);
+const descriptor = dumling.de.describe.as.attestation(surface);
 descriptor satisfies Descriptor<
-	"Selection",
+	"Attestation",
 	"de",
 	"Lexeme",
 	"NOUN",
 	"Citation"
 >;
 
-const csv = dumling.de.id.encode.asCsv(selection);
+const csv = dumling.de.id.encode.asCsv(surface);
 csv satisfies DumlingCsv<"de">;
 const id = dumling.de.id.encode.asBase64Url(csv);
 id satisfies DumlingBase64Url<"de">;
 
-const decoded = dumling.de.id.decode.asSelectionIdentity(id);
-decoded satisfies ApiResult<
-	Extract<IdDecodeSuccess<"de">, { kind: "Selection" }>,
-	IdDecodeError
->;
-if (decoded.success) {
-	decoded.data.selectionIdentity satisfies SelectionIdentity;
-	decoded.data.selectionIdentity
-		.segmentedSentenceId satisfies SegmentedSentenceId;
-}
+// @ts-expect-error Attestation is deliberately not ID-addressable.
+dumling.de.id.encode.asCsv(attestation);
+// @ts-expect-error No Attestation identity decoder exists.
+dumling.de.id.decode.asAttestationIdentity(id);
 
-const nounSelectionSchema =
-	schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
-nounSelectionSchema satisfies ZodType<
-	Selection<"de", "Citation", "Lexeme", "NOUN">
+const nounAttestationSchema =
+	schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN();
+nounAttestationSchema satisfies ZodType<
+	Attestation<"de", "Citation", "Lexeme", "NOUN">
 >;
 abstractSchemas.entity.Lemma satisfies ZodType<AbstractLemma<string>>;
+abstractSchemas.entity.Attestation satisfies ZodType<
+	AbstractAttestation<string>
+>;
 
 const gender: FeatureValue<"de", "core", "Lexeme", "NOUN", "gender"> = "Masc";
 void gender;
@@ -94,9 +80,5 @@ const invalidGender: FeatureValue<"de", "core", "Lexeme", "NOUN", "gender"> =
 	"Past";
 void invalidGender;
 
-// @ts-expect-error opaque sentence IDs cannot be plain strings
-const invalidSentenceId: SegmentedSentenceId = "sentence:de:am-see";
-void invalidSentenceId;
-
 // @ts-expect-error lexemes do not expose morpheme subkinds
-schemasFor.de.entity.Selection.Citation.Lexeme.Circumfix();
+schemasFor.de.entity.Attestation.Citation.Lexeme.Circumfix();

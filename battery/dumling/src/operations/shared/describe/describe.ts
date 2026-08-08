@@ -1,7 +1,7 @@
 import type {
+	Attestation,
 	DumlingDescriptorCsv,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 } from "../../../types/public-types.js";
@@ -12,10 +12,10 @@ import { csvRow } from "../id/id-codec/readable-csv.js";
 type EntityValue<L extends SupportedLanguage> =
 	| Lemma<L>
 	| Surface<L>
-	| Selection<L>;
+	| Attestation<L>;
 
 function descriptorToCsv<L extends SupportedLanguage>(
-	entityKind: "Lemma" | "Surface" | "Selection",
+	entityKind: "Lemma" | "Surface" | "Attestation",
 	descriptor: Record<string, string>,
 ): DumlingDescriptorCsv<L> {
 	const fields =
@@ -63,7 +63,7 @@ export function buildDescribeOperations<
 		surface(value: EntityValue<L>) {
 			return surfaceDescriptor(value) as never;
 		},
-		selection(value: EntityValue<L>) {
+		attestation(value: EntityValue<L>) {
 			return surfaceDescriptor(value) as never;
 		},
 	} satisfies LanguageApi<L>["describe"]["as"];
@@ -77,8 +77,8 @@ export function buildDescribeOperations<
 			surface(value: EntityValue<L>) {
 				return descriptorToCsv<L>("Surface", as.surface(value));
 			},
-			selection(value: EntityValue<L>) {
-				return descriptorToCsv<L>("Selection", as.selection(value));
+			attestation(value: EntityValue<L>) {
+				return descriptorToCsv<L>("Attestation", as.attestation(value));
 			},
 		},
 	} as unknown as LanguageApi<L>["describe"];

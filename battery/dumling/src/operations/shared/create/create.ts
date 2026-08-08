@@ -2,41 +2,6 @@ import type { SupportedLanguage } from "../../../types/public-types.js";
 import type { LanguageApi } from "../../api-shape.js";
 import { requireNonEmptyFeatureBag } from "../feature-bags.js";
 
-function requireOpaqueId(value: string, name: string): string {
-	if (
-		value.length === 0 ||
-		value.trim() !== value ||
-		value.normalize("NFC") !== value
-	) {
-		throw new Error(`${name} must be a non-empty normalized string`);
-	}
-	return value;
-}
-
-function requireSelectionIndices(
-	clickedSegmentIndex: number,
-	surfaceSegmentIndices: number[],
-) {
-	if (!Number.isInteger(clickedSegmentIndex) || clickedSegmentIndex < 0) {
-		throw new Error("clickedSegmentIndex must be a non-negative integer");
-	}
-	if (
-		surfaceSegmentIndices.length === 0 ||
-		!surfaceSegmentIndices.includes(clickedSegmentIndex) ||
-		surfaceSegmentIndices.some(
-			(index, position) =>
-				!Number.isInteger(index) ||
-				index < 0 ||
-				(position > 0 &&
-					index <= (surfaceSegmentIndices[position - 1] ?? -1)),
-		)
-	) {
-		throw new Error(
-			"surfaceSegmentIndices must be ordered, unique, non-negative, and include clickedSegmentIndex",
-		);
-	}
-}
-
 export function buildCreateOperations<L extends SupportedLanguage>(
 	language: L,
 ): LanguageApi<L>["create"] {
@@ -58,7 +23,6 @@ export function buildCreateOperations<L extends SupportedLanguage>(
 			language: input.lemma.language,
 			normalizedSurface: input.normalizedSurface,
 			spelling: input.spelling,
-			realizationCoverage: input.realizationCoverage,
 			surfaceKind: "Citation",
 			surfaceFeatures: requireNonEmptyFeatureBag(
 				input.surfaceFeatures,
@@ -74,7 +38,6 @@ export function buildCreateOperations<L extends SupportedLanguage>(
 			language: input.lemma.language,
 			normalizedSurface: input.normalizedSurface,
 			spelling: input.spelling,
-			realizationCoverage: input.realizationCoverage,
 			surfaceKind: "Inflection",
 			surfaceFeatures: requireNonEmptyFeatureBag(
 				input.surfaceFeatures,
@@ -86,31 +49,34 @@ export function buildCreateOperations<L extends SupportedLanguage>(
 			).inflectionalFeatures,
 		}) as never;
 
-	const createSelection: CreateOperations["selection"] = (input) => {
-		requireOpaqueId(input.segmentedSentenceId, "SegmentedSentenceId");
-		requireSelectionIndices(
-			input.clickedSegmentIndex,
-			input.surfaceSegmentIndices,
-		);
+	const createAttestation: CreateOperations["attestation"] = (input) => {
+		if (
+			input.members.length === 0 ||
+			input.members.some(
+				(member) =>
+					member.attested.length === 0 ||
+					(member.orthography !== "Standard" &&
+						member.orthography !== "Typo"),
+			)
+		) {
+			throw new Error(
+				"Attestation members must be non-empty paired text and orthography evidence",
+			);
+		}
+
 		return {
-			segmentedSentenceId: input.segmentedSentenceId,
-			clickedSegmentIndex: input.clickedSegmentIndex,
-			surfaceSegmentIndices: input.surfaceSegmentIndices,
-			attestedSurface: input.attestedSurface,
-			selectedOrthography: input.selectedOrthography,
+			members: input.members,
+			realizationCoverage: input.realizationCoverage,
 			surface: input.surface,
 		} as never;
 	};
 
 	return {
-		segmentedSentenceId(input) {
-			return requireOpaqueId(input, "SegmentedSentenceId") as never;
-		},
+		attestation: createAttestation,
 		lemma: createLemma,
 		surface: {
 			citation: createCitationSurface,
 			inflection: createInflectionSurface,
 		},
-		selection: createSelection,
 	};
 }

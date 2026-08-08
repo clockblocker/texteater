@@ -21,15 +21,15 @@ type DescriptorSchemaTree = {
 };
 
 type MutableLanguageDescriptorSchemaTree = {
+	Attestation: Record<string, Record<string, Record<string, z.ZodType>>>;
 	Lemma: Record<string, Record<string, z.ZodType>>;
 	Surface: Record<string, Record<string, Record<string, z.ZodType>>>;
-	Selection: Record<string, Record<string, Record<string, z.ZodType>>>;
 };
 
 type IterableLanguageSchemaTree = {
+	Attestation: Record<string, Record<string, Record<string, unknown>>>;
 	Lemma: Record<string, Record<string, unknown>>;
 	Surface: Record<string, Record<string, Record<string, unknown>>>;
-	Selection: Record<string, Record<string, Record<string, unknown>>>;
 };
 
 function ensureFamily<TValue>(
@@ -75,7 +75,7 @@ function buildSurfaceDescriptorSchema<
 	}) as DescriptorSchema<Descriptor<"Surface", L, LK, LSK, SK>>;
 }
 
-function buildSelectionDescriptorSchema<
+function buildAttestationDescriptorSchema<
 	L extends ConcreteLanguage,
 	const SK extends SurfaceKindFor<L>,
 	const LK extends LemmaFamilyForSurfaceKind<L, SK>,
@@ -85,13 +85,13 @@ function buildSelectionDescriptorSchema<
 	surfaceKind: SK,
 	family: LK,
 	kind: LSK,
-): DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>> {
+): DescriptorSchema<Descriptor<"Attestation", L, LK, LSK, SK>> {
 	return zod.strictObject({
 		language: zod.literal(language),
 		surfaceKind: zod.literal(surfaceKind),
 		family: zod.literal(family),
 		kind: zod.literal(kind),
-	}) as DescriptorSchema<Descriptor<"Selection", L, LK, LSK, SK>>;
+	}) as DescriptorSchema<Descriptor<"Attestation", L, LK, LSK, SK>>;
 }
 
 function buildLanguageDescriptorSchemas<L extends ConcreteLanguage>(
@@ -104,7 +104,7 @@ function buildLanguageDescriptorSchemas<L extends ConcreteLanguage>(
 			Citation: {},
 			Inflection: {},
 		},
-		Selection: {
+		Attestation: {
 			Citation: {},
 			Inflection: {},
 		},
@@ -150,16 +150,16 @@ function buildLanguageDescriptorSchemas<L extends ConcreteLanguage>(
 	}
 
 	for (const [surfaceKind, familySchemas] of Object.entries(
-		iterableSchemaTree.Selection,
+		iterableSchemaTree.Attestation,
 	)) {
-		descriptorTree.Selection[surfaceKind] ??= {};
-		const surfaceKindTree = descriptorTree.Selection[surfaceKind];
+		descriptorTree.Attestation[surfaceKind] ??= {};
+		const surfaceKindTree = descriptorTree.Attestation[surfaceKind];
 
 		for (const [family, subKindSchemas] of Object.entries(familySchemas)) {
-			const selectionFamily = ensureFamily(surfaceKindTree, family);
+			const attestationFamily = ensureFamily(surfaceKindTree, family);
 
 			for (const kind of Object.keys(subKindSchemas)) {
-				selectionFamily[kind] = buildSelectionDescriptorSchema(
+				attestationFamily[kind] = buildAttestationDescriptorSchema(
 					language,
 					surfaceKind as SurfaceKindFor<L>,
 					family as LemmaFamilyForSurfaceKind<L, SurfaceKindFor<L>>,

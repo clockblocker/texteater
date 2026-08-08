@@ -13,7 +13,6 @@ export const languageTokens = {
 
 export const entityKindTokens = {
 	Lemma: "l",
-	Selection: "x",
 	Surface: "s",
 } as const;
 

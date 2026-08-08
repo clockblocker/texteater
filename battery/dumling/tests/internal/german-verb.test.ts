@@ -5,30 +5,28 @@ import { makeLexemeSurfaceReference } from "../helpers";
 describe("German verb schemas", () => {
 	it("accept supported verb inflectional and core features", () => {
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "ging",
-				selectedOrthography: "Standard",
-
-				surface: {
-					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
-					language: "de",
-					normalizedSurface: "ging",
-					spelling: "Canonical",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				{
+					members: [{ attested: "ging", orthography: "Standard" }],
 					realizationCoverage: "Full",
-					surfaceKind: "Inflection",
-					inflectionalFeatures: {
-						mood: "Sub",
-						number: "Sing",
-						person: "3",
-						tense: "Past",
-						verbForm: "Fin",
-						voice: null,
+
+					surface: {
+						...makeLexemeSurfaceReference("de", "VERB", "gehen"),
+						language: "de",
+						normalizedSurface: "ging",
+						spelling: "Canonical",
+						surfaceKind: "Inflection",
+						inflectionalFeatures: {
+							mood: "Sub",
+							number: "Sing",
+							person: "3",
+							tense: "Past",
+							verbForm: "Fin",
+							voice: null,
+						},
 					},
 				},
-			}).success,
+			).success,
 		).toBe(true);
 
 		expect(
@@ -73,54 +71,50 @@ describe("German verb schemas", () => {
 		).toBe(false);
 
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "geht",
-				selectedOrthography: "Standard",
-
-				surface: {
-					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
-					language: "de",
-					normalizedSurface: "geht",
-					spelling: "Canonical",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				{
+					members: [{ attested: "geht", orthography: "Standard" }],
 					realizationCoverage: "Full",
-					surfaceKind: "Inflection",
-					inflectionalFeatures: {
-						gender: "Fem",
-						mood: "Ind",
-						number: "Sing",
-						person: "3",
-						tense: "Pres",
-						verbForm: "Fin",
+
+					surface: {
+						...makeLexemeSurfaceReference("de", "VERB", "gehen"),
+						language: "de",
+						normalizedSurface: "geht",
+						spelling: "Canonical",
+						surfaceKind: "Inflection",
+						inflectionalFeatures: {
+							gender: "Fem",
+							mood: "Ind",
+							number: "Sing",
+							person: "3",
+							tense: "Pres",
+							verbForm: "Fin",
+						},
 					},
 				},
-			}).success,
+			).success,
 		).toBe(false);
 
 		expect(
-			schemasFor.de.entity.Selection.Inflection.Lexeme.VERB().safeParse({
-				segmentedSentenceId: "test:fixture-sentence" as never,
-				clickedSegmentIndex: 0,
-				surfaceSegmentIndices: [0],
-				attestedSurface: "geh",
-				selectedOrthography: "Standard",
-
-				surface: {
-					...makeLexemeSurfaceReference("de", "VERB", "gehen"),
-					language: "de",
-					normalizedSurface: "geh",
-					spelling: "Canonical",
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.VERB().safeParse(
+				{
+					members: [{ attested: "geh", orthography: "Standard" }],
 					realizationCoverage: "Full",
-					surfaceKind: "Inflection",
-					inflectionalFeatures: {
-						mood: "Imp",
-						tense: "Past",
-						verbForm: "Fin",
+
+					surface: {
+						...makeLexemeSurfaceReference("de", "VERB", "gehen"),
+						language: "de",
+						normalizedSurface: "geh",
+						spelling: "Canonical",
+						surfaceKind: "Inflection",
+						inflectionalFeatures: {
+							mood: "Imp",
+							tense: "Past",
+							verbForm: "Fin",
+						},
 					},
 				},
-			}).success,
+			).success,
 		).toBe(false);
 	});
 
@@ -129,7 +123,7 @@ describe("German verb schemas", () => {
 			"function",
 		);
 		expect(
-			typeof schemasFor.de.entity.Selection.Inflection.Lexeme.VERB()
+			typeof schemasFor.de.entity.Attestation.Inflection.Lexeme.VERB()
 				.parse,
 		).toBe("function");
 	});

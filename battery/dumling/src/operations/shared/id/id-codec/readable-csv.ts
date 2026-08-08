@@ -1,8 +1,6 @@
 import type {
 	Lemma,
 	LemmaIdentity,
-	Selection,
-	SelectionIdentity,
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
@@ -12,10 +10,7 @@ import { isSupportedLanguage } from "../../language-inventory.js";
 import { idError } from "../id-errors.js";
 
 type CsvValue = string | number | boolean | null | undefined;
-type CsvEntity<L extends SupportedLanguage> =
-	| Lemma<L>
-	| Surface<L>
-	| Selection<L>;
+type CsvEntity<L extends SupportedLanguage> = Lemma<L> | Surface<L>;
 
 type IdentityParser<L extends SupportedLanguage> = {
 	lemma(input: unknown): ApiResult<Lemma<L>, { message: string }>;
@@ -32,11 +27,6 @@ export type ReadableCsvDecodeSuccess<L extends SupportedLanguage> =
 			kind: "Surface";
 			language: L;
 			surfaceIdentity: SurfaceIdentity<L>;
-	  }
-	| {
-			kind: "Selection";
-			language: L;
-			selectionIdentity: SelectionIdentity;
 	  };
 
 function invalidPayload(message: string): ApiResult<never, IdDecodeError> {
@@ -144,16 +134,8 @@ function assertNoDuplicateValues(
 }
 
 export function assertEntityIdFeatureConstraints(
-	entity:
-		| Lemma<SupportedLanguage>
-		| Surface<SupportedLanguage>
-		| Selection<SupportedLanguage>,
+	entity: Lemma<SupportedLanguage> | Surface<SupportedLanguage>,
 ) {
-	if ("surface" in entity) {
-		assertEntityIdFeatureConstraints(entity.surface);
-		return;
-	}
-
 	const lemma = "surfaceKind" in entity ? entity.lemma : entity;
 	assertNoDuplicateValues(
 		lemma.coreFeatures as Record<string, unknown>,
@@ -209,14 +191,6 @@ function assertLanguageForNamespace<L extends SupportedLanguage>(
 	return { success: true, data: true };
 }
 
-function isNormalizedOpaqueId(value: string) {
-	return (
-		value.length > 0 &&
-		value.trim() === value &&
-		value.normalize("NFC") === value
-	);
-}
-
 function lemmaIdentityFields<L extends SupportedLanguage>(lemma: Lemma<L>) {
 	return [
 		lemma.language,
@@ -230,13 +204,6 @@ function lemmaIdentityFields<L extends SupportedLanguage>(lemma: Lemma<L>) {
 export function entityToReadableCsv<L extends SupportedLanguage>(
 	entity: CsvEntity<L>,
 ): string {
-	if ("surface" in entity) {
-		return csvRow([
-			"Selection",
-			entity.segmentedSentenceId,
-			entity.clickedSegmentIndex,
-		]);
-	}
 	if (!("surfaceKind" in entity)) {
 		return csvRow(["Lemma", ...lemmaIdentityFields(entity)]);
 	}
@@ -292,30 +259,6 @@ export function decodeReadableCsv<L extends SupportedLanguage>(
 	if (!parsedRow.success) return parsedRow;
 	const fields = parsedRow.data;
 
-	if (fields[0] === "Selection") {
-		if (fields.length !== 3 || !isNormalizedOpaqueId(fields[1] ?? "")) {
-			return invalidPayload("CSV row is not a valid Selection identity");
-		}
-		const clickedSegmentIndex = Number(fields[2]);
-		if (!Number.isInteger(clickedSegmentIndex) || clickedSegmentIndex < 0) {
-			return invalidPayload(
-				"Selection clickedSegmentIndex must be non-negative",
-			);
-		}
-		return {
-			success: true,
-			data: {
-				kind: "Selection",
-				language: namespaceLanguage,
-				selectionIdentity: {
-					segmentedSentenceId:
-						fields[1] as SelectionIdentity["segmentedSentenceId"],
-					clickedSegmentIndex,
-				},
-			},
-		};
-	}
-
 	if (fields[0] === "Lemma") {
 		const lemma = decodeLemma(namespaceLanguage, parse, fields);
 		return lemma.success
@@ -331,9 +274,7 @@ export function decodeReadableCsv<L extends SupportedLanguage>(
 	}
 
 	if (fields[0] !== "Surface") {
-		return invalidPayload(
-			"CSV row must start with Lemma, Surface, or Selection",
-		);
+		return invalidPayload("CSV row must start with Lemma or Surface");
 	}
 	const isInflection = fields[2] === "Inflection";
 	if (
@@ -363,7 +304,6 @@ export function decodeReadableCsv<L extends SupportedLanguage>(
 		language: namespaceLanguage,
 		normalizedSurface: fields[3] ?? "",
 		spelling: "Canonical",
-		realizationCoverage: "Full",
 		surfaceKind: fields[2],
 		surfaceFeatures: null,
 		lemma: lemma.data,

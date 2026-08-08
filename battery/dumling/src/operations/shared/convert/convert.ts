@@ -1,20 +1,20 @@
 import type {
+	Attestation,
+	AttestationOptionsFor,
 	Lemma,
-	Selection,
-	SelectionOptionsFor,
 	SupportedLanguage,
 	Surface,
 } from "../../../types/public-types.js";
 import type { LanguageApi } from "../../api-shape.js";
 
-function buildSelectionFromSurface<L extends SupportedLanguage>(
+function buildAttestationFromSurface<L extends SupportedLanguage>(
 	surface: Surface<L>,
-	options: SelectionOptionsFor,
-): Selection<L> {
+	options: AttestationOptionsFor,
+): Attestation<L> {
 	return {
 		...options,
 		surface,
-	} as unknown as Selection<L>;
+	} as unknown as Attestation<L>;
 }
 
 export function buildConvertOperations<
@@ -27,7 +27,6 @@ export function buildConvertOperations<
 					language: lemma.language,
 					normalizedSurface: lemma.canonicalForm,
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 					surfaceFeatures: null,
 					lemma,
@@ -35,13 +34,12 @@ export function buildConvertOperations<
 					LanguageApi<L>["convert"]["lemma"]["toSurface"]
 				>;
 			},
-			toSelection(lemma: Lemma<L>, options: SelectionOptionsFor) {
-				return buildSelectionFromSurface(
+			toAttestation(lemma: Lemma<L>, options: AttestationOptionsFor) {
+				return buildAttestationFromSurface(
 					{
 						language: lemma.language,
 						normalizedSurface: lemma.canonicalForm,
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 						lemma,
@@ -51,8 +49,8 @@ export function buildConvertOperations<
 			},
 		},
 		surface: {
-			toSelection(surface: Surface<L>, options: SelectionOptionsFor) {
-				return buildSelectionFromSurface(surface, options);
+			toAttestation(surface: Surface<L>, options: AttestationOptionsFor) {
+				return buildAttestationFromSurface(surface, options);
 			},
 		},
 	} as unknown as LanguageApi<L>["convert"];

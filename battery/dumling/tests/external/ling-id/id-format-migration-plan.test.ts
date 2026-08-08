@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { dumling } from "../../../src";
 import {
 	englishWalkLemma,
-	englishWalkStandardFullSelection,
+	englishWalkStandardFullAttestation,
 	germanMasculineSeeLemma,
 } from "../../helpers";
 
@@ -18,16 +18,12 @@ describe("structural identity ID contract", () => {
 		);
 	});
 
-	it("keys a Selection by immutable sentence ID and local clicked index", () => {
-		const reclassifiedSelection = {
-			...englishWalkStandardFullSelection,
-			attestedSurface: "wolk",
-			selectedOrthography: "Typo" as const,
-		};
-
-		expect(dumling.en.id.encode.asCsv(reclassifiedSelection)).toBe(
-			dumling.en.id.encode.asCsv(englishWalkStandardFullSelection),
-		);
+	it("does not give Attestation an identity codec", () => {
+		expect(() =>
+			dumling.en.id.encode.asCsv(
+				englishWalkStandardFullAttestation as never,
+			),
+		).toThrow("Attestation has no ID");
 	});
 
 	it("rejects readable IDs from another language namespace", () => {

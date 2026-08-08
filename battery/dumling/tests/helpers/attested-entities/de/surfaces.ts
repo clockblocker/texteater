@@ -6,7 +6,6 @@ export const germanHausCitationSurface = {
 	language: "de",
 	normalizedSurface: "Haus",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: germanHausLemma,
 

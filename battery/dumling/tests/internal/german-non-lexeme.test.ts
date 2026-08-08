@@ -2,8 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { schemasFor } from "../../src/schema";
 import {
 	germanAbPrefixLemma,
-	germanAufJedenFallClickedJedenSelection,
-	germanAufJedenFallDiscourseFormulaSelection,
+	germanAufJedenFallFullAttestation,
 	makeConstructionSurfaceReference,
 	makeMorphemeSurfaceReference,
 } from "../helpers";
@@ -16,13 +15,8 @@ describe("German non-lexeme schemas", () => {
 			).success,
 		).toBe(true);
 		expect(
-			schemasFor.de.entity.Selection.Citation.Phraseme.DiscourseFormula().safeParse(
-				germanAufJedenFallDiscourseFormulaSelection,
-			).success,
-		).toBe(true);
-		expect(
-			schemasFor.de.entity.Selection.Citation.Phraseme.DiscourseFormula().safeParse(
-				germanAufJedenFallClickedJedenSelection,
+			schemasFor.de.entity.Attestation.Citation.Phraseme.DiscourseFormula().safeParse(
+				germanAufJedenFallFullAttestation,
 			).success,
 		).toBe(true);
 	});
@@ -55,30 +49,26 @@ describe("German non-lexeme schemas", () => {
 
 	it("keeps non-lexeme branches lemma-only", () => {
 		expect(
-			typeof schemasFor.de.entity.Selection.Citation.Morpheme.Prefix()
+			typeof schemasFor.de.entity.Attestation.Citation.Morpheme.Prefix()
 				.parse,
 		).toBe("function");
-		expect("Morpheme" in schemasFor.de.entity.Selection.Inflection).toBe(
+		expect("Morpheme" in schemasFor.de.entity.Attestation.Inflection).toBe(
 			false,
 		);
 		expect(
-			"Construction" in schemasFor.de.entity.Selection.Inflection,
+			"Construction" in schemasFor.de.entity.Attestation.Inflection,
 		).toBe(false);
 		expect(
-			schemasFor.de.entity.Selection.Citation.Morpheme.Suffix().safeParse(
+			schemasFor.de.entity.Attestation.Citation.Morpheme.Suffix().safeParse(
 				{
-					segmentedSentenceId: "test:fixture-sentence" as never,
-					clickedSegmentIndex: 0,
-					surfaceSegmentIndices: [0],
-					attestedSurface: "hait",
-					selectedOrthography: "Typo",
+					members: [{ attested: "hait", orthography: "Typo" }],
+					realizationCoverage: "Full",
 
 					surface: {
 						...makeMorphemeSurfaceReference("de", "Suffix", "heit"),
 						language: "de",
 						normalizedSurface: "heit",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 					},
 				},
@@ -98,13 +88,10 @@ describe("German non-lexeme schemas", () => {
 		).toBe(true);
 
 		expect(
-			schemasFor.de.entity.Selection.Citation.Construction.Fusion().safeParse(
+			schemasFor.de.entity.Attestation.Citation.Construction.Fusion().safeParse(
 				{
-					segmentedSentenceId: "test:fixture-sentence" as never,
-					clickedSegmentIndex: 0,
-					surfaceSegmentIndices: [0],
-					attestedSurface: "zum",
-					selectedOrthography: "Standard",
+					members: [{ attested: "zum", orthography: "Standard" }],
+					realizationCoverage: "Full",
 
 					surface: {
 						...makeConstructionSurfaceReference(
@@ -115,7 +102,6 @@ describe("German non-lexeme schemas", () => {
 						language: "de",
 						normalizedSurface: "zum",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 					},
 				},

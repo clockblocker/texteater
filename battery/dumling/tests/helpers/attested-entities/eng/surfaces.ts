@@ -6,7 +6,6 @@ export const englishWalkCitationSurface = {
 	language: "en",
 	normalizedSurface: "walk",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	lemma: englishWalkLemma,
 
@@ -27,7 +26,6 @@ export const englishWalkInflectionSurface = {
 	language: "en",
 	normalizedSurface: "walk",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: englishWalkLemma,
 
@@ -48,7 +46,6 @@ export const englishGiveUpInflectionSurface = {
 	language: "en",
 	normalizedSurface: "gave up",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	lemma: englishGiveUpLemma,
 

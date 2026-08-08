@@ -1,10 +1,10 @@
 import type {
+	AbstractAttestation,
+	AttestationMember as AbstractAttestationMember,
 	AbstractCoreFeaturesFor,
 	AbstractInflectionalFeaturesFor,
 	AbstractLemma,
 	AbstractLemmaKindFor,
-	SegmentedSentenceId as AbstractSegmentedSentenceId,
-	AbstractSelection,
 	AbstractSurface,
 	SurfaceFeatures as AbstractSurfaceFeatures,
 } from "./abstract/entities.js";
@@ -13,8 +13,8 @@ import type {
 	AbstractFeatureValue as AbstractFeatureValueForName,
 } from "./abstract/features/features-catalog.js";
 import type {
+	LanguageAttestationByKindMap,
 	LanguageLemmaUnionMap,
-	LanguageSelectionByKindMap,
 	LanguageSurfaceUnionMap,
 	SurfaceByKindForLanguage,
 } from "./concrete-language/concrete-language-types.js";
@@ -35,13 +35,13 @@ export type Language = SupportedLanguage;
 export type LemmaFamily = CoreLemmaFamily;
 export type LemmaKind = CoreLemmaKind;
 export type SurfaceKind = CoreSurfaceKind;
-export type SegmentedSentenceId = AbstractSegmentedSentenceId;
+export type AttestationMember = AbstractAttestationMember;
 export type SurfaceFeatures = AbstractSurfaceFeatures;
-export type EntityKind = "Lemma" | "Surface" | "Selection";
+export type EntityKind = "Lemma" | "Surface" | "Attestation";
 export type EntityValue<L extends SupportedLanguage = SupportedLanguage> =
 	| Lemma<L>
 	| Surface<L>
-	| Selection<L>;
+	| Attestation<L>;
 
 export type EntityForKind<
 	L extends SupportedLanguage,
@@ -50,7 +50,7 @@ export type EntityForKind<
 	? Lemma<L>
 	: K extends "Surface"
 		? Surface<L>
-		: Selection<L>;
+		: Attestation<L>;
 
 export type DumlingCsv<L extends SupportedLanguage = SupportedLanguage> =
 	string & {
@@ -126,7 +126,7 @@ export type Lemma<
 	: PlaceholderLemma<L, LK, LSK>;
 
 /**
- * A Surface is the normalized learner-facing form that the attested selection resolves to.
+ * A Surface is the persistent normalized learner-facing grammatical form.
  *
  * `surfaceKind: "Citation"` means the surface is stored in citation / Grundform shape.
  * Example: German `Mutter` stays `Citation`.
@@ -164,21 +164,11 @@ export type Surface<
 	: PlaceholderSurface<L, SK, LK, LSK>;
 
 /**
- * A Selection is an attestation-local node created after one clickable Segment
- * resolves to a Surface in an immutable Segmented Sentence.
- *
- * The contract is directional:
- *   (segmentedSentenceId + clickedSegmentIndex) -> Selection -> Surface
- *
- * Selection identity is the sentence ID plus clicked Segment index. Several
- * distinct clicks may share the same ordered Surface member indices and global
- * Surface while remaining distinct Selections.
- *
- * Example: `Pass [auf] dich auf!` and `Pass auf dich [auf]!` may both resolve
- * to the same verbal Surface for `aufpassen`, but have different clicked
- * Segment indices.
+ * An Attestation is fleeting, click-independent occurrence evidence linked to
+ * one persistent Surface. Members preserve source order and carry their own
+ * orthography evidence. Attestations have no identity or ID codec.
  */
-export type Selection<
+export type Attestation<
 	L extends SupportedLanguage = SupportedLanguage,
 	SK extends SurfaceKindFor<L> = SurfaceKindFor<L>,
 	LK extends LemmaFamilyForSurfaceKind<L, SK> = LemmaFamilyForSurfaceKind<
@@ -187,7 +177,7 @@ export type Selection<
 	>,
 	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
 > = L extends ConcreteLanguage
-	? ConcreteSelectionFor<
+	? ConcreteAttestationFor<
 			L & ConcreteLanguage,
 			SK & SurfaceKindFor<L & ConcreteLanguage>,
 			LK &
@@ -205,24 +195,7 @@ export type Selection<
 						>
 				>
 		>
-	: PlaceholderSelection<L, SK, LK, LSK>;
-
-/**
- * Attestation wrapper for a Selection in sentence context.
- *
- * The `selection` payload is authoritative. `sentenceMarkdown` is legacy
- * display evidence; authoritative reconstruction uses the immutable
- * Segmented Sentence referenced by `selection.segmentedSentenceId`, with the
- * clicked role identified by `selection.clickedSegmentIndex`.
- */
-export type AttestedSelection<L extends SupportedLanguage = SupportedLanguage> =
-	{
-		selection: Selection<L>;
-		sentenceMarkdown: string;
-		classifierNotes?: string;
-		classificationMistakes?: string;
-		isVerified?: true;
-	};
+	: PlaceholderAttestation<L, SK, LK, LSK>;
 
 export type FeatureSetKind = "core" | "inflectional";
 
@@ -305,18 +278,10 @@ export type FeatureValue<
 			: never
 		: never;
 
-export type SelectionOptionsFor = {
-	segmentedSentenceId: SegmentedSentenceId;
-	clickedSegmentIndex: number;
-	surfaceSegmentIndices: number[];
-	attestedSurface: string;
-	selectedOrthography: "Standard" | "Typo";
+export type AttestationOptionsFor = {
+	members: readonly [AttestationMember, ...AttestationMember[]];
+	realizationCoverage: "Full" | "Partial";
 };
-
-export type SelectionIdentity = Pick<
-	Selection,
-	"segmentedSentenceId" | "clickedSegmentIndex"
->;
 
 export type LemmaIdentity<L extends SupportedLanguage = SupportedLanguage> =
 	Lemma<L>;
@@ -330,11 +295,11 @@ export type SurfaceIdentity<L extends SupportedLanguage = SupportedLanguage> = {
 };
 
 export type {
+	AbstractAttestation,
 	AbstractCoreFeaturesFor,
 	AbstractInflectionalFeaturesFor,
 	AbstractLemma,
 	AbstractLemmaKindFor,
-	AbstractSelection,
 	AbstractSurface,
 };
 
@@ -363,7 +328,6 @@ type PlaceholderSurface<
 	language: L;
 	normalizedSurface: string;
 	spelling: "Canonical" | "Variant";
-	realizationCoverage: "Full" | "Partial";
 	surfaceKind: SK;
 	surfaceFeatures: SurfaceFeatures | null;
 	lemma: Lemma<L, LK, LSK>;
@@ -390,29 +354,26 @@ type ConcreteSurfaceFor<
 		: never
 	: never;
 
-type PlaceholderSelection<
+type PlaceholderAttestation<
 	L extends SupportedLanguage,
 	SK extends SurfaceKindFor<L>,
 	LK extends LemmaFamilyForSurfaceKind<L, SK>,
 	LSK extends LemmaKindFor<L, LK>,
 > = {
-	segmentedSentenceId: SegmentedSentenceId;
-	clickedSegmentIndex: number;
-	surfaceSegmentIndices: number[];
-	attestedSurface: string;
-	selectedOrthography: "Standard" | "Typo";
+	members: readonly [AttestationMember, ...AttestationMember[]];
+	realizationCoverage: "Full" | "Partial";
 	surface: Surface<L, SK, LK, LSK>;
 };
 
-type ConcreteSelectionFor<
+type ConcreteAttestationFor<
 	L extends ConcreteLanguage,
 	SK extends SurfaceKindFor<L>,
 	LK extends LemmaFamilyForSurfaceKind<L, SK>,
 	LSK extends LemmaKindFor<L, LK>,
-> = SK extends keyof LanguageSelectionByKindMap[L]
-	? LK extends keyof LanguageSelectionByKindMap[L][SK]
-		? LSK extends keyof LanguageSelectionByKindMap[L][SK][LK]
-			? LanguageSelectionByKindMap[L][SK][LK][LSK]
+> = SK extends keyof LanguageAttestationByKindMap[L]
+	? LK extends keyof LanguageAttestationByKindMap[L][SK]
+		? LSK extends keyof LanguageAttestationByKindMap[L][SK][LK]
+			? LanguageAttestationByKindMap[L][SK][LK][LSK]
 			: never
 		: never
 	: never;

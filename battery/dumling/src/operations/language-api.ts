@@ -1,8 +1,8 @@
 import type { z } from "zod";
 import { buildUnionSchema } from "../schemas/shared/builders.js";
 import type {
+	Attestation,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 } from "../types/public-types.js";
@@ -15,14 +15,14 @@ import { buildIdOperations } from "./shared/id/id.js";
 import { buildParseOperations } from "./shared/parse/parse.js";
 
 type EntitySchemaTree = {
+	Attestation: unknown;
 	Lemma: unknown;
-	Selection: unknown;
 	Surface: unknown;
 };
 
 type RuntimeSchemaSet<L extends SupportedLanguage> = {
+	attestation: z.ZodType<Attestation<L>>;
 	lemma: z.ZodType<Lemma<L>>;
-	selection: z.ZodType<Selection<L>>;
 	surface: z.ZodType<Surface<L>>;
 };
 
@@ -53,8 +53,8 @@ function buildRuntimeSchemas<L extends SupportedLanguage>(
 	schemaTree: EntitySchemaTree,
 ): RuntimeSchemaSet<L> {
 	return {
+		attestation: buildRuntimeUnion(schemaTree.Attestation),
 		lemma: buildRuntimeUnion(schemaTree.Lemma),
-		selection: buildRuntimeUnion(schemaTree.Selection),
 		surface: buildRuntimeUnion(schemaTree.Surface),
 	} as RuntimeSchemaSet<L>;
 }

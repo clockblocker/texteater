@@ -1,56 +1,51 @@
 import { describe, expect, it } from "bun:test";
 import { dumling } from "../../src";
-import type { SelectionOptionsFor } from "../../src/types";
+import type { AttestationOptionsFor } from "../../src/types";
 import {
-	englishWalkCitationSelection,
+	englishWalkCitationAttestation,
 	englishWalkCitationSurface,
 	englishWalkInflectionSurface,
 	englishWalkLemma,
 	germanHausCitationSurface,
-	hebrewKatvuStandardFullSelection,
+	hebrewKatvuStandardFullAttestation,
 } from "../helpers";
 
 describe("operations", () => {
-	it("extracts the exact Lemma from surfaces and selections", () => {
+	it("extracts the exact Lemma from surfaces and attestations", () => {
 		expect(dumling.en.extract.lemma(englishWalkCitationSurface)).toBe(
 			englishWalkLemma,
 		);
-		expect(dumling.en.extract.lemma(englishWalkCitationSelection)).toBe(
+		expect(dumling.en.extract.lemma(englishWalkCitationAttestation)).toBe(
 			englishWalkLemma,
 		);
-		expect(dumling.he.extract.lemma(hebrewKatvuStandardFullSelection)).toBe(
-			hebrewKatvuStandardFullSelection.surface.lemma,
-		);
+		expect(
+			dumling.he.extract.lemma(hebrewKatvuStandardFullAttestation),
+		).toBe(hebrewKatvuStandardFullAttestation.surface.lemma);
 	});
 
-	it("builds valid surfaces and attestation-local selections", () => {
+	it("builds valid surfaces and click-independent attestations", () => {
 		expect(dumling.en.convert.lemma.toSurface(englishWalkLemma)).toEqual(
 			englishWalkCitationSurface,
 		);
 
-		const selectionOptions = {
-			segmentedSentenceId: dumling.en.create.segmentedSentenceId(
-				"test:en:walk-conversion:v1",
-			),
-			clickedSegmentIndex: 2,
-			surfaceSegmentIndices: [2],
-			attestedSurface: "Walk",
-			selectedOrthography: "Standard",
-		} satisfies SelectionOptionsFor;
+		const attestationOptions = {
+			members: [{ attested: "Walk", orthography: "Standard" }],
+			realizationCoverage: "Full",
+		} satisfies AttestationOptionsFor;
 		expect(
-			dumling.en.convert.surface.toSelection(
+			dumling.en.convert.surface.toAttestation(
 				englishWalkInflectionSurface,
-				selectionOptions,
+				attestationOptions,
 			),
 		).toEqual({
-			...selectionOptions,
+			...attestationOptions,
 			surface: englishWalkInflectionSurface,
 		});
 	});
 
 	it("derives structural descriptors without semantic content", () => {
 		expect(
-			dumling.en.describe.as.lemma(englishWalkCitationSelection),
+			dumling.en.describe.as.lemma(englishWalkCitationAttestation),
 		).toEqual({
 			language: "en",
 			family: "Lexeme",
@@ -63,7 +58,7 @@ describe("operations", () => {
 			kind: "VERB",
 		});
 		expect(
-			dumling.en.describe.as.selection(englishWalkInflectionSurface),
+			dumling.en.describe.as.attestation(englishWalkInflectionSurface),
 		).toEqual({
 			language: "en",
 			surfaceKind: "Inflection",
@@ -71,7 +66,7 @@ describe("operations", () => {
 			kind: "VERB",
 		});
 		expect(
-			dumling.de.describe.as.selection(germanHausCitationSurface),
+			dumling.de.describe.as.attestation(germanHausCitationSurface),
 		).toEqual({
 			language: "de",
 			surfaceKind: "Citation",
@@ -80,10 +75,10 @@ describe("operations", () => {
 		});
 		expect(
 			String(
-				dumling.en.describe.asCsv.selection(
+				dumling.en.describe.asCsv.attestation(
 					englishWalkInflectionSurface,
 				),
 			),
-		).toBe("Selection,en,Inflection,Lexeme,VERB");
+		).toBe("Attestation,en,Inflection,Lexeme,VERB");
 	});
 });

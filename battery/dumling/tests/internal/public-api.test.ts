@@ -27,7 +27,7 @@ describe("public API usage", () => {
 			);
 		}
 
-		const selection = getLanguageApi("de").convert.lemma.toSelection(
+		const attestation = getLanguageApi("de").convert.lemma.toAttestation(
 			dumling.de.create.lemma({
 				canonicalForm: "see",
 				family: "Lexeme",
@@ -35,47 +35,34 @@ describe("public API usage", () => {
 				coreFeatures: { gender: "Masc", hyph: null },
 			}),
 			{
-				segmentedSentenceId:
-					dumling.de.create.segmentedSentenceId("sentence:de:am-see"),
-				clickedSegmentIndex: 4,
-				surfaceSegmentIndices: [4],
-				attestedSurface: "See",
-				selectedOrthography: "Standard",
+				members: [{ attested: "See", orthography: "Standard" }],
+				realizationCoverage: "Full",
 			},
 		);
-		const id = dumling.de.id.encode.asBase64Url(selection);
 
-		expect(dumling.de.id.decode.asSelectionIdentity(id)).toEqual({
-			success: true,
-			data: {
-				format: "base64url",
-				language: "de",
-				kind: "Selection",
-				selectionIdentity: {
-					segmentedSentenceId: selection.segmentedSentenceId,
-					clickedSegmentIndex: 4,
-				},
-			},
-		});
+		expect(attestation.members).toEqual([
+			{ attested: "See", orthography: "Standard" },
+		]);
+		expect("asAttestationIdentity" in dumling.de.id.decode).toBe(false);
 	});
 
 	it("keeps schemas available from the dedicated schema entrypoint", () => {
-		const nounSelectionSchema =
-			schemasFor.de.entity.Selection.Citation.Lexeme.NOUN();
+		const nounAttestationSchema =
+			schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN();
 		const nounDescriptorSchema = schemasFor.de.descriptor.Lemma.Lexeme.NOUN;
 
 		expect(
-			typeof schemasFor.de.entity.Selection.Inflection.Lexeme.VERB()
+			typeof schemasFor.de.entity.Attestation.Inflection.Lexeme.VERB()
 				.parse,
 		).toBe("function");
 		expect(typeof nounDescriptorSchema.parse).toBe("function");
-		expect(typeof nounSelectionSchema.parse).toBe("function");
+		expect(typeof nounAttestationSchema.parse).toBe("function");
 		expect(typeof schemasFor.he.entity.Lemma.Lexeme.VERB().parse).toBe(
 			"function",
 		);
 		expect(getSchemaTreeFor("de")).toBe(schemasFor.de);
-		expect(schemasFor.de.entity.Selection.Citation.Lexeme.NOUN()).toBe(
-			nounSelectionSchema,
+		expect(schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN()).toBe(
+			nounAttestationSchema,
 		);
 		expect(
 			nounDescriptorSchema.safeParse({
@@ -107,7 +94,7 @@ describe("public API usage", () => {
 			abstractSchemas.entity.Lemma.safeParse(abstractLemma).success,
 		).toBe(true);
 		expect(
-			abstractSchemas.descriptor.Selection.safeParse({
+			abstractSchemas.descriptor.Attestation.safeParse({
 				language: "fr",
 				surfaceKind: "Citation",
 				family: "Lexeme",

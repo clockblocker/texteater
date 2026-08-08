@@ -2,7 +2,6 @@ import type {
 	DumlingBase64Url,
 	DumlingCsv,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 } from "../../../types/public-types.js";
@@ -29,10 +28,7 @@ type DecodeResult<L extends SupportedLanguage> = ApiResult<
 	IdDecodeError
 >;
 
-type IdAddressableEntity<L extends SupportedLanguage> =
-	| Lemma<L>
-	| Surface<L>
-	| Selection<L>;
+type IdAddressableEntity<L extends SupportedLanguage> = Lemma<L> | Surface<L>;
 
 function assertParseSuccess<T>(
 	result: ApiResult<T, { message: string }>,
@@ -47,25 +43,21 @@ function assertParseSuccess<T>(
 
 function canonicalizeEntity<L extends SupportedLanguage>(
 	parse: LanguageApi<L>["parse"],
-	value: Lemma<L> | Surface<L> | Selection<L>,
+	value: Lemma<L> | Surface<L>,
 ): IdAddressableEntity<L> {
+	if ("surface" in value || "members" in value) {
+		throw new Error("Attestation has no ID");
+	}
+
 	assertEntityIdFeatureConstraints(value);
 
 	const parsed =
-		"surface" in value
+		"surfaceKind" in value
 			? assertParseSuccess(
-					parse.selection(value),
-					"Invalid Selection ID input",
+					parse.surface(value),
+					"Invalid Surface ID input",
 				)
-			: "surfaceKind" in value
-				? assertParseSuccess(
-						parse.surface(value),
-						"Invalid Surface ID input",
-					)
-				: assertParseSuccess(
-						parse.lemma(value),
-						"Invalid Lemma ID input",
-					);
+			: assertParseSuccess(parse.lemma(value), "Invalid Lemma ID input");
 
 	assertEntityIdFeatureConstraints(parsed);
 	return parsed;
@@ -94,18 +86,6 @@ function decodeReadableAsSuccess<L extends SupportedLanguage>(
 		};
 	}
 
-	if (decoded.data.kind === "Selection") {
-		return {
-			success: true,
-			data: {
-				format,
-				language,
-				kind: "Selection",
-				selectionIdentity: decoded.data.selectionIdentity,
-			},
-		};
-	}
-
 	return {
 		success: true,
 		data: {
@@ -118,15 +98,11 @@ function decodeReadableAsSuccess<L extends SupportedLanguage>(
 }
 
 function shouldTreatAsReadableCsv(input: string) {
-	return (
-		input.startsWith("Lemma") ||
-		input.startsWith("Surface") ||
-		input.startsWith("Selection")
-	);
+	return input.startsWith("Lemma") || input.startsWith("Surface");
 }
 
 function hasReadableCsvLeadingWhitespace(input: string) {
-	return /^[\s\uFEFF]+(?:Lemma|Surface|Selection)/u.test(input);
+	return /^[\s\uFEFF]+(?:Lemma|Surface)/u.test(input);
 }
 
 function decodeAny<L extends SupportedLanguage>(
@@ -175,9 +151,7 @@ export function buildIdOperations<L extends SupportedLanguage>(
 	language: L,
 	parse: LanguageApi<L>["parse"],
 ): LanguageApi<L>["id"] {
-	function encodeCanonicalCsv(
-		value: Lemma<L> | Surface<L> | Selection<L>,
-	): DumlingCsv<L> {
+	function encodeCanonicalCsv(value: Lemma<L> | Surface<L>): DumlingCsv<L> {
 		const canonical = canonicalizeEntity(parse, value);
 		return entityToReadableCsv(canonical) as DumlingCsv<L>;
 	}
@@ -252,27 +226,6 @@ export function buildIdOperations<L extends SupportedLanguage>(
 
 				return decoded as ApiResult<
 					Extract<IdDecodeSuccess<L>, { kind: "Surface" }>,
-					IdDecodeError
-				>;
-			},
-			asSelectionIdentity(input) {
-				const decoded = decodeAny(language, parse, input);
-				if (!decoded.success) {
-					return decoded;
-				}
-
-				if (decoded.data.kind !== "Selection") {
-					return {
-						success: false,
-						error: idError(
-							"EntityMismatch",
-							`Expected Selection, received ${decoded.data.kind}`,
-						),
-					};
-				}
-
-				return decoded as ApiResult<
-					Extract<IdDecodeSuccess<L>, { kind: "Selection" }>,
 					IdDecodeError
 				>;
 			},
