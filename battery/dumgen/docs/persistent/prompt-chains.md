@@ -157,7 +157,7 @@ fixed Lemma:
 
 Selection and Surface data are not repeated. An Emoji Description contains one
 to four Unicode RGI emoji graphemes, never Lemma text, a gloss, or prose. See
-[Emoji Description Authoring](./emoji-description-authoring.md).
+[Emoji Description Authoring](./human-owned-and-verified/emoji-description-authoring.md).
 
 ## Context and target markers
 

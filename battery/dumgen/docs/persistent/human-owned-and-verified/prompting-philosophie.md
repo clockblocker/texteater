@@ -13,7 +13,7 @@ the answer, not the rule.
 
 Look for hard cases while writing and testing a prompt. If a case raises a real
 policy question or deserves human thought, add it to the persistent
-[Prompt Logbook](./prompt-logbook.md). Keep routine failures with their test
+[Prompt Logbook](../prompt-logbook.md). Keep routine failures with their test
 run; the logbook is only for things worth thinking about.
 
 ## Instruction language

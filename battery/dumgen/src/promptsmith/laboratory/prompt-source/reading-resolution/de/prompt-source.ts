@@ -3,7 +3,7 @@ import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
 /**
- * Follows the `battery/dumgen/docs/persistent/prompting-philosophie.md`
+ * Follows the `battery/dumgen/docs/persistent/human-owned-and-verified/prompting-philosophie.md`
  */
 const body = `We are helping a language learner distinguish meanings that are useful to distinguish.
 

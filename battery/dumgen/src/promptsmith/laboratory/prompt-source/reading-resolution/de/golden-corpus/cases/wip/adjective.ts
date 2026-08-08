@@ -72,7 +72,7 @@ const sauerStorytelling = defineGoldenCaseGroup({
  * - Split conventional senses when an existing emoji would materially mislead
  *   a beginner.
  *
- * Related: `battery/dumgen/docs/persistent/emoji-description-authoring.md`
+ * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/emoji-description-authoring.md`
  */
 export const adjectives = defineGoldenCaseCollection(import.meta.url, {
 	groups: {

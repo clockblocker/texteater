@@ -68,7 +68,7 @@ const ueberStorytelling = defineGoldenCaseGroup({
  * - Clear stable relation gets semantic emoji; material change gets new emoji.
  * - No clear standalone relation: use generic connector 🔗.
  *
- * Related: `battery/dumgen/docs/persistent/prompting-philosophie.md`
+ * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/prompting-philosophie.md`
  */
 export const adpositions = defineGoldenCaseCollection(import.meta.url, {
 	groups: {

@@ -203,7 +203,7 @@ const absatzStorytelling = defineGoldenCaseGroup({
  * - Reuse across contextual variants and transparent conventional metaphor
  *   when the same broad label remains recognizable.
  *
- * Related: `battery/dumgen/docs/persistent/emoji-description-authoring.md`
+ * Related: `battery/dumgen/docs/persistent/human-owned-and-verified/emoji-description-authoring.md`
  */
 export const nouns = defineGoldenCaseCollection(import.meta.url, {
 	groups: {
