@@ -1,6 +1,6 @@
+import { isKnownRelation } from "dumrel";
 import { lemmaKey, readingKey } from "../core/identity";
 import { planCleanupRelations } from "../core/plan-mutation";
-import { isKnownRelation } from "../core/relations/rules";
 import { validateCleanupRelationsSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type { CleanupRelationsRequest, MutationResult } from "../public";

@@ -7,8 +7,9 @@ responsibility:
 - `battery/codec-builder`: composable Zod 3 and Zod 4 codec builders
 - `battery/codegen`: deterministic, filesystem-safe code generation
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
+- `battery/dumrel`: lexical and morphological relation types, schemas, and rules
 - `battery/dumgen`: deterministic prompt construction and evaluation
-- `battery/dumdict`: dictionary relations, workflows, and storage boundaries
+- `battery/dumdict`: dictionary workflows and storage boundaries
 
 An app is a self-contained, user-facing business unit. A battery is a generic,
 reusable module. Each workspace owns its manifest, runtime dependencies,

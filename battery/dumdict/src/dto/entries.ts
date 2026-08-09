@@ -1,6 +1,6 @@
+import type { LexicalRelations, MorphologicalRelations } from "dumrel";
 import type { Lemma, SupportedLanguage, Surface, SurfaceId } from "../dumling";
 import type { Reading } from "./reading";
-import type { LexicalRelations, MorphologicalRelations } from "./relations";
 
 export type LemmaRecord<L extends SupportedLanguage> = {
 	lemma: Lemma<L>;

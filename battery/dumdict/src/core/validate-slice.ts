@@ -1,3 +1,4 @@
+import { relationFamilyFor } from "dumrel";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
@@ -24,7 +25,6 @@ import type {
 } from "../storage";
 import { lemmaKey, readingKey, sameLemma, sameReading } from "./identity";
 import { derivePendingEntryId, makePendingEntryRef } from "./pending/identity";
-import { relationFamilyFor } from "./relations/rules";
 
 function assertLanguage(
 	expectedLanguage: SupportedLanguage,

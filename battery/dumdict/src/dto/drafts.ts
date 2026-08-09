@@ -1,6 +1,6 @@
+import type { ProposedRelation } from "dumrel";
 import type { SupportedLanguage, Surface } from "../dumling";
 import type { Reading } from "./reading";
-import type { ProposedRelation } from "./relations";
 
 export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
 	surface: Surface<L>;

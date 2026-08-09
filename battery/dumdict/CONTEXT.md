@@ -7,8 +7,8 @@ transactions, or synchronization.
 ## Language
 
 **Lemma Record**:
-A stored structural Lemma together with its grammatical relations. The embedded
-Lemma is grammatical identity; there is no separate opaque Lemma ID.
+A stored structural Lemma together with its morphological relations. The
+embedded Lemma is grammatical identity; there is no separate opaque Lemma ID.
 _Avoid_: Linguistic Entry record, Lemma entry
 
 **Reading**:
@@ -21,8 +21,9 @@ The stable learner-scoped semantic label that distinguishes Readings of the
 same Lemma. It participates in Reading identity.
 
 **Reading Entry**:
-The learner-facing note content stored for one Reading. The Reading is its
-semantic identity; note content does not create a second semantic identity.
+The learner-facing note content and lexical relations stored for one Reading.
+The Reading is its semantic identity; note content does not create a second
+semantic identity.
 _Avoid_: Meaning Entry, dictionary sense
 
 **Surface Entry**:

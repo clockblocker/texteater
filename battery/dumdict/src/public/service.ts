@@ -1,7 +1,6 @@
+import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
 	DumdictReadingDraft,
-	LexicalRelation,
-	MorphologicalRelation,
 	PendingEntryId,
 	Reading,
 	StoreRevision,

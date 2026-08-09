@@ -3,28 +3,28 @@ import type {
 	LemmaFamilyFor,
 	LemmaKindFor,
 	SupportedLanguage,
-} from "../dumling";
-import type { Reading } from "./reading";
+} from "dumling/types";
+import type { z } from "zod";
+import type {
+	lexicalRelationSchema,
+	morphologicalRelationSchema,
+	relationFamilySchema,
+	relationSchema,
+} from "./schema.js";
 
-export type RelationFamily = "lexical" | "morphological";
+export type RelationFamily = z.infer<typeof relationFamilySchema>;
+export type LexicalRelation = z.infer<typeof lexicalRelationSchema>;
+export type MorphologicalRelation = z.infer<typeof morphologicalRelationSchema>;
+export type Relation = z.infer<typeof relationSchema>;
 
-export type LexicalRelation =
-	| "synonym"
-	| "nearSynonym"
-	| "antonym"
-	| "hypernym"
-	| "hyponym"
-	| "meronym"
-	| "holonym";
-
-export type MorphologicalRelation =
-	| "consistsOf"
-	| "usedIn"
-	| "derivedFrom"
-	| "sourceFor";
+/** The structural seam required of a lexical relation endpoint. */
+export type ReadingRelationTarget<L extends SupportedLanguage> = {
+	lemma: Lemma<L>;
+	emojiDescription: string;
+};
 
 export type LexicalRelations<L extends SupportedLanguage> = Partial<
-	Record<LexicalRelation, Reading<L>[]>
+	Record<LexicalRelation, ReadingRelationTarget<L>[]>
 >;
 
 export type MorphologicalRelations<L extends SupportedLanguage> = Partial<
@@ -49,7 +49,7 @@ export type ProposedRelation<L extends SupportedLanguage> =
 	  };
 
 export type ProposedLexicalRelationTarget<L extends SupportedLanguage> =
-	| { kind: "existing"; reading: Reading<L> }
+	| { kind: "existing"; reading: ReadingRelationTarget<L> }
 	| {
 			kind: "pending";
 			ref: PendingRelationTargetRef<L>;

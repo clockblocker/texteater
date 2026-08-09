@@ -1,0 +1,11 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"paths": {
+			"dumrel": ["./src/index.ts"],
+			"dumrel/schema": ["./src/schema.ts"],
+			"dumrel/types": ["./src/types.ts"]
+		}
+	},
+	"include": ["src/**/*.ts", "tests/**/*.ts"]
+}

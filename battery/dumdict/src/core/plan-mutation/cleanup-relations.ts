@@ -1,3 +1,4 @@
+import { inverseRelationFor } from "dumrel";
 import type { PendingEntryRef, PendingEntryRelation, Reading } from "../../dto";
 import type { Lemma, SupportedLanguage } from "../../dumling";
 import type {
@@ -6,7 +7,6 @@ import type {
 } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
 import { lemmaKey, readingKey, sameLemma, sameReading } from "../identity";
-import { inverseRelationFor } from "../relations/rules";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function sourceKeyFor<L extends SupportedLanguage>(

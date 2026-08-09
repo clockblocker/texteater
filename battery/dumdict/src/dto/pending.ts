@@ -1,3 +1,4 @@
+import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
 	Lemma,
 	LemmaFamilyFor,
@@ -5,7 +6,6 @@ import type {
 	SupportedLanguage,
 } from "../dumling";
 import type { Reading } from "./reading";
-import type { LexicalRelation, MorphologicalRelation } from "./relations";
 
 export type PendingEntryId<L extends SupportedLanguage> = string & {
 	readonly __pendingEntryIdBrand?: unique symbol;

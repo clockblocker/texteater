@@ -45,6 +45,9 @@ collects a full note draft and calls `addNewNote`.
 - planning semantic changes and preconditions
 - maintaining inverse-paired relations and pending unresolved relation targets
 
+Relation names, schemas, and inverse/family rules come from `dumrel`; Dumdict
+owns the dictionary workflows that apply those rules to stored records.
+
 Host storage owns the actual writes. Obsidian can translate planned changes into
 markdown edits, SQLite into a transaction, and Electron into server/cache writes.
 Normal app flows do not load the full dictionary.
@@ -110,7 +113,7 @@ const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 Install the packages:
 
 ```sh
-npm install dumdict dumling
+npm install dumdict dumling dumrel
 ```
 
 Minimal usage with the in-memory testing storage:
@@ -145,7 +148,8 @@ the host's persistence model.
 The root export is intentionally focused:
 
 - `createDumdictService`: creates a language-bound service over a storage port
-- DTO types such as `ReadingEntry`, `SurfaceEntry`, `DumdictReadingDraft`, and relation payloads
+- DTO types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictReadingDraft`
+- compatibility type re-exports for relation payloads whose source of truth is `dumrel`
 - storage port types for host adapters
 - dumling helpers such as `dumling`, `makeSurfaceId`, and `inspectDumlingId`
 

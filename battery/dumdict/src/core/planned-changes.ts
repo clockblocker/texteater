@@ -1,7 +1,6 @@
+import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
 	LemmaRecord,
-	LexicalRelation,
-	MorphologicalRelation,
 	PendingEntryId,
 	PendingEntryRef,
 	PendingEntryRelation,

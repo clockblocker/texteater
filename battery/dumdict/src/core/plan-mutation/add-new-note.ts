@@ -1,8 +1,11 @@
+import {
+	inverseRelationFor,
+	type LexicalRelations,
+	type MorphologicalRelation,
+	type MorphologicalRelations,
+} from "dumrel";
 import type {
 	LemmaRecord,
-	LexicalRelations,
-	MorphologicalRelation,
-	MorphologicalRelations,
 	PendingEntryRef,
 	PendingEntryRelation,
 	ReadingEntry,
@@ -15,7 +18,6 @@ import type { NewNoteSlice } from "../../storage";
 import { lemmaKey, readingKey, sameLemma, sameReading } from "../identity";
 import { derivePendingEntryId, makePendingEntryRef } from "../pending/identity";
 import type { PlannedChangeOp } from "../planned-changes";
-import { inverseRelationFor } from "../relations/rules";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {

@@ -1,10 +1,9 @@
 import type {
 	LexicalRelation,
 	MorphologicalRelation,
+	Relation,
 	RelationFamily,
-} from "../../dto";
-
-type Relation = LexicalRelation | MorphologicalRelation;
+} from "./types.js";
 
 const relationRules = {
 	synonym: { family: "lexical", inverse: "synonym" },

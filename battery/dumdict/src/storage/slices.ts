@@ -1,3 +1,4 @@
+import type { RelationNotesForDisambiguation } from "dumrel";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
@@ -5,7 +6,6 @@ import type {
 	PendingEntryRelation,
 	Reading,
 	ReadingEntry,
-	RelationNotesForDisambiguation,
 	StoreRevision,
 	SurfaceEntry,
 } from "../dto";

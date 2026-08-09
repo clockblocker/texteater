@@ -1,6 +1,5 @@
+import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
-	LexicalRelation,
-	MorphologicalRelation,
 	PendingEntryRef,
 	Reading,
 	ReadingNoteForDisambiguation,
