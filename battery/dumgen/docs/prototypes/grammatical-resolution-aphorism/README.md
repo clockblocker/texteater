@@ -25,7 +25,7 @@ the Surface's linked Lemma are absent from model exchange. The complete Core
 Feature object is `{}`. Aphorism exposes no Dumling Inflection Surface, so
 `surfaceKind` is always `Citation` and `inflectionalFeatures` is never emitted.
 
-Whole-unit membership follows the Selection contract rather than treating the
+Whole-unit membership follows the Attestation-member contract rather than treating the
 quotation as one opaque string. The input schema preflights TARGET structure:
 it requires at least two balanced pairs and exactly one word-like lexical member
 inside each pair, rejecting empty, whitespace-only, punctuation-only, multiword,

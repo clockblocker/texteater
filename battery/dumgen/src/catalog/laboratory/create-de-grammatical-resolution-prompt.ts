@@ -42,6 +42,7 @@ type ModelGrammarOutput = {
 	readonly decision: "Resolved" | "Unresolved";
 	readonly resolution: {
 		readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+		readonly realizationCoverage: "Full" | "Partial";
 		readonly lemma: Readonly<Record<string, unknown>>;
 		readonly surface: ModelSurface;
 	} | null;
@@ -159,6 +160,7 @@ export function createDeGrammaticalResolutionPrompt<
 			return {
 				decision: "Resolved",
 				memberOrthographies: generated.resolution.memberOrthographies,
+				realizationCoverage: generated.resolution.realizationCoverage,
 				surface,
 				lemma,
 			} as unknown as GrammaticalResolution;

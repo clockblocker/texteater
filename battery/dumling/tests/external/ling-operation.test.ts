@@ -43,6 +43,49 @@ describe("operations", () => {
 		});
 	});
 
+	it("projects only licensed Attestation fields from runtime options", () => {
+		const options = {
+			members: [{ attested: "walked", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			clickedSegmentIndex: 4,
+		} as const;
+
+		expect(
+			dumling.en.convert.surface.toAttestation(
+				englishWalkInflectionSurface,
+				options,
+			),
+		).toEqual({
+			members: [{ attested: "walked", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: englishWalkInflectionSurface,
+		});
+	});
+
+	it("rejects runtime conversion options with no Attestation members", () => {
+		expect(() =>
+			dumling.en.convert.surface.toAttestation(
+				englishWalkInflectionSurface,
+				{
+					members: [],
+					realizationCoverage: "Full",
+				} as unknown as AttestationOptionsFor,
+			),
+		).toThrow("Attestation members must be non-empty");
+	});
+
+	it("rejects runtime conversion options with invalid realization coverage", () => {
+		expect(() =>
+			dumling.en.convert.surface.toAttestation(
+				englishWalkInflectionSurface,
+				{
+					members: [{ attested: "walked", orthography: "Standard" }],
+					realizationCoverage: "Bogus",
+				} as unknown as AttestationOptionsFor,
+			),
+		).toThrow();
+	});
+
 	it("derives structural descriptors without semantic content", () => {
 		expect(
 			dumling.en.describe.as.lemma(englishWalkCitationAttestation),

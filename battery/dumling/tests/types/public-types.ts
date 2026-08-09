@@ -39,6 +39,9 @@ const attestation = dumling.de.convert.surface.toAttestation(
 	options,
 ) satisfies Attestation<"de", "Citation", "Lexeme", "NOUN">;
 
+// @ts-expect-error Attestations require an explicit contextual Surface.
+dumling.de.convert.lemma.toAttestation(lemma, options);
+
 attestation satisfies EntityForKind<"de", "Attestation">;
 attestation.surface.lemma satisfies Lemma<"de", "Lexeme", "NOUN">;
 attestation.members[0].attested satisfies string;

@@ -37,10 +37,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "jeglicher",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
 						},
@@ -59,10 +59,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Typo"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "keinen",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -90,10 +90,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "einem",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -123,10 +123,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "die",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -157,10 +157,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "derlei",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
 						},

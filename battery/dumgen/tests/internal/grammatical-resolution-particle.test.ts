@@ -101,7 +101,6 @@ describe("Lexeme/PART route-local schemas and corpus", () => {
 			deParticleModelCitationSurfaceSchema.parse({
 				normalizedSurface: "nicht",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
@@ -110,7 +109,6 @@ describe("Lexeme/PART route-local schemas and corpus", () => {
 			deParticleModelCitationSurfaceSchema.parse({
 				normalizedSurface: "nicht",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {},

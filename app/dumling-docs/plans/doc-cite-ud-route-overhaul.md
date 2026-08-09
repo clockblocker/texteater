@@ -41,7 +41,7 @@ model hierarchy rather than the current flattened file buckets.
 
 Canonical examples:
 
-- `/u/entity/selection/`
+- `/u/entity/attestation/`
 - `/u/entity/surface/citation/`
 - `/u/entity/surface/inflection/`
 - `/u/entity/lemma/lexeme/noun/`
@@ -280,7 +280,7 @@ Keep language-local commentary and examples in `lang/{lang}`.
 
 Reshape the source tree around the chosen route hierarchy:
 
-- `entity/selection`
+- `entity/attestation`
 - `entity/surface/citation`
 - `entity/surface/inflection`
 - `entity/lemma/lexeme/*`

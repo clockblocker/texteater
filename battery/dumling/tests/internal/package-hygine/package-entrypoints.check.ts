@@ -76,7 +76,8 @@ describe("published package entrypoints", () => {
 				kind: "NOUN",
 				coreFeatures: { gender: "Masc" },
 			});
-			const attestation = dumling.de.convert.lemma.toAttestation(lemma, {
+			const surface = dumling.de.convert.lemma.toSurface(lemma);
+			const attestation = dumling.de.convert.surface.toAttestation(surface, {
 				members: [{ attested: "See", orthography: "Standard" }],
 				realizationCoverage: "Full",
 			});
@@ -121,14 +122,15 @@ describe("published package entrypoints", () => {
 					'\tcoreFeatures: { gender: "Masc", hyph: null },',
 					"});",
 					"",
-					'const attestation: Attestation<"de"> = dumling.de.convert.lemma.toAttestation(lemma, {',
+					"const surface = dumling.de.convert.lemma.toSurface(lemma);",
+					'const attestation: Attestation<"de"> = dumling.de.convert.surface.toAttestation(surface, {',
 					'\tmembers: [{ attested: "See", orthography: "Standard" }],',
 					'\trealizationCoverage: "Full",',
 					"});",
 					"const parsed = dumling.de.parse.attestation(attestation);",
 					"if (!parsed.success) throw new Error(parsed.error.message);",
 					'const dynamicApi = getLanguageApi("de");',
-					'const dynamicAttestation = dynamicApi.convert.lemma.toAttestation(lemma, { members: [{ attested: "See", orthography: "Standard" }], realizationCoverage: "Full" });',
+					'const dynamicAttestation = dynamicApi.convert.surface.toAttestation(surface, { members: [{ attested: "See", orthography: "Standard" }], realizationCoverage: "Full" });',
 					'dynamicAttestation satisfies Attestation<"de">;',
 					"function genericApi<L extends SupportedLanguage>(language: L): LanguageApi<L> {",
 					"\treturn getLanguageApi(language);",

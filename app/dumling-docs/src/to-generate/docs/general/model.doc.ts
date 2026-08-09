@@ -9,11 +9,11 @@ The public Dumling model is built around three hydrated DTOs:
 
 - \`Lemma\`: the normalized grammatical identity
 - \`Surface\`: the normalized form resolved from the attested text
-- \`Selection\`: the sentence-local evidence produced by a click
+- \`Attestation\`: click-independent evidence for one observed occurrence
 
-Selections are always hydrated:
+Attestations are always hydrated:
 
-- a \`Selection\` always contains a \`Surface\`
+- an \`Attestation\` always contains a \`Surface\`
 - a \`Surface\` always contains a \`Lemma\`
 
 ## Lemma
@@ -33,8 +33,7 @@ belongs outside Dumling.
 <!-- DOC_BLOCK:core-surface -->
 
 A citation surface uses \`surfaceKind: "Citation"\`. Every Surface also owns
-\`spelling: "Canonical" | "Variant"\` and
-\`realizationCoverage: "Full" | "Partial"\`.
+\`spelling: "Canonical" | "Variant"\`.
 
 Marked properties of the resolved surface live in \`surfaceFeatures\`. For example, a historical citation or inflection can carry \`surfaceFeatures: { historicalStatus: "Archaic" }\`.
 
@@ -47,7 +46,6 @@ const ranSurface = dumling.en.create.surface.inflection({
 \tlemma: runLemma,
 \tnormalizedSurface: "ran",
 \tspelling: "Canonical",
-\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\ttense: "Past",
 \t\tverbForm: "Fin",
@@ -55,24 +53,23 @@ const ranSurface = dumling.en.create.surface.inflection({
 });
 \`\`\`
 
-## Selection
+## Attestation
 
-<!-- DOC_BLOCK:core-selection -->
+<!-- DOC_BLOCK:core-attestation -->
 
-A Selection records the immutable segmented sentence ID, the clicked \`ResolvableText\`
-segment index, every segment index participating in the Surface occurrence,
-the noisy attested text across those segments, and the clicked segment's
-\`selectedOrthography\`. Variant spelling and partial realization live on the
-Surface because they describe the linguistic form, not the click.
+An Attestation records a non-empty, source-ordered tuple of exact member strings
+and per-member orthography evidence, plus \`Full | Partial\` realization coverage.
+It links exactly one Surface. It contains no sentence ID, click, segment index,
+marked context, identity, or persistence contract.
 
 ## Descriptors
 
 Descriptors are compact structural summaries of DTOs. They are useful when code needs to route by entity kind, language, Lemma family and kind, or Surface kind without carrying the whole object through the branch.
 
 \`\`\`ts
-const descriptor = dumling.de.describe.as.selection(seeSelection);
+const descriptor = dumling.de.describe.as.attestation(seeAttestation);
 
-descriptor.entityKind; // "Selection"
+descriptor.entityKind; // "Attestation"
 descriptor.language; // "de"
 descriptor.family; // "Lexeme"
 descriptor.kind; // "NOUN"
@@ -81,24 +78,24 @@ descriptor.surfaceKind; // "Citation"
 
 ## IDs
 
-IDs are compact identity keys. Decoding intentionally does not hydrate the
-whole DTO graph:
+IDs are compact identity keys for Lemmas and Surfaces. Attestations deliberately
+have no ID codec:
 
 \`\`\`ts
-const id = dumling.de.id.encode.asBase64Url(seeSelection);
-const decoded = dumling.de.id.decode.asSelectionIdentity(id);
+const id = dumling.de.id.encode.asBase64Url(seeAttestation.surface);
+const decoded = dumling.de.id.decode.asSurfaceIdentity(id);
 \`\`\`
 
-Selection identity is the pair
-\`(segmentedSentenceId, clickedSegmentIndex)\`. Lemma identity is its complete
-grammatical tuple: language, canonical form, family, kind, and core features.
+Lemma identity is its complete grammatical tuple: language, canonical form,
+family, kind, and core features. Attestation route slugs in this docs site are
+opaque docs-local structural hashes, not Dumling identities.
 
 ## Runtime Validation
 
 Parsing returns an \`ApiResult\` instead of throwing:
 
 \`\`\`ts
-const parsed = dumling.de.parse.selection(input);
+const parsed = dumling.de.parse.attestation(input);
 
 if (!parsed.success) {
 \tconsole.error(parsed.error.code, parsed.error.issues);
@@ -108,7 +105,7 @@ if (!parsed.success) {
 The schema entrypoint exposes concrete Zod schemas when a caller needs direct validator access:
 
 \`\`\`ts
-schemasFor.de.entity.Selection.Citation.Lexeme.NOUN().parse(value);
+schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN().parse(value);
 \`\`\`
 `,
 });

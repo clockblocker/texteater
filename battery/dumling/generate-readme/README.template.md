@@ -68,7 +68,7 @@ orthography, and whether the occurrence fully or partially realizes the Surface:
 Readable identities make the ownership boundary explicit. Lemma and Surface
 have stable identities; Attestation deliberately has no identity or ID codec:
 
-<!-- README_BLOCK:core-attestation-id-examples -->
+<!-- README_BLOCK:core-entity-id-examples -->
 
 ## Quickstart
 

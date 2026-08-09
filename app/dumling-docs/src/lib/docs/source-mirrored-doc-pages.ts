@@ -87,14 +87,14 @@ function defaultUniversalStubDescription(
 			return `${label} page in the public construction tree.`;
 		case "feature":
 			if (options.leaf === undefined) {
-				return "Overview of grammatical, selection, and surface feature pages.";
+				return "Overview of grammatical, attestation, and surface feature pages.";
 			}
 			return `${label} page in the public feature tree.`;
-		case "feature-selection":
+		case "feature-attestation":
 			if (options.leaf === undefined) {
-				return "Overview of selection features in the public doc-cite tree.";
+				return "Overview of attestation features in the public doc-cite tree.";
 			}
-			return `${label} page for public selection features.`;
+			return `${label} page for public attestation features.`;
 		case "feature-surface":
 			if (options.leaf === undefined) {
 				return "Overview of surface features in the public doc-cite tree.";

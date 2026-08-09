@@ -15,7 +15,7 @@ const document = defineGeneratedDocPage({
 | \`dumling/types\` | Public DTOs, feature helpers, descriptors, API result types, and ID types |
 | \`dumling/schema\` | Runtime Zod schema registries |
 
-## Lemma → Surface → Selection
+## Lemma → Surface → Attestation
 
 \`\`\`ts
 import { dumling } from "dumling";
@@ -37,7 +37,6 @@ const ranSurface = dumling.en.create.surface.inflection({
 \tlemma: runLemma,
 \tnormalizedSurface: "ran",
 \tspelling: "Canonical",
-\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\tmood: null,
 \t\tnumber: "Sing",
@@ -49,22 +48,18 @@ const ranSurface = dumling.en.create.surface.inflection({
 \tsurfaceFeatures: null,
 });
 
-const ranSelection = dumling.en.create.selection({
-\tsegmentedSentenceId:
-\t\tdumling.en.create.segmentedSentenceId("sentence:en:i-ran-home"),
-\tclickedSegmentIndex: 2,
-\tsurfaceSegmentIndices: [2],
-\tattestedSurface: "ran",
-\tselectedOrthography: "Standard",
+const ranAttestation = dumling.en.create.attestation({
+\tmembers: [{ attested: "ran", orthography: "Standard" }],
+\trealizationCoverage: "Full",
 \tsurface: ranSurface,
 });
 \`\`\`
 
 ## Operations
 
-- \`create\` constructs branded IDs and strict DTOs.
+- \`create\` constructs strict DTOs and Lemma/Surface IDs.
 - \`convert.lemma.toSurface\` makes the canonical full citation Surface.
-- \`convert.*.toSelection\` requires sentence-local Selection options.
+- \`convert.*.toAttestation\` requires occurrence members and coverage.
 - \`extract.lemma\` retrieves the Lemma from any hydrated layer.
 - \`parse\` safely validates unknown input.
 - \`describe\` returns compact structural descriptors.
@@ -72,18 +67,17 @@ const ranSelection = dumling.en.create.selection({
 ## Identity IDs
 
 \`\`\`ts
-const id = dumling.en.id.encode.asBase64Url(ranSelection);
-const decoded = dumling.en.id.decode.asSelectionIdentity(id);
+const id = dumling.en.id.encode.asBase64Url(ranAttestation.surface);
+const decoded = dumling.en.id.decode.asSurfaceIdentity(id);
 
 if (decoded.success) {
-\tdecoded.data.selectionIdentity.segmentedSentenceId;
-\tdecoded.data.selectionIdentity.clickedSegmentIndex;
+\tdecoded.data.surfaceIdentity.normalizedSurface;
 }
 \`\`\`
 
 Decoding returns identity keys, not a fabricated hydrated graph. Use
-\`asLemmaIdentity\`, \`asSurfaceIdentity\`, or
-\`asSelectionIdentity\` when the expected layer is known.
+\`asLemmaIdentity\` or \`asSurfaceIdentity\` when the expected layer is known.
+Attestations are intentionally absent from the ID API.
 
 ## Schemas
 
@@ -92,9 +86,9 @@ import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";
 
 schemasFor.de.entity.Lemma.Lexeme.NOUN();
 schemasFor.en.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.he.entity.Selection.Inflection.Lexeme.NOUN();
+schemasFor.he.entity.Attestation.Inflection.Lexeme.NOUN();
 getSchemaTreeFor("de");
-void abstractSchemas.entity.Selection;
+void abstractSchemas.entity.Attestation;
 \`\`\`
 `,
 });

@@ -1,5 +1,5 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as besserenComparativeAdjective } from "../../../../attestations/de/selection/Ich_suche_einen_besseren_Ansatz/Ich_suche_einen_[besseren]_Ansatz.ts";
+import { attestation as besserenComparativeAdjective } from "../../../../attestations/de/attestation/Ich_suche_einen_besseren_Ansatz/Ich_suche_einen_[besseren]_Ansatz.ts";
 
 const document = defineLanguageOverlayPage({
 	description: "German Degree.",

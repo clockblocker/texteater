@@ -310,10 +310,10 @@ function citation(
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: ["Standard" as const],
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface,
 				spelling: "Canonical" as const,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},
@@ -335,10 +335,10 @@ function resolvedSurface(
 			decision: "Resolved" as const,
 			resolution: {
 				memberOrthographies,
+				realizationCoverage: "Full" as const,
 				surface: {
 					normalizedSurface,
 					spelling: "Canonical" as const,
-					realizationCoverage: "Full" as const,
 					surfaceKind: "Citation" as const,
 					surfaceFeatures,
 				},
@@ -350,10 +350,10 @@ function resolvedSurface(
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies,
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface,
 				spelling: "Canonical" as const,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures,
 				inflectionalFeatures: { degree },

@@ -17,14 +17,14 @@ export function getWrappedAttestation(
 	}
 
 	const entityEntries = [
-		["lemma", wrapped.lemma],
-		["surface", wrapped.surface],
-		["selection", wrapped.selection],
-	].filter(([, value]) => isEntityValue(value));
+		["lemma", wrapped.lemma, isEntityValue(wrapped.lemma)],
+		["surface", wrapped.surface, isEntityValue(wrapped.surface)],
+		["attestation", wrapped.attestation, isRecord(wrapped.attestation)],
+	].filter(([, , isCandidate]) => isCandidate);
 
 	if (entityEntries.length !== 1) {
 		throw new Error(
-			`${sourcePath} attestation must contain exactly one lemma, surface, or selection.`,
+			`${sourcePath} attestation must contain exactly one lemma, surface, or attestation.`,
 		);
 	}
 
@@ -58,5 +58,9 @@ export function getWrappedAttestation(
 		order,
 		sentenceMarkdown,
 		title,
+		wrappedEntityKind: entityEntries[0]?.[0] as
+			| "attestation"
+			| "lemma"
+			| "surface",
 	};
 }

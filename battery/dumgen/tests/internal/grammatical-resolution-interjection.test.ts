@@ -69,7 +69,6 @@ describe("Lexeme/INTJ exact model contract", () => {
 		const citation = {
 			normalizedSurface: "pfui",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
 		};

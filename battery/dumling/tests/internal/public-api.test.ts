@@ -27,13 +27,20 @@ describe("public API usage", () => {
 			);
 		}
 
-		const attestation = getLanguageApi("de").convert.lemma.toAttestation(
-			dumling.de.create.lemma({
-				canonicalForm: "see",
-				family: "Lexeme",
-				kind: "NOUN",
-				coreFeatures: { gender: "Masc", hyph: null },
-			}),
+		const lemma = dumling.de.create.lemma({
+			canonicalForm: "see",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: { gender: "Masc", hyph: null },
+		});
+		const surface = dumling.de.create.surface.citation({
+			lemma,
+			normalizedSurface: "See",
+			spelling: "Canonical",
+			surfaceFeatures: null,
+		});
+		const attestation = getLanguageApi("de").convert.surface.toAttestation(
+			surface,
 			{
 				members: [{ attested: "See", orthography: "Standard" }],
 				realizationCoverage: "Full",
@@ -43,6 +50,7 @@ describe("public API usage", () => {
 		expect(attestation.members).toEqual([
 			{ attested: "See", orthography: "Standard" },
 		]);
+		expect("toAttestation" in dumling.de.convert.lemma).toBe(false);
 		expect("asAttestationIdentity" in dumling.de.id.decode).toBe(false);
 	});
 

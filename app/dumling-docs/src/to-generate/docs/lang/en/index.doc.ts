@@ -37,11 +37,10 @@ English noun \`number\` supports \`Sing\`, \`Plur\`, and \`Ptan\`. English verb 
 English attestation source files live in \`src/to-generate/attestations/en\`. Each file exports exactly one attested dumling object and generates exactly one Markdown attestation.
 
 Lemma and Surface attestations are generated from files under
-\`lemma/\` and \`surface/\`. Selection fixtures under
-\`selection/{sentence}/\` allow multiple clicked \`ResolvableText\` Segments in one sentence.
+\`lemma/\` and \`surface/\`. Occurrence evidence lives under
+\`attestation/{sentence}/\`; its bracketed sentence is docs-only review context.
 
-- [walk](/en/selection/djEscyxjLHdhbGssbCxlbixsLG4sd2Fsayzwn5q2LA/)
-- [walk in the park](/en/selection/djEscyxjLHdhbGsgaW4gdGhlIHBhcmssbCxlbixwLGlkLHdhbGsgaW4gdGhlIHBhcmss8J-YjCw/)
+- [English attestation routes](/en/attestation/)
 - [run](/en/lemma/djIsbCxlbixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
 - [book](/en/lemma/djIsbCxlbixlbnRyeV9tZnhsMGp4WnU1MWJ6a3VTa2M/)
 - [ran](/en/surface/djIscyxlbixpLHJhbixudT1zfHBlPXAxfHRlPXB8dmY9ZixlbnRyeV9aX1A3OFpmYUdnU0k0TEh0QXA/)
@@ -69,7 +68,6 @@ const ranSurface = dumling.en.create.surface.inflection({
 \tlemma: runLemma,
 \tnormalizedSurface: "ran",
 \tspelling: "Canonical",
-\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\tmood: null,
 \t\tnumber: "Sing",
@@ -81,16 +79,12 @@ const ranSurface = dumling.en.create.surface.inflection({
 \tsurfaceFeatures: null,
 });
 
-const ranSelection = dumling.en.convert.surface.toSelection(ranSurface, {
-\tsegmentedSentenceId:
-\t\tdumling.en.create.segmentedSentenceId("sentence:en:i-ran"),
-\tclickedSegmentIndex: 2,
-\tsurfaceSegmentIndices: [2],
-\tattestedSurface: "ran",
-\tselectedOrthography: "Standard",
+const ranAttestation = dumling.en.convert.surface.toAttestation(ranSurface, {
+\tmembers: [{ attested: "ran", orthography: "Standard" }],
+\trealizationCoverage: "Full",
 });
 
-dumling.en.parse.selection(ranSelection);
+dumling.en.parse.attestation(ranAttestation);
 \`\`\`
 
 ## Schema Access
@@ -98,7 +92,7 @@ dumling.en.parse.selection(ranSelection);
 \`\`\`ts
 schemasFor.en.entity.Lemma.Lexeme.VERB();
 schemasFor.en.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.en.entity.Selection.Inflection.Lexeme.VERB();
+schemasFor.en.entity.Attestation.Inflection.Lexeme.VERB();
 \`\`\`
 `,
 });

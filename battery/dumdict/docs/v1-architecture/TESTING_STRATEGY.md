@@ -1,8 +1,10 @@
 # Testing strategy
 
-> **Superseded terminology:** This document predates ADR 0002 and is retained
-> as pre-refactor design history. Use `battery/dumdict/CONTEXT.md` and the
-> generated package README for the current Lemma/Reading model and API.
+> **Superseded terminology:** This document predates ADRs 0002 and 0003 and is
+> retained as pre-refactor design history. Its Selection fixtures describe the
+> removed contract and are not compatibility fixtures. Use
+> `battery/dumdict/CONTEXT.md` and the generated package README for the current
+> Lemma/Reading model and API.
 
 ## Fixture rules
 

@@ -65,10 +65,11 @@ export function buildLanguageApi<L extends SupportedLanguage>(
 ): LanguageApi<L> {
 	const runtimeSchemas = buildRuntimeSchemas<L>(schemaTree.entity);
 	const parse = buildParseOperations(language, runtimeSchemas);
+	const create = buildCreateOperations(language);
 
 	return {
-		create: buildCreateOperations(language),
-		convert: buildConvertOperations<L>(),
+		create,
+		convert: buildConvertOperations<L>(create.attestation),
 		describe: buildDescribeOperations<L>(),
 		extract: buildExtractOperations<L>(),
 		id: buildIdOperations(language, parse),

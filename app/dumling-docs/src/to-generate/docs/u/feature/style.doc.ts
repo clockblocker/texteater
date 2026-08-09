@@ -1,5 +1,5 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as likeVernacularSubordinator } from "../../../attestations/en/selection/Do_it_like_I_showed_you/Do_it_[like]_I_showed_you.ts";
+import { attestation as likeVernacularSubordinator } from "../../../attestations/en/attestation/Do_it_like_I_showed_you/Do_it_[like]_I_showed_you.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Style feature.",

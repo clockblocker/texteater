@@ -376,7 +376,7 @@ is worth revisiting.
 - **Raised by:** Wayfinder issue #46 and the independent route review
 - **Question:** UD X covers unanalyzed code-switching, gibberish, and word
   fragments, but current Dumgen policy makes all three `OpaqueText` before a
-  click. Is a positive Lexeme/X Selection ever reachable without changing the
+  click. Is a positive Lexeme/X Attestation ever reachable without changing the
   German-only segmentation and language-routing model tracked by issue #19?
 - **Current take:** No. Keep the X prompt as an intentionally all-`Unresolved`
   diagnostic leaf. Its DTO still represents Dumling Citation and non-empty
@@ -463,10 +463,10 @@ is worth revisiting.
   Partial Surface of `mit den Wölfen heulen`, while whole-unit Target
   Classification normally selects every member of a conventionalized Idiom.
   Does that example license Partial for other head-plus-member selections, or
-  is it a family-specific exception pending a broader Selection policy?
+  is it a family-specific exception pending a broader Attestation policy?
 - **Current take:** Preserve only the exact repository-backed `heulte mit`
   positive. Keep `lachte ins` corpus-only and Unresolved; do not generalize a
-  Partial rule to other Idioms until Selection and whole-unit classification
+  Partial rule to other Idioms until Attestation and whole-unit classification
   define the boundary together.
 
 ### Fusion identity for polyfunctional `am`

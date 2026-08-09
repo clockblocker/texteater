@@ -1,7 +1,7 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as mitgebrachtParticiple } from "../../../../attestations/de/selection/Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht/Die_Peitsche_hat_er_[mitgebracht]und_nimmt_sie_sorglich_sehr_in_acht.ts";
-import { attestation as hinauslaufenInfinitive } from "../../../../attestations/de/selection/Er_versucht_hinauszulaufen/Er_versucht_[hinauszulaufen].ts";
-import { attestation as passAufImperative } from "../../../../attestations/de/selection/Pass_auf_dich_auf/[Pass]_auf_dich_auf.ts";
+import { attestation as mitgebrachtParticiple } from "../../../../attestations/de/attestation/Die_Peitsche_hat_er_mitgebrachtund_nimmt_sie_sorglich_sehr_in_acht/Die_Peitsche_hat_er_[mitgebracht]und_nimmt_sie_sorglich_sehr_in_acht.ts";
+import { attestation as hinauslaufenInfinitive } from "../../../../attestations/de/attestation/Er_versucht_hinauszulaufen/Er_versucht_[hinauszulaufen].ts";
+import { attestation as passAufImperative } from "../../../../attestations/de/attestation/Pass_auf_dich_auf/[Pass]_auf_dich_auf.ts";
 
 const document = defineLanguageOverlayPage({
 	description: "German HasSepPrefix.",

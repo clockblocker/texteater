@@ -60,14 +60,12 @@ describe("Lexeme/CCONJ route-local schemas and corpus", () => {
 			deCoordinatingConjunctionModelCitationSurfaceSchema.parse({
 				normalizedSurface: "und",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
 		).toEqual({
 			normalizedSurface: "und",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		});
@@ -75,7 +73,6 @@ describe("Lexeme/CCONJ route-local schemas and corpus", () => {
 			deCoordinatingConjunctionModelCitationSurfaceSchema.parse({
 				normalizedSurface: "und",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {},

@@ -83,7 +83,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 		const modelSurface = {
 			normalizedSurface: "Morgenstund hat Gold im Mund",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: { historicalStatus: null },
 		};
@@ -93,7 +92,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 			language: "de",
 			normalizedSurface: "Morgenstund hat Gold im Mund",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 			lemma: canonicalLemma,
@@ -131,7 +129,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 			deProverbModelCitationSurfaceSchema.parse({
 				normalizedSurface: "Übung macht den Meister",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
@@ -153,7 +150,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 				deProverbModelCitationSurfaceSchema.parse({
 					normalizedSurface: "Übung macht den Meister",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 					surfaceFeatures: null,
 					...extra,
@@ -164,7 +160,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 			deProverbModelCitationSurfaceSchema.parse({
 				normalizedSurface: "Übung macht den Meister",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {},
@@ -294,6 +289,7 @@ describe("Phraseme/Proverb pure diagnostic evaluator", () => {
 					testCase.idealOutput.resolution.memberOrthographies.slice(
 						1,
 					),
+				realizationCoverage: "Full" as const,
 				surface: {
 					...testCase.idealOutput.resolution.surface,
 					normalizedSurface: "Gelegenheit Diebe",

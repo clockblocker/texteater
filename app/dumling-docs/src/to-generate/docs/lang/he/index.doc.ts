@@ -49,7 +49,6 @@ const katavSurface = dumling.he.create.surface.inflection({
 \tlemma: katavLemma,
 \tnormalizedSurface: "כתב",
 \tspelling: "Canonical",
-\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\tdefinite: null,
 \t\tgender: "Masc",
@@ -64,16 +63,12 @@ const katavSurface = dumling.he.create.surface.inflection({
 \tsurfaceFeatures: null,
 });
 
-const katavSelection = dumling.he.convert.surface.toSelection(katavSurface, {
-\tsegmentedSentenceId:
-\t\tdumling.he.create.segmentedSentenceId("sentence:he:katav"),
-\tclickedSegmentIndex: 0,
-\tsurfaceSegmentIndices: [0],
-\tattestedSurface: "כתב",
-\tselectedOrthography: "Standard",
+const katavAttestation = dumling.he.convert.surface.toAttestation(katavSurface, {
+\tmembers: [{ attested: "כתב", orthography: "Standard" }],
+\trealizationCoverage: "Full",
 });
 
-dumling.he.parse.selection(katavSelection);
+dumling.he.parse.attestation(katavAttestation);
 \`\`\`
 
 ## Schema Access
@@ -81,7 +76,7 @@ dumling.he.parse.selection(katavSelection);
 \`\`\`ts
 schemasFor.he.entity.Lemma.Lexeme.VERB();
 schemasFor.he.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.he.entity.Selection.Inflection.Lexeme.VERB();
+schemasFor.he.entity.Attestation.Inflection.Lexeme.VERB();
 \`\`\`
 `,
 });

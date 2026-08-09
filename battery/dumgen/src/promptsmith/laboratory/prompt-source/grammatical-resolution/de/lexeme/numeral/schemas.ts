@@ -70,6 +70,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: z.union([
 				modelCitationSurfaceSchema,
 				modelInflectionSurfaceSchema,

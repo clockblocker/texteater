@@ -1,6 +1,6 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as hinauslaufenInfinitive } from "../../../attestations/de/selection/Er_versucht_hinauszulaufen/Er_versucht_[hinauszulaufen].ts";
-import { attestation as passAufImperative } from "../../../attestations/de/selection/Pass_auf_dich_auf/[Pass]_auf_dich_auf.ts";
+import { attestation as hinauslaufenInfinitive } from "../../../attestations/de/attestation/Er_versucht_hinauszulaufen/Er_versucht_[hinauszulaufen].ts";
+import { attestation as passAufImperative } from "../../../attestations/de/attestation/Pass_auf_dich_auf/[Pass]_auf_dich_auf.ts";
 
 const document = defineUniversalConceptPage({
 	description:

@@ -61,8 +61,9 @@ the same model shape.
 
 `AnalysisTarget` is an internal intermediate. It contains only member Segment
 indices, Lemma Family, and Lemma Kind, and does not belong in Dumling. A
-successful public operation returns the constructed Selection; a disabled route
-returns only its correlated Family and Kind.
+successful public operation returns the constructed Attestation and Dumgen
+interaction projection; a disabled route returns only its correlated Family
+and Kind.
 
 ### 1. Target Classification
 
@@ -87,7 +88,7 @@ type TargetClassification =
 
 Member indices are ordered, unique, point only to `ResolvableText`, and include
 the clicked index. Language and policy come from the prompt path. An Analysis
-Target is not a Selection because no Surface has been resolved.
+Target is not an Attestation because no Surface has been resolved.
 
 ### 2. Grammatical Resolution
 
@@ -112,6 +113,7 @@ type GrammaticalResolution =
   | {
       decision: "Resolved";
       memberOrthographies: ("Standard" | "Typo")[];
+      realizationCoverage: "Full" | "Partial";
       surface: Omit<Surface<Lang>, "lemma">;
       lemma: Lemma<Lang>;
     }
@@ -119,9 +121,10 @@ type GrammaticalResolution =
 ```
 
 Dumgen aligns orthographies with Analysis Target members. It owns Segmented
-Sentence identity, the click and member indices, and `attestedSurface`; it
-constructs the Selection and links the Surface to the Lemma before returning a
-public grammatical result.
+Sentence identity, the click and member indices, and exact attested member text.
+It zips target members with orthographies, constructs the Attestation, links the
+Surface to the Lemma, and returns the click-independent Attestation beside the
+Dumgen-owned interaction projection. Their member lists align positionally.
 
 ### 3. Reading Resolution
 
@@ -155,7 +158,7 @@ fixed Lemma:
 }
 ```
 
-Selection and Surface data are not repeated. An Emoji Description contains one
+Attestation and Surface data are not repeated. An Emoji Description contains one
 to four Unicode RGI emoji graphemes, never Lemma text, a gloss, or prose. See
 [Emoji Description Authoring](./human-owned-and-verified/emoji-description-authoring.md).
 
@@ -209,12 +212,12 @@ same ordered member indices, Family, and Kind. Only the clicked index may vary.
 The cache is scoped to Segmented Sentence, view, and policy. Each view owns a
 dedicated Dumgen instance, which caches the validated grammatical unit and its
 member orthographies. After the first complete resolution, the application
-stores the Analysis Target, Surface, Lemma, Reading, and click-local Selection
-for every member. Clicking another member makes no model call.
+stores the Analysis Target, click-independent Attestation, Surface, Lemma, and
+Reading for every member. Clicking another member makes no model call.
 
-The view marks all members of the unit, including discontinuous ones. Selection
-identity still includes `clickedSegmentIndex`, and `selectedOrthography` still
-describes only that Segment.
+The view marks all members of the unit, including discontinuous ones. The
+interaction value changes `clickedSegmentIndex`, while the cached Attestation
+and its per-member orthographies remain unchanged.
 
 ## Incremental route rollout
 
@@ -234,17 +237,17 @@ type ResolutionRouteNotImplemented = {
 ```
 
 This is not `Unresolved`: classification succeeded, but its resolver is not
-enabled. It creates no Selection and remains visible in laboratory logs. Add
+enabled. It creates no Attestation and remains visible in laboratory logs. Add
 and verify one part-of-speech route at a time.
 
 ## Resolution failure
 
 For an enabled route, `ResolvableText` promises that a click should produce an
-Analysis Target, Selection, Surface, and Lemma. A valid disabled route ends in
+Analysis Target, Attestation, Surface, and Lemma. A valid disabled route ends in
 `NotImplemented`. Known unresolvable material must be `OpaqueText` and never
 reach Target Classification.
 
 Target Classification and Grammatical Resolution still support `Unresolved`.
-`Unresolved` creates no Selection and is a diagnostic failure, not a normal
+`Unresolved` creates no Attestation and is a diagnostic failure, not a normal
 learner-flow branch. Record each case and fix the responsible Segmentation,
 Target Classification, or Grammatical Resolution prompt.

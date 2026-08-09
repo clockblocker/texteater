@@ -86,7 +86,6 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 		const modelSurface = {
 			normalizedSurface: "im",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: { historicalStatus: null },
 		};
@@ -96,7 +95,6 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 			language: "de",
 			normalizedSurface: "im",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 			lemma: canonicalLemma,
@@ -125,7 +123,6 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 		const citation = {
 			normalizedSurface: "im",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
 		};
@@ -160,6 +157,7 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard", "Standard"],
+					realizationCoverage: "Full" as const,
 					surface: citation,
 					lemma: { canonicalForm: "im", coreFeatures: {} },
 				},
@@ -193,6 +191,7 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 		);
 		expect(typoCase?.idealOutput.resolution).toMatchObject({
 			memberOrthographies: ["Typo"],
+			realizationCoverage: "Full" as const,
 			surface: { normalizedSurface: "beim" },
 			lemma: { canonicalForm: "beim" },
 		});

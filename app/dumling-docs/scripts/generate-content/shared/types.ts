@@ -1,4 +1,8 @@
-import type { EntityValue, SupportedLanguage } from "dumling/types";
+import type {
+	Attestation,
+	EntityValue,
+	SupportedLanguage,
+} from "dumling/types";
 
 export interface Frontmatter {
 	description?: string;
@@ -24,32 +28,20 @@ export type AttestationSource = {
 	sentenceMarkdown?: string;
 	sourcePath: string;
 	title?: string;
+	wrappedEntityKind?: "attestation" | "lemma" | "surface";
 };
 
-export type SelectionSentenceParts = {
+export type AttestedSentenceParts = {
 	selectedText: string;
 	sentenceText: string;
 };
 
-export type SelectionAttestationSource = {
-	classifierNotes?: string;
-	classificationMistakes?: string;
-	entity: {
-		attestedSurface: string;
-		clickedSegmentIndex: number;
-		segmentedSentenceId: string;
-		selectedOrthography: "Standard" | "Typo";
-		surface: {
-			normalizedSurface: string;
-			lemma: {
-				language: SupportedLanguage;
-			};
-		};
-		surfaceSegmentIndices: number[];
-	};
-	isVerified?: true;
+export type OccurrenceAttestationSource = Omit<
+	AttestationSource,
+	"entity" | "sentenceMarkdown"
+> & {
+	entity: Attestation<SupportedLanguage>;
 	sentenceMarkdown: string;
-	sourcePath: string;
 };
 
 export type LogbookFileKind = "classifier" | "reviewer" | "summary";

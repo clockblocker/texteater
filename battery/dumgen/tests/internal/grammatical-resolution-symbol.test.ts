@@ -66,7 +66,6 @@ describe("Lexeme/SYM exact model contract", () => {
 		const citation = {
 			normalizedSurface: "%",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
 		};

@@ -39,10 +39,10 @@ export function resolvedProverb(args: {
 							? ("Typo" as const)
 							: ("Standard" as const),
 				),
+				realizationCoverage: "Full" as const,
 				surface: {
 					normalizedSurface: normalized,
 					spelling: args.spelling ?? "Canonical",
-					realizationCoverage: "Full" as const,
 					surfaceKind: "Citation" as const,
 					surfaceFeatures: args.historical
 						? ({ historicalStatus: "Archaic" } as const)

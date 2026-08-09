@@ -53,6 +53,29 @@ const sampleText =
 	"Guten Morgen! Fritz steht sofort auf. Draußen ist es noch still, und in der Küche wartet schon der erste Kaffee.";
 const layoutStoragePrefix = "texteater.laboratory.layout.v2";
 
+type ResolvedClickResolution = Extract<
+	ClickResolutionResponse,
+	{ decision: "Resolved" }
+>;
+
+function orthographiesBySegmentIndex(
+	resolution: ResolvedClickResolution,
+): Record<number, MemberOrthography> {
+	return Object.fromEntries(
+		resolution.interaction.memberSegmentIndices.map(
+			(segmentIndex, position) => {
+				const member = resolution.entity.attestation.members[position];
+				if (!member) {
+					throw new Error(
+						"Attestation members and interaction indices are not positionally aligned.",
+					);
+				}
+				return [segmentIndex, member.orthography];
+			},
+		),
+	);
+}
+
 function loadLayout(storageKey: string, fallback: Layout): Layout {
 	if (typeof window === "undefined") return fallback;
 
@@ -467,10 +490,11 @@ function PipelineStage({
 function Segments({ state }: { state: LaboratoryState }) {
 	const segments = state.result?.sentence?.segments ?? [];
 	const target = state.resolution?.target;
-	const orthographies =
-		state.resolution?.decision === "Resolved"
-			? state.resolution.memberOrthographies
-			: undefined;
+	const resolved =
+		state.resolution?.decision === "Resolved" ? state.resolution : null;
+	const orthographies = resolved
+		? orthographiesBySegmentIndex(resolved)
+		: undefined;
 	const targetMembers = new Set(target?.memberSegmentIndices ?? []);
 	const intake = state.result?.stages.intake;
 	const segmentation = state.result?.stages.segmentation;
@@ -628,8 +652,8 @@ function SegmentToken({
 function ResolutionInspector({ state }: { state: LaboratoryState }) {
 	const { resolution } = state;
 	const diagnostics = resolution?.diagnostics ?? [];
-	const entity =
-		resolution?.decision === "Resolved" ? resolution.entity : null;
+	const resolved = resolution?.decision === "Resolved" ? resolution : null;
+	const entity = resolved?.entity ?? null;
 	const target = resolution?.target;
 
 	return (
@@ -642,10 +666,10 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
 						Resolution stages
 					</h2>
-					{entity ? (
+					{resolved ? (
 						<p className="text-sm text-muted-foreground">
-							Click #{entity.selection.clickedSegmentIndex}{" "}
-							remains its own Selection inside the shared target.
+							Click #{resolved.interaction.clickedSegmentIndex} is
+							interaction state outside the shared Attestation.
 						</p>
 					) : null}
 				</div>
@@ -719,12 +743,14 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 						</TabsContent>
 						<TabsContent value="grammatical">
 							<StagePanel
-								label="Canonical Selection + Surface + Lemma"
+								label="Attestation + Surface + Lemma"
 								value={
-									entity
+									resolved
 										? {
-												selection: entity.selection,
-												surface: entity.surface,
+												attestation:
+													resolved.entity.attestation,
+												interaction:
+													resolved.interaction,
 											}
 										: undefined
 								}
@@ -775,8 +801,13 @@ function ResolutionBadges({
 }: {
 	resolution: ClickResolutionResponse;
 }) {
-	const selection =
-		resolution.decision === "Resolved" ? resolution.entity.selection : null;
+	const resolved = resolution.decision === "Resolved" ? resolution : null;
+	const interaction = resolved?.interaction ?? null;
+	const clickedOrthography = resolved
+		? orthographiesBySegmentIndex(resolved)[
+				resolved.interaction.clickedSegmentIndex
+			]
+		: undefined;
 	return (
 		<div className="flex flex-wrap items-center justify-end gap-2">
 			<Badge
@@ -790,10 +821,10 @@ function ResolutionBadges({
 			>
 				{resolution.decision}
 			</Badge>
-			{selection ? (
+			{interaction ? (
 				<Badge variant="outline">
-					Click #{selection.clickedSegmentIndex} ·{" "}
-					{selection.selectedOrthography}
+					Click #{interaction.clickedSegmentIndex} ·{" "}
+					{clickedOrthography}
 				</Badge>
 			) : null}
 			<Badge

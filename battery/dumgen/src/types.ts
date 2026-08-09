@@ -1,8 +1,4 @@
-import type {
-	SegmentedSentenceId,
-	Selection,
-	SupportedLanguage,
-} from "dumling/types";
+import type { Attestation, SupportedLanguage } from "dumling/types";
 import type { GermanGrammaticalRoute } from "./schema/de-grammatical-resolution-inventory";
 import type {
 	GermanHighLevelFamily,
@@ -12,6 +8,10 @@ import type {
 export type EnabledSegmentationLanguage = "de";
 export type GrammaticalResolutionLanguage = "de";
 export type ReadingResolutionLanguage = "de";
+
+export type SegmentedSentenceId = string & {
+	readonly __segmentedSentenceIdBrand: unique symbol;
+};
 
 export type SegmentKind =
 	| "ResolvableText"
@@ -64,7 +64,8 @@ export type GrammaticalResult<
 			readonly decision: "Resolved";
 			readonly language: L;
 			readonly markedContext: string;
-			readonly selection: Selection<L>;
+			readonly attestation: Attestation<L>;
+			readonly interaction: GrammaticalInteraction;
 	  }
 	| {
 			readonly decision: "NotImplemented";
@@ -75,6 +76,12 @@ export type GrammaticalResult<
 			readonly decision: "Unresolved";
 			readonly language: L;
 	  };
+
+export type GrammaticalInteraction = {
+	readonly segmentedSentenceId: SegmentedSentenceId;
+	readonly clickedSegmentIndex: number;
+	readonly memberSegmentIndices: readonly [number, ...number[]];
+};
 
 export type GrammaticalInput<L extends GrammaticalResolutionLanguage> = {
 	readonly sentence: SegmentedSentence<L>;
@@ -125,6 +132,7 @@ export type GrammaticalResolution =
 	| {
 			readonly decision: "Resolved";
 			readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+			readonly realizationCoverage: "Full" | "Partial";
 			readonly surface: WithoutLemma<
 				import("dumling/types").Surface<"de">
 			>;

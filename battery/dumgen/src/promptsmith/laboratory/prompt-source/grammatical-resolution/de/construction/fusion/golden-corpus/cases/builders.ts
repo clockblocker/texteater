@@ -18,10 +18,10 @@ export function resolvedFusion(args: {
 				memberOrthographies: [
 					args.typo ? ("Typo" as const) : ("Standard" as const),
 				],
+				realizationCoverage: "Full" as const,
 				surface: {
 					normalizedSurface: normalized,
 					spelling: args.spelling ?? ("Canonical" as const),
-					realizationCoverage: "Full" as const,
 					surfaceKind: "Citation" as const,
 					surfaceFeatures: null,
 				},

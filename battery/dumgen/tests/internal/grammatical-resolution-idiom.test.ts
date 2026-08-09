@@ -183,9 +183,9 @@ describe("Phraseme/Idiom route-local corpus", () => {
 					"Standard",
 					"Standard",
 				],
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "die Flinte ins Korn geworfen",
-					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						verbForm: "Part",
@@ -212,9 +212,9 @@ describe("Phraseme/Idiom route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Partial",
 				surface: {
 					normalizedSurface: "heulte mit",
-					realizationCoverage: "Partial",
 				},
 				lemma: { canonicalForm: "mit den Wölfen heulen" },
 			},
@@ -222,8 +222,8 @@ describe("Phraseme/Idiom route-local corpus", () => {
 		const partialIds = corpus.all().ids.filter((id) => {
 			const testCase = corpus.cases[id];
 			return (
-				testCase?.idealOutput.resolution?.surface
-					.realizationCoverage === "Partial"
+				testCase?.idealOutput.resolution?.realizationCoverage ===
+				"Partial"
 			);
 		});
 		expect(partialIds).toEqual(["grammar-de-idiom-woelfe-past-partial"]);
@@ -378,7 +378,6 @@ describe("Phraseme/Idiom route-local corpus", () => {
 		const modelCitation = {
 			normalizedSurface: "mit den Wölfen heulen",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		} as const;
@@ -394,7 +393,6 @@ describe("Phraseme/Idiom route-local corpus", () => {
 		const modelInflection = {
 			normalizedSurface: "heulte mit",
 			spelling: "Canonical",
-			realizationCoverage: "Partial",
 			surfaceKind: "Inflection",
 			surfaceFeatures: { historicalStatus: null },
 			inflectionalFeatures: {
@@ -535,9 +533,9 @@ describe("Phraseme/Idiom diagnostic evaluator", () => {
 				...testCase.idealOutput,
 				resolution: {
 					...testCase.idealOutput.resolution,
+					realizationCoverage: "Full",
 					surface: {
 						...testCase.idealOutput.resolution.surface,
-						realizationCoverage: "Full",
 						inflectionalFeatures: {
 							mood: "Ind",
 							number: "Sing",

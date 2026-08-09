@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as doesPresentAuxiliary } from "../../../attestations/en/selection/Does_this_key_open_the_archive/[Does]_this_key_open_the_archive.ts";
-import { attestation as nichtavPastVerb } from "../../../attestations/he/selection/הדוח_נכתב_אתמול/הדוח_[נכתב]_אתמול.ts";
-import { attestation as ochalFutureVerb } from "../../../attestations/he/selection/מחר_אוכל_מוקדם/מחר_[אוכל]_מוקדם.ts";
+import { attestation as doesPresentAuxiliary } from "../../../attestations/en/attestation/Does_this_key_open_the_archive/[Does]_this_key_open_the_archive.ts";
+import { attestation as nichtavPastVerb } from "../../../attestations/he/attestation/הדוח_נכתב_אתמול/הדוח_[נכתב]_אתמול.ts";
+import { attestation as ochalFutureVerb } from "../../../attestations/he/attestation/מחר_אוכל_מוקדם/מחר_[אוכל]_מוקדם.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Tense feature.",

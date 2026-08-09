@@ -11,11 +11,9 @@ import type {
 	ClassificationStageResult,
 	ClickResolutionResponse,
 	EntityRepresentation,
-	MemberOrthography,
 	Reading,
 	ResolutionDiagnostic,
 	SegmentedSentence,
-	Selection,
 } from "./shared/contract";
 
 export const targetClassificationPrompt =
@@ -40,8 +38,14 @@ export function createGermanClassificationTrace(): GermanClassificationTrace {
 type ResolvedUnit = {
 	target: AnalysisTarget;
 	reading: Reading;
-	memberOrthographies: Record<number, MemberOrthography>;
-	selectionsByMember: Record<number, Selection>;
+	attestation: Extract<
+		GrammaticalResult<"de">,
+		{ decision: "Resolved" }
+	>["attestation"];
+	interaction: Extract<
+		GrammaticalResult<"de">,
+		{ decision: "Resolved" }
+	>["interaction"];
 	stages: GermanClassificationTrace;
 	diagnostics: ResolutionDiagnostic[];
 };
@@ -139,9 +143,9 @@ function targetFromResolved(
 	result: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
 ): AnalysisTarget {
 	return {
-		family: result.selection.surface.lemma.family,
-		kind: result.selection.surface.lemma.kind,
-		memberSegmentIndices: result.selection.surfaceSegmentIndices,
+		family: result.attestation.surface.lemma.family,
+		kind: result.attestation.surface.lemma.kind,
+		memberSegmentIndices: result.interaction.memberSegmentIndices,
 	} as AnalysisTarget;
 }
 
@@ -195,16 +199,9 @@ export class GermanClassificationResolver {
 		const cacheKey = this.#cacheKey(sentence.id, clickedSegmentIndex);
 		const cached = this.#unitsByMember.get(cacheKey);
 		if (cached) {
-			const selection = cached.selectionsByMember[clickedSegmentIndex];
-			if (!selection) {
-				throw new Error(
-					"The view cache has no Selection for a known target member.",
-				);
-			}
 			return this.#resolvedResponse(
 				clickedSegmentIndex,
 				cached,
-				selection,
 				"member-hit",
 				[],
 			);
@@ -222,6 +219,16 @@ export class GermanClassificationResolver {
 				...promptsFromExchanges(modelExchanges, exchangeStart),
 			);
 			throw error;
+		}
+		if (
+			grammatical.decision === "Resolved" &&
+			(grammatical.interaction.segmentedSentenceId !== sentence.id ||
+				grammatical.interaction.clickedSegmentIndex !==
+					clickedSegmentIndex)
+		) {
+			throw new Error(
+				"Dumgen returned a fresh Attestation for a different clicked member or Segmented Sentence.",
+			);
 		}
 
 		const stages = createGermanClassificationTrace();
@@ -309,9 +316,7 @@ export class GermanClassificationResolver {
 			modelExchanges,
 			exchangeStart,
 		);
-		const { memberOrthographies, selectionsByMember } =
-			await this.#resolveMemberSelections(sentence, target, grammatical);
-		const lemma = grammatical.selection.surface.lemma;
+		const lemma = grammatical.attestation.surface.lemma;
 		const lemmaKey = stableJson(lemma);
 		const existingEmojiDescriptions = [
 			...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
@@ -363,12 +368,12 @@ export class GermanClassificationResolver {
 
 		const resolvedUnit: ResolvedUnit = {
 			target,
+			attestation: grammatical.attestation,
+			interaction: grammatical.interaction,
 			reading: {
 				lemma,
 				emojiDescription: reading.emojiDescription,
 			} as Reading,
-			memberOrthographies,
-			selectionsByMember,
 			stages,
 			diagnostics,
 		};
@@ -383,7 +388,6 @@ export class GermanClassificationResolver {
 		return this.#resolvedResponse(
 			clickedSegmentIndex,
 			resolvedUnit,
-			grammatical.selection,
 			"miss",
 			prompts,
 		);
@@ -392,27 +396,31 @@ export class GermanClassificationResolver {
 	#resolvedResponse(
 		clickedSegmentIndex: number,
 		unit: ResolvedUnit,
-		selection: Selection,
 		cache: "miss" | "member-hit",
 		prompts: string[],
 	): ClickResolutionResponse {
-		if (selection.clickedSegmentIndex !== clickedSegmentIndex) {
+		if (
+			!unit.interaction.memberSegmentIndices.includes(clickedSegmentIndex)
+		) {
 			throw new Error(
-				"Dumgen returned a Selection for a different clicked member.",
+				"The resolved Attestation does not include the clicked member.",
 			);
 		}
+		const interaction = {
+			...unit.interaction,
+			clickedSegmentIndex,
+		};
 		const entity: EntityRepresentation = {
 			resolution: "dumgen",
 			model: "gpt-5-nano",
-			selection,
-			surface: selection.surface,
+			attestation: unit.attestation,
 			reading: unit.reading,
 		};
 		return {
 			decision: "Resolved",
 			target: unit.target,
+			interaction,
 			entity,
-			memberOrthographies: unit.memberOrthographies,
 			stages:
 				cache === "member-hit"
 					? cachedStages(unit.stages)
@@ -424,46 +432,6 @@ export class GermanClassificationResolver {
 				cache,
 				modelCalls: prompts.length,
 			},
-		};
-	}
-
-	async #resolveMemberSelections(
-		sentence: SegmentedSentence,
-		target: AnalysisTarget,
-		initial: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
-	): Promise<{
-		memberOrthographies: Record<number, MemberOrthography>;
-		selectionsByMember: Record<number, Selection>;
-	}> {
-		const orthographyEntries: Array<[number, MemberOrthography]> = [];
-		const selectionEntries: Array<[number, Selection]> = [];
-		for (const memberIndex of target.memberSegmentIndices) {
-			const result =
-				memberIndex === initial.selection.clickedSegmentIndex
-					? initial
-					: await this.#dumgen.resolve.grammatical("de", {
-							sentence,
-							clickedSegmentIndex: memberIndex,
-						});
-			if (
-				result.decision !== "Resolved" ||
-				result.selection.clickedSegmentIndex !== memberIndex ||
-				stableJson(result.selection.surfaceSegmentIndices) !==
-					stableJson(target.memberSegmentIndices)
-			) {
-				throw new Error(
-					"Dumgen did not preserve the resolved grammatical unit for every member.",
-				);
-			}
-			orthographyEntries.push([
-				memberIndex,
-				result.selection.selectedOrthography,
-			]);
-			selectionEntries.push([memberIndex, result.selection]);
-		}
-		return {
-			memberOrthographies: Object.fromEntries(orthographyEntries),
-			selectionsByMember: Object.fromEntries(selectionEntries),
 		};
 	}
 

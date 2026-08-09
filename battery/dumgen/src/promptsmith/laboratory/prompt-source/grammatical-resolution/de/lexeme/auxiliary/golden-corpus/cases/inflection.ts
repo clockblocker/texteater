@@ -7,7 +7,6 @@ import type { inputSchema, outputSchema } from "../../schemas";
 const citation = (normalizedSurface: string) => ({
 	normalizedSurface,
 	spelling: "Canonical" as const,
-	realizationCoverage: "Full" as const,
 	surfaceKind: "Citation" as const,
 	surfaceFeatures: null,
 });
@@ -21,7 +20,6 @@ const finite = (args: {
 }) => ({
 	normalizedSurface: args.normalizedSurface,
 	spelling: "Canonical" as const,
-	realizationCoverage: "Full" as const,
 	surfaceKind: "Inflection" as const,
 	surfaceFeatures: null,
 	inflectionalFeatures: {
@@ -42,6 +40,7 @@ const resolved = (args: {
 	decision: "Resolved" as const,
 	resolution: {
 		memberOrthographies: ["Standard" as const],
+		realizationCoverage: "Full" as const,
 		surface: args.surface,
 		lemma: {
 			canonicalForm: args.canonicalForm,
@@ -188,10 +187,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "gewesen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -218,10 +217,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "sei",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -249,10 +248,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "sein",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {

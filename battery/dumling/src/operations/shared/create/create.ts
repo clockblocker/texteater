@@ -63,6 +63,14 @@ export function buildCreateOperations<L extends SupportedLanguage>(
 				"Attestation members must be non-empty paired text and orthography evidence",
 			);
 		}
+		if (
+			input.realizationCoverage !== "Full" &&
+			input.realizationCoverage !== "Partial"
+		) {
+			throw new Error(
+				"Attestation realization coverage must be Full or Partial",
+			);
+		}
 
 		return {
 			members: input.members,

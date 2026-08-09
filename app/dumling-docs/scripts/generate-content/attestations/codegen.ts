@@ -9,8 +9,8 @@ import {
 	siteRoot,
 } from "../shared/paths";
 import type { Frontmatter } from "../shared/types";
+import type { AttestationLogbookCsvOutput } from "./attestation/logbook";
 import type { AttestationsInitialOwnership } from "./initial-ownership";
-import type { SelectionLogbookCsvOutput } from "./selection/logbook";
 
 export type AttestationOutput = {
 	body: string;
@@ -31,18 +31,24 @@ type AttestationArtifactMeta =
 			routeId: string;
 	  }
 	| {
-			kind: "selection-logbook";
+			kind: "attestation-logbook";
 	  };
 
 function artifactPath(root: string, path: string): string {
 	return relative(root, path).replaceAll("\\", "/");
 }
 
-export function lastAttestationOutputForEachRoute(
+export function assertUniqueAttestationOutputs(
 	outputs: readonly AttestationOutput[],
 ): AttestationOutput[] {
 	const byRouteId = new Map<string, AttestationOutput>();
 	for (const output of outputs) {
+		const existing = byRouteId.get(output.routeId);
+		if (existing !== undefined) {
+			throw new Error(
+				`Attestation route collision at ${output.routeId}: ${existing.sourcePath} and ${output.sourcePath}.`,
+			);
+		}
 		byRouteId.set(output.routeId, output);
 	}
 	return [...byRouteId.values()];
@@ -50,7 +56,7 @@ export function lastAttestationOutputForEachRoute(
 
 export function defineAttestationsCodegen(
 	outputs: readonly AttestationOutput[],
-	logbookOutputs: readonly SelectionLogbookCsvOutput[],
+	logbookOutputs: readonly AttestationLogbookCsvOutput[],
 	initialOwnership: AttestationsInitialOwnership = {
 		generatedEntities: [],
 		legacyGeneratedDocs: [],
@@ -149,7 +155,7 @@ export function defineAttestationsCodegen(
 					output.path,
 				)}`,
 				meta: {
-					kind: "selection-logbook",
+					kind: "attestation-logbook",
 				} satisfies AttestationArtifactMeta,
 				provenance: output.sourcePaths.map((path) => ({
 					kind: "source" as const,

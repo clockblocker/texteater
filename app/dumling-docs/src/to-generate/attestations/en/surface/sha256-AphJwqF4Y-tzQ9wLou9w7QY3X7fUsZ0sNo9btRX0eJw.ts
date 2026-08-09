@@ -4,7 +4,6 @@ export const booksSurface = {
 	language: "en",
 	normalizedSurface: "books",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	inflectionalFeatures: {
 		number: "Plur",

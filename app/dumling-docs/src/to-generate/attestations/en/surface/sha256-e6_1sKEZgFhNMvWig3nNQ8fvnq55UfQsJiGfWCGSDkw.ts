@@ -4,7 +4,6 @@ export const ranSurface = {
 	language: "en",
 	normalizedSurface: "ran",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Inflection",
 	inflectionalFeatures: {
 		mood: null,

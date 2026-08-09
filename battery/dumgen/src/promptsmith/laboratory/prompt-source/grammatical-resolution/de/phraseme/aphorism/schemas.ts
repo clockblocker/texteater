@@ -97,6 +97,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: deAphorismModelCitationSurfaceSchema,
 			lemma: deAphorismModelLemmaSchema,
 		})

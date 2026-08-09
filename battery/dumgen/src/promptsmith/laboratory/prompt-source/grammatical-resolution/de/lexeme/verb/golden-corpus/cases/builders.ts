@@ -65,10 +65,10 @@ export function citation(args: {
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: ["Standard" as const],
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},
@@ -95,11 +95,10 @@ export function inflection(args: {
 			memberOrthographies: [
 				...(args.memberOrthographies ?? ["Standard" as const]),
 			],
+			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
 			surface: {
 				normalizedSurface: args.normalizedSurface,
 				spelling: args.spelling ?? ("Canonical" as const),
-				realizationCoverage:
-					args.realizationCoverage ?? ("Full" as const),
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures: null,
 				inflectionalFeatures: args.inflectionalFeatures,

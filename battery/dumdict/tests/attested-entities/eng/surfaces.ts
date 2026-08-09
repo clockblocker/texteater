@@ -31,7 +31,6 @@ export const englishWalkPresentFiniteInflectionSurface = {
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
@@ -50,7 +49,6 @@ export const englishWalkAttestedInflectionSurface = {
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
@@ -61,7 +59,6 @@ export const englishWalkCitationSurface = {
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "They [walk] home together."
@@ -72,7 +69,6 @@ export const englishWalkCanonicalCitationSurface = {
 	lemma: englishWalkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Mark gvae [up] on it."
@@ -91,7 +87,6 @@ export const englishGiveUpPastFiniteInflectionSurface = {
 	lemma: englishGiveUpLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // Attestation: "She opened a [bank] account."
@@ -102,7 +97,6 @@ export const englishBankFinancialCitationSurface = {
 	lemma: englishBankFinancialLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The canoe scraped the river [bank]."
@@ -113,7 +107,6 @@ export const englishBankRiverCitationSurface = {
 	lemma: englishBankRiverLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [plant] needs more light."
@@ -124,7 +117,6 @@ export const englishPlantOrganismCitationSurface = {
 	lemma: englishPlantOrganismLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The auto [plant] added a night shift."
@@ -135,7 +127,6 @@ export const englishPlantFactoryCitationSurface = {
 	lemma: englishPlantFactoryLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The morning [light] filled the room."
@@ -146,7 +137,6 @@ export const englishLightIlluminationCitationSurface = {
 	lemma: englishLightIlluminationLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Pack a [light] jacket."
@@ -157,7 +147,6 @@ export const englishLightWeightCitationSurface = {
 	lemma: englishLightWeightLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "ADJ">;
 
 // Attestation: "Birds returned in [spring]."
@@ -168,7 +157,6 @@ export const englishSpringSeasonCitationSurface = {
 	lemma: englishSpringSeasonLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "The [spring] snapped inside the latch."
@@ -179,7 +167,6 @@ export const englishSpringCoilCitationSurface = {
 	lemma: englishSpringCoilLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "Use the [rake] after mowing."
@@ -190,7 +177,6 @@ export const englishRakeToolCitationSurface = {
 	lemma: englishRakeToolLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "NOUN">;
 
 // Attestation: "They [look up] every unknown word."
@@ -201,7 +187,6 @@ export const englishLookUpCitationSurface = {
 	lemma: englishLookUpLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;
 
 // Attestation: "Please [look] at the map."
@@ -212,5 +197,4 @@ export const englishLookCitationSurface = {
 	lemma: englishLookLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;

@@ -54,10 +54,10 @@ function resolved(
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: ["Standard" as const],
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface: form,
 				spelling: "Canonical" as const,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},

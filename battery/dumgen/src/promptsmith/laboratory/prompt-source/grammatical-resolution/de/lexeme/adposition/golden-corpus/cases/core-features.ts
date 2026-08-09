@@ -21,10 +21,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "mit",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -49,10 +49,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "auf",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -77,10 +77,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "entlang",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -105,10 +105,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "durch",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -131,10 +131,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "zu",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -158,10 +158,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "wegen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -187,10 +187,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "vor",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -214,10 +214,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "inkl.",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -242,10 +242,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "zuliebe",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -269,10 +269,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "seit",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -296,10 +296,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard", "Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "von an",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -325,10 +325,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "anstatt",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},

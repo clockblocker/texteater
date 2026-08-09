@@ -25,7 +25,7 @@ The route tests both directions of the fixed-fields codecs: model DTOs decode to
 canonical Dumling entities with every fixed field restored, and encoding those
 entities removes exactly the fixed fields again.
 
-Whole-unit membership follows the Selection contract rather than treating a
+Whole-unit membership follows the Attestation-member contract rather than treating a
 sentence as one opaque string. The input schema reuses the shared TARGET
 preflight and additionally requires at least two pairs. Each pair therefore
 identifies exactly one word-like lexical member before a model call.

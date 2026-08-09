@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as wartetVerb } from "../../../attestations/de/selection/Er_wartet_auf_den_Nachtbus/Er_[wartet]_auf_den_Nachtbus.ts";
-import { attestation as gebetenParticiple } from "../../../attestations/de/selection/Sie_wurde_um_Geduld_gebeten/Sie_wurde_um_Geduld_[gebeten].ts";
-import { attestation as dependOnVerb } from "../../../attestations/en/selection/We_depend_on_accurate_labels/We_[depend]_on_accurate_labels.ts";
+import { attestation as wartetVerb } from "../../../attestations/de/attestation/Er_wartet_auf_den_Nachtbus/Er_[wartet]_auf_den_Nachtbus.ts";
+import { attestation as gebetenParticiple } from "../../../attestations/de/attestation/Sie_wurde_um_Geduld_gebeten/Sie_wurde_um_Geduld_[gebeten].ts";
+import { attestation as dependOnVerb } from "../../../attestations/en/attestation/We_depend_on_accurate_labels/We_[depend]_on_accurate_labels.ts";
 
 const document = defineUniversalConceptPage({
 	description:

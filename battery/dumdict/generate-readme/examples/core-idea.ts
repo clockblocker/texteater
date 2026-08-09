@@ -54,7 +54,6 @@ const walkSurface = {
 	lemma: walkLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"en", "Inflection", "Lexeme", "VERB">;
 
 // README_BLOCK:english-walk-entry-record:start

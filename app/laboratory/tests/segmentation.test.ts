@@ -1,11 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import type { Dumgen, DumgenModelExchange, SegmentedSentence } from "dumgen";
-import { dumling } from "dumling";
 
 import { segmentForLaboratory } from "../src/segmentation";
 
 const sentence: SegmentedSentence<"de"> = {
-	id: dumling.de.create.segmentedSentenceId("segmentation-test"),
+	id: "segmentation-test" as SegmentedSentence<"de">["id"],
 	language: "de",
 	sourceText: "Die Bank",
 	segments: [

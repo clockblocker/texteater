@@ -1,12 +1,12 @@
-import { attestedSelectionRenderers } from "./renderers/attested-selection/index";
-import type { AttestedSelectionRenderer } from "./renderers/attested-selection/types";
+import { attestedAttestationRenderers } from "./renderers/attested-attestation/index";
+import type { AttestedAttestationRenderer } from "./renderers/attested-attestation/types";
 
 export type TypedDocsGenerationConfig = {
-	attestedSelectionRenderers: Record<string, AttestedSelectionRenderer>;
-	defaultAttestedSelectionRenderer: string;
+	attestedAttestationRenderers: Record<string, AttestedAttestationRenderer>;
+	defaultAttestedAttestationRenderer: string;
 };
 
 export const typedDocsGenerationConfig: TypedDocsGenerationConfig = {
-	attestedSelectionRenderers,
-	defaultAttestedSelectionRenderer: "asLinkedSentenceAndLemmaCsv",
+	attestedAttestationRenderers,
+	defaultAttestedAttestationRenderer: "asLinkedSentenceAndLemmaCsv",
 };

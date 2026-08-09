@@ -14,10 +14,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Haus",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -36,10 +36,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Bibliothek",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Dat", number: "Sing" },
@@ -59,10 +59,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Banken",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Nom", number: "Plur" },
@@ -80,10 +80,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Hund",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Acc", number: "Sing" },
@@ -101,10 +101,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Bücher",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Acc", number: "Plur" },
@@ -122,10 +122,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Kindern",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Dat", number: "Plur" },
@@ -146,10 +146,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Mannes",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Gen", number: "Sing" },
@@ -170,10 +170,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Frauen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Gen", number: "Plur" },
@@ -191,10 +191,10 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Leute",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: null, number: "Plur" },

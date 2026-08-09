@@ -62,14 +62,12 @@ describe("Lexeme/SCONJ route-local schemas and corpus", () => {
 			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
 				normalizedSurface: "dass",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
 		).toEqual({
 			normalizedSurface: "dass",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		});
@@ -77,7 +75,6 @@ describe("Lexeme/SCONJ route-local schemas and corpus", () => {
 			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
 				normalizedSurface: "dass",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {},

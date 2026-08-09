@@ -3,10 +3,10 @@ import { dirname, join } from "node:path";
 import type { EntityValue, SupportedLanguage } from "dumling/types";
 import { listTypeScriptFiles, removeEmptyDirectories } from "../../shared/fs";
 import { sourceAttestationsDir } from "../../shared/paths";
+import { attestationSemanticSourcePath } from "../attestation/semantic-source-path";
 import { attestationSlugForEntity } from "../entity/attestation-slug";
-import { selectionSemanticSourcePath } from "../selection/semantic-source-path";
 import { expectedEntityKindForPath } from "../validate/expected-entity-kind-for-path";
-import { validateSelectionAttestation } from "../validate/validate-selection-attestation";
+import { validateOccurrenceAttestation } from "../validate/validate-occurrence-attestation";
 import { loadAttestationSource } from "./load-attestation-source";
 
 function applyRenamePlan(renamePlan: Map<string, string>) {
@@ -37,20 +37,20 @@ function identityAddressedSourcePath(sourcePath: string, entity: EntityValue) {
 }
 
 export async function renameAttestationSources(): Promise<string[]> {
-	const selectionFiles = listTypeScriptFiles(sourceAttestationsDir).filter(
-		(sourcePath) => expectedEntityKindForPath(sourcePath) === "Selection",
+	const attestationFiles = listTypeScriptFiles(sourceAttestationsDir).filter(
+		(sourcePath) => expectedEntityKindForPath(sourcePath) === "Attestation",
 	);
 	const renamePlan = new Map<string, string>();
 	const claimedTargets = new Map<string, string>();
 
-	for (const sourcePath of selectionFiles) {
+	for (const sourcePath of attestationFiles) {
 		const source = await loadAttestationSource(sourcePath);
-		validateSelectionAttestation(source);
-		const targetPath = selectionSemanticSourcePath(source);
+		validateOccurrenceAttestation(source);
+		const targetPath = attestationSemanticSourcePath(source);
 		const priorSource = claimedTargets.get(targetPath);
 		if (priorSource !== undefined && priorSource !== sourcePath) {
 			throw new Error(
-				`Selection filename collision: ${priorSource} and ${sourcePath} both normalize to ${targetPath}.`,
+				`Attestation filename collision: ${priorSource} and ${sourcePath} both normalize to ${targetPath}.`,
 			);
 		}
 		claimedTargets.set(targetPath, sourcePath);
@@ -63,7 +63,7 @@ export async function renameAttestationSources(): Promise<string[]> {
 
 	for (const language of ["de", "en", "he"] satisfies SupportedLanguage[]) {
 		removeEmptyDirectories(
-			`${sourceAttestationsDir}/${language}/selection`,
+			`${sourceAttestationsDir}/${language}/attestation`,
 		);
 	}
 
@@ -72,7 +72,7 @@ export async function renameAttestationSources(): Promise<string[]> {
 	);
 	const identityRenamePlan = new Map<string, string>();
 	for (const sourcePath of sourcePaths) {
-		if (expectedEntityKindForPath(sourcePath) === "Selection") continue;
+		if (expectedEntityKindForPath(sourcePath) === "Attestation") continue;
 		const source = await loadAttestationSource(sourcePath);
 		const targetPath = identityAddressedSourcePath(
 			sourcePath,

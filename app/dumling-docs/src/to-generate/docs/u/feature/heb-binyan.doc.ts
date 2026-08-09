@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as nifalVerb } from "../../../attestations/he/selection/הדוח_נכתב_אתמול/הדוח_[נכתב]_אתמול.ts";
-import { attestation as hitpaelVerb } from "../../../attestations/he/selection/הוא_התכתב_עם_המרצה/הוא_[התכתב]_עם_המרצה.ts";
-import { attestation as paalVerb } from "../../../attestations/he/selection/הוא_כתב_מהר/הוא_[כתב]_מהר.ts";
+import { attestation as nifalVerb } from "../../../attestations/he/attestation/הדוח_נכתב_אתמול/הדוח_[נכתב]_אתמול.ts";
+import { attestation as hitpaelVerb } from "../../../attestations/he/attestation/הוא_התכתב_עם_המרצה/הוא_[התכתב]_עם_המרצה.ts";
+import { attestation as paalVerb } from "../../../attestations/he/attestation/הוא_כתב_מהר/הוא_[כתב]_מהר.ts";
 
 const document = defineUniversalConceptPage({
 	description:

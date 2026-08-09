@@ -1,4 +1,4 @@
-import type { AttestedSelection } from "dumling/types";
+import type { AttestedAttestation } from "../../../../src/lib/docs/document-shapes.ts";
 import type { TypedDocsGenerationConfig } from "./config";
 import type { RuleBlock, RuleDocument } from "./load-typed-doc-source";
 
@@ -16,17 +16,17 @@ export type RenderRuleDocumentOptions = {
 };
 
 function renderRuleExample(
-	example: AttestedSelection,
+	example: AttestedAttestation,
 	config: TypedDocsGenerationConfig,
 	sourceTitle: string,
 ): string {
 	const renderer =
-		config.attestedSelectionRenderers[
-			config.defaultAttestedSelectionRenderer
+		config.attestedAttestationRenderers[
+			config.defaultAttestedAttestationRenderer
 		];
 	if (renderer === undefined) {
 		throw new Error(
-			`${sourceTitle} references unknown attested-selection renderer "${config.defaultAttestedSelectionRenderer}".`,
+			`${sourceTitle} references unknown attested-attestation renderer "${config.defaultAttestedAttestationRenderer}".`,
 		);
 	}
 

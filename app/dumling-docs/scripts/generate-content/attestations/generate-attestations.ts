@@ -3,44 +3,44 @@ import { runCodegen } from "codegen";
 import { getLanguageApi } from "dumling";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
 import { generatedEntitiesDir } from "../shared/paths";
-import type { SelectionAttestationSource, SourcePage } from "../shared/types";
+import type { OccurrenceAttestationSource, SourcePage } from "../shared/types";
+import {
+	attestationLogbookCsvOutputs,
+	prepareAttestationLogbooks,
+} from "./attestation/logbook";
 import {
 	type AttestationOutput,
+	assertUniqueAttestationOutputs,
 	defineAttestationsCodegen,
-	lastAttestationOutputForEachRoute,
 } from "./codegen";
-import { attestationSlugForEntity } from "./entity/attestation-slug";
+import { attestationSlugForSource } from "./entity/attestation-slug";
 import { entityKindFor, lemmaForEntity } from "./entity/helpers";
 import { discoverAttestationsInitialOwnership } from "./initial-ownership";
 import { generatedFrontmatterForAttestation } from "./render/generated-frontmatter";
 import { renderAttestationBody } from "./render/render-attestation-body";
-import {
-	prepareSelectionLogbooks,
-	selectionLogbookCsvOutputs,
-} from "./selection/logbook";
 import { loadAttestationSource } from "./source/load-attestation-source";
 import { renameAttestationSources } from "./source/rename-attestation-sources";
 import { validateAttestationPath } from "./validate/validate-attestation-path";
 import {
-	isSelectionAttestationSource,
-	validateSelectionAttestation,
-} from "./validate/validate-selection-attestation";
+	isOccurrenceAttestationSource,
+	validateOccurrenceAttestation,
+} from "./validate/validate-occurrence-attestation";
 
 export async function generateAttestations(): Promise<SourcePage[]> {
 	const pages: SourcePage[] = [];
-	const selectionSources: SelectionAttestationSource[] = [];
+	const attestationSources: OccurrenceAttestationSource[] = [];
 	const outputs: AttestationOutput[] = [];
 	const initialOwnership = discoverAttestationsInitialOwnership();
 
-	prepareSelectionLogbooks();
+	prepareAttestationLogbooks();
 	const sourcePaths = await renameAttestationSources();
 
 	for (const sourcePath of sourcePaths) {
 		const source = await loadAttestationSource(sourcePath);
-		validateSelectionAttestation(source);
+		validateOccurrenceAttestation(source);
 		const language = lemmaForEntity(source.entity).language;
 		const languageApi = getLanguageApi(language);
-		const attestationSlug = attestationSlugForEntity(source.entity);
+		const attestationSlug = attestationSlugForSource(source);
 		const entityKind =
 			entityKindFor(source.entity) === "Lemma"
 				? "lemma"
@@ -51,7 +51,9 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 		const frontmatter = generatedFrontmatterForAttestation(source, routeId);
 		const body = renderAttestationBody(
 			source,
-			String(languageApi.id.encode.asCsv(source.entity)),
+			entityKind === "attestation"
+				? undefined
+				: String(languageApi.id.encode.asCsv(source.entity as never)),
 		);
 
 		outputs.push({
@@ -68,15 +70,15 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 			sourcePath,
 		});
 		pages.push({ frontmatter, routeId, sourcePath });
-		if (isSelectionAttestationSource(source)) {
-			selectionSources.push(source);
+		if (isOccurrenceAttestationSource(source)) {
+			attestationSources.push(source);
 		}
 	}
 
 	await runCodegen(
 		defineAttestationsCodegen(
-			lastAttestationOutputForEachRoute(outputs),
-			selectionLogbookCsvOutputs(selectionSources),
+			assertUniqueAttestationOutputs(outputs),
+			attestationLogbookCsvOutputs(attestationSources),
 			initialOwnership,
 		),
 		{ mode: "write" },

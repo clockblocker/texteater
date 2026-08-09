@@ -40,10 +40,10 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Bank",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: { case: "Dat", number: "Sing" },

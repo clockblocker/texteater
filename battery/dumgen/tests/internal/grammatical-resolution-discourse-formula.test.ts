@@ -73,7 +73,6 @@ describe("Phraseme/DiscourseFormula exact model contract", () => {
 		const citation = {
 			normalizedSurface: "auf Wiedersehen",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
 		};
@@ -90,6 +89,7 @@ describe("Phraseme/DiscourseFormula exact model contract", () => {
 			decision: "Resolved" as const,
 			resolution: {
 				memberOrthographies: ["Standard" as const],
+				realizationCoverage: "Full" as const,
 				surface: citation,
 				lemma,
 			},
@@ -314,6 +314,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Typo"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "herzlich willkommen" },
 				lemma: {
 					canonicalForm: "herzlich willkommen",

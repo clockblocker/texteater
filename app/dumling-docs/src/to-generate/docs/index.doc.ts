@@ -17,13 +17,12 @@ For a learner, the useful answer is not only that [give] is a verb token.
 
 dumling classifies it as:
 
-- a **Selection** whose clicked Segment is _"give"_ and whose Surface occurrence
-  also includes _"up"_
+- an **Attestation** with source-ordered members _"give"_ and _"up"_
 - the normalized **Surface** _"give up"_, which points to
 - the **Lemma** _"give up"_: a phrasal English \`VERB\`
 
-That is the core job of Dumling: resolve one learner click through its
-contextual grammatical form to a normalized grammatical identity.
+That is the core job of Dumling: preserve occurrence evidence, connect it to a
+normalized contextual form, and reach a normalized grammatical identity.
 
 ## Why It Exists
 
@@ -43,11 +42,10 @@ This also matters for phrasemes:
     Here the click resolves through the multi-segment Surface _"walk in the
     park"_ to the idiomatic Phraseme Lemma _"walk in the park"_.
 
-The clicked Segment is not forced to be the whole Surface occurrence. A click
-on one Segment can record all participating Segment indices and still resolve
-to the larger Surface and Lemma.
+An Attestation is not forced to be contiguous. Its ordered members can preserve
+discontinuous evidence while still resolving to the larger Surface and Lemma.
 
-That alone does not make the Surface partial. \`realizationCoverage: "Partial"\`
+That alone does not make the Attestation partial. \`realizationCoverage: "Partial"\`
 is for an attested form that omits part of the Lemma, such as _"heulte mit"_
 for _"mit den Wölfen heulen"_.
 
@@ -57,14 +55,15 @@ Dumling focuses on lexical classification for learning tools:
 
 - **Lemma**: normalized grammatical identity, such as _"walk"_, _"give up"_, or _"walk in the park"_
 - **Surface**: the normalized contextual form, such as _"gave up"_
-- **Selection**: sentence-local click evidence, including the clicked Segment and every Segment participating in the Surface occurrence
+- **Attestation**: click-independent occurrence evidence with one or more exact, source-ordered members
 - Lemma family: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
-- Selection orthography: whether the clicked Segment is standard text or a typo
-- Surface spelling and realization coverage: licensed variants and genuinely partial realizations
+- member orthography: whether each attested member is standard text or a typo
+- Surface spelling and Attestation realization coverage: licensed variants and genuinely partial realizations
 - learner-relevant Surface features, such as archaic status
 - language-specific lexical inventories built on a shared cross-language model
 
-The framework is implemented as a TypeScript and Zod package so apps can validate, serialize, search, and round-trip these objects through identities.
+The framework is implemented as a TypeScript and Zod package so apps can validate
+and inspect these objects. Lemmas and Surfaces have identities; Attestations do not.
 
 ## What It Omits
 
@@ -72,8 +71,8 @@ Dumling intentionally does not try to be a full grammar model.
 
 It does not model syntactic dependency relations, phrase structure, or sentence-level grammar. It also does not try to explain every grammatical relation between words in a sentence.
 
-The scope is narrower: resolve a learner click to a Surface and its Lemma, then
-describe that grammatical chain in a stable, language-aware shape. A learner's
+The scope is narrower: connect attested evidence to a Surface and its Lemma,
+then describe that grammatical chain in a stable, language-aware shape. A learner's
 semantic Reading—one Lemma plus one emoji description—belongs outside Dumling.
 
 ## Runtime Scope

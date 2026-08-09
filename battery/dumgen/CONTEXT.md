@@ -190,7 +190,7 @@ indexed.
 A domain error produced when a click on `ResolvableText` fails to yield exactly
 one defensible result from the Click Resolution Chain.
 
-`Unresolved` creates no Selection and indicates that the segmentation or
+`Unresolved` creates no Attestation and indicates that the segmentation or
 classification prompts violate the `ResolvableText` promise. Material known to
 be unresolvable is handled during segmentation as `OpaqueText`; `Unresolvable`
 is not a downstream classification outcome.
@@ -202,7 +202,7 @@ enabled yet.
 
 It is represented as `decision: "NotImplemented"` together with the selected
 correlated route. It stops the chain before another model call, creates no
-Selection, and remains distinct from `Unresolved`: the classification is valid,
+Attestation, and remains distinct from `Unresolved`: the classification is valid,
 but implementation is intentionally incremental.
 
 ### Analysis Target
@@ -211,7 +211,7 @@ as one unit by a Target Classification policy and names the Lemma Family and
 Kind to which that unit is routed.
 
 An Analysis Target is not exposed by the public grammatical operation. It is
-not a Selection, a persisted linguistic entity, part of Dumling, or a raw model
+not an Attestation, a persisted linguistic entity, part of Dumling, or a raw model
 response. Laboratory instrumentation may reconstruct it from prompt exchanges
 for diagnostics.
 
@@ -221,42 +221,32 @@ The target level is policy-owned. For a German support-verb Collocation such as
 the verb alone resolves the ordinary `Lexeme/VERB` Lemma `treffen`. Its
 contextual support use does not create a separate `Light` Lemma or Core Feature.
 
-### Selection
-A successfully resolved, attestation-local node identified by one
-`(SegmentedSentenceId, clickedSegmentIndex)` pair.
+### Attestation and interaction
+A successful grammatical resolution returns a click-independent Attestation
+plus Dumgen-owned interaction context.
 
-A Selection contains:
-- the clicked `ResolvableText` index;
-- ordered, unique `surfaceSegmentIndices` that reference only `ResolvableText`
-  and include the clicked index;
-- `attestedSurface`, a stored verbatim projection constructed in application
-  code from the participating Segments;
-- `selectedOrthography`, explicitly `Standard` or `Typo`, describing only the
-  clicked Segment;
-- one resolved global Surface.
+An Attestation contains a non-empty ordered `members` list, occurrence-level
+`realizationCoverage`, and one resolved global Surface. Each member pairs the
+exact participating Segment text as `attested` with its `Standard | Typo`
+orthography. The public interaction value contains the Segmented Sentence ID,
+clicked Segment index, and non-empty ordered member Segment indices.
 
-The clicked Segment text is derived from the immutable Segmented Sentence and
-clicked index and is not stored again. A resolution request, failed attempt, or
-prompt candidate is not a Selection. The canonical Selection requires Segment
-indices, although experiments may compare whether a model should emit those
-indices directly or an adapter should resolve another output representation to
-them.
+`interaction.memberSegmentIndices` aligns one-to-one and positionally with
+`attestation.members`; every index points to the Segment whose exact text is in
+the corresponding member. The indices are ordered, unique, reference only
+`ResolvableText`, and include the clicked index. Marked context remains an
+outer Dumgen result field.
 
-Clicks on different member Segments of one resolved unit create distinct
-Selections because their clicked indices differ. Under the same Target
-Classification policy, those clicks must nevertheless resolve to the same
-ordered Surface membership and grammatical route. Their clicked-only
-`selectedOrthography` values may differ.
+Clicks on different member Segments of one resolved unit reuse the same
+Attestation value. Only the interaction's clicked index changes.
 
 ### Surface
-A reusable global grammatical form shared by normalized-equivalent Selections.
+A reusable global grammatical form shared by normalized-equivalent Attestations.
 
 A Surface contains:
 - `normalizedSurface`, which normalizes attested material without inserting,
   reordering, or lemmatizing lexical constituents;
 - `spelling`, explicitly `Canonical` or `Variant`;
-- `realizationCoverage`, explicitly `Full` or `Partial`, describing how the
-  Surface realizes its Lemma;
 - its Surface kind and applicable inflectional features;
 - one Lemma.
 
@@ -265,15 +255,17 @@ inflectional features, and Lemma identity. Identically spelled noun
 and verb forms, and overlapping inflections with different grammatical
 analyses, are different Surfaces.
 
-Typos stop at Selection and are repaired in `normalizedSurface`. Licensed
+Typos remain member evidence on Attestation and are repaired in
+`normalizedSurface`. Licensed
 variants survive normalization and are marked on Surface. For example,
-`armuor` may be a Typo Selection of the Variant Surface `armour` for a Lexeme
+`armuor` may be a Typo Attestation member of the Variant Surface `armour` for a Lexeme
 whose Canonical Form is `armor`.
 
-`realizationCoverage: Partial` does not license Surface normalization to invent
+Attestation `realizationCoverage: Partial` does not license Surface normalization to invent
 missing material. For `heulte mit` resolving to the idiom
-`mit den Wölfen heulen`, both `attestedSurface` and `normalizedSurface` remain
-`heulte mit`; the complete Canonical Form belongs to the Lemma.
+`mit den Wölfen heulen`, Attestation members preserve `heulte` and `mit`, while
+`normalizedSurface` remains `heulte mit`; the complete Canonical Form belongs
+to the Lemma.
 
 ### Lemma
 The normalized grammatical identity behind a Surface.
@@ -332,8 +324,9 @@ learner can click.
 The post-click chain.
 
 It begins with a Segmented Sentence and one clicked `ResolvableText` index. It
-resolves one valid Selection containing the complete contextual Surface
-membership, then resolves the global Surface and its Lemma, and finally either
+resolves one valid Attestation containing the complete contextual Surface
+membership plus the Dumgen interaction projection, then resolves the global
+Surface and its Lemma, and finally either
 selects an existing learner-owned Reading or drafts a new one.
 
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
@@ -386,11 +379,11 @@ not claim production readiness.
 ## Relationships
 
 - A **Segmented Sentence** contains one or more indexed **Segments**.
-- A **Selection** belongs to exactly one **Segmented Sentence** and clicked
-  `ResolvableText` Segment.
-- A **Selection** resolves one or more `ResolvableText` Segments to exactly one
-  **Surface**.
-- Many noisy **Selections** may resolve to one global **Surface**.
+- A Dumgen **interaction** belongs to exactly one **Segmented Sentence** and
+  clicked `ResolvableText` Segment.
+- An **Attestation** contains one or more ordered member values aligned with
+  the interaction's `ResolvableText` Segment indices.
+- Many noisy **Attestations** may resolve to one global **Surface**.
 - A **Surface** realizes exactly one **Lemma** under one grammatical
   analysis.
 - A **Lexeme** is a word-like **Lemma**.
@@ -400,9 +393,9 @@ not claim production readiness.
 ## Example dialogue
 
 > **Dev:** "Does clicking `gvae` create a misspelled Surface?"
-> **Domain expert:** "No. It creates a Typo Selection whose attested Surface is
-> `gvae up`; that Selection resolves to the global normalized Surface `gave up`
-> and Lexeme Lemma whose Canonical Form is `give up`."
+> **Domain expert:** "No. It creates an Attestation with a Typo member `gvae`
+> and Standard member `up`; that Attestation resolves to the global normalized
+> Surface `gave up` and Lexeme Lemma whose Canonical Form is `give up`."
 
 ## Flagged ambiguities
 

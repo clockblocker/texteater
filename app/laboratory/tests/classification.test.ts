@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { type AiSdk, buildDumgen, type DumgenModelExchange } from "dumgen";
-import { dumling } from "dumling";
+import {
+	type AiSdk,
+	buildDumgen,
+	type Dumgen,
+	type DumgenModelExchange,
+} from "dumgen";
 
 import {
 	GermanClassificationResolver,
@@ -18,7 +22,7 @@ function sentence(
 ): SegmentedSentence {
 	let offset = 0;
 	return {
-		id: dumling.de.create.segmentedSentenceId(id),
+		id: id as SegmentedSentence["id"],
 		language: "de",
 		sourceText: parts.map(({ text }) => text).join(""),
 		segments: parts.map((part, index) => {
@@ -48,10 +52,10 @@ const grammarOutput = {
 	decision: "Resolved",
 	resolution: {
 		memberOrthographies: ["Typo", "Standard"],
+		realizationCoverage: "Full",
 		surface: {
 			normalizedSurface: "Bank Bank",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Inflection",
 			surfaceFeatures: null,
 			inflectionalFeatures: { case: "Nom", number: "Sing" },
@@ -123,13 +127,19 @@ describe("German classification through the Dumgen module", () => {
 			family: "Lexeme",
 			kind: "NOUN",
 		});
-		expect(result.entity.selection).toMatchObject({
-			clickedSegmentIndex: 0,
-			surfaceSegmentIndices: [0, 2],
-			attestedSurface: "Bnak Bank",
-			selectedOrthography: "Typo",
+		expect(result.entity.attestation).toMatchObject({
+			members: [
+				{ attested: "Bnak", orthography: "Typo" },
+				{ attested: "Bank", orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
 		});
-		expect(result.entity.surface.lemma).toMatchObject({
+		expect(result.interaction).toEqual({
+			segmentedSentenceId: "sentence-1",
+			clickedSegmentIndex: 0,
+			memberSegmentIndices: [0, 2],
+		});
+		expect(result.entity.attestation.surface.lemma).toMatchObject({
 			language: "de",
 			family: "Lexeme",
 			kind: "NOUN",
@@ -138,10 +148,6 @@ describe("German classification through the Dumgen module", () => {
 		expect(result.entity.reading).toMatchObject({
 			emojiDescription: "🏦",
 			lemma: { canonicalForm: "Bank" },
-		});
-		expect(result.memberOrthographies).toEqual({
-			0: "Typo",
-			2: "Standard",
 		});
 		expect(result.stages.target).toMatchObject({
 			prompt: targetClassificationPrompt,
@@ -170,7 +176,7 @@ describe("German classification through the Dumgen module", () => {
 		expect(testHarness.modelExchanges).toHaveLength(9);
 	});
 
-	test("indexes a full resolution by every member and rebuilds click-local Selection without model calls", async () => {
+	test("indexes one click-independent Attestation by every member without model calls", async () => {
 		const testHarness = harness([
 			targetOutput,
 			grammarOutput,
@@ -201,12 +207,48 @@ describe("German classification through the Dumgen module", () => {
 		});
 		expect(testHarness.modelExchanges).toEqual([]);
 		expect(second.stages.target?.traceOrigin).toBe("cached");
-		expect(second.entity.selection).toMatchObject({
+		expect(second.interaction).toEqual({
+			segmentedSentenceId: "sentence-1",
 			clickedSegmentIndex: 2,
-			selectedOrthography: "Standard",
-			surfaceSegmentIndices: [0, 2],
+			memberSegmentIndices: [0, 2],
 		});
-		expect(second.entity.surface).toEqual(first.entity.surface);
+		expect(second.entity.attestation).toEqual(first.entity.attestation);
+	});
+
+	test("rejects fresh Dumgen results correlated to a different click", async () => {
+		const testHarness = harness([targetOutput, grammarOutput]);
+		const resolver = new GermanClassificationResolver(() => {
+			const dumgen = testHarness.createDumgen();
+			return {
+				...dumgen,
+				resolve: {
+					...dumgen.resolve,
+					async grammatical(language, input) {
+						const result = await dumgen.resolve.grammatical(
+							language,
+							input,
+						);
+						return result.decision === "Resolved"
+							? {
+									...result,
+									interaction: {
+										...result.interaction,
+										clickedSegmentIndex: 2,
+									},
+								}
+							: result;
+					},
+				},
+			} as Dumgen;
+		});
+
+		await expect(
+			resolver.resolve(
+				multiMemberSentence,
+				0,
+				testHarness.modelExchanges,
+			),
+		).rejects.toThrow("different clicked member");
 	});
 
 	test("surfaces Target and Grammatical Unresolved as prompt diagnostics", async () => {
@@ -247,8 +289,8 @@ describe("German classification through the Dumgen module", () => {
 				decision: "Resolved",
 				target: {
 					additionalMemberSegmentIndices: [2],
-					family: "Phraseme",
-					kind: "DiscourseFormula",
+					family: "Lexeme",
+					kind: "PUNCT",
 				},
 			},
 		]);
@@ -264,8 +306,8 @@ describe("German classification through the Dumgen module", () => {
 			decision: "NotImplemented",
 			stage: "GrammaticalResolution",
 			language: "de",
-			family: "Phraseme",
-			kind: "DiscourseFormula",
+			family: "Lexeme",
+			kind: "PUNCT",
 			target: { memberSegmentIndices: [0, 2] },
 			diagnostics: [
 				{
@@ -344,7 +386,7 @@ describe("German classification through the Dumgen module", () => {
 		const second = await testHarness.resolver.resolve(
 			{
 				...multiMemberSentence,
-				id: dumling.de.create.segmentedSentenceId("sentence-2"),
+				id: "sentence-2" as SegmentedSentence["id"],
 			},
 			0,
 			testHarness.modelExchanges,

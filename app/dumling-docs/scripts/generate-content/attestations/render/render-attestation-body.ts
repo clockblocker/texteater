@@ -1,5 +1,5 @@
 import type { AttestationSource } from "../../shared/types";
-import { isSelection, isSurface } from "../entity/guards";
+import { isAttestation, isSurface } from "../entity/guards";
 import {
 	camelCaseIdentifier,
 	entityKindFor,
@@ -12,19 +12,22 @@ import { typeExpressionForEntity } from "./type-expression";
 
 export function renderAttestationBody(
 	source: AttestationSource,
-	identityCsv: string,
+	identityCsv?: string,
 ): string {
 	const entity = source.entity;
 	const kind = entityKindFor(entity);
 	const lemma = lemmaForEntity(entity);
 	const surface =
-		isSelection(entity) || isSurface(entity)
+		isAttestation(entity) || isSurface(entity)
 			? surfaceForEntity(entity)
 			: undefined;
 	const displayName = surface?.normalizedSurface ?? lemma.canonicalForm;
 	const variableBase = camelCaseIdentifier(displayName, "attested");
 	const entityVariable = `${variableBase}${kind}`;
-	const identityVariable = `${entityVariable}IdentityCsv`;
+	const identityBlock =
+		identityCsv === undefined
+			? ""
+			: `\nexport const ${entityVariable}IdentityCsv =\n\t${JSON.stringify(identityCsv)} as const;\n`;
 	const importType = typeExpressionForEntity(entity).split("<", 1)[0];
 	const title = source.title ?? displayName;
 	const sentenceBlock =
@@ -39,8 +42,7 @@ import type { ${importType} } from "dumling/types";
 
 export const ${entityVariable} = ${renderTsValue(entity)} satisfies ${typeExpressionForEntity(entity)};
 
-export const ${identityVariable} =
-\t${JSON.stringify(identityCsv)} as const;
+${identityBlock}
 \`\`\`
 `;
 }

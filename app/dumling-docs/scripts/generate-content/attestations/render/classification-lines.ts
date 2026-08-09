@@ -1,13 +1,17 @@
 import type { EntityValue } from "dumling/types";
-import { isSelection, isSurface } from "../entity/guards";
+import { isAttestation, isSurface } from "../entity/guards";
 import { lemmaForEntity } from "../entity/helpers";
 
 export function classificationLinesForEntity(entity: EntityValue): string[] {
 	const lemma = lemmaForEntity(entity);
-	if (isSelection(entity)) {
+	if (isAttestation(entity)) {
 		return [
-			`- \`${entity.selectedOrthography}\` **Selection**`,
-			`- \`${entity.surface.realizationCoverage}\` \`${entity.surface.spelling}\` **Surface**`,
+			`- \`${entity.realizationCoverage}\` **Attestation**`,
+			...entity.members.map(
+				(member) =>
+					`- \`${member.orthography}\` member _"${member.attested}"_`,
+			),
+			`- \`${entity.surface.spelling}\` **Surface**`,
 			`- \`${lemma.kind}\` **${lemma.family}**`,
 			`- **Lemma** _"${lemma.canonicalForm}"_`,
 		];

@@ -67,8 +67,8 @@ export function evaluateAdpositionGrammaticalResolution(args: {
 			(actualSurface?.spelling ?? null) ===
 			(expectedSurface?.spelling ?? null),
 		realizationCoveragePass:
-			(actualSurface?.realizationCoverage ?? null) ===
-			(expectedSurface?.realizationCoverage ?? null),
+			(actualResolution?.realizationCoverage ?? null) ===
+			(expectedResolution?.realizationCoverage ?? null),
 		surfaceFeaturesPass: equal(
 			canonicalSurfaceFeatures(actualSurface),
 			canonicalSurfaceFeatures(expectedSurface),

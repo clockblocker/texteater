@@ -32,10 +32,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "der",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -66,10 +66,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "meinem",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -102,10 +102,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "eurem",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -138,10 +138,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "irgendein",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -163,10 +163,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "jener",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -193,10 +193,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "einen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -226,10 +226,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "diesem",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -254,10 +254,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "welchen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -280,10 +280,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "kein",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -306,10 +306,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "alle",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -332,10 +332,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "beide",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -362,10 +362,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "deinen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -397,10 +397,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "unserem",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -431,10 +431,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "seinen",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {
@@ -467,10 +467,10 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "Ihrem",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
 						inflectionalFeatures: {

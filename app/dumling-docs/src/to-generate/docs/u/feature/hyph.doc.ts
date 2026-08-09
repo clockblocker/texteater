@@ -1,6 +1,6 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as unPrefixSelection } from "../../../attestations/en/selection/That_answer_was_unbelievable/That_answer_was_[un]believable.ts";
-import { attestation as twentyFirstHyphenatedOrdinal } from "../../../attestations/en/selection/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
+import { attestation as unPrefixAttestation } from "../../../attestations/en/attestation/That_answer_was_unbelievable/That_answer_was_[un]believable.ts";
+import { attestation as twentyFirstHyphenatedOrdinal } from "../../../attestations/en/attestation/The_twentyfirst_attempt_finally_passed/The_[twentyfirst]_attempt_finally_passed.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Hyph feature.",
@@ -20,7 +20,7 @@ It is a [UD-compliant](https://universaldependencies.org/u/feat/Hyph.html) featu
 
 If \`Lemma.coreFeatures.hyph\` is absent or \`undefined\`, the Lemma is treated as not marked for hyphenation.
 `,
-	examples: [twentyFirstHyphenatedOrdinal, unPrefixSelection],
+	examples: [twentyFirstHyphenatedOrdinal, unPrefixAttestation],
 	subsections: [
 		{
 			heading: "Use",
@@ -31,10 +31,10 @@ This is a Lemma-level orthographic property, not an inflectional one. Use it for
 
 Do not use \`hyph\` merely because noisy input omits or adds a hyphen relative
 to the Lemma. A typo on the clicked Segment belongs to
-[\`SelectedOrthography\`](/u/feature/selection/selected-orthography/); licensed
+[\`member.orthography\`](/u/feature/attestation/member-orthography/); licensed
 variation belongs to [\`Surface.spelling\`](/u/feature/surface/spelling/), and
 partial realization belongs to
-[\`Surface.realizationCoverage\`](/u/feature/surface/realization-coverage/).
+[\`Attestation.realizationCoverage\`](/u/feature/attestation/realization-coverage/).
 \`hyph\` records the Lemma's canonical grammatical form itself.
 `,
 		},

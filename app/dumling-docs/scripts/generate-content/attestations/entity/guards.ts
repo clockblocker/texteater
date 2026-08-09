@@ -1,7 +1,7 @@
 import type {
+	Attestation,
 	EntityValue,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 } from "dumling/types";
@@ -33,29 +33,32 @@ export function isSurface(value: unknown): value is Surface<SupportedLanguage> {
 		isSupportedLanguage(value.language) &&
 		typeof value.normalizedSurface === "string" &&
 		(value.spelling === "Canonical" || value.spelling === "Variant") &&
-		(value.realizationCoverage === "Full" ||
-			value.realizationCoverage === "Partial") &&
 		typeof value.surfaceKind === "string" &&
 		isLemma(value.lemma)
 	);
 }
 
-export function isSelection(
+export function isAttestation(
 	value: unknown,
-): value is Selection<SupportedLanguage> {
+): value is Attestation<SupportedLanguage> {
 	return (
 		isRecord(value) &&
-		typeof value.segmentedSentenceId === "string" &&
-		Number.isInteger(value.clickedSegmentIndex) &&
-		Array.isArray(value.surfaceSegmentIndices) &&
-		value.surfaceSegmentIndices.every(Number.isInteger) &&
-		typeof value.attestedSurface === "string" &&
-		(value.selectedOrthography === "Standard" ||
-			value.selectedOrthography === "Typo") &&
+		Array.isArray(value.members) &&
+		value.members.length > 0 &&
+		value.members.every(
+			(member) =>
+				isRecord(member) &&
+				typeof member.attested === "string" &&
+				member.attested.length > 0 &&
+				(member.orthography === "Standard" ||
+					member.orthography === "Typo"),
+		) &&
+		(value.realizationCoverage === "Full" ||
+			value.realizationCoverage === "Partial") &&
 		isSurface(value.surface)
 	);
 }
 
 export function isEntityValue(value: unknown): value is EntityValue {
-	return isSelection(value) || isSurface(value) || isLemma(value);
+	return isAttestation(value) || isSurface(value) || isLemma(value);
 }

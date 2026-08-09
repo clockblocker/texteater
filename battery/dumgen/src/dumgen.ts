@@ -22,6 +22,7 @@ export {
 export type {
 	EnabledSegmentationLanguage,
 	GrammaticalInput,
+	GrammaticalInteraction,
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
 	GrammaticalRoute,
@@ -31,6 +32,7 @@ export type {
 	Segment,
 	SegmentationResult,
 	SegmentedSentence,
+	SegmentedSentenceId,
 	SegmentKind,
 } from "./types";
 

@@ -14,8 +14,8 @@ export function expectedEntityKindForPath(
 	if (kindDirectory === "surface") {
 		return "Surface";
 	}
-	if (kindDirectory === "selection") {
-		return "Selection";
+	if (kindDirectory === "attestation") {
+		return "Attestation";
 	}
 	return undefined;
 }

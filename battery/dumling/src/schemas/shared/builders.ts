@@ -1,4 +1,5 @@
 import type {
+	AttestationMember,
 	CoreFeaturesFor,
 	InflectionalFeaturesFor,
 	LemmaFamilyFor,
@@ -11,6 +12,11 @@ import type { RawLanguageEntitySchemaTree } from "./schema-helper-types.js";
 
 type SchemaOutput<TSchema extends z.ZodType> = z.output<TSchema>;
 type SchemaTuple = readonly [z.ZodType, ...z.ZodType[]];
+type AttestationShape<TSurface> = {
+	members: readonly [AttestationMember, ...AttestationMember[]];
+	realizationCoverage: "Full" | "Partial";
+	surface: TSurface;
+};
 
 function nullableNonEmptyObjectSchema<TShape extends z.ZodRawShape>(
 	shape: TShape,
@@ -140,14 +146,7 @@ export function buildAttestationSchema<
 	TSurface extends { language: TLanguage },
 >(options: {
 	surfaceSchema: z.ZodType<TSurface>;
-}): z.ZodType<{
-	members: readonly [
-		{ attested: string; orthography: "Standard" | "Typo" },
-		...{ attested: string; orthography: "Standard" | "Typo" }[],
-	];
-	realizationCoverage: "Full" | "Partial";
-	surface: TSurface;
-}> {
+}): z.ZodType<AttestationShape<TSurface>> {
 	const memberSchema = z.strictObject({
 		attested: z.string().min(1),
 		orthography: z.enum(["Standard", "Typo"]),
@@ -157,14 +156,7 @@ export function buildAttestationSchema<
 		members: z.array(memberSchema).min(1),
 		realizationCoverage: z.enum(["Full", "Partial"]),
 		surface: options.surfaceSchema,
-	}) as unknown as z.ZodType<{
-		members: readonly [
-			{ attested: string; orthography: "Standard" | "Typo" },
-			...{ attested: string; orthography: "Standard" | "Typo" }[],
-		];
-		realizationCoverage: "Full" | "Partial";
-		surface: TSurface;
-	}>;
+	}) as unknown as z.ZodType<AttestationShape<TSurface>>;
 }
 
 export function buildUnionSchema<TSchemas extends SchemaTuple>(

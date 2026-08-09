@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { join } from "node:path";
 import {
 	type AttestationOutput,
-	lastAttestationOutputForEachRoute,
+	assertUniqueAttestationOutputs,
 } from "../scripts/generate-content/attestations/codegen";
 import { attestationsInitialOwnershipForPages } from "../scripts/generate-content/attestations/initial-ownership";
 import {
@@ -29,14 +29,14 @@ function output(
 	};
 }
 
-test("the later source remains the page for a multiply-attested entity", () => {
-	const first = output("de/selection/shared", "first.ts");
-	const unrelated = output("de/selection/other", "other.ts");
-	const later = output("de/selection/shared", "later.ts");
+test("generation rejects two source records claiming one occurrence route", () => {
+	const first = output("de/attestation/shared", "first.ts");
+	const unrelated = output("de/attestation/other", "other.ts");
+	const later = output("de/attestation/shared", "later.ts");
 
-	expect(
-		lastAttestationOutputForEachRoute([first, unrelated, later]),
-	).toEqual([later, unrelated]);
+	expect(() =>
+		assertUniqueAttestationOutputs([first, unrelated, later]),
+	).toThrow("Attestation route collision");
 });
 
 test("first-run ownership adopts only legacy attestation outputs", () => {
@@ -49,8 +49,8 @@ test("first-run ownership adopts only legacy attestation outputs", () => {
 			},
 			{
 				location: "entities",
-				path: join(generatedEntitiesDir, "de/selection/current.md"),
-				routeId: "de/selection/current",
+				path: join(generatedEntitiesDir, "de/attestation/current.md"),
+				routeId: "de/attestation/current",
 			},
 			{
 				location: "docs",
@@ -64,11 +64,11 @@ test("first-run ownership adopts only legacy attestation outputs", () => {
 			},
 		]),
 	).toEqual({
-		generatedEntities: ["de/selection/current.md"],
+		generatedEntities: ["de/attestation/current.md"],
 		legacyGeneratedDocs: ["de/attestation/legacy.md"],
 		publicAttestations: [
+			"de/attestation/current.md",
 			"de/attestation/legacy.md",
-			"de/selection/current.md",
 		],
 	});
 });

@@ -10,16 +10,18 @@ import type { LanguageApi } from "../../api-shape.js";
 function buildAttestationFromSurface<L extends SupportedLanguage>(
 	surface: Surface<L>,
 	options: AttestationOptionsFor,
+	createAttestation: LanguageApi<L>["create"]["attestation"],
 ): Attestation<L> {
-	return {
-		...options,
+	return createAttestation({
+		members: options.members,
+		realizationCoverage: options.realizationCoverage,
 		surface,
-	} as unknown as Attestation<L>;
+	} as Attestation<L>);
 }
 
-export function buildConvertOperations<
-	L extends SupportedLanguage,
->(): LanguageApi<L>["convert"] {
+export function buildConvertOperations<L extends SupportedLanguage>(
+	createAttestation: LanguageApi<L>["create"]["attestation"],
+): LanguageApi<L>["convert"] {
 	return {
 		lemma: {
 			toSurface(lemma: Lemma<L>) {
@@ -34,23 +36,14 @@ export function buildConvertOperations<
 					LanguageApi<L>["convert"]["lemma"]["toSurface"]
 				>;
 			},
-			toAttestation(lemma: Lemma<L>, options: AttestationOptionsFor) {
-				return buildAttestationFromSurface(
-					{
-						language: lemma.language,
-						normalizedSurface: lemma.canonicalForm,
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-						lemma,
-					} as unknown as Surface<L>,
-					options,
-				);
-			},
 		},
 		surface: {
 			toAttestation(surface: Surface<L>, options: AttestationOptionsFor) {
-				return buildAttestationFromSurface(surface, options);
+				return buildAttestationFromSurface(
+					surface,
+					options,
+					createAttestation,
+				);
 			},
 		},
 	} as unknown as LanguageApi<L>["convert"];

@@ -55,10 +55,10 @@ function dormantCitation(surfaceFeatures: unknown = null) {
 		decision: "Resolved",
 		resolution: {
 			memberOrthographies: ["Standard"],
+			realizationCoverage: "Full",
 			surface: {
 				normalizedSurface: "x",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures,
 			},
@@ -72,10 +72,10 @@ function dormantInflection(number: "Plur" | "Sing" | null = null) {
 		decision: "Resolved",
 		resolution: {
 			memberOrthographies: ["Standard"],
+			realizationCoverage: "Full",
 			surface: {
 				normalizedSurface: "x",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {

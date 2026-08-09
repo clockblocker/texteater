@@ -2,27 +2,27 @@ import type { Reading as DumdictReading } from "dumdict";
 import type {
 	Segment as DumgenSegment,
 	SegmentedSentence as DumgenSegmentedSentence,
+	GrammaticalInteraction,
 	GrammaticalRoute,
 } from "dumgen";
 import type {
+	Attestation as DumlingAttestation,
 	Lemma as DumlingLemma,
-	Selection as DumlingSelection,
 	Surface as DumlingSurface,
 } from "dumling";
 
+export type Attestation = DumlingAttestation<"de">;
 export type Lemma = DumlingLemma<"de">;
-export type Selection = DumlingSelection<"de">;
 export type Surface = DumlingSurface<"de">;
 export type Reading = DumdictReading<"de">;
-export type MemberOrthography = "Standard" | "Typo";
+export type MemberOrthography = Attestation["members"][number]["orthography"];
 
 export type AnalysisTarget = GrammaticalRoute<"de"> & {
 	readonly memberSegmentIndices: readonly number[];
 };
 
 export type EntityRepresentation = {
-	selection: Selection;
-	surface: Surface;
+	attestation: Attestation;
 	reading: Reading;
 	resolution: "dumgen";
 	model: "gpt-5-nano";
@@ -89,8 +89,8 @@ export type ClickResolutionResponse =
 	| {
 			decision: "Resolved";
 			target: AnalysisTarget;
+			interaction: GrammaticalInteraction;
 			entity: EntityRepresentation;
-			memberOrthographies: Record<number, MemberOrthography>;
 			stages: Partial<
 				Record<ClassificationStageName, ClassificationStageResult>
 			>;

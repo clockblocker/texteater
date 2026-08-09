@@ -53,7 +53,6 @@ export function buildDePairedFrameCitationSurfaceCodec(
 		{ language: "de", lemma },
 	);
 	const modelSchema = canonicalCodec.in.extend({
-		realizationCoverage: z.literal("Full"),
 		surfaceFeatures: modelSurfaceFeaturesSchema,
 	});
 	return z.codec(modelSchema, canonicalCodec.out, {
@@ -81,6 +80,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: dePairedFrameModelCitationSurfaceSchema,
 			lemma: dePairedFrameModelLemmaSchema,
 		})

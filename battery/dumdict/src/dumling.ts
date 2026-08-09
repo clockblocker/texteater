@@ -4,12 +4,11 @@ import type {
 	DumlingApi,
 	DumlingCsv,
 	EntityKind,
+	IdDecodeSuccess,
 	Lemma,
 	LemmaFamilyFor,
 	LemmaIdentity,
 	LemmaKindFor,
-	Selection,
-	SelectionIdentity,
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
@@ -23,8 +22,6 @@ export type {
 	LemmaFamilyFor,
 	LemmaIdentity,
 	LemmaKindFor,
-	Selection,
-	SelectionIdentity,
 	SupportedLanguage,
 	Surface,
 	SurfaceIdentity,
@@ -49,7 +46,7 @@ export type DumlingIdInspection<
 	L extends SupportedLanguage = SupportedLanguage,
 > = {
 	format: "csv" | "base64url";
-	kind: EntityKind;
+	kind: IdDecodeSuccess<L>["kind"];
 	language: L;
 };
 

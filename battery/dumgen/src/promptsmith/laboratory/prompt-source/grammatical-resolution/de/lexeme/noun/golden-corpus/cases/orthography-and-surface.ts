@@ -16,10 +16,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "U-Boot",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
 						},
@@ -41,10 +41,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Antlitz",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: { historicalStatus: "Archaic" },
 							inflectionalFeatures: {
@@ -69,10 +69,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Typo"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Stadt",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -97,10 +97,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "U-Bahn",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -124,10 +124,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Photographie",
 							spelling: "Variant",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -148,10 +148,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Typo"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Kaffee",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -174,10 +174,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Typo"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Katze",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {
@@ -201,10 +201,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "Odem",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Inflection",
 							surfaceFeatures: { historicalStatus: "Archaic" },
 							inflectionalFeatures: {
@@ -228,10 +228,10 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Partial",
 						surface: {
 							normalizedSurface: "Kinder",
 							spelling: "Canonical",
-							realizationCoverage: "Partial",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
 							inflectionalFeatures: {

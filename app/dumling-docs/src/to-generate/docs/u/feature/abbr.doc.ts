@@ -1,6 +1,6 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as bvgAbbreviation } from "../../../attestations/de/selection/In_Berlin_betreibt_die_BVG_die_UBahn/In_Berlin_betreibt_die_[BVG]_die_UBahn.ts";
-import { attestation as tzahalAbbreviation } from "../../../attestations/he/selection/הוא_שירת_בצהל/הוא_שירת_ב[צהל].ts";
+import { attestation as bvgAbbreviation } from "../../../attestations/de/attestation/In_Berlin_betreibt_die_BVG_die_UBahn/In_Berlin_betreibt_die_[BVG]_die_UBahn.ts";
+import { attestation as tzahalAbbreviation } from "../../../attestations/he/attestation/הוא_שירת_בצהל/הוא_שירת_ב[צהל].ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Abbr feature.",

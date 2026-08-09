@@ -15,7 +15,7 @@ if (segmented.outcome === "Segmented") {
 	if (grammatical.decision === "Resolved") {
 		const reading = await dumgen.resolve.reading("de", {
 			markedContext: grammatical.markedContext,
-			lemma: grammatical.selection.surface.lemma.canonicalForm,
+			lemma: grammatical.attestation.surface.lemma.canonicalForm,
 			existingEmojiDescriptions: [],
 		});
 		console.log(reading);

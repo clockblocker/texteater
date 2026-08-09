@@ -52,7 +52,6 @@ export const englishSwimCitationSurface = {
 	lemma: englishSwimLemma,
 	normalizedSurface: "swim",
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 	surfaceKind: "Citation",
 	surfaceFeatures: null,
 } satisfies Surface<"en", "Citation", "Lexeme", "VERB">;

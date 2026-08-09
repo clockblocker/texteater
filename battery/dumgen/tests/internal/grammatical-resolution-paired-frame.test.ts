@@ -102,7 +102,6 @@ describe("Construction/PairedFrame route-local contract", () => {
 		const modelSurface = {
 			normalizedSurface: "entweder oder",
 			spelling: "Canonical" as const,
-			realizationCoverage: "Full" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: { historicalStatus: null },
 		};
@@ -112,7 +111,6 @@ describe("Construction/PairedFrame route-local contract", () => {
 			language: "de",
 			normalizedSurface: "entweder oder",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 			lemma: canonicalLemma,
@@ -148,7 +146,6 @@ describe("Construction/PairedFrame route-local contract", () => {
 		const surface = {
 			normalizedSurface: "je desto",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		};
@@ -194,10 +191,10 @@ describe("Construction/PairedFrame route-local contract", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "je umso",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 				},
 				lemma: { canonicalForm: "je … umso", coreFeatures: {} },
@@ -208,6 +205,7 @@ describe("Construction/PairedFrame route-local contract", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Typo", "Standard"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "entweder oder" },
 			},
 		});
@@ -216,6 +214,7 @@ describe("Construction/PairedFrame route-local contract", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "sowohl wie" },
 				lemma: { canonicalForm: "sowohl … wie" },
 			},
@@ -279,6 +278,7 @@ describe("Construction/PairedFrame pure evaluator", () => {
 			resolution: {
 				...testCase.idealOutput.resolution,
 				memberOrthographies: ["Standard", "Typo"],
+				realizationCoverage: "Full" as const,
 				surface: {
 					...testCase.idealOutput.resolution.surface,
 					normalizedSurface: "je umso",

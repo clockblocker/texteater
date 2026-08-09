@@ -2,9 +2,9 @@
 
 ## Typo Handling
 
-Do not normalize the noisy input on the Selection. Preserve the whole attested
-Surface occurrence in `selection.attestedSurface`, mark only a misspelled
-clicked Segment with `selectedOrthography: "Typo"`, and keep
+Do not normalize noisy input on the Attestation. Preserve each exact source
+string in `attestation.members`, mark each misspelled member with
+`orthography: "Typo"`, and keep
 `surface.normalizedSurface` linguistically normalized.
 
 Source: `Im_Heft_stand_[Filosofie]_statt_Philosophie.ts`
@@ -12,7 +12,7 @@ Source: `Im_Heft_stand_[Filosofie]_statt_Philosophie.ts`
 ## Variant Versus Typo
 
 A licensed spelling is not a typo. Put `spelling: "Variant"` on the Surface and
-keep the clicked Segment `selectedOrthography: "Standard"`. Ordinary
+keep the corresponding member's `orthography: "Standard"`. Ordinary
 sentence-initial capitalization remains a Canonical Surface.
 
 ## Non-Fixed Phrases
@@ -22,44 +22,44 @@ into a Phraseme. Resolve the learner-facing token normally.
 
 Source: `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
 
-## Learner-Owned Meaning
+## Learner-Owned Reading
 
 Historical rows incorrectly stored scene-level emoji meaning on Dumling
-entities. Current correction: learner-owned Meaning is resolved downstream
-from the selected learner-facing unit. Dumling stores Entry identity,
-linguistic Surfaces, and clicked Selection evidence; it does not own Meaning.
+entities. Current correction: learner-owned Reading is resolved downstream
+from the attested learner-facing unit. Dumling stores Lemma identity,
+linguistic Surfaces, and occurrence Attestation evidence; it does not own Reading.
 
-## Clicked Segment Versus Surface Coverage
+## Review Span Versus Attestation Coverage
 
-Clicking one component does not mean the Surface is Partial. The clicked index
-identifies the Selection; `surfaceSegmentIndices` identifies all participating
-segments. `realizationCoverage` belongs to the Surface and is Partial only when
-the attested linguistic realization itself is incomplete.
+A docs review span around one component does not make the Attestation Partial.
+`members` contains all attested components. `realizationCoverage` belongs to
+the Attestation and is Partial only when its evidence omits part of the linked
+Surface's conventional realization.
 
-## Selection Identity
+## No Attestation Identity
 
-Do not collapse distinct clicks into one Selection. A Selection is a valid
-node identified by `(segmentedSentenceId, clickedSegmentIndex)`. Different
-Selections may resolve to the same Surface and Entry.
+Attestation is fleeting, click-independent evidence and has no ID. Sentence,
+click, segment, and review-marker state stays outside Dumling. Several
+application interaction records may reuse the same Attestation.
 
 # Locked-In Rules
 
 ## Typo Attestations
 
-- `attestedSurface` preserves noisy text such as `Filosofie` or `gvae up`.
-- `selectedOrthography` describes only the clicked Segment.
+- ordered members preserve noisy text such as `Filosofie` or `gvae` plus `up`.
+- every member carries its own `orthography` evidence.
 - `normalizedSurface` stays normalized, such as `Philosophie` or `gave up`.
 - Surface `spelling` remains Canonical when the input is merely misspelled.
 
 ## Fixed Expressions And Partial Realization
 
-For a full fixed expression occurrence, include every participating index and
-use a Full Surface even if the learner clicked only one component. Multiple
-clicked Segments may create distinct Selections pointing to that same Surface.
+For a full fixed expression occurrence, include every attested component and
+use a Full Attestation even if docs review only one component. Multiple review
+records may point to that same Attestation and Surface.
 
-Use a Partial Surface only when the attested realization omits conventional
-material. Example: `heulte mit` can be a Partial inflected Surface of the Entry
-with `citationForm: "mit den Wölfen heulen"`.
+Use a Partial Attestation only when the evidence omits conventional material.
+Example: `heulte mit` can be a Partial Attestation linked to an inflected Surface of the Lemma
+with `canonicalForm: "mit den Wölfen heulen"`.
 
 Sources include:
 
@@ -70,9 +70,9 @@ Sources include:
 
 ## Discontinuous Morphemes
 
-A click on `ge` can resolve the full discontinuous circumfix occurrence
-`ge … t`. Record both participating indices, preserve the attested form, and
-resolve it to the Entry with `citationForm: "ge-...-t"`.
+A reviewed `ge` can resolve the full discontinuous circumfix occurrence
+`ge … t`. Record both source-ordered members, preserve the attested strings, and
+resolve it to the Lemma with `canonicalForm: "ge-...-t"`.
 
 Source: `In_[ge]lacht_markieren_ge_und_t_zusammen_das_Partizip.ts`
 
@@ -85,29 +85,27 @@ inflectional reading.
 ## Adpositions
 
 For non-fixed phrases like `[Wegen] dem Regen`, use a standalone lexical `ADP`
-Entry rather than a Phraseme. Avoid unsupported prescriptive inherent features.
+Lemma rather than a Phraseme. Avoid unsupported prescriptive Core Features.
 
-## Entry And Meaning Identity
+## Lemma And Reading Identity
 
-- `LinguisticEntry.id` is durable identity; `citationForm` is its display form.
-- Equal spelling does not imply equal Entry identity.
-- Different learner-owned Meanings may share one Entry ID when the linguistic
+- Lemma's grammatical tuple is durable identity; `canonicalForm` is its display form.
+- Equal spelling does not imply equal Lemma identity.
+- Different learner-owned Readings may share one Lemma ID when the linguistic
   identity is the same, as with contextual readings of `Schloss`.
-- Learner-owned Meaning remains outside Dumling.
+- Learner-owned Reading remains outside Dumling.
 
 ## Split And Governed Verb Constructions
 
 Keep the attested verbal form in `normalizedSurface`; do not inflate it with
-valency material. Encode currently supported lexical government on the Entry.
+valency material. Encode currently supported lexical government on the Lemma.
 
 In `Pass auf dich auf!`:
 
-- clicking the middle `auf` resolves the standalone ADP Surface at its own
-  Segment index;
-- clicking `Pass` or the final `auf` resolves the inflected verb Surface
-  `pass auf` with `surfaceSegmentIndices` containing `Pass` and the final
-  particle;
-- all three clicks remain distinct Selection identities.
+- the middle `auf` can be attested as a standalone ADP Surface;
+- the verb occurrence has source-ordered `Pass` and final `auf` members and
+  resolves to the inflected verb Surface `pass auf`;
+- application click records remain separate from either Attestation.
 
 Sources:
 
@@ -115,9 +113,8 @@ Sources:
 - `Pass_auf_dich_[auf].ts`
 - `[Pass]_auf_dich_auf.ts`
 
-## Selection Resolution
+## Attestation Resolution
 
-A Selection is a persisted clicked-text node, not a temporary ingest wrapper.
-Its clicked identity survives even when several clicks resolve to the same
-Surface and Entry. The original unsegmented text need not survive once the
-immutable segmented sentence and local indices exist.
+An Attestation is fleeting occurrence evidence, not a persisted clicked-text
+node. It has no identity. Docs may retain `sentenceMarkdown` in a wrapper for
+display and review, but that context is not part of the Dumling DTO.

@@ -63,8 +63,8 @@ export function evaluateDiscourseFormulaGrammaticalResolution(args: {
 			(actualSurface?.spelling ?? null) ===
 			(expectedSurface?.spelling ?? null),
 		realizationCoveragePass:
-			(actualSurface?.realizationCoverage ?? null) ===
-			(expectedSurface?.realizationCoverage ?? null),
+			(actualResolution?.realizationCoverage ?? null) ===
+			(expectedResolution?.realizationCoverage ?? null),
 		surfaceFeaturesPass: equal(
 			actualSurface?.surfaceFeatures ?? null,
 			expectedSurface?.surfaceFeatures ?? null,

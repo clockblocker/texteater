@@ -37,12 +37,12 @@ const seeAttestation = dumling.de.create.attestation({
 }) satisfies Attestation<"de", "Citation", "Lexeme", "NOUN">;
 // README_BLOCK:core-attestation:end
 
-// README_BLOCK:core-attestation-id-examples:start
+// README_BLOCK:core-entity-id-examples:start
 const seeSurfaceReadableCsv =
 	'Surface,de,Citation,See,"{\"\"canonicalForm\"\":\"\"see\"\",\"\"coreFeatures\"\":{\"\"gender\"\":\"\"Masc\"\",\"\"hyph\"\":null},\"\"family\"\":\"\"Lexeme\"\",\"\"kind\"\":\"\"NOUN\"\",\"\"language\"\":\"\"de\"\"}"';
 const seeLemmaReadableCsv =
 	'Lemma,de,see,Lexeme,NOUN,"{""gender"":""Masc"",""hyph"":null}"';
-// README_BLOCK:core-attestation-id-examples:end
+// README_BLOCK:core-entity-id-examples:end
 
 void seeAttestation;
 

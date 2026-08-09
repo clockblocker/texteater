@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as positiveDegree } from "../../../attestations/de/selection/Viele_deutschsprachigen_Quellen_fehlen_noch/Viele_[deutschsprachigen]_Quellen_fehlen_noch.ts";
-import { attestation as superlativeDegree } from "../../../attestations/en/selection/She_performed_best_under_pressure/She_performed_[best]_under_pressure.ts";
-import { attestation as comparativeDegree } from "../../../attestations/en/selection/This_is_the_better_option/This_is_the_[better]_option.ts";
+import { attestation as positiveDegree } from "../../../attestations/de/attestation/Viele_deutschsprachigen_Quellen_fehlen_noch/Viele_[deutschsprachigen]_Quellen_fehlen_noch.ts";
+import { attestation as superlativeDegree } from "../../../attestations/en/attestation/She_performed_best_under_pressure/She_performed_[best]_under_pressure.ts";
+import { attestation as comparativeDegree } from "../../../attestations/en/attestation/This_is_the_better_option/This_is_the_[better]_option.ts";
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Degree feature.",

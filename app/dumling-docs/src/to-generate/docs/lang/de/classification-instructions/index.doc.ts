@@ -17,9 +17,10 @@ But the classifier is not building a dependency tree. It is resolving a learner 
 
 That is why German dumling can classify:
 
-- [\`zum\`](/de/selection/djEseCx6dW0scyxjLHp1bSxsLGRlLGMsZnVzLHp1bSzinqHvuI8s/) as \`Construction/Fusion\`
-- [\`Bahnhof\`](/de/selection/djEseCxCYWhuaG9mLGNvdj1wLHMsYyxudXIgYmFobmhvZiB2ZXJzdGVoZW4sbCxkZSxwLGlkLG51ciBiYWhuaG9mIHZlcnN0ZWhlbizinZMs/) through a discontinuous Surface occurrence of the idiom \`nur Bahnhof verstehen\`
-- [\`auf\`](/de/selection/djEseCxhdWYsY292PXAscyxpLHBhc3MgYXVmLG1vPWltfG51PXN8cGU9cDJ8dmY9ZixsLGRlLGwsdixhdWZwYXNzZW4s8J-RgCxoZ3A9fmF1Znxoc3A9fmF1Zg/) in \`Pass [auf] dich auf!\` as part of the verbal payload for \`aufpassen\`
+- \`zum\` as \`Construction/Fusion\`
+- \`Bahnhof\` through a partial realization of the idiom \`nur Bahnhof verstehen\`
+- both occurrences of \`auf\` in \`Pass auf dich auf!\` as ordered members of
+  one Attestation for \`aufpassen\`
 
 The main question is therefore not "which token label would UD assign in isolation?" but "which dumling payload best explains the learner-facing unit in this sentence?"
 
@@ -29,21 +30,17 @@ Every attested German answer has three layers:
 
 | Layer | Role |
 | --- | --- |
-| \`Selection\` | sentence-local evidence for one clicked \`ResolvableText\` Segment |
+| \`Attestation\` | exact, source-ordered occurrence evidence independent of the click |
 | \`Surface\` | the normalized grammatical realization resolved in context |
 | \`Lemma\` | normalized grammatical identity behind that Surface |
 
 The direction is one-way:
 
-\`SegmentedSentence + clickedSegmentIndex -> Selection -> Surface -> Lemma\`
+\`application context -> Attestation -> Surface -> Lemma\`
 
-Each click has its own Selection identity, even when several clicks resolve to
-the same Surface. The Selection also records every Segment index participating
-in that Surface occurrence.
-
-That is why clicking either \`auf\` in \`Pass auf dich auf!\` creates a distinct
-Selection while both Selections can resolve to the same verbal Surface
-\`pass auf\` and the same Lemma \`aufpassen\`.
+Attestation is fleeting evidence and has no identity. Applications retain
+sentence IDs, clicks, segment indices, marked context, and highlighting state
+outside Dumling. Several interaction records may point to the same Attestation.
 
 ## Lemma Families
 
@@ -60,7 +57,7 @@ These families are not interchangeable.
 
 \`Lexeme\` is for ordinary word-level Lemmas.
 
-\`Morpheme\` is for bound pieces such as [\`un-\`](/de/selection/djEseCxVbixjb3Y9cHxzcGw9dixzLGMsdW4tLGwsZGUsbSxwZix1bi0s8J-agCw/).
+\`Morpheme\` is for bound pieces such as \`un-\`.
 
 \`Phraseme\` is for learner-facing conventionalized expressions whose identity
 belongs to the larger unit rather than to one token in isolation. A
@@ -70,7 +67,7 @@ expressions such as \`eine Entscheidung treffen\` belong here rather than under
 
 \`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\` and paired frames such as \`um zu\`.
 
-## Surface Kinds And Click Evidence
+## Surface Kinds And Attested Evidence
 
 Every surface is either \`Citation\` or \`Inflection\`.
 
@@ -80,36 +77,35 @@ Every surface is either \`Citation\` or \`Inflection\`.
 
 Examples:
 
-- [\`Mutter\`](/de/selection/djEseCxNdXR0ZXIscyxjLG11dHRlcixsLGRlLGwsbixtdXR0ZXIs8J-RqSxnPWY/) is \`Citation\`
-- [\`Kindern\`](/de/selection/djEseCxLaW5kZXJuLHMsaSxraW5kZXJuLGNhPWR8bnU9cCxsLGRlLGwsbixraW5kLPCfp5IsZz1u/) is \`Inflection\`
-- [\`fünften\`](/de/selection/djEseCxmw7xuZnRlbixzLGksZsO8bmZ0ZW4sY2E9ZHxkZWc9cHxnPW18bnU9cyxsLGRlLGwsaixmw7xuZnRlLDXvuI_ig6MsbnQ9bw/) is \`Inflection\`
+- \`Mutter\` is \`Citation\`
+- \`Kindern\` is \`Inflection\`
+- \`fünften\` is \`Inflection\`
 
 The current public model also imposes two important constraints:
 
-- verbal \`Phraseme\` Surfaces may be inflected and may mark
+- verbal \`Phraseme\` Surfaces may be inflected; their Attestations may mark
   \`realizationCoverage: "Partial"\`
 - \`Construction\` Lemmas are citation-only and currently featureless.
 
-\`Selection\` records sentence-local clicked evidence:
+\`Attestation\` records occurrence evidence:
 
 | Field | Meaning |
 | --- | --- |
-| \`segmentedSentenceId\` | immutable identity of the pre-segmented sentence |
-| \`clickedSegmentIndex\` | the local \`ResolvableText\` Segment the learner clicked |
-| \`surfaceSegmentIndices\` | every segment participating in the Surface occurrence |
-| \`attestedSurface\` | noisy text across those participating segments |
-| \`selectedOrthography\` | \`Standard\` or \`Typo\` for the clicked segment |
+| \`members\` | non-empty tuple of exact attested strings in source order |
+| \`member.orthography\` | \`Standard\` or \`Typo\` for that member |
+| \`realizationCoverage\` | whether the members fully or partially realize the linked Surface |
+| \`surface\` | the reusable normalized grammatical form |
 
 \`Surface.spelling\` owns canonical versus licensed variant spelling.
-\`Surface.realizationCoverage\` owns full versus partial realization.
+Attestation owns full versus partial realization.
 
 ## Identity, Features, And Where They Live
 
 The classifier should keep the payload split cleanly:
 
 - \`Lemma\` stores grammatical identity: canonical form, family, kind, and core features
-- \`Surface\` stores normalized form, spelling, realization coverage, inflection, and Lemma identity
-- \`Selection\` stores sentence-local clicked evidence
+- \`Surface\` stores normalized form, spelling, inflection, and Lemma identity
+- \`Attestation\` stores members, per-member orthography, and realization coverage
 
 This split matters in German because many tempting distinctions belong in different places.
 

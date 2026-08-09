@@ -121,10 +121,6 @@ export type LanguageApi<L extends SupportedLanguage> = {
 				TLemma["kind"] &
 					LemmaKindFor<L, TLemma["family"] & LemmaFamilyFor<L>>
 			>;
-			toAttestation<TLemma extends Lemma<L>>(
-				lemma: TLemma,
-				options: AttestationOptionsFor,
-			): AttestationFromLemma<L, TLemma>;
 		};
 		surface: {
 			toAttestation<TSurface extends Surface<L>>(
@@ -235,21 +231,6 @@ type InflectionSurfaceKind<L extends SupportedLanguage> = Extract<
 	SurfaceKindFor<L>,
 	"Inflection"
 >;
-type AttestationFromLemma<
-	L extends SupportedLanguage,
-	TLemma extends Lemma<L>,
-> =
-	Lemma<L> extends TLemma
-		? Attestation<L>
-		: Attestation<L> &
-				Attestation<
-					L,
-					CitationSurfaceKind<L>,
-					TLemma["family"] &
-						LemmaFamilyForSurfaceKind<L, CitationSurfaceKind<L>>,
-					TLemma["kind"] &
-						LemmaKindFor<L, TLemma["family"] & LemmaFamilyFor<L>>
-				>;
 type AttestationFromSurface<
 	L extends SupportedLanguage,
 	TSurface extends Surface<L>,

@@ -1,7 +1,7 @@
 import { relative } from "node:path";
 import { pathToFileURL } from "node:url";
-import type { AttestedSelection } from "dumling/types";
 import type {
+	AttestedAttestation,
 	GeneratedDocPageDocument,
 	LanguageOverlayPageDocument,
 	TypedDocDocument,
@@ -19,7 +19,7 @@ import { normalizeRouteId, routeIdForGeneratedDocSourcePath } from "../routes";
 
 export type RuleBlock = {
 	body?: string;
-	examples: readonly AttestedSelection[];
+	examples: readonly AttestedAttestation[];
 	heading?: string;
 };
 
@@ -76,30 +76,30 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isAttestedSelection(value: unknown): value is AttestedSelection {
+function isAttestedAttestation(value: unknown): value is AttestedAttestation {
 	if (!isRecord(value)) {
 		return false;
 	}
 	if (typeof value.sentenceMarkdown !== "string") {
 		return false;
 	}
-	if (!isRecord(value.selection)) {
+	if (!isRecord(value.attestation)) {
 		return false;
 	}
 	return (
-		isRecord(value.selection.surface) &&
-		isRecord(value.selection.surface.lemma) &&
-		typeof value.selection.surface.lemma.language === "string"
+		isRecord(value.attestation.surface) &&
+		isRecord(value.attestation.surface.lemma) &&
+		typeof value.attestation.surface.lemma.language === "string"
 	);
 }
 
 function parseRuleExample(
 	value: unknown,
 	sourcePath: string,
-): AttestedSelection {
-	if (!isAttestedSelection(value)) {
+): AttestedAttestation {
+	if (!isAttestedAttestation(value)) {
 		throw new Error(
-			`${sourcePath} rule examples must reference AttestedSelection sources.`,
+			`${sourcePath} rule examples must reference attested Attestation sources.`,
 		);
 	}
 	return value;
@@ -170,7 +170,7 @@ function parseBaseDocumentFields(
 	sourcePath: string,
 ): {
 	body?: string;
-	examples: readonly AttestedSelection[];
+	examples: readonly AttestedAttestation[];
 	meta: ReturnType<typeof parseDocPageMeta>;
 	subsections?: readonly RuleBlock[];
 } {

@@ -5,7 +5,6 @@ import {
 	type DumgenModelExchange,
 	type SegmentedSentence,
 } from "dumgen";
-import { dumling } from "dumling";
 import { schemasFor } from "dumling/schema";
 
 import { DUMGEN_GENERATION_MODEL } from "../../src/ai-sdk/model-policy";
@@ -25,7 +24,7 @@ function routeKey(route: { readonly family: string; readonly kind: string }) {
 
 function sentence(): SegmentedSentence<"de"> {
 	return {
-		id: dumling.de.create.segmentedSentenceId(crypto.randomUUID()),
+		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
 		sourceText: "eins zwei",
 		segments: [
@@ -50,7 +49,7 @@ function sentence(): SegmentedSentence<"de"> {
 
 function singleSegmentSentence(text: string): SegmentedSentence<"de"> {
 	return {
-		id: dumling.de.create.segmentedSentenceId(crypto.randomUUID()),
+		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
 		sourceText: text,
 		segments: [
@@ -196,7 +195,7 @@ describe("German Grammatical Resolution inventory", () => {
 		expect(pending).toHaveLength(0);
 	});
 
-	test("constructs a linked Selection through a newly enabled Construction route", async () => {
+	test("constructs a linked Attestation through a newly enabled Construction route", async () => {
 		const { pending, sdk } = queueSdk([
 			{
 				decision: "Resolved",
@@ -211,10 +210,10 @@ describe("German Grammatical Resolution inventory", () => {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					lemma: { canonicalForm: "im", coreFeatures: {} },
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "im",
 						spelling: "Canonical",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},
@@ -231,9 +230,9 @@ describe("German Grammatical Resolution inventory", () => {
 			decision: "Resolved",
 			language: "de",
 			markedContext: "<TARGET>im</TARGET>",
-			selection: {
-				attestedSurface: "im",
-				selectedOrthography: "Standard",
+			attestation: {
+				members: [{ attested: "im", orthography: "Standard" }],
+				realizationCoverage: "Full",
 				surface: {
 					language: "de",
 					lemma: {
@@ -242,6 +241,10 @@ describe("German Grammatical Resolution inventory", () => {
 						kind: "Fusion",
 					},
 				},
+			},
+			interaction: {
+				clickedSegmentIndex: 0,
+				memberSegmentIndices: [0],
 			},
 		});
 		expect(pending).toHaveLength(0);
@@ -255,10 +258,10 @@ describe("German Grammatical Resolution inventory", () => {
 			resolution: {
 				memberOrthographies: ["Standard"],
 				lemma: { canonicalForm: "im", coreFeatures: {} },
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "im",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 					surfaceFeatures: { historicalStatus: null },
 				},
@@ -292,10 +295,10 @@ describe("German Grammatical Resolution inventory", () => {
 					canonicalForm: "Ende gut, alles gut",
 					coreFeatures: {},
 				},
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "Ende gut alles gut",
 					spelling: "Canonical",
-					realizationCoverage: "Full",
 					surfaceKind: "Citation",
 					surfaceFeatures: null,
 				},

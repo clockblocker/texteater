@@ -1,6 +1,6 @@
 import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as aufPreposition } from "../../../../attestations/de/selection/Das_rote_Band_lag_auf_dem_Geschenk/Das_rote_Band_lag_[auf]_dem_Geschenk.ts";
-import { attestation as entlangPostposition } from "../../../../attestations/de/selection/Wir_liefen_den_Fluss_entlang/Wir_liefen_den_Fluss_[entlang].ts";
+import { attestation as aufPreposition } from "../../../../attestations/de/attestation/Das_rote_Band_lag_auf_dem_Geschenk/Das_rote_Band_lag_[auf]_dem_Geschenk.ts";
+import { attestation as entlangPostposition } from "../../../../attestations/de/attestation/Wir_liefen_den_Fluss_entlang/Wir_liefen_den_Fluss_[entlang].ts";
 
 const document = defineLanguageOverlayPage({
 	description: "German AdpType.",

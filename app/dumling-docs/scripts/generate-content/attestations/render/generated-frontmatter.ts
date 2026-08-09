@@ -1,8 +1,8 @@
 import { pathRelativeToSiteRoot } from "../../shared/paths";
 import type { AttestationSource, Frontmatter } from "../../shared/types";
-import { isSelection, isSurface } from "../entity/guards";
+import { semanticAttestationBasename } from "../attestation/semantic-source-path";
+import { isAttestation, isSurface } from "../entity/guards";
 import { lemmaForEntity, surfaceForEntity } from "../entity/helpers";
-import { semanticSelectionBasename } from "../selection/semantic-source-path";
 
 export function generatedFrontmatterForAttestation(
 	source: AttestationSource,
@@ -11,14 +11,14 @@ export function generatedFrontmatterForAttestation(
 	const entity = source.entity;
 	const lemma = lemmaForEntity(entity);
 	const surface =
-		isSelection(entity) || isSurface(entity)
+		isAttestation(entity) || isSurface(entity)
 			? surfaceForEntity(entity)
 			: undefined;
 	const displayName =
 		source.title ?? surface?.normalizedSurface ?? lemma.canonicalForm;
 	const generatedTitle =
-		isSelection(entity) && source.sentenceMarkdown !== undefined
-			? semanticSelectionBasename(source.sentenceMarkdown)
+		isAttestation(entity) && source.sentenceMarkdown !== undefined
+			? semanticAttestationBasename(source.sentenceMarkdown)
 			: displayName;
 
 	return {

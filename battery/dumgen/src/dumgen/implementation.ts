@@ -1,6 +1,5 @@
-import { dumling } from "dumling";
 import { schemasFor } from "dumling/schema";
-import type { Lemma, Selection, Surface } from "dumling/types";
+import type { Attestation, Lemma, Surface } from "dumling/types";
 
 import type { PROMPT_CATALOG } from "../catalog/prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
@@ -19,6 +18,7 @@ import type {
 	Segment,
 	SegmentationResult,
 	SegmentedSentence,
+	SegmentedSentenceId,
 } from "../types";
 
 type DumgenGenerators = GeneratorCatalog<typeof PROMPT_CATALOG>;
@@ -141,7 +141,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 			}) satisfies Segment;
 		});
 		const sentence = Object.freeze({
-			id: dumling.de.create.segmentedSentenceId(crypto.randomUUID()),
+			id: crypto.randomUUID() as SegmentedSentenceId,
 			language: intake.language,
 			sourceText: text,
 			segments: Object.freeze(segments),
@@ -169,11 +169,11 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 				decision: "Resolved",
 				language,
 				markedContext: cached.markedContext,
-				selection: constructSelection(
+				attestation: cached.attestation,
+				interaction: constructInteraction(
 					germanSentence,
 					clickedSegmentIndex,
 					cached.target,
-					cached.resolution,
 				),
 			}) as GrammaticalResult<L>;
 		}
@@ -220,20 +220,19 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 		}
 		assertGrammaticalResolution(target, resolution);
 
-		const selection = constructSelection(
+		const attestation = constructAttestation(
 			germanSentence,
-			clickedSegmentIndex,
 			target,
 			resolution,
 		);
-		if (selection.surface.language !== language) {
+		if (attestation.surface.language !== language) {
 			throw invalidOutput(
-				"Grammatical Resolution returned a Selection in another language.",
+				"Grammatical Resolution returned an Attestation in another language.",
 			);
 		}
 		const cachedResolution = Object.freeze({
 			target,
-			resolution,
+			attestation,
 			markedContext,
 		});
 		const cachedByMember =
@@ -248,7 +247,12 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 			decision: "Resolved",
 			language,
 			markedContext,
-			selection,
+			attestation,
+			interaction: constructInteraction(
+				germanSentence,
+				clickedSegmentIndex,
+				target,
+			),
 		}) as GrammaticalResult<L>;
 	}
 
@@ -297,10 +301,7 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 
 type CachedGrammaticalResolution = {
 	readonly target: AnalysisTarget;
-	readonly resolution: Extract<
-		GrammaticalResolution,
-		{ readonly decision: "Resolved" }
-	>;
+	readonly attestation: Attestation<"de">;
 	readonly markedContext: string;
 };
 
@@ -427,92 +428,72 @@ function assertGrammaticalResolution(
 	}
 }
 
-function constructSelection(
+function constructAttestation(
 	sentence: SegmentedSentence<"de">,
-	clickedSegmentIndex: number,
 	target: AnalysisTarget,
 	resolution: Extract<
 		GrammaticalResolution,
 		{ readonly decision: "Resolved" }
 	>,
-): Selection<"de"> {
+): Attestation<"de"> {
 	const linkedSurface = {
 		...resolution.surface,
 		lemma: resolution.lemma,
 	} as Surface<"de">;
-	const selectedPosition =
-		target.memberSegmentIndices.indexOf(clickedSegmentIndex);
-	const selectedOrthography =
-		resolution.memberOrthographies[selectedPosition];
-	if (!selectedOrthography) {
-		throw invalidOutput(
-			"Grammatical Resolution omitted the clicked Segment orthography.",
-		);
-	}
-
 	const value = {
-		segmentedSentenceId: sentence.id,
-		clickedSegmentIndex,
-		surfaceSegmentIndices: [...target.memberSegmentIndices],
-		attestedSurface: constructAttestedSurface(
-			sentence.segments,
-			target.memberSegmentIndices,
-		),
-		selectedOrthography,
+		members: target.memberSegmentIndices.map((segmentIndex, position) => ({
+			attested: sentence.segments[segmentIndex]?.text,
+			orthography: resolution.memberOrthographies[position],
+		})),
+		realizationCoverage: resolution.realizationCoverage,
 		surface: linkedSurface,
 	};
 
 	try {
-		return selectionSchemaFor(linkedSurface, resolution.lemma).parse(value);
+		return attestationSchemaFor(linkedSurface, resolution.lemma).parse(
+			value,
+		);
 	} catch (cause) {
 		throw invalidOutput(
-			"Grammatical Resolution could not construct a valid Selection.",
+			"Grammatical Resolution could not construct a valid Attestation.",
 			cause,
 		);
 	}
 }
 
-function selectionSchemaFor(
+function attestationSchemaFor(
 	surface: Surface<"de">,
 	lemma: Lemma<"de">,
-): { parse(value: unknown): Selection<"de"> } {
-	type Getter = () => { parse(value: unknown): Selection<"de"> };
-	const selectionSchemas = schemasFor.de.entity
-		.Selection as unknown as Record<
+): { parse(value: unknown): Attestation<"de"> } {
+	type Getter = () => { parse(value: unknown): Attestation<"de"> };
+	const attestationSchemas = schemasFor.de.entity
+		.Attestation as unknown as Record<
 		string,
 		| Record<string, Record<string, Getter | undefined> | undefined>
 		| undefined
 	>;
 	const getSchema =
-		selectionSchemas[surface.surfaceKind]?.[lemma.family]?.[lemma.kind];
+		attestationSchemas[surface.surfaceKind]?.[lemma.family]?.[lemma.kind];
 	if (!getSchema) {
 		throw invalidOutput(
-			`No Selection schema exists for de/${lemma.family}/${lemma.kind}/${surface.surfaceKind}.`,
+			`No Attestation schema exists for de/${lemma.family}/${lemma.kind}/${surface.surfaceKind}.`,
 		);
 	}
 	return getSchema();
 }
 
-function constructAttestedSurface(
-	segments: readonly Segment[],
-	indices: readonly number[],
-): string {
-	let result = "";
-	for (let position = 0; position < indices.length; position += 1) {
-		const index = indices[position] ?? 0;
-		if (position > 0) {
-			const previous = indices[position - 1] ?? index;
-			if (
-				segments
-					.slice(previous + 1, index)
-					.some((segment) => segment.kind === "Whitespace")
-			) {
-				result += " ";
-			}
-		}
-		result += segments[index]?.text ?? "";
-	}
-	return result;
+function constructInteraction(
+	sentence: SegmentedSentence<"de">,
+	clickedSegmentIndex: number,
+	target: AnalysisTarget,
+) {
+	return Object.freeze({
+		segmentedSentenceId: sentence.id,
+		clickedSegmentIndex,
+		memberSegmentIndices: Object.freeze([
+			...target.memberSegmentIndices,
+		]) as readonly [number, ...number[]],
+	});
 }
 
 function constructMarkedContext(

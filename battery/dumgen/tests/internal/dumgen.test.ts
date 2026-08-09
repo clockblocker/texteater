@@ -8,7 +8,6 @@ import {
 	type DumgenOptions,
 	type SegmentedSentence,
 } from "dumgen";
-import { dumling } from "dumling";
 import { z } from "zod";
 
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
@@ -18,10 +17,10 @@ import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-rou
 
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
+	realizationCoverage: "Full",
 	surface: {
 		normalizedSurface: "Banken",
 		spelling: "Canonical",
-		realizationCoverage: "Full",
 		surfaceKind: "Inflection",
 		surfaceFeatures: null,
 		inflectionalFeatures: { case: "Nom", number: "Plur" },
@@ -40,7 +39,7 @@ function sentence(
 ): SegmentedSentence<"de"> {
 	let offset = 0;
 	return {
-		id: dumling.de.create.segmentedSentenceId(crypto.randomUUID()),
+		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
 		sourceText: parts.map(({ text }) => text).join(""),
 		segments: parts.map((part, index) => {
@@ -213,7 +212,7 @@ describe("Dumgen module interface", () => {
 });
 
 describe("grammatical resolution", () => {
-	test("owns classification, route dispatch, linking, and marked context", async () => {
+	test("returns an Attestation with Dumgen-owned interaction context", async () => {
 		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
@@ -245,12 +244,9 @@ describe("grammatical resolution", () => {
 			decision: "Resolved",
 			language: "de",
 			markedContext: "Die <TARGET>Banken</TARGET>",
-			selection: {
-				segmentedSentenceId: bankSentence.id,
-				clickedSegmentIndex: 2,
-				surfaceSegmentIndices: [2],
-				attestedSurface: "Banken",
-				selectedOrthography: "Standard",
+			attestation: {
+				members: [{ attested: "Banken", orthography: "Standard" }],
+				realizationCoverage: "Full",
 				surface: {
 					language: "de",
 					lemma: {
@@ -261,7 +257,24 @@ describe("grammatical resolution", () => {
 					},
 				},
 			},
+			interaction: {
+				segmentedSentenceId: bankSentence.id,
+				clickedSegmentIndex: 2,
+				memberSegmentIndices: [2],
+			},
 		});
+		expect("selection" in result).toBe(false);
+		if (result.decision !== "Resolved") {
+			throw new Error("Expected grammatical resolution to succeed.");
+		}
+		expect(Object.keys(result.attestation)).toEqual([
+			"members",
+			"realizationCoverage",
+			"surface",
+		]);
+		expect("realizationCoverage" in result.attestation.surface).toBe(false);
+		expect("clickedSegmentIndex" in result.attestation).toBe(false);
+		expect("segmentedSentenceId" in result.attestation).toBe(false);
 		expect("target" in result).toBe(false);
 		expect("memberOrthographies" in result).toBe(false);
 		expect(calls).toHaveLength(2);
@@ -331,7 +344,7 @@ describe("grammatical resolution", () => {
 
 		expect(result).toMatchObject({
 			decision: "Resolved",
-			selection: {
+			attestation: {
 				surface: { lemma: { canonicalForm: "Bank" } },
 			},
 		});
@@ -510,6 +523,7 @@ describe("grammatical resolution", () => {
 				resolution: {
 					...modelGrammar,
 					memberOrthographies: ["Typo", "Standard"],
+					realizationCoverage: "Full" as const,
 					surface: {
 						...modelGrammar.surface,
 						normalizedSurface: "Bank Bank",
@@ -535,20 +549,45 @@ describe("grammatical resolution", () => {
 		expect(calls).toHaveLength(2);
 		expect(first).toMatchObject({
 			decision: "Resolved",
-			selection: {
+			attestation: {
+				members: [
+					{ attested: "Bnak", orthography: "Typo" },
+					{ attested: "Bank", orthography: "Standard" },
+				],
+			},
+			interaction: {
 				clickedSegmentIndex: 0,
-				selectedOrthography: "Typo",
-				surfaceSegmentIndices: [0, 2],
+				memberSegmentIndices: [0, 2],
 			},
 		});
 		expect(second).toMatchObject({
 			decision: "Resolved",
-			selection: {
+			interaction: {
 				clickedSegmentIndex: 2,
-				selectedOrthography: "Standard",
-				surfaceSegmentIndices: [0, 2],
+				memberSegmentIndices: [0, 2],
 			},
 		});
+		if (first.decision !== "Resolved" || second.decision !== "Resolved") {
+			throw new Error("Expected both clicks to resolve.");
+		}
+		expect(second.attestation).toBe(first.attestation);
+		expect(first.attestation.members).toHaveLength(
+			first.interaction.memberSegmentIndices.length,
+		);
+		for (
+			let position = 0;
+			position < first.attestation.members.length;
+			position += 1
+		) {
+			const segmentIndex =
+				first.interaction.memberSegmentIndices[position];
+			if (segmentIndex === undefined) {
+				throw new Error("Missing aligned member Segment index.");
+			}
+			expect(first.attestation.members[position]?.attested).toBe(
+				source.segments[segmentIndex]?.text,
+			);
+		}
 	});
 
 	test("rejects generated grammatical route fields instead of accepting drift", async () => {

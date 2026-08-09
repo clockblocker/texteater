@@ -9,5 +9,4 @@ export const germanHausCitationSurface = {
 	lemma: germanHausLemma,
 	surfaceFeatures: null,
 	spelling: "Canonical",
-	realizationCoverage: "Full",
 } satisfies Surface<"de", "Citation", "Lexeme", "NOUN">;

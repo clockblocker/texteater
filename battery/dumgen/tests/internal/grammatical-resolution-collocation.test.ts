@@ -243,9 +243,9 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard", "Standard"],
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "trifft eine Entscheidung",
-					realizationCoverage: "Full",
 					surfaceKind: "Inflection",
 				},
 				lemma: {
@@ -260,9 +260,9 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard", "Standard"],
+				realizationCoverage: "Full",
 				surface: {
 					normalizedSurface: "stellen zur Verfügung",
-					realizationCoverage: "Full",
 				},
 				lemma: { canonicalForm: "zur Verfügung stellen" },
 			},
@@ -281,7 +281,7 @@ describe("Phraseme/Collocation route-local corpus", () => {
 				testCase.idealOutput.resolution !== null
 			) {
 				expect(
-					testCase.idealOutput.resolution.surface.realizationCoverage,
+					testCase.idealOutput.resolution.realizationCoverage,
 				).not.toBe("Partial");
 			}
 		}
@@ -447,9 +447,9 @@ describe("Phraseme/Collocation diagnostic evaluator", () => {
 			resolution: {
 				...testCase.idealOutput.resolution,
 				memberOrthographies: ["Standard" as const],
+				realizationCoverage: "Partial" as const,
 				surface: {
 					...testCase.idealOutput.resolution.surface,
-					realizationCoverage: "Partial" as const,
 				},
 				lemma: {
 					...testCase.idealOutput.resolution.lemma,

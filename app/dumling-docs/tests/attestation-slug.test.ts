@@ -1,21 +1,26 @@
 import { expect, test } from "bun:test";
 import { dumling } from "dumling";
-import { attestationSlugForEntity } from "../scripts/generate-content/attestations/entity/attestation-slug";
+import {
+	attestationSlugForEntity,
+	attestationSlugForSource,
+} from "../scripts/generate-content/attestations/entity/attestation-slug";
 
 const lemma = dumling.en.create.lemma({
 	canonicalForm: "walk",
 	family: "Lexeme",
 	kind: "VERB",
-	coreFeatures: {},
+	coreFeatures: {
+		abbr: null,
+		extPos: null,
+		hasGovPrep: null,
+		phrasal: null,
+		style: null,
+	},
 });
 const surface = dumling.en.convert.lemma.toSurface(lemma);
-const selection = dumling.en.convert.surface.toSelection(surface, {
-	segmentedSentenceId:
-		dumling.en.create.segmentedSentenceId("sentence:test:walk"),
-	clickedSegmentIndex: 0,
-	surfaceSegmentIndices: [0],
-	attestedSurface: "walk",
-	selectedOrthography: "Standard",
+const attestation = dumling.en.convert.surface.toAttestation(surface, {
+	members: [{ attested: "walk", orthography: "Standard" }],
+	realizationCoverage: "Full",
 });
 
 test("identity-addressed attestation routes remain filesystem safe", () => {
@@ -27,8 +32,38 @@ test("identity-addressed attestation routes remain filesystem safe", () => {
 	expect(lemmaSlug).not.toBe(surfaceSlug);
 });
 
-test("Selection routes retain the reversible local Selection identity", () => {
-	expect(attestationSlugForEntity(selection)).toBe(
-		String(dumling.en.id.encode.asBase64Url(selection)),
+function occurrenceSource(sentenceMarkdown: string, sourcePath: string) {
+	return {
+		entity: attestation,
+		sentenceMarkdown,
+		sourcePath,
+	};
+}
+
+test("Attestation routes use an opaque docs-owned occurrence slug", () => {
+	const slug = attestationSlugForSource(
+		occurrenceSource("I [walk].", "first.ts"),
+	);
+
+	expect(slug).toMatch(/^sha256-[\w-]{43}$/u);
+	expect(slug).not.toBe(attestationSlugForEntity(surface));
+});
+
+test("equal Attestations in different sentence wrappers keep distinct occurrence routes", () => {
+	expect(
+		attestationSlugForSource(occurrenceSource("I [walk].", "first.ts")),
+	).not.toBe(
+		attestationSlugForSource(occurrenceSource("We [walk].", "second.ts")),
+	);
+});
+
+test("occurrence routes are stable when the linked Attestation changes", () => {
+	const source = occurrenceSource("I [walk].", "first.ts");
+
+	expect(attestationSlugForSource(source)).toBe(
+		attestationSlugForSource({
+			...source,
+			entity: { ...attestation, realizationCoverage: "Partial" },
+		}),
 	);
 });

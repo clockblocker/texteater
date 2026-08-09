@@ -73,10 +73,10 @@ export const coreFeaturesAndOrthographyCases = defineGoldenCaseCollection(
 					decision: "Resolved",
 					resolution: {
 						memberOrthographies: ["Standard"],
+						realizationCoverage: "Full",
 						surface: {
 							normalizedSurface: "allein",
 							spelling: "Canonical",
-							realizationCoverage: "Full",
 							surfaceKind: "Citation",
 							surfaceFeatures: {
 								historicalStatus: "Archaic",
@@ -109,10 +109,10 @@ function resolved(
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: [orthography],
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface,
 				spelling,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},

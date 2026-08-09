@@ -50,7 +50,6 @@ export function buildDeFusionCitationSurfaceCodec(lemma: DeFusionLemma) {
 		{ language: "de", lemma },
 	);
 	const modelSchema = canonicalCodec.in.extend({
-		realizationCoverage: z.literal("Full"),
 		surfaceFeatures: modelSurfaceFeaturesSchema,
 	});
 	return z.codec(modelSchema, canonicalCodec.out, {
@@ -80,6 +79,7 @@ export const outputSchema = z.strictObject({
 			memberOrthographies: z
 				.array(z.enum(["Standard", "Typo"]))
 				.length(1),
+			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: deFusionModelCitationSurfaceSchema,
 			lemma: deFusionModelLemmaSchema,
 		})

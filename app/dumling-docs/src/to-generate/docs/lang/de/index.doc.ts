@@ -13,10 +13,10 @@ The public German classification tree lives under [/de/](/de/).
 
 Start with:
 
-- [/de/entity/](/de/entity/) for \`Lemma\`, \`Surface\`, and \`Selection\`
+- [/de/entity/](/de/entity/) for \`Lemma\`, \`Surface\`, and \`Attestation\`
 - [/de/entity/lemma/](/de/entity/lemma/) for the four Lemma branches
 - [/de/entity/lemma/lexeme/](/de/entity/lemma/lexeme/), [/de/entity/lemma/morpheme/](/de/entity/lemma/morpheme/), [/de/entity/lemma/phraseme/](/de/entity/lemma/phraseme/), and [/de/entity/lemma/construction/](/de/entity/lemma/construction/) for concrete inventories
-- [/de/feature/](/de/feature/) and [/de/feature/selection/](/de/feature/selection/) for feature pages
+- [/de/feature/](/de/feature/) and [/de/feature/attestation/](/de/feature/attestation/) for feature pages
 - [/de/classification-instructions/](/de/classification-instructions/) for German-specific classifier instructions
 
 ## Supported Lemma Families
@@ -63,7 +63,6 @@ const seenSurface = dumling.de.create.surface.inflection({
 \tlemma: seeLemma,
 \tnormalizedSurface: "Seen",
 \tspelling: "Canonical",
-\trealizationCoverage: "Full",
 \tinflectionalFeatures: {
 \t\tcase: "Nom",
 \t\tnumber: "Plur",
@@ -71,17 +70,13 @@ const seenSurface = dumling.de.create.surface.inflection({
 \tsurfaceFeatures: null,
 });
 
-const seenSelection = dumling.de.create.selection({
-\tsegmentedSentenceId:
-\t\tdumling.de.create.segmentedSentenceId("sentence:de:drei-seen"),
-\tclickedSegmentIndex: 4,
-\tsurfaceSegmentIndices: [4],
-\tattestedSurface: "Seen",
-\tselectedOrthography: "Standard",
+const seenAttestation = dumling.de.create.attestation({
+\tmembers: [{ attested: "Seen", orthography: "Standard" }],
+\trealizationCoverage: "Full",
 \tsurface: seenSurface,
 });
 
-dumling.de.id.encode.asBase64Url(seenSelection);
+dumling.de.parse.attestation(seenAttestation);
 \`\`\`
 
 German fusion example:
@@ -94,13 +89,10 @@ const zumLemma = dumling.de.create.lemma({
 \tcoreFeatures: {},
 });
 
-const zumSelection = dumling.de.convert.lemma.toSelection(zumLemma, {
-\tsegmentedSentenceId:
-\t\tdumling.de.create.segmentedSentenceId("sentence:de:zum-bahnhof"),
-\tclickedSegmentIndex: 2,
-\tsurfaceSegmentIndices: [2],
-\tattestedSurface: "zum",
-\tselectedOrthography: "Standard",
+const zumAttestation = dumling.de.create.attestation({
+\tmembers: [{ attested: "zum", orthography: "Standard" }],
+\trealizationCoverage: "Full",
+\tsurface: dumling.de.convert.lemma.toSurface(zumLemma),
 });
 \`\`\`
 
@@ -114,13 +106,13 @@ const umZuLemma = dumling.de.create.lemma({
 \tcoreFeatures: {},
 });
 
-const umZuSelection = dumling.de.convert.lemma.toSelection(umZuLemma, {
-\tsegmentedSentenceId:
-\t\tdumling.de.create.segmentedSentenceId("sentence:de:um-zu"),
-\tclickedSegmentIndex: 6,
-\tsurfaceSegmentIndices: [2, 6],
-\tattestedSurface: "um zu",
-\tselectedOrthography: "Standard",
+const umZuAttestation = dumling.de.create.attestation({
+\tmembers: [
+\t	{ attested: "um", orthography: "Standard" },
+\t	{ attested: "zu", orthography: "Standard" },
+\t],
+\trealizationCoverage: "Full",
+\tsurface: dumling.de.convert.lemma.toSurface(umZuLemma),
 });
 \`\`\`
 
@@ -131,9 +123,9 @@ schemasFor.de.entity.Lemma.Lexeme.NOUN();
 schemasFor.de.entity.Lemma.Construction.Fusion();
 schemasFor.de.entity.Lemma.Construction.PairedFrame();
 schemasFor.de.entity.Surface.Inflection.Lexeme.NOUN();
-schemasFor.de.entity.Selection.Inflection.Lexeme.NOUN();
-schemasFor.de.entity.Selection.Citation.Construction.Fusion();
-schemasFor.de.entity.Selection.Citation.Construction.PairedFrame();
+schemasFor.de.entity.Attestation.Inflection.Lexeme.NOUN();
+schemasFor.de.entity.Attestation.Citation.Construction.Fusion();
+schemasFor.de.entity.Attestation.Citation.Construction.PairedFrame();
 \`\`\`
 `,
 });

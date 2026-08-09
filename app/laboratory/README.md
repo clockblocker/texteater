@@ -38,7 +38,7 @@ German is the only supported language.
 After a `ResolvableText` click, the result panel exposes the Target,
 Grammatical, and Reading stages, including each stage's minimal prompt input and
 validated model output. The canonical Grammatical result uses the matching
-concrete German Dumling Selection and Surface contracts. `Unresolved` and
+concrete German Dumling Attestation and Surface contracts. `Unresolved` and
 Reading decision mismatches remain visible as prompt-quality diagnostics. A
 valid non-noun Target stops visibly as `ResolutionRouteNotImplemented` before
 another model call; only German Lexeme/NOUN is enabled through Grammatical and
@@ -48,7 +48,8 @@ laboratory bench, not production behavior.
 Target Classification may group several contiguous or discontinuous Segments
 into one Analysis Target. Every member is marked in the segmented sentence.
 After the first complete resolution, clicking another marked member creates a
-new click-local Selection while reusing the shared Surface, Lemma, and Reading;
+the same click-independent Attestation while keeping click state in the
+Dumgen-owned interaction envelope and reusing the shared Surface, Lemma, and Reading;
 the UI reports a **Member cache hit** and zero model calls.
 
 Useful first probes are `Guten Morgen`, a separable verb such as

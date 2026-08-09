@@ -155,6 +155,7 @@ describe("Lexeme/PROPN route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Typo"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "München" },
 				lemma: { canonicalForm: "München" },
 			},
@@ -165,6 +166,7 @@ describe("Lexeme/PROPN route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "NATO" },
 				lemma: {
 					canonicalForm: "NATO",
@@ -277,7 +279,6 @@ describe("Lexeme/PROPN route-local corpus", () => {
 		const modelSurface = {
 			normalizedSurface: "Berlin",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Inflection",
 			surfaceFeatures: { historicalStatus: null },
 			inflectionalFeatures: { case: "Dat", number: "Sing" },

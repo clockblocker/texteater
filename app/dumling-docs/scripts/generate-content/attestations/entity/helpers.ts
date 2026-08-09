@@ -1,12 +1,12 @@
 import type {
+	Attestation,
 	EntityKind,
 	EntityValue,
 	Lemma,
-	Selection,
 	SupportedLanguage,
 	Surface,
 } from "dumling/types";
-import { isSelection, isSurface } from "./guards";
+import { isAttestation, isSurface } from "./guards";
 
 export function languageLabelFor(language: SupportedLanguage): string {
 	const labels: Record<SupportedLanguage, string> = {
@@ -18,8 +18,8 @@ export function languageLabelFor(language: SupportedLanguage): string {
 }
 
 export function entityKindFor(value: EntityValue): EntityKind {
-	if (isSelection(value)) {
-		return "Selection";
+	if (isAttestation(value)) {
+		return "Attestation";
 	}
 	if (isSurface(value)) {
 		return "Surface";
@@ -28,13 +28,13 @@ export function entityKindFor(value: EntityValue): EntityKind {
 }
 
 export function surfaceForEntity(
-	value: Surface<SupportedLanguage> | Selection<SupportedLanguage>,
+	value: Surface<SupportedLanguage> | Attestation<SupportedLanguage>,
 ): Surface<SupportedLanguage> {
-	return isSelection(value) ? value.surface : value;
+	return isAttestation(value) ? value.surface : value;
 }
 
 export function lemmaForEntity(value: EntityValue): Lemma<SupportedLanguage> {
-	if (isSelection(value)) {
+	if (isAttestation(value)) {
 		return value.surface.lemma;
 	}
 	if (isSurface(value)) {

@@ -1,6 +1,6 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as lookUpVerb } from "../../../attestations/en/selection/Please_look_it_up_before_replying/Please_[look]_it_up_before_replying.ts";
-import { attestation as takeOffVerb } from "../../../attestations/en/selection/The_plane_will_take_off_at_dawn/The_plane_will_[take]_off_at_dawn.ts";
+import { attestation as lookUpVerb } from "../../../attestations/en/attestation/Please_look_it_up_before_replying/Please_[look]_it_up_before_replying.ts";
+import { attestation as takeOffVerb } from "../../../attestations/en/attestation/The_plane_will_take_off_at_dawn/The_plane_will_[take]_off_at_dawn.ts";
 
 const document = defineUniversalConceptPage({
 	description:
@@ -36,7 +36,7 @@ In current Dumling usage this marks English phrasal verbs such as \`take off\` a
 			body: `
 \`Phrasal\` is a core fact about the Lemma.
 
-Selections may include only the verbal component, as in \`take\` from \`take off\` or \`look\` from \`look ... up\`, while still pointing back to a phrasal Lemma whose full normalized surface is multiword.
+Partial Attestations may include only the verbal component, as in \`take\` from \`take off\` or \`look\` from \`look ... up\`, while still pointing back to a phrasal Lemma whose full normalized surface is multiword.
 `,
 		},
 		{

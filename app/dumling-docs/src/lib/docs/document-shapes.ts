@@ -1,4 +1,4 @@
-import type { AttestedSelection } from "dumling/types";
+import type { Attestation } from "dumling/types";
 import type { Prettify } from "../../../helper-types";
 
 export type DocPageMeta = {
@@ -13,6 +13,15 @@ export const generatedDocPageMarker = "generated-doc-page";
 export const universalConceptPageMarker = "universal-concept-page";
 export const languageOverlayPageMarker = "language-overlay-page";
 
+/** Docs-owned review context around a fleeting Dumling Attestation. */
+export type AttestedAttestation = Readonly<{
+	attestation: Attestation;
+	classifierNotes?: string;
+	classificationMistakes?: string;
+	isVerified?: true;
+	sentenceMarkdown: string;
+}>;
+
 export type DocCitePageFamily =
 	| "scope"
 	| "entity"
@@ -23,12 +32,12 @@ export type DocCitePageFamily =
 	| "phraseme"
 	| "construction"
 	| "feature"
-	| "feature-selection"
+	| "feature-attestation"
 	| "feature-surface";
 
 export type DocSection = {
 	body?: string;
-	examples?: readonly AttestedSelection[];
+	examples?: readonly AttestedAttestation[];
 	heading?: string;
 };
 

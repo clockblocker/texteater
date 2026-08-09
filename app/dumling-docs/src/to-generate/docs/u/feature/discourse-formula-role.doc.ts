@@ -1,7 +1,7 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as gutenTagGreeting } from "../../../attestations/de/selection/Guten_Tag_ich_habe_einen_Termin/[Guten_Tag]_ich_habe_einen_Termin.ts";
-import { attestation as tutMirLeidApology } from "../../../attestations/de/selection/Tut_mir_leid_das_war_mein_Fehler/[Tut_mir_leid]_das_war_mein_Fehler.ts";
-import { attestation as noWorriesAcknowledgment } from "../../../attestations/en/selection/No_worries_I_already_fixed_it/[No_worries]_I_already_fixed_it.ts";
+import { attestation as gutenTagGreeting } from "../../../attestations/de/attestation/Guten_Tag_ich_habe_einen_Termin/[Guten_Tag]_ich_habe_einen_Termin.ts";
+import { attestation as tutMirLeidApology } from "../../../attestations/de/attestation/Tut_mir_leid_das_war_mein_Fehler/[Tut_mir_leid]_das_war_mein_Fehler.ts";
+import { attestation as noWorriesAcknowledgment } from "../../../attestations/en/attestation/No_worries_I_already_fixed_it/[No_worries]_I_already_fixed_it.ts";
 
 const document = defineUniversalConceptPage({
 	description:
@@ -48,7 +48,7 @@ The value should capture the formula's pragmatic function in interaction, such a
 
 A click may select one Segment while its Surface occurrence spans the whole
 formula. If the attested formula itself omits lexical material,
-\`Surface.realizationCoverage\` may be \`Partial\`. In both cases the feature
+\`Attestation.realizationCoverage\` may be \`Partial\`. In both cases the feature
 still belongs on the underlying phraseme Lemma.
 `,
 		},

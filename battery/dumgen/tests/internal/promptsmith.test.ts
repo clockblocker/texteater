@@ -182,7 +182,6 @@ describe("German prompt projections", () => {
 		const modelCitationSurface = {
 			normalizedSurface: "Bank",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		} as const;
@@ -205,7 +204,6 @@ describe("German prompt projections", () => {
 		const modelSurface = {
 			normalizedSurface: "Banken",
 			spelling: "Canonical",
-			realizationCoverage: "Full",
 			surfaceKind: "Inflection",
 			surfaceFeatures: null,
 			inflectionalFeatures: { case: "Nom", number: "Plur" },
@@ -247,7 +245,6 @@ describe("German prompt projections", () => {
 				language: "de",
 				normalizedSurface: "Banken",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				lemma: otherLemma,

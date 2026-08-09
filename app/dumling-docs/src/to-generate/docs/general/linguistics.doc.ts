@@ -35,7 +35,6 @@ The Surface always contains a \`Lemma\`. It owns:
 
 - \`normalizedSurface\`: the normalized form, such as \`gave up\`
 - \`spelling\`: \`Canonical\` or a licensed \`Variant\`, such as \`armor\` / \`armour\`
-- \`realizationCoverage\`: \`Full\` or \`Partial\`; \`heulte mit\` can partially realize \`mit den Wölfen heulen\`
 - inflectional features and Lemma identity
 
 There are two surface kinds:
@@ -45,25 +44,25 @@ There are two surface kinds:
 
 Inflection surfaces carry \`inflectionalFeatures\`, such as number, case, tense, person, gender, degree, definiteness, or verb form, depending on the language and Lemma kind.
 
-## Selection
+## Attestation
 
-A \`Selection\` is the sentence-local resolution produced by a learner click.
+A \`Attestation\` is fleeting, click-independent occurrence evidence linked to
+one Surface.
 
-The Selection stores an immutable \`segmentedSentenceId\`, the local
-\`clickedSegmentIndex\`, all \`surfaceSegmentIndices\`, the noisy
-\`attestedSurface\`, and whether the clicked segment's orthography is
-\`Standard\` or a \`Typo\`.
+Its non-empty \`members\` tuple preserves source order. Each member pairs its
+exact \`attested\` string with \`Standard\` or \`Typo\` orthography evidence.
+\`realizationCoverage\` is \`Full\` or \`Partial\`; for example, \`heulte mit\`
+can partially realize \`mit den Wölfen heulen\`.
 
 The full chain is:
 
 \`\`\`txt
-Selection -> Surface -> Lemma
+Attestation -> Surface -> Lemma
 \`\`\`
 
-Only clicked \`ResolvableText\` segments are selectable today. A click can resolve to a
-discontinuous Surface occurrence: clicking either \`gvae\` or \`up\` may carry
-the same indices and attested text \`gvae up\`, while only the \`gvae\` click is
-marked \`Typo\`.
+An Attestation can be discontinuous: the members \`gvae\` and \`up\` preserve
+the same occurrence while the first member alone carries \`Typo\`. Sentence
+IDs, click indices, and marked context belong to the calling application.
 
 ## Lemma Families and Kinds
 
@@ -87,7 +86,7 @@ this package:
 
 The same Lemma may participate in several Readings. A classifier reuses a
 learner's existing Reading when it is close enough or proposes a new one; a
-Dumling \`Meaning\` or \`Sense\` DTO does not exist.
+learner-owned Reading remains an application value rather than a Dumling DTO.
 
 ## Features
 
@@ -95,8 +94,9 @@ Features are split by where they belong:
 
 - \`coreFeatures\` describe the Lemma itself
 - \`inflectionalFeatures\` describe a concrete inflected surface
-- \`selectedOrthography\` describes the clicked segment
-- \`spelling\` and \`realizationCoverage\` describe the Surface
+- each Attestation member owns its \`orthography\`
+- \`realizationCoverage\` describes the Attestation
+- \`spelling\` describes the Surface
 - \`surfaceFeatures\` describe marked properties of the resolved surface itself, such as \`historicalStatus: "Archaic"\`
 
 Each language narrows the abstract feature inventory. For example, German nouns support grammatical gender as a core feature and case/number as inflectional features. English nouns support number inflection but not grammatical case in the same way. Hebrew supports language-specific features such as \`hebBinyan\` for verbs.

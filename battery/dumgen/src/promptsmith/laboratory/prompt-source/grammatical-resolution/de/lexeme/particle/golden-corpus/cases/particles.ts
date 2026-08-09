@@ -132,10 +132,10 @@ function resolved(
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: [orthography],
+			realizationCoverage: "Full" as const,
 			surface: {
 				normalizedSurface,
 				spelling,
-				realizationCoverage: "Full" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},

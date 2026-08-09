@@ -16,7 +16,7 @@ export function validateAttestationPath(
 	}
 
 	const actualBaseName = basename(source.sourcePath, ".ts");
-	if (entityKindFor(source.entity) === "Selection") {
+	if (entityKindFor(source.entity) === "Attestation") {
 		return;
 	}
 	if (actualBaseName !== attestationSlug) {

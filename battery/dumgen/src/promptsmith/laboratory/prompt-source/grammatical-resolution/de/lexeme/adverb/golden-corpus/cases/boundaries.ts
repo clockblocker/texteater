@@ -60,10 +60,10 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				decision: "Resolved",
 				resolution: {
 					memberOrthographies: ["Standard", "Standard"],
+					realizationCoverage: "Full",
 					surface: {
 						normalizedSurface: "da … für",
 						spelling: "Variant",
-						realizationCoverage: "Full",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
 					},

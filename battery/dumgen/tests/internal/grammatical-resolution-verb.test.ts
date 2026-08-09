@@ -138,6 +138,7 @@ describe("Lexeme/VERB route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Full" as const,
 				surface: {
 					normalizedSurface: "pass auf",
 					inflectionalFeatures: {
@@ -198,6 +199,7 @@ describe("Lexeme/VERB route-local corpus", () => {
 		).toMatchObject({
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Full" as const,
 				surface: { normalizedSurface: "steht auf" },
 				lemma: {
 					canonicalForm: "aufstehen",

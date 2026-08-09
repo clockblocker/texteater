@@ -58,8 +58,8 @@ export function evaluatePairedFrameGrammaticalResolution(args: {
 			(actual?.surface.spelling ?? null) ===
 			(expected?.surface.spelling ?? null),
 		realizationCoveragePass:
-			(actual?.surface.realizationCoverage ?? null) ===
-			(expected?.surface.realizationCoverage ?? null),
+			(actual?.realizationCoverage ?? null) ===
+			(expected?.realizationCoverage ?? null),
 		surfaceFeaturesPass: equal(
 			canonicalSurfaceFeatures(actual?.surface.surfaceFeatures),
 			canonicalSurfaceFeatures(expected?.surface.surfaceFeatures),

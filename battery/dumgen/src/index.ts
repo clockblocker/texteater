@@ -14,6 +14,7 @@ export {
 	type DumgenOptions,
 	type EnabledSegmentationLanguage,
 	type GrammaticalInput,
+	type GrammaticalInteraction,
 	type GrammaticalResolutionLanguage,
 	type GrammaticalResult,
 	type GrammaticalRoute,
@@ -23,5 +24,6 @@ export {
 	type Segment,
 	type SegmentationResult,
 	type SegmentedSentence,
+	type SegmentedSentenceId,
 	type SegmentKind,
 } from "./dumgen";

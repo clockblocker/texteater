@@ -90,7 +90,6 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 			deAphorismModelCitationSurfaceSchema.parse({
 				normalizedSurface: "Alt werden heißt sehend werden",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
@@ -99,7 +98,6 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 			deAphorismModelCitationSurfaceSchema.parse({
 				normalizedSurface: "Alt werden heißt sehend werden",
 				spelling: "Canonical",
-				realizationCoverage: "Full",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
 				inflectionalFeatures: {},
@@ -208,6 +206,7 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 					"Standard",
 					"Standard",
 				],
+				realizationCoverage: "Full" as const,
 				surface: {
 					normalizedSurface: "Wer nichts weiß muß alles glauben",
 					spelling: "Variant",
@@ -389,6 +388,7 @@ describe("Phraseme/Aphorism pure diagnostic evaluator", () => {
 					testCase.idealOutput.resolution.memberOrthographies.slice(
 						1,
 					),
+				realizationCoverage: "Full" as const,
 				surface: {
 					...testCase.idealOutput.resolution.surface,
 					normalizedSurface: "Die Nachahmer",

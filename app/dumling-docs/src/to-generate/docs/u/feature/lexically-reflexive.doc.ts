@@ -1,5 +1,5 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
-import { attestation as erinnertVerb } from "../../../attestations/de/selection/Sie_erinnert_sich_an_den_Geruch/Sie_[erinnert]_sich_an_den_Geruch.ts";
+import { attestation as erinnertVerb } from "../../../attestations/de/attestation/Sie_erinnert_sich_an_den_Geruch/Sie_[erinnert]_sich_an_den_Geruch.ts";
 
 const document = defineUniversalConceptPage({
 	description:
@@ -35,7 +35,7 @@ Do not add it merely because one attested clause happens to contain a reflexive 
 			body: `
 \`LexicallyReflexive\` is a core Lemma-level feature, not an inflectional Surface feature.
 
-The selected token may exclude the reflexive element entirely, as in a selection of \`erinnert\` from \`Sie erinnert sich an den Geruch\`, but the Lemma still carries the same \`lexicallyReflexive\` value.
+The attested members may exclude the reflexive element entirely, as with \`erinnert\` from \`Sie erinnert sich an den Geruch\`, but the Lemma still carries the same \`lexicallyReflexive\` value.
 `,
 		},
 		{
