@@ -1,5 +1,8 @@
 # Issue #22 compact German noun DTO experiment report
 
+> Archived: the executable experiment sources have been removed. This report
+> and its retained run data are historical evidence, not a runnable prototype.
+
 ## Verdict
 
 **REVISE; do not adopt the compact DTOs into the default catalog.**
@@ -24,13 +27,10 @@ The experiment asked whether deliberately tiny property names and enum codes
 could preserve the same German `de / Lexeme / NOUN` Grammatical and Reading
 Resolution results with substantially fewer tokens.
 
-The compact runtime is opt-in under
-`src/experiments/issue-22-compact-noun-dtos`; its authored Prompt Sources and
-generated assets remain under
-`src/promptsmith/laboratory/experiments/issue-22-compact-noun-dtos`. It is not
-imported by the default `PROMPT_CATALOG` or Dumgen public entrypoint.
-Application inputs and decoded results remain canonical. Only model-bound DTOs,
-experiment prompts, and experiment examples are compact.
+The compact runtime was opt-in and was never imported by the default
+`PROMPT_CATALOG` or Dumgen public entrypoint. Its executable sources have since
+been removed; the report and retained run data preserve the experiment's
+historical result.
 
 ## Method
 
@@ -57,8 +57,8 @@ After that run, the compact legends were completed and generated directly from
 the authoritative field/code maps. No paid calls were repeated for this
 contract-only correction. The retained v1 live prompt signature is therefore
 the recorded compact prompt size: 1,692 bytes for Grammar and 1,151 bytes for
-Reading; that runner predates prompt-hash recording. Current v2 deterministic
-prompt fingerprints are:
+Reading; that runner predates prompt-hash recording. The last retained v2
+deterministic prompt fingerprints were:
 
 - compact Grammar: 2,106 bytes,
   `4c2fde8670250b4ef71129320328f6c9519971c9899f06121f991e394d225ccf`;

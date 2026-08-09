@@ -60,7 +60,11 @@ describe("Prompt Assembly", () => {
 			"intake-unsupported",
 			"intake-de-boundary-isolation",
 		]);
-		expect(intakePromptSource.demonstrations?.ids).toEqual([
+		const demonstrations = intakePromptSource.demonstrations;
+		if (demonstrations === undefined || !("ids" in demonstrations)) {
+			throw new Error("Intake demonstrations must be a Case Selection.");
+		}
+		expect(demonstrations.ids).toEqual([
 			"intake-de-core",
 			"intake-he-core",
 		]);
