@@ -4,9 +4,11 @@ Issue [#84](https://github.com/clockblocker/texteater/issues/84) freezes a
 representation-neutral German semantic oracle. It deliberately records complete
 Segment arrays and ordered original `memberSegmentIndices`; experiments must
 adapt their private DTOs to that contract rather than rewrite the oracle. The
-104 cases comprise six explicitly selected demonstrations, 94 explicitly
-selected held-out cases, and four same-stimulus click variants retained only to
-complete member-click coverage. No provider was called.
+130 cases comprise twenty explicitly selected demonstrations, 94 explicitly
+selected held-out cases, and sixteen role-neutral support or member-click
+coverage cases. The prompt-remediation teaching stimuli were
+added without changing the held-out selection, so the next experiment remains
+comparable to the retained failed run. No provider was called by this change.
 
 Collection membership is role-neutral: `routes`, `boundaries`, and `robustness`
 describe what each case exercises, while only `selections.ts` assigns

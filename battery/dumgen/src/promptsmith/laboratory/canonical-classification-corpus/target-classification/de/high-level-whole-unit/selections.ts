@@ -6,8 +6,22 @@ export const demonstrationSelection = corpus.select([
 	"target-de-boundary-multi-verb-click-gehen",
 	"target-de-core-kakao",
 	"target-de-route-lexeme-x",
-	"target-de-core-trotz",
 	"target-de-core-unresolved-qzxv",
+	"target-de-demo-default-modal-kann",
+	"target-de-demo-default-particle-nicht",
+	"target-de-demo-default-interjection-oh",
+	"target-de-demo-default-copula-ist",
+	"target-de-demo-aphorism-zeit-click-ist",
+	"target-de-demo-paired-entweder-click-oder",
+	"target-de-demo-idiom-faden-click-den",
+	"target-de-demo-literal-faden-click-faden",
+	"target-de-demo-governed-rechnen-click-mit",
+	"target-de-demo-adjunct-rechnen-click-mit",
+	"target-de-demo-inherent-reflexive-click-sich",
+	"target-de-demo-optional-reflexive-click-sich",
+	"target-de-demo-perfect-arbeiten-click-hat",
+	"target-de-demo-passive-brief-click-wird",
+	"target-de-demo-collocation-kenntnis-click-zur",
 ]);
 
 export const evaluationSelection = corpus.select([

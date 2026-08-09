@@ -9,6 +9,8 @@ export const IDS = {
 	modalVerb: "https://grammis.ids-mannheim.de/terminologie/155",
 	copula: "https://grammis.ids-mannheim.de/terminologie/146",
 	pairedFrame: "https://grammis.ids-mannheim.de/systematische-grammatik/2118",
+	pairedEitherOr:
+		"https://grammis.ids-mannheim.de/systematische-grammatik/2566",
 	proverbMorgenstund:
 		"https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13187/file/Hein_Zugang_zur_Sprichwortbedeutung_2012.pdf",
 	idiomIce:

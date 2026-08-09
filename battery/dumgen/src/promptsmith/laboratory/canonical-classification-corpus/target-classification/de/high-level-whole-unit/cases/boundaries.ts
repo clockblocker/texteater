@@ -7,7 +7,7 @@ import { addCaseEvidence, resolved, sentence } from "./builders";
 import { evidence, IDS } from "./sources";
 
 const greeting = sentence(["Guten", "Morgen"], "!");
-const demonstrationCollocation = sentence([
+const demonstrationDecisionCollocation = sentence([
 	"Der",
 	"Ausschuss",
 	"trifft",
@@ -53,6 +53,67 @@ const fixedFunctionWords = sentence([
 	"hungrigen",
 	"Wölfen",
 ]);
+const demonstrationIdiom = sentence([
+	"Nach",
+	"der",
+	"Zwischenfrage",
+	"verlor",
+	"sie",
+	"den",
+	"Faden",
+]);
+const demonstrationLiteral = sentence([
+	"Beim",
+	"Nähen",
+	"verlor",
+	"sie",
+	"den",
+	"roten",
+	"Faden",
+]);
+const demonstrationGoverned = sentence([
+	"Sie",
+	"rechnet",
+	"mit",
+	"starkem",
+	"Regen",
+]);
+const demonstrationAdjunct = sentence([
+	"Sie",
+	"rechnet",
+	"mit",
+	"dem",
+	"Taschenrechner",
+]);
+const demonstrationInherentReflexive = sentence([
+	"Sie",
+	"beeilt",
+	"sich",
+	"heute",
+]);
+const demonstrationOptionalReflexive = sentence([
+	"Sie",
+	"kämmt",
+	"sich",
+	"morgens",
+]);
+const demonstrationPerfect = sentence(["Er", "hat", "gestern", "gearbeitet"]);
+const demonstrationPassive = sentence([
+	"Der",
+	"Brief",
+	"wird",
+	"morgen",
+	"verschickt",
+]);
+const demonstrationKnowledgeCollocation = sentence([
+	"Sie",
+	"nahm",
+	"den",
+	"Antrag",
+	"gründlich",
+	"zur",
+	"Kenntnis",
+]);
 const DECISION_TREFFEN_CONTAMINATION_KEY =
 	"target-lexical-unit:eine-entscheidung-treffen";
 const AUFSTEHEN_CONTAMINATION_KEY = "target-lexical-unit:aufstehen";
@@ -78,7 +139,7 @@ const cases = {
 	},
 	"target-de-core-entscheidung-click-entscheidung": {
 		...resolved(
-			demonstrationCollocation,
+			demonstrationDecisionCollocation,
 			8,
 			[4, 6, 8],
 			"Phraseme",
@@ -88,7 +149,7 @@ const cases = {
 	},
 	"target-de-core-entscheidung-click-trifft": {
 		...resolved(
-			demonstrationCollocation,
+			demonstrationDecisionCollocation,
 			4,
 			[4, 6, 8],
 			"Phraseme",
@@ -98,7 +159,7 @@ const cases = {
 	},
 	"target-de-core-entscheidung-click-eine": {
 		...resolved(
-			demonstrationCollocation,
+			demonstrationDecisionCollocation,
 			6,
 			[4, 6, 8],
 			"Phraseme",
@@ -401,6 +462,126 @@ const cases = {
 		"Lexeme",
 		"ADJ",
 	),
+
+	"target-de-demo-idiom-faden-click-verlor": resolved(
+		demonstrationIdiom,
+		6,
+		[6, 10, 12],
+		"Phraseme",
+		"Idiom",
+	),
+	"target-de-demo-idiom-faden-click-den": resolved(
+		demonstrationIdiom,
+		10,
+		[6, 10, 12],
+		"Phraseme",
+		"Idiom",
+	),
+	"target-de-demo-idiom-faden-click-faden": resolved(
+		demonstrationIdiom,
+		12,
+		[6, 10, 12],
+		"Phraseme",
+		"Idiom",
+	),
+	"target-de-demo-literal-faden-click-faden": resolved(
+		demonstrationLiteral,
+		12,
+		[12],
+		"Lexeme",
+		"NOUN",
+	),
+	"target-de-demo-governed-rechnen-click-rechnet": resolved(
+		demonstrationGoverned,
+		2,
+		[2, 4],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-governed-rechnen-click-mit": resolved(
+		demonstrationGoverned,
+		4,
+		[2, 4],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-adjunct-rechnen-click-mit": resolved(
+		demonstrationAdjunct,
+		4,
+		[4],
+		"Lexeme",
+		"ADP",
+	),
+	"target-de-demo-inherent-reflexive-click-beeilt": resolved(
+		demonstrationInherentReflexive,
+		2,
+		[2, 4],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-inherent-reflexive-click-sich": resolved(
+		demonstrationInherentReflexive,
+		4,
+		[2, 4],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-optional-reflexive-click-sich": resolved(
+		demonstrationOptionalReflexive,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-demo-perfect-arbeiten-click-hat": resolved(
+		demonstrationPerfect,
+		2,
+		[2, 6],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-perfect-arbeiten-click-gearbeitet": resolved(
+		demonstrationPerfect,
+		6,
+		[2, 6],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-passive-brief-click-wird": resolved(
+		demonstrationPassive,
+		4,
+		[4, 8],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-passive-brief-click-verschickt": resolved(
+		demonstrationPassive,
+		8,
+		[4, 8],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-collocation-kenntnis-click-nahm": resolved(
+		demonstrationKnowledgeCollocation,
+		2,
+		[2, 10, 12],
+		"Phraseme",
+		"Collocation",
+	),
+	"target-de-demo-collocation-kenntnis-click-zur": resolved(
+		demonstrationKnowledgeCollocation,
+		10,
+		[2, 10, 12],
+		"Phraseme",
+		"Collocation",
+	),
+	"target-de-demo-collocation-kenntnis-click-kenntnis": resolved(
+		demonstrationKnowledgeCollocation,
+		12,
+		[2, 10, 12],
+		"Phraseme",
+		"Collocation",
+	),
 } satisfies GoldenCaseRegistry<
 	typeof canonicalInputSchema,
 	typeof canonicalOutputSchema
@@ -411,6 +592,51 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId.includes("demo-idiom-faden")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"IDS establishes the fixed multiword criterion. In the supplied context, issue #82 treats den Faden verlieren as a figurative Phraseme/Idiom and includes the fixed verb, determiner, and noun.",
+		);
+	}
+	if (caseId.includes("demo-literal-faden")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"The sewing context makes Faden a literal free noun rather than the figurative fixed expression; issue #82 therefore selects only the clicked Lexeme/NOUN.",
+		);
+	}
+	if (
+		caseId.includes("demo-governed-rechnen") ||
+		caseId.includes("demo-adjunct-rechnen")
+	) {
+		return evidence(
+			IDS.prepositionalGroup,
+			"IDS distinguishes verb-governed prepositions from freely selected adverbial PPs. Issue #82 groups rechnet mit for lexical government but keeps instrumental mit dem Taschenrechner separate.",
+		);
+	}
+	if (
+		caseId.includes("demo-inherent-reflexive") ||
+		caseId.includes("demo-optional-reflexive")
+	) {
+		return evidence(
+			IDS.reflexivePronoun,
+			"IDS distinguishes the lexically required pronoun of an inherently reflexive verb from an ordinary anaphoric object. Issue #82 groups beeilt sich but keeps the contextual pronoun in kämmt sich separate.",
+		);
+	}
+	if (
+		caseId.includes("demo-perfect-arbeiten") ||
+		caseId.includes("demo-passive-brief")
+	) {
+		return evidence(
+			IDS.verbalPeriphrasis,
+			"IDS analyzes haben/werden plus the infinite full-verb form as a perfect or passive verbal periphrasis. Issue #82 groups only the realized auxiliary and lexical verb, excluding intervening free context.",
+		);
+	}
+	if (caseId.includes("demo-collocation-kenntnis")) {
+		return evidence(
+			IDS.functionVerbGroup,
+			"IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Issue #82 includes nahm, zur, and Kenntnis while excluding the free argument and modifier.",
+		);
+	}
 	if (caseId.includes("guten-morgen")) {
 		return evidence(
 			IDS.phraseolexeme,

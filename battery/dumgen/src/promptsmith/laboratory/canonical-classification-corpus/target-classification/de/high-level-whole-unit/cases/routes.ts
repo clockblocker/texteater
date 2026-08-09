@@ -112,6 +112,13 @@ const pairedFrameFiller = (clickedSegmentIndex: number) => ({
 const aphorism = sentence(["Wissen", "ist", "Macht"]);
 const discourseFormula = sentence(["Herzlichen", "Dank"], "!");
 const proverb = sentence(["Morgenstund", "hat", "Gold", "im", "Mund"]);
+const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
+const demonstrationPairedFrame = sentence([
+	"Entweder",
+	"heute",
+	"oder",
+	"morgen",
+]);
 const pairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
@@ -231,6 +238,99 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			4,
 			"X",
 		),
+		"target-de-demo-default-modal-kann": lexeme(
+			["Heute", "kann", "Lea", "arbeiten"],
+			2,
+			"AUX",
+		),
+		"target-de-demo-default-particle-nicht": lexeme(
+			["Lea", "kommt", "heute", "nicht"],
+			6,
+			"PART",
+		),
+		"target-de-demo-default-interjection-oh": lexeme(
+			["Oh", "das", "überrascht", "mich"],
+			0,
+			"INTJ",
+		),
+		"target-de-demo-default-copula-ist": {
+			...resolved(
+				sentence(["Heute", "ist", "Lea", "müde"]),
+				2,
+				[2],
+				"Lexeme",
+				"AUX",
+			),
+			explanation: evidence(
+				IDS.copula,
+				"IDS classifies ist as a copula combined with a predicative complement. Issue #82 keeps the meaning-bearing copula as the standalone high-level Lexeme/AUX target rather than grouping it with müde.",
+			),
+		},
+		"target-de-demo-aphorism-zeit-click-zeit": {
+			...resolved(
+				demonstrationAphorism,
+				0,
+				[0, 2, 4],
+				"Phraseme",
+				"Aphorism",
+			),
+			explanation: evidence(
+				IDS.phraseolexeme,
+				"IDS establishes the fixed multiword criterion. Issue #82 treats Zeit ist Geld as the complete Phraseme/Aphorism target under the German high-level policy.",
+			),
+		},
+		"target-de-demo-aphorism-zeit-click-ist": {
+			...resolved(
+				demonstrationAphorism,
+				2,
+				[0, 2, 4],
+				"Phraseme",
+				"Aphorism",
+			),
+			explanation: evidence(
+				IDS.phraseolexeme,
+				"The clicked copular spelling participates in the fixed Aphorism rather than becoming a standalone AUX under this high-level occurrence.",
+			),
+		},
+		"target-de-demo-aphorism-zeit-click-geld": {
+			...resolved(
+				demonstrationAphorism,
+				4,
+				[0, 2, 4],
+				"Phraseme",
+				"Aphorism",
+			),
+			explanation: evidence(
+				IDS.phraseolexeme,
+				"Every fixed member click returns the same source-ordered Aphorism target.",
+			),
+		},
+		"target-de-demo-paired-entweder-click-entweder": {
+			...resolved(
+				demonstrationPairedFrame,
+				0,
+				[0, 4],
+				"Construction",
+				"PairedFrame",
+			),
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"IDS describes entweder ... oder as a correlated pair. Issue #82 includes only the two fixed anchors in Construction/PairedFrame membership.",
+			),
+		},
+		"target-de-demo-paired-entweder-click-oder": {
+			...resolved(
+				demonstrationPairedFrame,
+				4,
+				[0, 4],
+				"Construction",
+				"PairedFrame",
+			),
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"The alternative fillers heute and morgen are free context; either fixed anchor selects the same PairedFrame.",
+			),
+		},
 		"target-de-route-phraseme-aphorism-click-wissen": fixedPhraseme(
 			aphorism,
 			0,

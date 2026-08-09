@@ -13,8 +13,14 @@ or public DTO. It compares three private Structured Output contracts:
 
 All arms use the same compact input. Whitespace is removed while Punctuation
 and OpaqueText remain. Each adapter owns compact↔original maps, materializes the
-same six #84 demonstrations, decodes into the canonical original-index output,
+same twenty #84 demonstrations, decodes into the canonical original-index output,
 and is scored by the same #84 evaluator over the exact frozen 94 held-outs.
+
+The retained v3 run ended in `NoWinner` and exposed representation-independent
+prompt failures. Version v4 replaces that prompt with a policy-first account of
+the high-level task and twenty deliberately varied teaching cases. The 94
+held-outs and the exact 564-call comparison schedule are unchanged, so a new
+run remains comparable while the failed run stays as historical evidence.
 
 ## Deterministic preflight
 

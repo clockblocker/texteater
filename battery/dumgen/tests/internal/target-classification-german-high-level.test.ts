@@ -15,7 +15,7 @@ import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(104);
+		expect(corpus.all().ids).toHaveLength(130);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
@@ -26,8 +26,22 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"target-de-boundary-multi-verb-click-gehen",
 			"target-de-core-kakao",
 			"target-de-route-lexeme-x",
-			"target-de-core-trotz",
 			"target-de-core-unresolved-qzxv",
+			"target-de-demo-default-modal-kann",
+			"target-de-demo-default-particle-nicht",
+			"target-de-demo-default-interjection-oh",
+			"target-de-demo-default-copula-ist",
+			"target-de-demo-aphorism-zeit-click-ist",
+			"target-de-demo-paired-entweder-click-oder",
+			"target-de-demo-idiom-faden-click-den",
+			"target-de-demo-literal-faden-click-faden",
+			"target-de-demo-governed-rechnen-click-mit",
+			"target-de-demo-adjunct-rechnen-click-mit",
+			"target-de-demo-inherent-reflexive-click-sich",
+			"target-de-demo-optional-reflexive-click-sich",
+			"target-de-demo-perfect-arbeiten-click-hat",
+			"target-de-demo-passive-brief-click-wird",
+			"target-de-demo-collocation-kenntnis-click-zur",
 		]);
 		expect(evaluationSelection.ids).toHaveLength(94);
 		expect(demonstrationSelection.isDisjointFrom(evaluationSelection)).toBe(
@@ -35,7 +49,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		);
 		expect(
 			demonstrationSelection.union(evaluationSelection).ids,
-		).toHaveLength(100);
+		).toHaveLength(114);
 	});
 
 	test("covers every reachable route and records PUNCT as a clickability gap", () => {

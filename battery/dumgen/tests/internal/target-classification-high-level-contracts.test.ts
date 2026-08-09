@@ -98,7 +98,7 @@ describe("target classification high-level contract prototype", () => {
 	test("preflights one frozen corpus through all arms with exact hashes and cost cap", () => {
 		const preflight = preparePrototypePreflight();
 		expect(evaluationSelection.ids).toHaveLength(94);
-		expect(demonstrationSelection.ids).toHaveLength(6);
+		expect(demonstrationSelection.ids).toHaveLength(20);
 		expect(preflight.attemptsPerArm).toBe(ATTEMPTS_PER_ARM);
 		expect(preflight.expectedResolvedModel).toBe("gpt-5.6-luna");
 		expect(EXPECTED_CALLS_PER_ARM).toBe(188);
@@ -145,7 +145,7 @@ describe("target classification high-level contract prototype", () => {
 		}
 	});
 
-	test("round-trips all 100 selected ideals and shares each compact stimulus", () => {
+	test("round-trips all 114 selected ideals and shares each compact stimulus", () => {
 		const selected = demonstrationSelection.union(evaluationSelection);
 		for (const [index, caseId] of selected.ids.entries()) {
 			const goldenCase = selected.cases[index];
