@@ -12,7 +12,7 @@ test("repository policy rejects governed dependency version mismatches", async (
 		name: "second",
 	});
 	for (const [dir, version] of [
-		[first, "2.2.6"],
+		[first, "2.5.7"],
 		[second, "^2.6.0"],
 	] as const) {
 		const manifest = await Bun.file(join(dir, "package.json")).json();
@@ -29,7 +29,7 @@ test("repository policy rejects governed dependency version mismatches", async (
 		issues.some(
 			(issue) =>
 				issue.location.includes("second") &&
-				issue.message.includes("@biomejs/biome must use 2.2.6"),
+				issue.message.includes("@biomejs/biome must use 2.5.7"),
 		),
 	).toBe(true);
 });
