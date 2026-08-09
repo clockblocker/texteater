@@ -124,18 +124,32 @@ equality is used only when the route's semantics make it authoritative.
 The exact source text submitted to sentence-first discovery, before any learner
 click is interpreted.
 
+### Stitched Text
+The authoritative text produced when Intake minimally repairs whitespace in a
+Source Sentence. It may delete whitespace to rejoin blown-off fragments or
+insert whitespace to separate accidentally joined words, but it preserves every
+non-whitespace code point and their order.
+
+### Source Segmentation
+The deterministic partitioning of Stitched Text into learner-facing Segments.
+It does not perform lexical-internal morphology or resolve the grammatical
+target to which a learner click will later lead.
+_Avoid_: Morphological segmentation, tokenization
+
 ### Enabled Segmentation Language
 A Dumling Supported Language for which Dumgen has an enabled language-specific
-Segmentation route. German is the only Enabled Segmentation Language for now;
-the intended inventory is eventually every Dumling Supported Language.
+Source Segmentation route. German and Hebrew are the Enabled Segmentation
+Languages for the Section 1 path; the intended inventory is eventually every
+Dumling Supported Language.
 _Avoid_: Supported language, when referring specifically to Dumgen route availability
 
 ### Intake Decision
-The result of resolving a Source Sentence to its language before segmentation.
+The result of minimally stitching a Source Sentence and resolving its language
+before Source Segmentation.
 
 It has exactly one outcome:
-- `Accepted`, with the Enabled Segmentation Language to which some useful
-  material can be dispatched for segmentation as `ResolvableText`
+- `Accepted`, with the Stitched Text and Enabled Segmentation Language to which
+  some useful material can be dispatched as `ResolvableText`
 - `UnsupportedLanguage`, with the resolved language for valid language input
   that has no enabled Dumgen Segmentation route
 - `Unintelligible`, for gibberish or input too corrupted to support a
@@ -145,14 +159,14 @@ Unsupported language input is not malformed input.
 Malformed but intelligible language remains accepted. An accepted sentence may
 contain local `OpaqueText`; intake does not require a count or percentage of
 resolvable material. The Dumgen module dispatches an accepted result to
-`Segmentation<language>`; it does not hardcode a segmentation language after
-Intake. For now, Intake resolves exactly one primary language per Source
-Sentence, and Segmentation preserves non-primary-language spans as
+`SourceSegmentation<language>`; it does not hardcode a segmentation language
+after Intake. For now, Intake resolves exactly one primary language per Source
+Sentence, and Source Segmentation preserves non-primary-language spans as
 `OpaqueText`. Multilingual and code-switched routing is deferred to
 [texteater#19](https://github.com/clockblocker/texteater/issues/19).
 
 ### Segmented Sentence
-A versioned, immutable, ordered segmentation of a Source Sentence and the
+A versioned, immutable, ordered Source Segmentation of Stitched Text and the
 authoritative interactive text shown to the learner.
 
 Each Segmented Sentence has a stable `SegmentedSentenceId`. Every Segment is
@@ -161,10 +175,10 @@ global IDs. Any correction or re-segmentation produces a new Segmented Sentence
 and ID. There is no learner click before segmentation.
 
 Ordinary misspellings remain as written so later classification can preserve
-them as attested spelling. Only severely corrupted but intelligible input is
-reconstructed. When reconstruction is necessary, the reconstructed Segmented
-Sentence replaces the original for downstream interaction; dumgen does not
-retain an alignment back to the original.
+them as attested spelling. Intake's whitespace-only repair produces the Stitched
+Text; Source Segmentation never reconstructs it. The Stitched Text replaces the
+Source Sentence for downstream interaction, and Dumgen retains no alignment
+back to the original.
 
 ### Segment
 A non-empty, contiguous part of a Segmented Sentence.
@@ -308,17 +322,17 @@ _Avoid_: Emoji gloss, emoji-plus-gloss label
 ### Segmentation Chain
 The pre-click chain.
 
-It is exactly two sequential model calls:
+It has two internal stages behind one public operation:
 
-1. Intake resolves the Source Sentence's language and returns an Intake
-   Decision.
+1. One bounded LLM Intake call minimally stitches the Source Sentence, resolves
+   its language, and returns an Intake Decision.
 2. Only when Intake returns `Accepted`, the application uses the resolved
-   language to call the corresponding language-specific Segmentation prompt.
+   language to run deterministic language-specific Source Segmentation.
 
-Intake and Segmentation are never combined into one prompt or model call. An
+Intake and Source Segmentation remain distinct internal stages. An
 `UnsupportedLanguage` or `Unintelligible` Intake Decision stops the chain after
-the first call. A successful second call returns the Segmented Sentence the
-learner can click.
+Intake. Successful Source Segmentation returns the Segmented Sentence the learner
+can click.
 
 ### Click Resolution Chain
 The post-click chain.

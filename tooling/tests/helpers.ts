@@ -14,7 +14,7 @@ export async function temporaryRepository(): Promise<string> {
 			validate: "bun tooling/validate-repository.ts",
 		},
 		devDependencies: {
-			"@biomejs/biome": "^2.5.5",
+			"@biomejs/biome": "2.2.6",
 		},
 	});
 	return root;

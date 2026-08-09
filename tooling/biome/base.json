@@ -1,19 +1,19 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.5/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
 	"files": {
 		"includes": [
 			"**",
-			"!!dist",
-			"!!node_modules",
-			"!!.astro",
-			"!!bun.lock",
-			"!!**/bun.lock",
-			"!!package-lock.json",
-			"!!**/package-lock.json",
-			"!!pnpm-lock.yaml",
-			"!!**/pnpm-lock.yaml",
-			"!!yarn.lock",
-			"!!**/yarn.lock"
+			"!dist",
+			"!node_modules",
+			"!.astro",
+			"!bun.lock",
+			"!**/bun.lock",
+			"!package-lock.json",
+			"!**/package-lock.json",
+			"!pnpm-lock.yaml",
+			"!**/pnpm-lock.yaml",
+			"!yarn.lock",
+			"!**/yarn.lock"
 		]
 	},
 	"formatter": {

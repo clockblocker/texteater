@@ -1,7 +1,7 @@
 {
 	"extends": "//",
 	"files": {
-		"includes": ["!!dist", "!!node_modules", "!!.astro", "!src/lu/test.ts"]
+		"includes": ["!dist", "!node_modules", "!.astro", "!src/lu/test.ts"]
 	},
 	"formatter": {
 		"includes": ["**", "!generate-readme/examples/**/*.ts"]

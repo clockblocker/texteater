@@ -52,10 +52,10 @@ test("generated lockfiles are excluded from Biome validation", async () => {
 
 	expect(config.files.includes).toEqual(
 		expect.arrayContaining([
-			"!!**/bun.lock",
-			"!!**/package-lock.json",
-			"!!**/pnpm-lock.yaml",
-			"!!**/yarn.lock",
+			"!**/bun.lock",
+			"!**/package-lock.json",
+			"!**/pnpm-lock.yaml",
+			"!**/yarn.lock",
 		]),
 	);
 });
