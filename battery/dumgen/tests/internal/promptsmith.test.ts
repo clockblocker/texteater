@@ -6,15 +6,16 @@ import { zodTextFormat } from "openai/helpers/zod";
 import type { AiSdk } from "../../src/ai-sdk/ai-sdk";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
+import { assertIntakeBatch } from "../../src/intake/contracts";
 import {
 	assembleSystemPrompt,
 	defineLocalDemonstrations,
 } from "../../src/promptsmith/assembly";
 import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
-import { systemPrompt as generatedSegmentationSystemPrompt } from "../../src/promptsmith/laboratory/generated-system-prompt/segmentation/de";
+import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/laboratory/generated-system-prompt/intake";
+import { corpus as intakeCorpus } from "../../src/promptsmith/laboratory/prompt-source/intake/golden-corpus/corpus";
+import { promptSource as intakePromptSource } from "../../src/promptsmith/laboratory/prompt-source/intake/prompt-source";
 import { corpus as readingCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
-import { promptSource as segmentationPromptSource } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/prompt-source";
-import { outputSchema as segmentationOutputSchema } from "../../src/promptsmith/laboratory/prompt-source/segmentation/de/schemas";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -25,33 +26,49 @@ import {
 } from "../../src/schema/de-noun-codecs";
 
 describe("Prompt Assembly", () => {
-	test("renders stable use examples without IDs or test examples", () => {
-		const first = assembleSystemPrompt(segmentationPromptSource);
-		const second = assembleSystemPrompt(segmentationPromptSource);
+	test("renders the stable batch-only Intake contract", () => {
+		const first = assembleSystemPrompt(intakePromptSource);
+		const second = assembleSystemPrompt(intakePromptSource);
 
 		expect(first).toBe(second);
-		expect(first).toBe(generatedSegmentationSystemPrompt);
-		expect(first).toContain('{"text":"Still, aber wach!"}');
-		expect(first).toContain("quux42");
-		expect(first).not.toContain("segmentation-attached-punctuation");
-		expect(first).not.toContain("segmentation-simple-sentence");
-		expect(first).not.toContain('{"text":"Der Kaffee ist heiß."}');
+		expect(first).toBe(generatedIntakeSystemPrompt);
+		expect(first).toContain("caller-delimited source sentences");
+		expect(first).toContain("Das H au s ist groß.");
+		expect(first).toContain("אני הו לך הביתה.");
 		expect(
 			assembleSystemPrompt({
-				...segmentationPromptSource,
-				body: `${segmentationPromptSource.body}\nChanged.`,
+				...intakePromptSource,
+				body: `${intakePromptSource.body}\nChanged.`,
 			}),
 		).not.toBe(first);
 		expect(
 			assembleSystemPrompt({
-				...segmentationPromptSource,
+				...intakePromptSource,
 				demonstrations: defineLocalDemonstrations({
-					inputSchema: segmentationPromptSource.inputSchema,
-					outputSchema: segmentationPromptSource.outputSchema,
+					inputSchema: intakePromptSource.inputSchema,
+					outputSchema: intakePromptSource.outputSchema,
 					cases: [],
 				}),
 			}),
 		).not.toBe(first);
+	});
+
+	test("owns the multilingual/noisy Intake corpus and pins its demonstrations", () => {
+		expect(intakeCorpus.collections.core.ids).toEqual([
+			"intake-de-core",
+			"intake-he-core",
+			"intake-unsupported",
+			"intake-de-boundary-isolation",
+		]);
+		expect(intakePromptSource.demonstrations?.ids).toEqual([
+			"intake-de-core",
+			"intake-he-core",
+		]);
+		for (const goldenCase of Object.values(intakeCorpus.cases)) {
+			expect(() =>
+				assertIntakeBatch(goldenCase.input, goldenCase.idealOutput),
+			).not.toThrow();
+		}
 	});
 
 	test("reports route-specific selection contract errors", () => {
@@ -64,7 +81,7 @@ describe("Prompt Assembly", () => {
 	});
 
 	test("renders optional explanations as guidance outside the ideal output", () => {
-		const prompt = assembleSystemPrompt(segmentationPromptSource);
+		const prompt = assembleSystemPrompt(intakePromptSource);
 		const explanation = "Revolt, not leave bed. New.";
 		const readingPrompt =
 			PROMPT_CATALOG.laboratory.readingResolution.de.prompt;
@@ -81,10 +98,9 @@ describe("Prompt Assembly", () => {
 		expect(result.applied).toEqual([]);
 	});
 
-	test("all five initial schemas are accepted by OpenAI Structured Outputs", () => {
+	test("all four active schemas are accepted by OpenAI Structured Outputs", () => {
 		const prompts = [
 			PROMPT_CATALOG.laboratory.intake.prompt,
-			PROMPT_CATALOG.laboratory.segmentation.de.prompt,
 			PROMPT_CATALOG.laboratory.targetClassification.de.highLevelWholeUnit
 				.prompt,
 			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN
@@ -99,9 +115,11 @@ describe("Prompt Assembly", () => {
 		}
 	});
 
-	test("rejects empty segmentation and invalid emoji descriptions", () => {
+	test("rejects empty Intake batches and invalid emoji descriptions", () => {
 		expect(
-			segmentationOutputSchema.safeParse({ segments: [] }).success,
+			PROMPT_CATALOG.laboratory.intake.prompt.inputSchema.safeParse({
+				items: [],
+			}).success,
 		).toBe(false);
 
 		const readingOutputSchema =
@@ -254,11 +272,19 @@ describe("German prompt projections", () => {
 	});
 });
 
-test("Intake preserves language for every decision", async () => {
+test("Intake preserves batch order, stitching, and one language context", async () => {
 	const outputs = [
-		{ decision: "Accepted", language: "de" },
-		{ decision: "UnsupportedLanguage", language: "fr" },
-		{ decision: "Unintelligible", language: null },
+		{
+			language: "de",
+			items: [
+				{
+					id: "item-0",
+					decision: "Accepted",
+					language: "de",
+					stitchedText: "Das Haus",
+				},
+			],
+		},
 	];
 	const sdk: AiSdk = {
 		async structuredGeneration() {
@@ -270,16 +296,19 @@ test("Intake preserves language for every decision", async () => {
 	};
 	const generate = buildGeneratorCatalog(PROMPT_CATALOG, sdk);
 
-	expect(await generate.laboratory.intake({ text: "Hallo" })).toEqual({
-		decision: "Accepted",
+	expect(
+		await generate.laboratory.intake({
+			items: [{ id: "item-0", sourceText: "Das H au s" }],
+		}),
+	).toEqual({
 		language: "de",
-	});
-	expect(await generate.laboratory.intake({ text: "Bonjour" })).toEqual({
-		decision: "UnsupportedLanguage",
-		language: "fr",
-	});
-	expect(await generate.laboratory.intake({ text: "%%%" })).toEqual({
-		decision: "Unintelligible",
-		language: null,
+		items: [
+			{
+				id: "item-0",
+				decision: "Accepted",
+				language: "de",
+				stitchedText: "Das Haus",
+			},
+		],
 	});
 });

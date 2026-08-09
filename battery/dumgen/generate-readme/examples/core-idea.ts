@@ -4,11 +4,12 @@ import { buildDumgen } from "dumgen";
 // Server-side only. The OpenAI SDK reads OPENAI_API_KEY from the environment.
 const dumgen = buildDumgen();
 
-const segmented = await dumgen.segment("Die Bank ist geöffnet.");
+const segmented = await dumgen.segment(["Die Bank ist geöffnet."]);
 
-if (segmented.outcome === "Segmented") {
+const decision = segmented.ok ? segmented.value[0] : undefined;
+if (decision?.decision === "Accepted" && decision.language === "de") {
 	const grammatical = await dumgen.resolve.grammatical("de", {
-		sentence: segmented.sentence,
+		sentence: decision.sentence,
 		clickedSegmentIndex: 2,
 	});
 

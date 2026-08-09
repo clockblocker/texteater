@@ -27,7 +27,7 @@ function event(
 		operation,
 		input: { text: "Der Hund" },
 		promptNames: [`laboratory.${operation}`],
-		model: "gpt-5-nano",
+		model: "gpt-5.6-luna",
 		trace: {
 			stages: { intake: { output: { decision: "Accepted" } } },
 			modelExchanges:

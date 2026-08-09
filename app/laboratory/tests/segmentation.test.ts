@@ -1,22 +1,23 @@
 import { describe, expect, test } from "bun:test";
-import type { Dumgen, DumgenModelExchange, SegmentedSentence } from "dumgen";
+import type {
+	Dumgen,
+	DumgenModelExchange,
+	DumgenSection1Trace,
+	SegmentedSentence,
+} from "dumgen";
 
-import { segmentForLaboratory } from "../src/segmentation";
+import {
+	LaboratorySegmentationError,
+	segmentForLaboratory,
+} from "../src/segmentation";
 
 const sentence: SegmentedSentence<"de"> = {
 	id: "segmentation-test" as SegmentedSentence<"de">["id"],
 	language: "de",
-	sourceText: "Die Bank",
 	segments: [
-		{ index: 0, kind: "ResolvableText", text: "Die", start: 0, end: 3 },
-		{ index: 1, kind: "Whitespace", text: " ", start: 3, end: 4 },
-		{
-			index: 2,
-			kind: "ResolvableText",
-			text: "Bank",
-			start: 4,
-			end: 8,
-		},
+		{ kind: "ResolvableText", text: "Die" },
+		{ kind: "Whitespace", text: " " },
+		{ kind: "ResolvableText", text: "Bank" },
 	],
 };
 
@@ -43,40 +44,60 @@ describe("Laboratory segmentation adapter", () => {
 			{
 				phase: "attempted",
 				promptPath: "laboratory.intake",
-				modelInput: { text: "Die Bank" },
+				modelInput: {
+					items: [{ id: "item-0", sourceText: "Die Bank" }],
+				},
 			},
 			accepted(
 				"laboratory.intake",
-				{ text: "Die Bank" },
-				{ decision: "Accepted", language: "de" },
-				{ decision: "Accepted", language: "de" },
-			),
-			{
-				phase: "attempted",
-				promptPath: "laboratory.segmentation.de",
-				modelInput: { text: "Die Bank" },
-			},
-			accepted(
-				"laboratory.segmentation.de",
-				{ text: "Die Bank" },
 				{
-					segments: sentence.segments.map(({ kind, text }) => ({
-						kind,
-						text,
-					})),
+					items: [{ id: "item-0", sourceText: "Die Bank" }],
 				},
 				{
-					segments: sentence.segments.map(({ kind, text }) => ({
-						kind,
-						text,
-					})),
+					language: "de",
+					items: [
+						{
+							id: "item-0",
+							decision: "Accepted",
+							language: "de",
+							stitchedText: "Die Bank",
+						},
+					],
+				},
+				{
+					language: "de",
+					items: [
+						{
+							id: "item-0",
+							decision: "Accepted",
+							language: "de",
+							stitchedText: "Die Bank",
+						},
+					],
 				},
 			),
 		];
+		const traces: DumgenSection1Trace[] = [
+			{
+				phase: "source-segmentation",
+				itemIndex: 0,
+				language: "de",
+				stitchedText: "Die Bank",
+				segments: sentence.segments,
+				rules: [
+					"german-surface-candidate",
+					"space-separator",
+					"german-surface-candidate",
+				],
+			},
+		];
 		const dumgen: Pick<Dumgen, "segment"> = {
-			async segment(text) {
-				calls.push(text);
-				return { outcome: "Segmented", language: "de", sentence };
+			async segment(sourceSentences) {
+				calls.push(...sourceSentences);
+				return {
+					ok: true,
+					value: [{ decision: "Accepted", language: "de", sentence }],
+				};
 			},
 		};
 
@@ -84,6 +105,7 @@ describe("Laboratory segmentation adapter", () => {
 			dumgen,
 			"Die Bank",
 			exchanges,
+			traces,
 		);
 
 		expect(calls).toEqual(["Die Bank"]);
@@ -91,16 +113,15 @@ describe("Laboratory segmentation adapter", () => {
 			decision: "Accepted",
 			sentence,
 			generation: {
-				prompts: ["laboratory.intake", "laboratory.segmentation.de"],
+				prompts: ["laboratory.intake"],
 			},
 		});
-		expect(response.stages.segmentation?.result).toEqual({
-			segments: sentence.segments.map(({ kind, text }) => ({
-				kind,
-				text,
-			})),
+		expect(response.stages.segmentation).toMatchObject({
+			prompt: "source-segmentation.de",
+			traceOrigin: "deterministic",
+			output: { segments: sentence.segments },
+			result: sentence,
 		});
-		expect(response.stages.segmentation?.result).not.toEqual(sentence);
 	});
 
 	test("preserves an unavailable Intake result without a segmentation stage", async () => {
@@ -108,21 +129,42 @@ describe("Laboratory segmentation adapter", () => {
 			{
 				phase: "attempted",
 				promptPath: "laboratory.intake",
-				modelInput: { text: "Bonjour" },
+				modelInput: {
+					items: [{ id: "item-0", sourceText: "Bonjour" }],
+				},
 			},
 			accepted(
 				"laboratory.intake",
-				{ text: "Bonjour" },
-				{ decision: "UnsupportedLanguage", language: "fr" },
-				{ decision: "UnsupportedLanguage", language: "fr" },
+				{ items: [{ id: "item-0", sourceText: "Bonjour" }] },
+				{
+					language: null,
+					items: [
+						{
+							id: "item-0",
+							decision: "UnsupportedLanguage",
+							language: null,
+							stitchedText: "Bonjour",
+						},
+					],
+				},
+				{
+					language: null,
+					items: [
+						{
+							id: "item-0",
+							decision: "UnsupportedLanguage",
+							language: null,
+							stitchedText: "Bonjour",
+						},
+					],
+				},
 			),
 		];
 		const dumgen: Pick<Dumgen, "segment"> = {
 			async segment() {
 				return {
-					outcome: "Unavailable",
-					reason: "UnsupportedLanguage",
-					language: "fr",
+					ok: true,
+					value: [{ decision: "UnsupportedLanguage" }],
 				};
 			},
 		};
@@ -140,21 +182,56 @@ describe("Laboratory segmentation adapter", () => {
 				intake: {
 					prompt: "laboratory.intake",
 					traceOrigin: "generated",
-					input: { text: "Bonjour" },
+					input: { items: [{ id: "item-0", sourceText: "Bonjour" }] },
 					output: {
-						decision: "UnsupportedLanguage",
-						language: "fr",
+						language: null,
+						items: [
+							{
+								id: "item-0",
+								decision: "UnsupportedLanguage",
+								language: null,
+								stitchedText: "Bonjour",
+							},
+						],
 					},
 					result: {
-						decision: "UnsupportedLanguage",
-						language: "fr",
+						language: null,
+						items: [
+							{
+								id: "item-0",
+								decision: "UnsupportedLanguage",
+								language: null,
+								stitchedText: "Bonjour",
+							},
+						],
 					},
 				},
 			},
 			generation: {
-				model: "gpt-5-nano",
+				model: "gpt-5.6-luna",
 				prompts: ["laboratory.intake"],
 			},
+		});
+	});
+
+	test("preserves typed preflight failures without requiring a model trace", async () => {
+		const dumgen: Pick<Dumgen, "segment"> = {
+			async segment() {
+				return {
+					ok: false,
+					error: {
+						code: "InvalidInput",
+						message: "Input exceeds the production boundary.",
+					},
+				};
+			},
+		};
+
+		await expect(
+			segmentForLaboratory(dumgen, "too long", []),
+		).rejects.toMatchObject({
+			name: LaboratorySegmentationError.name,
+			section1Error: { code: "InvalidInput" },
 		});
 	});
 });

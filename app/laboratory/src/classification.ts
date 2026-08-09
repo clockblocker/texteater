@@ -11,9 +11,9 @@ import type {
 	ClassificationStageResult,
 	ClickResolutionResponse,
 	EntityRepresentation,
+	GermanSegmentedSentence,
 	Reading,
 	ResolutionDiagnostic,
-	SegmentedSentence,
 } from "./shared/contract";
 
 export const targetClassificationPrompt =
@@ -191,7 +191,7 @@ export class GermanClassificationResolver {
 	}
 
 	async resolve(
-		sentence: SegmentedSentence,
+		sentence: GermanSegmentedSentence,
 		clickedSegmentIndex: number,
 		modelExchanges: readonly DumgenModelExchange[] = [],
 		attemptedPrompts: string[] = [],
@@ -266,7 +266,7 @@ export class GermanClassificationResolver {
 					},
 				],
 				generation: {
-					model: "gpt-5-nano",
+					model: "gpt-5.6-luna",
 					prompts,
 					cache: "miss",
 					modelCalls: prompts.length,
@@ -300,7 +300,7 @@ export class GermanClassificationResolver {
 					},
 				],
 				generation: {
-					model: "gpt-5-nano",
+					model: "gpt-5.6-luna",
 					prompts,
 					cache: "miss",
 					modelCalls: prompts.length,
@@ -412,7 +412,7 @@ export class GermanClassificationResolver {
 		};
 		const entity: EntityRepresentation = {
 			resolution: "dumgen",
-			model: "gpt-5-nano",
+			model: "gpt-5.6-luna",
 			attestation: unit.attestation,
 			reading: unit.reading,
 		};
@@ -427,7 +427,7 @@ export class GermanClassificationResolver {
 					: unit.stages,
 			diagnostics: unit.diagnostics,
 			generation: {
-				model: "gpt-5-nano",
+				model: "gpt-5.6-luna",
 				prompts,
 				cache,
 				modelCalls: prompts.length,
@@ -442,7 +442,7 @@ export class GermanClassificationResolver {
 
 export async function classifyGermanSegment(
 	createDumgen: DumgenFactory,
-	sentence: SegmentedSentence,
+	sentence: GermanSegmentedSentence,
 	clickedSegmentIndex: number,
 	trace?: GermanClassificationTrace,
 	modelExchanges: readonly DumgenModelExchange[] = [],

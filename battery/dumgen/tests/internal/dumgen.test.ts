@@ -37,16 +37,10 @@ function sentence(
 		text: string;
 	}>,
 ): SegmentedSentence<"de"> {
-	let offset = 0;
 	return {
 		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
-		sourceText: parts.map(({ text }) => text).join(""),
-		segments: parts.map((part, index) => {
-			const start = offset;
-			offset += part.text.length;
-			return { ...part, index, start, end: offset };
-		}),
+		segments: parts,
 	};
 }
 
@@ -79,14 +73,23 @@ describe("Dumgen module interface", () => {
 		expect(Object.isFrozen(dumgen.resolve)).toBe(true);
 	});
 
-	test("segments German through Intake and its language route", async () => {
+	test("segments an ordered German/Hebrew batch after one Intake call", async () => {
 		const { calls, sdk } = queueSdk([
-			{ decision: "Accepted", language: "de" },
 			{
-				segments: [
-					{ kind: "ResolvableText", text: "Die" },
-					{ kind: "Whitespace", text: " " },
-					{ kind: "ResolvableText", text: "Banken" },
+				language: "de",
+				items: [
+					{
+						id: "item-0",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Die Banken",
+					},
+					{
+						id: "item-1",
+						decision: "Unintelligible",
+						language: null,
+						stitchedText: "%%%",
+					},
 				],
 			},
 		]);
@@ -98,95 +101,75 @@ describe("Dumgen module interface", () => {
 			},
 		});
 
-		const result = await dumgen.segment("Die Banken");
+		const result = await dumgen.segment(["Die Banken", "%%%"]);
 
-		expect(result.outcome).toBe("Segmented");
-		if (result.outcome !== "Segmented") return;
-		expect(result.language).toBe(result.sentence.language);
-		expect(result.sentence).toMatchObject({
-			language: "de",
-			sourceText: "Die Banken",
-			segments: [
+		expect(result).toMatchObject({
+			ok: true,
+			value: [
 				{
-					index: 0,
-					kind: "ResolvableText",
-					text: "Die",
-					start: 0,
-					end: 3,
+					decision: "Accepted",
+					language: "de",
+					sentence: {
+						language: "de",
+						segments: [
+							{ kind: "ResolvableText", text: "Die" },
+							{ kind: "Whitespace", text: " " },
+							{ kind: "ResolvableText", text: "Banken" },
+						],
+					},
 				},
-				{
-					index: 1,
-					kind: "Whitespace",
-					text: " ",
-					start: 3,
-					end: 4,
-				},
-				{
-					index: 2,
-					kind: "ResolvableText",
-					text: "Banken",
-					start: 4,
-					end: 10,
-				},
+				{ decision: "Unintelligible" },
 			],
 		});
-		expect(typeof result.sentence.id).toBe("string");
-		expect(Object.isFrozen(result.sentence)).toBe(true);
-		expect(Object.isFrozen(result.sentence.segments)).toBe(true);
-		expect(calls).toHaveLength(2);
+		if (!result.ok || result.value[0]?.decision !== "Accepted") return;
+		expect(typeof result.value[0].sentence.id).toBe("string");
+		expect(Object.isFrozen(result.value[0].sentence)).toBe(true);
+		expect(Object.isFrozen(result.value[0].sentence.segments)).toBe(true);
+		expect(calls).toHaveLength(1);
 		expect(
 			exchanges
 				.filter(({ phase }) => phase === "accepted")
 				.map(({ promptPath }) => promptPath),
-		).toEqual(["laboratory.intake", "laboratory.segmentation.de"]);
+		).toEqual(["laboratory.intake"]);
 	});
 
-	test("stops after rejected Intake decisions", async () => {
-		for (const [output, expected] of [
-			[
-				{ decision: "UnsupportedLanguage", language: "fr" },
-				{
-					outcome: "Unavailable",
-					reason: "UnsupportedLanguage",
-					language: "fr",
-				},
-			],
-			[
-				{ decision: "Unintelligible", language: null },
-				{
-					outcome: "Unavailable",
-					reason: "Unintelligible",
-					language: null,
-				},
-			],
-		] as const) {
-			const { calls, sdk } = queueSdk([output]);
-			await expect(
-				buildDumgen({ sdk }).segment("input"),
-			).resolves.toEqual(expected);
-			expect(calls).toHaveLength(1);
-		}
+	test("returns rejected Intake decisions in place", async () => {
+		const { calls, sdk } = queueSdk([
+			{
+				language: null,
+				items: [
+					{
+						id: "item-0",
+						decision: "UnsupportedLanguage",
+						language: null,
+						stitchedText: "Bonjour",
+					},
+				],
+			},
+		]);
+		await expect(
+			buildDumgen({ sdk }).segment(["Bonjour"]),
+		).resolves.toEqual({
+			ok: true,
+			value: [{ decision: "UnsupportedLanguage" }],
+		});
+		expect(calls).toHaveLength(1);
 	});
 
-	test("rejects empty source text before a model call", async () => {
+	test("rejects invalid batches before a model call", async () => {
 		const { calls, sdk } = queueSdk([]);
-		await expect(buildDumgen({ sdk }).segment("")).rejects.toMatchObject({
-			code: "invalid-input",
-			name: "DumgenError",
+		await expect(buildDumgen({ sdk }).segment([])).resolves.toMatchObject({
+			ok: false,
+			error: { code: "InvalidInput" },
 		});
 		expect(calls).toHaveLength(0);
 	});
 
-	test("observes every attempted segmentation prompt when its provider fails", async () => {
+	test("returns a typed Intake failure", async () => {
 		const promptPaths: string[] = [];
-		let callCount = 0;
 		const sdk: AiSdk = {
 			async structuredGeneration() {
-				callCount += 1;
-				if (callCount === 1) {
-					return { decision: "Accepted", language: "de" } as never;
-				}
-				throw new Error("segmentation provider unavailable");
+				throw new Error("intake provider unavailable");
 			},
 			async unstructuredGeneration() {
 				throw new Error("not used");
@@ -201,13 +184,111 @@ describe("Dumgen module interface", () => {
 			},
 		});
 
-		await expect(dumgen.segment("Die Bank")).rejects.toMatchObject({
-			code: "provider-error",
+		await expect(dumgen.segment(["Die Bank"])).resolves.toMatchObject({
+			ok: false,
+			error: { code: "IntakeFailure", reason: "provider-error" },
 		});
-		expect(promptPaths).toEqual([
-			"laboratory.intake",
-			"laboratory.segmentation.de",
+		expect(promptPaths).toEqual(["laboratory.intake"]);
+	});
+
+	test("segments Hebrew with surface evidence and defers ambiguous morphology", async () => {
+		const { calls, sdk } = queueSdk([
+			{
+				language: "he",
+				items: [
+					{
+						id: "item-0",
+						decision: "Accepted",
+						language: "he",
+						stitchedText: "בַּבַּיִת בבית",
+					},
+				],
+			},
 		]);
+
+		const result = await buildDumgen({ sdk }).segment(["בַּבַּיִת בבית"]);
+
+		expect(result).toMatchObject({
+			ok: true,
+			value: [
+				{
+					decision: "Accepted",
+					language: "he",
+					sentence: {
+						segments: [
+							{ kind: "ResolvableText", text: "בַּ" },
+							{ kind: "ResolvableText", text: "בַּיִת" },
+							{ kind: "Whitespace", text: " " },
+							{ kind: "ResolvableText", text: "בבית" },
+						],
+					},
+				},
+			],
+		});
+		expect(calls).toHaveLength(1);
+	});
+
+	test("enforces measured Intake boundaries without a model call", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const dumgen = buildDumgen({ sdk });
+		for (const input of [
+			Array.from({ length: 10 }, () => "Hallo"),
+			["a".repeat(206)],
+			[Array.from({ length: 35 }, () => "Wort").join(" ")],
+		]) {
+			await expect(dumgen.segment(input)).resolves.toMatchObject({
+				ok: false,
+				error: { code: "InvalidInput" },
+			});
+		}
+		expect(calls).toHaveLength(0);
+	});
+
+	test("rejects Intake boundary contamination and non-whitespace edits", async () => {
+		for (const output of [
+			{
+				language: "de",
+				items: [
+					{
+						id: "item-1",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Die Bank",
+					},
+					{
+						id: "item-0",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Hallo",
+					},
+				],
+			},
+			{
+				language: "de",
+				items: [
+					{
+						id: "item-0",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Hullo",
+					},
+					{
+						id: "item-1",
+						decision: "Accepted",
+						language: "de",
+						stitchedText: "Die Bank",
+					},
+				],
+			},
+		]) {
+			const { sdk } = queueSdk([output]);
+			await expect(
+				buildDumgen({ sdk }).segment(["Hallo", "Die Bank"]),
+			).resolves.toMatchObject({
+				ok: false,
+				error: { code: "IntakeFailure", reason: "invalid-output" },
+			});
+		}
 	});
 });
 
@@ -694,9 +775,9 @@ test("preserves typed provider failures and isolates instrumentation", async () 
 				throw new Error("observer failure");
 			},
 		});
-		await expect(dumgen.segment("Hallo")).rejects.toMatchObject({
-			code: reason,
-			name: "DumgenError",
+		await expect(dumgen.segment(["Hallo"])).resolves.toMatchObject({
+			ok: false,
+			error: { code: "IntakeFailure", reason },
 		});
 	}
 });

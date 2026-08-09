@@ -1,7 +1,8 @@
-# `dumgen` laboratory
+# `dumgen`
 
-Early-WIP generation helpers for hands-on prompt experiments. Nothing in this
-package is production-ready.
+Typed, language-routed learner-text resolution. The Section 1 German/Hebrew
+segmentation path is production-ready; post-click prompt routes remain
+incremental laboratory-backed features.
 
 ## Core idea
 
@@ -17,24 +18,28 @@ Example usage:
 
 <!-- README_BLOCK:basic-usage -->
 
-## Vision
+## Segmentation chain
 
-The current German-only module owns each settled chain:
+The module owns each stage behind one batch-only operation:
 
-1. Make a language-agnostic Intake model call. If it returns `Accepted`, make a
-   second model call to `Segmentation<de>`; the two stages are never combined.
-2. Classify one click with `Target Classification<de, HighLevelWholeUnit>`.
-3. Dispatch internally through physically distinct grammatical routes for the
-   target's German Lemma Family and Kind.
+1. Make one bounded Intake model call for an ordered list of caller-delimited
+   Source Sentences. Intake minimally repairs whitespace and returns one
+   position-preserving decision per item.
+2. Dispatch accepted items to deterministic, zero-package German or Hebrew
+   Source Segmentation. There is no second segmentation model call.
+3. For German, classify one click with
+   `Target Classification<de, HighLevelWholeUnit>` and dispatch through
+   grammatical routes for the target's German Lemma Family and Kind.
 4. Resolve the selected Lemma against learner Reading candidates through the
    language-routed Reading operation.
 5. Validate projected grammatical results with Dumling's concrete schemas.
 
-The prompt catalog remains internal under `laboratory`; consumers do not
-coordinate prompt leaves or depend on their topology. There is deliberately no
-production namespace or production claim.
+The prompt catalog and language-specific segmenters remain internal; consumers
+do not coordinate prompt leaves or depend on their topology. Section 1 failures
+are returned as typed results. Programming defects in later operations still
+throw.
 
-The initial five Prompt Sources live under
+Prompt Sources live under
 `src/promptsmith/laboratory/prompt-source` in stage-first routes. Each leaf owns
 its combined model schemas, instructions, and validated demonstrations. Routes
 with canonical semantic cases additionally own a route-local Golden Corpus.

@@ -2,6 +2,7 @@ import type { Reading as DumdictReading } from "dumdict";
 import type {
 	Segment as DumgenSegment,
 	SegmentedSentence as DumgenSegmentedSentence,
+	EnabledSegmentationLanguage,
 	GrammaticalInteraction,
 	GrammaticalRoute,
 } from "dumgen";
@@ -25,7 +26,7 @@ export type EntityRepresentation = {
 	attestation: Attestation;
 	reading: Reading;
 	resolution: "dumgen";
-	model: "gpt-5-nano";
+	model: "gpt-5.6-luna";
 };
 
 export type Segment = DumgenSegment;
@@ -36,7 +37,7 @@ export type SegmentationRequest = {
 
 export type SegmentationStageResult = {
 	prompt: string;
-	traceOrigin: "generated" | "cached";
+	traceOrigin: "generated" | "deterministic" | "cached";
 	input: unknown;
 	output: unknown;
 	result: unknown;
@@ -50,12 +51,15 @@ export type SegmentationResponse = {
 		segmentation?: SegmentationStageResult;
 	};
 	generation: {
-		model: "gpt-5-nano";
+		model: "gpt-5.6-luna";
 		prompts: string[];
 	};
 };
 
-export type SegmentedSentence = DumgenSegmentedSentence<"de">;
+export type SegmentedSentence = {
+	readonly [Language in EnabledSegmentationLanguage]: DumgenSegmentedSentence<Language>;
+}[EnabledSegmentationLanguage];
+export type GermanSegmentedSentence = DumgenSegmentedSentence<"de">;
 
 export type ClickResolutionRequest = {
 	segmentedSentenceId: string;
@@ -79,7 +83,7 @@ export type ResolutionDiagnostic = {
 };
 
 export type ClassificationGeneration = {
-	model: "gpt-5-nano";
+	model: "gpt-5.6-luna";
 	prompts: string[];
 	cache: "miss" | "member-hit";
 	modelCalls: number;

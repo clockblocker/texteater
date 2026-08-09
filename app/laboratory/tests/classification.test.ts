@@ -20,16 +20,10 @@ function sentence(
 		text: string;
 	}>,
 ): SegmentedSentence {
-	let offset = 0;
 	return {
 		id: id as SegmentedSentence["id"],
 		language: "de",
-		sourceText: parts.map(({ text }) => text).join(""),
-		segments: parts.map((part, index) => {
-			const start = offset;
-			offset += part.text.length;
-			return { ...part, index, start, end: offset };
-		}),
+		segments: parts,
 	};
 }
 
@@ -113,7 +107,7 @@ describe("German classification through the Dumgen module", () => {
 		expect(result.decision).toBe("Resolved");
 		if (result.decision !== "Resolved") return;
 		expect(result.generation).toEqual({
-			model: "gpt-5-nano",
+			model: "gpt-5.6-luna",
 			prompts: [
 				targetClassificationPrompt,
 				"laboratory.grammaticalResolution.de.Lexeme.NOUN",

@@ -1,5 +1,6 @@
 import type { AiSdk } from "./ai-sdk/ai-sdk";
 import { createDumgen } from "./dumgen/build";
+import type { DumgenSection1Trace } from "./dumgen/implementation";
 import type { ModelExchange } from "./generator/generator";
 import type {
 	GrammaticalInput,
@@ -29,7 +30,9 @@ export type {
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
+	Section1Error,
 	Segment,
+	SegmentationDecision,
 	SegmentationResult,
 	SegmentedSentence,
 	SegmentedSentenceId,
@@ -37,12 +40,14 @@ export type {
 } from "./types";
 
 export type DumgenModelExchange = ModelExchange;
+export type { DumgenSection1Trace };
 export type DumgenModelExchangeObserver = (
 	exchange: DumgenModelExchange,
 ) => void;
 
 type DumgenInstrumentationOptions = {
 	readonly onModelExchange?: DumgenModelExchangeObserver;
+	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
 };
 
 export type DumgenOptions = DumgenInstrumentationOptions &
@@ -52,7 +57,7 @@ export type DumgenOptions = DumgenInstrumentationOptions &
 	);
 
 export type Dumgen = {
-	segment(text: string): Promise<SegmentationResult>;
+	segment(sourceSentences: readonly string[]): Promise<SegmentationResult>;
 	readonly resolve: {
 		grammatical<L extends GrammaticalResolutionLanguage>(
 			language: L,

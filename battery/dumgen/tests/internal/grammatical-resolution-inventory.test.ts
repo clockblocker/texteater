@@ -26,23 +26,10 @@ function sentence(): SegmentedSentence<"de"> {
 	return {
 		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
-		sourceText: "eins zwei",
 		segments: [
-			{
-				index: 0,
-				text: "eins",
-				kind: "ResolvableText",
-				start: 0,
-				end: 4,
-			},
-			{ index: 1, text: " ", kind: "Whitespace", start: 4, end: 5 },
-			{
-				index: 2,
-				text: "zwei",
-				kind: "ResolvableText",
-				start: 5,
-				end: 9,
-			},
+			{ text: "eins", kind: "ResolvableText" },
+			{ text: " ", kind: "Whitespace" },
+			{ text: "zwei", kind: "ResolvableText" },
 		],
 	};
 }
@@ -51,16 +38,7 @@ function singleSegmentSentence(text: string): SegmentedSentence<"de"> {
 	return {
 		id: crypto.randomUUID() as SegmentedSentence<"de">["id"],
 		language: "de",
-		sourceText: text,
-		segments: [
-			{
-				index: 0,
-				text,
-				kind: "ResolvableText",
-				start: 0,
-				end: text.length,
-			},
-		],
+		segments: [{ text, kind: "ResolvableText" }],
 	};
 }
 

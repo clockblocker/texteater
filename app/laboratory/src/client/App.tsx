@@ -342,7 +342,7 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 						<p className="text-xs font-medium text-muted-foreground">
 							Input
 						</p>
-						<Badge variant="secondary">German only</Badge>
+						<Badge variant="secondary">German + Hebrew</Badge>
 					</div>
 					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
 						Source text
@@ -488,7 +488,8 @@ function PipelineStage({
 }
 
 function Segments({ state }: { state: LaboratoryState }) {
-	const segments = state.result?.sentence?.segments ?? [];
+	const sentence = state.result?.sentence;
+	const segments = sentence?.segments ?? [];
 	const target = state.resolution?.target;
 	const resolved =
 		state.resolution?.decision === "Resolved" ? state.resolution : null;
@@ -518,7 +519,7 @@ function Segments({ state }: { state: LaboratoryState }) {
 				/>
 				<RouteIcon className="mx-auto hidden size-4 text-muted-foreground sm:block" />
 				<PipelineStage
-					name="2. Segmentation<de>"
+					name={`2. Segmentation<${sentence?.language ?? "de|he"}>`}
 					stage={segmentation}
 					status={
 						segmentation
@@ -544,7 +545,10 @@ function Segments({ state }: { state: LaboratoryState }) {
 				</details>
 			) : null}
 
-			<div className="flex min-h-32 flex-wrap content-center items-center gap-2 rounded-lg border bg-muted/20 p-3">
+			<div
+				className="flex min-h-32 flex-wrap content-center items-center gap-2 rounded-lg border bg-muted/20 p-3"
+				dir={sentence?.language === "he" ? "rtl" : "ltr"}
+			>
 				{state.result && state.result.decision !== "Accepted" ? (
 					<Empty className="min-h-24 gap-2 p-2">
 						<EmptyHeader className="gap-1">
@@ -553,8 +557,8 @@ function Segments({ state }: { state: LaboratoryState }) {
 							</EmptyMedia>
 							<EmptyTitle>Sentence not accepted</EmptyTitle>
 							<EmptyDescription>
-								Intake returned {state.result.decision}; German
-								segmentation was not run.
+								Intake returned {state.result.decision}; Source
+								Segmentation was not run.
 							</EmptyDescription>
 						</EmptyHeader>
 					</Empty>
@@ -568,17 +572,17 @@ function Segments({ state }: { state: LaboratoryState }) {
 						</EmptyHeader>
 					</Empty>
 				) : (
-					segments.map((segment) => (
+					segments.map((segment, index) => (
 						<SegmentToken
-							key={`${segment.index}-${segment.text}`}
+							key={`${index}-${segment.text}`}
 							segment={segment}
-							active={state.activeIndex === segment.index}
-							targetMember={targetMembers.has(segment.index)}
-							orthography={orthographies?.[segment.index]}
+							index={index}
+							active={state.activeIndex === index}
+							targetMember={targetMembers.has(index)}
+							orthography={orthographies?.[index]}
 							busy={state.resolutionBusy}
-							onClick={() =>
-								void state.selectSegment(segment.index)
-							}
+							resolutionEnabled={sentence?.language === "de"}
+							onClick={() => void state.selectSegment(index)}
 						/>
 					))
 				)}
@@ -589,31 +593,35 @@ function Segments({ state }: { state: LaboratoryState }) {
 
 function SegmentToken({
 	segment,
+	index,
 	active,
 	targetMember,
 	orthography,
 	busy,
+	resolutionEnabled,
 	onClick,
 }: {
 	segment: Segment;
+	index: number;
 	active: boolean;
 	targetMember: boolean;
 	orthography?: MemberOrthography;
 	busy: boolean;
+	resolutionEnabled: boolean;
 	onClick: () => void;
 }) {
 	if (segment.kind === "Whitespace") {
 		return (
 			<span
 				className="px-1 font-mono text-muted-foreground"
-				title={`#${segment.index} Whitespace`}
+				title={`#${index} Whitespace`}
 			>
 				·
 			</span>
 		);
 	}
 
-	const clickable = segment.kind === "ResolvableText";
+	const clickable = segment.kind === "ResolvableText" && resolutionEnabled;
 	return (
 		<Button
 			type="button"
@@ -630,9 +638,9 @@ function SegmentToken({
 			disabled={!clickable || busy}
 			onClick={onClick}
 			aria-pressed={active}
-			title={`#${segment.index} ${segment.kind}${targetMember ? " · Analysis Target member" : ""}${orthography ? ` · ${orthography}` : ""}`}
+			title={`#${index} ${segment.kind}${!resolutionEnabled && segment.kind === "ResolvableText" ? " · Hebrew Click Resolution deferred" : ""}${targetMember ? " · Analysis Target member" : ""}${orthography ? ` · ${orthography}` : ""}`}
 		>
-			<span className="text-xs opacity-60">{segment.index}</span>
+			<span className="text-xs opacity-60">{index}</span>
 			{segment.text}
 			{targetMember ? (
 				<span
@@ -888,7 +896,11 @@ function StagePanel({
 	);
 }
 
-function StageTrace({ stage }: { stage: ClassificationStageResult }) {
+function StageTrace({
+	stage,
+}: {
+	stage: ClassificationStageResult | SegmentationStageResult;
+}) {
 	return (
 		<div className="flex flex-col gap-3 border-t pt-4">
 			<div className="flex flex-wrap items-center justify-between gap-2">

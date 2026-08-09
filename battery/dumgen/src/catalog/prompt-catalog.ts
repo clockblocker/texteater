@@ -1,9 +1,13 @@
 import { z } from "zod";
 
 import { DUMGEN_GENERATION_MODEL } from "../ai-sdk/model-policy";
+import {
+	assertIntakeBatch,
+	freezeIntakeBatch,
+	type IntakeBatch,
+} from "../intake/contracts";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
-import { systemPrompt as segmentationSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/segmentation/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
 	inputSchema as intakeInputSchema,
@@ -14,20 +18,11 @@ import {
 	outputSchema as readingOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
 import {
-	inputSchema as segmentationInputSchema,
-	outputSchema as segmentationOutputSchema,
-} from "../promptsmith/laboratory/prompt-source/segmentation/de/schemas";
-import {
 	inputSchema as targetInputSchema,
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas";
 import { isGermanHighLevelRoute } from "../schema/german-high-level-routes";
-import type {
-	AnalysisTarget,
-	IntakeDecision,
-	ReadingResolution,
-	Unresolved,
-} from "../types";
+import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
@@ -43,40 +38,18 @@ const intakePrompt = {
 	inputSchema: intakeInputSchema,
 	outputSchema: intakeOutputSchema,
 	outputPostcondition: {
-		assert(_input, generated) {
-			const valid =
-				(generated.decision === "Accepted" &&
-					generated.language === "de") ||
-				(generated.decision === "UnsupportedLanguage" &&
-					generated.language !== null &&
-					generated.language !== "de") ||
-				(generated.decision === "Unintelligible" &&
-					generated.language === null);
-			if (!valid) {
-				throw new Error(
-					"Intake decision and resolved language are inconsistent.",
-				);
-			}
+		assert(input, generated) {
+			assertIntakeBatch(input, generated);
 		},
 	},
-	projectOutput(_input, generated): IntakeDecision {
-		return generated as IntakeDecision;
+	projectOutput(_input, generated): IntakeBatch {
+		return freezeIntakeBatch(generated);
 	},
-	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 64 },
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 2048 },
 } satisfies Prompt<
 	typeof intakeInputSchema,
 	typeof intakeOutputSchema,
-	IntakeDecision
->;
-
-const segmentationPrompt = {
-	systemPrompt: segmentationSystemPrompt,
-	inputSchema: segmentationInputSchema,
-	outputSchema: segmentationOutputSchema,
-	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 2048 },
-} satisfies Prompt<
-	typeof segmentationInputSchema,
-	typeof segmentationOutputSchema
+	IntakeBatch
 >;
 
 const targetPrompt = {
@@ -220,9 +193,6 @@ const grammaticalResolutionCatalog = {
 export type LaboratoryPromptCatalog = {
 	readonly laboratory: {
 		readonly intake: PromptCatalogEntry<typeof intakePrompt>;
-		readonly segmentation: {
-			readonly de: PromptCatalogEntry<typeof segmentationPrompt>;
-		};
 		readonly targetClassification: {
 			readonly de: {
 				readonly highLevelWholeUnit: PromptCatalogEntry<
@@ -242,7 +212,6 @@ export type LaboratoryPromptCatalog = {
 export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 	laboratory: {
 		intake: promptEntry(intakePrompt),
-		segmentation: { de: promptEntry(segmentationPrompt) },
 		targetClassification: {
 			de: { highLevelWholeUnit: promptEntry(targetPrompt) },
 		},

@@ -4,7 +4,10 @@ import type { Attestation, Lemma, Surface } from "dumling/types";
 import type { PROMPT_CATALOG } from "../catalog/prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
+import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
 import { isGermanHighLevelRoute } from "../schema/german-high-level-routes";
+import { segmentSource } from "../source-segmentation";
+import type { SourceSegmentationTrace } from "../source-segmentation/contracts";
 import type {
 	AnalysisTarget,
 	GrammaticalInput,
@@ -15,13 +18,19 @@ import type {
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
+	Section1Error,
 	Segment,
+	SegmentationDecision,
 	SegmentationResult,
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "../types";
 
 type DumgenGenerators = GeneratorCatalog<typeof PROMPT_CATALOG>;
+export type DumgenSection1Trace = IntakeTrace | SourceSegmentationTrace;
+type DumgenImplementationOptions = Readonly<{
+	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
+}>;
 type GrammaticalGenerator = (input: {
 	readonly markedContext: string;
 }) => Promise<GrammaticalResolution>;
@@ -35,10 +44,10 @@ type GrammaticalRouteKey<
 			: never
 		: never;
 
-export function createDumgenImplementation(generators: DumgenGenerators) {
-	const segmentationRoutes = Object.freeze({
-		de: generators.laboratory.segmentation.de,
-	});
+export function createDumgenImplementation(
+	generators: DumgenGenerators,
+	options: DumgenImplementationOptions = {},
+) {
 	const targetClassificationRoutes = Object.freeze({
 		de: generators.laboratory.targetClassification.de.highLevelWholeUnit,
 	});
@@ -101,57 +110,98 @@ export function createDumgenImplementation(generators: DumgenGenerators) {
 		Map<number, CachedGrammaticalResolution>
 	>();
 
-	async function segment(text: string): Promise<SegmentationResult> {
-		if (typeof text !== "string" || text.length === 0) {
-			throw invalidInput("Expected non-empty source text.");
-		}
+	async function segment(
+		sourceSentences: readonly string[],
+	): Promise<SegmentationResult> {
+		const inputError = validateSegmentationInput(sourceSentences);
+		if (inputError) return Object.freeze({ ok: false, error: inputError });
 
-		const intake = await generators.laboratory.intake({ text });
-		if (intake.decision === "UnsupportedLanguage") {
+		let intake: Awaited<ReturnType<typeof generators.laboratory.intake>>;
+		try {
+			intake = await generators.laboratory.intake({
+				items: sourceSentences.map((sourceText, index) => ({
+					id: `item-${index}`,
+					sourceText,
+				})),
+			});
+		} catch (cause) {
+			const error =
+				cause instanceof DumgenError
+					? cause
+					: new DumgenError("provider-error", "Intake failed.", {
+							cause,
+						});
 			return Object.freeze({
-				outcome: "Unavailable",
-				reason: "UnsupportedLanguage",
-				language: intake.language,
+				ok: false,
+				error: Object.freeze({
+					code: "IntakeFailure",
+					reason: error.code,
+					message: error.message,
+				}),
 			});
 		}
-		if (intake.decision === "Unintelligible") {
-			return Object.freeze({
-				outcome: "Unavailable",
-				reason: "Unintelligible",
-				language: null,
+
+		notifySection1(options, {
+			phase: "intake",
+			items: intake.items,
+		});
+		const decisions: SegmentationDecision[] = [];
+		for (
+			let itemIndex = 0;
+			itemIndex < intake.items.length;
+			itemIndex += 1
+		) {
+			const item = intake.items[itemIndex];
+			if (!item) {
+				throw invalidOutput("Validated Intake item is missing.");
+			}
+			if (item.decision !== "Accepted") {
+				decisions.push(Object.freeze({ decision: item.decision }));
+				continue;
+			}
+			if (!item.language) {
+				throw invalidOutput("Accepted Intake item has no language.");
+			}
+
+			const source = segmentSource(item.language, item.stitchedText);
+			notifySection1(options, {
+				phase: "source-segmentation",
+				itemIndex,
+				language: item.language,
+				stitchedText: item.stitchedText,
+				segments: source.segments,
+				rules: Object.freeze(source.trace.map(({ rule }) => rule)),
 			});
+			if (item.language === "de") {
+				const sentence = Object.freeze({
+					id: crypto.randomUUID() as SegmentedSentenceId,
+					language: "de",
+					segments: source.segments,
+				}) satisfies SegmentedSentence<"de">;
+				decisions.push(
+					Object.freeze({
+						decision: "Accepted",
+						language: "de",
+						sentence,
+					}),
+				);
+			} else {
+				const sentence = Object.freeze({
+					id: crypto.randomUUID() as SegmentedSentenceId,
+					language: "he",
+					segments: source.segments,
+				}) satisfies SegmentedSentence<"he">;
+				decisions.push(
+					Object.freeze({
+						decision: "Accepted",
+						language: "he",
+						sentence,
+					}),
+				);
+			}
 		}
 
-		const route = segmentationRoutes[intake.language];
-		if (!route) {
-			throw invalidOutput(
-				`Intake accepted unavailable Segmentation language ${intake.language}.`,
-			);
-		}
-		const generated = await route({ text });
-		let offset = 0;
-		const segments = generated.segments.map((generatedSegment, index) => {
-			const start = offset;
-			offset += generatedSegment.text.length;
-			return Object.freeze({
-				...generatedSegment,
-				index,
-				start,
-				end: offset,
-			}) satisfies Segment;
-		});
-		const sentence = Object.freeze({
-			id: crypto.randomUUID() as SegmentedSentenceId,
-			language: intake.language,
-			sourceText: text,
-			segments: Object.freeze(segments),
-		}) satisfies SegmentedSentence<"de">;
-
-		return Object.freeze({
-			outcome: "Segmented",
-			language: sentence.language,
-			sentence,
-		});
+		return Object.freeze({ ok: true, value: Object.freeze(decisions) });
 	}
 
 	async function grammatical<L extends GrammaticalResolutionLanguage>(
@@ -321,7 +371,6 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 		sentence.language !== language ||
 		typeof sentence.id !== "string" ||
 		sentence.id.length === 0 ||
-		typeof sentence.sourceText !== "string" ||
 		!Array.isArray(sentence.segments)
 	) {
 		throw invalidInput(
@@ -329,23 +378,18 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 		);
 	}
 
-	let offset = 0;
-	for (let index = 0; index < sentence.segments.length; index += 1) {
-		const segment = sentence.segments[index];
+	for (const segment of sentence.segments) {
 		if (
 			!segment ||
-			segment.index !== index ||
 			typeof segment.text !== "string" ||
 			segment.text.length === 0 ||
 			!isSegmentKind(segment.kind) ||
-			segment.start !== offset ||
-			segment.end !== offset + segment.text.length
+			(segment.kind === "Whitespace" && segment.text !== " ")
 		) {
 			throw invalidInput(
 				"The Segmented Sentence contains an invalid Segment aggregate.",
 			);
 		}
-		offset = segment.end;
 	}
 
 	if (
@@ -502,16 +546,74 @@ function constructMarkedContext(
 ): string {
 	const members = new Set(memberSegmentIndices);
 	return segments
-		.map((segment) => {
+		.map((segment, index) => {
 			const escapedText = segment.text
 				.replaceAll("&", "&amp;")
 				.replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;");
-			return members.has(segment.index)
+			return members.has(index)
 				? `<TARGET>${escapedText}</TARGET>`
 				: escapedText;
 		})
 		.join("");
+}
+
+function validateSegmentationInput(
+	value: readonly string[],
+): Section1Error | undefined {
+	if (!Array.isArray(value) || value.length === 0) {
+		return Object.freeze({
+			code: "InvalidInput",
+			message:
+				"Expected a non-empty batch of caller-delimited source sentences.",
+		});
+	}
+	if (value.length > INTAKE_LIMITS.maxBatchSize) {
+		return Object.freeze({
+			code: "InvalidInput",
+			message: `Intake accepts at most ${INTAKE_LIMITS.maxBatchSize} sentences per batch.`,
+		});
+	}
+	for (let itemIndex = 0; itemIndex < value.length; itemIndex += 1) {
+		const sentence = value[itemIndex];
+		if (typeof sentence !== "string" || sentence.trim().length === 0) {
+			return Object.freeze({
+				code: "InvalidInput",
+				itemIndex,
+				message:
+					"Every Intake item must be a non-empty source sentence.",
+			});
+		}
+		if ([...sentence].length > INTAKE_LIMITS.maxCodePointsPerSentence) {
+			return Object.freeze({
+				code: "InvalidInput",
+				itemIndex,
+				message: `An Intake item may contain at most ${INTAKE_LIMITS.maxCodePointsPerSentence} Unicode code points.`,
+			});
+		}
+		if (
+			sentence.trim().split(/\s+/u).length >
+			INTAKE_LIMITS.maxWordsPerSentence
+		) {
+			return Object.freeze({
+				code: "InvalidInput",
+				itemIndex,
+				message: `An Intake item may contain at most ${INTAKE_LIMITS.maxWordsPerSentence} whitespace-delimited words.`,
+			});
+		}
+	}
+	return undefined;
+}
+
+function notifySection1(
+	options: DumgenImplementationOptions,
+	trace: DumgenSection1Trace,
+): void {
+	try {
+		options.onSection1Trace?.(structuredClone(trace));
+	} catch {
+		// Instrumentation is diagnostic-only and cannot affect the operation.
+	}
 }
 
 function invalidInput(message: string): DumgenError {

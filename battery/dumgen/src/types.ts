@@ -5,7 +5,7 @@ import type {
 	GermanHighLevelKind,
 } from "./schema/german-high-level-routes";
 
-export type EnabledSegmentationLanguage = "de";
+export type EnabledSegmentationLanguage = "de" | "he";
 export type GrammaticalResolutionLanguage = "de";
 export type ReadingResolutionLanguage = "de";
 
@@ -20,11 +20,8 @@ export type SegmentKind =
 	| "Punctuation";
 
 export type Segment = {
-	readonly index: number;
 	readonly text: string;
 	readonly kind: SegmentKind;
-	readonly start: number;
-	readonly end: number;
 };
 
 export type SegmentedSentence<
@@ -32,26 +29,42 @@ export type SegmentedSentence<
 > = {
 	readonly id: SegmentedSentenceId;
 	readonly language: L;
-	readonly sourceText: string;
 	readonly segments: readonly Segment[];
 };
 
+export type SegmentationDecision =
+	| {
+			readonly [Language in EnabledSegmentationLanguage]: {
+				readonly decision: "Accepted";
+				readonly language: Language;
+				readonly sentence: SegmentedSentence<Language>;
+			};
+	  }[EnabledSegmentationLanguage]
+	| {
+			readonly decision: "UnsupportedLanguage";
+	  }
+	| {
+			readonly decision: "Unintelligible";
+	  };
+
+export type Section1Error =
+	| {
+			readonly code: "InvalidInput";
+			readonly message: string;
+			readonly itemIndex?: number;
+	  }
+	| {
+			readonly code: "IntakeFailure";
+			readonly reason: import("./generator/generator-error").DumgenErrorCode;
+			readonly message: string;
+	  };
+
 export type SegmentationResult =
 	| {
-			readonly outcome: "Segmented";
-			readonly language: EnabledSegmentationLanguage;
-			readonly sentence: SegmentedSentence<EnabledSegmentationLanguage>;
+			readonly ok: true;
+			readonly value: readonly SegmentationDecision[];
 	  }
-	| {
-			readonly outcome: "Unavailable";
-			readonly reason: "UnsupportedLanguage";
-			readonly language: string;
-	  }
-	| {
-			readonly outcome: "Unavailable";
-			readonly reason: "Unintelligible";
-			readonly language: null;
-	  };
+	| { readonly ok: false; readonly error: Section1Error };
 
 export type GrammaticalRoute<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
@@ -100,17 +113,6 @@ export type ReadingResolution = {
 };
 
 export type Unresolved = { readonly decision: "Unresolved" };
-
-export type IntakeDecision =
-	| {
-			readonly decision: "Accepted";
-			readonly language: EnabledSegmentationLanguage;
-	  }
-	| {
-			readonly decision: "UnsupportedLanguage";
-			readonly language: string;
-	  }
-	| { readonly decision: "Unintelligible"; readonly language: null };
 
 /** Internal result of Target Classification. */
 export type AnalysisTarget = {

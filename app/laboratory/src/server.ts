@@ -1,8 +1,12 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { DumgenModelExchange } from "dumgen";
+import type { DumgenModelExchange, DumgenSection1Trace } from "dumgen";
 import { buildDumgen } from "dumgen";
 import { GermanClassificationResolver } from "./classification";
-import { attemptedPromptPaths, segmentForLaboratory } from "./segmentation";
+import {
+	attemptedPromptPaths,
+	LaboratorySegmentationError,
+	segmentForLaboratory,
+} from "./segmentation";
 import {
 	appendSessionEvent,
 	describeErrors,
@@ -18,17 +22,21 @@ import type {
 } from "./shared/contract";
 
 const modelExchangeContext = new AsyncLocalStorage<DumgenModelExchange[]>();
+const section1TraceContext = new AsyncLocalStorage<DumgenSection1Trace[]>();
 function buildLaboratoryDumgen() {
 	return buildDumgen({
 		onModelExchange(exchange) {
 			modelExchangeContext.getStore()?.push(exchange);
+		},
+		onSection1Trace(trace) {
+			section1TraceContext.getStore()?.push(trace);
 		},
 	});
 }
 
 const generate = buildLaboratoryDumgen();
 let resolver = new GermanClassificationResolver(buildLaboratoryDumgen);
-const model = "gpt-5-nano" as const;
+const model = "gpt-5.6-luna" as const;
 const sentences = new Map<
 	string,
 	{ sessionId: string; sentence: SegmentedSentence }
@@ -46,7 +54,14 @@ function errorResult(error: unknown): ApplicationResult {
 	const details = describeErrors(error).map(
 		({ name, message: detail }) => `${name}: ${detail}`,
 	);
-	return { status: 502, body: { error: message, details } };
+	return {
+		status:
+			error instanceof LaboratorySegmentationError &&
+			error.section1Error.code === "InvalidInput"
+				? 400
+				: 502,
+		body: { error: message, details },
+	};
 }
 
 async function logAttempt(input: {
@@ -115,6 +130,7 @@ const server = Bun.serve({
 				const trace: Partial<SegmentationResponse["stages"]> = {};
 				const promptNames: string[] = [];
 				const modelExchanges: DumgenModelExchange[] = [];
+				const section1Traces: DumgenSection1Trace[] = [];
 				let applicationResult: ApplicationResult | null = null;
 				let errors: LoggedError[] = [];
 				try {
@@ -141,8 +157,14 @@ const server = Bun.serve({
 						generate,
 						input.text,
 						modelExchanges,
+						section1Traces,
 						(operation) =>
-							modelExchangeContext.run(modelExchanges, operation),
+							modelExchangeContext.run(modelExchanges, () =>
+								section1TraceContext.run(
+									section1Traces,
+									operation,
+								),
+							),
 					);
 					promptNames.push(...body.generation.prompts);
 					Object.assign(trace, body.stages);
@@ -227,6 +249,19 @@ const server = Bun.serve({
 						});
 					}
 					const { sentence } = stored;
+					if (sentence.language !== "de") {
+						const error = new Error(
+							"Hebrew Click Resolution is not implemented; ambiguous morphology remains deferred.",
+						);
+						errors = describeErrors(error);
+						applicationResult = {
+							status: 422,
+							body: { error: error.message },
+						};
+						return Response.json(applicationResult.body, {
+							status: 422,
+						});
+					}
 					if (
 						sentence.segments[input.clickedSegmentIndex]?.kind !==
 						"ResolvableText"

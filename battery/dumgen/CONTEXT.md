@@ -150,7 +150,7 @@ before Source Segmentation.
 It has exactly one outcome:
 - `Accepted`, with the Stitched Text and Enabled Segmentation Language to which
   some useful material can be dispatched as `ResolvableText`
-- `UnsupportedLanguage`, with the resolved language for valid language input
+- `UnsupportedLanguage`, with no language projection, for valid language input
   that has no enabled Dumgen Segmentation route
 - `Unintelligible`, for gibberish or input too corrupted to support a
   defensible interpretation
@@ -164,6 +164,16 @@ after Intake. For now, Intake resolves exactly one primary language per Source
 Sentence, and Source Segmentation preserves non-primary-language spans as
 `OpaqueText`. Multilingual and code-switched routing is deferred to
 [texteater#19](https://github.com/clockblocker/texteater/issues/19).
+
+### Intake Batch
+A bounded, non-empty ordered list of caller-delimited Source Sentences handled
+by exactly one Intake model call.
+
+Every input position produces exactly one Intake Decision at the same output
+position. Stable internal item IDs enforce cardinality and order; Stitching
+never crosses an item boundary, and one bad item does not discard its
+neighbors. Accepted items in one Intake Batch share one primary Enabled
+Segmentation Language. A public single-item Intake operation is not exposed.
 
 ### Segmented Sentence
 A versioned, immutable, ordered Source Segmentation of Stitched Text and the
@@ -322,10 +332,11 @@ _Avoid_: Emoji gloss, emoji-plus-gloss label
 ### Segmentation Chain
 The pre-click chain.
 
-It has two internal stages behind one public operation:
+It has two internal stages behind one public batch operation:
 
-1. One bounded LLM Intake call minimally stitches the Source Sentence, resolves
-   its language, and returns an Intake Decision.
+1. One bounded LLM Intake call minimally stitches every Source Sentence in an
+   Intake Batch, resolves one primary language context, and returns one ordered
+   Intake Decision per item.
 2. Only when Intake returns `Accepted`, the application uses the resolved
    language to run deterministic language-specific Source Segmentation.
 
@@ -348,10 +359,11 @@ itself an experiment.
 
 ### Laboratory Prompt Namespace
 
-The current executable prompts are early-WIP laboratory instruments. German is
-the only registered language. The pre-click chain makes two distinct sequential
-model calls, registered as `laboratory.intake` followed on acceptance by
-`laboratory.segmentation.de`. Post-click classification begins at
+The current executable prompts are laboratory instruments. The pre-click chain
+makes one model call, registered as `laboratory.intake`. Accepted German and
+Hebrew items then use deterministic Source Segmentation modules; these are
+observable through laboratory rule traces but are not prompt routes. Post-click
+classification begins at
 `laboratory.targetClassification.de.highLevelWholeUnit`, then dispatches to
 physically distinct `laboratory.grammaticalResolution.de.<Family>.<Kind>`
 leaves. Reading Resolution depends only on the language and is registered once
@@ -375,9 +387,9 @@ Prompt Assembly writes disposable `systemPrompt` assets under
 handwritten `PROMPT_CATALOG` imports those assets together with each authored
 `schemas.ts` module.
 
-The initial structured Prompt Source scope is Intake, Segmentation<de>, Target
-Classification<de, HighLevelWholeUnit>, Grammatical Resolution<de, Lexeme,
-NOUN>, and Reading Resolution<de>. Target Classification retains
+The structured Prompt Source scope is batch Intake, Target Classification<de,
+HighLevelWholeUnit>, the enabled German Grammatical Resolution inventory, and
+Reading Resolution<de>. Target Classification retains
 its explicit policy dimension so later target policies can have distinct
 contracts. Only the German Lexeme/NOUN Grammatical Resolution route is
 initially enabled through the complete post-click chain. Every successfully

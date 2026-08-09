@@ -1,10 +1,15 @@
-import type { Dumgen, DumgenModelExchange, SegmentationResult } from "dumgen";
+import type {
+	Dumgen,
+	DumgenModelExchange,
+	DumgenSection1Trace,
+	Section1Error,
+	SegmentationResult,
+} from "dumgen";
 
 import type { SegmentationResponse } from "./shared/contract";
 
-const model = "gpt-5-nano" as const;
+const model = "gpt-5.6-luna" as const;
 const intakePrompt = "laboratory.intake";
-const segmentationPrompt = "laboratory.segmentation.de";
 
 type AcceptedExchange = Extract<
 	DumgenModelExchange,
@@ -14,6 +19,16 @@ type AcceptedExchange = Extract<
 type OperationRunner = <Result>(
 	operation: () => Promise<Result>,
 ) => Promise<Result>;
+
+export class LaboratorySegmentationError extends Error {
+	readonly section1Error: Section1Error;
+
+	constructor(error: Section1Error) {
+		super(error.message);
+		this.name = "LaboratorySegmentationError";
+		this.section1Error = error;
+	}
+}
 
 function acceptedStage(
 	prompt: string,
@@ -49,27 +64,50 @@ export async function segmentForLaboratory(
 	dumgen: Pick<Dumgen, "segment">,
 	text: string,
 	modelExchanges: DumgenModelExchange[],
+	section1Traces: DumgenSection1Trace[] = [],
 	run: OperationRunner = (operation) => operation(),
 ): Promise<SegmentationResponse> {
-	const result: SegmentationResult = await run(() => dumgen.segment(text));
+	const result: SegmentationResult = await run(() => dumgen.segment([text]));
+	if (!result.ok) throw new LaboratorySegmentationError(result.error);
 	const prompts = attemptedPromptPaths(modelExchanges);
 	const intake = acceptedStage(intakePrompt, modelExchanges);
+	const decision = result.value[0];
+	if (!decision)
+		throw new Error("Dumgen returned no decision for the lab item.");
 
-	if (result.outcome === "Unavailable") {
+	if (decision.decision !== "Accepted") {
 		return {
-			decision: result.reason,
+			decision: decision.decision,
 			sentence: null,
 			stages: { intake },
 			generation: { model, prompts },
 		};
 	}
+	const segmentation = section1Traces.find(
+		(trace) =>
+			trace.phase === "source-segmentation" && trace.itemIndex === 0,
+	);
+	if (segmentation?.phase !== "source-segmentation") {
+		throw new Error(
+			"No deterministic Source Segmentation trace was captured.",
+		);
+	}
 
 	return {
 		decision: "Accepted",
-		sentence: result.sentence,
+		sentence: decision.sentence,
 		stages: {
 			intake,
-			segmentation: acceptedStage(segmentationPrompt, modelExchanges),
+			segmentation: {
+				prompt: `source-segmentation.${segmentation.language}`,
+				traceOrigin: "deterministic",
+				input: { stitchedText: segmentation.stitchedText },
+				output: {
+					segments: segmentation.segments,
+					rules: segmentation.rules,
+				},
+				result: decision.sentence,
+			},
 		},
 		generation: { model, prompts },
 	};
