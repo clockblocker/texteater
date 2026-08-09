@@ -138,10 +138,7 @@ describe("Lexeme/NOUN diagnostic evaluator", () => {
 			...testCase.idealOutput,
 			resolution: {
 				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "Kaffe",
-				},
+				normalizedMembers: ["Kaffe"],
 			},
 		};
 		const result = evaluateNounGrammaticalResolution({

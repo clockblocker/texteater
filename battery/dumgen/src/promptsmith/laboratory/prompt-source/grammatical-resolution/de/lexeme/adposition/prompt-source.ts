@@ -16,11 +16,11 @@ grammatical adposition identity.
 Count literal opening <TARGET> tags. Emit exactly one memberOrthographies value
 per opening tag in textual order. Standard includes ordinary sentence-initial
 capitalization and licensed variant spelling. Typo means an actual spelling or
-inappropriate-casing error. normalizedSurface is the normalized contextual
+inappropriate-casing error. normalizedMembers is the normalized contextual
 lexical material: lowercase ordinary capitalization and repair only typos, but
 preserve lexical-member order and never include a complement or insert missing
 members. Mark a licensed noncanonical spelling Variant rather than Typo.
-Except for ordinary sentence-initial casing, if normalizedSurface changes any
+Except for ordinary sentence-initial casing, if normalizedMembers changes any
 marked character to repair casing or spelling, the corresponding
 memberOrthographies value must be Typo.
 

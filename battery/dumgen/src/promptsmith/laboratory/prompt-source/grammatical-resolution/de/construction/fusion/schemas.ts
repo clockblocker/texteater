@@ -5,6 +5,7 @@ import { z } from "zod";
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
 	grammaticalResolutionMarkedContextSchema,
+	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -66,7 +67,9 @@ const schemaProjectionLemma = deFusionLemmaCodec.decode({
 });
 
 export const deFusionModelCitationSurfaceSchema =
-	buildDeFusionCitationSurfaceCodec(schemaProjectionLemma).in;
+	buildDeFusionCitationSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 
 export const inputSchema = z.strictObject({
 	markedContext: grammaticalResolutionMarkedContextSchema,
@@ -79,6 +82,7 @@ export const outputSchema = z.strictObject({
 			memberOrthographies: z
 				.array(z.enum(["Standard", "Typo"]))
 				.length(1),
+			normalizedMembers: normalizedMembersSchema.length(1),
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: deFusionModelCitationSurfaceSchema,
 			lemma: deFusionModelLemmaSchema,

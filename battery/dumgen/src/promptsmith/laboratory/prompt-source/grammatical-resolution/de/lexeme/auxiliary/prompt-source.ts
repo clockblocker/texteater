@@ -29,7 +29,7 @@ Count literal opening <TARGET> tags and resolve only when the count is exactly
 one. Emit exactly one memberOrthographies value. Standard includes ordinary
 sentence-initial capitalization. Typo means an actual spelling or
 inappropriate-casing error.
-normalizedSurface is the normalized contextual lexical material: lowercase
+normalizedMembers is the normalized contextual lexical material: lowercase
 ordinary sentence-initial capitalization and repair only typos, while
 preserving lexical-member order. If normalization repairs spelling or casing
 other than ordinary sentence-initial capitalization, emit Typo for that member.

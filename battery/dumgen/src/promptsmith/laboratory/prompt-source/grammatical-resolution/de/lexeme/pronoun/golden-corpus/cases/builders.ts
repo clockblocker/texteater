@@ -38,7 +38,7 @@ export function core(
 }
 
 export function citation(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly coreFeatures: PronounCoreFeatures;
 	readonly spelling?: "Canonical" | "Variant";
@@ -48,8 +48,8 @@ export function citation(args: {
 		resolution: {
 			memberOrthographies: ["Standard" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: args.spelling ?? ("Canonical" as const),
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
@@ -63,7 +63,7 @@ export function citation(args: {
 }
 
 export function inflection(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly coreFeatures: PronounCoreFeatures;
 	readonly inflectionalFeatures: PronounInflectionalFeatures;
@@ -78,8 +78,8 @@ export function inflection(args: {
 				args.memberOrthography ?? ("Standard" as const),
 			],
 			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: args.spelling ?? ("Canonical" as const),
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures: null,

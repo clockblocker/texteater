@@ -6,39 +6,48 @@ const occurrenceAttestation = {
 			attested: "hat",
 			orthography: "Standard",
 		},
+		{
+			attested: "mitgebracht",
+			orthography: "Standard",
+		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "hat",
+		normalizedSurface: "hat mitgebracht",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
-			mood: "Ind",
-			number: "Sing",
-			person: "3",
-			tense: "Pres",
-			verbForm: "Fin",
+			aspect: null,
+			gender: null,
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			verbForm: "Part",
 			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalForm: "haben",
+			canonicalForm: "mitbringen",
 			family: "Lexeme",
-			kind: "AUX",
+			kind: "VERB",
 			coreFeatures: {
+				hasSepPrefix: "mit",
+				hasGovPrep: null,
+				lexicallyReflexive: null,
 				verbType: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Inflection", "Lexeme", "AUX">;
+} satisfies Attestation<"de", "Inflection", "Lexeme", "VERB">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown:
 		"Die Peitsche [hat] er mitgebracht\nund nimmt sie sorglich sehr in acht.",
 	classifierNotes:
-		"Hat is the present finite auxiliary in the perfect construction hat mitgebracht, not a lexical possession verb here.",
+		"The perfect-auxiliary click returns the same lexical mitbringen occurrence as the participle click; head morphology remains Participle and the Lemma remains mitbringen.",
 	isVerified: true,
 } as const;

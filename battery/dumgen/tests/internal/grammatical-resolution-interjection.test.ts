@@ -67,7 +67,6 @@ describe("Lexeme/INTJ exact model contract", () => {
 
 	test("permits only Citation Surfaces and no inflectional payload", () => {
 		const citation = {
-			normalizedSurface: "pfui",
 			spelling: "Canonical" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
@@ -155,10 +154,7 @@ describe("Lexeme/INTJ diagnostic evaluator", () => {
 			...testCase.idealOutput,
 			resolution: {
 				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "Nein",
-				},
+				normalizedMembers: ["Nein"],
 				lemma: {
 					...testCase.idealOutput.resolution.lemma,
 					coreFeatures: { partType: null },

@@ -122,10 +122,10 @@ export const particleCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function resolved(
-	normalizedSurface: string,
+	normalizedMembers: string,
 	coreFeatures: CoreFeatures,
 	orthography: "Standard" | "Typo" = "Standard",
-	canonicalForm = normalizedSurface,
+	canonicalForm = normalizedMembers,
 	spelling: "Canonical" | "Variant" = "Canonical",
 ) {
 	return {
@@ -133,8 +133,8 @@ function resolved(
 		resolution: {
 			memberOrthographies: [orthography],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [normalizedMembers],
 			surface: {
-				normalizedSurface,
 				spelling,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

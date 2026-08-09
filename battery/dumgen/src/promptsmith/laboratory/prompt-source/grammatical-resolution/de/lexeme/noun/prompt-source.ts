@@ -17,7 +17,7 @@ exactly one memberOrthographies value per opening tag in textual order. Typo mea
 an actual spelling error, including incorrect lowercase spelling of a German
 common noun. Standard includes canonical spelling and licensed variants;
 represent the latter as a Variant Surface rather than a Typo. If producing
-normalizedSurface requires changing any marked characters to repair spelling or
+normalizedMembers requires changing any marked characters to repair spelling or
 casing, the corresponding memberOrthographies value must be Typo.
 
 The Surface is the normalized contextual form. Copy Standard canonical lexical

@@ -38,8 +38,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["jeglicher"],
 						surface: {
-							normalizedSurface: "jeglicher",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -60,8 +60,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["keinen"],
 						surface: {
-							normalizedSurface: "keinen",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -79,7 +79,7 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					},
 				},
 				explanation:
-					"Repair the missing n to the contextual accusative form keinen; do not lemmatize normalizedSurface.",
+					"Repair the missing n to the contextual accusative form keinen; do not lemmatize normalizedMembers.",
 			},
 			"grammar-de-det-repeated-second-einem": {
 				input: {
@@ -91,8 +91,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["einem"],
 						surface: {
-							normalizedSurface: "einem",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -124,8 +124,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["die"],
 						surface: {
-							normalizedSurface: "die",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -158,8 +158,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["derlei"],
 						surface: {
-							normalizedSurface: "derlei",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,

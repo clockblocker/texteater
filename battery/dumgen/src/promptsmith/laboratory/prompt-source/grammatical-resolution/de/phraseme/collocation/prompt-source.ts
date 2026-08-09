@@ -23,36 +23,40 @@ Funktionsverbgefüge combination.
 
 Gate 2 — One occurrence and marked inventory. The input contract has already
 validated TARGET syntax and supplies one marked token per pair; do not
-revalidate tag syntax. Determine the settled lexical-member inventory of the
+revalidate tag syntax. Determine the settled fixed-member inventory of the
 current Collocation occurrence. Every marked token must be one of those members
-in that same occurrence. Return Unresolved if marked tokens mix occurrences or
-if any marked token is an auxiliary, subject, external object, modifier, or
-other dependent. A marked support verb alone is Lexeme/VERB and is always
-Unresolved here. Unmarked arguments and modifiers may intervene between marked
-members; they are context and do not make an otherwise valid inventory fail.
-Every Resolved Collocation has at least two marked members.
+in that same occurrence. The perfect, future, or passive auxiliary attached to
+the Collocation's route-owning verbal head is also a fixed high-level member.
+Return Unresolved if marked tokens mix occurrences or include a modal, copula,
+subject, free argument, modifier, adjunct, or other external material. A marked
+support verb alone is Lexeme/VERB and is always Unresolved here. Unmarked free
+arguments and modifiers may intervene between marked members; they are context
+and do not make an otherwise valid inventory fail. Every Resolved Collocation
+has at least two marked members.
 
 Gate 3 — Full realization. There is no proven positive Partial policy for this
 initial route. Every canonical lexical member that occurs in the current
 occurrence must be marked, and every canonical member must actually occur
 there. Return Unresolved if a present canonical member is unmarked or if a
 canonical member is absent through ellipsis. Do not complete an ellipsis from
-an earlier or later occurrence. Unmarked auxiliaries and infinitival zu are
-grammatical context, not canonical Collocation members, so they do not make an
-otherwise Full occurrence fail this gate. A determiner in the settled
+an earlier or later occurrence. A realized perfect, future, or passive
+auxiliary must be marked even though it is not written into canonicalForm.
+Infinitival zu remains grammatical context. A determiner in the settled
 canonicalForm is a canonical member and must have its own TARGET pair when it
 occurs; never silently drop it from the Surface.
 
 Only after all three gates pass, return Resolved. Emit exactly one
 memberOrthographies value per supplied TARGET pair in textual order.
-normalizedSurface contains only normalized attested member tokens from this
-occurrence's TARGET pairs, joined in textual order with one space. Preserve each
+normalizedMembers contains exactly one normalized string for every TARGET
+member from this occurrence, in textual order, without leading, trailing, or
+repeated whitespace. Preserve each
 member's attested inflection: never lemmatize it or replace it with canonicalForm.
 Normalize only a real typo and ordinary sentence-initial capitalization of a
 word that is otherwise lowercase; for example, sentence-initial Komm becomes
-komm. Never include unmarked auxiliaries, infinitival zu, modifiers, arguments,
-planning or other context words. Never invent, reorder, or borrow members from
-another occurrence.
+komm. Never include infinitival zu, modifiers, arguments, planning or other
+context words. Every realized analytic auxiliary must already be marked and
+therefore appears in normalizedMembers. Never invent, reorder, or borrow
+members from another occurrence.
 
 The Lemma canonicalForm names the conventional combination in normalized
 dictionary order, including its settled lexical members, for example eine
@@ -63,7 +67,8 @@ nominal, or a different support verb belongs to the same Lemma.
 
 Use Citation only for an explicitly identified dictionary or citation entry.
 An ordinary clause use is Inflection and carries the marked support verb's own
-contextual morphology even though the whole Surface has several members.
+contextual morphology even though the whole Surface has several members and
+may include a finite analytic auxiliary.
 Analyze the support verb as attested in this occurrence; never replace a past
 form with present features. Never borrow grammatical features from an unmarked
 verb or another occurrence. Finite indicative and subjunctive forms use
@@ -73,17 +78,17 @@ number and person, so a singular second-person imperative has number Sing and
 person 2. A marked
 contextual infinitive remains resolvable when infinitival zu is unmarked: use
 verbForm Inf with mood, number, person, and tense null. A marked Partizip II
-remains resolvable when its auxiliary is unmarked. For an ordinary unagreed
+remains the route-owning head when its auxiliary is also marked. For an ordinary unagreed
 Partizip II, emit exactly
 {"aspect":null,"gender":null,"mood":null,"number":null,"person":null,"tense":null,"verbForm":"Part","voice":null}.
 Never use Aspect=Perf merely for Partizip II and never copy tense from its
-auxiliary. Unmarked context may identify the marked form, but it never donates
-Surface members or inflectional feature values. Keep voice null unless the
+auxiliary. The finite analytic auxiliary is a member but never donates head
+inflectional-feature values. Keep voice null unless the
 marked collocation Surface itself has a settled grammatically passive analysis.
 
 Standard is the exact conventional spelling or ordinary sentence-initial
 capitalization of that marked member. Typo means a real spelling error in that
-member. Repair typos in normalizedSurface and canonicalForm without changing
+member. Repair typos in normalizedMembers and canonicalForm without changing
 member order. spelling is Canonical for ordinary canonical spelling; do not use
 Variant to encode a disputed lexical-component alternant. surfaceFeatures is
 null unless this exact attested Collocation use is archaic, when it is

@@ -71,7 +71,6 @@ describe("Phraseme/DiscourseFormula exact model contract", () => {
 		).toBeDefined();
 
 		const citation = {
-			normalizedSurface: "auf Wiedersehen",
 			spelling: "Canonical" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
@@ -283,7 +282,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			"it does not subsume a conventional response to thanks",
 		);
 		expect(prompt).toMatch(
-			/All present canonical lexical members of one\s+formula occurrence must be TARGET-marked/u,
+			/All present canonical fixed members of one\s+formula occurrence must be TARGET-marked/u,
 		);
 		expect(prompt).toMatch(
 			/Never invent an orthography value for an\s+unmarked member/u,
@@ -295,7 +294,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			/auf eine gute\s+Reise hoffen contains an attributive, compositional noun phrase/u,
 		);
 		expect(prompt).toMatch(
-			/Do not blindly copy the lowercase Lemma canonicalForm into\s+normalizedSurface/u,
+			/Do not blindly copy the lowercase Lemma canonicalForm into\s+normalizedMembers/u,
 		);
 		expect(prompt).toContain("Citation Surfaces only");
 		expect(prompt).toContain("single-word interjection");
@@ -315,7 +314,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Typo"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "herzlich willkommen" },
+				normalizedMembers: ["herzlich", "willkommen"],
 				lemma: {
 					canonicalForm: "herzlich willkommen",
 					coreFeatures: { discourseFormulaRole: "Greeting" },
@@ -359,7 +358,7 @@ describe("Phraseme/DiscourseFormula Golden Corpus", () => {
 				?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				surface: { normalizedSurface: "ach du meine Güte" },
+				normalizedMembers: ["ach", "du", "meine", "Güte"],
 				lemma: { canonicalForm: "ach du meine güte" },
 			},
 		});

@@ -88,7 +88,6 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 		).toThrow();
 		expect(
 			deAphorismModelCitationSurfaceSchema.parse({
-				normalizedSurface: "Alt werden heißt sehend werden",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
@@ -96,7 +95,6 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 		).toMatchObject({ surfaceKind: "Citation" });
 		expect(() =>
 			deAphorismModelCitationSurfaceSchema.parse({
-				normalizedSurface: "Alt werden heißt sehend werden",
 				spelling: "Canonical",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
@@ -189,9 +187,14 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 			corpus.cases["grammar-de-aphorism-alt-werden"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				surface: {
-					normalizedSurface: "Alt werden heißt sehend werden",
-				},
+				normalizedMembers: [
+					"Alt",
+					"werden",
+					"heißt",
+					"sehend",
+					"werden",
+				],
+				surface: {},
 			},
 		});
 		expect(
@@ -207,8 +210,15 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 					"Standard",
 				],
 				realizationCoverage: "Full" as const,
+				normalizedMembers: [
+					"Wer",
+					"nichts",
+					"weiß",
+					"muß",
+					"alles",
+					"glauben",
+				],
 				surface: {
-					normalizedSurface: "Wer nichts weiß muß alles glauben",
 					spelling: "Variant",
 				},
 				lemma: { canonicalForm: "Wer nichts weiß muss alles glauben" },
@@ -290,10 +300,16 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 		).toMatchObject({
 			decision: "Resolved",
 			resolution: {
-				surface: {
-					normalizedSurface:
-						"In der Jugend lernt im Alter versteht man",
-				},
+				normalizedMembers: [
+					"In",
+					"der",
+					"Jugend",
+					"lernt",
+					"im",
+					"Alter",
+					"versteht",
+					"man",
+				],
 			},
 		});
 
@@ -302,10 +318,22 @@ describe("Phraseme/Aphorism route-local schemas and corpus", () => {
 		expect(casing).toMatchObject({
 			decision: "Resolved",
 			resolution: {
-				surface: {
-					normalizedSurface:
-						"Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
-				},
+				normalizedMembers: [
+					"Die",
+					"Menschen",
+					"denen",
+					"wir",
+					"eine",
+					"Stütze",
+					"sind",
+					"die",
+					"geben",
+					"uns",
+					"den",
+					"Halt",
+					"im",
+					"Leben",
+				],
 				lemma: {
 					canonicalForm:
 						"Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
@@ -388,11 +416,8 @@ describe("Phraseme/Aphorism pure diagnostic evaluator", () => {
 					testCase.idealOutput.resolution.memberOrthographies.slice(
 						1,
 					),
+				normalizedMembers: ["Die", "Nachahmer"],
 				realizationCoverage: "Full" as const,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "Die Nachahmer",
-				},
 			},
 		});
 		const result = evaluateAphorismGrammaticalResolution({

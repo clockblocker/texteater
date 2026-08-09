@@ -5,6 +5,7 @@ import { z } from "zod";
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
 	grammaticalResolutionMarkedContextSchema,
+	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -69,7 +70,9 @@ const schemaProjectionLemma = dePairedFrameLemmaCodec.decode({
 });
 
 export const dePairedFrameModelCitationSurfaceSchema =
-	buildDePairedFrameCitationSurfaceCodec(schemaProjectionLemma).in;
+	buildDePairedFrameCitationSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 
 export const inputSchema = z.strictObject({
 	markedContext: grammaticalResolutionMarkedContextSchema,
@@ -80,6 +83,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: dePairedFrameModelCitationSurfaceSchema,
 			lemma: dePairedFrameModelLemmaSchema,

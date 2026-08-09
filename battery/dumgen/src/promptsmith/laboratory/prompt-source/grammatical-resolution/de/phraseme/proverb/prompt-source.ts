@@ -3,7 +3,7 @@ import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
 const body = `Target Classification has already fixed this request to German
-Phraseme/Proverb and supplied the marked lexical members. Resolve the Surface
+Phraseme/Proverb and supplied the marked fixed members. Resolve the Surface
 and Lemma grammar for that fixed route. Do not require the exact wording to be
 familiar, recall a dictionary entry, or reconstruct a source citation: those
 are not fields of Grammatical Resolution. Unfamiliarity with the wording is not
@@ -38,7 +38,7 @@ The input has already been structurally validated so that every TARGET pair
 identifies exactly one word-like ResolvableText member. TARGET membership is
 therefore authoritative: emit one memberOrthographies value per marked member
 in textual order. A positive target-scope contradiction exists when the marked
-members are not all and only the lexical members of one complete Proverb:
+members are not all and only the fixed members of one complete Proverb:
 return Unresolved for a partial saying, an appended speaker attribution, or
 members spanning two proverbs. Never repair target scope or return Partial
 coverage.
@@ -49,8 +49,9 @@ inflectionalFeatures. surfaceFeatures is null unless the grammatical use itself
 is archaic; historical spelling alone does not make it archaic. The complete
 Lemma coreFeatures object is exactly {}.
 
-normalizedSurface is the normalized space-separated projection of the marked
-lexical members in order. It excludes all unmarked internal and terminal
+normalizedMembers contains exactly one normalized string per marked fixed member
+in order, without leading, trailing, or repeated whitespace. It excludes all
+unmarked internal and terminal
 punctuation, surrounding quotation marks, and reporting context. Repair a real
 spelling or inappropriate-casing error and mark only that member Typo.
 Ordinary sentence-initial capitalization and licensed historical spelling are
@@ -58,7 +59,7 @@ Standard. Use spelling Variant only for a licensed orthographic form of the
 same lexical wording and use the current conventional wording for
 canonicalForm. Do not silently turn shortened forms or lexical component
 replacements into a preferred proverb. Otherwise spelling is Canonical. Never
-insert, remove, reorder, or lemmatize lexical members.
+insert, remove, reorder, or lemmatize fixed members.
 
 Resolved has a non-null resolution. Unresolved has resolution null. Return only
 the model fields: never language, family, kind, a linked Lemma inside Surface,

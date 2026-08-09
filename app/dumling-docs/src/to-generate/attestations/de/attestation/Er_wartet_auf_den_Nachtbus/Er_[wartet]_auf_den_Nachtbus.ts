@@ -6,11 +6,15 @@ const occurrenceAttestation = {
 			attested: "wartet",
 			orthography: "Standard",
 		},
+		{
+			attested: "auf",
+			orthography: "Standard",
+		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "wartet",
+		normalizedSurface: "wartet auf",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -41,6 +45,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Er [wartet] auf den Nachtbus.",
 	classifierNotes:
-		"The governed preposition auf is an inherent lemma feature, not part of the surface attestation.",
+		"The realized governed preposition auf is a fixed occurrence member and remains recorded as the Lemma feature hasGovPrep.",
 	isVerified: true,
 } as const;

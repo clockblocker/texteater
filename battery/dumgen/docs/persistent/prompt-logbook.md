@@ -505,3 +505,24 @@ is worth revisiting.
   The related route placement of `weder ... noch`, `sowohl ...`, `je ...`, and
   IDS-parallel `ohne/anstatt ... zu` remains a product inventory decision for
   Target Classification; issue #54 owns runtime dispatch.
+
+### German fixed members align through Target, Attestation, and Surface
+
+- **Route:** `grammatical-resolution/de/lexeme/verb` and verbal Phraseme routes
+- **Golden Case:** `grammar-de-verb-separable-imperative-aufpassen`,
+  `grammar-de-verb-governed-preposition-wartet`,
+  `grammar-de-verb-reflexive-erinnert`,
+  `grammar-de-verb-participle-gesungen`,
+  `grammar-de-verb-future-wird-reisen`, and
+  `grammar-de-verb-passive-wurde-gebeten`
+- **Raised by:** Wayfinder issues #82, #83, and #86 on 2026-08-09
+- **Question:** Which realized components belong to one German high-level unit,
+  and which member supplies Surface morphology and Lemma identity?
+- **Current take:** Include governed prepositions, inherently reflexive
+  pronouns, separable members, and perfect/future/passive auxiliaries exactly
+  once in source order. Keep modal, copular, free-valency, contextual-reflexive,
+  adjunct, and modifier material separate. Normalize exactly the target
+  projection, retain dictionary `canonicalForm`, and project morphology from
+  the route-owning lexical head rather than its analytic auxiliary. This entry
+  supersedes the narrower member exclusions in earlier prompt experiments;
+  their historical records remain unchanged.

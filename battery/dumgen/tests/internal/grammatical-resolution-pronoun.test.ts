@@ -194,8 +194,8 @@ describe("Lexeme/PRON route-local corpus", () => {
 			corpus.cases["grammar-de-pron-formal-sie"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				normalizedMembers: ["Sie"],
 				surface: {
-					normalizedSurface: "Sie",
 					inflectionalFeatures: { case: "Nom", number: null },
 				},
 				lemma: {
@@ -228,8 +228,8 @@ describe("Lexeme/PRON route-local corpus", () => {
 			corpus.cases["grammar-de-pron-variant-nix"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				normalizedMembers: ["nix"],
 				surface: {
-					normalizedSurface: "nix",
 					spelling: "Variant",
 					surfaceKind: "Citation",
 				},

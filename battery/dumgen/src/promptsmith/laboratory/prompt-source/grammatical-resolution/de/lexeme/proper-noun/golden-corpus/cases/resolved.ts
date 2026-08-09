@@ -10,7 +10,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-citation-dresden": {
 			input: { markedContext: "Namenseintrag: <TARGET>Dresden</TARGET>" },
 			idealOutput: citation({
-				normalizedSurface: "Dresden",
+				normalizedMembers: ["Dresden"],
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
 			}),
 			explanation:
@@ -19,7 +19,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-nom-sing-maria": {
 			input: { markedContext: "<TARGET>Maria</TARGET> wartet draußen." },
 			idealOutput: inflection({
-				normalizedSurface: "Maria",
+				normalizedMembers: ["Maria"],
 				case: "Nom",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Fem" },
@@ -32,7 +32,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Ich treffe <TARGET>Anna</TARGET> morgen.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Anna",
+				normalizedMembers: ["Anna"],
 				case: "Acc",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Fem" },
@@ -41,7 +41,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-dat-sing-berlin": {
 			input: { markedContext: "Wir wohnen in <TARGET>Berlin</TARGET>." },
 			idealOutput: inflection({
-				normalizedSurface: "Berlin",
+				normalizedMembers: ["Berlin"],
 				case: "Dat",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
@@ -52,7 +52,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "<TARGET>Deutschland</TARGET> liegt in Europa.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Deutschland",
+				normalizedMembers: ["Deutschland"],
 				case: "Nom",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
@@ -63,7 +63,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Sie besucht die <TARGET>Schweiz</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Schweiz",
+				normalizedMembers: ["Schweiz"],
 				case: "Acc",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Fem" },
@@ -74,7 +74,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "<TARGET>Peters</TARGET> Fahrrad ist neu.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Peters",
+				normalizedMembers: ["Peters"],
 				canonicalForm: "Peter",
 				case: "Gen",
 				number: "Sing",
@@ -89,7 +89,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 					"<TARGET>Deutschlands</TARGET> Hauptstadt ist Berlin.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Deutschlands",
+				normalizedMembers: ["Deutschlands"],
 				canonicalForm: "Deutschland",
 				case: "Gen",
 				number: "Sing",
@@ -101,7 +101,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "<TARGET>Hans'</TARGET> Auto steht draußen.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Hans'",
+				normalizedMembers: ["Hans'"],
 				canonicalForm: "Hans",
 				case: "Gen",
 				number: "Sing",
@@ -113,7 +113,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-vocative-anna": {
 			input: { markedContext: "Hallo, <TARGET>Anna</TARGET>!" },
 			idealOutput: inflection({
-				normalizedSurface: "Anna",
+				normalizedMembers: ["Anna"],
 				case: null,
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Fem" },
@@ -126,7 +126,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Sie lebt in den <TARGET>Niederlanden</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Niederlanden",
+				normalizedMembers: ["Niederlanden"],
 				canonicalForm: "Niederlande",
 				case: "Dat",
 				number: "Plur",
@@ -138,7 +138,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-citation-hamburg": {
 			input: { markedContext: "Namensliste: <TARGET>Hamburg</TARGET>" },
 			idealOutput: citation({
-				normalizedSurface: "Hamburg",
+				normalizedMembers: ["Hamburg"],
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
 			}),
 		},

@@ -156,7 +156,7 @@ describe("Lexeme/PROPN route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Typo"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "München" },
+				normalizedMembers: ["München"],
 				lemma: { canonicalForm: "München" },
 			},
 		});
@@ -167,7 +167,7 @@ describe("Lexeme/PROPN route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "NATO" },
+				normalizedMembers: ["NATO"],
 				lemma: {
 					canonicalForm: "NATO",
 					coreFeatures: {
@@ -186,8 +186,8 @@ describe("Lexeme/PROPN route-local corpus", () => {
 			corpus.cases["grammar-de-propn-dat-plur-niederlanden"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				normalizedMembers: ["Niederlanden"],
 				surface: {
-					normalizedSurface: "Niederlanden",
 					inflectionalFeatures: { case: "Dat", number: "Plur" },
 				},
 				lemma: {
@@ -204,8 +204,8 @@ describe("Lexeme/PROPN route-local corpus", () => {
 			corpus.cases["grammar-de-propn-gen-sing-peters"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				normalizedMembers: ["Peters"],
 				surface: {
-					normalizedSurface: "Peters",
 					inflectionalFeatures: { case: "Gen", number: "Sing" },
 				},
 				lemma: { canonicalForm: "Peter" },

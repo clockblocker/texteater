@@ -12,21 +12,21 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Sie braucht <TARGET>dreii</TARGET> Umschläge.",
 			},
 			idealOutput: citation({
-				normalizedSurface: "drei",
+				normalizedMembers: ["drei"],
 				canonicalForm: "drei",
 				memberOrthography: "Typo",
 			}),
 			explanation:
-				"Repair the duplicated final i in both normalizedSurface and canonicalForm and classify the attested member as Typo.",
+				"Repair the duplicated final i in both normalizedMembers and canonicalForm and classify the attested member as Typo.",
 			contaminationKeys: ["de-num-orthography:word-cardinal-typo"],
 		},
 		"grammar-de-num-sentence-initial-fuenf": {
 			input: {
 				markedContext: "<TARGET>Fünf</TARGET> Gäste sind schon da.",
 			},
-			idealOutput: citation({ normalizedSurface: "fünf" }),
+			idealOutput: citation({ normalizedMembers: ["fünf"] }),
 			explanation:
-				"Ordinary sentence-initial capitalization is Standard while normalizedSurface and canonicalForm use lowercase.",
+				"Ordinary sentence-initial capitalization is Standard while normalizedMembers and canonicalForm use lowercase.",
 			contaminationKeys: ["de-num-orthography:sentence-initial"],
 		},
 		"grammar-de-num-typo-siebn": {
@@ -34,7 +34,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Es fehlen <TARGET>siebn</TARGET> Seiten.",
 			},
 			idealOutput: citation({
-				normalizedSurface: "sieben",
+				normalizedMembers: ["sieben"],
 				canonicalForm: "sieben",
 				memberOrthography: "Typo",
 			}),

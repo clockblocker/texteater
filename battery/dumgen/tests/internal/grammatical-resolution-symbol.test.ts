@@ -64,7 +64,6 @@ describe("Lexeme/SYM exact model contract", () => {
 
 	test("supports Citation and structurally non-empty Inflection Surfaces", () => {
 		const citation = {
-			normalizedSurface: "%",
 			spelling: "Canonical" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
@@ -79,7 +78,6 @@ describe("Lexeme/SYM exact model contract", () => {
 		).toBe(false);
 		const inflection = {
 			...citation,
-			normalizedSurface: "×",
 			surfaceKind: "Inflection" as const,
 			inflectionalFeatures: {
 				case: "Nom" as const,

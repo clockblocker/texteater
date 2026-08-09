@@ -1,9 +1,10 @@
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
+import {
+	normalizedMembersSchema,
+	type PromptInputSchema,
+	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
@@ -23,6 +24,7 @@ const canonicalModelCitationSurfaceSchema = canonicalCitationSurfaceSchema.omit(
 	{
 		language: true,
 		lemma: true,
+		normalizedSurface: true,
 	},
 );
 
@@ -48,6 +50,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: modelCitationSurfaceSchema,
 			lemma: modelLemmaSchema,

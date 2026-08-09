@@ -26,7 +26,7 @@ Count literal opening <TARGET> tags and resolve only when the count is exactly
 one. A resolved output therefore has exactly one memberOrthographies value.
 Standard includes canonical spelling, ordinary sentence-initial capitalization,
 and the required formal capitalization of possessive Ihr. Typo means an actual
-spelling or inappropriate-casing error. normalizedSurface is the normalized
+spelling or inappropriate-casing error. normalizedMembers is the normalized
 contextual determiner form: lowercase ordinary sentence-initial capitalization
 and repair only typos, but preserve formal Ihr/Ihrem capitalization, inflection,
 lexical membership, and spelling. Never lemmatize the Surface or include the
@@ -76,10 +76,10 @@ surfaceFeatures must be null unless the attested form is archaic; then emit
 {"historicalStatus":"Archaic"}. realizationCoverage is Partial only when some
 lexical material of the complete determiner Lemma is absent.
 
-Final self-check before returning: normalizedSurface must preserve the target's
+Final self-check before returning: normalizedMembers must preserve the target's
 contextual inflection; if normalization repairs any marked character, the
 corresponding memberOrthographies value must be Typo; and do not copy
-lemma.canonicalForm into normalizedSurface unless it actually is the normalized
+lemma.canonicalForm into normalizedMembers unless it actually is the normalized
 contextual form.
 
 Resolved has a non-null resolution. Unresolved has resolution null. Return only

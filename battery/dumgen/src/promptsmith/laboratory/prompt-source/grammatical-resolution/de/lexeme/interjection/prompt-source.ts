@@ -24,7 +24,7 @@ spelling error. Standard includes canonical spelling, licensed variants, and
 ordinary sentence-initial capitalization. Normalize ordinary casing without
 calling it a Typo. Repair only spelling errors and ordinary casing; never
 replace the marked interjection with a synonym or expand it into a formula.
-Except for ordinary sentence-initial casing, if normalizedSurface changes any
+Except for ordinary sentence-initial casing, if normalizedMembers changes any
 marked character to repair a spelling, the corresponding memberOrthographies
 value must be Typo; Standard is not permitted merely because the repaired
 dictionary form is canonical.
@@ -32,7 +32,7 @@ dictionary form is canonical.
 German Lexeme/INTJ has Citation Surfaces only. Every Resolved result therefore
 uses surfaceKind Citation, even for an interjection used inside an ordinary
 sentence; never invent an Inflection Surface or inflectional features.
-normalizedSurface is the normalized contextual interjection. spelling is
+normalizedMembers is the normalized contextual interjection. spelling is
 Canonical for the canonical spelling and Variant only for a licensed written
 variant such as expressive lengthening. Licensed lengthening repeats sounds
 while preserving the canonical character sequence; deletion, transposition, or

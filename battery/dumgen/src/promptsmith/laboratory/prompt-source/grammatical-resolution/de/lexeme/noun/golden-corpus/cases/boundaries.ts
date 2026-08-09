@@ -41,8 +41,8 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["Bank"],
 					surface: {
-						normalizedSurface: "Bank",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,

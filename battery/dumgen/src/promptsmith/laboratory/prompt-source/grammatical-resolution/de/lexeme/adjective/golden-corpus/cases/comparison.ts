@@ -12,7 +12,7 @@ export const comparisonCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Der zweite Plan ist <TARGET>besser</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "besser",
+				normalizedMembers: ["besser"],
 				canonicalForm: "gut",
 				inflectionalFeatures: {
 					case: null,
@@ -29,7 +29,7 @@ export const comparisonCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Er kaufte ein <TARGET>teureres</TARGET> Gerät.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "teureres",
+				normalizedMembers: ["teureres"],
 				canonicalForm: "teuer",
 				inflectionalFeatures: {
 					case: "Acc",
@@ -45,7 +45,7 @@ export const comparisonCases = defineGoldenCaseCollection(import.meta.url, {
 					"Der <TARGET>höchste</TARGET> Turm steht am Fluss.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "höchste",
+				normalizedMembers: ["höchste"],
 				canonicalForm: "hoch",
 				inflectionalFeatures: {
 					case: "Nom",
@@ -61,7 +61,7 @@ export const comparisonCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie arbeitet am <TARGET>sorgfältigsten</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "sorgfältigsten",
+				normalizedMembers: ["sorgfältigsten"],
 				canonicalForm: "sorgfältig",
 				inflectionalFeatures: {
 					case: null,

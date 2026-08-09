@@ -14,31 +14,31 @@ import {
 import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
 
 const expectedEvaluationIds = [
-	"grammar-de-verb-past-ging",
-	"grammar-de-verb-imperative-lauf",
 	"grammar-de-verb-infinitive-hinauszulaufen",
 	"grammar-de-verb-participle-mitgebracht",
 	"grammar-de-verb-participle-gesungen",
 	"grammar-de-verb-governed-preposition-wartet",
 	"grammar-de-verb-separable-finite-aufstehen",
 	"grammar-de-verb-reflexive-schaemt",
-	"grammar-de-verb-full-modal-mag",
+	"grammar-de-verb-future-wird-reisen",
+	"grammar-de-verb-passive-wurde-gebeten",
 	"grammar-de-verb-full-werden",
 	"grammar-de-verb-full-hat",
-	"grammar-de-verb-typo-tanzd",
 	"grammar-de-verb-unresolved-perfect-aux-hat",
 	"grammar-de-verb-unresolved-modal-aux-kann",
 	"grammar-de-verb-unresolved-attributive-participle",
-	"grammar-de-verb-unresolved-overbroad-aux-participle",
-	"grammar-de-verb-unresolved-overbroad-reflexive",
-	"grammar-de-verb-unresolved-overbroad-governed-preposition",
+	"grammar-de-verb-unresolved-modal-complex",
+	"grammar-de-verb-unresolved-copular-predicate",
+	"grammar-de-verb-unresolved-contextual-reflexive",
+	"grammar-de-verb-unresolved-adjunct",
+	"grammar-de-verb-unresolved-modifier",
 	"grammar-de-verb-unresolved-repeated-schlaeft",
 	"grammar-de-verb-unresolved-unrelated-targets",
 ] as const;
 
 describe("Lexeme/VERB route-local corpus", () => {
 	test("keeps four minimized demonstrations and 20 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(31);
+		expect(corpus.all().ids).toHaveLength(35);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-verb-finite-liest",
 			"grammar-de-verb-citation-arbeiten",
@@ -90,19 +90,16 @@ describe("Lexeme/VERB route-local corpus", () => {
 		expect(prompt).toContain("Keep the AUX/VERB boundary exact");
 		expect(prompt).toContain("Keep the ADJ/VERB participle boundary exact");
 		expect(prompt).toContain("First apply a mechanical TARGET-scope gate");
-		expect(prompt).toContain(
-			"Material outside TARGET never makes an otherwise valid",
-		);
-		expect(prompt).toContain("every pair marks exactly one token");
+		expect(prompt).toContain("accept every realized");
+		expect(prompt).toContain("Every pair must");
 		expect(prompt).toContain(
 			"A marked detached prefix supplies only hasSepPrefix",
 		);
 		expect(prompt).toContain(
 			"hasGovPrep requires independent lexical-valency evidence",
 		);
-		expect(prompt).toContain("Sharing a spelling requires two functional");
-		expect(prompt).toContain(
-			"A full modal spelling with its own nominal complement",
+		expect(prompt).toMatch(
+			/A full modal spelling with its own\s+nominal complement/u,
 		);
 		expect(prompt).toContain(
 			'{"aspect":null,"gender":null,"mood":null,"number":null,"person":null,"tense":null,"verbForm":"Part","voice":null}',
@@ -137,10 +134,10 @@ describe("Lexeme/VERB route-local corpus", () => {
 				?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
+				memberOrthographies: ["Standard", "Standard", "Standard"],
 				realizationCoverage: "Full" as const,
+				normalizedMembers: ["pass", "auf", "auf"],
 				surface: {
-					normalizedSurface: "pass auf",
 					inflectionalFeatures: {
 						mood: "Imp",
 						verbForm: "Fin",
@@ -159,6 +156,8 @@ describe("Lexeme/VERB route-local corpus", () => {
 			corpus.cases["grammar-de-verb-reflexive-erinnert"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				memberOrthographies: ["Standard", "Standard", "Standard"],
+				normalizedMembers: ["erinnert", "sich", "an"],
 				lemma: {
 					canonicalForm: "sich erinnern",
 					coreFeatures: {
@@ -200,7 +199,7 @@ describe("Lexeme/VERB route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "steht auf" },
+				normalizedMembers: ["steht", "auf"],
 				lemma: {
 					canonicalForm: "aufstehen",
 					coreFeatures: { hasSepPrefix: "auf" },
@@ -211,13 +210,58 @@ describe("Lexeme/VERB route-local corpus", () => {
 			corpus.cases["grammar-de-verb-reflexive-schaemt"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				memberOrthographies: ["Standard"],
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["schämt", "sich"],
 				lemma: {
 					canonicalForm: "sich schämen",
 					coreFeatures: {
 						hasGovPrep: null,
 						lexicallyReflexive: "Yes",
 					},
+				},
+			},
+		});
+	});
+
+	test("keeps analytic auxiliaries as members and lexical-head morphology", () => {
+		expect(
+			corpus.cases["grammar-de-verb-participle-gesungen"]?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["hat", "gesungen"],
+				surface: {
+					inflectionalFeatures: { verbForm: "Part", tense: null },
+				},
+				lemma: { canonicalForm: "singen" },
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-verb-future-wird-reisen"]?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				normalizedMembers: ["wird", "reisen"],
+				surface: {
+					inflectionalFeatures: { verbForm: "Inf", tense: null },
+				},
+				lemma: { canonicalForm: "reisen" },
+			},
+		});
+		expect(
+			corpus.cases["grammar-de-verb-passive-wurde-gebeten"]?.idealOutput,
+		).toMatchObject({
+			resolution: {
+				memberOrthographies: ["Standard", "Standard", "Standard"],
+				normalizedMembers: ["wurde", "um", "gebeten"],
+				surface: {
+					inflectionalFeatures: {
+						verbForm: "Part",
+						voice: null,
+					},
+				},
+				lemma: {
+					canonicalForm: "bitten",
+					coreFeatures: { hasGovPrep: "um" },
 				},
 			},
 		});

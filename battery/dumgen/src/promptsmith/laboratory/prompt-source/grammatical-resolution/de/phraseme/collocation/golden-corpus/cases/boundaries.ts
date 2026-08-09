@@ -20,7 +20,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-coll-unresolved-idiom-loeffel": {
 			input: {
 				markedContext:
-					"Irgendwann wird er <TARGET>den</TARGET> <TARGET>Löffel</TARGET> <TARGET>abgeben</TARGET>.",
+					"Irgendwann <TARGET>wird</TARGET> er <TARGET>den</TARGET> <TARGET>Löffel</TARGET> <TARGET>abgeben</TARGET>.",
 			},
 			idealOutput: unresolved,
 			explanation:

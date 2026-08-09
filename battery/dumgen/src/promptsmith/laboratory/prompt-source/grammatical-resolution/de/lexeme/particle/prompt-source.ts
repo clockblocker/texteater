@@ -31,7 +31,7 @@ invalidate one later correctly marked particle occurrence.
 
 Emit exactly one memberOrthographies value for a Resolved result. Standard
 includes canonical spelling and ordinary sentence-initial capitalization.
-Typo means a real spelling or inappropriate-casing error. normalizedSurface is
+Typo means a real spelling or inappropriate-casing error. normalizedMembers is
 the normalized contextual particle: lowercase ordinary capitalization and
 repair only typos, while preserving the attested lexical item. Never substitute
 a synonym or copy a different Lemma form. A spelling repair requires Typo.

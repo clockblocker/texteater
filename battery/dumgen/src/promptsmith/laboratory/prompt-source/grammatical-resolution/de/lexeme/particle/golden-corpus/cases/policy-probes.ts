@@ -55,8 +55,8 @@ function resolved(
 		resolution: {
 			memberOrthographies: ["Standard" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [form],
 			surface: {
-				normalizedSurface: form,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

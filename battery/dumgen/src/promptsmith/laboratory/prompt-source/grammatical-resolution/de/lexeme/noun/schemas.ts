@@ -4,9 +4,10 @@ import {
 	deNounModelInflectionSurfaceSchema,
 	deNounModelLemmaSchema,
 } from "../../../../../../../schema/de-noun-codecs";
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
+import {
+	normalizedMembersSchema,
+	type PromptInputSchema,
+	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
 export const inputSchema = z.strictObject({
@@ -18,10 +19,15 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: z.union([
-				deNounModelCitationSurfaceSchema,
-				deNounModelInflectionSurfaceSchema,
+				deNounModelCitationSurfaceSchema.omit({
+					normalizedSurface: true,
+				}),
+				deNounModelInflectionSurfaceSchema.omit({
+					normalizedSurface: true,
+				}),
 			]),
 			lemma: deNounModelLemmaSchema,
 		})

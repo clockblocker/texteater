@@ -10,12 +10,12 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-separable-imperative-aufpassen": {
 			input: {
 				markedContext:
-					"<TARGET>Pass</TARGET> auf dich <TARGET>auf</TARGET>!",
+					"<TARGET>Pass</TARGET> <TARGET>auf</TARGET> dich <TARGET>auf</TARGET>!",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "pass auf",
+				normalizedMembers: ["pass", "auf", "auf"],
 				canonicalForm: "aufpassen",
-				memberOrthographies: ["Standard", "Standard"],
+				memberOrthographies: ["Standard", "Standard", "Standard"],
 				coreFeatures: {
 					hasGovPrep: "auf",
 					hasSepPrefix: "auf",
@@ -32,15 +32,15 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 			}),
 			explanation:
-				"The stem and detached separable prefix are two marked members of one complete VERB Surface; the reflexive pronoun and governed preposition remain context.",
+				"The stem, governed preposition, and detached separable prefix are three positionally distinct fixed members; the contextual reflexive object dich remains free.",
 		},
 		"grammar-de-verb-reflexive-erinnert": {
 			input: {
 				markedContext:
-					"Sie <TARGET>erinnert</TARGET> sich an den Geruch.",
+					"Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
 			},
 			idealOutput: finite(
-				"erinnert",
+				["erinnert", "sich", "an"],
 				"sich erinnern",
 				{
 					mood: "Ind",
@@ -54,17 +54,18 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					lexicallyReflexive: "Yes",
 					verbType: null,
 				},
+				["Standard", "Standard", "Standard"],
 			),
 			explanation:
-				"The reflexive pronoun and governed preposition are evidence, not members; both lexical facts stay on the Lemma.",
+				"The inherently reflexive pronoun and governed preposition are realized fixed members, while the Lemma retains sich erinnern and its lexical features.",
 		},
 		"grammar-de-verb-governed-preposition-wartet": {
 			input: {
 				markedContext:
-					"Sie <TARGET>wartet</TARGET> auf den nächsten Zug.",
+					"Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
 			},
 			idealOutput: finite(
-				"wartet",
+				["wartet", "auf"],
 				"warten",
 				{
 					mood: "Ind",
@@ -73,6 +74,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					tense: "Pres",
 				},
 				{ ...ordinaryCore, hasGovPrep: "auf" },
+				["Standard", "Standard"],
 			),
 		},
 		"grammar-de-verb-separable-finite-aufstehen": {
@@ -81,7 +83,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie <TARGET>steht</TARGET> jeden Morgen früh <TARGET>auf</TARGET>.",
 			},
 			idealOutput: finite(
-				"steht auf",
+				["steht", "auf"],
 				"aufstehen",
 				{
 					mood: "Ind",
@@ -97,10 +99,11 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 		},
 		"grammar-de-verb-reflexive-schaemt": {
 			input: {
-				markedContext: "Er <TARGET>schämt</TARGET> sich.",
+				markedContext:
+					"Er <TARGET>schämt</TARGET> <TARGET>sich</TARGET>.",
 			},
 			idealOutput: finite(
-				"schämt",
+				["schämt", "sich"],
 				"sich schämen",
 				{
 					mood: "Ind",
@@ -114,15 +117,61 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					lexicallyReflexive: "Yes",
 					verbType: null,
 				},
+				["Standard", "Standard"],
 			),
 			explanation:
-				"The unmarked reflexive pronoun establishes inherent reflexivity without joining the Surface.",
+				"The inherently reflexive pronoun is a fixed Surface member and also establishes the Lemma-level feature.",
+		},
+		"grammar-de-verb-future-wird-reisen": {
+			input: {
+				markedContext:
+					"Sie <TARGET>wird</TARGET> <TARGET>reisen</TARGET>.",
+			},
+			idealOutput: inflection({
+				normalizedMembers: ["wird", "reisen"],
+				canonicalForm: "reisen",
+				memberOrthographies: ["Standard", "Standard"],
+				inflectionalFeatures: {
+					mood: null,
+					number: null,
+					person: null,
+					tense: null,
+					verbForm: "Inf",
+					voice: null,
+				},
+			}),
+			explanation:
+				"Future-forming wird is fixed high-level material, while Surface morphology remains the infinitive morphology of reisen.",
+		},
+		"grammar-de-verb-passive-wurde-gebeten": {
+			input: {
+				markedContext:
+					"Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+			},
+			idealOutput: inflection({
+				normalizedMembers: ["wurde", "um", "gebeten"],
+				canonicalForm: "bitten",
+				memberOrthographies: ["Standard", "Standard", "Standard"],
+				coreFeatures: { ...ordinaryCore, hasGovPrep: "um" },
+				inflectionalFeatures: {
+					aspect: null,
+					gender: null,
+					mood: null,
+					number: null,
+					person: null,
+					tense: null,
+					verbForm: "Part",
+					voice: null,
+				},
+			}),
+			explanation:
+				"Passive wurde and governed um are fixed members, but gebeten remains an ordinary Partizip II Surface with null clause-level voice.",
 		},
 		"grammar-de-verb-full-modal-mag": {
 			input: {
 				markedContext: "Sie <TARGET>mag</TARGET> Schokolade.",
 			},
-			idealOutput: finite("mag", "mögen", {
+			idealOutput: finite(["mag"], "mögen", {
 				mood: "Ind",
 				number: "Sing",
 				person: "3",
@@ -135,7 +184,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext: "Sie <TARGET>wird</TARGET> Ärztin.",
 			},
-			idealOutput: finite("wird", "werden", {
+			idealOutput: finite(["wird"], "werden", {
 				mood: "Ind",
 				number: "Sing",
 				person: "3",
@@ -148,7 +197,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext: "Sie <TARGET>hat</TARGET> ein Fahrrad.",
 			},
-			idealOutput: finite("hat", "haben", {
+			idealOutput: finite(["hat"], "haben", {
 				mood: "Ind",
 				number: "Sing",
 				person: "3",
@@ -160,7 +209,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-typo-tanzd": {
 			input: { markedContext: "Er <TARGET>tanzd</TARGET> gern." },
 			idealOutput: finite(
-				"tanzt",
+				["tanzt"],
 				"tanzen",
 				{
 					mood: "Ind",

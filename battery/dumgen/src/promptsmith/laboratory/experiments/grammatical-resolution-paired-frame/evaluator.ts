@@ -52,8 +52,8 @@ export function evaluatePairedFrameGrammaticalResolution(args: {
 			(actual?.surface.surfaceKind ?? null) ===
 			(expected?.surface.surfaceKind ?? null),
 		normalizedSurfacePass:
-			(actual?.surface.normalizedSurface ?? null) ===
-			(expected?.surface.normalizedSurface ?? null),
+			(actual?.normalizedMembers.join(" ") ?? null) ===
+			(expected?.normalizedMembers.join(" ") ?? null),
 		spellingPass:
 			(actual?.surface.spelling ?? null) ===
 			(expected?.surface.spelling ?? null),

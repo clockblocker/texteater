@@ -13,7 +13,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 					"Die Gastgeberin begrüßte ihn: „<TARGET>Herzlich</TARGET> <TARGET>wilkommen</TARGET>!“",
 			},
 			idealOutput: citation({
-				normalizedSurface: "herzlich willkommen",
+				normalizedMembers: ["herzlich", "willkommen"],
 				canonicalForm: "herzlich willkommen",
 				role: "Greeting",
 				memberOrthographies: ["Standard", "Typo"],

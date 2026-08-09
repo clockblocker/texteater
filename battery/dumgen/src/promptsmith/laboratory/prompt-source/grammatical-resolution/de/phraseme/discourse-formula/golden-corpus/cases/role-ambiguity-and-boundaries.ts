@@ -16,7 +16,7 @@ export const roleAmbiguityAndBoundaryCases = defineGoldenCaseCollection(
 							"„Schaffst du es bis morgen?“ – „<TARGET>Auf</TARGET> <TARGET>jeden</TARGET> <TARGET>Fall</TARGET>.“",
 					},
 					idealOutput: citation({
-						normalizedSurface: "auf jeden Fall",
+						normalizedMembers: ["auf", "jeden", "Fall"],
 						canonicalForm: "auf jeden fall",
 						role: null,
 						memberOrthographies: [
@@ -34,7 +34,7 @@ export const roleAmbiguityAndBoundaryCases = defineGoldenCaseCollection(
 						"Nachdem er um die Tasse gebeten hatte, reichte sie sie ihm und sagte: „<TARGET>Bitte</TARGET> <TARGET>schön</TARGET>.“",
 				},
 				idealOutput: citation({
-					normalizedSurface: "bitte schön",
+					normalizedMembers: ["bitte", "schön"],
 					canonicalForm: "bitte schön",
 					role: null,
 					memberOrthographies: ["Standard", "Standard"],
@@ -51,7 +51,7 @@ export const roleAmbiguityAndBoundaryCases = defineGoldenCaseCollection(
 						"Beim Bäcker sagte er: „Zwei Brötchen, <TARGET>bitte</TARGET> <TARGET>schön</TARGET>.“",
 				},
 				idealOutput: citation({
-					normalizedSurface: "bitte schön",
+					normalizedMembers: ["bitte", "schön"],
 					canonicalForm: "bitte schön",
 					role: "Request",
 					memberOrthographies: ["Standard", "Standard"],
@@ -68,7 +68,7 @@ export const roleAmbiguityAndBoundaryCases = defineGoldenCaseCollection(
 						"Als sie vom Tod seines Bruders erfuhr, sagte sie: „<TARGET>Tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
 				},
 				idealOutput: citation({
-					normalizedSurface: "tut mir leid",
+					normalizedMembers: ["tut", "mir", "leid"],
 					canonicalForm: "tut mir leid",
 					role: null,
 					memberOrthographies: ["Standard", "Standard", "Standard"],

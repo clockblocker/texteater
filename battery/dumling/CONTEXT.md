@@ -62,10 +62,12 @@ Surface identity is the tuple of language, normalized contextual form, Surface
 kind, applicable inflectional features, and Lemma identity. An embedded copy of
 the Lemma's fields does not establish a different Surface identity.
 
-`normalizedSurface` may repair a typo or ordinary casing, but it preserves the
-attested constituent order and contextual inflection. It never inserts missing
-lexical constituents or replaces a contextual realization with the Lemma's
-Canonical Form.
+`normalizedSurface` may repair a typo or ordinary casing, but it is exactly the
+one-space projection of the Attestation members in occurrence order. It never
+inserts an unrealized member or replaces a contextual realization with the
+Lemma's Canonical Form. Because Surface identity includes this projection,
+adding a previously omitted fixed realized member intentionally creates a
+different Surface without changing the linked Lemma's identity.
 
 **Attestation**:
 A fleeting, click-independent occurrence value linked to one Surface. It has a
@@ -77,11 +79,15 @@ Each member pairs its exact non-empty attested text with `Standard | Typo`
 orthography evidence. Typo evidence belongs to the occurrence; licensed
 Canonical or Variant spelling belongs to Surface.
 
-`Full` means the occurrence completely realizes the linked grammatical entity
-under a licensed realization. `Partial` means entity-owned realization material
-is absent while the exact Surface and Lemma remain defensible. Missing
-arguments, governed complements, discontinuity, intervening context, typo
-repair, and casing repair do not themselves make an Attestation Partial.
+`Full` means every realized fixed component owned by the linked grammatical
+entity is present in the occurrence and in the member list. `Partial` means
+entity-owned lexical material is genuinely unrealized while the exact Surface
+and Lemma remain defensible. Missing free arguments, complements, adjuncts,
+discontinuity, intervening context, typo repair, and casing repair do not
+themselves make an Attestation Partial. An overt governed preposition,
+inherently reflexive pronoun, separable member, or perfect/future/passive
+auxiliary fixed by the Analysis Target is entity-owned occurrence material;
+omitting it is an alignment error, not Partial coverage.
 _Avoid_: Selection, click result, selected Surface
 
 ## Segmentation boundary

@@ -9,7 +9,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
 		"grammar-de-verb-finite-liest": {
 			input: { markedContext: "Sie <TARGET>liest</TARGET> leise." },
-			idealOutput: finite("liest", "lesen", {
+			idealOutput: finite(["liest"], "lesen", {
 				mood: "Ind",
 				number: "Sing",
 				person: "3",
@@ -22,13 +22,13 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wörterbucheintrag Vollverb: <TARGET>arbeiten</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "arbeiten",
+				normalizedMembers: ["arbeiten"],
 				canonicalForm: "arbeiten",
 			}),
 		},
 		"grammar-de-verb-past-ging": {
 			input: { markedContext: "Er <TARGET>ging</TARGET> nach Hause." },
-			idealOutput: finite("ging", "gehen", {
+			idealOutput: finite(["ging"], "gehen", {
 				mood: "Ind",
 				number: "Sing",
 				person: "3",
@@ -38,7 +38,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-imperative-lauf": {
 			input: { markedContext: "<TARGET>Lauf</TARGET> schneller!" },
 			idealOutput: inflection({
-				normalizedSurface: "lauf",
+				normalizedMembers: ["lauf"],
 				canonicalForm: "laufen",
 				inflectionalFeatures: {
 					mood: "Imp",
@@ -55,7 +55,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Er versucht, <TARGET>hinauszulaufen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "hinauszulaufen",
+				normalizedMembers: ["hinauszulaufen"],
 				canonicalForm: "hinauslaufen",
 				coreFeatures: {
 					...ordinaryCore,
@@ -74,11 +74,12 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-participle-mitgebracht": {
 			input: {
 				markedContext:
-					"Die Peitsche hat er <TARGET>mitgebracht</TARGET>.",
+					"Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "mitgebracht",
+				normalizedMembers: ["hat", "mitgebracht"],
 				canonicalForm: "mitbringen",
+				memberOrthographies: ["Standard", "Standard"],
 				coreFeatures: {
 					...ordinaryCore,
 					hasSepPrefix: "mit",
@@ -96,10 +97,14 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			}),
 		},
 		"grammar-de-verb-participle-gesungen": {
-			input: { markedContext: "Sie hat <TARGET>gesungen</TARGET>." },
+			input: {
+				markedContext:
+					"Sie <TARGET>hat</TARGET> <TARGET>gesungen</TARGET>.",
+			},
 			idealOutput: inflection({
-				normalizedSurface: "gesungen",
+				normalizedMembers: ["hat", "gesungen"],
 				canonicalForm: "singen",
+				memberOrthographies: ["Standard", "Standard"],
 				inflectionalFeatures: {
 					aspect: null,
 					gender: null,

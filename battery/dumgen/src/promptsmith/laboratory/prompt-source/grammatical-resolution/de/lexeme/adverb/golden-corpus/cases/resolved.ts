@@ -86,7 +86,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie reist <TARGET>am</TARGET> <TARGET>liebsten</TARGET> im Frühling.",
 			},
 			idealOutput: resolvedSurface(
-				"am liebsten",
+				["am", "liebsten"],
 				"gern",
 				unmarked,
 				"Sup",
@@ -101,7 +101,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				"Typo",
 			]),
 			explanation:
-				"Repair the missing final n in normalizedSurface and canonicalForm and mark the attested member Typo.",
+				"Repair the missing final n in normalizedMembers and canonicalForm and mark the attested member Typo.",
 		},
 		"grammar-de-adv-morgen": {
 			input: { markedContext: "Der Zug fährt <TARGET>morgen</TARGET>." },
@@ -302,7 +302,7 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function citation(
-	normalizedSurface: string,
+	normalizedMembers: string,
 	canonicalForm: string,
 	coreFeatures: CoreFeatures,
 ) {
@@ -311,8 +311,8 @@ function citation(
 		resolution: {
 			memberOrthographies: ["Standard" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [normalizedMembers],
 			surface: {
-				normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
@@ -323,21 +323,25 @@ function citation(
 }
 
 function resolvedSurface(
-	normalizedSurface: string,
+	normalizedMembers: string | readonly string[],
 	canonicalForm: string,
 	coreFeatures: CoreFeatures,
 	degree: "Cmp" | "Pos" | "Sup" | null,
 	memberOrthographies: ("Standard" | "Typo")[] = ["Standard"],
 	surfaceFeatures: { readonly historicalStatus: "Archaic" } | null = null,
 ) {
+	const alignedNormalizedMembers =
+		typeof normalizedMembers === "string"
+			? [normalizedMembers]
+			: [...normalizedMembers];
 	if (degree === null) {
 		return {
 			decision: "Resolved" as const,
 			resolution: {
 				memberOrthographies,
 				realizationCoverage: "Full" as const,
+				normalizedMembers: alignedNormalizedMembers,
 				surface: {
-					normalizedSurface,
 					spelling: "Canonical" as const,
 					surfaceKind: "Citation" as const,
 					surfaceFeatures,
@@ -351,8 +355,8 @@ function resolvedSurface(
 		resolution: {
 			memberOrthographies,
 			realizationCoverage: "Full" as const,
+			normalizedMembers: alignedNormalizedMembers,
 			surface: {
-				normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures,

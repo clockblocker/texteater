@@ -13,7 +13,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Nach dem Rückstand <TARGET>warf</TARGET> die Trainerin <TARGET>die</TARGET> <TARGET>Flinte</TARGET> <TARGET>ins</TARGET> <TARGET>Korn</TARGET>.",
 			},
 			idealOutput: finite(
-				"warf die Flinte ins Korn",
+				["warf", "die", "Flinte", "ins", "Korn"],
 				"die Flinte ins Korn werfen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Standard", "Standard"],
@@ -25,12 +25,20 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-idiom-flinte-participle-typo-full": {
 			input: {
 				markedContext:
-					"Nach der Niederlage hat die Trainerin <TARGET>die</TARGET> <TARGET>Flintte</TARGET> <TARGET>ins</TARGET> <TARGET>Korn</TARGET> <TARGET>geworfen</TARGET>.",
+					"Nach der Niederlage <TARGET>hat</TARGET> die Trainerin <TARGET>die</TARGET> <TARGET>Flintte</TARGET> <TARGET>ins</TARGET> <TARGET>Korn</TARGET> <TARGET>geworfen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "die Flinte ins Korn geworfen",
+				normalizedMembers: [
+					"hat",
+					"die",
+					"Flinte",
+					"ins",
+					"Korn",
+					"geworfen",
+				],
 				canonicalForm: "die Flinte ins Korn werfen",
 				memberOrthographies: [
+					"Standard",
 					"Standard",
 					"Typo",
 					"Standard",
@@ -49,7 +57,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 			}),
 			explanation:
-				"The complete figurative Idiom has a selected Partizip II head and one unambiguous member typo; the typo is repaired while the selected participle, not its unmarked auxiliary, determines verbForm Part.",
+				"The complete figurative Idiom includes its perfect auxiliary and one unambiguous member typo; the selected participle, not the auxiliary, determines verbForm Part.",
 			contaminationKeys: ["de-idiom-lemma:flinte-ins-korn-werfen"],
 		},
 		"grammar-de-idiom-grass-citation": {
@@ -58,7 +66,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wörterbucheintrag: <TARGET>ins</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "ins Gras beißen",
+				normalizedMembers: ["ins", "Gras", "beißen"],
 				canonicalForm: "ins Gras beißen",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 			}),
@@ -72,7 +80,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET> den Wölfen.",
 			},
 			idealOutput: finite(
-				"heulte mit",
+				["heulte", "mit"],
 				"mit den Wölfen heulen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard"],
@@ -88,7 +96,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Als sie die Nachricht hörte, <TARGET>lachte</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET>.",
 			},
 			idealOutput: finite(
-				"lachte sich ins Fäustchen",
+				["lachte", "sich", "ins", "Fäustchen"],
 				"sich ins Fäustchen lachen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Standard"],
@@ -98,12 +106,19 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-idiom-faeustchen-participle-full": {
 			input: {
 				markedContext:
-					"Sie hat <TARGET>sich</TARGET> <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
+					"Sie <TARGET>hat</TARGET> <TARGET>sich</TARGET> <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "sich ins Fäustchen gelacht",
+				normalizedMembers: [
+					"hat",
+					"sich",
+					"ins",
+					"Fäustchen",
+					"gelacht",
+				],
 				canonicalForm: "sich ins Fäustchen lachen",
 				memberOrthographies: [
+					"Standard",
 					"Standard",
 					"Standard",
 					"Standard",
@@ -128,7 +143,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie scheint <TARGET>sich</TARGET> <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> zu <TARGET>lachen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "sich ins Fäustchen lachen",
+				normalizedMembers: ["sich", "ins", "Fäustchen", "lachen"],
 				canonicalForm: "sich ins Fäustchen lachen",
 				memberOrthographies: [
 					"Standard",
@@ -153,7 +168,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie <TARGET>lachte</TARGET> <TARGET>sich</TARGET> <TARGET>ins</TARGET> <TARGET>Fäusthen</TARGET>.",
 			},
 			idealOutput: finite(
-				"lachte sich ins Fäustchen",
+				["lachte", "sich", "ins", "Fäustchen"],
 				"sich ins Fäustchen lachen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Typo"],
@@ -166,7 +181,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"<TARGET>Blase</TARGET> nicht länger <TARGET>Trübsal</TARGET>!",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "blase Trübsal",
+				normalizedMembers: ["blase", "Trübsal"],
 				canonicalForm: "Trübsal blasen",
 				memberOrthographies: ["Standard", "Standard"],
 				inflectionalFeatures: {
@@ -188,7 +203,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Der Plan <TARGET>hat</TARGET> <TARGET>Hand</TARGET> <TARGET>und</TARGET> <TARGET>Fuß</TARGET>.",
 			},
 			idealOutput: finite(
-				"hat Hand und Fuß",
+				["hat", "Hand", "und", "Fuß"],
 				"Hand und Fuß haben",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard", "Standard"],
@@ -201,7 +216,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wenn der Plan <TARGET>Hand</TARGET> <TARGET>und</TARGET> <TARGET>Fuß</TARGET> <TARGET>hätte</TARGET>, wäre ich dafür.",
 			},
 			idealOutput: finite(
-				"Hand und Fuß hätte",
+				["Hand", "und", "Fuß", "hätte"],
 				"Hand und Fuß haben",
 				{ mood: "Sub", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Standard"],
@@ -214,7 +229,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
 			},
 			idealOutput: finite(
-				"fror wie ein Schneider",
+				["fror", "wie", "ein", "Schneider"],
 				"frieren wie ein Schneider",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Standard"],
@@ -227,7 +242,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Redewendung: <TARGET>frieren</TARGET> <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "frieren wie ein Schneider",
+				normalizedMembers: ["frieren", "wie", "ein", "Schneider"],
 				canonicalForm: "frieren wie ein Schneider",
 				memberOrthographies: [
 					"Standard",
@@ -244,7 +259,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wegen der Grippe <TARGET>hütete</TARGET> sie <TARGET>das</TARGET> <TARGET>Bett</TARGET>.",
 			},
 			idealOutput: finite(
-				"hütete das Bett",
+				["hütete", "das", "Bett"],
 				"das Bett hüten",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard"],
@@ -257,7 +272,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Mit derselben Maßnahme löst sie beide Probleme; damit <TARGET>schlägt</TARGET> sie <TARGET>zwei</TARGET> <TARGET>Fliegen</TARGET> <TARGET>mit</TARGET> <TARGET>einer</TARGET> <TARGET>Klappe</TARGET>.",
 			},
 			idealOutput: finite(
-				"schlägt zwei Fliegen mit einer Klappe",
+				["schlägt", "zwei", "Fliegen", "mit", "einer", "Klappe"],
 				"zwei Fliegen mit einer Klappe schlagen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				[
@@ -274,12 +289,21 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-idiom-fliegen-participle-full": {
 			input: {
 				markedContext:
-					"Mit einer Maßnahme hat sie beide Ziele erreicht und <TARGET>zwei</TARGET> <TARGET>Fliegen</TARGET> <TARGET>mit</TARGET> <TARGET>einer</TARGET> <TARGET>Klappe</TARGET> <TARGET>geschlagen</TARGET>.",
+					"Mit einer Maßnahme <TARGET>hat</TARGET> sie beide Ziele erreicht und <TARGET>zwei</TARGET> <TARGET>Fliegen</TARGET> <TARGET>mit</TARGET> <TARGET>einer</TARGET> <TARGET>Klappe</TARGET> <TARGET>geschlagen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "zwei Fliegen mit einer Klappe geschlagen",
+				normalizedMembers: [
+					"hat",
+					"zwei",
+					"Fliegen",
+					"mit",
+					"einer",
+					"Klappe",
+					"geschlagen",
+				],
 				canonicalForm: "zwei Fliegen mit einer Klappe schlagen",
 				memberOrthographies: [
+					"Standard",
 					"Standard",
 					"Standard",
 					"Standard",
@@ -306,7 +330,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Nach langer Krankheit starb der Schurke; am Ende <TARGET>gab</TARGET> er <TARGET>den</TARGET> <TARGET>Löffel</TARGET> <TARGET>ab</TARGET>.",
 			},
 			idealOutput: finite(
-				"gab den Löffel ab",
+				["gab", "den", "Löffel", "ab"],
 				"den Löffel abgeben",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard", "Standard"],
@@ -319,7 +343,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Im Nachruf stand, dass er <TARGET>den</TARGET> <TARGET>Löfel</TARGET> <TARGET>abgab</TARGET>.",
 			},
 			idealOutput: finite(
-				"den Löffel abgab",
+				["den", "Löffel", "abgab"],
 				"den Löffel abgeben",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Typo", "Standard"],

@@ -121,7 +121,6 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 			);
 		}
 		const citation = {
-			normalizedSurface: "im",
 			spelling: "Canonical" as const,
 			surfaceKind: "Citation" as const,
 			surfaceFeatures: null,
@@ -192,7 +191,7 @@ describe("Construction/Fusion route-local schemas and corpus", () => {
 		expect(typoCase?.idealOutput.resolution).toMatchObject({
 			memberOrthographies: ["Typo"],
 			realizationCoverage: "Full" as const,
-			surface: { normalizedSurface: "beim" },
+			normalizedMembers: ["beim"],
 			lemma: { canonicalForm: "beim" },
 		});
 		expect(

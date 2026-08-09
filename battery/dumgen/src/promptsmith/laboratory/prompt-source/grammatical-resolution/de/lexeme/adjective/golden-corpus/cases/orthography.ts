@@ -13,7 +13,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 					"Die Antwort klingt <TARGET>freundlcih</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "freundlich",
+				normalizedMembers: ["freundlich"],
 				canonicalForm: "freundlich",
 				inflectionalFeatures: {
 					case: null,
@@ -33,7 +33,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 					"Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "großer",
+				normalizedMembers: ["großer"],
 				canonicalForm: "groß",
 				inflectionalFeatures: {
 					case: "Nom",

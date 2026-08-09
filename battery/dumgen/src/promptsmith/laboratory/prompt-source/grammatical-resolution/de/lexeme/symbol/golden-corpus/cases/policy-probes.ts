@@ -15,7 +15,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 					"In der englischen Firmenangabe steht ein <TARGET>&</TARGET> zwischen den Namen.",
 			},
 			idealOutput: citation({
-				normalizedSurface: "&",
+				normalizedMembers: ["&"],
 				coreFeatures: { ...ordinarySymbolCore, foreign: "Yes" },
 			}),
 			explanation:
@@ -27,7 +27,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 					"Als Zahlenzeichen steht <TARGET>%</TARGET> hier für einen Anteil.",
 			},
 			idealOutput: citation({
-				normalizedSurface: "%",
+				normalizedMembers: ["%"],
 				coreFeatures: { ...ordinarySymbolCore, numType: "Card" },
 			}),
 			explanation:

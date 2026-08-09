@@ -60,20 +60,17 @@ describe("Lexeme/SCONJ route-local schemas and corpus", () => {
 		).toThrow();
 		expect(
 			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
-				normalizedSurface: "dass",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
 		).toEqual({
-			normalizedSurface: "dass",
 			spelling: "Canonical",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		});
 		expect(() =>
 			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
-				normalizedSurface: "dass",
 				spelling: "Canonical",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
@@ -221,10 +218,7 @@ describe("Lexeme/SCONJ pure diagnostic evaluator", () => {
 			...testCase.idealOutput,
 			resolution: {
 				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "wie",
-				},
+				normalizedMembers: ["wie"],
 				lemma: {
 					...testCase.idealOutput.resolution.lemma,
 					coreFeatures: { conjType: null },

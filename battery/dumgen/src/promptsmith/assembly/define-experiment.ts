@@ -12,6 +12,7 @@ import {
 	tryGetSelectionState,
 } from "./golden-corpus";
 import { getLocalDemonstrationState } from "./local-demonstrations";
+import { assertEntriesUncontaminated } from "./selection-contamination";
 
 export function defineExperiment<
 	InputSchema extends PromptInputSchema,
@@ -62,57 +63,11 @@ export function defineExperiment<
 				),
 			})) ??
 			[];
-		assertNoContamination(
-			args.promptSource.route,
-			demonstrationEntries,
-			evaluation.entries,
-		);
+		assertEntriesUncontaminated({
+			route: args.promptSource.route,
+			demonstrations: demonstrationEntries,
+			evaluation: evaluation.entries,
+		});
 	}
 	return Object.freeze({ ...args });
-}
-
-type Entry = ReturnType<typeof getSelectionState>["entries"][number];
-
-function assertNoContamination(
-	route: string,
-	demonstrations: readonly Entry[],
-	evaluation: readonly Entry[],
-): void {
-	const checks: readonly {
-		readonly name: string;
-		readonly conflict: (left: Entry, right: Entry) => boolean;
-	}[] = [
-		{ name: "case ID", conflict: (left, right) => left.id === right.id },
-		{
-			name: "exact parsed-input fingerprint",
-			conflict: (left, right) =>
-				left.exactFingerprint === right.exactFingerprint,
-		},
-		{
-			name: "route-specific fingerprint",
-			conflict: (left, right) =>
-				left.routeFingerprint !== undefined &&
-				right.routeFingerprint !== undefined &&
-				left.routeFingerprint === right.routeFingerprint,
-		},
-		{
-			name: "contamination key",
-			conflict: (left, right) => {
-				const rightKeys = new Set(right.contaminationKeys);
-				return left.contaminationKeys.some((key) => rightKeys.has(key));
-			},
-		},
-	];
-
-	for (const check of checks) {
-		for (const demonstration of demonstrations) {
-			for (const evaluated of evaluation) {
-				if (check.conflict(demonstration, evaluated)) {
-					throw new Error(
-						`Experiment contamination for route "${route}": demonstration case "${demonstration.id}" conflicts with evaluation case "${evaluated.id}" by ${check.name}.`,
-					);
-				}
-			}
-		}
-	}
 }

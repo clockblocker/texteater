@@ -29,7 +29,7 @@ mark one legible token. It applies to multiword, repeated, unrelated,
 overbroad, and unbalanced targets as well. Never translate, transliterate,
 repair, lowercase, lemmatize, or infer Core Features on this route. A
 recoverable spelling or casing normalization belongs to the target's real
-lexical route; without a reachable X identity, inventing normalizedSurface or
+lexical route; without a reachable X identity, inventing normalizedMembers or
 canonicalForm would invent a Lemma.
 
 The model schema still mirrors Dumling's dormant German X contract, including

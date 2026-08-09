@@ -19,8 +19,8 @@ export function resolvedFusion(args: {
 					args.typo ? ("Typo" as const) : ("Standard" as const),
 				],
 				realizationCoverage: "Full" as const,
+				normalizedMembers: [normalized],
 				surface: {
-					normalizedSurface: normalized,
 					spelling: args.spelling ?? ("Canonical" as const),
 					surfaceKind: "Citation" as const,
 					surfaceFeatures: null,

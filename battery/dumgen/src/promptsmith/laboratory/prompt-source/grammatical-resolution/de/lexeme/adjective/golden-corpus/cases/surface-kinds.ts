@@ -12,7 +12,7 @@ export const surfaceKindCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Wörterbucheintrag: <TARGET>sanft</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "sanft",
+				normalizedMembers: ["sanft"],
 				canonicalForm: "sanft",
 			}),
 			explanation:

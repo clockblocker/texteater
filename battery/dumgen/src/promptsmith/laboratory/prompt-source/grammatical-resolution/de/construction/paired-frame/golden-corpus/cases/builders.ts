@@ -5,7 +5,7 @@ export const unresolved = {
 
 export function resolvedFrame(args: {
 	readonly markedContext: string;
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly memberOrthographies?: readonly ("Standard" | "Typo")[];
 }) {
@@ -23,8 +23,8 @@ export function resolvedFrame(args: {
 							)
 						: [...args.memberOrthographies],
 				realizationCoverage: "Full" as const,
+				normalizedMembers: [...args.normalizedMembers],
 				surface: {
-					normalizedSurface: args.normalizedSurface,
 					spelling: "Canonical" as const,
 					surfaceKind: "Citation" as const,
 					surfaceFeatures: null,

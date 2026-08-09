@@ -16,7 +16,7 @@ export const unresolved = {
 };
 
 export function citation(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm?: string;
 	readonly coreFeatures?: ProperNounCoreFeatures;
 	readonly memberOrthography?: "Standard" | "Typo";
@@ -27,14 +27,15 @@ export function citation(args: {
 		resolution: {
 			memberOrthographies: [args.memberOrthography ?? "Standard"],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: args.spelling ?? ("Canonical" as const),
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
 			},
 			lemma: {
-				canonicalForm: args.canonicalForm ?? args.normalizedSurface,
+				canonicalForm:
+					args.canonicalForm ?? args.normalizedMembers.join(" "),
 				coreFeatures: args.coreFeatures ?? unmarkedCore,
 			},
 		},
@@ -42,7 +43,7 @@ export function citation(args: {
 }
 
 export function inflection(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm?: string;
 	readonly case: "Acc" | "Dat" | "Gen" | "Nom" | null;
 	readonly number: "Plur" | "Sing" | null;
@@ -55,8 +56,8 @@ export function inflection(args: {
 		resolution: {
 			memberOrthographies: [args.memberOrthography ?? "Standard"],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: args.spelling ?? ("Canonical" as const),
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures: null,
@@ -66,7 +67,8 @@ export function inflection(args: {
 				},
 			},
 			lemma: {
-				canonicalForm: args.canonicalForm ?? args.normalizedSurface,
+				canonicalForm:
+					args.canonicalForm ?? args.normalizedMembers.join(" "),
 				coreFeatures: args.coreFeatures ?? unmarkedCore,
 			},
 		},

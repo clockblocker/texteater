@@ -3,9 +3,10 @@ import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
+import {
+	normalizedMembersSchema,
+	type PromptInputSchema,
+	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
 const canonicalLemmaSchema = asObjectSchema(
@@ -137,9 +138,13 @@ const schemaProjectionLemma = {
 } satisfies DeOtherLemma;
 
 export const deOtherModelCitationSurfaceSchema =
-	buildDeOtherCitationSurfaceCodec(schemaProjectionLemma).in;
+	buildDeOtherCitationSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 export const deOtherModelInflectionSurfaceSchema =
-	buildDeOtherInflectionSurfaceCodec(schemaProjectionLemma).in;
+	buildDeOtherInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 
 export const inputSchema = z.strictObject({
 	markedContext: z.string().min(1),
@@ -150,6 +155,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: z.union([
 				deOtherModelCitationSurfaceSchema,

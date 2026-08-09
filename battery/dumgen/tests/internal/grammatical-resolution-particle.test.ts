@@ -99,7 +99,6 @@ describe("Lexeme/PART route-local schemas and corpus", () => {
 		).toBeDefined();
 		expect(
 			deParticleModelCitationSurfaceSchema.parse({
-				normalizedSurface: "nicht",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
@@ -107,7 +106,6 @@ describe("Lexeme/PART route-local schemas and corpus", () => {
 		).toBeDefined();
 		expect(() =>
 			deParticleModelCitationSurfaceSchema.parse({
-				normalizedSurface: "nicht",
 				spelling: "Canonical",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
@@ -225,10 +223,7 @@ describe("Lexeme/PART pure diagnostic evaluator", () => {
 			...goldenCase.idealOutput,
 			resolution: {
 				...goldenCase.idealOutput.resolution,
-				surface: {
-					...goldenCase.idealOutput.resolution.surface,
-					normalizedSurface: "nie",
-				},
+				normalizedMembers: ["nie"],
 				lemma: {
 					...goldenCase.idealOutput.resolution.lemma,
 					coreFeatures: {

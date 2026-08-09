@@ -10,11 +10,15 @@ const occurrenceAttestation = {
 			attested: "auf",
 			orthography: "Standard",
 		},
+		{
+			attested: "auf",
+			orthography: "Standard",
+		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "pass auf",
+		normalizedSurface: "pass auf auf",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -45,6 +49,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "[Pass] auf dich auf!",
 	classifierNotes:
-		'The finite verb token stays on the verbal surface `pass auf`; government is encoded on the Lemma with `hasGovPrep: "auf"`, not by building a separate governed-preposition surface.',
+		"Pass, governed auf, and detached-prefix auf are three fixed members distinguished by source position; free reflexive object dich remains separate.",
 	isVerified: true,
 } as const;

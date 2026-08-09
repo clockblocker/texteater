@@ -12,7 +12,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Die Tür wurde <TARGET>geschlossen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "geschlossen",
+				normalizedMembers: ["geschlossen"],
 				canonicalForm: "schließen",
 				inflectionalFeatures: {
 					aspect: null,
@@ -33,7 +33,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Die Tür ist <TARGET>geschlossen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "geschlossen",
+				normalizedMembers: ["geschlossen"],
 				canonicalForm: "schließen",
 				inflectionalFeatures: {
 					aspect: null,
@@ -52,7 +52,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-provisional-modal-ellipsis-kann": {
 			input: { markedContext: "Sie <TARGET>kann</TARGET> Deutsch." },
 			idealOutput: finite(
-				"kann",
+				["kann"],
 				"können",
 				{
 					mood: "Ind",
@@ -70,7 +70,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Sie versucht zu <TARGET>warten</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "warten",
+				normalizedMembers: ["warten"],
 				canonicalForm: "warten",
 				inflectionalFeatures: {
 					mood: null,

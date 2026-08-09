@@ -36,8 +36,8 @@ export function resolvedAphorism(args: {
 							: ("Standard" as const),
 				),
 				realizationCoverage: "Full" as const,
+				normalizedMembers: normalized.match(memberPattern) ?? [],
 				surface: {
-					normalizedSurface: normalized,
 					spelling: args.spelling ?? "Canonical",
 					surfaceKind: "Citation" as const,
 					surfaceFeatures: args.historical

@@ -17,7 +17,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 						"Wörterbucheintrag Pronomen: <TARGET>man</TARGET>",
 				},
 				idealOutput: citation({
-					normalizedSurface: "man",
+					normalizedMembers: ["man"],
 					canonicalForm: "man",
 					coreFeatures: core("Ind"),
 				}),
@@ -27,7 +27,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 			"grammar-de-pron-inflection-dative-ihm": {
 				input: { markedContext: "Anna hilft <TARGET>ihm</TARGET>." },
 				idealOutput: inflection({
-					normalizedSurface: "ihm",
+					normalizedMembers: ["ihm"],
 					canonicalForm: "er",
 					coreFeatures: personal("3"),
 					inflectionalFeatures: {
@@ -43,7 +43,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 			"grammar-de-pron-sentence-initial-es": {
 				input: { markedContext: "<TARGET>Es</TARGET> öffnet die Tür." },
 				idealOutput: inflection({
-					normalizedSurface: "es",
+					normalizedMembers: ["es"],
 					canonicalForm: "es",
 					coreFeatures: personal("3"),
 					inflectionalFeatures: {
@@ -59,7 +59,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 					markedContext: "Heute öffnet <TARGET>sie</TARGET> die Tür.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "sie",
+					normalizedMembers: ["sie"],
 					canonicalForm: "sie",
 					coreFeatures: personal("3"),
 					inflectionalFeatures: {
@@ -75,7 +75,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 					markedContext: "Heute öffnen <TARGET>sie</TARGET> die Tür.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "sie",
+					normalizedMembers: ["sie"],
 					canonicalForm: "sie",
 					coreFeatures: personal("3"),
 					inflectionalFeatures: {
@@ -91,7 +91,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 					markedContext: "<TARGET>Wir</TARGET> warten draußen.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "wir",
+					normalizedMembers: ["wir"],
 					canonicalForm: "wir",
 					coreFeatures: personal("1"),
 					inflectionalFeatures: {
@@ -107,7 +107,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 					markedContext: "Bitte warten <TARGET>Sie</TARGET> hier.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "Sie",
+					normalizedMembers: ["Sie"],
 					canonicalForm: "Sie",
 					coreFeatures: core("Prs", {
 						person: "2",
@@ -124,7 +124,7 @@ export const personalAndPolitenessCases = defineGoldenCaseCollection(
 			"grammar-de-pron-formal-ihnen": {
 				input: { markedContext: "Ich danke <TARGET>Ihnen</TARGET>." },
 				idealOutput: inflection({
-					normalizedSurface: "Ihnen",
+					normalizedMembers: ["Ihnen"],
 					canonicalForm: "Sie",
 					coreFeatures: core("Prs", {
 						person: "2",

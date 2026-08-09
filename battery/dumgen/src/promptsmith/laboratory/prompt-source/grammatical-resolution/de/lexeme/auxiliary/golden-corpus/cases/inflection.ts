@@ -4,31 +4,35 @@ import {
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
 
-const citation = (normalizedSurface: string) => ({
-	normalizedSurface,
-	spelling: "Canonical" as const,
-	surfaceKind: "Citation" as const,
-	surfaceFeatures: null,
+const citation = (normalizedMember: string) => ({
+	normalizedMembers: [normalizedMember],
+	surface: {
+		spelling: "Canonical" as const,
+		surfaceKind: "Citation" as const,
+		surfaceFeatures: null,
+	},
 });
 
 const finite = (args: {
-	normalizedSurface: string;
+	normalizedMembers: readonly string[];
 	mood: "Ind" | "Sub";
 	number: "Sing" | "Plur";
 	person: "1" | "2" | "3";
 	tense: "Past" | "Pres";
 }) => ({
-	normalizedSurface: args.normalizedSurface,
-	spelling: "Canonical" as const,
-	surfaceKind: "Inflection" as const,
-	surfaceFeatures: null,
-	inflectionalFeatures: {
-		mood: args.mood,
-		number: args.number,
-		person: args.person,
-		tense: args.tense,
-		verbForm: "Fin" as const,
-		voice: null,
+	normalizedMembers: [...args.normalizedMembers],
+	surface: {
+		spelling: "Canonical" as const,
+		surfaceKind: "Inflection" as const,
+		surfaceFeatures: null,
+		inflectionalFeatures: {
+			mood: args.mood,
+			number: args.number,
+			person: args.person,
+			tense: args.tense,
+			verbForm: "Fin" as const,
+			voice: null,
+		},
 	},
 });
 
@@ -40,8 +44,9 @@ const resolved = (args: {
 	decision: "Resolved" as const,
 	resolution: {
 		memberOrthographies: ["Standard" as const],
+		normalizedMembers: args.surface.normalizedMembers,
 		realizationCoverage: "Full" as const,
-		surface: args.surface,
+		surface: args.surface.surface,
 		lemma: {
 			canonicalForm: args.canonicalForm,
 			coreFeatures: { verbType: args.verbType },
@@ -57,7 +62,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "wird",
+					normalizedMembers: ["wird"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -75,7 +80,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "kann",
+					normalizedMembers: ["kann"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -104,7 +109,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			input: { markedContext: "Sie <TARGET>ist</TARGET> früh gegangen." },
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "ist",
+					normalizedMembers: ["ist"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -120,7 +125,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "hat",
+					normalizedMembers: ["hat"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -134,7 +139,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			input: { markedContext: "Der Turm <TARGET>ist</TARGET> alt." },
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "ist",
+					normalizedMembers: ["ist"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -152,7 +157,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "waren",
+					normalizedMembers: ["waren"],
 					mood: "Ind",
 					number: "Plur",
 					person: "3",
@@ -169,7 +174,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "wären",
+					normalizedMembers: ["wären"],
 					mood: "Sub",
 					number: "Plur",
 					person: "3",
@@ -188,8 +193,8 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["gewesen"],
 					surface: {
-						normalizedSurface: "gewesen",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -218,8 +223,8 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["sei"],
 					surface: {
-						normalizedSurface: "sei",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -249,8 +254,8 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["sein"],
 					surface: {
-						normalizedSurface: "sein",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -274,7 +279,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			input: { markedContext: "Sie <TARGET>will</TARGET> heute gehen." },
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "will",
+					normalizedMembers: ["will"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -288,7 +293,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			input: { markedContext: "Ihr <TARGET>wollt</TARGET> heute gehen." },
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "wollt",
+					normalizedMembers: ["wollt"],
 					mood: "Ind",
 					number: "Plur",
 					person: "2",
@@ -304,7 +309,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "musste",
+					normalizedMembers: ["musste"],
 					mood: "Ind",
 					number: "Sing",
 					person: "3",
@@ -320,7 +325,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "möchte",
+					normalizedMembers: ["möchte"],
 					mood: "Sub",
 					number: "Sing",
 					person: "3",
@@ -334,7 +339,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 			input: { markedContext: "Wir <TARGET>müssen</TARGET> eintreten." },
 			idealOutput: resolved({
 				surface: finite({
-					normalizedSurface: "müssen",
+					normalizedMembers: ["müssen"],
 					mood: "Ind",
 					number: "Plur",
 					person: "1",

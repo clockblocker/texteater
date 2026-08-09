@@ -36,11 +36,11 @@ This route is Citation-only under the current Dumling codec. Every Resolved
 result has surfaceKind Citation, realizationCoverage Full, no
 inflectionalFeatures, surfaceFeatures null, and Lemma coreFeatures exactly {}.
 
-normalizedSurface is the normalized spelling of the single marked word.
+normalizedMembers is the normalized spelling of the single marked word.
 Ordinary sentence-initial capitalization is Standard and lowercases in
-normalizedSurface. Repair an evident local spelling error only when context
+normalizedMembers. Repair an evident local spelling error only when context
 positively identifies the intended fused form; then mark Typo and use the
-repaired form for normalizedSurface and canonicalForm. A different valid word,
+repaired form for normalizedMembers and canonicalForm. A different valid word,
 such as the pronoun ihm, is not evidence of a typo. canonicalForm is the
 conventional fused spelling. Use spelling Canonical unless the attested form is
 a licensed spelling variant of that same Fusion.

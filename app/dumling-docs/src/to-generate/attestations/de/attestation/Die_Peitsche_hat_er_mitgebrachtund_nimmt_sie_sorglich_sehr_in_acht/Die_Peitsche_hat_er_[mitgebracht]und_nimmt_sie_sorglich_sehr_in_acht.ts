@@ -3,6 +3,10 @@ import type { Attestation } from "dumling/types";
 const occurrenceAttestation = {
 	members: [
 		{
+			attested: "hat",
+			orthography: "Standard",
+		},
+		{
 			attested: "mitgebracht",
 			orthography: "Standard",
 		},
@@ -10,11 +14,11 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "mitgebracht",
+		normalizedSurface: "hat mitgebracht",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
-			aspect: "Perf",
+			aspect: null,
 			verbForm: "Part",
 			gender: null,
 			mood: null,
@@ -44,6 +48,6 @@ export const attestation = {
 	sentenceMarkdown:
 		"Die Peitsche hat er [mitgebracht]\nund nimmt sie sorglich sehr in acht.",
 	classifierNotes:
-		"Mitgebracht is the perfect participle of separable mitbringen; the prefix stays on the Lemma as hasSepPrefix rather than being split off in this file.",
+		"Hat and mitgebracht are the two fixed members of this perfect occurrence; the participle supplies Surface morphology and the prefix remains a Lemma feature.",
 	isVerified: true,
 } as const;

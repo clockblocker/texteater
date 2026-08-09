@@ -13,7 +13,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Der Ausschuss <TARGET>trifft</TARGET> <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET>.",
 			},
 			idealOutput: finite(
-				"trifft eine Entscheidung",
+				["trifft", "eine", "Entscheidung"],
 				"eine Entscheidung treffen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
@@ -28,7 +28,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wörterbucheintrag: <TARGET>eine</TARGET> <TARGET>Frage</TARGET> <TARGET>stellen</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "eine Frage stellen",
+				normalizedMembers: ["eine", "Frage", "stellen"],
 				canonicalForm: "eine Frage stellen",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 			}),
@@ -42,7 +42,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wir <TARGET>stellen</TARGET> die Daten <TARGET>zur</TARGET> <TARGET>Verfügung</TARGET>.",
 			},
 			idealOutput: finite(
-				"stellen zur Verfügung",
+				["stellen", "zur", "Verfügung"],
 				"zur Verfügung stellen",
 				{ mood: "Ind", number: "Plur", person: "1", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
@@ -54,12 +54,12 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-coll-anerkennung-participle-typo-full": {
 			input: {
 				markedContext:
-					"Der Vorschlag hat <TARGET>Anerkenung</TARGET> <TARGET>gefunden</TARGET>.",
+					"Der Vorschlag <TARGET>hat</TARGET> <TARGET>Anerkenung</TARGET> <TARGET>gefunden</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Anerkennung gefunden",
+				normalizedMembers: ["hat", "Anerkennung", "gefunden"],
 				canonicalForm: "Anerkennung finden",
-				memberOrthographies: ["Typo", "Standard"],
+				memberOrthographies: ["Standard", "Typo", "Standard"],
 				inflectionalFeatures: {
 					aspect: null,
 					gender: null,
@@ -72,7 +72,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 			}),
 			explanation:
-				"The established two-member Funktionsverbgefüge remains Resolved when one marked member has a repairable typo and the support verb is Partizip II; the unmarked auxiliary contributes no Surface member or tense.",
+				"The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II.",
 			contaminationKeys: ["de-coll-lemma:anerkennung-finden"],
 		},
 		"grammar-de-coll-antrag-present-full": {
@@ -81,7 +81,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie <TARGET>stellt</TARGET> <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
 			},
 			idealOutput: finite(
-				"stellt einen Antrag",
+				["stellt", "einen", "Antrag"],
 				"einen Antrag stellen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
@@ -94,7 +94,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Gestern <TARGET>stellte</TARGET> sie <TARGET>einen</TARGET> <TARGET>Antrag</TARGET>.",
 			},
 			idealOutput: finite(
-				"stellte einen Antrag",
+				["stellte", "einen", "Antrag"],
 				"einen Antrag stellen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Past" },
 				["Standard", "Standard", "Standard"],
@@ -107,7 +107,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Die Parteien <TARGET>treffen</TARGET> <TARGET>eine</TARGET> <TARGET>Vereinbarung</TARGET>.",
 			},
 			idealOutput: finite(
-				"treffen eine Vereinbarung",
+				["treffen", "eine", "Vereinbarung"],
 				"eine Vereinbarung treffen",
 				{ mood: "Ind", number: "Plur", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
@@ -120,7 +120,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Die Verantwortlichen <TARGET>leisten</TARGET> <TARGET>Abbitte</TARGET>.",
 			},
 			idealOutput: finite(
-				"leisten Abbitte",
+				["leisten", "Abbitte"],
 				"Abbitte leisten",
 				{ mood: "Ind", number: "Plur", person: "3", tense: "Pres" },
 				["Standard", "Standard"],
@@ -133,7 +133,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wir <TARGET>nahmen</TARGET> <TARGET>Abschied</TARGET>.",
 			},
 			idealOutput: finite(
-				"nahmen Abschied",
+				["nahmen", "Abschied"],
 				"Abschied nehmen",
 				{ mood: "Ind", number: "Plur", person: "1", tense: "Past" },
 				["Standard", "Standard"],
@@ -146,7 +146,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Der Rat <TARGET>erteilt</TARGET> <TARGET>Zustimmung</TARGET>.",
 			},
 			idealOutput: finite(
-				"erteilt Zustimmung",
+				["erteilt", "Zustimmung"],
 				"Zustimmung erteilen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard"],
@@ -159,7 +159,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"<TARGET>Komm</TARGET> endlich <TARGET>zum</TARGET> <TARGET>Ende</TARGET>!",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "komm zum Ende",
+				normalizedMembers: ["komm", "zum", "Ende"],
 				canonicalForm: "zum Ende kommen",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 				inflectionalFeatures: {
@@ -176,12 +176,17 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-coll-anspruch-participle-full": {
 			input: {
 				markedContext:
-					"Sie hat Hilfe <TARGET>in</TARGET> <TARGET>Anspruch</TARGET> <TARGET>genommen</TARGET>.",
+					"Sie <TARGET>hat</TARGET> Hilfe <TARGET>in</TARGET> <TARGET>Anspruch</TARGET> <TARGET>genommen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "in Anspruch genommen",
+				normalizedMembers: ["hat", "in", "Anspruch", "genommen"],
 				canonicalForm: "in Anspruch nehmen",
-				memberOrthographies: ["Standard", "Standard", "Standard"],
+				memberOrthographies: [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+				],
 				inflectionalFeatures: {
 					aspect: null,
 					gender: null,
@@ -201,7 +206,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie versucht, ihre Sorge <TARGET>zum</TARGET> <TARGET>Ausdruck</TARGET> zu <TARGET>bringen</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "zum Ausdruck bringen",
+				normalizedMembers: ["zum", "Ausdruck", "bringen"],
 				canonicalForm: "zum Ausdruck bringen",
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 				inflectionalFeatures: {
@@ -221,7 +226,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Das Wetter <TARGET>nimmt</TARGET> <TARGET>Einfluss</TARGET> auf die Planung.",
 			},
 			idealOutput: finite(
-				"nimmt Einfluss",
+				["nimmt", "Einfluss"],
 				"Einfluss nehmen",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard"],
@@ -234,7 +239,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Das Problem <TARGET>tritt</TARGET> plötzlich <TARGET>in</TARGET> <TARGET>Erscheinung</TARGET>.",
 			},
 			idealOutput: finite(
-				"tritt in Erscheinung",
+				["tritt", "in", "Erscheinung"],
 				"in Erscheinung treten",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Standard", "Standard"],
@@ -247,7 +252,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Wörterbucheintrag: <TARGET>Abschied</TARGET> <TARGET>nehmen</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "Abschied nehmen",
+				normalizedMembers: ["Abschied", "nehmen"],
 				canonicalForm: "Abschied nehmen",
 				memberOrthographies: ["Standard", "Standard"],
 			}),
@@ -259,7 +264,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie <TARGET>leistet</TARGET> <TARGET>Abbite</TARGET>.",
 			},
 			idealOutput: finite(
-				"leistet Abbitte",
+				["leistet", "Abbitte"],
 				"Abbitte leisten",
 				{ mood: "Ind", number: "Sing", person: "3", tense: "Pres" },
 				["Standard", "Typo"],

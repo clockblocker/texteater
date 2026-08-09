@@ -15,8 +15,8 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["und"],
 					surface: {
-						normalizedSurface: "und",
 						spelling: "Canonical",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
@@ -39,8 +39,8 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["oder"],
 					surface: {
-						normalizedSurface: "oder",
 						spelling: "Canonical",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
@@ -127,16 +127,16 @@ export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function resolved(
-	normalizedSurface: string,
-	canonicalForm = normalizedSurface,
+	normalizedMembers: string,
+	canonicalForm = normalizedMembers,
 ) {
 	return {
 		decision: "Resolved" as const,
 		resolution: {
 			memberOrthographies: ["Standard" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [normalizedMembers],
 			surface: {
-				normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

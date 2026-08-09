@@ -13,7 +13,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 					"Mit <TARGET>Millionen</TARGET> rechnet niemand.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Millionen",
+				normalizedMembers: ["Millionen"],
 				canonicalForm: "Million",
 				case: "Dat",
 				gender: "Fem",
@@ -28,7 +28,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Von <TARGET>Milliarden</TARGET> träumt sie.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "Milliarden",
+				normalizedMembers: ["Milliarden"],
 				canonicalForm: "Milliarde",
 				case: "Dat",
 				gender: "Fem",

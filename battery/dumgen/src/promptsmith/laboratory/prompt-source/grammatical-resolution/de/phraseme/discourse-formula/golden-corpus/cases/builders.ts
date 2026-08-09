@@ -16,7 +16,7 @@ export const unresolved = {
 };
 
 export function citation(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly role: DiscourseFormulaRole | null;
 	readonly memberOrthographies: readonly ("Standard" | "Typo")[];
@@ -26,8 +26,8 @@ export function citation(args: {
 		resolution: {
 			memberOrthographies: [...args.memberOrthographies],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

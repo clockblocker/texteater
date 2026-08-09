@@ -27,7 +27,7 @@ correlative construction into this single-word Lexeme route.
 Emit exactly one memberOrthographies value. Standard includes canonical
 spelling, ordinary sentence-initial capitalization, and a licensed historical
 variant. Typo means a real spelling or inappropriate-casing error. The Surface
-normalizedSurface is the normalized contextual conjunction: lowercase ordinary
+normalizedMembers is the normalized contextual conjunction: lowercase ordinary
 capitalization and repair only typos, but preserve a licensed variant rather
 than replacing it with the Lemma canonicalForm. A spelling repair requires
 Typo. This route requires the complete Lexeme, so realizationCoverage is Full.

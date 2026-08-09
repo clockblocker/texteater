@@ -57,8 +57,8 @@ export function evaluateInterjectionGrammaticalResolution(args: {
 			(actualSurface?.surfaceKind ?? null) ===
 			(expectedSurface?.surfaceKind ?? null),
 		normalizedSurfacePass:
-			(actualSurface?.normalizedSurface ?? null) ===
-			(expectedSurface?.normalizedSurface ?? null),
+			(actualResolution?.normalizedMembers.join(" ") ?? null) ===
+			(expectedResolution?.normalizedMembers.join(" ") ?? null),
 		spellingPass:
 			(actualSurface?.spelling ?? null) ===
 			(expectedSurface?.spelling ?? null),

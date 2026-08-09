@@ -14,7 +14,7 @@ export const indefiniteAndNegativeCases = defineGoldenCaseCollection(
 					markedContext: "Wir suchen <TARGET>jemanden</TARGET>.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "jemanden",
+					normalizedMembers: ["jemanden"],
 					canonicalForm: "jemand",
 					coreFeatures: core("Ind"),
 					inflectionalFeatures: {
@@ -28,7 +28,7 @@ export const indefiniteAndNegativeCases = defineGoldenCaseCollection(
 			"grammar-de-pron-indefinite-etwas": {
 				input: { markedContext: "Ich sehe <TARGET>etwas</TARGET>." },
 				idealOutput: citation({
-					normalizedSurface: "etwas",
+					normalizedMembers: ["etwas"],
 					canonicalForm: "etwas",
 					coreFeatures: core("Ind"),
 				}),
@@ -38,7 +38,7 @@ export const indefiniteAndNegativeCases = defineGoldenCaseCollection(
 					markedContext: "Ich helfe <TARGET>niemandem</TARGET>.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "niemandem",
+					normalizedMembers: ["niemandem"],
 					canonicalForm: "niemand",
 					coreFeatures: core("Neg"),
 					inflectionalFeatures: {
@@ -52,7 +52,7 @@ export const indefiniteAndNegativeCases = defineGoldenCaseCollection(
 			"grammar-de-pron-negative-nichts": {
 				input: { markedContext: "Ich sehe <TARGET>nichts</TARGET>." },
 				idealOutput: citation({
-					normalizedSurface: "nichts",
+					normalizedMembers: ["nichts"],
 					canonicalForm: "nichts",
 					coreFeatures: core("Neg"),
 				}),

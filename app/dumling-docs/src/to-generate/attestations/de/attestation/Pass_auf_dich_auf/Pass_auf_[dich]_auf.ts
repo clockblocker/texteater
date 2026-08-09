@@ -41,6 +41,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Pass auf [dich] auf!",
 	classifierNotes:
-		"Dich is the accusative second-person pronoun `du`, with reflexive use marked on the inflected surface; it is not part of `normalizedSurface`, which remains the verbal surface `pass auf` for the split verb tokens.",
+		"Dich is a free contextual reflexive object, not an inherent member of aufpassen; its independent pronoun Attestation remains separate from the verbal Surface `pass auf auf`.",
 	isVerified: true,
 } as const;

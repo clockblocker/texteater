@@ -28,7 +28,7 @@ a syntactic modifier together with its adverb head, such as an intensifier plus
 adverb, the target is overbroad and must be Unresolved rather than collapsed
 into one orthography member. Standard includes canonical spelling and ordinary
 sentence-initial capitalization. Typo means an actual spelling or
-inappropriate-casing error. normalizedSurface is the normalized contextual
+inappropriate-casing error. normalizedMembers is the normalized contextual
 adverb: lowercase ordinary capitalization and repair only typos, while
 preserving the complete attested morphology and the order of marked members.
 Never substitute a synonym or silently add unmarked lexical material. Except

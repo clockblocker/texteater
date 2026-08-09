@@ -11,9 +11,9 @@ executable laboratory prompt.
 instruction body, and immutable ordered demonstration selection. A
 corpus-backed Prompt Source may also expose that Demonstration Selection for
 experiment composition. `schemas.ts` keeps the input and output schemas together
-and is the runtime catalog's schema interface. A route with canonical semantic
-cases also owns a route-local Golden Corpus; a route without such cases omits
-that directory.
+and is the runtime catalog's schema interface. A route whose private
+representation is unsettled does not attach its Canonical Classification Corpus
+to a Prompt Source.
 
 Demonstrations are either schema-validated local examples owned directly by the
 Prompt Source or a Case Selection from that source's canonical Golden Corpus.
@@ -28,44 +28,52 @@ and authoring infrastructure belongs to Prompt Assembly.
 ### Golden Case
 A canonical semantic case containing `input`, `idealOutput`, an optional
 trimmed `explanation`, and optional `contaminationKeys`. Its stable ID is the
-key in one route-local Golden Corpus and is not repeated inside the case.
+key in exactly one Golden Corpus or Canonical Classification Corpus and is not
+repeated inside the case.
 
 ### Golden Corpus
-The canonical keyed Golden Case registry for one Prompt Source route.
+The Prompt Source-owned keyed Golden Case registry for one prompt route, parsed
+with that Prompt Source's exact model-facing schema instances.
 
-Construction parses every input and ideal output with the route schemas,
-rejects duplicate exact parsed inputs, and validates contamination keys and
-named composition groups. A corpus may add a route-specific stimulus
-fingerprint, but exact parsed-input fingerprinting always remains active.
+### Canonical Classification Corpus
+The representation-neutral keyed Golden Case registry for a classification
+route whose private prompt representation is unsettled. Its ideal outputs are
+the semantic oracle shared by every Prompt Representation Adapter.
 
 ### Golden Case Collection
-A named semantic subdivision of one Golden Corpus, such as ADP or Phraseme.
+A named semantic subdivision of one canonical corpus, such as ADP or Phraseme.
 Collection membership describes what a case exercises and never assigns
 demonstration or evaluation roles.
 _Avoid_: Sub-corpus, ADP corpus, demonstration collection, evaluation collection
 
 ### Case Selection
-An immutable ordered set of Golden Case IDs bound to one Golden Corpus.
+An immutable ordered set of Golden Case IDs bound to one canonical corpus.
 
 Selection and set algebra preserve deterministic order. Named groups resolve to
 Case Selections and carry composition meaning only; contamination is expressed
 only through IDs, fingerprints, and contamination keys.
 
 ### Demonstration Selection
-The ordered cases embedded in one Prompt Source as model guidance. Corpus-backed
-demonstrations remain members of their semantic Golden Case Collections.
+The ordered Golden Cases designated as model guidance. Prompt-owned cases are
+embedded directly; Canonical Classification Cases are materialized by an
+Adapter.
 _Avoid_: Examples to use, training set
 
 ### Evaluation Selection
 The held-out Case Selection evaluated by one Prompt Experiment. It is chosen
-independently of corpus organization and excludes the Prompt Source's
-Demonstration Selection.
+independently of corpus organization and excludes the Demonstration Selection.
 _Avoid_: Examples for test, test set
 
 ### Local Demonstrations
 An immutable ordered list of examples parsed with a Prompt Source's exact schema
 instances. Local Demonstrations teach model exchange shape or route-local prompt
 behavior without claiming canonical semantic evidence.
+
+### Prompt Representation Adapter
+An Adapter at the experimental representation seam that materializes one
+representation-neutral Golden Case into a private prompt input/ideal output and
+canonicalizes one private model output back into the corpus's semantic output.
+It owns no cases, selections, policy, or scoring.
 
 ### Prompt Assembly
 The stable authoring contracts that Prompt Sources satisfy together with the
@@ -74,10 +82,11 @@ code generator that compiles Prompt Sources into Generated System Prompts.
 Prompt Assembly lives under `promptsmith/assembly`; it is authoring
 infrastructure, not application runtime integration.
 
-Demonstration and Golden Case inputs and ideal outputs match the minimal
-model-facing schemas, not the public Dumgen domain shapes. Runtime mapping and
-its tests are outside Prompt Assembly. An ideal output is a typed reference
-answer, not a universal
+Prompt-owned Demonstrations and Golden Cases match the minimal model-facing
+schemas, while Canonical Classification Cases match their semantic schemas and
+cross the private representation seam only through Prompt Representation
+Adapters. Runtime mapping and its tests remain outside Prompt Assembly.
+An ideal output is a typed reference answer, not a universal
 exact-match assertion; route-specific evaluators decide correctness.
 An explanation is concise authoring guidance that connects observable input
 evidence and prompt rules to the ideal output. Prompt Assembly renders it after
@@ -111,6 +120,9 @@ demonstration/evaluation contamination by case ID, exact parsed-input
 fingerprint, additional route fingerprint, and shared contamination key before
 a provider runner can make a call. Published suites pin explicit case IDs so
 corpus growth cannot silently change an evaluation.
+
+A representation-comparison Prompt Experiment binds every Adapter to the same
+Canonical Classification Corpus and evaluates only canonicalized outputs.
 
 ### Evaluation Run
 An observation produced by running a catalog prompt against a model on an
@@ -210,6 +222,13 @@ non-interactive.
 For now, only `ResolvableText` is clickable. All four Segment kinds remain
 indexed.
 
+`Lexeme/PUNCT` remains in the downstream German route inventory, but it is not
+reachable from High-Level Target Classification while Source Segmentation
+classifies punctuation as `Punctuation` and target membership admits only
+`ResolvableText`. Canonical high-level corpora record this as an inventory/
+clickability domain gap; they must not fabricate clickable punctuation as
+`ResolvableText` merely to claim route coverage.
+
 ### Unresolved
 A domain error produced when a click on `ResolvableText` fails to yield exactly
 one defensible result from the Click Resolution Chain.
@@ -230,14 +249,24 @@ Attestation, and remains distinct from `Unresolved`: the classification is valid
 but implementation is intentionally incremental.
 
 ### Analysis Target
-A Dumgen-owned internal intermediate that groups the ordered Segments resolved
-as one unit by a Target Classification policy and names the Lemma Family and
-Kind to which that unit is routed.
+A Dumgen-owned result that groups the ordered Segments resolved as one unit by
+a Target Classification policy and names the Lemma Family and Kind to which
+that unit is routed.
 
-An Analysis Target is not exposed by the public grammatical operation. It is
-not an Attestation, a persisted linguistic entity, part of Dumling, or a raw model
-response. Laboratory instrumentation may reconstruct it from prompt exchanges
-for diagnostics.
+High-Level Target Classification exposes the Analysis Target as a public
+Dumgen action result. It is not an Attestation, a persisted linguistic entity,
+part of Dumling, or the private model response. Its indices are non-empty,
+ordered, unique, in bounds, point only at `ResolvableText`, include the click,
+and identify the same unit whichever member was clicked.
+
+For German, fixed realized components belong to one target even when they are
+discontinuous or have different parts of speech. These components include
+governed prepositions, inherently reflexive pronouns, separable members, and
+perfect/future/passive auxiliaries. Modal auxiliaries with lexical verbs,
+copulas with predicates, free arguments, contextual reflexives, adjuncts, and
+modifiers remain separate targets. High-level membership does not prevent a
+later drill-down analysis of an individual AUX, preposition, pronoun, or other
+member.
 
 The target level is policy-owned. For a German support-verb Collocation such as
 `eine Entscheidung treffen`, a whole-unit target resolves the
@@ -246,8 +275,8 @@ the verb alone resolves the ordinary `Lexeme/VERB` Lemma `treffen`. Its
 contextual support use does not create a separate `Light` Lemma or Core Feature.
 
 ### Attestation and interaction
-A successful grammatical resolution returns a click-independent Attestation
-plus Dumgen-owned interaction context.
+A successful grammatical resolution projects its click-independent Analysis
+Target into one Attestation plus Dumgen-owned interaction context.
 
 An Attestation contains a non-empty ordered `members` list, occurrence-level
 `realizationCoverage`, and one resolved global Surface. Each member pairs the
@@ -255,11 +284,12 @@ exact participating Segment text as `attested` with its `Standard | Typo`
 orthography. The public interaction value contains the Segmented Sentence ID,
 clicked Segment index, and non-empty ordered member Segment indices.
 
-`interaction.memberSegmentIndices` aligns one-to-one and positionally with
+The target member indices align one-to-one and positionally with the marked
+context's `TARGET` pairs, Grammatical Resolution's member orthographies, and
 `attestation.members`; every index points to the Segment whose exact text is in
-the corresponding member. The indices are ordered, unique, reference only
-`ResolvableText`, and include the clicked index. Marked context remains an
-outer Dumgen result field.
+the corresponding member. No fixed target member may disappear because its
+role is auxiliary, reflexive, governed-prepositional, or separable. Marked
+context remains a Dumgen result artifact.
 
 Clicks on different member Segments of one resolved unit reuse the same
 Attestation value. Only the interaction's clicked index changes.
@@ -268,11 +298,20 @@ Attestation value. Only the interaction's clicked index changes.
 A reusable global grammatical form shared by normalized-equivalent Attestations.
 
 A Surface contains:
-- `normalizedSurface`, which normalizes attested material without inserting,
-  reordering, or lemmatizing lexical constituents;
+- `normalizedSurface`, which is the normalized one-space projection of exactly
+  the ordered target members without inserting, reordering, or lemmatizing
+  occurrence constituents;
 - `spelling`, explicitly `Canonical` or `Variant`;
 - its Surface kind and applicable inflectional features;
 - one Lemma.
+
+The private Grammatical Resolution DTO does not ask a model to construct that
+scalar. It returns `normalizedMembers`, one entry per target member in the same
+order as member orthographies. The shared projection validator rejects
+cardinality drift, reordered or unrelated Standard material, and leading,
+trailing, or repeated whitespace; Dumgen alone joins the validated entries
+with one space to construct public `normalizedSurface`. Typo repair remains a
+route-level linguistic judgment rather than a character-distance policy.
 
 Surface identity includes its language, normalized form, Surface kind,
 inflectional features, and Lemma identity. Identically spelled noun
@@ -290,6 +329,14 @@ missing material. For `heulte mit` resolving to the idiom
 `mit den Wölfen heulen`, Attestation members preserve `heulte` and `mit`, while
 `normalizedSurface` remains `heulte mit`; the complete Canonical Form belongs
 to the Lemma.
+
+For a German VERB target, Surface inflectional features describe the
+route-owning lexical head rather than every member or the whole clause. A
+perfect or passive lexical head therefore remains Participle morphology and a
+future lexical head remains Infinitive morphology; finite features from the
+auxiliary are not copied onto it. Lemma `canonicalForm` likewise remains the
+lexical identity, such as `warten`, `sich erinnern`, or `aufpassen`, rather than
+a concatenation of occurrence members.
 
 ### Lemma
 The normalized grammatical identity behind a Surface.
@@ -349,9 +396,9 @@ can click.
 The post-click chain.
 
 It begins with a Segmented Sentence and one clicked `ResolvableText` index. It
-resolves one valid Attestation containing the complete contextual Surface
-membership plus the Dumgen interaction projection, then resolves the global
-Surface and its Lemma, and finally either
+classifies one click-invariant Analysis Target, projects every fixed realized
+member into one valid Attestation, resolves the global Surface and its Lemma,
+and finally either
 selects an existing learner-owned Reading or drafts a new one.
 
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
@@ -405,10 +452,11 @@ not claim production readiness.
 ## Relationships
 
 - A **Segmented Sentence** contains one or more indexed **Segments**.
-- A Dumgen **interaction** belongs to exactly one **Segmented Sentence** and
-  clicked `ResolvableText` Segment.
-- An **Attestation** contains one or more ordered member values aligned with
-  the interaction's `ResolvableText` Segment indices.
+- An **Analysis Target** belongs to exactly one **Segmented Sentence** and is
+  invariant across clicks on any of its member `ResolvableText` Segments.
+- An **Attestation** contains one ordered member value for every Analysis
+  Target index, in the same position as its marked-context pair and member
+  orthography.
 - Many noisy **Attestations** may resolve to one global **Surface**.
 - A **Surface** realizes exactly one **Lemma** under one grammatical
   analysis.

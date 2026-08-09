@@ -127,16 +127,16 @@ describe("Phraseme/Idiom route-local corpus", () => {
 			"For a contextual clause, inspect the selected members themselves before using surrounding grammar",
 		);
 		expect(normalizedPrompt).toContain(
-			"Determine verbForm from the selected verbal member itself before assigning clause-level features",
+			"Determine verbForm from the route-owning selected lexical head before assigning features",
 		);
 		expect(normalizedPrompt).toContain(
-			"Only a selected finite verb licenses verbForm Fin",
+			"Only a finite lexical head licenses verbForm Fin",
 		);
 		expect(prompt).toContain(
-			"normalizedSurface contains only normalized selected",
+			"normalizedMembers contains exactly one normalized string",
 		);
 		expect(normalizedPrompt).toContain(
-			"unmarked infinitival zu never appears in normalizedSurface",
+			"unmarked infinitival zu never appears",
 		);
 		expect(prompt).toContain("Konjunktiv I receives tense Pres");
 		expect(prompt).toContain("Konjunktiv II receives tense Past");
@@ -178,14 +178,22 @@ describe("Phraseme/Idiom route-local corpus", () => {
 			resolution: {
 				memberOrthographies: [
 					"Standard",
+					"Standard",
 					"Typo",
 					"Standard",
 					"Standard",
 					"Standard",
 				],
 				realizationCoverage: "Full",
+				normalizedMembers: [
+					"hat",
+					"die",
+					"Flinte",
+					"ins",
+					"Korn",
+					"geworfen",
+				],
 				surface: {
-					normalizedSurface: "die Flinte ins Korn geworfen",
 					surfaceKind: "Inflection",
 					inflectionalFeatures: {
 						verbForm: "Part",
@@ -213,9 +221,8 @@ describe("Phraseme/Idiom route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
 				realizationCoverage: "Partial",
-				surface: {
-					normalizedSurface: "heulte mit",
-				},
+				normalizedMembers: ["heulte", "mit"],
+				surface: {},
 				lemma: { canonicalForm: "mit den Wölfen heulen" },
 			},
 		});
@@ -290,8 +297,8 @@ describe("Phraseme/Idiom route-local corpus", () => {
 				?.idealOutput,
 		).toMatchObject({
 			resolution: {
+				normalizedMembers: ["blase", "Trübsal"],
 				surface: {
-					normalizedSurface: "blase Trübsal",
 					inflectionalFeatures: {
 						mood: "Imp",
 						number: "Sing",

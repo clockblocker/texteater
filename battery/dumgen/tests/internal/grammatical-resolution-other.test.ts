@@ -56,8 +56,8 @@ function dormantCitation(surfaceFeatures: unknown = null) {
 		resolution: {
 			memberOrthographies: ["Standard"],
 			realizationCoverage: "Full",
+			normalizedMembers: ["x"],
 			surface: {
-				normalizedSurface: "x",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures,
@@ -73,8 +73,8 @@ function dormantInflection(number: "Plur" | "Sing" | null = null) {
 		resolution: {
 			memberOrthographies: ["Standard"],
 			realizationCoverage: "Full",
+			normalizedMembers: ["x"],
 			surface: {
-				normalizedSurface: "x",
 				spelling: "Canonical",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
@@ -147,8 +147,16 @@ describe("Lexeme/X route-local schemas and corpus", () => {
 			throw new Error("Missing dormant Inflection fixture.");
 		}
 		expect(
-			inflectionCodec.encode(inflectionCodec.decode(modelInflection)),
-		).toEqual(modelInflection);
+			inflectionCodec.encode(
+				inflectionCodec.decode({
+					...modelInflection,
+					normalizedSurface:
+						dormantInflection().resolution?.normalizedMembers.join(
+							" ",
+						) ?? "x",
+				}),
+			),
+		).toEqual({ ...modelInflection, normalizedSurface: "x" });
 	});
 
 	test("pins an intentionally all-Unresolved 26/4/19/3 split", () => {

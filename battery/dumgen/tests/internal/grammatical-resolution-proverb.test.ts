@@ -127,7 +127,6 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 		).toThrow();
 		expect(
 			deProverbModelCitationSurfaceSchema.parse({
-				normalizedSurface: "Übung macht den Meister",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
@@ -227,7 +226,7 @@ describe("Phraseme/Proverb route-local schemas and corpus", () => {
 			corpus.cases["grammar-de-proverb-ende-gut"]?.idealOutput,
 		).toMatchObject({
 			resolution: {
-				surface: { normalizedSurface: "Ende gut alles gut" },
+				normalizedMembers: ["Ende", "gut", "alles", "gut"],
 				lemma: { canonicalForm: "Ende gut alles gut" },
 			},
 		});
@@ -289,11 +288,8 @@ describe("Phraseme/Proverb pure diagnostic evaluator", () => {
 					testCase.idealOutput.resolution.memberOrthographies.slice(
 						1,
 					),
+				normalizedMembers: ["Gelegenheit", "Diebe"],
 				realizationCoverage: "Full" as const,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "Gelegenheit Diebe",
-				},
 			},
 		});
 		const result = evaluateProverbGrammaticalResolution({

@@ -12,7 +12,7 @@ export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Der <TARGET>erste</TARGET> Versuch gelang.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "erste",
+				normalizedMembers: ["erste"],
 				canonicalForm: "erst",
 				coreFeatures: { ...unmarkedCore, numType: "Ord" },
 				inflectionalFeatures: {
@@ -28,7 +28,7 @@ export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Die Lösung ist <TARGET>möglich</TARGET>.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "möglich",
+				normalizedMembers: ["möglich"],
 				canonicalForm: "möglich",
 				coreFeatures: { ...unmarkedCore, variant: "Short" },
 				inflectionalFeatures: {
@@ -47,7 +47,7 @@ export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 					"Sie las die <TARGET>siebenhundert</TARGET> Seiten.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "siebenhundert",
+				normalizedMembers: ["siebenhundert"],
 				canonicalForm: "siebenhundert",
 				coreFeatures: { ...unmarkedCore, numType: "Card" },
 				inflectionalFeatures: {
@@ -63,7 +63,7 @@ export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-adj-provisional-foreign-cool": {
 			input: { markedContext: "Das klingt <TARGET>cool</TARGET>." },
 			idealOutput: inflection({
-				normalizedSurface: "cool",
+				normalizedMembers: ["cool"],
 				canonicalForm: "cool",
 				coreFeatures: { ...unmarkedCore, foreign: "Yes" },
 				inflectionalFeatures: {
@@ -81,7 +81,7 @@ export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Ein <TARGET>sog.</TARGET> Experte sagte aus.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "sog.",
+				normalizedMembers: ["sog."],
 				canonicalForm: "sogenannt",
 				coreFeatures: { ...unmarkedCore, abbr: "Yes" },
 				inflectionalFeatures: {

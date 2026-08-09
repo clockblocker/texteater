@@ -36,7 +36,7 @@ This lets Dumling keep a single Lemma such as \`aufpassen\` or \`hinauslaufen\` 
 			body: `
 \`HasSepPrefix\` is a core Lemma-level feature, not an inflectional Surface feature.
 
-The actual selected token may show only the stem, only the detached prefix, or a fully attached form, but all of those still point back to the same Lemma carrying the same \`hasSepPrefix\` value.
+An attached form is one member; a detached realization contributes both its stem and prefix in source order. Clicking either detached member reaches the same high-level occurrence and Lemma carrying the same \`hasSepPrefix\` value.
 `,
 		},
 		{

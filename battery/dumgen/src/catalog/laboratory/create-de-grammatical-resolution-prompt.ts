@@ -7,6 +7,10 @@ import type {
 	GermanHighLevelFamily,
 	GermanHighLevelKind,
 } from "../../schema/german-high-level-routes";
+import {
+	constructNormalizedSurface,
+	extractMarkedContextMembers,
+} from "../../schema/normalized-surface-projection";
 import type { GrammaticalResolution } from "../../types";
 import type { Prompt } from "../prompt-definition";
 
@@ -42,6 +46,7 @@ type ModelGrammarOutput = {
 	readonly decision: "Resolved" | "Unresolved";
 	readonly resolution: {
 		readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+		readonly normalizedMembers: readonly string[];
 		readonly realizationCoverage: "Full" | "Partial";
 		readonly lemma: Readonly<Record<string, unknown>>;
 		readonly surface: ModelSurface;
@@ -107,23 +112,18 @@ export function createDeGrammaticalResolutionPrompt<
 						"Resolved Grammatical Resolution requires a resolution.",
 					);
 				}
-				const markerCount =
-					input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
-				const closingCount =
-					input.markedContext.match(/<\/TARGET>/gu)?.length ?? 0;
-				if (
-					markerCount < 1 ||
-					markerCount !== closingCount ||
-					generated.resolution.memberOrthographies.length !==
-						markerCount
-				) {
-					throw new Error(
-						"Member orthographies must align one-to-one with TARGET markers.",
-					);
-				}
+				constructNormalizedSurface({
+					attestedMembers: extractMarkedContextMembers(
+						input.markedContext,
+					),
+					normalizedMembers: generated.resolution.normalizedMembers,
+					memberOrthographies:
+						generated.resolution.memberOrthographies,
+				});
 			},
 		},
-		projectOutput(_input, rawGenerated): GrammaticalResolution {
+		projectOutput(rawInput, rawGenerated): GrammaticalResolution {
+			const input = rawInput as { readonly markedContext: string };
 			const generated = rawGenerated as unknown as ModelGrammarOutput;
 			if (generated.decision === "Unresolved") {
 				return { decision: "Unresolved" };
@@ -150,16 +150,29 @@ export function createDeGrammaticalResolutionPrompt<
 				surfaceSchema,
 				{ language: "de", lemma },
 			);
+			const normalizedSurface = constructNormalizedSurface({
+				attestedMembers: extractMarkedContextMembers(
+					input.markedContext,
+				),
+				normalizedMembers: generated.resolution.normalizedMembers,
+				memberOrthographies: generated.resolution.memberOrthographies,
+			});
 			const linkedSurface = surfaceCodec.decode(
-				normalizeModelSurfaceFeatures(
-					generated.resolution.surface,
-				) as z.input<typeof surfaceCodec>,
+				normalizeModelSurfaceFeatures({
+					...generated.resolution.surface,
+					normalizedSurface,
+				}) as z.input<typeof surfaceCodec>,
 			);
-			const { lemma: _linkedLemma, ...surface } = linkedSurface;
+			const {
+				lemma: _linkedLemma,
+				normalizedSurface: _normalizedSurface,
+				...surface
+			} = linkedSurface;
 
 			return {
 				decision: "Resolved",
 				memberOrthographies: generated.resolution.memberOrthographies,
+				normalizedMembers: generated.resolution.normalizedMembers,
 				realizationCoverage: generated.resolution.realizationCoverage,
 				surface,
 				lemma,

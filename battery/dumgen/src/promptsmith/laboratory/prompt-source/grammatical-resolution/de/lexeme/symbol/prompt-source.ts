@@ -27,7 +27,7 @@ Emit exactly one memberOrthographies value for the one opening TARGET tag.
 Standard is the exact conventional glyph or character sequence. Typo is not a
 license to substitute visually similar symbols or normalize one glyph identity
 to another. If a damaged or ambiguous glyph cannot be repaired without guessing
-its identity, return Unresolved. normalizedSurface and Lemma canonicalForm
+its identity, return Unresolved. normalizedMembers and Lemma canonicalForm
 normally preserve the exact conventional symbol sequence.
 
 Use Citation for an ordinary invariant symbolic occurrence. Use Inflection only

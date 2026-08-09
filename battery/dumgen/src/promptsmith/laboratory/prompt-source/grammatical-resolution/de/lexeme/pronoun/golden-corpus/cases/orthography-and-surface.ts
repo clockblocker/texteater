@@ -12,7 +12,7 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 			"grammar-de-pron-variant-nix": {
 				input: { markedContext: "Ich sehe <TARGET>nix</TARGET>." },
 				idealOutput: citation({
-					normalizedSurface: "nix",
+					normalizedMembers: ["nix"],
 					canonicalForm: "nichts",
 					coreFeatures: core("Neg"),
 					spelling: "Variant",
@@ -23,7 +23,7 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 			"grammar-de-pron-typo-ihc": {
 				input: { markedContext: "<TARGET>Ihc</TARGET> komme später." },
 				idealOutput: inflection({
-					normalizedSurface: "ich",
+					normalizedMembers: ["ich"],
 					canonicalForm: "ich",
 					coreFeatures: core("Prs", { person: "1" }),
 					memberOrthography: "Typo",

@@ -58,20 +58,17 @@ describe("Lexeme/CCONJ route-local schemas and corpus", () => {
 		).toThrow();
 		expect(
 			deCoordinatingConjunctionModelCitationSurfaceSchema.parse({
-				normalizedSurface: "und",
 				spelling: "Canonical",
 				surfaceKind: "Citation",
 				surfaceFeatures: null,
 			}),
 		).toEqual({
-			normalizedSurface: "und",
 			spelling: "Canonical",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
 		});
 		expect(() =>
 			deCoordinatingConjunctionModelCitationSurfaceSchema.parse({
-				normalizedSurface: "und",
 				spelling: "Canonical",
 				surfaceKind: "Inflection",
 				surfaceFeatures: null,
@@ -103,9 +100,9 @@ describe("Lexeme/CCONJ route-local schemas and corpus", () => {
 			corpus.cases["grammar-de-cconj-sentence-initial-und"];
 		const coordinatingDoch =
 			corpus.cases["grammar-de-cconj-coordinating-doch"];
-		expect(sentenceInitial?.idealOutput.resolution?.surface).toMatchObject({
-			normalizedSurface: "und",
-			spelling: "Canonical",
+		expect(sentenceInitial?.idealOutput.resolution).toMatchObject({
+			normalizedMembers: ["und"],
+			surface: { spelling: "Canonical" },
 		});
 		expect(coordinatingDoch?.idealOutput).toMatchObject({
 			decision: "Resolved",
@@ -165,10 +162,7 @@ describe("Lexeme/CCONJ pure diagnostic evaluator", () => {
 			...testCase.idealOutput,
 			resolution: {
 				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "als",
-				},
+				normalizedMembers: ["als"],
 				lemma: {
 					...testCase.idealOutput.resolution.lemma,
 					coreFeatures: { conjType: null },

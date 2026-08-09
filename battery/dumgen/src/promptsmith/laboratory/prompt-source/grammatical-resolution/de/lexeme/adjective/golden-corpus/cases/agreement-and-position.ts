@@ -14,7 +14,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 					markedContext: "Der <TARGET>kleine</TARGET> Hund schläft.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "kleine",
+					normalizedMembers: ["kleine"],
 					canonicalForm: "klein",
 					inflectionalFeatures: {
 						case: "Nom",
@@ -31,7 +31,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 					markedContext: "Der Hund läuft <TARGET>schnell</TARGET>.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "schnell",
+					normalizedMembers: ["schnell"],
 					canonicalForm: "schnell",
 					inflectionalFeatures: {
 						case: null,
@@ -50,7 +50,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 						"Sie trägt die <TARGET>rote</TARGET> Tasche.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "rote",
+					normalizedMembers: ["rote"],
 					canonicalForm: "rot",
 					inflectionalFeatures: {
 						case: "Acc",
@@ -66,7 +66,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 						"Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drin.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "kaltem",
+					normalizedMembers: ["kaltem"],
 					canonicalForm: "kalt",
 					inflectionalFeatures: {
 						case: "Dat",
@@ -82,7 +82,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 						"Aufgrund <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "neuer",
+					normalizedMembers: ["neuer"],
 					canonicalForm: "neu",
 					inflectionalFeatures: {
 						case: "Gen",
@@ -97,7 +97,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 					markedContext: "<TARGET>Blau</TARGET> ist der Himmel.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "blau",
+					normalizedMembers: ["blau"],
 					canonicalForm: "blau",
 					inflectionalFeatures: {
 						case: null,
@@ -113,7 +113,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 						"Sie schließt die Tür <TARGET>leise</TARGET>.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "leise",
+					normalizedMembers: ["leise"],
 					canonicalForm: "leise",
 					inflectionalFeatures: {
 						case: null,
@@ -130,7 +130,7 @@ export const agreementAndPositionCases = defineGoldenCaseCollection(
 						"Die <TARGET>geschlossene</TARGET> Tür bleibt zu.",
 				},
 				idealOutput: inflection({
-					normalizedSurface: "geschlossene",
+					normalizedMembers: ["geschlossene"],
 					canonicalForm: "geschlossen",
 					coreFeatures: unmarkedCore,
 					inflectionalFeatures: {

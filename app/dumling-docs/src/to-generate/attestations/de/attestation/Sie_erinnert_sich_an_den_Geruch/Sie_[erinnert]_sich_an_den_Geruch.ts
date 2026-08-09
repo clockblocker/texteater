@@ -6,11 +6,19 @@ const occurrenceAttestation = {
 			attested: "erinnert",
 			orthography: "Standard",
 		},
+		{
+			attested: "sich",
+			orthography: "Standard",
+		},
+		{
+			attested: "an",
+			orthography: "Standard",
+		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "erinnert",
+		normalizedSurface: "erinnert sich an",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -41,6 +49,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Sie [erinnert] sich an den Geruch.",
 	classifierNotes:
-		"The lemma is lexically reflexive, but the attested member excludes sich; reflexivity stays inherent on the Lemma.",
+		"The inherently reflexive sich and governed an are fixed occurrence members; the Lemma identity remains sich erinnern with the same core features.",
 	isVerified: true,
 } as const;

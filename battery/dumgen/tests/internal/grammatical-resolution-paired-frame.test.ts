@@ -144,7 +144,6 @@ describe("Construction/PairedFrame route-local contract", () => {
 			).toBe(false);
 		}
 		const surface = {
-			normalizedSurface: "je desto",
 			spelling: "Canonical",
 			surfaceKind: "Citation",
 			surfaceFeatures: null,
@@ -192,8 +191,8 @@ describe("Construction/PairedFrame route-local contract", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
 				realizationCoverage: "Full",
+				normalizedMembers: ["je", "umso"],
 				surface: {
-					normalizedSurface: "je umso",
 					spelling: "Canonical",
 					surfaceKind: "Citation",
 				},
@@ -206,7 +205,7 @@ describe("Construction/PairedFrame route-local contract", () => {
 			resolution: {
 				memberOrthographies: ["Typo", "Standard"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "entweder oder" },
+				normalizedMembers: ["entweder", "oder"],
 			},
 		});
 		expect(
@@ -215,7 +214,7 @@ describe("Construction/PairedFrame route-local contract", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard"],
 				realizationCoverage: "Full" as const,
-				surface: { normalizedSurface: "sowohl wie" },
+				normalizedMembers: ["sowohl", "wie"],
 				lemma: { canonicalForm: "sowohl … wie" },
 			},
 		});
@@ -236,9 +235,7 @@ describe("Construction/PairedFrame route-local contract", () => {
 			const targetCount =
 				testCase.input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
 			expect(resolution.memberOrthographies).toHaveLength(targetCount);
-			expect(
-				resolution.surface.normalizedSurface.split(" "),
-			).toHaveLength(targetCount);
+			expect(resolution.normalizedMembers).toHaveLength(targetCount);
 			expect(
 				resolution.lemma.canonicalForm
 					.split(" ")
@@ -278,11 +275,8 @@ describe("Construction/PairedFrame pure evaluator", () => {
 			resolution: {
 				...testCase.idealOutput.resolution,
 				memberOrthographies: ["Standard", "Typo"],
+				normalizedMembers: ["je", "umso"],
 				realizationCoverage: "Full" as const,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					normalizedSurface: "je umso",
-				},
 			},
 		});
 		const result = evaluatePairedFrameGrammaticalResolution({

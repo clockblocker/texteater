@@ -18,7 +18,7 @@ Before resolving, count literal opening and closing TARGET tags. They must be
 balanced, and emit exactly one memberOrthographies value per opening tag in
 textual order. Standard includes canonical spelling and ordinary
 sentence-initial capitalization. Typo means an actual spelling or
-inappropriate-casing error. normalizedSurface is the normalized contextual
+inappropriate-casing error. normalizedMembers is the normalized contextual
 adjective: lowercase ordinary capitalization and repair only typos, while
 preserving the complete attested morphology and marked-member order. Never
 substitute a synonym, silently add unmarked lexical material, or replace an

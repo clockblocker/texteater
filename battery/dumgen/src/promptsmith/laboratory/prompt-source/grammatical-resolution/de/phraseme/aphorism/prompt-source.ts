@@ -3,7 +3,7 @@ import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
 const body = `Target Classification has already fixed this request to German
-Phraseme/Aphorism and supplied the marked lexical members. Resolve the Surface
+Phraseme/Aphorism and supplied the marked fixed members. Resolve the Surface
 and Lemma grammar for that fixed route. Do not require the exact wording to be
 familiar, recall an author or collection, or reconstruct a source citation:
 those are not fields of Grammatical Resolution. Unfamiliarity with the wording
@@ -40,7 +40,7 @@ The input has already been structurally validated so that every TARGET pair
 identifies exactly one word-like ResolvableText member. TARGET membership is
 therefore authoritative: emit one memberOrthographies value per marked member
 in textual order. A positive target-scope contradiction exists when the marked
-members are not all and only the lexical members of one complete Aphorism:
+members are not all and only the fixed members of one complete Aphorism:
 return Unresolved for a partial quotation, an appended author attribution, or
 members spanning two aphorisms. Never repair target scope or return Partial
 coverage.
@@ -51,17 +51,18 @@ inflectionalFeatures. surfaceFeatures is null unless the grammatical use itself
 is archaic; historical spelling alone does not make it archaic. The complete
 Lemma coreFeatures object is exactly {}.
 
-normalizedSurface is the normalized space-separated projection of the marked
-lexical members in order. It excludes all unmarked punctuation and surrounding
+normalizedMembers contains exactly one normalized string per marked fixed member
+in order, without leading, trailing, or repeated whitespace. It excludes all
+unmarked punctuation and surrounding
 quotation marks. Repair a real spelling or inappropriate-casing error and mark
 only that member Typo. In particular, when the complete maxim begins with
-lowercase die, normalize it to Die in normalizedSurface and canonicalForm and
+lowercase die, normalize it to Die in normalizedMembers and canonicalForm and
 mark that first member Typo. An attested uppercase initial at the beginning of
 the maxim is ordinary sentence-initial capitalization and remains Standard.
 Licensed historical spelling is also Standard. Preserve a licensed historical
-spelling in normalizedSurface and use spelling Variant; use the current
+spelling in normalizedMembers and use spelling Variant; use the current
 conventional wording for canonicalForm. Otherwise spelling is Canonical. Never
-insert, remove, reorder, or lemmatize lexical members.
+insert, remove, reorder, or lemmatize fixed members.
 
 Resolved has a non-null resolution. Unresolved has resolution null. Return only
 the model fields: never language, family, kind, a linked Lemma inside Surface,

@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
 	asObjectSchema,
 	grammaticalResolutionMarkedContextSchema,
+	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -34,7 +35,9 @@ const citationSurfaceCodec = codecBuilder4.buildFixedFieldsCodec(
 
 // German DiscourseFormula exposes Citation Surfaces only. The derived schema
 // intentionally has no Inflection branch or inflectional feature payload.
-export const modelCitationSurfaceSchema = citationSurfaceCodec.in;
+export const modelCitationSurfaceSchema = citationSurfaceCodec.in.omit({
+	normalizedSurface: true,
+});
 
 export const inputSchema = z.strictObject({
 	markedContext: grammaticalResolutionMarkedContextSchema,
@@ -45,6 +48,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: modelCitationSurfaceSchema,
 			lemma: modelLemmaSchema,

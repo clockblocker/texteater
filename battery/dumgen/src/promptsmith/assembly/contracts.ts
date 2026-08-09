@@ -149,6 +149,28 @@ export interface GoldenCorpus<
 	all(): CaseSelection<InputSchema, OutputSchema>;
 }
 
+export interface PromptRepresentationAdapter<
+	CanonicalInputSchema extends PromptInputSchema,
+	CanonicalOutputSchema extends PromptOutputSchema,
+	PrivateInputSchema extends PromptInputSchema,
+	PrivateOutputSchema extends PromptOutputSchema,
+> {
+	materialize(
+		goldenCase: ParsedGoldenCase<
+			CanonicalInputSchema,
+			CanonicalOutputSchema
+		>,
+	): {
+		readonly input: input<PrivateInputSchema>;
+		readonly idealOutput: input<PrivateOutputSchema>;
+	};
+	canonicalize(args: {
+		readonly canonicalInput: output<CanonicalInputSchema>;
+		readonly privateInput: output<PrivateInputSchema>;
+		readonly output: output<PrivateOutputSchema>;
+	}): output<CanonicalOutputSchema>;
+}
+
 export interface PromptSource<
 	InputSchema extends PromptInputSchema = PromptInputSchema,
 	OutputSchema extends PromptOutputSchema = PromptOutputSchema,

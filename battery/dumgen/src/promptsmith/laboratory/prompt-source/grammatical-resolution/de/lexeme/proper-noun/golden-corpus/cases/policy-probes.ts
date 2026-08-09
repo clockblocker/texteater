@@ -19,7 +19,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-provisional-organization-spd-gender": {
 			input: { markedContext: "Die <TARGET>SPD</TARGET> berät heute." },
 			idealOutput: inflection({
-				normalizedSurface: "SPD",
+				normalizedMembers: ["SPD"],
 				case: "Nom",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Fem" },
@@ -30,7 +30,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-provisional-foreign-new": {
 			input: { markedContext: "Namensbestandteil: <TARGET>New</TARGET>" },
 			idealOutput: citation({
-				normalizedSurface: "New",
+				normalizedMembers: ["New"],
 				coreFeatures: { abbr: null, foreign: "Yes", gender: null },
 			}),
 			explanation:
@@ -39,7 +39,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-provisional-abbreviation-chr": {
 			input: { markedContext: "Abgekürzter Name: <TARGET>Chr.</TARGET>" },
 			idealOutput: citation({
-				normalizedSurface: "Chr.",
+				normalizedMembers: ["Chr."],
 				canonicalForm: "Christus",
 				coreFeatures: { abbr: "Yes", foreign: null, gender: "Masc" },
 				spelling: "Variant",
@@ -50,7 +50,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-provisional-stylized-brand-adidas": {
 			input: { markedContext: "Markenname: <TARGET>adidas</TARGET>" },
 			idealOutput: citation({
-				normalizedSurface: "adidas",
+				normalizedMembers: ["adidas"],
 				coreFeatures: { abbr: null, foreign: null, gender: null },
 			}),
 			explanation:

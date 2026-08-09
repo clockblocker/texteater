@@ -51,7 +51,7 @@ type MemberOrthographies = readonly [
 export const emptyCore = {};
 
 export function citation(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly memberOrthographies: MemberOrthographies;
 }) {
@@ -60,8 +60,8 @@ export function citation(args: {
 		resolution: {
 			memberOrthographies: [...args.memberOrthographies],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
@@ -75,7 +75,7 @@ export function citation(args: {
 }
 
 export function inflection(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly inflectionalFeatures: InflectionalFeatures;
 	readonly memberOrthographies: MemberOrthographies;
@@ -86,8 +86,8 @@ export function inflection(args: {
 		resolution: {
 			memberOrthographies: [...args.memberOrthographies],
 			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures: null,
@@ -102,14 +102,14 @@ export function inflection(args: {
 }
 
 export function finite(
-	normalizedSurface: string,
+	normalizedMembers: readonly string[],
 	canonicalForm: string,
 	features: Omit<FiniteFeatures, "verbForm" | "voice">,
 	memberOrthographies: MemberOrthographies,
 	realizationCoverage: "Full" | "Partial" = "Full",
 ) {
 	return inflection({
-		normalizedSurface,
+		normalizedMembers,
 		canonicalForm,
 		memberOrthographies,
 		realizationCoverage,

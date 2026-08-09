@@ -27,7 +27,7 @@ all-caps or acronym shape alone cannot.
 
 Emit exactly one memberOrthographies value for a Resolved result. Standard
 means the marked spelling and casing are licensed for this Lexeme; Typo means a
-repair is required. normalizedSurface is the normalized contextual name:
+repair is required. normalizedMembers is the normalized contextual name:
 preserve canonical casing, contextual genitive suffixes and apostrophes, and
 all lexical characters; repair only actual typos. Never replace the contextual
 Surface with the Lemma canonicalForm, expand a marked unit into a full name, or
@@ -43,7 +43,7 @@ number is defensible, return Unresolved rather than misusing Citation.
 
 The Lemma canonicalForm is the complete normalized citation form of the same
 word-like proper noun. Strip contextual genitive -s or a genitive apostrophe
-only from canonicalForm, never from normalizedSurface. coreFeatures are stable
+only from canonicalForm, never from normalizedMembers. coreFeatures are stable
 grammatical identity and always contain abbr, foreign, and gender. Gender is
 Fem, Masc, or Neut only when the grammatical identity is established from
 reliable lexical and contextual evidence; never infer it from a person's name

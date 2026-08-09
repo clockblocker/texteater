@@ -18,8 +18,8 @@ import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-rou
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
 	realizationCoverage: "Full",
+	normalizedMembers: ["Banken"],
 	surface: {
-		normalizedSurface: "Banken",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		surfaceFeatures: null,
@@ -442,8 +442,12 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Unresolved",
-				resolution: null,
+				decision: "Resolved",
+				resolution: {
+					...modelGrammar,
+					memberOrthographies: ["Standard", "Standard"],
+					normalizedMembers: ["sage", "auf&"],
+				},
 			},
 		]);
 		const source = sentence([
@@ -454,7 +458,7 @@ describe("grammatical resolution", () => {
 			{ kind: "ResolvableText", text: "auf&" },
 		]);
 
-		await buildDumgen({ sdk }).resolve.grammatical("de", {
+		const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
 			sentence: source,
 			clickedSegmentIndex: 0,
 		});
@@ -462,9 +466,16 @@ describe("grammatical resolution", () => {
 		expect(calls[1]?.input).toBe(
 			'{"markedContext":"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>"}',
 		);
+		expect(result).toMatchObject({
+			decision: "Resolved",
+			attestation: {
+				members: [{ attested: "sage" }, { attested: "auf&" }],
+				surface: { normalizedSurface: "sage auf&" },
+			},
+		});
 	});
 
-	test("returns expected Unresolved and NotImplemented outcomes", async () => {
+	test("returns expected target and grammar Unresolved outcomes", async () => {
 		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
 		const targetUnresolved = queueSdk([
 			{ decision: "Unresolved", target: null },
@@ -476,28 +487,6 @@ describe("grammatical resolution", () => {
 			),
 		).resolves.toEqual({ decision: "Unresolved", language: "de" });
 		expect(targetUnresolved.calls).toHaveLength(1);
-
-		const disabled = queueSdk([
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [],
-					family: "Lexeme",
-					kind: "PUNCT",
-				},
-			},
-		]);
-		await expect(
-			buildDumgen({ sdk: disabled.sdk }).resolve.grammatical("de", {
-				sentence: source,
-				clickedSegmentIndex: 0,
-			}),
-		).resolves.toEqual({
-			decision: "NotImplemented",
-			language: "de",
-			route: { family: "Lexeme", kind: "PUNCT" },
-		});
-		expect(disabled.calls).toHaveLength(1);
 
 		const grammarUnresolved = queueSdk([
 			{
@@ -582,6 +571,129 @@ describe("grammatical resolution", () => {
 			}),
 		).rejects.toMatchObject({ code: "invalid-output" });
 		expect(invalidCount.calls).toHaveLength(2);
+
+		const invalidNormalization = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2],
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			},
+			{
+				decision: "Resolved",
+				resolution: {
+					...modelGrammar,
+					memberOrthographies: ["Standard", "Standard"],
+				},
+			},
+		]);
+		await expect(
+			buildDumgen({ sdk: invalidNormalization.sdk }).resolve.grammatical(
+				"de",
+				{ sentence: source, clickedSegmentIndex: 0 },
+			),
+		).rejects.toMatchObject({ code: "invalid-output" });
+		expect(invalidNormalization.calls).toHaveLength(2);
+	});
+
+	test("keeps repeated fixed members positionally aligned and click-invariant", async () => {
+		const source = sentence([
+			{ kind: "ResolvableText", text: "Pass" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "auf" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "dich" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "auf" },
+			{ kind: "Punctuation", text: "." },
+		]);
+		const { calls, sdk } = queueSdk([
+			{
+				decision: "Resolved",
+				target: {
+					additionalMemberSegmentIndices: [2, 6],
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			},
+			{
+				decision: "Resolved",
+				resolution: {
+					memberOrthographies: ["Standard", "Standard", "Standard"],
+					realizationCoverage: "Full",
+					normalizedMembers: ["pass", "auf", "auf"],
+					surface: {
+						spelling: "Canonical",
+						surfaceKind: "Inflection",
+						surfaceFeatures: null,
+						inflectionalFeatures: {
+							mood: "Imp",
+							number: "Sing",
+							person: "2",
+							tense: null,
+							verbForm: "Fin",
+							voice: null,
+						},
+					},
+					lemma: {
+						canonicalForm: "aufpassen",
+						coreFeatures: {
+							hasGovPrep: "auf",
+							hasSepPrefix: "auf",
+							lexicallyReflexive: null,
+							verbType: null,
+						},
+					},
+				},
+			},
+		]);
+		const dumgen = buildDumgen({ sdk });
+		const first = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 0,
+		});
+		const governedClick = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 2,
+		});
+		const prefixClick = await dumgen.resolve.grammatical("de", {
+			sentence: source,
+			clickedSegmentIndex: 6,
+		});
+
+		expect(calls).toHaveLength(2);
+		expect(first).toMatchObject({
+			decision: "Resolved",
+			markedContext:
+				"<TARGET>Pass</TARGET> <TARGET>auf</TARGET> dich <TARGET>auf</TARGET>.",
+			interaction: { memberSegmentIndices: [0, 2, 6] },
+			attestation: {
+				members: [
+					{ attested: "Pass", orthography: "Standard" },
+					{ attested: "auf", orthography: "Standard" },
+					{ attested: "auf", orthography: "Standard" },
+				],
+				realizationCoverage: "Full",
+				surface: {
+					lemma: { canonicalForm: "aufpassen" },
+				},
+			},
+		});
+		if (
+			first.decision !== "Resolved" ||
+			governedClick.decision !== "Resolved" ||
+			prefixClick.decision !== "Resolved"
+		) {
+			throw new Error("Expected every fixed-member click to resolve.");
+		}
+		expect(governedClick.attestation).toBe(first.attestation);
+		expect(prefixClick.attestation).toBe(first.attestation);
+		expect(governedClick.interaction.memberSegmentIndices).toEqual([
+			0, 2, 6,
+		]);
+		expect(prefixClick.interaction.memberSegmentIndices).toEqual([0, 2, 6]);
 	});
 
 	test("reuses a resolved unit for another member within one instance", async () => {
@@ -604,10 +716,10 @@ describe("grammatical resolution", () => {
 				resolution: {
 					...modelGrammar,
 					memberOrthographies: ["Typo", "Standard"],
+					normalizedMembers: ["Bank", "Bank"],
 					realizationCoverage: "Full" as const,
 					surface: {
 						...modelGrammar.surface,
-						normalizedSurface: "Bank Bank",
 						inflectionalFeatures: {
 							case: "Nom",
 							number: "Sing",

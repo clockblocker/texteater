@@ -31,7 +31,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-pron-provisional-informal-polite-du": {
 			input: { markedContext: "<TARGET>Du</TARGET> wartest hier." },
 			idealOutput: inflection({
-				normalizedSurface: "du",
+				normalizedMembers: ["du"],
 				canonicalForm: "du",
 				coreFeatures: core("Prs", { person: "2", polite: "Infm" }),
 				inflectionalFeatures: {
@@ -53,7 +53,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-pron-provisional-foreign-it": {
 			input: { markedContext: "The answer is <TARGET>it</TARGET>." },
 			idealOutput: citation({
-				normalizedSurface: "it",
+				normalizedMembers: ["it"],
 				canonicalForm: "it",
 				coreFeatures: core("Prs", { foreign: "Yes", person: "3" }),
 			}),
@@ -63,7 +63,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-pron-provisional-total-all": {
 			input: { markedContext: "That's <TARGET>all</TARGET>." },
 			idealOutput: citation({
-				normalizedSurface: "all",
+				normalizedMembers: ["all"],
 				canonicalForm: "all",
 				coreFeatures: core("Tot", { foreign: "Yes" }),
 			}),
@@ -75,7 +75,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 				markedContext: "Wenn <TARGET>'s</TARGET> regnet, bleiben wir.",
 			},
 			idealOutput: inflection({
-				normalizedSurface: "'s",
+				normalizedMembers: ["'s"],
 				canonicalForm: "es",
 				coreFeatures: core("Prs", { person: "3" }),
 				spelling: "Variant",

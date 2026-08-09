@@ -17,8 +17,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["hmm"],
 						surface: {
-							normalizedSurface: "hmm",
 							spelling: "Variant",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -41,8 +41,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["ach"],
 						surface: {
-							normalizedSurface: "ach",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -61,8 +61,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["hurra"],
 						surface: {
-							normalizedSurface: "hurra",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -84,8 +84,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["juchhei"],
 						surface: {
-							normalizedSurface: "juchhei",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: {

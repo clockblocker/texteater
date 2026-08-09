@@ -35,7 +35,7 @@ Do not add it merely because one attested clause happens to contain a reflexive 
 			body: `
 \`LexicallyReflexive\` is a core Lemma-level feature, not an inflectional Surface feature.
 
-The attested members may exclude the reflexive element entirely, as with \`erinnert\` from \`Sie erinnert sich an den Geruch\`, but the Lemma still carries the same \`lexicallyReflexive\` value.
+An overt inherently reflexive pronoun is also an Attestation member, as with \`erinnert sich an\` from \`Sie erinnert sich an den Geruch\`, while the Lemma retains the same \`lexicallyReflexive\` value. A merely contextual reflexive object is not included by this feature.
 `,
 		},
 		{

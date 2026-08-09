@@ -128,15 +128,19 @@ type WithoutLemma<Value> = Value extends { readonly lemma: unknown }
 	? Omit<Value, "lemma">
 	: never;
 
+type GrammarSurfaceProjection = Omit<
+	WithoutLemma<import("dumling/types").Surface<"de">>,
+	"normalizedSurface"
+>;
+
 /** Internal result of a Grammatical Resolution prompt. */
 export type GrammaticalResolution =
 	| Unresolved
 	| {
 			readonly decision: "Resolved";
 			readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+			readonly normalizedMembers: readonly string[];
 			readonly realizationCoverage: "Full" | "Partial";
-			readonly surface: WithoutLemma<
-				import("dumling/types").Surface<"de">
-			>;
+			readonly surface: GrammarSurfaceProjection;
 			readonly lemma: import("dumling/types").Lemma<"de">;
 	  };

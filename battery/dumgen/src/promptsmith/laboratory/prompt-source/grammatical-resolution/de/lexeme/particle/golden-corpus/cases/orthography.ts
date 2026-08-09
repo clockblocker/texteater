@@ -31,8 +31,8 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Typo"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["nicht"],
 					surface: {
-						normalizedSurface: "nicht",
 						spelling: "Canonical",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
@@ -57,8 +57,8 @@ function resolvedTypo(canonicalForm: string) {
 		resolution: {
 			memberOrthographies: ["Typo" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [canonicalForm],
 			surface: {
-				normalizedSurface: canonicalForm,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

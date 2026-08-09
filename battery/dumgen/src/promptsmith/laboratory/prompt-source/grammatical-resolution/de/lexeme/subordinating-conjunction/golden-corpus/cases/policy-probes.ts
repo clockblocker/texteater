@@ -83,8 +83,8 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function resolved(
-	normalizedSurface: string,
-	canonicalForm = normalizedSurface,
+	normalizedMembers: string,
+	canonicalForm = normalizedMembers,
 	spelling: "Canonical" | "Variant" = "Canonical",
 	orthography: "Standard" | "Typo" = "Standard",
 ) {
@@ -93,8 +93,8 @@ function resolved(
 		resolution: {
 			memberOrthographies: [orthography],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [normalizedMembers],
 			surface: {
-				normalizedSurface,
 				spelling,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

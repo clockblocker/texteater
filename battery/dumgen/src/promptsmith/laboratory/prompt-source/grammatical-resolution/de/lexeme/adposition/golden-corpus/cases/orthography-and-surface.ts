@@ -31,8 +31,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["wegen"],
 						surface: {
-							normalizedSurface: "wegen",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -47,7 +47,7 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					},
 				},
 				explanation:
-					"Ordinary sentence-initial capitalization is Standard, while normalizedSurface and canonicalForm use lowercase.",
+					"Ordinary sentence-initial capitalization is Standard, while normalizedMembers and canonicalForm use lowercase.",
 			},
 			"grammar-de-adp-demo-typo-one": {
 				input: {
@@ -59,8 +59,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["ohne"],
 						surface: {
-							normalizedSurface: "ohne",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -87,8 +87,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["jenseits"],
 						surface: {
-							normalizedSurface: "jenseits",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -113,8 +113,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["unter"],
 						surface: {
-							normalizedSurface: "unter",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -139,8 +139,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["gegen"],
 						surface: {
-							normalizedSurface: "gegen",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,
@@ -165,8 +165,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["ob"],
 						surface: {
-							normalizedSurface: "ob",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: {
@@ -193,8 +193,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["bei"],
 						surface: {
-							normalizedSurface: "bei",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: null,

@@ -26,8 +26,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["soll"],
 						surface: {
-							normalizedSurface: "soll",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -40,7 +40,7 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					},
 				},
 				explanation:
-					"A lexical spelling error is repaired in normalizedSurface and marked Typo; the grammatical identity remains the modal auxiliary sollen.",
+					"A lexical spelling error is repaired in normalizedMembers and marked Typo; the grammatical identity remains the modal auxiliary sollen.",
 			},
 			"grammar-de-aux-typo-mus": {
 				input: {
@@ -51,8 +51,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Typo"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["muss"],
 						surface: {
-							normalizedSurface: "muss",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -74,8 +74,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["wollen"],
 						surface: {
-							normalizedSurface: "wollen",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,
@@ -102,8 +102,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["mag"],
 						surface: {
-							normalizedSurface: "mag",
 							spelling: "Canonical",
 							surfaceKind: "Inflection",
 							surfaceFeatures: null,

@@ -13,7 +13,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			idealOutput: unresolved,
 			explanation:
-				"Perfect-forming haben belongs to Lexeme/AUX, not this fixed VERB route.",
+				"A perfect auxiliary without its lexical head is an incomplete high-level VERB target; standalone AUX remains available only through drill-down.",
 		},
 		"grammar-de-verb-unresolved-modal-aux-kann": {
 			input: {
@@ -32,30 +32,50 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 			explanation:
 				"The attributive participle carries adjectival agreement and belongs to Lexeme/ADJ.",
 		},
-		"grammar-de-verb-unresolved-overbroad-aux-participle": {
-			input: {
-				markedContext: "Sie <TARGET>hat gegessen</TARGET>.",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"The TARGET combines an AUX and a lexical VERB rather than marking one lexical Surface.",
-		},
-		"grammar-de-verb-unresolved-overbroad-reflexive": {
+		"grammar-de-verb-unresolved-modal-complex": {
 			input: {
 				markedContext:
-					"Sie <TARGET>freut sich</TARGET> über den Besuch.",
+					"Sie <TARGET>kann</TARGET> <TARGET>schwimmen</TARGET>.",
 			},
 			idealOutput: unresolved,
 			explanation:
-				"The reflexive pronoun is evidence for lexical reflexivity but is not a member of the VERB Surface.",
+				"A modal and its lexical verb remain separate high-level targets.",
 		},
-		"grammar-de-verb-unresolved-overbroad-governed-preposition": {
+		"grammar-de-verb-unresolved-copular-predicate": {
 			input: {
-				markedContext: "Sie <TARGET>wartet auf</TARGET> den Zug.",
+				markedContext:
+					"Sie <TARGET>ist</TARGET> <TARGET>schön</TARGET>.",
 			},
 			idealOutput: unresolved,
 			explanation:
-				"A governed preposition is a Lemma feature and contextual dependent, not a verbal member.",
+				"A copula and predicative adjective remain separate high-level targets.",
+		},
+		"grammar-de-verb-unresolved-contextual-reflexive": {
+			input: {
+				markedContext:
+					"Er <TARGET>wäscht</TARGET> <TARGET>sich</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The contextual reflexive object is not inherent lexical material of waschen.",
+		},
+		"grammar-de-verb-unresolved-adjunct": {
+			input: {
+				markedContext:
+					"Sie <TARGET>arbeitet</TARGET> <TARGET>im</TARGET> Büro.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The freely added location adjunct is not a fixed VERB member.",
+		},
+		"grammar-de-verb-unresolved-modifier": {
+			input: {
+				markedContext:
+					"Sie <TARGET>arbeitet</TARGET> <TARGET>gern</TARGET>.",
+			},
+			idealOutput: unresolved,
+			explanation:
+				"The free adverbial modifier is not a fixed VERB member.",
 		},
 		"grammar-de-verb-unresolved-repeated-schlaeft": {
 			input: {

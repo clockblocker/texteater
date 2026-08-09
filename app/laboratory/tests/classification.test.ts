@@ -46,9 +46,9 @@ const grammarOutput = {
 	decision: "Resolved",
 	resolution: {
 		memberOrthographies: ["Typo", "Standard"],
+		normalizedMembers: ["Bank", "Bank"],
 		realizationCoverage: "Full",
 		surface: {
-			normalizedSurface: "Bank Bank",
 			spelling: "Canonical",
 			surfaceKind: "Inflection",
 			surfaceFeatures: null,

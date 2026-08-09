@@ -5,6 +5,7 @@ import { z } from "zod";
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
 	grammaticalResolutionMarkedContextSchema,
+	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -67,7 +68,9 @@ const schemaProjectionLemma = deProverbLemmaCodec.decode({
 });
 
 export const deProverbModelCitationSurfaceSchema =
-	buildDeProverbCitationSurfaceCodec(schemaProjectionLemma).in;
+	buildDeProverbCitationSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 
 const targetPairPattern = /<TARGET>(.*?)<\/TARGET>/gsu;
 const proverbMarkedContextSchema =
@@ -95,6 +98,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: deProverbModelCitationSurfaceSchema,
 			lemma: deProverbModelLemmaSchema,

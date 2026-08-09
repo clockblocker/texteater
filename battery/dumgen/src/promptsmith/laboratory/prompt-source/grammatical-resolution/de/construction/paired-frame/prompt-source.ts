@@ -42,7 +42,7 @@ Citation, realizationCoverage Full, and no inflectionalFeatures.
 surfaceFeatures is null unless the grammatical use itself is archaic. The
 complete Lemma coreFeatures object is exactly {}.
 
-normalizedSurface is the normalized space-separated projection of marked frame
+normalizedMembers is the normalized space-separated projection of marked frame
 members in textual order. Lowercase ordinary sentence-initial capitalization
 and repair only actual typos. It excludes all fillers and punctuation.
 canonicalForm writes the exact lexical frame inventory with a spaced ellipsis

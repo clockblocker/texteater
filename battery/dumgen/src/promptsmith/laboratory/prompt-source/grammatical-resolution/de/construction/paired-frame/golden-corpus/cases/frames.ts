@@ -11,7 +11,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
-				normalizedSurface: "entweder oder",
+				normalizedMembers: ["entweder", "oder"],
 				canonicalForm: "entweder … oder",
 			}),
 			contaminationKeys: ["de-paired-frame:entweder-oder"],
@@ -22,7 +22,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"<TARGET>Je</TARGET> länger die Nacht, <TARGET>umso</TARGET> heller der Morgen.",
-				normalizedSurface: "je umso",
+				normalizedMembers: ["je", "umso"],
 				canonicalForm: "je … umso",
 			}),
 			contaminationKeys: ["de-paired-frame:je-umso"],
@@ -33,7 +33,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Sie liest täglich, <TARGET>um</TARGET> schneller <TARGET>zu</TARGET> lernen.",
-				normalizedSurface: "um zu",
+				normalizedMembers: ["um", "zu"],
 				canonicalForm: "um … zu",
 			}),
 			contaminationKeys: ["de-paired-frame:um-zu"],
@@ -44,7 +44,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"<TARGET>Entweder</TARGET> fährt Mia heute, <TARGET>oder</TARGET> sie bleibt bis morgen.",
-				normalizedSurface: "entweder oder",
+				normalizedMembers: ["entweder", "oder"],
 				canonicalForm: "entweder … oder",
 			}),
 			contaminationKeys: ["de-paired-frame:entweder-oder"],
@@ -55,7 +55,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Sie trinkt <TARGET>weder</TARGET> Tee <TARGET>noch</TARGET> Kaffee.",
-				normalizedSurface: "weder noch",
+				normalizedMembers: ["weder", "noch"],
 				canonicalForm: "weder … noch",
 			}),
 			contaminationKeys: ["de-paired-frame:weder-noch"],
@@ -66,7 +66,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Die Regel gilt <TARGET>sowohl</TARGET> für Kinder <TARGET>wie</TARGET> für Erwachsene.",
-				normalizedSurface: "sowohl wie",
+				normalizedMembers: ["sowohl", "wie"],
 				canonicalForm: "sowohl … wie",
 			}),
 			contaminationKeys: ["de-paired-frame:sowohl-wie"],
@@ -77,7 +77,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Sie hat <TARGET>sowohl</TARGET> den Film gesehen <TARGET>als</TARGET> <TARGET>auch</TARGET> das Buch gelesen.",
-				normalizedSurface: "sowohl als auch",
+				normalizedMembers: ["sowohl", "als", "auch"],
 				canonicalForm: "sowohl … als auch",
 			}),
 			contaminationKeys: ["de-paired-frame:sowohl-als-auch"],
@@ -88,7 +88,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Das gilt <TARGET>sowohl</TARGET> für Kinder <TARGET>wie</TARGET> <TARGET>auch</TARGET> für Erwachsene.",
-				normalizedSurface: "sowohl wie auch",
+				normalizedMembers: ["sowohl", "wie", "auch"],
 				canonicalForm: "sowohl … wie auch",
 			}),
 			contaminationKeys: ["de-paired-frame:sowohl-wie-auch"],
@@ -99,7 +99,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"<TARGET>Je</TARGET> länger er wartet, <TARGET>desto</TARGET> unruhiger wird er.",
-				normalizedSurface: "je desto",
+				normalizedMembers: ["je", "desto"],
 				canonicalForm: "je … desto",
 			}),
 			contaminationKeys: ["de-paired-frame:je-desto"],
@@ -110,7 +110,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"<TARGET>Je</TARGET> genauer wir messen, <TARGET>umso</TARGET> sicherer wird das Ergebnis.",
-				normalizedSurface: "je umso",
+				normalizedMembers: ["je", "umso"],
 				canonicalForm: "je … umso",
 			}),
 			contaminationKeys: ["de-paired-frame:je-umso"],
@@ -119,7 +119,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Noah spart, <TARGET>um</TARGET> im Sommer verreisen <TARGET>zu</TARGET> können.",
-				normalizedSurface: "um zu",
+				normalizedMembers: ["um", "zu"],
 				canonicalForm: "um … zu",
 			}),
 			contaminationKeys: ["de-paired-frame:um-zu"],
@@ -128,7 +128,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Er ging, <TARGET>ohne</TARGET> sich <TARGET>zu</TARGET> verabschieden.",
-				normalizedSurface: "ohne zu",
+				normalizedMembers: ["ohne", "zu"],
 				canonicalForm: "ohne … zu",
 			}),
 			contaminationKeys: ["de-paired-frame:ohne-zu"],
@@ -139,7 +139,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Sie telefonierte, <TARGET>anstatt</TARGET> den Bericht <TARGET>zu</TARGET> schreiben.",
-				normalizedSurface: "anstatt zu",
+				normalizedMembers: ["anstatt", "zu"],
 				canonicalForm: "anstatt … zu",
 			}),
 			contaminationKeys: ["de-paired-frame:anstatt-zu"],
@@ -150,7 +150,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"Wir nehmen <TARGET>endweder</TARGET> den Bus <TARGET>oder</TARGET> die Bahn.",
-				normalizedSurface: "entweder oder",
+				normalizedMembers: ["entweder", "oder"],
 				canonicalForm: "entweder … oder",
 				memberOrthographies: ["Typo", "Standard"],
 			}),
@@ -162,7 +162,7 @@ export const frameCases = defineGoldenCaseCollection(import.meta.url, {
 			...resolvedFrame({
 				markedContext:
 					"<TARGET>Je</TARGET> höher der Druck, <TARGET>desdo</TARGET> größer das Risiko.",
-				normalizedSurface: "je desto",
+				normalizedMembers: ["je", "desto"],
 				canonicalForm: "je … desto",
 				memberOrthographies: ["Standard", "Typo"],
 			}),

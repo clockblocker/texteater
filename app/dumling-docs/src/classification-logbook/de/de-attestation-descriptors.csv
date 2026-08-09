@@ -50,9 +50,9 @@ Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Infl
 Die [Mutter] passt nicht auf diese Schraube.,Mutter,Citation,Lexeme,NOUN
 [Die] Peitsche hat er mitgebracht und nimmt sie sorglich sehr in acht.,die,Inflection,Lexeme,DET
 Die [Peitsche] hat er mitgebracht und nimmt sie sorglich sehr in acht.,Peitsche,Citation,Lexeme,NOUN
-Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat,Inflection,Lexeme,AUX
+Die Peitsche [hat] er mitgebracht und nimmt sie sorglich sehr in acht.,hat mitgebracht,Inflection,Lexeme,VERB
 Die Peitsche hat [er] mitgebracht und nimmt sie sorglich sehr in acht.,er,Inflection,Lexeme,PRON
-Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,mitgebracht,Inflection,Lexeme,VERB
+Die Peitsche hat er [mitgebracht] und nimmt sie sorglich sehr in acht.,hat mitgebracht,Inflection,Lexeme,VERB
 Die Peitsche hat er mitgebracht [und] nimmt sie sorglich sehr in acht.,und,Citation,Lexeme,CCONJ
 Die Peitsche hat er mitgebracht und [nimmt] sie sorglich sehr in acht.,nimmt,Citation,Phraseme,Idiom
 Die Peitsche hat er mitgebracht und nimmt [sie] sorglich sehr in acht.,sie,Inflection,Lexeme,PRON
@@ -79,7 +79,7 @@ Er [muss] heute arbeiten.,muss,Inflection,Lexeme,AUX
 Er saß [schweigend] am Fenster.,schweigend,Inflection,Lexeme,VERB
 Er vergaß [seinen] Schlüssel im Büro.,seinen,Inflection,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Inflection,Lexeme,VERB
-Er [wartet] auf den Nachtbus.,wartet,Inflection,Lexeme,VERB
+Er [wartet] auf den Nachtbus.,wartet auf,Inflection,Lexeme,VERB
 Er [wog] vielleicht ein halbes Lot – und war am fünften Tage tot. ,wog,Inflection,Lexeme,VERB
 Er wog vielleicht ein halbes [Lot] – und war am fünften Tage tot. ,Lot,Inflection,Lexeme,NOUN
 Er wog vielleicht ein halbes Lot – und [war] am fünften Tage tot. ,war,Inflection,Lexeme,AUX
@@ -116,20 +116,20 @@ Nach [manchem] Fehler lernt man schneller.,manchem,Inflection,Lexeme,DET
 "nahm Ranzen, Pulverhorn und Flint und lief [hinaus] ins Feld geschwind",hinaus,Citation,Lexeme,ADV
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus [ins] Feld geschwind",ins,Citation,Construction,Fusion
 "nahm Ranzen, Pulverhorn und Flint und lief hinaus ins Feld [geschwind]",geschwind,Citation,Lexeme,ADV
-[Pass] auf dich auf!,pass auf,Inflection,Lexeme,VERB
-Pass [auf] dich auf!,auf,Citation,Lexeme,ADP
+[Pass] auf dich auf!,pass auf auf,Inflection,Lexeme,VERB
+Pass [auf] dich auf!,pass auf auf,Inflection,Lexeme,VERB
 Pass auf [dich] auf!,dich,Inflection,Lexeme,PRON
-Pass auf dich [auf]!,pass auf,Inflection,Lexeme,VERB
+Pass auf dich [auf]!,pass auf auf,Inflection,Lexeme,VERB
 [Schwimmen] ist gesund.,Schwimmen,Citation,Lexeme,NOUN
 Sein ständiges [Meckern] nervt.,Meckern,Citation,Lexeme,NOUN
-Sie [erinnert] sich an den Geruch.,erinnert,Inflection,Lexeme,VERB
+Sie [erinnert] sich an den Geruch.,erinnert sich an,Inflection,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Inflection,Lexeme,NOUN
 Sie ist [verheiratet].,verheiratet,Inflection,Lexeme,VERB
 Sie kam [lachend] herein.,lachend,Inflection,Lexeme,VERB
 Sie sprang [ins] kalte Wasser.,ins,Citation,Construction,Fusion
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Inflection,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Inflection,Lexeme,VERB
-Sie wurde um Geduld [gebeten].,gebeten,Inflection,Lexeme,VERB
+Sie wurde um Geduld [gebeten].,wurde um gebeten,Inflection,Lexeme,VERB
 "[Sieh] einmal, hier steht er, pfui, der Struwwelpeter!",sieh,Inflection,Lexeme,VERB
 "Sieh [einmal], hier steht er, pfui, der Struwwelpeter!",einmal,Citation,Lexeme,ADV
 "Sieh einmal, [hier] steht er, pfui, der Struwwelpeter!",hier,Citation,Lexeme,ADV

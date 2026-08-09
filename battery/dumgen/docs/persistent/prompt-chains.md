@@ -124,7 +124,9 @@ Dumgen aligns orthographies with Analysis Target members. It owns Segmented
 Sentence identity, the click and member indices, and exact attested member text.
 It zips target members with orthographies, constructs the Attestation, links the
 Surface to the Lemma, and returns the click-independent Attestation beside the
-Dumgen-owned interaction projection. Their member lists align positionally.
+Dumgen-owned interaction projection. Target indices, TARGET pairs,
+orthographies, Attestation members, and normalized Surface projection align
+one-to-one in source order.
 
 ### 3. Reading Resolution
 
@@ -194,9 +196,21 @@ level remain first-class targets.
 The current `HighLevelWholeUnit` policy selects a defensible conventionalized
 unit containing the click, including proverbs, discourse formulae such as
 `Guten Morgen`, support-verb Collocations such as `eine Entscheidung treffen`,
-and separable verbs. Otherwise it selects the word-level Lexeme. It never
-selects a Morpheme; a future morpheme policy will handle that through
-drill-down.
+and separable verbs. For German VERBs it also selects every realized fixed
+component: governed prepositions, inherently reflexive pronouns, detached
+separable members, and perfect/future/passive auxiliaries. It excludes modals
+with lexical verbs, copulas with predicates, free arguments, contextual
+reflexives, adjuncts, and modifiers. Otherwise it selects the word-level
+Lexeme. It never selects a Morpheme; a future morpheme policy will handle that
+through drill-down.
+
+The private grammar output returns one positionally aligned `normalizedMembers`
+entry per target member. Dumgen validates those entries and constructs the
+Surface's `normalizedSurface` by joining them with one space. Expanding fixed
+membership therefore intentionally changes affected Surface identities. The
+lexical head still owns VERB inflectional features and
+the Lemma retains its dictionary `canonicalForm`; analytic auxiliaries do not
+donate finite features or rename the Lemma.
 
 Target markup fixes the resolution level. A whole-unit target on `eine
 Entscheidung treffen` resolves its `Phraseme/Collocation` Lemma. An explicit

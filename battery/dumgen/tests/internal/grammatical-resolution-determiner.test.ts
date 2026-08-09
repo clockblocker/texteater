@@ -114,7 +114,7 @@ describe("Lexeme/DET route-local corpus", () => {
 		);
 		expect(normalizedPrompt).toContain("Final self-check before returning");
 		expect(normalizedPrompt).toContain(
-			"do not copy lemma.canonicalForm into normalizedSurface",
+			"do not copy lemma.canonicalForm into normalizedMembers",
 		);
 		expect(normalizedPrompt).toContain(
 			"A nullable field is still mandatory in its selected schema object",

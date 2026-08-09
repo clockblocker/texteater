@@ -148,31 +148,6 @@ describe("German Grammatical Resolution inventory", () => {
 		}
 	});
 
-	test("keeps Lexeme/PUNCT explicitly NotImplemented without a grammar call", async () => {
-		const { pending, sdk } = queueSdk([
-			{
-				decision: "Resolved",
-				target: {
-					family: "Lexeme",
-					kind: "PUNCT",
-					additionalMemberSegmentIndices: [],
-				},
-			},
-		]);
-
-		const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
-			sentence: sentence(),
-			clickedSegmentIndex: 0,
-		});
-
-		expect(result).toEqual({
-			decision: "NotImplemented",
-			language: "de",
-			route: { family: "Lexeme", kind: "PUNCT" },
-		});
-		expect(pending).toHaveLength(0);
-	});
-
 	test("constructs a linked Attestation through a newly enabled Construction route", async () => {
 		const { pending, sdk } = queueSdk([
 			{
@@ -189,8 +164,8 @@ describe("German Grammatical Resolution inventory", () => {
 					memberOrthographies: ["Standard"],
 					lemma: { canonicalForm: "im", coreFeatures: {} },
 					realizationCoverage: "Full",
+					normalizedMembers: ["im"],
 					surface: {
-						normalizedSurface: "im",
 						spelling: "Canonical",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
@@ -237,8 +212,8 @@ describe("German Grammatical Resolution inventory", () => {
 				memberOrthographies: ["Standard"],
 				lemma: { canonicalForm: "im", coreFeatures: {} },
 				realizationCoverage: "Full",
+				normalizedMembers: ["im"],
 				surface: {
-					normalizedSurface: "im",
 					spelling: "Canonical",
 					surfaceKind: "Citation",
 					surfaceFeatures: { historicalStatus: null },
@@ -268,14 +243,19 @@ describe("German Grammatical Resolution inventory", () => {
 		const proverbGenerated = proverbPrompt.outputSchema.parse({
 			decision: "Resolved",
 			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
+				memberOrthographies: [
+					"Standard",
+					"Standard",
+					"Standard",
+					"Standard",
+				],
 				lemma: {
 					canonicalForm: "Ende gut, alles gut",
 					coreFeatures: {},
 				},
 				realizationCoverage: "Full",
+				normalizedMembers: ["Ende", "gut", "alles", "gut"],
 				surface: {
-					normalizedSurface: "Ende gut alles gut",
 					spelling: "Canonical",
 					surfaceKind: "Citation",
 					surfaceFeatures: null,
@@ -283,7 +263,10 @@ describe("German Grammatical Resolution inventory", () => {
 			},
 		});
 		const proverb = proverbPrompt.projectOutput(
-			{ markedContext: "<TARGET>Ende</TARGET> <TARGET>gut</TARGET>" },
+			{
+				markedContext:
+					"<TARGET>Ende</TARGET> <TARGET>gut</TARGET> <TARGET>alles</TARGET> <TARGET>gut</TARGET>",
+			},
 			proverbGenerated,
 		);
 

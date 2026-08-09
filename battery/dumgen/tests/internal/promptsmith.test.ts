@@ -24,6 +24,7 @@ import {
 	deNounModelInflectionSurfaceSchema,
 	deNounModelLemmaSchema,
 } from "../../src/schema/de-noun-codecs";
+import { normalizedMembersSchema } from "../../src/schema/normalized-surface-projection";
 
 describe("Prompt Assembly", () => {
 	test("renders the stable batch-only Intake contract", () => {
@@ -175,10 +176,43 @@ describe("German prompt projections", () => {
 			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN.prompt.outputSchema.shape.resolution.unwrap();
 
 		expect(resolvedSchema.shape.lemma).toBe(deNounModelLemmaSchema);
-		expect(resolvedSchema.shape.surface.options).toEqual([
-			deNounModelCitationSurfaceSchema,
-			deNounModelInflectionSurfaceSchema,
+		expect(resolvedSchema.shape.normalizedMembers).toBe(
+			normalizedMembersSchema,
+		);
+		const [citationSurface, inflectionSurface] =
+			resolvedSchema.shape.surface.options;
+		expect(Object.keys(citationSurface.shape)).toEqual([
+			"spelling",
+			"surfaceKind",
+			"surfaceFeatures",
 		]);
+		expect(citationSurface.shape.spelling).toBe(
+			deNounModelCitationSurfaceSchema.shape.spelling,
+		);
+		expect(citationSurface.shape.surfaceKind).toBe(
+			deNounModelCitationSurfaceSchema.shape.surfaceKind,
+		);
+		expect(citationSurface.shape.surfaceFeatures).toBe(
+			deNounModelCitationSurfaceSchema.shape.surfaceFeatures,
+		);
+		expect(Object.keys(inflectionSurface.shape)).toEqual([
+			"spelling",
+			"surfaceKind",
+			"surfaceFeatures",
+			"inflectionalFeatures",
+		]);
+		expect(inflectionSurface.shape.spelling).toBe(
+			deNounModelInflectionSurfaceSchema.shape.spelling,
+		);
+		expect(inflectionSurface.shape.surfaceKind).toBe(
+			deNounModelInflectionSurfaceSchema.shape.surfaceKind,
+		);
+		expect(inflectionSurface.shape.surfaceFeatures).toBe(
+			deNounModelInflectionSurfaceSchema.shape.surfaceFeatures,
+		);
+		expect(inflectionSurface.shape.inflectionalFeatures).toBe(
+			deNounModelInflectionSurfaceSchema.shape.inflectionalFeatures,
+		);
 		expect(
 			PROMPT_CATALOG.laboratory.readingResolution.de.prompt.inputSchema.shape.lemma.safeParse(
 				"Bank",

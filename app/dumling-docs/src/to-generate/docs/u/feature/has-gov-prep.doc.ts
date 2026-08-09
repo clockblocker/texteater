@@ -29,7 +29,7 @@ If \`Lemma.coreFeatures.hasGovPrep\` is absent or \`undefined\`, the Lemma is tr
 			body: `
 Use \`hasGovPrep\` when the Lemma lexically selects a particular preposition in its complementation pattern, as in English \`depend on\` or German \`warten auf\`.
 
-The preposition is recorded as part of the Lemma's argument-structure behavior even when the selected token itself is only the verb form, as in \`wartet\` or \`gebeten\`.
+When that preposition is realized in a German high-level target, it is an ordered Attestation member as well as a Lemma feature. Free prepositional adjuncts and the preposition's complement remain outside the target.
 `,
 		},
 		{

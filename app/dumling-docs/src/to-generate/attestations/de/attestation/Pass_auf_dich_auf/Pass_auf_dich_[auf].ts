@@ -10,11 +10,15 @@ const occurrenceAttestation = {
 			attested: "auf",
 			orthography: "Standard",
 		},
+		{
+			attested: "auf",
+			orthography: "Standard",
+		},
 	],
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "pass auf",
+		normalizedSurface: "pass auf auf",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -45,6 +49,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Pass auf dich [auf]!",
 	classifierNotes:
-		'The detached prefix token also points to the verbal surface `pass auf`; the governed preposition is kept separately on the Lemma as `hasGovPrep: "auf"`.',
+		"The detached-prefix click returns the same three-member verbal occurrence: Pass, governed auf, and detached-prefix auf in source order.",
 	isVerified: true,
 } as const;

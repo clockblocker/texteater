@@ -40,7 +40,7 @@ export const coreFeaturesAndOrthographyCases = defineGoldenCaseCollection(
 				},
 				idealOutput: resolved("und", { conjType: null }, "Typo"),
 				explanation:
-					"Repair the transposition only in normalizedSurface and canonicalForm; the marked member is a Typo.",
+					"Repair the transposition only in normalizedMembers and canonicalForm; the marked member is a Typo.",
 			},
 			"grammar-de-cconj-typo-odre": {
 				input: {
@@ -74,8 +74,8 @@ export const coreFeaturesAndOrthographyCases = defineGoldenCaseCollection(
 					resolution: {
 						memberOrthographies: ["Standard"],
 						realizationCoverage: "Full",
+						normalizedMembers: ["allein"],
 						surface: {
-							normalizedSurface: "allein",
 							spelling: "Canonical",
 							surfaceKind: "Citation",
 							surfaceFeatures: {
@@ -99,10 +99,10 @@ export const coreFeaturesAndOrthographyCases = defineGoldenCaseCollection(
 );
 
 function resolved(
-	normalizedSurface: string,
+	normalizedMembers: string,
 	coreFeatures: { readonly conjType: "Comp" | null },
 	orthography: "Standard" | "Typo" = "Standard",
-	canonicalForm = normalizedSurface,
+	canonicalForm = normalizedMembers,
 	spelling: "Canonical" | "Variant" = "Canonical",
 ) {
 	return {
@@ -110,8 +110,8 @@ function resolved(
 		resolution: {
 			memberOrthographies: [orthography],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [normalizedMembers],
 			surface: {
-				normalizedSurface,
 				spelling,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,

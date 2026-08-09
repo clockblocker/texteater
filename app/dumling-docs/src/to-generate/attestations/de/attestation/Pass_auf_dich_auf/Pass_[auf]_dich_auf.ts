@@ -3,6 +3,14 @@ import type { Attestation } from "dumling/types";
 const occurrenceAttestation = {
 	members: [
 		{
+			attested: "Pass",
+			orthography: "Standard",
+		},
+		{
+			attested: "auf",
+			orthography: "Standard",
+		},
+		{
 			attested: "auf",
 			orthography: "Standard",
 		},
@@ -10,31 +18,37 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "auf",
+		normalizedSurface: "pass auf auf",
 		spelling: "Canonical",
-		surfaceKind: "Citation",
+		surfaceKind: "Inflection",
+		inflectionalFeatures: {
+			mood: "Imp",
+			number: "Sing",
+			person: "2",
+			verbForm: "Fin",
+			tense: null,
+			voice: null,
+		},
 		lemma: {
 			language: "de",
-			canonicalForm: "auf",
+			canonicalForm: "aufpassen",
 			family: "Lexeme",
-			kind: "ADP",
+			kind: "VERB",
 			coreFeatures: {
-				adpType: "Prep",
-				abbr: null,
-				extPos: null,
-				foreign: null,
-				governedCase: null,
-				partType: null,
+				hasGovPrep: "auf",
+				hasSepPrefix: "auf",
+				lexicallyReflexive: null,
+				verbType: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Citation", "Lexeme", "ADP">;
+} satisfies Attestation<"de", "Inflection", "Lexeme", "VERB">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Pass [auf] dich auf!",
 	classifierNotes:
-		"The governed preposition is a standalone `auf` Surface. It is not a member of the separable verb occurrence `Pass … auf`; future valency may relate it to `aufpassen`.",
+		"The governed-preposition click returns the same three-member aufpassen occurrence; the equal auf strings remain distinct by source position and role.",
 	isVerified: true,
 } as const;

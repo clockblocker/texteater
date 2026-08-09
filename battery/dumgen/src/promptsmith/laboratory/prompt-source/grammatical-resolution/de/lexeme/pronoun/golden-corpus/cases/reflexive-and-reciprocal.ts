@@ -12,7 +12,7 @@ export const reflexiveAndReciprocalCases = defineGoldenCaseCollection(
 			"grammar-de-pron-reflexive-sich": {
 				input: { markedContext: "Er wäscht <TARGET>sich</TARGET>." },
 				idealOutput: inflection({
-					normalizedSurface: "sich",
+					normalizedMembers: ["sich"],
 					canonicalForm: "sich",
 					coreFeatures: core("Prs", { person: "3" }),
 					inflectionalFeatures: {
@@ -26,7 +26,7 @@ export const reflexiveAndReciprocalCases = defineGoldenCaseCollection(
 			"grammar-de-pron-nonreflexive-mich": {
 				input: { markedContext: "Sie sieht <TARGET>mich</TARGET>." },
 				idealOutput: inflection({
-					normalizedSurface: "mich",
+					normalizedMembers: ["mich"],
 					canonicalForm: "ich",
 					coreFeatures: core("Prs", { person: "1" }),
 					inflectionalFeatures: {
@@ -41,7 +41,7 @@ export const reflexiveAndReciprocalCases = defineGoldenCaseCollection(
 			"grammar-de-pron-reflexive-mich": {
 				input: { markedContext: "Ich wasche <TARGET>mich</TARGET>." },
 				idealOutput: inflection({
-					normalizedSurface: "mich",
+					normalizedMembers: ["mich"],
 					canonicalForm: "ich",
 					coreFeatures: core("Prs", { person: "1" }),
 					inflectionalFeatures: {
@@ -58,7 +58,7 @@ export const reflexiveAndReciprocalCases = defineGoldenCaseCollection(
 					markedContext: "Sie begrüßten <TARGET>einander</TARGET>.",
 				},
 				idealOutput: citation({
-					normalizedSurface: "einander",
+					normalizedMembers: ["einander"],
 					canonicalForm: "einander",
 					coreFeatures: core("Rcp"),
 				}),

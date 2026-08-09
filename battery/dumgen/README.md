@@ -55,7 +55,10 @@ The module owns each stage behind one batch-only operation:
    Source Segmentation. There is no second segmentation model call.
 3. For German, classify one click with
    `Target Classification<de, HighLevelWholeUnit>` and dispatch through
-   grammatical routes for the target's German Lemma Family and Kind.
+   grammatical routes for the target's German Lemma Family and Kind. Fixed
+   realized governed prepositions, inherent reflexives, separable members, and
+   perfect/future/passive auxiliaries remain positionally aligned through the
+   target, Attestation, and normalized Surface.
 4. Resolve the selected Lemma against learner Reading candidates through the
    language-routed Reading operation.
 5. Validate projected grammatical results with Dumling's concrete schemas.

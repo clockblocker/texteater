@@ -35,7 +35,7 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 					"Numeral-Abkürzung für Tausend: <TARGET>T</TARGET>",
 			},
 			idealOutput: citation({
-				normalizedSurface: "T",
+				normalizedMembers: ["T"],
 				canonicalForm: "Tausend",
 				coreFeatures: { ...cardinalCore, abbr: "Yes" },
 			}),

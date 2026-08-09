@@ -33,8 +33,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["der"],
 					surface: {
-						normalizedSurface: "der",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -67,8 +67,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["meinem"],
 					surface: {
-						normalizedSurface: "meinem",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -103,8 +103,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["eurem"],
 					surface: {
-						normalizedSurface: "eurem",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -139,8 +139,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["irgendein"],
 					surface: {
-						normalizedSurface: "irgendein",
 						spelling: "Canonical",
 						surfaceKind: "Citation",
 						surfaceFeatures: null,
@@ -164,8 +164,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["jener"],
 					surface: {
-						normalizedSurface: "jener",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -194,8 +194,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["einen"],
 					surface: {
-						normalizedSurface: "einen",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -227,8 +227,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["diesem"],
 					surface: {
-						normalizedSurface: "diesem",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -255,8 +255,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["welchen"],
 					surface: {
-						normalizedSurface: "welchen",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -281,8 +281,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["kein"],
 					surface: {
-						normalizedSurface: "kein",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -307,8 +307,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["alle"],
 					surface: {
-						normalizedSurface: "alle",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -333,8 +333,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["beide"],
 					surface: {
-						normalizedSurface: "beide",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -363,8 +363,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["deinen"],
 					surface: {
-						normalizedSurface: "deinen",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -398,8 +398,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["unserem"],
 					surface: {
-						normalizedSurface: "unserem",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -432,8 +432,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["seinen"],
 					surface: {
-						normalizedSurface: "seinen",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,
@@ -468,8 +468,8 @@ export const coreFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				resolution: {
 					memberOrthographies: ["Standard"],
 					realizationCoverage: "Full",
+					normalizedMembers: ["Ihrem"],
 					surface: {
-						normalizedSurface: "Ihrem",
 						spelling: "Canonical",
 						surfaceKind: "Inflection",
 						surfaceFeatures: null,

@@ -6,6 +6,10 @@ import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
 import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
 import { isGermanHighLevelRoute } from "../schema/german-high-level-routes";
+import {
+	constructNormalizedSurface,
+	NormalizedSurfaceProjectionError,
+} from "../schema/normalized-surface-projection";
 import { segmentSource } from "../source-segmentation";
 import type { SourceSegmentationTrace } from "../source-segmentation/contracts";
 import type {
@@ -480,8 +484,24 @@ function constructAttestation(
 		{ readonly decision: "Resolved" }
 	>,
 ): Attestation<"de"> {
+	let normalizedSurface: string;
+	try {
+		normalizedSurface = constructNormalizedSurface({
+			attestedMembers: target.memberSegmentIndices.map(
+				(segmentIndex) => sentence.segments[segmentIndex]?.text ?? "",
+			),
+			normalizedMembers: resolution.normalizedMembers,
+			memberOrthographies: resolution.memberOrthographies,
+		});
+	} catch (cause) {
+		if (cause instanceof NormalizedSurfaceProjectionError) {
+			throw invalidOutput(cause.message, cause);
+		}
+		throw cause;
+	}
 	const linkedSurface = {
 		...resolution.surface,
+		normalizedSurface,
 		lemma: resolution.lemma,
 	} as Surface<"de">;
 	const value = {

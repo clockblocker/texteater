@@ -10,7 +10,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-typo-koelnn": {
 			input: { markedContext: "Wir fahren nach <TARGET>Kölnn</TARGET>." },
 			idealOutput: inflection({
-				normalizedSurface: "Köln",
+				normalizedMembers: ["Köln"],
 				case: "Dat",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
@@ -23,7 +23,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-typo-muenchn": {
 			input: { markedContext: "Wir wohnen in <TARGET>Münchn</TARGET>." },
 			idealOutput: inflection({
-				normalizedSurface: "München",
+				normalizedMembers: ["München"],
 				case: "Dat",
 				number: "Sing",
 				coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
@@ -35,7 +35,7 @@ export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-propn-canonical-acronym-nato": {
 			input: { markedContext: "<TARGET>NATO</TARGET> tagt heute." },
 			idealOutput: inflection({
-				normalizedSurface: "NATO",
+				normalizedMembers: ["NATO"],
 				case: "Nom",
 				number: "Sing",
 				coreFeatures: {

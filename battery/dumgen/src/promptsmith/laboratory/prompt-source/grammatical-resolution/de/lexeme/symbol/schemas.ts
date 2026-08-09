@@ -1,9 +1,10 @@
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
+import {
+	normalizedMembersSchema,
+	type PromptInputSchema,
+	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
@@ -49,11 +50,11 @@ export const modelInflectionalFeaturesSchema = z.union([
 ]);
 
 export const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
-	.omit({ language: true, lemma: true })
+	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
 
 export const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
-	.omit({ language: true, lemma: true })
+	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({
 		surfaceFeatures: modelSurfaceFeaturesSchema,
 		inflectionalFeatures: modelInflectionalFeaturesSchema,
@@ -68,6 +69,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: z.union([
 				modelCitationSurfaceSchema,

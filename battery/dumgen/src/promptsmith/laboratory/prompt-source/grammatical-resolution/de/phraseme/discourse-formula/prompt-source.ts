@@ -18,7 +18,7 @@ sentence or request, a restricted but compositional Collocation, a figurative
 Idiom, a generalizing Proverb or Aphorism, or an arbitrary quotation.
 
 The input has already passed the shared deterministic TARGET syntax preflight.
-Decide semantic scope only. All present canonical lexical members of one
+Decide semantic scope only. All present canonical fixed members of one
 formula occurrence must be TARGET-marked, and every marked member must belong
 to that same occurrence. If a present formula member is unmarked, the target
 underselects the formula and is Unresolved; for example, marking only Schönen
@@ -26,16 +26,17 @@ while Tag remains present but unmarked is not a Full Surface. Also return
 Unresolved for repeated occurrences, unrelated targets, or marked surrounding
 material. For a Resolved result, emit exactly one memberOrthographies value per
 literal TARGET pair in textual order. Never invent an orthography value for an
-unmarked member or insert that member into normalizedSurface.
+unmarked member or insert that member into normalizedMembers.
 
 German Phraseme/DiscourseFormula has Citation Surfaces only. Every Resolved
 result therefore uses surfaceKind Citation and has no inflectional features.
-normalizedSurface is derived from only the marked contextual members in
-attested order, joined with one space. Normalize ordinary utterance-initial
+normalizedMembers contains exactly one normalized string for every marked
+contextual member in attested order, without leading, trailing, or repeated
+whitespace. Normalize ordinary utterance-initial
 casing, repair actual spelling or inappropriate casing, and preserve required
 German lexical noun capitalization such as Morgen, Wiedersehen, Dank, Reise,
 or Güte. Do not blindly copy the lowercase Lemma canonicalForm into
-normalizedSurface. Standard includes ordinary utterance-initial capitalization;
+normalizedMembers. Standard includes ordinary utterance-initial capitalization;
 Typo marks a real spelling error or inappropriate casing. spelling is
 Canonical, realizationCoverage is Full, and surfaceFeatures is null for the
 supported contemporary formulas.

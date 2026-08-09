@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
 	asObjectSchema,
 	grammaticalResolutionMarkedContextSchema,
+	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
@@ -132,9 +133,13 @@ const schemaProjectionLemma = deIdiomLemmaCodec.decode({
 });
 
 export const deIdiomModelCitationSurfaceSchema =
-	buildDeIdiomCitationSurfaceCodec(schemaProjectionLemma).in;
+	buildDeIdiomCitationSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 export const deIdiomModelInflectionSurfaceSchema =
-	buildDeIdiomInflectionSurfaceCodec(schemaProjectionLemma).in;
+	buildDeIdiomInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
+		normalizedSurface: true,
+	});
 
 export const modelCitationSurfaceSchema = deIdiomModelCitationSurfaceSchema;
 export const modelInflectionSurfaceSchema = deIdiomModelInflectionSurfaceSchema;
@@ -148,6 +153,7 @@ export const outputSchema = z.strictObject({
 	resolution: z
 		.strictObject({
 			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+			normalizedMembers: normalizedMembersSchema,
 			realizationCoverage: z.enum(["Full", "Partial"]),
 			surface: z.union([
 				deIdiomModelCitationSurfaceSchema,

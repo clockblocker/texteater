@@ -1,25 +1,23 @@
 import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
 
-export const GERMAN_HIGH_LEVEL_ROUTES = {
-	Lexeme: [
-		"ADJ",
-		"ADP",
-		"ADV",
-		"AUX",
-		"CCONJ",
-		"DET",
-		"INTJ",
-		"NOUN",
-		"NUM",
-		"PART",
-		"PRON",
-		"PROPN",
-		"PUNCT",
-		"SCONJ",
-		"SYM",
-		"VERB",
-		"X",
-	],
+const LEXEME_KINDS_BEFORE_PUNCT = [
+	"ADJ",
+	"ADP",
+	"ADV",
+	"AUX",
+	"CCONJ",
+	"DET",
+	"INTJ",
+	"NOUN",
+	"NUM",
+	"PART",
+	"PRON",
+	"PROPN",
+] as const;
+const LEXEME_KINDS_AFTER_PUNCT = ["SCONJ", "SYM", "VERB", "X"] as const;
+
+export const GERMAN_REACHABLE_HIGH_LEVEL_ROUTES = {
+	Lexeme: [...LEXEME_KINDS_BEFORE_PUNCT, ...LEXEME_KINDS_AFTER_PUNCT],
 	Phraseme: [
 		"Aphorism",
 		"Collocation",
@@ -34,6 +32,15 @@ export const GERMAN_HIGH_LEVEL_ROUTES = {
 		"Morpheme"
 	>]: readonly LemmaKindFor<"de", Family>[];
 };
+
+export const GERMAN_HIGH_LEVEL_ROUTES = {
+	...GERMAN_REACHABLE_HIGH_LEVEL_ROUTES,
+	Lexeme: [
+		...LEXEME_KINDS_BEFORE_PUNCT,
+		"PUNCT",
+		...LEXEME_KINDS_AFTER_PUNCT,
+	],
+} as const;
 
 export type GermanHighLevelFamily = keyof typeof GERMAN_HIGH_LEVEL_ROUTES;
 export type GermanHighLevelKind<Family extends GermanHighLevelFamily> =

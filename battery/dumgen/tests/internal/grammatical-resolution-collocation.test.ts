@@ -89,15 +89,15 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		expect(prompt).toContain("no proven positive Partial policy");
 		expect(prompt).toContain("a present canonical member is unmarked");
 		expect(prompt).toMatch(
-			/Unmarked arguments and modifiers may intervene between marked\s+members/u,
+			/Unmarked free\s+arguments and modifiers may intervene between marked members/u,
 		);
 		expect(prompt).toMatch(
 			/A determiner in the settled\s+canonicalForm is a canonical member/u,
 		);
 		expect(prompt).toContain("Never borrow grammatical features");
-		expect(prompt).toContain("A marked support verb alone");
+		expect(prompt).toMatch(/A marked\s+support verb alone/u);
 		expect(prompt).toContain(
-			"normalizedSurface contains only normalized attested",
+			"normalizedMembers contains exactly one normalized string",
 		);
 		expect(prompt).toContain("<TARGET>trifft</TARGET>");
 		expect(prompt).toContain("<TARGET>Frage</TARGET>");
@@ -141,7 +141,7 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			}
 			return {
 				normalizedSurface:
-					idealOutput.resolution.surface.normalizedSurface,
+					idealOutput.resolution.normalizedMembers.join(" "),
 				inflectionalFeatures:
 					idealOutput.resolution.surface.inflectionalFeatures,
 				canonicalForm: idealOutput.resolution.lemma.canonicalForm,
@@ -179,7 +179,7 @@ describe("Phraseme/Collocation route-local corpus", () => {
 		expect(
 			regressionPayload("grammar-de-coll-anspruch-participle-full"),
 		).toEqual({
-			normalizedSurface: "in Anspruch genommen",
+			normalizedSurface: "hat in Anspruch genommen",
 			inflectionalFeatures: {
 				aspect: null,
 				gender: null,
@@ -244,8 +244,8 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 				realizationCoverage: "Full",
+				normalizedMembers: ["trifft", "eine", "Entscheidung"],
 				surface: {
-					normalizedSurface: "trifft eine Entscheidung",
 					surfaceKind: "Inflection",
 				},
 				lemma: {
@@ -261,9 +261,8 @@ describe("Phraseme/Collocation route-local corpus", () => {
 			resolution: {
 				memberOrthographies: ["Standard", "Standard", "Standard"],
 				realizationCoverage: "Full",
-				surface: {
-					normalizedSurface: "stellen zur Verfügung",
-				},
+				normalizedMembers: ["stellen", "zur", "Verfügung"],
+				surface: {},
 				lemma: { canonicalForm: "zur Verfügung stellen" },
 			},
 		});

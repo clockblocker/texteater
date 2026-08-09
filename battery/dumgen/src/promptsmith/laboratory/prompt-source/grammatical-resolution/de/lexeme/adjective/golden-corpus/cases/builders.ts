@@ -20,7 +20,7 @@ export const unmarkedCore = {
 } satisfies CoreFeatures;
 
 export function citation(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly coreFeatures?: CoreFeatures;
 }) {
@@ -29,8 +29,8 @@ export function citation(args: {
 		resolution: {
 			memberOrthographies: ["Standard" as const],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Citation" as const,
 				surfaceFeatures: null,
@@ -44,7 +44,7 @@ export function citation(args: {
 }
 
 export function inflection(args: {
-	readonly normalizedSurface: string;
+	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly inflectionalFeatures: InflectionalFeatures;
 	readonly coreFeatures?: CoreFeatures;
@@ -57,8 +57,8 @@ export function inflection(args: {
 				...(args.memberOrthographies ?? ["Standard" as const]),
 			],
 			realizationCoverage: "Full" as const,
+			normalizedMembers: [...args.normalizedMembers],
 			surface: {
-				normalizedSurface: args.normalizedSurface,
 				spelling: "Canonical" as const,
 				surfaceKind: "Inflection" as const,
 				surfaceFeatures: null,

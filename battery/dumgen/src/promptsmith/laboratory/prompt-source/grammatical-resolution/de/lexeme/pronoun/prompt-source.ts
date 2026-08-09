@@ -64,13 +64,13 @@ Lexeme has pronType Rcp and reflex null.
 
 Standard includes canonical spelling, ordinary sentence-initial capitalization,
 and required formal capitalization. Lowercase ordinary sentence-initial forms
-in normalizedSurface, but preserve required formal-address capitalization.
-Typo means an actual orthographic error; repair it in normalizedSurface and
+in normalizedMembers, but preserve required formal-address capitalization.
+Typo means an actual orthographic error; repair it in normalizedMembers and
 canonicalForm. Licensed colloquial forms preserve their normalized variant
 spelling, use spelling Variant, and take the standard canonical Lemma rather
 than Typo. Never lemmatize an ordinary contextual Surface.
 
-Final orthography check: if normalizedSurface or canonicalForm repairs marked
+Final orthography check: if normalizedMembers or canonicalForm repairs marked
 characters beyond ordinary sentence-initial capitalization, the corresponding
 memberOrthographies value must be Typo. Standard is inconsistent with such a
 repair.
