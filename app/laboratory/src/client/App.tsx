@@ -1,9 +1,7 @@
 import {
-	BracesIcon,
 	CheckIcon,
 	CircleAlertIcon,
 	CircleDotIcon,
-	DatabaseZapIcon,
 	MousePointerClickIcon,
 	PlayIcon,
 	RotateCcwIcon,
@@ -336,44 +334,7 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-5 overflow-auto bg-muted/10 p-4 sm:p-6">
-			<div className="flex flex-wrap items-start justify-between gap-4">
-				<div className="flex flex-col gap-1">
-					<div className="flex items-center gap-2">
-						<p className="text-xs font-medium text-muted-foreground">
-							Input
-						</p>
-						<Badge variant="secondary">German + Hebrew</Badge>
-					</div>
-					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Source text
-					</h2>
-				</div>
-				<div className="flex flex-wrap items-center justify-end gap-2">
-					<Badge variant="outline">
-						{state.sessionId
-							? `Session ${state.sessionId.slice(0, 8)}`
-							: "Loading session"}
-					</Badge>
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						onClick={() => void state.resetSession()}
-						disabled={
-							state.busy ||
-							state.resolutionBusy ||
-							state.resetBusy
-						}
-					>
-						{state.resetBusy ? (
-							<Spinner data-icon="inline-start" />
-						) : (
-							<RotateCcwIcon data-icon="inline-start" />
-						)}
-						{state.resetBusy ? "Resetting…" : "Reset session"}
-					</Button>
-				</div>
-			</div>
+			<h2 className="sr-only">Source text</h2>
 
 			<Field className="min-h-0 flex-1">
 				<FieldLabel className="sr-only" htmlFor="laboratory-source">
@@ -394,40 +355,6 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 				/>
 			</Field>
 
-			<div className="flex flex-wrap items-center justify-between gap-3">
-				<p className="text-sm text-muted-foreground" aria-live="polite">
-					{hasSelection
-						? `${state.text.length} characters · ${selectedText.length} selected for segmentation`
-						: state.text.length > 0
-							? `${state.text.length} characters · select one sentence to continue`
-							: "Paste a source text to continue"}
-				</p>
-				<div className="group relative">
-					<Button
-						type="button"
-						onClick={() => void state.segment(selectedText)}
-						disabled={!hasSelection || state.busy}
-						aria-describedby="run-segmentation-shortcut"
-						aria-keyshortcuts="Meta+Shift+S"
-					>
-						{state.busy ? (
-							<Spinner data-icon="inline-start" />
-						) : (
-							<PlayIcon data-icon="inline-start" />
-						)}
-						{state.busy ? "Running…" : "Segment selection"}
-					</Button>
-					<div
-						id="run-segmentation-shortcut"
-						role="tooltip"
-						className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
-					>
-						Segment selected sentence
-						<span className="ml-2 font-mono opacity-80">⌘⇧S</span>
-					</div>
-				</div>
-			</div>
-
 			{state.error ? (
 				<Alert variant="destructive">
 					<CircleAlertIcon />
@@ -442,6 +369,62 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 					<AlertDescription>{state.sessionError}</AlertDescription>
 				</Alert>
 			) : null}
+
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<p className="text-sm text-muted-foreground" aria-live="polite">
+					{hasSelection
+						? `${state.text.length} characters · ${selectedText.length} selected for segmentation`
+						: state.text.length > 0
+							? `${state.text.length} characters · select one sentence to continue`
+							: "Paste a source text to continue"}
+				</p>
+				<div className="flex flex-wrap items-center justify-end gap-2">
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={() => void state.resetSession()}
+						disabled={
+							state.busy ||
+							state.resolutionBusy ||
+							state.resetBusy
+						}
+					>
+						{state.resetBusy ? (
+							<Spinner data-icon="inline-start" />
+						) : (
+							<RotateCcwIcon data-icon="inline-start" />
+						)}
+						{state.resetBusy ? "Resetting…" : "Reset session"}
+					</Button>
+					<div className="group relative">
+						<Button
+							type="button"
+							onClick={() => void state.segment(selectedText)}
+							disabled={!hasSelection || state.busy}
+							aria-describedby="run-segmentation-shortcut"
+							aria-keyshortcuts="Meta+Shift+S"
+						>
+							{state.busy ? (
+								<Spinner data-icon="inline-start" />
+							) : (
+								<PlayIcon data-icon="inline-start" />
+							)}
+							{state.busy ? "Running…" : "Segment selection"}
+						</Button>
+						<div
+							id="run-segmentation-shortcut"
+							role="tooltip"
+							className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+						>
+							Segment selected sentence
+							<span className="ml-2 font-mono opacity-80">
+								⌘⇧S
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 	);
 }
@@ -502,10 +485,8 @@ function Segments({ state }: { state: LaboratoryState }) {
 
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto p-4">
-			<div className="flex items-end justify-between gap-4">
-				<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-					Intake &amp; segmentation
-				</h2>
+			<h2 className="sr-only">Intake &amp; segmentation</h2>
+			<div className="flex justify-end">
 				<Badge variant={segments.length > 0 ? "secondary" : "outline"}>
 					{state.result?.decision ?? "Waiting"}
 				</Badge>
@@ -666,25 +647,7 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 
 	return (
 		<section className="flex h-full min-h-0 flex-col gap-4 overflow-auto bg-muted/10 p-4 sm:p-6">
-			<div className="flex flex-wrap items-start justify-between gap-4">
-				<div className="flex flex-col gap-1">
-					<p className="text-xs font-medium text-muted-foreground">
-						Post-click chain
-					</p>
-					<h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-						Resolution stages
-					</h2>
-					{resolved ? (
-						<p className="text-sm text-muted-foreground">
-							Click #{resolved.interaction.clickedSegmentIndex} is
-							interaction state outside the shared Attestation.
-						</p>
-					) : null}
-				</div>
-				{resolution ? (
-					<ResolutionBadges resolution={resolution} />
-				) : null}
-			</div>
+			<h2 className="sr-only">Resolution stages</h2>
 
 			{state.resolutionBusy ? (
 				<Empty className="min-h-48 flex-1 p-4">
@@ -804,61 +767,6 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 	);
 }
 
-function ResolutionBadges({
-	resolution,
-}: {
-	resolution: ClickResolutionResponse;
-}) {
-	const resolved = resolution.decision === "Resolved" ? resolution : null;
-	const interaction = resolved?.interaction ?? null;
-	const clickedOrthography = resolved
-		? orthographiesBySegmentIndex(resolved)[
-				resolved.interaction.clickedSegmentIndex
-			]
-		: undefined;
-	return (
-		<div className="flex flex-wrap items-center justify-end gap-2">
-			<Badge
-				variant={
-					resolution.decision === "Resolved"
-						? "secondary"
-						: resolution.decision === "NotImplemented"
-							? "outline"
-							: "destructive"
-				}
-			>
-				{resolution.decision}
-			</Badge>
-			{interaction ? (
-				<Badge variant="outline">
-					Click #{interaction.clickedSegmentIndex} ·{" "}
-					{clickedOrthography}
-				</Badge>
-			) : null}
-			<Badge
-				variant={
-					resolution.generation.cache === "member-hit"
-						? "default"
-						: "outline"
-				}
-				className={cn(
-					resolution.generation.cache === "member-hit" &&
-						"bg-emerald-700 text-white dark:bg-emerald-500 dark:text-emerald-950",
-				)}
-			>
-				<DatabaseZapIcon />
-				{resolution.generation.cache === "member-hit"
-					? "Member cache hit"
-					: "Fresh resolution"}
-			</Badge>
-			<Badge variant="outline">
-				{resolution.generation.modelCalls} model call
-				{resolution.generation.modelCalls === 1 ? "" : "s"}
-			</Badge>
-		</div>
-	);
-}
-
 function StagePanel({
 	label,
 	value,
@@ -872,16 +780,7 @@ function StagePanel({
 }) {
 	return (
 		<div className="flex flex-col gap-5">
-			<div className="flex items-center justify-between gap-3">
-				<p className="font-mono text-xs font-medium text-primary">
-					{label}
-				</p>
-				{stage ? (
-					<Badge variant="secondary">Complete</Badge>
-				) : (
-					<Badge variant="outline">Not reached</Badge>
-				)}
-			</div>
+			<h3 className="sr-only">{label}</h3>
 			{value === undefined ? (
 				<Alert variant="destructive">
 					<CircleAlertIcon />
@@ -902,34 +801,26 @@ function StageTrace({
 	stage: ClassificationStageResult | SegmentationStageResult;
 }) {
 	return (
-		<div className="flex flex-col gap-3 border-t pt-4">
-			<div className="flex flex-wrap items-center justify-between gap-2">
-				<div className="flex items-center gap-2">
-					<BracesIcon className="size-4 text-muted-foreground" />
-					<p className="text-xs font-semibold">Laboratory trace</p>
-				</div>
-				<Badge variant="outline" className="max-w-full font-mono">
-					<span className="truncate">{stage.prompt}</span>
-				</Badge>
-			</div>
-			<div className="grid gap-3 xl:grid-cols-2">
-				<JsonCard title="Minimal prompt input" value={stage.input} />
-				<JsonCard title="Validated model output" value={stage.output} />
-			</div>
-		</div>
+		<section
+			className="grid gap-3 border-t pt-4 xl:grid-cols-2"
+			aria-label={`Laboratory trace for ${stage.prompt}`}
+		>
+			<JsonCard title="Minimal prompt input" value={stage.input} />
+			<JsonCard title="Validated model output" value={stage.output} />
+		</section>
 	);
 }
 
 function JsonCard({ title, value }: { title: string; value: unknown }) {
 	return (
-		<div className="min-w-0 rounded-lg border bg-background/70">
-			<p className="border-b px-3 py-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-				{title}
-			</p>
+		<section
+			className="min-w-0 rounded-lg border bg-background/70"
+			aria-label={title}
+		>
 			<pre className="max-h-80 overflow-auto p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]">
 				{JSON.stringify(value, null, 2)}
 			</pre>
-		</div>
+		</section>
 	);
 }
 
