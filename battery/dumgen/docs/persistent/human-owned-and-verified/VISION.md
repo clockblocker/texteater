@@ -23,7 +23,7 @@ r hmi frfr
 
 DumXXX's notion of the "Segmentation" differs from the general linguistiscs. 
 
-As a learner-facing tool, we present the text as the sequence of smallest clickable units that corrspond to "the biggest semantic unit in Dumling".
+As a learner-facing tool, we present the text as the sequence of smallest clickable units that can point to the biggest applicable grammatical unit in Dumling.
 
 For example, in "[אֲנִי] [בַּ][בַּיִת]" the "בַּ" deserves to be a separate clickable unit (leading to the fusion of "בְּ־" and  "הַ")
 
@@ -53,13 +53,13 @@ TS Output: ```
 ### 1.1 Intake: "Stiching" + Target Language Resolution
 
 #### 1.1.1 Stiching
-In order to combat possible noise in the input, the Dumbling supports typos and varians, as well as the "partial" selections.
+In order to combat possible noise in the input, Dumling supports typo evidence, variant Surfaces, and Partial Attestations.
 
 To do that, however it expects all clickabe Segments to be "resolvable" as standalong unit.
 
 For example, "w" in "br a <target>w</target> tkae a w" is not a valid stadalone unit. It is not a Morpheme, Lexeme, etc. It's a "blown-off" finger from the valid unit of "braw"
 
-"w" in "w" in "br a w tkae a <target>w</target>" is as standalong unit. We can map it to a valid variant of a Noun "win". Which in this context is a partial selection (along with segmrnts for "tkae" and "w") of the incorrectly spelled version "tkae a w" of the slang phrare "take a w".
+"w" in "w" in "br a w tkae a <target>w</target>" is a standalone unit. Target Classification can decide whether it points to the word itself or participates with the segments for "tkae" and "a" in the incorrectly spelled slang phrase "take a w". Grammatical Resolution later records typo and realization-coverage evidence in an Attestation.
 
 The "stiching" is a step to make from 
 Input: ```
@@ -102,29 +102,28 @@ Although we would prefer to have A and B here, they could be later handeled in L
 C is a core reason this step exists. Hopefully, Intl.Segmenter (or some like Stanza) can help here
 
 
-## 2. Dumling resolution of a clicked segemnt
+## 2. Dumgen resolution of a clicked segemnt
 
-### 2.1 Selection / Target resolution
+### 2.1 Target Classification
 
-As a learner facing tool, we resolse the biggest semantic unit first 
+As a learner-facing tool, the initial high-level policy resolves the biggest applicable grammatical unit first.
 
-click on "Good" in "[Good] [morning], [mother]" we resolve as "Good morning"
+Click on "Good" in "[Good] [morning], [mother]" and the Analysis Target contains both "Good" and "morning", routed as Phraseme / DiscourseFormula.
 
-click on `heulte` in `Obwohl er anderer Meinung war, heulte er mit` we resolve to: `mit den Wölfen heulen`
+Click on `heulte` in `Obwohl er anderer Meinung war, heulte er mit` and the Analysis Target contains `heulte` and `mit`, routed as Phraseme / Idiom. It does not yet resolve the Lemma `mit den Wölfen heulen`.
 
-We are not shure if target resolution is: 
-A) 2 prompts (one picks all segments for the unit, teh clickled one is pointing to), the otehr resolves the POS
-B) 1 prompt for both thing in A
-C) 1 promot + some Stanza magic
+Target Classification is one policy-specific prompt after deterministic Source Segmentation. It receives the Segmented Sentence and clicked ResolvableText index, then returns exactly one internal Analysis Target or Unresolved.
 
-But we do know, that in the end  of 2.1 we should know:
-- Family / Kind of the targeted biggest semantic unit 
-- Indices of the segmets that are all facing to the same unit, the clicked segment was pointing to
+At the end of 2.1, the Analysis Target contains only:
+- Family / Kind of the targeted biggest applicable grammatical unit
+- ordered indices of the ResolvableText Segments that participate in that unit, including the clicked Segment
+
+It contains no Surface, Lemma, Attestation, sentence identity, or click provenance. The high-level policy never selects a Morpheme; lower-level drill-down uses a separate Target Classification policy.
 
 ### 2.2 Dumling (Grammatical) resolution 
-The system selects the approp promt for resolved {Lang, Family, Kind}, passess in the marked context `Obwohl er anderer Meinung war, <target>heulte</target> er <target>mit</target>` and recieves the structured dumling output for teh full resoluton 
+The system selects the appropriate prompt for the resolved {Lang, Family, Kind}, passes in the marked context `Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET>`, and receives the structured grammatical output used to construct a click-independent Attestation linked to its Surface and Lemma.
 
-Once again, we are not shure if the "Normal form of the lemma" (ie `mit den Wölfen heulen`) could be resolved in 2.1 or we have to do that in 2.2 
+The Lemma's canonical form (for example, `mit den Wölfen heulen`) is resolved in 2.2, not in Target Classification.
 
 ### 2.3 Reading (Meaning) resolution 
 This is how we resolve holonyms / plasemy. The "emoji as semantic identity" + "do not split semntic penneis policy".
@@ -148,6 +147,6 @@ Read
 
 // out of scope for now, but we do keep it in mind
 
-TLDR: "Intake" is skipped. "Segmentation" and "Target resolution" will be done differently: in Phrasemes' notes, the lexemes will become the targetes. In Lexemes' notes the morphenmes will become the targets.
+TLDR: "Intake" is skipped. "Segmentation" and "Target Classification" will be done differently: in Phrasemes' notes, the lexemes will become the targetes. In Lexemes' notes the morphenmes will become the targets.
 
 The rest of teh resolution is the same
