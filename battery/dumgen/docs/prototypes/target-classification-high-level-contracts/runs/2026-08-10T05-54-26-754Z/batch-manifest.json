@@ -1,0 +1,2222 @@
+{
+  "version": "target-classification-high-level-batch-v1",
+  "createdAt": "2026-08-10T05:54:26.754Z",
+  "endpoint": "/v1/responses",
+  "completionWindow": "24h",
+  "bindingSha256": "bc7056154c481a1d49759e2bb0221ae07fd32756d56d866b0f6eb1afac712519",
+  "preflight": {
+    "runnerVersion": "target-classification-high-level-contracts-v8",
+    "question": "Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?",
+    "model": "gpt-5.6-luna",
+    "expectedResolvedModel": "gpt-5.6-luna",
+    "modelConfigSha256": "de9cfc11c48e15f2b5a811a65214a97fa7ba839b1637acb10eeb00d435c2b195",
+    "corpusSha256": "950a6267556acda1807df3a433223a57d1040054dfdc3f4335f4357af0d958c1",
+    "evaluatorBinding": {
+      "version": "german-high-level-target-evaluator-v1",
+      "sourceSha256": "17ac55c5c4d2d9beb6418abb8712860038d71f712fe2c516e61c450ea2dc3bb6",
+      "semanticFixtureMatrixVersion": "german-high-level-target-evaluator-semantics-v1",
+      "semanticFixtureMatrixSha256": "f70ddfa938c3e21401baffb0558c55656ecaf359fb48c6f07edd5b94deda99be"
+    },
+    "decisionPolicy": {
+      "expectedCallsPerArm": 188,
+      "minimumContractRatio": 0.8,
+      "minimumSliceRatio": 0.8,
+      "tieMargin": 0.01,
+      "tieRule": "inclusive-best-ratio-margin"
+    },
+    "decisionPolicySha256": "9a44417bb2c0031fbdb401716f09855727c6080307ccdfecbe5ac714b3113a86",
+    "batchPolicy": {
+      "transport": "openai-batch",
+      "endpoint": "/v1/responses",
+      "completionWindow": "24h",
+      "promptCacheMode": "explicit",
+      "promptCacheTtl": "30m",
+      "promptCacheBreakpoint": "end-of-stable-system-prompt",
+      "maximumScheduledRequestsPerCacheKey": 12
+    },
+    "batchPolicySha256": "e7a6459878a9f3c29655345fd4f42cfc7736aba790f5af6b9cd64fb2459e2796",
+    "evaluationCaseIds": [
+      "target-de-route-lexeme-adj",
+      "target-de-route-lexeme-adp",
+      "target-de-route-lexeme-adv",
+      "target-de-route-lexeme-aux",
+      "target-de-route-lexeme-cconj",
+      "target-de-route-lexeme-det",
+      "target-de-route-lexeme-intj",
+      "target-de-route-lexeme-noun",
+      "target-de-route-lexeme-num",
+      "target-de-route-lexeme-part",
+      "target-de-route-lexeme-pron",
+      "target-de-route-lexeme-propn",
+      "target-de-route-lexeme-sconj",
+      "target-de-route-lexeme-sym",
+      "target-de-route-lexeme-verb",
+      "target-de-route-phraseme-aphorism-click-wissen",
+      "target-de-route-phraseme-aphorism-click-ist",
+      "target-de-route-phraseme-aphorism-click-macht",
+      "target-de-route-phraseme-discourse-click-herzlichen",
+      "target-de-route-phraseme-discourse-click-dank",
+      "target-de-route-phraseme-proverb-click-morgenstund",
+      "target-de-route-phraseme-proverb-click-hat",
+      "target-de-route-phraseme-proverb-click-gold",
+      "target-de-route-phraseme-proverb-click-im",
+      "target-de-route-phraseme-proverb-click-mund",
+      "target-de-core-entscheidung-click-entscheidung",
+      "target-de-core-entscheidung-click-trifft",
+      "target-de-core-entscheidung-click-eine",
+      "target-de-route-construction-fusion",
+      "target-de-route-construction-paired-click-je",
+      "target-de-route-construction-paired-click-desto",
+      "target-de-route-construction-paired-near-frueher",
+      "target-de-route-construction-paired-near-besser",
+      "target-de-boundary-idiom-click-brach",
+      "target-de-boundary-idiom-click-das",
+      "target-de-boundary-idiom-click-eis",
+      "target-de-boundary-idiom-near-endlich",
+      "target-de-boundary-literal-eis-click-brach",
+      "target-de-boundary-literal-eis-click-eis",
+      "target-de-boundary-governed-click-wartet",
+      "target-de-boundary-governed-click-auf",
+      "target-de-boundary-governed-near-bus",
+      "target-de-boundary-adjunct-click-laeuft",
+      "target-de-boundary-adjunct-click-auf",
+      "target-de-boundary-adjunct-click-wiese",
+      "target-de-boundary-inherent-reflexive-click-schaemt",
+      "target-de-boundary-inherent-reflexive-click-sich",
+      "target-de-boundary-optional-reflexive-click-waescht",
+      "target-de-boundary-optional-reflexive-click-sich",
+      "target-de-boundary-separable-click-steht",
+      "target-de-boundary-separable-click-auf",
+      "target-de-boundary-separable-near-heute",
+      "target-de-boundary-perfect-click-hat",
+      "target-de-boundary-perfect-click-gelacht",
+      "target-de-boundary-perfect-near-laut",
+      "target-de-boundary-future-click-wird",
+      "target-de-boundary-future-click-lachen",
+      "target-de-boundary-passive-click-wird",
+      "target-de-boundary-passive-click-gelobt",
+      "target-de-boundary-modal-click-muss",
+      "target-de-boundary-modal-click-schlafen",
+      "target-de-boundary-copula-click-ist",
+      "target-de-boundary-copula-click-muede",
+      "target-de-boundary-collocation-click-trifft",
+      "target-de-boundary-collocation-click-eine",
+      "target-de-boundary-collocation-click-entscheidung",
+      "target-de-boundary-collocation-near-heute",
+      "target-de-boundary-free-object-click-bringt",
+      "target-de-boundary-free-object-click-cola",
+      "target-de-boundary-fixed-function-click-heult",
+      "target-de-boundary-fixed-function-click-mit",
+      "target-de-boundary-fixed-function-click-den",
+      "target-de-boundary-fixed-function-click-woelfen",
+      "target-de-boundary-fixed-function-near-hungrigen",
+      "target-de-robust-repeated-click-steht",
+      "target-de-robust-repeated-click-final-auf",
+      "target-de-robust-repeated-near-first-auf",
+      "target-de-robust-overlap-collocation-click-stellt",
+      "target-de-robust-overlap-collocation-click-eine",
+      "target-de-robust-overlap-collocation-click-frage",
+      "target-de-robust-overlap-separable-click-stellt",
+      "target-de-robust-overlap-separable-click-ab",
+      "target-de-robust-overlap-near-vase",
+      "target-de-robust-partial-click-brach",
+      "target-de-robust-partial-click-das",
+      "target-de-robust-typo-click-stet",
+      "target-de-robust-typo-click-auf",
+      "target-de-robust-slang",
+      "target-de-robust-opaque-surroundings",
+      "target-de-robust-punctuation-click-steht",
+      "target-de-robust-punctuation-click-auf",
+      "target-de-robust-long-click-wird",
+      "target-de-robust-long-click-verstanden",
+      "target-de-robust-unresolved"
+    ],
+    "demonstrationCaseIds": [
+      "target-de-demo-perfect-arbeiten-click-habe",
+      "target-de-demo-perfect-arbeiten-click-gearbeitet",
+      "target-de-demo-perfect-arbeiten-click-gestern",
+      "target-de-demo-governed-rechnen-click-rechnet",
+      "target-de-demo-governed-rechnen-click-mit",
+      "target-de-demo-governed-rechnen-click-regen",
+      "target-de-demo-idiom-faden-click-verlor",
+      "target-de-demo-idiom-faden-click-faden",
+      "target-de-demo-idiom-faden-click-voellig",
+      "target-de-demo-literal-faden-click-faden",
+      "target-de-demo-literal-handtuch-click-warf",
+      "target-de-demo-paired-entweder-click-entweder",
+      "target-de-demo-paired-entweder-click-oder",
+      "target-de-demo-paired-je-click-laenger",
+      "target-de-demo-optional-reflexive-click-kaemmst",
+      "target-de-demo-optional-reflexive-click-dich",
+      "target-de-demo-modal-arbeiten-click-kann",
+      "target-de-demo-modal-arbeiten-click-arbeiten",
+      "target-de-demo-fusion-zum",
+      "target-de-demo-symbol-percent",
+      "target-de-demo-repeated-anfangen-click-final-an"
+    ],
+    "attemptsPerArm": 2,
+    "exactCallCap": 188,
+    "inputTokenUpperBound": 4975690,
+    "outputTokenUpperBound": 192512,
+    "maximumEstimatedCostUsd": 0.7374684499999994,
+    "maximumSpendUsd": 5,
+    "priceSchedule": {
+      "id": "openai-batch-gpt-5.6-luna-2026-08-09",
+      "longContextThresholdTokens": 272000,
+      "shortContext": {
+        "inputUsdPerMillion": 0.1,
+        "cachedInputUsdPerMillion": 0.01,
+        "cacheWriteUsdPerMillion": 0.125,
+        "outputUsdPerMillion": 0.6
+      },
+      "longContext": {
+        "inputUsdPerMillion": 0.2,
+        "cachedInputUsdPerMillion": 0.02,
+        "cacheWriteUsdPerMillion": 0.25,
+        "outputUsdPerMillion": 0.9
+      }
+    },
+    "arms": [
+      {
+        "id": "additional-compact-indices",
+        "promptSha256": "90459900aa9e49c9d44eab065f5a894e11d111d7ba82f8ce5edfd3bd4df5ed1f",
+        "schemaSha256": "ef9dbd40938830bb56e1ee29404c387dd6628e75688f2bd702ae3d2e82f21653",
+        "adapterSha256": "c46d2bfc53a4c6ce84aef2dbd61d53ea784f66b1b76c97d006fc595b051055a0",
+        "postconditionFixturesSha256": "53e9af40b7cec1132b8a18e3523c3cca9a12bbdf06a5c005547613d1c4843867"
+      }
+    ]
+  },
+  "inputSha256": "a50ac7441f2ec6ed47eec290dd9122cb5bcf90ccd62b6f8350b651cc06d6b819",
+  "inputUtf8Bytes": 5377070,
+  "schedule": [
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-adj",
+      "customId": "tc85-000-13834b5c2566",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-adj",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "e9fc84898b1be735e03bda522b50f7a85a1f739cabd3bfc51001ccca207956a4",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-adp",
+      "customId": "tc85-001-f075ef384b1a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-adp",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "42772dbe391016da7a400d3dc0dc5f24b1086137d8240b925fd386053cef4321",
+      "requestUtf8Bytes": 28578
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-adv",
+      "customId": "tc85-002-7918aef65861",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-adv",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "31fc0cf17c487da815b4692a52958ad3149b438705fb819e8a7cb3203be6aa02",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-aux",
+      "customId": "tc85-003-31acd695198e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-aux",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "3486721d46b321ad0ed2482265b72554ac2bc6476c7d3ee7cb1f100dc4e6eec8",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-cconj",
+      "customId": "tc85-004-4b67974b5ec6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-cconj",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "dc8379bc5e52e529b3b3b8c10f761336fdf31c72b2606cd3209430a311fdea4d",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-det",
+      "customId": "tc85-005-f1ca23132dbc",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-det",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "88d369ab95c5a239043fe064a5b536f1bef57be2cc2962049a83461ae750e021",
+      "requestUtf8Bytes": 28320
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-intj",
+      "customId": "tc85-006-35265225d7c6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-intj",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "1c3e26d2ac0da725ad4877a06d5ca3118cdbf91ca813a14ae451a62a17f4f558",
+      "requestUtf8Bytes": 28395
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-noun",
+      "customId": "tc85-007-df1298cf28e4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-noun",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "965a154614b03d15fabb9f590702c52eb05555f06e3a7d23b1944697936c8d7b",
+      "requestUtf8Bytes": 28399
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-num",
+      "customId": "tc85-008-ff6d9d4339c3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-num",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "182dc73e8d95b008b1509ce9e1b5f2a8b42b2fae49d71d4dbe4d8c797d06a8cf",
+      "requestUtf8Bytes": 28401
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-part",
+      "customId": "tc85-009-280548ed89fc",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-part",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "fa2ce4b8b2a85da4caa178f6f9e35501d27769d4ea99ac8a7b93d0e6b0f6c371",
+      "requestUtf8Bytes": 28318
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-pron",
+      "customId": "tc85-010-e4ad020a9dc8",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-pron",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "d556a9d25004a64351d9f4933cc1c368de33475f054dbee09a745cfd88b7f37b",
+      "requestUtf8Bytes": 28322
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-propn",
+      "customId": "tc85-011-0f7a47222949",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-propn",
+      "promptCacheKey": "tc85:additional-compact-indices:s00",
+      "requestSha256": "28fb095d91ab366171091145cf0b8383d831aae782b7886c081bd46b6f6427c4",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-sconj",
+      "customId": "tc85-012-ef2d09a365e2",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-sconj",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "11b80314be8b4821b7af363d7b4a3705055eecb1f34cfad9aa38a90729ca9f77",
+      "requestUtf8Bytes": 28733
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-sym",
+      "customId": "tc85-013-37267ef677b5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-sym",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "5862995477e6b40b8a1997db17313465154979b00bb0fb4fc5e1a280afa930f6",
+      "requestUtf8Bytes": 28487
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-lexeme-verb",
+      "customId": "tc85-014-7667400037ae",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-lexeme-verb",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "47d002778daa391b56bdc8b955916c81237ae80404634cdf57dddd89e2304ba3",
+      "requestUtf8Bytes": 28317
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-aphorism-click-wissen",
+      "customId": "tc85-015-6706a166fcf0",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-aphorism-click-wissen",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "9a975a9e14f591880046eba1eea255eeeded77394cbb7f48e6d4e5a4ee4303f9",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-aphorism-click-ist",
+      "customId": "tc85-016-e581a6ebf3d6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-aphorism-click-ist",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "7cb61727a56b1d568428691b1210fa8d9ff60052861cbadf797694a77796dee4",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-aphorism-click-macht",
+      "customId": "tc85-017-f8b399f02659",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-aphorism-click-macht",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "413e4786471e2f542f2046f63e20a6a0afa6d6682af3a4d55b5f661b1db0b8d7",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-discourse-click-herzlichen",
+      "customId": "tc85-018-25b9f4bc4075",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-discourse-click-herzlichen",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "3bb925f557aa43ddb1457e7082d9754e4789fc7e383d68e4cd7d759cc3fa80b3",
+      "requestUtf8Bytes": 28235
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-discourse-click-dank",
+      "customId": "tc85-019-d34016b5504a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-discourse-click-dank",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "53cc507b9d2c78c809307df613f89381f9a920fa3ab506b4cd84026143b47759",
+      "requestUtf8Bytes": 28235
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-proverb-click-morgenstund",
+      "customId": "tc85-020-e9e82edbe52f",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-proverb-click-morgenstund",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "bff6a075f7facf81d4dd4ad3cc0b7f6c6054bb4c67605f4010f1295707498ea6",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-proverb-click-hat",
+      "customId": "tc85-021-4084e42b292a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-proverb-click-hat",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "a5d99e8a497299d0c41acebcf9f84cf2936a01a5f58b495e65eacae3aa1e76b3",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-proverb-click-gold",
+      "customId": "tc85-022-46520dc580d1",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-proverb-click-gold",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "e395e274a7b6d82fa0c1dbcc91fd0d685158480f0e8baca33e8528f65a645457",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-proverb-click-im",
+      "customId": "tc85-023-841e489e4b01",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-proverb-click-im",
+      "promptCacheKey": "tc85:additional-compact-indices:s01",
+      "requestSha256": "e4f898fcc936edb044a3375b943920202d48db934bf2b7609f890e5ccdf91600",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-phraseme-proverb-click-mund",
+      "customId": "tc85-024-6f6644bb679e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-phraseme-proverb-click-mund",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "018ab41eb1e712f9398f10e5f1901045e697f0e3bf971c61dd8bd9c1edb87e48",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-core-entscheidung-click-entscheidung",
+      "customId": "tc85-025-22481cd648e9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-core-entscheidung-click-entscheidung",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "c8fadcb1ca42d6b9c2d0fa4cc2077aa48d4735d0f3ba3be2d053f6d590ed62aa",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-core-entscheidung-click-trifft",
+      "customId": "tc85-026-8a794e7ffe0a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-core-entscheidung-click-trifft",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "ea05f8a29b4b568fb62bb3c697477b71f03626dcc002554f845de3ea7ef17b77",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-core-entscheidung-click-eine",
+      "customId": "tc85-027-6b5c6eb8b2f9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-core-entscheidung-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "76def4775383848625aeab4afce6c01b6a2ecbf7fcd198f8e2b8a28c746b755e",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-construction-fusion",
+      "customId": "tc85-028-890689b51d12",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-construction-fusion",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "2075724518e0627b35c313fc4bf9ebf195aa72220d3c10ac7750bd95062a8933",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-construction-paired-click-je",
+      "customId": "tc85-029-3a605ccdbd48",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-construction-paired-click-je",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "8f909d22d49251f376631f53ba3a69812dd6dd416410c0a95294f05b278dc495",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-construction-paired-click-desto",
+      "customId": "tc85-030-84370182654a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-construction-paired-click-desto",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "5914e985318ab63f2468fa63484047f465ba2da47e8b61c988896ab1c93ec644",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-construction-paired-near-frueher",
+      "customId": "tc85-031-a2ab658efec6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-construction-paired-near-frueher",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "9edecb68bca81e743c84eefe9df41c2dc841d097a5ec2932a61d7e60e6ff5092",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-route-construction-paired-near-besser",
+      "customId": "tc85-032-bc96fb7135de",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-route-construction-paired-near-besser",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "02ade9f300f9a9c8ccd7c1dac72aae86ee60fee7999578efa8cbf38343134158",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-idiom-click-brach",
+      "customId": "tc85-033-f2b14358edcd",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-idiom-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "d3591ace60e23b6863d641a9e9daa37f3fa9705b2a5d2880b16bac8b26580e76",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-idiom-click-das",
+      "customId": "tc85-034-cae89cd6efa6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-idiom-click-das",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "d4dd308ee6762cd32b5f18973cc662dd87028412882d5736be7ae2b5315b0ad1",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-idiom-click-eis",
+      "customId": "tc85-035-6f221cb1cd1d",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-idiom-click-eis",
+      "promptCacheKey": "tc85:additional-compact-indices:s02",
+      "requestSha256": "c1ae9de12767cb2b006e77a5e9e820bcc5372acff8f41f1fac405ea724b3c675",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-idiom-near-endlich",
+      "customId": "tc85-036-d404e5509ef3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-idiom-near-endlich",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "577dcc6c7590adf4a5bb9ab9ac31e98836b98216e3351a511862fd0b08109f7f",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-literal-eis-click-brach",
+      "customId": "tc85-037-2d03279ad109",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-literal-eis-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "cc0c8c54cabec89740915ceec01e23aeb8a82854c0ef930e901ec4eb9f676fdc",
+      "requestUtf8Bytes": 28656
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-literal-eis-click-eis",
+      "customId": "tc85-038-21f44e0c7e69",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-literal-eis-click-eis",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "a01afc625ef96cc3e5f0165c93b1be30f234687927b88ce638c60623f42c3cf7",
+      "requestUtf8Bytes": 28656
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-governed-click-wartet",
+      "customId": "tc85-039-7625f2e55832",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-governed-click-wartet",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "c36c122716a282948349e07d1d4f03afd5264802f64b68ed8ece511679e73341",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-governed-click-auf",
+      "customId": "tc85-040-5cd1a76afb36",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-governed-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "267e3ee7f7ed6139bb7aa5904976f9911f3f9296f7a3a0c933c3a1956ae25802",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-governed-near-bus",
+      "customId": "tc85-041-e70f00b76445",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-governed-near-bus",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "d9588267dae42e42cd0fbe43df4b4d20d77f048b5d73b054a042a26fe75fcff5",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-adjunct-click-laeuft",
+      "customId": "tc85-042-f0f59d64b0a3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-adjunct-click-laeuft",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "5dc255a4fcc06c4d17be08678c6a3f2bafabf4b2b74edd62626c5d0587273bcc",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-adjunct-click-auf",
+      "customId": "tc85-043-e853f4de35b6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-adjunct-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "a33fd3bb84ece53b64f1dea37d9a4d8520e396f23d3a38710cb8081c79b95917",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-adjunct-click-wiese",
+      "customId": "tc85-044-3f514bb142d1",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-adjunct-click-wiese",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "2972af6afb2598bf89b4f2a6092a7ea8a70d07533ce3659a583eca37ea4cf3f0",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-inherent-reflexive-click-schaemt",
+      "customId": "tc85-045-2f15ae2b6528",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-inherent-reflexive-click-schaemt",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "7bf119d8bc24c793b83bea988ded7a5a3ec3646befd536d59b4e8efa5b98cd4f",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-inherent-reflexive-click-sich",
+      "customId": "tc85-046-bd2db17af632",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-inherent-reflexive-click-sich",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "87e6e51006da1683dde7cf827558f113a3187831d466567794cd10723ffe1668",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-optional-reflexive-click-waescht",
+      "customId": "tc85-047-8ea0c314434c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-optional-reflexive-click-waescht",
+      "promptCacheKey": "tc85:additional-compact-indices:s03",
+      "requestSha256": "8f50337dc93de237c109520fd331064d54090cd7b9ce57b8ed1683c0466e915a",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-optional-reflexive-click-sich",
+      "customId": "tc85-048-464c792b33c4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-optional-reflexive-click-sich",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "94a1fd2b2a995c3cd24849b57a7070fc557e7f51c784a76d8c4dea57e21c104f",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-separable-click-steht",
+      "customId": "tc85-049-805d35ae74f5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-separable-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "daf24cc09f10387398e3d5eb5422801627e91d8be4796fc1ef1810f7bba781e7",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-separable-click-auf",
+      "customId": "tc85-050-246961fae705",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-separable-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "f032850b5c9e723598e9a6a253e67e8b00b40ecd15616c85530877e03f555db4",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-separable-near-heute",
+      "customId": "tc85-051-8f8d7a311f7b",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-separable-near-heute",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "6d288609fe22b825291db42c2d09529232d031f8c77351c0c19d4d4141292448",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-perfect-click-hat",
+      "customId": "tc85-052-217f483ab4cf",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-perfect-click-hat",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "be3135b068ac85add889a417968951cc430ff26a760171ae24676a43a19b274a",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-perfect-click-gelacht",
+      "customId": "tc85-053-3b798fc0a0c9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-perfect-click-gelacht",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "51b9506283e033f24d863d3135672be161d4f8e4cf42258f3600ff62e8df7391",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-perfect-near-laut",
+      "customId": "tc85-054-8aaefbe951f1",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-perfect-near-laut",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "e8b6c42bfa653c0fd36b4da2aef25466f9ee3542e3e892d6766fb1e4cae62cbe",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-future-click-wird",
+      "customId": "tc85-055-d208c28a0adb",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-future-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "94e93275ca997b8b50b36fa6fc8375df66195dbb49ed979e77b7d9fec323fd09",
+      "requestUtf8Bytes": 28402
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-future-click-lachen",
+      "customId": "tc85-056-2783d5d5774a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-future-click-lachen",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "188ad49fea11949efc1076215c7ad5868b3971529629a8565ffd54544a8d99be",
+      "requestUtf8Bytes": 28402
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-passive-click-wird",
+      "customId": "tc85-057-333a2d837aa6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-passive-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "38d23ca2cfc9b3c06a5f88aff6aae570c3ea042f64c6e2cbcfecb816e8eab729",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-passive-click-gelobt",
+      "customId": "tc85-058-245ea4f76001",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-passive-click-gelobt",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "12bbfb550b56c21a85a6e146b86155c64bfb616ff3e97f39339fff01c1aec75b",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-modal-click-muss",
+      "customId": "tc85-059-d2c64129c1da",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-modal-click-muss",
+      "promptCacheKey": "tc85:additional-compact-indices:s04",
+      "requestSha256": "6fa7400d03902372e5075f1b482a71e2ccbe90e45e88830d41a633ba0a698c0a",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-modal-click-schlafen",
+      "customId": "tc85-060-42e3a8ae7c37",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-modal-click-schlafen",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "e25a9c96db437d14e75a8f2f6af30a626a84804d3971575d355073cdfe4d4589",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-copula-click-ist",
+      "customId": "tc85-061-0fd2b311eab8",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-copula-click-ist",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "efc8ebfa6bd6914525a478d55f377d3542ef7db03ac0a2737c62d23283d0d99f",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-copula-click-muede",
+      "customId": "tc85-062-02c4127d0fa6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-copula-click-muede",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "f3c51f932262dbec1cb7d9fc82f9c41d0930b93cc0589dd80afcc77d7f8f376c",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-collocation-click-trifft",
+      "customId": "tc85-063-5f24f56ad72b",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-collocation-click-trifft",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "2ccf8818916c17ddec9357ee5c4cf7d500096faf7ffe0a69ace1c44200edb4d5",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-collocation-click-eine",
+      "customId": "tc85-064-6c1b63bbf5c5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-collocation-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "09b8dc4e8b4313b83ee77cd9e0397bf0fcf8ce58f50fe36759b05d4bd518b47b",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-collocation-click-entscheidung",
+      "customId": "tc85-065-a6a8ee0942dd",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-collocation-click-entscheidung",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "9c6a714a65d61702f56bfd4897c1d932c923cafdaa48b51ee768b60bd8b73235",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-collocation-near-heute",
+      "customId": "tc85-066-793719566273",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-collocation-near-heute",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "404868c15965f3157eaa9d3d69fed168efaadc9e6a7de81d648f5481f056aa2d",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-free-object-click-bringt",
+      "customId": "tc85-067-ac1cc1f912b3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-free-object-click-bringt",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "2a45705176e8a786c96f15461c33ccd5d396b24799417d6a383507376ac2f432",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-free-object-click-cola",
+      "customId": "tc85-068-3dd36011bb53",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-free-object-click-cola",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "dbb6a0af44415bb6257872e421730bffcad09035497f040f985dcc3ebf79efa0",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-fixed-function-click-heult",
+      "customId": "tc85-069-6b6422c1d019",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-fixed-function-click-heult",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "6b463783e2842e0b274dd511966c4ec8162a8c88b7a1c4d7e96ff7b5b941deb7",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-fixed-function-click-mit",
+      "customId": "tc85-070-ba23954affc5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-fixed-function-click-mit",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "de42f1f78a3eed864405f4133cf616bb2b6ee48c84a30937e7eeb71ebb372e0d",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-fixed-function-click-den",
+      "customId": "tc85-071-a6c1453ce9d3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-fixed-function-click-den",
+      "promptCacheKey": "tc85:additional-compact-indices:s05",
+      "requestSha256": "b6743107da6a1caeedfd7a7f4d140ffd18652fec90bf576a628134598d496070",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-fixed-function-click-woelfen",
+      "customId": "tc85-072-69e0cdad9df9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-fixed-function-click-woelfen",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "1409611901aa83634ccf78bd5befd5c319789ccbdce0cbc6bdd38b1c7d172c6a",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-boundary-fixed-function-near-hungrigen",
+      "customId": "tc85-073-25ce5065bce9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-boundary-fixed-function-near-hungrigen",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "a666a4131b9b62dea36c09ced514d72de6ffd9ba0a33689f453050a9bf23d10a",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-repeated-click-steht",
+      "customId": "tc85-074-015eae95e20d",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-repeated-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "df6750fb8d688eff4bec73a10db29662e284d3e0703e31920a79cb7cc2ae3c8c",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-repeated-click-final-auf",
+      "customId": "tc85-075-30cef8465b3c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-repeated-click-final-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "f532547fcef0afac268004d8ca2dff50c88d92b14363bf5954eeba790eb541fa",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-repeated-near-first-auf",
+      "customId": "tc85-076-5e98e80110c4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-repeated-near-first-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "719e5bc729c2074fc20098c218229ffaa91301067e09985e3c2ab8ca99b18e8c",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-collocation-click-stellt",
+      "customId": "tc85-077-0731d39d1d3a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-collocation-click-stellt",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "c7971294f00ac562f8f2c45e67415852a8bdeb150c300afccf87c9dd25877cb7",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-collocation-click-eine",
+      "customId": "tc85-078-5aa003f4a0ef",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-collocation-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "e8aaf86a5b9674a45ee613b89c2df81b3a877b9d0c594a69e1f78c2af9452b59",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-collocation-click-frage",
+      "customId": "tc85-079-2d0f0d0fcb48",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-collocation-click-frage",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "11a9a4d8ab38ac371254a0db9d753f4f4a357d66f47ef20ece10d9f76f421dd2",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-separable-click-stellt",
+      "customId": "tc85-080-a417bc260278",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-separable-click-stellt",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "e998510e442e78ef911cc7eb30ef14dd98d0a3d8e331a906ce82386650277967",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-separable-click-ab",
+      "customId": "tc85-081-8920d3b275b9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-separable-click-ab",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "9a08ffcac9e16e96f32ee7514e185e2c9e371eab68b40d5a5723d28782c8db97",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-overlap-near-vase",
+      "customId": "tc85-082-351a53840fd6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-overlap-near-vase",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "e84470f893d9d738561dd15dbde966d77ddc64cf629d216ecf04b72af6e52ee2",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-partial-click-brach",
+      "customId": "tc85-083-951634b0b586",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-partial-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s06",
+      "requestSha256": "32d3767343b20b9a0dfe27bc0dc61ec57c95293a6ad7d30c0985625ac1c4f6cc",
+      "requestUtf8Bytes": 28314
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-partial-click-das",
+      "customId": "tc85-084-5d30c14dd8d7",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-partial-click-das",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "93f251a1a167d7a4dfd6faf5775827baa4a850549bf537a7b5ba096e0f3a8f06",
+      "requestUtf8Bytes": 28314
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-typo-click-stet",
+      "customId": "tc85-085-322268c4f398",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-typo-click-stet",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "f20dba85fad747bbea235ee64596db99e4e8a87d2f136357b1055c904b14236c",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-typo-click-auf",
+      "customId": "tc85-086-059c08252d30",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-typo-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "09dfe01494f2425eb9ab85a02199ef420d2ea7e75a3ec4e56fdeadcd66633455",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-slang",
+      "customId": "tc85-087-715f6a0d5902",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-slang",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "3f36f0925857d7301380b55b1dd7e63bf9c18da99f4eea8b6c04e3356341c926",
+      "requestUtf8Bytes": 28311
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-opaque-surroundings",
+      "customId": "tc85-088-719cfe671ac0",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-opaque-surroundings",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "a13af28a2c119b6431c399c2238d743861259dafb6ac8dda1644b2d2e1581e3d",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-punctuation-click-steht",
+      "customId": "tc85-089-5419c848364e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-punctuation-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "63a07b07108ee07562ddb7e4beaf95ddb82f49f191db6d14c171615151df9efd",
+      "requestUtf8Bytes": 28486
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-punctuation-click-auf",
+      "customId": "tc85-090-7d83176cad6c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-punctuation-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "6aba0d56148dca4ef385658c34ed6f97d689f5be87b5190f885d2aed9ba8565d",
+      "requestUtf8Bytes": 28486
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-long-click-wird",
+      "customId": "tc85-091-85cddb555e7a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-long-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "93b9ab97f8cb381fc0751dfa4a7e7eb1e40312450a7f30a8f488184ccfb49806",
+      "requestUtf8Bytes": 30539
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-long-click-verstanden",
+      "customId": "tc85-092-fa20eb49d5e5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-long-click-verstanden",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "2e0c543a67fea25e834dbbacdbcd7223b71d4aa4099671b1a139a0c0b358edf9",
+      "requestUtf8Bytes": 30539
+    },
+    {
+      "key": "additional-compact-indices/1/target-de-robust-unresolved",
+      "customId": "tc85-093-96c2705dd787",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 1,
+      "caseId": "target-de-robust-unresolved",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "fe671740549798deae423666a2567275f50cfa75ba6c3fd34bf239e6f63c3788",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-adj",
+      "customId": "tc85-094-517a4dc4b11e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-adj",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "2ea69c4a7e4cedcb805c3a7021ed64bde6bd7253b50ef6bf6487fe76b8b326a2",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-adp",
+      "customId": "tc85-095-eef0c0865bac",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-adp",
+      "promptCacheKey": "tc85:additional-compact-indices:s07",
+      "requestSha256": "9ec22c33d4479d43e9c65e711d290f72c538ec4f521236ba577bce4c9c0c21da",
+      "requestUtf8Bytes": 28578
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-adv",
+      "customId": "tc85-096-89837861ca55",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-adv",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "7c7ac67f3674899647ceaaefb0f1d5c04b8b7fb2b15a966c608b660494d06730",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-aux",
+      "customId": "tc85-097-bb4730b8c8b4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-aux",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "b8febc4dd279a115df8f0e27ebbcb8c822a43b06e635f83b6e4fa634ec93ee0c",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-cconj",
+      "customId": "tc85-098-9fca397ec5c1",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-cconj",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "d6960a8f9c37a2315feae8ca8cb9ff31032d335c1c2b198a6063c3bd80ab68e0",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-det",
+      "customId": "tc85-099-40fd273797aa",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-det",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "12fbc75f94e08921547389d0ead40d5cac781311ff793510469dad90382cf920",
+      "requestUtf8Bytes": 28320
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-intj",
+      "customId": "tc85-100-18b32b111e5e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-intj",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "7855902b0b058a452f4ed4ec070164b6006849e3845932c81c6e87d0ca8637ed",
+      "requestUtf8Bytes": 28395
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-noun",
+      "customId": "tc85-101-189ccb8285cd",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-noun",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "d6ba43ad3d28f6eb3853f07a75498cd4cc32a241c63c9a4b5c724d31d2ce0193",
+      "requestUtf8Bytes": 28399
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-num",
+      "customId": "tc85-102-1da688fd7b50",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-num",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "2f9cba71350371a6b01fb618f25dbc996b9cc986cfe1820f08712bd10c5b4ece",
+      "requestUtf8Bytes": 28401
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-part",
+      "customId": "tc85-103-44fff1feb922",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-part",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "d763f96af3f2690cacff52b2893d5f2a4aa3138d864f0d1e9bc5e284956ef257",
+      "requestUtf8Bytes": 28318
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-pron",
+      "customId": "tc85-104-972d9ae1bb86",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-pron",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "6dacec364ca978f616f2484e908114566877bff69ad295463283af3a8a4b0679",
+      "requestUtf8Bytes": 28322
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-propn",
+      "customId": "tc85-105-aa01bd6a8933",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-propn",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "a99dd685bce4d849f1bace99eb6c0edce32834b3a290b1140741e1778bc90e6e",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-sconj",
+      "customId": "tc85-106-b67043c73d51",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-sconj",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "711a481113aad17e52a41ecaa5bb4f7fdbfb8432941beac562fe6fa6038d9bf0",
+      "requestUtf8Bytes": 28733
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-sym",
+      "customId": "tc85-107-e4421692ff34",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-sym",
+      "promptCacheKey": "tc85:additional-compact-indices:s08",
+      "requestSha256": "79a32915f382ccb901e7ab7a5a5220998eeb19b62f0530dd5ca0a66cdc86c8ef",
+      "requestUtf8Bytes": 28487
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-lexeme-verb",
+      "customId": "tc85-108-c5286fa55f51",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-lexeme-verb",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "c271d6bd601f96bf270e477ef9f079385e44bb7d5c8667b83be88c3515985dbf",
+      "requestUtf8Bytes": 28317
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-aphorism-click-wissen",
+      "customId": "tc85-109-7cb2f3e72444",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-aphorism-click-wissen",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "df731503528379066b57127cb3a183a724d00787a67ebf489480a06135e51ef7",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-aphorism-click-ist",
+      "customId": "tc85-110-67d528597b58",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-aphorism-click-ist",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "a5c91054e8e845a4ffad1f1cfaebc6b2b7f94d51abfd0e3f00d2463310594010",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-aphorism-click-macht",
+      "customId": "tc85-111-5780807f0efa",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-aphorism-click-macht",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "c446043c0454a15a66ca99a2430f30b412d306578781e921f503d8778d0ced49",
+      "requestUtf8Bytes": 28316
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-discourse-click-herzlichen",
+      "customId": "tc85-112-288cdbca8e6c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-discourse-click-herzlichen",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "01d6e38312b49ec5343c06023bbec5026e55bfc24a6ee80e44cac6d184d749b3",
+      "requestUtf8Bytes": 28235
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-discourse-click-dank",
+      "customId": "tc85-113-49f75a42b51e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-discourse-click-dank",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "059ea74e8336478ffc958c0c39e0a318190351a341ce1b87dcbc8cf988743704",
+      "requestUtf8Bytes": 28235
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-proverb-click-morgenstund",
+      "customId": "tc85-114-e550e0a71799",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-proverb-click-morgenstund",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "408e149c7b223f8046bc05aabc444e5d267bd32b114e26e06ac692971d2f649b",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-proverb-click-hat",
+      "customId": "tc85-115-841c9e85f061",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-proverb-click-hat",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "64f9e90fd838677c35e9ee9089f22b2083c10726cfc0feb014bab0827eb28379",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-proverb-click-gold",
+      "customId": "tc85-116-5acd871361e6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-proverb-click-gold",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "1b6a4f9b2469dc887c77a401403f00dea934f103c9f437395f76943568094374",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-proverb-click-im",
+      "customId": "tc85-117-099df2fc6834",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-proverb-click-im",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "6a18592c81c56955f9c309d9b621c1f9777af3971caa8b51f8a007d8001c56ad",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-phraseme-proverb-click-mund",
+      "customId": "tc85-118-b81403951468",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-phraseme-proverb-click-mund",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "1dc134fff3fd5f6c86307b8aeac2af87e5aa6156bcba31535d01fe982fd6905f",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-core-entscheidung-click-entscheidung",
+      "customId": "tc85-119-61c3df458f47",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-core-entscheidung-click-entscheidung",
+      "promptCacheKey": "tc85:additional-compact-indices:s09",
+      "requestSha256": "b99a106a927824b84b37c2e989846c4c5a37f1cfb715a117ff7f5509f59fb2a9",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-core-entscheidung-click-trifft",
+      "customId": "tc85-120-a6bd8a268605",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-core-entscheidung-click-trifft",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "5f54507165dacb2ab5a88e33662a7044a382f2b2e7352fa89a9ae5c3870c3dcf",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-core-entscheidung-click-eine",
+      "customId": "tc85-121-163a71b1ee85",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-core-entscheidung-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "4a393fb1f623a1c26f1b19580f3e7ed0894f75dbc8b3f8eee2f78b7a7d8c63a4",
+      "requestUtf8Bytes": 28498
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-construction-fusion",
+      "customId": "tc85-122-a71863c3e9f6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-construction-fusion",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "89e5e839e1d2b6611cb5bcad390f2bd2e0ee23eb7c76b58af2b3e825dd6227eb",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-construction-paired-click-je",
+      "customId": "tc85-123-c551076320c3",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-construction-paired-click-je",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "d7007348529e31881564c7d8bde95fbd2f5f6b35b1866aa664c90fb05c104e7a",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-construction-paired-click-desto",
+      "customId": "tc85-124-0968bc91f020",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-construction-paired-click-desto",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "50bf741e51c37d1893b16f07cebc66c48921a2e442f7a4f10ab985163967efab",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-construction-paired-near-frueher",
+      "customId": "tc85-125-ca5d72394294",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-construction-paired-near-frueher",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "4f7280be163faec45e5b79fba7c0d75acc49a3b2e70fdcce282bb7514da8a018",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-route-construction-paired-near-besser",
+      "customId": "tc85-126-0561cf909544",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-route-construction-paired-near-besser",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "0e665ce5a038ecbac8c23f73e3a53bff045230d518dfff76581b0e7bb354b03b",
+      "requestUtf8Bytes": 28482
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-idiom-click-brach",
+      "customId": "tc85-127-25ca82b024d4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-idiom-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "74b015588c8191a7c6667ff9cda6e6d24ec2ce45937ad25c523ca09587659ec2",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-idiom-click-das",
+      "customId": "tc85-128-5a114b628c05",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-idiom-click-das",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "8a9eddd0124806c4e8e2c74abfb4ace4d8639925bb8af9ed70b9c455cd15c220",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-idiom-click-eis",
+      "customId": "tc85-129-c1d856c024a5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-idiom-click-eis",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "82746c969ade50e15f28d45df7d6a13aaf6c9e3c2bf026d962e92a192798b2b9",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-idiom-near-endlich",
+      "customId": "tc85-130-17c3d32425d4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-idiom-near-endlich",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "1bac545c50d7c6ef356ea40f8bfce1f4af8746e86b448525b2073aa40df69c1d",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-literal-eis-click-brach",
+      "customId": "tc85-131-76e51607e3df",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-literal-eis-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s10",
+      "requestSha256": "fe61883232c1135c137090b2aec9dd40476b79510e7684ec5e2178422217eb0d",
+      "requestUtf8Bytes": 28656
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-literal-eis-click-eis",
+      "customId": "tc85-132-d96f7b24423d",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-literal-eis-click-eis",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "fd75f02d50b2fd8ab71ed85922cbef9911ba7f4de332dc39448ab5a7e281698a",
+      "requestUtf8Bytes": 28656
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-governed-click-wartet",
+      "customId": "tc85-133-a8cf758569aa",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-governed-click-wartet",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "64bec90d7cd12ce83707556faef7847c9697a58e93d6ac93f779c10f01430fd3",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-governed-click-auf",
+      "customId": "tc85-134-811f99ae0426",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-governed-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "a403599d04465aa64e90dca45c8edce2bdeee6b6aa05e2836aeb4ca561ccc52d",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-governed-near-bus",
+      "customId": "tc85-135-ed97bd359c2a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-governed-near-bus",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "5de419e143ea7244dacf85fd3abd4c9b3bfe20ba8d8dd9f009ff9dd8838db1c0",
+      "requestUtf8Bytes": 28483
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-adjunct-click-laeuft",
+      "customId": "tc85-136-dea2ecbce07f",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-adjunct-click-laeuft",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "4b2d10594758df958bc6fa78c8c95f8d0e638956c515f17516ccb04e3eb3c919",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-adjunct-click-auf",
+      "customId": "tc85-137-7f104e7a0e99",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-adjunct-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "1b5f3a942e74de705a9d64e91ad901fb98957ab75e9a41e4fdf07b6678238e4d",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-adjunct-click-wiese",
+      "customId": "tc85-138-2ee77148fbd9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-adjunct-click-wiese",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "506c6a92226e7860a1063300ba5adfc9ae2709b1161276200dc63d57a5ce75b0",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-inherent-reflexive-click-schaemt",
+      "customId": "tc85-139-2ed46f261c8a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-inherent-reflexive-click-schaemt",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "2e6b233a9b9b27fe1e8191b51f62b8d264d0646e4cdb83c57c5b653345f2c92b",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-inherent-reflexive-click-sich",
+      "customId": "tc85-140-817932d5b467",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-inherent-reflexive-click-sich",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "df87430f49cafe638c58aa526953a76547f2d4a73c2f519b85cb3b468dfda4ab",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-optional-reflexive-click-waescht",
+      "customId": "tc85-141-ac83be87fa15",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-optional-reflexive-click-waescht",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "6677d7a6e5206360590b2656437444667b8dbae4a14f3b7769dd4d0028734f54",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-optional-reflexive-click-sich",
+      "customId": "tc85-142-bda49e11ba7a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-optional-reflexive-click-sich",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "12bf357ad3e66859b537235bc56c1c38b5290f61de0c32572dc228896471a31a",
+      "requestUtf8Bytes": 28315
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-separable-click-steht",
+      "customId": "tc85-143-dff75d48ba77",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-separable-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s11",
+      "requestSha256": "7c074ddfa0db46254c2f05cf6e12d528561347a1b77069ab5f172f2891f90993",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-separable-click-auf",
+      "customId": "tc85-144-832f225c042a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-separable-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "da25ecdb6aca937e1f6200747a5a75232c9bfe492b5654b88b7156afd60f4f31",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-separable-near-heute",
+      "customId": "tc85-145-f9d95675c616",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-separable-near-heute",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "aba4ebc6ab33536c97ddb8a0b6f46861416b806c8cbe44f05727052d1863085b",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-perfect-click-hat",
+      "customId": "tc85-146-b1eb408818aa",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-perfect-click-hat",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "5a5727a8c4572cb40aaf9befd04c8969516a5f7d52fe154279c8ee3e93cab272",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-perfect-click-gelacht",
+      "customId": "tc85-147-3bf20017bccc",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-perfect-click-gelacht",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "b3c820681d5c358987f358983cfd5797c9c1874112461b2ebe222561a411c1f7",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-perfect-near-laut",
+      "customId": "tc85-148-a25158d0d6cc",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-perfect-near-laut",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "36611fc9a07bcf00a60016a1a35d7c29ea32610136872ec7412a866497b25a1f",
+      "requestUtf8Bytes": 28400
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-future-click-wird",
+      "customId": "tc85-149-1f8933b6f5b9",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-future-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "c21f42cc9a6eb8b8000e24419b78536b0038abe1880e10d0c585de093c0e4960",
+      "requestUtf8Bytes": 28402
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-future-click-lachen",
+      "customId": "tc85-150-e8797d5c7152",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-future-click-lachen",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "e7091874008270ea2e2d3218be3aaad03bf7cd70ea921afe5fd505194858e108",
+      "requestUtf8Bytes": 28402
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-passive-click-wird",
+      "customId": "tc85-151-ec8a633a4d57",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-passive-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "234f51974037030d9761c8862c82eb0ef3017a35984be533cb7d523267fae55c",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-passive-click-gelobt",
+      "customId": "tc85-152-a5607f73379c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-passive-click-gelobt",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "3dbf1352be7bef4af589457075b2265004c8b0da3436dccecfe6e8f7b07e6c73",
+      "requestUtf8Bytes": 28485
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-modal-click-muss",
+      "customId": "tc85-153-de74156fcfca",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-modal-click-muss",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "7863ffdd2268420c08921146e5f3df17b860dedf11dbd3bf12f68c008c3911b9",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-modal-click-schlafen",
+      "customId": "tc85-154-0aced2807f4b",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-modal-click-schlafen",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "ad916d803dce8f764121368dcb522c600cb1ea9d874d336c9a81eac5c6f0b4aa",
+      "requestUtf8Bytes": 28403
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-copula-click-ist",
+      "customId": "tc85-155-ffed7b5963db",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-copula-click-ist",
+      "promptCacheKey": "tc85:additional-compact-indices:s12",
+      "requestSha256": "3ad02a5c1ca02018f0b31815df32c13d92da592691ad83879ef1be0c80e8fffc",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-copula-click-muede",
+      "customId": "tc85-156-08b623b2b90b",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-copula-click-muede",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "a20eb401c37140438e407b48b30a7f646d49c091e8a8487f72066df59d372c26",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-collocation-click-trifft",
+      "customId": "tc85-157-f6a5072f7e54",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-collocation-click-trifft",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "364ec1a4ad44802129cfad91a9050f160c5d921dada83362bcd3b4452fde4e90",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-collocation-click-eine",
+      "customId": "tc85-158-b17d9bcd09b1",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-collocation-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "e108e14ba9609785886492b82c9d1abdbfdcbaddb5c46f6b83fbd4a9949da9ff",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-collocation-click-entscheidung",
+      "customId": "tc85-159-c1497056c7ae",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-collocation-click-entscheidung",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "ae793323ea6b07c3f0ea94a8a1a49564aa5f7b378156c8a315dc9cffe1b8b8f9",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-collocation-near-heute",
+      "customId": "tc85-160-5a136b426760",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-collocation-near-heute",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "b229af6d6b7687dddef9ad383d2097d94cdced8e2462ad9c73054431d75e9c27",
+      "requestUtf8Bytes": 28584
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-free-object-click-bringt",
+      "customId": "tc85-161-11f4db77541e",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-free-object-click-bringt",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "d43cf47176e490cbe0b22a19cb7b16e43d0bbf85fbee5b0d77a7bbad81cac94d",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-free-object-click-cola",
+      "customId": "tc85-162-cd1cc449e2bc",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-free-object-click-cola",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "56e28183afa33b6de003115f6495d3787f5c406cfccd1941f1fceeca11536823",
+      "requestUtf8Bytes": 28488
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-fixed-function-click-heult",
+      "customId": "tc85-163-bc6594a5d697",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-fixed-function-click-heult",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "0ca056a5879183fe21fc009466810c8cab9bad209fec0e307c646d198ba8dbc5",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-fixed-function-click-mit",
+      "customId": "tc85-164-2aa23675d3b6",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-fixed-function-click-mit",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "0ae9a764fc5301ca755da8dd1bb4c78a55247fe0eae66ad5c97964961af2bc27",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-fixed-function-click-den",
+      "customId": "tc85-165-6b5f64c736ed",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-fixed-function-click-den",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "824461c549188e9d87d849fc2571001bf98d774eb9a59393cd9b042d7ee9ebcf",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-fixed-function-click-woelfen",
+      "customId": "tc85-166-b29c4518c3b4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-fixed-function-click-woelfen",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "10f3ce4a56594003717a2a1c2d967a8710dbd0bbbdbb1a67a4281a5861c730ca",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-boundary-fixed-function-near-hungrigen",
+      "customId": "tc85-167-9f5811d500e7",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-boundary-fixed-function-near-hungrigen",
+      "promptCacheKey": "tc85:additional-compact-indices:s13",
+      "requestSha256": "3c5094255eaa33ece03f0964f53c24a4e3b0e80c2f496d67ea78c50e1dcc8b50",
+      "requestUtf8Bytes": 28575
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-repeated-click-steht",
+      "customId": "tc85-168-bcded04f4135",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-repeated-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "a81f7ee52edf4368f675ca896d8bc6e1699bed31808a1e316df70249d5d91ddd",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-repeated-click-final-auf",
+      "customId": "tc85-169-1a9c4073b2c5",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-repeated-click-final-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "83ab9165abd8d356e2d0ea965d3c46a2ae2d9808332f0ec9613161a8d70185a1",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-repeated-near-first-auf",
+      "customId": "tc85-170-33ae080e5a85",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-repeated-near-first-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "a9a92d5db524445d53b2bdddddac945fbc6f5733b4c853be86bbefe28f1daa45",
+      "requestUtf8Bytes": 28567
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-collocation-click-stellt",
+      "customId": "tc85-171-a1788328267a",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-collocation-click-stellt",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "7dc23cdfba485b3c1daab49f90dc6247543eac8f50ee8e21478e3fb9aa7caab2",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-collocation-click-eine",
+      "customId": "tc85-172-65cff1bea0a8",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-collocation-click-eine",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "0e473c97346ecff53426dedf03f1645d3168cafb239ab1c95c6a96bd416722ab",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-collocation-click-frage",
+      "customId": "tc85-173-89851084317c",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-collocation-click-frage",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "b19d9a653bcf3e59ea74d6e26363cd736b8fdd4ada2e7b5e73bc49520cc4d16a",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-separable-click-stellt",
+      "customId": "tc85-174-f11a269ea711",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-separable-click-stellt",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "40471e6c282b9bbc5ec21b5381a48dcf74bd9baa8c22eb875269d10ca653b533",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-separable-click-ab",
+      "customId": "tc85-175-9110b5a195fa",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-separable-click-ab",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "6c895aea939a6057b33ca1a510a476716f544f1e65fd9c89dad10b8cecb19793",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-overlap-near-vase",
+      "customId": "tc85-176-a118708375b0",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-overlap-near-vase",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "5a2b059fa1ae44d52330bc47609e07f69a4a1f3d927bcdab1c6933e7415229f8",
+      "requestUtf8Bytes": 28823
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-partial-click-brach",
+      "customId": "tc85-177-fc31cfce69eb",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-partial-click-brach",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "e378d8a759d1df88f4e222936a08a5df180f4f9434b1b1ce24844add87002b29",
+      "requestUtf8Bytes": 28314
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-partial-click-das",
+      "customId": "tc85-178-d538a447fa40",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-partial-click-das",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "b379e8ad1cb1ec218e5916922c771ca0a8d782407971692eeee16ecae829025d",
+      "requestUtf8Bytes": 28314
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-typo-click-stet",
+      "customId": "tc85-179-c5889ce35fc8",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-typo-click-stet",
+      "promptCacheKey": "tc85:additional-compact-indices:s14",
+      "requestSha256": "c78c2b9ddac52a5922e45765fcf3554874188348aa6c7bdf5db7a739993a2e66",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-typo-click-auf",
+      "customId": "tc85-180-9a201d1bf1eb",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-typo-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "873bbee2c9d0b4813aeae91d4b3b3c7562f8a4f2678954f585f5a00dd3ff7e6a",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-slang",
+      "customId": "tc85-181-17ac36649062",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-slang",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "aecfde53076e6ee82c3347eca9be15f7b5d0c872480d960394da118d8e527580",
+      "requestUtf8Bytes": 28311
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-opaque-surroundings",
+      "customId": "tc85-182-e471e8df7faf",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-opaque-surroundings",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "9bb5ce4f459353588b9ad9492f38ea74e5a331640d26fa1413906f5abb7d9c87",
+      "requestUtf8Bytes": 28398
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-punctuation-click-steht",
+      "customId": "tc85-183-81c576eed689",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-punctuation-click-steht",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "506341a2cbe8a942881927b1b2a5c96f25dccf37c8a3063adeb959e543079ba5",
+      "requestUtf8Bytes": 28486
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-punctuation-click-auf",
+      "customId": "tc85-184-aed857b334cb",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-punctuation-click-auf",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "2769a62ead9def690f9fc4214e748203692c8cd2da7e66b2c39911c9e5cc71de",
+      "requestUtf8Bytes": 28486
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-long-click-wird",
+      "customId": "tc85-185-0d9d86bb4825",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-long-click-wird",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "d8c08d99d54005f029da41899bb57829a3ded2a7a637719f2d3d1b169283c0e0",
+      "requestUtf8Bytes": 30539
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-long-click-verstanden",
+      "customId": "tc85-186-61b756a8027d",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-long-click-verstanden",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "190035649d5509e8e9dbfc028bd0d1df665eab2e972a6e6d971d6c23e70c51ee",
+      "requestUtf8Bytes": 30539
+    },
+    {
+      "key": "additional-compact-indices/2/target-de-robust-unresolved",
+      "customId": "tc85-187-e5e9556a0da4",
+      "armId": "additional-compact-indices",
+      "attemptNumber": 2,
+      "caseId": "target-de-robust-unresolved",
+      "promptCacheKey": "tc85:additional-compact-indices:s15",
+      "requestSha256": "bfba1cb536c0c2156a9474f662a67a8747eeae127f794ec107ad0f33f7859d9e",
+      "requestUtf8Bytes": 28315
+    }
+  ],
+  "remote": {
+    "inputFileId": "file-3NgXn75i4o8THKZtsFR2tF",
+    "uploadAttemptedAt": "2026-08-10T05:54:27.586Z",
+    "batchId": "batch_6a79679659488190a7bc526c6d127d49",
+    "createAttemptedAt": "2026-08-10T05:54:30.007Z",
+    "status": "completed",
+    "outputFileId": "file-YQsVfCCuYH7cG8quJwuykm",
+    "errorFileId": null,
+    "snapshots": [
+      {
+        "observedAt": "2026-08-10T05:54:30.891Z",
+        "raw": {
+          "id": "batch_6a79679659488190a7bc526c6d127d49",
+          "object": "batch",
+          "endpoint": "/v1/responses",
+          "model": null,
+          "errors": null,
+          "input_file_id": "file-3NgXn75i4o8THKZtsFR2tF",
+          "completion_window": "24h",
+          "status": "validating",
+          "output_file_id": null,
+          "error_file_id": null,
+          "created_at": 1786341270,
+          "in_progress_at": null,
+          "expires_at": 1786427670,
+          "finalizing_at": null,
+          "completed_at": null,
+          "failed_at": null,
+          "expired_at": null,
+          "cancelling_at": null,
+          "cancelled_at": null,
+          "request_counts": {
+            "total": 0,
+            "completed": 0,
+            "failed": 0
+          },
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "metadata": {
+            "prototype": "target-classification-high-level-contracts",
+            "binding_sha256": "bc7056154c481a1d49759e2bb0221ae07fd32756d56d866b0f6eb1afac712519",
+            "input_sha256": "a50ac7441f2ec6ed47eec290dd9122cb5bcf90ccd62b6f8350b651cc06d6b819"
+          }
+        },
+        "utf8Bytes": 884
+      },
+      {
+        "observedAt": "2026-08-10T05:56:59.253Z",
+        "raw": {
+          "id": "batch_6a79679659488190a7bc526c6d127d49",
+          "object": "batch",
+          "endpoint": "/v1/responses",
+          "model": "gpt-5.6-luna",
+          "errors": null,
+          "input_file_id": "file-3NgXn75i4o8THKZtsFR2tF",
+          "completion_window": "24h",
+          "status": "in_progress",
+          "output_file_id": null,
+          "error_file_id": null,
+          "created_at": 1786341270,
+          "in_progress_at": 1786341333,
+          "expires_at": 1786427670,
+          "finalizing_at": null,
+          "completed_at": null,
+          "failed_at": null,
+          "expired_at": null,
+          "cancelling_at": null,
+          "cancelled_at": null,
+          "request_counts": {
+            "total": 188,
+            "completed": 0,
+            "failed": 0
+          },
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "metadata": {
+            "prototype": "target-classification-high-level-contracts",
+            "binding_sha256": "bc7056154c481a1d49759e2bb0221ae07fd32756d56d866b0f6eb1afac712519",
+            "input_sha256": "a50ac7441f2ec6ed47eec290dd9122cb5bcf90ccd62b6f8350b651cc06d6b819"
+          }
+        },
+        "utf8Bytes": 903
+      },
+      {
+        "observedAt": "2026-08-10T06:04:26.167Z",
+        "raw": {
+          "id": "batch_6a79679659488190a7bc526c6d127d49",
+          "object": "batch",
+          "endpoint": "/v1/responses",
+          "model": "gpt-5.6-luna",
+          "errors": null,
+          "input_file_id": "file-3NgXn75i4o8THKZtsFR2tF",
+          "completion_window": "24h",
+          "status": "completed",
+          "output_file_id": "file-YQsVfCCuYH7cG8quJwuykm",
+          "error_file_id": null,
+          "created_at": 1786341270,
+          "in_progress_at": 1786341333,
+          "expires_at": 1786427670,
+          "finalizing_at": 1786341486,
+          "completed_at": 1786341494,
+          "failed_at": null,
+          "expired_at": null,
+          "cancelling_at": null,
+          "cancelled_at": null,
+          "request_counts": {
+            "total": 188,
+            "completed": 188,
+            "failed": 0
+          },
+          "usage": {
+            "input_tokens": 1109090,
+            "output_tokens": 7459,
+            "total_tokens": 1116549,
+            "input_tokens_details": {
+              "cached_tokens": 991408
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "metadata": {
+            "prototype": "target-classification-high-level-contracts",
+            "binding_sha256": "bc7056154c481a1d49759e2bb0221ae07fd32756d56d866b0f6eb1afac712519",
+            "input_sha256": "a50ac7441f2ec6ed47eec290dd9122cb5bcf90ccd62b6f8350b651cc06d6b819"
+          }
+        },
+        "utf8Bytes": 960
+      }
+    ]
+  }
+}

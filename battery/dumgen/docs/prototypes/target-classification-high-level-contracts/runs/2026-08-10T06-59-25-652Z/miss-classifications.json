@@ -1,0 +1,22 @@
+{
+  "additional-compact-indices/1/target-de-route-lexeme-intj": { "classification": "prompt-defect", "explanation": "The prompt did not keep a standalone interjection separate from a discourse formula." },
+  "additional-compact-indices/1/target-de-route-phraseme-aphorism-click-wissen": { "classification": "prompt-defect", "explanation": "The prompt did not preserve every fixed member of the aphorism." },
+  "additional-compact-indices/1/target-de-route-construction-paired-click-desto": { "classification": "prompt-defect", "explanation": "The prompt did not distinguish the earlier PairedFrame anchor from its comparative filler." },
+  "additional-compact-indices/1/target-de-route-construction-paired-near-frueher": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into the PairedFrame." },
+  "additional-compact-indices/1/target-de-route-construction-paired-near-besser": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into a larger fixed expression." },
+  "additional-compact-indices/1/target-de-boundary-adjunct-click-auf": { "classification": "prompt-defect", "explanation": "The prompt confused a free locative adposition with a governed preposition." },
+  "additional-compact-indices/1/target-de-robust-repeated-click-steht": { "classification": "prompt-defect", "explanation": "The prompt split the lexical verb from the correct repeated particle." },
+  "additional-compact-indices/1/target-de-robust-repeated-click-final-auf": { "classification": "prompt-defect", "explanation": "The prompt failed to join the clicked final particle to its verb." },
+  "additional-compact-indices/1/target-de-robust-repeated-near-first-auf": { "classification": "prompt-defect", "explanation": "The prompt joined the wrong repeated adposition to the verb." },
+  "additional-compact-indices/1/target-de-robust-typo-click-auf": { "classification": "prompt-defect", "explanation": "The prompt did not recover the separable verb across an intelligible typo." },
+  "additional-compact-indices/2/target-de-route-lexeme-intj": { "classification": "prompt-defect", "explanation": "The prompt expanded a standalone interjection into a discourse formula." },
+  "additional-compact-indices/2/target-de-route-phraseme-aphorism-click-macht": { "classification": "prompt-defect", "explanation": "The prompt omitted the first fixed member of the aphorism." },
+  "additional-compact-indices/2/target-de-route-construction-paired-click-desto": { "classification": "prompt-defect", "explanation": "The prompt paired the second anchor with the preceding comparative filler." },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-frueher": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into the PairedFrame." },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-besser": { "classification": "prompt-defect", "explanation": "The prompt paired a clicked filler with the wrong anchor." },
+  "additional-compact-indices/2/target-de-robust-repeated-click-steht": { "classification": "prompt-defect", "explanation": "The prompt split the repeated-particle verb." },
+  "additional-compact-indices/2/target-de-robust-repeated-near-first-auf": { "classification": "prompt-defect", "explanation": "The prompt joined the wrong repeated adposition to the verb." },
+  "additional-compact-indices/2/target-de-robust-typo-click-auf": { "classification": "prompt-defect", "explanation": "The prompt did not recover the separable verb across an intelligible typo." },
+  "additional-compact-indices/2/target-de-robust-punctuation-click-auf": { "classification": "prompt-defect", "explanation": "The prompt let punctuation split the clicked separable particle from its verb." },
+  "additional-compact-indices/2/target-de-robust-long-click-wird": { "classification": "prompt-defect", "explanation": "The prompt split a distant future auxiliary from its lexical verb." }
+}
