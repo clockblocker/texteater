@@ -85,40 +85,37 @@ export const PRICE_SCHEDULE = Object.freeze({
 	}),
 });
 
-const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains that click and its Family/Kind route. This is the big-picture selection pass, not grammatical drill-down, lemma resolution, or canonicalization.
+const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is the big-picture selection pass, not grammatical drill-down, lemma resolution, or canonicalization.
 
 CLICK FIRST — this constraint is non-negotiable:
 
 1. Compact indices are zero-based. Locate the one segment whose clicked field is true and verify that its compactIndex equals clickedCompactIndex.
-2. Consider only candidate targets that contain that exact clicked segment. Discard every candidate that does not contain it, even if it is the sentence's most salient fixed expression.
-3. If the click is on a free word inside, between, or beside fixed members, return that clicked free word as its own Lexeme. Never return the nearby fixed expression.
-4. Only after anchoring on the click, determine the target and encode its membership.
+2. Consider only targets containing that exact segment. Discard every target that does not contain it, even if it is the most salient expression in the surrounding context.
+3. If the click is on a free word inside, between, or beside the members of another unit, return the clicked word as its own Lexeme. Do not return the nearby unit.
 
 The central linguistic policy is: fixed parts go together; free parts stay apart.
 
-Read the complete occurrence before deciding. Choose the largest defensible fixed unit containing the click, but do not absorb a phrase or clause merely because its words are syntactically related. If fixedness is doubtful, choose the smaller defensible target rather than guessing a larger group.
+For this high-level pass, parts belong together for three distinct reasons:
 
-LITERAL-USE VETO: familiar wording does not prove an idiom. A Phraseme/Idiom is allowed only when this occurrence has the idiomatic, non-compositional reading. In a compositionally literal occurrence, classify the clicked word separately. Context overrides remembered spelling.
+- LEXICAL FIXEDNESS: group the realized fixed members of an established Phraseme or Construction.
+- LEXICAL VALENCY: group a verb with its lexically governed preposition, but not with the preposition's free nominal argument; group an inherently reflexive verb with its required reflexive pronoun.
+- GRAMMATICAL COMPOSITION: group separable and other multi-segment realizations of one verb. Also group the grammatical auxiliary or auxiliaries of perfect, future, and passive forms with the lexical verb. At this level, such a verbal complex is the temporal or voice realization of one lemma and routes as Lexeme/VERB.
 
-Group all realized fixed members of:
+Mind that wording associated with an idiom is not necessarily idiomatic in the supplied occurrence. Route Phraseme/Idiom only when the complete context supports the idiomatic, non-compositional reading. When the same wording is used compositionally and literally, do not classify it as an Idiom. This warning concerns idiom recognition; it does not override the valency or grammatical-composition rules above.
 
-- established Phrasemes and Constructions;
-- separable and other multi-segment realizations of one verb;
-- a verb with its lexically governed preposition, excluding the preposition's free nominal argument;
-- an inherently reflexive verb with its required reflexive pronoun;
-- perfect, future, and passive verb forms: group the grammatical auxiliary or auxiliaries with the lexical verb and route the result as Lexeme/VERB.
+Read the complete supplied context before deciding; it may contain more than one sentence. Choose the largest defensible fixed unit containing the click, but do not absorb a phrase or clause merely because its words are syntactically related. If a larger unit is doubtful, choose the smaller defensible target.
 
-Keep free material separate, including arguments, objects, complements, adjuncts, modifiers, fillers, and freely inserted words. Keep an optional or contextual reflexive pronoun separate from its verb. Keep a meaning-bearing modal AUX separate from its governed VERB. Keep a copula AUX separate from its predicate unless the occurrence belongs to a larger established fixed expression.
+Keep free material separate, including arguments, objects, complements, adjuncts, modifiers, fillers, and freely inserted words. Keep an optional or contextual reflexive pronoun separate from its verb. Keep a meaning-bearing modal AUX separate from its governed VERB. Keep a copula AUX separate from its predicate unless the occurrence belongs to an established fixed expression.
 
-COLLOCATION SPLIT: conventionality or restricted lexical choice alone does not make a high-level multi-segment target. For an ordinary non-idiomatic Collocation or support-verb combination such as eine Entscheidung treffen or eine Frage stellen, classify only the clicked word as its Lexeme. Do not route Phraseme/Collocation under this policy.
+Conventionality or restricted lexical choice alone does not make a high-level multi-segment target. For an ordinary non-idiomatic collocation or support-verb combination such as eine Entscheidung treffen or eine Frage stellen, classify only the clicked word as its Lexeme. Phraseme/Collocation is not reachable under this policy.
 
 Route only the click-containing target:
 
 - Lexeme is the default for an individual word and for a multi-segment realization of one verb. Use the contextually correct German word-class kind.
 - A standalone symbol such as %, €, or another non-word symbol is Lexeme/SYM. A neighboring quantity remains a separate Lexeme/NUM.
-- Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression whose occurrence has a non-compositional meaning. Phraseme/Collocation is not reachable under this policy.
+- Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression used here with a non-compositional meaning.
 - Construction/Fusion is exactly one source segment that fuses grammatical words, for example zum = zu + dem, unless it participates in a larger fixed target. Route that segment as Construction/Fusion, not Lexeme/ADP.
-- Construction/PairedFrame contains only its fixed correlated anchors. A clicked freely supplied filler is its own Lexeme, not a member of the nearby PairedFrame.
+- Construction/PairedFrame contains only its fixed correlated anchors. A freely supplied filler is not a member; if the filler is clicked, return it as its own Lexeme.
 
 The input is a compact projection of the source:
 
@@ -127,20 +124,13 @@ The input is a compact projection of the source:
 - Punctuation and OpaqueText remain as context and occupy compact positions;
 - only ResolvableText segments can be target members.
 
-Membership is positional. Include all and only source segments realizing the selected unit in this occurrence. Include every fixed realized member even when discontinuous. Exclude punctuation, OpaqueText, free context, neighboring targets, and identical spellings at the wrong position. Preserve increasing compact source order; do not rewrite into lemma, canonical, or grammatical order.
+Membership is positional. Include all and only the source segments realizing the selected unit in this occurrence, including every realized member when the unit is discontinuous. Exclude punctuation, OpaqueText, free material, neighboring units, and identical spellings at the wrong position. Preserve increasing compact source order; do not rewrite the members into lemma, canonical, or grammatical order.
 
 Return Unresolved only when the clicked ResolvableText has no defensible Family/Kind route. If a standalone route is defensible but a larger fixed group is uncertain, choose the standalone target. For Resolved, target must be non-null. For Unresolved, target must be null.
 
-Before returning, silently verify:
+Before returning, silently verify that the selected target contains the exact clicked segment, contains every and only member required by the policy, and follows the representation-specific membership instruction supplied after this policy.
 
-1. I located the zero-based segment marked clicked.
-2. My semantic target contains that exact segment.
-3. Every included segment is a fixed member of that target, or is the clicked standalone target itself.
-4. No fixed member is missing.
-5. I removed free arguments, fillers, modifiers, punctuation, OpaqueText, neighboring units, and wrong repeated positions.
-6. I encoded that one semantic decision using the membership rule below.
-
-Return only the strict JSON contract, with no lemma, canonical form, surface form, explanation, or alternative candidates.`;
+Return only an object matching the supplied output schema. Do not return a lemma, canonical form, surface form, explanation, or alternative candidate.`;
 
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 	"target-de-demo-perfect-arbeiten-click-habe":
