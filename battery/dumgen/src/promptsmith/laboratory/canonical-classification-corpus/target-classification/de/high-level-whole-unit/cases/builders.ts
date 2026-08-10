@@ -27,6 +27,17 @@ export function sentence(
 	return segments;
 }
 
+export function sentences(items: readonly (readonly string[])[]): Segment[] {
+	const segments: Segment[] = [];
+	for (const [index, words] of items.entries()) {
+		if (index > 0) {
+			segments.push({ kind: "Whitespace", text: " " });
+		}
+		segments.push(...sentence(words));
+	}
+	return segments;
+}
+
 export function resolved<const Family extends Route["family"]>(
 	segments: readonly Segment[],
 	clickedSegmentIndex: number,

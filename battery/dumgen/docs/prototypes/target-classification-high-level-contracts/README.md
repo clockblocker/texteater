@@ -11,10 +11,10 @@ additional to that click.
 Whitespace is removed while Punctuation and OpaqueText remain. Every remaining
 segment carries its zero-based compact index and an explicit click marker,
 redundant with the top-level clicked index; the input schema rejects
-disagreements. The adapter owns compact↔original maps, materializes the same
-twenty-one #84 demonstrations, decodes into the canonical original-index
-output, and is scored by the #84 evaluator over the exact 94-case development
-suite.
+disagreements. The adapter owns compact↔original maps, materializes the selected
+demonstrations, decodes into the canonical original-index output, and is scored
+by the #84 evaluator over the exact 94-case development suite. Demonstrations
+are capped at 35 and kept as small as the current policy coverage permits.
 
 The retained v3 run ended in `NoWinner` and exposed representation-independent
 prompt failures. The retained v5 run's policy-first prompt materially improved
@@ -46,12 +46,31 @@ Version v8 retires the full-index and fixed-mask alternatives. Only the
 additional-indices contract remains, reducing the frozen schedule to 188 calls
 without changing the 94 development cases or two-attempt policy.
 
+Version v9 makes transport selection explicit. Every provider run binds a
+mandatory `batching` boolean into preflight evidence. Batch mode retains its
+checkpointed upload/create/resume workflow; direct mode uses eight concurrent
+Responses calls and an atomic checkpoint that skips completed logical attempts
+on restart. Each iteration has a conservative $2 ceiling. A winner now requires
+each independent 94-case attempt to pass at least 90 cases, plus membership
+safety and click-invariance; slice ratios remain diagnostics rather than winner
+gates.
+
+Five bounded direct v9 development iterations were run on 2026-08-10. Their
+per-attempt scores were 81/84, 84/84, 85/85, 81/82, and 84/84 out of 94. The
+empirically best configuration uses 27 demonstrations and is retained in
+[`runs/2026-08-10T07-05-38-236Z/results.json`](runs/2026-08-10T07-05-38-236Z/results.json):
+85/94 in each attempt, zero provider errors, 91.67% routes, 90.91% boundaries,
+and 87.5% robustness. It fails membership safety and click-invariance, so the
+honest verdict is `NoWinner`. The five direct runs consumed a combined retained
+cost upper bound of $0.335872, well below the $10 session cap. These are
+development-suite results, not evidence of generalization.
+
 ## Deterministic preflight
 
 From `battery/dumgen`, run the one package command:
 
 ```sh
-bun run prototype:target-classification-high-level-contracts
+bun run prototype:target-classification-high-level-contracts preflight --batching=true
 ```
 
 Preflight performs no provider call. It proves adapter ideal round-trips,
@@ -66,8 +85,8 @@ also binds the exact thresholds and explicit valid and invalid postcondition
 fixtures for the adapter. The additional-index adapter
 rejects unordered or duplicate additional indices before it inserts the click.
 
-The approved schedule contains exactly **188 Responses requests** inside one
-OpenAI Batch input:
+The approved schedule contains exactly **188 Responses requests**, either
+inside one OpenAI Batch input or as one bounded direct run:
 94 cases × 1 contract × 2 attempts. It uses `gpt-5.6-luna`, reasoning `none`, low
 verbosity, 1,024 maximum output tokens, `maxRetries: 0`, and `store: false`.
 Every JSONL line uses `POST /v1/responses`, has a unique `custom_id`, and is
@@ -83,8 +102,7 @@ guideline, while every request within a shard shares the identical stable
 system prefix. The cache and Batch transport policy are part of the preflight
 binding.
 
-The price binding is OpenAI Batch pricing for GPT-5.6 Luna observed on
-2026-08-09:
+The Batch price binding for GPT-5.6 Luna was observed on 2026-08-09:
 
 - short context: $0.10/M input, $0.01/M cached input, $0.125/M cache write,
   $0.60/M output;
@@ -94,9 +112,14 @@ The price binding is OpenAI Batch pricing for GPT-5.6 Luna observed on
 See the [official GPT-5.6 Luna model page](https://developers.openai.com/api/docs/models/gpt-5.6-luna),
 the [Batch guide](https://developers.openai.com/api/docs/guides/batch), and the
 [prompt caching guide](https://developers.openai.com/api/docs/guides/prompt-caching).
+Direct mode binds the corresponding standard Responses prices observed on
+2026-08-10: $0.20/M input, $0.02/M cached input, $0.25/M cache write, and
+$1.20/M output for short context; long-context input/cache rates are doubled
+and output is $1.80/M.
+
 Preflight chooses the tier independently for every request, treats UTF-8 bytes
 plus framing allowance as a conservative input-token upper bound, charges the
-higher input/cache-write rate, and refuses a ceiling above **$5.00**. The
+higher input/cache-write rate, and refuses a ceiling above **$2.00**. The
 current deterministic request set estimates a maximum below that hard cap.
 
 The official page is mutable and publishes `gpt-5.6-luna` as the only Luna
@@ -108,14 +131,37 @@ rejects any other identifier or within-run drift. This cannot detect a provider
 backend revision served later under the same identifier, and the recorded date
 and rates document an observation rather than an immutable price snapshot.
 
-## Explicit Batch mode and offline finalization
+## Explicit transport modes and offline finalization
 
-No live call is part of this change. After human approval only, submit the
-frozen Batch explicitly:
+Run the direct transport with bounded concurrency eight:
 
 ```sh
 bun --env-file ../../.env.local \
-	  run prototype:target-classification-high-level-contracts batch-submit
+  run prototype:target-classification-high-level-contracts run \
+  --batching=false [run-directory]
+```
+
+Direct mode atomically writes `direct-checkpoint.json` before every dispatch and
+after every completed logical attempt. Rerunning the command with the same
+directory skips completed keys. A dispatched but incomplete key is replayed;
+every dispatch, including such a crash-gap replay, counts against the retained
+$2 conservative ceiling. The Responses API cannot reconcile that gap remotely
+when `store: false`, so the checkpoint records dispatch counts separately from
+the 188 logical result slots.
+
+Direct mode also retries a logical request at most twice, and only for transport
+or network failures, HTTP 429, or HTTP 5xx. It never retries a valid provider
+response merely because its model output, schema, or semantic classification is
+wrong. Each retry is checkpointed as another physical dispatch before the call
+and must fit under the same $2 ceiling. Exhaustion retains the final provider
+error in the request's one logical result slot.
+
+Alternatively, submit the frozen Batch explicitly:
+
+```sh
+bun --env-file ../../.env.local \
+	  run prototype:target-classification-high-level-contracts batch-submit \
+  --batching=true [run-directory]
 ```
 
 The command prints the retained `batch-manifest.json` path. Poll or resume the
@@ -124,6 +170,7 @@ same Batch without resubmitting it:
 ```sh
 bun --env-file ../../.env.local \
   run prototype:target-classification-high-level-contracts batch-resume \
+  --batching=true \
   docs/prototypes/target-classification-high-level-contracts/runs/<run>/batch-manifest.json
 ```
 
@@ -179,8 +226,9 @@ byte-compares its canonical input, canonical ideal, private input, and private
 ideal with the retained attempt. It also recomputes request/response byte counts,
 checks raw response fields against retained metadata, and rejects resolved-model
 drift or a changed run-level model binding.
-The retained contract is eligible only with all 188 attempts, zero provider errors, zero
-unclassified misses, all membership-safety and click-invariance gates, at least
-80% overall score, and at least 80% in each route/boundary/robustness slice. If
-it is eligible, the verdict names `additional-compact-indices` as the winner;
-otherwise the verdict is `NoWinner`.
+The retained contract is eligible only with all 188 attempts, zero provider
+errors, zero unclassified misses, all membership-safety and click-invariance
+gates, and at least 90/94 exact passes in each independent attempt. Route,
+boundary, and robustness slice ratios remain reported diagnostics but are not
+winner gates. If eligible, the verdict names `additional-compact-indices` as
+the winner; otherwise the verdict is `NoWinner`.

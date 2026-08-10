@@ -4,7 +4,17 @@ import {
 } from "../../../../../../assembly";
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
 import { resolved, type Segment, sentence } from "./builders";
-import { evidence, IDS } from "./sources";
+import { evidence, IDS, udPartOfSpeech } from "./sources";
+
+const JE_DESTO_CONTAMINATION_KEY = "target-construction:paired-frame:je-desto";
+const ENTWEDER_ODER_CONTAMINATION_KEY =
+	"target-construction:paired-frame:entweder-oder";
+const EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY =
+	"target-construction:paired-frame:einerseits-andererseits";
+const ZUM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:zum";
+const CRINGE_CONTAMINATION_KEY = "target-lexeme:cringe";
+const ZEIT_IST_GELD_CONTAMINATION_KEY =
+	"target-phraseme:aphorism:zeit-ist-geld";
 
 const lexeme = (
 	words: readonly string[],
@@ -25,8 +35,8 @@ const lexemeFromSegments = (
 		kind,
 	),
 	explanation: evidence(
-		kind === "AUX" ? IDS.modalVerb : IDS.wordClasses,
-		`The complete sentence disambiguates the clicked occurrence as Lexeme/${kind}.`,
+		kind === "AUX" ? IDS.modalVerb : udPartOfSpeech(kind),
+		`The complete sentence disambiguates the clicked occurrence as Lexeme/${kind} in Dumling's UD-inspired product inventory.`,
 	),
 });
 
@@ -38,6 +48,7 @@ const fusion = {
 		"Construction",
 		"Fusion",
 	),
+	contaminationKeys: [ZUM_FUSION_CONTAMINATION_KEY],
 	explanation: evidence(
 		IDS.fusionZu,
 		"The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem. IDS does not assign Dumgen's Construction/Fusion route; issue #82 product policy maps the one fused source Segment at original index 4 to that route.",
@@ -89,6 +100,7 @@ const pairedFrameTarget = (
 		"Construction",
 		"PairedFrame",
 	),
+	contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 	explanation: evidence(
 		IDS.pairedFrame,
 		"IDS describes je with obligatory desto or umso as a two-part proportional correlation. Issue #82 product policy maps je and desto to Construction/PairedFrame membership while keeping the comparative fillers separate.",
@@ -103,6 +115,7 @@ const pairedFrameFiller = (clickedSegmentIndex: number) => ({
 		"Lexeme",
 		"ADJ",
 	),
+	contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 	explanation: evidence(
 		IDS.pairedFrame,
 		"IDS places the comparative expressions after je and desto inside their respective degree phrases. Issue #82 product policy therefore keeps this freely supplied comparative adjective outside Construction/PairedFrame membership.",
@@ -114,6 +127,17 @@ const discourseFormula = sentence(["Herzlichen", "Dank"], "!");
 const proverb = sentence(["Morgenstund", "hat", "Gold", "im", "Mund"]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
 const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
+const demonstrationMatchedPairedFrame: Segment[] = [
+	{ kind: "ResolvableText", text: "Einerseits" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "lokal" },
+	{ kind: "Punctuation", text: "," },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "andererseits" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "digital" },
+	{ kind: "Punctuation", text: "." },
+];
 const demonstrationPairedFrameFiller: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
@@ -141,6 +165,12 @@ const demonstrationSymbol = sentence([
 	"bei",
 	"zwölf",
 	"%",
+]);
+const demonstrationPredicativeCringe = sentence([
+	"Sein",
+	"Kommentar",
+	"wirkt",
+	"cringe",
 ]);
 const pairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
@@ -256,11 +286,6 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			4,
 			"VERB",
 		),
-		"target-de-route-lexeme-x": lexeme(
-			["Das", "Wort", "lol", "steht", "hier"],
-			4,
-			"X",
-		),
 		"target-de-demo-default-modal-kann": lexeme(
 			["Heute", "kann", "Lea", "arbeiten"],
 			2,
@@ -297,6 +322,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Phraseme",
 				"Aphorism",
 			),
+			contaminationKeys: [ZEIT_IST_GELD_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.phraseolexeme,
 				"IDS establishes the fixed multiword criterion. Issue #82 treats Zeit ist Geld as the complete Phraseme/Aphorism target under the German high-level policy.",
@@ -310,6 +336,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Phraseme",
 				"Aphorism",
 			),
+			contaminationKeys: [ZEIT_IST_GELD_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.phraseolexeme,
 				"The clicked copular spelling participates in the fixed Aphorism rather than becoming a standalone AUX under this high-level occurrence.",
@@ -323,6 +350,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Phraseme",
 				"Aphorism",
 			),
+			contaminationKeys: [ZEIT_IST_GELD_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.phraseolexeme,
 				"Every fixed member click returns the same source-ordered Aphorism target.",
@@ -336,9 +364,82 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Construction",
 				"PairedFrame",
 			),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
 				"IDS describes entweder ... oder as a correlated pair. Issue #82 includes only the two fixed anchors in Construction/PairedFrame membership.",
+			),
+		},
+		"target-de-demo-paired-entweder-click-hier": {
+			...resolved(demonstrationPairedFrame, 2, [2], "Lexeme", "ADV"),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"IDS describes entweder ... oder as the correlated frame. Issue #82 keeps the freely supplied locative filler hier outside frame membership and routes the clicked occurrence as Lexeme/ADV.",
+			),
+		},
+		"target-de-demo-paired-entweder-click-dort": {
+			...resolved(demonstrationPairedFrame, 6, [6], "Lexeme", "ADV"),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"IDS describes entweder ... oder as the correlated frame. Issue #82 keeps the freely supplied locative filler dort outside frame membership and routes the clicked occurrence as Lexeme/ADV.",
+			),
+		},
+		"target-de-demo-paired-einerseits-click-einerseits": {
+			...resolved(
+				demonstrationMatchedPairedFrame,
+				0,
+				[0, 5],
+				"Construction",
+				"PairedFrame",
+			),
+			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"Issue #82 treats einerseits and andererseits as the two fixed PairedFrame anchors while the supplied adjectives lokal and digital remain free fillers.",
+			),
+		},
+		"target-de-demo-paired-einerseits-click-lokal": {
+			...resolved(
+				demonstrationMatchedPairedFrame,
+				2,
+				[2],
+				"Lexeme",
+				"ADJ",
+			),
+			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"Issue #82 keeps the freely supplied adjective lokal outside the einerseits ... andererseits PairedFrame.",
+			),
+		},
+		"target-de-demo-paired-einerseits-click-andererseits": {
+			...resolved(
+				demonstrationMatchedPairedFrame,
+				5,
+				[0, 5],
+				"Construction",
+				"PairedFrame",
+			),
+			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"Issue #82 pairs the second anchor andererseits with the earlier anchor einerseits, not with either adjacent adjective filler.",
+			),
+		},
+		"target-de-demo-paired-einerseits-click-digital": {
+			...resolved(
+				demonstrationMatchedPairedFrame,
+				7,
+				[7],
+				"Lexeme",
+				"ADJ",
+			),
+			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"Issue #82 keeps the freely supplied adjective digital outside the einerseits ... andererseits PairedFrame.",
 			),
 		},
 		"target-de-demo-paired-entweder-click-oder": {
@@ -349,9 +450,10 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Construction",
 				"PairedFrame",
 			),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
-				"The alternative fillers heute and morgen are free context; either fixed anchor selects the same PairedFrame.",
+				"The locative fillers hier and dort are free context; either fixed anchor selects the same PairedFrame.",
 			),
 		},
 		"target-de-demo-paired-je-click-laenger": {
@@ -362,6 +464,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"Lexeme",
 				"ADJ",
 			),
+			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedFrame,
 				"IDS describes je ... desto as a proportional correlation but places the comparative expressions inside the degree phrases organized by its anchors. Issue #82 therefore keeps the freely supplied comparative länger outside Construction/PairedFrame membership and classifies the clicked occurrence as Lexeme/ADJ.",
@@ -369,6 +472,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 		},
 		"target-de-demo-fusion-zum": {
 			...resolved(demonstrationFusion, 4, [4], "Construction", "Fusion"),
+			contaminationKeys: [ZUM_FUSION_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.fusionZu,
 				"The IDS preposition entry identifies zum as zu plus dem. Issue #82 maps the one fused source segment to Construction/Fusion rather than Lexeme/ADP.",
@@ -377,8 +481,22 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 		"target-de-demo-symbol-percent": {
 			...resolved(demonstrationSymbol, 10, [10], "Lexeme", "SYM"),
 			explanation: evidence(
-				IDS.wordClasses,
+				udPartOfSpeech("SYM"),
 				"The clicked percent sign is a standalone symbol rather than part of the neighboring number; issue #82 maps that occurrence to Lexeme/SYM.",
+			),
+		},
+		"target-de-demo-predicative-cringe-click-cringe": {
+			...resolved(
+				demonstrationPredicativeCringe,
+				6,
+				[6],
+				"Lexeme",
+				"ADJ",
+			),
+			contaminationKeys: [CRINGE_CONTAMINATION_KEY],
+			explanation: evidence(
+				udPartOfSpeech("ADJ"),
+				"The borrowed property word cringe is predicative after wirkt. Dumling's UD-inspired product inventory therefore uses the informative Lexeme/ADJ route rather than residual X or a nominal analysis.",
 			),
 		},
 		"target-de-route-phraseme-aphorism-click-wissen": fixedPhraseme(

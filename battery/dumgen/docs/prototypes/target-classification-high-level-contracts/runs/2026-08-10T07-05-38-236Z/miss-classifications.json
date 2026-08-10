@@ -1,0 +1,20 @@
+{
+  "additional-compact-indices/1/target-de-route-construction-paired-near-frueher": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into the PairedFrame." },
+  "additional-compact-indices/1/target-de-route-construction-paired-near-besser": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into a larger fixed expression." },
+  "additional-compact-indices/1/target-de-boundary-idiom-near-endlich": { "classification": "prompt-defect", "explanation": "The prompt absorbed a free adverb inside the idiom occurrence." },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-click-heult": { "classification": "prompt-defect", "explanation": "The prompt included a free adjective in the idiom membership." },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-click-woelfen": { "classification": "prompt-defect", "explanation": "The prompt omitted a fixed determiner from the idiom membership." },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-near-hungrigen": { "classification": "prompt-defect", "explanation": "The prompt returned the surrounding idiom when its free adjective was clicked." },
+  "additional-compact-indices/1/target-de-robust-repeated-click-steht": { "classification": "prompt-defect", "explanation": "The prompt split the verb from the correct repeated particle." },
+  "additional-compact-indices/1/target-de-robust-repeated-near-first-auf": { "classification": "prompt-defect", "explanation": "The prompt joined the wrong repeated adposition to the verb." },
+  "additional-compact-indices/1/target-de-robust-punctuation-click-auf": { "classification": "prompt-defect", "explanation": "The prompt let punctuation split the clicked particle from its separable verb." },
+  "additional-compact-indices/2/target-de-route-construction-fusion": { "classification": "prompt-defect", "explanation": "The prompt incorrectly added a neighboring noun to the one-token Fusion." },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-frueher": { "classification": "prompt-defect", "explanation": "The prompt absorbed a clicked comparative filler into the PairedFrame." },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-besser": { "classification": "prompt-defect", "explanation": "The prompt absorbed both fillers into the PairedFrame." },
+  "additional-compact-indices/2/target-de-boundary-optional-reflexive-click-sich": { "classification": "prompt-defect", "explanation": "The prompt grouped an optional reflexive object with the verb." },
+  "additional-compact-indices/2/target-de-boundary-copula-click-ist": { "classification": "prompt-defect", "explanation": "The prompt routed the standalone copula as VERB instead of AUX." },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-click-mit": { "classification": "prompt-defect", "explanation": "The prompt split a fixed idiom preposition from the expression." },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-near-hungrigen": { "classification": "prompt-defect", "explanation": "The prompt returned the surrounding idiom when its free adjective was clicked." },
+  "additional-compact-indices/2/target-de-robust-repeated-click-steht": { "classification": "prompt-defect", "explanation": "The prompt chose the wrong repeated particle position for the separable verb." },
+  "additional-compact-indices/2/target-de-robust-overlap-separable-click-stellt": { "classification": "prompt-defect", "explanation": "The model repeated the clicked index in additional membership, violating the representation contract." }
+}

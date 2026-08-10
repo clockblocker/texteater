@@ -222,11 +222,13 @@ non-interactive.
 For now, only `ResolvableText` is clickable. All four Segment kinds remain
 indexed.
 
-`Lexeme/PUNCT` remains in the downstream German route inventory, but it is not
-reachable from High-Level Target Classification while Source Segmentation
-classifies punctuation as `Punctuation` and target membership admits only
-`ResolvableText`. Canonical high-level corpora record this as an inventory/
-clickability domain gap; they must not fabricate clickable punctuation as
+`Lexeme/PUNCT` and `Lexeme/X` remain in the downstream German route inventory,
+but neither is reachable from High-Level Target Classification. Source
+Segmentation classifies punctuation as `Punctuation`, while unintelligible
+material, fragments, and unanalyzed non-primary-language spans belong upstream
+as `OpaqueText`; target membership admits only `ResolvableText`. Canonical
+high-level corpora record these as inventory/clickability domain gaps; they
+must not fabricate clickable punctuation or residual X material as
 `ResolvableText` merely to claim route coverage.
 
 ### Unresolved

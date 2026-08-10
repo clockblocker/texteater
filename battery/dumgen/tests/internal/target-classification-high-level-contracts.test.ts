@@ -4,12 +4,16 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
 	assertAttemptSchedule,
+	assertBatchingForMode,
 	BATCH_COMPLETION_WINDOW,
 	BATCH_ENDPOINT,
+	DIRECT_TRANSIENT_RETRY_LIMIT,
 	finalizeEvidence,
+	parseBatchingFlag,
 	preparePrototypeBatch,
 	resumePrototypeBatch,
 	runLivePrototype,
+	shouldRetryDirectProviderError,
 	submitPrototypeBatch,
 } from "../../docs/prototypes/target-classification-high-level-contracts/run";
 import { stableJson } from "../../src/lib/stable-json";
@@ -24,9 +28,11 @@ import {
 	decidePrototypeWinner,
 	EXACT_CALL_CAP,
 	EXPECTED_CALLS_PER_ARM,
+	MAX_OUTPUT_TOKENS,
 	MAXIMUM_SPEND_USD,
 	preparePrototypePreflight,
 	prepareRepresentationCases,
+	REASONING_EFFORT,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
 	additionalCompactIndicesOutputSchema,
@@ -71,6 +77,57 @@ describe("target classification high-level contract prototype", () => {
 					};
 					callIndex += 1;
 					return response;
+				},
+			},
+		};
+	}
+
+	function fakeResponsesClientByInput(onCall?: () => Promise<void> | void) {
+		const ideals = new Map(
+			REPRESENTATION_IDS.flatMap((id) =>
+				prepareRepresentationCases(id).map(
+					(testCase) =>
+						[
+							stableJson(testCase.privateInput),
+							testCase.privateIdealOutput,
+						] as const,
+				),
+			),
+		);
+		let callCount = 0;
+		return {
+			get callCount() {
+				return callCount;
+			},
+			responses: {
+				create: async (request: unknown) => {
+					callCount += 1;
+					await onCall?.();
+					const privateInput = (
+						request as {
+							input?: readonly { content?: unknown }[];
+						}
+					).input?.[1]?.content;
+					if (typeof privateInput !== "string") {
+						throw new Error("Missing fake private input.");
+					}
+					const output = ideals.get(privateInput);
+					if (output === undefined) {
+						throw new Error("Unknown fake private input.");
+					}
+					const outputText = stableJson(output);
+					return {
+						id: `response-by-input-${callCount}`,
+						model: "gpt-5.6-luna",
+						output_text: outputText,
+						output: [{ type: "message", content: [outputText] }],
+						usage: {
+							input_tokens: 10,
+							output_tokens: 5,
+							total_tokens: 15,
+							input_tokens_details: { cached_tokens: 0 },
+						},
+					};
 				},
 			},
 		};
@@ -136,9 +193,10 @@ describe("target classification high-level contract prototype", () => {
 	});
 
 	test("preflights the frozen additional-indices contract with exact hashes and cost cap", () => {
-		const preflight = preparePrototypePreflight();
+		const preflight = preparePrototypePreflight({ batching: true });
 		expect(evaluationSelection.ids).toHaveLength(94);
-		expect(demonstrationSelection.ids).toHaveLength(21);
+		expect(demonstrationSelection.ids.length).toBeGreaterThan(0);
+		expect(demonstrationSelection.ids.length).toBeLessThanOrEqual(35);
 		expect(preflight.attemptsPerArm).toBe(ATTEMPTS_PER_ARM);
 		expect(preflight.expectedResolvedModel).toBe("gpt-5.6-luna");
 		expect(EXPECTED_CALLS_PER_ARM).toBe(188);
@@ -165,8 +223,9 @@ describe("target classification high-level contract prototype", () => {
 		);
 		expect(preflight.decisionPolicy).toEqual({
 			expectedCallsPerArm: 188,
-			minimumContractRatio: 0.8,
-			minimumSliceRatio: 0.8,
+			expectedEvaluationCasesPerAttempt: 94,
+			minimumAttemptContractScore: 90,
+			minimumAttemptContractRatio: 90 / 94,
 			tieMargin: 0.01,
 			tieRule: "inclusive-best-ratio-margin",
 		});
@@ -208,7 +267,7 @@ describe("target classification high-level contract prototype", () => {
 		}
 	});
 
-	test("round-trips all 115 selected ideals", () => {
+	test("round-trips all selected ideals", () => {
 		const selected = demonstrationSelection.union(evaluationSelection);
 		for (const [index, caseId] of selected.ids.entries()) {
 			const goldenCase = selected.cases[index];
@@ -292,6 +351,7 @@ describe("target classification high-level contract prototype", () => {
 				attemptCount: 188,
 				contractScore: score,
 				executionErrorCount: 0,
+				attemptContractScores: [90, 90],
 				unclassifiedMissCount: 0,
 				safetyGatePass: true,
 				clickGatePass: true,
@@ -303,6 +363,26 @@ describe("target classification high-level contract prototype", () => {
 			decision: "Winner",
 			winner: "additional-compact-indices",
 		});
+		expect(
+			decidePrototypeWinner([
+				{
+					...passing("additional-compact-indices", 183),
+					attemptContractScores: [94, 89],
+				},
+			]),
+		).toMatchObject({ decision: "NoWinner" });
+		expect(
+			decidePrototypeWinner([
+				{
+					...passing("additional-compact-indices", 180),
+					sliceRatios: {
+						routes: 0.5,
+						boundaries: 0.5,
+						robustness: 0.5,
+					},
+				},
+			]),
+		).toMatchObject({ decision: "Winner" });
 		expect(
 			decidePrototypeWinner([
 				{
@@ -320,14 +400,254 @@ describe("target classification high-level contract prototype", () => {
 		const previous = process.env.OPENAI_API_KEY;
 		delete process.env.OPENAI_API_KEY;
 		try {
-			await expect(runLivePrototype()).rejects.toThrow(/OPENAI_API_KEY/u);
+			await expect(runLivePrototype({ batching: false })).rejects.toThrow(
+				/OPENAI_API_KEY/u,
+			);
 		} finally {
 			if (previous !== undefined) process.env.OPENAI_API_KEY = previous;
 		}
 	});
 
+	test("requires an explicit batching flag and binds transport pricing", () => {
+		expect(parseBatchingFlag("--batching=true")).toBe(true);
+		expect(parseBatchingFlag("--batching=false")).toBe(false);
+		expect(() => parseBatchingFlag(undefined)).toThrow(/explicit/u);
+		expect(() => parseBatchingFlag("false")).toThrow(/explicit/u);
+		expect(() => assertBatchingForMode("run", true)).toThrow(
+			/--batching=false/u,
+		);
+		expect(() => assertBatchingForMode("batch-submit", false)).toThrow(
+			/--batching=true/u,
+		);
+		expect(() => assertBatchingForMode("batch-resume", false)).toThrow(
+			/--batching=true/u,
+		);
+
+		const batch = preparePrototypePreflight({ batching: true });
+		const direct = preparePrototypePreflight({ batching: false });
+		expect(batch.runnerParameters).toEqual({ batching: true });
+		expect(direct.runnerParameters).toEqual({ batching: false });
+		expect(batch.priceSchedule.shortContext).toMatchObject({
+			inputUsdPerMillion: 0.1,
+			outputUsdPerMillion: 0.6,
+		});
+		expect(direct.priceSchedule.shortContext).toMatchObject({
+			inputUsdPerMillion: 0.2,
+			cachedInputUsdPerMillion: 0.02,
+			cacheWriteUsdPerMillion: 0.25,
+			outputUsdPerMillion: 1.2,
+		});
+		expect(direct.maximumEstimatedCostUsd).toBeLessThanOrEqual(2);
+		expect(direct.maximumEstimatedCostUsd).toBeGreaterThan(
+			batch.maximumEstimatedCostUsd,
+		);
+		expect(MAX_OUTPUT_TOKENS).toBe(1024);
+		expect(REASONING_EFFORT).toBe("none");
+		expect(DIRECT_TRANSIENT_RETRY_LIMIT).toBe(2);
+		expect(
+			shouldRetryDirectProviderError(
+				{ name: "Error", message: "socket reset", code: "ECONNRESET" },
+				0,
+			),
+		).toBe(true);
+		expect(
+			shouldRetryDirectProviderError(
+				{ name: "RateLimitError", message: "slow down", status: 429 },
+				1,
+			),
+		).toBe(true);
+		expect(
+			shouldRetryDirectProviderError(
+				{
+					name: "InternalServerError",
+					message: "unavailable",
+					status: 503,
+				},
+				1,
+			),
+		).toBe(true);
+		expect(
+			shouldRetryDirectProviderError(
+				{ name: "BadRequestError", message: "bad input", status: 400 },
+				0,
+			),
+		).toBe(false);
+		expect(
+			shouldRetryDirectProviderError(
+				{ name: "Error", message: "reset", code: "ECONNRESET" },
+				2,
+			),
+		).toBe(false);
+	});
+
+	test("retries direct transient transport failures within the same logical slot", async () => {
+		const directory = await mkdtemp(
+			join(tmpdir(), "target-contract-direct-retry-"),
+		);
+		const stableClient = fakeResponsesClientByInput();
+		const targetInput = stableJson(
+			prepareRepresentationCases(REPRESENTATION_IDS[0])[0]?.privateInput,
+		);
+		const exhaustedInput = stableJson(
+			prepareRepresentationCases(REPRESENTATION_IDS[0])[1]?.privateInput,
+		);
+		let targetFailures = 0;
+		let exhaustedFailures = 0;
+		let physicalCalls = 0;
+		try {
+			const run = await runLivePrototype({
+				batching: false,
+				client: {
+					responses: {
+						create: async (request) => {
+							physicalCalls += 1;
+							const privateInput = (
+								request.input as
+									| readonly { content?: unknown }[]
+									| undefined
+							)?.[1]?.content;
+							if (
+								privateInput === targetInput &&
+								targetFailures < 2
+							) {
+								targetFailures += 1;
+								throw Object.assign(
+									new Error("connection reset"),
+									{
+										code: "ECONNRESET",
+									},
+								);
+							}
+							if (
+								privateInput === exhaustedInput &&
+								exhaustedFailures < 3
+							) {
+								exhaustedFailures += 1;
+								throw Object.assign(
+									new Error("connection reset"),
+									{
+										code: "ECONNRESET",
+									},
+								);
+							}
+							return stableClient.responses.create(request);
+						},
+					},
+				},
+				runDirectory: directory,
+			});
+			expect(physicalCalls).toBe(EXACT_CALL_CAP + 4);
+			expect(run.attempts).toHaveLength(EXACT_CALL_CAP);
+			const providerErrors = run.attempts.filter(
+				({ providerError }) => providerError !== undefined,
+			);
+			expect(providerErrors).toHaveLength(1);
+			expect(providerErrors[0]?.providerError?.code).toBe("ECONNRESET");
+			const firstKey = run.attempts[0]?.key;
+			const exhaustedKey = run.attempts[1]?.key;
+			if (firstKey === undefined || exhaustedKey === undefined) {
+				throw new Error("Missing retry keys.");
+			}
+			const checkpoint = JSON.parse(
+				await Bun.file(
+					join(directory, "direct-checkpoint.json"),
+				).text(),
+			);
+			expect(checkpoint.dispatchCounts[firstKey]).toBe(3);
+			expect(checkpoint.transientRetryCounts[firstKey]).toBe(2);
+			expect(checkpoint.dispatchCounts[exhaustedKey]).toBe(3);
+			expect(checkpoint.transientRetryCounts[exhaustedKey]).toBe(2);
+		} finally {
+			await rm(directory, { recursive: true, force: true });
+		}
+	}, 15_000);
+
+	test("runs direct calls concurrently and resumes atomic checkpoints", async () => {
+		const directory = await mkdtemp(
+			join(tmpdir(), "target-contract-direct-"),
+		);
+		let inFlight = 0;
+		let maximumInFlight = 0;
+		const firstClient = fakeResponsesClientByInput(async () => {
+			inFlight += 1;
+			maximumInFlight = Math.max(maximumInFlight, inFlight);
+			await new Promise<void>((resolveDelay) =>
+				setTimeout(resolveDelay, 1),
+			);
+			inFlight -= 1;
+		});
+		let injected = false;
+		try {
+			await expect(
+				runLivePrototype({
+					batching: false,
+					client: firstClient,
+					runDirectory: directory,
+					onAttemptPersisted: () => {
+						if (!injected) {
+							injected = true;
+							throw new Error("Injected direct crash.");
+						}
+					},
+				}),
+			).rejects.toThrow("Injected direct crash.");
+			expect(maximumInFlight).toBeGreaterThan(1);
+			expect(maximumInFlight).toBeLessThanOrEqual(8);
+
+			const checkpointPath = join(directory, "direct-checkpoint.json");
+			const checkpoint = JSON.parse(
+				await Bun.file(checkpointPath).text(),
+			);
+			const completedBeforeResume = checkpoint.attempts.length;
+			expect(completedBeforeResume).toBeGreaterThan(0);
+			expect(completedBeforeResume).toBeLessThan(EXACT_CALL_CAP);
+
+			const resumedClient = fakeResponsesClientByInput();
+			const run = await runLivePrototype({
+				batching: false,
+				client: resumedClient,
+				runDirectory: directory,
+			});
+			expect(resumedClient.callCount).toBe(
+				EXACT_CALL_CAP - completedBeforeResume,
+			);
+			expect(run.attempts).toHaveLength(EXACT_CALL_CAP);
+			expect(run.attempts.map(({ key }) => key)).toEqual(
+				preparePrototypeBatch({ batching: true }).manifest.schedule.map(
+					({ key }) => key,
+				),
+			);
+
+			const completedCheckpoint = JSON.parse(
+				await Bun.file(checkpointPath).text(),
+			);
+			const lostAttempt = completedCheckpoint.attempts.pop();
+			if (lostAttempt === undefined) {
+				throw new Error("Missing simulated crash-gap attempt.");
+			}
+			await writeFile(
+				checkpointPath,
+				`${JSON.stringify(completedCheckpoint, null, 2)}\n`,
+				"utf8",
+			);
+			const replayClient = fakeResponsesClientByInput();
+			await runLivePrototype({
+				batching: false,
+				client: replayClient,
+				runDirectory: directory,
+			});
+			expect(replayClient.callCount).toBe(1);
+			const replayedCheckpoint = JSON.parse(
+				await Bun.file(checkpointPath).text(),
+			);
+			expect(replayedCheckpoint.dispatchCounts[lostAttempt.key]).toBe(2);
+		} finally {
+			await rm(directory, { recursive: true, force: true });
+		}
+	}, 30_000);
+
 	test("prepares one frozen Responses Batch with bounded explicit cache shards", () => {
-		const prepared = preparePrototypeBatch();
+		const prepared = preparePrototypeBatch({ batching: true });
 		expect(prepared.manifest.schedule).toHaveLength(EXACT_CALL_CAP);
 		expect(prepared.jsonl.trim().split("\n")).toHaveLength(EXACT_CALL_CAP);
 		const envelopes = prepared.jsonl
@@ -341,6 +661,10 @@ describe("target classification high-level contract prototype", () => {
 		for (const envelope of envelopes) {
 			expect(envelope.method).toBe("POST");
 			expect(envelope.url).toBe(BATCH_ENDPOINT);
+			expect(envelope.body.max_output_tokens).toBe(MAX_OUTPUT_TOKENS);
+			expect(envelope.body.reasoning).toEqual({
+				effort: REASONING_EFFORT,
+			});
 			expect(envelope.body.prompt_cache_options).toEqual({
 				mode: "explicit",
 				ttl: "30m",
@@ -369,7 +693,7 @@ describe("target classification high-level contract prototype", () => {
 			let uploadedPurpose: unknown;
 			let createRequest: unknown;
 			const downloadedFileIds: string[] = [];
-			const prepared = preparePrototypeBatch();
+			const prepared = preparePrototypeBatch({ batching: true });
 			const output = prepared.manifest.schedule
 				.toReversed()
 				.map((binding, index) => {
@@ -465,6 +789,7 @@ describe("target classification high-level contract prototype", () => {
 				},
 			};
 			const manifestPath = await submitPrototypeBatch({
+				batching: true,
 				client,
 				runDirectory: directory,
 			});
@@ -480,6 +805,7 @@ describe("target classification high-level contract prototype", () => {
 				},
 			});
 			const resumed = await resumePrototypeBatch({
+				batching: true,
 				client,
 				manifestPath,
 			});
@@ -498,7 +824,7 @@ describe("target classification high-level contract prototype", () => {
 	}, 15_000);
 
 	test("batch reconciliation blocks ambiguous remote file and Batch matches", async () => {
-		const prepared = preparePrototypeBatch();
+		const prepared = preparePrototypeBatch({ batching: true });
 		const filename = `target-classification-high-level-${prepared.manifest.inputSha256}.jsonl`;
 		const metadata = {
 			prototype: "target-classification-high-level-contracts",
@@ -553,7 +879,11 @@ describe("target classification high-level contract prototype", () => {
 			};
 			try {
 				await expect(
-					submitPrototypeBatch({ client, runDirectory: directory }),
+					submitPrototypeBatch({
+						batching: true,
+						client,
+						runDirectory: directory,
+					}),
 				).rejects.toThrow(/Multiple remote/u);
 				expect(uploadCount).toBe(0);
 				expect(createCount).toBe(0);
@@ -622,6 +952,7 @@ describe("target classification high-level contract prototype", () => {
 			try {
 				await expect(
 					submitPrototypeBatch({
+						batching: true,
 						client,
 						runDirectory: directory,
 						onRemoteMutationReturned: (phase) => {
@@ -632,6 +963,7 @@ describe("target classification high-level contract prototype", () => {
 					}),
 				).rejects.toThrow(`Injected ${crashAfter} crash.`);
 				const manifestPath = await submitPrototypeBatch({
+					batching: true,
 					client,
 					runDirectory: directory,
 				});
@@ -645,7 +977,8 @@ describe("target classification high-level contract prototype", () => {
 				expect(uploadCount).toBe(1);
 				expect(createCount).toBe(1);
 				expect(remoteFiles[0]?.filename).toContain(
-					preparePrototypeBatch().manifest.inputSha256,
+					preparePrototypeBatch({ batching: true }).manifest
+						.inputSha256,
 				);
 			} finally {
 				await rm(directory, { recursive: true, force: true });
@@ -661,6 +994,7 @@ describe("target classification high-level contract prototype", () => {
 		const directory = await mkdtemp(join(tmpdir(), "target-contract-run-"));
 		try {
 			const run = await runLivePrototype({
+				batching: false,
 				client: fakeResponsesClient(),
 				runDirectory: directory,
 			});
@@ -678,12 +1012,14 @@ describe("target classification high-level contract prototype", () => {
 			);
 			await expect(
 				runLivePrototype({
+					batching: false,
 					client: fakeResponsesClient(() => "gpt-5.6-luna-other"),
 					runDirectory: join(directory, "wrong-snapshot"),
 				}),
 			).rejects.toThrow(/expected resolved model/u);
 			await expect(
 				runLivePrototype({
+					batching: false,
 					client: fakeResponsesClient((callIndex) =>
 						callIndex === EXACT_CALL_CAP - 1
 							? "gpt-5.6-luna-2026-08-02"
@@ -695,7 +1031,7 @@ describe("target classification high-level contract prototype", () => {
 		} finally {
 			await rm(directory, { recursive: true, force: true });
 		}
-	});
+	}, 15_000);
 
 	test("preserves raw response bytes when usage parsing fails", async () => {
 		const directory = await mkdtemp(
@@ -704,6 +1040,7 @@ describe("target classification high-level contract prototype", () => {
 		try {
 			const validClient = fakeResponsesClient();
 			const run = await runLivePrototype({
+				batching: false,
 				client: {
 					responses: {
 						create: async (request) => ({
@@ -738,6 +1075,7 @@ describe("target classification high-level contract prototype", () => {
 		try {
 			const rawResponse = { unexpected: "response-shape" };
 			const run = await runLivePrototype({
+				batching: false,
 				client: { responses: { create: async () => rawResponse } },
 				runDirectory: directory,
 			});
@@ -761,6 +1099,7 @@ describe("target classification high-level contract prototype", () => {
 		const classificationsPath = join(directory, "classifications.json");
 		try {
 			const run = await runLivePrototype({
+				batching: false,
 				client: fakeResponsesClient(),
 				runDirectory: directory,
 			});

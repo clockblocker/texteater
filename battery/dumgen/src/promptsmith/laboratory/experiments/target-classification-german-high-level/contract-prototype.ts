@@ -36,7 +36,7 @@ import {
 
 export const PROTOTYPE_QUESTION =
 	"Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v8";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v9";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -48,14 +48,16 @@ export const EXPECTED_CALLS_PER_ARM =
 	EXPECTED_EVALUATION_CASES * ATTEMPTS_PER_ARM;
 export const EXACT_CALL_CAP =
 	EXPECTED_CALLS_PER_ARM * REPRESENTATION_IDS.length;
-export const MAXIMUM_SPEND_USD = 5;
-export const MINIMUM_CONTRACT_RATIO = 0.8;
-export const MINIMUM_SLICE_RATIO = 0.8;
+export const MAXIMUM_SPEND_USD = 2;
+export const MINIMUM_ATTEMPT_CONTRACT_SCORE = 90;
+export const MINIMUM_ATTEMPT_CONTRACT_RATIO =
+	MINIMUM_ATTEMPT_CONTRACT_SCORE / EXPECTED_EVALUATION_CASES;
 export const TIE_MARGIN = 0.01;
 export const DECISION_POLICY = Object.freeze({
 	expectedCallsPerArm: EXPECTED_CALLS_PER_ARM,
-	minimumContractRatio: MINIMUM_CONTRACT_RATIO,
-	minimumSliceRatio: MINIMUM_SLICE_RATIO,
+	expectedEvaluationCasesPerAttempt: EXPECTED_EVALUATION_CASES,
+	minimumAttemptContractScore: MINIMUM_ATTEMPT_CONTRACT_SCORE,
+	minimumAttemptContractRatio: MINIMUM_ATTEMPT_CONTRACT_RATIO,
 	tieMargin: TIE_MARGIN,
 	tieRule: "inclusive-best-ratio-margin" as const,
 });
@@ -68,7 +70,16 @@ export const BATCH_CACHE_POLICY = Object.freeze({
 	promptCacheBreakpoint: "end-of-stable-system-prompt" as const,
 	maximumScheduledRequestsPerCacheKey: 12,
 });
-export const PRICE_SCHEDULE = Object.freeze({
+export const DIRECT_RESPONSES_POLICY = Object.freeze({
+	transport: "openai-responses" as const,
+	endpoint: "/v1/responses" as const,
+	concurrency: 8,
+	promptCacheMode: "explicit" as const,
+	promptCacheTtl: "30m" as const,
+	promptCacheBreakpoint: "end-of-stable-system-prompt" as const,
+	maximumScheduledRequestsPerCacheKey: 12,
+});
+export const BATCH_PRICE_SCHEDULE = Object.freeze({
 	id: "openai-batch-gpt-5.6-luna-2026-08-09",
 	longContextThresholdTokens: 272_000,
 	shortContext: Object.freeze({
@@ -84,8 +95,38 @@ export const PRICE_SCHEDULE = Object.freeze({
 		outputUsdPerMillion: 0.9,
 	}),
 });
+export const DIRECT_PRICE_SCHEDULE = Object.freeze({
+	id: "openai-responses-gpt-5.6-luna-2026-08-10",
+	longContextThresholdTokens: 272_000,
+	shortContext: Object.freeze({
+		inputUsdPerMillion: 0.2,
+		cachedInputUsdPerMillion: 0.02,
+		cacheWriteUsdPerMillion: 0.25,
+		outputUsdPerMillion: 1.2,
+	}),
+	longContext: Object.freeze({
+		inputUsdPerMillion: 0.4,
+		cachedInputUsdPerMillion: 0.04,
+		cacheWriteUsdPerMillion: 0.5,
+		outputUsdPerMillion: 1.8,
+	}),
+});
+export type PrototypePriceSchedule =
+	| typeof BATCH_PRICE_SCHEDULE
+	| typeof DIRECT_PRICE_SCHEDULE;
 
-const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is the big-picture selection pass, not grammatical drill-down, lemma resolution, or canonicalization.
+export const runnerParametersSchema = z.strictObject({
+	batching: z.boolean(),
+});
+export type RunnerParameters = z.output<typeof runnerParametersSchema>;
+
+const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is target selection only: no grammatical drill-down, lemma resolution, or canonical form.
+
+Dumling's big picture:
+
+- An ordinary word is a Lexeme with its contextually correct UD-like word class.
+- Dumling can also select established Phraseme and Construction units that bare word-by-word analysis would miss.
+- A separable, multi-part, perfect, future, or passive realization of one verb counts here as one inflected Lexeme/VERB.
 
 CLICK FIRST — this constraint is non-negotiable:
 
@@ -93,29 +134,26 @@ CLICK FIRST — this constraint is non-negotiable:
 2. Consider only targets containing that exact segment. Discard every target that does not contain it, even if it is the most salient expression in the surrounding context.
 3. If the click is on a free word inside, between, or beside the members of another unit, return the clicked word as its own Lexeme. Do not return the nearby unit.
 
-The central linguistic policy is: fixed parts go together; free parts stay apart.
+FIXED TOGETHER. FREE APART.
 
-For this high-level pass, parts belong together for three distinct reasons:
+A free modifier stays separate even when inserted between fixed members. If that modifier is clicked, return only that word.
 
-- LEXICAL FIXEDNESS: group the realized fixed members of an established Phraseme or Construction.
-- LEXICAL VALENCY: group a verb with its lexically governed preposition, but not with the preposition's free nominal argument; group an inherently reflexive verb with its required reflexive pronoun.
-- GRAMMATICAL COMPOSITION: group separable and other multi-segment realizations of one verb. Also group the grammatical auxiliary or auxiliaries of perfect, future, and passive forms with the lexical verb. At this level, such a verbal complex is the temporal or voice realization of one lemma and routes as Lexeme/VERB.
+Parts go together for three reasons:
 
-Mind that wording associated with an idiom is not necessarily idiomatic in the supplied occurrence. Route Phraseme/Idiom only when the complete context supports the idiomatic, non-compositional reading. When the same wording is used compositionally and literally, do not classify it as an Idiom. This warning concerns idiom recognition; it does not override the valency or grammatical-composition rules above.
+- FIXED EXPRESSION: realized fixed members of an established Phraseme or Construction.
+- VALENCY: a verb plus its governed preposition, or an inherently reflexive verb plus its required reflexive pronoun. The argument itself stays free.
+- GRAMMAR: the realized pieces of one inflected verb, including separable pieces and tense or voice auxiliaries.
 
-Read the complete supplied context before deciding; it may contain more than one sentence. Choose the largest defensible fixed unit containing the click, but do not absorb a phrase or clause merely because its words are syntactically related. If a larger unit is doubtful, choose the smaller defensible target.
+Idiom recognition is about the meaning of this occurrence, not whether its words match a known idiom. When the supplied context makes the wording physical or otherwise compositional, do not group it as an Idiom.
 
-Keep free material separate, including arguments, objects, complements, adjuncts, modifiers, fillers, and freely inserted words. Keep an optional or contextual reflexive pronoun separate from its verb. Keep a meaning-bearing modal AUX separate from its governed VERB. Keep a copula AUX separate from its predicate unless the occurrence belongs to an established fixed expression.
-
-Conventionality or restricted lexical choice alone does not make a high-level multi-segment target. For an ordinary non-idiomatic collocation or support-verb combination such as eine Entscheidung treffen or eine Frage stellen, classify only the clicked word as its Lexeme. Phraseme/Collocation is not reachable under this policy.
+Read all supplied context; it may contain several sentences. Choose the largest defensible unit containing the click. Mere syntactic relation or familiar co-occurrence is not enough. If the larger unit is doubtful, choose the smaller defensible target.
 
 Route only the click-containing target:
 
-- Lexeme is the default for an individual word and for a multi-segment realization of one verb. Use the contextually correct German word-class kind.
-- A standalone symbol such as %, €, or another non-word symbol is Lexeme/SYM. A neighboring quantity remains a separate Lexeme/NUM.
+- Lexeme is the default for one word and for a multi-segment realization of one verb. Use the contextually correct word-class kind.
 - Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression used here with a non-compositional meaning.
-- Construction/Fusion is exactly one source segment that fuses grammatical words, for example zum = zu + dem, unless it participates in a larger fixed target. Route that segment as Construction/Fusion, not Lexeme/ADP.
-- Construction/PairedFrame contains only its fixed correlated anchors. A freely supplied filler is not a member; if the filler is clicked, return it as its own Lexeme.
+- Construction/Fusion is one source segment that fuses grammatical words.
+- Construction/PairedFrame contains only fixed lexical marker words as correlated anchors. Content or comparative words expressing the paired values are free fillers, regardless of position.
 
 The input is a compact projection of the source:
 
@@ -134,47 +172,93 @@ Return only an object matching the supplied output schema. Do not return a lemma
 
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 	"target-de-demo-perfect-arbeiten-click-habe":
-		"The clicked auxiliary belongs to habe ... gearbeitet; both fixed verb-form members form one Lexeme/VERB while gestern stays free.",
+		"habe + gearbeitet = one perfect verb. Take both. gestern is extra. VERB.",
 	"target-de-demo-perfect-arbeiten-click-gearbeitet":
-		"Changing the click to gearbeitet selects the same complete perfect Lexeme/VERB as clicking habe.",
-	"target-de-demo-perfect-arbeiten-click-gestern":
-		"The click is on the free temporal adverb gestern, so return only Lexeme/ADV rather than the neighboring perfect verb form.",
+		"gearbeitet is the lexical part of this perfect. Take habe + gearbeitet as one VERB. Leave gestern out.",
 	"target-de-demo-governed-rechnen-click-rechnet":
-		"The clicked verb and its lexically governed preposition mit form one Lexeme/VERB; the argument starkem Regen stays free.",
+		"rechnen needs mit. Take rechnet + mit. Regen is the argument; leave it out. VERB.",
 	"target-de-demo-governed-rechnen-click-mit":
-		"Clicking the governed preposition selects the same rechnet mit Lexeme/VERB as clicking the verb.",
-	"target-de-demo-governed-rechnen-click-regen":
-		"The click is on the free nominal argument Regen, so return only Lexeme/NOUN rather than rechnet mit.",
+		"mit is required by rechnen. Same verb target: rechnet + mit. No Regen.",
+	"target-de-demo-adjunct-rechnen-click-mit":
+		"mit dem Taschenrechner tells how the calculation happens; rechnen does not require mit in this sense. The clicked mit is ADP only.",
 	"target-de-demo-idiom-faden-click-verlor":
-		"The occurrence is figurative; clicking verlor selects the fixed verb, determiner, and noun of the Phraseme/Idiom, excluding völlig.",
+		"She lost the train of thought. Idiom. Take verlor + den + Faden. völlig is extra.",
+	"target-de-demo-idiom-faden-click-den":
+		"den is a fixed idiom word here. Take verlor + den + Faden. völlig is extra.",
+	"target-de-demo-aphorism-zeit-click-ist":
+		"Zeit ist Geld is one fixed Aphorism. The clicked middle word still selects every realized member: Zeit + ist + Geld.",
 	"target-de-demo-idiom-faden-click-faden":
-		"Clicking Faden in the same figurative occurrence selects exactly the same fixed Idiom members as clicking verlor.",
-	"target-de-demo-idiom-faden-click-voellig":
-		"The click is on the freely inserted modifier völlig, so return only Lexeme/ADV rather than the surrounding Idiom.",
+		"Faden means the train of thought here. Same idiom: verlor + den + Faden.",
 	"target-de-demo-literal-faden-click-faden":
-		"The sewing context makes the wording literal; the clicked Faden is only Lexeme/NOUN despite matching words from a familiar idiom.",
+		"Sewing thread. Physical thread. No idiom. Faden/NOUN only.",
 	"target-de-demo-literal-handtuch-click-warf":
-		"The washing context makes warf das Handtuch literal; familiarity with the idiom das Handtuch werfen does not override occurrence meaning, so the clicked warf is only Lexeme/VERB.",
+		"Laundry towel goes into the machine. Literal action. No idiom. warf/VERB only.",
+	"target-de-demo-literal-gras-click-biss":
+		"A rabbit physically bites grass. Familiar idiom-shaped words do not matter. No death meaning, no Idiom. biss/VERB only.",
+	"target-de-demo-literal-gras-click-gras":
+		"This is physical grass in a feeding scene. No death meaning, no Idiom. Gras/NOUN only.",
+	"target-de-demo-idiom-katze-click-die":
+		"The idiom members are ließ + die + Katze + aus + dem + Sack. verdammte is inserted inside that sequence but remains free. Never include it.",
+	"target-de-demo-idiom-katze-click-verdammte":
+		"The click is on the inserted modifier. Return verdammte/ADJ alone. Do not return or include any part of the surrounding idiom.",
+	"target-de-demo-idiom-katze-click-katze":
+		"Katze is fixed idiom material, but the adjective immediately before it is inserted and free. Take ließ + die + Katze + aus + dem + Sack. Do not take verdammte.",
+	"target-de-demo-idiom-katze-click-aus":
+		"aus is a fixed preposition inside this idiom, not a standalone ADP here. Take ließ + die + Katze + aus + dem + Sack. Exclude the inserted adjective verdammte.",
 	"target-de-demo-paired-entweder-click-entweder":
-		"Clicking either fixed anchor selects both anchors of Construction/PairedFrame and excludes the free fillers.",
+		"entweder + oder are the frame. hier and dort fill slots. Take the anchors only.",
+	"target-de-demo-paired-entweder-click-hier":
+		"hier fills a slot between the anchors. Slot word, not frame member. ADV only.",
 	"target-de-demo-paired-entweder-click-oder":
-		"Clicking the other anchor selects the same two-member PairedFrame.",
-	"target-de-demo-paired-je-click-laenger":
-		"In je ... desto, the clicked comparative länger is a freely supplied filler, so return only Lexeme/ADJ rather than either PairedFrame anchor.",
+		"oder is the clicked second anchor. Its partner is the earlier entweder, not the following filler dort. Take entweder + oder only.",
+	"target-de-demo-paired-entweder-click-dort":
+		"dort comes after oder, but it fills a slot; it is not an anchor. Return dort/ADV only. Do not pair it with oder.",
+	"target-de-demo-paired-einerseits-click-einerseits":
+		"einerseits + andererseits are the two anchors. lokal and digital are adjective fillers. Take the anchors only.",
+	"target-de-demo-paired-einerseits-click-lokal":
+		"lokal fills the first adjective slot before the comma. It is not an anchor. Return lokal/ADJ only.",
+	"target-de-demo-paired-einerseits-click-andererseits":
+		"andererseits is the clicked second anchor. Its partner is the earlier einerseits, not adjacent lokal or digital. Take both anchors only.",
+	"target-de-demo-paired-einerseits-click-digital":
+		"digital fills the adjective slot after the second anchor. It is not an anchor. Return digital/ADJ only.",
+	"target-de-demo-inherent-reflexive-click-beeile":
+		"beeilen needs a reflexive pronoun. Take beeile + mich. VERB.",
+	"target-de-demo-inherent-reflexive-click-mich":
+		"mich is required by beeilen. Same verb target: beeile + mich. VERB.",
 	"target-de-demo-optional-reflexive-click-kaemmst":
-		"In dich kämmen, the pronoun is contextual rather than lexically required; the clicked verb is its own Lexeme/VERB.",
+		"kämmen works without dich. The click is on the verb, so take kämmst/VERB only. dich remains a separate pronoun.",
 	"target-de-demo-optional-reflexive-click-dich":
-		"Changing the click to the optional reflexive object selects only Lexeme/PRON; it does not join kämmst.",
+		"kämmen works without dich. dich is an object, not part of the verb. PRON only.",
 	"target-de-demo-modal-arbeiten-click-kann":
-		"The meaning-bearing modal kann is the clicked target and remains a standalone Lexeme/AUX.",
+		"kann means ability. It is not tense or voice glue. AUX only.",
 	"target-de-demo-modal-arbeiten-click-arbeiten":
-		"Clicking the governed arbeiten selects only Lexeme/VERB; the modal kann is a separate target.",
-	"target-de-demo-fusion-zum":
-		"The single clicked source segment zum fuses zu and dem, so route it as Construction/Fusion rather than Lexeme/ADP.",
+		"kann means ability, not verb inflection. The clicked arbeiten is VERB only. Do not include kann.",
+	"target-de-demo-passive-briefe-click-werden":
+		"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
+	"target-de-demo-passive-briefe-click-verschickt":
+		"verschickt belongs with passive werden. Take both. Free words do not split the verb.",
+	"target-de-demo-collocation-kenntnis-click-nahm":
+		"The wording is conventional but not idiomatic. Keep ordinary support-verb words separate. nahm/VERB only.",
+	"target-de-demo-collocation-kenntnis-click-zur":
+		"zur is one fused source token: zu + der. Fusion only. Do not absorb the surrounding wording.",
 	"target-de-demo-symbol-percent":
-		"The clicked percent sign is a standalone Lexeme/SYM; the neighboring quantity zwölf is not part of its membership.",
+		"% is the clicked symbol. zwölf is a separate number. SYM only.",
+	"target-de-demo-default-interjection-oh":
+		"Oh is one reaction word. Not a multiword discourse formula. INTJ only.",
+	"target-de-demo-repeated-anfangen-click-faengt":
+		"The first an governs the noun phrase der Kreuzung, so it is an ADP. The objectless final an completes fängt. Take fängt + final an only.",
 	"target-de-demo-repeated-anfangen-click-final-an":
-		"The clicked final an is the separable particle of fängt ... an; include fängt and this final an, but exclude the earlier identical free preposition an.",
+		"This final an has no governed noun phrase; it completes fängt. Take fängt + final an. The earlier an + der Kreuzung stays out.",
+	"target-de-demo-repeated-anfangen-click-first-an":
+		"This first an introduces and governs der Kreuzung. It is an ADP, not the objectless final verb particle. Return this an alone.",
+	"target-de-demo-question-stattfinden-click-findet":
+		"The question mark is only context. findet + statt are the two realized pieces of stattfinden. Take both as Lexeme/VERB.",
+	"target-de-demo-question-stattfinden-click-statt":
+		"statt completes findet here. Question punctuation does not split the separable verb. Take findet + statt as Lexeme/VERB.",
+	"target-de-demo-typo-mitmachen-click-mit":
+		"mact is an obvious typo for macht. The objectless final mit still completes that separable verb. Take mact + mit as Lexeme/VERB.",
+	"target-de-demo-predicative-cringe-click-cringe":
+		"cringe describes the subject after wirkt. It is an indeclinable borrowed property word here: ADJ, not NOUN.",
 });
 
 const membershipInstructions: Readonly<Record<RepresentationId, string>> = {
@@ -256,6 +340,7 @@ export type ArmBinding = Readonly<{
 }>;
 
 export type PrototypePreflight = Readonly<{
+	runnerParameters: RunnerParameters;
 	runnerVersion: string;
 	question: string;
 	model: string;
@@ -272,6 +357,8 @@ export type PrototypePreflight = Readonly<{
 	decisionPolicySha256: string;
 	batchPolicy: typeof BATCH_CACHE_POLICY;
 	batchPolicySha256: string;
+	directResponsesPolicy: typeof DIRECT_RESPONSES_POLICY;
+	directResponsesPolicySha256: string;
 	evaluationCaseIds: readonly string[];
 	demonstrationCaseIds: readonly string[];
 	attemptsPerArm: number;
@@ -280,11 +367,17 @@ export type PrototypePreflight = Readonly<{
 	outputTokenUpperBound: number;
 	maximumEstimatedCostUsd: number;
 	maximumSpendUsd: number;
-	priceSchedule: typeof PRICE_SCHEDULE;
+	priceSchedule: PrototypePriceSchedule;
 	arms: readonly ArmBinding[];
 }>;
 
-export function preparePrototypePreflight(): PrototypePreflight {
+export function preparePrototypePreflight(
+	parameters: RunnerParameters,
+): PrototypePreflight {
+	const runnerParameters = runnerParametersSchema.parse(parameters);
+	const priceSchedule = runnerParameters.batching
+		? BATCH_PRICE_SCHEDULE
+		: DIRECT_PRICE_SCHEDULE;
 	assertFrozenSuite();
 	const selected = demonstrationSelection.union(evaluationSelection);
 	const privateStimuliByArm = new Map<RepresentationId, Set<string>>();
@@ -362,9 +455,9 @@ export function preparePrototypePreflight(): PrototypePreflight {
 			inputTokenUpperBound += requestInputUpperBound * ATTEMPTS_PER_ARM;
 			const price =
 				requestInputUpperBound >
-				PRICE_SCHEDULE.longContextThresholdTokens
-					? PRICE_SCHEDULE.longContext
-					: PRICE_SCHEDULE.shortContext;
+				priceSchedule.longContextThresholdTokens
+					? priceSchedule.longContext
+					: priceSchedule.shortContext;
 			maximumEstimatedCostUsd +=
 				ATTEMPTS_PER_ARM *
 				((requestInputUpperBound / 1_000_000) *
@@ -383,6 +476,7 @@ export function preparePrototypePreflight(): PrototypePreflight {
 		);
 	}
 	return Object.freeze({
+		runnerParameters: Object.freeze({ ...runnerParameters }),
 		runnerVersion: RUNNER_VERSION,
 		question: PROTOTYPE_QUESTION,
 		model: RUN_MODEL,
@@ -396,7 +490,9 @@ export function preparePrototypePreflight(): PrototypePreflight {
 				maxOutputTokens: MAX_OUTPUT_TOKENS,
 				retries: 0,
 				store: false,
+				runnerParameters,
 				batchPolicy: BATCH_CACHE_POLICY,
+				directResponsesPolicy: DIRECT_RESPONSES_POLICY,
 			}),
 		),
 		corpusSha256: sha256(
@@ -426,6 +522,10 @@ export function preparePrototypePreflight(): PrototypePreflight {
 		decisionPolicySha256: sha256(stableJson(DECISION_POLICY)),
 		batchPolicy: BATCH_CACHE_POLICY,
 		batchPolicySha256: sha256(stableJson(BATCH_CACHE_POLICY)),
+		directResponsesPolicy: DIRECT_RESPONSES_POLICY,
+		directResponsesPolicySha256: sha256(
+			stableJson(DIRECT_RESPONSES_POLICY),
+		),
 		evaluationCaseIds: Object.freeze([...evaluationSelection.ids]),
 		demonstrationCaseIds: Object.freeze([...demonstrationSelection.ids]),
 		attemptsPerArm: ATTEMPTS_PER_ARM,
@@ -434,7 +534,7 @@ export function preparePrototypePreflight(): PrototypePreflight {
 		outputTokenUpperBound,
 		maximumEstimatedCostUsd,
 		maximumSpendUsd: MAXIMUM_SPEND_USD,
-		priceSchedule: PRICE_SCHEDULE,
+		priceSchedule,
 		arms: Object.freeze(armBindings),
 	});
 }
@@ -452,6 +552,7 @@ export type ArmEvidenceSummary = Readonly<{
 	id: RepresentationId;
 	attemptCount: number;
 	contractScore: number;
+	attemptContractScores: readonly number[];
 	executionErrorCount: number;
 	unclassifiedMissCount: number;
 	safetyGatePass: boolean;
@@ -474,17 +575,16 @@ export function decidePrototypeWinner(
 			summary.unclassifiedMissCount === 0 &&
 			summary.safetyGatePass &&
 			summary.clickGatePass &&
-			summary.contractScore / summary.attemptCount >=
-				MINIMUM_CONTRACT_RATIO &&
-			Object.values(summary.sliceRatios).every(
-				(ratio) => ratio >= MINIMUM_SLICE_RATIO,
+			summary.attemptContractScores.length === ATTEMPTS_PER_ARM &&
+			summary.attemptContractScores.every(
+				(score) => score >= MINIMUM_ATTEMPT_CONTRACT_SCORE,
 			),
 	);
 	if (eligible.length === 0) {
 		return Object.freeze({
 			decision: "NoWinner",
 			reasons: Object.freeze([
-				"No arm passed the frozen call-count, error, classification, safety, click, overall-score, and per-slice gates.",
+				"No arm passed the frozen call-count, error, classification, safety, click, and per-attempt 90/94 score gates.",
 			]),
 		});
 	}
@@ -515,8 +615,13 @@ function assertFrozenSuite(): void {
 			`Issue #85 keeps ${EXPECTED_EVALUATION_CASES} development cases for historical comparison; found ${evaluationSelection.ids.length}.`,
 		);
 	}
-	if (demonstrationSelection.ids.length !== 21) {
-		throw new Error("Issue #85 is frozen to twenty-one demonstrations.");
+	if (
+		demonstrationSelection.ids.length === 0 ||
+		demonstrationSelection.ids.length > 35
+	) {
+		throw new Error(
+			"The development prompt requires between one and thirty-five demonstrations.",
+		);
 	}
 	if (EXACT_CALL_CAP !== 188) {
 		throw new Error("Issue #85 exact call cap must remain 188.");

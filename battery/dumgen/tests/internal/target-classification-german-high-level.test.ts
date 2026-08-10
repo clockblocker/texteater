@@ -18,45 +18,53 @@ import {
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(143);
+		expect(corpus.all().ids).toHaveLength(162);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
 			"robustness",
 		]);
 		expect(demonstrationSelection.ids).toEqual([
-			"target-de-demo-perfect-arbeiten-click-habe",
-			"target-de-demo-perfect-arbeiten-click-gearbeitet",
-			"target-de-demo-perfect-arbeiten-click-gestern",
-			"target-de-demo-governed-rechnen-click-rechnet",
 			"target-de-demo-governed-rechnen-click-mit",
-			"target-de-demo-governed-rechnen-click-regen",
+			"target-de-demo-adjunct-rechnen-click-mit",
 			"target-de-demo-idiom-faden-click-verlor",
-			"target-de-demo-idiom-faden-click-faden",
-			"target-de-demo-idiom-faden-click-voellig",
-			"target-de-demo-literal-faden-click-faden",
-			"target-de-demo-literal-handtuch-click-warf",
-			"target-de-demo-paired-entweder-click-entweder",
-			"target-de-demo-paired-entweder-click-oder",
-			"target-de-demo-paired-je-click-laenger",
+			"target-de-demo-idiom-faden-click-den",
+			"target-de-demo-aphorism-zeit-click-ist",
+			"target-de-demo-literal-gras-click-biss",
+			"target-de-demo-literal-gras-click-gras",
+			"target-de-demo-idiom-katze-click-die",
+			"target-de-demo-idiom-katze-click-verdammte",
+			"target-de-demo-idiom-katze-click-katze",
+			"target-de-demo-paired-einerseits-click-einerseits",
+			"target-de-demo-paired-einerseits-click-lokal",
+			"target-de-demo-paired-einerseits-click-andererseits",
+			"target-de-demo-paired-einerseits-click-digital",
+			"target-de-demo-inherent-reflexive-click-beeile",
+			"target-de-demo-inherent-reflexive-click-mich",
 			"target-de-demo-optional-reflexive-click-kaemmst",
 			"target-de-demo-optional-reflexive-click-dich",
 			"target-de-demo-modal-arbeiten-click-kann",
-			"target-de-demo-modal-arbeiten-click-arbeiten",
-			"target-de-demo-fusion-zum",
-			"target-de-demo-symbol-percent",
+			"target-de-demo-passive-briefe-click-werden",
+			"target-de-demo-default-interjection-oh",
+			"target-de-demo-repeated-anfangen-click-faengt",
 			"target-de-demo-repeated-anfangen-click-final-an",
+			"target-de-demo-repeated-anfangen-click-first-an",
+			"target-de-demo-question-stattfinden-click-statt",
+			"target-de-demo-typo-mitmachen-click-mit",
+			"target-de-demo-predicative-cringe-click-cringe",
 		]);
+		expect(demonstrationSelection.ids).toHaveLength(27);
+		expect(demonstrationSelection.ids.length).toBeLessThanOrEqual(35);
 		expect(evaluationSelection.ids).toHaveLength(94);
 		expect(demonstrationSelection.isDisjointFrom(evaluationSelection)).toBe(
 			true,
 		);
 		expect(
 			demonstrationSelection.union(evaluationSelection).ids,
-		).toHaveLength(115);
+		).toHaveLength(121);
 	});
 
-	test("covers every reachable route and records PUNCT as a clickability gap", () => {
+	test("covers every reachable route and records unreachable PUNCT and X gaps", () => {
 		const covered = new Set(
 			corpus
 				.all()
@@ -87,7 +95,12 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme).not.toContain(
 			"PUNCT" as never,
 		);
+		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme).not.toContain(
+			"X" as never,
+		);
 		expect(covered.has("Lexeme/PUNCT")).toBe(false);
+		expect(covered.has("Lexeme/X")).toBe(false);
+		expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("X");
 		expect(GERMAN_HIGH_LEVEL_ROUTES.Phraseme).toContain("Collocation");
 		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).not.toContain(
 			"Collocation" as never,
@@ -98,6 +111,16 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 				target: {
 					family: "Lexeme",
 					kind: "PUNCT",
+					memberSegmentIndices: [0],
+				},
+			}).success,
+		).toBe(false);
+		expect(
+			corpus.outputSchema.safeParse({
+				decision: "Resolved",
+				target: {
+					family: "Lexeme",
+					kind: "X",
 					memberSegmentIndices: [0],
 				},
 			}).success,
@@ -229,9 +252,86 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			...corpus.collections.boundaries.cases,
 		]) {
 			expect(goldenCase.explanation).toMatch(
-				/https:\/\/(?:grammis\.ids-mannheim\.de|ids-pub\.bsz-bw\.de)\//u,
+				/https:\/\/(?:grammis\.ids-mannheim\.de|ids-pub\.bsz-bw\.de|universaldependencies\.org)\//u,
 			);
 		}
+		expect(
+			corpus
+				.all()
+				.cases.some(({ explanation }) =>
+					(explanation ?? "").includes(
+						"grammis.ids-mannheim.de/sgt/2195",
+					),
+				),
+		).toBe(false);
+	});
+
+	test("makes figurative and literal idiom-shaped occurrences explicit in context", () => {
+		const wordsFor = (caseId: string) =>
+			corpus.cases[caseId]?.input.segments
+				.filter(({ kind }) => kind === "ResolvableText")
+				.map(({ text }) => text);
+
+		expect(wordsFor("target-de-boundary-idiom-click-brach")).toEqual([
+			"Im",
+			"Workshop",
+			"schwieg",
+			"jeder",
+			"Mit",
+			"einem",
+			"Witz",
+			"brach",
+			"sie",
+			"endlich",
+			"das",
+			"Eis",
+		]);
+		expect(wordsFor("target-de-boundary-literal-eis-click-brach")).toEqual([
+			"Vor",
+			"ihr",
+			"lag",
+			"ein",
+			"großer",
+			"Eisblock",
+			"Mit",
+			"einem",
+			"Hammer",
+			"brach",
+			"sie",
+			"das",
+			"Eis",
+			"für",
+			"die",
+			"Getränke",
+		]);
+		expect(
+			wordsFor("target-de-boundary-fixed-function-click-heult"),
+		).toEqual([
+			"Aus",
+			"Opportunismus",
+			"folgt",
+			"sie",
+			"immer",
+			"der",
+			"Mehrheit",
+			"Sie",
+			"heult",
+			"mit",
+			"den",
+			"hungrigen",
+			"Wölfen",
+		]);
+	});
+
+	test("routes intelligible predicative slang to an informative word class", () => {
+		expect(corpus.cases["target-de-robust-slang"]?.idealOutput).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [4],
+			},
+		});
 	});
 
 	test("separates authoritative facts from issue #82 classification policy", () => {
@@ -354,6 +454,31 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 				}),
 			).toThrow(/contamination key/u);
 		}
+		for (const caseId of [
+			"target-de-route-construction-paired-click-je",
+			"target-de-route-construction-paired-click-desto",
+			"target-de-route-construction-paired-near-frueher",
+			"target-de-route-construction-paired-near-besser",
+		]) {
+			expect(() =>
+				assertCaseSelectionsUncontaminated({
+					route: corpus.route,
+					demonstrations: corpus.select([
+						"target-de-demo-paired-je-click-laenger",
+					]),
+					evaluation: corpus.select([caseId]),
+				}),
+			).toThrow(/contamination key/u);
+		}
+		expect(() =>
+			assertCaseSelectionsUncontaminated({
+				route: corpus.route,
+				demonstrations: corpus.select(["target-de-demo-fusion-zum"]),
+				evaluation: corpus.select([
+					"target-de-route-construction-fusion",
+				]),
+			}),
+		).toThrow(/contamination key/u);
 	});
 
 	test("keeps demonstrated Lexeme clicks lexically distinct from held-outs", () => {

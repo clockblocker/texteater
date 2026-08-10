@@ -1,5 +1,4 @@
 export const IDS = {
-	wordClasses: "https://grammis.ids-mannheim.de/sgt/2195",
 	phraseolexeme: "https://grammis.ids-mannheim.de/terminologie/1175",
 	functionVerbGroup: "https://grammis.ids-mannheim.de/vggf/2202",
 	prepositionalGroup: "https://grammis.ids-mannheim.de/sgt/2262",
@@ -22,6 +21,10 @@ export const IDS = {
 	questionSupportVerb:
 		"https://grammis.ids-mannheim.de/systematische-grammatik/514",
 } as const;
+
+export function udPartOfSpeech(kind: string): string {
+	return `https://universaldependencies.org/u/pos/${kind}.html`;
+}
 
 export function evidence(source: string, claim: string): string {
 	return `${claim} Source: ${source}`;

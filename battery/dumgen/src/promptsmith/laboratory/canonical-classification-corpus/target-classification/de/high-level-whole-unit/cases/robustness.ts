@@ -10,7 +10,7 @@ import {
 	sentence,
 	unresolved,
 } from "./builders";
-import { evidence, IDS } from "./sources";
+import { evidence, IDS, udPartOfSpeech } from "./sources";
 
 const repeated = sentence(["Sie", "steht", "auf", "dem", "Platz", "auf"]);
 const overlap = sentence([
@@ -27,7 +27,15 @@ const overlap = sentence([
 const partial = sentence(["Er", "brach", "das"], "…");
 const typo = sentence(["Er", "stet", "morgen", "auf"]);
 const punctuation = sentence(["Ach", "er", "steht", "wirklich", "auf"], "?!");
+const demonstrationQuestionSeparable = sentence(
+	["Findet", "das", "Treffen", "morgen", "statt"],
+	"?",
+);
+const demonstrationTypoSeparable = sentence(["Er", "mact", "morgen", "mit"]);
 const AUFSTEHEN_CONTAMINATION_KEY = "target-lexical-unit:aufstehen";
+const STATTFINDEN_CONTAMINATION_KEY = "target-lexical-unit:stattfinden";
+const MITMACHEN_TYPO_CONTAMINATION_KEY =
+	"target-lexical-unit:mitmachen:finite-typo";
 const long = sentence([
 	"Obwohl",
 	"die",
@@ -161,7 +169,7 @@ const cases = {
 		4,
 		[4],
 		"Lexeme",
-		"X",
+		"ADJ",
 	),
 	"target-de-robust-opaque-surroundings": resolved(
 		opaque,
@@ -176,6 +184,34 @@ const cases = {
 	"target-de-robust-punctuation-click-auf": aufstehenVariant(
 		resolved(punctuation, 8, [4, 8], "Lexeme", "VERB"),
 	),
+	"target-de-demo-question-stattfinden-click-findet": {
+		...resolved(
+			demonstrationQuestionSeparable,
+			0,
+			[0, 8],
+			"Lexeme",
+			"VERB",
+		),
+		contaminationKeys: [STATTFINDEN_CONTAMINATION_KEY],
+	},
+	"target-de-demo-question-stattfinden-click-statt": {
+		...resolved(
+			demonstrationQuestionSeparable,
+			8,
+			[0, 8],
+			"Lexeme",
+			"VERB",
+		),
+		contaminationKeys: [STATTFINDEN_CONTAMINATION_KEY],
+	},
+	"target-de-demo-typo-mitmachen-click-mact": {
+		...resolved(demonstrationTypoSeparable, 2, [2, 6], "Lexeme", "VERB"),
+		contaminationKeys: [MITMACHEN_TYPO_CONTAMINATION_KEY],
+	},
+	"target-de-demo-typo-mitmachen-click-mit": {
+		...resolved(demonstrationTypoSeparable, 6, [2, 6], "Lexeme", "VERB"),
+		contaminationKeys: [MITMACHEN_TYPO_CONTAMINATION_KEY],
+	},
 	"target-de-robust-long-click-wird": resolved(
 		long,
 		32,
@@ -204,10 +240,22 @@ export const robustnessCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function robustnessEvidence(caseId: string): string {
+	if (caseId.includes("demo-typo-mitmachen")) {
+		return evidence(
+			IDS.separableVerb,
+			"The complete sentence makes mact an obvious finite-stem typo for macht. Issue #82 still groups the objectless final particle mit with that stem as one separable Lexeme/VERB.",
+		);
+	}
+	if (caseId.includes("demo-question-stattfinden")) {
+		return evidence(
+			IDS.separableVerb,
+			"IDS establishes the detached-prefix category fact. Issue #82 groups findet and statt as one Lexeme/VERB in the question while excluding the question mark from membership.",
+		);
+	}
 	if (caseId.includes("unresolved")) {
 		return evidence(
-			IDS.wordClasses,
-			"IDS supplies the German word-class inventory but no observable category fact licenses qzxv or xqzvrrt as a particular Family/Kind. Under issue #82, the clicked ResolvableText therefore has no defensible route, and Unresolved carries no guessed route or membership.",
+			udPartOfSpeech("X"),
+			"UD reserves X for material that cannot receive a more informative part of speech, while current Dumgen policy ordinarily keeps unintelligible material upstream as OpaqueText. No observable category fact licenses qzxv or xqzvrrt as a particular Family/Kind; under issue #82, the clicked ResolvableText therefore has no defensible route, and Unresolved carries no guessed route or membership.",
 		);
 	}
 	if (caseId.includes("overlap-collocation")) {
@@ -251,8 +299,14 @@ function robustnessEvidence(caseId: string): string {
 			"IDS establishes werden plus a full-verb participle as a passive verbal periphrasis. Issue #82 product policy maps the distant wird and verstanden to one Lexeme/VERB at exact original indices [32,54], excluding all intervening free context.",
 		);
 	}
+	if (caseId.includes("slang")) {
+		return evidence(
+			udPartOfSpeech("ADJ"),
+			"The intelligible slang loan sus is the predicative property word after ist, so Dumling's UD-inspired inventory assigns the informative Lexeme/ADJ route. Current Dumgen product policy does not use residual Lexeme/X for an established, syntactically classifiable loan.",
+		);
+	}
 	return evidence(
-		IDS.wordClasses,
-		"The complete surrounding sentence keeps the clicked occurrence classifiable without absorbing opaque, slang, or unrelated material.",
+		udPartOfSpeech("VERB"),
+		"The complete surrounding sentence identifies schläft as Lexeme/VERB without absorbing the neighboring OpaqueText material.",
 	);
 }

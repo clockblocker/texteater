@@ -15,16 +15,18 @@ import {
 	type ArmEvidenceSummary,
 	ATTEMPTS_PER_ARM,
 	BATCH_CACHE_POLICY,
+	DIRECT_RESPONSES_POLICY,
 	decidePrototypeWinner,
 	EXACT_CALL_CAP,
 	EXPECTED_RESOLVED_MODEL,
 	MAX_OUTPUT_TOKENS,
 	MAXIMUM_SPEND_USD,
-	PRICE_SCHEDULE,
+	type PrototypePriceSchedule,
 	preparePrototypePreflight,
 	prepareRepresentationCases,
 	REASONING_EFFORT,
 	RUN_MODEL,
+	runnerParametersSchema,
 	sliceForCase,
 	systemPromptForRepresentation,
 	TEXT_VERBOSITY,
@@ -48,6 +50,8 @@ const BATCH_MANIFEST_NAME = "batch-manifest.json";
 const BATCH_INPUT_NAME = "batch-input.jsonl";
 const BATCH_OUTPUT_NAME = "batch-output.jsonl";
 const BATCH_ERROR_NAME = "batch-error.jsonl";
+const DIRECT_CHECKPOINT_NAME = "direct-checkpoint.json";
+export const DIRECT_TRANSIENT_RETRY_LIMIT = 2;
 let scheduleCacheKeys: ReadonlyMap<string, string> | undefined;
 const CLASSIFICATIONS = [
 	"prompt-defect",
@@ -221,6 +225,9 @@ const armSummarySchema = z.strictObject({
 	id: z.enum(REPRESENTATION_IDS),
 	attemptCount: z.number().int().nonnegative(),
 	contractScore: z.number().int().nonnegative(),
+	attemptContractScores: z
+		.array(z.number().int().nonnegative())
+		.length(ATTEMPTS_PER_ARM),
 	executionErrorCount: z.number().int().nonnegative(),
 	unclassifiedMissCount: z.number().int().nonnegative(),
 	safetyGatePass: z.boolean(),
@@ -304,6 +311,7 @@ const batchScheduleBindingSchema = z.strictObject({
 	promptCacheKey: z.string().min(1),
 	requestSha256: z.string().regex(/^[0-9a-f]{64}$/u),
 	requestUtf8Bytes: z.number().int().positive(),
+	maximumCostUpperBoundUsd: z.number().positive(),
 });
 
 const rawBatchSnapshotSchema = z.strictObject({
@@ -342,6 +350,23 @@ export type PreparedPrototypeBatch = Readonly<{
 	manifest: PrototypeBatchManifest;
 }>;
 
+const prototypeDirectCheckpointSchema = z.strictObject({
+	version: z.literal("target-classification-high-level-direct-v1"),
+	createdAt: z.iso.datetime({ offset: true }),
+	updatedAt: z.iso.datetime({ offset: true }),
+	bindingSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	preflight: z.unknown(),
+	schedule: z.array(batchScheduleBindingSchema).length(EXACT_CALL_CAP),
+	dispatchCounts: z.record(z.string(), z.number().int().nonnegative()),
+	transientRetryCounts: z
+		.record(z.string(), z.number().int().nonnegative())
+		.default({}),
+	attempts: z.array(attemptSchema).max(EXACT_CALL_CAP),
+});
+type PrototypeDirectCheckpoint = z.output<
+	typeof prototypeDirectCheckpointSchema
+>;
+
 const remoteBatchSchema = z
 	.object({
 		id: z.string().min(1),
@@ -379,11 +404,34 @@ const batchResultEnvelopeSchema = z
 	})
 	.passthrough();
 
-export function preparePrototypeBatch(): PreparedPrototypeBatch {
-	const preflight = preparePrototypePreflight();
-	assertPreflightCallPolicy(preflight);
-	const schedule: z.input<typeof batchScheduleBindingSchema>[] = [];
-	const lines: string[] = [];
+type PrototypeScheduleEntry = Readonly<{
+	binding: z.output<typeof batchScheduleBindingSchema>;
+	request: ResponseRequest;
+	systemPrompt: string;
+	testCase: ReturnType<typeof prepareRepresentationCases>[number];
+}>;
+
+function maximumRequestCostUpperBoundUsd(
+	requestUtf8Bytes: number,
+	priceSchedule: PrototypePriceSchedule,
+): number {
+	const inputTokenUpperBound = requestUtf8Bytes + 64;
+	const price =
+		inputTokenUpperBound > priceSchedule.longContextThresholdTokens
+			? priceSchedule.longContext
+			: priceSchedule.shortContext;
+	return (
+		(inputTokenUpperBound / 1_000_000) *
+			Math.max(price.inputUsdPerMillion, price.cacheWriteUsdPerMillion) +
+		(MAX_OUTPUT_TOKENS / 1_000_000) * price.outputUsdPerMillion
+	);
+}
+
+function preparePrototypeSchedule(parameters: {
+	readonly batching: boolean;
+}): readonly PrototypeScheduleEntry[] {
+	const preflight = preparePrototypePreflight(parameters);
+	const schedule: PrototypeScheduleEntry[] = [];
 	let scheduleIndex = 0;
 	for (const armId of REPRESENTATION_IDS) {
 		const systemPrompt = systemPromptForRepresentation(armId);
@@ -401,27 +449,59 @@ export function preparePrototypeBatch(): PreparedPrototypeBatch {
 					privateInput: testCase.privateInput,
 					promptCacheKey,
 				});
-				const customId = `tc85-${String(scheduleIndex).padStart(3, "0")}-${bindingSha256(key).slice(0, 12)}`;
-				const envelope = {
-					custom_id: customId,
-					method: "POST",
-					url: BATCH_ENDPOINT,
-					body: request,
-				};
-				lines.push(stableJson(envelope));
+				const requestUtf8Bytes = jsonUtf8Bytes(request);
 				schedule.push({
-					key,
-					customId,
-					armId,
-					attemptNumber,
-					caseId: testCase.caseId,
-					promptCacheKey,
-					requestSha256: bindingSha256(request),
-					requestUtf8Bytes: jsonUtf8Bytes(request),
+					binding: batchScheduleBindingSchema.parse({
+						key,
+						customId: `tc85-${String(scheduleIndex).padStart(3, "0")}-${bindingSha256(key).slice(0, 12)}`,
+						armId,
+						attemptNumber,
+						caseId: testCase.caseId,
+						promptCacheKey,
+						requestSha256: bindingSha256(request),
+						requestUtf8Bytes,
+						maximumCostUpperBoundUsd:
+							maximumRequestCostUpperBoundUsd(
+								requestUtf8Bytes,
+								preflight.priceSchedule,
+							),
+					}),
+					request,
+					systemPrompt,
+					testCase,
 				});
 				scheduleIndex += 1;
 			}
 		}
+	}
+	if (schedule.length !== EXACT_CALL_CAP) {
+		throw new Error("Prepared schedule does not match the exact call cap.");
+	}
+	return Object.freeze(schedule);
+}
+
+export function preparePrototypeBatch(parameters: {
+	readonly batching: true;
+}): PreparedPrototypeBatch {
+	const runnerParameters = runnerParametersSchema.parse({
+		batching: parameters.batching,
+	});
+	if (!runnerParameters.batching) {
+		throw new Error("Batch preparation requires batching: true.");
+	}
+	const preflight = preparePrototypePreflight(runnerParameters);
+	assertPreflightCallPolicy(preflight);
+	const schedule = preparePrototypeSchedule(runnerParameters);
+	const lines: string[] = [];
+	for (const entry of schedule) {
+		lines.push(
+			stableJson({
+				custom_id: entry.binding.customId,
+				method: "POST",
+				url: BATCH_ENDPOINT,
+				body: entry.request,
+			}),
+		);
 	}
 	const jsonl = `${lines.join("\n")}\n`;
 	return {
@@ -435,7 +515,7 @@ export function preparePrototypeBatch(): PreparedPrototypeBatch {
 			preflight,
 			inputSha256: sha256Text(jsonl),
 			inputUtf8Bytes: Buffer.byteLength(jsonl, "utf8"),
-			schedule,
+			schedule: schedule.map(({ binding }) => binding),
 			remote: {
 				inputFileId: null,
 				uploadAttemptedAt: null,
@@ -451,22 +531,37 @@ export function preparePrototypeBatch(): PreparedPrototypeBatch {
 }
 
 if (import.meta.main) {
-	const mode = process.argv[2] ?? "preflight";
+	const mode = process.argv[2];
 	if (mode === "preflight") {
-		printPreflight();
+		printPreflight({ batching: parseBatchingFlag(process.argv[3]) });
 	} else if (mode === "run") {
-		await runLivePrototype();
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		await runLivePrototype({
+			batching: false,
+			runDirectory: process.argv[4],
+		});
 	} else if (mode === "batch-submit") {
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
 		const manifestPath = await submitPrototypeBatch({
-			runDirectory: process.argv[3],
+			batching: true,
+			runDirectory: process.argv[4],
 		});
 		console.log(`Submitted Batch; manifest: ${manifestPath}`);
 	} else if (mode === "batch-resume") {
-		const manifestPath = process.argv[3];
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		const manifestPath = process.argv[4];
 		if (manifestPath === undefined) {
-			throw new Error("Usage: run.ts batch-resume <batch-manifest.json>");
+			throw new Error(
+				"Usage: run.ts batch-resume --batching=true <batch-manifest.json>",
+			);
 		}
-		const resumed = await resumePrototypeBatch({ manifestPath });
+		const resumed = await resumePrototypeBatch({
+			batching: true,
+			manifestPath,
+		});
 		console.log(
 			resumed.run === null
 				? `Batch status: ${resumed.status}`
@@ -482,16 +577,38 @@ if (import.meta.main) {
 		}
 		await finalizeEvidence(resultsPath, classificationsPath);
 	} else {
-		throw new Error(`Unknown prototype mode ${mode}.`);
+		throw new Error(
+			"Usage: run.ts <preflight|run|batch-submit|batch-resume|finalize> with an explicit batching flag for provider modes.",
+		);
 	}
 }
 
-export function printPreflight(): void {
-	const preflight = preparePrototypePreflight();
+export function parseBatchingFlag(value: string | undefined): boolean {
+	if (value === "--batching=true") return true;
+	if (value === "--batching=false") return false;
+	throw new Error("Expected explicit --batching=true or --batching=false.");
+}
+
+export function assertBatchingForMode(
+	mode: "run" | "batch-submit" | "batch-resume",
+	batching: boolean,
+): void {
+	if (mode === "run" ? batching : !batching) {
+		throw new Error(
+			`${mode} requires --batching=${mode === "run" ? "false" : "true"}.`,
+		);
+	}
+}
+
+export function printPreflight(parameters: {
+	readonly batching: boolean;
+}): void {
+	const preflight = preparePrototypePreflight(parameters);
 	console.log(JSON.stringify(preflight, null, 2));
 }
 
 export async function submitPrototypeBatch(options: {
+	readonly batching: true;
 	readonly apiKey?: string;
 	readonly client?: PrototypeBatchClient;
 	readonly runDirectory?: string;
@@ -504,7 +621,12 @@ export async function submitPrototypeBatch(options: {
 	readonly reconciliationAttempts?: number;
 	readonly reconciliationDelayMs?: number;
 }): Promise<string> {
-	const prepared = preparePrototypeBatch();
+	if (
+		!runnerParametersSchema.parse({ batching: options.batching }).batching
+	) {
+		throw new Error("Batch submission requires batching: true.");
+	}
+	const prepared = preparePrototypeBatch(options);
 	const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
 	if (apiKey === undefined && options.client === undefined) {
 		throw new Error(
@@ -831,10 +953,16 @@ async function listAllBatches(
 }
 
 export async function resumePrototypeBatch(options: {
+	readonly batching: true;
 	readonly manifestPath: string;
 	readonly apiKey?: string;
 	readonly client?: PrototypeBatchClient;
 }): Promise<{ status: string; run: RetainedRun | null }> {
+	if (
+		!runnerParametersSchema.parse({ batching: options.batching }).batching
+	) {
+		throw new Error("Batch resume requires batching: true.");
+	}
 	const manifestPath = resolve(options.manifestPath);
 	let manifest = prototypeBatchManifestSchema.parse(
 		JSON.parse(await readFile(manifestPath, "utf8")),
@@ -911,7 +1039,7 @@ export async function resumePrototypeBatch(options: {
 }
 
 function assertBatchManifestCurrent(manifest: PrototypeBatchManifest): void {
-	const preflight = preparePrototypePreflight();
+	const preflight = preparePrototypePreflight({ batching: true });
 	if (
 		manifest.bindingSha256 !== bindingSha256(preflight) ||
 		stableJson(manifest.preflight) !== stableJson(preflight)
@@ -920,7 +1048,7 @@ function assertBatchManifestCurrent(manifest: PrototypeBatchManifest): void {
 			"Batch manifest is not bound to current source policy.",
 		);
 	}
-	const prepared = preparePrototypeBatch();
+	const prepared = preparePrototypeBatch({ batching: true });
 	if (
 		manifest.inputSha256 !== prepared.manifest.inputSha256 ||
 		stableJson(manifest.schedule) !== stableJson(prepared.manifest.schedule)
@@ -953,14 +1081,52 @@ function rawBatchSnapshot(raw: unknown) {
 	});
 }
 
-export async function runLivePrototype(
-	options: {
-		readonly apiKey?: string;
-		readonly client?: PrototypeResponsesClient;
-		readonly runDirectory?: string;
-	} = {},
-): Promise<RetainedRun> {
-	const preflight = preparePrototypePreflight();
+async function readDirectCheckpointIfPresent(
+	checkpointPath: string,
+): Promise<PrototypeDirectCheckpoint | null> {
+	try {
+		return prototypeDirectCheckpointSchema.parse(
+			JSON.parse(await readFile(checkpointPath, "utf8")),
+		);
+	} catch (cause) {
+		if ((cause as NodeJS.ErrnoException).code === "ENOENT") return null;
+		throw cause;
+	}
+}
+
+function assertDirectCheckpointCurrent(
+	checkpoint: PrototypeDirectCheckpoint,
+	preflight: ReturnType<typeof preparePrototypePreflight>,
+	schedule: readonly PrototypeScheduleEntry[],
+): void {
+	if (
+		checkpoint.bindingSha256 !== bindingSha256(preflight) ||
+		stableJson(checkpoint.preflight) !== stableJson(preflight) ||
+		stableJson(checkpoint.schedule) !==
+			stableJson(schedule.map(({ binding }) => binding))
+	) {
+		throw new Error(
+			"Direct checkpoint is not bound to the current source policy and schedule.",
+		);
+	}
+}
+
+export async function runLivePrototype(options: {
+	readonly batching: false;
+	readonly apiKey?: string;
+	readonly client?: PrototypeResponsesClient;
+	readonly runDirectory?: string;
+	readonly onAttemptPersisted?: (
+		attempt: RetainedAttempt,
+	) => void | Promise<void>;
+}): Promise<RetainedRun> {
+	const parameters = runnerParametersSchema.parse({
+		batching: options.batching,
+	});
+	if (parameters.batching) {
+		throw new Error("Direct runner requires batching: false.");
+	}
+	const preflight = preparePrototypePreflight(parameters);
 	assertPreflightCallPolicy(preflight);
 	const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
 	if (apiKey === undefined && options.client === undefined) {
@@ -970,59 +1136,247 @@ export async function runLivePrototype(
 	}
 	const client: PrototypeResponsesClient =
 		options.client ?? new OpenAI({ apiKey, maxRetries: 0 });
-	const startedAt = new Date().toISOString();
-	const attempts: RetainedAttempt[] = [];
-
-	for (const armId of REPRESENTATION_IDS) {
-		const systemPrompt = systemPromptForRepresentation(armId);
-		const cases = prepareRepresentationCases(armId);
-		for (
-			let attemptNumber = 1;
-			attemptNumber <= ATTEMPTS_PER_ARM;
-			attemptNumber += 1
-		) {
-			for (const testCase of cases) {
-				if (attempts.length >= EXACT_CALL_CAP) {
-					throw new Error(
-						"Exact call cap reached before schedule completion.",
-					);
-				}
-				attempts.push(
-					await callOne({
-						client,
-						armId,
-						attemptNumber,
-						systemPrompt,
-						testCase,
-					}),
-				);
-			}
-		}
-	}
-	if (attempts.length !== EXACT_CALL_CAP) {
+	const schedule = preparePrototypeSchedule(parameters);
+	if (
+		schedule.reduce(
+			(sum, { binding }) => sum + binding.maximumCostUpperBoundUsd,
+			0,
+		) > MAXIMUM_SPEND_USD
+	) {
 		throw new Error(
-			`Expected ${EXACT_CALL_CAP} calls; made ${attempts.length}.`,
+			"Direct schedule exceeds the $2 conservative spend ceiling.",
 		);
 	}
-	const resolvedModel = resolvedModelForRun(attempts);
+	const createdAt = new Date().toISOString();
+	const runDirectory =
+		options.runDirectory === undefined
+			? join(RUNS, createdAt.replaceAll(/[:.]/gu, "-"))
+			: resolve(options.runDirectory);
+	await mkdir(runDirectory, { recursive: true });
+	const checkpointPath = join(runDirectory, DIRECT_CHECKPOINT_NAME);
+	let checkpoint = await readDirectCheckpointIfPresent(checkpointPath);
+	if (checkpoint === null) {
+		checkpoint = prototypeDirectCheckpointSchema.parse({
+			version: "target-classification-high-level-direct-v1",
+			createdAt,
+			updatedAt: createdAt,
+			bindingSha256: bindingSha256(preflight),
+			preflight,
+			schedule: schedule.map(({ binding }) => binding),
+			dispatchCounts: {},
+			transientRetryCounts: {},
+			attempts: [],
+		});
+		await writeJsonAtomically(checkpointPath, checkpoint);
+	} else {
+		assertDirectCheckpointCurrent(checkpoint, preflight, schedule);
+	}
+	if (checkpoint === null) {
+		throw new Error("Direct checkpoint initialization failed.");
+	}
+
+	const completed = new Map(
+		checkpoint.attempts.map((attempt) => [attempt.key, attempt]),
+	);
+	const knownKeys = new Set(schedule.map(({ binding }) => binding.key));
+	if (
+		completed.size !== checkpoint.attempts.length ||
+		[...completed.keys()].some((key) => !knownKeys.has(key)) ||
+		Object.keys(checkpoint.dispatchCounts).some(
+			(key) => !knownKeys.has(key),
+		) ||
+		Object.entries(checkpoint.transientRetryCounts).some(
+			([key, count]) =>
+				!knownKeys.has(key) ||
+				count > DIRECT_TRANSIENT_RETRY_LIMIT ||
+				count >= (checkpoint?.dispatchCounts[key] ?? 0),
+		) ||
+		[...completed.keys()].some(
+			(key) => (checkpoint?.dispatchCounts[key] ?? 0) < 1,
+		)
+	) {
+		throw new Error(
+			"Direct checkpoint has duplicate, unknown, or undispatched attempts.",
+		);
+	}
+	const retainedProjectedCost = schedule.reduce(
+		(sum, { binding }) =>
+			sum +
+			(checkpoint?.dispatchCounts[binding.key] ?? 0) *
+				binding.maximumCostUpperBoundUsd,
+		0,
+	);
+	if (retainedProjectedCost > MAXIMUM_SPEND_USD) {
+		throw new Error(
+			"Retained direct dispatches exceed the $2 conservative spend ceiling.",
+		);
+	}
+	let nextScheduleIndex = 0;
+	let fatalError: unknown;
+	let mutation = Promise.resolve();
+	const mutateCheckpoint = async <T>(
+		operation: () => Promise<T> | T,
+	): Promise<T> => {
+		const result = mutation.then(operation);
+		mutation = result.then(
+			() => undefined,
+			() => undefined,
+		);
+		return result;
+	};
+	const projectedDispatchCost = () =>
+		schedule.reduce(
+			(sum, { binding }) =>
+				sum +
+				(checkpoint?.dispatchCounts[binding.key] ?? 0) *
+					binding.maximumCostUpperBoundUsd,
+			0,
+		);
+	const reserveNext = () =>
+		mutateCheckpoint(async (): Promise<PrototypeScheduleEntry | null> => {
+			if (fatalError !== undefined) return null;
+			while (
+				nextScheduleIndex < schedule.length &&
+				completed.has(schedule[nextScheduleIndex]?.binding.key ?? "")
+			) {
+				nextScheduleIndex += 1;
+			}
+			const entry = schedule[nextScheduleIndex];
+			if (entry === undefined) return null;
+			nextScheduleIndex += 1;
+			const dispatchCounts = {
+				...checkpoint?.dispatchCounts,
+				[entry.binding.key]:
+					(checkpoint?.dispatchCounts[entry.binding.key] ?? 0) + 1,
+			};
+			checkpoint = prototypeDirectCheckpointSchema.parse({
+				...checkpoint,
+				updatedAt: new Date().toISOString(),
+				dispatchCounts,
+			});
+			if (projectedDispatchCost() > MAXIMUM_SPEND_USD) {
+				throw new Error(
+					"Direct dispatches would exceed the $2 conservative spend ceiling.",
+				);
+			}
+			await writeJsonAtomically(checkpointPath, checkpoint);
+			return entry;
+		});
+	const reserveTransientRetry = (
+		entry: PrototypeScheduleEntry,
+		providerError: NonNullable<RetainedAttempt["providerError"]>,
+	) =>
+		mutateCheckpoint(async () => {
+			const retryCount =
+				checkpoint?.transientRetryCounts[entry.binding.key] ?? 0;
+			if (!shouldRetryDirectProviderError(providerError, retryCount)) {
+				throw new Error(
+					`Direct retry policy rejected ${entry.binding.key}.`,
+				);
+			}
+			checkpoint = prototypeDirectCheckpointSchema.parse({
+				...checkpoint,
+				updatedAt: new Date().toISOString(),
+				dispatchCounts: {
+					...checkpoint?.dispatchCounts,
+					[entry.binding.key]:
+						(checkpoint?.dispatchCounts[entry.binding.key] ?? 0) +
+						1,
+				},
+				transientRetryCounts: {
+					...checkpoint?.transientRetryCounts,
+					[entry.binding.key]: retryCount + 1,
+				},
+			});
+			if (projectedDispatchCost() > MAXIMUM_SPEND_USD) {
+				throw new Error(
+					"Direct retry would exceed the $2 conservative spend ceiling.",
+				);
+			}
+			await writeJsonAtomically(checkpointPath, checkpoint);
+		});
+	const persistAttempt = (attempt: RetainedAttempt) =>
+		mutateCheckpoint(async () => {
+			if (completed.has(attempt.key)) {
+				throw new Error(`Duplicate direct attempt ${attempt.key}.`);
+			}
+			completed.set(attempt.key, attempt);
+			checkpoint = prototypeDirectCheckpointSchema.parse({
+				...checkpoint,
+				updatedAt: new Date().toISOString(),
+				attempts: [...completed.values()],
+			});
+			await writeJsonAtomically(checkpointPath, checkpoint);
+		});
+	const worker = async () => {
+		while (fatalError === undefined) {
+			try {
+				const entry = await reserveNext();
+				if (entry === null) return;
+				let attempt: RetainedAttempt;
+				while (true) {
+					attempt = await callOne({
+						client,
+						armId: entry.binding.armId,
+						attemptNumber: entry.binding.attemptNumber,
+						systemPrompt: entry.systemPrompt,
+						testCase: entry.testCase,
+						priceSchedule: preflight.priceSchedule,
+					});
+					const providerError = attempt.providerError;
+					const retryCount =
+						checkpoint?.transientRetryCounts[entry.binding.key] ??
+						0;
+					if (
+						providerError === undefined ||
+						!shouldRetryDirectProviderError(
+							providerError,
+							retryCount,
+						)
+					) {
+						break;
+					}
+					await reserveTransientRetry(entry, providerError);
+				}
+				await persistAttempt(attempt);
+				await options.onAttemptPersisted?.(attempt);
+			} catch (cause) {
+				fatalError ??= cause;
+			}
+		}
+	};
+	await Promise.all(
+		Array.from({ length: DIRECT_RESPONSES_POLICY.concurrency }, async () =>
+			worker(),
+		),
+	);
+	if (fatalError !== undefined) throw fatalError;
+	const attempts = schedule.map(({ binding }) => completed.get(binding.key));
+	if (attempts.some((attempt) => attempt === undefined)) {
+		throw new Error("Direct run ended with an incomplete schedule.");
+	}
+	const retainedAttempts = attempts as RetainedAttempt[];
+	if (retainedAttempts.length !== EXACT_CALL_CAP) {
+		throw new Error(
+			`Expected ${EXACT_CALL_CAP} calls; retained ${retainedAttempts.length}.`,
+		);
+	}
+	assertAttemptSchedule(retainedAttempts);
+	const resolvedModel = resolvedModelForRun(retainedAttempts);
 	const result = retainedRunSchema.parse({
-		startedAt,
+		startedAt: checkpoint.createdAt,
 		completedAt: new Date().toISOString(),
 		finalizedAt: null,
 		bindingSha256: bindingSha256(preflight),
 		preflight,
 		resolvedModel,
-		actualCallCount: attempts.length,
-		totalBilledCostUpperBoundUsd: totalCost(attempts),
-		arms: summarizeArms(attempts),
+		actualCallCount: retainedAttempts.length,
+		totalBilledCostUpperBoundUsd: totalCost(retainedAttempts),
+		arms: summarizeArms(retainedAttempts),
 		verdict: null,
-		attempts,
+		attempts: retainedAttempts,
 	});
-	const destination =
-		options.runDirectory === undefined
-			? join(RUNS, startedAt.replaceAll(/[:.]/gu, "-"), "results.json")
-			: join(options.runDirectory, "results.json");
-	await mkdir(dirname(destination), { recursive: true });
+	const destination = join(runDirectory, "results.json");
 	await writeJsonAtomically(destination, result);
 	console.log(`Wrote ${relative(process.cwd(), destination)}`);
 	console.log("Evidence remains ineligible until offline finalization.");
@@ -1034,6 +1388,9 @@ async function collectPrototypeBatch(
 	outputJsonl: string,
 	errorJsonl: string,
 ): Promise<RetainedRun> {
+	const batchPriceSchedule = preparePrototypePreflight({
+		batching: true,
+	}).priceSchedule;
 	const envelopes = [
 		...parseBatchJsonl(outputJsonl),
 		...parseBatchJsonl(errorJsonl),
@@ -1154,6 +1511,7 @@ async function collectPrototypeBatch(
 			attemptNumber: binding.attemptNumber,
 			systemPrompt,
 			testCase,
+			priceSchedule: batchPriceSchedule,
 		});
 		attempts.push(attemptSchema.parse({ ...retained, ...batchEvidence }));
 	}
@@ -1193,6 +1551,7 @@ async function callOne(args: {
 	attemptNumber: number;
 	systemPrompt: string;
 	testCase: ReturnType<typeof prepareRepresentationCases>[number];
+	priceSchedule: PrototypePriceSchedule;
 }): Promise<RetainedAttempt> {
 	const key = `${args.armId}/${args.attemptNumber}/${args.testCase.caseId}`;
 	const promptCacheKey = promptCacheKeyForScheduleKey(key);
@@ -1281,7 +1640,7 @@ async function callOne(args: {
 	};
 	let usage: z.output<typeof usageSchema>;
 	try {
-		usage = normalizeUsage(response.usage);
+		usage = normalizeUsage(response.usage, args.priceSchedule);
 	} catch (cause) {
 		return attemptSchema.parse({
 			...baseAttempt,
@@ -1387,6 +1746,17 @@ export function summarizeArms(
 ): readonly ArmEvidenceSummary[] {
 	return REPRESENTATION_IDS.map((id) => {
 		const armAttempts = attempts.filter((attempt) => attempt.armId === id);
+		const attemptContractScores = Array.from(
+			{ length: ATTEMPTS_PER_ARM },
+			(_, index) => index + 1,
+		).map(
+			(attemptNumber) =>
+				armAttempts.filter(
+					(attempt) =>
+						attempt.attemptNumber === attemptNumber &&
+						attempt.evaluation.contractPass,
+				).length,
+		);
 		const sliceRatios = Object.fromEntries(
 			(["routes", "boundaries", "robustness"] as const).map((slice) => {
 				const sliced = armAttempts.filter(
@@ -1427,6 +1797,7 @@ export function summarizeArms(
 			contractScore: armAttempts.filter(
 				({ evaluation }) => evaluation.contractPass,
 			).length,
+			attemptContractScores,
 			executionErrorCount: armAttempts.filter(
 				({ providerError }) => providerError !== undefined,
 			).length,
@@ -1484,9 +1855,14 @@ export async function finalizeEvidence(
 			}),
 		)
 		.parse(JSON.parse(await readFile(classificationsPath, "utf8")));
+	const priceSchedule = currentPreflightForRetained(retained).priceSchedule;
 	const attempts = retained.attempts.map((attempt) => {
 		const scheduledCase = scheduledCaseForAttempt(attempt);
-		const recomputed = recomputeAttempt(attempt, scheduledCase);
+		const recomputed = recomputeAttempt(
+			attempt,
+			scheduledCase,
+			priceSchedule,
+		);
 		if (recomputed.evaluation.contractPass) {
 			if (classifications[attempt.key] !== undefined) {
 				throw new Error(
@@ -1535,6 +1911,7 @@ export async function finalizeEvidence(
 function recomputeAttempt(
 	attempt: RetainedAttempt,
 	scheduledCase: ReturnType<typeof prepareRepresentationCases>[number],
+	priceSchedule: PrototypePriceSchedule,
 ): RetainedAttempt {
 	if (
 		attempt.rawOutputText === undefined ||
@@ -1584,7 +1961,7 @@ function recomputeAttempt(
 			`Attempt ${attempt.key} lacks retained usage evidence.`,
 		);
 	}
-	const recomputedUsage = normalizeUsage(attempt.rawUsage);
+	const recomputedUsage = normalizeUsage(attempt.rawUsage, priceSchedule);
 	if (stableJson(recomputedUsage) !== stableJson(attempt.usage)) {
 		throw new Error(
 			`Attempt ${attempt.key} usage or cost was tampered with.`,
@@ -1735,7 +2112,7 @@ export function promptCacheKeyForScheduleKey(scheduleKey: string): string {
 }
 
 export function assertCurrentBinding(retained: RetainedRun): void {
-	const current = preparePrototypePreflight();
+	const current = currentPreflightForRetained(retained);
 	if (
 		retained.bindingSha256 !== bindingSha256(current) ||
 		stableJson(retained.preflight) !== stableJson(current)
@@ -1744,6 +2121,15 @@ export function assertCurrentBinding(retained: RetainedRun): void {
 			"Retained evidence is not bound to current source policy.",
 		);
 	}
+}
+
+function currentPreflightForRetained(
+	retained: RetainedRun,
+): ReturnType<typeof preparePrototypePreflight> {
+	const bound = z
+		.object({ runnerParameters: runnerParametersSchema })
+		.parse(retained.preflight);
+	return preparePrototypePreflight(bound.runnerParameters);
 }
 
 function resolvedModelForRun(
@@ -1795,7 +2181,10 @@ function assertPreflightCallPolicy(
 	}
 }
 
-function normalizeUsage(usage: unknown): z.output<typeof usageSchema> {
+function normalizeUsage(
+	usage: unknown,
+	priceSchedule: PrototypePriceSchedule,
+): z.output<typeof usageSchema> {
 	const value = z
 		.object({
 			input_tokens: z.number().int().nonnegative(),
@@ -1823,10 +2212,10 @@ function normalizeUsage(usage: unknown): z.output<typeof usageSchema> {
 		);
 	}
 	const longContext =
-		value.input_tokens > PRICE_SCHEDULE.longContextThresholdTokens;
+		value.input_tokens > priceSchedule.longContextThresholdTokens;
 	const price = longContext
-		? PRICE_SCHEDULE.longContext
-		: PRICE_SCHEDULE.shortContext;
+		? priceSchedule.longContext
+		: priceSchedule.shortContext;
 	const uncachedInputTokens = Math.max(
 		0,
 		value.input_tokens - cachedInputTokens - cacheWriteInputTokens,
@@ -1908,6 +2297,61 @@ function failedEvaluation(): Evaluation {
 		clickInclusionPass: false,
 		correctUnresolvedPass: false,
 	};
+}
+
+const TRANSIENT_TRANSPORT_ERROR_CODES = new Set([
+	"ECONNABORTED",
+	"ECONNREFUSED",
+	"ECONNRESET",
+	"EHOSTUNREACH",
+	"ENETDOWN",
+	"ENETUNREACH",
+	"ENOTFOUND",
+	"EPIPE",
+	"ETIMEDOUT",
+	"EAI_AGAIN",
+]);
+
+export function shouldRetryDirectProviderError(
+	error: Readonly<{
+		name: string;
+		message: string;
+		status?: number;
+		code?: string;
+	}>,
+	completedRetryCount: number,
+): boolean {
+	if (
+		!Number.isInteger(completedRetryCount) ||
+		completedRetryCount < 0 ||
+		completedRetryCount >= DIRECT_TRANSIENT_RETRY_LIMIT
+	) {
+		return false;
+	}
+	if (
+		error.status === 429 ||
+		(error.status !== undefined &&
+			error.status >= 500 &&
+			error.status <= 599)
+	) {
+		return true;
+	}
+	if (
+		error.code !== undefined &&
+		(TRANSIENT_TRANSPORT_ERROR_CODES.has(error.code) ||
+			error.code.startsWith("UND_ERR_"))
+	) {
+		return true;
+	}
+	if (
+		error.name === "APIConnectionError" ||
+		error.name === "APIConnectionTimeoutError"
+	) {
+		return true;
+	}
+	return /\b(?:ECONNRESET|ETIMEDOUT|EAI_AGAIN|fetch failed|network connection|socket hang up)\b/iu.test(
+		error.message,
+	);
 }
 
 function describeError(cause: unknown) {

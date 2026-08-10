@@ -3,7 +3,7 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../assembly";
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
-import { addCaseEvidence, resolved, sentence } from "./builders";
+import { addCaseEvidence, resolved, sentence, sentences } from "./builders";
 import { evidence, IDS } from "./sources";
 
 const greeting = sentence(["Guten", "Morgen"], "!");
@@ -15,15 +15,24 @@ const demonstrationDecisionSupportVerb = sentence([
 	"Entscheidung",
 ]);
 const demonstrationSeparable = sentence(["Fritz", "steht", "sofort", "auf"]);
-const idiom = sentence(["Sie", "brach", "endlich", "das", "Eis"]);
-const literalIce = sentence([
-	"Sie",
-	"brach",
-	"das",
-	"Eis",
-	"für",
-	"die",
-	"Getränke",
+const idiom = sentences([
+	["Im", "Workshop", "schwieg", "jeder"],
+	["Mit", "einem", "Witz", "brach", "sie", "endlich", "das", "Eis"],
+]);
+const literalIce = sentences([
+	["Vor", "ihr", "lag", "ein", "großer", "Eisblock"],
+	[
+		"Mit",
+		"einem",
+		"Hammer",
+		"brach",
+		"sie",
+		"das",
+		"Eis",
+		"für",
+		"die",
+		"Getränke",
+	],
 ]);
 const governed = sentence(["Mara", "wartet", "auf", "den", "Bus"]);
 const adjunct = sentence(["Mara", "läuft", "auf", "der", "Wiese"]);
@@ -45,13 +54,9 @@ const supportVerbCombination = sentence([
 	"Entscheidung",
 ]);
 const freeObject = sentence(["Der", "Kellner", "bringt", "eine", "Cola"]);
-const fixedFunctionWords = sentence([
-	"Sie",
-	"heult",
-	"mit",
-	"den",
-	"hungrigen",
-	"Wölfen",
+const fixedFunctionWords = sentences([
+	["Aus", "Opportunismus", "folgt", "sie", "immer", "der", "Mehrheit"],
+	["Sie", "heult", "mit", "den", "hungrigen", "Wölfen"],
 ]);
 const demonstrationIdiom = sentence([
 	"Nach",
@@ -83,6 +88,10 @@ const demonstrationLiteralHandtuch = sentence([
 	"in",
 	"die",
 	"Maschine",
+]);
+const demonstrationLiteralGrass = sentences([
+	["Das", "Kaninchen", "fraß", "auf", "der", "Wiese"],
+	["Dabei", "biss", "es", "ins", "Gras"],
 ]);
 const demonstrationGoverned = sentence([
 	"Sie",
@@ -137,9 +146,27 @@ const demonstrationRepeatedParticle = sentence([
 	"endlich",
 	"an",
 ]);
+const demonstrationInternalIdiomModifier = sentences([
+	["Alle", "wollten", "den", "geheimen", "Plan", "wissen"],
+	[
+		"Schließlich",
+		"ließ",
+		"er",
+		"die",
+		"verdammte",
+		"Katze",
+		"aus",
+		"dem",
+		"Sack",
+	],
+]);
 const DECISION_TREFFEN_CONTAMINATION_KEY =
 	"target-lexical-unit:eine-entscheidung-treffen";
 const AUFSTEHEN_CONTAMINATION_KEY = "target-lexical-unit:aufstehen";
+const KATZE_AUS_DEM_SACK_CONTAMINATION_KEY =
+	"target-lexical-unit:die-katze-aus-dem-sack-lassen";
+const INS_GRAS_BEISSEN_CONTAMINATION_KEY =
+	"target-lexical-unit:ins-gras-beissen";
 
 function contaminated<const GoldenCase extends object>(
 	goldenCase: GoldenCase,
@@ -182,43 +209,43 @@ const cases = {
 	},
 	"target-de-boundary-idiom-click-brach": resolved(
 		idiom,
-		2,
-		[2, 6, 8],
+		15,
+		[15, 21, 23],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-idiom-click-das": resolved(
 		idiom,
-		6,
-		[2, 6, 8],
+		21,
+		[15, 21, 23],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-idiom-click-eis": resolved(
 		idiom,
-		8,
-		[2, 6, 8],
+		23,
+		[15, 21, 23],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-idiom-near-endlich": resolved(
 		idiom,
-		4,
-		[4],
+		19,
+		[19],
 		"Lexeme",
 		"ADV",
 	),
 	"target-de-boundary-literal-eis-click-brach": resolved(
 		literalIce,
-		2,
-		[2],
+		19,
+		[19],
 		"Lexeme",
 		"VERB",
 	),
 	"target-de-boundary-literal-eis-click-eis": resolved(
 		literalIce,
-		6,
-		[6],
+		25,
+		[25],
 		"Lexeme",
 		"NOUN",
 	),
@@ -434,36 +461,36 @@ const cases = {
 
 	"target-de-boundary-fixed-function-click-heult": resolved(
 		fixedFunctionWords,
-		2,
-		[2, 4, 6, 10],
+		17,
+		[17, 19, 21, 25],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-fixed-function-click-mit": resolved(
 		fixedFunctionWords,
-		4,
-		[2, 4, 6, 10],
+		19,
+		[17, 19, 21, 25],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-fixed-function-click-den": resolved(
 		fixedFunctionWords,
-		6,
-		[2, 4, 6, 10],
+		21,
+		[17, 19, 21, 25],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-fixed-function-click-woelfen": resolved(
 		fixedFunctionWords,
-		10,
-		[2, 4, 6, 10],
+		25,
+		[17, 19, 21, 25],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-boundary-fixed-function-near-hungrigen": resolved(
 		fixedFunctionWords,
-		8,
-		[8],
+		23,
+		[23],
 		"Lexeme",
 		"ADJ",
 	),
@@ -509,6 +536,14 @@ const cases = {
 		[6],
 		"Lexeme",
 		"VERB",
+	),
+	"target-de-demo-literal-gras-click-biss": contaminated(
+		resolved(demonstrationLiteralGrass, 15, [15], "Lexeme", "VERB"),
+		INS_GRAS_BEISSEN_CONTAMINATION_KEY,
+	),
+	"target-de-demo-literal-gras-click-gras": contaminated(
+		resolved(demonstrationLiteralGrass, 21, [21], "Lexeme", "NOUN"),
+		INS_GRAS_BEISSEN_CONTAMINATION_KEY,
 	),
 	"target-de-demo-governed-rechnen-click-rechnet": resolved(
 		demonstrationGoverned,
@@ -657,6 +692,70 @@ const cases = {
 		"Lexeme",
 		"ADP",
 	),
+	"target-de-demo-idiom-katze-click-liess": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			15,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-die": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			19,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-verdammte": contaminated(
+		resolved(demonstrationInternalIdiomModifier, 21, [21], "Lexeme", "ADJ"),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-katze": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			23,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-aus": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			25,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-dem": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			27,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-katze-click-sack": contaminated(
+		resolved(
+			demonstrationInternalIdiomModifier,
+			29,
+			[15, 19, 23, 25, 27, 29],
+			"Phraseme",
+			"Idiom",
+		),
+		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
+	),
 } satisfies GoldenCaseRegistry<
 	typeof canonicalInputSchema,
 	typeof canonicalOutputSchema
@@ -667,6 +766,24 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId.includes("demo-literal-gras")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"The feeding scene makes biss ins Gras a physical, compositional occurrence rather than the familiar death idiom. Issue #82 therefore selects only the clicked verb or noun Lexeme.",
+		);
+	}
+	if (caseId === "target-de-demo-idiom-katze-click-verdammte") {
+		return evidence(
+			IDS.phraseolexeme,
+			"The first sentence makes the following idiom's figurative reading explicit. Issue #82 keeps the freely inserted adjective verdammte outside die Katze aus dem Sack lassen and selects only the clicked Lexeme/ADJ.",
+		);
+	}
+	if (caseId.includes("demo-idiom-katze")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"The first sentence makes the following idiom's figurative reading explicit. Issue #82 includes the realized fixed members ließ, die, Katze, aus, dem, and Sack while excluding the freely inserted adjective verdammte.",
+		);
+	}
 	if (caseId === "target-de-demo-idiom-faden-click-voellig") {
 		return evidence(
 			IDS.phraseolexeme,

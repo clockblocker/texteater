@@ -14,7 +14,7 @@ const LEXEME_KINDS_BEFORE_PUNCT = [
 	"PRON",
 	"PROPN",
 ] as const;
-const LEXEME_KINDS_AFTER_PUNCT = ["SCONJ", "SYM", "VERB", "X"] as const;
+const LEXEME_KINDS_AFTER_PUNCT = ["SCONJ", "SYM", "VERB"] as const;
 
 export const GERMAN_REACHABLE_HIGH_LEVEL_ROUTES = {
 	Lexeme: [...LEXEME_KINDS_BEFORE_PUNCT, ...LEXEME_KINDS_AFTER_PUNCT],
@@ -33,6 +33,7 @@ export const GERMAN_HIGH_LEVEL_ROUTES = {
 		...LEXEME_KINDS_BEFORE_PUNCT,
 		"PUNCT",
 		...LEXEME_KINDS_AFTER_PUNCT,
+		"X",
 	],
 	Phraseme: [
 		"Aphorism",
