@@ -58,6 +58,27 @@ const fixedFunctionWords = sentences([
 	["Aus", "Opportunismus", "folgt", "sie", "immer", "der", "Mehrheit"],
 	["Sie", "heult", "mit", "den", "hungrigen", "Wölfen"],
 ]);
+const diagnosticOptionalReflexive = sentence([
+	"Er",
+	"rasiert",
+	"sich",
+	"morgens",
+]);
+const diagnosticCopula = sentence(["Der", "Himmel", "bleibt", "heute", "grau"]);
+const diagnosticIdiomModifier = sentences([
+	["Der", "Streit", "eskalierte", "bereits"],
+	[
+		"Mit",
+		"seiner",
+		"Provokation",
+		"goss",
+		"er",
+		"zusätzliches",
+		"Öl",
+		"ins",
+		"Feuer",
+	],
+]);
 const demonstrationIdiom = sentence([
 	"Nach",
 	"der",
@@ -167,6 +188,8 @@ const KATZE_AUS_DEM_SACK_CONTAMINATION_KEY =
 	"target-lexical-unit:die-katze-aus-dem-sack-lassen";
 const INS_GRAS_BEISSEN_CONTAMINATION_KEY =
 	"target-lexical-unit:ins-gras-beissen";
+const OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY =
+	"target-lexical-unit:oel-ins-feuer-giessen";
 
 function contaminated<const GoldenCase extends object>(
 	goldenCase: GoldenCase,
@@ -321,6 +344,20 @@ const cases = {
 		"Lexeme",
 		"PRON",
 	),
+	"target-de-diagnostic-optional-reflexive-click-rasiert": resolved(
+		diagnosticOptionalReflexive,
+		2,
+		[2],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-diagnostic-optional-reflexive-click-sich": resolved(
+		diagnosticOptionalReflexive,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
 
 	"target-de-boundary-separable-click-steht": contaminated(
 		resolved(separable, 2, [2, 8], "Lexeme", "VERB"),
@@ -427,6 +464,13 @@ const cases = {
 		"Lexeme",
 		"ADJ",
 	),
+	"target-de-diagnostic-copula-click-bleibt": resolved(
+		diagnosticCopula,
+		4,
+		[4],
+		"Lexeme",
+		"AUX",
+	),
 
 	"target-de-boundary-collocation-click-trifft": contaminated(
 		resolved(supportVerbCombination, 4, [4], "Lexeme", "VERB"),
@@ -493,6 +537,50 @@ const cases = {
 		[23],
 		"Lexeme",
 		"ADJ",
+	),
+	"target-de-diagnostic-idiom-oel-click-goss": contaminated(
+		resolved(
+			diagnosticIdiomModifier,
+			15,
+			[15, 21, 23, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY,
+	),
+	"target-de-diagnostic-idiom-oel-click-oel": contaminated(
+		resolved(
+			diagnosticIdiomModifier,
+			21,
+			[15, 21, 23, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY,
+	),
+	"target-de-diagnostic-idiom-oel-click-ins": contaminated(
+		resolved(
+			diagnosticIdiomModifier,
+			23,
+			[15, 21, 23, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY,
+	),
+	"target-de-diagnostic-idiom-oel-click-feuer": contaminated(
+		resolved(
+			diagnosticIdiomModifier,
+			25,
+			[15, 21, 23, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY,
+	),
+	"target-de-diagnostic-idiom-oel-near-zusaetzliches": contaminated(
+		resolved(diagnosticIdiomModifier, 19, [19], "Lexeme", "ADJ"),
+		OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY,
 	),
 
 	"target-de-demo-idiom-faden-click-verlor": resolved(
@@ -766,6 +854,24 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId.includes("diagnostic-idiom-oel")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate.",
+		);
+	}
+	if (caseId.includes("diagnostic-optional-reflexive")) {
+		return evidence(
+			IDS.reflexivePronoun,
+			"rasieren is usable without a reflexive pronoun, so issue #82 keeps rasiert as Lexeme/VERB and the contextual object sich as a separate Lexeme/PRON.",
+		);
+	}
+	if (caseId.includes("diagnostic-copula")) {
+		return evidence(
+			IDS.copula,
+			"IDS classifies bleiben with a predicative complement as a copula. Issue #82 keeps the clicked copula bleibt as standalone Lexeme/AUX rather than grouping it with grau.",
+		);
+	}
 	if (caseId.includes("demo-literal-gras")) {
 		return evidence(
 			IDS.phraseolexeme,

@@ -65,12 +65,18 @@ honest verdict is `NoWinner`. The five direct runs consumed a combined retained
 cost upper bound of $0.335872, well below the $10 session cap. These are
 development-suite results, not evidence of generalization.
 
+Version v10 adds an explicit runner pool. `development` preserves the frozen
+94-case, 188-call comparison. `diagnostic` is a non-winner-eligible 34-case
+selection containing the 14 failures from the best v9 run plus 20 controlled
+analogues. The two selections are retained separately: adding diagnostic cases
+does not mutate the historical development suite.
+
 ## Deterministic preflight
 
 From `battery/dumgen`, run the one package command:
 
 ```sh
-bun run prototype:target-classification-high-level-contracts preflight --batching=true
+bun run prototype:target-classification-high-level-contracts preflight --batching=true --pool=development
 ```
 
 Preflight performs no provider call. It proves adapter ideal round-trips,
@@ -138,7 +144,16 @@ Run the direct transport with bounded concurrency eight:
 ```sh
 bun --env-file ../../.env.local \
   run prototype:target-classification-high-level-contracts run \
-  --batching=false [run-directory]
+  --batching=false --pool=development [run-directory]
+```
+
+For failure triangulation only, run the 34-case diagnostic selection twice
+(68 logical calls total):
+
+```sh
+bun --env-file ../../.env.local \
+  run prototype:target-classification-high-level-contracts run \
+  --batching=false --pool=diagnostic [run-directory]
 ```
 
 Direct mode atomically writes `direct-checkpoint.json` before every dispatch and
@@ -161,7 +176,7 @@ Alternatively, submit the frozen Batch explicitly:
 ```sh
 bun --env-file ../../.env.local \
 	  run prototype:target-classification-high-level-contracts batch-submit \
-  --batching=true [run-directory]
+  --batching=true --pool=development [run-directory]
 ```
 
 The command prints the retained `batch-manifest.json` path. Poll or resume the

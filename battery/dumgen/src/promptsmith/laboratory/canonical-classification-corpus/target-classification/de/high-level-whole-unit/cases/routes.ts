@@ -12,6 +12,7 @@ const ENTWEDER_ODER_CONTAMINATION_KEY =
 const EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY =
 	"target-construction:paired-frame:einerseits-andererseits";
 const ZUM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:zum";
+const AM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:am";
 const CRINGE_CONTAMINATION_KEY = "target-lexeme:cringe";
 const ZEIT_IST_GELD_CONTAMINATION_KEY =
 	"target-phraseme:aphorism:zeit-ist-geld";
@@ -183,6 +184,18 @@ const pairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "besser" },
 	{ kind: "Punctuation", text: "." },
 ];
+const diagnosticPairedFrame: Segment[] = [
+	{ kind: "ResolvableText", text: "Je" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "wärmer" },
+	{ kind: "Punctuation", text: "," },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "desto" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "schöner" },
+	{ kind: "Punctuation", text: "." },
+];
+const diagnosticEitherFrame = sentence(["Entweder", "Kaffee", "oder", "Tee"]);
 const subordinateClause: Segment[] = [
 	{ kind: "ResolvableText", text: "Weil" },
 	{ kind: "Whitespace", text: " " },
@@ -560,6 +573,20 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			"Proverb",
 		),
 		"target-de-route-construction-fusion": fusion,
+		"target-de-diagnostic-fusion-am": {
+			...resolved(
+				sentence(["Sie", "wartet", "am", "Bahnhof"]),
+				4,
+				[4],
+				"Construction",
+				"Fusion",
+			),
+			contaminationKeys: [AM_FUSION_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.fusionZu,
+				"IDS establishes the German preposition-article contraction category. In this locative occurrence, am realizes an plus dem; issue #82 maps exactly the clicked fused source segment to Construction/Fusion and excludes Bahnhof.",
+			),
+		},
 		"target-de-route-construction-paired-click-je": pairedFrameTarget(
 			0,
 			[0, 5],
@@ -571,6 +598,38 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 		"target-de-route-construction-paired-near-frueher":
 			pairedFrameFiller(2),
 		"target-de-route-construction-paired-near-besser": pairedFrameFiller(7),
+		"target-de-diagnostic-paired-je-near-waermer": {
+			...resolved(diagnosticPairedFrame, 2, [2], "Lexeme", "ADJ"),
+			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"The repeated je ... desto frame changes only its comparative values. wärmer fills the first degree slot and remains a standalone clicked Lexeme/ADJ.",
+			),
+		},
+		"target-de-diagnostic-paired-je-near-schoener": {
+			...resolved(diagnosticPairedFrame, 7, [7], "Lexeme", "ADJ"),
+			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"The repeated je ... desto frame changes only its comparative values. schöner fills the second degree slot and remains a standalone clicked Lexeme/ADJ.",
+			),
+		},
+		"target-de-diagnostic-paired-entweder-near-kaffee": {
+			...resolved(diagnosticEitherFrame, 2, [2], "Lexeme", "NOUN"),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"In entweder ... oder, Kaffee is a freely supplied nominal alternative rather than a fixed anchor. The clicked filler is Lexeme/NOUN only.",
+			),
+		},
+		"target-de-diagnostic-paired-entweder-near-tee": {
+			...resolved(diagnosticEitherFrame, 6, [6], "Lexeme", "NOUN"),
+			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"In entweder ... oder, Tee is a freely supplied nominal alternative rather than a fixed anchor. The clicked filler is Lexeme/NOUN only.",
+			),
+		},
 	} satisfies GoldenCaseRegistry<
 		typeof canonicalInputSchema,
 		typeof canonicalOutputSchema

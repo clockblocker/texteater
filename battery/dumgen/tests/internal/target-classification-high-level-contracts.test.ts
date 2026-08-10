@@ -10,7 +10,9 @@ import {
 	DIRECT_TRANSIENT_RETRY_LIMIT,
 	finalizeEvidence,
 	parseBatchingFlag,
+	parsePoolFlag,
 	preparePrototypeBatch,
+	promptCacheKeyForScheduleKey,
 	resumePrototypeBatch,
 	runLivePrototype,
 	shouldRetryDirectProviderError,
@@ -20,6 +22,7 @@ import { stableJson } from "../../src/lib/stable-json";
 import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
 	demonstrationSelection,
+	diagnosticSelection,
 	evaluationSelection,
 } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
 import {
@@ -33,6 +36,7 @@ import {
 	preparePrototypePreflight,
 	prepareRepresentationCases,
 	REASONING_EFFORT,
+	runnerParametersSchema,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
 	additionalCompactIndicesOutputSchema,
@@ -413,6 +417,9 @@ describe("target classification high-level contract prototype", () => {
 		expect(parseBatchingFlag("--batching=false")).toBe(false);
 		expect(() => parseBatchingFlag(undefined)).toThrow(/explicit/u);
 		expect(() => parseBatchingFlag("false")).toThrow(/explicit/u);
+		expect(parsePoolFlag("--pool=development")).toBe("development");
+		expect(parsePoolFlag("--pool=diagnostic")).toBe("diagnostic");
+		expect(() => parsePoolFlag(undefined)).toThrow(/explicit/u);
 		expect(() => assertBatchingForMode("run", true)).toThrow(
 			/--batching=false/u,
 		);
@@ -425,8 +432,14 @@ describe("target classification high-level contract prototype", () => {
 
 		const batch = preparePrototypePreflight({ batching: true });
 		const direct = preparePrototypePreflight({ batching: false });
-		expect(batch.runnerParameters).toEqual({ batching: true });
-		expect(direct.runnerParameters).toEqual({ batching: false });
+		expect(batch.runnerParameters).toEqual({
+			batching: true,
+			pool: "development",
+		});
+		expect(direct.runnerParameters).toEqual({
+			batching: false,
+			pool: "development",
+		});
 		expect(batch.priceSchedule.shortContext).toMatchObject({
 			inputUsdPerMillion: 0.1,
 			outputUsdPerMillion: 0.6,
@@ -478,6 +491,25 @@ describe("target classification high-level contract prototype", () => {
 				2,
 			),
 		).toBe(false);
+	});
+
+	test("binds an explicit diagnostic pool to only the failing and analogue cases", () => {
+		const parsed = runnerParametersSchema.safeParse({
+			batching: false,
+			pool: "diagnostic",
+		});
+		expect(parsed.success).toBe(true);
+		if (!parsed.success) return;
+		const preflight = preparePrototypePreflight(parsed.data);
+		expect(preflight.runnerParameters.pool).toBe("diagnostic");
+		expect(preflight.evaluationCaseIds).toEqual(diagnosticSelection.ids);
+		expect(preflight.exactCallCap).toBe(68);
+		expect(
+			promptCacheKeyForScheduleKey(
+				"additional-compact-indices/1/target-de-diagnostic-fusion-am",
+				"diagnostic",
+			),
+		).toMatch(/^tc85:additional-compact-indices:s\d{2}$/u);
 	});
 
 	test("retries direct transient transport failures within the same logical slot", async () => {

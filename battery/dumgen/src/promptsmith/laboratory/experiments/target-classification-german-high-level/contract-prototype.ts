@@ -12,6 +12,7 @@ import {
 import { corpus } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
 	demonstrationSelection,
+	diagnosticSelection,
 	evaluationSelection,
 } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
 import {
@@ -36,7 +37,7 @@ import {
 
 export const PROTOTYPE_QUESTION =
 	"Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v9";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v10";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -60,6 +61,12 @@ export const DECISION_POLICY = Object.freeze({
 	minimumAttemptContractRatio: MINIMUM_ATTEMPT_CONTRACT_RATIO,
 	tieMargin: TIE_MARGIN,
 	tieRule: "inclusive-best-ratio-margin" as const,
+});
+export const DIAGNOSTIC_DECISION_POLICY = Object.freeze({
+	purpose: "failure-triangulation" as const,
+	expectedCallsPerArm: diagnosticSelection.ids.length * ATTEMPTS_PER_ARM,
+	expectedEvaluationCasesPerAttempt: diagnosticSelection.ids.length,
+	winnerEligible: false as const,
 });
 export const BATCH_CACHE_POLICY = Object.freeze({
 	transport: "openai-batch" as const,
@@ -115,10 +122,17 @@ export type PrototypePriceSchedule =
 	| typeof BATCH_PRICE_SCHEDULE
 	| typeof DIRECT_PRICE_SCHEDULE;
 
+export const RUNNER_POOL_IDS = ["development", "diagnostic"] as const;
+export type RunnerPoolId = (typeof RUNNER_POOL_IDS)[number];
 export const runnerParametersSchema = z.strictObject({
 	batching: z.boolean(),
+	pool: z.enum(RUNNER_POOL_IDS).default("development"),
 });
 export type RunnerParameters = z.output<typeof runnerParametersSchema>;
+export type RunnerParameterInput = Readonly<{
+	batching: boolean;
+	pool?: RunnerPoolId;
+}>;
 
 const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is target selection only: no grammatical drill-down, lemma resolution, or canonical form.
 
@@ -312,9 +326,11 @@ export function systemPromptForRepresentation(id: RepresentationId): string {
 
 export function prepareRepresentationCases(
 	id: RepresentationId,
+	pool: RunnerPoolId = "development",
 ): readonly PreparedRepresentationCase[] {
-	return evaluationSelection.ids.map((caseId, index) => {
-		const goldenCase = evaluationSelection.cases[index];
+	const selection = selectionForRunnerPool(pool);
+	return selection.ids.map((caseId, index) => {
+		const goldenCase = selection.cases[index];
 		if (goldenCase === undefined) {
 			throw new Error(`Frozen case ${caseId} is missing.`);
 		}
@@ -353,7 +369,7 @@ export type PrototypePreflight = Readonly<{
 		semanticFixtureMatrixVersion: string;
 		semanticFixtureMatrixSha256: string;
 	}>;
-	decisionPolicy: typeof DECISION_POLICY;
+	decisionPolicy: typeof DECISION_POLICY | typeof DIAGNOSTIC_DECISION_POLICY;
 	decisionPolicySha256: string;
 	batchPolicy: typeof BATCH_CACHE_POLICY;
 	batchPolicySha256: string;
@@ -363,6 +379,7 @@ export type PrototypePreflight = Readonly<{
 	demonstrationCaseIds: readonly string[];
 	attemptsPerArm: number;
 	exactCallCap: number;
+	winnerEligible: boolean;
 	inputTokenUpperBound: number;
 	outputTokenUpperBound: number;
 	maximumEstimatedCostUsd: number;
@@ -372,14 +389,23 @@ export type PrototypePreflight = Readonly<{
 }>;
 
 export function preparePrototypePreflight(
-	parameters: RunnerParameters,
+	parameters: RunnerParameterInput,
 ): PrototypePreflight {
 	const runnerParameters = runnerParametersSchema.parse(parameters);
+	const evaluationCases = selectionForRunnerPool(runnerParameters.pool);
+	const exactCallCap =
+		evaluationCases.ids.length *
+		ATTEMPTS_PER_ARM *
+		REPRESENTATION_IDS.length;
+	const decisionPolicy =
+		runnerParameters.pool === "development"
+			? DECISION_POLICY
+			: DIAGNOSTIC_DECISION_POLICY;
 	const priceSchedule = runnerParameters.batching
 		? BATCH_PRICE_SCHEDULE
 		: DIRECT_PRICE_SCHEDULE;
 	assertFrozenSuite();
-	const selected = demonstrationSelection.union(evaluationSelection);
+	const selected = demonstrationSelection.union(evaluationCases);
 	const privateStimuliByArm = new Map<RepresentationId, Set<string>>();
 	const armBindings = REPRESENTATION_IDS.map((id) => {
 		const privateStimuli = new Set<string>();
@@ -445,7 +471,10 @@ export function preparePrototypePreflight(
 	let maximumEstimatedCostUsd = 0;
 	for (const id of REPRESENTATION_IDS) {
 		const systemPrompt = systemPromptForRepresentation(id);
-		for (const testCase of prepareRepresentationCases(id)) {
+		for (const testCase of prepareRepresentationCases(
+			id,
+			runnerParameters.pool,
+		)) {
 			const requestInput = stableJson([
 				{ role: "system", content: systemPrompt },
 				{ role: "user", content: stableJson(testCase.privateInput) },
@@ -469,7 +498,7 @@ export function preparePrototypePreflight(
 						price.outputUsdPerMillion);
 		}
 	}
-	const outputTokenUpperBound = EXACT_CALL_CAP * MAX_OUTPUT_TOKENS;
+	const outputTokenUpperBound = exactCallCap * MAX_OUTPUT_TOKENS;
 	if (maximumEstimatedCostUsd > MAXIMUM_SPEND_USD) {
 		throw new Error(
 			`Conservative cost ceiling $${maximumEstimatedCostUsd.toFixed(2)} exceeds $${MAXIMUM_SPEND_USD.toFixed(2)}.`,
@@ -518,18 +547,19 @@ export function preparePrototypePreflight(
 				stableJson(proveEvaluatorSemanticDependencies()),
 			),
 		}),
-		decisionPolicy: DECISION_POLICY,
-		decisionPolicySha256: sha256(stableJson(DECISION_POLICY)),
+		decisionPolicy,
+		decisionPolicySha256: sha256(stableJson(decisionPolicy)),
 		batchPolicy: BATCH_CACHE_POLICY,
 		batchPolicySha256: sha256(stableJson(BATCH_CACHE_POLICY)),
 		directResponsesPolicy: DIRECT_RESPONSES_POLICY,
 		directResponsesPolicySha256: sha256(
 			stableJson(DIRECT_RESPONSES_POLICY),
 		),
-		evaluationCaseIds: Object.freeze([...evaluationSelection.ids]),
+		evaluationCaseIds: Object.freeze([...evaluationCases.ids]),
 		demonstrationCaseIds: Object.freeze([...demonstrationSelection.ids]),
 		attemptsPerArm: ATTEMPTS_PER_ARM,
-		exactCallCap: EXACT_CALL_CAP,
+		exactCallCap,
+		winnerEligible: runnerParameters.pool === "development",
 		inputTokenUpperBound,
 		outputTokenUpperBound,
 		maximumEstimatedCostUsd,
@@ -537,6 +567,10 @@ export function preparePrototypePreflight(
 		priceSchedule,
 		arms: Object.freeze(armBindings),
 	});
+}
+
+function selectionForRunnerPool(pool: RunnerPoolId) {
+	return pool === "development" ? evaluationSelection : diagnosticSelection;
 }
 
 export type SliceId = "routes" | "boundaries" | "robustness";

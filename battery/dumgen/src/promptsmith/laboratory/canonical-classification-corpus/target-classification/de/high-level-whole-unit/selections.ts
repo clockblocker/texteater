@@ -134,8 +134,51 @@ export const evaluationSelection = corpus.select([
 	"target-de-robust-unresolved",
 ]);
 
+export const diagnosticSelection = corpus.select([
+	"target-de-route-construction-fusion",
+	"target-de-diagnostic-fusion-am",
+	"target-de-route-construction-paired-near-frueher",
+	"target-de-route-construction-paired-near-besser",
+	"target-de-diagnostic-paired-je-near-waermer",
+	"target-de-diagnostic-paired-je-near-schoener",
+	"target-de-diagnostic-paired-entweder-near-kaffee",
+	"target-de-diagnostic-paired-entweder-near-tee",
+	"target-de-boundary-idiom-near-endlich",
+	"target-de-boundary-fixed-function-click-heult",
+	"target-de-boundary-fixed-function-click-mit",
+	"target-de-boundary-fixed-function-click-woelfen",
+	"target-de-boundary-fixed-function-near-hungrigen",
+	"target-de-diagnostic-idiom-oel-click-goss",
+	"target-de-diagnostic-idiom-oel-click-oel",
+	"target-de-diagnostic-idiom-oel-click-ins",
+	"target-de-diagnostic-idiom-oel-click-feuer",
+	"target-de-diagnostic-idiom-oel-near-zusaetzliches",
+	"target-de-boundary-optional-reflexive-click-sich",
+	"target-de-diagnostic-optional-reflexive-click-rasiert",
+	"target-de-diagnostic-optional-reflexive-click-sich",
+	"target-de-boundary-copula-click-ist",
+	"target-de-diagnostic-copula-click-bleibt",
+	"target-de-robust-overlap-separable-click-stellt",
+	"target-de-robust-punctuation-click-auf",
+	"target-de-robust-repeated-click-steht",
+	"target-de-robust-repeated-near-first-auf",
+	"target-de-diagnostic-repeated-click-kommt",
+	"target-de-diagnostic-repeated-click-final-an",
+	"target-de-diagnostic-repeated-near-first-an",
+	"target-de-diagnostic-punctuation-click-hoert",
+	"target-de-diagnostic-punctuation-click-auf",
+	"target-de-diagnostic-overlap-click-second-schaltet",
+	"target-de-diagnostic-overlap-click-aus",
+]);
+
 assertCaseSelectionsUncontaminated({
 	route: corpus.route,
 	demonstrations: demonstrationSelection,
 	evaluation: evaluationSelection,
+});
+
+assertCaseSelectionsUncontaminated({
+	route: corpus.route,
+	demonstrations: demonstrationSelection,
+	evaluation: diagnosticSelection,
 });

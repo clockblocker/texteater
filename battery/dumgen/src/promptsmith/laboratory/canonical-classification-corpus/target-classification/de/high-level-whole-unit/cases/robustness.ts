@@ -27,6 +27,30 @@ const overlap = sentence([
 const partial = sentence(["Er", "brach", "das"], "…");
 const typo = sentence(["Er", "stet", "morgen", "auf"]);
 const punctuation = sentence(["Ach", "er", "steht", "wirklich", "auf"], "?!");
+const diagnosticRepeated = sentence([
+	"Sie",
+	"kommt",
+	"an",
+	"der",
+	"Haltestelle",
+	"an",
+]);
+const diagnosticPunctuation = sentence(
+	["Er", "hört", "trotz", "des", "Lärms", "auf"],
+	"?!",
+);
+const diagnosticOverlap = sentence([
+	"Sie",
+	"schaltet",
+	"das",
+	"Licht",
+	"an",
+	"und",
+	"schaltet",
+	"es",
+	"später",
+	"aus",
+]);
 const demonstrationQuestionSeparable = sentence(
 	["Findet", "das", "Treffen", "morgen", "statt"],
 	"?",
@@ -36,6 +60,9 @@ const AUFSTEHEN_CONTAMINATION_KEY = "target-lexical-unit:aufstehen";
 const STATTFINDEN_CONTAMINATION_KEY = "target-lexical-unit:stattfinden";
 const MITMACHEN_TYPO_CONTAMINATION_KEY =
 	"target-lexical-unit:mitmachen:finite-typo";
+const ANKOMMEN_CONTAMINATION_KEY = "target-lexical-unit:ankommen";
+const AUFHOEREN_CONTAMINATION_KEY = "target-lexical-unit:aufhoeren";
+const AUSSCHALTEN_CONTAMINATION_KEY = "target-lexical-unit:ausschalten";
 const long = sentence([
 	"Obwohl",
 	"die",
@@ -184,6 +211,34 @@ const cases = {
 	"target-de-robust-punctuation-click-auf": aufstehenVariant(
 		resolved(punctuation, 8, [4, 8], "Lexeme", "VERB"),
 	),
+	"target-de-diagnostic-repeated-click-kommt": {
+		...resolved(diagnosticRepeated, 2, [2, 10], "Lexeme", "VERB"),
+		contaminationKeys: [ANKOMMEN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-repeated-click-final-an": {
+		...resolved(diagnosticRepeated, 10, [2, 10], "Lexeme", "VERB"),
+		contaminationKeys: [ANKOMMEN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-repeated-near-first-an": {
+		...resolved(diagnosticRepeated, 4, [4], "Lexeme", "ADP"),
+		contaminationKeys: [ANKOMMEN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-punctuation-click-hoert": {
+		...resolved(diagnosticPunctuation, 2, [2, 10], "Lexeme", "VERB"),
+		contaminationKeys: [AUFHOEREN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-punctuation-click-auf": {
+		...resolved(diagnosticPunctuation, 10, [2, 10], "Lexeme", "VERB"),
+		contaminationKeys: [AUFHOEREN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-overlap-click-second-schaltet": {
+		...resolved(diagnosticOverlap, 12, [12, 18], "Lexeme", "VERB"),
+		contaminationKeys: [AUSSCHALTEN_CONTAMINATION_KEY],
+	},
+	"target-de-diagnostic-overlap-click-aus": {
+		...resolved(diagnosticOverlap, 18, [12, 18], "Lexeme", "VERB"),
+		contaminationKeys: [AUSSCHALTEN_CONTAMINATION_KEY],
+	},
 	"target-de-demo-question-stattfinden-click-findet": {
 		...resolved(
 			demonstrationQuestionSeparable,
@@ -279,6 +334,7 @@ function robustnessEvidence(caseId: string): string {
 	if (
 		caseId.includes("repeated") ||
 		caseId.includes("overlap-separable") ||
+		caseId.includes("diagnostic-overlap") ||
 		caseId.includes("typo") ||
 		caseId.includes("punctuation")
 	) {

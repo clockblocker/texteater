@@ -26,6 +26,8 @@ import {
 	prepareRepresentationCases,
 	REASONING_EFFORT,
 	RUN_MODEL,
+	type RunnerParameterInput,
+	type RunnerPoolId,
 	runnerParametersSchema,
 	sliceForCase,
 	systemPromptForRepresentation,
@@ -52,7 +54,10 @@ const BATCH_OUTPUT_NAME = "batch-output.jsonl";
 const BATCH_ERROR_NAME = "batch-error.jsonl";
 const DIRECT_CHECKPOINT_NAME = "direct-checkpoint.json";
 export const DIRECT_TRANSIENT_RETRY_LIMIT = 2;
-let scheduleCacheKeys: ReadonlyMap<string, string> | undefined;
+const scheduleCacheKeysByPool = new Map<
+	RunnerPoolId,
+	ReadonlyMap<string, string>
+>();
 const CLASSIFICATIONS = [
 	"prompt-defect",
 	"adapter-or-runner-defect",
@@ -356,7 +361,7 @@ const prototypeDirectCheckpointSchema = z.strictObject({
 	updatedAt: z.iso.datetime({ offset: true }),
 	bindingSha256: z.string().regex(/^[0-9a-f]{64}$/u),
 	preflight: z.unknown(),
-	schedule: z.array(batchScheduleBindingSchema).length(EXACT_CALL_CAP),
+	schedule: z.array(batchScheduleBindingSchema).max(EXACT_CALL_CAP),
 	dispatchCounts: z.record(z.string(), z.number().int().nonnegative()),
 	transientRetryCounts: z
 		.record(z.string(), z.number().int().nonnegative())
@@ -427,10 +432,11 @@ function maximumRequestCostUpperBoundUsd(
 	);
 }
 
-function preparePrototypeSchedule(parameters: {
-	readonly batching: boolean;
-}): readonly PrototypeScheduleEntry[] {
+function preparePrototypeSchedule(
+	parameters: RunnerParameterInput,
+): readonly PrototypeScheduleEntry[] {
 	const preflight = preparePrototypePreflight(parameters);
+	const runnerParameters = preflight.runnerParameters;
 	const schedule: PrototypeScheduleEntry[] = [];
 	let scheduleIndex = 0;
 	for (const armId of REPRESENTATION_IDS) {
@@ -440,9 +446,15 @@ function preparePrototypeSchedule(parameters: {
 			attemptNumber <= ATTEMPTS_PER_ARM;
 			attemptNumber += 1
 		) {
-			for (const testCase of prepareRepresentationCases(armId)) {
+			for (const testCase of prepareRepresentationCases(
+				armId,
+				runnerParameters.pool,
+			)) {
 				const key = `${armId}/${attemptNumber}/${testCase.caseId}`;
-				const promptCacheKey = promptCacheKeyForScheduleKey(key);
+				const promptCacheKey = promptCacheKeyForScheduleKey(
+					key,
+					runnerParameters.pool,
+				);
 				const request = responseRequestFor({
 					armId,
 					systemPrompt,
@@ -474,7 +486,7 @@ function preparePrototypeSchedule(parameters: {
 			}
 		}
 	}
-	if (schedule.length !== EXACT_CALL_CAP) {
+	if (schedule.length !== preflight.exactCallCap) {
 		throw new Error("Prepared schedule does not match the exact call cap.");
 	}
 	return Object.freeze(schedule);
@@ -482,12 +494,19 @@ function preparePrototypeSchedule(parameters: {
 
 export function preparePrototypeBatch(parameters: {
 	readonly batching: true;
+	readonly pool?: RunnerPoolId;
 }): PreparedPrototypeBatch {
 	const runnerParameters = runnerParametersSchema.parse({
 		batching: parameters.batching,
+		pool: parameters.pool,
 	});
 	if (!runnerParameters.batching) {
 		throw new Error("Batch preparation requires batching: true.");
+	}
+	if (runnerParameters.pool !== "development") {
+		throw new Error(
+			"Batch preparation supports only the development pool.",
+		);
 	}
 	const preflight = preparePrototypePreflight(runnerParameters);
 	assertPreflightCallPolicy(preflight);
@@ -533,20 +552,25 @@ export function preparePrototypeBatch(parameters: {
 if (import.meta.main) {
 	const mode = process.argv[2];
 	if (mode === "preflight") {
-		printPreflight({ batching: parseBatchingFlag(process.argv[3]) });
+		printPreflight({
+			batching: parseBatchingFlag(process.argv[3]),
+			pool: parsePoolFlag(process.argv[4]),
+		});
 	} else if (mode === "run") {
 		const batching = parseBatchingFlag(process.argv[3]);
 		assertBatchingForMode(mode, batching);
 		await runLivePrototype({
 			batching: false,
-			runDirectory: process.argv[4],
+			pool: parsePoolFlag(process.argv[4]),
+			runDirectory: process.argv[5],
 		});
 	} else if (mode === "batch-submit") {
 		const batching = parseBatchingFlag(process.argv[3]);
 		assertBatchingForMode(mode, batching);
 		const manifestPath = await submitPrototypeBatch({
 			batching: true,
-			runDirectory: process.argv[4],
+			pool: parsePoolFlag(process.argv[4]),
+			runDirectory: process.argv[5],
 		});
 		console.log(`Submitted Batch; manifest: ${manifestPath}`);
 	} else if (mode === "batch-resume") {
@@ -578,7 +602,7 @@ if (import.meta.main) {
 		await finalizeEvidence(resultsPath, classificationsPath);
 	} else {
 		throw new Error(
-			"Usage: run.ts <preflight|run|batch-submit|batch-resume|finalize> with an explicit batching flag for provider modes.",
+			"Usage: run.ts <preflight|run|batch-submit> --batching=<true|false> --pool=<development|diagnostic> [run-directory], or batch-resume/finalize with their artifact paths.",
 		);
 	}
 }
@@ -587,6 +611,14 @@ export function parseBatchingFlag(value: string | undefined): boolean {
 	if (value === "--batching=true") return true;
 	if (value === "--batching=false") return false;
 	throw new Error("Expected explicit --batching=true or --batching=false.");
+}
+
+export function parsePoolFlag(value: string | undefined): RunnerPoolId {
+	if (value === "--pool=development") return "development";
+	if (value === "--pool=diagnostic") return "diagnostic";
+	throw new Error(
+		"Expected explicit --pool=development or --pool=diagnostic.",
+	);
 }
 
 export function assertBatchingForMode(
@@ -600,15 +632,14 @@ export function assertBatchingForMode(
 	}
 }
 
-export function printPreflight(parameters: {
-	readonly batching: boolean;
-}): void {
+export function printPreflight(parameters: RunnerParameterInput): void {
 	const preflight = preparePrototypePreflight(parameters);
 	console.log(JSON.stringify(preflight, null, 2));
 }
 
 export async function submitPrototypeBatch(options: {
 	readonly batching: true;
+	readonly pool?: RunnerPoolId;
 	readonly apiKey?: string;
 	readonly client?: PrototypeBatchClient;
 	readonly runDirectory?: string;
@@ -622,7 +653,10 @@ export async function submitPrototypeBatch(options: {
 	readonly reconciliationDelayMs?: number;
 }): Promise<string> {
 	if (
-		!runnerParametersSchema.parse({ batching: options.batching }).batching
+		!runnerParametersSchema.parse({
+			batching: options.batching,
+			pool: options.pool,
+		}).batching
 	) {
 		throw new Error("Batch submission requires batching: true.");
 	}
@@ -1113,6 +1147,7 @@ function assertDirectCheckpointCurrent(
 
 export async function runLivePrototype(options: {
 	readonly batching: false;
+	readonly pool?: RunnerPoolId;
 	readonly apiKey?: string;
 	readonly client?: PrototypeResponsesClient;
 	readonly runDirectory?: string;
@@ -1122,6 +1157,7 @@ export async function runLivePrototype(options: {
 }): Promise<RetainedRun> {
 	const parameters = runnerParametersSchema.parse({
 		batching: options.batching,
+		pool: options.pool,
 	});
 	if (parameters.batching) {
 		throw new Error("Direct runner requires batching: false.");
@@ -1321,6 +1357,7 @@ export async function runLivePrototype(options: {
 						attemptNumber: entry.binding.attemptNumber,
 						systemPrompt: entry.systemPrompt,
 						testCase: entry.testCase,
+						promptCacheKey: entry.binding.promptCacheKey,
 						priceSchedule: preflight.priceSchedule,
 					});
 					const providerError = attempt.providerError;
@@ -1356,12 +1393,12 @@ export async function runLivePrototype(options: {
 		throw new Error("Direct run ended with an incomplete schedule.");
 	}
 	const retainedAttempts = attempts as RetainedAttempt[];
-	if (retainedAttempts.length !== EXACT_CALL_CAP) {
+	if (retainedAttempts.length !== preflight.exactCallCap) {
 		throw new Error(
-			`Expected ${EXACT_CALL_CAP} calls; retained ${retainedAttempts.length}.`,
+			`Expected ${preflight.exactCallCap} calls; retained ${retainedAttempts.length}.`,
 		);
 	}
-	assertAttemptSchedule(retainedAttempts);
+	assertAttemptSchedule(retainedAttempts, parameters.pool);
 	const resolvedModel = resolvedModelForRun(retainedAttempts);
 	const result = retainedRunSchema.parse({
 		startedAt: checkpoint.createdAt,
@@ -1511,6 +1548,7 @@ async function collectPrototypeBatch(
 			attemptNumber: binding.attemptNumber,
 			systemPrompt,
 			testCase,
+			promptCacheKey: binding.promptCacheKey,
 			priceSchedule: batchPriceSchedule,
 		});
 		attempts.push(attemptSchema.parse({ ...retained, ...batchEvidence }));
@@ -1551,16 +1589,16 @@ async function callOne(args: {
 	attemptNumber: number;
 	systemPrompt: string;
 	testCase: ReturnType<typeof prepareRepresentationCases>[number];
+	promptCacheKey: string;
 	priceSchedule: PrototypePriceSchedule;
 }): Promise<RetainedAttempt> {
 	const key = `${args.armId}/${args.attemptNumber}/${args.testCase.caseId}`;
-	const promptCacheKey = promptCacheKeyForScheduleKey(key);
 	const started = performance.now();
 	const request = responseRequestFor({
 		armId: args.armId,
 		systemPrompt: args.systemPrompt,
 		privateInput: args.testCase.privateInput,
-		promptCacheKey,
+		promptCacheKey: args.promptCacheKey,
 	});
 	const requestUtf8Bytes = jsonUtf8Bytes(request);
 	const baseAttempt = {
@@ -2046,6 +2084,7 @@ export function assertAttemptSchedule(
 		RetainedAttempt,
 		"key" | "armId" | "attemptNumber" | "caseId"
 	>[],
+	pool: RunnerPoolId = "development",
 ): void {
 	const expected = new Set<string>();
 	for (const armId of REPRESENTATION_IDS) {
@@ -2054,13 +2093,14 @@ export function assertAttemptSchedule(
 			attemptNumber <= ATTEMPTS_PER_ARM;
 			attemptNumber += 1
 		) {
-			for (const testCase of prepareRepresentationCases(armId)) {
+			for (const testCase of prepareRepresentationCases(armId, pool)) {
 				expected.add(`${armId}/${attemptNumber}/${testCase.caseId}`);
 			}
 		}
 	}
 	if (
-		attempts.length !== EXACT_CALL_CAP ||
+		attempts.length !==
+			preparePrototypePreflight({ batching: false, pool }).exactCallCap ||
 		new Set(attempts.map(({ key }) => key)).size !== attempts.length
 	) {
 		throw new Error(
@@ -2080,8 +2120,11 @@ export function assertAttemptSchedule(
 		throw new Error("Retained attempt schedule is incomplete.");
 }
 
-export function promptCacheKeyForScheduleKey(scheduleKey: string): string {
-	if (scheduleCacheKeys === undefined) {
+export function promptCacheKeyForScheduleKey(
+	scheduleKey: string,
+	pool: RunnerPoolId = "development",
+): string {
+	if (!scheduleCacheKeysByPool.has(pool)) {
 		const computed = new Map<string, string>();
 		for (const armId of REPRESENTATION_IDS) {
 			for (
@@ -2089,7 +2132,7 @@ export function promptCacheKeyForScheduleKey(scheduleKey: string): string {
 				attemptNumber <= ATTEMPTS_PER_ARM;
 				attemptNumber += 1
 			) {
-				const cases = prepareRepresentationCases(armId);
+				const cases = prepareRepresentationCases(armId, pool);
 				for (const [caseIndex, testCase] of cases.entries()) {
 					const armSequenceIndex =
 						(attemptNumber - 1) * cases.length + caseIndex;
@@ -2104,9 +2147,9 @@ export function promptCacheKeyForScheduleKey(scheduleKey: string): string {
 				}
 			}
 		}
-		scheduleCacheKeys = computed;
+		scheduleCacheKeysByPool.set(pool, computed);
 	}
-	const promptCacheKey = scheduleCacheKeys.get(scheduleKey);
+	const promptCacheKey = scheduleCacheKeysByPool.get(pool)?.get(scheduleKey);
 	if (promptCacheKey !== undefined) return promptCacheKey;
 	throw new Error(`Unknown prototype schedule key ${scheduleKey}.`);
 }
@@ -2168,12 +2211,12 @@ function assertPreflightCallPolicy(
 	preflight: ReturnType<typeof preparePrototypePreflight>,
 ): void {
 	if (
-		preflight.exactCallCap !== EXACT_CALL_CAP ||
+		preflight.exactCallCap > EXACT_CALL_CAP ||
 		preflight.maximumEstimatedCostUsd > MAXIMUM_SPEND_USD ||
 		preflight.evaluationCaseIds.length *
 			preflight.attemptsPerArm *
 			preflight.arms.length !==
-			EXACT_CALL_CAP
+			preflight.exactCallCap
 	) {
 		throw new Error(
 			"Prototype preflight does not satisfy the exact safety cap.",
