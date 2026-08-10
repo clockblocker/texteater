@@ -16,17 +16,61 @@ export const REPRESENTATION_IDS = [
 
 export type RepresentationId = (typeof REPRESENTATION_IDS)[number];
 
-export const compactInputSchema = z.strictObject({
-	clickedCompactIndex: z.number().int().nonnegative(),
-	segments: z
-		.array(
-			z.strictObject({
-				kind: z.enum(["ResolvableText", "OpaqueText", "Punctuation"]),
-				text: z.string().min(1),
-			}),
-		)
-		.min(1),
-});
+export const compactInputSchema = z
+	.strictObject({
+		clickedCompactIndex: z.number().int().nonnegative(),
+		segments: z
+			.array(
+				z.strictObject({
+					compactIndex: z.number().int().nonnegative(),
+					clicked: z.boolean(),
+					kind: z.enum([
+						"ResolvableText",
+						"OpaqueText",
+						"Punctuation",
+					]),
+					text: z.string().min(1),
+				}),
+			)
+			.min(1),
+	})
+	.superRefine((input, context) => {
+		const clickedSegments = input.segments.filter(({ clicked }) => clicked);
+		for (const [arrayIndex, segment] of input.segments.entries()) {
+			if (segment.compactIndex !== arrayIndex) {
+				context.addIssue({
+					code: "custom",
+					path: ["segments", arrayIndex, "compactIndex"],
+					message:
+						"compactIndex must equal the segment's array position.",
+				});
+			}
+		}
+		if (clickedSegments.length !== 1) {
+			context.addIssue({
+				code: "custom",
+				path: ["segments"],
+				message: "Exactly one compact segment must be clicked.",
+			});
+			return;
+		}
+		const clickedSegment = clickedSegments[0];
+		if (clickedSegment?.compactIndex !== input.clickedCompactIndex) {
+			context.addIssue({
+				code: "custom",
+				path: ["clickedCompactIndex"],
+				message:
+					"clickedCompactIndex must identify the segment marked clicked.",
+			});
+		}
+		if (clickedSegment?.kind !== "ResolvableText") {
+			context.addIssue({
+				code: "custom",
+				path: ["segments", clickedSegment?.compactIndex ?? 0, "kind"],
+				message: "The clicked compact segment must be ResolvableText.",
+			});
+		}
+	});
 
 const routeTarget = <Membership extends z.ZodType>(membership: Membership) =>
 	z.discriminatedUnion("family", [
@@ -94,7 +138,12 @@ export function projectCompactInput(input: CanonicalInput): CompactProjection {
 	for (const [originalIndex, segment] of input.segments.entries()) {
 		if (segment.kind === "Whitespace") continue;
 		const compactIndex = segments.length;
-		segments.push({ kind: segment.kind, text: segment.text });
+		segments.push({
+			compactIndex,
+			clicked: originalIndex === input.clickedSegmentIndex,
+			kind: segment.kind,
+			text: segment.text,
+		});
 		compactToOriginal.push(originalIndex);
 		originalToCompact.set(originalIndex, compactIndex);
 	}

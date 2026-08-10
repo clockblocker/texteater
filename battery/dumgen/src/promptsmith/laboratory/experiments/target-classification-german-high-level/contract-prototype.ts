@@ -36,7 +36,7 @@ import {
 
 export const PROTOTYPE_QUESTION =
 	"Which private compact membership representation most reliably preserves the frozen German high-level target contract under identical evidence and evaluation?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v4";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v7";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -59,28 +59,46 @@ export const DECISION_POLICY = Object.freeze({
 	tieMargin: TIE_MARGIN,
 	tieRule: "inclusive-best-ratio-margin" as const,
 });
+export const BATCH_CACHE_POLICY = Object.freeze({
+	transport: "openai-batch" as const,
+	endpoint: "/v1/responses" as const,
+	completionWindow: "24h" as const,
+	promptCacheMode: "explicit" as const,
+	promptCacheTtl: "30m" as const,
+	promptCacheBreakpoint: "end-of-stable-system-prompt" as const,
+	maximumScheduledRequestsPerCacheKey: 12,
+});
 export const PRICE_SCHEDULE = Object.freeze({
-	id: "openai-standard-2026-08-09",
+	id: "openai-batch-gpt-5.6-luna-2026-08-09",
 	longContextThresholdTokens: 272_000,
 	shortContext: Object.freeze({
+		inputUsdPerMillion: 0.1,
+		cachedInputUsdPerMillion: 0.01,
+		cacheWriteUsdPerMillion: 0.125,
+		outputUsdPerMillion: 0.6,
+	}),
+	longContext: Object.freeze({
 		inputUsdPerMillion: 0.2,
 		cachedInputUsdPerMillion: 0.02,
 		cacheWriteUsdPerMillion: 0.25,
-		outputUsdPerMillion: 1.2,
-	}),
-	longContext: Object.freeze({
-		inputUsdPerMillion: 0.4,
-		cachedInputUsdPerMillion: 0.04,
-		cacheWriteUsdPerMillion: 0.5,
-		outputUsdPerMillion: 1.8,
+		outputUsdPerMillion: 0.9,
 	}),
 });
 
-const commonPrompt = `We are helping a German learner select the complete high-level language unit represented by one clicked segment. This is the big-picture classification pass: identify the whole learner-facing unit and its route. Do not perform a later grammatical drill-down, lemma resolution, or canonicalization.
+const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains that click and its Family/Kind route. This is the big-picture selection pass, not grammatical drill-down, lemma resolution, or canonicalization.
 
-The central policy is: fixed parts go together; free parts stay apart.
+CLICK FIRST — this constraint is non-negotiable:
 
-Read the complete sentence before deciding. The same spelling may be fixed in one occurrence and free in another. Choose the largest defensible fixed unit containing the click, but never absorb a whole phrase or clause merely because its words are syntactically related. When the fixedness of a borderline expression is doubtful, prefer the smaller separate target.
+1. Compact indices are zero-based. Locate the one segment whose clicked field is true and verify that its compactIndex equals clickedCompactIndex.
+2. Consider only candidate targets that contain that exact clicked segment. Discard every candidate that does not contain it, even if it is the sentence's most salient fixed expression.
+3. If the click is on a free word inside, between, or beside fixed members, return that clicked free word as its own Lexeme. Never return the nearby fixed expression.
+4. Only after anchoring on the click, determine the target and encode its membership.
+
+The central linguistic policy is: fixed parts go together; free parts stay apart.
+
+Read the complete occurrence before deciding. Choose the largest defensible fixed unit containing the click, but do not absorb a phrase or clause merely because its words are syntactically related. If fixedness is doubtful, choose the smaller defensible target rather than guessing a larger group.
+
+LITERAL-USE VETO: familiar wording does not prove an idiom. A Phraseme/Idiom is allowed only when this occurrence has the idiomatic, non-compositional reading. In a compositionally literal occurrence, classify the clicked word separately. Context overrides remembered spelling.
 
 Group all realized fixed members of:
 
@@ -90,75 +108,88 @@ Group all realized fixed members of:
 - an inherently reflexive verb with its required reflexive pronoun;
 - perfect, future, and passive verb forms: group the grammatical auxiliary or auxiliaries with the lexical verb and route the result as Lexeme/VERB.
 
-Keep free material separate, including arguments, objects, complements, adjuncts, modifiers, and freely inserted words. Keep an optional or contextual reflexive pronoun separate. Keep a meaning-bearing modal AUX separate from its governed verb. Keep a copula AUX separate from its predicate unless the occurrence belongs to a larger established fixed expression.
+Keep free material separate, including arguments, objects, complements, adjuncts, modifiers, fillers, and freely inserted words. Keep an optional or contextual reflexive pronoun separate from its verb. Keep a meaning-bearing modal AUX separate from its governed VERB. Keep a copula AUX separate from its predicate unless the occurrence belongs to a larger established fixed expression.
 
-Route the selected target as follows:
+COLLOCATION SPLIT: conventionality or restricted lexical choice alone does not make a high-level multi-segment target. For an ordinary non-idiomatic Collocation or support-verb combination such as eine Entscheidung treffen or eine Frage stellen, classify only the clicked word as its Lexeme. Do not route Phraseme/Collocation under this policy.
+
+Route only the click-containing target:
 
 - Lexeme is the default for an individual word and for a multi-segment realization of one verb. Use the contextually correct German word-class kind.
-- Phraseme is an established multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression whose occurrence has a non-compositional meaning; Collocation for another conventional lexical combination.
-- Construction/Fusion is one source segment that fuses grammatical words, unless that segment participates in a larger fixed target.
-- Construction/PairedFrame contains only the fixed correlated anchors; its freely supplied fillers stay outside the target.
+- A standalone symbol such as %, €, or another non-word symbol is Lexeme/SYM. A neighboring quantity remains a separate Lexeme/NUM.
+- Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression whose occurrence has a non-compositional meaning. Phraseme/Collocation is not reachable under this policy.
+- Construction/Fusion is exactly one source segment that fuses grammatical words, for example zum = zu + dem, unless it participates in a larger fixed target. Route that segment as Construction/Fusion, not Lexeme/ADP.
+- Construction/PairedFrame contains only its fixed correlated anchors. A clicked freely supplied filler is its own Lexeme, not a member of the nearby PairedFrame.
 
-Input uses compact source positions. Whitespace segments have been removed; reconstruct normal spacing by reading the remaining sequence as if adjacent items were separated by one space. Punctuation and OpaqueText remain for context and still occupy compact positions. Only ResolvableText segments can be target members.
+The input is a compact projection of the source:
 
-Membership means all and only the source segments that realize the selected unit in this occurrence:
+- each segment states its zero-based compactIndex and whether it is clicked;
+- Whitespace was removed; read the remaining sequence as if adjacent items were separated by one space;
+- Punctuation and OpaqueText remain as context and occupy compact positions;
+- only ResolvableText segments can be target members.
 
-- include the clicked compact position;
-- include every fixed realized member even when the members are discontinuous;
-- exclude punctuation, OpaqueText, and all free context;
-- preserve compact source order, using positions rather than spellings to distinguish repetitions;
-- do not rewrite members into lemma, canonical, or grammatical order.
+Membership is positional. Include all and only source segments realizing the selected unit in this occurrence. Include every fixed realized member even when discontinuous. Exclude punctuation, OpaqueText, free context, neighboring targets, and identical spellings at the wrong position. Preserve increasing compact source order; do not rewrite into lemma, canonical, or grammatical order.
 
-Return Unresolved only when the clicked ResolvableText has no defensible Family/Kind route. Do not use Unresolved for uncertainty between a speculative larger group and a defensible smaller target: choose the smaller target. For Resolved, target must be non-null. For Unresolved, target must be null. Return only the strict JSON contract, with no lemma, canonical form, surface form, explanation, or alternative candidates.`;
+Return Unresolved only when the clicked ResolvableText has no defensible Family/Kind route. If a standalone route is defensible but a larger fixed group is uncertain, choose the standalone target. For Resolved, target must be non-null. For Unresolved, target must be null.
+
+Before returning, silently verify:
+
+1. I located the zero-based segment marked clicked.
+2. My semantic target contains that exact segment.
+3. Every included segment is a fixed member of that target, or is the clicked standalone target itself.
+4. No fixed member is missing.
+5. I removed free arguments, fillers, modifiers, punctuation, OpaqueText, neighboring units, and wrong repeated positions.
+6. I encoded that one semantic decision using the arm-specific membership rule below.
+
+Return only the strict JSON contract, with no lemma, canonical form, surface form, explanation, or alternative candidates.`;
 
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
-	"target-de-core-guten-morgen-click-guten":
-		"Guten Morgen is a conventional interactional formula, so both fixed words form one Phraseme/DiscourseFormula.",
-	"target-de-boundary-multi-verb-click-gehen":
-		"gehen ... spazieren realizes one discontinuous verb; the intervening adverb is free and excluded.",
-	"target-de-core-kakao":
-		"Kakao is an ordinary noun here, with no defensible larger fixed unit.",
-	"target-de-route-lexeme-x":
-		"The sentence identifies the clicked item as a usable other-word Lexeme/X; unfamiliar form alone does not require Unresolved.",
-	"target-de-core-unresolved-qzxv":
-		"The opaque-looking clicked string has no defensible route in context, so it remains Unresolved without guessed membership.",
-	"target-de-demo-default-modal-kann":
-		"The modal kann contributes its own meaning and stays a separate Lexeme/AUX from arbeiten.",
-	"target-de-demo-default-particle-nicht":
-		"The productive negator nicht is a standalone Lexeme/PART, not a fixed member of the verb.",
-	"target-de-demo-default-interjection-oh":
-		"The interjection Oh is a standalone Lexeme/INTJ and does not absorb the following clause.",
-	"target-de-demo-default-copula-ist":
-		"The copula ist stays a separate Lexeme/AUX from the freely supplied predicate müde.",
-	"target-de-demo-aphorism-zeit-click-ist":
-		"Zeit ist Geld is a fixed aphorism; clicking its copula therefore selects all three fixed words.",
-	"target-de-demo-paired-entweder-click-oder":
-		"Entweder ... oder is a PairedFrame containing only its two fixed anchors; heute and morgen are free fillers.",
-	"target-de-demo-idiom-faden-click-den":
-		"The context gives den Faden verlieren its figurative meaning, so verb, determiner, and noun form one Phraseme/Idiom.",
-	"target-de-demo-literal-faden-click-faden":
-		"The sewing context makes Faden literal; the clicked noun stays separate rather than triggering the idiom.",
+	"target-de-demo-perfect-arbeiten-click-habe":
+		"The clicked auxiliary belongs to habe ... gearbeitet; both fixed verb-form members form one Lexeme/VERB while gestern stays free.",
+	"target-de-demo-perfect-arbeiten-click-gearbeitet":
+		"Changing the click to gearbeitet selects the same complete perfect Lexeme/VERB as clicking habe.",
+	"target-de-demo-perfect-arbeiten-click-gestern":
+		"The click is on the free temporal adverb gestern, so return only Lexeme/ADV rather than the neighboring perfect verb form.",
+	"target-de-demo-governed-rechnen-click-rechnet":
+		"The clicked verb and its lexically governed preposition mit form one Lexeme/VERB; the argument starkem Regen stays free.",
 	"target-de-demo-governed-rechnen-click-mit":
-		"In mit Regen rechnen, mit is lexically governed: group it with rechnet but exclude the nominal argument.",
-	"target-de-demo-adjunct-rechnen-click-mit":
-		"In mit dem Taschenrechner rechnen, mit introduces a free instrumental adjunct and remains its own Lexeme/ADP.",
-	"target-de-demo-inherent-reflexive-click-sich":
-		"sich beeilen is inherently reflexive, so the required pronoun and verb form one Lexeme/VERB.",
-	"target-de-demo-optional-reflexive-click-sich":
-		"In sich kämmen, the contextual reflexive object is not a fixed verb member, so the clicked pronoun stays Lexeme/PRON.",
-	"target-de-demo-perfect-arbeiten-click-hat":
-		"hat ... gearbeitet is one perfect realization of the verb; the temporal adverb is free and excluded.",
-	"target-de-demo-passive-brief-click-wird":
-		"wird ... verschickt is one passive realization of the verb; the temporal adverb is free and excluded.",
-	"target-de-demo-collocation-kenntnis-click-zur":
-		"zur Kenntnis nehmen is a conventional collocation: include nahm, zur, and Kenntnis, but exclude the free object and modifier.",
+		"Clicking the governed preposition selects the same rechnet mit Lexeme/VERB as clicking the verb.",
+	"target-de-demo-governed-rechnen-click-regen":
+		"The click is on the free nominal argument Regen, so return only Lexeme/NOUN rather than rechnet mit.",
+	"target-de-demo-idiom-faden-click-verlor":
+		"The occurrence is figurative; clicking verlor selects the fixed verb, determiner, and noun of the Phraseme/Idiom, excluding völlig.",
+	"target-de-demo-idiom-faden-click-faden":
+		"Clicking Faden in the same figurative occurrence selects exactly the same fixed Idiom members as clicking verlor.",
+	"target-de-demo-idiom-faden-click-voellig":
+		"The click is on the freely inserted modifier völlig, so return only Lexeme/ADV rather than the surrounding Idiom.",
+	"target-de-demo-literal-faden-click-faden":
+		"The sewing context makes the wording literal; the clicked Faden is only Lexeme/NOUN despite matching words from a familiar idiom.",
+	"target-de-demo-paired-entweder-click-entweder":
+		"Clicking either fixed anchor selects both anchors of Construction/PairedFrame and excludes the free fillers.",
+	"target-de-demo-paired-entweder-click-oder":
+		"Clicking the other anchor selects the same two-member PairedFrame.",
+	"target-de-demo-paired-entweder-click-hier":
+		"The click is on the freely supplied filler hier, so return only Lexeme/ADV rather than the nearby PairedFrame.",
+	"target-de-demo-optional-reflexive-click-kaemmst":
+		"In dich kämmen, the pronoun is contextual rather than lexically required; the clicked verb is its own Lexeme/VERB.",
+	"target-de-demo-optional-reflexive-click-dich":
+		"Changing the click to the optional reflexive object selects only Lexeme/PRON; it does not join kämmst.",
+	"target-de-demo-modal-arbeiten-click-kann":
+		"The meaning-bearing modal kann is the clicked target and remains a standalone Lexeme/AUX.",
+	"target-de-demo-modal-arbeiten-click-arbeiten":
+		"Clicking the governed arbeiten selects only Lexeme/VERB; the modal kann is a separate target.",
+	"target-de-demo-fusion-zum":
+		"The single clicked source segment zum fuses zu and dem, so route it as Construction/Fusion rather than Lexeme/ADP.",
+	"target-de-demo-symbol-percent":
+		"The clicked percent sign is a standalone Lexeme/SYM; the neighboring quantity zwölf is not part of its membership.",
+	"target-de-demo-repeated-anfangen-click-final-an":
+		"The clicked final an is the separable particle of fängt ... an; include fängt and this final an, but exclude the earlier identical free preposition an.",
 });
 
 const armInstructions: Readonly<Record<RepresentationId, string>> = {
 	"full-compact-indices":
 		"For Resolved, membership.memberCompactIndices lists every member compact index, including the click.",
 	"additional-compact-indices":
-		"For Resolved, membership.additionalMemberCompactIndices lists every member compact index except the clicked index in strictly increasing source order; do not repeat the click or another index.",
+		"For Resolved, the semantic target still contains the click, but membership.additionalMemberCompactIndices encodes every other member compact index except the clicked index in strictly increasing source order; do not repeat the click or another index.",
 	"fixed-length-mask":
 		"For Resolved, membership.memberMask has exactly one boolean per compact input segment; true marks members and the clicked position must be true.",
 };
@@ -251,6 +282,8 @@ export type PrototypePreflight = Readonly<{
 	}>;
 	decisionPolicy: typeof DECISION_POLICY;
 	decisionPolicySha256: string;
+	batchPolicy: typeof BATCH_CACHE_POLICY;
+	batchPolicySha256: string;
 	evaluationCaseIds: readonly string[];
 	demonstrationCaseIds: readonly string[];
 	attemptsPerArm: number;
@@ -375,6 +408,7 @@ export function preparePrototypePreflight(): PrototypePreflight {
 				maxOutputTokens: MAX_OUTPUT_TOKENS,
 				retries: 0,
 				store: false,
+				batchPolicy: BATCH_CACHE_POLICY,
 			}),
 		),
 		corpusSha256: sha256(
@@ -402,6 +436,8 @@ export function preparePrototypePreflight(): PrototypePreflight {
 		}),
 		decisionPolicy: DECISION_POLICY,
 		decisionPolicySha256: sha256(stableJson(DECISION_POLICY)),
+		batchPolicy: BATCH_CACHE_POLICY,
+		batchPolicySha256: sha256(stableJson(BATCH_CACHE_POLICY)),
 		evaluationCaseIds: Object.freeze([...evaluationSelection.ids]),
 		demonstrationCaseIds: Object.freeze([...demonstrationSelection.ids]),
 		attemptsPerArm: ATTEMPTS_PER_ARM,
@@ -488,7 +524,7 @@ export function decidePrototypeWinner(
 function assertFrozenSuite(): void {
 	if (evaluationSelection.ids.length !== EXPECTED_EVALUATION_CASES) {
 		throw new Error(
-			`Issue #85 is frozen to ${EXPECTED_EVALUATION_CASES} held-out cases; found ${evaluationSelection.ids.length}.`,
+			`Issue #85 keeps ${EXPECTED_EVALUATION_CASES} development cases for historical comparison; found ${evaluationSelection.ids.length}.`,
 		);
 	}
 	if (demonstrationSelection.ids.length !== 20) {

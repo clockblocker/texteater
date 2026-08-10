@@ -21,7 +21,7 @@ import {
 	inputSchema as targetInputSchema,
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas";
-import { isGermanHighLevelRoute } from "../schema/german-high-level-routes";
+import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
@@ -70,7 +70,7 @@ const targetPrompt = {
 				throw new Error("Resolved Target requires a target.");
 			}
 			if (
-				!isGermanHighLevelRoute(
+				!isGermanReachableHighLevelRoute(
 					generated.target.family,
 					generated.target.kind,
 				)

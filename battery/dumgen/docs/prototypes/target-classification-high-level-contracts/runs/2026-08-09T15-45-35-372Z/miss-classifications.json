@@ -1,0 +1,850 @@
+{
+  "full-compact-indices/1/target-de-route-lexeme-intj": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/INTJ, received Phraseme/DiscourseFormula. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-core-entscheidung-click-trifft": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 members expected [4,6,8], received [4,8]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Construction/Fusion, received Lexeme/ADP. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 members expected [2], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-perfect-near-laut": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-boundary-modal-click-schlafen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-boundary-copula-click-muede": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-boundary-collocation-click-trifft": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [4,8,10], received [4]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-boundary-collocation-near-heute": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 members expected [2,4,6,10], received [2,4,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/DET; members expected [2,4,6], received [4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-opaque-surroundings": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/VERB, received Lexeme/PRON. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-robust-punctuation-click-steht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/1/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/1/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 1 route expected Lexeme/VERB, received Lexeme/DET; members expected [32,54], received [32]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-route-lexeme-intj": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Construction/Fusion, received Lexeme/ADP. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 members expected [2], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-perfect-near-laut": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-boundary-modal-click-schlafen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-boundary-copula-click-muede": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-boundary-collocation-click-entscheidung": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [4,8,10], received [10]. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-boundary-collocation-near-heute": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 members expected [2,4,6,10], received [2,4,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/DET; members expected [2,4,6], received [4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-opaque-surroundings": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/PRON. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-robust-punctuation-click-steht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "full-compact-indices attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "full-compact-indices/2/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "full-compact-indices/2/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "full-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/DET; members expected [32,54], received [32]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/SYM, received Lexeme/NUM. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-route-phraseme-aphorism-click-macht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-route-phraseme-discourse-click-dank": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-route-phraseme-proverb-click-hat": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-route-phraseme-proverb-click-gold": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 members expected [0,2,4,6,8], received [2,4,6,8]. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Construction/Fusion, received Lexeme/VERB. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [2], received [2,5]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [7], received [0,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADV, received Phraseme/Idiom; members expected [4], received [2,4,6,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [8], received [2,4,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-adjunct-click-auf": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [8], received [2,4,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 members expected [2], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADV, received Lexeme/VERB; members expected [4], received [2,4,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-perfect-near-laut": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADV, received Lexeme/VERB; members expected [4], received [4,6]. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-modal-click-schlafen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 members expected [6], received [2,6]. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-collocation-click-entscheidung": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [4,8,10], received [10]. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-click-heult": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 members expected [2,4,6,10], received [2,4,6,8,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 members expected [2,4,6,10], received [2,4,6,8,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-click-woelfen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 members expected [2,4,6,10], received [2,4,6,8,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/1/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADJ, received Phraseme/Idiom; members expected [8], received [2,4,6,8,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 members expected [2,10], received [2,4,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/DET; members expected [2,4,6], received [4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [14], received [10,14,16]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/DET, received Lexeme/VERB. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 1 route expected Lexeme/VERB, received Lexeme/DET; members expected [32,54], received [32]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/1/target-de-robust-long-click-verstanden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 1 violated the private membership contract: Compact membership must reference ResolvableText. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/SYM, received Lexeme/NUM. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-route-phraseme-aphorism-click-macht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-route-phraseme-discourse-click-dank": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-route-phraseme-proverb-click-hat": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 violated the private membership contract: Additional membership must exclude the clicked index. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-route-phraseme-proverb-click-gold": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [0,2,4,6,8], received [2,4,6,8]. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-core-entscheidung-click-eine": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [4,6,8], received [6,8]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Construction/Fusion, received Lexeme/VERB. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [2], received [2,5]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [7], received [0,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADV, received Phraseme/Idiom; members expected [4], received [2,4,6,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [8], received [2,4,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-adjunct-click-laeuft": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [2], received [2,4]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-adjunct-click-auf": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [8], received [2,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 members expected [2], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADV, received Lexeme/VERB; members expected [4], received [2,4,8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-modal-click-schlafen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [6], received [2,6]. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-collocation-click-eine": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/DET; members expected [4,8,10], received [8]. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-collocation-click-entscheidung": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [4,8,10], received [10]. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-collocation-near-heute": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADV, received Phraseme/Collocation; members expected [6], received [4,6,8,10]. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-click-heult": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,4,6,10], received [2,4,6,8,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,4,6,10], received [2,4,6,8,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-click-den": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,4,6,10], received [2,4,6]. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-click-woelfen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,4,6,10], received [2,4,6,8,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADJ, received Phraseme/Idiom; members expected [8], received [2,4,6,8,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 members expected [2,10], received [2,4,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/DET; members expected [2,4,6], received [4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [14], received [10,14,16]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/DET, received Lexeme/VERB. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-punctuation-click-steht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/INTJ; members expected [4,8], received [4]. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "additional-compact-indices/2/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "additional-compact-indices attempt 2 route expected Lexeme/VERB, received Lexeme/DET; members expected [32,54], received [32]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "additional-compact-indices/2/target-de-robust-long-click-verstanden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "additional-compact-indices attempt 2 violated the private membership contract: Compact membership must reference ResolvableText. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-route-lexeme-adv": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-route-lexeme-intj": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/INTJ, received Phraseme/DiscourseFormula; members expected [0], received [0,2,4,6]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Construction/Fusion, received Lexeme/ADP. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-route-construction-paired-click-desto": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 members expected [0,5], received [0,2,5,7]. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [2], received [0,2,5,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [7], received [0,2,5,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-adjunct-click-auf": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-perfect-near-laut": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-collocation-click-eine": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-collocation-near-heute": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-fixed-function-click-heult": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 members expected [2,4,6,10], received [2,4,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 members expected [2,4,6,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-boundary-fixed-function-click-den": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-fixed-function-click-woelfen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 members expected [2,4,6,10], received [2,4,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2,16]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-overlap-separable-click-stellt": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-punctuation-click-steht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/1/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/1/target-de-robust-long-click-verstanden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 1 violated the private membership contract: Member mask length must equal compact segment length. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-route-lexeme-adv": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-route-lexeme-intj": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/INTJ, received Phraseme/DiscourseFormula; members expected [0], received [0,2,4,6]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-route-lexeme-sym": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-route-construction-fusion": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Construction/Fusion, received Lexeme/ADP. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-route-construction-paired-click-desto": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 members expected [0,5], received [0,2,5,7]. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-route-construction-paired-near-frueher": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [2], received [0,2,5,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-route-construction-paired-near-besser": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/ADJ, received Construction/PairedFrame; members expected [7], received [0,2,5,7]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-idiom-click-brach": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 members expected [2,6,8], received [2,8]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-idiom-near-endlich": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-literal-eis-click-brach": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/VERB, received Phraseme/Idiom; members expected [2], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-literal-eis-click-eis": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/NOUN, received Phraseme/Idiom; members expected [6], received [2,4,6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-governed-near-bus": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-adjunct-click-auf": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-adjunct-click-wiese": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-optional-reflexive-click-waescht": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-separable-near-heute": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-perfect-near-laut": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-modal-click-schlafen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-copula-click-muede": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-collocation-click-eine": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-collocation-near-heute": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-fixed-function-click-heult": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 members expected [2,4,6,10], received [2,4,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-fixed-function-click-mit": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 members expected [2,4,6,10], received [2,4,10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-boundary-fixed-function-click-den": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 3 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-fixed-function-click-woelfen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 members expected [2,4,6,10], received [2,4,10]. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-boundary-fixed-function-near-hungrigen": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-repeated-click-steht": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 members expected [2,10], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-repeated-click-final-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/VERB, received Lexeme/ADP; members expected [2,10], received [10]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-repeated-near-first-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/ADP, received Lexeme/VERB; members expected [4], received [2,4]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-collocation-click-stellt": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Phraseme/Collocation, received Lexeme/VERB; members expected [2,4,6], received [2,16]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-collocation-click-eine": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-collocation-click-frage": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Phraseme/Collocation, received Lexeme/NOUN; members expected [2,4,6], received [6]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-separable-click-stellt": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 4 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-separable-click-ab": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 members expected [10,16], received [10,14,16]. 5 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-robust-overlap-near-vase": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/NOUN, received Lexeme/VERB; members expected [14], received [10,14,16]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-partial-click-das": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-punctuation-click-steht": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Compact membership must include the clicked member. 1 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  },
+  "fixed-length-mask/2/target-de-robust-punctuation-click-auf": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 route expected Lexeme/VERB, received Lexeme/ADP; members expected [4,8], received [8]. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-long-click-wird": {
+    "classification": "prompt-defect",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Member mask length must equal compact segment length. All six observations for this case failed across both attempts and all three representations, so the recurrence is representation-independent and attributable to insufficient shared prompt guidance."
+  },
+  "fixed-length-mask/2/target-de-robust-long-click-verstanden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "fixed-length-mask attempt 2 violated the private membership contract: Member mask length must equal compact segment length. 2 of six observations for this case passed, demonstrating that the frozen corpus, evaluator, shared prompt, and adapters can yield the oracle; this miss is residual model variability."
+  }
+}

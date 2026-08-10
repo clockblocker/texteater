@@ -10,11 +10,14 @@ clickedSegmentIndex.
 Default: return the clicked ResolvableText as a one-member Lexeme and classify
 its kind from local German morphology and syntax. Return an empty
 additionalMemberSegmentIndices array unless the click belongs to a defensible
-conventionalized whole: an aphorism, collocation, discourse formula, idiom,
-proverb, or every lexical member of a phrasal or separable verb. A collocation
-is conventional but non-idiomatic, such as eine Entscheidung treffen. A
-multi-member verb remains Lexeme/VERB. Never absorb an ordinary free phrase or
-an unrelated nearby word.
+fixed whole: an aphorism, discourse formula, idiom, proverb, or every lexical
+member of a phrasal or separable verb. A multi-member verb remains Lexeme/VERB.
+Never absorb an ordinary free phrase or an unrelated nearby word.
+
+Conventionality alone is insufficient. For an ordinary non-idiomatic
+Collocation or support-verb combination such as eine Entscheidung treffen,
+return only the clicked word as its Lexeme. Phraseme/Collocation is not
+reachable under this policy.
 
 Indices are zero-based array positions counting every Segment kind. Return only
 the participating ResolvableText indices other than clickedSegmentIndex in
@@ -72,9 +75,9 @@ const demonstrations = defineLocalDemonstrations({
 			idealOutput: {
 				decision: "Resolved",
 				target: {
-					additionalMemberSegmentIndices: [4, 6],
-					family: "Phraseme",
-					kind: "Collocation",
+					additionalMemberSegmentIndices: [],
+					family: "Lexeme",
+					kind: "NOUN",
 				},
 			},
 		},

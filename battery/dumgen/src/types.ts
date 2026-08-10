@@ -1,8 +1,8 @@
 import type { Attestation, SupportedLanguage } from "dumling/types";
 import type { GermanGrammaticalRoute } from "./schema/de-grammatical-resolution-inventory";
 import type {
-	GermanHighLevelFamily,
-	GermanHighLevelKind,
+	GermanReachableHighLevelFamily,
+	GermanReachableHighLevelKind,
 } from "./schema/german-high-level-routes";
 
 export type EnabledSegmentationLanguage = "de" | "he";
@@ -116,11 +116,11 @@ export type Unresolved = { readonly decision: "Unresolved" };
 
 /** Internal result of Target Classification. */
 export type AnalysisTarget = {
-	readonly [Family in GermanHighLevelFamily]: {
+	readonly [Family in GermanReachableHighLevelFamily]: {
 		readonly family: Family;
-		readonly kind: GermanHighLevelKind<Family>;
+		readonly kind: GermanReachableHighLevelKind<Family>;
 	};
-}[GermanHighLevelFamily] & {
+}[GermanReachableHighLevelFamily] & {
 	readonly memberSegmentIndices: readonly number[];
 };
 

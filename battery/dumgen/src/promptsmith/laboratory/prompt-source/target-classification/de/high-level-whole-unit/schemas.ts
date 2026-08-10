@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GERMAN_HIGH_LEVEL_ROUTES } from "../../../../../../schema/german-high-level-routes";
+import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../../../../../schema/german-high-level-routes";
 import type {
 	PromptInputSchema,
 	PromptOutputSchema,
@@ -40,21 +40,21 @@ export const outputSchema = z.strictObject({
 		.discriminatedUnion("family", [
 			z.strictObject({
 				family: z.literal("Lexeme"),
-				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Lexeme),
+				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme),
 				additionalMemberSegmentIndices: z.array(
 					z.number().int().nonnegative(),
 				),
 			}),
 			z.strictObject({
 				family: z.literal("Phraseme"),
-				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Phraseme),
+				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme),
 				additionalMemberSegmentIndices: z.array(
 					z.number().int().nonnegative(),
 				),
 			}),
 			z.strictObject({
 				family: z.literal("Construction"),
-				kind: z.enum(GERMAN_HIGH_LEVEL_ROUTES.Construction),
+				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Construction),
 				additionalMemberSegmentIndices: z.array(
 					z.number().int().nonnegative(),
 				),

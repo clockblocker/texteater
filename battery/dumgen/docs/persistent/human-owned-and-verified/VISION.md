@@ -106,11 +106,13 @@ C is a core reason this step exists. Hopefully, Intl.Segmenter (or some like Sta
 
 ### 2.1 Target Classification
 
-As a learner-facing tool, the initial high-level policy resolves the biggest applicable grammatical unit first.
+As a learner-facing tool, the initial high-level policy resolves the biggest sufficiently fixed grammatical unit first.
 
 Click on "Good" in "[Good] [morning], [mother]" and the Analysis Target contains both "Good" and "morning", routed as Phraseme / DiscourseFormula.
 
 Click on `heulte` in `Obwohl er anderer Meinung war, heulte er mit` and the Analysis Target contains `heulte` and `mit`, routed as Phraseme / Idiom. It does not yet resolve the Lemma `mit den Wölfen heulen`.
+
+Conventionality alone is not enough. In `Der Ausschuss trifft eine Entscheidung`, `trifft`, `eine`, and `Entscheidung` are separate Lexeme targets. The high-level policy groups governed prepositions, idioms, and other genuinely fixed expressions, but not ordinary non-idiomatic Collocations.
 
 Target Classification is one policy-specific prompt after deterministic Source Segmentation. It receives the Segmented Sentence and clicked ResolvableText index, then returns exactly one internal Analysis Target or Unresolved.
 

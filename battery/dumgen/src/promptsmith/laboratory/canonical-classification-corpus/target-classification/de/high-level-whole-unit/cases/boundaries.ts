@@ -7,7 +7,7 @@ import { addCaseEvidence, resolved, sentence } from "./builders";
 import { evidence, IDS } from "./sources";
 
 const greeting = sentence(["Guten", "Morgen"], "!");
-const demonstrationDecisionCollocation = sentence([
+const demonstrationDecisionSupportVerb = sentence([
 	"Der",
 	"Ausschuss",
 	"trifft",
@@ -36,7 +36,7 @@ const future = sentence(["Sie", "wird", "morgen", "lachen"]);
 const passive = sentence(["Sie", "wird", "von", "allen", "gelobt"]);
 const modal = sentence(["Sie", "muss", "jetzt", "schlafen"]);
 const copula = sentence(["Sie", "ist", "sehr", "müde"]);
-const collocation = sentence([
+const supportVerbCombination = sentence([
 	"Der",
 	"Ausschuss",
 	"trifft",
@@ -59,6 +59,7 @@ const demonstrationIdiom = sentence([
 	"Zwischenfrage",
 	"verlor",
 	"sie",
+	"völlig",
 	"den",
 	"Faden",
 ]);
@@ -86,26 +87,27 @@ const demonstrationAdjunct = sentence([
 	"Taschenrechner",
 ]);
 const demonstrationInherentReflexive = sentence([
-	"Sie",
-	"beeilt",
-	"sich",
+	"Ich",
+	"beeile",
+	"mich",
 	"heute",
 ]);
 const demonstrationOptionalReflexive = sentence([
-	"Sie",
-	"kämmt",
-	"sich",
+	"Du",
+	"kämmst",
+	"dich",
 	"morgens",
 ]);
-const demonstrationPerfect = sentence(["Er", "hat", "gestern", "gearbeitet"]);
+const demonstrationPerfect = sentence(["Ich", "habe", "gestern", "gearbeitet"]);
+const demonstrationModal = sentence(["Lea", "kann", "heute", "arbeiten"]);
 const demonstrationPassive = sentence([
-	"Der",
-	"Brief",
-	"wird",
+	"Die",
+	"Briefe",
+	"werden",
 	"morgen",
 	"verschickt",
 ]);
-const demonstrationKnowledgeCollocation = sentence([
+const demonstrationKnowledgeSupportVerb = sentence([
 	"Sie",
 	"nahm",
 	"den",
@@ -113,6 +115,15 @@ const demonstrationKnowledgeCollocation = sentence([
 	"gründlich",
 	"zur",
 	"Kenntnis",
+]);
+const demonstrationRepeatedParticle = sentence([
+	"Mila",
+	"fängt",
+	"an",
+	"der",
+	"Kreuzung",
+	"endlich",
+	"an",
 ]);
 const DECISION_TREFFEN_CONTAMINATION_KEY =
 	"target-lexical-unit:eine-entscheidung-treffen";
@@ -138,33 +149,15 @@ const cases = {
 		contaminationKeys: ["target-stimulus:guten-morgen"],
 	},
 	"target-de-core-entscheidung-click-entscheidung": {
-		...resolved(
-			demonstrationDecisionCollocation,
-			8,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 8, [8], "Lexeme", "NOUN"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-entscheidung-click-trifft": {
-		...resolved(
-			demonstrationDecisionCollocation,
-			4,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 4, [4], "Lexeme", "VERB"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-entscheidung-click-eine": {
-		...resolved(
-			demonstrationDecisionCollocation,
-			6,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 6, [6], "Lexeme", "DET"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-aufstehen-click-steht": {
@@ -397,19 +390,19 @@ const cases = {
 	),
 
 	"target-de-boundary-collocation-click-trifft": contaminated(
-		resolved(collocation, 4, [4, 8, 10], "Phraseme", "Collocation"),
+		resolved(supportVerbCombination, 4, [4], "Lexeme", "VERB"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-click-eine": contaminated(
-		resolved(collocation, 8, [4, 8, 10], "Phraseme", "Collocation"),
+		resolved(supportVerbCombination, 8, [8], "Lexeme", "DET"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-click-entscheidung": contaminated(
-		resolved(collocation, 10, [4, 8, 10], "Phraseme", "Collocation"),
+		resolved(supportVerbCombination, 10, [10], "Lexeme", "NOUN"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-near-heute": contaminated(
-		resolved(collocation, 6, [6], "Lexeme", "ADV"),
+		resolved(supportVerbCombination, 6, [6], "Lexeme", "ADV"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-free-object-click-bringt": resolved(
@@ -466,23 +459,30 @@ const cases = {
 	"target-de-demo-idiom-faden-click-verlor": resolved(
 		demonstrationIdiom,
 		6,
-		[6, 10, 12],
+		[6, 12, 14],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-demo-idiom-faden-click-den": resolved(
 		demonstrationIdiom,
-		10,
-		[6, 10, 12],
+		12,
+		[6, 12, 14],
 		"Phraseme",
 		"Idiom",
 	),
 	"target-de-demo-idiom-faden-click-faden": resolved(
 		demonstrationIdiom,
-		12,
-		[6, 10, 12],
+		14,
+		[6, 12, 14],
 		"Phraseme",
 		"Idiom",
+	),
+	"target-de-demo-idiom-faden-click-voellig": resolved(
+		demonstrationIdiom,
+		10,
+		[10],
+		"Lexeme",
+		"ADV",
 	),
 	"target-de-demo-literal-faden-click-faden": resolved(
 		demonstrationLiteral,
@@ -505,6 +505,13 @@ const cases = {
 		"Lexeme",
 		"VERB",
 	),
+	"target-de-demo-governed-rechnen-click-regen": resolved(
+		demonstrationGoverned,
+		8,
+		[8],
+		"Lexeme",
+		"NOUN",
+	),
 	"target-de-demo-adjunct-rechnen-click-mit": resolved(
 		demonstrationAdjunct,
 		4,
@@ -512,28 +519,35 @@ const cases = {
 		"Lexeme",
 		"ADP",
 	),
-	"target-de-demo-inherent-reflexive-click-beeilt": resolved(
+	"target-de-demo-inherent-reflexive-click-beeile": resolved(
 		demonstrationInherentReflexive,
 		2,
 		[2, 4],
 		"Lexeme",
 		"VERB",
 	),
-	"target-de-demo-inherent-reflexive-click-sich": resolved(
+	"target-de-demo-inherent-reflexive-click-mich": resolved(
 		demonstrationInherentReflexive,
 		4,
 		[2, 4],
 		"Lexeme",
 		"VERB",
 	),
-	"target-de-demo-optional-reflexive-click-sich": resolved(
+	"target-de-demo-optional-reflexive-click-dich": resolved(
 		demonstrationOptionalReflexive,
 		4,
 		[4],
 		"Lexeme",
 		"PRON",
 	),
-	"target-de-demo-perfect-arbeiten-click-hat": resolved(
+	"target-de-demo-optional-reflexive-click-kaemmst": resolved(
+		demonstrationOptionalReflexive,
+		2,
+		[2],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-perfect-arbeiten-click-habe": resolved(
 		demonstrationPerfect,
 		2,
 		[2, 6],
@@ -547,14 +561,35 @@ const cases = {
 		"Lexeme",
 		"VERB",
 	),
-	"target-de-demo-passive-brief-click-wird": resolved(
+	"target-de-demo-perfect-arbeiten-click-gestern": resolved(
+		demonstrationPerfect,
+		4,
+		[4],
+		"Lexeme",
+		"ADV",
+	),
+	"target-de-demo-modal-arbeiten-click-kann": resolved(
+		demonstrationModal,
+		2,
+		[2],
+		"Lexeme",
+		"AUX",
+	),
+	"target-de-demo-modal-arbeiten-click-arbeiten": resolved(
+		demonstrationModal,
+		6,
+		[6],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-passive-briefe-click-werden": resolved(
 		demonstrationPassive,
 		4,
 		[4, 8],
 		"Lexeme",
 		"VERB",
 	),
-	"target-de-demo-passive-brief-click-verschickt": resolved(
+	"target-de-demo-passive-briefe-click-verschickt": resolved(
 		demonstrationPassive,
 		8,
 		[4, 8],
@@ -562,25 +597,46 @@ const cases = {
 		"VERB",
 	),
 	"target-de-demo-collocation-kenntnis-click-nahm": resolved(
-		demonstrationKnowledgeCollocation,
+		demonstrationKnowledgeSupportVerb,
 		2,
-		[2, 10, 12],
-		"Phraseme",
-		"Collocation",
+		[2],
+		"Lexeme",
+		"VERB",
 	),
 	"target-de-demo-collocation-kenntnis-click-zur": resolved(
-		demonstrationKnowledgeCollocation,
+		demonstrationKnowledgeSupportVerb,
 		10,
-		[2, 10, 12],
-		"Phraseme",
-		"Collocation",
+		[10],
+		"Construction",
+		"Fusion",
 	),
 	"target-de-demo-collocation-kenntnis-click-kenntnis": resolved(
-		demonstrationKnowledgeCollocation,
+		demonstrationKnowledgeSupportVerb,
 		12,
-		[2, 10, 12],
-		"Phraseme",
-		"Collocation",
+		[12],
+		"Lexeme",
+		"NOUN",
+	),
+	"target-de-demo-repeated-anfangen-click-faengt": resolved(
+		demonstrationRepeatedParticle,
+		2,
+		[2, 12],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-repeated-anfangen-click-final-an": resolved(
+		demonstrationRepeatedParticle,
+		12,
+		[2, 12],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-repeated-anfangen-click-first-an": resolved(
+		demonstrationRepeatedParticle,
+		4,
+		[4],
+		"Lexeme",
+		"ADP",
 	),
 } satisfies GoldenCaseRegistry<
 	typeof canonicalInputSchema,
@@ -592,6 +648,12 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId === "target-de-demo-idiom-faden-click-voellig") {
+		return evidence(
+			IDS.phraseolexeme,
+			"IDS establishes the fixed multiword criterion and occurrence sensitivity. Issue #82 keeps the freely inserted adverb völlig outside the neighboring idiom and selects only the clicked Lexeme/ADV.",
+		);
+	}
 	if (caseId.includes("demo-idiom-faden")) {
 		return evidence(
 			IDS.phraseolexeme,
@@ -619,7 +681,7 @@ function boundaryEvidence(caseId: string): string {
 	) {
 		return evidence(
 			IDS.reflexivePronoun,
-			"IDS distinguishes the lexically required pronoun of an inherently reflexive verb from an ordinary anaphoric object. Issue #82 groups beeilt sich but keeps the contextual pronoun in kämmt sich separate.",
+			"IDS distinguishes the lexically required pronoun of an inherently reflexive verb from an ordinary anaphoric object. Issue #82 groups beeile mich but keeps the contextual pronoun in kämmst dich separate.",
 		);
 	}
 	if (
@@ -634,7 +696,13 @@ function boundaryEvidence(caseId: string): string {
 	if (caseId.includes("demo-collocation-kenntnis")) {
 		return evidence(
 			IDS.functionVerbGroup,
-			"IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Issue #82 includes nahm, zur, and Kenntnis while excluding the free argument and modifier.",
+			"IDS lists zur Kenntnis nehmen as a conventional support-verb expression. Revised issue #82 high-level policy does not treat conventionality alone as fixedness: nahm and Kenntnis remain separate Lexemes, while the clicked fused segment zur independently routes as Construction/Fusion.",
+		);
+	}
+	if (caseId.includes("demo-repeated-anfangen")) {
+		return evidence(
+			IDS.separableVerb,
+			"IDS analyzes detached stressed particles with their finite stem as one separable verb. Issue #82 uses source position to group fängt with only the final particle an, while the earlier identical an remains a standalone Lexeme/ADP.",
 		);
 	}
 	if (caseId.includes("guten-morgen")) {
@@ -704,7 +772,7 @@ function boundaryEvidence(caseId: string): string {
 	if (caseId.includes("collocation") || caseId.includes("entscheidung")) {
 		return evidence(
 			IDS.functionVerbGroup,
-			"IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. Issue #82 product policy treats this occurrence of eine Entscheidung treffen as Phraseme/Collocation and fixes its three lexical members; IDS does not supply Dumgen indices.",
+			"IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. Revised issue #82 high-level policy deliberately does not equate that conventionality with fixed target membership: the clicked verb, determiner, noun, or adverb remains its own Lexeme.",
 		);
 	}
 	if (caseId.includes("free-object")) {

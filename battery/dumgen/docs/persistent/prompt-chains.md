@@ -193,10 +193,11 @@ Drill-down uses a new clickable region and its own policy. It is a new click,
 not reclassification of the original one. Dumling entities at every supported
 level remain first-class targets.
 
-The current `HighLevelWholeUnit` policy selects a defensible conventionalized
-unit containing the click, including proverbs, discourse formulae such as
-`Guten Morgen`, support-verb Collocations such as `eine Entscheidung treffen`,
-and separable verbs. For German VERBs it also selects every realized fixed
+The current `HighLevelWholeUnit` policy selects a defensible fixed unit
+containing the click, including proverbs, discourse formulae such as
+`Guten Morgen`, idioms, and separable verbs. Conventional but non-idiomatic
+Collocations such as `eine Entscheidung treffen` remain separate Lexeme
+targets. For German VERBs the policy also selects every realized fixed
 component: governed prepositions, inherently reflexive pronouns, detached
 separable members, and perfect/future/passive auxiliaries. It excludes modals
 with lexical verbs, copulas with predicates, free arguments, contextual
@@ -212,11 +213,11 @@ lexical head still owns VERB inflectional features and
 the Lemma retains its dictionary `canonicalForm`; analytic auxiliaries do not
 donate finite features or rename the Lemma.
 
-Target markup fixes the resolution level. A whole-unit target on `eine
-Entscheidung treffen` resolves its `Phraseme/Collocation` Lemma. An explicit
-verb drill-down in the same context resolves the ordinary `Lexeme/VERB` Lemma
-`treffen`; the contextual support use does not introduce a `Light` Core Feature
-or a second Lemma identity.
+Target markup fixes the resolution level. Under this policy, clicks on `eine`,
+`Entscheidung`, and `treffen` resolve their ordinary Lexeme targets separately;
+the contextual support use does not introduce a `Light` Core Feature or a
+second Lemma identity. `Phraseme/Collocation` remains available to other
+explicit target policies rather than being inferred by this one.
 
 ## Resolved-unit reuse
 

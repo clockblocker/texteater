@@ -11,37 +11,40 @@ import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/evaluator";
-import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
+import {
+	GERMAN_HIGH_LEVEL_ROUTES,
+	GERMAN_REACHABLE_HIGH_LEVEL_ROUTES,
+} from "../../src/schema/german-high-level-routes";
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(130);
+		expect(corpus.all().ids).toHaveLength(142);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
 			"robustness",
 		]);
 		expect(demonstrationSelection.ids).toEqual([
-			"target-de-core-guten-morgen-click-guten",
-			"target-de-boundary-multi-verb-click-gehen",
-			"target-de-core-kakao",
-			"target-de-route-lexeme-x",
-			"target-de-core-unresolved-qzxv",
-			"target-de-demo-default-modal-kann",
-			"target-de-demo-default-particle-nicht",
-			"target-de-demo-default-interjection-oh",
-			"target-de-demo-default-copula-ist",
-			"target-de-demo-aphorism-zeit-click-ist",
-			"target-de-demo-paired-entweder-click-oder",
-			"target-de-demo-idiom-faden-click-den",
-			"target-de-demo-literal-faden-click-faden",
+			"target-de-demo-perfect-arbeiten-click-habe",
+			"target-de-demo-perfect-arbeiten-click-gearbeitet",
+			"target-de-demo-perfect-arbeiten-click-gestern",
+			"target-de-demo-governed-rechnen-click-rechnet",
 			"target-de-demo-governed-rechnen-click-mit",
-			"target-de-demo-adjunct-rechnen-click-mit",
-			"target-de-demo-inherent-reflexive-click-sich",
-			"target-de-demo-optional-reflexive-click-sich",
-			"target-de-demo-perfect-arbeiten-click-hat",
-			"target-de-demo-passive-brief-click-wird",
-			"target-de-demo-collocation-kenntnis-click-zur",
+			"target-de-demo-governed-rechnen-click-regen",
+			"target-de-demo-idiom-faden-click-verlor",
+			"target-de-demo-idiom-faden-click-faden",
+			"target-de-demo-idiom-faden-click-voellig",
+			"target-de-demo-literal-faden-click-faden",
+			"target-de-demo-paired-entweder-click-entweder",
+			"target-de-demo-paired-entweder-click-oder",
+			"target-de-demo-paired-entweder-click-hier",
+			"target-de-demo-optional-reflexive-click-kaemmst",
+			"target-de-demo-optional-reflexive-click-dich",
+			"target-de-demo-modal-arbeiten-click-kann",
+			"target-de-demo-modal-arbeiten-click-arbeiten",
+			"target-de-demo-fusion-zum",
+			"target-de-demo-symbol-percent",
+			"target-de-demo-repeated-anfangen-click-final-an",
 		]);
 		expect(evaluationSelection.ids).toHaveLength(94);
 		expect(demonstrationSelection.isDisjointFrom(evaluationSelection)).toBe(
@@ -84,6 +87,10 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"PUNCT" as never,
 		);
 		expect(covered.has("Lexeme/PUNCT")).toBe(false);
+		expect(GERMAN_HIGH_LEVEL_ROUTES.Phraseme).toContain("Collocation");
+		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).not.toContain(
+			"Collocation" as never,
+		);
 		expect(
 			corpus.outputSchema.safeParse({
 				decision: "Resolved",
@@ -105,6 +112,106 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 					),
 				),
 		).toBe(false);
+	});
+
+	test("keeps ordinary non-idiomatic Collocations separate by click", () => {
+		expect(
+			corpus.cases["target-de-core-entscheidung-click-trifft"]
+				?.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			corpus.cases["target-de-core-entscheidung-click-eine"]?.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "DET",
+				memberSegmentIndices: [6],
+			},
+		});
+		expect(
+			corpus.cases["target-de-core-entscheidung-click-entscheidung"]
+				?.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [8],
+			},
+		});
+	});
+
+	test("teaches click anchoring through fixed-member and free-neighbor contrasts", () => {
+		const target = (caseId: string) => {
+			const goldenCase = corpus.cases[caseId];
+			if (goldenCase?.idealOutput.decision !== "Resolved") {
+				throw new Error(`Expected resolved contrast case ${caseId}.`);
+			}
+			return goldenCase.idealOutput.target;
+		};
+		const expectSameMembership = (
+			firstCaseId: string,
+			secondCaseId: string,
+		) => {
+			expect(target(secondCaseId)).toEqual(target(firstCaseId));
+		};
+
+		expectSameMembership(
+			"target-de-demo-perfect-arbeiten-click-habe",
+			"target-de-demo-perfect-arbeiten-click-gearbeitet",
+		);
+		expectSameMembership(
+			"target-de-demo-governed-rechnen-click-rechnet",
+			"target-de-demo-governed-rechnen-click-mit",
+		);
+		expectSameMembership(
+			"target-de-demo-idiom-faden-click-verlor",
+			"target-de-demo-idiom-faden-click-faden",
+		);
+		expectSameMembership(
+			"target-de-demo-paired-entweder-click-entweder",
+			"target-de-demo-paired-entweder-click-oder",
+		);
+
+		for (const [caseId, memberSegmentIndices] of [
+			["target-de-demo-perfect-arbeiten-click-gestern", [4]],
+			["target-de-demo-governed-rechnen-click-regen", [8]],
+			["target-de-demo-idiom-faden-click-voellig", [10]],
+			["target-de-demo-paired-entweder-click-hier", [2]],
+			["target-de-demo-optional-reflexive-click-kaemmst", [2]],
+			["target-de-demo-optional-reflexive-click-dich", [4]],
+			["target-de-demo-modal-arbeiten-click-kann", [2]],
+			["target-de-demo-modal-arbeiten-click-arbeiten", [6]],
+			["target-de-demo-repeated-anfangen-click-first-an", [4]],
+		] as const) {
+			expect(target(caseId).memberSegmentIndices).toEqual([
+				...memberSegmentIndices,
+			]);
+		}
+
+		expect(
+			target("target-de-demo-repeated-anfangen-click-final-an"),
+		).toMatchObject({
+			family: "Lexeme",
+			kind: "VERB",
+			memberSegmentIndices: [2, 12],
+		});
+		expect(target("target-de-demo-fusion-zum")).toMatchObject({
+			family: "Construction",
+			kind: "Fusion",
+		});
+		expect(target("target-de-demo-symbol-percent")).toMatchObject({
+			family: "Lexeme",
+			kind: "SYM",
+		});
 	});
 
 	test("uses complete disambiguating sentences and case-level evidence", () => {
@@ -245,6 +352,39 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 				}),
 			).toThrow(/contamination key/u);
 		}
+	});
+
+	test("keeps demonstrated Lexeme clicks lexically distinct from held-outs", () => {
+		const lexemeClickKeys = (
+			selection: typeof demonstrationSelection,
+		): readonly string[] =>
+			selection.cases.flatMap((goldenCase) => {
+				if (
+					goldenCase.idealOutput.decision !== "Resolved" ||
+					goldenCase.idealOutput.target.family !== "Lexeme"
+				) {
+					return [];
+				}
+				const clicked =
+					goldenCase.input.segments[
+						goldenCase.input.clickedSegmentIndex
+					];
+				if (clicked?.kind !== "ResolvableText") {
+					throw new Error(
+						"Selected Lexeme click is not ResolvableText.",
+					);
+				}
+				return [
+					`${goldenCase.idealOutput.target.kind}:${clicked.text.toLocaleLowerCase("de")}`,
+				];
+			});
+
+		const demonstrated = new Set(lexemeClickKeys(demonstrationSelection));
+		expect(
+			lexemeClickKeys(evaluationSelection).filter((key) =>
+				demonstrated.has(key),
+			),
+		).toEqual([]);
 	});
 
 	test("diagnoses every invalid original-index membership dimension", () => {

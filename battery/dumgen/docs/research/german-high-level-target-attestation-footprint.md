@@ -55,6 +55,7 @@ aligned.
 | `Sie wurde gebeten.` | `wurde`, `gebeten` | `wurde gebeten` | — |
 | `Sie kann schwimmen.` | clicked lexical item only | unchanged for that item | modal and lexical verb are separate high-level targets |
 | `Sie ist schön.` | clicked item only | unchanged for that item | copula and predicative adjective are separate high-level targets |
+| `Der Ausschuss trifft eine Entscheidung.` | clicked lexical item only | unchanged for that item | a conventional non-idiomatic Collocation is not fixed enough for this policy |
 
 The linguistic distinction is first-party grammar rather than a repository
 convenience:

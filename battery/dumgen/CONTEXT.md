@@ -268,11 +268,12 @@ modifiers remain separate targets. High-level membership does not prevent a
 later drill-down analysis of an individual AUX, preposition, pronoun, or other
 member.
 
-The target level is policy-owned. For a German support-verb Collocation such as
-`eine Entscheidung treffen`, a whole-unit target resolves the
-`Phraseme/Collocation` Lemma `eine Entscheidung treffen`. An explicit target on
-the verb alone resolves the ordinary `Lexeme/VERB` Lemma `treffen`. Its
-contextual support use does not create a separate `Light` Lemma or Core Feature.
+The target level is policy-owned. German High-Level Target Classification does
+not group an ordinary non-idiomatic Collocation merely because its lexical
+choices are conventional. In `eine Entscheidung treffen`, clicks on `eine`,
+`Entscheidung`, and `treffen` resolve separate Lexeme targets. Collocation
+remains a valid Dumling Lemma kind for explicit policies and supplied targets,
+but it is not reachable from this high-level policy.
 
 ### Attestation and interaction
 A successful grammatical resolution projects its click-independent Analysis

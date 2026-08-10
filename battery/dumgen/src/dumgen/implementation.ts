@@ -5,7 +5,7 @@ import type { PROMPT_CATALOG } from "../catalog/prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
 import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
-import { isGermanHighLevelRoute } from "../schema/german-high-level-routes";
+import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import {
 	constructNormalizedSurface,
 	NormalizedSurfaceProjectionError,
@@ -422,7 +422,7 @@ function assertTarget(
 	target: AnalysisTarget,
 ): void {
 	if (
-		!isGermanHighLevelRoute(target.family, target.kind) ||
+		!isGermanReachableHighLevelRoute(target.family, target.kind) ||
 		target.memberSegmentIndices.length === 0 ||
 		!target.memberSegmentIndices.includes(clickedSegmentIndex)
 	) {

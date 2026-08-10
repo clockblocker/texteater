@@ -521,7 +521,9 @@ is worth revisiting.
 - **Current take:** Include governed prepositions, inherently reflexive
   pronouns, separable members, and perfect/future/passive auxiliaries exactly
   once in source order. Keep modal, copular, free-valency, contextual-reflexive,
-  adjunct, and modifier material separate. Normalize exactly the target
+  adjunct, modifier, and ordinary non-idiomatic Collocation material separate.
+  Conventional support-verb combinations such as `eine Entscheidung treffen`
+  do not become multi-segment targets under this policy. Normalize exactly the target
   projection, retain dictionary `canonicalForm`, and project morphology from
   the route-owning lexical head rather than its analytic auxiliary. This entry
   supersedes the narrower member exclusions in earlier prompt experiments;

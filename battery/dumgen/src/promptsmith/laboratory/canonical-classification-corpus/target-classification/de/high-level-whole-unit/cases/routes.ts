@@ -113,11 +113,15 @@ const aphorism = sentence(["Wissen", "ist", "Macht"]);
 const discourseFormula = sentence(["Herzlichen", "Dank"], "!");
 const proverb = sentence(["Morgenstund", "hat", "Gold", "im", "Mund"]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
-const demonstrationPairedFrame = sentence([
-	"Entweder",
-	"heute",
-	"oder",
-	"morgen",
+const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
+const demonstrationFusion = sentence(["Wir", "fahren", "zum", "Museum"]);
+const demonstrationSymbol = sentence([
+	"Die",
+	"Quote",
+	"liegt",
+	"bei",
+	"zwölf",
+	"%",
 ]);
 const pairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
@@ -243,9 +247,9 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			2,
 			"AUX",
 		),
-		"target-de-demo-default-particle-nicht": lexeme(
-			["Lea", "kommt", "heute", "nicht"],
-			6,
+		"target-de-demo-default-particle-doch": lexeme(
+			["Lea", "kommt", "doch", "heute"],
+			4,
 			"PART",
 		),
 		"target-de-demo-default-interjection-oh": lexeme(
@@ -253,9 +257,9 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			0,
 			"INTJ",
 		),
-		"target-de-demo-default-copula-ist": {
+		"target-de-demo-default-copula-bleibt": {
 			...resolved(
-				sentence(["Heute", "ist", "Lea", "müde"]),
+				sentence(["Nora", "bleibt", "ruhig"]),
 				2,
 				[2],
 				"Lexeme",
@@ -263,7 +267,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 			explanation: evidence(
 				IDS.copula,
-				"IDS classifies ist as a copula combined with a predicative complement. Issue #82 keeps the meaning-bearing copula as the standalone high-level Lexeme/AUX target rather than grouping it with müde.",
+				"IDS classifies bleibt as a copula combined with a predicative complement. Issue #82 keeps the meaning-bearing copula as the standalone high-level Lexeme/AUX target rather than grouping it with ruhig.",
 			),
 		},
 		"target-de-demo-aphorism-zeit-click-zeit": {
@@ -329,6 +333,27 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			explanation: evidence(
 				IDS.pairedEitherOr,
 				"The alternative fillers heute and morgen are free context; either fixed anchor selects the same PairedFrame.",
+			),
+		},
+		"target-de-demo-paired-entweder-click-hier": {
+			...resolved(demonstrationPairedFrame, 2, [2], "Lexeme", "ADV"),
+			explanation: evidence(
+				IDS.pairedEitherOr,
+				"IDS describes entweder ... oder as a correlated pair. Issue #82 keeps the freely supplied locative filler hier outside Construction/PairedFrame membership and classifies the clicked occurrence as Lexeme/ADV.",
+			),
+		},
+		"target-de-demo-fusion-zum": {
+			...resolved(demonstrationFusion, 4, [4], "Construction", "Fusion"),
+			explanation: evidence(
+				IDS.fusionZu,
+				"The IDS preposition entry identifies zum as zu plus dem. Issue #82 maps the one fused source segment to Construction/Fusion rather than Lexeme/ADP.",
+			),
+		},
+		"target-de-demo-symbol-percent": {
+			...resolved(demonstrationSymbol, 10, [10], "Lexeme", "SYM"),
+			explanation: evidence(
+				IDS.wordClasses,
+				"The clicked percent sign is a standalone symbol rather than part of the neighboring number; issue #82 maps that occurrence to Lexeme/SYM.",
 			),
 		},
 		"target-de-route-phraseme-aphorism-click-wissen": fixedPhraseme(

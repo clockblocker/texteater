@@ -96,23 +96,23 @@ const cases = {
 	"target-de-robust-overlap-collocation-click-stellt": resolved(
 		overlap,
 		2,
-		[2, 4, 6],
-		"Phraseme",
-		"Collocation",
+		[2],
+		"Lexeme",
+		"VERB",
 	),
 	"target-de-robust-overlap-collocation-click-eine": resolved(
 		overlap,
 		4,
-		[2, 4, 6],
-		"Phraseme",
-		"Collocation",
+		[4],
+		"Lexeme",
+		"DET",
 	),
 	"target-de-robust-overlap-collocation-click-frage": resolved(
 		overlap,
 		6,
-		[2, 4, 6],
-		"Phraseme",
-		"Collocation",
+		[6],
+		"Lexeme",
+		"NOUN",
 	),
 	"target-de-robust-overlap-separable-click-stellt": resolved(
 		overlap,
@@ -213,7 +213,7 @@ function robustnessEvidence(caseId: string): string {
 	if (caseId.includes("overlap-collocation")) {
 		return evidence(
 			IDS.questionSupportVerb,
-			"IDS explicitly lists eine Frage stellen as a meaning unit. Issue #82 product policy maps the first stellt, eine, and Frage to Phraseme/Collocation at exact original indices [2,4,6], independently of the later abstellen occurrence.",
+			"IDS explicitly lists eine Frage stellen as a meaning unit. Revised issue #82 high-level policy nevertheless keeps its non-idiomatic members separate: the clicked stellt, eine, or Frage is respectively Lexeme/VERB [2], Lexeme/DET [4], or Lexeme/NOUN [6], independently of the later abstellen occurrence.",
 		);
 	}
 	if (caseId.includes("overlap-separable")) {
@@ -225,7 +225,7 @@ function robustnessEvidence(caseId: string): string {
 	if (caseId.includes("overlap-near")) {
 		return evidence(
 			IDS.questionSupportVerb,
-			"IDS identifies eine Frage stellen as the earlier meaning unit; it does not make Vase part of either verbal unit. Issue #82 product policy maps the clicked Vase alone to Lexeme/NOUN at exact original index [14].",
+			"IDS identifies eine Frage stellen as the earlier conventional meaning unit, but revised issue #82 high-level policy keeps its non-idiomatic words separate. Vase likewise remains its own Lexeme/NOUN at exact original index [14], outside the later separable verb.",
 		);
 	}
 	if (

@@ -18,13 +18,7 @@ const LEXEME_KINDS_AFTER_PUNCT = ["SCONJ", "SYM", "VERB", "X"] as const;
 
 export const GERMAN_REACHABLE_HIGH_LEVEL_ROUTES = {
 	Lexeme: [...LEXEME_KINDS_BEFORE_PUNCT, ...LEXEME_KINDS_AFTER_PUNCT],
-	Phraseme: [
-		"Aphorism",
-		"Collocation",
-		"DiscourseFormula",
-		"Idiom",
-		"Proverb",
-	],
+	Phraseme: ["Aphorism", "DiscourseFormula", "Idiom", "Proverb"],
 	Construction: ["Fusion", "PairedFrame"],
 } as const satisfies {
 	readonly [Family in Exclude<
@@ -40,7 +34,20 @@ export const GERMAN_HIGH_LEVEL_ROUTES = {
 		"PUNCT",
 		...LEXEME_KINDS_AFTER_PUNCT,
 	],
+	Phraseme: [
+		"Aphorism",
+		"Collocation",
+		"DiscourseFormula",
+		"Idiom",
+		"Proverb",
+	],
 } as const;
+
+export type GermanReachableHighLevelFamily =
+	keyof typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES;
+export type GermanReachableHighLevelKind<
+	Family extends GermanReachableHighLevelFamily,
+> = (typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES)[Family][number];
 
 export type GermanHighLevelFamily = keyof typeof GERMAN_HIGH_LEVEL_ROUTES;
 export type GermanHighLevelKind<Family extends GermanHighLevelFamily> =
@@ -55,6 +62,20 @@ export function isGermanHighLevelRoute(
 		(
 			GERMAN_HIGH_LEVEL_ROUTES[
 				family as GermanHighLevelFamily
+			] as readonly string[]
+		).includes(kind)
+	);
+}
+
+export function isGermanReachableHighLevelRoute(
+	family: string,
+	kind: string,
+): family is GermanReachableHighLevelFamily {
+	return (
+		family in GERMAN_REACHABLE_HIGH_LEVEL_ROUTES &&
+		(
+			GERMAN_REACHABLE_HIGH_LEVEL_ROUTES[
+				family as GermanReachableHighLevelFamily
 			] as readonly string[]
 		).includes(kind)
 	);

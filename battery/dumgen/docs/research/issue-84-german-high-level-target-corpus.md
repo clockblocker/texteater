@@ -4,24 +4,29 @@ Issue [#84](https://github.com/clockblocker/texteater/issues/84) freezes a
 representation-neutral German semantic oracle. It deliberately records complete
 Segment arrays and ordered original `memberSegmentIndices`; experiments must
 adapt their private DTOs to that contract rather than rewrite the oracle. The
-130 cases comprise twenty explicitly selected demonstrations, 94 explicitly
-selected held-out cases, and sixteen role-neutral support or member-click
-coverage cases. The prompt-remediation teaching stimuli were
-added without changing the held-out selection, so the next experiment remains
-comparable to the retained failed run. No provider was called by this change.
+142 cases comprise twenty explicitly selected demonstrations, 94 explicitly
+selected development cases, and 28 role-neutral support or member-click
+coverage cases. The click-first v6 remediation added analogous teaching
+stimuli without changing those 94 cases. The v7 policy revision then changed
+nine development ideals from multi-member Collocations to separate Lexemes;
+v7 is therefore not a representation-only comparison with earlier runs.
+Because retained misses informed both revisions, the 94 cases are no longer an
+untouched holdout. A fresh analogous holdout must be frozen before any claim of
+generalization. No provider was called by the v7 change.
 
 Collection membership is role-neutral: `routes`, `boundaries`, and `robustness`
 describe what each case exercises, while only `selections.ts` assigns
 demonstration or evaluation roles.
 
-Every sentence variant containing the lexical targets *eine Entscheidung
-treffen* or *aufstehen* shares an explicit semantic contamination key,
-including nearby-nonmember clicks and noisy spellings. The frozen
-Demonstration Selection instead uses the unique *gehen … spazieren* occurrence
-and `lol` case, so neither lexical target is split across demonstrations and
-held-out evaluation. The second *gehen … spazieren* member-click case remains
-role-neutral in the corpus for click-coverage validation; every published role
-continues to be assigned by an explicit case ID.
+Every sentence variant containing the spellings *eine Entscheidung
+treffen* or *aufstehen* shares an explicit contamination key,
+including nearby-nonmember clicks and noisy spellings. The v6 Demonstration
+Selection uses distinct analogous stimuli and teaches contrasts by changing the
+click within one stimulus: fixed-member clicks converge on one target, while a
+free modifier, argument, filler, or repeated neighbor remains standalone.
+Every published role continues to be assigned by an explicit case ID, and the
+shared contamination validator keeps exact stimuli and declared lexical units
+from crossing the demonstration/development boundary.
 
 Every fixedness or grammatical-boundary Golden Case carries a concise,
 source-auditable explanation. Where IDS classifies the exact expression, the
@@ -66,17 +71,19 @@ the oracle.
   gehen](https://grammis.ids-mannheim.de/verbvalenz/400901)
 - IDS explicitly records `zu + dem` as `zum`, while its grammar lists *eine
   Frage stellen* as a meaning unit. Those expression facts support the Fusion
-  and overlap cases; issue #82 separately supplies Dumgen's exact
-  Family/Kind and source-index projection. [IDS grammis:
+  and overlap controls; the revised high-level product policy deliberately
+  keeps each non-idiomatic support-verb member as its own Lexeme despite the
+  conventional meaning unit. [IDS grammis:
   zu](https://grammis.ids-mannheim.de/praepositionen/299700), [IDS grammis:
   Nominalisierungsverb und
   Funktionsverb](https://grammis.ids-mannheim.de/systematische-grammatik/514)
 - IDS defines a Funktionsverbgefüge as a verb plus nominal or prepositional
   group functioning as one predicate, gives examples such as *zum Ende kommen*
   and *Zustimmung erteilen*, and explicitly says the boundary with a full verb
-  plus object is gradual. The corpus therefore pairs conventional
-  `Phraseme/Collocation` targets with ordinary verb-object controls and follows
-  the product's conservative split rule at doubtful boundaries. [IDS grammis:
+  plus object is gradual. The high-level corpus treats this gradual,
+  non-idiomatic conventionality as insufficient for fixed multi-segment
+  membership: each clicked verb, determiner, preposition or noun receives its
+  own route unless another independently fixed rule applies. [IDS grammis:
   Funktionsverbgefüge](https://grammis.ids-mannheim.de/vggf/2202)
 - IDS distinguishes a verb-governed prepositional object—whose preposition is
   not freely exchangeable—from an adverbial PP, whose relation and preposition
