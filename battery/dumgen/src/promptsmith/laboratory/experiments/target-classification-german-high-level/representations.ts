@@ -8,11 +8,7 @@ import {
 	canonicalOutputSchema,
 } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
 
-export const REPRESENTATION_IDS = [
-	"full-compact-indices",
-	"additional-compact-indices",
-	"fixed-length-mask",
-] as const;
+export const REPRESENTATION_IDS = ["additional-compact-indices"] as const;
 
 export type RepresentationId = (typeof REPRESENTATION_IDS)[number];
 
@@ -109,16 +105,8 @@ const privateOutput = <Membership extends z.ZodType>(membership: Membership) =>
 
 const compactIndexArray = z.array(z.number().int().nonnegative());
 
-export const fullCompactIndicesOutputSchema = privateOutput(
-	z.strictObject({ memberCompactIndices: compactIndexArray.min(1) }),
-);
-
 export const additionalCompactIndicesOutputSchema = privateOutput(
 	z.strictObject({ additionalMemberCompactIndices: compactIndexArray }),
-);
-
-export const fixedLengthMaskOutputSchema = privateOutput(
-	z.strictObject({ memberMask: z.array(z.boolean()).min(1) }),
 );
 
 type CanonicalInput = z.output<typeof canonicalInputSchema>;
@@ -244,61 +232,7 @@ function canonicalOutputForRoute(args: {
 	});
 }
 
-type FullOutput = z.output<typeof fullCompactIndicesOutputSchema>;
 type AdditionalOutput = z.output<typeof additionalCompactIndicesOutputSchema>;
-type MaskOutput = z.output<typeof fixedLengthMaskOutputSchema>;
-
-export const fullCompactIndicesAdapter = {
-	materialize(goldenCase) {
-		const input = projectCompactInput(goldenCase.input).input;
-		if (goldenCase.idealOutput.decision === "Unresolved") {
-			return {
-				input,
-				idealOutput: fullCompactIndicesOutputSchema.parse({
-					decision: "Unresolved",
-					target: null,
-				}),
-			};
-		}
-		return {
-			input,
-			idealOutput: fullCompactIndicesOutputSchema.parse({
-				decision: "Resolved" as const,
-				target: {
-					...privateRoute(goldenCase.idealOutput),
-					membership: {
-						memberCompactIndices: [
-							...compactIdealMembers(
-								goldenCase.input,
-								goldenCase.idealOutput,
-							),
-						],
-					},
-				},
-			}),
-		};
-	},
-	canonicalize({ canonicalInput, privateInput, output }) {
-		if (output.decision === "Unresolved") {
-			return canonicalOutputSchema.parse({ decision: "Unresolved" });
-		}
-		if (output.target === null) {
-			throw new Error("Resolved output requires a target.");
-		}
-		return canonicalizeMembership({
-			canonicalInput,
-			privateInput,
-			family: output.target.family,
-			kind: output.target.kind,
-			compactMembers: output.target.membership.memberCompactIndices,
-		});
-	},
-} satisfies PromptRepresentationAdapter<
-	typeof canonicalInputSchema,
-	typeof canonicalOutputSchema,
-	typeof compactInputSchema,
-	typeof fullCompactIndicesOutputSchema
->;
 
 export const additionalCompactIndicesAdapter = {
 	materialize(goldenCase) {
@@ -375,120 +309,16 @@ export const additionalCompactIndicesAdapter = {
 	typeof additionalCompactIndicesOutputSchema
 >;
 
-export const fixedLengthMaskAdapter = {
-	materialize(goldenCase) {
-		const input = projectCompactInput(goldenCase.input).input;
-		if (goldenCase.idealOutput.decision === "Unresolved") {
-			return {
-				input,
-				idealOutput: fixedLengthMaskOutputSchema.parse({
-					decision: "Unresolved",
-					target: null,
-				}),
-			};
-		}
-		const members = new Set(
-			compactIdealMembers(goldenCase.input, goldenCase.idealOutput),
-		);
-		return {
-			input,
-			idealOutput: fixedLengthMaskOutputSchema.parse({
-				decision: "Resolved" as const,
-				target: {
-					...privateRoute(goldenCase.idealOutput),
-					membership: {
-						memberMask: input.segments.map((_, index) =>
-							members.has(index),
-						),
-					},
-				},
-			}),
-		};
-	},
-	canonicalize({ canonicalInput, privateInput, output }) {
-		if (output.decision === "Unresolved") {
-			return canonicalOutputSchema.parse({ decision: "Unresolved" });
-		}
-		if (output.target === null) {
-			throw new Error("Resolved output requires a target.");
-		}
-		const mask = output.target.membership.memberMask;
-		if (mask.length !== privateInput.segments.length) {
-			throw new Error(
-				"Member mask length must equal compact segment length.",
-			);
-		}
-		return canonicalizeMembership({
-			canonicalInput,
-			privateInput,
-			family: output.target.family,
-			kind: output.target.kind,
-			compactMembers: mask.flatMap((member, index) =>
-				member ? [index] : [],
-			),
-		});
-	},
-} satisfies PromptRepresentationAdapter<
-	typeof canonicalInputSchema,
-	typeof canonicalOutputSchema,
-	typeof compactInputSchema,
-	typeof fixedLengthMaskOutputSchema
->;
-
-export type RepresentationArm =
-	| Readonly<{
-			id: "full-compact-indices";
-			outputSchema: typeof fullCompactIndicesOutputSchema;
-			adapter: typeof fullCompactIndicesAdapter;
-	  }>
-	| Readonly<{
-			id: "additional-compact-indices";
-			outputSchema: typeof additionalCompactIndicesOutputSchema;
-			adapter: typeof additionalCompactIndicesAdapter;
-	  }>
-	| Readonly<{
-			id: "fixed-length-mask";
-			outputSchema: typeof fixedLengthMaskOutputSchema;
-			adapter: typeof fixedLengthMaskAdapter;
-	  }>;
-
-export const representationArms: readonly RepresentationArm[] = Object.freeze([
-	{
-		id: "full-compact-indices",
-		outputSchema: fullCompactIndicesOutputSchema,
-		adapter: fullCompactIndicesAdapter,
-	},
-	{
-		id: "additional-compact-indices",
-		outputSchema: additionalCompactIndicesOutputSchema,
-		adapter: additionalCompactIndicesAdapter,
-	},
-	{
-		id: "fixed-length-mask",
-		outputSchema: fixedLengthMaskOutputSchema,
-		adapter: fixedLengthMaskAdapter,
-	},
-]);
-
-export type AnyPrivateOutput = FullOutput | AdditionalOutput | MaskOutput;
-
 export function materializeRepresentation(
-	id: RepresentationId,
+	_id: RepresentationId,
 	goldenCase: {
 		readonly input: CanonicalInput;
 		readonly idealOutput: CanonicalOutput;
 		readonly explanation?: string;
 		readonly contaminationKeys?: readonly string[];
 	},
-): { readonly input: CompactInput; readonly idealOutput: AnyPrivateOutput } {
-	switch (id) {
-		case "full-compact-indices":
-			return fullCompactIndicesAdapter.materialize(goldenCase);
-		case "additional-compact-indices":
-			return additionalCompactIndicesAdapter.materialize(goldenCase);
-		case "fixed-length-mask":
-			return fixedLengthMaskAdapter.materialize(goldenCase);
-	}
+): { readonly input: CompactInput; readonly idealOutput: AdditionalOutput } {
+	return additionalCompactIndicesAdapter.materialize(goldenCase);
 }
 
 export function parseAndCanonicalizeRepresentation(args: {
@@ -497,34 +327,14 @@ export function parseAndCanonicalizeRepresentation(args: {
 	readonly privateInput: CompactInput;
 	readonly output: unknown;
 }): CanonicalOutput {
-	switch (args.id) {
-		case "full-compact-indices":
-			return fullCompactIndicesAdapter.canonicalize({
-				...args,
-				output: fullCompactIndicesOutputSchema.parse(args.output),
-			});
-		case "additional-compact-indices":
-			return additionalCompactIndicesAdapter.canonicalize({
-				...args,
-				output: additionalCompactIndicesOutputSchema.parse(args.output),
-			});
-		case "fixed-length-mask":
-			return fixedLengthMaskAdapter.canonicalize({
-				...args,
-				output: fixedLengthMaskOutputSchema.parse(args.output),
-			});
-	}
+	return additionalCompactIndicesAdapter.canonicalize({
+		...args,
+		output: additionalCompactIndicesOutputSchema.parse(args.output),
+	});
 }
 
-export function outputSchemaForRepresentation(id: RepresentationId) {
-	switch (id) {
-		case "full-compact-indices":
-			return fullCompactIndicesOutputSchema;
-		case "additional-compact-indices":
-			return additionalCompactIndicesOutputSchema;
-		case "fixed-length-mask":
-			return fixedLengthMaskOutputSchema;
-	}
+export function outputSchemaForRepresentation(_id: RepresentationId) {
+	return additionalCompactIndicesOutputSchema;
 }
 
 const postconditionCanonicalInput = canonicalInputSchema.parse({
@@ -554,30 +364,6 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 	privateInput: projectCompactInput(postconditionCanonicalInput).input,
 	canonicalOutput: postconditionCanonicalOutput,
 	arms: Object.freeze({
-		"full-compact-indices": Object.freeze({
-			validOutput: {
-				decision: "Resolved",
-				target: {
-					family: "Lexeme",
-					kind: "VERB",
-					membership: { memberCompactIndices: [0, 1, 2] },
-				},
-			},
-			invalidOutputs: Object.freeze([
-				Object.freeze({
-					name: "unordered-members",
-					output: {
-						decision: "Resolved",
-						target: {
-							family: "Lexeme",
-							kind: "VERB",
-							membership: { memberCompactIndices: [2, 1, 0] },
-						},
-					},
-					expectedError: "ordered and unique",
-				}),
-			]),
-		}),
 		"additional-compact-indices": Object.freeze({
 			validOutput: {
 				decision: "Resolved",
@@ -615,30 +401,6 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 						},
 					},
 					expectedError: "ordered and unique before click insertion",
-				}),
-			]),
-		}),
-		"fixed-length-mask": Object.freeze({
-			validOutput: {
-				decision: "Resolved",
-				target: {
-					family: "Lexeme",
-					kind: "VERB",
-					membership: { memberMask: [true, true, true, false] },
-				},
-			},
-			invalidOutputs: Object.freeze([
-				Object.freeze({
-					name: "wrong-mask-length",
-					output: {
-						decision: "Resolved",
-						target: {
-							family: "Lexeme",
-							kind: "VERB",
-							membership: { memberMask: [true] },
-						},
-					},
-					expectedError: "mask length",
 				}),
 			]),
 		}),

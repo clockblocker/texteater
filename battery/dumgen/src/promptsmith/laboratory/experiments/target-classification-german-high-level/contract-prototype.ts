@@ -35,8 +35,8 @@ import {
 } from "./representations";
 
 export const PROTOTYPE_QUESTION =
-	"Which private compact membership representation most reliably preserves the frozen German high-level target contract under identical evidence and evaluation?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v7";
+	"Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v8";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -138,7 +138,7 @@ Before returning, silently verify:
 3. Every included segment is a fixed member of that target, or is the clicked standalone target itself.
 4. No fixed member is missing.
 5. I removed free arguments, fillers, modifiers, punctuation, OpaqueText, neighboring units, and wrong repeated positions.
-6. I encoded that one semantic decision using the arm-specific membership rule below.
+6. I encoded that one semantic decision using the membership rule below.
 
 Return only the strict JSON contract, with no lemma, canonical form, surface form, explanation, or alternative candidates.`;
 
@@ -163,12 +163,14 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"The click is on the freely inserted modifier völlig, so return only Lexeme/ADV rather than the surrounding Idiom.",
 	"target-de-demo-literal-faden-click-faden":
 		"The sewing context makes the wording literal; the clicked Faden is only Lexeme/NOUN despite matching words from a familiar idiom.",
+	"target-de-demo-literal-handtuch-click-warf":
+		"The washing context makes warf das Handtuch literal; familiarity with the idiom das Handtuch werfen does not override occurrence meaning, so the clicked warf is only Lexeme/VERB.",
 	"target-de-demo-paired-entweder-click-entweder":
 		"Clicking either fixed anchor selects both anchors of Construction/PairedFrame and excludes the free fillers.",
 	"target-de-demo-paired-entweder-click-oder":
 		"Clicking the other anchor selects the same two-member PairedFrame.",
-	"target-de-demo-paired-entweder-click-hier":
-		"The click is on the freely supplied filler hier, so return only Lexeme/ADV rather than the nearby PairedFrame.",
+	"target-de-demo-paired-je-click-laenger":
+		"In je ... desto, the clicked comparative länger is a freely supplied filler, so return only Lexeme/ADJ rather than either PairedFrame anchor.",
 	"target-de-demo-optional-reflexive-click-kaemmst":
 		"In dich kämmen, the pronoun is contextual rather than lexically required; the clicked verb is its own Lexeme/VERB.",
 	"target-de-demo-optional-reflexive-click-dich":
@@ -185,13 +187,9 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"The clicked final an is the separable particle of fängt ... an; include fängt and this final an, but exclude the earlier identical free preposition an.",
 });
 
-const armInstructions: Readonly<Record<RepresentationId, string>> = {
-	"full-compact-indices":
-		"For Resolved, membership.memberCompactIndices lists every member compact index, including the click.",
+const membershipInstructions: Readonly<Record<RepresentationId, string>> = {
 	"additional-compact-indices":
 		"For Resolved, the semantic target still contains the click, but membership.additionalMemberCompactIndices encodes every other member compact index except the clicked index in strictly increasing source order; do not repeat the click or another index.",
-	"fixed-length-mask":
-		"For Resolved, membership.memberMask has exactly one boolean per compact input segment; true marks members and the clicked position must be true.",
 };
 
 export type PreparedRepresentationCase = Readonly<{
@@ -232,7 +230,7 @@ export function systemPromptForRepresentation(id: RepresentationId): string {
 			route: `prototype/target-classification/de/high-level/${id}`,
 			inputSchema: compactInputSchema,
 			outputSchema,
-			body: `${commonPrompt}\n\n${armInstructions[id]}`,
+			body: `${commonPrompt}\n\n${membershipInstructions[id]}`,
 			demonstrations,
 		}),
 	);
@@ -527,11 +525,11 @@ function assertFrozenSuite(): void {
 			`Issue #85 keeps ${EXPECTED_EVALUATION_CASES} development cases for historical comparison; found ${evaluationSelection.ids.length}.`,
 		);
 	}
-	if (demonstrationSelection.ids.length !== 20) {
-		throw new Error("Issue #85 is frozen to twenty demonstrations.");
+	if (demonstrationSelection.ids.length !== 21) {
+		throw new Error("Issue #85 is frozen to twenty-one demonstrations.");
 	}
-	if (EXACT_CALL_CAP !== 564) {
-		throw new Error("Issue #85 exact call cap must remain 564.");
+	if (EXACT_CALL_CAP !== 188) {
+		throw new Error("Issue #85 exact call cap must remain 188.");
 	}
 }
 

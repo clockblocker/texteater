@@ -114,6 +114,25 @@ const discourseFormula = sentence(["Herzlichen", "Dank"], "!");
 const proverb = sentence(["Morgenstund", "hat", "Gold", "im", "Mund"]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
 const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
+const demonstrationPairedFrameFiller: Segment[] = [
+	{ kind: "ResolvableText", text: "Je" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "länger" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "der" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Weg" },
+	{ kind: "Punctuation", text: "," },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "desto" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "müder" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "die" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Reisenden" },
+	{ kind: "Punctuation", text: "." },
+];
 const demonstrationFusion = sentence(["Wir", "fahren", "zum", "Museum"]);
 const demonstrationSymbol = sentence([
 	"Die",
@@ -335,11 +354,17 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"The alternative fillers heute and morgen are free context; either fixed anchor selects the same PairedFrame.",
 			),
 		},
-		"target-de-demo-paired-entweder-click-hier": {
-			...resolved(demonstrationPairedFrame, 2, [2], "Lexeme", "ADV"),
+		"target-de-demo-paired-je-click-laenger": {
+			...resolved(
+				demonstrationPairedFrameFiller,
+				2,
+				[2],
+				"Lexeme",
+				"ADJ",
+			),
 			explanation: evidence(
-				IDS.pairedEitherOr,
-				"IDS describes entweder ... oder as a correlated pair. Issue #82 keeps the freely supplied locative filler hier outside Construction/PairedFrame membership and classifies the clicked occurrence as Lexeme/ADV.",
+				IDS.pairedFrame,
+				"IDS describes je ... desto as a proportional correlation but places the comparative expressions inside the degree phrases organized by its anchors. Issue #82 therefore keeps the freely supplied comparative länger outside Construction/PairedFrame membership and classifies the clicked occurrence as Lexeme/ADJ.",
 			),
 		},
 		"target-de-demo-fusion-zum": {

@@ -31,8 +31,6 @@ import {
 import {
 	additionalCompactIndicesOutputSchema,
 	compactInputSchema,
-	fixedLengthMaskOutputSchema,
-	fullCompactIndicesOutputSchema,
 	materializeRepresentation,
 	parseAndCanonicalizeRepresentation,
 	projectCompactInput,
@@ -137,15 +135,15 @@ describe("target classification high-level contract prototype", () => {
 		).toThrow();
 	});
 
-	test("preflights one frozen corpus through all arms with exact hashes and cost cap", () => {
+	test("preflights the frozen additional-indices contract with exact hashes and cost cap", () => {
 		const preflight = preparePrototypePreflight();
 		expect(evaluationSelection.ids).toHaveLength(94);
-		expect(demonstrationSelection.ids).toHaveLength(20);
+		expect(demonstrationSelection.ids).toHaveLength(21);
 		expect(preflight.attemptsPerArm).toBe(ATTEMPTS_PER_ARM);
 		expect(preflight.expectedResolvedModel).toBe("gpt-5.6-luna");
 		expect(EXPECTED_CALLS_PER_ARM).toBe(188);
 		expect(preflight.exactCallCap).toBe(EXACT_CALL_CAP);
-		expect(EXACT_CALL_CAP).toBe(564);
+		expect(EXACT_CALL_CAP).toBe(188);
 		expect(preflight.arms.map(({ id }) => id)).toEqual([
 			...REPRESENTATION_IDS,
 		]);
@@ -210,12 +208,12 @@ describe("target classification high-level contract prototype", () => {
 		}
 	});
 
-	test("round-trips all 114 selected ideals and shares each compact stimulus", () => {
+	test("round-trips all 115 selected ideals", () => {
 		const selected = demonstrationSelection.union(evaluationSelection);
 		for (const [index, caseId] of selected.ids.entries()) {
 			const goldenCase = selected.cases[index];
 			if (goldenCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const inputs = REPRESENTATION_IDS.map((id) => {
+			for (const id of REPRESENTATION_IDS) {
 				const materialized = materializeRepresentation(id, goldenCase);
 				expect(
 					parseAndCanonicalizeRepresentation({
@@ -227,42 +225,20 @@ describe("target classification high-level contract prototype", () => {
 						output: materialized.idealOutput,
 					}),
 				).toEqual(goldenCase.idealOutput);
-				return materialized.input;
-			});
-			expect(inputs[1]).toEqual(inputs[0]);
-			expect(inputs[2]).toEqual(inputs[0]);
+			}
 		}
 	});
 
-	test("enforces arm-specific click, mask-length, and resolvable-index gates", () => {
+	test("enforces additional-index click and ordering gates", () => {
 		const goldenCase =
 			corpus.cases["target-de-boundary-separable-click-steht"];
 		if (goldenCase === undefined)
 			throw new Error("Missing separable fixture.");
 		const privateInput = projectCompactInput(goldenCase.input).input;
-		const full = materializeRepresentation(
-			"full-compact-indices",
-			goldenCase,
-		);
 		const additional = materializeRepresentation(
 			"additional-compact-indices",
 			goldenCase,
 		);
-		const mask = materializeRepresentation("fixed-length-mask", goldenCase);
-		expect(() =>
-			parseAndCanonicalizeRepresentation({
-				id: "full-compact-indices",
-				canonicalInput: goldenCase.input,
-				privateInput,
-				output: fullCompactIndicesOutputSchema.parse({
-					...(full.idealOutput as object),
-					target: {
-						...(full.idealOutput as { target: object }).target,
-						membership: { memberCompactIndices: [0] },
-					},
-				}),
-			}),
-		).toThrow(/clicked|ResolvableText/u);
 		expect(() =>
 			parseAndCanonicalizeRepresentation({
 				id: "additional-compact-indices",
@@ -304,23 +280,9 @@ describe("target classification high-level contract prototype", () => {
 				}),
 			).toThrow(/ordered and unique/u);
 		}
-		expect(() =>
-			parseAndCanonicalizeRepresentation({
-				id: "fixed-length-mask",
-				canonicalInput: goldenCase.input,
-				privateInput,
-				output: fixedLengthMaskOutputSchema.parse({
-					...(mask.idealOutput as object),
-					target: {
-						...(mask.idealOutput as { target: object }).target,
-						membership: { memberMask: [true] },
-					},
-				}),
-			}),
-		).toThrow(/length/u);
 	});
 
-	test("uses predetermined winner, tie, and no-winner outcomes", () => {
+	test("passes or rejects the retained contract with predetermined gates", () => {
 		const passing = (
 			id: (typeof REPRESENTATION_IDS)[number],
 			score: number,
@@ -336,24 +298,17 @@ describe("target classification high-level contract prototype", () => {
 				sliceRatios: { routes: 0.9, boundaries: 0.9, robustness: 0.9 },
 			}) satisfies ArmEvidenceSummary;
 		expect(
-			decidePrototypeWinner([
-				passing("full-compact-indices", 180),
-				passing("additional-compact-indices", 175),
-				passing("fixed-length-mask", 170),
-			]),
-		).toEqual({ decision: "Winner", winner: "full-compact-indices" });
-		expect(
-			decidePrototypeWinner([
-				passing("full-compact-indices", 180),
-				passing("additional-compact-indices", 179),
-			]),
+			decidePrototypeWinner([passing("additional-compact-indices", 175)]),
 		).toEqual({
-			decision: "Tie",
-			arms: ["full-compact-indices", "additional-compact-indices"],
+			decision: "Winner",
+			winner: "additional-compact-indices",
 		});
 		expect(
 			decidePrototypeWinner([
-				{ ...passing("fixed-length-mask", 180), safetyGatePass: false },
+				{
+					...passing("additional-compact-indices", 180),
+					safetyGatePass: false,
+				},
 			]),
 		).toMatchObject({ decision: "NoWinner" });
 	});

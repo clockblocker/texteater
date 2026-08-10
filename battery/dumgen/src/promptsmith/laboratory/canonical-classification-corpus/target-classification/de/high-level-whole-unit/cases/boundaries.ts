@@ -72,6 +72,18 @@ const demonstrationLiteral = sentence([
 	"roten",
 	"Faden",
 ]);
+const demonstrationLiteralHandtuch = sentence([
+	"Vor",
+	"dem",
+	"Waschen",
+	"warf",
+	"er",
+	"das",
+	"Handtuch",
+	"in",
+	"die",
+	"Maschine",
+]);
 const demonstrationGoverned = sentence([
 	"Sie",
 	"rechnet",
@@ -491,6 +503,13 @@ const cases = {
 		"Lexeme",
 		"NOUN",
 	),
+	"target-de-demo-literal-handtuch-click-warf": resolved(
+		demonstrationLiteralHandtuch,
+		6,
+		[6],
+		"Lexeme",
+		"VERB",
+	),
 	"target-de-demo-governed-rechnen-click-rechnet": resolved(
 		demonstrationGoverned,
 		2,
@@ -664,6 +683,12 @@ function boundaryEvidence(caseId: string): string {
 		return evidence(
 			IDS.phraseolexeme,
 			"The sewing context makes Faden a literal free noun rather than the figurative fixed expression; issue #82 therefore selects only the clicked Lexeme/NOUN.",
+		);
+	}
+	if (caseId.includes("demo-literal-handtuch")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"IDS establishes that fixed multiword status belongs to the contextual whole rather than to a familiar word sequence alone. The washing context makes warf das Handtuch literal; issue #82 therefore selects only the clicked Lexeme/VERB.",
 		);
 	}
 	if (

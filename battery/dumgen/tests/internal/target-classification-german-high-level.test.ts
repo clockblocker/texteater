@@ -18,7 +18,7 @@ import {
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(142);
+		expect(corpus.all().ids).toHaveLength(143);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
@@ -35,9 +35,10 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"target-de-demo-idiom-faden-click-faden",
 			"target-de-demo-idiom-faden-click-voellig",
 			"target-de-demo-literal-faden-click-faden",
+			"target-de-demo-literal-handtuch-click-warf",
 			"target-de-demo-paired-entweder-click-entweder",
 			"target-de-demo-paired-entweder-click-oder",
-			"target-de-demo-paired-entweder-click-hier",
+			"target-de-demo-paired-je-click-laenger",
 			"target-de-demo-optional-reflexive-click-kaemmst",
 			"target-de-demo-optional-reflexive-click-dich",
 			"target-de-demo-modal-arbeiten-click-kann",
@@ -52,7 +53,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		);
 		expect(
 			demonstrationSelection.union(evaluationSelection).ids,
-		).toHaveLength(114);
+		).toHaveLength(115);
 	});
 
 	test("covers every reachable route and records PUNCT as a clickability gap", () => {
@@ -185,7 +186,8 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			["target-de-demo-perfect-arbeiten-click-gestern", [4]],
 			["target-de-demo-governed-rechnen-click-regen", [8]],
 			["target-de-demo-idiom-faden-click-voellig", [10]],
-			["target-de-demo-paired-entweder-click-hier", [2]],
+			["target-de-demo-literal-handtuch-click-warf", [6]],
+			["target-de-demo-paired-je-click-laenger", [2]],
 			["target-de-demo-optional-reflexive-click-kaemmst", [2]],
 			["target-de-demo-optional-reflexive-click-dich", [4]],
 			["target-de-demo-modal-arbeiten-click-kann", [2]],

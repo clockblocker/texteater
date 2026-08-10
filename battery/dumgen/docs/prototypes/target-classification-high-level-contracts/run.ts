@@ -1463,7 +1463,9 @@ export async function finalizeEvidence(
 		throw new Error("Retained evidence is already finalized.");
 	}
 	if (retained.actualCallCount !== EXACT_CALL_CAP) {
-		throw new Error("Only the exact 564-call schedule can be finalized.");
+		throw new Error(
+			`Only the exact ${EXACT_CALL_CAP}-call schedule can be finalized.`,
+		);
 	}
 	assertAttemptSchedule(retained.attempts);
 	if (

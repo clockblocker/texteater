@@ -1,23 +1,20 @@
-# PROTOTYPE ONLY: German high-level target contract representations
+# PROTOTYPE ONLY: German high-level target contract
 
-Question: **Which private compact membership representation most reliably
-preserves the frozen German high-level target contract under identical evidence
-and evaluation?**
+Question: **Does the additional-member compact-indices contract preserve the
+German high-level target policy across the development suite?**
 
 This is issue #85's throwaway logic experiment, not a production Prompt Source
-or public DTO. It compares three private Structured Output contracts:
+or public DTO. It retains one private Structured Output contract: the click is
+implicit membership, and the model returns only compact member indices
+additional to that click.
 
-1. every member as a compact index;
-2. only compact member indices additional to the click;
-3. one fixed-length boolean mask over the compact sequence.
-
-All arms use the same compact input. Whitespace is removed while Punctuation
-and OpaqueText remain. Every remaining segment carries its zero-based compact
-index and an explicit click marker, redundant with the top-level clicked index;
-the input schema rejects disagreements. Each adapter owns compact↔original
-maps, materializes the same twenty #84 demonstrations, decodes into the
-canonical original-index output, and is scored by the same #84 evaluator over
-the exact 94-case development suite.
+Whitespace is removed while Punctuation and OpaqueText remain. Every remaining
+segment carries its zero-based compact index and an explicit click marker,
+redundant with the top-level clicked index; the input schema rejects
+disagreements. The adapter owns compact↔original maps, materializes the same
+twenty-one #84 demonstrations, decodes into the canonical original-index
+output, and is scored by the #84 evaluator over the exact 94-case development
+suite.
 
 The retained v3 run ended in `NoWinner` and exposed representation-independent
 prompt failures. The retained v5 run's policy-first prompt materially improved
@@ -36,13 +33,18 @@ separable verb members remain grouped. `Phraseme/Collocation` remains a valid
 Dumling route for other explicit policies but is not reachable from this
 high-level classifier. No provider call is part of the v7 change.
 
-The exact 94 case IDs and 564-call schedule remain, but v7 changes nine
+Version v7 kept the exact 94 case IDs and 564-call comparison schedule, but
+changed nine
 Collocation ideals and is therefore a new policy experiment rather than a
 representation-only historical comparison. The cases were untouched hold-outs
 for the earlier runs, but retained misses directly informed v6 and the policy
 change informed v7; they are now a development suite, not independent evidence
 of generalization. Any later winner/generalization claim requires a fresh,
 analogous, untouched holdout selected before another prompt revision.
+
+Version v8 retires the full-index and fixed-mask alternatives. Only the
+additional-indices contract remains, reducing the frozen schedule to 188 calls
+without changing the 94 development cases or two-attempt policy.
 
 ## Deterministic preflight
 
@@ -53,29 +55,29 @@ bun run prototype:target-classification-high-level-contracts
 ```
 
 Preflight performs no provider call. It proves adapter ideal round-trips,
-private-stimulus uniqueness, shared compact stimuli, exact selections and call
+private-stimulus uniqueness, exact selections and call
 cap, and prints the model/config, corpus, prompt, schema, and adapter hashes.
 The evidence binding also pins the evaluator version and executable function
 source, plus an executed frozen semantic fixture matrix. That matrix covers
 Resolved and Unresolved decisions, route errors, schema and membership
 validation, cross-click semantic fingerprints, and passing/failing click
 aggregates, so helper and schema semantic drift changes the binding. Preflight
-also binds the exact thresholds and inclusive tie rule and explicit valid and
-invalid postcondition fixtures for every adapter. The additional-index adapter
+also binds the exact thresholds and explicit valid and invalid postcondition
+fixtures for the adapter. The additional-index adapter
 rejects unordered or duplicate additional indices before it inserts the click.
 
-The approved schedule contains exactly **564 Responses requests** inside one
+The approved schedule contains exactly **188 Responses requests** inside one
 OpenAI Batch input:
-94 cases × 3 arms × 2 attempts. It uses `gpt-5.6-luna`, reasoning `none`, low
+94 cases × 1 contract × 2 attempts. It uses `gpt-5.6-luna`, reasoning `none`, low
 verbosity, 1,024 maximum output tokens, `maxRetries: 0`, and `store: false`.
 Every JSONL line uses `POST /v1/responses`, has a unique `custom_id`, and is
-bound back to its frozen `<arm>/<attempt>/<case>` schedule key. The Batch uses a
+bound back to its frozen `<contract>/<attempt>/<case>` schedule key. The Batch uses a
 `24h` completion window and refuses any schedule other than the frozen one.
 
 GPT-5.6 prompt caching is explicit. Every request sets
 `prompt_cache_options: { mode: "explicit", ttl: "30m" }` and marks the end of
-the stable arm system prompt with an explicit breakpoint. Cache keys are a
-deterministic arm-and-shard projection: each key receives no more than twelve
+the stable contract system prompt with an explicit breakpoint. Cache keys are a
+deterministic contract-and-shard projection: each key receives no more than twelve
 scheduled requests, below OpenAI's approximate fifteen-requests-per-minute
 guideline, while every request within a shard shares the identical stable
 system prefix. The cache and Batch transport policy are part of the preflight
@@ -161,7 +163,7 @@ schema or usage parsing. Envelope-parse and usage-parse errors therefore retain
 the raw response and byte evidence that produced them.
 
 Create a JSON object keyed by each failed
-`<arm>/<attempt>/<case>` with a classification and non-empty explanation, then
+`<contract>/<attempt>/<case>` with a classification and non-empty explanation, then
 finalize without a provider call:
 
 ```sh
@@ -177,8 +179,8 @@ byte-compares its canonical input, canonical ideal, private input, and private
 ideal with the retained attempt. It also recomputes request/response byte counts,
 checks raw response fields against retained metadata, and rejects resolved-model
 drift or a changed run-level model binding.
-An arm is eligible only with all 188 attempts, zero provider errors, zero
+The retained contract is eligible only with all 188 attempts, zero provider errors, zero
 unclassified misses, all membership-safety and click-invariance gates, at least
-80% overall score, and at least 80% in each route/boundary/robustness slice. A
-unique arm must lead by more than one percentage point; otherwise the verdict is
-`Tie`. If no arm is eligible, the verdict is `NoWinner`.
+80% overall score, and at least 80% in each route/boundary/robustness slice. If
+it is eligible, the verdict names `additional-compact-indices` as the winner;
+otherwise the verdict is `NoWinner`.
