@@ -181,6 +181,19 @@ const demonstrationInternalIdiomModifier = sentences([
 		"Sack",
 	],
 ]);
+const demonstrationKragenIdiom = sentences([
+	["Er", "ertrug", "zwei", "Lügen", "schweigend"],
+	[
+		"Nach",
+		"der",
+		"dritten",
+		"platzte",
+		"ihm",
+		"der",
+		"sprichwörtliche",
+		"Kragen",
+	],
+]);
 const DECISION_TREFFEN_CONTAMINATION_KEY =
 	"target-lexical-unit:eine-entscheidung-treffen";
 const AUFSTEHEN_CONTAMINATION_KEY = "target-lexical-unit:aufstehen";
@@ -190,6 +203,8 @@ const INS_GRAS_BEISSEN_CONTAMINATION_KEY =
 	"target-lexical-unit:ins-gras-beissen";
 const OEL_INS_FEUER_GIESSEN_CONTAMINATION_KEY =
 	"target-lexical-unit:oel-ins-feuer-giessen";
+const KRAGEN_PLATZEN_CONTAMINATION_KEY =
+	"target-lexical-unit:jemandem-der-kragen-platzen";
 
 function contaminated<const GoldenCase extends object>(
 	goldenCase: GoldenCase,
@@ -844,6 +859,36 @@ const cases = {
 		),
 		KATZE_AUS_DEM_SACK_CONTAMINATION_KEY,
 	),
+	"target-de-demo-idiom-kragen-click-platzte": contaminated(
+		resolved(
+			demonstrationKragenIdiom,
+			17,
+			[17, 21, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		KRAGEN_PLATZEN_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-kragen-click-der": contaminated(
+		resolved(
+			demonstrationKragenIdiom,
+			21,
+			[17, 21, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		KRAGEN_PLATZEN_CONTAMINATION_KEY,
+	),
+	"target-de-demo-idiom-kragen-click-kragen": contaminated(
+		resolved(
+			demonstrationKragenIdiom,
+			25,
+			[17, 21, 25],
+			"Phraseme",
+			"Idiom",
+		),
+		KRAGEN_PLATZEN_CONTAMINATION_KEY,
+	),
 } satisfies GoldenCaseRegistry<
 	typeof canonicalInputSchema,
 	typeof canonicalOutputSchema
@@ -858,6 +903,12 @@ function boundaryEvidence(caseId: string): string {
 		return evidence(
 			IDS.phraseolexeme,
 			"The escalation context makes Öl ins Feuer gießen figurative. Issue #82 includes goss, Öl, ins, and Feuer as fixed Idiom members while keeping the freely inserted adjective zusätzliches separate.",
+		);
+	}
+	if (caseId.includes("target-de-demo-idiom-kragen")) {
+		return evidence(
+			IDS.phraseolexeme,
+			"The anger context makes der Kragen platzen figurative. Issue #82 includes platzte, der, and Kragen as fixed Idiom members while excluding the dative argument ihm and inserted modifier sprichwörtliche.",
 		);
 	}
 	if (caseId.includes("diagnostic-optional-reflexive")) {

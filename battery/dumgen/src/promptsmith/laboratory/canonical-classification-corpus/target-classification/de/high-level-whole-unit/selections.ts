@@ -11,11 +11,9 @@ export const demonstrationSelection = corpus.select([
 	"target-de-demo-literal-gras-click-gras",
 	"target-de-demo-idiom-katze-click-die",
 	"target-de-demo-idiom-katze-click-verdammte",
-	"target-de-demo-idiom-katze-click-katze",
 	"target-de-demo-paired-einerseits-click-einerseits",
 	"target-de-demo-paired-einerseits-click-lokal",
 	"target-de-demo-paired-einerseits-click-andererseits",
-	"target-de-demo-paired-einerseits-click-digital",
 	"target-de-demo-inherent-reflexive-click-beeile",
 	"target-de-demo-inherent-reflexive-click-mich",
 	"target-de-demo-optional-reflexive-click-kaemmst",
@@ -29,6 +27,8 @@ export const demonstrationSelection = corpus.select([
 	"target-de-demo-question-stattfinden-click-statt",
 	"target-de-demo-typo-mitmachen-click-mit",
 	"target-de-demo-predicative-cringe-click-cringe",
+	"target-de-demo-paired-sowohl-click-robust",
+	"target-de-demo-idiom-kragen-click-kragen",
 ]);
 
 if (demonstrationSelection.ids.length > 35) {

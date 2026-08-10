@@ -59,3 +59,18 @@ These results support concentrating the next prompt revision on three narrow
 mechanisms: `je … desto` filler exclusion, free-modifier exclusion from idiom
 membership, and fused-form routing. Optional reflexive and generic
 separable-position guidance should not receive more demonstrations.
+
+## Blind follow-up
+
+A later neutral, non-scoring follow-up audited all 29 misses plus one passing
+control from each of the six mechanism clusters. All 35 calls parsed without a
+provider or model-output error. The model said it would revise 10 answers, but
+none of its proposed compact classifications exactly matched the oracle. It
+also tried to revise three of six passing controls.
+
+The explanations frequently named the right abstract distinction—such as free
+PairedFrame fillers or optional idiom modifiers—while the proposed target still
+absorbed the filler/modifier or rebuilt `additionalMemberCompactIndices`
+incorrectly. This supports an action/serialization defect rather than a mere
+lack of grammatical vocabulary. Follow-up artifacts remain excluded from the
+first-turn score and winner policy.

@@ -150,7 +150,7 @@ CLICK FIRST — this constraint is non-negotiable:
 
 FIXED TOGETHER. FREE APART.
 
-A free modifier stays separate even when inserted between fixed members. If that modifier is clicked, return only that word.
+Idiom: fixed members only; skip inserted free modifiers, and a modifier click = that Lexeme only.
 
 Parts go together for three reasons:
 
@@ -166,8 +166,8 @@ Route only the click-containing target:
 
 - Lexeme is the default for one word and for a multi-segment realization of one verb. Use the contextually correct word-class kind.
 - Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression used here with a non-compositional meaning.
-- Construction/Fusion is one source segment that fuses grammatical words.
-- Construction/PairedFrame contains only fixed lexical marker words as correlated anchors. Content or comparative words expressing the paired values are free fillers, regardless of position.
+- Construction/Fusion is exactly the clicked fused source segment; take no neighbors.
+- PairedFrame: anchor click = all anchors, no fillers; filler click = that Lexeme only.
 
 The input is a compact projection of the source:
 
@@ -219,6 +219,8 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"Katze is fixed idiom material, but the adjective immediately before it is inserted and free. Take ließ + die + Katze + aus + dem + Sack. Do not take verdammte.",
 	"target-de-demo-idiom-katze-click-aus":
 		"aus is a fixed preposition inside this idiom, not a standalone ADP here. Take ließ + die + Katze + aus + dem + Sack. Exclude the inserted adjective verdammte.",
+	"target-de-demo-idiom-kragen-click-kragen":
+		"platzte + der + Kragen are fixed. Take those three. ihm and sprichwörtliche are free; leave them out.",
 	"target-de-demo-paired-entweder-click-entweder":
 		"entweder + oder are the frame. hier and dort fill slots. Take the anchors only.",
 	"target-de-demo-paired-entweder-click-hier":
@@ -235,6 +237,8 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"andererseits is the clicked second anchor. Its partner is the earlier einerseits, not adjacent lokal or digital. Take both anchors only.",
 	"target-de-demo-paired-einerseits-click-digital":
 		"digital fills the adjective slot after the second anchor. It is not an anchor. Return digital/ADJ only.",
+	"target-de-demo-paired-sowohl-click-robust":
+		"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
 	"target-de-demo-inherent-reflexive-click-beeile":
 		"beeilen needs a reflexive pronoun. Take beeile + mich. VERB.",
 	"target-de-demo-inherent-reflexive-click-mich":

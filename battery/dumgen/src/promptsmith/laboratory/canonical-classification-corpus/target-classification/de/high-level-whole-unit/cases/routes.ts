@@ -11,6 +11,8 @@ const ENTWEDER_ODER_CONTAMINATION_KEY =
 	"target-construction:paired-frame:entweder-oder";
 const EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY =
 	"target-construction:paired-frame:einerseits-andererseits";
+const SOWOHL_ALS_AUCH_CONTAMINATION_KEY =
+	"target-construction:paired-frame:sowohl-als-auch";
 const ZUM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:zum";
 const AM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:am";
 const CRINGE_CONTAMINATION_KEY = "target-lexeme:cringe";
@@ -139,6 +141,16 @@ const demonstrationMatchedPairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "digital" },
 	{ kind: "Punctuation", text: "." },
 ];
+const demonstrationSowohlPairedFrame = sentence([
+	"Der",
+	"Entwurf",
+	"ist",
+	"sowohl",
+	"schlicht",
+	"als",
+	"auch",
+	"robust",
+]);
 const demonstrationPairedFrameFiller: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
@@ -453,6 +465,20 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			explanation: evidence(
 				IDS.pairedFrame,
 				"Issue #82 keeps the freely supplied adjective digital outside the einerseits ... andererseits PairedFrame.",
+			),
+		},
+		"target-de-demo-paired-sowohl-click-robust": {
+			...resolved(
+				demonstrationSowohlPairedFrame,
+				14,
+				[14],
+				"Lexeme",
+				"ADJ",
+			),
+			contaminationKeys: [SOWOHL_ALS_AUCH_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.pairedFrame,
+				"Issue #82 treats sowohl, als, and auch as the correlated anchors while the freely supplied predicate adjective robust remains a standalone Lexeme/ADJ.",
 			),
 		},
 		"target-de-demo-paired-entweder-click-oder": {

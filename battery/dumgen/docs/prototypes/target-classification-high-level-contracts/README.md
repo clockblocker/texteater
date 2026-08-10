@@ -156,6 +156,45 @@ bun --env-file ../../.env.local \
   --batching=false --pool=diagnostic [run-directory]
 ```
 
+After that first-turn diagnostic run, request neutral second-turn diagnostics
+without changing or rescoring its evidence:
+
+```sh
+bun --env-file ../../.env.local \
+  run prototype:target-classification-high-level-contracts \
+  diagnostic-follow-up --batching=false \
+  docs/prototypes/target-classification-high-level-contracts/runs/<run>/results.json \
+  [follow-up-artifact-directory]
+```
+
+The follow-up selection contains every failed attempt across both original
+replicates, plus at most one passing control from each of six mechanism
+clusters: Fusion, PairedFrame, idiom membership, optional reflexive, copula,
+and separable/position. Each control is the lowest passing attempt key
+in its cluster. Selection reason and cluster are retained as artifact metadata,
+but the model is blind to both, as well as to evaluator flags and the oracle.
+It sees only a fixed neutral diagnostic instruction, the original private
+input, and its retained first answer.
+
+This direct-only workflow permits at most 40 physical dispatches and has its
+own conservative $0.10 ceiling. The retained 29 misses plus six controls bind
+35 logical calls with a $0.07806625 conservative ceiling, leaving room for at
+most five crash-gap replays while both guards still apply. Before every
+dispatch and after every result it atomically rewrites
+`diagnostic-follow-up.json`; rerunning the same command and artifact directory
+skips completed keys. The artifact binds the exact source file bytes and hash,
+the source's own historical evidence binding, the neutral instruction, and the
+follow-up request schedule. It is explicitly non-winner-eligible and never
+overwrites or mutates the source `results.json`, its attempts, or its scores.
+
+On resume, a retained follow-up provider error is retried only when it satisfies
+the direct runner's transient policy: network/transport failures, HTTP 429, or
+HTTP 5xx, with at most two retries for that logical key. Each retry dispatch is
+checkpointed first and consumes the same 40-dispatch and $0.10 ceilings. A
+successful retry or exhausted final error atomically replaces the earlier
+provider-error result. Successful diagnostics, model/schema-output errors, and
+non-transient provider errors are terminal and are never replayed.
+
 Direct mode atomically writes `direct-checkpoint.json` before every dispatch and
 after every completed logical attempt. Rerunning the command with the same
 directory skips completed keys. A dispatched but incomplete key is replayed;

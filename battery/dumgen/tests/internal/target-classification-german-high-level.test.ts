@@ -8,6 +8,7 @@ import {
 	evaluationSelection,
 } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
 import { validateOriginalIndexMembership } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/validators";
+import { systemPromptForRepresentation } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,
@@ -18,6 +19,64 @@ import {
 } from "../../src/schema/german-high-level-routes";
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
+	test("assembles explicit fixed-unit membership rules", () => {
+		const systemPrompt = systemPromptForRepresentation(
+			"additional-compact-indices",
+		);
+
+		expect(systemPrompt).toContain(
+			"PairedFrame: anchor click = all anchors, no fillers; filler click = that Lexeme only.",
+		);
+		expect(systemPrompt).toContain(
+			"Idiom: fixed members only; skip inserted free modifiers, and a modifier click = that Lexeme only.",
+		);
+		expect(systemPrompt).toContain(
+			"Construction/Fusion is exactly the clicked fused source segment; take no neighbors.",
+		);
+	});
+
+	test("teaches a frame-disjoint PairedFrame filler through the assembled prompt", () => {
+		const caseId = "target-de-demo-paired-sowohl-click-robust";
+		const systemPrompt = systemPromptForRepresentation(
+			"additional-compact-indices",
+		);
+
+		expect(demonstrationSelection.ids).toContain(caseId);
+		expect(corpus.cases[caseId]?.idealOutput).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [14],
+			},
+		});
+		expect(systemPrompt).toContain('"text":"robust"');
+		expect(systemPrompt).toContain(
+			"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
+		);
+	});
+
+	test("teaches an inserted free modifier without absorbing it into an idiom", () => {
+		const caseId = "target-de-demo-idiom-kragen-click-kragen";
+		const systemPrompt = systemPromptForRepresentation(
+			"additional-compact-indices",
+		);
+
+		expect(demonstrationSelection.ids).toContain(caseId);
+		expect(corpus.cases[caseId]?.idealOutput).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Phraseme",
+				kind: "Idiom",
+				memberSegmentIndices: [17, 21, 25],
+			},
+		});
+		expect(systemPrompt).toContain('"text":"sprichwörtliche"');
+		expect(systemPrompt).toContain(
+			"platzte + der + Kragen are fixed. Take those three. ihm and sprichwörtliche are free; leave them out.",
+		);
+	});
+
 	test("pins a diagnostic pool of observed failures plus controlled analogues", () => {
 		expect(diagnosticSelection.ids).toEqual([
 			"target-de-route-construction-fusion",
@@ -74,7 +133,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 	});
 
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(182);
+		expect(corpus.all().ids).toHaveLength(186);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
@@ -90,11 +149,9 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"target-de-demo-literal-gras-click-gras",
 			"target-de-demo-idiom-katze-click-die",
 			"target-de-demo-idiom-katze-click-verdammte",
-			"target-de-demo-idiom-katze-click-katze",
 			"target-de-demo-paired-einerseits-click-einerseits",
 			"target-de-demo-paired-einerseits-click-lokal",
 			"target-de-demo-paired-einerseits-click-andererseits",
-			"target-de-demo-paired-einerseits-click-digital",
 			"target-de-demo-inherent-reflexive-click-beeile",
 			"target-de-demo-inherent-reflexive-click-mich",
 			"target-de-demo-optional-reflexive-click-kaemmst",
@@ -108,6 +165,8 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"target-de-demo-question-stattfinden-click-statt",
 			"target-de-demo-typo-mitmachen-click-mit",
 			"target-de-demo-predicative-cringe-click-cringe",
+			"target-de-demo-paired-sowohl-click-robust",
+			"target-de-demo-idiom-kragen-click-kragen",
 		]);
 		expect(demonstrationSelection.ids).toHaveLength(27);
 		expect(demonstrationSelection.ids.length).toBeLessThanOrEqual(35);

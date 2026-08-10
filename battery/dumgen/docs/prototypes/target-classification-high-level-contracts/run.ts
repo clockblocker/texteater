@@ -34,6 +34,12 @@ import {
 	TEXT_VERBOSITY,
 } from "../../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
+	DIAGNOSTIC_FOLLOW_UP_SYSTEM_INSTRUCTION,
+	parseDiagnosticFollowUpResponse,
+	prepareDiagnosticFollowUpRequest,
+	retainedDiagnosticFollowUpSchema,
+} from "../../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/diagnostic-follow-up";
+import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,
 } from "../../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/evaluator";
@@ -53,7 +59,10 @@ const BATCH_INPUT_NAME = "batch-input.jsonl";
 const BATCH_OUTPUT_NAME = "batch-output.jsonl";
 const BATCH_ERROR_NAME = "batch-error.jsonl";
 const DIRECT_CHECKPOINT_NAME = "direct-checkpoint.json";
+const DIAGNOSTIC_FOLLOW_UP_ARTIFACT_NAME = "diagnostic-follow-up.json";
 export const DIRECT_TRANSIENT_RETRY_LIMIT = 2;
+export const DIAGNOSTIC_FOLLOW_UP_CALL_CAP = 40;
+export const DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD = 0.1;
 const scheduleCacheKeysByPool = new Map<
 	RunnerPoolId,
 	ReadonlyMap<string, string>
@@ -261,10 +270,113 @@ const retainedRunSchema = z.strictObject({
 export type RetainedAttempt = z.output<typeof attemptSchema>;
 export type RetainedRun = z.output<typeof retainedRunSchema>;
 
+const diagnosticMechanismClusterSchema = z.enum([
+	"copula",
+	"fusion",
+	"idiom-membership",
+	"optional-reflexive",
+	"paired-frame",
+	"separable-position",
+	"unclustered",
+]);
+type DiagnosticMechanismCluster = z.output<
+	typeof diagnosticMechanismClusterSchema
+>;
+const MATCHED_PASS_CONTROL_CLUSTERS = [
+	"copula",
+	"fusion",
+	"idiom-membership",
+	"optional-reflexive",
+	"paired-frame",
+	"separable-position",
+] as const satisfies readonly DiagnosticMechanismCluster[];
+const diagnosticFollowUpSelectionReasonSchema = z.enum([
+	"first-turn-miss",
+	"matched-pass-control",
+]);
+const diagnosticFollowUpSelectionSchema = z.strictObject({
+	key: z.string().min(1),
+	sourceAttemptSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	selectionReason: diagnosticFollowUpSelectionReasonSchema,
+	cluster: diagnosticMechanismClusterSchema,
+});
+const diagnosticFollowUpResultSchema = z
+	.strictObject({
+		key: z.string().min(1),
+		sourceAttemptSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+		selectionReason: diagnosticFollowUpSelectionReasonSchema,
+		cluster: diagnosticMechanismClusterSchema,
+		requestSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+		requestUtf8Bytes: z.number().int().nonnegative(),
+		maximumCostUpperBoundUsd: z.number().nonnegative(),
+		latencyMs: z.number().int().nonnegative(),
+		rawResponseJson: z.unknown().optional(),
+		responseUtf8Bytes: z.number().int().nonnegative().optional(),
+		responseId: z.string().min(1).optional(),
+		resolvedModel: z.string().min(1).optional(),
+		rawUsage: z.unknown().optional(),
+		usage: usageSchema.optional(),
+		providerError: errorSchema.optional(),
+		modelOutputError: errorSchema.optional(),
+		followUp: retainedDiagnosticFollowUpSchema.optional(),
+	})
+	.superRefine((result, context) => {
+		const terminalCount = [
+			result.providerError,
+			result.modelOutputError,
+			result.followUp,
+		].filter((value) => value !== undefined).length;
+		if (terminalCount !== 1) {
+			context.addIssue({
+				code: "custom",
+				message:
+					"A diagnostic follow-up requires exactly one terminal outcome.",
+			});
+		}
+		const rawEvidenceCount = [
+			result.rawResponseJson,
+			result.responseUtf8Bytes,
+		].filter((value) => value !== undefined).length;
+		if (rawEvidenceCount !== 0 && rawEvidenceCount !== 2) {
+			context.addIssue({
+				code: "custom",
+				message:
+					"Diagnostic raw response JSON and byte count must be paired.",
+			});
+		}
+	});
+
+const diagnosticFollowUpArtifactSchema = z.strictObject({
+	version: z.literal("target-classification-diagnostic-follow-up-v1"),
+	startedAt: z.iso.datetime({ offset: true }),
+	updatedAt: z.iso.datetime({ offset: true }),
+	completedAt: z.iso.datetime({ offset: true }).nullable(),
+	sourceResultsSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	sourceResultsUtf8Bytes: z.number().int().nonnegative(),
+	sourceBindingSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	diagnosticInstructionSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	requestScheduleSha256: z.string().regex(/^[0-9a-f]{64}$/u),
+	model: z.literal(RUN_MODEL),
+	winnerEligible: z.literal(false),
+	callCap: z.literal(DIAGNOSTIC_FOLLOW_UP_CALL_CAP),
+	spendCapUsd: z.literal(DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD),
+	maximumScheduledCostUpperBoundUsd: z.number().nonnegative(),
+	dispatchCounts: z.record(z.string(), z.number().int().nonnegative()),
+	selections: z
+		.array(diagnosticFollowUpSelectionSchema)
+		.max(DIAGNOSTIC_FOLLOW_UP_CALL_CAP),
+	followUps: z
+		.array(diagnosticFollowUpResultSchema)
+		.max(DIAGNOSTIC_FOLLOW_UP_CALL_CAP),
+});
+export type DiagnosticFollowUpArtifact = z.output<
+	typeof diagnosticFollowUpArtifactSchema
+>;
+
 type ResponseRequest = ReturnType<typeof responseRequestFor>;
 export type PrototypeResponsesClient = Readonly<{
 	responses: Readonly<{
-		create(request: ResponseRequest): Promise<unknown>;
+		create(request: ResponseCreateParamsNonStreaming): Promise<unknown>;
 	}>;
 }>;
 
@@ -419,6 +531,7 @@ type PrototypeScheduleEntry = Readonly<{
 function maximumRequestCostUpperBoundUsd(
 	requestUtf8Bytes: number,
 	priceSchedule: PrototypePriceSchedule,
+	maxOutputTokens = MAX_OUTPUT_TOKENS,
 ): number {
 	const inputTokenUpperBound = requestUtf8Bytes + 64;
 	const price =
@@ -428,7 +541,7 @@ function maximumRequestCostUpperBoundUsd(
 	return (
 		(inputTokenUpperBound / 1_000_000) *
 			Math.max(price.inputUsdPerMillion, price.cacheWriteUsdPerMillion) +
-		(MAX_OUTPUT_TOKENS / 1_000_000) * price.outputUsdPerMillion
+		(maxOutputTokens / 1_000_000) * price.outputUsdPerMillion
 	);
 }
 
@@ -549,64 +662,6 @@ export function preparePrototypeBatch(parameters: {
 	};
 }
 
-if (import.meta.main) {
-	const mode = process.argv[2];
-	if (mode === "preflight") {
-		printPreflight({
-			batching: parseBatchingFlag(process.argv[3]),
-			pool: parsePoolFlag(process.argv[4]),
-		});
-	} else if (mode === "run") {
-		const batching = parseBatchingFlag(process.argv[3]);
-		assertBatchingForMode(mode, batching);
-		await runLivePrototype({
-			batching: false,
-			pool: parsePoolFlag(process.argv[4]),
-			runDirectory: process.argv[5],
-		});
-	} else if (mode === "batch-submit") {
-		const batching = parseBatchingFlag(process.argv[3]);
-		assertBatchingForMode(mode, batching);
-		const manifestPath = await submitPrototypeBatch({
-			batching: true,
-			pool: parsePoolFlag(process.argv[4]),
-			runDirectory: process.argv[5],
-		});
-		console.log(`Submitted Batch; manifest: ${manifestPath}`);
-	} else if (mode === "batch-resume") {
-		const batching = parseBatchingFlag(process.argv[3]);
-		assertBatchingForMode(mode, batching);
-		const manifestPath = process.argv[4];
-		if (manifestPath === undefined) {
-			throw new Error(
-				"Usage: run.ts batch-resume --batching=true <batch-manifest.json>",
-			);
-		}
-		const resumed = await resumePrototypeBatch({
-			batching: true,
-			manifestPath,
-		});
-		console.log(
-			resumed.run === null
-				? `Batch status: ${resumed.status}`
-				: `Collected ${resumed.run.actualCallCount} Batch responses.`,
-		);
-	} else if (mode === "finalize") {
-		const resultsPath = process.argv[3];
-		const classificationsPath = process.argv[4];
-		if (resultsPath === undefined || classificationsPath === undefined) {
-			throw new Error(
-				"Usage: run.ts finalize <results.json> <miss-classifications.json>",
-			);
-		}
-		await finalizeEvidence(resultsPath, classificationsPath);
-	} else {
-		throw new Error(
-			"Usage: run.ts <preflight|run|batch-submit> --batching=<true|false> --pool=<development|diagnostic> [run-directory], or batch-resume/finalize with their artifact paths.",
-		);
-	}
-}
-
 export function parseBatchingFlag(value: string | undefined): boolean {
 	if (value === "--batching=true") return true;
 	if (value === "--batching=false") return false;
@@ -622,12 +677,13 @@ export function parsePoolFlag(value: string | undefined): RunnerPoolId {
 }
 
 export function assertBatchingForMode(
-	mode: "run" | "batch-submit" | "batch-resume",
+	mode: "run" | "batch-submit" | "batch-resume" | "diagnostic-follow-up",
 	batching: boolean,
 ): void {
-	if (mode === "run" ? batching : !batching) {
+	const direct = mode === "run" || mode === "diagnostic-follow-up";
+	if (direct ? batching : !batching) {
 		throw new Error(
-			`${mode} requires --batching=${mode === "run" ? "false" : "true"}.`,
+			`${mode} requires --batching=${direct ? "false" : "true"}.`,
 		);
 	}
 }
@@ -1418,6 +1474,595 @@ export async function runLivePrototype(options: {
 	console.log(`Wrote ${relative(process.cwd(), destination)}`);
 	console.log("Evidence remains ineligible until offline finalization.");
 	return result;
+}
+
+function diagnosticMechanismClusterForCase(
+	caseId: string,
+): DiagnosticMechanismCluster {
+	if (caseId.includes("optional-reflexive")) return "optional-reflexive";
+	if (caseId.includes("copula")) return "copula";
+	if (caseId.includes("fusion")) return "fusion";
+	if (caseId.includes("paired")) return "paired-frame";
+	if (caseId.includes("idiom") || caseId.includes("fixed-function")) {
+		return "idiom-membership";
+	}
+	if (
+		caseId.includes("separable") ||
+		caseId.includes("repeated") ||
+		caseId.includes("punctuation") ||
+		caseId.includes("overlap")
+	) {
+		return "separable-position";
+	}
+	return "unclustered";
+}
+
+function selectDiagnosticFollowUpAttempts(retained: RetainedRun) {
+	const sorted = [...retained.attempts].sort((left, right) =>
+		left.key.localeCompare(right.key),
+	);
+	const misses = sorted
+		.filter(({ evaluation }) => !evaluation.contractPass)
+		.map((attempt) => ({
+			attempt,
+			selection: diagnosticFollowUpSelectionSchema.parse({
+				key: attempt.key,
+				sourceAttemptSha256: bindingSha256(attempt),
+				selectionReason: "first-turn-miss",
+				cluster: diagnosticMechanismClusterForCase(attempt.caseId),
+			}),
+		}));
+	const controls = MATCHED_PASS_CONTROL_CLUSTERS.flatMap((cluster) => {
+		const attempt = sorted.find(
+			(candidate) =>
+				candidate.evaluation.contractPass &&
+				diagnosticMechanismClusterForCase(candidate.caseId) === cluster,
+		);
+		return attempt === undefined
+			? []
+			: [
+					{
+						attempt,
+						selection: diagnosticFollowUpSelectionSchema.parse({
+							key: attempt.key,
+							sourceAttemptSha256: bindingSha256(attempt),
+							selectionReason: "matched-pass-control",
+							cluster,
+						}),
+					},
+				];
+	});
+	const selected = [...misses, ...controls];
+	if (selected.length > DIAGNOSTIC_FOLLOW_UP_CALL_CAP) {
+		throw new Error(
+			`Diagnostic follow-up requires ${selected.length} calls; cap is ${DIAGNOSTIC_FOLLOW_UP_CALL_CAP}.`,
+		);
+	}
+	return selected;
+}
+
+function assertRetainedDiagnosticSourceStructure(retained: RetainedRun): void {
+	const bound = z
+		.object({
+			runnerParameters: runnerParametersSchema,
+			exactCallCap: z.number().int().positive(),
+			attemptsPerArm: z.number().int().positive(),
+			evaluationCaseIds: z.array(z.string().min(1)),
+			arms: z.array(z.object({ id: z.enum(REPRESENTATION_IDS) })),
+		})
+		.parse(retained.preflight);
+	if (bound.runnerParameters.pool !== "diagnostic") {
+		throw new Error(
+			"Diagnostic follow-up requires a retained diagnostic-pool results.json.",
+		);
+	}
+	if (
+		bindingSha256(retained.preflight) !== retained.bindingSha256 ||
+		retained.attempts.length !== bound.exactCallCap ||
+		retained.actualCallCount !== retained.attempts.length
+	) {
+		throw new Error(
+			"Retained diagnostic source does not match its own evidence binding and call cap.",
+		);
+	}
+	const expected = new Set<string>();
+	for (const { id } of bound.arms) {
+		for (
+			let attemptNumber = 1;
+			attemptNumber <= bound.attemptsPerArm;
+			attemptNumber += 1
+		) {
+			for (const caseId of bound.evaluationCaseIds) {
+				expected.add(`${id}/${attemptNumber}/${caseId}`);
+			}
+		}
+	}
+	for (const attempt of retained.attempts) {
+		if (
+			attempt.key !==
+				`${attempt.armId}/${attempt.attemptNumber}/${attempt.caseId}` ||
+			!expected.delete(attempt.key)
+		) {
+			throw new Error(
+				`Unexpected retained diagnostic attempt ${attempt.key}.`,
+			);
+		}
+	}
+	if (expected.size !== 0) {
+		throw new Error(
+			"Retained diagnostic source has an incomplete structural schedule.",
+		);
+	}
+}
+
+type DiagnosticFollowUpScheduleEntry = ReturnType<
+	typeof prepareDiagnosticFollowUpSchedule
+>[number];
+
+function prepareDiagnosticFollowUpSchedule(
+	retained: RetainedRun,
+	priceSchedule: PrototypePriceSchedule,
+) {
+	return selectDiagnosticFollowUpAttempts(retained).map(
+		({ attempt, selection }) => {
+			if (attempt.privateOutputJson === undefined) {
+				throw new Error(
+					`Diagnostic follow-up source ${attempt.key} has no parsed first-turn output.`,
+				);
+			}
+			const sourceAttempt = {
+				key: attempt.key,
+				caseId: attempt.caseId,
+				privateInput: attempt.privateInput,
+				privateOutputJson: attempt.privateOutputJson,
+				canonicalInput: attempt.canonicalInput,
+				...(attempt.canonicalOutput === undefined
+					? {}
+					: { canonicalOutput: attempt.canonicalOutput }),
+				evaluation: Object.fromEntries(
+					Object.entries(attempt.evaluation),
+				),
+			};
+			const request = prepareDiagnosticFollowUpRequest({
+				attempt: sourceAttempt,
+				model: RUN_MODEL,
+			});
+			const requestUtf8Bytes = jsonUtf8Bytes(request);
+			const maxOutputTokens = request.max_output_tokens;
+			if (maxOutputTokens === undefined) {
+				throw new Error("Diagnostic request has no output-token cap.");
+			}
+			return Object.freeze({
+				attempt: sourceAttempt,
+				selection,
+				request,
+				requestSha256: bindingSha256(request),
+				requestUtf8Bytes,
+				maximumCostUpperBoundUsd: maximumRequestCostUpperBoundUsd(
+					requestUtf8Bytes,
+					priceSchedule,
+					maxOutputTokens,
+				),
+			});
+		},
+	);
+}
+
+async function callOneDiagnosticFollowUp(args: {
+	client: PrototypeResponsesClient;
+	entry: DiagnosticFollowUpScheduleEntry;
+	priceSchedule: PrototypePriceSchedule;
+}) {
+	const started = performance.now();
+	const base = {
+		key: args.entry.selection.key,
+		sourceAttemptSha256: args.entry.selection.sourceAttemptSha256,
+		selectionReason: args.entry.selection.selectionReason,
+		cluster: args.entry.selection.cluster,
+		requestSha256: args.entry.requestSha256,
+		requestUtf8Bytes: args.entry.requestUtf8Bytes,
+		maximumCostUpperBoundUsd: args.entry.maximumCostUpperBoundUsd,
+	};
+	let rawResponse: unknown;
+	try {
+		rawResponse = await args.client.responses.create(args.entry.request);
+	} catch (cause) {
+		return diagnosticFollowUpResultSchema.parse({
+			...base,
+			latencyMs: Math.round(performance.now() - started),
+			providerError: describeError(cause),
+		});
+	}
+	const responseUtf8Bytes = jsonUtf8Bytes(rawResponse);
+	try {
+		const response = providerResponseSchema.parse(rawResponse);
+		if (response.model !== EXPECTED_RESOLVED_MODEL) {
+			throw new Error(
+				`Diagnostic response.model must equal ${EXPECTED_RESOLVED_MODEL}; received ${response.model}.`,
+			);
+		}
+		const rawOutputText = extractResponseOutputText(response);
+		return diagnosticFollowUpResultSchema.parse({
+			...base,
+			latencyMs: Math.round(performance.now() - started),
+			rawResponseJson: rawResponse,
+			responseUtf8Bytes,
+			responseId: response.id,
+			resolvedModel: response.model,
+			rawUsage: response.usage,
+			usage: normalizeUsage(response.usage, args.priceSchedule),
+			followUp: parseDiagnosticFollowUpResponse({
+				attempt: args.entry.attempt,
+				cluster: args.entry.selection.cluster,
+				rawOutputText,
+				selectionReason: args.entry.selection.selectionReason,
+			}),
+		});
+	} catch (cause) {
+		return diagnosticFollowUpResultSchema.parse({
+			...base,
+			latencyMs: Math.round(performance.now() - started),
+			rawResponseJson: rawResponse,
+			responseUtf8Bytes,
+			modelOutputError: describeError(cause),
+		});
+	}
+}
+
+export async function runDiagnosticFollowUp(options: {
+	readonly batching: false;
+	readonly resultsPath: string;
+	readonly artifactDirectory?: string;
+	readonly apiKey?: string;
+	readonly client?: PrototypeResponsesClient;
+	readonly onFollowUpPersisted?: (
+		followUp: z.output<typeof diagnosticFollowUpResultSchema>,
+	) => void | Promise<void>;
+}): Promise<DiagnosticFollowUpArtifact> {
+	if (options.batching) {
+		throw new Error("Diagnostic follow-up requires batching: false.");
+	}
+	const sourceText = await readFile(resolve(options.resultsPath), "utf8");
+	const source = retainedRunSchema.parse(JSON.parse(sourceText));
+	assertRetainedDiagnosticSourceStructure(source);
+	const sourceResultsSha256 = sha256Text(sourceText);
+	const sourceResultsUtf8Bytes = Buffer.byteLength(sourceText, "utf8");
+	const priceSchedule = preparePrototypePreflight({
+		batching: false,
+		pool: "diagnostic",
+	}).priceSchedule;
+	const schedule = prepareDiagnosticFollowUpSchedule(source, priceSchedule);
+	const maximumScheduledCostUpperBoundUsd = schedule.reduce(
+		(sum, entry) => sum + entry.maximumCostUpperBoundUsd,
+		0,
+	);
+	const diagnosticInstructionSha256 = sha256Text(
+		DIAGNOSTIC_FOLLOW_UP_SYSTEM_INSTRUCTION,
+	);
+	const requestScheduleSha256 = bindingSha256(
+		schedule.map((entry) => ({
+			selection: entry.selection,
+			requestSha256: entry.requestSha256,
+			requestUtf8Bytes: entry.requestUtf8Bytes,
+			maximumCostUpperBoundUsd: entry.maximumCostUpperBoundUsd,
+		})),
+	);
+	if (
+		maximumScheduledCostUpperBoundUsd > DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD
+	) {
+		throw new Error(
+			`Diagnostic follow-up ceiling $${maximumScheduledCostUpperBoundUsd.toFixed(2)} exceeds $${DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD.toFixed(2)}.`,
+		);
+	}
+	const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
+	if (apiKey === undefined && options.client === undefined) {
+		throw new Error(
+			"OPENAI_API_KEY is unavailable for diagnostic follow-up.",
+		);
+	}
+	const client: PrototypeResponsesClient =
+		options.client ?? new OpenAI({ apiKey, maxRetries: 0 });
+	const artifactDirectory = resolve(
+		options.artifactDirectory ?? dirname(resolve(options.resultsPath)),
+	);
+	await mkdir(artifactDirectory, { recursive: true });
+	const artifactPath = join(
+		artifactDirectory,
+		DIAGNOSTIC_FOLLOW_UP_ARTIFACT_NAME,
+	);
+	let artifact: DiagnosticFollowUpArtifact;
+	try {
+		artifact = diagnosticFollowUpArtifactSchema.parse(
+			JSON.parse(await readFile(artifactPath, "utf8")),
+		);
+		if (
+			artifact.sourceResultsSha256 !== sourceResultsSha256 ||
+			artifact.sourceResultsUtf8Bytes !== sourceResultsUtf8Bytes ||
+			artifact.sourceBindingSha256 !== source.bindingSha256 ||
+			artifact.diagnosticInstructionSha256 !==
+				diagnosticInstructionSha256 ||
+			artifact.requestScheduleSha256 !== requestScheduleSha256 ||
+			stableJson(artifact.selections) !==
+				stableJson(schedule.map(({ selection }) => selection)) ||
+			artifact.maximumScheduledCostUpperBoundUsd !==
+				maximumScheduledCostUpperBoundUsd
+		) {
+			throw new Error(
+				"Diagnostic follow-up artifact is not bound to the current source and selection.",
+			);
+		}
+	} catch (cause) {
+		if ((cause as NodeJS.ErrnoException).code !== "ENOENT") throw cause;
+		const now = new Date().toISOString();
+		artifact = diagnosticFollowUpArtifactSchema.parse({
+			version: "target-classification-diagnostic-follow-up-v1",
+			startedAt: now,
+			updatedAt: now,
+			completedAt: null,
+			sourceResultsSha256,
+			sourceResultsUtf8Bytes,
+			sourceBindingSha256: source.bindingSha256,
+			diagnosticInstructionSha256,
+			requestScheduleSha256,
+			model: RUN_MODEL,
+			winnerEligible: false,
+			callCap: DIAGNOSTIC_FOLLOW_UP_CALL_CAP,
+			spendCapUsd: DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD,
+			maximumScheduledCostUpperBoundUsd,
+			dispatchCounts: {},
+			selections: schedule.map(({ selection }) => selection),
+			followUps: [],
+		});
+		await writeJsonAtomically(artifactPath, artifact);
+	}
+	const completed = new Map(
+		artifact.followUps.map((followUp) => [followUp.key, followUp]),
+	);
+	const scheduledByKey = new Map(
+		schedule.map((entry) => [entry.selection.key, entry]),
+	);
+	if (
+		Object.keys(artifact.dispatchCounts).some(
+			(key) => !scheduledByKey.has(key),
+		) ||
+		[...completed.keys()].some(
+			(key) =>
+				!scheduledByKey.has(key) ||
+				(artifact.dispatchCounts[key] ?? 0) < 1,
+		)
+	) {
+		throw new Error(
+			"Diagnostic follow-up artifact has unknown or undispatched results.",
+		);
+	}
+	let nextScheduleIndex = 0;
+	let fatalError: unknown;
+	let mutation = Promise.resolve();
+	const mutateArtifact = async <T>(
+		operation: () => Promise<T> | T,
+	): Promise<T> => {
+		const result = mutation.then(operation);
+		mutation = result.then(
+			() => undefined,
+			() => undefined,
+		);
+		return result;
+	};
+	const orderedFollowUps = () =>
+		schedule.flatMap(({ selection }) => {
+			const followUp = completed.get(selection.key);
+			return followUp === undefined ? [] : [followUp];
+		});
+	const projectedDispatchCost = (
+		dispatchCounts: Readonly<Record<string, number>>,
+	) =>
+		schedule.reduce(
+			(sum, entry) =>
+				sum +
+				(dispatchCounts[entry.selection.key] ?? 0) *
+					entry.maximumCostUpperBoundUsd,
+			0,
+		);
+	const retainedDispatchCount = Object.values(artifact.dispatchCounts).reduce(
+		(sum, count) => sum + count,
+		0,
+	);
+	if (
+		retainedDispatchCount > DIAGNOSTIC_FOLLOW_UP_CALL_CAP ||
+		projectedDispatchCost(artifact.dispatchCounts) >
+			DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD
+	) {
+		throw new Error(
+			"Retained diagnostic follow-up dispatches exceed a safety cap.",
+		);
+	}
+	const completedRetryCount = (key: string) =>
+		Math.max(0, (artifact.dispatchCounts[key] ?? 0) - 1);
+	const isRetryableCompletedResult = (key: string) => {
+		const providerError = completed.get(key)?.providerError;
+		return (
+			providerError !== undefined &&
+			shouldRetryDirectProviderError(
+				providerError,
+				completedRetryCount(key),
+			)
+		);
+	};
+	const reserveNext = () =>
+		mutateArtifact(
+			async (): Promise<{
+				entry: DiagnosticFollowUpScheduleEntry;
+				replacingProviderError: boolean;
+			} | null> => {
+				if (fatalError !== undefined) return null;
+				while (
+					nextScheduleIndex < schedule.length &&
+					completed.has(
+						schedule[nextScheduleIndex]?.selection.key ?? "",
+					) &&
+					!isRetryableCompletedResult(
+						schedule[nextScheduleIndex]?.selection.key ?? "",
+					)
+				) {
+					nextScheduleIndex += 1;
+				}
+				const entry = schedule[nextScheduleIndex];
+				if (entry === undefined) return null;
+				nextScheduleIndex += 1;
+				const replacingProviderError = completed.has(
+					entry.selection.key,
+				);
+				const dispatchCounts = {
+					...artifact.dispatchCounts,
+					[entry.selection.key]:
+						(artifact.dispatchCounts[entry.selection.key] ?? 0) + 1,
+				};
+				const dispatchCount = Object.values(dispatchCounts).reduce(
+					(sum, count) => sum + count,
+					0,
+				);
+				if (dispatchCount > DIAGNOSTIC_FOLLOW_UP_CALL_CAP) {
+					throw new Error(
+						"Diagnostic follow-up dispatches exceed the call cap.",
+					);
+				}
+				if (
+					projectedDispatchCost(dispatchCounts) >
+					DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD
+				) {
+					throw new Error(
+						"Diagnostic follow-up dispatches exceed the spend cap.",
+					);
+				}
+				artifact = diagnosticFollowUpArtifactSchema.parse({
+					...artifact,
+					updatedAt: new Date().toISOString(),
+					completedAt: null,
+					dispatchCounts,
+				});
+				await writeJsonAtomically(artifactPath, artifact);
+				return { entry, replacingProviderError };
+			},
+		);
+	const reserveTransientRetry = (
+		entry: DiagnosticFollowUpScheduleEntry,
+		providerError: NonNullable<
+			z.output<typeof diagnosticFollowUpResultSchema>["providerError"]
+		>,
+	) =>
+		mutateArtifact(async () => {
+			const retryCount = completedRetryCount(entry.selection.key);
+			if (!shouldRetryDirectProviderError(providerError, retryCount)) {
+				throw new Error(
+					`Diagnostic transient retry policy rejected ${entry.selection.key}.`,
+				);
+			}
+			const dispatchCounts = {
+				...artifact.dispatchCounts,
+				[entry.selection.key]:
+					(artifact.dispatchCounts[entry.selection.key] ?? 0) + 1,
+			};
+			const dispatchCount = Object.values(dispatchCounts).reduce(
+				(sum, count) => sum + count,
+				0,
+			);
+			if (dispatchCount > DIAGNOSTIC_FOLLOW_UP_CALL_CAP) {
+				throw new Error(
+					"Diagnostic follow-up retries exceed the call cap.",
+				);
+			}
+			if (
+				projectedDispatchCost(dispatchCounts) >
+				DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD
+			) {
+				throw new Error(
+					"Diagnostic follow-up retries exceed the spend cap.",
+				);
+			}
+			artifact = diagnosticFollowUpArtifactSchema.parse({
+				...artifact,
+				updatedAt: new Date().toISOString(),
+				completedAt: null,
+				dispatchCounts,
+			});
+			await writeJsonAtomically(artifactPath, artifact);
+		});
+	const persistFollowUp = (
+		followUp: z.output<typeof diagnosticFollowUpResultSchema>,
+		replacingProviderError: boolean,
+	) =>
+		mutateArtifact(async () => {
+			const existing = completed.get(followUp.key);
+			if (
+				(existing !== undefined && !replacingProviderError) ||
+				(existing === undefined && replacingProviderError) ||
+				(replacingProviderError &&
+					existing?.providerError === undefined)
+			) {
+				throw new Error(
+					`Invalid diagnostic follow-up replacement ${followUp.key}.`,
+				);
+			}
+			completed.set(followUp.key, followUp);
+			artifact = diagnosticFollowUpArtifactSchema.parse({
+				...artifact,
+				updatedAt: new Date().toISOString(),
+				followUps: orderedFollowUps(),
+			});
+			await writeJsonAtomically(artifactPath, artifact);
+		});
+	const worker = async () => {
+		while (fatalError === undefined) {
+			try {
+				const reservation = await reserveNext();
+				if (reservation === null) return;
+				const { entry, replacingProviderError } = reservation;
+				let followUp = await callOneDiagnosticFollowUp({
+					client,
+					entry,
+					priceSchedule,
+				});
+				while (
+					replacingProviderError &&
+					followUp.providerError !== undefined &&
+					shouldRetryDirectProviderError(
+						followUp.providerError,
+						completedRetryCount(entry.selection.key),
+					)
+				) {
+					await reserveTransientRetry(entry, followUp.providerError);
+					followUp = await callOneDiagnosticFollowUp({
+						client,
+						entry,
+						priceSchedule,
+					});
+				}
+				await persistFollowUp(followUp, replacingProviderError);
+				await options.onFollowUpPersisted?.(followUp);
+			} catch (cause) {
+				fatalError ??= cause;
+			}
+		}
+	};
+	await Promise.all(
+		Array.from({ length: DIRECT_RESPONSES_POLICY.concurrency }, worker),
+	);
+	if (fatalError !== undefined) throw fatalError;
+	if (completed.size !== schedule.length) {
+		throw new Error(
+			"Diagnostic follow-up ended with an incomplete schedule.",
+		);
+	}
+	artifact = diagnosticFollowUpArtifactSchema.parse({
+		...artifact,
+		updatedAt: new Date().toISOString(),
+		completedAt: new Date().toISOString(),
+		followUps: orderedFollowUps(),
+	});
+	await writeJsonAtomically(artifactPath, artifact);
+	console.log(`Wrote ${relative(process.cwd(), artifactPath)}`);
+	console.log("Diagnostic follow-ups are excluded from winner scoring.");
+	return artifact;
 }
 
 async function collectPrototypeBatch(
@@ -2445,3 +3090,77 @@ async function writeTextAtomically(destination: string, value: string) {
 		throw cause;
 	}
 }
+
+async function runCli(): Promise<void> {
+	const mode = process.argv[2];
+	if (mode === "preflight") {
+		printPreflight({
+			batching: parseBatchingFlag(process.argv[3]),
+			pool: parsePoolFlag(process.argv[4]),
+		});
+	} else if (mode === "run") {
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		await runLivePrototype({
+			batching: false,
+			pool: parsePoolFlag(process.argv[4]),
+			runDirectory: process.argv[5],
+		});
+	} else if (mode === "batch-submit") {
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		const manifestPath = await submitPrototypeBatch({
+			batching: true,
+			pool: parsePoolFlag(process.argv[4]),
+			runDirectory: process.argv[5],
+		});
+		console.log(`Submitted Batch; manifest: ${manifestPath}`);
+	} else if (mode === "batch-resume") {
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		const manifestPath = process.argv[4];
+		if (manifestPath === undefined) {
+			throw new Error(
+				"Usage: run.ts batch-resume --batching=true <batch-manifest.json>",
+			);
+		}
+		const resumed = await resumePrototypeBatch({
+			batching: true,
+			manifestPath,
+		});
+		console.log(
+			resumed.run === null
+				? `Batch status: ${resumed.status}`
+				: `Collected ${resumed.run.actualCallCount} Batch responses.`,
+		);
+	} else if (mode === "diagnostic-follow-up") {
+		const batching = parseBatchingFlag(process.argv[3]);
+		assertBatchingForMode(mode, batching);
+		const resultsPath = process.argv[4];
+		if (resultsPath === undefined) {
+			throw new Error(
+				"Usage: run.ts diagnostic-follow-up --batching=false <diagnostic-results.json> [artifact-directory]",
+			);
+		}
+		await runDiagnosticFollowUp({
+			batching: false,
+			resultsPath,
+			artifactDirectory: process.argv[5],
+		});
+	} else if (mode === "finalize") {
+		const resultsPath = process.argv[3];
+		const classificationsPath = process.argv[4];
+		if (resultsPath === undefined || classificationsPath === undefined) {
+			throw new Error(
+				"Usage: run.ts finalize <results.json> <miss-classifications.json>",
+			);
+		}
+		await finalizeEvidence(resultsPath, classificationsPath);
+	} else {
+		throw new Error(
+			"Usage: run.ts <preflight|run|batch-submit> --batching=<true|false> --pool=<development|diagnostic> [run-directory], diagnostic-follow-up --batching=false <diagnostic-results.json> [artifact-directory], or batch-resume/finalize with their artifact paths.",
+		);
+	}
+}
+
+if (import.meta.main) await runCli();

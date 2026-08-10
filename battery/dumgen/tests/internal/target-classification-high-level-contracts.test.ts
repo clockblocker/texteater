@@ -7,6 +7,8 @@ import {
 	assertBatchingForMode,
 	BATCH_COMPLETION_WINDOW,
 	BATCH_ENDPOINT,
+	DIAGNOSTIC_FOLLOW_UP_CALL_CAP,
+	DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD,
 	DIRECT_TRANSIENT_RETRY_LIMIT,
 	finalizeEvidence,
 	parseBatchingFlag,
@@ -14,6 +16,7 @@ import {
 	preparePrototypeBatch,
 	promptCacheKeyForScheduleKey,
 	resumePrototypeBatch,
+	runDiagnosticFollowUp,
 	runLivePrototype,
 	shouldRetryDirectProviderError,
 	submitPrototypeBatch,
@@ -86,10 +89,13 @@ describe("target classification high-level contract prototype", () => {
 		};
 	}
 
-	function fakeResponsesClientByInput(onCall?: () => Promise<void> | void) {
+	function fakeResponsesClientByInput(
+		onCall?: () => Promise<void> | void,
+		pool: "development" | "diagnostic" = "development",
+	) {
 		const ideals = new Map(
 			REPRESENTATION_IDS.flatMap((id) =>
-				prepareRepresentationCases(id).map(
+				prepareRepresentationCases(id, pool).map(
 					(testCase) =>
 						[
 							stableJson(testCase.privateInput),
@@ -429,6 +435,9 @@ describe("target classification high-level contract prototype", () => {
 		expect(() => assertBatchingForMode("batch-resume", false)).toThrow(
 			/--batching=true/u,
 		);
+		expect(() =>
+			assertBatchingForMode("diagnostic-follow-up", true),
+		).toThrow(/--batching=false/u);
 
 		const batch = preparePrototypePreflight({ batching: true });
 		const direct = preparePrototypePreflight({ batching: false });
@@ -511,6 +520,294 @@ describe("target classification high-level contract prototype", () => {
 			),
 		).toMatch(/^tc85:additional-compact-indices:s\d{2}$/u);
 	});
+
+	test("runs diagnostic follow-ups without changing first-turn evidence", async () => {
+		const sourceDirectory = await mkdtemp(
+			join(tmpdir(), "target-contract-diagnostic-source-"),
+		);
+		const followUpDirectory = await mkdtemp(
+			join(tmpdir(), "target-contract-diagnostic-follow-up-"),
+		);
+		try {
+			const sourceRun = await runLivePrototype({
+				batching: false,
+				pool: "diagnostic",
+				client: fakeResponsesClientByInput(undefined, "diagnostic"),
+				runDirectory: sourceDirectory,
+			});
+			const missKeys = [
+				"additional-compact-indices/1/target-de-diagnostic-fusion-am",
+				"additional-compact-indices/2/target-de-diagnostic-idiom-oel-click-oel",
+			];
+			const sourceWithMisses = {
+				...sourceRun,
+				attempts: sourceRun.attempts.map((attempt) =>
+					missKeys.includes(attempt.key)
+						? {
+								...attempt,
+								evaluation: {
+									...attempt.evaluation,
+									contractPass: false,
+								},
+							}
+						: attempt,
+				),
+			};
+			const resultsPath = join(sourceDirectory, "results.json");
+			await writeFile(
+				resultsPath,
+				`${JSON.stringify(sourceWithMisses, null, 2)}\n`,
+				"utf8",
+			);
+			const sourceBytesBefore = await Bun.file(resultsPath).bytes();
+			let providerCallCount = 0;
+			const followUp = await runDiagnosticFollowUp({
+				batching: false,
+				resultsPath,
+				artifactDirectory: followUpDirectory,
+				client: {
+					responses: {
+						create: async () => {
+							providerCallCount += 1;
+							throw new Error("offline diagnostic boundary");
+						},
+					},
+				},
+			});
+			expect(providerCallCount).toBe(8);
+			expect(followUp.callCap).toBe(DIAGNOSTIC_FOLLOW_UP_CALL_CAP);
+			expect(followUp.spendCapUsd).toBe(
+				DIAGNOSTIC_FOLLOW_UP_SPEND_CAP_USD,
+			);
+			expect(followUp.winnerEligible).toBe(false);
+			expect(followUp.sourceResultsSha256).toMatch(/^[0-9a-f]{64}$/u);
+			expect(followUp.selections).toHaveLength(8);
+			expect(
+				followUp.selections.filter(
+					({ selectionReason }) =>
+						selectionReason === "first-turn-miss",
+				),
+			).toHaveLength(2);
+			expect(
+				followUp.selections
+					.filter(
+						({ selectionReason }) =>
+							selectionReason === "matched-pass-control",
+					)
+					.map(({ cluster }) => cluster),
+			).toEqual([
+				"copula",
+				"fusion",
+				"idiom-membership",
+				"optional-reflexive",
+				"paired-frame",
+				"separable-position",
+			]);
+			expect(
+				followUp.selections
+					.filter(
+						({ selectionReason }) =>
+							selectionReason === "matched-pass-control",
+					)
+					.map(({ key }) => key),
+			).toEqual([
+				"additional-compact-indices/1/target-de-boundary-copula-click-ist",
+				"additional-compact-indices/1/target-de-route-construction-fusion",
+				"additional-compact-indices/1/target-de-boundary-fixed-function-click-heult",
+				"additional-compact-indices/1/target-de-boundary-optional-reflexive-click-sich",
+				"additional-compact-indices/1/target-de-diagnostic-paired-entweder-near-kaffee",
+				"additional-compact-indices/1/target-de-diagnostic-overlap-click-aus",
+			]);
+			expect(followUp.followUps).toHaveLength(8);
+			expect(
+				followUp.followUps.every(
+					({ providerError }) =>
+						providerError?.message ===
+						"offline diagnostic boundary",
+				),
+			).toBe(true);
+			expect(await Bun.file(resultsPath).bytes()).toEqual(
+				sourceBytesBefore,
+			);
+			expect(
+				await Bun.file(
+					join(followUpDirectory, "diagnostic-follow-up.json"),
+				).exists(),
+			).toBe(true);
+			const resumed = await runDiagnosticFollowUp({
+				batching: false,
+				resultsPath,
+				artifactDirectory: followUpDirectory,
+				client: {
+					responses: {
+						create: async () => {
+							throw new Error(
+								"Completed follow-up must not dispatch again.",
+							);
+						},
+					},
+				},
+			});
+			expect(resumed.followUps).toHaveLength(8);
+			expect(providerCallCount).toBe(8);
+
+			const followUpPath = join(
+				followUpDirectory,
+				"diagnostic-follow-up.json",
+			);
+			const retryableKeys = missKeys;
+			const modelOutputErrorKey =
+				followUp.selections.find(
+					({ selectionReason }) =>
+						selectionReason === "matched-pass-control",
+				)?.key ?? "";
+			const retainedWithTransientErrors = JSON.parse(
+				await Bun.file(followUpPath).text(),
+			);
+			retainedWithTransientErrors.followUps =
+				retainedWithTransientErrors.followUps.map(
+					(followUpResult: {
+						key: string;
+						providerError?: Record<string, unknown>;
+					}) =>
+						followUpResult.key === modelOutputErrorKey
+							? {
+									...Object.fromEntries(
+										Object.entries(followUpResult).filter(
+											([field]) =>
+												field !== "providerError",
+										),
+									),
+									modelOutputError: {
+										name: "SyntaxError",
+										message: "retained schema failure",
+									},
+								}
+							: retryableKeys.includes(followUpResult.key)
+								? {
+										...followUpResult,
+										providerError: {
+											...followUpResult.providerError,
+											status: 520,
+										},
+									}
+								: followUpResult,
+				);
+			await writeFile(
+				followUpPath,
+				`${JSON.stringify(retainedWithTransientErrors, null, 2)}\n`,
+				"utf8",
+			);
+			const sourceInputsByKey = new Map(
+				sourceWithMisses.attempts.map((attempt) => [
+					attempt.key,
+					stableJson(attempt.privateInput),
+				]),
+			);
+			const successfulRetryInput = sourceInputsByKey.get(
+				retryableKeys[0] ?? "",
+			);
+			const exhaustedRetryInput = sourceInputsByKey.get(
+				retryableKeys[1] ?? "",
+			);
+			if (
+				successfulRetryInput === undefined ||
+				exhaustedRetryInput === undefined
+			) {
+				throw new Error("Missing diagnostic retry fixture inputs.");
+			}
+			let retryCallCount = 0;
+			const retried = await runDiagnosticFollowUp({
+				batching: false,
+				resultsPath,
+				artifactDirectory: followUpDirectory,
+				client: {
+					responses: {
+						create: async (request) => {
+							retryCallCount += 1;
+							const privateInput = (
+								request.input as readonly {
+									content?: unknown;
+								}[]
+							)[1]?.content;
+							if (privateInput === exhaustedRetryInput) {
+								throw Object.assign(
+									new Error("provider edge failure"),
+									{ status: 520 },
+								);
+							}
+							if (privateInput !== successfulRetryInput) {
+								throw new Error(
+									"A terminal diagnostic result was replayed.",
+								);
+							}
+							const outputText = stableJson({
+								chosenUnit: null,
+								clickRole: "NoChosenUnit",
+								segmentJudgments: [
+									{
+										compactIndex: 0,
+										judgment: "Free",
+										reason: "The retained answer is reviewed neutrally.",
+									},
+								],
+								ruleApplied:
+									"Apply the click-containing target rule.",
+								conciseCritique: "No correction is warranted.",
+								wouldRevise: false,
+								correctedClassification: null,
+							});
+							return {
+								id: "diagnostic-retry-success",
+								model: "gpt-5.6-luna",
+								output_text: outputText,
+								usage: {
+									input_tokens: 10,
+									output_tokens: 5,
+									total_tokens: 15,
+									input_tokens_details: { cached_tokens: 0 },
+								},
+							};
+						},
+					},
+				},
+			});
+			expect(retryCallCount).toBe(3);
+			expect(retried.dispatchCounts[retryableKeys[0] ?? ""]).toBe(2);
+			expect(retried.dispatchCounts[retryableKeys[1] ?? ""]).toBe(3);
+			expect(
+				retried.followUps.find(({ key }) => key === retryableKeys[0])
+					?.followUp?.winnerEligible,
+			).toBe(false);
+			expect(
+				retried.followUps.find(({ key }) => key === retryableKeys[1])
+					?.providerError?.status,
+			).toBe(520);
+			expect(retried.dispatchCounts[modelOutputErrorKey]).toBe(1);
+			expect(
+				retried.followUps.find(({ key }) => key === modelOutputErrorKey)
+					?.modelOutputError?.message,
+			).toBe("retained schema failure");
+			let terminalReplayCount = 0;
+			await runDiagnosticFollowUp({
+				batching: false,
+				resultsPath,
+				artifactDirectory: followUpDirectory,
+				client: {
+					responses: {
+						create: async () => {
+							terminalReplayCount += 1;
+							throw new Error("Terminal result replayed.");
+						},
+					},
+				},
+			});
+			expect(terminalReplayCount).toBe(0);
+		} finally {
+			await rm(sourceDirectory, { recursive: true, force: true });
+			await rm(followUpDirectory, { recursive: true, force: true });
+		}
+	}, 30_000);
 
 	test("retries direct transient transport failures within the same logical slot", async () => {
 		const directory = await mkdtemp(
