@@ -1,20 +1,23 @@
 # PROTOTYPE ONLY: German high-level target contract
 
-Question: **Does the additional-member compact-indices contract preserve the
+Question: **Does the lean additional-member-indices contract preserve the
 German high-level target policy across the development suite?**
 
 This is issue #85's throwaway logic experiment, not a production Prompt Source
 or public DTO. It retains one private Structured Output contract: the click is
-implicit membership, and the model returns only compact member indices
-additional to that click.
+implicit membership, and the model returns only array indices additional to
+that click.
 
-Whitespace is removed while Punctuation and OpaqueText remain. Every remaining
-segment carries its zero-based compact index and an explicit click marker,
-redundant with the top-level clicked index; the input schema rejects
-disagreements. The adapter owns compact↔original maps, materializes the selected
-demonstrations, decodes into the canonical original-index output, and is scored
-by the #84 evaluator over the exact 94-case development suite. Demonstrations
-are capped at 35 and kept as small as the current policy coverage permits.
+The model input is exactly `{ clickedIndex: number, segments: string[] }`.
+Whitespace is removed while every other source segment remains in order as
+plain surface text, including punctuation and opaque text. Array position is
+the only model-facing segment identity. Canonical segment kinds and the
+original source indices stay inside the deterministic adapter, which accepts
+only a `ResolvableText` click and rejects output membership that maps to
+anything else. The adapter materializes the selected demonstrations, decodes
+into the canonical original-index output, and is scored by the #84 evaluator
+over the exact 94-case development suite. Demonstrations are capped at 35 and
+kept as small as the current policy coverage permits.
 
 The retained v3 run ended in `NoWinner` and exposed representation-independent
 prompt failures. The retained v5 run's policy-first prompt materially improved
@@ -70,6 +73,19 @@ Version v10 adds an explicit runner pool. `development` preserves the frozen
 selection containing the 14 failures from the best v9 run plus 20 controlled
 analogues. The two selections are retained separately: adding diagnostic cases
 does not mutate the historical development suite.
+
+Version v11 removes deterministic source metadata from the model contract.
+The private input no longer exposes `clickedCompactIndex`, per-segment
+`compactIndex`, `clicked`, `kind`, or `text` fields. Its sole click coordinate
+is `clickedIndex`, and `segments` is a string array. The private output field is
+`additionalMemberIndices`; the internal representation ID remains
+`additional-compact-indices` so retained experiment artifacts keep their
+historical identity. The lean interface itself is an adapter-seam change. Any
+canonical corpus or target-policy edits shipped in the same v11 evidence set
+remain separate semantic changes and are bound by the corpus and evaluator
+hashes. Because the current v11 worktree also changes Collocation policy and
+oracles, a v11 run establishes a new semantic baseline; its score cannot serve
+as a DTO-only comparison with retained v10 runs.
 
 ## Deterministic preflight
 

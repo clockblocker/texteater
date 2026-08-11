@@ -12,28 +12,15 @@ const firstTurnAttempt = Object.freeze({
 	key: "additional-compact-indices/1/target-de-boundary-fusion-zum",
 	caseId: "target-de-boundary-fusion-zum",
 	privateInput: Object.freeze({
-		clickedCompactIndex: 1,
-		segments: Object.freeze([
-			Object.freeze({
-				compactIndex: 0,
-				clicked: false,
-				kind: "ResolvableText",
-				text: "Sie",
-			}),
-			Object.freeze({
-				compactIndex: 1,
-				clicked: true,
-				kind: "ResolvableText",
-				text: "zum",
-			}),
-		]),
+		clickedIndex: 1,
+		segments: Object.freeze(["Sie", "zum"]),
 	}),
 	privateOutputJson: Object.freeze({
 		decision: "Resolved",
 		target: Object.freeze({
 			family: "Lexeme",
 			kind: "ADP",
-			membership: Object.freeze({ additionalMemberCompactIndices: [] }),
+			membership: Object.freeze({ additionalMemberIndices: [] }),
 		}),
 	}),
 	canonicalInput: Object.freeze({
@@ -77,10 +64,14 @@ describe("target-classification diagnostic follow-up", () => {
 			role: "system",
 			content: DIAGNOSTIC_FOLLOW_UP_SYSTEM_INSTRUCTION,
 		});
+		expect(request.input[1]).toEqual({
+			role: "user",
+			content: '{"clickedIndex":1,"segments":["Sie","zum"]}',
+		});
 		expect(request.input[2]).toEqual({
 			role: "assistant",
 			content:
-				'{"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP","membership":{"additionalMemberCompactIndices":[]}}}',
+				'{"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP","membership":{"additionalMemberIndices":[]}}}',
 		});
 		const modelFacingTranscript = JSON.stringify(request.input);
 		expect(modelFacingTranscript).toContain(
@@ -106,12 +97,12 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: { additionalMemberCompactIndices: [] },
+					membership: { additionalMemberIndices: [] },
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
 					{
-						compactIndex: 1,
+						index: 1,
 						judgment: "Fixed",
 						reason: "zum is the fixed fused realization of zu plus dem.",
 					},
@@ -127,7 +118,7 @@ describe("target-classification diagnostic follow-up", () => {
 						family: "Construction",
 						kind: "Fusion",
 						membership: {
-							additionalMemberCompactIndices: [],
+							additionalMemberIndices: [],
 						},
 					},
 				},
@@ -145,12 +136,12 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: { additionalMemberCompactIndices: [] },
+					membership: { additionalMemberIndices: [] },
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
 					{
-						compactIndex: 1,
+						index: 1,
 						judgment: "Fixed",
 						reason: "zum is a fixed fusion of zu and dem.",
 					},
@@ -166,7 +157,7 @@ describe("target-classification diagnostic follow-up", () => {
 						family: "Construction",
 						kind: "Fusion",
 						membership: {
-							additionalMemberCompactIndices: [],
+							additionalMemberIndices: [],
 						},
 					},
 				},

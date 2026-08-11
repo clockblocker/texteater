@@ -12,58 +12,17 @@ export const REPRESENTATION_IDS = ["additional-compact-indices"] as const;
 
 export type RepresentationId = (typeof REPRESENTATION_IDS)[number];
 
-export const compactInputSchema = z
+export const classificationInputSchema = z
 	.strictObject({
-		clickedCompactIndex: z.number().int().nonnegative(),
-		segments: z
-			.array(
-				z.strictObject({
-					compactIndex: z.number().int().nonnegative(),
-					clicked: z.boolean(),
-					kind: z.enum([
-						"ResolvableText",
-						"OpaqueText",
-						"Punctuation",
-					]),
-					text: z.string().min(1),
-				}),
-			)
-			.min(1),
+		clickedIndex: z.number().int().nonnegative(),
+		segments: z.array(z.string().min(1)).min(1),
 	})
 	.superRefine((input, context) => {
-		const clickedSegments = input.segments.filter(({ clicked }) => clicked);
-		for (const [arrayIndex, segment] of input.segments.entries()) {
-			if (segment.compactIndex !== arrayIndex) {
-				context.addIssue({
-					code: "custom",
-					path: ["segments", arrayIndex, "compactIndex"],
-					message:
-						"compactIndex must equal the segment's array position.",
-				});
-			}
-		}
-		if (clickedSegments.length !== 1) {
+		if (input.clickedIndex >= input.segments.length) {
 			context.addIssue({
 				code: "custom",
-				path: ["segments"],
-				message: "Exactly one compact segment must be clicked.",
-			});
-			return;
-		}
-		const clickedSegment = clickedSegments[0];
-		if (clickedSegment?.compactIndex !== input.clickedCompactIndex) {
-			context.addIssue({
-				code: "custom",
-				path: ["clickedCompactIndex"],
-				message:
-					"clickedCompactIndex must identify the segment marked clicked.",
-			});
-		}
-		if (clickedSegment?.kind !== "ResolvableText") {
-			context.addIssue({
-				code: "custom",
-				path: ["segments", clickedSegment?.compactIndex ?? 0, "kind"],
-				message: "The clicked compact segment must be ResolvableText.",
+				path: ["clickedIndex"],
+				message: "clickedIndex must reference a segment.",
 			});
 		}
 	});
@@ -103,59 +62,57 @@ const privateOutput = <Membership extends z.ZodType>(membership: Membership) =>
 			}
 		});
 
-const compactIndexArray = z.array(z.number().int().nonnegative());
+const memberIndexArray = z.array(z.number().int().nonnegative());
 
-export const additionalCompactIndicesOutputSchema = privateOutput(
-	z.strictObject({ additionalMemberCompactIndices: compactIndexArray }),
+export const additionalIndicesOutputSchema = privateOutput(
+	z.strictObject({ additionalMemberIndices: memberIndexArray }),
 );
 
 type CanonicalInput = z.output<typeof canonicalInputSchema>;
 type CanonicalOutput = z.output<typeof canonicalOutputSchema>;
-type CompactInput = z.output<typeof compactInputSchema>;
+type ClassificationInput = z.output<typeof classificationInputSchema>;
 
-export type CompactProjection = Readonly<{
-	input: CompactInput;
+export type ClassificationProjection = Readonly<{
+	input: ClassificationInput;
 	compactToOriginal: readonly number[];
 	originalToCompact: ReadonlyMap<number, number>;
 }>;
 
-export function projectCompactInput(input: CanonicalInput): CompactProjection {
-	const segments: CompactInput["segments"] = [];
+export function projectClassificationInput(
+	input: CanonicalInput,
+): ClassificationProjection {
+	const canonicalInput = canonicalInputSchema.parse(input);
+	const segments: ClassificationInput["segments"] = [];
 	const compactToOriginal: number[] = [];
 	const originalToCompact = new Map<number, number>();
-	for (const [originalIndex, segment] of input.segments.entries()) {
+	for (const [originalIndex, segment] of canonicalInput.segments.entries()) {
 		if (segment.kind === "Whitespace") continue;
 		const compactIndex = segments.length;
-		segments.push({
-			compactIndex,
-			clicked: originalIndex === input.clickedSegmentIndex,
-			kind: segment.kind,
-			text: segment.text,
-		});
+		segments.push(segment.text);
 		compactToOriginal.push(originalIndex);
 		originalToCompact.set(originalIndex, compactIndex);
 	}
-	const clickedCompactIndex = originalToCompact.get(
-		input.clickedSegmentIndex,
+	const clickedIndex = originalToCompact.get(
+		canonicalInput.clickedSegmentIndex,
 	);
-	if (clickedCompactIndex === undefined) {
+	if (clickedIndex === undefined) {
 		throw new Error(
 			"The clicked canonical segment was removed by compaction.",
 		);
 	}
 	return Object.freeze({
-		input: compactInputSchema.parse({ clickedCompactIndex, segments }),
+		input: classificationInputSchema.parse({ clickedIndex, segments }),
 		compactToOriginal: Object.freeze(compactToOriginal),
 		originalToCompact,
 	});
 }
 
-function compactIdealMembers(
+function projectedIdealMembers(
 	input: CanonicalInput,
 	output: CanonicalOutput,
 ): readonly number[] {
 	if (output.decision === "Unresolved") return [];
-	const projection = projectCompactInput(input);
+	const projection = projectClassificationInput(input);
 	return output.target.memberSegmentIndices.map((originalIndex) => {
 		const compactIndex = projection.originalToCompact.get(originalIndex);
 		if (compactIndex === undefined) {
@@ -175,40 +132,38 @@ function privateRoute(
 
 function canonicalizeMembership(args: {
 	canonicalInput: CanonicalInput;
-	privateInput: CompactInput;
+	privateInput: ClassificationInput;
 	family: "Lexeme" | "Phraseme" | "Construction";
 	kind: string;
-	compactMembers: readonly number[];
+	memberIndices: readonly number[];
 }): CanonicalOutput {
-	const projection = projectCompactInput(args.canonicalInput);
+	const projection = projectClassificationInput(args.canonicalInput);
 	if (stableJson(projection.input) !== stableJson(args.privateInput)) {
 		throw new Error(
-			"Private input is not the canonical input's compact projection.",
+			"Private input is not the canonical input's classification projection.",
 		);
 	}
-	if (args.compactMembers.length === 0) {
-		throw new Error("Resolved compact membership must be non-empty.");
+	if (args.memberIndices.length === 0) {
+		throw new Error("Resolved membership must be non-empty.");
 	}
 	let previous = -1;
-	const originalMembers = args.compactMembers.map((compactIndex) => {
-		if (!Number.isSafeInteger(compactIndex) || compactIndex <= previous) {
-			throw new Error("Compact membership must be ordered and unique.");
+	const originalMembers = args.memberIndices.map((memberIndex) => {
+		if (!Number.isSafeInteger(memberIndex) || memberIndex <= previous) {
+			throw new Error("Membership indices must be ordered and unique.");
 		}
-		previous = compactIndex;
-		const originalIndex = projection.compactToOriginal[compactIndex];
+		previous = memberIndex;
+		const originalIndex = projection.compactToOriginal[memberIndex];
 		if (
 			originalIndex === undefined ||
 			args.canonicalInput.segments[originalIndex]?.kind !==
 				"ResolvableText"
 		) {
-			throw new Error(
-				"Compact membership must reference ResolvableText.",
-			);
+			throw new Error("Membership must reference ResolvableText.");
 		}
 		return originalIndex;
 	});
-	if (!args.compactMembers.includes(args.privateInput.clickedCompactIndex)) {
-		throw new Error("Compact membership must include the clicked member.");
+	if (!args.memberIndices.includes(args.privateInput.clickedIndex)) {
+		throw new Error("Membership must include the clicked member.");
 	}
 	return canonicalOutputForRoute({
 		family: args.family,
@@ -232,33 +187,33 @@ function canonicalOutputForRoute(args: {
 	});
 }
 
-type AdditionalOutput = z.output<typeof additionalCompactIndicesOutputSchema>;
+type AdditionalOutput = z.output<typeof additionalIndicesOutputSchema>;
 
-export const additionalCompactIndicesAdapter = {
+export const additionalIndicesAdapter = {
 	materialize(goldenCase) {
-		const input = projectCompactInput(goldenCase.input).input;
+		const input = projectClassificationInput(goldenCase.input).input;
 		if (goldenCase.idealOutput.decision === "Unresolved") {
 			return {
 				input,
-				idealOutput: additionalCompactIndicesOutputSchema.parse({
+				idealOutput: additionalIndicesOutputSchema.parse({
 					decision: "Unresolved",
 					target: null,
 				}),
 			};
 		}
-		const members = compactIdealMembers(
+		const members = projectedIdealMembers(
 			goldenCase.input,
 			goldenCase.idealOutput,
 		);
 		return {
 			input,
-			idealOutput: additionalCompactIndicesOutputSchema.parse({
+			idealOutput: additionalIndicesOutputSchema.parse({
 				decision: "Resolved" as const,
 				target: {
 					...privateRoute(goldenCase.idealOutput),
 					membership: {
-						additionalMemberCompactIndices: members.filter(
-							(index) => index !== input.clickedCompactIndex,
+						additionalMemberIndices: members.filter(
+							(index) => index !== input.clickedIndex,
 						),
 					},
 				},
@@ -272,21 +227,17 @@ export const additionalCompactIndicesAdapter = {
 		if (output.target === null) {
 			throw new Error("Resolved output requires a target.");
 		}
-		const additional =
-			output.target.membership.additionalMemberCompactIndices;
+		const additional = output.target.membership.additionalMemberIndices;
 		let previous = -1;
-		for (const compactIndex of additional) {
-			if (
-				!Number.isSafeInteger(compactIndex) ||
-				compactIndex <= previous
-			) {
+		for (const memberIndex of additional) {
+			if (!Number.isSafeInteger(memberIndex) || memberIndex <= previous) {
 				throw new Error(
 					"Additional membership must be ordered and unique before click insertion.",
 				);
 			}
-			previous = compactIndex;
+			previous = memberIndex;
 		}
-		if (additional.includes(privateInput.clickedCompactIndex)) {
+		if (additional.includes(privateInput.clickedIndex)) {
 			throw new Error(
 				"Additional membership must exclude the clicked index.",
 			);
@@ -296,17 +247,16 @@ export const additionalCompactIndicesAdapter = {
 			privateInput,
 			family: output.target.family,
 			kind: output.target.kind,
-			compactMembers: [
-				privateInput.clickedCompactIndex,
-				...additional,
-			].toSorted((a, b) => a - b),
+			memberIndices: [privateInput.clickedIndex, ...additional].toSorted(
+				(a, b) => a - b,
+			),
 		});
 	},
 } satisfies PromptRepresentationAdapter<
 	typeof canonicalInputSchema,
 	typeof canonicalOutputSchema,
-	typeof compactInputSchema,
-	typeof additionalCompactIndicesOutputSchema
+	typeof classificationInputSchema,
+	typeof additionalIndicesOutputSchema
 >;
 
 export function materializeRepresentation(
@@ -317,24 +267,27 @@ export function materializeRepresentation(
 		readonly explanation?: string;
 		readonly contaminationKeys?: readonly string[];
 	},
-): { readonly input: CompactInput; readonly idealOutput: AdditionalOutput } {
-	return additionalCompactIndicesAdapter.materialize(goldenCase);
+): {
+	readonly input: ClassificationInput;
+	readonly idealOutput: AdditionalOutput;
+} {
+	return additionalIndicesAdapter.materialize(goldenCase);
 }
 
 export function parseAndCanonicalizeRepresentation(args: {
 	readonly id: RepresentationId;
 	readonly canonicalInput: CanonicalInput;
-	readonly privateInput: CompactInput;
+	readonly privateInput: ClassificationInput;
 	readonly output: unknown;
 }): CanonicalOutput {
-	return additionalCompactIndicesAdapter.canonicalize({
+	return additionalIndicesAdapter.canonicalize({
 		...args,
-		output: additionalCompactIndicesOutputSchema.parse(args.output),
+		output: additionalIndicesOutputSchema.parse(args.output),
 	});
 }
 
 export function outputSchemaForRepresentation(_id: RepresentationId) {
-	return additionalCompactIndicesOutputSchema;
+	return additionalIndicesOutputSchema;
 }
 
 const postconditionCanonicalInput = canonicalInputSchema.parse({
@@ -345,6 +298,7 @@ const postconditionCanonicalInput = canonicalInputSchema.parse({
 		{ kind: "ResolvableText", text: "auf" },
 		{ kind: "Whitespace", text: " " },
 		{ kind: "ResolvableText", text: "auf" },
+		{ kind: "OpaqueText", text: "[???]" },
 		{ kind: "Punctuation", text: "." },
 	],
 });
@@ -359,9 +313,9 @@ const postconditionCanonicalOutput = canonicalOutputSchema.parse({
 });
 
 export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
-	version: "target-classification-adapter-postconditions-v1",
+	version: "target-classification-adapter-postconditions-v2",
 	canonicalInput: postconditionCanonicalInput,
-	privateInput: projectCompactInput(postconditionCanonicalInput).input,
+	privateInput: projectClassificationInput(postconditionCanonicalInput).input,
 	canonicalOutput: postconditionCanonicalOutput,
 	arms: Object.freeze({
 		"additional-compact-indices": Object.freeze({
@@ -370,7 +324,7 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 				target: {
 					family: "Lexeme",
 					kind: "VERB",
-					membership: { additionalMemberCompactIndices: [0, 2] },
+					membership: { additionalMemberIndices: [0, 2] },
 				},
 			},
 			invalidOutputs: Object.freeze([
@@ -382,7 +336,7 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 							family: "Lexeme",
 							kind: "VERB",
 							membership: {
-								additionalMemberCompactIndices: [2, 0],
+								additionalMemberIndices: [2, 0],
 							},
 						},
 					},
@@ -396,11 +350,39 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 							family: "Lexeme",
 							kind: "VERB",
 							membership: {
-								additionalMemberCompactIndices: [0, 0],
+								additionalMemberIndices: [0, 0],
 							},
 						},
 					},
 					expectedError: "ordered and unique before click insertion",
+				}),
+				Object.freeze({
+					name: "opaque-additional-member",
+					output: {
+						decision: "Resolved",
+						target: {
+							family: "Lexeme",
+							kind: "VERB",
+							membership: {
+								additionalMemberIndices: [3],
+							},
+						},
+					},
+					expectedError: "Membership must reference ResolvableText",
+				}),
+				Object.freeze({
+					name: "punctuation-additional-member",
+					output: {
+						decision: "Resolved",
+						target: {
+							family: "Lexeme",
+							kind: "VERB",
+							membership: {
+								additionalMemberIndices: [4],
+							},
+						},
+					},
+					expectedError: "Membership must reference ResolvableText",
 				}),
 			]),
 		}),

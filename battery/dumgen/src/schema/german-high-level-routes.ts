@@ -18,7 +18,13 @@ const LEXEME_KINDS_AFTER_PUNCT = ["SCONJ", "SYM", "VERB"] as const;
 
 export const GERMAN_REACHABLE_HIGH_LEVEL_ROUTES = {
 	Lexeme: [...LEXEME_KINDS_BEFORE_PUNCT, ...LEXEME_KINDS_AFTER_PUNCT],
-	Phraseme: ["Aphorism", "DiscourseFormula", "Idiom", "Proverb"],
+	Phraseme: [
+		"Aphorism",
+		"Collocation",
+		"DiscourseFormula",
+		"Idiom",
+		"Proverb",
+	],
 	Construction: ["Fusion", "PairedFrame"],
 } as const satisfies {
 	readonly [Family in Exclude<

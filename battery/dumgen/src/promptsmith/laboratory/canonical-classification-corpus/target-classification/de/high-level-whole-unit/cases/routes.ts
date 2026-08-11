@@ -92,6 +92,25 @@ const fixedPhrasemeEvidence = {
 	},
 } as const;
 
+const strongCollocation = (
+	segments: readonly Segment[],
+	clickedSegmentIndex: number,
+	memberSegmentIndices: readonly number[],
+	canonicalForm: string,
+) => ({
+	...resolved(
+		segments,
+		clickedSegmentIndex,
+		memberSegmentIndices,
+		"Phraseme",
+		"Collocation",
+	),
+	explanation: evidence(
+		IDS.functionVerbGroup,
+		`IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. Under issue #82's strict product threshold, ${canonicalForm} is treated as a strongly restricted but compositional Phraseme/Collocation; only its realized lexical members belong to the target.`,
+	),
+});
+
 const pairedFrameTarget = (
 	clickedSegmentIndex: number,
 	memberSegmentIndices: readonly number[],
@@ -128,6 +147,63 @@ const pairedFrameFiller = (clickedSegmentIndex: number) => ({
 const aphorism = sentence(["Wissen", "ist", "Macht"]);
 const discourseFormula = sentence(["Herzlichen", "Dank"], "!");
 const proverb = sentence(["Morgenstund", "hat", "Gold", "im", "Mund"]);
+const measuresCollocation = sentence([
+	"Nach",
+	"dem",
+	"Sturm",
+	"ergriff",
+	"die",
+	"Stadt",
+	"sofort",
+	"wirksame",
+	"Maßnahmen",
+]);
+const criticismCollocation = sentence([
+	"Im",
+	"Leitartikel",
+	"übte",
+	"die",
+	"Zeitung",
+	"scharfe",
+	"Kritik",
+	"an",
+	"dem",
+	"Vorschlag",
+]);
+const considerationCollocation = sentence([
+	"Trotz",
+	"des",
+	"Zeitdrucks",
+	"nahm",
+	"Lea",
+	"stets",
+	"Rücksicht",
+	"auf",
+	"ihre",
+	"Kollegen",
+]);
+const availabilityCollocation = sentence([
+	"Für",
+	"den",
+	"Workshop",
+	"stellte",
+	"das",
+	"Team",
+	"aktuelle",
+	"Daten",
+	"zur",
+	"Verfügung",
+]);
+const applicationCollocation = sentence([
+	"Kurz",
+	"vor",
+	"Fristende",
+	"stellte",
+	"Nora",
+	"noch",
+	"einen",
+	"Antrag",
+]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
 const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
 const demonstrationMatchedPairedFrame: Segment[] = [
@@ -598,6 +674,80 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			[0, 2, 4, 6, 8],
 			"Proverb",
 		),
+		"target-de-route-phraseme-collocation-massnahmen-click-ergriff":
+			strongCollocation(
+				measuresCollocation,
+				6,
+				[6, 16],
+				"Maßnahmen ergreifen",
+			),
+		"target-de-route-phraseme-collocation-massnahmen-click-massnahmen":
+			strongCollocation(
+				measuresCollocation,
+				16,
+				[6, 16],
+				"Maßnahmen ergreifen",
+			),
+		"target-de-route-phraseme-collocation-kritik-click-uebte":
+			strongCollocation(criticismCollocation, 4, [4, 12], "Kritik üben"),
+		"target-de-route-phraseme-collocation-kritik-click-kritik":
+			strongCollocation(criticismCollocation, 12, [4, 12], "Kritik üben"),
+		"target-de-route-phraseme-collocation-ruecksicht-click-nahm":
+			strongCollocation(
+				considerationCollocation,
+				6,
+				[6, 12],
+				"Rücksicht nehmen",
+			),
+		"target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht":
+			strongCollocation(
+				considerationCollocation,
+				12,
+				[6, 12],
+				"Rücksicht nehmen",
+			),
+		"target-de-route-phraseme-collocation-verfuegung-click-stellte":
+			strongCollocation(
+				availabilityCollocation,
+				6,
+				[6, 16, 18],
+				"zur Verfügung stellen",
+			),
+		"target-de-route-phraseme-collocation-verfuegung-click-zur":
+			strongCollocation(
+				availabilityCollocation,
+				16,
+				[6, 16, 18],
+				"zur Verfügung stellen",
+			),
+		"target-de-route-phraseme-collocation-verfuegung-click-verfuegung":
+			strongCollocation(
+				availabilityCollocation,
+				18,
+				[6, 16, 18],
+				"zur Verfügung stellen",
+			),
+		"target-de-route-phraseme-collocation-antrag-click-stellte":
+			strongCollocation(
+				applicationCollocation,
+				6,
+				[6, 12, 14],
+				"einen Antrag stellen",
+			),
+		"target-de-route-phraseme-collocation-antrag-click-einen":
+			strongCollocation(
+				applicationCollocation,
+				12,
+				[6, 12, 14],
+				"einen Antrag stellen",
+			),
+		"target-de-route-phraseme-collocation-antrag-click-antrag":
+			strongCollocation(
+				applicationCollocation,
+				14,
+				[6, 12, 14],
+				"einen Antrag stellen",
+			),
 		"target-de-route-construction-fusion": fusion,
 		"target-de-diagnostic-fusion-am": {
 			...resolved(

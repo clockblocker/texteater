@@ -19,20 +19,18 @@ import {
 } from "../../src/schema/german-high-level-routes";
 
 describe("German High-Level Target Classification Canonical Classification Corpus", () => {
-	test("assembles explicit fixed-unit membership rules", () => {
+	test("assembles the lean positional model contract", () => {
 		const systemPrompt = systemPromptForRepresentation(
 			"additional-compact-indices",
 		);
 
-		expect(systemPrompt).toContain(
-			"PairedFrame: anchor click = all anchors, no fillers; filler click = that Lexeme only.",
-		);
-		expect(systemPrompt).toContain(
-			"Idiom: fixed members only; skip inserted free modifiers, and a modifier click = that Lexeme only.",
-		);
-		expect(systemPrompt).toContain(
-			"Construction/Fusion is exactly the clicked fused source segment; take no neighbors.",
-		);
+		expect(systemPrompt).toContain("clickedIndex");
+		expect(systemPrompt).toContain("additionalMemberIndices");
+		expect(systemPrompt).not.toContain("clickedCompactIndex");
+		expect(systemPrompt).not.toContain("additionalMemberCompactIndices");
+		expect(systemPrompt).not.toContain("compactIndex");
+		expect(systemPrompt).not.toContain('"clicked":');
+		expect(systemPrompt).not.toContain('"kind":"ResolvableText"');
 	});
 
 	test("teaches a frame-disjoint PairedFrame filler through the assembled prompt", () => {
@@ -50,7 +48,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 				memberSegmentIndices: [14],
 			},
 		});
-		expect(systemPrompt).toContain('"text":"robust"');
+		expect(systemPrompt).toContain('"robust"');
 		expect(systemPrompt).toContain(
 			"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
 		);
@@ -71,7 +69,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 				memberSegmentIndices: [17, 21, 25],
 			},
 		});
-		expect(systemPrompt).toContain('"text":"sprichwörtliche"');
+		expect(systemPrompt).toContain('"sprichwörtliche"');
 		expect(systemPrompt).toContain(
 			"platzte + der + Kragen are fixed. Take those three. ihm and sprichwörtliche are free; leave them out.",
 		);
@@ -133,7 +131,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 	});
 
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(186);
+		expect(corpus.all().ids).toHaveLength(198);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
@@ -217,8 +215,8 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(covered.has("Lexeme/X")).toBe(false);
 		expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("X");
 		expect(GERMAN_HIGH_LEVEL_ROUTES.Phraseme).toContain("Collocation");
-		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).not.toContain(
-			"Collocation" as never,
+		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).toContain(
+			"Collocation",
 		);
 		expect(
 			corpus.outputSchema.safeParse({
@@ -253,16 +251,16 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toBe(false);
 	});
 
-	test("keeps ordinary non-idiomatic Collocations separate by click", () => {
+	test("groups every fixed member of a strong Collocation", () => {
 		expect(
 			corpus.cases["target-de-core-entscheidung-click-trifft"]
 				?.idealOutput,
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Lexeme",
-				kind: "VERB",
-				memberSegmentIndices: [4],
+				family: "Phraseme",
+				kind: "Collocation",
+				memberSegmentIndices: [4, 6, 8],
 			},
 		});
 		expect(
@@ -270,9 +268,9 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Lexeme",
-				kind: "DET",
-				memberSegmentIndices: [6],
+				family: "Phraseme",
+				kind: "Collocation",
+				memberSegmentIndices: [4, 6, 8],
 			},
 		});
 		expect(
@@ -281,11 +279,39 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Lexeme",
-				kind: "NOUN",
-				memberSegmentIndices: [8],
+				family: "Phraseme",
+				kind: "Collocation",
+				memberSegmentIndices: [4, 6, 8],
 			},
 		});
+	});
+
+	test("provides five strong Collocations in realistic contexts", () => {
+		const expected = {
+			"target-de-route-phraseme-collocation-massnahmen-click-ergriff": [
+				6, 16,
+			],
+			"target-de-route-phraseme-collocation-kritik-click-kritik": [4, 12],
+			"target-de-route-phraseme-collocation-ruecksicht-click-nahm": [
+				6, 12,
+			],
+			"target-de-route-phraseme-collocation-verfuegung-click-verfuegung":
+				[6, 16, 18],
+			"target-de-route-phraseme-collocation-antrag-click-antrag": [
+				6, 12, 14,
+			],
+		} as const;
+
+		for (const [caseId, memberSegmentIndices] of Object.entries(expected)) {
+			expect(corpus.cases[caseId]?.idealOutput).toEqual({
+				decision: "Resolved",
+				target: {
+					family: "Phraseme",
+					kind: "Collocation",
+					memberSegmentIndices: [...memberSegmentIndices],
+				},
+			});
+		}
 	});
 
 	test("teaches click anchoring through fixed-member and free-neighbor contrasts", () => {

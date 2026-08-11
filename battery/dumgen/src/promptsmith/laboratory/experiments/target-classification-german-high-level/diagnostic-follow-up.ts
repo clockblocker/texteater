@@ -3,10 +3,9 @@ import type { ResponseCreateParamsNonStreaming } from "openai/resources/response
 import { z } from "zod";
 
 import { stableJson } from "../../../../lib/stable-json";
-import { additionalCompactIndicesOutputSchema } from "./representations";
+import { additionalIndicesOutputSchema } from "./representations";
 
-const privateTargetSchema =
-	additionalCompactIndicesOutputSchema.shape.target.unwrap();
+const privateTargetSchema = additionalIndicesOutputSchema.shape.target.unwrap();
 
 export const DIAGNOSTIC_FOLLOW_UP_SYSTEM_INSTRUCTION = [
 	"Produce a neutral, non-scoring diagnostic note about the retained German target-classification exchange.",
@@ -30,7 +29,7 @@ export const diagnosticFollowUpOutputSchema = z
 		segmentJudgments: z
 			.array(
 				z.strictObject({
-					compactIndex: z.number().int().nonnegative(),
+					index: z.number().int().nonnegative(),
 					judgment: z.enum(["Fixed", "Free"]),
 					reason: conciseReason,
 				}),
@@ -39,8 +38,7 @@ export const diagnosticFollowUpOutputSchema = z
 		ruleApplied: conciseReason,
 		conciseCritique: conciseReason,
 		wouldRevise: z.boolean(),
-		correctedClassification:
-			additionalCompactIndicesOutputSchema.nullable(),
+		correctedClassification: additionalIndicesOutputSchema.nullable(),
 	})
 	.superRefine((diagnostic, context) => {
 		if (
@@ -158,7 +156,7 @@ export function prepareDiagnosticFollowUpRequest(
 ) {
 	const diagnosticInstruction = [
 		"Identify the chosen unit and the clicked segment's role, judge the relevant segments as fixed or free, name the rule applied, and briefly critique the retained answer.",
-		"Set wouldRevise to say whether you would now change the retained answer. correctedClassification is optional in meaning: use null when no concise correction is warranted; otherwise use the same compact-index classification shape as the original answer.",
+		"Set wouldRevise to say whether you would now change the retained answer. correctedClassification is optional in meaning: use null when no concise correction is warranted; otherwise use the same index-based classification shape as the original answer.",
 		"This artifact is excluded from scoring, cannot be winner-eligible, and must not change or replace the retained first-turn output or evaluation.",
 	].join("\n");
 

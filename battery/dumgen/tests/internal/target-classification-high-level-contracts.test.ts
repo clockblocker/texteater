@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -42,11 +43,11 @@ import {
 	runnerParametersSchema,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
-	additionalCompactIndicesOutputSchema,
-	compactInputSchema,
+	additionalIndicesOutputSchema,
+	classificationInputSchema,
 	materializeRepresentation,
 	parseAndCanonicalizeRepresentation,
-	projectCompactInput,
+	projectClassificationInput,
 	REPRESENTATION_IDS,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/representations";
 
@@ -143,8 +144,8 @@ describe("target classification high-level contract prototype", () => {
 		};
 	}
 
-	test("compacts only whitespace while retaining opaque and punctuation positions", () => {
-		const projection = projectCompactInput({
+	test("exposes only positional text while retaining opaque and punctuation context", () => {
+		const projection = projectClassificationInput({
 			clickedSegmentIndex: 2,
 			segments: [
 				{ kind: "OpaqueText", text: "[x]" },
@@ -154,52 +155,26 @@ describe("target classification high-level contract prototype", () => {
 			],
 		});
 		expect(projection.input).toEqual({
-			clickedCompactIndex: 1,
-			segments: [
-				{
-					compactIndex: 0,
-					clicked: false,
-					kind: "OpaqueText",
-					text: "[x]",
-				},
-				{
-					compactIndex: 1,
-					clicked: true,
-					kind: "ResolvableText",
-					text: "steht",
-				},
-				{
-					compactIndex: 2,
-					clicked: false,
-					kind: "Punctuation",
-					text: ".",
-				},
-			],
+			clickedIndex: 1,
+			segments: ["[x]", "steht", "."],
 		});
 		expect(projection.compactToOriginal).toEqual([0, 2, 3]);
 		expect(projection.originalToCompact.get(2)).toBe(1);
 	});
 
-	test("rejects contradictory compact click annotations", () => {
+	test("rejects clicks that the deterministic adapter cannot expose", () => {
 		expect(() =>
-			compactInputSchema.parse({
-				clickedCompactIndex: 0,
-				segments: [
-					{
-						compactIndex: 0,
-						clicked: false,
-						kind: "ResolvableText",
-						text: "Sie",
-					},
-					{
-						compactIndex: 2,
-						clicked: true,
-						kind: "ResolvableText",
-						text: "kommt",
-					},
-				],
+			projectClassificationInput({
+				clickedSegmentIndex: 0,
+				segments: [{ kind: "Punctuation", text: "." }],
 			}),
-		).toThrow();
+		).toThrow(/ResolvableText/u);
+		expect(() =>
+			classificationInputSchema.parse({
+				clickedIndex: 2,
+				segments: ["Sie", "kommt"],
+			}),
+		).toThrow(/clickedIndex/u);
 	});
 
 	test("preflights the frozen additional-indices contract with exact hashes and cost cap", () => {
@@ -288,7 +263,7 @@ describe("target classification high-level contract prototype", () => {
 					parseAndCanonicalizeRepresentation({
 						id,
 						canonicalInput: goldenCase.input,
-						privateInput: compactInputSchema.parse(
+						privateInput: classificationInputSchema.parse(
 							materialized.input,
 						),
 						output: materialized.idealOutput,
@@ -303,7 +278,7 @@ describe("target classification high-level contract prototype", () => {
 			corpus.cases["target-de-boundary-separable-click-steht"];
 		if (goldenCase === undefined)
 			throw new Error("Missing separable fixture.");
-		const privateInput = projectCompactInput(goldenCase.input).input;
+		const privateInput = projectClassificationInput(goldenCase.input).input;
 		const additional = materializeRepresentation(
 			"additional-compact-indices",
 			goldenCase,
@@ -313,21 +288,21 @@ describe("target classification high-level contract prototype", () => {
 				id: "additional-compact-indices",
 				canonicalInput: goldenCase.input,
 				privateInput,
-				output: additionalCompactIndicesOutputSchema.parse({
+				output: additionalIndicesOutputSchema.parse({
 					...(additional.idealOutput as object),
 					target: {
 						...(additional.idealOutput as { target: object })
 							.target,
 						membership: {
-							additionalMemberCompactIndices: [
-								privateInput.clickedCompactIndex,
+							additionalMemberIndices: [
+								privateInput.clickedIndex,
 							],
 						},
 					},
 				}),
 			}),
 		).toThrow(/exclude/u);
-		for (const additionalMemberCompactIndices of [
+		for (const additionalMemberIndices of [
 			[3, 0],
 			[0, 0],
 		]) {
@@ -336,19 +311,45 @@ describe("target classification high-level contract prototype", () => {
 					id: "additional-compact-indices",
 					canonicalInput: goldenCase.input,
 					privateInput,
-					output: additionalCompactIndicesOutputSchema.parse({
+					output: additionalIndicesOutputSchema.parse({
 						...(additional.idealOutput as object),
 						target: {
 							...(additional.idealOutput as { target: object })
 								.target,
 							membership: {
-								additionalMemberCompactIndices,
+								additionalMemberIndices,
 							},
 						},
 					}),
 				}),
 			).toThrow(/ordered and unique/u);
 		}
+
+		const punctuationInput = {
+			clickedSegmentIndex: 0,
+			segments: [
+				{ kind: "ResolvableText" as const, text: "Guten" },
+				{ kind: "Whitespace" as const, text: " " },
+				{ kind: "ResolvableText" as const, text: "Morgen" },
+				{ kind: "Punctuation" as const, text: "!" },
+			],
+		};
+		expect(() =>
+			parseAndCanonicalizeRepresentation({
+				id: "additional-compact-indices",
+				canonicalInput: punctuationInput,
+				privateInput:
+					projectClassificationInput(punctuationInput).input,
+				output: additionalIndicesOutputSchema.parse({
+					decision: "Resolved",
+					target: {
+						family: "Phraseme",
+						kind: "DiscourseFormula",
+						membership: { additionalMemberIndices: [2] },
+					},
+				}),
+			}),
+		).toThrow(/ResolvableText/u);
 	});
 
 	test("passes or rejects the retained contract with predetermined gates", () => {
@@ -535,6 +536,52 @@ describe("target classification high-level contract prototype", () => {
 				client: fakeResponsesClientByInput(undefined, "diagnostic"),
 				runDirectory: sourceDirectory,
 			});
+			if (
+				typeof sourceRun.preflight !== "object" ||
+				sourceRun.preflight === null ||
+				Array.isArray(sourceRun.preflight)
+			) {
+				throw new Error("Expected object preflight evidence.");
+			}
+			const legacyPreflight = {
+				...sourceRun.preflight,
+				runnerVersion: "target-classification-high-level-contracts-v10",
+			};
+			const legacyResultsPath = join(
+				sourceDirectory,
+				"legacy-results.json",
+			);
+			await writeFile(
+				legacyResultsPath,
+				`${JSON.stringify(
+					{
+						...sourceRun,
+						preflight: legacyPreflight,
+						bindingSha256: createHash("sha256")
+							.update(stableJson(legacyPreflight))
+							.digest("hex"),
+					},
+					null,
+					2,
+				)}\n`,
+				"utf8",
+			);
+			await expect(
+				runDiagnosticFollowUp({
+					batching: false,
+					resultsPath: legacyResultsPath,
+					artifactDirectory: followUpDirectory,
+					client: {
+						responses: {
+							create: async () => {
+								throw new Error(
+									"Legacy source must not dispatch.",
+								);
+							},
+						},
+					},
+				}),
+			).rejects.toThrow(/runnerVersion|v11/u);
 			const missKeys = [
 				"additional-compact-indices/1/target-de-diagnostic-fusion-am",
 				"additional-compact-indices/2/target-de-diagnostic-idiom-oel-click-oel",
@@ -574,6 +621,9 @@ describe("target classification high-level contract prototype", () => {
 					},
 				},
 			});
+			expect(followUp.version).toBe(
+				"target-classification-diagnostic-follow-up-v2",
+			);
 			expect(providerCallCount).toBe(8);
 			expect(followUp.callCap).toBe(DIAGNOSTIC_FOLLOW_UP_CALL_CAP);
 			expect(followUp.spendCapUsd).toBe(
@@ -746,7 +796,7 @@ describe("target classification high-level contract prototype", () => {
 								clickRole: "NoChosenUnit",
 								segmentJudgments: [
 									{
-										compactIndex: 0,
+										index: 0,
 										judgment: "Free",
 										reason: "The retained answer is reviewed neutrally.",
 									},

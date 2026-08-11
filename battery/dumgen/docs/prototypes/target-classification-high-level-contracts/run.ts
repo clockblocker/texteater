@@ -26,6 +26,7 @@ import {
 	prepareRepresentationCases,
 	REASONING_EFFORT,
 	RUN_MODEL,
+	RUNNER_VERSION,
 	type RunnerParameterInput,
 	type RunnerPoolId,
 	runnerParametersSchema,
@@ -347,7 +348,7 @@ const diagnosticFollowUpResultSchema = z
 	});
 
 const diagnosticFollowUpArtifactSchema = z.strictObject({
-	version: z.literal("target-classification-diagnostic-follow-up-v1"),
+	version: z.literal("target-classification-diagnostic-follow-up-v2"),
 	startedAt: z.iso.datetime({ offset: true }),
 	updatedAt: z.iso.datetime({ offset: true }),
 	completedAt: z.iso.datetime({ offset: true }).nullable(),
@@ -1544,6 +1545,7 @@ function selectDiagnosticFollowUpAttempts(retained: RetainedRun) {
 function assertRetainedDiagnosticSourceStructure(retained: RetainedRun): void {
 	const bound = z
 		.object({
+			runnerVersion: z.literal(RUNNER_VERSION),
 			runnerParameters: runnerParametersSchema,
 			exactCallCap: z.number().int().positive(),
 			attemptsPerArm: z.number().int().positive(),
@@ -1795,7 +1797,7 @@ export async function runDiagnosticFollowUp(options: {
 		if ((cause as NodeJS.ErrnoException).code !== "ENOENT") throw cause;
 		const now = new Date().toISOString();
 		artifact = diagnosticFollowUpArtifactSchema.parse({
-			version: "target-classification-diagnostic-follow-up-v1",
+			version: "target-classification-diagnostic-follow-up-v2",
 			startedAt: now,
 			updatedAt: now,
 			completedAt: null,

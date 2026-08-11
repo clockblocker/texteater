@@ -25,19 +25,19 @@ import {
 	proveEvaluatorSemanticDependencies,
 } from "./evaluator-semantic-fixtures";
 import {
-	compactInputSchema,
+	classificationInputSchema,
 	materializeRepresentation,
 	outputSchemaForRepresentation,
 	parseAndCanonicalizeRepresentation,
-	projectCompactInput,
+	projectClassificationInput,
 	proveAdapterPostconditions,
 	REPRESENTATION_IDS,
 	type RepresentationId,
 } from "./representations";
 
 export const PROTOTYPE_QUESTION =
-	"Does the additional-member compact-indices contract preserve the German high-level target policy across the development suite?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v10";
+	"Does the lean additional-member indices contract preserve the German high-level target policy across the development suite?";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v11";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -134,56 +134,90 @@ export type RunnerParameterInput = Readonly<{
 	pool?: RunnerPoolId;
 }>;
 
-const commonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is target selection only: no grammatical drill-down, lemma resolution, or canonical form.
+const commonPrompt = `<agent_role>
+You are helping a learner of German who has selected one part of a sentence. Classify the selected target in a custom UD-like system, prioritizing the highest-level defensible language unit.
+</agent_role>
 
-Dumling's big picture:
+<classification_model>
+The system has 3 Families. Each one has multiple Kinds.
+\`\`\`
+    {
+        Lexeme: { // UD POS
+            ADJ,
+            ADP,
+            ADV,
+            AUX,
+            CCONJ,
+            DET,
+            INTJ,
+            NOUN,
+            NUM,
+            PART,
+            PRON,
+            PROPN,
+            PUNCT,
+            SCONJ,
+            SYM,
+            VERB, // Note: under our system, all temporal AUX are counted as being a part of the "VERB". The same goes for governed prepositions and reflexivity.
+            X, // Unknown
+        },
+        Phraseme: {
+            Aphorism, // \`Zeit ist Geld.\`
+            Collocation, // \`eine Entscheidung treffen\`. Note: Classify a target as a Collocation only if it is a conventional lexical combination and at least one component is selected in a notably restricted or non-obvious way. Do not classify combinations that speakers can construct freely from the ordinary meanings of their components. YES: Maßnahmen ergreifen, Kritik üben, Rücksicht nehmen. NO:  ein Buch lesen, schnell laufen, ein großes Haus kaufen
+            DiscourseFormula, // \`Guten Tag!\`
+            Idiom, // \`Was wollte er gerade sagen? „Entschuldigung, ich habe **den Faden verloren**.“\` . Note: only idiomatic uses qualify as an Idiom. Literal uses are classified as Lexemes.
+            Proverb, // \`Morgenstund hat Gold im Mund.\`
+        },
+        Construction: {
+            Fusion, // "zum" (zu + dem)
+            PairedFrame, // "entweder ... oder"
+        },
+    };
+\`\`\`
+</classification_model>
 
-- An ordinary word is a Lexeme with its contextually correct UD-like word class.
-- Dumling can also select established Phraseme and Construction units that bare word-by-word analysis would miss.
-- A separable, multi-part, perfect, future, or passive realization of one verb counts here as one inflected Lexeme/VERB.
+<input_format>
+The input is one JSON object:
 
-CLICK FIRST — this constraint is non-negotiable:
+\`\`\`
+{
+    clickedIndex: number, // Zero-based position of the segment clicked by the learner.
+    segments: string[], // Source-ordered text segments with whitespace removed.
+}
+\`\`\`
 
-1. Compact indices are zero-based. Locate the one segment whose clicked field is true and verify that its compactIndex equals clickedCompactIndex.
-2. Consider only targets containing that exact segment. Discard every target that does not contain it, even if it is the most salient expression in the surrounding context.
-3. If the click is on a free word inside, between, or beside the members of another unit, return the clicked word as its own Lexeme. Do not return the nearby unit.
+Read \`segments\` in order as one-spaced text. Array positions are segment indices. Punctuation and unreadable context may clarify the sentence but are never target members.
+</input_format>
 
-FIXED TOGETHER. FREE APART.
+<output_format>
+Return exactly one JSON object in one of these forms:
 
-Idiom: fixed members only; skip inserted free modifiers, and a modifier click = that Lexeme only.
+\`\`\`
+// Resolved
+{
+    decision: "Resolved",
+    target: {
+        family: "Lexeme" | "Phraseme" | "Construction",
+        kind: string, // A Kind belonging to the selected Family in classification_model.
+        membership: {
+            additionalMemberIndices: number[],
+        },
+    },
+}
 
-Parts go together for three reasons:
+// Unresolved
+{
+    decision: "Unresolved",
+    target: null,
+}
+\`\`\`
 
-- FIXED EXPRESSION: realized fixed members of an established Phraseme or Construction.
-- VALENCY: a verb plus its governed preposition, or an inherently reflexive verb plus its required reflexive pronoun. The argument itself stays free.
-- GRAMMAR: the realized pieces of one inflected verb, including separable pieces and tense or voice auxiliaries.
+For \`Resolved\`, the clicked segment is always an implicit target member. \`additionalMemberIndices\` contains the array index of every other target member, in strictly increasing source order. Exclude \`clickedIndex\`; use \`[]\` for a one-segment target. Never include punctuation or unreadable context.
 
-Idiom recognition is about the meaning of this occurrence, not whether its words match a known idiom. When the supplied context makes the wording physical or otherwise compositional, do not group it as an Idiom.
+Use \`Unresolved\` only when no Family/Kind classification is defensible. Return JSON only: no explanation, markdown, extra fields, or alternative.
+</output_format>
 
-Read all supplied context; it may contain several sentences. Choose the largest defensible unit containing the click. Mere syntactic relation or familiar co-occurrence is not enough. If the larger unit is doubtful, choose the smaller defensible target.
-
-Route only the click-containing target:
-
-- Lexeme is the default for one word and for a multi-segment realization of one verb. Use the contextually correct word-class kind.
-- Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression used here with a non-compositional meaning.
-- Construction/Fusion is exactly the clicked fused source segment; take no neighbors.
-- PairedFrame: anchor click = all anchors, no fillers; filler click = that Lexeme only.
-
-The input is a compact projection of the source:
-
-- each segment states its zero-based compactIndex and whether it is clicked;
-- Whitespace was removed; read the remaining sequence as if adjacent items were separated by one space;
-- Punctuation and OpaqueText remain as context and occupy compact positions;
-- only ResolvableText segments can be target members.
-
-Membership is positional. Include all and only the source segments realizing the selected unit in this occurrence, including every realized member when the unit is discontinuous. Exclude punctuation, OpaqueText, free material, neighboring units, and identical spellings at the wrong position. Preserve increasing compact source order; do not rewrite the members into lemma, canonical, or grammatical order.
-
-Return Unresolved only when the clicked ResolvableText has no defensible Family/Kind route. If a standalone route is defensible but a larger fixed group is uncertain, choose the standalone target. For Resolved, target must be non-null. For Unresolved, target must be null.
-
-Before returning, silently verify that the selected target contains the exact clicked segment, contains every and only member required by the policy, and follows the representation-specific membership instruction supplied after this policy.
-
-Return only an object matching the supplied output schema. Do not return a lemma, canonical form, surface form, explanation, or alternative candidate.`;
-
+`;
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 	"target-de-demo-perfect-arbeiten-click-habe":
 		"habe + gearbeitet = one perfect verb. Take both. gestern is extra. VERB.",
@@ -281,21 +315,21 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 
 const membershipInstructions: Readonly<Record<RepresentationId, string>> = {
 	"additional-compact-indices":
-		"For Resolved, the semantic target still contains the click, but membership.additionalMemberCompactIndices encodes every other member compact index except the clicked index in strictly increasing source order; do not repeat the click or another index.",
+		"For Resolved, the semantic target contains the click implicitly. membership.additionalMemberIndices lists every other member's array index in strictly increasing source order; do not include the clicked index or repeat an index.",
 };
 
 export type PreparedRepresentationCase = Readonly<{
 	caseId: string;
 	canonicalInput: (typeof evaluationSelection.cases)[number]["input"];
 	canonicalIdealOutput: (typeof evaluationSelection.cases)[number]["idealOutput"];
-	privateInput: z.output<typeof compactInputSchema>;
+	privateInput: z.output<typeof classificationInputSchema>;
 	privateIdealOutput: unknown;
 }>;
 
 export function systemPromptForRepresentation(id: RepresentationId): string {
 	const outputSchema = outputSchemaForRepresentation(id);
 	const demonstrations = defineLocalDemonstrations({
-		inputSchema: compactInputSchema,
+		inputSchema: classificationInputSchema,
 		outputSchema,
 		cases: demonstrationSelection.ids.map((caseId, index) => {
 			const goldenCase = demonstrationSelection.cases[index];
@@ -320,7 +354,7 @@ export function systemPromptForRepresentation(id: RepresentationId): string {
 	return assembleSystemPrompt(
 		definePromptSource({
 			route: `prototype/target-classification/de/high-level/${id}`,
-			inputSchema: compactInputSchema,
+			inputSchema: classificationInputSchema,
 			outputSchema,
 			body: `${commonPrompt}\n\n${membershipInstructions[id]}`,
 			demonstrations,
@@ -343,7 +377,7 @@ export function prepareRepresentationCases(
 			caseId,
 			canonicalInput: goldenCase.input,
 			canonicalIdealOutput: goldenCase.idealOutput,
-			privateInput: compactInputSchema.parse(materialized.input),
+			privateInput: classificationInputSchema.parse(materialized.input),
 			privateIdealOutput: outputSchemaForRepresentation(id).parse(
 				materialized.idealOutput,
 			),
@@ -418,7 +452,9 @@ export function preparePrototypePreflight(
 			if (goldenCase === undefined)
 				throw new Error(`Missing case ${caseId}.`);
 			const materialized = materializeRepresentation(id, goldenCase);
-			const privateInput = compactInputSchema.parse(materialized.input);
+			const privateInput = classificationInputSchema.parse(
+				materialized.input,
+			);
 			const privateOutput = outputSchemaForRepresentation(id).parse(
 				materialized.idealOutput,
 			);
@@ -444,7 +480,7 @@ export function preparePrototypePreflight(
 			promptSha256: sha256(systemPromptForRepresentation(id)),
 			schemaSha256: sha256(
 				stableJson({
-					input: z.toJSONSchema(compactInputSchema),
+					input: z.toJSONSchema(classificationInputSchema),
 					output: z.toJSONSchema(outputSchemaForRepresentation(id)),
 				}),
 			),
@@ -458,14 +494,16 @@ export function preparePrototypePreflight(
 	for (const caseId of selected.ids) {
 		const canonical = corpus.cases[caseId];
 		if (canonical === undefined) throw new Error(`Missing case ${caseId}.`);
-		const expected = stableJson(projectCompactInput(canonical.input).input);
+		const expected = stableJson(
+			projectClassificationInput(canonical.input).input,
+		);
 		for (const id of REPRESENTATION_IDS) {
 			const actual = stableJson(
 				materializeRepresentation(id, canonical).input,
 			);
 			if (actual !== expected) {
 				throw new Error(
-					`${id} does not share the compact stimulus for ${caseId}.`,
+					`${id} does not share the classification stimulus for ${caseId}.`,
 				);
 			}
 		}
