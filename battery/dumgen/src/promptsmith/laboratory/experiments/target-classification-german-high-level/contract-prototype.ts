@@ -193,27 +193,43 @@ Read \`segments\` in order as one-spaced text. Array positions are segment indic
 Return exactly one JSON object in one of these forms:
 
 \`\`\`
-// Resolved
 {
     decision: "Resolved",
     target: {
         family: "Lexeme" | "Phraseme" | "Construction",
         kind: string, // A Kind belonging to the selected Family in classification_model.
-        membership: { additionalMemberIndices: number[] } | null, // null when the click is the only member. Example: clickedIndex 1 in ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."] => { additionalMemberIndices: [2, 5] } for governed "mit" and separable "auf"; exclude the free argument "dem Rauchen".
-    },
-}
+        membership: null  // null when none of the other segments are used to make up a unit targeted with a click
+     		| { additionalMemberIndices: number[] } // Example: clickedIndex 1 in ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."] => { additionalMemberIndices: [2, 5] } for governed "mit" and separable "auf"; exclude the free argument "dem Rauchen".
+		},
+} 
 
-// Unresolved
+or
+
 {
-    decision: "Unresolved",
+    decision: "Unresolved", // no Family/Kind classification is defensible
     target: null,
 }
 \`\`\`
 
-For \`Resolved\`, the clicked segment is always an implicit target member. Set \`membership\` to \`null\` when the click is the target's only member. Otherwise, \`additionalMemberIndices\` contains at least one array index: every other target member in strictly increasing source order. Exclude \`clickedIndex\`. Never include punctuation or unreadable context.
-
-Use \`Unresolved\` only when no Family/Kind classification is defensible. Return JSON only: no explanation, markdown, extra fields, or alternative.
 </output_format>
+
+<classification_rules>
+We have 3 big-picture policies, that distigiush us from the vanilla UD:
+
+1) Prefer the biggest defensible win for the learner.
+Example: In "Guten Morgen, Mutter!", clicking "Guten" selects "Guten" and "Morgen" as Phraseme/DiscourseFormula — not "Guten" alone. Clicking "Mutter" still selects only "Mutter" as Lexeme/NOUN.
+
+2) Fixed material belongs together; free material stays separate.
+Examples: 
+- In "Sie trifft eine Entscheidung", "trifft eine Entscheidung" is a conventional Collocation and belongs together. In "Sie liest ein Buch", the combination is freely formed: clicking "liest" selects only the VERB, while clicking "Buch" selects only the NOUN.
+- In "Sie wartet auf den Bus", "auf" is governed by "wartet", so clicking either "wartet" or "auf" selects "wartet + auf" as one Lexeme/VERB; "den Bus" remains free.
+- In "Sie wartet auf dem Bahnsteig", "auf dem Bahnsteig" is a freely added location, so clicking "wartet" selects only the VERB, while clicking "auf" selects only Lexeme/ADP.
+
+3) Idiomatic use belongs together; literal use stays separate.
+Examples: 
+- In "Nach der Frage verlor sie den Faden", "verlor den Faden" is a Phraseme/Idiom. 
+- In "Beim Nähen verlor sie den Faden", the thread is literal, so clicking "Faden" selects only Lexeme/NOUN.
+</classification_rules>
 
 `;
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
