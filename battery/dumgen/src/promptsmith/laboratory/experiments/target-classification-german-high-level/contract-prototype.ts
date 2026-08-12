@@ -37,7 +37,7 @@ import {
 
 export const PROTOTYPE_QUESTION =
 	"Does the lean additional-member indices contract preserve the German high-level target policy across the development suite?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v11";
+export const RUNNER_VERSION = "target-classification-high-level-contracts-v12";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -199,9 +199,7 @@ Return exactly one JSON object in one of these forms:
     target: {
         family: "Lexeme" | "Phraseme" | "Construction",
         kind: string, // A Kind belonging to the selected Family in classification_model.
-        membership: {
-            additionalMemberIndices: number[],
-        },
+        membership: { additionalMemberIndices: number[] } | null, // null when the click is the only member. Example: clickedIndex 1 in ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."] => { additionalMemberIndices: [2, 5] } for governed "mit" and separable "auf"; exclude the free argument "dem Rauchen".
     },
 }
 
@@ -212,7 +210,7 @@ Return exactly one JSON object in one of these forms:
 }
 \`\`\`
 
-For \`Resolved\`, the clicked segment is always an implicit target member. \`additionalMemberIndices\` contains the array index of every other target member, in strictly increasing source order. Exclude \`clickedIndex\`; use \`[]\` for a one-segment target. Never include punctuation or unreadable context.
+For \`Resolved\`, the clicked segment is always an implicit target member. Set \`membership\` to \`null\` when the click is the target's only member. Otherwise, \`additionalMemberIndices\` contains at least one array index: every other target member in strictly increasing source order. Exclude \`clickedIndex\`. Never include punctuation or unreadable context.
 
 Use \`Unresolved\` only when no Family/Kind classification is defensible. Return JSON only: no explanation, markdown, extra fields, or alternative.
 </output_format>
@@ -315,7 +313,7 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 
 const membershipInstructions: Readonly<Record<RepresentationId, string>> = {
 	"additional-compact-indices":
-		"For Resolved, the semantic target contains the click implicitly. membership.additionalMemberIndices lists every other member's array index in strictly increasing source order; do not include the clicked index or repeat an index.",
+		"For Resolved, the semantic target contains the click implicitly. Use membership: null when it has no other members. Otherwise, membership.additionalMemberIndices lists every other member's array index in strictly increasing source order; do not include the clicked index or repeat an index.",
 };
 
 export type PreparedRepresentationCase = Readonly<{

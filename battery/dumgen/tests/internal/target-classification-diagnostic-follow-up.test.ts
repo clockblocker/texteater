@@ -20,7 +20,7 @@ const firstTurnAttempt = Object.freeze({
 		target: Object.freeze({
 			family: "Lexeme",
 			kind: "ADP",
-			membership: Object.freeze({ additionalMemberIndices: [] }),
+			membership: null,
 		}),
 	}),
 	canonicalInput: Object.freeze({
@@ -71,7 +71,7 @@ describe("target-classification diagnostic follow-up", () => {
 		expect(request.input[2]).toEqual({
 			role: "assistant",
 			content:
-				'{"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP","membership":{"additionalMemberIndices":[]}}}',
+				'{"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP","membership":null}}',
 		});
 		const modelFacingTranscript = JSON.stringify(request.input);
 		expect(modelFacingTranscript).toContain(
@@ -97,7 +97,7 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: { additionalMemberIndices: [] },
+					membership: null,
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
@@ -117,9 +117,7 @@ describe("target-classification diagnostic follow-up", () => {
 					target: {
 						family: "Construction",
 						kind: "Fusion",
-						membership: {
-							additionalMemberIndices: [],
-						},
+						membership: null,
 					},
 				},
 			}),
@@ -136,7 +134,7 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: { additionalMemberIndices: [] },
+					membership: null,
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
@@ -156,9 +154,7 @@ describe("target-classification diagnostic follow-up", () => {
 					target: {
 						family: "Construction",
 						kind: "Fusion",
-						membership: {
-							additionalMemberIndices: [],
-						},
+						membership: null,
 					},
 				},
 			}),

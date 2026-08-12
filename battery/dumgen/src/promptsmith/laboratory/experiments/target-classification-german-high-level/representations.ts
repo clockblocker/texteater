@@ -65,7 +65,9 @@ const privateOutput = <Membership extends z.ZodType>(membership: Membership) =>
 const memberIndexArray = z.array(z.number().int().nonnegative());
 
 export const additionalIndicesOutputSchema = privateOutput(
-	z.strictObject({ additionalMemberIndices: memberIndexArray }),
+	z
+		.strictObject({ additionalMemberIndices: memberIndexArray.min(1) })
+		.nullable(),
 );
 
 type CanonicalInput = z.output<typeof canonicalInputSchema>;
@@ -205,17 +207,19 @@ export const additionalIndicesAdapter = {
 			goldenCase.input,
 			goldenCase.idealOutput,
 		);
+		const additionalMemberIndices = members.filter(
+			(index) => index !== input.clickedIndex,
+		);
 		return {
 			input,
 			idealOutput: additionalIndicesOutputSchema.parse({
 				decision: "Resolved" as const,
 				target: {
 					...privateRoute(goldenCase.idealOutput),
-					membership: {
-						additionalMemberIndices: members.filter(
-							(index) => index !== input.clickedIndex,
-						),
-					},
+					membership:
+						additionalMemberIndices.length === 0
+							? null
+							: { additionalMemberIndices },
 				},
 			}),
 		};
@@ -227,7 +231,8 @@ export const additionalIndicesAdapter = {
 		if (output.target === null) {
 			throw new Error("Resolved output requires a target.");
 		}
-		const additional = output.target.membership.additionalMemberIndices;
+		const additional =
+			output.target.membership?.additionalMemberIndices ?? [];
 		let previous = -1;
 		for (const memberIndex of additional) {
 			if (!Number.isSafeInteger(memberIndex) || memberIndex <= previous) {
@@ -312,13 +317,31 @@ const postconditionCanonicalOutput = canonicalOutputSchema.parse({
 	},
 });
 
+const postconditionCanonicalSingletonOutput = canonicalOutputSchema.parse({
+	decision: "Resolved",
+	target: {
+		family: "Lexeme",
+		kind: "VERB",
+		memberSegmentIndices: [2],
+	},
+});
+
 export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
-	version: "target-classification-adapter-postconditions-v2",
+	version: "target-classification-adapter-postconditions-v3",
 	canonicalInput: postconditionCanonicalInput,
 	privateInput: projectClassificationInput(postconditionCanonicalInput).input,
 	canonicalOutput: postconditionCanonicalOutput,
 	arms: Object.freeze({
 		"additional-compact-indices": Object.freeze({
+			validNullOutput: {
+				decision: "Resolved",
+				target: {
+					family: "Lexeme",
+					kind: "VERB",
+					membership: null,
+				},
+			},
+			canonicalNullOutput: postconditionCanonicalSingletonOutput,
 			validOutput: {
 				decision: "Resolved",
 				target: {
@@ -328,6 +351,20 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 				},
 			},
 			invalidOutputs: Object.freeze([
+				Object.freeze({
+					name: "empty-additional-members",
+					output: {
+						decision: "Resolved",
+						target: {
+							family: "Lexeme",
+							kind: "VERB",
+							membership: {
+								additionalMemberIndices: [],
+							},
+						},
+					},
+					expectedError: "Too small",
+				}),
 				Object.freeze({
 					name: "unordered-additional-members",
 					output: {
@@ -391,6 +428,20 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 
 export function proveAdapterPostconditions(id: RepresentationId) {
 	const fixture = ADAPTER_POSTCONDITION_FIXTURES.arms[id];
+	const canonicalizedNull = parseAndCanonicalizeRepresentation({
+		id,
+		canonicalInput: ADAPTER_POSTCONDITION_FIXTURES.canonicalInput,
+		privateInput: ADAPTER_POSTCONDITION_FIXTURES.privateInput,
+		output: fixture.validNullOutput,
+	});
+	if (
+		stableJson(canonicalizedNull) !==
+		stableJson(fixture.canonicalNullOutput)
+	) {
+		throw new Error(
+			`${id} valid null postcondition fixture did not round-trip.`,
+		);
+	}
 	const canonicalized = parseAndCanonicalizeRepresentation({
 		id,
 		canonicalInput: ADAPTER_POSTCONDITION_FIXTURES.canonicalInput,
@@ -433,6 +484,8 @@ export function proveAdapterPostconditions(id: RepresentationId) {
 		id,
 		canonicalInput: ADAPTER_POSTCONDITION_FIXTURES.canonicalInput,
 		privateInput: ADAPTER_POSTCONDITION_FIXTURES.privateInput,
+		validNullOutput: fixture.validNullOutput,
+		canonicalizedNull,
 		validOutput: fixture.validOutput,
 		canonicalized,
 		invalidResults: Object.freeze(invalidResults),

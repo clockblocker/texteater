@@ -26,6 +26,8 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 
 		expect(systemPrompt).toContain("clickedIndex");
 		expect(systemPrompt).toContain("additionalMemberIndices");
+		expect(systemPrompt).toContain('"membership":null');
+		expect(systemPrompt).not.toContain('"additionalMemberIndices":[]');
 		expect(systemPrompt).not.toContain("clickedCompactIndex");
 		expect(systemPrompt).not.toContain("additionalMemberCompactIndices");
 		expect(systemPrompt).not.toContain("compactIndex");

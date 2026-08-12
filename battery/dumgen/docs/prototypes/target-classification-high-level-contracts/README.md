@@ -5,8 +5,8 @@ German high-level target policy across the development suite?**
 
 This is issue #85's throwaway logic experiment, not a production Prompt Source
 or public DTO. It retains one private Structured Output contract: the click is
-implicit membership, and the model returns only array indices additional to
-that click.
+implicit membership. A one-segment target uses `membership: null`; otherwise,
+the model returns only the array indices additional to that click.
 
 The model input is exactly `{ clickedIndex: number, segments: string[] }`.
 Whitespace is removed while every other source segment remains in order as
@@ -86,6 +86,13 @@ remain separate semantic changes and are bound by the corpus and evaluator
 hashes. Because the current v11 worktree also changes Collocation policy and
 oracles, a v11 run establishes a new semantic baseline; its score cannot serve
 as a DTO-only comparison with retained v10 runs.
+
+Version v12 makes optional information structurally absent. A Resolved target
+whose only member is the click now returns `membership: null`. A multi-segment
+target returns a non-null membership object with at least one
+`additionalMemberIndices` entry. The adapter restores the implicit click in
+both cases, and the schema rejects a non-null empty membership object. The
+diagnostic follow-up artifact is correspondingly versioned as v3.
 
 ## Deterministic preflight
 

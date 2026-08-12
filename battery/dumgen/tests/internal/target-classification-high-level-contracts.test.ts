@@ -25,6 +25,10 @@ import {
 import { stableJson } from "../../src/lib/stable-json";
 import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
+	canonicalInputSchema,
+	canonicalOutputSchema,
+} from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
+import {
 	demonstrationSelection,
 	diagnosticSelection,
 	evaluationSelection,
@@ -271,6 +275,72 @@ describe("target classification high-level contract prototype", () => {
 				).toEqual(goldenCase.idealOutput);
 			}
 		}
+	});
+
+	test("emits membership only when the target has additional members", () => {
+		const singleton = corpus.cases["target-de-route-lexeme-adj"];
+		if (singleton === undefined)
+			throw new Error("Missing singleton fixture.");
+		const materializedSingleton = materializeRepresentation(
+			"additional-compact-indices",
+			singleton,
+		);
+		expect(materializedSingleton.idealOutput).toMatchObject({
+			decision: "Resolved",
+			target: { membership: null },
+		});
+		expect(
+			additionalIndicesOutputSchema.safeParse({
+				decision: "Resolved",
+				target: {
+					family: "Lexeme",
+					kind: "ADJ",
+					membership: { additionalMemberIndices: [] },
+				},
+			}).success,
+		).toBe(false);
+
+		const governedSeparable = {
+			input: canonicalInputSchema.parse({
+				clickedSegmentIndex: 2,
+				segments: [
+					{ kind: "ResolvableText", text: "Sie" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "hört" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "mit" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "dem" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "Rauchen" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "auf" },
+					{ kind: "Punctuation", text: "." },
+				],
+			}),
+			idealOutput: canonicalOutputSchema.parse({
+				decision: "Resolved",
+				target: {
+					family: "Lexeme",
+					kind: "VERB",
+					memberSegmentIndices: [2, 4, 10],
+				},
+			}),
+		};
+		const materializedMultiMember = materializeRepresentation(
+			"additional-compact-indices",
+			governedSeparable,
+		);
+		expect(materializedMultiMember.input).toEqual({
+			clickedIndex: 1,
+			segments: ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."],
+		});
+		expect(materializedMultiMember.idealOutput).toMatchObject({
+			decision: "Resolved",
+			target: {
+				membership: { additionalMemberIndices: [2, 5] },
+			},
+		});
 	});
 
 	test("enforces additional-index click and ordering gates", () => {
@@ -581,7 +651,7 @@ describe("target classification high-level contract prototype", () => {
 						},
 					},
 				}),
-			).rejects.toThrow(/runnerVersion|v11/u);
+			).rejects.toThrow(/runnerVersion|v12/u);
 			const missKeys = [
 				"additional-compact-indices/1/target-de-diagnostic-fusion-am",
 				"additional-compact-indices/2/target-de-diagnostic-idiom-oel-click-oel",
@@ -622,7 +692,7 @@ describe("target classification high-level contract prototype", () => {
 				},
 			});
 			expect(followUp.version).toBe(
-				"target-classification-diagnostic-follow-up-v2",
+				"target-classification-diagnostic-follow-up-v3",
 			);
 			expect(providerCallCount).toBe(8);
 			expect(followUp.callCap).toBe(DIAGNOSTIC_FOLLOW_UP_CALL_CAP);
