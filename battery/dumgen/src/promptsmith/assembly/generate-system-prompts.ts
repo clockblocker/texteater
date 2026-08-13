@@ -27,6 +27,11 @@ import { promptSource as grammarProverbPromptSource } from "../laboratory/prompt
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as targetPromptSource } from "../laboratory/prompt-source/target-classification/de/high-level-whole-unit/prompt-source";
+import {
+	productionDemonstrationSelection,
+	promptSource as productionTargetPromptSource,
+} from "../production/prompt-part/target-classification/de/high-level-whole-unit";
+import { selectedCaseSourcePaths } from "./golden-corpus";
 import type { SystemPromptRecipe } from "./system-prompt-codegen";
 import { defineSystemPromptCodegen } from "./system-prompt-codegen";
 
@@ -72,6 +77,55 @@ const codegen = defineSystemPromptCodegen({
 	staleLabel: "Generated system prompts are stale",
 });
 
-export const systemPromptRecipe: SystemPromptRecipe = codegen.recipe;
+const productionPromptSourceRoot = join(
+	promptsmithRoot,
+	"production",
+	"prompt-part",
+);
+const productionRouteRoot = join(
+	productionPromptSourceRoot,
+	productionTargetPromptSource.route,
+);
+const productionCodegen = defineSystemPromptCodegen({
+	promptSources: [productionTargetPromptSource],
+	promptSourceRoot: productionPromptSourceRoot,
+	generatedRoot: join(
+		promptsmithRoot,
+		"production",
+		"generated-system-prompt",
+	),
+	displayRoot: promptsmithRoot,
+	artifactIdPrefix: "production-system-prompt",
+	generatedBy: "promptsmith/assembly/generate-system-prompts.ts",
+	sourceLabel: "Production Prompt Part",
+	staleLabel: "Generated production system prompts are stale",
+	expectedRouteEntries: () => [
+		"corpus",
+		"demonstrations.ts",
+		"index.ts",
+		"prompt-part.ts",
+		"prompt-source.ts",
+		"representation.ts",
+		"schemas.ts",
+	],
+	provenancePaths: () => [
+		join(productionRouteRoot, "prompt-source.ts"),
+		join(productionRouteRoot, "schemas.ts"),
+		join(productionRouteRoot, "prompt-part.ts"),
+		join(productionRouteRoot, "demonstrations.ts"),
+		join(productionRouteRoot, "representation.ts"),
+		join(productionRouteRoot, "corpus", "corpus.ts"),
+		join(productionRouteRoot, "corpus", "schemas.ts"),
+		join(productionRouteRoot, "corpus", "selections.ts"),
+		...selectedCaseSourcePaths(productionDemonstrationSelection),
+	],
+});
 
-if (import.meta.main) await codegen.run();
+export const systemPromptRecipe: SystemPromptRecipe = codegen.recipe;
+export const productionSystemPromptRecipe: SystemPromptRecipe =
+	productionCodegen.recipe;
+
+if (import.meta.main) {
+	await codegen.run();
+	await productionCodegen.run();
+}

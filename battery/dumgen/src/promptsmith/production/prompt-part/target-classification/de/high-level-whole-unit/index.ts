@@ -24,3 +24,10 @@ export {
 } from "./corpus/validators";
 export { productionDemonstrationGuidance } from "./demonstrations";
 export { promptPart } from "./prompt-part";
+export { promptSource } from "./prompt-source";
+export * from "./representation";
+export {
+	inputSchema,
+	modelInputSchema,
+	outputSchema,
+} from "./schemas";

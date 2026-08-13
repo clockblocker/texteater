@@ -28,6 +28,12 @@ export function defineSystemPromptCodegen(args: {
 	readonly generatedBy: string;
 	readonly sourceLabel?: string;
 	readonly staleLabel: string;
+	readonly expectedRouteEntries?: (
+		source: AnyPromptSource,
+	) => readonly string[];
+	readonly provenancePaths?: (
+		source: AnyPromptSource,
+	) => readonly string[];
 }): {
 	readonly recipe: SystemPromptRecipe;
 	run(argv?: readonly string[]): Promise<void>;
@@ -54,6 +60,7 @@ export function defineSystemPromptCodegen(args: {
 				provenance: promptSourceProvenance(
 					args.promptSourceRoot,
 					source,
+					args.provenancePaths,
 				),
 				meta: { route: source.route },
 			}));
@@ -82,6 +89,9 @@ async function assertPromptSourceLayout(args: {
 	readonly promptSources: readonly AnyPromptSource[];
 	readonly promptSourceRoot: string;
 	readonly sourceLabel?: string;
+	readonly expectedRouteEntries?: (
+		source: AnyPromptSource,
+	) => readonly string[];
 }): Promise<void> {
 	for (const source of args.promptSources) {
 		const directory = join(args.promptSourceRoot, source.route);
@@ -96,11 +106,13 @@ async function assertPromptSourceLayout(args: {
 				{ cause },
 			);
 		}
-		const expectedFiles = [
-			...(source.goldenCorpus === undefined ? [] : ["golden-corpus"]),
-			"prompt-source.ts",
-			"schemas.ts",
-		].toSorted();
+		const expectedFiles = (
+			args.expectedRouteEntries?.(source) ?? [
+				...(source.goldenCorpus === undefined ? [] : ["golden-corpus"]),
+				"prompt-source.ts",
+				"schemas.ts",
+			]
+		).toSorted();
 		if (actualFiles.join("\n") !== expectedFiles.join("\n")) {
 			throw new Error(
 				`${args.sourceLabel ?? "Prompt Source"} "${source.route}" must contain exactly ${expectedFiles.join(", ")}; found ${actualFiles.join(", ") || "no files"}.`,
@@ -112,7 +124,14 @@ async function assertPromptSourceLayout(args: {
 function promptSourceProvenance(
 	promptSourceRoot: string,
 	source: AnyPromptSource,
+	provenancePaths?: (source: AnyPromptSource) => readonly string[],
 ): readonly { readonly kind: "source"; readonly path: string }[] {
+	if (provenancePaths !== undefined) {
+		return provenancePaths(source).map((path) => ({
+			kind: "source",
+			path,
+		}));
+	}
 	const routeRoot = join(promptSourceRoot, source.route);
 	const selected =
 		source.demonstrations === undefined

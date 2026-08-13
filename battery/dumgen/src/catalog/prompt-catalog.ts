@@ -8,7 +8,7 @@ import {
 } from "../intake/contracts";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
-import { systemPrompt as targetSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/target-classification/de/high-level-whole-unit";
+import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
@@ -18,10 +18,12 @@ import {
 	outputSchema as readingOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
 import {
+	additionalIndicesAdapter,
 	inputSchema as targetInputSchema,
+	modelInputSchema as targetModelInputSchema,
 	outputSchema as targetOutputSchema,
-} from "../promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas";
-import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
+	projectClassificationInput,
+} from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
@@ -55,83 +57,40 @@ const intakePrompt = {
 const targetPrompt = {
 	systemPrompt: targetSystemPrompt,
 	inputSchema: targetInputSchema,
+	modelInputSchema: targetModelInputSchema,
 	outputSchema: targetOutputSchema,
+	projectInput(input) {
+		return projectClassificationInput(input).input;
+	},
 	outputPostcondition: {
 		assert(input, generated) {
-			if (generated.decision === "Unresolved") {
-				if (generated.target !== null) {
-					throw new Error(
-						"Unresolved Target must not include a target.",
-					);
-				}
-				return;
-			}
-			if (generated.target === null) {
-				throw new Error("Resolved Target requires a target.");
-			}
-			if (
-				!isGermanReachableHighLevelRoute(
-					generated.target.family,
-					generated.target.kind,
-				)
-			) {
-				throw new Error(
-					"Target must select a reachable German high-level route.",
-				);
-			}
-			const additionalIndices =
-				generated.target.additionalMemberSegmentIndices;
-			if (additionalIndices.includes(input.clickedSegmentIndex)) {
-				throw new Error(
-					"Additional target members must not repeat the clicked Segment.",
-				);
-			}
-			if (new Set(additionalIndices).size !== additionalIndices.length) {
-				throw new Error("Additional target members must be unique.");
-			}
-			const indices = targetMemberSegmentIndices(
-				input.clickedSegmentIndex,
-				additionalIndices,
-			);
-			for (const index of indices) {
-				if (input.segments[index]?.kind !== "ResolvableText") {
-					throw new Error(
-						"Target members must reference ResolvableText.",
-					);
-				}
-			}
+			canonicalizeTargetClassification(input, generated);
 		},
 	},
 	projectOutput(input, generated): AnalysisTarget | Unresolved {
-		if (generated.decision === "Unresolved") {
+		const canonical = canonicalizeTargetClassification(input, generated);
+		if (canonical.decision === "Unresolved") {
 			return { decision: "Unresolved" };
 		}
-		if (generated.target === null) {
-			throw new Error("Resolved Target requires a target.");
-		}
-		return {
-			family: generated.target.family,
-			kind: generated.target.kind,
-			memberSegmentIndices: targetMemberSegmentIndices(
-				input.clickedSegmentIndex,
-				generated.target.additionalMemberSegmentIndices,
-			),
-		} as AnalysisTarget;
+		return canonical.target as AnalysisTarget;
 	},
 	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 1024 },
 } satisfies Prompt<
 	typeof targetInputSchema,
 	typeof targetOutputSchema,
-	AnalysisTarget | Unresolved
+	AnalysisTarget | Unresolved,
+	typeof targetModelInputSchema
 >;
 
-function targetMemberSegmentIndices(
-	clickedSegmentIndex: number,
-	additionalMemberSegmentIndices: readonly number[],
-): number[] {
-	return [clickedSegmentIndex, ...additionalMemberSegmentIndices].toSorted(
-		(left, right) => left - right,
-	);
+function canonicalizeTargetClassification(
+	input: Parameters<typeof projectClassificationInput>[0],
+	generated: Parameters<typeof additionalIndicesAdapter.canonicalize>[0]["output"],
+) {
+	return additionalIndicesAdapter.canonicalize({
+		canonicalInput: input,
+		privateInput: projectClassificationInput(input).input,
+		output: generated,
+	});
 }
 
 const readingPrompt = {

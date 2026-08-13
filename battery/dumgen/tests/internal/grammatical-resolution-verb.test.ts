@@ -31,7 +31,7 @@ const expectedEvaluationIds = [
 
 describe("Lexeme/VERB route-local corpus", () => {
 	test("contains only resolvable cases under the classified-target contract", () => {
-		expect(corpus.all().ids).toHaveLength(21);
+		expect(corpus.all().ids).toHaveLength(36);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-verb-finite-liest",
 			"grammar-de-verb-citation-arbeiten",
@@ -46,6 +46,7 @@ describe("Lexeme/VERB route-local corpus", () => {
 			"forms",
 			"lexicalFeatures",
 			"policyProbes",
+			"dwArticles",
 		]);
 		expect(corpus.all().ids.some((id) => id.includes("unresolved"))).toBe(
 			false,
@@ -53,6 +54,21 @@ describe("Lexeme/VERB route-local corpus", () => {
 		expect(
 			corpus.all().ids.some((id) => id.includes("modal-ellipsis")),
 		).toBe(false);
+	});
+
+	test("keeps the DW article cases source-backed and corpus-only", () => {
+		const dwCases = corpus.collections.dwArticles;
+		expect(dwCases.ids).toHaveLength(15);
+		expect(demonstrations.isDisjointFrom(dwCases)).toBe(true);
+		expect(evaluation.isDisjointFrom(dwCases)).toBe(true);
+
+		for (const testCase of dwCases.cases) {
+			expect(testCase.contaminationKeys).toHaveLength(1);
+			expect(testCase.contaminationKeys?.[0]).toStartWith(
+				"source:https://",
+			);
+			expect(testCase.input.markedContext.length).toBeGreaterThan(80);
+		}
 	});
 
 	test("aligns exact input members with marked context in every case", () => {
@@ -76,7 +92,9 @@ describe("Lexeme/VERB route-local corpus", () => {
 		const prompt = assembleSystemPrompt(promptSource);
 		expect(prompt).toContain('"members":["liest"]');
 		expect(prompt).toContain('"members":["Pass","auf","auf"]');
-		expect(prompt).toContain("Target Classification has already established");
+		expect(prompt).toContain(
+			"Target Classification has already established",
+		);
 		expect(prompt).toContain(
 			"Return only memberOrthographies, normalizedMembers, surface, and lemma",
 		);
@@ -92,8 +110,9 @@ describe("Lexeme/VERB route-local corpus", () => {
 		if (finiteCase === undefined) return;
 
 		expect(
-			inputSchema.safeParse({ markedContext: finiteCase.input.markedContext })
-				.success,
+			inputSchema.safeParse({
+				markedContext: finiteCase.input.markedContext,
+			}).success,
 		).toBe(false);
 		expect(
 			inputSchema.safeParse({

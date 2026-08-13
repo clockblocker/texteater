@@ -1,5 +1,6 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
+import { dwArticleCases } from "./cases/dw-articles";
 import { formCases } from "./cases/forms";
 import { lexicalFeatureCases } from "./cases/lexical-features";
 import { policyProbeCases } from "./cases/policy-probes";
@@ -12,6 +13,7 @@ export const corpus = defineGoldenCorpus({
 		forms: formCases,
 		lexicalFeatures: lexicalFeatureCases,
 		policyProbes: policyProbeCases,
+		dwArticles: dwArticleCases,
 	},
 	fingerprintInput(input) {
 		return JSON.stringify({

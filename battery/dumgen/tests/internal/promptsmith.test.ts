@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { runCodegen } from "codegen";
 import type { Lemma, Surface } from "dumling/types";
+import { createHash } from "node:crypto";
 import { zodTextFormat } from "openai/helpers/zod";
 
 import type { AiSdk } from "../../src/ai-sdk/ai-sdk";
@@ -101,6 +102,24 @@ describe("Prompt Assembly", () => {
 		const result = await runCodegen(systemPromptRecipe, { mode: "check" });
 		expect(result.status).toBe("clean");
 		expect(result.applied).toEqual([]);
+	});
+
+	test("catalog uses the promoted production target-classification prompt", () => {
+		const targetPrompt =
+			PROMPT_CATALOG.laboratory.targetClassification.de.highLevelWholeUnit
+				.prompt;
+
+		expect(
+			createHash("sha256")
+				.update(targetPrompt.systemPrompt)
+				.digest("hex"),
+		).toBe(
+			"3c71bc5ded78c53c503f0377cb5af55e2afa6ed03f9c98998126a708e13908bd",
+		);
+		expect(targetPrompt.systemPrompt).toContain("markedSentence");
+		expect(targetPrompt.systemPrompt).toContain(
+			"Examples to follow:",
+		);
 	});
 
 	test("all four active schemas are accepted by OpenAI Structured Outputs", () => {
