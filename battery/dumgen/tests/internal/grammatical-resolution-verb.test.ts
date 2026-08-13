@@ -11,7 +11,10 @@ import {
 	demonstrations,
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
+import {
+	inputSchema,
+	outputSchema,
+} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
 
 const expectedEvaluationIds = [
 	"grammar-de-verb-infinitive-hinauszulaufen",
@@ -24,21 +27,11 @@ const expectedEvaluationIds = [
 	"grammar-de-verb-passive-wurde-gebeten",
 	"grammar-de-verb-full-werden",
 	"grammar-de-verb-full-hat",
-	"grammar-de-verb-unresolved-perfect-aux-hat",
-	"grammar-de-verb-unresolved-modal-aux-kann",
-	"grammar-de-verb-unresolved-attributive-participle",
-	"grammar-de-verb-unresolved-modal-complex",
-	"grammar-de-verb-unresolved-copular-predicate",
-	"grammar-de-verb-unresolved-contextual-reflexive",
-	"grammar-de-verb-unresolved-adjunct",
-	"grammar-de-verb-unresolved-modifier",
-	"grammar-de-verb-unresolved-repeated-schlaeft",
-	"grammar-de-verb-unresolved-unrelated-targets",
 ] as const;
 
 describe("Lexeme/VERB route-local corpus", () => {
-	test("keeps four minimized demonstrations and 20 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(35);
+	test("contains only resolvable cases under the classified-target contract", () => {
+		expect(corpus.all().ids).toHaveLength(21);
 		expect(demonstrations.ids).toEqual([
 			"grammar-de-verb-finite-liest",
 			"grammar-de-verb-citation-arbeiten",
@@ -48,101 +41,102 @@ describe("Lexeme/VERB route-local corpus", () => {
 		expect(evaluation.ids).toEqual(expectedEvaluationIds);
 		expect(evaluation).toBe(verbGrammaticalResolutionExperiment.evaluation);
 		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		expect(
-			evaluation.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution !== null &&
-				demonstrationLemmas.has(
-					testCase.idealOutput.resolution.lemma.canonicalForm,
-				)
-					? [testCase.idealOutput.resolution.lemma.canonicalForm]
-					: [],
-			),
-		).toEqual([]);
-		expect(corpus.all().ids.some((id) => /-(?:demo|eval)-/u.test(id))).toBe(
-			false,
-		);
+		expect(demonstrations.union(evaluation).ids).toHaveLength(14);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"forms",
 			"lexicalFeatures",
-			"boundaries",
 			"policyProbes",
 		]);
+		expect(corpus.all().ids.some((id) => id.includes("unresolved"))).toBe(
+			false,
+		);
+		expect(
+			corpus.all().ids.some((id) => id.includes("modal-ellipsis")),
+		).toBe(false);
 	});
 
-	test("assembles only minimized demonstrations and explicit route boundaries", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>liest</TARGET>");
-		expect(prompt).toContain("<TARGET>arbeiten</TARGET>");
-		expect(prompt).toContain("<TARGET>Pass</TARGET>");
-		expect(prompt).toContain("<TARGET>auf</TARGET>");
-		expect(prompt).toContain("<TARGET>erinnert</TARGET>");
-		expect(prompt).not.toContain("<TARGET>hinauszulaufen</TARGET>");
-		expect(prompt).not.toContain("<TARGET>gesungen</TARGET>");
-		expect(prompt).not.toContain("<TARGET>tanzd</TARGET>");
-		expect(prompt).toContain("Keep the AUX/VERB boundary exact");
-		expect(prompt).toContain("Keep the ADJ/VERB participle boundary exact");
-		expect(prompt).toContain("First apply a mechanical TARGET-scope gate");
-		expect(prompt).toContain("accept every realized");
-		expect(prompt).toContain("Every pair must");
-		expect(prompt).toContain(
-			"A marked detached prefix supplies only hasSepPrefix",
-		);
-		expect(prompt).toContain(
-			"hasGovPrep requires independent lexical-valency evidence",
-		);
-		expect(prompt).toMatch(
-			/A full modal spelling with its own\s+nominal complement/u,
-		);
-		expect(prompt).toContain(
-			'{"aspect":null,"gender":null,"mood":null,"number":null,"person":null,"tense":null,"verbForm":"Part","voice":null}',
-		);
-		expect(prompt).toContain("Never label it verbForm Inf");
-		expect(prompt).toContain("never emit aspect Perf");
-		expect(prompt).toContain("never copy tense from");
-		expect(prompt).toContain("hasGovPrep");
-		expect(prompt).toContain("hasSepPrefix");
-		expect(prompt).toContain("lexicallyReflexive");
-		expect(prompt).toContain("verbType");
-	});
-
-	test("keeps unsettled voice, predicative, ellipsis, and nominalization probes out of scoring", () => {
-		for (const caseId of [
-			"grammar-de-verb-provisional-passive-participle-geschlossen",
-			"grammar-de-verb-provisional-predicative-geschlossen",
-			"grammar-de-verb-provisional-modal-ellipsis-kann",
-			"grammar-de-verb-provisional-zu-infinitive-warten",
-			"grammar-de-verb-provisional-nominalized-infinitive",
-			"grammar-de-verb-provisional-split-stem-only",
-		]) {
-			expect(corpus.cases[caseId]).toBeDefined();
-			expect(demonstrations.ids).not.toContain(caseId);
-			expect(evaluation.ids).not.toContain(caseId);
+	test("aligns exact input members with marked context in every case", () => {
+		for (const testCase of corpus.all().cases) {
+			const markedMembers = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<>]+)<\/TARGET>/gu,
+				),
+			].map((match) => match[1] ?? "");
+			expect(testCase.input.members).toEqual(markedMembers);
+			expect(testCase.idealOutput.memberOrthographies).toHaveLength(
+				testCase.input.members.length,
+			);
+			expect(testCase.idealOutput.normalizedMembers).toHaveLength(
+				testCase.input.members.length,
+			);
 		}
 	});
 
-	test("pins split-member, lexical-reflexive, governed-preposition, and participle payloads", () => {
+	test("assembles flattened demonstrations for an already classified target", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain('"members":["liest"]');
+		expect(prompt).toContain('"members":["Pass","auf","auf"]');
+		expect(prompt).toContain("Target Classification has already established");
+		expect(prompt).toContain(
+			"Return only memberOrthographies, normalizedMembers, surface, and lemma",
+		);
+		expect(prompt).not.toContain('"decision":"Resolved"');
+		expect(prompt).not.toContain('"resolution":');
+		expect(prompt).not.toContain('"realizationCoverage":');
+		expect(prompt).not.toContain('"verbType":');
+	});
+
+	test("enforces the compact input and output DTOs", () => {
+		const finiteCase = corpus.cases["grammar-de-verb-finite-liest"];
+		expect(finiteCase).toBeDefined();
+		if (finiteCase === undefined) return;
+
 		expect(
-			corpus.cases["grammar-de-verb-separable-imperative-aufpassen"]
-				?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard", "Standard"],
-				realizationCoverage: "Full" as const,
-				normalizedMembers: ["pass", "auf", "auf"],
-				surface: {
-					inflectionalFeatures: {
-						mood: "Imp",
-						verbForm: "Fin",
+			inputSchema.safeParse({ markedContext: finiteCase.input.markedContext })
+				.success,
+		).toBe(false);
+		expect(
+			inputSchema.safeParse({
+				...finiteCase.input,
+				members: ["lesen"],
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				decision: "Resolved",
+				resolution: finiteCase.idealOutput,
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...finiteCase.idealOutput,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...finiteCase.idealOutput,
+				lemma: {
+					...finiteCase.idealOutput.lemma,
+					coreFeatures: {
+						hasGovPrep: null,
+						hasSepPrefix: null,
+						lexicallyReflexive: null,
+						verbType: null,
 					},
 				},
+			}).success,
+		).toBe(false);
+	});
+
+	test("keeps multi-member lexical evidence and lexical-head morphology", () => {
+		expect(
+			corpus.cases["grammar-de-verb-separable-imperative-aufpassen"],
+		).toMatchObject({
+			input: { members: ["Pass", "auf", "auf"] },
+			idealOutput: {
+				memberOrthographies: ["Standard", "Standard", "Standard"],
+				normalizedMembers: ["pass", "auf", "auf"],
 				lemma: {
 					canonicalForm: "aufpassen",
 					coreFeatures: {
@@ -153,82 +147,10 @@ describe("Lexeme/VERB route-local corpus", () => {
 			},
 		});
 		expect(
-			corpus.cases["grammar-de-verb-reflexive-erinnert"]?.idealOutput,
+			corpus.cases["grammar-de-verb-participle-gesungen"],
 		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard", "Standard"],
-				normalizedMembers: ["erinnert", "sich", "an"],
-				lemma: {
-					canonicalForm: "sich erinnern",
-					coreFeatures: {
-						hasGovPrep: "an",
-						lexicallyReflexive: "Yes",
-					},
-				},
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-verb-participle-mitgebracht"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: {
-					inflectionalFeatures: {
-						aspect: null,
-						tense: null,
-						verbForm: "Part",
-						voice: null,
-					},
-				},
-				lemma: { coreFeatures: { hasSepPrefix: "mit" } },
-			},
-		});
-	});
-
-	test("holds out distinct detached-separable and lexical-reflexive positives", () => {
-		for (const caseId of [
-			"grammar-de-verb-separable-finite-aufstehen",
-			"grammar-de-verb-reflexive-schaemt",
-		]) {
-			expect(evaluation.ids).toContain(caseId);
-			expect(demonstrations.ids).not.toContain(caseId);
-		}
-		expect(
-			corpus.cases["grammar-de-verb-separable-finite-aufstehen"]
-				?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
-				realizationCoverage: "Full" as const,
-				normalizedMembers: ["steht", "auf"],
-				lemma: {
-					canonicalForm: "aufstehen",
-					coreFeatures: { hasSepPrefix: "auf" },
-				},
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-verb-reflexive-schaemt"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
-				normalizedMembers: ["schämt", "sich"],
-				lemma: {
-					canonicalForm: "sich schämen",
-					coreFeatures: {
-						hasGovPrep: null,
-						lexicallyReflexive: "Yes",
-					},
-				},
-			},
-		});
-	});
-
-	test("keeps analytic auxiliaries as members and lexical-head morphology", () => {
-		expect(
-			corpus.cases["grammar-de-verb-participle-gesungen"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard"],
+			input: { members: ["hat", "gesungen"] },
+			idealOutput: {
 				normalizedMembers: ["hat", "gesungen"],
 				surface: {
 					inflectionalFeatures: { verbForm: "Part", tense: null },
@@ -236,139 +158,11 @@ describe("Lexeme/VERB route-local corpus", () => {
 				lemma: { canonicalForm: "singen" },
 			},
 		});
-		expect(
-			corpus.cases["grammar-de-verb-future-wird-reisen"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				normalizedMembers: ["wird", "reisen"],
-				surface: {
-					inflectionalFeatures: { verbForm: "Inf", tense: null },
-				},
-				lemma: { canonicalForm: "reisen" },
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-verb-passive-wurde-gebeten"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				memberOrthographies: ["Standard", "Standard", "Standard"],
-				normalizedMembers: ["wurde", "um", "gebeten"],
-				surface: {
-					inflectionalFeatures: {
-						verbForm: "Part",
-						voice: null,
-					},
-				},
-				lemma: {
-					canonicalForm: "bitten",
-					coreFeatures: { hasGovPrep: "um" },
-				},
-			},
-		});
-	});
-
-	test("keeps Aspect null on every authoritative lexical participle", () => {
-		for (const caseId of [
-			"grammar-de-verb-participle-mitgebracht",
-			"grammar-de-verb-participle-gesungen",
-		]) {
-			expect(corpus.cases[caseId]?.idealOutput).toMatchObject({
-				resolution: {
-					surface: {
-						inflectionalFeatures: {
-							aspect: null,
-							verbForm: "Part",
-						},
-					},
-				},
-			});
-			expect(evaluation.ids).toContain(caseId);
-		}
-	});
-
-	test("derives strict minimal DTOs and exact verb-form feature shapes", () => {
-		const finiteCase = corpus.cases["grammar-de-verb-past-ging"];
-		const citationCase = corpus.cases["grammar-de-verb-citation-arbeiten"];
-		if (
-			finiteCase === undefined ||
-			finiteCase.idealOutput.resolution === null ||
-			citationCase === undefined ||
-			citationCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing VERB fixtures.");
-		}
-		expect(
-			outputSchema.safeParse({
-				...finiteCase.idealOutput,
-				resolution: {
-					...finiteCase.idealOutput.resolution,
-					lemma: {
-						...finiteCase.idealOutput.resolution.lemma,
-						language: "de",
-					},
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...finiteCase.idealOutput,
-				resolution: {
-					...finiteCase.idealOutput.resolution,
-					surface: {
-						...finiteCase.idealOutput.resolution.surface,
-						inflectionalFeatures: {
-							gender: "Masc",
-							mood: "Ind",
-							number: "Sing",
-							person: "3",
-							tense: "Past",
-							verbForm: "Fin",
-							voice: null,
-						},
-					},
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...finiteCase.idealOutput,
-				resolution: {
-					...finiteCase.idealOutput.resolution,
-					lemma: {
-						...finiteCase.idealOutput.resolution.lemma,
-						coreFeatures: {
-							hasGovPrep: null,
-							hasSepPrefix: null,
-							verbType: null,
-						},
-					},
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					surface: {
-						...citationCase.idealOutput.resolution.surface,
-						inflectionalFeatures: {
-							mood: null,
-							number: null,
-							person: null,
-							tense: null,
-							verbForm: "Inf",
-							voice: null,
-						},
-					},
-				},
-			}).success,
-		).toBe(false);
 	});
 });
 
 describe("Lexeme/VERB diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
+	test("passes every pinned ideal output", () => {
 		for (const [index, caseId] of evaluation.ids.entries()) {
 			const testCase = evaluation.cases[index];
 			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
@@ -383,28 +177,25 @@ describe("Lexeme/VERB diagnostic evaluator", () => {
 		}
 	});
 
-	test("reports inflection and lexical-identity misses independently", () => {
+	test("reports an inflection miss without hiding lexical identity", () => {
 		const testCase = corpus.cases["grammar-de-verb-past-ging"];
 		if (
 			testCase === undefined ||
-			testCase.idealOutput.resolution === null
+			testCase.idealOutput.surface.surfaceKind !== "Inflection"
 		) {
 			throw new Error("Missing ging fixture.");
 		}
 		const output = outputSchema.parse({
 			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					inflectionalFeatures: {
-						mood: "Sub",
-						number: "Sing",
-						person: "3",
-						tense: "Past",
-						verbForm: "Fin",
-						voice: null,
-					},
+			surface: {
+				...testCase.idealOutput.surface,
+				inflectionalFeatures: {
+					mood: "Sub",
+					number: "Sing",
+					person: "3",
+					tense: "Past",
+					verbForm: "Fin",
+					voice: null,
 				},
 			},
 		});
@@ -418,32 +209,5 @@ describe("Lexeme/VERB diagnostic evaluator", () => {
 		expect(result.inflectionalFeaturesPass).toBe(false);
 		expect(result.canonicalFormPass).toBe(true);
 		expect(result.coreFeaturesPass).toBe(true);
-	});
-
-	test("scores every marked member for a split separable Surface", () => {
-		const testCase =
-			corpus.cases["grammar-de-verb-separable-imperative-aufpassen"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing aufpassen fixture.");
-		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				memberOrthographies: ["Standard"],
-			},
-		});
-		const result = evaluateVerbGrammaticalResolution({
-			caseId: "grammar-de-verb-separable-imperative-aufpassen",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
-		expect(result.contractPass).toBe(false);
-		expect(result.memberCountPass).toBe(false);
-		expect(result.memberOrthographiesPass).toBe(false);
 	});
 });

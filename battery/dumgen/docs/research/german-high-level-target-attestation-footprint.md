@@ -212,7 +212,7 @@ type CanonicalTargetCase = Readonly<{
 ```
 
 Its schema and corpus live under
-`src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/`,
+`src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/corpus/`,
 not under any candidate Prompt Source. Its named semantic collections assign no
 demo/evaluation role. A separate `selections.ts` pins explicit demonstration
 and held-out IDs and checks ID, complete-stimulus, and contamination-key

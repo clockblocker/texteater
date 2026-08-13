@@ -35,5 +35,6 @@
 	"files.associations": {
 		"bun.lock": "jsonc"
 	},
-	"js/ts.experimental.useTsgo": true
+	"js/ts.experimental.useTsgo": true,
+	"js/ts.tsdk.path": "node_modules/@typescript/native-preview"
 }

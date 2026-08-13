@@ -1,11 +1,11 @@
 // PROTOTYPE ONLY — executable semantic dependency binding for issue #85.
 
 import { stableJson } from "../../../../lib/stable-json";
-import { corpus } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
+	corpus,
 	semanticTargetFingerprint,
 	targetStimulusFingerprint,
-} from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/fingerprints";
+} from "../../../production/prompt-part/target-classification/de/high-level-whole-unit";
 import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,

@@ -11,6 +11,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext:
 					"<TARGET>Pass</TARGET> <TARGET>auf</TARGET> dich <TARGET>auf</TARGET>!",
+				members: ["Pass", "auf", "auf"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["pass", "auf", "auf"],
@@ -20,7 +21,6 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					hasGovPrep: "auf",
 					hasSepPrefix: "auf",
 					lexicallyReflexive: null,
-					verbType: null,
 				},
 				inflectionalFeatures: {
 					mood: "Imp",
@@ -32,12 +32,13 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 			}),
 			explanation:
-				"The stem, governed preposition, and detached separable prefix are three positionally distinct fixed members; the contextual reflexive object dich remains free.",
+				"Two auf. First governed preposition. Second separable prefix. dich free.",
 		},
 		"grammar-de-verb-reflexive-erinnert": {
 			input: {
 				markedContext:
 					"Sie <TARGET>erinnert</TARGET> <TARGET>sich</TARGET> <TARGET>an</TARGET> den Geruch.",
+				members: ["erinnert", "sich", "an"],
 			},
 			idealOutput: finite(
 				["erinnert", "sich", "an"],
@@ -52,17 +53,17 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					hasGovPrep: "an",
 					hasSepPrefix: null,
 					lexicallyReflexive: "Yes",
-					verbType: null,
 				},
 				["Standard", "Standard", "Standard"],
 			),
 			explanation:
-				"The inherently reflexive pronoun and governed preposition are realized fixed members, while the Lemma retains sich erinnern and its lexical features.",
+				"sich inherent. an governed. Both members.",
 		},
 		"grammar-de-verb-governed-preposition-wartet": {
 			input: {
 				markedContext:
 					"Sie <TARGET>wartet</TARGET> <TARGET>auf</TARGET> den nächsten Zug.",
+				members: ["wartet", "auf"],
 			},
 			idealOutput: finite(
 				["wartet", "auf"],
@@ -81,6 +82,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext:
 					"Sie <TARGET>steht</TARGET> jeden Morgen früh <TARGET>auf</TARGET>.",
+				members: ["steht", "auf"],
 			},
 			idealOutput: finite(
 				["steht", "auf"],
@@ -94,13 +96,12 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				{ ...ordinaryCore, hasSepPrefix: "auf" },
 				["Standard", "Standard"],
 			),
-			explanation:
-				"Both detached members form one complete finite Surface of aufstehen; the intervening material remains context.",
 		},
 		"grammar-de-verb-reflexive-schaemt": {
 			input: {
 				markedContext:
 					"Er <TARGET>schämt</TARGET> <TARGET>sich</TARGET>.",
+				members: ["schämt", "sich"],
 			},
 			idealOutput: finite(
 				["schämt", "sich"],
@@ -115,17 +116,15 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					hasGovPrep: null,
 					hasSepPrefix: null,
 					lexicallyReflexive: "Yes",
-					verbType: null,
 				},
 				["Standard", "Standard"],
 			),
-			explanation:
-				"The inherently reflexive pronoun is a fixed Surface member and also establishes the Lemma-level feature.",
 		},
 		"grammar-de-verb-future-wird-reisen": {
 			input: {
 				markedContext:
 					"Sie <TARGET>wird</TARGET> <TARGET>reisen</TARGET>.",
+				members: ["wird", "reisen"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["wird", "reisen"],
@@ -140,13 +139,13 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 					voice: null,
 				},
 			}),
-			explanation:
-				"Future-forming wird is fixed high-level material, while Surface morphology remains the infinitive morphology of reisen.",
+			explanation: "wird member. reisen head. Head stays Inf.",
 		},
 		"grammar-de-verb-passive-wurde-gebeten": {
 			input: {
 				markedContext:
 					"Sie <TARGET>wurde</TARGET> <TARGET>um</TARGET> Geduld <TARGET>gebeten</TARGET>.",
+				members: ["wurde", "um", "gebeten"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["wurde", "um", "gebeten"],
@@ -165,11 +164,12 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 			}),
 			explanation:
-				"Passive wurde and governed um are fixed members, but gebeten remains an ordinary Partizip II Surface with null clause-level voice.",
+				"wurde and um members. gebeten head. Head stays Part; voice null.",
 		},
 		"grammar-de-verb-full-modal-mag": {
 			input: {
 				markedContext: "Sie <TARGET>mag</TARGET> Schokolade.",
+				members: ["mag"],
 			},
 			idealOutput: finite(["mag"], "mögen", {
 				mood: "Ind",
@@ -177,12 +177,11 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				person: "3",
 				tense: "Pres",
 			}),
-			explanation:
-				"Mögen with its own nominal object is a lexical full verb, not a modal auxiliary; verbType is therefore null for this use.",
 		},
 		"grammar-de-verb-full-werden": {
 			input: {
 				markedContext: "Sie <TARGET>wird</TARGET> Ärztin.",
+				members: ["wird"],
 			},
 			idealOutput: finite(["wird"], "werden", {
 				mood: "Ind",
@@ -190,12 +189,11 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				person: "3",
 				tense: "Pres",
 			}),
-			explanation:
-				"Lexical werden meaning become belongs to VERB rather than future/passive AUX.",
 		},
 		"grammar-de-verb-full-hat": {
 			input: {
 				markedContext: "Sie <TARGET>hat</TARGET> ein Fahrrad.",
+				members: ["hat"],
 			},
 			idealOutput: finite(["hat"], "haben", {
 				mood: "Ind",
@@ -203,11 +201,12 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				person: "3",
 				tense: "Pres",
 			}),
-			explanation:
-				"Possession haben is a full verb and is complementary to the AUX route's perfect-forming use.",
 		},
 		"grammar-de-verb-typo-tanzd": {
-			input: { markedContext: "Er <TARGET>tanzd</TARGET> gern." },
+			input: {
+				markedContext: "Er <TARGET>tanzd</TARGET> gern.",
+				members: ["tanzd"],
+			},
 			idealOutput: finite(
 				["tanzt"],
 				"tanzen",

@@ -1,21 +1,23 @@
 import { describe, expect, test } from "bun:test";
 import { assertCaseSelectionsUncontaminated } from "../../src/promptsmith/assembly";
-import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
-import { semanticTargetFingerprint } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/fingerprints";
-import {
-	adaptiveCarryoverSelection,
-	adaptiveDevelopmentSelection,
-	adaptiveNovelSelection,
-	demonstrationSelection,
-	diagnosticSelection,
-	evaluationSelection,
-} from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
-import { validateOriginalIndexMembership } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/validators";
 import { systemPromptForRepresentation } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/evaluator";
+import {
+	adaptiveCarryoverSelection,
+	adaptiveDevelopmentSelection,
+	adaptiveNovelSelection,
+	corpus,
+	demonstrationSelection,
+	diagnosticSelection,
+	evaluationSelection,
+	productionDemonstrationGuidance,
+	productionDemonstrationSelection,
+	semanticTargetFingerprint,
+	validateOriginalIndexMembership,
+} from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import {
 	GERMAN_HIGH_LEVEL_ROUTES,
 	GERMAN_REACHABLE_HIGH_LEVEL_ROUTES,
@@ -298,6 +300,36 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(new Set(demonstrationSentences).size).toBe(
 			demonstrationSentences.length,
 		);
+	});
+
+	test("derives production demonstrations and frozen evaluation from one corpus", () => {
+		expect(productionDemonstrationSelection.ids).toHaveLength(21);
+		expect(evaluationSelection.ids).toHaveLength(94);
+		expect(
+			productionDemonstrationSelection.isDisjointFrom(
+				evaluationSelection,
+			),
+		).toBe(true);
+		expect(
+			productionDemonstrationSelection.intersection(evaluationSelection)
+				.isEmpty,
+		).toBe(true);
+		expect(
+			corpus
+				.select([
+					...productionDemonstrationSelection.ids,
+					...evaluationSelection.ids,
+				])
+				.difference(productionDemonstrationSelection).ids,
+		).toEqual(evaluationSelection.ids);
+		expect(Object.keys(productionDemonstrationGuidance)).toEqual([
+			...productionDemonstrationSelection.ids,
+		]);
+		assertCaseSelectionsUncontaminated({
+			route: corpus.route,
+			demonstrations: productionDemonstrationSelection,
+			evaluation: evaluationSelection,
+		});
 	});
 
 	test("freezes the 7 v16 misses plus 23 novel adaptive probes", () => {

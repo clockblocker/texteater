@@ -55,13 +55,13 @@ function draftResult() {
 
 test("VERB runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v1");
+	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v2");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/verb");
 	expect(binding.model).toBe("gpt-5.6-luna");
 	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(20);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
+	expect(prepareCurrentTestCases()).toHaveLength(10);
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
 	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
 	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
@@ -96,14 +96,11 @@ test("VERB retained evidence is strict, current-bound, and preserves errors", ()
 	const { output: _output, ...withoutOutput } = first;
 	const parseFailure = {
 		...withoutOutput,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
 		memberCountPass: false,
 		memberOrthographiesPass: false,
 		surfaceKindPass: false,
 		normalizedSurfacePass: false,
 		spellingPass: false,
-		realizationCoveragePass: false,
 		surfaceFeaturesPass: false,
 		inflectionalFeaturesPass: false,
 		canonicalFormPass: false,

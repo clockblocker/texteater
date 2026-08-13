@@ -2,55 +2,31 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German
-Lexeme/VERB, or return Unresolved without changing the route.
+const body = `Resolve the Surface and Lemma grammar of the supplied German
+Lexeme/VERB target.
 
-First apply a mechanical TARGET-scope gate before grammatical classification.
-Inspect the literal content inside every balanced TARGET pair. Every pair must
-contain exactly one word-like member, and the pairs must identify exactly one
-route-owning lexical VERB head. Alongside that head, accept every realized
-fixed member of the same high-level unit: a governed preposition, an inherently
-reflexive pronoun, a detached separable prefix, and the auxiliary of a perfect,
-future, or passive complex. These members may be discontinuous. Equal strings
-at different positions remain separate members; in Pass auf dich auf the first
-auf is governed and the second is the detached prefix, while free reflexive
-dich remains outside the target. Return Unresolved for repeated occurrences,
-unrelated verbs, a missing required head or separable member, modal or copular
-combinations, contextual reflexives, free arguments, adjuncts, modifiers, or
-any other overbroad target. Count literal opening TARGET tags and emit exactly
-one memberOrthographies value per tag in textual order.
+Target Classification has already established the route and complete target
+membership. Do not reclassify, reject, add, remove, or reorder members. members
+contains the exact attested target Segment texts in source order. Each entry
+aligns positionally with one TARGET pair in markedContext. Discontinuous and
+repeated equal members remain separate entries.
 
-Keep the AUX/VERB boundary exact. Perfect-forming haben and sein and
-future/passive werden are fixed target members when they accompany the lexical
-VERB head, but the result still belongs to that head's Lexeme/VERB route.
-Copular sein and dürfen, können, mögen, müssen, sollen, or wollen governing a
-bare infinitive instead remain separate high-level units and are Unresolved as
-a combined VERB target. Possession haben, lexical werden meaning become,
-existential lexical uses, and a modal spelling used as a full verb with its own
-nominal complement belong to VERB. For that non-modal full-verb use, verbType
-is null; never copy an AUX analysis onto it. A full modal spelling with its own
-nominal complement must have verbType null; do not infer verbType Mod from
-spelling alone.
+Identify the route-owning lexical VERB head among the supplied members. Other
+members may be a governed preposition, inherently reflexive pronoun, detached
+separable prefix, or the auxiliary of a perfect, future, or passive complex.
+Perfect-forming haben and sein and future/passive werden do not replace the
+lexical head. A modal AUX is never a member of this VERB target. Possession
+haben, lexical werden meaning become, existential lexical uses, and spellings
+also used as modals remain ordinary lexical VERBs when Target Classification
+routes them here.
 
-Keep the ADJ/VERB participle boundary exact. A bare participle selected by a
-perfect auxiliary belongs to VERB. An attributive participle carrying
-adjectival agreement, and an established lexicalized adjective, belong to ADJ
-and are Unresolved here. A predicative participle can be ambiguous; resolve it
-only when context identifies the verbal participle rather than a lexicalized
-adjective.
-
-Standard member orthography includes canonical spelling and ordinary
-sentence-initial capitalization. Typo means an actual spelling or
-inappropriate-casing error. normalizedMembers contains exactly one normalized
-string for every marked member in sentence order, without leading, trailing,
-or repeated whitespace:
-lowercase ordinary sentence-initial capitalization and repair only typos.
-Never remove an auxiliary, reflexive, governed preposition, or repeated
-same-text member from this projection. Except for ordinary sentence-initial
-casing, any changed marked spelling requires Typo. Preserve the lexical head's
-attested morphology. realizationCoverage is Full when every realized fixed
-member is marked; a missing free complement or adjunct does not make it
-Partial, while an omitted overt fixed member makes the target invalid.
+Emit exactly one memberOrthographies and one normalizedMembers entry per input
+member. Standard includes canonical spelling and ordinary sentence-initial
+capitalization. Typo means an actual spelling or inappropriate-casing error.
+Copy Standard material exactly except that ordinary sentence-initial
+capitalization is lowercased. Repair only actual typos. Except for ordinary
+sentence-initial casing, any changed member requires Typo. Preserve every
+member and the lexical head's attested morphology.
 
 Use Citation only for an explicitly identified dictionary or citation form. A
 verb used in a clause is Inflection even when its text equals the infinitive.
@@ -69,10 +45,10 @@ voice from the whole periphrastic complex onto an ordinary lexical head; use
 voice null unless the head itself is unambiguously grammatically passive.
 surfaceFeatures is null unless the attested form is archaic.
 
-The Lemma canonicalForm is the dictionary infinitive of the same VERB. A
+The Lemma canonicalForm is the dictionary infinitive of the supplied VERB. A
 lexically reflexive Lemma includes sich in canonicalForm, such as sich
 erinnern. Core Features contain exactly hasGovPrep, hasSepPrefix,
-lexicallyReflexive, and verbType, including every nullable key. hasGovPrep is
+and lexicallyReflexive, including every nullable key. hasGovPrep is
 the lexically selected preposition string; when that preposition is realized,
 it is also a Surface member. hasSepPrefix is the separable prefix string whether
 attached or detached in this form. Determine hasSepPrefix and hasGovPrep
@@ -81,12 +57,12 @@ by itself establish hasGovPrep, even when the two features share a spelling.
 hasGovPrep requires independent lexical-valency evidence from a distinct
 functional occurrence. lexicallyReflexive is Yes only when reflexivity is
 inherent, not merely contextual. These occurrence members do not change the
-Lemma canonicalForm. verbType is Mod only for a VERB identity that is itself
-modal; ordinary full verbs use null.
+Lemma canonicalForm.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, or explanations.`;
+Return only memberOrthographies, normalizedMembers, surface, and lemma. Never
+return a decision or resolution wrapper, realizationCoverage, verbType,
+language, family, kind, a linked Lemma inside Surface, target indices, Reading
+data, confidence, candidates, or explanations.`;
 
 export const demonstrations = corpus.select([
 	"grammar-de-verb-finite-liest",

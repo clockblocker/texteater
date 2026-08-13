@@ -113,14 +113,25 @@ Run `bun run check:system-prompts` to detect stale generated output.
 
 ## Production Prompt Parts
 
-A laboratory instruction body may be promoted under
-`production/prompt-part`, preserving the stage-first route. Each route-local
-module exposes the small production interface `promptPart: string`. It must not
-import laboratory corpora, experiments, runners, or provider clients.
+A reviewed route may be promoted under `production/prompt-part`, preserving the
+stage-first route. The route owns its instruction body, canonical Golden Corpus,
+ordered production demonstration selection, and prompt-facing demonstration
+guidance. Production cases are organized by semantic subject, never by whether
+they currently serve demonstration, development, diagnostic, or evaluation
+roles.
 
-Promotion pins the exact reviewed bytes to retained experiment evidence. Model
-schemas, demonstrations, assembly, and runtime projection remain separate
-seams; promotion of a Prompt Part does not silently promote those concerns.
+Every role is an immutable Case Selection over that one corpus. Use
+`select`, `union`, `intersection`, `difference`, and `isDisjointFrom` to make
+membership explicit. Set algebra proves case-ID separation; retained experiments
+must also run Prompt Assembly's semantic contamination check before provider
+calls.
+
+Promotion pins the exact reviewed instruction bytes, demonstrations, and
+guidance to retained experiment evidence. The production module must not import
+laboratory experiments, runners, provider clients, or retained results.
+Laboratory experiments consume the production corpus and content through the
+route's interface. Runtime projection and provider execution remain separate
+seams.
 
 ## Runtime boundary
 

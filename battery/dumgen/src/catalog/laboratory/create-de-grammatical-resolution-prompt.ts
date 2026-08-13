@@ -24,6 +24,9 @@ type AuthoredGrammarPromptOptions<
 	readonly systemPrompt: string;
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;
+	readonly normalizeGenerated?: (
+		generated: z.output<OutputSchema>,
+	) => ModelGrammarOutput;
 };
 
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
@@ -98,7 +101,11 @@ export function createDeGrammaticalResolutionPrompt<
 		outputPostcondition: {
 			assert(rawInput, rawGenerated) {
 				const input = rawInput as { readonly markedContext: string };
-				const generated = rawGenerated as unknown as ModelGrammarOutput;
+				const generated = options.normalizeGenerated
+					? options.normalizeGenerated(
+							rawGenerated as z.output<OutputSchema>,
+						)
+					: (rawGenerated as unknown as ModelGrammarOutput);
 				if (generated.decision === "Unresolved") {
 					if (generated.resolution !== null) {
 						throw new Error(
@@ -124,7 +131,11 @@ export function createDeGrammaticalResolutionPrompt<
 		},
 		projectOutput(rawInput, rawGenerated): GrammaticalResolution {
 			const input = rawInput as { readonly markedContext: string };
-			const generated = rawGenerated as unknown as ModelGrammarOutput;
+			const generated = options.normalizeGenerated
+				? options.normalizeGenerated(
+						rawGenerated as z.output<OutputSchema>,
+					)
+				: (rawGenerated as unknown as ModelGrammarOutput);
 			if (generated.decision === "Unresolved") {
 				return { decision: "Unresolved" };
 			}

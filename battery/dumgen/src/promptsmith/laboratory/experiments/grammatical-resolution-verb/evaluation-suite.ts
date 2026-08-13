@@ -17,16 +17,6 @@ export const evaluation = corpus.select([
 	"grammar-de-verb-passive-wurde-gebeten",
 	"grammar-de-verb-full-werden",
 	"grammar-de-verb-full-hat",
-	"grammar-de-verb-unresolved-perfect-aux-hat",
-	"grammar-de-verb-unresolved-modal-aux-kann",
-	"grammar-de-verb-unresolved-attributive-participle",
-	"grammar-de-verb-unresolved-modal-complex",
-	"grammar-de-verb-unresolved-copular-predicate",
-	"grammar-de-verb-unresolved-contextual-reflexive",
-	"grammar-de-verb-unresolved-adjunct",
-	"grammar-de-verb-unresolved-modifier",
-	"grammar-de-verb-unresolved-repeated-schlaeft",
-	"grammar-de-verb-unresolved-unrelated-targets",
 ]);
 
 if (!evaluation.isDisjointFrom(demonstrations)) {

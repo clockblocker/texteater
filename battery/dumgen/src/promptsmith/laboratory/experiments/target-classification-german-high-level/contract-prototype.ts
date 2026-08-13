@@ -10,14 +10,16 @@ import {
 	defineLocalDemonstrations,
 	definePromptSource,
 } from "../../../assembly";
-import { promptPart as productionPromptPart } from "../../../production/prompt-part/target-classification/de/high-level-whole-unit";
-import { corpus } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
 	adaptiveDevelopmentSelection,
+	corpus,
 	demonstrationSelection,
 	diagnosticSelection,
 	evaluationSelection,
-} from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
+	productionDemonstrationGuidance,
+	productionDemonstrationSelection,
+	promptPart as productionPromptPart,
+} from "../../../production/prompt-part/target-classification/de/high-level-whole-unit";
 import {
 	evaluateGermanHighLevelClickInvariance,
 	evaluateGermanHighLevelTargetClassification,
@@ -591,6 +593,15 @@ const adaptiveIterationFiveDemonstrationCaseIds = Object.freeze(
 	}),
 );
 
+if (
+	stableJson(adaptiveIterationFiveDemonstrationCaseIds) !==
+	stableJson(productionDemonstrationSelection.ids)
+) {
+	throw new Error(
+		"Adaptive-5 demonstrations have drifted from the production selection.",
+	);
+}
+
 type RunProfileConfiguration = Readonly<{
 	pool: RunnerPoolId;
 	prompt: string;
@@ -605,7 +616,7 @@ const RUN_PROFILE_CONFIGURATIONS: Readonly<
 	"frozen-94": Object.freeze({
 		pool: "development",
 		prompt: adaptiveIterationFivePrompt,
-		demonstrationCaseIds: adaptiveIterationFiveDemonstrationCaseIds,
+		demonstrationCaseIds: productionDemonstrationSelection.ids,
 	}),
 	"adaptive-1": Object.freeze({
 		pool: "adaptive",
@@ -630,7 +641,7 @@ const RUN_PROFILE_CONFIGURATIONS: Readonly<
 	"adaptive-5": Object.freeze({
 		pool: "adaptive",
 		prompt: adaptiveIterationFivePrompt,
-		demonstrationCaseIds: adaptiveIterationFiveDemonstrationCaseIds,
+		demonstrationCaseIds: productionDemonstrationSelection.ids,
 	}),
 	diagnostic: Object.freeze({
 		pool: "diagnostic",
@@ -648,30 +659,19 @@ function demonstrationsForProfile(profile: RunProfileId) {
 }
 
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
-	"target-de-demo-perfect-arbeiten-click-habe":
-		"habe + gearbeitet = one perfect verb. Take both. gestern is extra. VERB.",
+	...productionDemonstrationGuidance,
 	"target-de-demo-perfect-arbeiten-click-gearbeitet":
 		"gearbeitet is the lexical part of this perfect. Take habe + gearbeitet as one VERB. Leave gestern out.",
-	"target-de-demo-governed-rechnen-click-rechnet":
-		"mit is lexically governed by rechnet. The marked verb is implicit; return only mit's i as the additional member. The nominal complement remains free. VERB.",
 	"target-de-demo-governed-rechnen-click-mit":
 		"mit is required by rechnen. Same verb target: rechnet + mit. No Regen.",
-	"target-de-demo-adjunct-rechnen-click-mit":
-		"mit dem Taschenrechner tells how the calculation happens; rechnen does not require mit in this sense. The clicked mit is ADP only.",
 	"target-de-demo-idiom-faden-click-verlor":
 		"She lost the train of thought. Idiom. Take verlor + den + Faden. völlig is extra.",
-	"target-de-demo-idiom-faden-click-den":
-		"den is a fixed idiom word here. Take verlor + den + Faden. völlig is extra.",
-	"target-de-demo-aphorism-zeit-click-ist":
-		"Zeit ist Geld is one fixed Aphorism. The clicked middle word still selects every realized member: Zeit + ist + Geld.",
 	"target-de-demo-idiom-faden-click-faden":
 		"Faden means the train of thought here. Same idiom: verlor + den + Faden.",
 	"target-de-demo-literal-faden-click-faden":
 		"Sewing thread. Physical thread. No idiom. Faden/NOUN only.",
 	"target-de-demo-literal-handtuch-click-warf":
 		"Laundry towel goes into the machine. Literal action. No idiom. warf/VERB only.",
-	"target-de-demo-literal-gras-click-biss":
-		"A rabbit physically bites grass. Familiar idiom-shaped words do not matter. No death meaning, no Idiom. biss/VERB only.",
 	"target-de-demo-literal-gras-click-gras":
 		"This is physical grass in a feeding scene. No death meaning, no Idiom. Gras/NOUN only.",
 	"target-de-demo-idiom-katze-click-die":
@@ -682,14 +682,8 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"Katze is fixed idiom material, but the adjective immediately before it is inserted and free. Take ließ + die + Katze + aus + dem + Sack. Do not take verdammte.",
 	"target-de-demo-idiom-katze-click-aus":
 		"aus is a fixed preposition inside this idiom, not a standalone ADP here. Take ließ + die + Katze + aus + dem + Sack. Exclude the inserted adjective verdammte.",
-	"target-de-demo-idiom-katze-click-dem":
-		"dem is the fixed article following fixed aus inside the Idiom. Its click selects ließ + die + Katze + aus + dem + Sack. Exclude the inserted adjective verdammte.",
 	"target-de-demo-idiom-kragen-click-kragen":
 		"platzte + der + Kragen are fixed. Take those three. ihm and sprichwörtliche are free; leave them out.",
-	"target-de-demo-idiom-kragen-click-der":
-		"der is a fixed article in platzte + der + Kragen. Its function-word click selects the whole Idiom. ihm and sprichwörtliche are ordinary dependents; leave them out.",
-	"target-de-diagnostic-idiom-oel-click-ins":
-		"The marked function token is a fixed realized member of the Idiom. Its click selects the complete Idiom, while the inserted descriptive modifier remains outside membership.",
 	"target-de-demo-paired-entweder-click-entweder":
 		"entweder + oder are the frame. hier and dort fill slots. Take the anchors only.",
 	"target-de-demo-paired-entweder-click-hier":
@@ -700,38 +694,22 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"dort comes after oder, but it fills a slot; it is not an anchor. Return dort/ADV only. Do not pair it with oder.",
 	"target-de-demo-paired-einerseits-click-einerseits":
 		"einerseits + andererseits are the two anchors. lokal and digital are adjective fillers. Take the anchors only.",
-	"target-de-demo-paired-einerseits-click-lokal":
-		"lokal fills the first adjective slot before the comma. It is not an anchor. Return lokal/ADJ only.",
 	"target-de-demo-paired-einerseits-click-andererseits":
 		"andererseits is the clicked second anchor. Its partner is the earlier einerseits, not adjacent lokal or digital. Take both anchors only.",
 	"target-de-demo-paired-einerseits-click-digital":
 		"digital fills the adjective slot after the second anchor. It is not an anchor. Return digital/ADJ only.",
-	"target-de-demo-paired-sowohl-click-robust":
-		"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
-	"target-de-demo-inherent-reflexive-click-beeile":
-		"beeilen needs a reflexive pronoun. Take beeile + mich. VERB.",
 	"target-de-demo-inherent-reflexive-click-mich":
 		"mich is required by beeilen. Same verb target: beeile + mich. VERB.",
 	"target-de-demo-optional-reflexive-click-kaemmst":
 		"kämmen works without dich. The click is on the verb, so take kämmst/VERB only. dich remains a separate pronoun.",
-	"target-de-demo-optional-reflexive-click-dich":
-		"kämmen works without dich. dich is an object, not part of the verb. PRON only.",
-	"target-de-demo-modal-arbeiten-click-kann":
-		"kann means ability. It is not tense or voice glue. AUX only.",
 	"target-de-demo-modal-arbeiten-click-arbeiten":
 		"kann means ability, not verb inflection. The clicked arbeiten is VERB only. Do not include kann.",
-	"target-de-demo-passive-briefe-click-werden":
-		"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
 	"target-de-demo-passive-briefe-click-verschickt":
 		"verschickt belongs with passive werden. Take both. Free words do not split the verb.",
 	"target-de-demo-collocation-kenntnis-click-nahm":
 		"The wording is conventional but not idiomatic. Keep ordinary support-verb words separate. nahm/VERB only.",
 	"target-de-demo-collocation-kenntnis-click-zur":
 		"zur is one fused source token: zu + der. Fusion only. Do not absorb the surrounding wording.",
-	"target-de-demo-symbol-percent":
-		"% is the clicked symbol. zwölf is a separate number. SYM only.",
-	"target-de-core-unresolved-qzxv":
-		"The marked string has no defensible German Family/Kind route in this context. Return Unresolved with both nullable fields null.",
 	"target-de-route-phraseme-collocation-antrag-click-einen":
 		"The marked determiner is a fixed realized member of this strong conventional support-verb combination. Select the whole Collocation, including its verb, determiner, and noun; exclude free context.",
 	"target-de-demo-default-interjection-oh":
@@ -740,18 +718,10 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"The first an governs the noun phrase der Kreuzung, so it is an ADP. The objectless final an completes fängt. Take fängt + final an only.",
 	"target-de-demo-repeated-anfangen-click-final-an":
 		"This final an has no governed noun phrase; it completes fängt. Take fängt + final an. The earlier an + der Kreuzung stays out.",
-	"target-de-demo-repeated-anfangen-click-first-an":
-		"This first an introduces and governs der Kreuzung. It is an ADP, not the objectless final verb particle. Return this an alone.",
-	"target-de-diagnostic-repeated-click-final-an":
-		"The marked final an is objectless and completes kommt. Take kommt + final an only. Exclude the earlier an because it introduces der Haltestelle.",
 	"target-de-demo-question-stattfinden-click-findet":
 		"The question mark is only context. findet + statt are the two realized pieces of stattfinden. Take both as Lexeme/VERB.",
 	"target-de-demo-question-stattfinden-click-statt":
 		"statt completes findet here. Question punctuation does not split the separable verb. Take findet + statt as Lexeme/VERB.",
-	"target-de-demo-typo-mitmachen-click-mit":
-		"mact is an obvious typo for macht. The objectless final mit still completes that separable verb. Take mact + mit as Lexeme/VERB.",
-	"target-de-demo-predicative-cringe-click-cringe":
-		"cringe describes the subject after wirkt. It is an indeclinable borrowed property word here: ADJ, not NOUN.",
 });
 
 const membershipInstructions: Readonly<Record<RepresentationId, string>> = {

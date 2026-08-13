@@ -1,6 +1,6 @@
 import type { output } from "zod";
 
-import { stableJson } from "../../../../../../lib/stable-json";
+import { stableJson } from "../../../../../../../lib/stable-json";
 import type { canonicalInputSchema, canonicalOutputSchema } from "./schemas";
 
 type Input = output<typeof canonicalInputSchema>;

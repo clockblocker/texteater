@@ -6,7 +6,7 @@ import {
 	canonicalInputSchema,
 	canonicalOutputSchema,
 	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
-} from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
+} from "../../../production/prompt-part/target-classification/de/high-level-whole-unit";
 
 export const REPRESENTATION_IDS = ["additional-compact-indices"] as const;
 

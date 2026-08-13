@@ -26,18 +26,6 @@ import {
 } from "../../docs/prototypes/target-classification-high-level-contracts/run";
 import { stableJson } from "../../src/lib/stable-json";
 import { assertCaseSelectionsUncontaminated } from "../../src/promptsmith/assembly";
-import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
-import {
-	canonicalInputSchema,
-	canonicalOutputSchema,
-	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
-} from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
-import {
-	adaptiveDevelopmentSelection,
-	demonstrationSelection,
-	diagnosticSelection,
-	evaluationSelection,
-} from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/selections";
 import {
 	type ArmEvidenceSummary,
 	ATTEMPTS_PER_ARM,
@@ -61,7 +49,18 @@ import {
 	projectClassificationInput,
 	REPRESENTATION_IDS,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/representations";
-import { promptPart as productionPromptPart } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
+import {
+	adaptiveDevelopmentSelection,
+	canonicalInputSchema,
+	canonicalOutputSchema,
+	corpus,
+	demonstrationSelection,
+	diagnosticSelection,
+	evaluationSelection,
+	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
+	productionDemonstrationSelection,
+	promptPart as productionPromptPart,
+} from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
 
 describe("target classification high-level contract prototype", () => {
@@ -90,6 +89,12 @@ describe("target classification high-level contract prototype", () => {
 		);
 		expect(frozen.arms[0]?.promptSha256).toBe(
 			adaptive.arms[0]?.promptSha256,
+		);
+		expect(adaptive.demonstrationCaseIds).toEqual(
+			productionDemonstrationSelection.ids,
+		);
+		expect(frozen.demonstrationCaseIds).toEqual(
+			productionDemonstrationSelection.ids,
 		);
 	});
 

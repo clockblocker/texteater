@@ -1,7 +1,7 @@
 import {
 	defineGoldenCaseCollection,
 	type GoldenCaseRegistry,
-} from "../../../../../../assembly";
+} from "../../../../../../../assembly";
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
 import { resolved, type Segment, sentence } from "./builders";
 import { evidence, IDS, udPartOfSpeech } from "./sources";

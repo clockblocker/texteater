@@ -1,4 +1,4 @@
-import { defineGoldenCorpus } from "../../../../../assembly";
+import { defineGoldenCorpus } from "../../../../../../assembly";
 import { adaptiveDevelopmentCases } from "./cases/adaptive-development";
 import { boundaryCases } from "./cases/boundaries";
 import { robustnessCases } from "./cases/robustness";

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../../../../../schema/german-high-level-routes";
+import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../../../../../../schema/german-high-level-routes";
 import type {
 	PromptInputSchema,
 	PromptOutputSchema,
-} from "../../../../../assembly";
+} from "../../../../../../assembly";
 
 /**
  * Routes owned by this target-classification contract. Dumling's global

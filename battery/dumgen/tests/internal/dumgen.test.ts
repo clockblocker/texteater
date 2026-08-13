@@ -619,32 +619,27 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard", "Standard", "Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["pass", "auf", "auf"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						surfaceFeatures: null,
-						inflectionalFeatures: {
-							mood: "Imp",
-							number: "Sing",
-							person: "2",
-							tense: null,
-							verbForm: "Fin",
-							voice: null,
-						},
+				memberOrthographies: ["Standard", "Standard", "Standard"],
+				normalizedMembers: ["pass", "auf", "auf"],
+				surface: {
+					spelling: "Canonical",
+					surfaceKind: "Inflection",
+					surfaceFeatures: null,
+					inflectionalFeatures: {
+						mood: "Imp",
+						number: "Sing",
+						person: "2",
+						tense: null,
+						verbForm: "Fin",
+						voice: null,
 					},
-					lemma: {
-						canonicalForm: "aufpassen",
-						coreFeatures: {
-							hasGovPrep: "auf",
-							hasSepPrefix: "auf",
-							lexicallyReflexive: null,
-							verbType: null,
-						},
+				},
+				lemma: {
+					canonicalForm: "aufpassen",
+					coreFeatures: {
+						hasGovPrep: "auf",
+						hasSepPrefix: "auf",
+						lexicallyReflexive: null,
 					},
 				},
 			},

@@ -8,6 +8,7 @@ import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import {
 	constructNormalizedSurface,
+	extractMarkedContextMembers,
 	NormalizedSurfaceProjectionError,
 } from "../schema/normalized-surface-projection";
 import { segmentSource } from "../source-segmentation";
@@ -86,8 +87,11 @@ export function createDumgenImplementation(
 			generators.laboratory.grammaticalResolution.de.Lexeme.SCONJ,
 		"de/Lexeme/SYM":
 			generators.laboratory.grammaticalResolution.de.Lexeme.SYM,
-		"de/Lexeme/VERB":
-			generators.laboratory.grammaticalResolution.de.Lexeme.VERB,
+		"de/Lexeme/VERB": async ({ markedContext }) =>
+			generators.laboratory.grammaticalResolution.de.Lexeme.VERB({
+				markedContext,
+				members: [...extractMarkedContextMembers(markedContext)],
+			}),
 		"de/Lexeme/X": generators.laboratory.grammaticalResolution.de.Lexeme.X,
 		"de/Phraseme/Aphorism":
 			generators.laboratory.grammaticalResolution.de.Phraseme.Aphorism,

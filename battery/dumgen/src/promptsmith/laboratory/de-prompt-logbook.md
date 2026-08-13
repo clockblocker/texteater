@@ -106,16 +106,20 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - These examples encode learner-facing relation identity without copying the
   complement's content into the adposition's Emoji Description.
 
-## 2026-08-13 — first production Prompt Part promoted
+## 2026-08-13 — first complete production Prompt Part promoted
 
-- German high-level Target Classification is the first instruction body
-  promoted to `production/prompt-part`.
+- German high-level Target Classification is the first complete route promoted
+  to `production/prompt-part`: instruction body, canonical 221-case Golden
+  Corpus, exact 21 demonstrations, and their prompt guidance.
 - The promoted 8,577-byte body is Adaptive-5 from the additional-indices
   contract study. Its frozen 94-case regression scored 89/94 in both
   replicates, with zero execution errors and membership safety passing.
 - The regression is not a formal winner claim: click invariance remained false.
   The production promotion is an explicit product decision backed by retained
   development evidence.
-- The production module has one export, `promptPart`, and no laboratory
-  dependency. Its bytes and the assembled regression prompt hash are pinned by
-  focused tests.
+- Demonstrations and the frozen 94-case evaluation are disjoint Case Selections
+  over the same production corpus. Selection algebra proves ID separation and
+  Prompt Assembly validates stronger semantic contamination keys.
+- The production route has no laboratory dependency. Its instruction bytes,
+  demonstration selection, guidance, and assembled regression prompt hash are
+  pinned by focused tests.

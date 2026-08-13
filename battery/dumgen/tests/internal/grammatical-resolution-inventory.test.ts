@@ -124,6 +124,34 @@ describe("German Grammatical Resolution inventory", () => {
 		for (const route of targetReachableRoutes) {
 			const multipleMembers =
 				route.family === "Phraseme" || route.kind === "PairedFrame";
+			const grammarOutput =
+				route.family === "Lexeme" && route.kind === "VERB"
+					? {
+							memberOrthographies: ["Standard"],
+							normalizedMembers: ["eins"],
+							surface: {
+								spelling: "Canonical",
+								surfaceKind: "Inflection",
+								surfaceFeatures: null,
+								inflectionalFeatures: {
+									mood: "Ind",
+									number: "Sing",
+									person: "3",
+									tense: "Pres",
+									verbForm: "Fin",
+									voice: null,
+								},
+							},
+							lemma: {
+								canonicalForm: "einsen",
+								coreFeatures: {
+									hasGovPrep: null,
+									hasSepPrefix: null,
+									lexicallyReflexive: null,
+								},
+							},
+						}
+					: { decision: "Unresolved", resolution: null };
 			const { pending, sdk } = queueSdk([
 				{
 					decision: "Resolved",
@@ -134,7 +162,7 @@ describe("German Grammatical Resolution inventory", () => {
 							: [],
 					},
 				},
-				{ decision: "Unresolved", resolution: null },
+				grammarOutput,
 			]);
 			const exchanges: DumgenModelExchange[] = [];
 			const result = await buildDumgen({
@@ -147,7 +175,17 @@ describe("German Grammatical Resolution inventory", () => {
 				clickedSegmentIndex: 0,
 			});
 
-			expect(result).toEqual({ decision: "Unresolved", language: "de" });
+			if (route.family === "Lexeme" && route.kind === "VERB") {
+				expect(result).toMatchObject({
+					decision: "Resolved",
+					language: "de",
+				});
+			} else {
+				expect(result).toEqual({
+					decision: "Unresolved",
+					language: "de",
+				});
+			}
 			expect(pending).toHaveLength(0);
 			expect(
 				exchanges

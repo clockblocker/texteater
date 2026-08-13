@@ -8,7 +8,10 @@ import { citation, finite, inflection, ordinaryCore } from "./builders";
 export const formCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
 		"grammar-de-verb-finite-liest": {
-			input: { markedContext: "Sie <TARGET>liest</TARGET> leise." },
+			input: {
+				markedContext: "Sie <TARGET>liest</TARGET> leise.",
+				members: ["liest"],
+			},
 			idealOutput: finite(["liest"], "lesen", {
 				mood: "Ind",
 				number: "Sing",
@@ -20,6 +23,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext:
 					"Wörterbucheintrag Vollverb: <TARGET>arbeiten</TARGET>",
+				members: ["arbeiten"],
 			},
 			idealOutput: citation({
 				normalizedMembers: ["arbeiten"],
@@ -27,7 +31,10 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			}),
 		},
 		"grammar-de-verb-past-ging": {
-			input: { markedContext: "Er <TARGET>ging</TARGET> nach Hause." },
+			input: {
+				markedContext: "Er <TARGET>ging</TARGET> nach Hause.",
+				members: ["ging"],
+			},
 			idealOutput: finite(["ging"], "gehen", {
 				mood: "Ind",
 				number: "Sing",
@@ -36,7 +43,10 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			}),
 		},
 		"grammar-de-verb-imperative-lauf": {
-			input: { markedContext: "<TARGET>Lauf</TARGET> schneller!" },
+			input: {
+				markedContext: "<TARGET>Lauf</TARGET> schneller!",
+				members: ["Lauf"],
+			},
 			idealOutput: inflection({
 				normalizedMembers: ["lauf"],
 				canonicalForm: "laufen",
@@ -53,6 +63,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-verb-infinitive-hinauszulaufen": {
 			input: {
 				markedContext: "Er versucht, <TARGET>hinauszulaufen</TARGET>.",
+				members: ["hinauszulaufen"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["hinauszulaufen"],
@@ -75,6 +86,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext:
 					"Die Peitsche <TARGET>hat</TARGET> er <TARGET>mitgebracht</TARGET>.",
+				members: ["hat", "mitgebracht"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["hat", "mitgebracht"],
@@ -100,6 +112,7 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 			input: {
 				markedContext:
 					"Sie <TARGET>hat</TARGET> <TARGET>gesungen</TARGET>.",
+				members: ["hat", "gesungen"],
 			},
 			idealOutput: inflection({
 				normalizedMembers: ["hat", "gesungen"],

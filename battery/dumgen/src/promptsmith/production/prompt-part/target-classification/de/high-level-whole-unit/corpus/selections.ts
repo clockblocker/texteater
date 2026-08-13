@@ -1,4 +1,4 @@
-import { assertCaseSelectionsUncontaminated } from "../../../../../assembly";
+import { assertCaseSelectionsUncontaminated } from "../../../../../../assembly";
 import { corpus } from "./corpus";
 
 export const demonstrationSelection = corpus.select([
@@ -30,7 +30,36 @@ if (demonstrationSelection.ids.length > 35) {
 	);
 }
 
-export const evaluationSelection = corpus.select([
+/**
+ * The exact 21 demonstrations retained by the promoted Adaptive-5 prompt.
+ * This is production prompt content; historical adaptive profiles may select
+ * other cases from the same corpus inside the laboratory runner.
+ */
+export const productionDemonstrationSelection = corpus.select([
+	"target-de-demo-perfect-arbeiten-click-habe",
+	"target-de-demo-governed-rechnen-click-rechnet",
+	"target-de-demo-adjunct-rechnen-click-mit",
+	"target-de-demo-idiom-faden-click-den",
+	"target-de-demo-aphorism-zeit-click-ist",
+	"target-de-demo-literal-gras-click-biss",
+	"target-de-demo-idiom-katze-click-dem",
+	"target-de-demo-paired-einerseits-click-lokal",
+	"target-de-demo-inherent-reflexive-click-beeile",
+	"target-de-demo-optional-reflexive-click-dich",
+	"target-de-demo-modal-arbeiten-click-kann",
+	"target-de-demo-passive-briefe-click-werden",
+	"target-de-demo-repeated-anfangen-click-first-an",
+	"target-de-diagnostic-repeated-click-final-an",
+	"target-de-demo-typo-mitmachen-click-mit",
+	"target-de-demo-predicative-cringe-click-cringe",
+	"target-de-demo-paired-sowohl-click-robust",
+	"target-de-demo-idiom-kragen-click-der",
+	"target-de-demo-symbol-percent",
+	"target-de-core-unresolved-qzxv",
+	"target-de-diagnostic-idiom-oel-click-ins",
+]);
+
+const frozenEvaluationCandidates = corpus.select([
 	"target-de-route-lexeme-adj",
 	"target-de-route-lexeme-adp",
 	"target-de-route-lexeme-adv",
@@ -127,6 +156,19 @@ export const evaluationSelection = corpus.select([
 	"target-de-robust-unresolved",
 ]);
 
+if (
+	!frozenEvaluationCandidates.isDisjointFrom(productionDemonstrationSelection)
+) {
+	throw new Error(
+		"Production demonstrations must not occur in the frozen evaluation candidates.",
+	);
+}
+
+/** The historical 94 cases after mechanically omitting demonstrations. */
+export const evaluationSelection = frozenEvaluationCandidates.difference(
+	productionDemonstrationSelection,
+);
+
 export const diagnosticSelection = corpus.select([
 	"target-de-route-construction-fusion",
 	"target-de-diagnostic-fusion-am",
@@ -218,7 +260,19 @@ assertCaseSelectionsUncontaminated({
 
 assertCaseSelectionsUncontaminated({
 	route: corpus.route,
+	demonstrations: productionDemonstrationSelection,
+	evaluation: evaluationSelection,
+});
+
+assertCaseSelectionsUncontaminated({
+	route: corpus.route,
 	demonstrations: demonstrationSelection,
+	evaluation: adaptiveDevelopmentSelection,
+});
+
+assertCaseSelectionsUncontaminated({
+	route: corpus.route,
+	demonstrations: productionDemonstrationSelection,
 	evaluation: adaptiveDevelopmentSelection,
 });
 

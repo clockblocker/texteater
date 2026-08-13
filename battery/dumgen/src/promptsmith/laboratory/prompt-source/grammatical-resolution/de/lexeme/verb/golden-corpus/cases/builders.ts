@@ -2,7 +2,6 @@ export type VerbCoreFeatures = {
 	readonly hasGovPrep: string | null;
 	readonly hasSepPrefix: string | null;
 	readonly lexicallyReflexive: "Yes" | null;
-	readonly verbType: "Mod" | null;
 };
 
 export type FiniteFeatures = {
@@ -53,7 +52,6 @@ export const ordinaryCore: VerbCoreFeatures = {
 	hasGovPrep: null,
 	hasSepPrefix: null,
 	lexicallyReflexive: null,
-	verbType: null,
 };
 
 export function citation(args: {
@@ -62,20 +60,16 @@ export function citation(args: {
 	readonly coreFeatures?: VerbCoreFeatures;
 }) {
 	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: ["Standard" as const],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: args.coreFeatures ?? ordinaryCore,
-			},
+		memberOrthographies: ["Standard" as const],
+		normalizedMembers: [...args.normalizedMembers],
+		surface: {
+			spelling: "Canonical" as const,
+			surfaceKind: "Citation" as const,
+			surfaceFeatures: null,
+		},
+		lemma: {
+			canonicalForm: args.canonicalForm,
+			coreFeatures: args.coreFeatures ?? ordinaryCore,
 		},
 	};
 }
@@ -87,26 +81,21 @@ export function inflection(args: {
 	readonly coreFeatures?: VerbCoreFeatures;
 	readonly memberOrthographies?: readonly ("Standard" | "Typo")[];
 	readonly spelling?: "Canonical" | "Variant";
-	readonly realizationCoverage?: "Full" | "Partial";
 }) {
 	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [
-				...(args.memberOrthographies ?? ["Standard" as const]),
-			],
-			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: args.spelling ?? ("Canonical" as const),
-				surfaceKind: "Inflection" as const,
-				surfaceFeatures: null,
-				inflectionalFeatures: args.inflectionalFeatures,
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: args.coreFeatures ?? ordinaryCore,
-			},
+		memberOrthographies: [
+			...(args.memberOrthographies ?? ["Standard" as const]),
+		],
+		normalizedMembers: [...args.normalizedMembers],
+		surface: {
+			spelling: args.spelling ?? ("Canonical" as const),
+			surfaceKind: "Inflection" as const,
+			surfaceFeatures: null,
+			inflectionalFeatures: args.inflectionalFeatures,
+		},
+		lemma: {
+			canonicalForm: args.canonicalForm,
+			coreFeatures: args.coreFeatures ?? ordinaryCore,
 		},
 	};
 }
@@ -130,8 +119,3 @@ export function finite(
 		},
 	});
 }
-
-export const unresolved = {
-	decision: "Unresolved" as const,
-	resolution: null,
-};

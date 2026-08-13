@@ -18,10 +18,10 @@ import { verbGrammaticalResolutionExperiment } from "../../../src/promptsmith/la
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const RUNNER_VERSION = "grammatical-resolution-verb-v1";
+const RUNNER_VERSION = "grammatical-resolution-verb-v2";
 const RUN_ROUTE = "grammatical-resolution/de/lexeme/verb";
 const RUN_MAX_OUTPUT_TOKENS = 16384;
-const MINIMUM_EVALUATION_CASES = 15;
+const MINIMUM_EVALUATION_CASES = 10;
 const MAXIMUM_EVALUATION_CASES = 20;
 const MINIMUM_SCORE_RATIO = 0.8;
 const TEXT_VERBOSITY = "low";
@@ -47,14 +47,11 @@ const retainedErrorSchema = z.strictObject({
 });
 const diagnosticShape = {
 	contractPass: z.boolean(),
-	decisionPass: z.boolean(),
-	decisionResolutionCoherencePass: z.boolean(),
 	memberCountPass: z.boolean(),
 	memberOrthographiesPass: z.boolean(),
 	surfaceKindPass: z.boolean(),
 	normalizedSurfacePass: z.boolean(),
 	spellingPass: z.boolean(),
-	realizationCoveragePass: z.boolean(),
 	surfaceFeaturesPass: z.boolean(),
 	inflectionalFeaturesPass: z.boolean(),
 	canonicalFormPass: z.boolean(),
@@ -619,14 +616,11 @@ function recomputeAttemptEvaluation(attempt: RetainedAttempt): RetainedAttempt {
 function failedEvaluation(): Evaluation {
 	return {
 		contractPass: false,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
 		memberCountPass: false,
 		memberOrthographiesPass: false,
 		surfaceKindPass: false,
 		normalizedSurfacePass: false,
 		spellingPass: false,
-		realizationCoveragePass: false,
 		surfaceFeaturesPass: false,
 		inflectionalFeaturesPass: false,
 		canonicalFormPass: false,

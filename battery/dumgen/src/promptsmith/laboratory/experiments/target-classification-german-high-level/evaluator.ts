@@ -1,12 +1,12 @@
 import type { output } from "zod";
 
 import { stableJson } from "../../../../lib/stable-json";
-import { semanticTargetFingerprint } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/fingerprints";
 import {
 	type canonicalInputSchema,
 	canonicalOutputSchema,
-} from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
-import { validateOriginalIndexMembership } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/validators";
+	semanticTargetFingerprint,
+	validateOriginalIndexMembership,
+} from "../../../production/prompt-part/target-classification/de/high-level-whole-unit";
 
 export const GERMAN_HIGH_LEVEL_TARGET_EVALUATOR_VERSION =
 	"german-high-level-target-evaluator-v1";

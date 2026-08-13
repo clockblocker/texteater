@@ -3,10 +3,12 @@
 Question: **Does the lean additional-member-indices contract preserve the
 German high-level target policy across the development suite?**
 
-This remains issue #85's logic experiment, not a production Prompt Source or
-public DTO. Its frozen Adaptive-5 instruction body has now been promoted as the
-first production `prompt-part`; schemas, demonstrations, adapters, and runner
-remain laboratory concerns. The experiment retains one private Structured
+This remains issue #85's logic experiment, not a public DTO. Its frozen
+Adaptive-5 prompt is now the first complete production `prompt-part`: the
+instruction body, canonical corpus, exact 21 demonstrations, and their guidance
+live together under the production route. Evaluation, adaptive, and diagnostic
+pools are selections over that corpus. Representation adapters and runner
+evidence remain laboratory concerns. The experiment retains one private Structured
 Output contract: the click is
 implicit membership. For every Resolved result, the model returns a top-level
 `additionalMemberIndices` array containing only the other members; a
