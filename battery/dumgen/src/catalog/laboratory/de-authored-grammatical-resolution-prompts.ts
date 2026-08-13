@@ -91,6 +91,7 @@ import {
 } from "../../promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/schemas";
 import {
 	inputSchema as verbInputSchema,
+	verbOutputCodec,
 	outputSchema as verbOutputSchema,
 } from "../../promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
 import {
@@ -242,31 +243,8 @@ export const DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS = {
 			systemPrompt: verbSystemPrompt,
 			inputSchema: verbInputSchema,
 			outputSchema: verbOutputSchema,
-			normalizeGenerated(generated) {
-				const lemma = generated.lemma as {
-					readonly canonicalForm: string;
-					readonly coreFeatures: Readonly<Record<string, unknown>>;
-				};
-				return {
-					decision: "Resolved",
-					resolution: {
-						...generated,
-						surface: generated.surface as Readonly<
-							Record<string, unknown>
-						> & {
-							readonly surfaceKind: "Citation" | "Inflection";
-						},
-						realizationCoverage: "Full",
-						lemma: {
-							...lemma,
-							coreFeatures: {
-								...lemma.coreFeatures,
-								verbType: null,
-							},
-						},
-					},
-				};
-			},
+			normalizeGenerated: (generated) =>
+				verbOutputCodec.decode(generated),
 		}),
 		X: authoredPrompt(
 			"Lexeme",

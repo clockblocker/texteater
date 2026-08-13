@@ -1,6 +1,8 @@
+import { codecBuilder4 } from "codec-builder-library/v4";
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
+import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
 	grammaticalResolutionMarkedContextSchema,
 	normalizedMembersSchema,
@@ -8,31 +10,90 @@ import {
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
-type ObjectSchema = z.ZodObject<z.ZodRawShape>;
+const canonicalLemmaSchema = asObjectSchema(
+	schemasFor.de.entity.Lemma.Lexeme.VERB(),
+);
+const canonicalCitationSurfaceSchema = asObjectSchema(
+	schemasFor.de.entity.Surface.Citation.Lexeme.VERB(),
+);
+const canonicalInflectionSurfaceSchema = asObjectSchema(
+	schemasFor.de.entity.Surface.Inflection.Lexeme.VERB(),
+);
+const canonicalCoreFeaturesSchema = asObjectSchema(
+	canonicalLemmaSchema.shape.coreFeatures,
+);
 
-const canonicalLemmaSchema =
-	schemasFor.de.entity.Lemma.Lexeme.VERB() as unknown as ObjectSchema;
-const canonicalCitationSurfaceSchema =
-	schemasFor.de.entity.Surface.Citation.Lexeme.VERB() as unknown as ObjectSchema;
-const canonicalInflectionSurfaceSchema =
-	schemasFor.de.entity.Surface.Inflection.Lexeme.VERB() as unknown as ObjectSchema;
+const coreFeaturesCodec = codecBuilder4.buildFixedFieldsCodec(
+	canonicalCoreFeaturesSchema,
+	{ verbType: null },
+);
+const routeFieldsCodec = codecBuilder4.buildFixedFieldsCodec(
+	canonicalLemmaSchema,
+	{
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+	},
+);
+const modelLemmaWithCoreFeaturesSchema = routeFieldsCodec.in.extend({
+	coreFeatures: coreFeaturesCodec.in,
+});
+const extractModelCoreFeaturesCodec = codecBuilder4.buildReshapeCodec(
+	modelLemmaWithCoreFeaturesSchema,
+	{
+		fieldName: "modelCoreFeatures",
+		fieldSchema: coreFeaturesCodec.in,
+		dropFields: ["coreFeatures"],
+		construct: (lemma) => lemma.coreFeatures,
+		reconstruct: (modelCoreFeatures) => ({
+			coreFeatures: modelCoreFeatures,
+		}),
+	},
+);
+const restoreCanonicalCoreFeaturesCodec = codecBuilder4.buildReshapeCodec(
+	extractModelCoreFeaturesCodec.out,
+	{
+		fieldName: "coreFeatures",
+		fieldSchema: coreFeaturesCodec.out,
+		dropFields: ["modelCoreFeatures"],
+		construct: (lemma) => coreFeaturesCodec.decode(lemma.modelCoreFeatures),
+		reconstruct: (coreFeatures) => ({
+			modelCoreFeatures: coreFeaturesCodec.encode(coreFeatures),
+		}),
+	},
+);
+const modelLemmaCodec = codecBuilder4.helpers.pipeCodecs(
+	extractModelCoreFeaturesCodec,
+	restoreCanonicalCoreFeaturesCodec,
+);
 
-const canonicalCoreFeaturesSchema = canonicalLemmaSchema.shape
-	.coreFeatures as ObjectSchema;
+export const deVerbLemmaCodec = codecBuilder4.helpers.pipeCodecs(
+	modelLemmaCodec,
+	routeFieldsCodec,
+);
+export const modelLemmaSchema = deVerbLemmaCodec.in;
 
-export const modelLemmaSchema = canonicalLemmaSchema
-	.omit({
-		language: true,
-		family: true,
-		kind: true,
-	})
-	.extend({
-		coreFeatures: canonicalCoreFeaturesSchema.omit({ verbType: true }),
-	});
+type DeVerbLemma = z.output<typeof deVerbLemmaCodec>;
 
 const modelSurfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.nullable();
+
+function normalizeModelSurfaceFeatures<
+	Surface extends {
+		readonly surfaceFeatures: {
+			readonly historicalStatus: "Archaic" | null;
+		} | null;
+	},
+>(surface: Surface): Surface {
+	if (
+		surface.surfaceFeatures === null ||
+		surface.surfaceFeatures.historicalStatus !== null
+	) {
+		return surface;
+	}
+	return { ...surface, surfaceFeatures: null };
+}
 
 const finiteInflectionalFeaturesSchema = z.strictObject({
 	mood: z.enum(["Ind", "Sub"]).nullable(),
@@ -79,16 +140,54 @@ const modelInflectionalFeaturesSchema = z.union([
 	participleInflectionalFeaturesSchema,
 ]);
 
-export const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
-	.omit({ language: true, lemma: true, normalizedSurface: true })
-	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
+export function buildDeVerbCitationSurfaceCodec(lemma: DeVerbLemma) {
+	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
+		canonicalCitationSurfaceSchema,
+		{ language: "de", lemma },
+	);
+	const modelSchema = canonicalCodec.in.extend({
+		surfaceFeatures: modelSurfaceFeaturesSchema,
+	});
+	return z.codec(modelSchema, canonicalCodec.out, {
+		decode: (model) =>
+			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
+		encode: (canonical) => canonicalCodec.encode(canonical),
+	});
+}
 
-export const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
-	.omit({ language: true, lemma: true, normalizedSurface: true })
-	.extend({
+export function buildDeVerbInflectionSurfaceCodec(lemma: DeVerbLemma) {
+	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
+		canonicalInflectionSurfaceSchema,
+		{ language: "de", lemma },
+	);
+	const modelSchema = canonicalCodec.in.extend({
 		surfaceFeatures: modelSurfaceFeaturesSchema,
 		inflectionalFeatures: modelInflectionalFeaturesSchema,
 	});
+	return z.codec(modelSchema, canonicalCodec.out, {
+		decode: (model) =>
+			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
+		encode: (canonical) =>
+			modelSchema.parse(canonicalCodec.encode(canonical)),
+	});
+}
+
+const schemaProjectionLemma = deVerbLemmaCodec.decode({
+	canonicalForm: "arbeiten",
+	coreFeatures: {
+		hasGovPrep: null,
+		hasSepPrefix: null,
+		lexicallyReflexive: null,
+	},
+});
+
+export const modelCitationSurfaceSchema = buildDeVerbCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({ normalizedSurface: true });
+
+export const modelInflectionSurfaceSchema = buildDeVerbInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({ normalizedSurface: true });
 
 export const inputSchema = z
 	.strictObject({
@@ -114,7 +213,7 @@ export const inputSchema = z
 		}
 	}) satisfies PromptInputSchema;
 
-export const outputSchema = z.strictObject({
+const modelOutputSchema = z.strictObject({
 	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 	normalizedMembers: normalizedMembersSchema,
 	surface: z.union([
@@ -122,4 +221,84 @@ export const outputSchema = z.strictObject({
 		modelInflectionSurfaceSchema,
 	]),
 	lemma: modelLemmaSchema,
-}) satisfies PromptOutputSchema;
+});
+
+const extractModelLemmaCodec = codecBuilder4.buildReshapeCodec(
+	modelOutputSchema,
+	{
+		fieldName: "modelLemma",
+		fieldSchema: modelLemmaCodec.in,
+		dropFields: ["lemma"],
+		construct: (output) => output.lemma,
+		reconstruct: (modelLemma) => ({ lemma: modelLemma }),
+	},
+);
+const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
+	extractModelLemmaCodec.out,
+	{
+		fieldName: "lemma",
+		fieldSchema: modelLemmaCodec.out,
+		dropFields: ["modelLemma"],
+		construct: (output) => modelLemmaCodec.decode(output.modelLemma),
+		reconstruct: (lemma) => ({
+			modelLemma: modelLemmaCodec.encode(lemma),
+		}),
+	},
+);
+const restoreRuntimeLemmaOutputCodec = codecBuilder4.helpers.pipeCodecs(
+	extractModelLemmaCodec,
+	restoreRuntimeLemmaCodec,
+);
+
+const runtimeResolutionSchema = z.strictObject({
+	memberOrthographies: modelOutputSchema.shape.memberOrthographies,
+	normalizedMembers: modelOutputSchema.shape.normalizedMembers,
+	realizationCoverage: z.literal("Full"),
+	surface: modelOutputSchema.shape.surface,
+	lemma: modelLemmaCodec.out,
+});
+const realizationCoverageCodec = codecBuilder4.buildFixedFieldsCodec(
+	runtimeResolutionSchema,
+	{ realizationCoverage: "Full" },
+);
+const runtimeResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+	restoreRuntimeLemmaOutputCodec,
+	realizationCoverageCodec,
+);
+
+const nestResolutionCodec = codecBuilder4.buildReshapeCodec(
+	runtimeResolutionSchema,
+	{
+		fieldName: "resolution",
+		fieldSchema: runtimeResolutionSchema,
+		dropFields: [
+			"memberOrthographies",
+			"normalizedMembers",
+			"realizationCoverage",
+			"surface",
+			"lemma",
+		],
+		construct: (resolution) => resolution,
+		reconstruct: (resolution) => resolution,
+	},
+);
+const nestedResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+	runtimeResolutionCodec,
+	nestResolutionCodec,
+);
+
+const resolvedRuntimeOutputSchema = z.strictObject({
+	decision: z.literal("Resolved"),
+	resolution: runtimeResolutionSchema,
+});
+const decisionCodec = codecBuilder4.buildFixedFieldsCodec(
+	resolvedRuntimeOutputSchema,
+	{ decision: "Resolved" },
+);
+
+export const verbOutputCodec = codecBuilder4.helpers.pipeCodecs(
+	nestedResolutionCodec,
+	decisionCodec,
+);
+
+export const outputSchema = verbOutputCodec.in satisfies PromptOutputSchema;
