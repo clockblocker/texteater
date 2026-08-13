@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
+	adjectiveGrammaticalResolutionAcceptanceExperiment,
 	adjectiveGrammaticalResolutionExperiment,
-	evaluation,
+	developmentEvaluation,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adjective/evaluation-suite";
 import { evaluateAdjectiveGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adjective/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/golden-corpus/corpus";
@@ -11,317 +13,343 @@ import {
 	demonstrations,
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/schemas";
+import {
+	inputSchema,
+	modelCitationSurfaceSchema,
+	modelInflectionSurfaceSchema,
+	modelLemmaSchema,
+	outputSchema,
+} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-adj-attributive-acc-fem-rot",
-	"grammar-de-adj-attributive-dat-neut-kalt",
-	"grammar-de-adj-attributive-gen-plur-neu",
-	"grammar-de-adj-predicative-blau",
-	"grammar-de-adj-adverbial-leise",
-	"grammar-de-adj-participial-geschlossen",
-	"grammar-de-adj-irregular-comparative-besser",
-	"grammar-de-adj-attributive-comparative-teuer",
-	"grammar-de-adj-attributive-superlative-hoch",
-	"grammar-de-adj-adverbial-superlative-sorgfaeltig",
-	"grammar-de-adj-ordinal-erste",
-	"grammar-de-adj-typo-grsser",
-	"grammar-de-adj-unresolved-lexical-adverb",
-	"grammar-de-adj-unresolved-perfect-participle",
-	"grammar-de-adj-unresolved-overbroad-modifier",
-	"grammar-de-adj-unresolved-repeated-surfaces",
-	"grammar-de-adj-unresolved-unrelated-targets",
+const expectedDemonstrationIds = [
+	"grammar-de-adj-demo-citation-sanft",
+	"grammar-de-adj-demo-attributive-klein",
+	"grammar-de-adj-demo-adverbial-schnell",
+	"grammar-de-adj-demo-comparative-besser",
+	"grammar-de-adj-demo-ordinal-erste",
+	"grammar-de-adj-demo-typo-freundlcih",
 ] as const;
 
-describe("Lexeme/ADJ route-local corpus", () => {
-	test("keeps two shape demonstrations and 17 authoritative held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(26);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-adj-citation-sanft",
-			"grammar-de-adj-attributive-nom-masc-klein",
+const expectedDevelopmentIds = [
+	"grammar-de-adj-dev-attributive-acc-fem-rot",
+	"grammar-de-adj-dev-attributive-dat-neut-kalt",
+	"grammar-de-adj-dev-attributive-gen-plur-neu",
+	"grammar-de-adj-dev-attributive-nom-plur-alt",
+	"grammar-de-adj-dev-predicative-blau",
+	"grammar-de-adj-dev-adverbial-leise",
+	"grammar-de-adj-dev-attributive-comparative-teuer",
+	"grammar-de-adj-dev-attributive-superlative-hoch",
+	"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+	"grammar-de-adj-dev-predicative-comparative-nah",
+	"grammar-de-adj-dev-cardinal-siebenhundert",
+	"grammar-de-adj-dev-foreign-special",
+	"grammar-de-adj-dev-abbreviation-sog",
+	"grammar-de-adj-dev-typo-grsser",
+	"grammar-de-adj-dev-participial-geschlossen",
+	"grammar-de-adj-dev-participial-spannend",
+	"grammar-de-adj-dev-invariant-lila",
+	"grammar-de-adj-dev-archaic-hold",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-adj-accept-citation-mild",
+	"grammar-de-adj-accept-attributive-dat-fem-lang",
+	"grammar-de-adj-accept-attributive-acc-neut-gruen",
+	"grammar-de-adj-accept-attributive-gen-masc-stark",
+	"grammar-de-adj-accept-predicative-ruhig",
+	"grammar-de-adj-accept-adverbial-deutlich",
+	"grammar-de-adj-accept-irregular-superlative-beste",
+	"grammar-de-adj-accept-adverbial-comparative-schnell",
+	"grammar-de-adj-accept-ordinal-zweite",
+	"grammar-de-adj-accept-typo-wunderschoen",
+	"grammar-de-adj-accept-participial-glaenzend",
+	"grammar-de-adj-accept-invariant-rosa",
+] as const;
+
+describe("Lexeme/ADJ route-local schemas and corpus", () => {
+	test("uses canonical input and the smallest total flat codec-derived DTO", () => {
+		expect(
+			inputSchema.parse({
+				markedContext: "Der <TARGET>kleine</TARGET> Hund schläft.",
+				members: ["kleine"],
+			}),
+		).toEqual({
+			markedContext: "Der <TARGET>kleine</TARGET> Hund schläft.",
+			members: ["kleine"],
+		});
+		expect(() =>
+			inputSchema.parse({
+				markedContext: "Der <TARGET>kleine</TARGET> Hund schläft.",
+				members: ["Hund"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const modelOutput = outputSchema.parse({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["kleine"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Nom",
+					degree: "Pos",
+					gender: "Masc",
+					number: "Sing",
+				},
+			},
+			lemma: {
+				canonicalForm: "klein",
+				coreFeatures: {
+					abbr: null,
+					foreign: null,
+					numType: null,
+					variant: null,
+				},
+			},
+		});
+		expect(Object.keys(modelOutput)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
 		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
+		expect(
+			outputSchema.safeParse({
+				decision: "Resolved",
+				resolution: modelOutput,
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...modelOutput,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+		expect(() =>
+			modelLemmaSchema.parse({
+				...modelOutput.lemma,
+				language: "de",
+			}),
+		).toThrow();
+		expect(
+			modelCitationSurfaceSchema.safeParse({
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
+			}).success,
+		).toBe(true);
+		expect(
+			modelInflectionSurfaceSchema.safeParse(modelOutput.surface).success,
+		).toBe(true);
+	});
+
+	test("freezes 36 realistic total cases into disjoint grammatical partitions", () => {
+		expect(corpus.all().ids).toHaveLength(36);
+		expect(demonstrations.ids).toEqual(expectedDemonstrationIds);
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
+		);
+		expect(demonstrations.ids).toHaveLength(6);
+		expect(developmentEvaluation.ids).toHaveLength(18);
+		expect(untouchedAcceptanceEvaluation.ids).toHaveLength(12);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(36);
+		expect(developmentEvaluation).toBe(
 			adjectiveGrammaticalResolutionExperiment.evaluation,
 		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(17);
-		expect(corpus.all().ids.some((id) => id.includes("-demo-"))).toBe(
-			false,
+		expect(untouchedAcceptanceEvaluation).toBe(
+			adjectiveGrammaticalResolutionAcceptanceExperiment.evaluation,
 		);
-		expect(Object.keys(corpus.collections)).toEqual([
-			"surfaceKinds",
-			"agreementAndPosition",
-			"comparison",
-			"orthography",
-			"boundaries",
-			"featurePolicy",
-		]);
 
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		const leaked = evaluation.cases.flatMap((testCase) =>
-			testCase.idealOutput.resolution !== null &&
-			demonstrationLemmas.has(
-				testCase.idealOutput.resolution.lemma.canonicalForm,
-			)
-				? [testCase.idealOutput.resolution.lemma.canonicalForm]
-				: [],
-		);
-		expect(leaked).toEqual([]);
-	});
-
-	test("assembles only demonstrations and explicit route policy", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>kleine</TARGET>");
-		expect(prompt).toContain("<TARGET>sanft</TARGET>");
-		expect(prompt).not.toContain("<TARGET>schnell</TARGET>");
-		expect(prompt).not.toContain("<TARGET>besser</TARGET>");
-		expect(prompt).not.toContain("<TARGET>freundlcih</TARGET>");
-		expect(prompt).not.toContain("<TARGET>gesungen</TARGET>");
-		expect(prompt).not.toContain("<TARGET>rote</TARGET>");
-		expect(prompt).not.toContain("<TARGET>möglich</TARGET>");
-		expect(prompt).not.toContain("<TARGET>geschlossene</TARGET>");
-		expect(prompt).toContain("predicative and adverbial uses");
-		expect(prompt).toContain("Degree is Pos");
-		expect(prompt).toContain("syncretic plural adjective Surface");
-		expect(prompt).toContain("ordinal adjective Lemmas use numType");
-		expect(prompt).toContain("repeated occurrences");
-	});
-
-	test("keeps four unsettled Core Feature probes corpus-only", () => {
-		for (const caseId of [
-			"grammar-de-adj-provisional-short-moeglich",
-			"grammar-de-adj-provisional-card-siebenhundert",
-			"grammar-de-adj-provisional-foreign-cool",
-			"grammar-de-adj-provisional-abbreviation-sog",
-		]) {
-			expect(corpus.cases[caseId]).toBeDefined();
-			expect(demonstrations.ids).not.toContain(caseId);
-			expect(evaluation.ids).not.toContain(caseId);
-		}
-	});
-
-	test("marks known semantic twins while keeping them out of demonstrations", () => {
-		const twinPairs = [
-			[
-				"grammar-de-adj-adverbial-schnell",
-				"grammar-de-adj-adverbial-leise",
-			],
-			[
-				"grammar-de-adj-unresolved-perfect-participle-gesungen",
-				"grammar-de-adj-unresolved-perfect-participle",
-			],
-			["grammar-de-adj-typo-freundlcih", "grammar-de-adj-typo-grsser"],
-		] as const;
-		for (const [left, right] of twinPairs) {
-			const leftKeys = corpus.cases[left]?.contaminationKeys ?? [];
-			const rightKeys = new Set(
-				corpus.cases[right]?.contaminationKeys ?? [],
+		for (const testCase of corpus.all().cases) {
+			const markedMembers = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<>]+)<\/TARGET>/gu,
+				),
+			].map((match) => match[1]);
+			expect(markedMembers).toEqual(testCase.input.members);
+			expect(testCase.idealOutput.memberOrthographies).toHaveLength(
+				testCase.input.members.length,
 			);
-			expect(leftKeys.some((key) => rightKeys.has(key))).toBe(true);
-			expect(demonstrations.ids).not.toContain(left);
-			expect(demonstrations.ids).not.toContain(right);
+			expect(testCase.idealOutput.normalizedMembers).toHaveLength(
+				testCase.input.members.length,
+			);
+			expect("decision" in testCase.idealOutput).toBe(false);
+			expect("realizationCoverage" in testCase.idealOutput).toBe(false);
 		}
 	});
 
-	test("pins agreement, uninflected position, degree, and ordinal identity", () => {
+	test("covers agreement, position, comparison, route anchors, and form policies", () => {
+		const cases = corpus.all().cases;
 		expect(
-			corpus.cases["grammar-de-adj-attributive-acc-fem-rot"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: {
-					inflectionalFeatures: {
-						case: "Acc",
-						degree: "Pos",
-						gender: "Fem",
-						number: "Sing",
-					},
-				},
-			},
-		});
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceKind === "Citation",
+			),
+		).toHaveLength(2);
 		expect(
-			corpus.cases["grammar-de-adj-predicative-blau"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: {
-					inflectionalFeatures: {
-						case: null,
-						degree: "Pos",
-						gender: null,
-						number: null,
-					},
-				},
-			},
-		});
+			cases.filter((testCase) => {
+				const surface = testCase.idealOutput.surface;
+				return (
+					surface.surfaceKind === "Inflection" &&
+					(surface.inflectionalFeatures.degree === "Cmp" ||
+						surface.inflectionalFeatures.degree === "Sup")
+				);
+			}),
+		).toHaveLength(7);
 		expect(
-			corpus.cases["grammar-de-adj-ordinal-erste"]?.idealOutput,
-		).toMatchObject({
-			resolution: { lemma: { coreFeatures: { numType: "Ord" } } },
-		});
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.lemma.coreFeatures.numType === "Ord",
+			),
+		).toHaveLength(2);
 		expect(
-			corpus.cases["grammar-de-adj-participial-geschlossen"]?.idealOutput,
-		).toMatchObject({
-			decision: "Resolved",
-			resolution: {
-				surface: {
-					inflectionalFeatures: {
-						case: "Nom",
-						degree: "Pos",
-						gender: "Fem",
-						number: "Sing",
-					},
-				},
-				lemma: { canonicalForm: "geschlossen" },
-			},
-		});
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.memberOrthographies[0] === "Typo",
+			),
+		).toHaveLength(3);
 		expect(
-			corpus.cases["grammar-de-adj-irregular-comparative-besser"]
-				?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: { inflectionalFeatures: { degree: "Cmp" } },
-				lemma: { canonicalForm: "gut" },
-			},
-		});
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceFeatures !== null,
+			),
+		).toHaveLength(1);
+		for (const coreKey of ["abbr", "foreign", "numType"] as const) {
+			expect(
+				cases.some(
+					(testCase) =>
+						testCase.idealOutput.lemma.coreFeatures[coreKey] !==
+						null,
+				),
+			).toBe(true);
+		}
+		for (const anchor of [
+			"not lexical adv",
+			"not num",
+			"not color-name noun",
+			"not verbal participle",
+		]) {
+			expect(
+				cases.some((testCase) =>
+					testCase.explanation
+						?.toLocaleLowerCase("de")
+						.includes(anchor),
+				),
+			).toBe(true);
+		}
 	});
 
-	test("derives minimal Dumling DTOs and distinguishes Citation from Inflection", () => {
-		const citationCase = corpus.cases["grammar-de-adj-citation-sanft"];
-		const inflectionCase = corpus.cases["grammar-de-adj-predicative-blau"];
-		if (
-			citationCase === undefined ||
-			citationCase.idealOutput.resolution === null ||
-			inflectionCase === undefined ||
-			inflectionCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing ADJ fixtures.");
-		}
-		expect(
-			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					lemma: {
-						...citationCase.idealOutput.resolution.lemma,
-						language: "de",
-					},
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					surface: {
-						...citationCase.idealOutput.resolution.surface,
-						inflectionalFeatures: {
-							case: null,
-							degree: "Pos",
-							gender: null,
-							number: null,
-						},
-					},
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...inflectionCase.idealOutput,
-				resolution: {
-					...inflectionCase.idealOutput.resolution,
-					surface: {
-						...inflectionCase.idealOutput.resolution.surface,
-						inflectionalFeatures: undefined,
-					},
-				},
-			}).success,
-		).toBe(false);
+	test("assembles only the total classified-target contract and demonstrations", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+
+		expect(prompt).toContain("already-classified German Lexeme/ADJ");
+		expect(prompt).toContain("members: string[]");
+		expect(prompt).toContain("At least one value must be non-null");
+		expect(prompt).toContain(
+			"Never return decision, resolution, Unresolved",
+		);
+		expect(prompt).toContain("<TARGET>kleine</TARGET>");
+		expect(prompt).toContain("<TARGET>besser</TARGET>");
+		expect(prompt).toContain("<TARGET>freundlcih</TARGET>");
+		expect(prompt).not.toContain("<TARGET>teureres</TARGET>");
+		expect(prompt).not.toContain("<TARGET>wundershcön</TARGET>");
 	});
 });
 
-describe("Lexeme/ADJ diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateAdjectiveGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+describe("Lexeme/ADJ pure diagnostic evaluator", () => {
+	test("passes every frozen development and acceptance ideal output", () => {
+		for (const experiment of [
+			adjectiveGrammaticalResolutionExperiment,
+			adjectiveGrammaticalResolutionAcceptanceExperiment,
+		]) {
+			for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+				const testCase = experiment.evaluation.cases[index];
+				if (testCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = experiment.evaluator({
+					caseId,
+					input: testCase.input,
+					idealOutput: testCase.idealOutput,
+					output: testCase.idealOutput,
+				});
+
+				expect(result.contractPass).toBe(true);
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports agreement and degree misses independently", () => {
+	test("reports normalization, inflection, and Core Feature misses independently", () => {
 		const testCase =
-			corpus.cases["grammar-de-adj-attributive-comparative-teuer"];
+			corpus.cases["grammar-de-adj-dev-attributive-comparative-teuer"];
 		if (
 			testCase === undefined ||
-			testCase.idealOutput.resolution === null
+			testCase.idealOutput.surface.surfaceKind !== "Inflection"
 		) {
 			throw new Error("Missing comparative fixture.");
 		}
 		const output = outputSchema.parse({
 			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					inflectionalFeatures: {
-						case: "Nom",
-						degree: "Pos",
-						gender: "Neut",
-						number: "Sing",
-					},
+			normalizedMembers: ["teures"],
+			surface: {
+				...testCase.idealOutput.surface,
+				inflectionalFeatures: {
+					...testCase.idealOutput.surface.inflectionalFeatures,
+					degree: "Pos",
+				},
+			},
+			lemma: {
+				...testCase.idealOutput.lemma,
+				coreFeatures: {
+					...testCase.idealOutput.lemma.coreFeatures,
+					abbr: "Yes",
 				},
 			},
 		});
 		const result = evaluateAdjectiveGrammaticalResolution({
-			caseId: "grammar-de-adj-attributive-comparative-teuer",
+			caseId: "grammar-de-adj-dev-attributive-comparative-teuer",
 			input: testCase.input,
 			idealOutput: testCase.idealOutput,
 			output,
 		});
+
 		expect(result.contractPass).toBe(false);
+		expect(result.normalizedSurfacePass).toBe(false);
 		expect(result.inflectionalFeaturesPass).toBe(false);
-		expect(result.canonicalFormPass).toBe(true);
-		expect(result.coreFeaturesPass).toBe(true);
+		expect(result.coreFeaturesPass).toBe(false);
+		expect(result.surfaceKindPass).toBe(true);
 	});
 
-	test("normalizes a null-only Surface Feature bag for exact scoring", () => {
-		const testCase = corpus.cases["grammar-de-adj-predicative-blau"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing predicative fixture.");
-		}
+	test("canonicalizes an all-null model feature bag like the route seam", () => {
+		const testCase = corpus.cases["grammar-de-adj-dev-adverbial-leise"];
+		if (testCase === undefined) throw new Error("Missing ADJ fixture.");
 		const output = outputSchema.parse({
 			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
+			surface: {
+				...testCase.idealOutput.surface,
+				surfaceFeatures: { historicalStatus: null },
 			},
 		});
 		const result = evaluateAdjectiveGrammaticalResolution({
-			caseId: "grammar-de-adj-predicative-blau",
+			caseId: "grammar-de-adj-dev-adverbial-leise",
 			input: testCase.input,
 			idealOutput: testCase.idealOutput,
 			output,
 		});
+
 		expect(result.contractPass).toBe(true);
 		expect(result.surfaceFeaturesPass).toBe(true);
 	});

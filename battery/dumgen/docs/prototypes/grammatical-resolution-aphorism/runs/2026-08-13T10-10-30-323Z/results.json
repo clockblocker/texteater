@@ -1,0 +1,1171 @@
+{
+  "runnerVersion": "grammatical-resolution-aphorism-v8",
+  "route": "grammatical-resolution/de/phraseme/aphorism",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T10:10:30.323Z",
+  "completedAt": "2026-08-13T10:10:47.286Z",
+  "finalizedAt": "2026-08-13T10:11:12.404Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "9cac9eabfb1277b59b6ad995f52c6730e4b036728945de70b11b327aced4d858",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "0d6a0653c264892d3f69fb52d967aab76b2d3b32b53ac0c93af264d46d94217a",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "bebb7534e1fc34744efdf332f5aa7b8f9485586f4d4128e510eaf86362b4f200",
+  "suiteSha256": "24485f0e69669b8945df11bfc3cf9e0eb15976151f4bdc24e1b7d0627ddb8d24",
+  "evaluationCaseIds": [
+    "grammar-de-aphorism-warten",
+    "grammar-de-aphorism-leidenschaft",
+    "grammar-de-aphorism-gebrannte-kinder",
+    "grammar-de-aphorism-mitleid-neglige",
+    "grammar-de-aphorism-arme-reiche",
+    "grammar-de-aphorism-widerspruch-partial",
+    "grammar-de-aphorism-huete-dich",
+    "grammar-de-aphorism-alten-lesen",
+    "grammar-de-aphorism-kunst-tempel-partial",
+    "grammar-de-aphorism-guete-grenzenlos"
+  ],
+  "boundedCalls": 10,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 8,
+  "scoreRatio": 0.8,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-aphorism-warten",
+      "input": {
+        "markedContext": "<TARGET>Warten</TARGET> <TARGET>lernen</TARGET> <TARGET>wir</TARGET> <TARGET>gewöhnlich</TARGET> <TARGET>erst</TARGET>, <TARGET>wenn</TARGET> <TARGET>wir</TARGET> <TARGET>nichts</TARGET> <TARGET>mehr</TARGET> <TARGET>zu</TARGET> <TARGET>erwarten</TARGET> <TARGET>haben</TARGET>.",
+        "members": [
+          "Warten",
+          "lernen",
+          "wir",
+          "gewöhnlich",
+          "erst",
+          "wenn",
+          "wir",
+          "nichts",
+          "mehr",
+          "zu",
+          "erwarten",
+          "haben"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Warten",
+          "lernen",
+          "wir",
+          "gewöhnlich",
+          "erst",
+          "wenn",
+          "wir",
+          "nichts",
+          "mehr",
+          "zu",
+          "erwarten",
+          "haben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Warten",
+          "lernen",
+          "wir",
+          "gewöhnlich",
+          "erst",
+          "wenn",
+          "wir",
+          "nichts",
+          "mehr",
+          "zu",
+          "erwarten",
+          "haben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1550,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Warten\",\"lernen\",\"wir\",\"gewöhnlich\",\"erst\",\"wenn\",\"wir\",\"nichts\",\"mehr\",\"zu\",\"erwarten\",\"haben\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0eb71ebb5e068dcd016a7d9816a21c8192b0a7e38440a64848",
+      "usage": {
+        "input_tokens": 2275,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 115,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2390
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-leidenschaft",
+      "input": {
+        "markedContext": "<TARGET>Die</TARGET> <TARGET>Leidenschaft</TARGET> <TARGET>ist</TARGET> <TARGET>immer</TARGET> <TARGET>ein</TARGET> <TARGET>Leiden</TARGET>, <TARGET>auch</TARGET> <TARGET>die</TARGET> <TARGET>befriedigte</TARGET>.",
+        "members": [
+          "Die",
+          "Leidenschaft",
+          "ist",
+          "immer",
+          "ein",
+          "Leiden",
+          "auch",
+          "die",
+          "befriedigte"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Leidenschaft",
+          "ist",
+          "immer",
+          "ein",
+          "Leiden",
+          "auch",
+          "die",
+          "befriedigte"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Leidenschaft ist immer ein Leiden auch die befriedigte"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Leidenschaft",
+          "ist",
+          "immer",
+          "ein",
+          "Leiden",
+          "auch",
+          "die",
+          "befriedigte"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Leidenschaft ist immer ein Leiden auch die befriedigte"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1643,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"Leidenschaft\",\"ist\",\"immer\",\"ein\",\"Leiden\",\"auch\",\"die\",\"befriedigte\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die Leidenschaft ist immer ein Leiden auch die befriedigte\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00ef203df4992197016a7d981815f481a19f9c5b94bfa9384b",
+      "usage": {
+        "input_tokens": 2248,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 100,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2348
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-gebrannte-kinder",
+      "input": {
+        "markedContext": "<TARGET>Gebrannte</TARGET> <TARGET>Kinder</TARGET> <TARGET>fürchten</TARGET> <TARGET>das</TARGET> <TARGET>Feuer</TARGET> <TARGET>oder</TARGET> <TARGET>vernarren</TARGET> <TARGET>sich</TARGET> <TARGET>darein</TARGET>.",
+        "members": [
+          "Gebrannte",
+          "Kinder",
+          "fürchten",
+          "das",
+          "Feuer",
+          "oder",
+          "vernarren",
+          "sich",
+          "darein"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Gebrannte",
+          "Kinder",
+          "fürchten",
+          "das",
+          "Feuer",
+          "oder",
+          "vernarren",
+          "sich",
+          "darein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Gebrannte Kinder fürchten das Feuer oder vernarren sich darein"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Gebrannte",
+          "Kinder",
+          "fürchten",
+          "das",
+          "Feuer",
+          "oder",
+          "vernarren",
+          "sich",
+          "darein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Gebrannte Kinder fürchten das Feuer oder vernarren sich darein"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1427,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Gebrannte\",\"Kinder\",\"fürchten\",\"das\",\"Feuer\",\"oder\",\"vernarren\",\"sich\",\"darein\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Gebrannte Kinder fürchten das Feuer oder vernarren sich darein\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d047c686528b23b016a7d9819b98481a28ca6b2e734a82f87",
+      "usage": {
+        "input_tokens": 2252,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2358
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-mitleid-neglige",
+      "input": {
+        "markedContext": "<TARGET>Mitleid</TARGET> <TARGET>ist</TARGET> <TARGET>Liebe</TARGET> <TARGET>im</TARGET> <TARGET>Négligé</TARGET>.",
+        "members": [
+          "Mitleid",
+          "ist",
+          "Liebe",
+          "im",
+          "Négligé"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mitleid",
+          "ist",
+          "Liebe",
+          "im",
+          "Négligé"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Mitleid ist Liebe im Négligé"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mitleid",
+          "ist",
+          "Liebe",
+          "im",
+          "Négligé"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Mitleid ist Liebe im Négligé"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1351,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Mitleid\",\"ist\",\"Liebe\",\"im\",\"Négligé\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Mitleid ist Liebe im Négligé\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cc69c75302a5afe016a7d981b277881a0af42d25ea9c87a8b",
+      "usage": {
+        "input_tokens": 2210,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2292
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-arme-reiche",
+      "input": {
+        "markedContext": "<TARGET>Der</TARGET> <TARGET>Arme</TARGET> <TARGET>rechnet</TARGET> <TARGET>dem</TARGET> <TARGET>Reichen</TARGET> <TARGET>die</TARGET> <TARGET>Großmut</TARGET> <TARGET>niemals</TARGET> <TARGET>als</TARGET> <TARGET>Tugend</TARGET> <TARGET>an</TARGET>.",
+        "members": [
+          "Der",
+          "Arme",
+          "rechnet",
+          "dem",
+          "Reichen",
+          "die",
+          "Großmut",
+          "niemals",
+          "als",
+          "Tugend",
+          "an"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Arme",
+          "rechnet",
+          "dem",
+          "Reichen",
+          "die",
+          "Großmut",
+          "niemals",
+          "als",
+          "Tugend",
+          "an"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Arme",
+          "rechnet",
+          "dem",
+          "Reichen",
+          "die",
+          "Großmut",
+          "niemals",
+          "als",
+          "Tugend",
+          "an"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1515,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Der\",\"Arme\",\"rechnet\",\"dem\",\"Reichen\",\"die\",\"Großmut\",\"niemals\",\"als\",\"Tugend\",\"an\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Der Arme rechnet dem Reichen die Großmut niemals als Tugend an\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0eff7badecc88415016a7d981c7f2881a1a5f2421e912902e8",
+      "usage": {
+        "input_tokens": 2271,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 115,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2386
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-widerspruch-partial",
+      "input": {
+        "markedContext": "Die Ausgabe kürzt mit Auslassungszeichen: „<TARGET>Die</TARGET> <TARGET>Leute</TARGET> <TARGET>denen</TARGET> <TARGET>man</TARGET> <TARGET>nie</TARGET> <TARGET>widerspricht</TARGET> <TARGET>sind</TARGET> <TARGET>entweder</TARGET> <TARGET>die</TARGET> …“.",
+        "members": [
+          "Die",
+          "Leute",
+          "denen",
+          "man",
+          "nie",
+          "widerspricht",
+          "sind",
+          "entweder",
+          "die"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Leute",
+          "denen",
+          "man",
+          "nie",
+          "widerspricht",
+          "sind",
+          "entweder",
+          "die"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Leute denen man nie widerspricht sind entweder die welche man am meisten liebt oder die welche man am geringsten achtet"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Leute",
+          "denen",
+          "man",
+          "nie",
+          "widerspricht",
+          "sind",
+          "entweder",
+          "die"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Leute denen man nie widerspricht sind entweder die dümmsten oder die klügsten"
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "latencyMs": 1535,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"Leute\",\"denen\",\"man\",\"nie\",\"widerspricht\",\"sind\",\"entweder\",\"die\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die Leute denen man nie widerspricht sind entweder die dümmsten oder die klügsten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03a4cf30cf7a7b78016a7d981e046081a3813f6e782a5a3068",
+      "usage": {
+        "input_tokens": 2263,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2373
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model correctly resolved the occurrence as Partial and preserved every supplied member, but recalled a different aphoristic completion instead of the source-attested Ebner-Eschenbach wording. The prompt already requires exact complete-wording recovery, and the untouched acceptance result is retained without post-hoc prompt or corpus changes."
+    },
+    {
+      "caseId": "grammar-de-aphorism-huete-dich",
+      "input": {
+        "markedContext": "<TARGET>Hüte</TARGET> <TARGET>dich</TARGET> <TARGET>vor</TARGET> <TARGET>der</TARGET> <TARGET>Tugend</TARGET>, <TARGET>die</TARGET> <TARGET>zu</TARGET> <TARGET>besitzen</TARGET> <TARGET>ein</TARGET> <TARGET>Mensch</TARGET> <TARGET>von</TARGET> <TARGET>sich</TARGET> <TARGET>selber</TARGET> <TARGET>rühmt</TARGET>.",
+        "members": [
+          "Hüte",
+          "dich",
+          "vor",
+          "der",
+          "Tugend",
+          "die",
+          "zu",
+          "besitzen",
+          "ein",
+          "Mensch",
+          "von",
+          "sich",
+          "selber",
+          "rühmt"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hüte",
+          "dich",
+          "vor",
+          "der",
+          "Tugend",
+          "die",
+          "zu",
+          "besitzen",
+          "ein",
+          "Mensch",
+          "von",
+          "sich",
+          "selber",
+          "rühmt"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hüte",
+          "dich",
+          "vor",
+          "der",
+          "Tugend",
+          "die",
+          "zu",
+          "besitzen",
+          "ein",
+          "Mensch",
+          "von",
+          "sich",
+          "selber",
+          "rühmt"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 3072,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Hüte\",\"dich\",\"vor\",\"der\",\"Tugend\",\"die\",\"zu\",\"besitzen\",\"ein\",\"Mensch\",\"von\",\"sich\",\"selber\",\"rühmt\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e63c972dafa5298016a7d9820d424819c840136c23fb481fc",
+      "usage": {
+        "input_tokens": 2299,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 132,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2431
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-alten-lesen",
+      "input": {
+        "markedContext": "<TARGET>Wenn</TARGET> <TARGET>man</TARGET> <TARGET>nur</TARGET> <TARGET>die</TARGET> <TARGET>Alten</TARGET> <TARGET>liest</TARGET>, <TARGET>ist</TARGET> <TARGET>man</TARGET> <TARGET>sicher</TARGET>, <TARGET>immer</TARGET> <TARGET>neu</TARGET> <TARGET>zu</TARGET> <TARGET>bleiben</TARGET>.",
+        "members": [
+          "Wenn",
+          "man",
+          "nur",
+          "die",
+          "Alten",
+          "liest",
+          "ist",
+          "man",
+          "sicher",
+          "immer",
+          "neu",
+          "zu",
+          "bleiben"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "man",
+          "nur",
+          "die",
+          "Alten",
+          "liest",
+          "ist",
+          "man",
+          "sicher",
+          "immer",
+          "neu",
+          "zu",
+          "bleiben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "man",
+          "nur",
+          "die",
+          "Alten",
+          "liest",
+          "ist",
+          "man",
+          "sicher",
+          "immer",
+          "neu",
+          "zu",
+          "bleiben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1499,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wenn\",\"man\",\"nur\",\"die\",\"Alten\",\"liest\",\"ist\",\"man\",\"sicher\",\"immer\",\"neu\",\"zu\",\"bleiben\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wenn man nur die Alten liest ist man sicher immer neu zu bleiben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a52e357319327af016a7d9822a13081a08582e725fe07ef90",
+      "usage": {
+        "input_tokens": 2279,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 116,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2395
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-kunst-tempel-partial",
+      "input": {
+        "markedContext": "Auf der Karte war nur der Anfang gedruckt: „<TARGET>Wenn</TARGET> <TARGET>der</TARGET> <TARGET>Kunst</TARGET> <TARGET>kein</TARGET> <TARGET>Tempel</TARGET> <TARGET>mehr</TARGET> <TARGET>offen</TARGET> <TARGET>steht</TARGET> …“.",
+        "members": [
+          "Wenn",
+          "der",
+          "Kunst",
+          "kein",
+          "Tempel",
+          "mehr",
+          "offen",
+          "steht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "der",
+          "Kunst",
+          "kein",
+          "Tempel",
+          "mehr",
+          "offen",
+          "steht"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn der Kunst kein Tempel mehr offen steht dann flüchtet sie in die Werkstatt"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "der",
+          "Kunst",
+          "kein",
+          "Tempel",
+          "mehr",
+          "offen",
+          "steht"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn der Kunst kein Tempel mehr offen steht"
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": false,
+      "latencyMs": 1665,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wenn\",\"der\",\"Kunst\",\"kein\",\"Tempel\",\"mehr\",\"offen\",\"steht\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wenn der Kunst kein Tempel mehr offen steht\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_002ca8ef1cc135a8016a7d9824281881a3a6f5eb027161703e",
+      "usage": {
+        "input_tokens": 2248,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 92,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2340
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model correctly resolved the occurrence as Partial and preserved every supplied member, but returned only the quoted beginning rather than recovering the source-attested omitted tail. The prompt already requires exact complete-wording recovery, and the untouched acceptance result is retained without post-hoc prompt or corpus changes."
+    },
+    {
+      "caseId": "grammar-de-aphorism-guete-grenzenlos",
+      "input": {
+        "markedContext": "<TARGET>Die</TARGET> <TARGET>Güte</TARGET>, <TARGET>die</TARGET> <TARGET>nicht</TARGET> <TARGET>grenzenlos</TARGET> <TARGET>ist</TARGET>, <TARGET>verdient</TARGET> <TARGET>den</TARGET> <TARGET>Namen</TARGET> <TARGET>nicht</TARGET>.",
+        "members": [
+          "Die",
+          "Güte",
+          "die",
+          "nicht",
+          "grenzenlos",
+          "ist",
+          "verdient",
+          "den",
+          "Namen",
+          "nicht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Güte",
+          "die",
+          "nicht",
+          "grenzenlos",
+          "ist",
+          "verdient",
+          "den",
+          "Namen",
+          "nicht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Güte die nicht grenzenlos ist verdient den Namen nicht"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Güte",
+          "die",
+          "nicht",
+          "grenzenlos",
+          "ist",
+          "verdient",
+          "den",
+          "Namen",
+          "nicht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Güte die nicht grenzenlos ist verdient den Namen nicht"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1693,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"Güte\",\"die\",\"nicht\",\"grenzenlos\",\"ist\",\"verdient\",\"den\",\"Namen\",\"nicht\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die Güte die nicht grenzenlos ist verdient den Namen nicht\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02430c1158df0276016a7d9825cc0c819db73ab4d071a52d48",
+      "usage": {
+        "input_tokens": 2256,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2361
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

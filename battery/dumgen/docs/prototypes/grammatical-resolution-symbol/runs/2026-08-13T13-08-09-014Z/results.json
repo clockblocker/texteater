@@ -1,0 +1,959 @@
+{
+  "runnerVersion": "grammatical-resolution-symbol-v2",
+  "route": "grammatical-resolution/de/lexeme/symbol",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T13:08:09.014Z",
+  "completedAt": "2026-08-13T13:08:26.987Z",
+  "finalizedAt": "2026-08-13T13:08:43.698Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "f59e55b41a4623a3f7b466d28cd02cd380c66a52967d2c1de26207382edb5fe2",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "b84a28b0c97afa3d25d1d894fe19a25bcd49d082288b267f1c1661d1c8ef1a60",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "a2697ff55a057f79d1e08608109ef73bbb9662fcb5c1300f5cb89496205a453d",
+  "suiteSha256": "23ced739f1ee5fb58e2f9915caa1e8cc6dd0a93bd77d04c0430ba48bd14a409e",
+  "evaluationCaseIds": [
+    "grammar-de-sym-accept-v2-division-inflection",
+    "grammar-de-sym-accept-v2-not-equal",
+    "grammar-de-sym-accept-v2-sum",
+    "grammar-de-sym-accept-v2-rupee",
+    "grammar-de-sym-accept-v2-registered",
+    "grammar-de-sym-accept-v2-double-arrow",
+    "grammar-de-sym-accept-v2-basis-point",
+    "grammar-de-sym-accept-v2-card-numero",
+    "grammar-de-sym-accept-v2-range-tilde",
+    "grammar-de-sym-accept-v2-foreign-japanese-reference",
+    "grammar-de-sym-accept-v2-variant-small-percent",
+    "grammar-de-sym-accept-v2-typo-double-permille"
+  ],
+  "boundedCalls": 12,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 11,
+  "scoreRatio": 0.9166666666666666,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-sym-accept-v2-division-inflection",
+      "input": {
+        "markedContext": "Die Schülerin umkreist das <TARGET>÷</TARGET> mit roter Farbe.",
+        "members": [
+          "÷"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "÷"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "÷",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "÷"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "÷",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2561,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"÷\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"÷\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bde0ec9df1236f2016a7dc1b9f614819f97bc55ccd7d60db3",
+      "usage": {
+        "input_tokens": 2766,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2823
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt mandates Inflection when das directly governs the target symbol, and a distinct plus-sign development case teaches and repeatedly passes the same Acc/Neut/Sing pattern. The model matched all remaining fields but fell back to Citation for ÷, so this is an accepted model limitation rather than a prompt or corpus defect."
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-not-equal",
+      "input": {
+        "markedContext": "Die Bedingung lautet x <TARGET>≠</TARGET> 5.",
+        "members": [
+          "≠"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "≠"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "≠",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "≠"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "≠",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1520,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"≠\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"≠\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f0652f0b7781832016a7dc1bbd4b4819c9cda2608f11b0f81",
+      "usage": {
+        "input_tokens": 2764,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2823
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-sum",
+      "input": {
+        "markedContext": "In der Herleitung wird die Reihe mit <TARGET>∑</TARGET> notiert.",
+        "members": [
+          "∑"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "∑"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "∑",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "∑"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "∑",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1151,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"∑\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"∑\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_033f94547ce9ef69016a7dc1bd4ce4819e873545436cb503ad",
+      "usage": {
+        "input_tokens": 2766,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2825
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-rupee",
+      "input": {
+        "markedContext": "Auf der indischen Rechnung stehen achthundert <TARGET>₹</TARGET>.",
+        "members": [
+          "₹"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "₹"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "₹",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "₹"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "₹",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1404,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"₹\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"₹\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a29126c41d86a2b016a7dc1be77108192a404ce6bc4206fe6",
+      "usage": {
+        "input_tokens": 2763,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2820
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-registered",
+      "input": {
+        "markedContext": "Die Verpackung trägt hinter dem Namen <TARGET>®</TARGET>.",
+        "members": [
+          "®"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "®"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "®",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "®"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "®",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1274,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"®\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"®\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0df75a20275b0526016a7dc1bfe170819c82576bfaf2f59c8c",
+      "usage": {
+        "input_tokens": 2761,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2818
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-double-arrow",
+      "input": {
+        "markedContext": "Das Zustandsdiagramm zeigt A <TARGET>↔</TARGET> B.",
+        "members": [
+          "↔"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "↔"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "↔",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "↔"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "↔",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1241,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"↔\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"↔\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b5f59ad632e1cf2016a7dc1c12584819d8fa9c1e353ed078d",
+      "usage": {
+        "input_tokens": 2764,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2823
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-basis-point",
+      "input": {
+        "markedContext": "Die Abweichung beträgt drei <TARGET>‱</TARGET>.",
+        "members": [
+          "‱"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "‱"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "‱",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "‱"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "‱",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1304,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"‱\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"‱\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_058e3db3dc4678a3016a7dc1c27364819cb65c26f44b8adf6d",
+      "usage": {
+        "input_tokens": 2762,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2821
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-card-numero",
+      "input": {
+        "markedContext": "Im französischen Formular kennzeichnet <TARGET>nº</TARGET> ausdrücklich die folgende Kardinalnummer.",
+        "members": [
+          "nº"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nº"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nº",
+          "coreFeatures": {
+            "foreign": "Yes",
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nº"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nº",
+          "coreFeatures": {
+            "foreign": "Yes",
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1325,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nº\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nº\",\"coreFeatures\":{\"foreign\":\"Yes\",\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04786e07e2bac1ac016a7dc1c3ad4481a3b5f1cb3b3636db16",
+      "usage": {
+        "input_tokens": 2768,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2827
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-range-tilde",
+      "input": {
+        "markedContext": "In der Zahlenangabe 20<TARGET>~</TARGET>30 dient die Tilde ausdrücklich als Bereichszeichen.",
+        "members": [
+          "~"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "~"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "~",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": "Range"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "~"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "~",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": "Range"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1287,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"~\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"~\",\"coreFeatures\":{\"foreign\":null,\"numType\":\"Range\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e823bb088443f16016a7dc1c5007481a28b213a63076e12b2",
+      "usage": {
+        "input_tokens": 2771,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2828
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-foreign-japanese-reference",
+      "input": {
+        "markedContext": "Im japanischen Original steht vor dem Hinweis das Zeichen <TARGET>※</TARGET>.",
+        "members": [
+          "※"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "※"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "※",
+          "coreFeatures": {
+            "foreign": "Yes",
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "※"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "※",
+          "coreFeatures": {
+            "foreign": "Yes",
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1182,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"※\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"※\",\"coreFeatures\":{\"foreign\":\"Yes\",\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_008d92db386f076c016a7dc1c64ba081a09447177066ea5b27",
+      "usage": {
+        "input_tokens": 2764,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2821
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-variant-small-percent",
+      "input": {
+        "markedContext": "Die Unicode-Liste erklärt <TARGET>﹪</TARGET> als kleine Variante von %.",
+        "members": [
+          "﹪"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "﹪"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "%",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "﹪"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "%",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1781,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"﹪\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"%\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f91a034103f4e80016a7dc1c77a5081a28852dd38179f4184",
+      "usage": {
+        "input_tokens": 2766,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2824
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sym-accept-v2-typo-double-permille",
+      "input": {
+        "markedContext": "Durch einen Tippfehler erscheint <TARGET>‰‰</TARGET> statt eines einzelnen Promillezeichens.",
+        "members": [
+          "‰‰"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "‰"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "‰",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "‰"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "‰",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1932,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"‰\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"‰\",\"coreFeatures\":{\"foreign\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_047f8501305cbf00016a7dc1c951248192bf568388f1752edd",
+      "usage": {
+        "input_tokens": 2769,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2730
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2827
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

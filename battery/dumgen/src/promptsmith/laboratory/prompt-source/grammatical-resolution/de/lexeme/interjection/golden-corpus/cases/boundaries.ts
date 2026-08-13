@@ -3,56 +3,67 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { interjectionCase } from "./builders";
 
 export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-intj-demo-o-wei-phraseme-boundary": {
-			input: {
-				markedContext:
-					"Da rief die Frau: „<TARGET>O</TARGET> wei! O wei!“",
+		"grammar-de-intj-demo-contextual-ach-after-noun": interjectionCase(
+			"Sein ständiges Ach störte sie; später seufzte er <TARGET>ach</TARGET>.",
+			["ach"],
+			"ach",
+			null,
+			{
+				explanation:
+					"The marked occurrence is already classified INTJ; the unmarked nominal use does not change its route or Lemma.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-			explanation:
-				"The marked O participates in the meaning-bearing formula o wei; it must not be detached into the fixed Lexeme/INTJ route.",
-		},
-		"grammar-de-intj-demo-punctuation-in-target": {
-			input: { markedContext: "Sie rief <TARGET>pfui!</TARGET>" },
-			idealOutput: { decision: "Unresolved", resolution: null },
-			explanation:
-				"The TARGET includes punctuation rather than exactly the interjection's lexical material.",
-		},
-		"grammar-de-intj-unresolved-modal-particle-ja": {
-			input: { markedContext: "Das ist <TARGET>ja</TARGET> schön." },
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-intj-unresolved-na-ja-formula": {
-			input: {
-				markedContext:
-					"Na <TARGET>ja</TARGET>, ganz überzeugt bin ich nicht.",
+		),
+
+		"grammar-de-intj-dev-beside-part-ja": interjectionCase(
+			"Das ist ja erstaunlich; auf ihre Frage antwortete er <TARGET>ja</TARGET>.",
+			["ja"],
+			"ja",
+			"Res",
+			{
+				explanation:
+					"The unmarked ja is a modal particle; the supplied answer occurrence is fixed upstream as INTJ and carries Res.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-intj-unresolved-nominalized-ach": {
-			input: {
-				markedContext:
-					"Sein ständiges <TARGET>Ach</TARGET> störte die anderen.",
+		),
+		"grammar-de-intj-dev-beside-discourse-formula-oh": interjectionCase(
+			"Nach dem Guten Morgen sah er die Rechnung und sagte <TARGET>oh</TARGET>.",
+			["oh"],
+			"oh",
+			undefined,
+			{
+				explanation:
+					"The nearby greeting is an unmarked DiscourseFormula; the authoritative singleton reaction remains INTJ.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-intj-unresolved-overbroad-formula": {
-			input: {
-				markedContext:
-					"<TARGET>Ach du meine Güte</TARGET>, was ist passiert?",
+		),
+		"grammar-de-intj-dev-beside-adv-na": interjectionCase(
+			"Nun war alles vorbereitet; <TARGET>na</TARGET>, dann erzähl endlich.",
+			["na"],
+			"na",
+			undefined,
+			{
+				explanation:
+					"The unmarked nun is an adverb; the prompting target is independently classified INTJ.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-intj-unresolved-unrelated-targets": {
-			input: {
-				markedContext:
-					"Er sagte erst <TARGET>ach</TARGET> und später <TARGET>pfui</TARGET>.",
+		),
+
+		"grammar-de-intj-accept-v2-ordinary-lexical-mist": interjectionCase(
+			"Der Mist lag auf dem Feld; am Bahnhof rief jemand <TARGET>Mist</TARGET>!",
+			["Mist"],
+			"Mist",
+			undefined,
+			{
+				explanation:
+					"The unmarked noun and marked secondary interjection share spelling, but the supplied route is authoritative.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
+		),
+		"grammar-de-intj-accept-v2-beside-formula-aehm": interjectionCase(
+			"Sie sagte vielen Dank; er zögerte nur <TARGET>ähm</TARGET>.",
+			["ähm"],
+			"ähm",
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

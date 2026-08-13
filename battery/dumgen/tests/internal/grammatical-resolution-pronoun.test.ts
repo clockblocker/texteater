@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
+	developmentEvaluation,
+	pronounGrammaticalResolutionAcceptanceExperiment,
 	pronounGrammaticalResolutionExperiment,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluation-suite";
 import { evaluatePronounGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/golden-corpus/corpus";
@@ -13,376 +15,226 @@ import {
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/prompt-source";
 import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-pron-sentence-initial-es",
-	"grammar-de-pron-personal-feminine-sie",
-	"grammar-de-pron-personal-plural-sie",
-	"grammar-de-pron-personal-wir",
-	"grammar-de-pron-formal-sie",
-	"grammar-de-pron-formal-ihnen",
-	"grammar-de-pron-reflexive-sich",
-	"grammar-de-pron-nonreflexive-mich",
-	"grammar-de-pron-reflexive-mich",
-	"grammar-de-pron-indefinite-jemanden",
-	"grammar-de-pron-indefinite-etwas",
-	"grammar-de-pron-negative-niemandem",
-	"grammar-de-pron-negative-nichts",
-	"grammar-de-pron-reciprocal-einander",
-	"grammar-de-pron-variant-nix",
-	"grammar-de-pron-typo-ihc",
-	"grammar-de-pron-unresolved-adverb-etwas",
-	"grammar-de-pron-unresolved-nominalized-ich",
-	"grammar-de-pron-unresolved-overbroad-mit-ihm",
-	"grammar-de-pron-unresolved-repeated-sie",
-	"grammar-de-pron-unresolved-unrelated-targets",
+const expectedDevelopmentIds = [
+	"grammar-de-pron-dev-personal-ich",
+	"grammar-de-pron-dev-personal-sie-fem",
+	"grammar-de-pron-dev-personal-sie-plur-acc",
+	"grammar-de-pron-dev-personal-euch",
+	"grammar-de-pron-dev-formal-sie-nom",
+	"grammar-de-pron-dev-reflexive-mich",
+	"grammar-de-pron-dev-nonreflexive-mich",
+	"grammar-de-pron-dev-reciprocal-einander",
+	"grammar-de-pron-dev-inherent-reflexive-sich",
+	"grammar-de-pron-dev-demonstrative-das-nom",
+	"grammar-de-pron-dev-relative-die-nom",
+	"grammar-de-pron-dev-interrogative-wer-nom",
+	"grammar-de-pron-dev-indefinite-jemandem",
+	"grammar-de-pron-dev-negative-niemanden",
+	"grammar-de-pron-dev-total-foreign-all",
+	"grammar-de-pron-dev-extpos-was",
+	"grammar-de-pron-dev-poss-meiner",
+	"grammar-de-pron-dev-contraction-s",
+	"grammar-de-pron-dev-typo-ihc",
+	"grammar-de-pron-dev-archaic-euer",
+	"grammar-de-pron-dev-formal-lowercase-typo",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-pron-accept-v4-personal-dir-dat",
+	"grammar-de-pron-accept-v4-personal-wir-nom",
+	"grammar-de-pron-accept-v4-formal-ihnen-dat",
+	"grammar-de-pron-accept-v4-reflexive-euch-acc",
+	"grammar-de-pron-accept-v4-demonstrative-die-nom-plur",
+	"grammar-de-pron-accept-v4-relative-dem-dat-neut",
+	"grammar-de-pron-accept-v4-interrogative-wem-dat",
+	"grammar-de-pron-accept-v4-indefinite-irgendjemandem-dat",
+	"grammar-de-pron-accept-v4-negative-niemanden-acc",
+	"grammar-de-pron-accept-v4-reciprocal-einander",
+	"grammar-de-pron-accept-v4-negative-nichts",
+	"grammar-de-pron-accept-v4-foreign-he",
 ] as const;
 
 describe("Lexeme/PRON route-local corpus", () => {
-	test("keeps four minimized demonstrations, 21 authoritative cases, and 11 corpus-only cases", () => {
-		expect(corpus.all().ids).toHaveLength(36);
+	test("pins 39 flat cases in three pairwise-disjoint partitions", () => {
+		expect(corpus.all().ids).toHaveLength(39);
 		expect(demonstrations.ids).toEqual([
-			"grammar-de-pron-citation-man",
-			"grammar-de-pron-inflection-dative-ihm",
-			"grammar-de-pron-unresolved-determiner-jener",
-			"grammar-de-pron-unresolved-numeral-zwei",
+			"grammar-de-pron-demo-personal-ihm",
+			"grammar-de-pron-demo-formal-ihnen",
+			"grammar-de-pron-demo-reflexive-sich",
+			"grammar-de-pron-demo-relative-der",
+			"grammar-de-pron-demo-indefinite-etwas",
+			"grammar-de-pron-demo-variant-nix",
 		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
-			pronounGrammaticalResolutionExperiment.evaluation,
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
 		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(corpus.all().ids.some((id) => id.includes("-demo-"))).toBe(
-			false,
-		);
-		expect(Object.keys(corpus.collections)).toEqual([
-			"personalAndPoliteness",
-			"reflexiveAndReciprocal",
-			"indefiniteAndNegative",
-			"orthographyAndSurface",
-			"boundaries",
-			"policyProbes",
-		]);
-
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
 		expect(
-			evaluation.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution !== null &&
-				demonstrationLemmas.has(
-					testCase.idealOutput.resolution.lemma.canonicalForm,
-				)
-					? [testCase.idealOutput.resolution.lemma.canonicalForm]
-					: [],
-			),
-		).toEqual([]);
-		expect(promptSource.route).toBe(
-			"grammatical-resolution/de/lexeme/pronoun",
-		);
-		const selectedIds = new Set([...demonstrations.ids, ...evaluation.ids]);
-		const corpusOnlyIds = corpus
-			.all()
-			.ids.filter((caseId) => !selectedIds.has(caseId));
-		expect(corpusOnlyIds).toHaveLength(11);
-		for (const caseId of [
-			"grammar-de-pron-unresolved-adjective-schnell",
-			"grammar-de-pron-unresolved-determiner-dieser",
-			"grammar-de-pron-unresolved-numeral-eins",
-		]) {
-			expect(corpusOnlyIds).toContain(caseId);
-		}
-
-		for (const [demonstrationId, corpusOnlyId, contaminationKey] of [
-			[
-				"grammar-de-pron-unresolved-determiner-jener",
-				"grammar-de-pron-unresolved-determiner-dieser",
-				"de-pron-route-boundary:standalone-determiner",
-			],
-			[
-				"grammar-de-pron-unresolved-numeral-zwei",
-				"grammar-de-pron-unresolved-numeral-eins",
-				"de-pron-route-boundary:standalone-cardinal",
-			],
-		] as const) {
-			expect(corpus.cases[demonstrationId]?.contaminationKeys).toContain(
-				contaminationKey,
-			);
-			expect(corpus.cases[corpusOnlyId]?.contaminationKeys).toContain(
-				contaminationKey,
-			);
-			expect(demonstrations.ids).toContain(demonstrationId);
-			expect(evaluation.ids).not.toContain(corpusOnlyId);
-		}
-		const demonstrationContaminationKeys = new Set(
-			demonstrations.cases.flatMap(
-				(testCase) => testCase.contaminationKeys ?? [],
-			),
-		);
-		expect(
-			evaluation.cases.flatMap((testCase) =>
-				(testCase.contaminationKeys ?? []).filter((key) =>
-					demonstrationContaminationKeys.has(key),
-				),
-			),
-		).toEqual([]);
-		const reflexTwinKeys = new Set(
-			corpus.cases["grammar-de-pron-reflexive-mich"]?.contaminationKeys,
-		);
-		expect(
-			(
-				corpus.cases["grammar-de-pron-nonreflexive-mich"]
-					?.contaminationKeys ?? []
-			).some((key) => reflexTwinKeys.has(key)),
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
 		).toBe(true);
-	});
-
-	test("assembles only the four demonstrations and explicit route policy", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>man</TARGET>");
-		expect(prompt).toContain("<TARGET>ihm</TARGET>");
-		expect(prompt).toContain("<TARGET>Jener</TARGET>");
-		expect(prompt).toContain("<TARGET>zwei</TARGET>");
-		expect(prompt).not.toContain("<TARGET>schnell</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Dieser</TARGET>");
-		expect(prompt).not.toContain("<TARGET>eins</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Sie</TARGET>");
-		expect(prompt).not.toContain("<TARGET>einander</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Wer</TARGET>");
-		expect(prompt).not.toContain("<TARGET>'s</TARGET>");
-		expect(prompt).toContain("DET/PRON boundary is lexical");
-		expect(prompt).toContain("count the literal opening <TARGET> tags");
-		expect(prompt).toContain(
-			"Every resolved PRON Lemma requires a non-null pronType",
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(39);
+		expect(pronounGrammaticalResolutionExperiment.evaluation).toBe(
+			developmentEvaluation,
 		);
-		expect(prompt).toContain("never widen Neg to the broader Ind class");
-		expect(prompt).toContain(
-			"schema forbids an all-null inflectionalFeatures object",
-		);
-		expect(prompt).toContain("memberOrthographies value must be Typo");
-		expect(prompt).toContain("requires a combined PronType value");
-		expect(prompt).toContain("Reflex is a contextual Surface feature");
-		expect(prompt).toContain("formal second-person address paradigm");
-		expect(prompt).not.toMatch(/\b(?:Sie|Ihnen)\b/u);
-		expect(prompt).not.toMatch(
-			/\b(?:es|wir|sich|mich|jemanden?|etwas|niemand(?:em)?|nichts|einander|nix|dieser|eins|ich|der|wer|was)\b/iu,
-		);
-	});
+		expect(
+			pronounGrammaticalResolutionAcceptanceExperiment.evaluation,
+		).toBe(untouchedAcceptanceEvaluation);
 
-	test("keeps all eight uncertain policies outside demonstrations and scoring", () => {
-		for (const caseId of [
-			"grammar-de-pron-provisional-dem-rel-der",
-			"grammar-de-pron-provisional-int-rel-wer",
-			"grammar-de-pron-provisional-extpos-was",
-			"grammar-de-pron-provisional-informal-polite-du",
-			"grammar-de-pron-provisional-native-poss-meiner",
-			"grammar-de-pron-provisional-foreign-it",
-			"grammar-de-pron-provisional-total-all",
-			"grammar-de-pron-provisional-clitic-s",
-		]) {
-			expect(corpus.cases[caseId]).toBeDefined();
-			expect(demonstrations.ids).not.toContain(caseId);
-			expect(evaluation.ids).not.toContain(caseId);
-		}
-	});
-
-	test("pins formal address, contextual Reflex, and invariant Citation identity", () => {
-		expect(
-			corpus.cases["grammar-de-pron-formal-sie"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				normalizedMembers: ["Sie"],
-				surface: {
-					inflectionalFeatures: { case: "Nom", number: null },
-				},
-				lemma: {
-					canonicalForm: "Sie",
-					coreFeatures: {
-						person: "2",
-						polite: "Form",
-						pronType: "Prs",
-					},
-				},
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-pron-nonreflexive-mich"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: { inflectionalFeatures: { reflex: null } },
-				lemma: { canonicalForm: "ich" },
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-pron-reflexive-mich"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				surface: { inflectionalFeatures: { reflex: "Yes" } },
-				lemma: { canonicalForm: "ich" },
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-pron-variant-nix"]?.idealOutput,
-		).toMatchObject({
-			resolution: {
-				normalizedMembers: ["nix"],
-				surface: {
-					spelling: "Variant",
-					surfaceKind: "Citation",
-				},
-				lemma: { canonicalForm: "nichts" },
-			},
-		});
-		for (const caseId of [
-			"grammar-de-pron-indefinite-etwas",
-			"grammar-de-pron-negative-nichts",
-			"grammar-de-pron-reciprocal-einander",
-			"grammar-de-pron-variant-nix",
-		] as const) {
-			const testCase = corpus.cases[caseId];
-			expect(testCase?.idealOutput.resolution?.surface.surfaceKind).toBe(
-				"Citation",
+		for (const goldenCase of Object.values(corpus.cases)) {
+			expect(Object.keys(goldenCase.input).sort()).toEqual([
+				"markedContext",
+				"members",
+			]);
+			expect(Object.keys(goldenCase.idealOutput).sort()).toEqual([
+				"lemma",
+				"memberOrthographies",
+				"normalizedMembers",
+				"surface",
+			]);
+			expect(goldenCase.idealOutput).not.toHaveProperty("decision");
+			expect(goldenCase.idealOutput).not.toHaveProperty("resolution");
+			expect(goldenCase.idealOutput).not.toHaveProperty(
+				"realizationCoverage",
 			);
-			expect(
-				testCase?.idealOutput.resolution?.surface,
-			).not.toHaveProperty("inflectionalFeatures");
+			expect(goldenCase.idealOutput).not.toHaveProperty(
+				"normalizedSurface",
+			);
 		}
 	});
 
-	test("derives strict minimal Dumling Citation and Inflection DTOs", () => {
-		const citationCase = corpus.cases["grammar-de-pron-citation-man"];
-		const inflectionCase = corpus.cases["grammar-de-pron-formal-ihnen"];
-		if (
-			citationCase === undefined ||
-			citationCase.idealOutput.resolution === null ||
-			inflectionCase === undefined ||
-			inflectionCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing PRON fixtures.");
-		}
+	test("assembles total fixed-route policy and only six demonstrations", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain("already-classified German Lexeme/PRON");
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain("one scalar pronType");
+		expect(prompt).toContain("inherently reflexive verb");
+		expect(prompt).toContain("<TARGET>ihm</TARGET>");
+		expect(prompt).toContain("<TARGET>Ihnen</TARGET>");
+		expect(prompt).toContain("<TARGET>der</TARGET>");
+		expect(prompt).toContain("<TARGET>nix</TARGET>");
+		expect(prompt).not.toContain("<TARGET>jemandem</TARGET>");
+		expect(prompt).not.toContain("<TARGET>He</TARGET>");
+		expect(prompt).not.toContain('"decision":"Unresolved"');
+	});
+
+	test("keeps app-owned and legacy fields outside the model DTO", () => {
+		const fixture = corpus.cases["grammar-de-pron-dev-personal-ich"];
+		if (fixture === undefined) throw new Error("Missing ich fixture.");
 		expect(
 			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					lemma: {
-						...citationCase.idealOutput.resolution.lemma,
-						language: "de",
-					},
-				},
+				...fixture.idealOutput,
+				decision: "Resolved",
+				resolution: fixture.idealOutput,
 			}).success,
 		).toBe(false);
 		expect(
 			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					surface: {
-						...citationCase.idealOutput.resolution.surface,
-						inflectionalFeatures: {
-							case: "Nom",
-							gender: null,
-							number: "Sing",
-							reflex: null,
-						},
-					},
-				},
+				...fixture.idealOutput,
+				realizationCoverage: "Full",
 			}).success,
 		).toBe(false);
 		expect(
 			outputSchema.safeParse({
-				...inflectionCase.idealOutput,
-				resolution: {
-					...inflectionCase.idealOutput.resolution,
-					surface: {
-						...inflectionCase.idealOutput.resolution.surface,
-						inflectionalFeatures: undefined,
-					},
+				...fixture.idealOutput,
+				surface: {
+					...fixture.idealOutput.surface,
+					normalizedSurface: "ich",
 				},
 			}).success,
 		).toBe(false);
+	});
+
+	test("covers every codec PronType and specialized Core Feature", () => {
+		const coreFeatures = Object.values(corpus.cases).map(
+			(goldenCase) => goldenCase.idealOutput.lemma.coreFeatures,
+		);
+		expect(new Set(coreFeatures.map(({ pronType }) => pronType))).toEqual(
+			new Set(["Dem", "Ind", "Int", "Neg", "Prs", "Rcp", "Rel", "Tot"]),
+		);
+		expect(coreFeatures.some(({ extPos }) => extPos === "DET")).toBe(true);
+		expect(coreFeatures.some(({ foreign }) => foreign === "Yes")).toBe(
+			true,
+		);
+		expect(coreFeatures.some(({ polite }) => polite === "Form")).toBe(true);
+		expect(coreFeatures.some(({ polite }) => polite === "Infm")).toBe(true);
+		expect(coreFeatures.some(({ poss }) => poss === "Yes")).toBe(true);
 	});
 });
 
 describe("Lexeme/PRON diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluatePronounGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+	test("passes every development and untouched acceptance oracle", () => {
+		for (const selection of [
+			developmentEvaluation,
+			untouchedAcceptanceEvaluation,
+		]) {
+			for (const [index, caseId] of selection.ids.entries()) {
+				const goldenCase = selection.cases[index];
+				if (goldenCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = evaluatePronounGrammaticalResolution({
+					caseId,
+					input: goldenCase.input,
+					idealOutput: goldenCase.idealOutput,
+					output: goldenCase.idealOutput,
+				});
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports contextual Reflex and stable PronType misses independently", () => {
-		const testCase = corpus.cases["grammar-de-pron-reflexive-mich"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing reflexive fixture.");
+	test("reports a reflex miss without weakening flat exact scoring", () => {
+		const goldenCase = corpus.cases["grammar-de-pron-dev-reflexive-mich"];
+		if (goldenCase === undefined) throw new Error("Missing mich fixture.");
+		if (goldenCase.idealOutput.surface.surfaceKind !== "Inflection") {
+			throw new Error("Expected an Inflection fixture.");
 		}
-		const wrongReflex = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					inflectionalFeatures: {
-						case: "Acc",
-						gender: null,
-						number: "Sing",
-						reflex: null,
-					},
+		const output = outputSchema.parse({
+			...goldenCase.idealOutput,
+			surface: {
+				...goldenCase.idealOutput.surface,
+				inflectionalFeatures: {
+					...goldenCase.idealOutput.surface.inflectionalFeatures,
+					reflex: null,
 				},
 			},
 		});
 		const result = evaluatePronounGrammaticalResolution({
-			caseId: "grammar-de-pron-reflexive-mich",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output: wrongReflex,
+			caseId: "grammar-de-pron-dev-reflexive-mich",
+			input: goldenCase.input,
+			idealOutput: goldenCase.idealOutput,
+			output,
 		});
 		expect(result.contractPass).toBe(false);
 		expect(result.inflectionalFeaturesPass).toBe(false);
-		expect(result.canonicalFormPass).toBe(true);
 		expect(result.coreFeaturesPass).toBe(true);
+		expect(result.canonicalFormPass).toBe(true);
 	});
 
 	test("canonicalizes a null-only Surface Feature bag", () => {
-		const testCase = corpus.cases["grammar-de-pron-personal-wir"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing personal fixture.");
-		}
+		const goldenCase = corpus.cases["grammar-de-pron-dev-personal-ich"];
+		if (goldenCase === undefined) throw new Error("Missing ich fixture.");
 		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
+			...goldenCase.idealOutput,
+			surface: {
+				...goldenCase.idealOutput.surface,
+				surfaceFeatures: { historicalStatus: null },
 			},
 		});
 		expect(
 			evaluatePronounGrammaticalResolution({
-				caseId: "grammar-de-pron-personal-wir",
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
+				caseId: "grammar-de-pron-dev-personal-ich",
+				input: goldenCase.input,
+				idealOutput: goldenCase.idealOutput,
 				output,
-			}).surfaceFeaturesPass,
+			}).contractPass,
 		).toBe(true);
 	});
 });

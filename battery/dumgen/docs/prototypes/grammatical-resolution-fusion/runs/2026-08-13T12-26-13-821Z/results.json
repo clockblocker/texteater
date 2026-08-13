@@ -1,0 +1,1211 @@
+{
+  "runnerVersion": "grammatical-resolution-fusion-v6",
+  "route": "grammatical-resolution/de/construction/fusion",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 2
+  },
+  "startedAt": "2026-08-13T12:26:13.821Z",
+  "completedAt": "2026-08-13T12:26:39.817Z",
+  "finalizedAt": "2026-08-13T12:26:48.174Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "fe67ea255b52965997ee565ac2398228f34d16037bd0f9f41e20b02f17920d56",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "61c8e0cf54518ecb128ea5c9938c22b9afd69c199020bd543f5aa22f2bf8694b",
+  "inputSchemaSha256": "98b18956889e213168539804868e119d7636970a312b79e2c7a55a32b4b89c8c",
+  "outputSchemaSha256": "02a730bdb287662cc66680e5ba2671e82d252a493913fc4449762c27220735a4",
+  "suiteSha256": "a64066ee0143f3eb21c0a831ffb4540399b075a3c380a647cdae382869248fb2",
+  "evaluationCaseIds": [
+    "grammar-de-fusion-dev-am-bahnhof",
+    "grammar-de-fusion-dev-beim-umzug",
+    "grammar-de-fusion-dev-vom-arzt",
+    "grammar-de-fusion-dev-ins-haus",
+    "grammar-de-fusion-dev-ans-meer",
+    "grammar-de-fusion-dev-aufs-dach",
+    "grammar-de-fusion-dev-fuers-essen",
+    "grammar-de-fusion-dev-ums-haus",
+    "grammar-de-fusion-dev-durchs-tor",
+    "grammar-de-fusion-dev-uebers-wetter",
+    "grammar-de-fusion-dev-zum-behufe-archaic-context",
+    "grammar-de-fusion-dev-hinterm-schrank",
+    "grammar-de-fusion-dev-vorm-haus",
+    "grammar-de-fusion-dev-unterm-tisch",
+    "grammar-de-fusion-dev-beim-initial",
+    "grammar-de-fusion-dev-beimm-typo",
+    "grammar-de-fusion-dev-ins-historical-variant",
+    "grammar-de-fusion-dev-zur-anmeldung"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-fusion-dev-am-bahnhof",
+      "input": {
+        "markedContext": "Wir treffen uns morgen <TARGET>am</TARGET> Bahnhof neben dem Kiosk.",
+        "members": [
+          "am"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "am"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "am"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "am"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "am"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 984,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"am\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"am\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bbb1254e79d2283016a7db7e6100881a0895f55290d7c0dc4",
+      "usage": {
+        "input_tokens": 1683,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1728
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-beim-umzug",
+      "input": {
+        "markedContext": "Die Nachbarn halfen uns <TARGET>beim</TARGET> Umzug in den dritten Stock.",
+        "members": [
+          "beim"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 910,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"beim\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"beim\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d36c1a5432c844c016a7db7e6f390819e8e8f5fea902191bc",
+      "usage": {
+        "input_tokens": 1688,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1735
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-vom-arzt",
+      "input": {
+        "markedContext": "Der unterschriebene Brief kam direkt <TARGET>vom</TARGET> Arzt.",
+        "members": [
+          "vom"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vom"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vom"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vom"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vom"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 943,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"vom\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"vom\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_061353a0e5c19b23016a7db7e7de1c819d9fb909de688d3ca7",
+      "usage": {
+        "input_tokens": 1683,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1728
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-ins-haus",
+      "input": {
+        "markedContext": "Nachmittags spielten die Kinder in dem Hof; wegen des starken Regens liefen dann alle schnell <TARGET>ins</TARGET> Haus.",
+        "members": [
+          "ins"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ins"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ins"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ins"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ins"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 964,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ins\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ins\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0204953992a7309a016a7db7e8d108819da98b11fbbd9f78fa",
+      "usage": {
+        "input_tokens": 1695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1740
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-ans-meer",
+      "input": {
+        "markedContext": "In den Sommerferien fährt die Familie <TARGET>ans</TARGET> Meer.",
+        "members": [
+          "ans"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ans"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ans"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ans"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ans"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 874,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ans\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ans\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0575093308914a6f016a7db7e9c7cc81a1a6e6174bf779c7ad",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1727
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-aufs-dach",
+      "input": {
+        "markedContext": "Die junge Katze sprang vorsichtig <TARGET>aufs</TARGET> Dach.",
+        "members": [
+          "aufs"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aufs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aufs"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aufs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aufs"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 3971,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"aufs\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"aufs\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_078b1b847145ff7a016a7db7eaa9ec81a3b31cd32607bd9028",
+      "usage": {
+        "input_tokens": 1681,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1726
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-fuers-essen",
+      "input": {
+        "markedContext": "Den größten Teil des Budgets brauchten sie <TARGET>fürs</TARGET> Essen.",
+        "members": [
+          "fürs"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fürs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "fürs"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fürs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "fürs"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1061,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"fürs\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"fürs\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a9eff3fa2daca39016a7db7ee9f60819d81099041c24c7005",
+      "usage": {
+        "input_tokens": 1686,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1733
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-ums-haus",
+      "input": {
+        "markedContext": "Der schmale Fußweg führt einmal <TARGET>ums</TARGET> Haus.",
+        "members": [
+          "ums"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ums"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ums"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ums"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ums"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 918,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ums\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ums\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03f0afbe9b5fb639016a7db7efae24819d800847c636c4ff76",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1727
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-durchs-tor",
+      "input": {
+        "markedContext": "Nach dem Signal gingen die Besucher <TARGET>durchs</TARGET> Tor.",
+        "members": [
+          "durchs"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "durchs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "durchs"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "durchs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "durchs"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1812,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"durchs\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"durchs\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_081f923b02dc1886016a7db7f09764819da62f565318ed2cba",
+      "usage": {
+        "input_tokens": 1683,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1730
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-uebers-wetter",
+      "input": {
+        "markedContext": "Beim Kaffee sprachen die Gäste lange <TARGET>übers</TARGET> Wetter.",
+        "members": [
+          "übers"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "übers"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "übers"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "übers"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "übers"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 967,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"übers\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"übers\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cb997a4b59bbd0f016a7db7f26be8819c8ae4d3cffeacf27b",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1727
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-zum-behufe-archaic-context",
+      "input": {
+        "markedContext": "In der historisch markierten Wendung ging es <TARGET>zum</TARGET> Behufe der Prüfung um alte Amtssprache.",
+        "members": [
+          "zum"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zum"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zum"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zum"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zum"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 924,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zum\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zum\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f2320ffe421401f016a7db7f360d081a2a1f790cd91d97fd0",
+      "usage": {
+        "input_tokens": 1693,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1738
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-hinterm-schrank",
+      "input": {
+        "markedContext": "Der verlorene Schlüssel lag <TARGET>hinterm</TARGET> Schrank.",
+        "members": [
+          "hinterm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hinterm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "hinterm"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hinterm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "hinterm"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 5116,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"hinterm\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"hinterm\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_085fae479a900654016a7db7f452b0819ebff89012ecf34436",
+      "usage": {
+        "input_tokens": 1685,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 49,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1734
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-vorm-haus",
+      "input": {
+        "markedContext": "Das Taxi wartete bereits <TARGET>vorm</TARGET> Haus.",
+        "members": [
+          "vorm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vorm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vorm"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vorm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vorm"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 893,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"vorm\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"vorm\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_027e79000479eff3016a7db7f9734c81a292a044ab6df5a99e",
+      "usage": {
+        "input_tokens": 1680,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1725
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-unterm-tisch",
+      "input": {
+        "markedContext": "Der Hund schlief ruhig <TARGET>unterm</TARGET> Tisch.",
+        "members": [
+          "unterm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "unterm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "unterm"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "unterm"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "unterm"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1169,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"unterm\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"unterm\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09872802d26a06c9016a7db7fa536c81a2845dd280ef2e7640",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1729
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-beim-initial",
+      "input": {
+        "markedContext": "<TARGET>Beim</TARGET> Lesen vergaß sie völlig die Zeit.",
+        "members": [
+          "Beim"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 962,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"beim\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"beim\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a6151c70f7b5e51016a7db7fb7da881a2aa5505eed9fa2828",
+      "usage": {
+        "input_tokens": 1682,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1729
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-beimm-typo",
+      "input": {
+        "markedContext": "In der Nachricht bat er um Hilfe <TARGET>beimm</TARGET> Umzug.",
+        "members": [
+          "beimm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "beim"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beim"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1655,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"beim\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"beim\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f293589c69dd353016a7db7fcb71c8192a0c5db83768414ca",
+      "usage": {
+        "input_tokens": 1685,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 48,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1733
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-ins-historical-variant",
+      "input": {
+        "markedContext": "In der alten Erzählung ging der Wanderer <TARGET>in's</TARGET> Dorf zurück.",
+        "members": [
+          "in's"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "in's"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ins"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "in's"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ins"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 935,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"in's\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ins\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0700415ee6be6061016a7db7fe1ba8819f9da0fd05687a48c9",
+      "usage": {
+        "input_tokens": 1688,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 46,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1734
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-fusion-dev-zur-anmeldung",
+      "input": {
+        "markedContext": "Die erforderlichen Unterlagen gehören <TARGET>zur</TARGET> Anmeldung.",
+        "members": [
+          "zur"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zur"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zur"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zur"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zur"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 925,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zur\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zur\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0658c8e80573a6ca016a7db7ff0a7881a3b6692ca896d616e0",
+      "usage": {
+        "input_tokens": 1681,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1650
+        },
+        "output_tokens": 45,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1726
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

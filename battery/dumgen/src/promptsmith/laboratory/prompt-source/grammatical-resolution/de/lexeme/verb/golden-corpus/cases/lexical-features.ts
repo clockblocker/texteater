@@ -56,8 +56,7 @@ export const lexicalFeatureCases = defineGoldenCaseCollection(import.meta.url, {
 				},
 				["Standard", "Standard", "Standard"],
 			),
-			explanation:
-				"sich inherent. an governed. Both members.",
+			explanation: "sich inherent. an governed. Both members.",
 		},
 		"grammar-de-verb-governed-preposition-wartet": {
 			input: {

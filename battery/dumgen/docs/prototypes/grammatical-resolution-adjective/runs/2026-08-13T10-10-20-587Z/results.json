@@ -1,0 +1,1735 @@
+{
+  "runnerVersion": "grammatical-resolution-adjective-v4",
+  "route": "grammatical-resolution/de/lexeme/adjective",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T10:10:20.587Z",
+  "completedAt": "2026-08-13T10:10:49.387Z",
+  "finalizedAt": "2026-08-13T10:11:17.532Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "ff23fba5a86b53add9fa4723e30be1f9c7d1d35acfef549acb989fe012c7eb76",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "a85cbcfff1f83e4a903448b25efe731de844001ce0d8b4b4bbe9a35912a2551e",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "157a3bc0ba6a89cecafd2b191aace3a873bb24608af53aba1798d5b9705b76b6",
+  "suiteSha256": "0a088940ee05304169a729cec4d6490d2fed29682e325f15ffa30ee8ca196e94",
+  "evaluationCaseIds": [
+    "grammar-de-adj-dev-attributive-acc-fem-rot",
+    "grammar-de-adj-dev-attributive-dat-neut-kalt",
+    "grammar-de-adj-dev-attributive-gen-plur-neu",
+    "grammar-de-adj-dev-attributive-nom-plur-alt",
+    "grammar-de-adj-dev-predicative-blau",
+    "grammar-de-adj-dev-adverbial-leise",
+    "grammar-de-adj-dev-attributive-comparative-teuer",
+    "grammar-de-adj-dev-attributive-superlative-hoch",
+    "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+    "grammar-de-adj-dev-predicative-comparative-nah",
+    "grammar-de-adj-dev-cardinal-siebenhundert",
+    "grammar-de-adj-dev-foreign-special",
+    "grammar-de-adj-dev-abbreviation-sog",
+    "grammar-de-adj-dev-typo-grsser",
+    "grammar-de-adj-dev-participial-geschlossen",
+    "grammar-de-adj-dev-participial-spannend",
+    "grammar-de-adj-dev-invariant-lila",
+    "grammar-de-adj-dev-archaic-hold"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 16,
+  "scoreRatio": 0.8888888888888888,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adj-dev-attributive-acc-fem-rot",
+      "input": {
+        "markedContext": "Sie trägt die <TARGET>rote</TARGET> Tasche.",
+        "members": [
+          "rote"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "rote"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "rot",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "rote"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "rot",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1462,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"rote\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"rot\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_021a3b4229ff2686016a7d980ce3d4819283cb7c11b44ed126",
+      "usage": {
+        "input_tokens": 2692,
+        "input_tokens_details": {
+          "cache_write_tokens": 2664,
+          "cached_tokens": 0
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2786
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-dat-neut-kalt",
+      "input": {
+        "markedContext": "Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drinnen.",
+        "members": [
+          "kaltem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "kaltem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "kalt",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "kaltem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "kalt",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4861,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"kaltem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":\"Pos\",\"gender\":\"Neut\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"kalt\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_058576d0e8fce28f016a7d980e4bdc819282dae04c1727ca28",
+      "usage": {
+        "input_tokens": 2696,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2793
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-gen-plur-neu",
+      "input": {
+        "markedContext": "Wegen <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
+        "members": [
+          "neuer"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "neuer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "neu",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "neuer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "neu",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1438,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"neuer\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Gen\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"neu\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0418990501fd872e016a7d98132aec81a183201d9f5f1819bb",
+      "usage": {
+        "input_tokens": 2698,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2794
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-nom-plur-alt",
+      "input": {
+        "markedContext": "Die <TARGET>alten</TARGET> Häuser stehen am Marktplatz.",
+        "members": [
+          "alten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "alten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "alt",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "alten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "alt",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1230,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"alten\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Neut\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"alt\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c9910be0ba1b889016a7d981496cc819c830acf63f3d7c6f8",
+      "usage": {
+        "input_tokens": 2695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2791
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-predicative-blau",
+      "input": {
+        "markedContext": "<TARGET>Blau</TARGET> ist der Himmel über dem Meer.",
+        "members": [
+          "Blau"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "blau"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Pos",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "blau",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "blau"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Pos",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "blau",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1503,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"blau\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Pos\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"blau\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05bac75a573e5484016a7d9815d6ec819fac908ec21dc58f66",
+      "usage": {
+        "input_tokens": 2696,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2792
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-adverbial-leise",
+      "input": {
+        "markedContext": "Sie schließt die Tür <TARGET>leise</TARGET>.",
+        "members": [
+          "leise"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "leise"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Pos",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "leise",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "leise"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Pos",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "leise",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1905,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"leise\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Pos\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"leise\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0257b30f9ec14a4b016a7d9817544081919b19d258d858ae25",
+      "usage": {
+        "input_tokens": 2695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2791
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-comparative-teuer",
+      "input": {
+        "markedContext": "Er kaufte ein <TARGET>teureres</TARGET> Gerät.",
+        "members": [
+          "teureres"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "teureres"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Cmp",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "teuer",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "teureres"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Cmp",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "teuer",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1398,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"teureres\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Cmp\",\"gender\":\"Neut\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"teuer\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a9f8c18d1e680ac016a7d9819409081a1a2e7dae609cabb7c",
+      "usage": {
+        "input_tokens": 2697,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 98,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2795
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-attributive-superlative-hoch",
+      "input": {
+        "markedContext": "Der <TARGET>höchste</TARGET> Turm steht am Fluss.",
+        "members": [
+          "höchste"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "höchste"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Sup",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "hoch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "höchste"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Sup",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "hoch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1398,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"höchste\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Sup\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"hoch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_039b2e6e5907046f016a7d981a9bf0819cbe2ca876c5175b0f",
+      "usage": {
+        "input_tokens": 2699,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2795
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+      "input": {
+        "markedContext": "Von allen arbeitet sie am <TARGET>sorgfältigsten</TARGET>.",
+        "members": [
+          "sorgfältigsten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sorgfältigsten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Sup",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sorgfältig",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sorgfältigsten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Sup",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sorgfältig",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1247,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sorgfältigsten\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Sup\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"sorgfältig\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c13b955e7c02da7016a7d981c049481a3b783096ab2251a76",
+      "usage": {
+        "input_tokens": 2700,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 101,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2801
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-predicative-comparative-nah",
+      "input": {
+        "markedContext": "Das neue Büro liegt <TARGET>näher</TARGET>.",
+        "members": [
+          "näher"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "näher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Cmp",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "nah",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "näher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Cmp",
+            "gender": null,
+            "number": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "nah",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1385,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"näher\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"degree\":\"Cmp\",\"gender\":null,\"number\":null}},\"lemma\":{\"canonicalForm\":\"nah\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bdd7da630f3385a016a7d981d65f081a28dccd6ad16c2ffb2",
+      "usage": {
+        "input_tokens": 2694,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2789
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-cardinal-siebenhundert",
+      "input": {
+        "markedContext": "Sie las die <TARGET>siebenhundert</TARGET> Seiten in einer Woche.",
+        "members": [
+          "siebenhundert"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "siebenhundert"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "siebenhundert",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card",
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "siebenhundert"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "siebenhundert",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card",
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1347,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"siebenhundert\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"siebenhundert\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\",\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05ba717f27bb16a8016a7d981ea7c881919f35a189f26a803a",
+      "usage": {
+        "input_tokens": 2700,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 101,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2801
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-foreign-special",
+      "input": {
+        "markedContext": "Das war ein <TARGET>special</TARGET> Moment für das Team.",
+        "members": [
+          "special"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "special"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "special",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "special"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "special",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1304,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"special\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"special\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fbb0f620b1eb64f016a7d9820029c819cb32622b28668bc04",
+      "usage": {
+        "input_tokens": 2695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2789
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-abbreviation-sog",
+      "input": {
+        "markedContext": "Ein <TARGET>sog</TARGET>. Experte sagte vor Gericht aus.",
+        "members": [
+          "sog"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sog"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sogenannt",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sog"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sogenannt",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1403,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sog\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"sogenannt\",\"coreFeatures\":{\"abbr\":\"Yes\",\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ce0b0c4e159284c016a7d98214e088191a7c7e90c412a9fa0",
+      "usage": {
+        "input_tokens": 2696,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2793
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-typo-grsser",
+      "input": {
+        "markedContext": "Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
+        "members": [
+          "grßer"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "großer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "groß",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "großer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "groß",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1705,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"großer\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"groß\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d5e697ba1c83cfb016a7d9822d99c81a09c1fb88c1ef11dfa",
+      "usage": {
+        "input_tokens": 2694,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2791
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-participial-geschlossen",
+      "input": {
+        "markedContext": "Die <TARGET>geschlossene</TARGET> Tür bleibt heute zu.",
+        "members": [
+          "geschlossene"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "geschlossene"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "geschlossen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "geschlossene"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "geschlossen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1265,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"geschlossene\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Fem\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"geschlossen\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_040cf2c1bb920a91016a7d982469fc8191bc4f0275e2bdd0ba",
+      "usage": {
+        "input_tokens": 2695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2790
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-participial-spannend",
+      "input": {
+        "markedContext": "Der <TARGET>spannende</TARGET> Vortrag dauerte eine Stunde.",
+        "members": [
+          "spannende"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "spannende"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "spannend",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "spannende"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "spannend",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1206,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"spannende\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"spannend\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e8274da5c0f0de2016a7d9825acbc8191a57c61ef8eb6ad38",
+      "usage": {
+        "input_tokens": 2696,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2792
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adj-dev-invariant-lila",
+      "input": {
+        "markedContext": "Sie trug einen <TARGET>lila</TARGET> Schal.",
+        "members": [
+          "lila"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "lila"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "lila",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "lila"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": "Pos",
+            "gender": "Masc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "lila",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1423,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"lila\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"lila\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_061e4fd5e9ef4cc0016a7d9826e6cc81918378850fb577417d",
+      "usage": {
+        "input_tokens": 2695,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2791
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt limits Foreign Yes to an overt foreign adjective identity, and the same established invariant German color adjective passed in round 2; this isolated Foreign Yes output is a bounded-model feature miss."
+    },
+    {
+      "caseId": "grammar-de-adj-dev-archaic-hold",
+      "input": {
+        "markedContext": "Ihr <TARGET>holdes</TARGET> Lächeln bezauberte die Gäste.",
+        "members": [
+          "holdes"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "holdes"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          },
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "hold",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "holdes"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Neut",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "hold",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": null,
+            "variant": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": false,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1290,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"holdes\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Neut\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"hold\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":null,\"variant\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_031374802c734daf016a7d9828500c8192af823cff42f0a92b",
+      "usage": {
+        "input_tokens": 2699,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2664
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2795
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt explicitly maps old poetic adjective use to Surface Archaic and a different archaic adjective demonstration still did not change this output, so the persistent null status is accepted as a bounded-model limitation."
+    }
+  ]
+}

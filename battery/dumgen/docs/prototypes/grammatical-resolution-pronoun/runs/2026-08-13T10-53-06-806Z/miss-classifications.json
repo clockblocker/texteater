@@ -1,0 +1,6 @@
+{
+  "grammar-de-pron-dev-poss-meiner": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The response again resolved the full substantive-possessive Surface and Core Features but retained the inflected form as canonicalForm. The selected prompt directly states that every first-person substantive possessive such as meiner maps to ich; repeating the exact rule further would be case-specific overfitting. The immediately preceding round passed, and this 20/21 round remains above threshold."
+  }
+}

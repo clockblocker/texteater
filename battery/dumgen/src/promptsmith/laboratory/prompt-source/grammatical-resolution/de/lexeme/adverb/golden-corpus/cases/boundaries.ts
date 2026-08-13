@@ -3,83 +3,67 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { citationCase, unmarkedCoreFeatures } from "./builders";
 
-const unresolved = {
-	decision: "Unresolved" as const,
-	resolution: null,
+const demonstrative = {
+	...unmarkedCoreFeatures,
+	pronType: "Dem" as const,
 };
 
 export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-adv-demo-unresolved-adverbial-adjective": {
-			input: {
-				markedContext: "Der Hund läuft <TARGET>schnell</TARGET>.",
+		"grammar-de-adv-dev-route-sconj-da": citationCase(
+			"<TARGET>Da</TARGET> steht der Hausmeister schon vor dem Tor.",
+			["Da"],
+			"da",
+			unmarkedCoreFeatures,
+			{
+				normalizedMembers: ["da"],
+				explanation:
+					"The authoritative ADV route and verb-second clause identify locative da, not clause-introducing SCONJ da.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"Productive adverbial use does not change the adjective Lexeme schnell into a lexical ADV; keep it on its ADJ route.",
-		},
-		"grammar-de-adv-unresolved-attributive-adjective": {
-			input: {
-				markedContext: "Sie nimmt den <TARGET>schnellen</TARGET> Zug.",
+		),
+		"grammar-de-adv-dev-route-part-doch": citationCase(
+			"Nach langem Zögern kam Leon dann <TARGET>doch</TARGET> zur Sitzung.",
+			["doch"],
+			"doch",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"Target Classification fixed ADV; the contrastive adverb is not the homographic modal-particle route.",
 			},
-			idealOutput: unresolved,
-		},
-		"grammar-de-adv-unresolved-modal-particle-doch": {
-			input: {
-				markedContext: "Komm <TARGET>doch</TARGET> morgen vorbei.",
+		),
+		"grammar-de-adv-dev-route-adp-davor": citationCase(
+			"<TARGET>Davor</TARGET> warnt die Technikerin in jedem Kurs.",
+			["Davor"],
+			"davor",
+			demonstrative,
+			{
+				normalizedMembers: ["davor"],
+				explanation:
+					"The pronominal ADV is a complete member; do not split or reinterpret it as the ADP vor.",
 			},
-			idealOutput: unresolved,
-		},
-		"grammar-de-adv-unresolved-subordinating-conjunction": {
-			input: {
-				markedContext:
-					"Wir bleiben zu Hause, <TARGET>weil</TARGET> es regnet.",
+		),
+		"grammar-de-adv-dev-route-adj-gern": citationCase(
+			"Die Praktikantin hilft den Gästen <TARGET>gern</TARGET>.",
+			["gern"],
+			"gern",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"The classified lexical ADV gern remains ADV; productive adverbial ADJ forms belong to their fixed ADJ route instead.",
 			},
-			idealOutput: unresolved,
-		},
-		"grammar-de-adv-unresolved-overbroad-target": {
-			input: {
-				markedContext: "Sie besucht uns <TARGET>sehr oft</TARGET>.",
+		),
+		"grammar-de-adv-dev-route-paired-frame-auch": citationCase(
+			"Der Jugendchor singt und tanzt <TARGET>auch</TARGET>.",
+			["auch"],
+			"auch",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"The supplied target is an ordinary ADV occurrence, not a member of an upstream PairedFrame payload.",
 			},
-			idealOutput: unresolved,
-		},
-		"grammar-de-adv-unresolved-two-unrelated-targets": {
-			input: {
-				markedContext:
-					"<TARGET>Heute</TARGET> arbeitet sie, <TARGET>morgen</TARGET> ruht sie sich aus.",
-			},
-			idealOutput: unresolved,
-		},
-		"grammar-de-adv-provisional-split-pronominal-dafuer": {
-			input: {
-				markedContext:
-					"Da kann ich <TARGET>da</TARGET> nichts <TARGET>für</TARGET>.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard", "Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["da", "für"],
-					surface: {
-						spelling: "Variant",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "dafür",
-						coreFeatures: {
-							foreign: null,
-							numType: null,
-							pronType: "Dem",
-						},
-					},
-				},
-			},
-			explanation:
-				"Corpus-only probe: colloquial split pronominal adverbs need a settled Surface normalization and route-membership policy.",
-		},
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

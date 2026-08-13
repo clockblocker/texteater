@@ -1,0 +1,6 @@
+{
+  "grammar-de-num-accept-v3-archaic-fuenff": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt already gives recognized historical spellings precedence over typo repair, and the separate fresh historical variant passed under that rule in v2. Here the model fails to recognize the independently established older spelling fünff, repairs it to fünf, and loses Variant plus Archaic metadata while retaining the correct Citation, Lemma, and core features. This isolated lexical-recognition miss does not justify another general rule or demonstration change."
+  }
+}

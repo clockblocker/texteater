@@ -1,0 +1,1635 @@
+{
+  "runnerVersion": "grammatical-resolution-subordinating-conjunction-v2",
+  "route": "grammatical-resolution/de/lexeme/subordinating-conjunction",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 2
+  },
+  "startedAt": "2026-08-13T13:07:07.608Z",
+  "completedAt": "2026-08-13T13:07:47.299Z",
+  "finalizedAt": "2026-08-13T13:07:55.241Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "1267d168d7945760c3372d3f867e0096d455cdf14c41623bf1cc86c0ff46e4a8",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "82cd159a7d051e4df95bad4d2be016ff96558a89fea35cfe7101da3899ef1dff",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "6366b4226712eeef53683763e0e93a8460f0e77b09416ac6c67b273570210398",
+  "suiteSha256": "456ef871258dfea4c6b0fedc90ad68c6a3b515620601777587c223ea926f1d4a",
+  "evaluationCaseIds": [
+    "grammar-de-sconj-dev-complement-dass",
+    "grammar-de-sconj-dev-conditional-wenn",
+    "grammar-de-sconj-dev-temporal-nachdem",
+    "grammar-de-sconj-dev-temporal-waehrend",
+    "grammar-de-sconj-dev-interrogative-ob",
+    "grammar-de-sconj-dev-temporal-bevor",
+    "grammar-de-sconj-dev-conditional-falls",
+    "grammar-de-sconj-dev-temporal-seitdem",
+    "grammar-de-sconj-dev-temporal-sobald",
+    "grammar-de-sconj-dev-modal-indem",
+    "grammar-de-sconj-dev-causal-zumal",
+    "grammar-de-sconj-dev-comparative-als-clause",
+    "grammar-de-sconj-dev-comparative-wie-clause",
+    "grammar-de-sconj-dev-temporal-als",
+    "grammar-de-sconj-dev-adversative-wohingegen",
+    "grammar-de-sconj-dev-concessive-obgleich",
+    "grammar-de-sconj-dev-conditional-sofern",
+    "grammar-de-sconj-dev-temporal-bis",
+    "grammar-de-sconj-dev-multiword-als-ob",
+    "grammar-de-sconj-dev-variant-sodass",
+    "grammar-de-sconj-dev-beside-adp-waehrend",
+    "grammar-de-sconj-dev-beside-cconj-denn"
+  ],
+  "boundedCalls": 22,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 22,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-sconj-dev-complement-dass",
+      "input": {
+        "markedContext": "Mara weiß, <TARGET>dass</TARGET> Ben morgen kommt.",
+        "members": [
+          "dass"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dass"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dass",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dass"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dass",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1193,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"dass\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dass\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0361eaeea9806ca1016a7dc17bee6881a2b6353b6818309750",
+      "usage": {
+        "input_tokens": 1931,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1991
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-conditional-wenn",
+      "input": {
+        "markedContext": "Wir gehen los, <TARGET>wenn</TARGET> der Regen aufhört.",
+        "members": [
+          "wenn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wenn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wenn",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wenn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wenn",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1224,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wenn\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wenn\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0db67194b28212ea016a7dc17cffb4819ea22246495ffb3df3",
+      "usage": {
+        "input_tokens": 1932,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1990
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-nachdem",
+      "input": {
+        "markedContext": "<TARGET>Nachdem</TARGET> er gegessen hatte, räumte er den Tisch ab.",
+        "members": [
+          "Nachdem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nachdem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nachdem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nachdem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nachdem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1109,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nachdem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nachdem\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04118d48a6273396016a7dc17e3bc08192a11354976f81f821",
+      "usage": {
+        "input_tokens": 1935,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1995
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-waehrend",
+      "input": {
+        "markedContext": "Sie las, <TARGET>während</TARGET> er das Abendessen kochte.",
+        "members": [
+          "während"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1159,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"während\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"während\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00b7905ed7fc65bd016a7dc17f54b0819db55a1e9ddfbdcac6",
+      "usage": {
+        "input_tokens": 1933,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1993
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-interrogative-ob",
+      "input": {
+        "markedContext": "Ich frage mich, <TARGET>ob</TARGET> die Bibliothek noch geöffnet ist.",
+        "members": [
+          "ob"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ob",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ob",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1097,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ob\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ob\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fb92407d245d3f5016a7dc1807e008191bba1209b269a0f9e",
+      "usage": {
+        "input_tokens": 1933,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1991
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-bevor",
+      "input": {
+        "markedContext": "Ruf mich an, <TARGET>bevor</TARGET> du zum Bahnhof fährst.",
+        "members": [
+          "bevor"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bevor"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bevor",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bevor"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bevor",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1280,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bevor\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bevor\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_007ec2561d4c6922016a7dc1819fa8819fb999e118d9072a03",
+      "usage": {
+        "input_tokens": 1936,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1996
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-conditional-falls",
+      "input": {
+        "markedContext": "Nimm eine Jacke mit, <TARGET>falls</TARGET> es abends kühl wird.",
+        "members": [
+          "falls"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "falls"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "falls",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "falls"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "falls",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1129,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"falls\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"falls\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_099312de82a2d21c016a7dc182f1ec81a09f33f1e89015b056",
+      "usage": {
+        "input_tokens": 1936,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1994
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-seitdem",
+      "input": {
+        "markedContext": "Es ist ruhiger, <TARGET>seitdem</TARGET> die Baustelle geschlossen wurde.",
+        "members": [
+          "seitdem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "seitdem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "seitdem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "seitdem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "seitdem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1697,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"seitdem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"seitdem\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b3c1893489254d1016a7dc184077081a288db46ec9a69d064",
+      "usage": {
+        "input_tokens": 1935,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1995
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-sobald",
+      "input": {
+        "markedContext": "Wir beginnen, <TARGET>sobald</TARGET> alle Gäste eingetroffen sind.",
+        "members": [
+          "sobald"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sobald"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sobald",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sobald"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sobald",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3445,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sobald\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sobald\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04b7f533edf99ae8016a7dc1863f2081a1a9a51c40152fcbdf",
+      "usage": {
+        "input_tokens": 1933,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1993
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-modal-indem",
+      "input": {
+        "markedContext": "Sie half, <TARGET>indem</TARGET> sie die Messwerte sorgfältig prüfte.",
+        "members": [
+          "indem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "indem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "indem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "indem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "indem",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1059,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"indem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"indem\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cd04b1a49bc6ef8016a7dc189223481a09abac904a3a39981",
+      "usage": {
+        "input_tokens": 1936,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1996
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-causal-zumal",
+      "input": {
+        "markedContext": "Wir blieben noch, <TARGET>zumal</TARGET> die Diskussion spannend war.",
+        "members": [
+          "zumal"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zumal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zumal",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zumal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zumal",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1124,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zumal\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zumal\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f46a93f29e78045016a7dc18a32448192bc80cb392580d4bb",
+      "usage": {
+        "input_tokens": 1934,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1994
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-comparative-als-clause",
+      "input": {
+        "markedContext": "Der Weg dauerte länger, <TARGET>als</TARGET> wir erwartet hatten.",
+        "members": [
+          "als"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3718,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"als\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"als\",\"coreFeatures\":{\"conjType\":\"Comp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_060ab56b2719f6ad016a7dc18deeec81a3acc87fc7c662979b",
+      "usage": {
+        "input_tokens": 1932,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1990
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-comparative-wie-clause",
+      "input": {
+        "markedContext": "Die Maschine arbeitet so leise, <TARGET>wie</TARGET> der Hersteller versprochen hatte.",
+        "members": [
+          "wie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wie",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wie",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1043,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wie\",\"coreFeatures\":{\"conjType\":\"Comp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_088582169c8a4f28016a7dc18f0684819ea9991131cfaeda86",
+      "usage": {
+        "input_tokens": 1935,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1993
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-als",
+      "input": {
+        "markedContext": "<TARGET>Als</TARGET> der Bus endlich kam, warteten wir schon lange.",
+        "members": [
+          "Als"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5599,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"als\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"als\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_049ef2df78ded9c4016a7dc190cd70819eaacbb52a90f08fff",
+      "usage": {
+        "input_tokens": 1933,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1991
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-adversative-wohingegen",
+      "input": {
+        "markedContext": "Lena fährt gern Rad, <TARGET>wohingegen</TARGET> Tom lieber wandert.",
+        "members": [
+          "wohingegen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wohingegen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wohingegen",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wohingegen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wohingegen",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2038,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wohingegen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wohingegen\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08d626999d442d1c016a7dc195b0f481a1acaa816307e110c3",
+      "usage": {
+        "input_tokens": 1937,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 62,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1999
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-concessive-obgleich",
+      "input": {
+        "markedContext": "Er setzte die Reise fort, <TARGET>obgleich</TARGET> das Wetter schlechter wurde.",
+        "members": [
+          "obgleich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "obgleich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "obgleich",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "obgleich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "obgleich",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1764,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"obgleich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"obgleich\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e5d921ae2f87171016a7dc19807d081919e481a640bdbde59",
+      "usage": {
+        "input_tokens": 1935,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1995
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-conditional-sofern",
+      "input": {
+        "markedContext": "Die Sitzung findet statt, <TARGET>sofern</TARGET> genug Mitglieder kommen.",
+        "members": [
+          "sofern"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sofern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sofern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sofern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sofern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1111,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sofern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sofern\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f4afc9d0d47ca3f016a7dc19981bc819fa663304b66c273f4",
+      "usage": {
+        "input_tokens": 1933,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1993
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-temporal-bis",
+      "input": {
+        "markedContext": "Wir warteten, <TARGET>bis</TARGET> das Licht wieder anging.",
+        "members": [
+          "bis"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1018,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bis\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bis\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03e81c478d664a95016a7dc19a95b881a0ab54d4874d728851",
+      "usage": {
+        "input_tokens": 1932,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1990
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-multiword-als-ob",
+      "input": {
+        "markedContext": "Er tat, <TARGET>als</TARGET> <TARGET>ob</TARGET> er die Nachricht nicht gehört hätte.",
+        "members": [
+          "als",
+          "ob"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als",
+          "ob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als ob",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als",
+          "ob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als ob",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1282,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"als\",\"ob\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"als ob\",\"coreFeatures\":{\"conjType\":\"Comp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0db0f0558bfcb289016a7dc19ba370819d8b46843d70f58708",
+      "usage": {
+        "input_tokens": 1941,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 63,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2004
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-variant-sodass",
+      "input": {
+        "markedContext": "Die Tür klemmte, <TARGET>so</TARGET> <TARGET>dass</TARGET> wir warten mussten.",
+        "members": [
+          "so",
+          "dass"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "so",
+          "dass"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "so dass",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "so",
+          "dass"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "so dass",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1183,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"so\",\"dass\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"so dass\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0aca64a1c388613d016a7dc19ce5e48191aa67dcc04b4ef255",
+      "usage": {
+        "input_tokens": 1942,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 64,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2006
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-beside-adp-waehrend",
+      "input": {
+        "markedContext": "Während des Urlaubs las Nora, <TARGET>während</TARGET> die Kinder schliefen.",
+        "members": [
+          "während"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2232,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"während\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"während\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b53bb597eaf7bc6016a7dc19e8d60819cb2c5037f288ee06b",
+      "usage": {
+        "input_tokens": 1936,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1996
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-sconj-dev-beside-cconj-denn",
+      "input": {
+        "markedContext": "Wir blieben, denn es regnete, <TARGET>bis</TARGET> der Bus kam.",
+        "members": [
+          "bis"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3172,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bis\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bis\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a1ac0a2a97ed3a6016a7dc1a04e74819f8bd4d98a651e9168",
+      "usage": {
+        "input_tokens": 1935,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1899
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1993
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

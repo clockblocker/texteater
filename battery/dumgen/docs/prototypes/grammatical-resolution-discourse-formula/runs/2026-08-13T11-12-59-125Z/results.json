@@ -1,0 +1,861 @@
+{
+  "runnerVersion": "grammatical-resolution-discourse-formula-v5",
+  "route": "grammatical-resolution/de/phraseme/discourse-formula",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T11:12:59.125Z",
+  "completedAt": "2026-08-13T11:13:18.028Z",
+  "finalizedAt": "2026-08-13T11:13:53.279Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "21e8f691ca3a680e0385597af691e3c74d195f364f4e9301a128dd8c374cf6a0",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "674947fc1b3906d517171901654e904634f583d53d17660a8024b451a311dee6",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "35602872c9f42d85c8488110d3cb039e7e244c6059ee33b5326d382519a81820",
+  "suiteSha256": "431bcf879b4c8a645cb7504ccf07fd7974daf624c506a80234f74ffda3ce9770",
+  "evaluationCaseIds": [
+    "grammar-de-discourse-formula-accept-schoenen-guten-tag",
+    "grammar-de-discourse-formula-accept-gute-nacht",
+    "grammar-de-discourse-formula-accept-besten-dank",
+    "grammar-de-discourse-formula-accept-ich-bitte-um-verzeihung",
+    "grammar-de-discourse-formula-accept-keine-ursache",
+    "grammar-de-discourse-formula-accept-vielen-herzlichen-partial",
+    "grammar-de-discourse-formula-accept-auf-keinen-fall",
+    "grammar-de-discourse-formula-accept-nun-denn",
+    "grammar-de-discourse-formula-accept-um-himmels-willen",
+    "grammar-de-discourse-formula-accept-willkommen-single"
+  ],
+  "boundedCalls": 10,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 9,
+  "scoreRatio": 0.9,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-discourse-formula-accept-schoenen-guten-tag",
+      "input": {
+        "markedContext": "An der Hotelrezeption wandte sich der Gast an die Mitarbeiterin: „<TARGET>Schönen</TARGET> <TARGET>guten</TARGET> <TARGET>Tag</TARGET>, Frau Özdemir.“",
+        "members": [
+          "Schönen",
+          "guten",
+          "Tag"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "schönen",
+          "guten",
+          "Tag"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "schönen guten tag",
+          "coreFeatures": {
+            "discourseFormulaRole": "Greeting"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "schönen",
+          "Guten",
+          "Tag"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "schönen guten tag",
+          "coreFeatures": {
+            "discourseFormulaRole": "Greeting"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": false,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1666,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Typo\",\"Standard\"],\"normalizedMembers\":[\"schönen\",\"Guten\",\"Tag\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"schönen guten tag\",\"coreFeatures\":{\"discourseFormulaRole\":\"Greeting\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0070e42f9377ccea016a7da6bb6bfc819c93b873ad1c41301b",
+      "usage": {
+        "input_tokens": 2513,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2590
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model invented uppercase Guten and called the correctly lowercase supplied adjective a Typo, despite the prompt defining Standard as exact conventional spelling, requiring repair only for actual errors, and reserving German capitals for required nouns. The canonical form and all other fields were correct, so this is a localized model limitation rather than a prompt defect."
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-gute-nacht",
+      "input": {
+        "markedContext": "Vor dem Ausschalten des Flurlichts verabschiedete sich der Vater mit „<TARGET>Gute</TARGET> <TARGET>Nacht</TARGET>, ihr zwei.“",
+        "members": [
+          "Gute",
+          "Nacht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gute",
+          "Nacht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gute nacht",
+          "coreFeatures": {
+            "discourseFormulaRole": "Farewell"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gute",
+          "Nacht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gute nacht",
+          "coreFeatures": {
+            "discourseFormulaRole": "Farewell"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1669,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"gute\",\"Nacht\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gute nacht\",\"coreFeatures\":{\"discourseFormulaRole\":\"Farewell\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d892e2725e2a482016a7da6bcf654819c8269f3a4418ee194",
+      "usage": {
+        "input_tokens": 2502,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2574
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-besten-dank",
+      "input": {
+        "markedContext": "Nachdem die Bibliothekarin das seltene Buch gefunden hatte, sagte der Forscher: „<TARGET>Besten</TARGET> <TARGET>Dank</TARGET> für Ihre Mühe.“",
+        "members": [
+          "Besten",
+          "Dank"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "besten",
+          "Dank"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "besten dank",
+          "coreFeatures": {
+            "discourseFormulaRole": "Thanks"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "besten",
+          "Dank"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "besten dank",
+          "coreFeatures": {
+            "discourseFormulaRole": "Thanks"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1372,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"besten\",\"Dank\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"besten dank\",\"coreFeatures\":{\"discourseFormulaRole\":\"Thanks\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0efbc333be6fe627016a7da6bea48081a3b91344d57fd88771",
+      "usage": {
+        "input_tokens": 2505,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2575
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-ich-bitte-um-verzeihung",
+      "input": {
+        "markedContext": "Nachdem sie den Termin verwechselt hatte, sagte die Ärztin: „<TARGET>Ich</TARGET> <TARGET>bitte</TARGET> <TARGET>um</TARGET> <TARGET>Verzeihung</TARGET> für die Wartezeit.“",
+        "members": [
+          "Ich",
+          "bitte",
+          "um",
+          "Verzeihung"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ich",
+          "bitte",
+          "um",
+          "Verzeihung"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ich bitte um verzeihung",
+          "coreFeatures": {
+            "discourseFormulaRole": "Apology"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ich",
+          "bitte",
+          "um",
+          "Verzeihung"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ich bitte um verzeihung",
+          "coreFeatures": {
+            "discourseFormulaRole": "Apology"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1801,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"ich\",\"bitte\",\"um\",\"Verzeihung\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ich bitte um verzeihung\",\"coreFeatures\":{\"discourseFormulaRole\":\"Apology\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00335d4723ce75f0016a7da6c00acc81a090246737bc7efef5",
+      "usage": {
+        "input_tokens": 2526,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2612
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-keine-ursache",
+      "input": {
+        "markedContext": "Auf sein dankbares Nicken antwortete der Hausmeister: „<TARGET>Keine</TARGET> <TARGET>Ursache</TARGET>, das mache ich gern.“",
+        "members": [
+          "Keine",
+          "Ursache"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "keine",
+          "Ursache"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "keine ursache",
+          "coreFeatures": {
+            "discourseFormulaRole": "Acknowledgment"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "keine",
+          "Ursache"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "keine ursache",
+          "coreFeatures": {
+            "discourseFormulaRole": "Acknowledgment"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1420,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"keine\",\"Ursache\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"keine ursache\",\"coreFeatures\":{\"discourseFormulaRole\":\"Acknowledgment\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0905cf6f99e7267b016a7da6c1d84c81918ca4da26d38d69ff",
+      "usage": {
+        "input_tokens": 2501,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 74,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2575
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-vielen-herzlichen-partial",
+      "input": {
+        "markedContext": "Die Aufnahme brach mitten in der Dankesformel „<TARGET>Vielen</TARGET> <TARGET>herzlichen</TARGET> …“ ab.",
+        "members": [
+          "Vielen",
+          "herzlichen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vielen",
+          "herzlichen"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vielen herzlichen dank",
+          "coreFeatures": {
+            "discourseFormulaRole": "Thanks"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "vielen",
+          "herzlichen"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "vielen herzlichen dank",
+          "coreFeatures": {
+            "discourseFormulaRole": "Thanks"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1358,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"vielen\",\"herzlichen\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"vielen herzlichen dank\",\"coreFeatures\":{\"discourseFormulaRole\":\"Thanks\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d5b9ba143db85e7016a7da6c33b4081a1a2df54113b9bb7a5",
+      "usage": {
+        "input_tokens": 2498,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 74,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2572
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-auf-keinen-fall",
+      "input": {
+        "markedContext": "„Gibst du ihm das Original ohne Quittung?“ – „<TARGET>Auf</TARGET> <TARGET>keinen</TARGET> <TARGET>Fall</TARGET>.“",
+        "members": [
+          "Auf",
+          "keinen",
+          "Fall"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "auf",
+          "keinen",
+          "Fall"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "auf keinen fall",
+          "coreFeatures": {
+            "discourseFormulaRole": "Refusal"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "auf",
+          "keinen",
+          "Fall"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "auf keinen fall",
+          "coreFeatures": {
+            "discourseFormulaRole": "Refusal"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1342,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"auf\",\"keinen\",\"Fall\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"auf keinen fall\",\"coreFeatures\":{\"discourseFormulaRole\":\"Refusal\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04d774694227ed2b016a7da6c497b481a2ac83f2a4f5558dd1",
+      "usage": {
+        "input_tokens": 2506,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 75,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2581
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-nun-denn",
+      "input": {
+        "markedContext": "Als alle Plätze besetzt waren, eröffnete die Moderatorin die Sitzung mit „<TARGET>Nun</TARGET> <TARGET>denn</TARGET>, beginnen wir.“",
+        "members": [
+          "Nun",
+          "denn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nun",
+          "denn"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nun denn",
+          "coreFeatures": {
+            "discourseFormulaRole": "Initiation"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nun",
+          "denn"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nun denn",
+          "coreFeatures": {
+            "discourseFormulaRole": "Initiation"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1352,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"nun\",\"denn\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nun denn\",\"coreFeatures\":{\"discourseFormulaRole\":\"Initiation\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b3aaee41e04dac1016a7da6c5ee3081a2ae25c98bf0135aa9",
+      "usage": {
+        "input_tokens": 2500,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2570
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-um-himmels-willen",
+      "input": {
+        "markedContext": "Nachdem jemand den Idiom-Ausdruck ‚ins Gras beißen‘ erwähnt hatte, sah die Ärztin den falschen Befund und rief: „<TARGET>Um</TARGET> <TARGET>Himmels</TARGET> <TARGET>willen</TARGET>!“",
+        "members": [
+          "Um",
+          "Himmels",
+          "willen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "Himmels",
+          "willen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um himmels willen",
+          "coreFeatures": {
+            "discourseFormulaRole": "Reaction"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "Himmels",
+          "willen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um himmels willen",
+          "coreFeatures": {
+            "discourseFormulaRole": "Reaction"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5270,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"um\",\"Himmels\",\"willen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"um himmels willen\",\"coreFeatures\":{\"discourseFormulaRole\":\"Reaction\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00fe4a51d7dc3981016a7da6caa04081a097c5ff95164ca7d3",
+      "usage": {
+        "input_tokens": 2526,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2604
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-discourse-formula-accept-willkommen-single",
+      "input": {
+        "markedContext": "Nach dem lockeren Zuruf ‚Hallo!‘ trat die Gastgeberin ans Mikrofon und begrüßte die Gäste offiziell: „<TARGET>Willkommen</TARGET> in Dresden!“",
+        "members": [
+          "Willkommen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "willkommen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "willkommen",
+          "coreFeatures": {
+            "discourseFormulaRole": "Greeting"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "willkommen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "willkommen",
+          "coreFeatures": {
+            "discourseFormulaRole": "Greeting"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1640,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"willkommen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"willkommen\",\"coreFeatures\":{\"discourseFormulaRole\":\"Greeting\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06e80e5e6c28f56b016a7da6ccd090819cb261fba0a1680d3f",
+      "usage": {
+        "input_tokens": 2500,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2446
+        },
+        "output_tokens": 65,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2565
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

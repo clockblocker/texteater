@@ -1,0 +1,30 @@
+{
+  "grammar-de-adp-dev-extpos-sconj-anstatt": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt explains extPos=SCONJ but does not state that a clausal complement leaves governedCase null. The model retained the ordinary nominal-government value Gen while correctly emitting extPos=SCONJ, exposing an underspecified interaction between the two codec fields."
+  },
+  "grammar-de-adp-dev-foreign-versus-acc": {
+    "classification": "prompt-defect",
+    "explanation": "The model correctly identified versus as a foreign preposition but left governedCase null. The prompt gives no foreign-ADP government example and its instruction to prefer stable lexical government over a single observed case does not establish versus as accusative-governing."
+  },
+  "grammar-de-adp-dev-prep-entlang-gen": {
+    "classification": "prompt-defect",
+    "explanation": "The context visibly supplies preposed entlang with a genitive complement, but the prompt's stable-government wording does not explain that the governedCase scalar follows the route-valid occurrence construction when a lemma's government varies with position. The model defaulted to the more familiar postposed accusative construction."
+  },
+  "grammar-de-adp-dev-adp-beside-sconj": {
+    "classification": "prompt-defect",
+    "explanation": "The model respected the marked ADP target and ignored the neighboring SCONJ, but left governedCase null for wegen despite the visible genitive complement. The prompt names canonical genitive government only in the special local-dative discussion and needs a direct general rule/example."
+  },
+  "grammar-de-adp-dev-casing-typo-unter": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt says ordinary sentence-initial capitalization is Standard and inappropriate casing is Typo, but it does not explicitly contrast a capitalized preposition in medial position. The model normalized Unter correctly while incorrectly extending the sentence-initial exception."
+  },
+  "grammar-de-adp-dev-abbreviation-inkl": {
+    "classification": "prompt-defect",
+    "explanation": "The model correctly preserved the unpunctuated member, chose canonicalForm inkl., and set abbr=Yes, but returned Canonical spelling and null government. The guidance does not explicitly connect omission of an abbreviation's dictionary punctuation to Variant spelling or establish conventional inklusive/inkl. as genitive-governing."
+  },
+  "grammar-de-adp-dev-variant-auf-grund": {
+    "classification": "prompt-defect",
+    "explanation": "The model correctly marked the attested two-member form as Variant but repeated it as canonicalForm. The prompt says equal variants do not choose a headword, which conflicts with this context's explicit statement that aufgrund is the Leitform; it needs to state that an explicit lexical headword cue controls canonicalForm."
+  }
+}

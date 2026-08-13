@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
+	developmentEvaluation,
+	interjectionGrammaticalResolutionAcceptanceExperiment,
 	interjectionGrammaticalResolutionExperiment,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-interjection/evaluation-suite";
 import { evaluateInterjectionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-interjection/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/golden-corpus/corpus";
@@ -12,33 +14,133 @@ import {
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/prompt-source";
 import {
+	inputSchema,
 	modelCitationSurfaceSchema,
 	modelLemmaSchema,
+	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-intj-wupp-sound-effect",
-	"grammar-de-intj-hallo-greeting",
-	"grammar-de-intj-hurra-joy",
-	"grammar-de-intj-oh-reaction",
-	"grammar-de-intj-huch-surprise",
-	"grammar-de-intj-au-pain",
-	"grammar-de-intj-aeh-hesitation",
-	"grammar-de-intj-tja-resignation",
-	"grammar-de-intj-miau-sound",
-	"grammar-de-intj-nein-response",
-	"grammar-de-intj-doch-corrective-response",
-	"grammar-de-intj-sentence-initial-ach",
-	"grammar-de-intj-typo-huraa",
-	"grammar-de-intj-unresolved-modal-particle-ja",
-	"grammar-de-intj-unresolved-na-ja-formula",
-	"grammar-de-intj-unresolved-nominalized-ach",
-	"grammar-de-intj-unresolved-overbroad-formula",
-	"grammar-de-intj-unresolved-unrelated-targets",
+const expectedDemonstrationIds = [
+	"grammar-de-intj-demo-pfui-expressive",
+	"grammar-de-intj-demo-ja-response",
+	"grammar-de-intj-demo-hmm-lengthened",
+	"grammar-de-intj-demo-ha-ha-reduplication",
+	"grammar-de-intj-demo-typo-huraa",
+	"grammar-de-intj-demo-archaic-juchhei",
+	"grammar-de-intj-demo-contextual-ach-after-noun",
 ] as const;
 
-describe("Lexeme/INTJ exact model contract", () => {
-	test("derives the minimal Lemma schema with only the fixed route's feature", () => {
+const expectedDevelopmentIds = [
+	"grammar-de-intj-dev-wupp-onomatopoeia",
+	"grammar-de-intj-dev-hallo-greeting",
+	"grammar-de-intj-dev-hurra-joy",
+	"grammar-de-intj-dev-oh-reaction",
+	"grammar-de-intj-dev-huch-surprise",
+	"grammar-de-intj-dev-au-pain",
+	"grammar-de-intj-dev-aeh-hesitation",
+	"grammar-de-intj-dev-tja-resignation",
+	"grammar-de-intj-dev-miau-onomatopoeia",
+	"grammar-de-intj-dev-nein-response",
+	"grammar-de-intj-dev-doch-corrective-response",
+	"grammar-de-intj-dev-jawohl-response",
+	"grammar-de-intj-dev-initial-ach",
+	"grammar-de-intj-dev-lengthened-boahhh",
+	"grammar-de-intj-dev-reduplicated-he-he",
+	"grammar-de-intj-dev-typo-pufi",
+	"grammar-de-intj-dev-archaic-potz",
+	"grammar-de-intj-dev-acronym-omg",
+	"grammar-de-intj-dev-beside-part-ja",
+	"grammar-de-intj-dev-beside-discourse-formula-oh",
+	"grammar-de-intj-dev-beside-adv-na",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-intj-accept-v2-aha-realization",
+	"grammar-de-intj-accept-v2-hoppla-mishap",
+	"grammar-de-intj-accept-v2-maeh-onomatopoeia",
+	"grammar-de-intj-accept-v2-ja-response-initial",
+	"grammar-de-intj-accept-v2-heda-prompting",
+	"grammar-de-intj-accept-v2-secondary-mann",
+	"grammar-de-intj-accept-v2-secondary-donnerwetter",
+	"grammar-de-intj-accept-v2-lengthened-aaach",
+	"grammar-de-intj-accept-v2-reduplicated-igitt-igitt",
+	"grammar-de-intj-accept-v2-typo-halol",
+	"grammar-de-intj-accept-v2-acronym-lol",
+	"grammar-de-intj-accept-v2-lengthened-ohhh",
+	"grammar-de-intj-accept-v2-ordinary-lexical-mist",
+	"grammar-de-intj-accept-v2-beside-formula-aehm",
+] as const;
+
+describe("Lexeme/INTJ route-local schemas and corpus", () => {
+	test("uses canonical input and a smallest total flat codec DTO", () => {
+		expect(
+			inputSchema.parse({
+				markedContext: "Sie rief <TARGET>pfui</TARGET>!",
+				members: ["pfui"],
+			}),
+		).toEqual({
+			markedContext: "Sie rief <TARGET>pfui</TARGET>!",
+			members: ["pfui"],
+		});
+		expect(() =>
+			inputSchema.parse({
+				markedContext: "Sie rief <TARGET>pfui</TARGET>!",
+				members: ["ach"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const output = outputSchema.parse({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["pfui"],
+			surface: { spelling: "Canonical", surfaceFeatures: null },
+			lemma: {
+				canonicalForm: "pfui",
+				coreFeatures: { partType: null },
+			},
+		});
+		expect(Object.keys(output)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
+		]);
+		expect(
+			outputSchema.safeParse({ decision: "Resolved", resolution: output })
+				.success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...output,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+	});
+
+	test("derives Citation-only Surface and exact Lemma feature schemas", () => {
+		expect(
+			modelCitationSurfaceSchema.parse({
+				spelling: "Variant",
+				surfaceFeatures: { historicalStatus: "Archaic" },
+			}),
+		).toEqual({
+			spelling: "Variant",
+			surfaceFeatures: { historicalStatus: "Archaic" },
+		});
+		expect(
+			modelCitationSurfaceSchema.safeParse({
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
+			}).success,
+		).toBe(false);
+		expect(
+			modelCitationSurfaceSchema.safeParse({
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				inflectionalFeatures: {},
+				surfaceFeatures: null,
+			}).success,
+		).toBe(false);
 		expect(
 			modelLemmaSchema.parse({
 				canonicalForm: "ja",
@@ -50,126 +152,128 @@ describe("Lexeme/INTJ exact model contract", () => {
 		});
 		expect(
 			modelLemmaSchema.safeParse({
-				language: "de",
-				canonicalForm: "ja",
-				family: "Lexeme",
-				kind: "INTJ",
-				coreFeatures: { partType: "Res" },
-			}).success,
-		).toBe(false);
-		expect(
-			modelLemmaSchema.safeParse({
 				canonicalForm: "ja",
 				coreFeatures: { partType: "Inf" },
 			}).success,
 		).toBe(false);
 	});
 
-	test("permits only Citation Surfaces and no inflectional payload", () => {
-		const citation = {
-			spelling: "Canonical" as const,
-			surfaceKind: "Citation" as const,
-			surfaceFeatures: null,
-		};
-		expect(modelCitationSurfaceSchema.parse(citation)).toEqual(citation);
-		expect(
-			modelCitationSurfaceSchema.safeParse({
-				...citation,
-				surfaceFeatures: { historicalStatus: null },
-			}).success,
-		).toBe(false);
-		expect(
-			modelCitationSurfaceSchema.safeParse({
-				...citation,
-				surfaceKind: "Inflection",
-				inflectionalFeatures: {},
-			}).success,
-		).toBe(false);
-	});
-});
-
-describe("Lexeme/INTJ Golden Corpus", () => {
-	test("pins five policy demonstrations and 18 disjoint held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(24);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-intj-demo-pfui-expressive",
-			"grammar-de-intj-demo-ja-response",
-			"grammar-de-intj-demo-hmm-variant",
-			"grammar-de-intj-demo-o-wei-phraseme-boundary",
-			"grammar-de-intj-demo-punctuation-in-target",
-		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
-			interjectionGrammaticalResolutionExperiment.evaluation,
+	test("freezes 42 cases into disjoint grammatical partitions", () => {
+		expect(corpus.all().ids).toHaveLength(42);
+		expect(demonstrations.ids).toEqual(expectedDemonstrationIds);
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
 		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(18);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(23);
-		expect(evaluation.ids).not.toContain("grammar-de-intj-archaic-juchhei");
-		expect(corpus.cases["grammar-de-intj-archaic-juchhei"]).toBeDefined();
+		expect(demonstrations.ids).toHaveLength(7);
+		expect(developmentEvaluation.ids).toHaveLength(21);
+		expect(untouchedAcceptanceEvaluation.ids).toHaveLength(14);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(42);
 	});
 
-	test("assembles demonstrations without held-out contamination", () => {
+	test("covers Core, Surface, orthography, repetition, and fixed-route controls", () => {
+		const all = corpus.all().cases;
+		const outputs = all.map((testCase) => testCase.idealOutput);
+		expect(
+			new Set(
+				outputs.map((output) => output.lemma.coreFeatures.partType),
+			),
+		).toEqual(new Set([null, "Res"]));
+		expect(
+			new Set(outputs.map((output) => output.surface.spelling)),
+		).toEqual(new Set(["Canonical", "Variant"]));
+		expect(
+			outputs.some(
+				(output) =>
+					output.surface.surfaceFeatures?.historicalStatus ===
+					"Archaic",
+			),
+		).toBe(true);
+		expect(
+			outputs.some((output) =>
+				output.memberOrthographies.includes("Typo"),
+			),
+		).toBe(true);
+		expect(
+			outputs.some((output) => output.normalizedMembers.length > 1),
+		).toBe(true);
+		for (const routeWord of [
+			"part",
+			"discourse-formula",
+			"adv",
+			"onomatopoeia",
+			"ordinary-lexical",
+		]) {
+			expect(corpus.all().ids.some((id) => id.includes(routeWord))).toBe(
+				true,
+			);
+		}
+	});
+
+	test("assembles total instructions without held-out contamination", () => {
 		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>pfui</TARGET>");
-		expect(prompt).toContain("antwortete: „<TARGET>Ja</TARGET>.“");
-		expect(prompt).toContain("<TARGET>hmm</TARGET>");
-		expect(prompt).toContain("<TARGET>O</TARGET> wei");
-		expect(prompt).toContain("<TARGET>pfui!</TARGET>");
-		expect(prompt).toContain(
-			"German Lexeme/INTJ has Citation Surfaces only",
-		);
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain("application injects");
+		expect(prompt).toContain('partType: "Res" | null');
+		expect(prompt).toContain("<TARGET>ha</TARGET> <TARGET>ha</TARGET>");
 		expect(prompt).not.toContain("<TARGET>wupp</TARGET>");
-		expect(prompt).not.toContain("<TARGET>nein</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Ach</TARGET>");
-		expect(prompt).not.toContain("<TARGET>huraa</TARGET>");
+		expect(prompt).not.toContain("<TARGET>uff</TARGET>");
+		expect(prompt).not.toContain('decision: "Resolved"');
 	});
 });
 
-describe("Lexeme/INTJ diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateInterjectionGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+describe("Lexeme/INTJ pure diagnostic evaluator", () => {
+	test("passes every frozen development and acceptance ideal output", () => {
+		for (const experiment of [
+			interjectionGrammaticalResolutionExperiment,
+			interjectionGrammaticalResolutionAcceptanceExperiment,
+		]) {
+			for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+				const testCase = experiment.evaluation.cases[index];
+				if (testCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = evaluateInterjectionGrammaticalResolution({
+					caseId,
+					input: testCase.input,
+					idealOutput: testCase.idealOutput,
+					output: testCase.idealOutput,
+				});
+				expect(result.contractPass).toBe(true);
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports exact Core Feature and Surface misses independently", () => {
-		const testCase = corpus.cases["grammar-de-intj-nein-response"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing resolved nein case.");
-		}
-		const output = {
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
+	test("reports normalization and response-feature misses independently", () => {
+		const testCase = corpus.cases["grammar-de-intj-dev-nein-response"];
+		if (testCase === undefined) throw new Error("Missing nein case.");
+		const result = evaluateInterjectionGrammaticalResolution({
+			caseId: "grammar-de-intj-dev-nein-response",
+			input: testCase.input,
+			idealOutput: testCase.idealOutput,
+			output: {
+				...testCase.idealOutput,
 				normalizedMembers: ["Nein"],
 				lemma: {
-					...testCase.idealOutput.resolution.lemma,
+					...testCase.idealOutput.lemma,
 					coreFeatures: { partType: null },
 				},
 			},
-		};
-		const result = evaluateInterjectionGrammaticalResolution({
-			caseId: "grammar-de-intj-nein-response",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
 		});
 		expect(result.contractPass).toBe(false);
 		expect(result.normalizedSurfacePass).toBe(false);
 		expect(result.coreFeaturesPass).toBe(false);
-		expect(result.decisionPass).toBe(true);
+		expect(result.spellingPass).toBe(true);
 	});
 });

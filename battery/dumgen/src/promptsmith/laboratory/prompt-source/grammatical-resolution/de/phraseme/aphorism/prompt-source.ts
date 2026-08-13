@@ -2,78 +2,92 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Target Classification has already fixed this request to German
-Phraseme/Aphorism and supplied the marked fixed members. Resolve the Surface
-and Lemma grammar for that fixed route. Do not require the exact wording to be
-familiar, recall an author or collection, or reconstruct a source citation:
-those are not fields of Grammatical Resolution. Unfamiliarity with the wording
-is not evidence for Unresolved.
+const body = `<agent_role>
+Resolve the German Phraseme/Aphorism Analysis Target to its Citation Surface and
+Lemma grammar. The caller has already classified one valid Aphorism target.
+Always resolve it.
+</agent_role>
 
-An Aphorism is a conventional, self-contained, concisely formulated authored
-maxim or observation circulated as a whole utterance. Before constructing any
-Resolved output, look only for hard contradiction evidence that is observable
-in this input:
+<input_contract>
+Input is exactly {markedContext,members}. TARGET spans in markedContext and the
+members array are authoritative projections of the same valid target. They
+already passed syntax, route, occurrence, and membership validation.
 
-- unmarked context explicitly labels the marked wording as a Collocation or
-  Funktionsverbgefüge, a traditional Proverb, a merely episodic observation,
-  drama or scene-bound dialogue, or ordinary direct speech;
-- the marked words visibly fill a phrase slot inside a larger unmarked clause
-  as an Idiom or Collocation rather than form the whole utterance; or
-- target scope is partial, includes an attribution, or punctuation separates
-  the marked members into multiple complete units.
+Never add, remove, reorder, reject, repair, or reclassify membership. Unmarked
+text is context only. It may contain an author or speaker attribution, source
+label, punctuation, quotation marks, a Proverb, Idiom, slogan, arbitrary quote,
+or ordinary assertion. Resolve only the marked Aphorism members. Return one
+memberOrthographies and one normalizedMembers entry per member in source order.
+</input_contract>
 
-Hard contradiction evidence is decisive: return Unresolved immediately and do
-not apply the fixed-route default. If none of those observable conditions is
-present, the upstream Phraseme/Aphorism route and marked membership are
-authoritative: return Resolved and construct the Citation Surface and Lemma.
-Do not invent a contradiction from the marked wording's style or content.
+<fixed_contract>
+Return a flat object. This route exposes Citation only, so the application
+injects surfaceKind Citation. It also supplies language de, Family Phraseme,
+Kind Aphorism, empty Lemma Core Features, Surface-to-Lemma linkage, normalized
+Surface scalar, and the successful result wrapper.
 
-Do not ask again whether the wording is an established Aphorism. Lack of
-recognition, recalled authorship, or independent attestation is never a reason
-for Unresolved.
+Never return decision, resolution, language, family, kind, coreFeatures,
+surfaceKind, normalizedSurface, a linked Lemma inside Surface, authorship,
+provenance, confidence, candidates, indices, or explanations.
+</fixed_contract>
 
-A positive route contradiction exists only when the input supplies the hard
-evidence above. Do not infer a wrong route merely because you cannot
-independently attest the wording.
+<aphorism_analysis>
+Infer the complete normalized conventional wording as canonicalForm. It is the
+space-separated lexical wording in canonical order with current German
+orthography and appropriate initial and noun capitalization. Punctuation and
+quotation marks are not word-like members and do not enter normalizedMembers
+or canonicalForm. Serialize canonicalForm as lexical words joined by single
+spaces: never insert commas, periods, semicolons, colons, dashes, quotation
+marks, or any other punctuation. For Full coverage without historical spelling,
+canonicalForm is exactly normalizedMembers joined by single spaces.
 
-The input has already been structurally validated so that every TARGET pair
-identifies exactly one word-like ResolvableText member. TARGET membership is
-therefore authoritative: emit one memberOrthographies value per marked member
-in textual order. A positive target-scope contradiction exists when the marked
-members are not all and only the fixed members of one complete Aphorism:
-return Unresolved for a partial quotation, an appended author attribution, or
-members spanning two aphorisms. Never repair target scope or return Partial
-coverage.
+Attributions and framing remain unmarked even when they interrupt a split
+quotation. Repeated wording elsewhere does not change which occurrence is the
+authoritative target. Labels or nearby examples of Proverbs, Idioms, slogans,
+quotations, or ordinary assertions do not reopen the upstream route decision.
+</aphorism_analysis>
 
-This route is Citation-only under the current Dumling codec. Every Resolved
-result has surfaceKind Citation, realizationCoverage Full, and no
-inflectionalFeatures. surfaceFeatures is null unless the grammatical use itself
-is archaic; historical spelling alone does not make it archaic. The complete
-Lemma coreFeatures object is exactly {}.
+<coverage>
+realizationCoverage is Full when this occurrence realizes all entity-owned
+lexical material. Use Partial only for an explicitly shortened citation whose
+missing tail is genuinely unrealized, normally signaled by an ellipsis, while
+the exact full Aphorism remains recoverable from the quoted beginning. Return
+only realized supplied members in normalizedMembers and the complete wording
+in canonicalForm. Partial never excuses an overt omitted word, an overbroad
+target, or a target spanning two units; those are upstream membership matters.
+</coverage>
 
-normalizedMembers contains exactly one normalized string per marked fixed member
-in order, without leading, trailing, or repeated whitespace. It excludes all
-unmarked punctuation and surrounding
-quotation marks. Repair a real spelling or inappropriate-casing error and mark
-only that member Typo. In particular, when the complete maxim begins with
-lowercase die, normalize it to Die in normalizedMembers and canonicalForm and
-mark that first member Typo. An attested uppercase initial at the beginning of
-the maxim is ordinary sentence-initial capitalization and remains Standard.
-Licensed historical spelling is also Standard. Preserve a licensed historical
-spelling in normalizedMembers and use spelling Variant; use the current
-conventional wording for canonicalForm. Otherwise spelling is Canonical. Never
-insert, remove, reorder, or lemmatize fixed members.
+<orthography>
+Standard means exact conventional spelling, ordinary sentence-initial
+capitalization, or a licensed historical spelling. A licensed historical form
+stays unchanged in normalizedMembers, uses Surface spelling Variant, and maps
+to current orthography in canonicalForm. Historical spelling alone does not
+make surfaceFeatures archaic.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, authorship metadata,
-source citations, or explanations.`;
+Typo means a real selected-member spelling or casing error. Repair it in
+normalizedMembers and canonicalForm and mark only that position Typo. A
+lowercase first source member at the beginning of the complete maxim is an
+inappropriate-casing Typo: mark that source position Typo and normalize it to
+uppercase. Do not call the lowercase source token Standard merely because its
+repair is ordinary sentence-initial capitalization. A Typo repair uses Surface
+spelling Canonical, not Variant. surfaceFeatures is null unless this grammatical
+use itself is archaic, then {historicalStatus:"Archaic"}.
+</orthography>
+
+<final_checks>
+Return every required field and no extra field. Array lengths equal
+members.length. normalizedMembers contain only realized target words in source
+order. canonicalForm contains the complete conventional wording. Always
+resolve the classified target.
+</final_checks>`;
 
 export const demonstrations = corpus.select([
 	"grammar-de-aphorism-alt-werden",
 	"grammar-de-aphorism-typo-hoert",
 	"grammar-de-aphorism-historical-muss",
-	"grammar-de-aphorism-unresolved-proverb",
+	"grammar-de-aphorism-vertrauen-discontinuous",
+	"grammar-de-aphorism-verstehen-partial",
+	"grammar-de-aphorism-liebe-rechte",
 ]);
 
 export const promptSource = definePromptSource({

@@ -3,97 +3,63 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { inflection, unmarkedCore } from "./builders";
+import { inflectionCase, unmarkedCore } from "./builders";
 
 export const featurePolicyCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-adj-ordinal-erste": {
-			input: {
-				markedContext: "Der <TARGET>erste</TARGET> Versuch gelang.",
-			},
-			idealOutput: inflection({
-				normalizedMembers: ["erste"],
-				canonicalForm: "erst",
+		"grammar-de-adj-demo-ordinal-erste": inflectionCase(
+			"Der <TARGET>erste</TARGET> Versuch gelang.",
+			"erste",
+			"erst",
+			{ case: "Nom", degree: "Pos", gender: "Masc", number: "Sing" },
+			{
 				coreFeatures: { ...unmarkedCore, numType: "Ord" },
-				inflectionalFeatures: {
-					case: "Nom",
-					degree: "Pos",
-					gender: "Masc",
-					number: "Sing",
-				},
-			}),
-		},
-		"grammar-de-adj-provisional-short-moeglich": {
-			input: {
-				markedContext: "Die Lösung ist <TARGET>möglich</TARGET>.",
+				explanation: "Ordinal ADJ. Keep agreement. Lemma NumType Ord.",
 			},
-			idealOutput: inflection({
-				normalizedMembers: ["möglich"],
-				canonicalForm: "möglich",
-				coreFeatures: { ...unmarkedCore, variant: "Short" },
-				inflectionalFeatures: {
-					case: null,
-					degree: "Pos",
-					gender: null,
-					number: null,
-				},
-			}),
-			explanation:
-				"Corpus-only probe: German-HDT uses Variant=Short on uninflected ADJ tokens, but Dumling currently stores Variant in Lemma Core Features.",
-		},
-		"grammar-de-adj-provisional-card-siebenhundert": {
-			input: {
-				markedContext:
-					"Sie las die <TARGET>siebenhundert</TARGET> Seiten.",
-			},
-			idealOutput: inflection({
-				normalizedMembers: ["siebenhundert"],
-				canonicalForm: "siebenhundert",
+		),
+		"grammar-de-adj-dev-cardinal-siebenhundert": inflectionCase(
+			"Sie las die <TARGET>siebenhundert</TARGET> Seiten in einer Woche.",
+			"siebenhundert",
+			"siebenhundert",
+			{ case: "Acc", degree: "Pos", gender: "Fem", number: "Plur" },
+			{
 				coreFeatures: { ...unmarkedCore, numType: "Card" },
-				inflectionalFeatures: {
-					case: null,
-					degree: "Pos",
-					gender: null,
-					number: null,
-				},
-			}),
-			explanation:
-				"Corpus-only probe: GSD attests ADJ NumType=Card, but the Lexeme/ADJ versus NUM policy remains unsettled.",
-		},
-		"grammar-de-adj-provisional-foreign-cool": {
-			input: { markedContext: "Das klingt <TARGET>cool</TARGET>." },
-			idealOutput: inflection({
-				normalizedMembers: ["cool"],
-				canonicalForm: "cool",
-				coreFeatures: { ...unmarkedCore, foreign: "Yes" },
-				inflectionalFeatures: {
-					case: null,
-					degree: "Pos",
-					gender: null,
-					number: null,
-				},
-			}),
-			explanation:
-				"Corpus-only probe: lexicalization determines whether a borrowed adjective retains Foreign=Yes.",
-		},
-		"grammar-de-adj-provisional-abbreviation-sog": {
-			input: {
-				markedContext: "Ein <TARGET>sog.</TARGET> Experte sagte aus.",
+				explanation:
+					"Route fixed ADJ, not NUM. Cardinal identity. Invariant Surface.",
 			},
-			idealOutput: inflection({
-				normalizedMembers: ["sog."],
-				canonicalForm: "sogenannt",
+		),
+		"grammar-de-adj-dev-foreign-special": inflectionCase(
+			"Das war ein <TARGET>special</TARGET> Moment für das Team.",
+			"special",
+			"special",
+			{ case: "Nom", degree: "Pos", gender: "Masc", number: "Sing" },
+			{
+				coreFeatures: { ...unmarkedCore, foreign: "Yes" },
+				explanation:
+					"Overt English adjective in German context. Mark Foreign Yes.",
+			},
+		),
+		"grammar-de-adj-dev-abbreviation-sog": inflectionCase(
+			"Ein <TARGET>sog</TARGET>. Experte sagte vor Gericht aus.",
+			"sog",
+			"sogenannt",
+			{ case: "Nom", degree: "Pos", gender: "Masc", number: "Sing" },
+			{
 				coreFeatures: { ...unmarkedCore, abbr: "Yes" },
-				inflectionalFeatures: {
-					case: "Nom",
-					degree: "Pos",
-					gender: "Masc",
-					number: "Sing",
-				},
-			}),
-			explanation:
-				"Corpus-only probe: GSD attests ADJ Abbr=Yes, while abbreviation punctuation and recoverable agreement need a route policy.",
-		},
+				spelling: "Variant",
+				explanation:
+					"Licensed abbreviation. Period outside member. Variant Surface.",
+			},
+		),
+		"grammar-de-adj-accept-ordinal-zweite": inflectionCase(
+			"Die <TARGET>zweite</TARGET> Sitzung begann pünktlich.",
+			"zweite",
+			"zweit",
+			{ case: "Nom", degree: "Pos", gender: "Fem", number: "Sing" },
+			{
+				coreFeatures: { ...unmarkedCore, numType: "Ord" },
+			},
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

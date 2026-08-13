@@ -1,0 +1,6 @@
+{
+  "grammar-de-adv-dev-variant-bisschen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The selected prompt now states that lemma-owned Core Features survive licensed spelling variants, and official UD German-GSD explicitly lists bisschen, bischen, and bißchen as ADV PronType Ind. The model still dropped only this feature; naming the exact held-out lexeme would contaminate the case, so the isolated miss is retained as a model limitation."
+  }
+}

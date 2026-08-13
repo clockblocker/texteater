@@ -1,0 +1,10 @@
+{
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "accepted-model-limitation",
+    "explanation": "After two evidence-driven prompt revisions, the model now gets the complete finite Inflection analysis and contextual normalization exactly right but still conservatively keeps the category-indeterminate finite X spelling as canonicalForm. The corpus expectation is codec-valid and linguistically recoverable, but the residual X label makes invented-base lemmatization intrinsically fragile."
+  },
+  "grammar-de-x-dev-unknown-glorp-imp": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model now correctly handles Standard initial casing, lowercase normalizedMembers, and the full imperative Inflection bag, but retains the attested capitalized residual X as canonicalForm rather than the inferred nonce infinitive. The explicit rule and different teaching templates are present; this remaining X lemmatization miss is accepted as bounded-model uncertainty."
+  }
+}

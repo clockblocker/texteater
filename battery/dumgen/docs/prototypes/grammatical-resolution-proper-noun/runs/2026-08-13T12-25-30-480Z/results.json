@@ -1,0 +1,1911 @@
+{
+  "runnerVersion": "grammatical-resolution-proper-noun-v2",
+  "route": "grammatical-resolution/de/lexeme/proper-noun",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 1
+  },
+  "startedAt": "2026-08-13T12:25:30.480Z",
+  "completedAt": "2026-08-13T12:26:05.682Z",
+  "finalizedAt": "2026-08-13T12:26:35.131Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "91c8588f2d6fc590d1b13772ca4b95548eaf76d7d477407c6c22299a96113c93",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "bb6b37a4eb37278ae4bc2a084dc353233a8ec4d445846a93184e22414a04b51b",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "51f683fb1215ff32ef937d45690bcd1a001901e0c5d2004b0c17313e3a4bd36e",
+  "suiteSha256": "9eaa2733c4f30c0042904e508748fb126b0807945056e5000239d089533a4512",
+  "evaluationCaseIds": [
+    "grammar-de-propn-dev-person-anna-acc",
+    "grammar-de-propn-dev-person-peters-gen",
+    "grammar-de-propn-dev-place-schweiz",
+    "grammar-de-propn-dev-place-niederlanden",
+    "grammar-de-propn-dev-org-deutsche-bank",
+    "grammar-de-propn-dev-org-spd",
+    "grammar-de-propn-dev-product-iphone",
+    "grammar-de-propn-dev-product-adidas",
+    "grammar-de-propn-dev-work-zauberfloete",
+    "grammar-de-propn-dev-work-prozess",
+    "grammar-de-propn-dev-citation-hamburg",
+    "grammar-de-propn-dev-vocative-lukas",
+    "grammar-de-propn-dev-foreign-new-york",
+    "grammar-de-propn-dev-transliteration-kyjiw",
+    "grammar-de-propn-dev-variant-pressburg",
+    "grammar-de-propn-dev-typo-muenchn",
+    "grammar-de-propn-dev-casing-berLin",
+    "grammar-de-propn-dev-multi-johann-goethe",
+    "grammar-de-propn-dev-neighbor-city-berlin",
+    "grammar-de-propn-dev-repeated-second-peter",
+    "grammar-de-propn-dev-plural-alpen"
+  ],
+  "boundedCalls": 21,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 15,
+  "scoreRatio": 0.7142857142857143,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-propn-dev-person-anna-acc",
+      "input": {
+        "markedContext": "Die Redaktion interviewt <TARGET>Anna</TARGET> am Freitag.",
+        "members": [
+          "Anna"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Anna"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Anna",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Anna"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Anna",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1672,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Anna\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Anna\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Fem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ea3ee273af113f5016a7db7baca1881918251809b4a53b9ba",
+      "usage": {
+        "input_tokens": 2000,
+        "input_tokens_details": {
+          "cache_write_tokens": 1970,
+          "cached_tokens": 0
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2083
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-person-peters-gen",
+      "input": {
+        "markedContext": "<TARGET>Peters</TARGET> neuer Roman erscheint im Herbst.",
+        "members": [
+          "Peters"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Peters"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Peter",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Peters"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Peters",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 2171,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Peters\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Peters\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Masc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_027bed4626b570be016a7db7bc5e1081a0853d9ad2db0a0e67",
+      "usage": {
+        "input_tokens": 2000,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2085
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt and a distinct Hans demonstration explicitly teach articleless genitive suffix stripping; the model treated Peters as a nominative surname despite the possessive construction."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-place-schweiz",
+      "input": {
+        "markedContext": "Im Sommer besucht sie die <TARGET>Schweiz</TARGET>.",
+        "members": [
+          "Schweiz"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Schweiz"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Schweiz",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Schweiz"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Schweiz",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1511,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Schweiz\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Schweiz\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Fem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c1fe79119bf2ccc016a7db7bea850819facac9baa3fb86bf8",
+      "usage": {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2090
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-place-niederlanden",
+      "input": {
+        "markedContext": "Seit April arbeitet er in den <TARGET>Niederlanden</TARGET>.",
+        "members": [
+          "Niederlanden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Niederlanden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Niederlande",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Niederlanden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Niederlande",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2293,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Niederlanden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Niederlande\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a4f935f85683d30016a7db7c028c081a390acef25cabc8b2a",
+      "usage": {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2091
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-org-deutsche-bank",
+      "input": {
+        "markedContext": "Die <TARGET>Deutsche</TARGET> <TARGET>Bank</TARGET> veröffentlichte den Bericht.",
+        "members": [
+          "Deutsche",
+          "Bank"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Deutsche",
+          "Bank"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Deutsche Bank",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Deutsche",
+          "Bank"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Deutsche Bank",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1257,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Deutsche\",\"Bank\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Deutsche Bank\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Fem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c597665836bdf4e016a7db7c24a4c81a387ab3a963f03eaaa",
+      "usage": {
+        "input_tokens": 2011,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 90,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2101
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-org-spd",
+      "input": {
+        "markedContext": "Die <TARGET>SPD</TARGET> beschloss ein neues Programm.",
+        "members": [
+          "SPD"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "SPD"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "SPD",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "SPD"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "SPD",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1340,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"SPD\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"SPD\",\"coreFeatures\":{\"abbr\":\"Yes\",\"foreign\":null,\"gender\":\"Fem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03c38881699f859a016a7db7c38e00819d84249e2a86df7c4b",
+      "usage": {
+        "input_tokens": 2000,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2083
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-product-iphone",
+      "input": {
+        "markedContext": "Sie testet das neue <TARGET>iPhone</TARGET> im Labor.",
+        "members": [
+          "iPhone"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "iPhone"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "iPhone",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "iPhone"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "iPhone",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1450,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"iPhone\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"iPhone\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f3270fc1864cf76016a7db7c4f4088191af5e8d5fee6b191a",
+      "usage": {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2089
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-product-adidas",
+      "input": {
+        "markedContext": "Die Kampagne stellt <TARGET>adidas</TARGET> in den Mittelpunkt.",
+        "members": [
+          "adidas"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "adidas"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "adidas",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "adidas"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "adidas",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1483,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"adidas\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"adidas\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e39c871d5d73c91016a7db7c6564481919e3aba16fe84d39d",
+      "usage": {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2089
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The sentence provides no reliable grammatical-gender agreement and the prompt requires null rather than shape-based inference; the model invented Neut."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-work-zauberfloete",
+      "input": {
+        "markedContext": "Am Samstag sehen wir <TARGET>Die</TARGET> <TARGET>Zauberflöte</TARGET> in der Oper.",
+        "members": [
+          "Die",
+          "Zauberflöte"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Zauberflöte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Die Zauberflöte",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Zauberflöte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Die Zauberflöte",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Fem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1477,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"Zauberflöte\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Die Zauberflöte\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Fem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0dc114c50209b71b016a7db7c7d62c81928b32d970d98148a6",
+      "usage": {
+        "input_tokens": 2018,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2114
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-work-prozess",
+      "input": {
+        "markedContext": "Der Katalog nennt den Titel „<TARGET>Der</TARGET> <TARGET>Prozess</TARGET>“.",
+        "members": [
+          "Der",
+          "Prozess"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Prozess"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der Prozess",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Prozess"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Der Prozess",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1922,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Der\",\"Prozess\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Der Prozess\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Masc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0658b76489de534c016a7db7c94d1881a0aa4d2e7ce278c85f",
+      "usage": {
+        "input_tokens": 2013,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 89,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2102
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt explicitly assigns quoted-title mentions without contextual name case to Citation; the model borrowed accusative from the surrounding common noun Titel."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-citation-hamburg",
+      "input": {
+        "markedContext": "Im Register steht der Namenseintrag <TARGET>Hamburg</TARGET>.",
+        "members": [
+          "Hamburg"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hamburg"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Hamburg",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hamburg"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Hamburg",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1230,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Hamburg\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Hamburg\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_062e29d53ea0f881016a7db7cb39fc8191876b0fb280e68d9d",
+      "usage": {
+        "input_tokens": 2004,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2070
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-vocative-lukas",
+      "input": {
+        "markedContext": "Bitte komm herein, <TARGET>Lukas</TARGET>!",
+        "members": [
+          "Lukas"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Lukas"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Lukas",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Lukas"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Lukas",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1587,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Lukas\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Lukas\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Masc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03931306e48a3459016a7db7cc7a14819ca1b5e956108747b1",
+      "usage": {
+        "input_tokens": 2000,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2085
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-foreign-new-york",
+      "input": {
+        "markedContext": "Sie lebt seit zwei Jahren in <TARGET>New</TARGET> <TARGET>York</TARGET>.",
+        "members": [
+          "New",
+          "York"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "New",
+          "York"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "New York",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "New",
+          "York"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "New York",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1816,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"New\",\"York\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"New York\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a4654c4a51499ca016a7db7ce11fc81a28f964235e633829e",
+      "usage": {
+        "input_tokens": 2009,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 89,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2098
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-transliteration-kyjiw",
+      "input": {
+        "markedContext": "Die Delegation reist morgen nach <TARGET>Kyjiw</TARGET>.",
+        "members": [
+          "Kyjiw"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kyjiw"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kyjiw",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kyjiw"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kyjiw",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": false,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1695,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kyjiw\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Kyjiw\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04cc099a7ebbac67016a7db7cfe1d881a380b034aebc3911e3",
+      "usage": {
+        "input_tokens": 2004,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2092
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The oracle called Kyjiw Variant while also making Kyjiw the canonicalForm and gave no alternative identity relation; this should be Canonical."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-variant-pressburg",
+      "input": {
+        "markedContext": "Der historische Bericht erwähnt <TARGET>Pressburg</TARGET> mehrfach.",
+        "members": [
+          "Pressburg"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Pressburg"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          },
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Bratislava",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Pressburg"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Pressburg",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": false,
+      "surfaceFeaturesPass": false,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 1249,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Pressburg\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Pressburg\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ec39510dd835ae7016a7db7d18e7481a3b3fcdcb86c7b2553",
+      "usage": {
+        "input_tokens": 2001,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2087
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The original sentence merely mentioned Pressburg in a historical report and did not establish that it was an archaic exonym of Bratislava; the asserted Variant/Lemma relation lacked input evidence."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-typo-muenchn",
+      "input": {
+        "markedContext": "Die Konferenz findet in <TARGET>Münchn</TARGET> statt.",
+        "members": [
+          "Münchn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "München"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "München",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "München"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "München",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1441,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"München\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"München\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0060bfc7de095f2c016a7db7d2ce5481a18ec15c3c3acca7a4",
+      "usage": {
+        "input_tokens": 2003,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 89,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2092
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-casing-berLin",
+      "input": {
+        "markedContext": "Die Messe wurde nach <TARGET>berLin</TARGET> verlegt.",
+        "members": [
+          "berLin"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "Berlin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Berlin",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "Berlin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Berlin",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1465,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"Berlin\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Berlin\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0725fcf4dd320c4b016a7db7d4420c819e8a17d7b96e6e920d",
+      "usage": {
+        "input_tokens": 2002,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2087
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model repaired casing correctly but assigned dative after directional nach; the prompt requires case from syntax and the motion destination is accusative."
+    },
+    {
+      "caseId": "grammar-de-propn-dev-multi-johann-goethe",
+      "input": {
+        "markedContext": "Die Universität ehrt <TARGET>Johann</TARGET> <TARGET>Wolfgang</TARGET> <TARGET>von</TARGET> <TARGET>Goethe</TARGET> mit einer Ausstellung.",
+        "members": [
+          "Johann",
+          "Wolfgang",
+          "von",
+          "Goethe"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Johann",
+          "Wolfgang",
+          "von",
+          "Goethe"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Johann Wolfgang von Goethe",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Johann",
+          "Wolfgang",
+          "von",
+          "Goethe"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Johann Wolfgang von Goethe",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1363,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Johann\",\"Wolfgang\",\"von\",\"Goethe\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Johann Wolfgang von Goethe\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Masc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0020ef0f41c03655016a7db7d5b42481a0b081273ec15ce201",
+      "usage": {
+        "input_tokens": 2034,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2136
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-neighbor-city-berlin",
+      "input": {
+        "markedContext": "Die Stadt <TARGET>Berlin</TARGET> wächst weiterhin schnell.",
+        "members": [
+          "Berlin"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Berlin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Berlin",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Berlin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Berlin",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Neut"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1736,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Berlin\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Berlin\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Neut\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02c7e833f20a2a0e016a7db7d71fa08192ab3c94ee4063b2c4",
+      "usage": {
+        "input_tokens": 1999,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2083
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-repeated-second-peter",
+      "input": {
+        "markedContext": "Peter kam zuerst, doch <TARGET>Peter</TARGET> ging als Letzter.",
+        "members": [
+          "Peter"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Peter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Peter",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Peter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Peter",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": "Masc"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1362,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Peter\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Peter\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":\"Masc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04ab63da23bf5f89016a7db7d8cfbc819eb9bf29a029f9322d",
+      "usage": {
+        "input_tokens": 2004,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2087
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-propn-dev-plural-alpen",
+      "input": {
+        "markedContext": "Im Winter fahren sie in die <TARGET>Alpen</TARGET>.",
+        "members": [
+          "Alpen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Alpen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Alpen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Alpen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Alpen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "gender": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3661,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Alpen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Alpen\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"gender\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_012100d678136a73016a7db7da320c81a18d73f93061243ecc",
+      "usage": {
+        "input_tokens": 2002,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1970
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2088
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

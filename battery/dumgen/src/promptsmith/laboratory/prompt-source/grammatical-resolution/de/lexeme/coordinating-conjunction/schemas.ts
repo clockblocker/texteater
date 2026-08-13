@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
+	grammaticalResolutionMarkedContextSchema,
 	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
@@ -78,21 +79,35 @@ const schemaProjectionLemma = {
 export const deCoordinatingConjunctionModelCitationSurfaceSchema =
 	buildDeCoordinatingConjunctionCitationSurfaceCodec(
 		schemaProjectionLemma,
-	).in.omit({ normalizedSurface: true });
+	).in.omit({ normalizedSurface: true, surfaceKind: true });
 
-export const inputSchema = z.strictObject({
-	markedContext: z.string().min(1),
-}) satisfies PromptInputSchema;
+export const inputSchema = z
+	.strictObject({
+		markedContext: grammaticalResolutionMarkedContextSchema,
+		members: z.array(z.string().min(1)).min(1),
+	})
+	.superRefine((input, context) => {
+		const markedMembers = [
+			...input.markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+		].map((match) => match[1]);
+		if (
+			markedMembers.length !== input.members.length ||
+			markedMembers.some(
+				(member, position) => member !== input.members[position],
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["members"],
+				message:
+					"members must exactly match TARGET contents in source order.",
+			});
+		}
+	}) satisfies PromptInputSchema;
 
 export const outputSchema = z.strictObject({
-	decision: z.enum(["Resolved", "Unresolved"]),
-	resolution: z
-		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-			normalizedMembers: normalizedMembersSchema,
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			surface: deCoordinatingConjunctionModelCitationSurfaceSchema,
-			lemma: deCoordinatingConjunctionModelLemmaSchema,
-		})
-		.nullable(),
+	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+	normalizedMembers: normalizedMembersSchema,
+	surface: deCoordinatingConjunctionModelCitationSurfaceSchema,
+	lemma: deCoordinatingConjunctionModelLemmaSchema,
 }) satisfies PromptOutputSchema;

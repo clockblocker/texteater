@@ -1,0 +1,14 @@
+{
+  "grammar-de-adp-dev-foreign-versus-acc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The revised prompt requires lexical valency when a complement does not visibly mark case. The response correctly resolved versus as a foreign preposition but still omitted its accusative government; the corpus and exact evaluator expectation remain sound."
+  },
+  "grammar-de-adp-dev-adp-before-unmarked-particle": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The response correctly ignored the later unmarked particle and kept partType null, but assigned the visible directional accusative to governedCase. The prompt explicitly identifies auf as a two-way preposition whose scalar governedCase must be null, so this is a model policy miss."
+  },
+  "grammar-de-adp-dev-abbreviation-inkl": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The revised prompt fixed the abbreviation-specific Surface behavior: the response now preserves the member, emits Variant, uses canonicalForm inkl., and sets abbr=Yes. It still omits the abbreviation lemma's established genitive government despite the lexical-valency rule; the corpus and evaluator remain sound."
+  }
+}

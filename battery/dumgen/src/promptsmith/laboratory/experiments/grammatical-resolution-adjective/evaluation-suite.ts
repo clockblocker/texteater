@@ -6,34 +6,65 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/lexeme/adjective/prompt-source";
 import { evaluateAdjectiveGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-adj-attributive-acc-fem-rot",
-	"grammar-de-adj-attributive-dat-neut-kalt",
-	"grammar-de-adj-attributive-gen-plur-neu",
-	"grammar-de-adj-predicative-blau",
-	"grammar-de-adj-adverbial-leise",
-	"grammar-de-adj-participial-geschlossen",
-	"grammar-de-adj-irregular-comparative-besser",
-	"grammar-de-adj-attributive-comparative-teuer",
-	"grammar-de-adj-attributive-superlative-hoch",
-	"grammar-de-adj-adverbial-superlative-sorgfaeltig",
-	"grammar-de-adj-ordinal-erste",
-	"grammar-de-adj-typo-grsser",
-	"grammar-de-adj-unresolved-lexical-adverb",
-	"grammar-de-adj-unresolved-perfect-participle",
-	"grammar-de-adj-unresolved-overbroad-modifier",
-	"grammar-de-adj-unresolved-repeated-surfaces",
-	"grammar-de-adj-unresolved-unrelated-targets",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-adj-dev-attributive-acc-fem-rot",
+	"grammar-de-adj-dev-attributive-dat-neut-kalt",
+	"grammar-de-adj-dev-attributive-gen-plur-neu",
+	"grammar-de-adj-dev-attributive-nom-plur-alt",
+	"grammar-de-adj-dev-predicative-blau",
+	"grammar-de-adj-dev-adverbial-leise",
+	"grammar-de-adj-dev-attributive-comparative-teuer",
+	"grammar-de-adj-dev-attributive-superlative-hoch",
+	"grammar-de-adj-dev-adverbial-superlative-sorgfaeltig",
+	"grammar-de-adj-dev-predicative-comparative-nah",
+	"grammar-de-adj-dev-cardinal-siebenhundert",
+	"grammar-de-adj-dev-foreign-special",
+	"grammar-de-adj-dev-abbreviation-sog",
+	"grammar-de-adj-dev-typo-grsser",
+	"grammar-de-adj-dev-participial-geschlossen",
+	"grammar-de-adj-dev-participial-spannend",
+	"grammar-de-adj-dev-invariant-lila",
+	"grammar-de-adj-dev-archaic-hold",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
+export const untouchedAcceptanceEvaluation = corpus.select([
+	"grammar-de-adj-accept-citation-mild",
+	"grammar-de-adj-accept-attributive-dat-fem-lang",
+	"grammar-de-adj-accept-attributive-acc-neut-gruen",
+	"grammar-de-adj-accept-attributive-gen-masc-stark",
+	"grammar-de-adj-accept-predicative-ruhig",
+	"grammar-de-adj-accept-adverbial-deutlich",
+	"grammar-de-adj-accept-irregular-superlative-beste",
+	"grammar-de-adj-accept-adverbial-comparative-schnell",
+	"grammar-de-adj-accept-ordinal-zweite",
+	"grammar-de-adj-accept-typo-wunderschoen",
+	"grammar-de-adj-accept-participial-glaenzend",
+	"grammar-de-adj-accept-invariant-rosa",
+]);
+
+if (!developmentEvaluation.isDisjointFrom(demonstrations)) {
+	throw new Error("ADJ demonstrations and development must be disjoint.");
+}
+if (!untouchedAcceptanceEvaluation.isDisjointFrom(demonstrations)) {
 	throw new Error(
-		"ADJ Grammatical Resolution demonstrations and evaluation must be disjoint.",
+		"ADJ demonstrations and untouched acceptance must be disjoint.",
+	);
+}
+if (!developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation)) {
+	throw new Error(
+		"ADJ development and untouched acceptance must be disjoint.",
 	);
 }
 
 export const adjectiveGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
 	evaluator: evaluateAdjectiveGrammaticalResolution,
 });
+
+export const adjectiveGrammaticalResolutionAcceptanceExperiment =
+	defineExperiment({
+		promptSource,
+		evaluation: untouchedAcceptanceEvaluation,
+		evaluator: evaluateAdjectiveGrammaticalResolution,
+	});

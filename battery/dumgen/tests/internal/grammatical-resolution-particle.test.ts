@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
+	developmentEvaluation,
+	particleGrammaticalResolutionAcceptanceExperiment,
 	particleGrammaticalResolutionExperiment,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-particle/evaluation-suite";
 import { evaluateParticleGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-particle/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/golden-corpus/corpus";
@@ -14,264 +16,221 @@ import {
 import {
 	deParticleModelCitationSurfaceSchema,
 	deParticleModelLemmaSchema,
+	inputSchema,
 	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-part-negative-nicht",
-	"grammar-de-part-negative-sentence-initial-nicht",
-	"grammar-de-part-negative-typo-nicth",
-	"grammar-de-part-infinitival-zu",
-	"grammar-de-part-modal-doch",
-	"grammar-de-part-modal-denn",
-	"grammar-de-part-modal-wohl",
-	"grammar-de-part-modal-bloss",
-	"grammar-de-part-modal-mal",
-	"grammar-de-part-modal-ja",
-	"grammar-de-part-modal-label-eigentlich",
-	"grammar-de-part-repeated-second-doch",
-	"grammar-de-part-unresolved-verb-particle-an",
-	"grammar-de-part-unresolved-adverb-gerne",
-	"grammar-de-part-unresolved-response-ja",
-	"grammar-de-part-unresolved-cconj-aber",
-	"grammar-de-part-unresolved-sconj-weil",
-	"grammar-de-part-unresolved-phraseme-na-ja",
-	"grammar-de-part-unresolved-adposition-zu",
-	"grammar-de-part-unresolved-overbroad-doch-mal",
-	"grammar-de-part-unresolved-two-targets",
-	"grammar-de-part-unresolved-ambiguous-doch-label",
+const expectedDemonstrationIds = [
+	"grammar-de-part-demo-negative-nicht",
+	"grammar-de-part-demo-infinitival-zu",
+	"grammar-de-part-demo-modal-halt",
+	"grammar-de-part-demo-focus-sogar",
+	"grammar-de-part-demo-typo-ebn",
+	"grammar-de-part-demo-archaic-nit",
+	"grammar-de-part-demo-distinct-archaic-ni",
+	"grammar-de-part-demo-foreign-yes",
+	"grammar-de-part-demo-abbreviation-aff",
 ] as const;
 
-describe("Lexeme/PART route-local schemas and corpus", () => {
-	test("projects the exact Dumling Citation-only DTOs", () => {
+const expectedAcceptanceIds = [
+	"grammar-de-part-accept-v2-negative-nicht",
+	"grammar-de-part-accept-v2-infinitival-zu",
+	"grammar-de-part-accept-v2-answer-doch",
+	"grammar-de-part-accept-v2-foreign-never",
+	"grammar-de-part-accept-v2-abbreviation-pos",
+	"grammar-de-part-accept-v2-modal-bloss",
+	"grammar-de-part-accept-v2-focus-lediglich",
+	"grammar-de-part-accept-v2-intensifying-gar",
+	"grammar-de-part-accept-v2-modal-ja-not-intj",
+	"grammar-de-part-accept-v2-typo-nciht",
+	"grammar-de-part-accept-v2-explicit-variant-nedd",
+	"grammar-de-part-accept-v2-distinct-archaic-en",
+] as const;
+
+describe("Lexeme/PART route-local migration", () => {
+	test("uses exact input and the smallest total flat codec-derived DTO", () => {
 		expect(
-			deParticleModelLemmaSchema.parse({
-				canonicalForm: "nicht",
-				coreFeatures: {
-					abbr: null,
-					foreign: null,
-					partType: null,
-					polarity: "Neg",
-				},
+			inputSchema.parse({
+				markedContext: "Heute fährt er <TARGET>nicht</TARGET>.",
+				members: ["nicht"],
 			}),
 		).toEqual({
-			canonicalForm: "nicht",
-			coreFeatures: {
-				abbr: null,
-				foreign: null,
-				partType: null,
-				polarity: "Neg",
-			},
+			markedContext: "Heute fährt er <TARGET>nicht</TARGET>.",
+			members: ["nicht"],
 		});
 		expect(() =>
+			inputSchema.parse({
+				markedContext: "Heute fährt er <TARGET>nicht</TARGET>.",
+				members: ["heute"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const fixture = corpus.cases["grammar-de-part-demo-negative-nicht"];
+		if (fixture === undefined)
+			throw new Error("Expected PART demonstration fixture.");
+		const modelOutput = fixture.idealOutput;
+		expect(outputSchema.parse(modelOutput)).toEqual(modelOutput);
+		expect(Object.keys(modelOutput)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
+		]);
+		expect(
+			outputSchema.safeParse({
+				decision: "Resolved",
+				resolution: modelOutput,
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...modelOutput,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+		expect(() =>
 			deParticleModelLemmaSchema.parse({
+				...modelOutput.lemma,
 				language: "de",
-				canonicalForm: "zu",
-				coreFeatures: {
-					abbr: null,
-					foreign: null,
-					partType: "Inf",
-					polarity: null,
-				},
-			}),
-		).toThrow();
-		expect(() =>
-			deParticleModelLemmaSchema.parse({
-				canonicalForm: "doch",
-				coreFeatures: {
-					abbr: null,
-					foreign: null,
-					partType: "Mod",
-					polarity: null,
-				},
 			}),
 		).toThrow();
 		expect(
-			deParticleModelLemmaSchema.parse({
-				canonicalForm: "ja",
-				coreFeatures: {
-					abbr: null,
-					foreign: null,
-					partType: null,
-					polarity: "Pos",
-				},
-			}),
-		).toBeDefined();
-		expect(
-			deParticleModelCitationSurfaceSchema.parse({
-				spelling: "Canonical",
+			deParticleModelCitationSurfaceSchema.safeParse({
+				...modelOutput.surface,
 				surfaceKind: "Citation",
-				surfaceFeatures: null,
-			}),
-		).toBeDefined();
-		expect(() =>
-			deParticleModelCitationSurfaceSchema.parse({
-				spelling: "Canonical",
-				surfaceKind: "Inflection",
-				surfaceFeatures: null,
-				inflectionalFeatures: {},
-			}),
-		).toThrow();
+			}).success,
+		).toBe(false);
 	});
 
-	test("pins 22 held-out cases disjoint from four lemma-disjoint demonstrations", () => {
-		expect(corpus.all().ids).toHaveLength(28);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-part-demo-modal-halt",
-			"grammar-de-part-demo-typo-ebn",
-			"grammar-de-part-demo-unresolved-verb-particle-auf",
-			"grammar-de-part-demo-unresolved-response-nein",
-		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation.ids).toHaveLength(22);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation).toBe(
+	test("freezes 42 realistic cases into disjoint 9/21/12 partitions", () => {
+		expect(corpus.all().ids).toHaveLength(42);
+		expect(demonstrations.ids).toEqual(expectedDemonstrationIds);
+		expect(developmentEvaluation.ids).toHaveLength(21);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
+		);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(42);
+		expect(developmentEvaluation).toBe(
 			particleGrammaticalResolutionExperiment.evaluation,
 		);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(26);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-part-provisional-affirmative-ja",
-		);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-part-provisional-foreign-not",
+		expect(untouchedAcceptanceEvaluation).toBe(
+			particleGrammaticalResolutionAcceptanceExperiment.evaluation,
 		);
 
-		const demonstratedLemmas = new Set(
-			demonstrations.cases.flatMap((goldenCase) =>
-				goldenCase.idealOutput.resolution === null
-					? []
-					: [goldenCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		const evaluatedLemmas = new Set(
-			evaluation.cases.flatMap((goldenCase) =>
-				goldenCase.idealOutput.resolution === null
-					? []
-					: [goldenCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		expect(
-			[...demonstratedLemmas].filter((lemma) =>
-				evaluatedLemmas.has(lemma),
-			),
-		).toEqual([]);
+		for (const testCase of corpus.all().cases) {
+			const markedMembers = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<>]+)<\/TARGET>/gu,
+				),
+			].map((match) => match[1]);
+			expect(markedMembers).toEqual(testCase.input.members);
+			expect(testCase.idealOutput.memberOrthographies).toHaveLength(1);
+			expect(testCase.idealOutput.normalizedMembers).toHaveLength(1);
+			expect("decision" in testCase.idealOutput).toBe(false);
+			expect("realizationCoverage" in testCase.idealOutput).toBe(false);
+			expect("surfaceKind" in testCase.idealOutput.surface).toBe(false);
+		}
 	});
 
-	test("assembles only the selected policy demonstrations", () => {
+	test("covers every codec feature, route distinction, and form policy", () => {
+		const cases = corpus.all().cases;
+		for (const key of [
+			"abbr",
+			"foreign",
+			"partType",
+			"polarity",
+		] as const) {
+			expect(
+				cases.some(
+					(testCase) =>
+						testCase.idealOutput.lemma.coreFeatures[key] !== null,
+				),
+			).toBe(true);
+		}
+		for (const polarity of ["Neg", "Pos"] as const) {
+			expect(
+				cases.some(
+					(testCase) =>
+						testCase.idealOutput.lemma.coreFeatures.polarity ===
+						polarity,
+				),
+			).toBe(true);
+		}
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.memberOrthographies[0] === "Typo",
+			),
+		).toBe(true);
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.surface.spelling === "Variant",
+			),
+		).toBe(true);
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceFeatures !== null,
+			),
+		).toBe(true);
+		for (const anchor of [
+			"not ADP membership",
+			"not the later temporal ADV",
+			"unmarked weil remains SCONJ",
+			"not the clause-linking CCONJ",
+			"separable VERB element",
+		]) {
+			expect(
+				cases.some((testCase) =>
+					testCase.explanation?.includes(anchor),
+				),
+			).toBe(true);
+		}
+	});
+
+	test("assembles total fixed-route policy and scores exact diagnostics", () => {
 		const prompt = assembleSystemPrompt(promptSource);
-
-		expect(prompt).toContain("Das ist <TARGET>halt</TARGET> so.");
+		expect(prompt).toContain("already-classified German Lexeme/PART");
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain("members: string[]");
+		expect(prompt).toContain("fixed PART route remains authoritative");
+		expect(prompt).toContain('partType: "Inf" | null');
+		expect(prompt).toContain('polarity: "Neg" | "Pos" | null');
+		expect(prompt).toContain("realizationCoverage Full");
 		expect(prompt).toContain("<TARGET>ebn</TARGET>");
-		expect(prompt).toContain("Er hört <TARGET>auf</TARGET>");
-		expect(prompt).toContain("<TARGET>Nein</TARGET>");
-		expect(prompt).not.toContain("<TARGET>nicth</TARGET>");
-		expect(prompt).not.toContain("<TARGET>bloß</TARGET>");
-		expect(prompt).not.toContain("<TARGET>not</TARGET>");
-		expect(prompt).not.toMatch(
-			/\b(?:doch|denn|wohl|bloß|mal|ja|eigentlich)\b/iu,
-		);
-	});
+		expect(prompt).not.toContain("<TARGET>nihct</TARGET>");
 
-	test("keeps modal ja distinct from a response and a discourse formula", () => {
+		const testCase = corpus.cases["grammar-de-part-dev-foreign-not"];
+		if (testCase === undefined)
+			throw new Error("Expected PART scored fixture.");
 		expect(
-			corpus.cases["grammar-de-part-modal-ja"]?.idealOutput,
-		).toMatchObject({
-			decision: "Resolved",
-			resolution: {
-				lemma: {
-					canonicalForm: "ja",
-					coreFeatures: { polarity: null, partType: null },
-				},
-			},
+			evaluateParticleGrammaticalResolution({
+				caseId: "grammar-de-part-dev-foreign-not",
+				input: testCase.input,
+				idealOutput: testCase.idealOutput,
+				output: testCase.idealOutput,
+			}),
+		).toEqual({
+			contractPass: true,
+			memberCountPass: true,
+			memberOrthographiesPass: true,
+			normalizedSurfacePass: true,
+			spellingPass: true,
+			surfaceFeaturesPass: true,
+			canonicalFormPass: true,
+			coreFeaturesPass: true,
 		});
-		expect(
-			corpus.cases["grammar-de-part-unresolved-response-ja"]?.idealOutput,
-		).toEqual({ decision: "Unresolved", resolution: null });
-		expect(
-			corpus.cases["grammar-de-part-unresolved-phraseme-na-ja"]
-				?.idealOutput,
-		).toEqual({ decision: "Unresolved", resolution: null });
-	});
-});
-
-describe("Lexeme/PART pure diagnostic evaluator", () => {
-	test("passes every pinned ideal output", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const goldenCase = evaluation.cases[index];
-			if (goldenCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateParticleGrammaticalResolution({
-				caseId,
-				input: goldenCase.input,
-				idealOutput: goldenCase.idealOutput,
-				output: goldenCase.idealOutput,
-			});
-
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
-		}
-	});
-
-	test("reports normalization and Core Feature misses independently", () => {
-		const goldenCase = corpus.cases["grammar-de-part-negative-nicht"];
-		if (
-			goldenCase === undefined ||
-			goldenCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing negative-particle fixture.");
-		}
-		const output = outputSchema.parse({
-			...goldenCase.idealOutput,
-			resolution: {
-				...goldenCase.idealOutput.resolution,
-				normalizedMembers: ["nie"],
-				lemma: {
-					...goldenCase.idealOutput.resolution.lemma,
-					coreFeatures: {
-						...goldenCase.idealOutput.resolution.lemma.coreFeatures,
-						polarity: null,
-					},
-				},
-			},
-		});
-		const result = evaluateParticleGrammaticalResolution({
-			caseId: "grammar-de-part-negative-nicht",
-			input: goldenCase.input,
-			idealOutput: goldenCase.idealOutput,
-			output,
-		});
-
-		expect(result.contractPass).toBe(false);
-		expect(result.normalizedSurfacePass).toBe(false);
-		expect(result.coreFeaturesPass).toBe(false);
-		expect(result.surfaceKindPass).toBe(true);
-	});
-
-	test("canonicalizes only the codec-equivalent all-null Surface feature bag", () => {
-		const goldenCase = corpus.cases["grammar-de-part-modal-doch"];
-		if (
-			goldenCase === undefined ||
-			goldenCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing modal-particle fixture.");
-		}
-		const output = outputSchema.parse({
-			...goldenCase.idealOutput,
-			resolution: {
-				...goldenCase.idealOutput.resolution,
-				surface: {
-					...goldenCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
-			},
-		});
-		const result = evaluateParticleGrammaticalResolution({
-			caseId: "grammar-de-part-modal-doch",
-			input: goldenCase.input,
-			idealOutput: goldenCase.idealOutput,
-			output,
-		});
-
-		expect(result.contractPass).toBe(true);
-		expect(result.surfaceFeaturesPass).toBe(true);
 	});
 });

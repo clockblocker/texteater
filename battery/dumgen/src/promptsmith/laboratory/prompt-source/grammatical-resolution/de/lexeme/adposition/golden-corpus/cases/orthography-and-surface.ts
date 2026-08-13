@@ -3,212 +3,131 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-
-const core = (options: {
-	readonly adpType: "Circ" | "Post" | "Prep" | null;
-	readonly governedCase: "Acc" | "Dat" | "Gen" | null;
-	readonly abbr?: "Yes" | null;
-}) => ({
-	abbr: options.abbr ?? null,
-	adpType: options.adpType,
-	extPos: null,
-	foreign: null,
-	governedCase: options.governedCase,
-	partType: null,
-});
+import { adpositionCase, ordinaryAdpositionCore } from "./builders";
 
 export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 	import.meta.url,
 	{
 		cases: {
-			"grammar-de-adp-demo-sentence-initial-wegen": {
-				input: {
-					markedContext:
-						"<TARGET>Wegen</TARGET> des Sturms blieb die Fähre im Hafen.",
+			"grammar-de-adp-demo-typo-one": adpositionCase(
+				"Sie ging <TARGET>one</TARGET> Mantel hinaus.",
+				["one"],
+				{
+					normalizedMembers: ["ohne"],
+					memberOrthographies: ["Typo"],
+					canonicalForm: "ohne",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Acc",
+					}),
+					explanation:
+						"Missing h is a genuine typo; repair only the supplied member.",
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Standard"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["wegen"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "wegen",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Gen",
-							}),
-						},
-					},
+			),
+			"grammar-de-adp-demo-archaic-ob": adpositionCase(
+				"<TARGET>Ob</TARGET> des Unwetters blieb das Tor geschlossen.",
+				["Ob"],
+				{
+					normalizedMembers: ["ob"],
+					historicalStatus: "Archaic",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Gen",
+					}),
 				},
-				explanation:
-					"Ordinary sentence-initial capitalization is Standard, while normalizedMembers and canonicalForm use lowercase.",
-			},
-			"grammar-de-adp-demo-typo-one": {
-				input: {
-					markedContext:
-						"Sie ging <TARGET>one</TARGET> Mantel hinaus.",
+			),
+			"grammar-de-adp-dev-sentence-initial-wegen": adpositionCase(
+				"<TARGET>Wegen</TARGET> des Sturms blieb die Fähre im Hafen.",
+				["Wegen"],
+				{
+					normalizedMembers: ["wegen"],
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Gen",
+					}),
+					explanation:
+						"Sentence-initial capitalization is Standard and normalizes to lowercase.",
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Typo"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["ohne"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "ohne",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Acc",
-							}),
-						},
-					},
+			),
+			"grammar-de-adp-dev-casing-typo-unter": adpositionCase(
+				"Das Paket liegt <TARGET>Unter</TARGET> dem Tisch.",
+				["Unter"],
+				{
+					normalizedMembers: ["unter"],
+					memberOrthographies: ["Typo"],
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: null,
+					}),
 				},
-				explanation:
-					"The missing h is a real typo; repair it without changing the adposition identity.",
-			},
-			"grammar-de-adp-citation-label-jenseits": {
-				input: {
-					markedContext:
-						"Wörterbucheintrag: <TARGET>jenseits</TARGET>",
+			),
+			"grammar-de-adp-dev-lexical-typo-gegen": adpositionCase(
+				"Sie protestiert <TARGET>egen</TARGET> den neuen Plan.",
+				["egen"],
+				{
+					normalizedMembers: ["gegen"],
+					memberOrthographies: ["Typo"],
+					canonicalForm: "gegen",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Acc",
+					}),
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Standard"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["jenseits"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "jenseits",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Gen",
-							}),
-						},
-					},
+			),
+			"grammar-de-adp-dev-abbreviation-inkl": adpositionCase(
+				"Der Preis beträgt <TARGET>inkl</TARGET>. Versand zehn Euro.",
+				["inkl"],
+				{
+					canonicalForm: "inkl.",
+					spelling: "Variant",
+					coreFeatures: ordinaryAdpositionCore({
+						abbr: "Yes",
+						adpType: "Prep",
+						governedCase: "Gen",
+					}),
+					explanation:
+						"Segment supplies letters only; following period remains unmarked punctuation.",
 				},
-			},
-			"grammar-de-adp-mid-sentence-casing-typo-unter": {
-				input: {
-					markedContext:
-						"Das liegt <TARGET>Unter</TARGET> dem Tisch.",
+			),
+			"grammar-de-adp-dev-variant-auf-grund": adpositionCase(
+				"Die Redaktion führt „aufgrund“ als Leitform; <TARGET>auf</TARGET> <TARGET>Grund</TARGET> des Wetters bleibt zulässig.",
+				["auf", "Grund"],
+				{
+					canonicalForm: "aufgrund",
+					spelling: "Variant",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Gen",
+					}),
+					explanation:
+						"Context names editorial headword; two-word standard variant stays aligned.",
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Typo"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["unter"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "unter",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: null,
-							}),
-						},
-					},
+			),
+			"grammar-de-adp-accept-typo-ohhne": adpositionCase(
+				"Er verließ das Haus <TARGET>ohhne</TARGET> seine Schlüssel.",
+				["ohhne"],
+				{
+					normalizedMembers: ["ohne"],
+					memberOrthographies: ["Typo"],
+					canonicalForm: "ohne",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Acc",
+					}),
 				},
-			},
-			"grammar-de-adp-lexical-typo-gegen": {
-				input: {
-					markedContext:
-						"Sie protestiert <TARGET>egen</TARGET> den Plan.",
+			),
+			"grammar-de-adp-accept-archaic-behufs": adpositionCase(
+				"<TARGET>Behufs</TARGET> einer Prüfung wurden die Akten versiegelt.",
+				["Behufs"],
+				{
+					normalizedMembers: ["behufs"],
+					historicalStatus: "Archaic",
+					coreFeatures: ordinaryAdpositionCore({
+						adpType: "Prep",
+						governedCase: "Gen",
+					}),
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Typo"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["gegen"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "gegen",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Acc",
-							}),
-						},
-					},
-				},
-			},
-			"grammar-de-adp-archaic-ob": {
-				input: {
-					markedContext:
-						"<TARGET>Ob</TARGET> des Unwetters blieb das Tor geschlossen.",
-				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Standard"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["ob"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: {
-								historicalStatus: "Archaic",
-							},
-						},
-						lemma: {
-							canonicalForm: "ob",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Gen",
-							}),
-						},
-					},
-				},
-			},
-			"grammar-de-adp-repeated-second-bei": {
-				input: {
-					markedContext:
-						"Bei Anna war er schon, nun ist er <TARGET>bei</TARGET> Ben.",
-				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Standard"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["bei"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: null,
-						},
-						lemma: {
-							canonicalForm: "bei",
-							coreFeatures: core({
-								adpType: "Prep",
-								governedCase: "Dat",
-							}),
-						},
-					},
-				},
-			},
+			),
 		} as const satisfies GoldenCaseRegistry<
 			typeof inputSchema,
 			typeof outputSchema

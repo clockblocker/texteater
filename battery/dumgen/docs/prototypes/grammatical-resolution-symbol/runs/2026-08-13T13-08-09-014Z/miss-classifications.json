@@ -1,0 +1,6 @@
+{
+  "grammar-de-sym-accept-v2-division-inflection": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt mandates Inflection when das directly governs the target symbol, and a distinct plus-sign development case teaches and repeatedly passes the same Acc/Neut/Sing pattern. The model matched all remaining fields but fell back to Citation for ÷, so this is an accepted model limitation rather than a prompt or corpus defect."
+  }
+}

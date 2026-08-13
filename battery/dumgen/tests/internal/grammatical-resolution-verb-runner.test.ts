@@ -9,6 +9,7 @@ import {
 	currentEvidenceBinding,
 	finalizeEvidence,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
 	responseRequestFor,
@@ -19,9 +20,11 @@ import { verbGrammaticalResolutionExperiment } from "../../src/promptsmith/labor
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -45,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -55,15 +58,27 @@ function draftResult() {
 	};
 }
 
-test("VERB runner import and preflight make no provider call", () => {
-	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v4");
+test("VERB runner import and preflight make no provider call", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(25);
+	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v5");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/verb");
 	expect(binding.transport).toBe("openai-responses-direct-serial");
 	expect(binding.model).toBe("gpt-5.6-luna");
 	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(25);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(25);
+	expect(() => prepareCurrentTestCases(acceptancePhase)).toThrow(
+		/fresh disjoint corpus/,
+	);
 	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
 	expect(() => assertEvaluationSuiteBounds(31)).toThrow(/capped at 30/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
@@ -74,13 +89,13 @@ test("VERB runner import and preflight make no provider call", () => {
 });
 
 test("VERB requests cache the stable prompt prefix explicitly", () => {
-	const testCases = prepareCurrentTestCases();
+	const testCases = prepareCurrentTestCases(developmentPhase);
 	const first = testCases[0];
 	const second = testCases[1];
 	if (first === undefined || second === undefined) {
 		throw new Error("Expected at least two VERB evaluation cases.");
 	}
-	const binding = currentEvidenceBinding();
+	const binding = currentEvidenceBinding(developmentPhase);
 	const firstRequest = responseRequestFor(first.input);
 	const secondRequest = responseRequestFor(second.input);
 
@@ -93,6 +108,7 @@ test("VERB requests cache the stable prompt prefix explicitly", () => {
 	expect(binding.promptCacheMode).toBe("explicit");
 	expect(binding.promptCacheTtl).toBe("30m");
 	expect(binding.promptCacheBreakpoint).toBe("end-of-stable-system-prompt");
+	expect(binding.suiteSha256).toMatch(/^[0-9a-f]{64}$/u);
 	expect(firstRequest.prompt_cache_key).toBe(binding.promptCacheKey);
 	expect(secondRequest.prompt_cache_key).toBe(binding.promptCacheKey);
 	expect(firstRequest).toMatchObject({
@@ -187,7 +203,7 @@ test("VERB finalization is offline, atomic, and recomputed", async () => {
 		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
 		attempts[0] = { ...firstAttempt, contractPass: false };
 		const draft = {
-			...currentEvidenceBinding(),
+			...currentEvidenceBinding(developmentPhase),
 			startedAt,
 			completedAt,
 			finalizedAt: null,

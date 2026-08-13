@@ -6,21 +6,25 @@ import { join } from "node:path";
 import {
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
-	assertLiveApiKey,
 	currentEvidenceBinding,
 	finalizeEvidence,
+	INTJ_PROMPT_CACHE_POLICY,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-interjection/run";
 import { interjectionGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-interjection/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -32,6 +36,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
+		rawOutputText: JSON.stringify(testCase.idealOutput),
 		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
@@ -43,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -53,74 +58,82 @@ function draftResult() {
 	};
 }
 
-test("INTJ runner preflights the exact bounded suite without a call", () => {
-	expect(prepareCurrentTestCases()).toHaveLength(18);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
+test("INTJ runner preflights both suites without provider access", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(14);
+	expect(binding).toMatchObject({
+		runnerVersion: "grammatical-resolution-interjection-v2",
+		route: "grammatical-resolution/de/lexeme/interjection",
+		transport: "openai-responses-direct-serial",
+		model: "gpt-5.6-luna",
+		reasoningEffort: "none",
+		maxOutputTokens: 4096,
+	});
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
 	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
-	expect(() => assertEvaluationSuiteBounds(19.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
-	expect(() => assertLiveApiKey(undefined)).toThrow(
-		/no provider client or call/,
-	);
-	expect(() => assertLiveApiKey("")).toThrow(/no provider client or call/);
-	expect(() => assertLiveApiKey("test-only-key")).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(10.5)).toThrow(/safe integer/);
 });
 
-test("INTJ retained evidence validates attempts and recomputed summaries", () => {
-	const valid = draftResult();
-	expect(parseRetainedRun(valid).evaluationCaseIds).toEqual(
-		valid.evaluationCaseIds,
-	);
-	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			completedAt: "2020-01-01T09:59:00.000Z",
-		}),
-	).toThrow(/completedAt/);
-	expect(() => parseRetainedRun({ ...valid, contractScore: 0 })).toThrow(
-		/inconsistent/,
-	);
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			evaluationCaseIds: [
-				valid.evaluationCaseIds[0],
-				...valid.evaluationCaseIds,
-			],
-		}),
-	).toThrow(/unique|attempt order/);
+test("INTJ requests explicitly cache the stable prompt prefix", () => {
+	const first = prepareCurrentTestCases(developmentPhase)[0];
+	if (first === undefined)
+		throw new Error("Expected an INTJ development case.");
+	const binding = currentEvidenceBinding(developmentPhase);
+	const request = responseRequestFor(first.input);
+	expect(INTJ_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(binding.suiteSha256).toMatch(/^[0-9a-f]{64}$/u);
+	expect(request.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(request).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
 });
 
-test("INTJ binding rejects stale prompt policy and Golden Cases", () => {
+test("INTJ retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
-		assertCurrentEvidenceBinding({
+		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
+	).toThrow(/Retained evidence summary field/);
+	expect(() =>
+		parseRetainedRun({
 			...valid,
-			promptSha256: "0".repeat(64),
+			runnerVersion: "grammatical-resolution-interjection-v1",
 		}),
-	).toThrow(/obsolete evidence policy/);
-	const firstAttempt = valid.attempts[0];
-	if (firstAttempt === undefined) throw new Error("Expected a current case.");
+	).toThrow();
 	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
-			attempts: [
-				{
-					...firstAttempt,
-					idealOutput: {
-						decision: "Unresolved" as const,
-						resolution: null,
-					},
-				},
-				...valid.attempts.slice(1),
-			],
+			outputSchemaSha256: "0".repeat(64),
 		}),
-	).toThrow(/current Golden Case/);
+	).toThrow(/obsolete evidence policy/);
 });
 
 test("INTJ finalization is offline, atomic, and recomputed", async () => {
@@ -128,8 +141,22 @@ test("INTJ finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
-		await writeFile(resultsPath, JSON.stringify(draftResult()), "utf8");
+		const attempts = passingAttempts();
+		const firstAttempt = attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		attempts[0] = { ...firstAttempt, contractPass: false };
+		const draft = {
+			...currentEvidenceBinding(developmentPhase),
+			startedAt,
+			completedAt,
+			finalizedAt: null,
+			boundedCalls: attempts.length,
+			...summarizeEvidence(attempts, false),
+			attempts,
+		};
+		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 		await writeFile(classificationsPath, "{}", "utf8");
+
 		const finalized = await finalizeEvidence(
 			resultsPath,
 			classificationsPath,
@@ -137,12 +164,14 @@ test("INTJ finalization is offline, atomic, and recomputed", async () => {
 		expect(finalized.completedAt).toBe(completedAt);
 		expect(finalized.finalizedAt).not.toBeNull();
 		expect(finalized.contractScore).toBe(finalized.boundedCalls);
-		expect(finalized.scoreRatio).toBe(1);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
 		).toBe(finalized.finalizedAt);
+		expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(/already been finalized/);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

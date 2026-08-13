@@ -1,0 +1,34 @@
+{
+  "grammar-de-x-dev-unknown-blarg-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The model defaulted a transparently article-governed contextual X to Citation. The contract needs a stronger rule that residual lexical identity does not erase morphosyntax licensed by the German sentence."
+  },
+  "grammar-de-x-dev-unknown-glorpen-inf": {
+    "classification": "prompt-defect",
+    "explanation": "The modal-plus-bare-form context transparently licenses verbForm Inf, but the prompt did not make the verbal templates concrete enough and the model defaulted to Citation."
+  },
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "prompt-defect",
+    "explanation": "The subject and finite ending transparently license finite indicative singular morphology and an infinitival canonical form, but the prompt did not explicitly teach removal of nonce-verb inflection."
+  },
+  "grammar-de-x-dev-unknown-glorp-imp": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The builder inferred Typo merely because ordinary sentence-initial capitalization normalized to lowercase. The oracle must explicitly keep this member Standard; the prompt also needs a different imperative template to prevent nominal case leakage."
+  },
+  "grammar-de-x-dev-slang-cringe": {
+    "classification": "prompt-defect",
+    "explanation": "The output marked integrated German-scene slang Foreign solely from recognizable English origin. The contract needs a sharper current-use distinction between overt code-switching and integrated slang."
+  },
+  "grammar-de-x-dev-archaic-thou": {
+    "classification": "prompt-defect",
+    "explanation": "The context explicitly identifies the exact foreign form's grammatical use as historical, but the prompt's historical-document contrast did not sufficiently require Archaic for overtly archaic grammar."
+  },
+  "grammar-de-x-dev-mixed-w00t": {
+    "classification": "prompt-defect",
+    "explanation": "The model again treated recognizable foreign origin as enough for Foreign Yes despite an integrated German forum-slang context. The present-use criterion needs stronger wording."
+  },
+  "grammar-de-x-dev-alphanumeric-3d": {
+    "classification": "prompt-defect",
+    "explanation": "The compact mixed identity transparently encodes an abbreviation and an initial cardinal number, but the prompt warned against shape inference without supplying a positive alphanumeric feature rule."
+  }
+}

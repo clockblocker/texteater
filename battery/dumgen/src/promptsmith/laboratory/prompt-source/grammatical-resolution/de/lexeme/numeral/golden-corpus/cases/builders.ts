@@ -1,68 +1,106 @@
-export type CardinalCoreFeatures = {
+import type { input } from "zod";
+
+import type { GoldenCase } from "../../../../../../../../assembly";
+import type {
+	inputSchema,
+	modelInflectionalFeaturesSchema,
+	outputSchema,
+} from "../../schemas";
+
+export type NumeralCoreFeatures = {
 	readonly abbr: "Yes" | null;
 	readonly foreign: "Yes" | null;
-	readonly numType: "Card";
+	readonly numType: "Card" | "Frac" | "Mult" | "Range" | null;
 };
 
 export const cardinalCore = {
 	abbr: null,
 	foreign: null,
 	numType: "Card",
-} satisfies CardinalCoreFeatures;
+} satisfies NumeralCoreFeatures;
 
-export function citation(args: {
-	readonly normalizedMembers: readonly string[];
-	readonly canonicalForm?: string;
-	readonly memberOrthography?: "Standard" | "Typo";
-	readonly coreFeatures?: CardinalCoreFeatures;
-}) {
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [args.memberOrthography ?? "Standard"],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
-			lemma: {
-				canonicalForm:
-					args.canonicalForm ?? args.normalizedMembers.join(" "),
-				coreFeatures: args.coreFeatures ?? cardinalCore,
-			},
+type CaseOptions = {
+	readonly explanation?: string;
+	readonly historicalStatus?: "Archaic" | null;
+	readonly normalizedMembers?: readonly string[];
+	readonly orthographies?: readonly ("Standard" | "Typo")[];
+	readonly spelling?: "Canonical" | "Variant";
+};
+
+export function citationCase(
+	markedContext: string,
+	members: readonly string[],
+	canonicalForm: string,
+	coreFeatures: NumeralCoreFeatures = cardinalCore,
+	options: CaseOptions = {},
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
+	return numeralCase(
+		markedContext,
+		members,
+		{
+			spelling: options.spelling ?? "Canonical",
+			surfaceKind: "Citation",
+			surfaceFeatures: surfaceFeatures(options.historicalStatus),
 		},
+		canonicalForm,
+		coreFeatures,
+		options,
+	);
+}
+
+export function inflectionCase(
+	markedContext: string,
+	members: readonly string[],
+	canonicalForm: string,
+	inflectionalFeatures: input<typeof modelInflectionalFeaturesSchema>,
+	coreFeatures: NumeralCoreFeatures = cardinalCore,
+	options: CaseOptions = {},
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
+	return numeralCase(
+		markedContext,
+		members,
+		{
+			spelling: options.spelling ?? "Canonical",
+			surfaceKind: "Inflection",
+			surfaceFeatures: surfaceFeatures(options.historicalStatus),
+			inflectionalFeatures,
+		},
+		canonicalForm,
+		coreFeatures,
+		options,
+	);
+}
+
+function numeralCase(
+	markedContext: string,
+	members: readonly string[],
+	surface: input<typeof outputSchema>["surface"],
+	canonicalForm: string,
+	coreFeatures: NumeralCoreFeatures,
+	options: CaseOptions,
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
+	return {
+		input: { markedContext, members: [...members] },
+		idealOutput: {
+			memberOrthographies:
+				options.orthographies === undefined
+					? members.map(() => "Standard" as const)
+					: [...options.orthographies],
+			normalizedMembers:
+				options.normalizedMembers === undefined
+					? [...members]
+					: [...options.normalizedMembers],
+			surface,
+			lemma: { canonicalForm, coreFeatures },
+		},
+		...(options.explanation === undefined
+			? {}
+			: { explanation: options.explanation }),
 	};
 }
 
-export function inflection(args: {
-	readonly normalizedMembers: readonly string[];
-	readonly canonicalForm: string;
-	readonly case: "Acc" | "Dat" | "Gen" | "Nom" | null;
-	readonly gender: "Fem" | "Masc" | "Neut" | null;
-	readonly number: "Plur" | "Sing" | null;
-}) {
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: ["Standard" as const],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Inflection" as const,
-				surfaceFeatures: null,
-				inflectionalFeatures: {
-					case: args.case,
-					gender: args.gender,
-					number: args.number,
-				},
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: cardinalCore,
-			},
-		},
-	};
+function surfaceFeatures(historicalStatus: "Archaic" | null | undefined) {
+	return historicalStatus === "Archaic"
+		? ({ historicalStatus: "Archaic" } as const)
+		: null;
 }

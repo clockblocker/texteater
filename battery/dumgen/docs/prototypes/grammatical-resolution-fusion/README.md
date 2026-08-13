@@ -1,114 +1,95 @@
-# German Construction/Fusion grammatical-resolution prototype
+# German Construction/Fusion Grammatical Resolution prototype
 
-This route-local slice resolves a Target-Classification result already fixed to
-`grammatical-resolution/de/construction/fusion`. Its Prompt Source participates
-in shared generated-system-prompt assembly. Runtime catalog registration remains
-deferred to issue #54.
+This route resolves one already classified German Fusion Analysis Target. The
+legacy contract accepted only `markedContext`, reopened route and membership
+decisions, and returned a `Resolved | Unresolved` wrapper around a nullable
+payload. The current contract accepts exactly `{markedContext,members}` and
+returns one total flat codec-derived DTO. Both input projections are
+authoritative.
 
-## Dumling contract
+The model owns the singleton member's orthography classification and normalized
+string, Citation spelling/features, and Lemma `canonicalForm`. The application
+owns German language, Construction family, Fusion kind, empty Lemma Core
+Features, Citation `surfaceKind`, Surface-to-Lemma linkage, normalized Surface,
+Full realization coverage, and successful-result construction. The Dumling
+Fusion route has Citation Surface only.
 
-Inspection of Dumling's German subtree confirms that `Construction/Fusion` has
-Lemma and Citation Surface schemas, no Inflection Surface schema, and empty
-`coreFeatures` and `inflectionalFeatures` feature objects. The model DTO removes
-the fixed `language: de`, `family: Construction`, `kind: Fusion`, and linked
-Surface Lemma fields through reversible fixed-field codecs. Resolved output is
-therefore one marked orthographic member, a full Citation Surface, and an
-empty-Core Lemma.
+Grammatical Resolution never repairs membership. The classified fused member
+stays one member; it is not split into hidden preposition/article members and a
+following article, noun, complement, or Idiom word is never absorbed. Plain
+ADP/DET sequences, lexicalized or nondecomposable lookalikes, dialectal forms,
+and neighboring Idiom or PairedFrame material remain context when unmarked.
 
-The shared grammatical-resolution TARGET schema remains the structural
-preflight. It validates balanced word-like TARGET members but intentionally
-allows multiple marked words so route/scope contradictions such as separately
-written `in dem` reach the route evaluator and become `Unresolved`.
+## Frozen corpus
 
-This follows the repository's fixed-chain boundary in
-`docs/persistent/prompt-chains.md` and the Target Classification instruction in
-`src/promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/prompt-source.ts`:
-Construction is selected only when the clicked material itself is a Fusion or
-PairedFrame. Lemma identity follows `docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md`.
+The 34 original synthetic full-sentence cases are frozen as:
 
-## Domain boundary
+- 6 demonstrations covering initial casing, following-noun control, typo
+  repair, historical apostrophe Variant, and nearby standalone, Idiom, and
+  dialect controls;
+- 18 development cases covering the standard productive inventory, singleton
+  membership beside uncontracted words, initial casing, two typos, a historical
+  Variant, and archaic wording that does not make the Fusion use archaic;
+- 10 untouched acceptance cases covering unseen contexts, repeated identical
+  occurrences, and further productive fused forms.
 
-A positive is the single written contraction itself, not the larger PP. Plain
-adpositions are `Lexeme/ADP`; separately written preposition + article pairs
-are not a Fusion Surface; whole marked idioms, discourse formulas, and paired
-frames retain their own routes even when they contain a fused word. The valid
-pronoun `ihm` is a typo adversary and must not normalize to `im`.
+The three selections are explicit, exhaustive, and pairwise disjoint. Exact
+observed development cases cannot become demonstrations; a genuinely different
+sentence may teach the same grammatical distinction.
 
-The general boundary is supported by the IDS grammis discussion of
-[articleless forms versus preposition/article fusion](https://grammis.ids-mannheim.de/fragen/35)
-and Duden rule D 14, which the individual entries link.
+All contexts are original synthetic examples. Current spellings use Citation
+`spelling: "Canonical"`. Ordinary sentence-initial capitalization remains
+Standard and lowercases in `normalizedMembers`. Evident local typos repair only
+the supplied member and remain Canonical spelling. Licensed historical
+apostrophe spellings such as `für's` and `in's` remain Standard as attested,
+use Variant spelling, and map to current `fürs` and `ins` Lemmas. Historical or
+archaic unmarked wording does not itself make the current Fusion use Archaic.
 
-## Direct positive provenance
+## Shared evidence runner
 
-Each positive form family used by the demonstrations or held-outs has a direct
-Duden entry identifying the expansion and the grammatical analysis as
-`Präposition + Artikel` (or explicitly `Verschmelzung von Präposition +
-Artikel`):
+The thin route configuration uses the shared direct cached runner with
+`gpt-5.6-luna`, no reasoning, low text verbosity, no retries, `store:false`, a
+4,096-token response ceiling, and an explicit 30-minute cache breakpoint after
+the stable system prompt. Import and preflight make no provider call.
 
-| Fusion | Expansion | Source |
-| --- | --- | --- |
-| `im` | `in dem` | [Duden: im](https://www.duden.de/rechtschreibung/im) |
-| `zum` | `zu dem` | [Duden: zum](https://www.duden.de/rechtschreibung/zum) |
-| `zur` | `zu der` | [Duden: zur](https://www.duden.de/rechtschreibung/zur) |
-| `am` | `an dem` | [Duden: am](https://www.duden.de/rechtschreibung/am) |
-| `beim` | `bei dem` | [Duden: beim](https://www.duden.de/rechtschreibung/beim) |
-| `vom` | `von dem` | [Duden: vom](https://www.duden.de/rechtschreibung/vom) |
-| `ins` | `in das` | [Duden: ins](https://www.duden.de/rechtschreibung/ins) |
-| `ans` | `an das` | [Duden: ans](https://www.duden.de/rechtschreibung/ans) |
-| `aufs` | `auf das` | [Duden: aufs](https://www.duden.de/rechtschreibung/aufs) |
-| `fürs` | `für das` | [Duden: fürs](https://www.duden.de/rechtschreibung/fuers) |
-| `ums` | `um das` | [Duden: ums](https://www.duden.de/rechtschreibung/ums) |
-| `durchs` | `durch das` | [Duden: durchs](https://www.duden.de/rechtschreibung/durchs) |
-| `übers` | `über das` | [Duden: übers](https://www.duden.de/rechtschreibung/uebers) |
+The authorized protocol used 18 calls for each of three development rounds and
+10 calls for untouched acceptance: 64 calls total. Retained usage is 107,790
+input tokens, of which 103,950 were cached and 1,650 were cache writes, plus
+2,938 output tokens and zero reasoning tokens. At published Luna rates of
+$1.00/M ordinary input, $0.10/M cached input, $1.25/M cache-write input, and
+$6.00/M output, the measured content estimate is approximately $0.032, safely
+below the $5 leaf cap. Exact billed cost remains authoritative in the provider
+billing export.
 
-Duden separately marks superlative `am` (for example `am schönsten`) and the
-progressive construction (`am Essen sein`) as not decomposable. The corpus
-therefore uses the transparently decomposable spatial/temporal `am` family and
-does not generalize this prototype to every string spelled `am`.
+## Retained current-contract evidence
 
-## Corpus and evidence
+All four runs are finalized, have zero execution errors, contain no misses, and
+meet the shared evidence threshold:
 
-The prompt uses four minimized demonstrations: sentence-initial normalization,
-a second canonical fusion, one obvious spelling repair, and one uncontracted
-route contradiction. The evaluation suite contains exactly 20 disjoint
-held-outs: 11 resolved outputs and 9 route, scope, multi-occurrence, and typo
-adversaries. A distinct repeated-consonant typo checks repair beyond the prompt
-example, nondecomposable superlative `am` checks the polyfunctional spelling
-boundary, and the `Zum Wohl!` DiscourseFormula boundary is held out. One
-redundant uncontracted `von dem` boundary stays corpus-only.
+| Phase | Score | Evidence |
+| --- | ---: | --- |
+| Development 1 | 18/18 (100%) | `runs/2026-08-13T12-25-34-604Z/results.json` |
+| Development 2 | 18/18 (100%) | `runs/2026-08-13T12-26-13-821Z/results.json` |
+| Development 3 | 18/18 (100%) | `runs/2026-08-13T12-26-48-330Z/results.json` |
+| Untouched acceptance | 10/10 (100%) | `runs/2026-08-13T12-27-15-073Z/results.json` |
 
-The pure evaluator checks every projected output field, canonicalizing only the
-codec-equivalent `{ "historicalStatus": null }` Surface feature bag to `null`.
-The bounded runner retains prompt/schema hashes, ordered case IDs, raw provider output,
-provider metadata, attempts, and a recomputed evidence summary. It imports the
-shared Dumgen model policy (`gpt-5.6-luna`, reasoning effort `none`), performs no
-request during import or preflight, retries zero times, stores no provider data,
-and caps evaluation at 25 cases.
+Every development case passed on every round, so no miss classification or
+prompt change was warranted. No case moved between partitions and no observed
+case became a demonstration. Untouched acceptance was reserved and invoked
+exactly once, scored 100%, and therefore required no recovery run. The
+reservation is retained at `runs/acceptance-reservation.json`.
 
-Run route-local tests from `battery/dumgen`:
+The retained 2026-08-03 v2 files bind the obsolete markedContext-only input,
+decision wrapper, mixed positive/negative suite, copied Batch/direct runner, and
+old prompt/schema. They remain historical diagnostics and are not evidence for
+this migration.
+
+From `battery/dumgen`, deterministic checks and offline preflight are:
 
 ```sh
 bun test tests/internal/grammatical-resolution-fusion.test.ts \
   tests/internal/grammatical-resolution-fusion-runner.test.ts
+bun run check
+bun run docs/prototypes/grammatical-resolution-fusion/run.ts \
+  preflight development 1
 ```
-
-Final evidence requires at least 15 attempted held-outs, an 80% score, zero
-execution/provider errors, and a classification with a non-empty explanation
-for every scored miss. The current finalized evidence is the 20-case
-`gpt-5.6-luna` Batch API run at
-`runs/2026-08-03T16-00-15-793Z/results.json`. It scores 18/20 (90%), with zero
-execution errors and zero unclassified misses, so `evidenceThresholdMet` is
-true. The retained record identifies the `openai-batch-v1` transport, Batch and
-file IDs, request counts, and content hashes; per-request latency is null
-because Batch does not expose it. Both misses are accepted model limitations
-in which the model extracted the fused word while ignoring additional marked
-material despite the explicit all-and-only-one-member gate.
-
-The route-local direct runner remains available from `battery/dumgen` with:
-
-```sh
-bun run prototype:grammatical-resolution-fusion
-```
-
-Any new run must classify every miss and finalize the retained draft offline
-with the runner's `finalize` mode.

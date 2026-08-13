@@ -3,111 +3,78 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { unresolved } from "./builders";
+import { citation, discourseFormulaInput } from "./builders";
 
-export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
-	cases: {
-		"grammar-de-discourse-formula-unresolved-danke-intj": {
-			input: {
-				markedContext:
-					"Er nahm das Geschenk und sagte <TARGET>Danke</TARGET>.",
+export const contextualContrastCases = defineGoldenCaseCollection(
+	import.meta.url,
+	{
+		cases: {
+			"grammar-de-discourse-formula-dev-gute-reise-wish": {
+				input: discourseFormulaInput(
+					"Nachdem sie über eine gute Reise im nächsten Jahr gesprochen hatten, wünschte Karim seiner Schwester am Bahnsteig: „<TARGET>Gute</TARGET> <TARGET>Reise</TARGET>, Leyla!“",
+				),
+				idealOutput: citation({
+					normalizedMembers: ["gute", "Reise"],
+					canonicalForm: "gute reise",
+					role: null,
+					memberOrthographies: ["Standard", "Standard"],
+				}),
+				explanation:
+					"The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context, and Wish has no role enum value.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"The isolated single word danke belongs to a lexical/interjection boundary, not this multiword Phraseme route.",
-		},
-		"grammar-de-discourse-formula-unresolved-compositional-request": {
-			input: {
-				markedContext:
-					"<TARGET>Kannst</TARGET> <TARGET>du</TARGET> <TARGET>mir</TARGET> <TARGET>bitte</TARGET> <TARGET>das</TARGET> <TARGET>Fenster</TARGET> <TARGET>öffnen</TARGET>?",
+			"grammar-de-discourse-formula-accept-auf-keinen-fall": {
+				input: discourseFormulaInput(
+					"„Gibst du ihm das Original ohne Quittung?“ – „<TARGET>Auf</TARGET> <TARGET>keinen</TARGET> <TARGET>Fall</TARGET>.“",
+				),
+				idealOutput: citation({
+					normalizedMembers: ["auf", "keinen", "Fall"],
+					canonicalForm: "auf keinen fall",
+					role: "Refusal",
+					memberOrthographies: ["Standard", "Standard", "Standard"],
+				}),
+				explanation:
+					"The standalone reply performs a refusal rather than serving as an embedded adverbial.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"This is an ordinary productive request sentence, not a conventionalized formula Lemma.",
-		},
-		"grammar-de-discourse-formula-unresolved-collocation": {
-			input: {
-				markedContext:
-					"Sie musste <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET> <TARGET>treffen</TARGET>.",
+			"grammar-de-discourse-formula-accept-nun-denn": {
+				input: discourseFormulaInput(
+					"Als alle Plätze besetzt waren, eröffnete die Moderatorin die Sitzung mit „<TARGET>Nun</TARGET> <TARGET>denn</TARGET>, beginnen wir.“",
+				),
+				idealOutput: citation({
+					normalizedMembers: ["nun", "denn"],
+					canonicalForm: "nun denn",
+					role: "Initiation",
+					memberOrthographies: ["Standard", "Standard"],
+				}),
 			},
-			idealOutput: unresolved,
-			explanation:
-				"Eine Entscheidung treffen is a restricted compositional Collocation, not an autonomous discourse act.",
-		},
-		"grammar-de-discourse-formula-unresolved-idiom": {
-			input: {
-				markedContext:
-					"Im Western musste der Bösewicht <TARGET>ins</TARGET> <TARGET>Gras</TARGET> <TARGET>beißen</TARGET>.",
+			"grammar-de-discourse-formula-accept-um-himmels-willen": {
+				input: discourseFormulaInput(
+					"Nachdem jemand den Idiom-Ausdruck ‚ins Gras beißen‘ erwähnt hatte, sah die Ärztin den falschen Befund und rief: „<TARGET>Um</TARGET> <TARGET>Himmels</TARGET> <TARGET>willen</TARGET>!“",
+				),
+				idealOutput: citation({
+					normalizedMembers: ["um", "Himmels", "willen"],
+					canonicalForm: "um himmels willen",
+					role: "Reaction",
+					memberOrthographies: ["Standard", "Standard", "Standard"],
+				}),
+				explanation:
+					"The unmarked Idiom mention is route-contrast context; the marked reaction formula is authoritative.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"The figurative whole belongs to Phraseme/Idiom rather than DiscourseFormula.",
-		},
-		"grammar-de-discourse-formula-unresolved-proverb": {
-			input: {
-				markedContext:
-					"Die Großmutter sagte: „<TARGET>Morgenstund</TARGET> <TARGET>hat</TARGET> <TARGET>Gold</TARGET> <TARGET>im</TARGET> <TARGET>Mund</TARGET>.“",
+			"grammar-de-discourse-formula-accept-willkommen-single": {
+				input: discourseFormulaInput(
+					"Nach dem lockeren Zuruf ‚Hallo!‘ trat die Gastgeberin ans Mikrofon und begrüßte die Gäste offiziell: „<TARGET>Willkommen</TARGET> in Dresden!“",
+				),
+				idealOutput: citation({
+					normalizedMembers: ["willkommen"],
+					canonicalForm: "willkommen",
+					role: "Greeting",
+					memberOrthographies: ["Standard"],
+				}),
+				explanation:
+					"A valid single-member formula is resolved on this authoritative route; the nearby unmarked Interjection does not alter membership.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"A reusable general saying belongs to the Proverb boundary, not an interactional formula role.",
-		},
-		"grammar-de-discourse-formula-unresolved-arbitrary-quote": {
-			input: {
-				markedContext:
-					"Auf der Anzeige stand: „<TARGET>Der</TARGET> <TARGET>Zug</TARGET> <TARGET>kommt</TARGET> <TARGET>später</TARGET>.“",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"Quotation does not conventionalize an ordinary proposition as a discourse formula.",
-		},
-		"grammar-de-discourse-formula-unresolved-partial-formula": {
-			input: {
-				markedContext:
-					"Beim Abschied sagte sie: „<TARGET>Schönen</TARGET> Tag!“",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"Only one member of the candidate formula is marked, so this route cannot emit a Full Surface.",
-		},
-		"grammar-de-discourse-formula-unresolved-compositional-gute-reise-np": {
-			input: {
-				markedContext:
-					"Nach der Buchung hoffte sie auf eine <TARGET>gute</TARGET> <TARGET>Reise</TARGET>.",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"The marked noun phrase describes a hoped-for journey and does not independently perform the conventional Gute Reise wish.",
-		},
-		"grammar-de-discourse-formula-unresolved-repeated-occurrence": {
-			input: {
-				markedContext:
-					"Sie sagte erst „<TARGET>Bis</TARGET> <TARGET>morgen</TARGET>“ und später erneut „<TARGET>Bis</TARGET> <TARGET>morgen</TARGET>“.",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"The targets mix two occurrences; one result may describe only one contiguous formula occurrence.",
-		},
-		"grammar-de-discourse-formula-unresolved-unrelated-targets": {
-			input: {
-				markedContext:
-					"Morgens sagte er <TARGET>Guten</TARGET> Tag, abends auf <TARGET>Wiedersehen</TARGET>.",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"The marked words belong to different formulas and different discourse moments.",
-		},
-		"grammar-de-discourse-formula-unresolved-bitte-intj": {
-			input: {
-				markedContext:
-					"Beim Bäcker sagte er: „Noch einen Kaffee, <TARGET>bitte</TARGET>.“",
-			},
-			idealOutput: unresolved,
-			explanation:
-				"The isolated single-word request marker bitte is outside this multiword Phraseme route.",
-		},
-	} as const satisfies GoldenCaseRegistry<
-		typeof inputSchema,
-		typeof outputSchema
-	>,
-});
+		} as const satisfies GoldenCaseRegistry<
+			typeof inputSchema,
+			typeof outputSchema
+		>,
+	},
+);

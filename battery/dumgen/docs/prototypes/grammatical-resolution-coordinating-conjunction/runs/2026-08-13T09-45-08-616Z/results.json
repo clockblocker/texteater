@@ -1,0 +1,1337 @@
+{
+  "runnerVersion": "grammatical-resolution-coordinating-conjunction-v3",
+  "route": "grammatical-resolution/de/lexeme/coordinating-conjunction",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T09:45:08.616Z",
+  "completedAt": "2026-08-13T09:45:32.563Z",
+  "finalizedAt": "2026-08-13T09:45:47.513Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "4389a4c0aef480d8212cb437f0b0fbc91939e362f21e1bd3c4dfa4d65b3708f0",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "32d4744b74124646d3a3e5d701dde5979438386f3d96039d051c8110a67f1189",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "6366b4226712eeef53683763e0e93a8460f0e77b09416ac6c67b273570210398",
+  "suiteSha256": "ff2becfcaf474bd2435cf853510bd07edf418bf815e9d9cd8e496e8dc3bd6c57",
+  "evaluationCaseIds": [
+    "grammar-de-cconj-dev-ordinary-oder-nouns",
+    "grammar-de-cconj-dev-adversative-aber-clauses",
+    "grammar-de-cconj-dev-adversative-doch-clauses",
+    "grammar-de-cconj-dev-corrective-sondern",
+    "grammar-de-cconj-dev-additive-sowie",
+    "grammar-de-cconj-dev-beziehungsweise-full",
+    "grammar-de-cconj-dev-sentence-initial-und",
+    "grammar-de-cconj-dev-repeated-second-und",
+    "grammar-de-cconj-dev-comparative-wie",
+    "grammar-de-cconj-dev-comparative-als-mehr",
+    "grammar-de-cconj-dev-jedoch-null-position",
+    "grammar-de-cconj-dev-aber-not-particle",
+    "grammar-de-cconj-dev-doch-not-particle",
+    "grammar-de-cconj-dev-denn-verb-second-anchor",
+    "grammar-de-cconj-dev-oder-without-paired-frame",
+    "grammar-de-cconj-dev-typo-odre",
+    "grammar-de-cconj-dev-typo-sonedrn",
+    "grammar-de-cconj-dev-variant-bzw-initial"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-cconj-dev-ordinary-oder-nouns",
+      "input": {
+        "markedContext": "Zum Frühstück gibt es Müsli <TARGET>oder</TARGET> Brot.",
+        "members": [
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1376,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"oder\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c24059a3eb057aa016a7d9224e4dc81a38536190757d73a03",
+      "usage": {
+        "input_tokens": 1493,
+        "input_tokens_details": {
+          "cache_write_tokens": 1461,
+          "cached_tokens": 0
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1551
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-adversative-aber-clauses",
+      "input": {
+        "markedContext": "Sie ist müde, <TARGET>aber</TARGET> sie arbeitet weiter.",
+        "members": [
+          "aber"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1156,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"aber\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"aber\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08464090b1e20039016a7d922646ec819c803855e45fa13c69",
+      "usage": {
+        "input_tokens": 1493,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1551
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-adversative-doch-clauses",
+      "input": {
+        "markedContext": "Er wollte kommen, <TARGET>doch</TARGET> der Zug fiel aus.",
+        "members": [
+          "doch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4410,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"doch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_028b068f15a263c5016a7d922765648191bd8f324bad00af73",
+      "usage": {
+        "input_tokens": 1493,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1551
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-corrective-sondern",
+      "input": {
+        "markedContext": "Das Wasser ist nicht kalt, <TARGET>sondern</TARGET> warm.",
+        "members": [
+          "sondern"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sondern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sondern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sondern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sondern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1327,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sondern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sondern\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00cbd762304a801c016a7d922bc0ec81a3867986c43af02781",
+      "usage": {
+        "input_tokens": 1494,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1554
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-additive-sowie",
+      "input": {
+        "markedContext": "Brot <TARGET>sowie</TARGET> Käse werden serviert.",
+        "members": [
+          "sowie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowie",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowie",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1145,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sowie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sowie\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_097efcb5589dcdde016a7d922d1c348192a6dd16c133d9818d",
+      "usage": {
+        "input_tokens": 1493,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1553
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-beziehungsweise-full",
+      "input": {
+        "markedContext": "Die Eltern <TARGET>beziehungsweise</TARGET> Sorgeberechtigten unterschreiben.",
+        "members": [
+          "beziehungsweise"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beziehungsweise"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beziehungsweise",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beziehungsweise"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beziehungsweise",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1002,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"beziehungsweise\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"beziehungsweise\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bfbfbc6d057bd49016a7d922e3c5881a2a10ab6078c29cc04",
+      "usage": {
+        "input_tokens": 1495,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1555
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-sentence-initial-und",
+      "input": {
+        "markedContext": "<TARGET>Und</TARGET> danach gingen alle nach Hause.",
+        "members": [
+          "Und"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "und"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "und",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "und"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "und",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1408,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"und\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"und\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cc090916046927b016a7d922f3b8c819fbfd9ba2f5806630f",
+      "usage": {
+        "input_tokens": 1490,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1548
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-repeated-second-und",
+      "input": {
+        "markedContext": "Anna und Ben singen, <TARGET>und</TARGET> Carla tanzt.",
+        "members": [
+          "und"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "und"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "und",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "und"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "und",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 934,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"und\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"und\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03903dcf2bda0e61016a7d9230a398819d97cd6d8179e601c6",
+      "usage": {
+        "input_tokens": 1494,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1552
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-comparative-wie",
+      "input": {
+        "markedContext": "Mira ist genauso groß <TARGET>wie</TARGET> ihre Schwester.",
+        "members": [
+          "wie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wie",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wie",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1044,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wie\",\"coreFeatures\":{\"conjType\":\"Comp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06061302b9256770016a7d92318fe081918a24ee6954bbe160",
+      "usage": {
+        "input_tokens": 1492,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1550
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-comparative-als-mehr",
+      "input": {
+        "markedContext": "Heute kamen mehr Gäste <TARGET>als</TARGET> gestern.",
+        "members": [
+          "als"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "als"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "als",
+          "coreFeatures": {
+            "conjType": "Comp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1082,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"als\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"als\",\"coreFeatures\":{\"conjType\":\"Comp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_083a68cbe63d55b6016a7d9232a09c819f82f31e96d8d6c7c8",
+      "usage": {
+        "input_tokens": 1490,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1548
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-jedoch-null-position",
+      "input": {
+        "markedContext": "Die Polizei suchte überall, <TARGET>jedoch</TARGET> sie fand ihn nicht.",
+        "members": [
+          "jedoch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "jedoch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "jedoch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "jedoch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "jedoch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 959,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"jedoch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"jedoch\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e0479de6b4f3e9f016a7d9233b50c81a1a3d8ff937635a418",
+      "usage": {
+        "input_tokens": 1497,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1557
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-aber-not-particle",
+      "input": {
+        "markedContext": "Die Aufgabe war schwierig, <TARGET>aber</TARGET> alle lösten sie.",
+        "members": [
+          "aber"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1094,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"aber\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"aber\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09f805c13dfb064f016a7d9234aa90819c8aa2b79d5ee58f6b",
+      "usage": {
+        "input_tokens": 1494,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1552
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-doch-not-particle",
+      "input": {
+        "markedContext": "Wir warteten lange, <TARGET>doch</TARGET> niemand erschien.",
+        "members": [
+          "doch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1992,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"doch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c3578cb25e8fac6016a7d9235d9ec81929d19eda2c5bc86cb",
+      "usage": {
+        "input_tokens": 1492,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1550
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-denn-verb-second-anchor",
+      "input": {
+        "markedContext": "Nora schloss das Fenster, <TARGET>denn</TARGET> draußen tobte ein Sturm.",
+        "members": [
+          "denn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "denn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "denn",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "denn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "denn",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 978,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"denn\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"denn\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_037d997efa23c993016a7d9237bc34819eafe6b640365ee1ef",
+      "usage": {
+        "input_tokens": 1499,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1559
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-oder-without-paired-frame",
+      "input": {
+        "markedContext": "Du kannst anrufen <TARGET>oder</TARGET> eine Nachricht schreiben.",
+        "members": [
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1101,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"oder\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f7c9b5d708fe9aa016a7d9238bbc081a083b9bd260acba165",
+      "usage": {
+        "input_tokens": 1492,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1550
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-typo-odre",
+      "input": {
+        "markedContext": "Nimm den Bus <TARGET>odre</TARGET> geh zu Fuß.",
+        "members": [
+          "odre"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "oder",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 944,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"oder\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0dcd32694b01930c016a7d9239d3f881a2a6bfd352bb4e20b0",
+      "usage": {
+        "input_tokens": 1494,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1553
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-typo-sonedrn",
+      "input": {
+        "markedContext": "Das Paket ist nicht leicht, <TARGET>sonedrn</TARGET> schwer.",
+        "members": [
+          "sonedrn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "sondern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sondern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "sondern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sondern",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1024,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"sondern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sondern\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00d6f35e6b44537e016a7d923ac6f4819d987cefa712e7a9f3",
+      "usage": {
+        "input_tokens": 1496,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 61,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1557
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-cconj-dev-variant-bzw-initial",
+      "input": {
+        "markedContext": "<TARGET>Bzw</TARGET>. die gesetzliche Vertretung muss zustimmen.",
+        "members": [
+          "Bzw"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bzw"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beziehungsweise",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bzw"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "beziehungsweise",
+          "coreFeatures": {
+            "conjType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 956,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bzw\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"beziehungsweise\",\"coreFeatures\":{\"conjType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f343b350732fc6b016a7d923bcbe4819fa34e95bd61410fb2",
+      "usage": {
+        "input_tokens": 1495,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1461
+        },
+        "output_tokens": 60,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1555
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

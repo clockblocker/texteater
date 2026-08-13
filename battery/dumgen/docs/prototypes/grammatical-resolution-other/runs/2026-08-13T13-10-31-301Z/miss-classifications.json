@@ -1,0 +1,10 @@
+{
+  "grammar-de-x-dev-unknown-blarg-nom": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Across all three v2 rounds, the model alone keeps this determiner-governed residual X as Citation despite two nominal demonstrations and an explicit rule; other nominal cases pass. The persistent isolated Surface-kind bias is accepted."
+  },
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The complete finite Surface remains correct, but across all v2 rounds the model conservatively retains the finite residual-X spelling as canonicalForm rather than inventing the linked nonce infinitive. The corpus-linked oracle is defensible and the limitation is fully characterized."
+  }
+}

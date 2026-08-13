@@ -2,118 +2,151 @@
 
 This route-local prototype evaluates the exact
 `grammatical-resolution/de/lexeme/pronoun` Prompt Source. Its Golden Corpus has
-36 explicit cases: four minimized demonstrations, 21 disjoint authoritative
-held-out cases, and 11 corpus-only cases. The corpus-only set consists of eight
-uncertain policy probes and three retained route-boundary controls. Resolved
-demonstration Lemmas do not occur in held-out scoring.
+39 realistic full-sentence cases: six demonstrations, 21 development cases,
+and 12 untouched acceptance cases. The selections are pairwise disjoint and
+together exhaust the corpus.
 
-The four demonstrations carry distinct burdens:
+The model input is exactly `{ markedContext, members }`; both projections are
+authoritative and alignment-validated. The total model output is the flat
+`{ memberOrthographies, normalizedMembers, surface, lemma }` DTO derived from
+the German PRON codec. The Surface discriminator remains model-owned because
+PRON permits Citation and Inflection. The application injects German
+Lexeme/PRON identity, normalized Surface, Surface-to-Lemma linkage, successful
+result construction, and `realizationCoverage: Full`.
 
-- the explicit entry label for `man` establishes Citation and a mandatory
-  non-null Core `PronType`; and
-- contextual `ihm` establishes Inflection, the `er` canonical form, stable
-  personal features, and contextual case, gender, number, and reflex fields;
-- standalone `jener` demonstrates that an inflecting determiner Lexeme remains
-  DET even when it heads a nominal alone; and
-- standalone `zwei` demonstrates that a cardinal remains NUM rather than
-  becoming PRON.
+Coverage includes personal, reflexive, reciprocal, demonstrative, relative,
+interrogative, indefinite, negative, total, and substantive possessive uses;
+all four cases; first, second, and third person; singular and plural; feminine,
+masculine, and neuter; contextual Reflex; formal and informal politeness;
+`ExtPos=DET`; `Foreign=Yes`; and every codec PronType. It also exercises
+syncretic `sie`, required formal capitalization, an external-apostrophe
+contraction, an invariant Citation, a licensed spelling variant, a genuine
+typo, and an archaic genitive Surface.
 
-The Unresolved demonstrations are lemma-disjoint semantic twins of the
-corpus-only `dieser` and `eins` controls. Each pair shares an explicit
-contamination key so neither control can accidentally re-enter held-out
-scoring. The earlier generic `schnell` rejection remains corpus-only.
+Route distinctions are upstream-fixed. Context containing a DET, ADV, PART, or
+governing VERB never causes membership repair or reclassification, and a PRON
+selected by an inherently reflexive VERB remains the exact supplied PRON
+member.
 
-The prompt prose states the lexical DET/PRON boundary, exact Core Feature
-policy, contextual Reflex policy, formal address rules, normalization, and
-route/scope rejection rules. It also distinguishes invariant canonical-shape
-Citation Surfaces from genuinely encoded Inflection Surfaces and forbids an
-all-null Inflection bag. The assembled prompt has an explicit lexical-leakage
-guard. Formal `Sie`/`Ihnen` are the one held-out lexical exception because their
-required capitalization, `Person=2`, `Polite=Form`, and deliberately null
-Number cannot be stated without naming the forms. The combined-value
-`der`/`wer`/`was` names occur only in corpus-only exclusions.
+## Scalar PronType policy
 
-The authoritative suite covers personal agreement and case, singular versus
-plural `sie`, formal address, first- and third-person reflexive behavior,
-non-reflexive contrast, indefinite and negative pronouns, invariant reciprocal
-`einander`, the licensed `nix` Citation variant, typo repair, and lexical
-boundaries to ADV and NOUN. Demonstrations cover the DET and NUM policy
-families. The suite also rejects overbroad, repeated, and unrelated targets.
-Exactly one balanced TARGET pair can resolve.
+The German Dumling codec exposes one nullable PronType scalar, although source
+annotation can associate some homographic paradigms with combined labels. The
+total route cannot reject such a valid classified target or emit a value the
+codec does not accept. The prompt therefore selects the single value licensed
+by this occurrence's grammatical role: `Rel` in a relative clause, `Int` in a
+direct question, and the corresponding single value for the other fixed uses.
+This is a codec-capacity boundary, not a membership or route-classification
+decision.
 
-## Corpus-only cases
-
-Three route-boundary controls are deliberately absent from demonstrations and
-scoring: `schnell` retains the generic ADJ/ADV rejection, while `dieser` and
-`eins` are contamination-linked semantic twins of the demonstrated DET and NUM
-families.
-
-The following eight uncertain policy probes are also absent from demonstrations
-and scoring:
-
-- `der` requires GSD's combined `PronType=Dem,Rel`, while the current Dumling
-  codec accepts only one scalar value;
-- `wer` and the relevant `was` identities require combined
-  `PronType=Int,Rel`; the latter also carries rare `ExtPos=DET`;
-- German UD prose specifies `Polite=Infm` for informal second person, while
-  current GSD PRON data attests only `Polite=Form`;
-- native PRON `Poss=Yes` is not established by the current inventory;
-- GSD's PRON `Foreign=Yes` and `PronType=Tot` examples are foreign
-  code-switching rather than stable native German classes; and
-- contracted `'s` is attested with lemma `es`, but Variant versus Partial
-  realization still needs a domain ruling.
-
-Primary references are the
-[German PRON definition](https://universaldependencies.org/de/pos/PRON.html),
-[German annotation overview](https://universaldependencies.org/de/),
+The feature policy follows the
+[German UD overview](https://universaldependencies.org/de/), the lexical
 [German DET/PRON boundary](https://universaldependencies.org/de/pos/DET.html),
-[GSD PRON statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-pos-PRON.html),
-and [GSD PronType statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-feat-PronType.html).
-IDS grammis separately supports the contextual distinction between personal
-and reflexive readings and the reciprocal identity of `einander`.
+and the
+[German GSD PRON inventory](https://universaldependencies.org/treebanks/de_gsd/de_gsd-pos-PRON.html).
+All corpus sentences are synthetic; no external sentence text is reproduced.
 
-## Exact DTO and evaluation
+## Shared bounded evidence runner
 
-The model schemas derive directly from Dumling's German Lexeme/PRON Lemma,
-Citation Surface, and Inflection Surface schemas. They omit only redundant
-`language`, `family`, `kind`, and the Surface's linked Lemma. Every nullable
-Core and Inflectional key remains required. The pure evaluator scores decision
-coherence, member count and orthography, Surface kind, normalization, spelling,
-coverage, Surface and Inflectional Features, canonical form, and Core Features.
-It canonicalizes only a null-only Surface Feature bag.
+This route is a thin configuration over the shared direct cached evaluation
+runner. Each development round makes 21 direct serial Responses API calls; the
+acceptance phase makes 12. The policy uses `gpt-5.6-luna`, no reasoning, a
+4,096-token output ceiling, zero retries, and `store: false`. Import and
+preflight make no provider call.
 
-## Bounded evidence runner
+Every request shares a deterministic cache key, an explicit breakpoint after
+the stable system prompt, and a 30-minute cache TTL. Evidence binds the exact
+prompt, schemas, suite, generation and cache policy, raw provider metadata,
+field diagnostics, and errors.
 
-Runner v1 makes one serial call for each of the 21 held-out cases using the
-shared `gpt-5.6-luna` model, no reasoning, a 16,384-token output budget, zero
-retries, and `store: false`. A 25-case cap prevents accidental corpus growth
-from expanding a live run. No live call was made while authoring this slice.
+Run deterministic preflight from `battery/dumgen`:
 
-Each retained run binds the route, runner version, model policy, assembled
-prompt and schema hashes, exact ordered evaluation IDs, and current Golden Case
-inputs and ideals. Successful responses retain raw output, response ID,
-resolved model, and usage metadata. JSON or exact-schema failures retain that
-complete response metadata with the error; transport errors remain error-only.
+```sh
+bun docs/prototypes/grammatical-resolution-pronoun/run.ts \
+  preflight development 1
+```
 
-After shared generated-prompt and package integration, an explicit live run can
-invoke the runner from `battery/dumgen`:
+After explicit authorization, run and finalize three development rounds:
 
 ```sh
 bun --env-file ../../.env.local \
-  docs/prototypes/grammatical-resolution-pronoun/run.ts
-```
+  docs/prototypes/grammatical-resolution-pronoun/run.ts run development 1
 
-The draft exits unsuccessfully until every scored miss is classified offline
-as `prompt-defect`, `corpus-or-evaluator-defect`, or
-`accepted-model-limitation`. Finalize without a provider call:
-
-```sh
 bun docs/prototypes/grammatical-resolution-pronoun/run.ts finalize \
   docs/prototypes/grammatical-resolution-pronoun/runs/<timestamp>/results.json \
   docs/prototypes/grammatical-resolution-pronoun/runs/<timestamp>/miss-classifications.json
 ```
 
-Evidence qualifies with at least 15 cases, at least 80% exact-contract score,
-zero execution errors, and zero unclassified misses. Finalization rejects stale
-policy, prompt, schema, suite, and Golden Case bindings and atomically replaces
-the retained result.
+Every scored miss must have a JSON sidecar classification of `prompt-defect`,
+`corpus-or-evaluator-defect`, or `accepted-model-limitation`. After three
+finalized development rounds with zero execution errors, the shared runner
+permits one reserved untouched acceptance run. Reservation is persisted before
+transport creation and can never be relabelled untouched after failure:
+
+```sh
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-pronoun/run.ts preflight acceptance
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-pronoun/run.ts run acceptance
+```
+
+The standard protocol is bounded at 75 provider calls: `3 × 21 + 12`.
+Acceptance prompt defects trigger the #90 recovery protocol: retain and
+classify the failed acceptance, change the prompt from evidence, replace every
+observed acceptance case, then run three newly bound development rounds before
+one suite-specific replacement acceptance. The 2026-08-13 work required three
+such recovery cycles plus one superseded development draft and one initial
+diagnostic draft, for 342 observed calls.
+
+The final provider requests contained about 4,040 input tokens and 104–110
+output tokens each, with roughly 4,009 stable input tokens served from cache
+after a cold write. Retained provider usage is authoritative; see the
+[OpenAI API pricing page](https://openai.com/api/pricing/).
+
+## 2026-08-13 retained evidence
+
+| Phase | Score | Errors | Disposition | Evidence |
+| --- | ---: | ---: | --- | --- |
+| Initial diagnostic D1 | 7/21 (33.3%) | 1 | Ineligible schema-error draft; classifications retained | [results](runs/2026-08-13T10-25-06-884Z/results.json), [classifications](runs/2026-08-13T10-25-06-884Z/miss-classifications.json) |
+| Initial D1 | 16/21 (76.2%) | 0 | Finalized; all misses classified | [results](runs/2026-08-13T10-28-40-306Z/results.json), [classifications](runs/2026-08-13T10-28-40-306Z/miss-classifications.json) |
+| Initial D2 | 20/21 (95.2%) | 0 | Finalized; threshold met | [results](runs/2026-08-13T10-30-40-204Z/results.json), [classifications](runs/2026-08-13T10-30-40-204Z/miss-classifications.json) |
+| Initial D3 | 20/21 (95.2%) | 0 | Finalized; threshold met | [results](runs/2026-08-13T10-31-58-849Z/results.json), [classifications](runs/2026-08-13T10-31-58-849Z/miss-classifications.json) |
+| Acceptance v1 | 8/12 (66.7%) | 0 | Failed; four prompt defects | [results](runs/2026-08-13T10-33-21-563Z/results.json), [classifications](runs/2026-08-13T10-33-21-563Z/miss-classifications.json) |
+| Recovery 1 D1 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-39-02-481Z/results.json), [classifications](runs/2026-08-13T10-39-02-481Z/miss-classifications.json) |
+| Recovery 1 D2 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-39-51-487Z/results.json), [classifications](runs/2026-08-13T10-39-51-487Z/miss-classifications.json) |
+| Recovery 1 D3 | 20/21 (95.2%) | 0 | Finalized; one accepted stochastic limitation | [results](runs/2026-08-13T10-40-36-406Z/results.json), [classifications](runs/2026-08-13T10-40-36-406Z/miss-classifications.json) |
+| Acceptance v2 | 9/12 (75.0%) | 0 | Failed; three prompt defects | [results](runs/2026-08-13T10-41-34-627Z/results.json), [classifications](runs/2026-08-13T10-41-34-627Z/miss-classifications.json) |
+| Recovery 2 D1 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-44-37-056Z/results.json), [classifications](runs/2026-08-13T10-44-37-056Z/miss-classifications.json) |
+| Recovery 2 D2 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-45-45-720Z/results.json), [classifications](runs/2026-08-13T10-45-45-720Z/miss-classifications.json) |
+| Recovery 2 D3 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-46-50-541Z/results.json), [classifications](runs/2026-08-13T10-46-50-541Z/miss-classifications.json) |
+| Acceptance v3 | 10/12 (83.3%) | 0 | Numeric threshold passed, but two prompt defects required recovery | [results](runs/2026-08-13T10-47-39-353Z/results.json), [classifications](runs/2026-08-13T10-47-39-353Z/miss-classifications.json) |
+| Recovery 3 superseded D1 | 20/21 (95.2%) | 0 | Finalized; prompt defect caused binding restart | [results](runs/2026-08-13T10-50-17-010Z/results.json), [classifications](runs/2026-08-13T10-50-17-010Z/miss-classifications.json) |
+| Recovery 3 counted D1 | 20/21 (95.2%) | 0 | Finalized; one accepted stochastic limitation | [results](runs/2026-08-13T10-51-33-259Z/results.json), [classifications](runs/2026-08-13T10-51-33-259Z/miss-classifications.json) |
+| Recovery 3 counted D2 | 21/21 (100%) | 0 | Finalized | [results](runs/2026-08-13T10-52-18-350Z/results.json), [classifications](runs/2026-08-13T10-52-18-350Z/miss-classifications.json) |
+| Recovery 3 counted D3 | 20/21 (95.2%) | 0 | Finalized; one accepted stochastic limitation | [results](runs/2026-08-13T10-53-06-806Z/results.json), [classifications](runs/2026-08-13T10-53-06-806Z/miss-classifications.json) |
+| Acceptance v4 | 12/12 (100%) | 0 | Finalized; threshold met, no prompt defects | [results](runs/2026-08-13T10-54-36-025Z/results.json), [classifications](runs/2026-08-13T10-54-36-025Z/miss-classifications.json) |
+
+The initial diagnostic prompted an official-GSD correction of demonstrative
+`das` to the `der` Lemma and general rules for contextual Inflection,
+sentence-initial normalization, number, politeness, contraction morphology,
+`was für`, and archaic genitives. Later evidence justified narrower rules for
+plural `sie`, invariant `sich`, substantive-possessive Lemmas,
+Typo-versus-Variant spelling, co-referential Reflex, demonstrative gender,
+inflecting `wer`/`jemand`/`niemand` paradigms, compound indefinite Lemmas, and
+foreign identity and morphology. No failed development or acceptance case was
+added to demonstrations. Each observed acceptance suite was retired in full
+and replaced with 12 new IDs and sentences before the next reserved run.
+
+Across all 18 retained v2 drafts, provider metadata records 1,298,155 input
+tokens, including 1,249,992 cached tokens, and 36,022 output tokens. At the
+published token rates used for the estimate, that is approximately **$0.3893**,
+safely below the $5 leaf ceiling. The only execution error occurred in the
+initial ineligible diagnostic draft; all 321 subsequent calls were error-free.
+The selected final binding has development scores 20/21, 21/21, and 20/21,
+followed by untouched acceptance 12/12 with no prompt defects.
+
+## Legacy evidence
+
+The retained 2026-08-03 v1 artifacts bind the old one-field input, nullable
+Resolved/Unresolved wrapper, route-negative corpus, copied runner, and obsolete
+model policy. They remain historical diagnostics and cannot finalize under v2.

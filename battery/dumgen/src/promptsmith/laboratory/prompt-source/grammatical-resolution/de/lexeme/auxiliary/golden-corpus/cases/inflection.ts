@@ -3,363 +3,390 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-
-const citation = (normalizedMember: string) => ({
-	normalizedMembers: [normalizedMember],
-	surface: {
-		spelling: "Canonical" as const,
-		surfaceKind: "Citation" as const,
-		surfaceFeatures: null,
-	},
-});
-
-const finite = (args: {
-	normalizedMembers: readonly string[];
-	mood: "Ind" | "Sub";
-	number: "Sing" | "Plur";
-	person: "1" | "2" | "3";
-	tense: "Past" | "Pres";
-}) => ({
-	normalizedMembers: [...args.normalizedMembers],
-	surface: {
-		spelling: "Canonical" as const,
-		surfaceKind: "Inflection" as const,
-		surfaceFeatures: null,
-		inflectionalFeatures: {
-			mood: args.mood,
-			number: args.number,
-			person: args.person,
-			tense: args.tense,
-			verbForm: "Fin" as const,
-			voice: null,
-		},
-	},
-});
-
-const resolved = (args: {
-	surface: ReturnType<typeof finite> | ReturnType<typeof citation>;
-	canonicalForm: string;
-	verbType: "Mod" | null;
-}) => ({
-	decision: "Resolved" as const,
-	resolution: {
-		memberOrthographies: ["Standard" as const],
-		normalizedMembers: args.surface.normalizedMembers,
-		realizationCoverage: "Full" as const,
-		surface: args.surface.surface,
-		lemma: {
-			canonicalForm: args.canonicalForm,
-			coreFeatures: { verbType: args.verbType },
-		},
-	},
-});
+import {
+	citationCase,
+	finiteCase,
+	imperativeCase,
+	infinitiveCase,
+	participleCase,
+} from "./builders";
 
 export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-aux-demo-future-wird": {
-			input: {
-				markedContext: "Sie <TARGET>wird</TARGET> morgen abreisen.",
+		"grammar-de-aux-demo-future-wird": finiteCase(
+			"Mara <TARGET>wird</TARGET> morgen abreisen.",
+			"wird",
+			"werden",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["wird"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "werden",
-				verbType: null,
-			}),
-			explanation:
-				"Future-forming werden is an ordinary auxiliary; the contextual form is a finite Inflection Surface while verbType remains null.",
-		},
-		"grammar-de-aux-demo-modal-kann": {
-			input: {
-				markedContext: "Das Kind <TARGET>kann</TARGET> schwimmen.",
+			{
+				explanation:
+					"Future AUX. Finite present third singular. Not passive. VerbType null.",
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["kann"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "können",
-				verbType: "Mod",
-			}),
-			explanation:
-				"Können governing a bare infinitive is a modal auxiliary and therefore has verbType Mod.",
-		},
-		"grammar-de-aux-demo-modal-citation-duerfen": {
-			input: {
-				markedContext:
-					"Wörterbucheintrag Modalauxiliar: <TARGET>dürfen</TARGET>",
+		),
+		"grammar-de-aux-demo-modal-kann": finiteCase(
+			"Das Kind <TARGET>kann</TARGET> schon schwimmen.",
+			"kann",
+			"können",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
 			},
-			idealOutput: resolved({
-				surface: citation("dürfen"),
-				canonicalForm: "dürfen",
-				verbType: "Mod",
-			}),
-			explanation:
-				"An explicitly identified dictionary headword is a Citation Surface, not an Inflection Surface.",
-		},
-		"grammar-de-aux-perfect-ist-gegangen": {
-			input: { markedContext: "Sie <TARGET>ist</TARGET> früh gegangen." },
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["ist"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "sein",
-				verbType: null,
-			}),
-		},
-		"grammar-de-aux-perfect-hat-gegessen": {
-			input: {
-				markedContext: "Sie <TARGET>hat</TARGET> schon gegessen.",
+			{
+				explanation:
+					"Meaning-bearing modal AUX. Bare infinitive outside target. VerbType Mod.",
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["hat"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "haben",
-				verbType: null,
-			}),
-		},
-		"grammar-de-aux-copula-ist-alt": {
-			input: { markedContext: "Der Turm <TARGET>ist</TARGET> alt." },
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["ist"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "sein",
-				verbType: null,
-			}),
-			explanation:
-				"The fixed AUX route includes copular sein; the current Core Features schema has no separate Cop value.",
-		},
-		"grammar-de-aux-perfect-waren-gegangen": {
-			input: {
-				markedContext: "Sie <TARGET>waren</TARGET> schon gegangen.",
+		),
+		"grammar-de-aux-demo-copula-ist": finiteCase(
+			"Der Innenhof <TARGET>ist</TARGET> heute still.",
+			"ist",
+			"sein",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["waren"],
-					mood: "Ind",
-					number: "Plur",
-					person: "3",
-					tense: "Past",
-				}),
-				canonicalForm: "sein",
-				verbType: null,
-			}),
-		},
-		"grammar-de-aux-subjunctive-waeren-gekommen": {
-			input: {
-				markedContext:
-					"Wenn sie früher gekommen <TARGET>wären</TARGET>, ...",
+			{
+				explanation:
+					"Copular sein is AUX on fixed route. Predicate stays context. VerbType null.",
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["wären"],
-					mood: "Sub",
-					number: "Plur",
-					person: "3",
-					tense: "Past",
-				}),
-				canonicalForm: "sein",
-				verbType: null,
-			}),
-		},
-		"grammar-de-aux-participle-gewesen": {
-			input: {
-				markedContext: "Es wäre schön <TARGET>gewesen</TARGET>.",
+		),
+		"grammar-de-aux-demo-citation-duerfen": citationCase(
+			"Im Wörterbuch steht das Modalauxiliar <TARGET>dürfen</TARGET>.",
+			"dürfen",
+			"dürfen",
+			"Mod",
+			{
+				explanation:
+					"Explicit dictionary headword. Citation Surface. Modal identity remains Mod.",
 			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["gewesen"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						surfaceFeatures: null,
-						inflectionalFeatures: {
-							aspect: null,
-							gender: null,
-							mood: null,
-							number: null,
-							person: null,
-							tense: null,
-							verbForm: "Part",
-							voice: null,
-						},
-					},
-					lemma: {
-						canonicalForm: "sein",
-						coreFeatures: { verbType: null },
-					},
-				},
+		),
+		"grammar-de-aux-demo-imperative-sei": imperativeCase(
+			"<TARGET>Sei</TARGET> bitte vorsichtig!",
+			"Sei",
+			"sein",
+			"Sing",
+			"2",
+			{
+				normalizedMember: "sei",
+				explanation:
+					"Copular imperative. Initial capital is Standard and normalizes lowercase.",
 			},
-		},
-		"grammar-de-aux-copular-imperative-sei": {
-			input: { markedContext: "<TARGET>Sei</TARGET> vorsichtig!" },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["sei"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						surfaceFeatures: null,
-						inflectionalFeatures: {
-							mood: "Imp",
-							number: "Sing",
-							person: "2",
-							tense: null,
-							verbForm: "Fin",
-							voice: null,
-						},
-					},
-					lemma: {
-						canonicalForm: "sein",
-						coreFeatures: { verbType: null },
-					},
-				},
+		),
+
+		"grammar-de-aux-dev-perfect-hat-gegessen": finiteCase(
+			"Nora <TARGET>hat</TARGET> bereits gegessen.",
+			"hat",
+			"haben",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
 			},
-		},
-		"grammar-de-aux-infinitive-sein": {
-			input: {
-				markedContext:
-					"Sie wird bereits angekommen <TARGET>sein</TARGET>.",
+		),
+		"grammar-de-aux-dev-perfect-waren-gegangen": finiteCase(
+			"Die Gäste <TARGET>waren</TARGET> schon gegangen.",
+			"waren",
+			"sein",
+			null,
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "3",
+				tense: "Past",
+				voice: null,
 			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["sein"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						surfaceFeatures: null,
-						inflectionalFeatures: {
-							mood: null,
-							number: null,
-							person: null,
-							tense: null,
-							verbForm: "Inf",
-							voice: null,
-						},
-					},
-					lemma: {
-						canonicalForm: "sein",
-						coreFeatures: { verbType: null },
-					},
-				},
+		),
+		"grammar-de-aux-dev-passive-wird-repariert": finiteCase(
+			"Die Brücke <TARGET>wird</TARGET> im Sommer repariert.",
+			"wird",
+			"werden",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: "Pass",
 			},
-		},
-		"grammar-de-aux-modal-will-gehen": {
-			input: { markedContext: "Sie <TARGET>will</TARGET> heute gehen." },
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["will"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Pres",
-				}),
-				canonicalForm: "wollen",
-				verbType: "Mod",
-			}),
-		},
-		"grammar-de-aux-modal-wollt-gehen": {
-			input: { markedContext: "Ihr <TARGET>wollt</TARGET> heute gehen." },
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["wollt"],
-					mood: "Ind",
-					number: "Plur",
-					person: "2",
-					tense: "Pres",
-				}),
-				canonicalForm: "wollen",
-				verbType: "Mod",
-			}),
-		},
-		"grammar-de-aux-modal-musste-gehen": {
-			input: {
-				markedContext: "Gestern <TARGET>musste</TARGET> er gehen.",
+			{
+				explanation:
+					"Passive-forming werden. Mark AUX Surface voice Pass.",
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["musste"],
-					mood: "Ind",
-					number: "Sing",
-					person: "3",
-					tense: "Past",
-				}),
-				canonicalForm: "müssen",
-				verbType: "Mod",
-			}),
-		},
-		"grammar-de-aux-modal-moechte-bleiben": {
-			input: {
-				markedContext: "Er <TARGET>möchte</TARGET> gern bleiben.",
+		),
+		"grammar-de-aux-dev-passive-wurde-gesperrt": finiteCase(
+			"Die Straße <TARGET>wurde</TARGET> gestern gesperrt.",
+			"wurde",
+			"werden",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Past",
+				voice: "Pass",
 			},
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["möchte"],
-					mood: "Sub",
-					number: "Sing",
-					person: "3",
-					tense: "Past",
-				}),
-				canonicalForm: "mögen",
-				verbType: "Mod",
-			}),
-		},
-		"grammar-de-aux-modal-muessen-plural": {
-			input: { markedContext: "Wir <TARGET>müssen</TARGET> eintreten." },
-			idealOutput: resolved({
-				surface: finite({
-					normalizedMembers: ["müssen"],
-					mood: "Ind",
-					number: "Plur",
-					person: "1",
-					tense: "Pres",
-				}),
-				canonicalForm: "müssen",
-				verbType: "Mod",
-			}),
-		},
-		"grammar-de-aux-modal-wollen-citation": {
-			input: {
-				markedContext:
-					"Lexikon, Modalauxiliar: <TARGET>wollen</TARGET>",
+		),
+		"grammar-de-aux-dev-copula-bin-muede": finiteCase(
+			"Nach der Reise <TARGET>bin</TARGET> ich müde.",
+			"bin",
+			"sein",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "1",
+				tense: "Pres",
+				voice: null,
 			},
-			idealOutput: resolved({
-				surface: citation("wollen"),
-				canonicalForm: "wollen",
-				verbType: "Mod",
-			}),
-		},
+		),
+		"grammar-de-aux-dev-subjunctive-sei-gegangen": finiteCase(
+			"Der Zeuge sagt, die Frau <TARGET>sei</TARGET> früh gegangen.",
+			"sei",
+			"sein",
+			null,
+			{
+				mood: "Sub",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
+			},
+			{ explanation: "Konjunktiv I. Tense Pres in AUX codec." },
+		),
+		"grammar-de-aux-dev-subjunctive-waeren-geblieben": finiteCase(
+			"Ohne den Anruf <TARGET>wären</TARGET> sie länger geblieben.",
+			"wären",
+			"sein",
+			null,
+			{
+				mood: "Sub",
+				number: "Plur",
+				person: "3",
+				tense: "Past",
+				voice: null,
+			},
+			{ explanation: "Konjunktiv II. Tense Past in AUX codec." },
+		),
+		"grammar-de-aux-dev-modal-darf-bleiben": finiteCase(
+			"Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
+			"darf",
+			"dürfen",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-dev-modal-wolltest-gehen": finiteCase(
+			"Du <TARGET>wolltest</TARGET> doch früher gehen.",
+			"wolltest",
+			"wollen",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "2",
+				tense: "Past",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-dev-modal-moechte-bleiben": finiteCase(
+			"Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
+			"möchte",
+			"mögen",
+			"Mod",
+			{
+				mood: "Sub",
+				number: "Sing",
+				person: "3",
+				tense: "Past",
+				voice: null,
+			},
+			{ explanation: "Modal möchte. Lemma mögen. Konjunktiv II shape." },
+		),
+		"grammar-de-aux-dev-modal-sollen-syncretic": finiteCase(
+			"In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
+			"sollen",
+			"sollen",
+			"Mod",
+			{
+				mood: null,
+				number: "Plur",
+				person: "1",
+				tense: "Pres",
+				voice: null,
+			},
+			{
+				explanation:
+					"Form syncretic for indicative and subjunctive. Context damaged. Mood null.",
+			},
+		),
+		"grammar-de-aux-dev-infinitive-sein": infinitiveCase(
+			"Mira wird längst angekommen <TARGET>sein</TARGET>.",
+			"sein",
+			"sein",
+			null,
+			null,
+		),
+		"grammar-de-aux-dev-infinitive-passive-werden": infinitiveCase(
+			"Der Saal muss heute gereinigt <TARGET>werden</TARGET>.",
+			"werden",
+			"werden",
+			null,
+			"Pass",
+			{ explanation: "Passive auxiliary infinitive. Voice Pass." },
+		),
+		"grammar-de-aux-dev-participle-gewesen": participleCase(
+			"Der Raum ist lange leer <TARGET>gewesen</TARGET>.",
+			"gewesen",
+			"sein",
+			null,
+		),
+		"grammar-de-aux-dev-participle-worden": participleCase(
+			"Der Antrag ist gestern genehmigt <TARGET>worden</TARGET>.",
+			"worden",
+			"werden",
+			"Pass",
+			{ explanation: "Passive auxiliary participle. Voice Pass." },
+		),
+
+		"grammar-de-aux-accept-perfect-ist-gegangen": finiteCase(
+			"Der Kurier <TARGET>ist</TARGET> pünktlich gegangen.",
+			"ist",
+			"sein",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-future-werden-abreisen": finiteCase(
+			"Wir <TARGET>werden</TARGET> am Freitag abreisen.",
+			"werden",
+			"werden",
+			null,
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "1",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-passive-wurden-gerufen": finiteCase(
+			"Die Helfer <TARGET>wurden</TARGET> sofort gerufen.",
+			"wurden",
+			"werden",
+			null,
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "3",
+				tense: "Past",
+				voice: "Pass",
+			},
+		),
+		"grammar-de-aux-accept-copula-war-ruhig": finiteCase(
+			"Der See <TARGET>war</TARGET> am Morgen ruhig.",
+			"war",
+			"sein",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Past",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-subjunctive-haette": finiteCase(
+			"Mit mehr Zeit <TARGET>hätte</TARGET> er das Ziel erreicht.",
+			"hätte",
+			"haben",
+			null,
+			{
+				mood: "Sub",
+				number: "Sing",
+				person: "3",
+				tense: "Past",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-modal-muessen": finiteCase(
+			"Wir <TARGET>müssen</TARGET> jetzt eintreten.",
+			"müssen",
+			"müssen",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "1",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-modal-mag": finiteCase(
+			"Tobias <TARGET>mag</TARGET> später mitkommen.",
+			"mag",
+			"mögen",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "3",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-modal-wollt": finiteCase(
+			"Ihr <TARGET>wollt</TARGET> morgen weiterfahren.",
+			"wollt",
+			"wollen",
+			"Mod",
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "2",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-accept-citation-sein": citationCase(
+			"Der Wörterbucheintrag nennt <TARGET>sein</TARGET> als Kopula.",
+			"sein",
+			"sein",
+			null,
+		),
+		"grammar-de-aux-accept-infinitive-haben": infinitiveCase(
+			"Sie könnte den Zug verpasst <TARGET>haben</TARGET>.",
+			"haben",
+			"haben",
+			null,
+			null,
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

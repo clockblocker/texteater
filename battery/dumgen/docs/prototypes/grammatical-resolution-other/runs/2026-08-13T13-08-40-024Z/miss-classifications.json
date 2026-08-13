@@ -1,0 +1,26 @@
+{
+  "grammar-de-x-dev-unknown-blarg-nom": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt has two different nominal Inflection demonstrations plus an explicit determiner-governed-X rule, yet this run again defaulted the unknown form to Citation. The oracle and codec are sound; this is a persistent residual-X model bias."
+  },
+  "grammar-de-x-dev-unknown-glorps-acc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "All contextual Surface fields pass, but the model conservatively retains the plural residual-X spelling as canonicalForm instead of inferring the singular nonce Lemma. The prompt explicitly separates normalized member and lexical identity; the remaining inference is bounded-model uncertainty."
+  },
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The full finite Inflection analysis is correct, but the model again keeps the finite residual-X spelling as canonicalForm despite the explicit nonce-infinitive rule. This repeats the classified v1 limitation."
+  },
+  "grammar-de-x-dev-unknown-geglorpt-part": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The participial Surface is exactly correct, but the model proposes a different defensible-looking nonce base rather than the corpus-linked glorpen identity. Residual X provides weak lexical evidence, so this is accepted model lemmatization uncertainty."
+  },
+  "grammar-de-x-dev-unknown-glorp-imp": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model now recovers the intended nonce Lemma and complete imperative features but preserves ordinary initial capitalization in normalizedMembers despite the direct Narg and Glorp rules. This isolated normalization miss is accepted as bounded model behavior."
+  },
+  "grammar-de-x-dev-slang-sus": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly limits Foreign Yes to an overt current code-switch and contrasts integrated German-scene slang; other integrated slang cases pass. This run's Foreign Yes for German game-chat sus is a bounded feature miss."
+  }
+}

@@ -6,38 +6,68 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/lexeme/pronoun/prompt-source";
 import { evaluatePronounGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-pron-sentence-initial-es",
-	"grammar-de-pron-personal-feminine-sie",
-	"grammar-de-pron-personal-plural-sie",
-	"grammar-de-pron-personal-wir",
-	"grammar-de-pron-formal-sie",
-	"grammar-de-pron-formal-ihnen",
-	"grammar-de-pron-reflexive-sich",
-	"grammar-de-pron-nonreflexive-mich",
-	"grammar-de-pron-reflexive-mich",
-	"grammar-de-pron-indefinite-jemanden",
-	"grammar-de-pron-indefinite-etwas",
-	"grammar-de-pron-negative-niemandem",
-	"grammar-de-pron-negative-nichts",
-	"grammar-de-pron-reciprocal-einander",
-	"grammar-de-pron-variant-nix",
-	"grammar-de-pron-typo-ihc",
-	"grammar-de-pron-unresolved-adverb-etwas",
-	"grammar-de-pron-unresolved-nominalized-ich",
-	"grammar-de-pron-unresolved-overbroad-mit-ihm",
-	"grammar-de-pron-unresolved-repeated-sie",
-	"grammar-de-pron-unresolved-unrelated-targets",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-pron-dev-personal-ich",
+	"grammar-de-pron-dev-personal-sie-fem",
+	"grammar-de-pron-dev-personal-sie-plur-acc",
+	"grammar-de-pron-dev-personal-euch",
+	"grammar-de-pron-dev-formal-sie-nom",
+	"grammar-de-pron-dev-reflexive-mich",
+	"grammar-de-pron-dev-nonreflexive-mich",
+	"grammar-de-pron-dev-reciprocal-einander",
+	"grammar-de-pron-dev-inherent-reflexive-sich",
+	"grammar-de-pron-dev-demonstrative-das-nom",
+	"grammar-de-pron-dev-relative-die-nom",
+	"grammar-de-pron-dev-interrogative-wer-nom",
+	"grammar-de-pron-dev-indefinite-jemandem",
+	"grammar-de-pron-dev-negative-niemanden",
+	"grammar-de-pron-dev-total-foreign-all",
+	"grammar-de-pron-dev-extpos-was",
+	"grammar-de-pron-dev-poss-meiner",
+	"grammar-de-pron-dev-contraction-s",
+	"grammar-de-pron-dev-typo-ihc",
+	"grammar-de-pron-dev-archaic-euer",
+	"grammar-de-pron-dev-formal-lowercase-typo",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
+export const untouchedAcceptanceEvaluation = corpus.select([
+	"grammar-de-pron-accept-v4-personal-dir-dat",
+	"grammar-de-pron-accept-v4-personal-wir-nom",
+	"grammar-de-pron-accept-v4-formal-ihnen-dat",
+	"grammar-de-pron-accept-v4-reflexive-euch-acc",
+	"grammar-de-pron-accept-v4-demonstrative-die-nom-plur",
+	"grammar-de-pron-accept-v4-relative-dem-dat-neut",
+	"grammar-de-pron-accept-v4-interrogative-wem-dat",
+	"grammar-de-pron-accept-v4-indefinite-irgendjemandem-dat",
+	"grammar-de-pron-accept-v4-negative-niemanden-acc",
+	"grammar-de-pron-accept-v4-reciprocal-einander",
+	"grammar-de-pron-accept-v4-negative-nichts",
+	"grammar-de-pron-accept-v4-foreign-he",
+]);
+
+if (!developmentEvaluation.isDisjointFrom(demonstrations)) {
+	throw new Error("PRON demonstrations and development must be disjoint.");
+}
+if (!untouchedAcceptanceEvaluation.isDisjointFrom(demonstrations)) {
 	throw new Error(
-		"PRON Grammatical Resolution demonstrations and evaluation must be disjoint.",
+		"PRON demonstrations and untouched acceptance must be disjoint.",
+	);
+}
+if (!developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation)) {
+	throw new Error(
+		"PRON development and untouched acceptance must be disjoint.",
 	);
 }
 
 export const pronounGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
 	evaluator: evaluatePronounGrammaticalResolution,
 });
+
+export const pronounGrammaticalResolutionAcceptanceExperiment =
+	defineExperiment({
+		promptSource,
+		evaluation: untouchedAcceptanceEvaluation,
+		evaluator: evaluatePronounGrammaticalResolution,
+	});

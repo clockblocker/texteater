@@ -128,7 +128,7 @@ function jsonl(values: readonly unknown[]): string {
 	return `${values.map((value) => stableJson(value)).join("\n")}\n`;
 }
 
-test("shared Batch input immutably binds the exact five routes and 100 requests", () => {
+test("retained Batch input immutably binds Collocation's 20 requests", () => {
 	const prepared = preparedBatch();
 	const requests = prepared.jsonl
 		.trimEnd()
@@ -138,11 +138,11 @@ test("shared Batch input immutably binds the exact five routes and 100 requests"
 	expect(prepared.requests).toHaveLength(BATCH_REQUEST_COUNT);
 	expect(requests).toHaveLength(BATCH_REQUEST_COUNT);
 	expect(prepared.manifest.submission.routes.map(({ slug }) => slug)).toEqual(
-		["aphorism", "collocation", "idiom", "fusion", "paired-frame"],
+		["collocation"],
 	);
 	expect(
 		prepared.manifest.submission.routes.map(({ cases }) => cases.length),
-	).toEqual([20, 20, 20, 20, 20]);
+	).toEqual([20]);
 	expect(new Set(requests.map(({ custom_id }) => custom_id)).size).toBe(
 		BATCH_REQUEST_COUNT,
 	);
@@ -169,13 +169,12 @@ test("shared Batch input immutably binds the exact five routes and 100 requests"
 	expect(JSON.stringify(prepared.manifest)).not.toContain("OPENAI_API_KEY");
 });
 
-test("selected remediation routes prepare and collect one exact 40-request Batch", () => {
-	const routes = selectBatchRoutes(["collocation", "idiom"]);
+test("selected remediation route prepares and collects one exact 20-request Batch", () => {
+	const routes = selectBatchRoutes(["collocation"]);
 	const prepared = prepareBatch({
 		inputPath: "/retained/remediation/input.jsonl",
 		resultPaths: {
 			collocation: "/retained/collocation/results.json",
-			idiom: "/retained/idiom/results.json",
 		},
 		routes,
 		now: new Date("2026-08-03T11:00:00.000Z"),
@@ -187,14 +186,14 @@ test("selected remediation routes prepare and collect one exact 40-request Batch
 
 	expect(prepared.manifest.manifestVersion).toBe(1);
 	expect(prepared.manifest.submission.routes.map(({ slug }) => slug)).toEqual(
-		["collocation", "idiom"],
+		["collocation"],
 	);
-	expect(prepared.manifest.submission.input.requestCount).toBe(40);
-	expect(prepared.requests).toHaveLength(40);
-	expect(requests).toHaveLength(40);
-	expect(new Set(requests.map(({ custom_id }) => custom_id)).size).toBe(40);
+	expect(prepared.manifest.submission.input.requestCount).toBe(20);
+	expect(prepared.requests).toHaveLength(20);
+	expect(requests).toHaveLength(20);
+	expect(new Set(requests.map(({ custom_id }) => custom_id)).size).toBe(20);
 	expect(requests[0]?.custom_id).toMatch(/^collocation--/);
-	expect(requests.at(-1)?.custom_id).toMatch(/^idiom--/);
+	expect(requests.at(-1)?.custom_id).toMatch(/^collocation--/);
 	expect(createHash("sha256").update(prepared.jsonl).digest("hex")).toBe(
 		prepared.manifest.submission.input.sha256,
 	);
@@ -219,12 +218,9 @@ test("selected remediation routes prepare and collect one exact 40-request Batch
 		now: new Date("2026-08-03T11:03:00.000Z"),
 	});
 
-	expect(Object.keys(collected.resultsBySlug)).toEqual([
-		"collocation",
-		"idiom",
-	]);
-	expect(collected.manifest.remote.output?.lineCount).toBe(40);
-	expect(collected.manifest.collection.envelopes).toHaveLength(40);
+	expect(Object.keys(collected.resultsBySlug)).toEqual(["collocation"]);
+	expect(collected.manifest.remote.output?.lineCount).toBe(20);
+	expect(collected.manifest.collection.envelopes).toHaveLength(20);
 	for (const result of Object.values(collected.resultsBySlug)) {
 		const retained = result as {
 			boundedCalls: number;
@@ -233,11 +229,11 @@ test("selected remediation routes prepare and collect one exact 40-request Batch
 		};
 		expect(retained.boundedCalls).toBe(20);
 		expect(retained.contractScore).toBe(20);
-		expect(retained.batchProvenance.requestCounts.total).toBe(40);
+		expect(retained.batchProvenance.requestCounts.total).toBe(20);
 	}
 });
 
-test("remediation route selection rejects empty, duplicate, unknown, and noncanonical lists", () => {
+test("remediation route selection rejects empty, duplicate, and unknown lists", () => {
 	expect(() => selectBatchRoutes([])).toThrow(/At least one/);
 	expect(() => selectBatchRoutes(["collocation", "collocation"])).toThrow(
 		/duplicates/,
@@ -245,15 +241,9 @@ test("remediation route selection rejects empty, duplicate, unknown, and noncano
 	expect(() => selectBatchRoutes(["collocation", "unknown"])).toThrow(
 		/Unknown.*unknown/,
 	);
-	expect(() => selectBatchRoutes(["idiom", "collocation"])).toThrow(
-		/canonical order/,
-	);
 	expect(() => parseRouteList("")).toThrow(/must not be empty/);
 	expect(() => parseRouteList("collocation, idiom")).toThrow(/whitespace/);
-	expect(parseRouteList("collocation,idiom")).toEqual([
-		"collocation",
-		"idiom",
-	]);
+	expect(parseRouteList("collocation")).toEqual(["collocation"]);
 });
 
 test("manifest hash and current-source drift are rejected before collection", () => {
@@ -376,7 +366,9 @@ test("collection maps arbitrary output order and creates strict route evidence",
 			createHash("sha256").update(outputContent).digest("hex"),
 		);
 	}
-	expect(collected.manifest.remote.output?.lineCount).toBe(100);
+	expect(collected.manifest.remote.output?.lineCount).toBe(
+		BATCH_REQUEST_COUNT,
+	);
 	expect(collected.manifest.remote.output?.localPath).toBe(
 		"/retained/batch/output.jsonl",
 	);
@@ -424,18 +416,18 @@ test("collection unions the error file and rejects corrupt ID/count/file contrac
 		content: jsonl([failure]),
 	};
 	const collected = collectBatch({ manifest, output, error });
-	const pairedFrame = collected.resultsBySlug["paired-frame"] as {
+	const collocation = collected.resultsBySlug.collocation as {
 		executionErrorCount: number;
 		attempts: readonly {
 			error?: { code?: string };
 			latencyMs: number | null;
 		}[];
 	};
-	expect(pairedFrame.executionErrorCount).toBe(1);
-	expect(pairedFrame.attempts.at(-1)?.error?.code).toBe(
+	expect(collocation.executionErrorCount).toBe(1);
+	expect(collocation.attempts.at(-1)?.error?.code).toBe(
 		"batch_request_failed",
 	);
-	expect(pairedFrame.attempts.at(-1)?.latencyMs).toBeNull();
+	expect(collocation.attempts.at(-1)?.latencyMs).toBeNull();
 	expect(collected.manifest.remote.error?.lineCount).toBe(1);
 
 	expect(() =>
@@ -476,7 +468,11 @@ test("collection unions the error file and rejects corrupt ID/count/file contrac
 		collectBatch({
 			manifest: withBatchSnapshot(manifest, {
 				...manifest.remote.batch,
-				requestCounts: { total: 100, completed: 100, failed: 0 },
+				requestCounts: {
+					total: BATCH_REQUEST_COUNT,
+					completed: BATCH_REQUEST_COUNT,
+					failed: 0,
+				},
 			}),
 			output,
 			error,
@@ -518,10 +514,10 @@ test("collection requires completed status and derives text only from message bl
 		output: { ...output, content: jsonl(withMismatch) },
 		error: null,
 	});
-	const aphorism = collected.resultsBySlug.aphorism as {
+	const collocation = collected.resultsBySlug.collocation as {
 		executionErrorCount: number;
 		attempts: readonly { error?: { message: string } }[];
 	};
-	expect(aphorism.executionErrorCount).toBe(1);
-	expect(aphorism.attempts[0]?.error?.message).toMatch(/disagrees/);
+	expect(collocation.executionErrorCount).toBe(1);
+	expect(collocation.attempts[0]?.error?.message).toMatch(/disagrees/);
 });

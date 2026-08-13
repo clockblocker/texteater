@@ -1,0 +1,1705 @@
+{
+  "runnerVersion": "grammatical-resolution-auxiliary-v3",
+  "route": "grammatical-resolution/de/lexeme/auxiliary",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T10:27:02.573Z",
+  "completedAt": "2026-08-13T10:27:34.655Z",
+  "finalizedAt": "2026-08-13T10:27:43.316Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "57089a4adc4d54f3e94f25c67ecac16da9cc3e6a8e996fad403829bac28b2c62",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "8dcbb3d6c809a1f312c84bf7a8a086f247d1eb62bbdc8d42a1c1a5265ae4e162",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "50d5800ae14caa8cef28d86f4d5c0dbbcc18ab0b255c48b68a833818b23fbfbd",
+  "suiteSha256": "5e51d3ea8858fb79259f97f43bf44192e5301ebe9fa74b1127146f61cfe67894",
+  "evaluationCaseIds": [
+    "grammar-de-aux-dev-perfect-hat-gegessen",
+    "grammar-de-aux-dev-perfect-waren-gegangen",
+    "grammar-de-aux-dev-passive-wird-repariert",
+    "grammar-de-aux-dev-passive-wurde-gesperrt",
+    "grammar-de-aux-dev-copula-bin-muede",
+    "grammar-de-aux-dev-subjunctive-sei-gegangen",
+    "grammar-de-aux-dev-subjunctive-waeren-geblieben",
+    "grammar-de-aux-dev-modal-darf-bleiben",
+    "grammar-de-aux-dev-modal-wolltest-gehen",
+    "grammar-de-aux-dev-modal-moechte-bleiben",
+    "grammar-de-aux-dev-modal-sollen-syncretic",
+    "grammar-de-aux-dev-infinitive-sein",
+    "grammar-de-aux-dev-infinitive-passive-werden",
+    "grammar-de-aux-dev-participle-gewesen",
+    "grammar-de-aux-dev-participle-worden",
+    "grammar-de-aux-dev-typo-mus",
+    "grammar-de-aux-dev-variant-muss",
+    "grammar-de-aux-dev-contrast-modal-mag"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-aux-dev-perfect-hat-gegessen",
+      "input": {
+        "markedContext": "Nora <TARGET>hat</TARGET> bereits gegessen.",
+        "members": [
+          "hat"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "haben",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "haben",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1498,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"hat\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"haben\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b7ef200010cea97016a7d9bf6eb8481918da3d62c4d3829a6",
+      "usage": {
+        "input_tokens": 3433,
+        "input_tokens_details": {
+          "cache_write_tokens": 3404,
+          "cached_tokens": 0
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3526
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-perfect-waren-gegangen",
+      "input": {
+        "markedContext": "Die Gäste <TARGET>waren</TARGET> schon gegangen.",
+        "members": [
+          "waren"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "waren"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "waren"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1297,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"waren\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ef8297e7f08d607016a7d9bf845d881918c5483eb40ea307e",
+      "usage": {
+        "input_tokens": 3432,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3526
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-passive-wird-repariert",
+      "input": {
+        "markedContext": "Die Brücke <TARGET>wird</TARGET> im Sommer repariert.",
+        "members": [
+          "wird"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1289,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wird\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":\"Pass\"}},\"lemma\":{\"canonicalForm\":\"werden\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bd28aefc1b2dffc016a7d9bf996b881a2a4fb30e55bf3af44",
+      "usage": {
+        "input_tokens": 3436,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3530
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-passive-wurde-gesperrt",
+      "input": {
+        "markedContext": "Die Straße <TARGET>wurde</TARGET> gestern gesperrt.",
+        "members": [
+          "wurde"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wurde"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wurde"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1256,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wurde\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":\"Pass\"}},\"lemma\":{\"canonicalForm\":\"werden\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bdc7f109a507d1e016a7d9bfaddc88191b457411cae418982",
+      "usage": {
+        "input_tokens": 3435,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3529
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-copula-bin-muede",
+      "input": {
+        "markedContext": "Nach der Reise <TARGET>bin</TARGET> ich müde.",
+        "members": [
+          "bin"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "1",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bin"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "1",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1566,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bin\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"1\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fd0ca1684076d87016a7d9bfc23508191927740aeee783650",
+      "usage": {
+        "input_tokens": 3434,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3527
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-subjunctive-sei-gegangen",
+      "input": {
+        "markedContext": "Der Zeuge sagt, die Frau <TARGET>sei</TARGET> früh gegangen.",
+        "members": [
+          "sei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1258,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Sub\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_060b1da370d778ee016a7d9bfdb0cc8192bb0bb81bdf00ef21",
+      "usage": {
+        "input_tokens": 3437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3530
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-subjunctive-waeren-geblieben",
+      "input": {
+        "markedContext": "Ohne den Anruf <TARGET>wären</TARGET> sie länger geblieben.",
+        "members": [
+          "wären"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wären"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wären"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1585,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wären\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Sub\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bf122121ecb0c5a016a7d9bfef2808192b866d4799b2211dc",
+      "usage": {
+        "input_tokens": 3437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3532
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-modal-darf-bleiben",
+      "input": {
+        "markedContext": "Der Hund <TARGET>darf</TARGET> heute drinnen bleiben.",
+        "members": [
+          "darf"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "darf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dürfen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "darf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dürfen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1405,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"darf\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"dürfen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f2ac32239558127016a7d9c00899081a1a7387dec2b18d9e8",
+      "usage": {
+        "input_tokens": 3435,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3530
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-modal-wolltest-gehen",
+      "input": {
+        "markedContext": "Du <TARGET>wolltest</TARGET> doch früher gehen.",
+        "members": [
+          "wolltest"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wolltest"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "2",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wollen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wolltest"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "2",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wollen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1397,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wolltest\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"2\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"wollen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b84c83e7e8710c0016a7d9c01f608819cbf86deaa7e8691e3",
+      "usage": {
+        "input_tokens": 3435,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3531
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-modal-moechte-bleiben",
+      "input": {
+        "markedContext": "Lea <TARGET>möchte</TARGET> noch etwas bleiben.",
+        "members": [
+          "möchte"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "möchte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "möchte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1342,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"möchte\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Sub\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"mögen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a38eb4030d71774016a7d9c0356ac81a1954a6b957ded46f4",
+      "usage": {
+        "input_tokens": 3435,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3530
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-modal-sollen-syncretic",
+      "input": {
+        "markedContext": "In der beschädigten Notiz steht: „Wir <TARGET>sollen</TARGET> …“",
+        "members": [
+          "sollen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sollen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": "Plur",
+            "person": "1",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sollen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sollen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": "Plur",
+            "person": "1",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sollen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1614,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sollen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":\"Plur\",\"person\":\"1\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sollen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0becc9e6f3793cad016a7d9c04b8e8819e899d68e96e87efbb",
+      "usage": {
+        "input_tokens": 3441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3537
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-infinitive-sein",
+      "input": {
+        "markedContext": "Mira wird längst angekommen <TARGET>sein</TARGET>.",
+        "members": [
+          "sein"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sein"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sein"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1766,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sein\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01ef982c439e4ca0016a7d9c0651cc8192805beb516805ec13",
+      "usage": {
+        "input_tokens": 3433,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3526
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-infinitive-passive-werden",
+      "input": {
+        "markedContext": "Der Saal muss heute gereinigt <TARGET>werden</TARGET>.",
+        "members": [
+          "werden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "werden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "werden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5152,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"werden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":\"Pass\"}},\"lemma\":{\"canonicalForm\":\"werden\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_045dcd44191361d1016a7d9c097f9c81a0bf6d5707d3a9fe58",
+      "usage": {
+        "input_tokens": 3436,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3529
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-participle-gewesen",
+      "input": {
+        "markedContext": "Der Raum ist lange leer <TARGET>gewesen</TARGET>.",
+        "members": [
+          "gewesen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gewesen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gewesen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1619,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"gewesen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b435a03b2faa7b7016a7d9c0d3d78819f9216c1786d0a88ca",
+      "usage": {
+        "input_tokens": 3435,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3537
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-participle-worden",
+      "input": {
+        "markedContext": "Der Antrag ist gestern genehmigt <TARGET>worden</TARGET>.",
+        "members": [
+          "worden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "worden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "worden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "werden",
+          "coreFeatures": {
+            "verbType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1579,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"worden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":\"Pass\"}},\"lemma\":{\"canonicalForm\":\"werden\",\"coreFeatures\":{\"verbType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c4b068ca2584558016a7d9c0ed44c81a2a10484549ce6f1d3",
+      "usage": {
+        "input_tokens": 3437,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3539
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-typo-mus",
+      "input": {
+        "markedContext": "Der Fahrer <TARGET>mus</TARGET> sofort bremsen.",
+        "members": [
+          "mus"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "muss"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "müssen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "muss"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "müssen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3872,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"muss\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"müssen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a45d863cc02c59b016a7d9c106fa4819d89fdcad9b165f4c5",
+      "usage": {
+        "input_tokens": 3434,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3531
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-variant-muss",
+      "input": {
+        "markedContext": "Im alten Brief steht: „Er <TARGET>muß</TARGET> morgen abreisen.“",
+        "members": [
+          "muß"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "muß"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "müssen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "muß"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "müssen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1341,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"muß\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"müssen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01ff3f70745d2efa016a7d9c144cb081a3b07d30d0473bff0f",
+      "usage": {
+        "input_tokens": 3441,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3537
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aux-dev-contrast-modal-mag",
+      "input": {
+        "markedContext": "Sie mag Schokolade, aber heute <TARGET>mag</TARGET> sie lieber kochen.",
+        "members": [
+          "mag"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mag"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mag"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "verbType": "Mod"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1226,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mag\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"mögen\",\"coreFeatures\":{\"verbType\":\"Mod\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_080b09cad84feafe016a7d9c159f8c81a3bbcb21d8608a829a",
+      "usage": {
+        "input_tokens": 3439,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3404
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3533
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

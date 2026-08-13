@@ -35,29 +35,22 @@ const multiMemberSentence = sentence("sentence-1", [
 
 const targetOutput = {
 	decision: "Resolved",
-	target: {
-		additionalMemberSegmentIndices: [2],
-		family: "Lexeme",
-		kind: "NOUN",
-	},
+	target: { family: "Lexeme", kind: "NOUN" },
+	additionalMemberIndices: [1],
 } as const;
 
 const grammarOutput = {
-	decision: "Resolved",
-	resolution: {
-		memberOrthographies: ["Typo", "Standard"],
-		normalizedMembers: ["Bank", "Bank"],
-		realizationCoverage: "Full",
-		surface: {
-			spelling: "Canonical",
-			surfaceKind: "Inflection",
-			surfaceFeatures: null,
-			inflectionalFeatures: { case: "Nom", number: "Sing" },
-		},
-		lemma: {
-			canonicalForm: "Bank",
-			coreFeatures: { gender: "Fem", hyph: null },
-		},
+	memberOrthographies: ["Typo", "Standard"],
+	normalizedMembers: ["Bank", "Bank"],
+	surface: {
+		spelling: "Canonical",
+		surfaceKind: "Inflection",
+		surfaceFeatures: null,
+		inflectionalFeatures: { case: "Nom", number: "Sing" },
+	},
+	lemma: {
+		canonicalForm: "Bank",
+		coreFeatures: { gender: "Fem", hyph: null },
 	},
 } as const;
 
@@ -154,9 +147,9 @@ describe("German classification through the Dumgen module", () => {
 		});
 		expect(result.stages.grammatical?.input).toEqual({
 			markedContext: "<TARGET>Bnak</TARGET> <TARGET>Bank</TARGET>",
+			members: ["Bnak", "Bank"],
 		});
 		expect(result.stages.grammatical?.result).toMatchObject({
-			decision: "Resolved",
 			memberOrthographies: ["Typo", "Standard"],
 		});
 		expect(result.stages.grammatical?.result).not.toHaveProperty(
@@ -245,9 +238,13 @@ describe("German classification through the Dumgen module", () => {
 		).rejects.toThrow("different clicked member");
 	});
 
-	test("surfaces Target and Grammatical Unresolved as prompt diagnostics", async () => {
+	test("surfaces Target Unresolved and rejects legacy Grammatical Unresolved", async () => {
 		const targetHarness = harness([
-			{ decision: "Unresolved", target: null },
+			{
+				decision: "Unresolved",
+				target: null,
+				additionalMemberIndices: null,
+			},
 		]);
 		const targetResult = await targetHarness.resolver.resolve(
 			multiMemberSentence,
@@ -264,56 +261,13 @@ describe("German classification through the Dumgen module", () => {
 			targetOutput,
 			{ decision: "Unresolved", resolution: null },
 		]);
-		const grammarResult = await grammarHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			grammarHarness.modelExchanges,
-		);
-		expect(grammarResult).toMatchObject({
-			decision: "Unresolved",
-			target: { memberSegmentIndices: [0, 2] },
-			diagnostics: [{ stage: "grammatical", kind: "Unresolved" }],
-			generation: { modelCalls: 2 },
-		});
-	});
-
-	test("stops a disabled route before Grammatical Resolution", async () => {
-		const testHarness = harness([
-			{
-				decision: "Resolved",
-				target: {
-					additionalMemberSegmentIndices: [2],
-					family: "Lexeme",
-					kind: "PUNCT",
-				},
-			},
-		]);
-
-		const result = await testHarness.resolver.resolve(
-			multiMemberSentence,
-			0,
-			testHarness.modelExchanges,
-		);
-
-		expect(testHarness.calls).toHaveLength(1);
-		expect(result).toMatchObject({
-			decision: "NotImplemented",
-			stage: "GrammaticalResolution",
-			language: "de",
-			family: "Lexeme",
-			kind: "PUNCT",
-			target: { memberSegmentIndices: [0, 2] },
-			diagnostics: [
-				{
-					stage: "grammatical",
-					kind: "ResolutionRouteNotImplemented",
-				},
-			],
-			generation: {
-				prompts: [targetClassificationPrompt],
-				modelCalls: 1,
-			},
-		});
+		await expect(
+			grammarHarness.resolver.resolve(
+				multiMemberSentence,
+				0,
+				grammarHarness.modelExchanges,
+			),
+		).rejects.toThrow("does not match its prompt schema");
 	});
 
 	test("retains observed attempted routes when the grammatical provider fails", async () => {

@@ -1,0 +1,1610 @@
+{
+  "runnerVersion": "grammatical-resolution-numeral-v3",
+  "route": "grammatical-resolution/de/lexeme/numeral",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T12:14:17.819Z",
+  "completedAt": "2026-08-13T12:14:50.856Z",
+  "finalizedAt": "2026-08-13T12:15:02.994Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "49a39a1ef32ed018866e94afcbb63af9492a0fa7cb1f5e45e9c7cbe6ddc74c8a",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "2b3244e79a3662b01b54fe0bc87ae957fd783b2720fbf204441c153d43e0d744",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "45697a1c08b683b893a6687837cdadc0f48b21661e8d4fb3938c8e8102b00d36",
+  "suiteSha256": "33bb1cc95f88e33e03c4b9d52999e91b2a525b8d0007fc512852f69bcb789a4d",
+  "evaluationCaseIds": [
+    "grammar-de-num-dev-initial-fuenf",
+    "grammar-de-num-dev-decimal-drei-komma-vierzehn",
+    "grammar-de-num-dev-year-2024",
+    "grammar-de-num-dev-roman-xiv",
+    "grammar-de-num-dev-abbreviation-t",
+    "grammar-de-num-dev-foreign-three",
+    "grammar-de-num-dev-distributive-zwei",
+    "grammar-de-num-dev-collective-zwei",
+    "grammar-de-num-dev-multi-member-ein-komma-fuenf",
+    "grammar-de-num-dev-multiplicative-dreifach",
+    "grammar-de-num-dev-inflected-million-acc",
+    "grammar-de-num-dev-inflected-millionen-gen",
+    "grammar-de-num-dev-archaic-zween",
+    "grammar-de-num-dev-variant-zwo",
+    "grammar-de-num-dev-route-adj-drei",
+    "grammar-de-num-dev-route-det-zwei",
+    "grammar-de-num-dev-route-pron-drei",
+    "grammar-de-num-dev-route-noun-eins",
+    "grammar-de-num-dev-route-symbol-7"
+  ],
+  "boundedCalls": 19,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 0.9473684210526315,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-num-dev-initial-fuenf",
+      "input": {
+        "markedContext": "<TARGET>Fünf</TARGET> Gäste warten bereits im Foyer.",
+        "members": [
+          "Fünf"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fünf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "fünf",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fünf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "fünf",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1667,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"fünf\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"fünf\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04f7ae1bdb63d4bb016a7db51a65e4819cb1477f6208dde57e",
+      "usage": {
+        "input_tokens": 3261,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3333
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-decimal-drei-komma-vierzehn",
+      "input": {
+        "markedContext": "Der gemessene Wert beträgt <TARGET>drei</TARGET> <TARGET>Komma</TARGET> <TARGET>vierzehn</TARGET>.",
+        "members": [
+          "drei",
+          "Komma",
+          "vierzehn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei",
+          "Komma",
+          "vierzehn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei Komma vierzehn",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei",
+          "Komma",
+          "vierzehn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei Komma vierzehn",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1228,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"drei\",\"Komma\",\"vierzehn\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"drei Komma vierzehn\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0492bb5bf8c4301c016a7db51ba6f08192a4429e92337c31e1",
+      "usage": {
+        "input_tokens": 3282,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3368
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-year-2024",
+      "input": {
+        "markedContext": "Die neue Brücke wurde <TARGET>2024</TARGET> eröffnet.",
+        "members": [
+          "2024"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "2024"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "2024",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "2024"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "2024",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1464,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"2024\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"2024\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_000913e35fee30cf016a7db51cf128819f8b9feb0e6e490f60",
+      "usage": {
+        "input_tokens": 3259,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3329
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-roman-xiv",
+      "input": {
+        "markedContext": "Als römische Zahl wird vierzehn <TARGET>XIV</TARGET> geschrieben.",
+        "members": [
+          "XIV"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "XIV"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "XIV",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "XIV"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "XIV",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1535,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"XIV\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"XIV\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b23dd7363555d3a016a7db51e5c28819fa61616cb77de3f0f",
+      "usage": {
+        "input_tokens": 3262,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3332
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-abbreviation-t",
+      "input": {
+        "markedContext": "Die Stückzahl ist mit <TARGET>T</TARGET> für Tausend angegeben.",
+        "members": [
+          "T"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "T"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Tausend",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "T"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Tausend",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1153,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"T\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Tausend\",\"coreFeatures\":{\"abbr\":\"Yes\",\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04b4df8cdb69ae7b016a7db51fdf8881a3b2fc237ef7b63999",
+      "usage": {
+        "input_tokens": 3259,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3329
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-foreign-three",
+      "input": {
+        "markedContext": "Im englischen Zitat stand die Zahl <TARGET>three</TARGET>.",
+        "members": [
+          "three"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "three"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "three",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "three"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "three",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1095,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"three\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"three\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a668574051e8051016a7db521085481a38ce72c9271dcff94",
+      "usage": {
+        "input_tokens": 3259,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3327
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-distributive-zwei",
+      "input": {
+        "markedContext": "Die Kinder erhielten jeweils <TARGET>zwei</TARGET> Äpfel.",
+        "members": [
+          "zwei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1260,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zwei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zwei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_056440324b2205ec016a7db5222138819290778454365569c1",
+      "usage": {
+        "input_tokens": 3261,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3331
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-collective-zwei",
+      "input": {
+        "markedContext": "Für die Reise kaufte sie <TARGET>zwei</TARGET> Paar Wanderschuhe.",
+        "members": [
+          "zwei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1212,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zwei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zwei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d44708a8746c6ee016a7db523669c81a183d3b53e7ca9ccec",
+      "usage": {
+        "input_tokens": 3263,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3333
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-multi-member-ein-komma-fuenf",
+      "input": {
+        "markedContext": "Der Mittelwert beträgt <TARGET>ein</TARGET> <TARGET>Komma</TARGET> <TARGET>fünf</TARGET>.",
+        "members": [
+          "ein",
+          "Komma",
+          "fünf"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ein",
+          "Komma",
+          "fünf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ein Komma fünf",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ein",
+          "Komma",
+          "fünf"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ein Komma fünf",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1930,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"ein\",\"Komma\",\"fünf\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ein Komma fünf\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ba45353ddd46ffc016a7db524ba34819f8890ea37e9f2ead2",
+      "usage": {
+        "input_tokens": 3279,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3361
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-multiplicative-dreifach",
+      "input": {
+        "markedContext": "Der klassifizierte Multiplikator lautet <TARGET>dreifach</TARGET>.",
+        "members": [
+          "dreifach"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dreifach"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dreifach",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Mult"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dreifach"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dreifach",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Mult"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1126,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"dreifach\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dreifach\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Mult\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fcda6947ed92a17016a7db5268a7481a39107ebf5ea3063b8",
+      "usage": {
+        "input_tokens": 3263,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3335
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-inflected-million-acc",
+      "input": {
+        "markedContext": "Der Fonds investiert eine <TARGET>Million</TARGET> Euro.",
+        "members": [
+          "Million"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Million"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Million",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Million"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": "Fem",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Million",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1285,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Million\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":\"Fem\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Million\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_019f42b271adcad3016a7db527b074819f862b10ca66cca6a2",
+      "usage": {
+        "input_tokens": 3257,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3344
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-inflected-millionen-gen",
+      "input": {
+        "markedContext": "Trotz <TARGET>Millionen</TARGET> offener Fragen begann das Projekt.",
+        "members": [
+          "Millionen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Millionen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Million",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Millionen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": "Fem",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Million",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4660,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Millionen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Gen\",\"gender\":\"Fem\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Million\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ec91f0a5c60c711016a7db52c0ad88192b6aebde1d70c35bb",
+      "usage": {
+        "input_tokens": 3261,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 89,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3350
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-archaic-zween",
+      "input": {
+        "markedContext": "<TARGET>Zween</TARGET> Ritter bewachten der Sage nach das Tor.",
+        "members": [
+          "Zween"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zween"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          },
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Masc",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zween"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4710,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zween\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":{\"historicalStatus\":\"Archaic\"}},\"lemma\":{\"canonicalForm\":\"zwei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f09bef91eb4d676016a7db52da46c87d29a8284197b592c5e",
+      "usage": {
+        "input_tokens": 3260,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3337
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The third bound round repeats only the established stochastic surface-kind limitation for this agreeing historical form. All other Surface, Lemma, normalization, orthography, and history fields are correct; no v3 quantity-word defect or evidence for another prompt change appears."
+    },
+    {
+      "caseId": "grammar-de-num-dev-variant-zwo",
+      "input": {
+        "markedContext": "Im Funkverkehr meldete die Pilotin <TARGET>zwo</TARGET> Kontakte.",
+        "members": [
+          "zwo"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwo"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwo"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1018,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zwo\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zwei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_035c3a3804c9be34016a7db532532c81a18895445143b77715",
+      "usage": {
+        "input_tokens": 3262,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3332
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-route-adj-drei",
+      "input": {
+        "markedContext": "Nach dem zweiten Versuch gelang schließlich Versuch Nummer <TARGET>drei</TARGET>.",
+        "members": [
+          "drei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1770,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"drei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"drei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f5fcc4be6417b05016a7db5335b188192868b51feba1ce8a9",
+      "usage": {
+        "input_tokens": 3260,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3330
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-route-det-zwei",
+      "input": {
+        "markedContext": "Von beiden Gruppen kamen jeweils <TARGET>zwei</TARGET> Personen zur Probe.",
+        "members": [
+          "zwei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1422,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zwei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zwei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e81751bda55ce55016a7db535255081a19c049e81d463e2b3",
+      "usage": {
+        "input_tokens": 3261,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3331
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-route-pron-drei",
+      "input": {
+        "markedContext": "Von den zwölf Bewerbern kamen <TARGET>drei</TARGET> später an.",
+        "members": [
+          "drei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "drei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "drei",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1115,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"drei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"drei\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05355f0b0dc02e32016a7db5368334819d84a22a6cd4b01c7d",
+      "usage": {
+        "input_tokens": 3260,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3330
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-route-noun-eins",
+      "input": {
+        "markedContext": "Die Anzeige sprang von der Null auf <TARGET>eins</TARGET>.",
+        "members": [
+          "eins"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eins"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eins",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eins"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eins",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1394,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"eins\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"eins\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0854d36a8d82a012016a7db537ab10819dbbf5ba982b988127",
+      "usage": {
+        "input_tokens": 3258,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3326
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-num-dev-route-symbol-7",
+      "input": {
+        "markedContext": "Die Gleichung lautet drei plus vier gleich <TARGET>7</TARGET>.",
+        "members": [
+          "7"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "7"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "7",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "7"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "7",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "numType": "Card"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1979,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"7\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"7\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"numType\":\"Card\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_070a8a475fcb3221016a7db5391268819fbaeabfd0132a6f63",
+      "usage": {
+        "input_tokens": 3259,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3227
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3327
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

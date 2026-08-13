@@ -1,0 +1,10 @@
+{
+	"grammar-de-proverb-dev-repeated-das": {
+		"classification": "prompt-defect",
+		"explanation": "The output called a conventional apocopated verb member Typo while leaving its normalized form unchanged; the prompt needs to state explicitly that fixed proverbial contractions are Standard rather than repaired toward free-sentence morphology."
+	},
+	"grammar-de-proverb-dev-reden-silber-partial": {
+		"classification": "prompt-defect",
+		"explanation": "The output inserted a comma into canonicalForm despite the punctuation-free policy; the prompt needs a final mechanical serialization check that forbids punctuation in every Full or Partial canonical form."
+	}
+}

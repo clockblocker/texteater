@@ -1,0 +1,14 @@
+{
+  "grammar-de-adj-dev-predicative-blau": {
+    "classification": "prompt-defect",
+    "explanation": "The normalization rule mentioned ordinary sentence-initial capitalization but did not state strongly enough that it also applies to suffixless predicative adjectives at the beginning of the sentence."
+  },
+  "grammar-de-adj-dev-abbreviation-sog": {
+    "classification": "prompt-defect",
+    "explanation": "The Core Feature rule did not explicitly contrast an abbreviated Surface of a full adjective Lemma, which requires Abbr Yes and Variant null, with a genuinely short Lemma identity."
+  },
+  "grammar-de-adj-dev-archaic-hold": {
+    "classification": "prompt-defect",
+    "explanation": "The Surface Feature rule named archaic use but did not give the model an operational contrast between an old poetic adjective and an ordinary current adjective."
+  }
+}

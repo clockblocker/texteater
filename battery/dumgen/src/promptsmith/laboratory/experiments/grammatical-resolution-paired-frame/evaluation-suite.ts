@@ -6,37 +6,63 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/construction/paired-frame/prompt-source";
 import { evaluatePairedFrameGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-paired-frame-entweder-oder-friday",
-	"grammar-de-paired-frame-entweder-oder-clauses",
-	"grammar-de-paired-frame-weder-noch-nouns",
-	"grammar-de-paired-frame-sowohl-wie",
-	"grammar-de-paired-frame-je-umso-night",
-	"grammar-de-paired-frame-je-desto",
-	"grammar-de-paired-frame-je-umso",
-	"grammar-de-paired-frame-um-zu-learn",
-	"grammar-de-paired-frame-um-zu-purpose",
-	"grammar-de-paired-frame-ohne-zu",
-	"grammar-de-paired-frame-entweder-typo",
-	"grammar-de-paired-frame-desto-typo",
-	"grammar-de-paired-frame-unresolved-single-arm-entweder",
-	"grammar-de-paired-frame-unresolved-single-arm-noch",
-	"grammar-de-paired-frame-unresolved-overselected-conjunct",
-	"grammar-de-paired-frame-unresolved-mixed-occurrences",
-	"grammar-de-paired-frame-unresolved-unrelated-um-zu",
-	"grammar-de-paired-frame-unresolved-mismatched-arms",
-	"grammar-de-paired-frame-unresolved-single-cconj-sowie",
-	"grammar-de-paired-frame-unresolved-unmarked-third-member",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-paired-frame-dev-entweder-freitag",
+	"grammar-de-paired-frame-dev-entweder-clauses",
+	"grammar-de-paired-frame-dev-weder-noch",
+	"grammar-de-paired-frame-dev-sowohl-wie",
+	"grammar-de-paired-frame-dev-sowohl-wie-auch",
+	"grammar-de-paired-frame-dev-je-umso",
+	"grammar-de-paired-frame-dev-um-zu",
+	"grammar-de-paired-frame-dev-ohne-zu",
+	"grammar-de-paired-frame-dev-statt-zu",
+	"grammar-de-paired-frame-dev-teils-teils",
+	"grammar-de-paired-frame-dev-je-je",
+	"grammar-de-paired-frame-dev-casing-entweder",
+	"grammar-de-paired-frame-dev-desto-typo",
+	"grammar-de-paired-frame-dev-andererseits-typo",
+	"grammar-de-paired-frame-dev-near-cconj",
+	"grammar-de-paired-frame-dev-near-sconj",
+	"grammar-de-paired-frame-dev-near-adv",
+	"grammar-de-paired-frame-dev-repeated-um-zu-context",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
-	throw new Error(
-		"PairedFrame Grammatical Resolution demonstrations and evaluation must be disjoint.",
-	);
+export const acceptanceEvaluation = corpus.select([
+	"grammar-de-paired-frame-accept-entweder-nouns",
+	"grammar-de-paired-frame-accept-weder-clauses",
+	"grammar-de-paired-frame-accept-sowohl-als-auch",
+	"grammar-de-paired-frame-accept-sowohl-wie",
+	"grammar-de-paired-frame-accept-je-desto",
+	"grammar-de-paired-frame-accept-je-umso",
+	"grammar-de-paired-frame-accept-um-zu",
+	"grammar-de-paired-frame-accept-einerseits",
+	"grammar-de-paired-frame-accept-teils",
+	"grammar-de-paired-frame-accept-ohne-zu",
+]);
+
+for (const [leftName, left, rightName, right] of [
+	["demonstrations", demonstrations, "development", developmentEvaluation],
+	["demonstrations", demonstrations, "acceptance", acceptanceEvaluation],
+	["development", developmentEvaluation, "acceptance", acceptanceEvaluation],
+] as const) {
+	if (!left.isDisjointFrom(right)) {
+		throw new Error(
+			`PairedFrame ${leftName} and ${rightName} selections must be disjoint.`,
+		);
+	}
 }
+
+export const evaluation = developmentEvaluation;
 
 export const pairedFrameGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
 	evaluator: evaluatePairedFrameGrammaticalResolution,
 });
+
+export const pairedFrameGrammaticalResolutionAcceptanceExperiment =
+	defineExperiment({
+		promptSource,
+		evaluation: acceptanceEvaluation,
+		evaluator: evaluatePairedFrameGrammaticalResolution,
+	});

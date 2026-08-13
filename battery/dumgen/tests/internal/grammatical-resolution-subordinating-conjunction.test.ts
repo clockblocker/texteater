@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
+	developmentEvaluation,
+	subordinatingConjunctionGrammaticalResolutionAcceptanceExperiment,
 	subordinatingConjunctionGrammaticalResolutionExperiment,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-subordinating-conjunction/evaluation-suite";
 import { evaluateSubordinatingConjunctionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-subordinating-conjunction/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/corpus";
@@ -14,254 +16,300 @@ import {
 import {
 	deSubordinatingConjunctionModelCitationSurfaceSchema,
 	deSubordinatingConjunctionModelLemmaSchema,
+	inputSchema,
 	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-sconj-citation-dass",
-	"grammar-de-sconj-complement-dass",
-	"grammar-de-sconj-conditional-wenn",
-	"grammar-de-sconj-temporal-nachdem",
-	"grammar-de-sconj-temporal-waehrend",
-	"grammar-de-sconj-interrogative-ob",
-	"grammar-de-sconj-temporal-bevor",
-	"grammar-de-sconj-conditional-falls",
-	"grammar-de-sconj-temporal-seitdem",
-	"grammar-de-sconj-temporal-sobald",
-	"grammar-de-sconj-modal-indem",
-	"grammar-de-sconj-causal-zumal",
-	"grammar-de-sconj-comparative-als-clause",
-	"grammar-de-sconj-sentence-initial-dass",
-	"grammar-de-sconj-typo-wehn",
-	"grammar-de-sconj-unresolved-adp-waehrend",
-	"grammar-de-sconj-unresolved-adv-dann",
-	"grammar-de-sconj-unresolved-cconj-denn",
-	"grammar-de-sconj-unresolved-cconj-comparative-als",
-	"grammar-de-sconj-unresolved-adp-als",
-	"grammar-de-sconj-unresolved-adv-darum",
-	"grammar-de-sconj-unresolved-overbroad-dass-er",
-	"grammar-de-sconj-unresolved-two-targets",
+const expectedDemonstrationIds = [
+	"grammar-de-sconj-demo-finite-weil",
+	"grammar-de-sconj-demo-reduced-wie",
+	"grammar-de-sconj-demo-infinitival-um",
+	"grammar-de-sconj-demo-causal-da",
+	"grammar-de-sconj-demo-typo-obwol",
+	"grammar-de-sconj-demo-historical-dass",
+	"grammar-de-sconj-demo-multiword-so-dass",
+] as const;
+
+const expectedDevelopmentIds = [
+	"grammar-de-sconj-dev-complement-dass",
+	"grammar-de-sconj-dev-conditional-wenn",
+	"grammar-de-sconj-dev-temporal-nachdem",
+	"grammar-de-sconj-dev-temporal-waehrend",
+	"grammar-de-sconj-dev-interrogative-ob",
+	"grammar-de-sconj-dev-temporal-bevor",
+	"grammar-de-sconj-dev-conditional-falls",
+	"grammar-de-sconj-dev-temporal-seitdem",
+	"grammar-de-sconj-dev-temporal-sobald",
+	"grammar-de-sconj-dev-modal-indem",
+	"grammar-de-sconj-dev-causal-zumal",
+	"grammar-de-sconj-dev-comparative-als-clause",
+	"grammar-de-sconj-dev-comparative-wie-clause",
+	"grammar-de-sconj-dev-temporal-als",
+	"grammar-de-sconj-dev-adversative-wohingegen",
+	"grammar-de-sconj-dev-concessive-obgleich",
+	"grammar-de-sconj-dev-conditional-sofern",
+	"grammar-de-sconj-dev-temporal-bis",
+	"grammar-de-sconj-dev-multiword-als-ob",
+	"grammar-de-sconj-dev-variant-sodass",
+	"grammar-de-sconj-dev-beside-adp-waehrend",
+	"grammar-de-sconj-dev-beside-cconj-denn",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-sconj-accept-v2-finite-obwohl",
+	"grammar-de-sconj-accept-v2-purpose-damit",
+	"grammar-de-sconj-accept-v2-conditional-wenn",
+	"grammar-de-sconj-accept-v2-interrogative-ob",
+	"grammar-de-sconj-accept-v2-infinitival-ohne",
+	"grammar-de-sconj-accept-v2-comparative-als",
+	"grammar-de-sconj-accept-v2-reduced-wie",
+	"grammar-de-sconj-accept-v2-multiword-als-wenn",
+	"grammar-de-sconj-accept-v2-initial-falls",
+	"grammar-de-sconj-accept-v2-typo-obwhol",
+	"grammar-de-sconj-accept-v2-archaic-dieweil",
+	"grammar-de-sconj-accept-v2-variant-so-dass",
+	"grammar-de-sconj-accept-v2-beside-adv-da",
+	"grammar-de-sconj-accept-v2-beside-part-ja",
+	"grammar-de-sconj-accept-v2-beside-frame-and-abbreviation",
 ] as const;
 
 describe("Lexeme/SCONJ route-local schemas and corpus", () => {
-	test("projects the exact Citation-only DTO and comparative Core Feature", () => {
+	test("uses canonical input and a smallest total flat codec DTO", () => {
+		expect(
+			inputSchema.parse({
+				markedContext:
+					"Wir gehen, <TARGET>wenn</TARGET> es trocken bleibt.",
+				members: ["wenn"],
+			}),
+		).toEqual({
+			markedContext:
+				"Wir gehen, <TARGET>wenn</TARGET> es trocken bleibt.",
+			members: ["wenn"],
+		});
+		expect(() =>
+			inputSchema.parse({
+				markedContext:
+					"Wir gehen, <TARGET>wenn</TARGET> es trocken bleibt.",
+				members: ["ob"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const output = outputSchema.parse({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["wenn"],
+			surface: { spelling: "Canonical", surfaceFeatures: null },
+			lemma: {
+				canonicalForm: "wenn",
+				coreFeatures: { conjType: null },
+			},
+		});
+		expect(Object.keys(output)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
+		]);
+		expect(
+			outputSchema.safeParse({ decision: "Resolved", resolution: output })
+				.success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...output,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+	});
+
+	test("derives Citation-only Surface and exact Lemma feature schemas", () => {
+		expect(
+			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
+				spelling: "Variant",
+				surfaceFeatures: { historicalStatus: "Archaic" },
+			}),
+		).toEqual({
+			spelling: "Variant",
+			surfaceFeatures: { historicalStatus: "Archaic" },
+		});
+		expect(
+			deSubordinatingConjunctionModelCitationSurfaceSchema.safeParse({
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
+			}).success,
+		).toBe(false);
 		expect(
 			deSubordinatingConjunctionModelLemmaSchema.parse({
 				canonicalForm: "als",
 				coreFeatures: { conjType: "Comp" },
 			}),
-		).toEqual({ canonicalForm: "als", coreFeatures: { conjType: "Comp" } });
-		expect(() =>
-			deSubordinatingConjunctionModelLemmaSchema.parse({
-				language: "de",
-				canonicalForm: "dass",
-				coreFeatures: { conjType: null },
-			}),
-		).toThrow();
-		expect(
-			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
-				spelling: "Canonical",
-				surfaceKind: "Citation",
-				surfaceFeatures: null,
-			}),
 		).toEqual({
-			spelling: "Canonical",
-			surfaceKind: "Citation",
-			surfaceFeatures: null,
+			canonicalForm: "als",
+			coreFeatures: { conjType: "Comp" },
 		});
-		expect(() =>
-			deSubordinatingConjunctionModelCitationSurfaceSchema.parse({
-				spelling: "Canonical",
-				surfaceKind: "Inflection",
-				surfaceFeatures: null,
-				inflectionalFeatures: {},
-			}),
-		).toThrow();
-	});
-
-	test("pins 23 held-out cases disjoint from four necessary demonstrations", () => {
-		expect(corpus.all().ids).toHaveLength(34);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-sconj-contextual-weil",
-			"grammar-de-sconj-comparative-reduced-wie",
-			"grammar-de-sconj-typo-obwol",
-			"grammar-de-sconj-unresolved-ambiguous-da",
-		]);
 		expect(
-			corpus
-				.all()
-				.ids.some((id) =>
-					/-(?:demo|eval|evaluation|held-out)-/u.test(id),
-				),
+			deSubordinatingConjunctionModelLemmaSchema.safeParse({
+				canonicalForm: "als",
+				coreFeatures: { conjType: "Coord" },
+			}).success,
 		).toBe(false);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation.ids).toHaveLength(23);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation).toBe(
-			subordinatingConjunctionGrammaticalResolutionExperiment.evaluation,
-		);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(27);
-
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		expect(
-			evaluation.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution !== null &&
-				demonstrationLemmas.has(
-					testCase.idealOutput.resolution.lemma.canonicalForm,
-				)
-					? [testCase.idealOutput.resolution.lemma.canonicalForm]
-					: [],
-			),
-		).toEqual([]);
 	});
 
-	test("keeps seven unsettled evidence and route policies corpus-only", () => {
-		for (const caseId of [
-			"grammar-de-sconj-provisional-multiword-so-dass",
-			"grammar-de-sconj-provisional-v2-weil",
-			"grammar-de-sconj-provisional-v2-obwohl",
-			"grammar-de-sconj-provisional-historical-dass",
-			"grammar-de-sconj-provisional-foreign-att",
-			"grammar-de-sconj-provisional-gsd-typo-das",
-			"grammar-de-sconj-provisional-gsd-typo-den",
-		] as const) {
-			expect(corpus.cases[caseId]).toBeDefined();
-			expect(demonstrations.ids).not.toContain(caseId);
-			expect(evaluation.ids).not.toContain(caseId);
+	test("freezes a fresh v2 acceptance partition beside retained v1 cases", () => {
+		expect(corpus.all().ids).toHaveLength(59);
+		expect(demonstrations.ids).toEqual(expectedDemonstrationIds);
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
+		);
+		expect(demonstrations.ids).toHaveLength(7);
+		expect(developmentEvaluation.ids).toHaveLength(22);
+		expect(untouchedAcceptanceEvaluation.ids).toHaveLength(15);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(44);
+		for (const retiredId of [
+			"grammar-de-sconj-accept-concessive-obwohl",
+			"grammar-de-sconj-accept-purpose-damit",
+			"grammar-de-sconj-accept-temporal-ehe",
+			"grammar-de-sconj-accept-concessive-wenngleich",
+			"grammar-de-sconj-accept-concessive-obschon",
+			"grammar-de-sconj-accept-consecutive-sodass",
+			"grammar-de-sconj-accept-proportional-je",
+			"grammar-de-sconj-accept-multiword-ohne-dass",
+			"grammar-de-sconj-accept-typo-wehn",
+			"grammar-de-sconj-accept-archaic-sintemal",
+			"grammar-de-sconj-accept-variant-obzwar",
+			"grammar-de-sconj-accept-beside-adv-da",
+			"grammar-de-sconj-accept-beside-part-ja",
+			"grammar-de-sconj-accept-beside-paired-frame",
+			"grammar-de-sconj-accept-beside-abbreviation",
+		]) {
+			expect(corpus.cases[retiredId]).toBeDefined();
+			expect(untouchedAcceptanceEvaluation.ids).not.toContain(retiredId);
 		}
 	});
 
-	test("keeps comparative clause markers distinct from phrase comparisons", () => {
-		expect(
-			corpus.cases["grammar-de-sconj-comparative-reduced-wie"]
-				?.idealOutput,
-		).toMatchObject({
-			decision: "Resolved",
-			resolution: {
-				lemma: {
-					canonicalForm: "wie",
-					coreFeatures: { conjType: "Comp" },
-				},
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-sconj-comparative-als-clause"]
-				?.idealOutput,
-		).toMatchObject({
-			decision: "Resolved",
-			resolution: {
-				lemma: {
-					canonicalForm: "als",
-					coreFeatures: { conjType: "Comp" },
-				},
-			},
-		});
-		expect(
-			corpus.cases["grammar-de-sconj-unresolved-cconj-comparative-als"]
-				?.idealOutput,
-		).toEqual({ decision: "Unresolved", resolution: null });
+	test("rejects a Variant oracle identical to its own canonical form", async () => {
+		const { subordinatingConjunctionCase } = await import(
+			"../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/cases/builders"
+		);
+		expect(() =>
+			subordinatingConjunctionCase(
+				"Sie blieb, <TARGET>obzwar</TARGET> es spät war.",
+				["obzwar"],
+				"obzwar",
+				undefined,
+				{ spelling: "Variant" },
+			),
+		).toThrow(/must use Canonical spelling/);
 	});
 
-	test("does not reproduce the noisy SCONJ analysis of CCONJ denn", () => {
+	test("covers comparative, orthographic, multi-member, and fixed-route controls", () => {
+		const outputs = corpus
+			.all()
+			.cases.map((testCase) => testCase.idealOutput);
 		expect(
-			corpus.cases["grammar-de-sconj-provisional-gsd-typo-den"]
-				?.idealOutput,
-		).toEqual({ decision: "Unresolved", resolution: null });
+			new Set(
+				outputs.map((output) => output.lemma.coreFeatures.conjType),
+			),
+		).toEqual(new Set([null, "Comp"]));
+		expect(
+			new Set(outputs.map((output) => output.surface.spelling)),
+		).toEqual(new Set(["Canonical", "Variant"]));
+		expect(
+			outputs.some(
+				(output) =>
+					output.surface.surfaceFeatures?.historicalStatus ===
+					"Archaic",
+			),
+		).toBe(true);
+		expect(
+			outputs.some((output) =>
+				output.memberOrthographies.includes("Typo"),
+			),
+		).toBe(true);
+		expect(
+			outputs.some((output) => output.normalizedMembers.length > 1),
+		).toBe(true);
+		for (const routeWord of [
+			"cconj",
+			"adv",
+			"adp",
+			"part",
+			"paired-frame",
+			"abbreviation",
+		]) {
+			expect(corpus.all().ids.some((id) => id.includes(routeWord))).toBe(
+				true,
+			);
+		}
 	});
 
-	test("assembles demonstrations but no held-out or corpus-only probes", () => {
+	test("assembles total instructions without held-out contamination", () => {
 		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>weil</TARGET>");
-		expect(prompt).toContain("<TARGET>wie</TARGET>");
-		expect(prompt).toContain("<TARGET>obwol</TARGET>");
-		expect(prompt).toContain("<TARGET>da</TARGET>");
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain("application injects");
+		expect(prompt).toContain('conjType: "Comp" | null');
+		expect(prompt).toContain("<TARGET>so</TARGET> <TARGET>dass</TARGET>");
 		expect(prompt).not.toContain("<TARGET>nachdem</TARGET>");
-		expect(prompt).not.toContain("<TARGET>so dass</TARGET>");
-		expect(prompt).not.toContain("<TARGET>daß</TARGET>");
-		expect(prompt).not.toContain("<TARGET>att</TARGET>");
+		expect(prompt).not.toContain("<TARGET>sintemal</TARGET>");
+		expect(prompt).not.toContain('decision: "Resolved"');
 	});
 });
 
 describe("Lexeme/SCONJ pure diagnostic evaluator", () => {
-	test("passes every pinned ideal output", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result =
-				evaluateSubordinatingConjunctionGrammaticalResolution({
-					caseId,
-					input: testCase.input,
-					idealOutput: testCase.idealOutput,
-					output: testCase.idealOutput,
-				});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+	test("passes every frozen development and acceptance ideal output", () => {
+		for (const experiment of [
+			subordinatingConjunctionGrammaticalResolutionExperiment,
+			subordinatingConjunctionGrammaticalResolutionAcceptanceExperiment,
+		]) {
+			for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+				const testCase = experiment.evaluation.cases[index];
+				if (testCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result =
+					evaluateSubordinatingConjunctionGrammaticalResolution({
+						caseId,
+						input: testCase.input,
+						idealOutput: testCase.idealOutput,
+						output: testCase.idealOutput,
+					});
+				expect(result.contractPass).toBe(true);
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports comparative-feature and normalization misses independently", () => {
+	test("reports normalization and comparative-feature misses independently", () => {
 		const testCase =
-			corpus.cases["grammar-de-sconj-comparative-als-clause"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing comparative fixture.");
-		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
+			corpus.cases["grammar-de-sconj-dev-comparative-als-clause"];
+		if (testCase === undefined) throw new Error("Missing als case.");
+		const result = evaluateSubordinatingConjunctionGrammaticalResolution({
+			caseId: "grammar-de-sconj-dev-comparative-als-clause",
+			input: testCase.input,
+			idealOutput: testCase.idealOutput,
+			output: {
+				...testCase.idealOutput,
 				normalizedMembers: ["wie"],
 				lemma: {
-					...testCase.idealOutput.resolution.lemma,
+					...testCase.idealOutput.lemma,
 					coreFeatures: { conjType: null },
 				},
 			},
 		});
-		const result = evaluateSubordinatingConjunctionGrammaticalResolution({
-			caseId: "grammar-de-sconj-comparative-als-clause",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
 		expect(result.contractPass).toBe(false);
 		expect(result.normalizedSurfacePass).toBe(false);
 		expect(result.coreFeaturesPass).toBe(false);
-		expect(result.surfaceKindPass).toBe(true);
-	});
-
-	test("canonicalizes an all-null model feature bag like the codec", () => {
-		const testCase = corpus.cases["grammar-de-sconj-complement-dass"];
-		if (
-			testCase === undefined ||
-			testCase.idealOutput.resolution === null
-		) {
-			throw new Error("Missing dass fixture.");
-		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
-			},
-		});
-		const result = evaluateSubordinatingConjunctionGrammaticalResolution({
-			caseId: "grammar-de-sconj-complement-dass",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
-		expect(result.contractPass).toBe(true);
-		expect(result.surfaceFeaturesPass).toBe(true);
+		expect(result.spellingPass).toBe(true);
 	});
 });

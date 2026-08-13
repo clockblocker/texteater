@@ -8,8 +8,6 @@ import type {
 
 export type IdiomGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;
-	readonly decisionPass: boolean;
-	readonly decisionResolutionCoherencePass: boolean;
 	readonly memberCountPass: boolean;
 	readonly memberOrthographiesPass: boolean;
 	readonly surfaceKindPass: boolean;
@@ -19,12 +17,9 @@ export type IdiomGrammaticalResolutionEvaluation = {
 	readonly surfaceFeaturesPass: boolean;
 	readonly inflectionalFeaturesPass: boolean;
 	readonly canonicalFormPass: boolean;
-	readonly coreFeaturesPass: boolean;
 };
 
-type IdiomSurface = NonNullable<
-	output<typeof outputSchema>["resolution"]
->["surface"];
+type IdiomSurface = output<typeof outputSchema>["surface"];
 
 export function evaluateIdiomGrammaticalResolution(args: {
 	readonly caseId: string;
@@ -32,44 +27,33 @@ export function evaluateIdiomGrammaticalResolution(args: {
 	readonly idealOutput: output<typeof outputSchema>;
 	readonly output: output<typeof outputSchema>;
 }): IdiomGrammaticalResolutionEvaluation {
-	const expectedResolution = args.idealOutput.resolution;
-	const actualResolution = args.output.resolution;
-	const expectedSurface = expectedResolution?.surface;
-	const actualSurface = actualResolution?.surface;
+	const expectedSurface = args.idealOutput.surface;
+	const actualSurface = args.output.surface;
 	const markerCount =
 		args.input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
 	const closingMarkerCount =
 		args.input.markedContext.match(/<\/TARGET>/gu)?.length ?? 0;
 
 	const diagnostics = {
-		decisionPass: args.output.decision === args.idealOutput.decision,
-		decisionResolutionCoherencePass:
-			(args.output.decision === "Resolved" &&
-				actualResolution !== null) ||
-			(args.output.decision === "Unresolved" &&
-				actualResolution === null),
 		memberCountPass:
-			actualResolution === null || expectedResolution === null
-				? actualResolution === expectedResolution
-				: markerCount === closingMarkerCount &&
-					markerCount > 0 &&
-					actualResolution.memberOrthographies.length === markerCount,
+			markerCount === closingMarkerCount &&
+			markerCount === args.input.members.length &&
+			args.output.memberOrthographies.length ===
+				args.input.members.length &&
+			args.output.normalizedMembers.length === args.input.members.length,
 		memberOrthographiesPass: equal(
-			actualResolution?.memberOrthographies ?? null,
-			expectedResolution?.memberOrthographies ?? null,
+			args.output.memberOrthographies,
+			args.idealOutput.memberOrthographies,
 		),
 		surfaceKindPass:
-			(actualSurface?.surfaceKind ?? null) ===
-			(expectedSurface?.surfaceKind ?? null),
+			actualSurface.surfaceKind === expectedSurface.surfaceKind,
 		normalizedSurfacePass:
-			(actualResolution?.normalizedMembers.join(" ") ?? null) ===
-			(expectedResolution?.normalizedMembers.join(" ") ?? null),
-		spellingPass:
-			(actualSurface?.spelling ?? null) ===
-			(expectedSurface?.spelling ?? null),
+			args.output.normalizedMembers.join(" ") ===
+			args.idealOutput.normalizedMembers.join(" "),
+		spellingPass: actualSurface.spelling === expectedSurface.spelling,
 		realizationCoveragePass:
-			(actualResolution?.realizationCoverage ?? null) ===
-			(expectedResolution?.realizationCoverage ?? null),
+			args.output.realizationCoverage ===
+			args.idealOutput.realizationCoverage,
 		surfaceFeaturesPass: equal(
 			canonicalSurfaceFeatures(actualSurface),
 			canonicalSurfaceFeatures(expectedSurface),
@@ -79,12 +63,8 @@ export function evaluateIdiomGrammaticalResolution(args: {
 			inflectionalFeatures(expectedSurface),
 		),
 		canonicalFormPass:
-			(actualResolution?.lemma.canonicalForm ?? null) ===
-			(expectedResolution?.lemma.canonicalForm ?? null),
-		coreFeaturesPass: equal(
-			actualResolution?.lemma.coreFeatures ?? null,
-			expectedResolution?.lemma.coreFeatures ?? null,
-		),
+			args.output.lemma.canonicalForm ===
+			args.idealOutput.lemma.canonicalForm,
 	};
 
 	return {
@@ -93,8 +73,8 @@ export function evaluateIdiomGrammaticalResolution(args: {
 	};
 }
 
-function canonicalSurfaceFeatures(surface: IdiomSurface | undefined): unknown {
-	const features = surface?.surfaceFeatures ?? null;
+function canonicalSurfaceFeatures(surface: IdiomSurface): unknown {
+	const features = surface.surfaceFeatures ?? null;
 	return features !== null &&
 		typeof features === "object" &&
 		"historicalStatus" in features &&
@@ -103,8 +83,8 @@ function canonicalSurfaceFeatures(surface: IdiomSurface | undefined): unknown {
 		: features;
 }
 
-function inflectionalFeatures(surface: IdiomSurface | undefined): unknown {
-	return surface?.surfaceKind === "Inflection"
+function inflectionalFeatures(surface: IdiomSurface): unknown {
+	return surface.surfaceKind === "Inflection"
 		? surface.inflectionalFeatures
 		: null;
 }

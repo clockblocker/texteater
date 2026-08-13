@@ -1,0 +1,1664 @@
+{
+  "runnerVersion": "grammatical-resolution-proverb-v6",
+  "route": "grammatical-resolution/de/phraseme/proverb",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 2
+  },
+  "startedAt": "2026-08-13T11:58:40.084Z",
+  "completedAt": "2026-08-13T11:59:05.780Z",
+  "finalizedAt": "2026-08-13T11:59:35.081Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "ba1a2b6f9083e748340dd16c9149cc0d41614bf5aa357d5df5a30dc6bdfeea34",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "013cd4700c043090f3bf61b6de97d68d802bacc9d8e07a9e6ac919a570095cb4",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "bebb7534e1fc34744efdf332f5aa7b8f9485586f4d4128e510eaf86362b4f200",
+  "suiteSha256": "a72d9eb578d44fc86c2be7057497832562aca40fdc45d1a8ddd70c04fe8a47d3",
+  "evaluationCaseIds": [
+    "grammar-de-proverb-dev-andere-laender",
+    "grammar-de-proverb-dev-ende-gut",
+    "grammar-de-proverb-dev-uebung-meister",
+    "grammar-de-proverb-dev-viele-koeche",
+    "grammar-de-proverb-dev-grube",
+    "grammar-de-proverb-dev-zuletzt-lacht",
+    "grammar-de-proverb-dev-stille-wasser",
+    "grammar-de-proverb-dev-gelegenheit-diebe",
+    "grammar-de-proverb-dev-apfel-stamm",
+    "grammar-de-proverb-dev-kleinvieh",
+    "grammar-de-proverb-dev-luegen-beine",
+    "grammar-de-proverb-dev-reden-silber",
+    "grammar-de-proverb-dev-wer-rastet",
+    "grammar-de-proverb-dev-repeated-das",
+    "grammar-de-proverb-dev-casing-viele-koeche",
+    "grammar-de-proverb-dev-stille-wasser-typo",
+    "grammar-de-proverb-dev-wes-brot-archaic",
+    "grammar-de-proverb-dev-reden-silber-partial"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-proverb-dev-andere-laender",
+      "input": {
+        "markedContext": "Nachdem die Reisenden über ungewohnte Essenszeiten gesprochen hatten, sagte ihre Begleiterin: „<TARGET>Andere</TARGET> <TARGET>Länder</TARGET>, <TARGET>andere</TARGET> <TARGET>Sitten</TARGET>.“",
+        "members": [
+          "Andere",
+          "Länder",
+          "andere",
+          "Sitten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Andere",
+          "Länder",
+          "andere",
+          "Sitten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Andere Länder andere Sitten"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Andere",
+          "Länder",
+          "andere",
+          "Sitten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Andere Länder andere Sitten"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1500,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Andere\",\"Länder\",\"andere\",\"Sitten\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Andere Länder andere Sitten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e48253e64177091016a7db1705ee8819fad34f0d49fc3e07e",
+      "usage": {
+        "input_tokens": 2548,
+        "input_tokens_details": {
+          "cache_write_tokens": 2471,
+          "cached_tokens": 0
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2618
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-ende-gut",
+      "input": {
+        "markedContext": "Als die Aufführung trotz der Panne gelang, fasste der Regisseur den Abend zusammen: „<TARGET>Ende</TARGET> <TARGET>gut</TARGET>, <TARGET>alles</TARGET> <TARGET>gut</TARGET>.“",
+        "members": [
+          "Ende",
+          "gut",
+          "alles",
+          "gut"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ende",
+          "gut",
+          "alles",
+          "gut"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Ende gut alles gut"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ende",
+          "gut",
+          "alles",
+          "gut"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Ende gut alles gut"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1149,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Ende\",\"gut\",\"alles\",\"gut\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Ende gut alles gut\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f0ac321830e9128016a7db171be6c819daa585eb70ac0c452",
+      "usage": {
+        "input_tokens": 2545,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2613
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-uebung-meister",
+      "input": {
+        "markedContext": "Nach dem ersten misslungenen Versuch ermutigte die Trainerin den Schüler mit „<TARGET>Übung</TARGET> <TARGET>macht</TARGET> <TARGET>den</TARGET> <TARGET>Meister</TARGET>.“",
+        "members": [
+          "Übung",
+          "macht",
+          "den",
+          "Meister"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Übung",
+          "macht",
+          "den",
+          "Meister"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Übung macht den Meister"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Übung",
+          "macht",
+          "den",
+          "Meister"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Übung macht den Meister"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1063,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Übung\",\"macht\",\"den\",\"Meister\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Übung macht den Meister\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0654a7b7c6beea35016a7db172df4881a0922394aa4283c8f2",
+      "usage": {
+        "input_tokens": 2544,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 69,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2613
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-viele-koeche",
+      "input": {
+        "markedContext": "Als fünf Personen gleichzeitig den Ablauf ändern wollten, warnte die Projektleiterin: „<TARGET>Viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.“",
+        "members": [
+          "Viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Viele Köche verderben den Brei"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Viele Köche verderben den Brei"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1405,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Viele\",\"Köche\",\"verderben\",\"den\",\"Brei\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Viele Köche verderben den Brei\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e0825a180bbce11016a7db173f0dc819dac1a4f5b4fdb27d4",
+      "usage": {
+        "input_tokens": 2557,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 79,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2636
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-grube",
+      "input": {
+        "markedContext": "Nachdem der Intrigant an seinem eigenen Plan gescheitert war, bemerkte seine Kollegin: „<TARGET>Wer</TARGET> <TARGET>anderen</TARGET> <TARGET>eine</TARGET> <TARGET>Grube</TARGET> <TARGET>gräbt</TARGET>, <TARGET>fällt</TARGET> <TARGET>selbst</TARGET> <TARGET>hinein</TARGET>.“",
+        "members": [
+          "Wer",
+          "anderen",
+          "eine",
+          "Grube",
+          "gräbt",
+          "fällt",
+          "selbst",
+          "hinein"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "anderen",
+          "eine",
+          "Grube",
+          "gräbt",
+          "fällt",
+          "selbst",
+          "hinein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer anderen eine Grube gräbt fällt selbst hinein"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "anderen",
+          "eine",
+          "Grube",
+          "gräbt",
+          "fällt",
+          "selbst",
+          "hinein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer anderen eine Grube gräbt fällt selbst hinein"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1151,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"anderen\",\"eine\",\"Grube\",\"gräbt\",\"fällt\",\"selbst\",\"hinein\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer anderen eine Grube gräbt fällt selbst hinein\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f93a843d9a37c2f016a7db175577081a289cfaadb9aedd38b",
+      "usage": {
+        "input_tokens": 2593,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2688
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-zuletzt-lacht",
+      "input": {
+        "markedContext": "Nach dem unerwarteten Sieg erinnerte der Kapitän die Spötter: „<TARGET>Wer</TARGET> <TARGET>zuletzt</TARGET> <TARGET>lacht</TARGET>, <TARGET>lacht</TARGET> <TARGET>am</TARGET> <TARGET>besten</TARGET>.“",
+        "members": [
+          "Wer",
+          "zuletzt",
+          "lacht",
+          "lacht",
+          "am",
+          "besten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "zuletzt",
+          "lacht",
+          "lacht",
+          "am",
+          "besten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer zuletzt lacht lacht am besten"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "zuletzt",
+          "lacht",
+          "lacht",
+          "am",
+          "besten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer zuletzt lacht lacht am besten"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1253,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"zuletzt\",\"lacht\",\"lacht\",\"am\",\"besten\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer zuletzt lacht lacht am besten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06dc594de8a520f6016a7db1767f5881928e4e67efdf5b116d",
+      "usage": {
+        "input_tokens": 2563,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2643
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-stille-wasser",
+      "input": {
+        "markedContext": "Als der schweigsame Bewerber die beste Analyse vorlegte, sagte die Chefin: „<TARGET>Stille</TARGET> <TARGET>Wasser</TARGET> <TARGET>sind</TARGET> <TARGET>tief</TARGET>.“",
+        "members": [
+          "Stille",
+          "Wasser",
+          "sind",
+          "tief"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Stille",
+          "Wasser",
+          "sind",
+          "tief"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Stille Wasser sind tief"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Stille",
+          "Wasser",
+          "sind",
+          "tief"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Stille Wasser sind tief"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1186,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Stille\",\"Wasser\",\"sind\",\"tief\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Stille Wasser sind tief\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a3e11a1ebc1a453016a7db177bff0819281647dd5454b3ffc",
+      "usage": {
+        "input_tokens": 2549,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 71,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2620
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-gelegenheit-diebe",
+      "input": {
+        "markedContext": "Beim Abschließen des Lagerraums erklärte der Hausmeister seine Vorsicht: „<TARGET>Gelegenheit</TARGET> <TARGET>macht</TARGET> <TARGET>Diebe</TARGET>.“",
+        "members": [
+          "Gelegenheit",
+          "macht",
+          "Diebe"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Gelegenheit",
+          "macht",
+          "Diebe"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Gelegenheit macht Diebe"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Gelegenheit",
+          "macht",
+          "Diebe"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Gelegenheit macht Diebe"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1531,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Gelegenheit\",\"macht\",\"Diebe\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Gelegenheit macht Diebe\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c230f106c159f59016a7db178ef48819fa760ad74211f2487",
+      "usage": {
+        "input_tokens": 2534,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 65,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-apfel-stamm",
+      "input": {
+        "markedContext": "Als Mutter und Tochter denselben Beruf wählten, kommentierte der Onkel: „<TARGET>Der</TARGET> <TARGET>Apfel</TARGET> <TARGET>fällt</TARGET> <TARGET>nicht</TARGET> <TARGET>weit</TARGET> <TARGET>vom</TARGET> <TARGET>Stamm</TARGET>.“",
+        "members": [
+          "Der",
+          "Apfel",
+          "fällt",
+          "nicht",
+          "weit",
+          "vom",
+          "Stamm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Apfel",
+          "fällt",
+          "nicht",
+          "weit",
+          "vom",
+          "Stamm"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der Apfel fällt nicht weit vom Stamm"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "Apfel",
+          "fällt",
+          "nicht",
+          "weit",
+          "vom",
+          "Stamm"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der Apfel fällt nicht weit vom Stamm"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1440,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Der\",\"Apfel\",\"fällt\",\"nicht\",\"weit\",\"vom\",\"Stamm\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Der Apfel fällt nicht weit vom Stamm\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06aeeba3cc3d0a93016a7db17a7724819d84327d34c7a760a4",
+      "usage": {
+        "input_tokens": 2573,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2658
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-kleinvieh",
+      "input": {
+        "markedContext": "Als sich die kleinen monatlichen Beträge summierten, sagte die Sparerin: „<TARGET>Kleinvieh</TARGET> <TARGET>macht</TARGET> <TARGET>auch</TARGET> <TARGET>Mist</TARGET>.“",
+        "members": [
+          "Kleinvieh",
+          "macht",
+          "auch",
+          "Mist"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kleinvieh",
+          "macht",
+          "auch",
+          "Mist"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Kleinvieh macht auch Mist"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kleinvieh",
+          "macht",
+          "auch",
+          "Mist"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Kleinvieh macht auch Mist"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1437,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Kleinvieh\",\"macht\",\"auch\",\"Mist\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Kleinvieh macht auch Mist\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0040c78e57fa70dc016a7db17be860819cb4c118428b5d2f3e",
+      "usage": {
+        "input_tokens": 2546,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2618
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-luegen-beine",
+      "input": {
+        "markedContext": "Nachdem die erfundene Ausrede sofort aufflog, stellte der Lehrer fest: „<TARGET>Lügen</TARGET> <TARGET>haben</TARGET> <TARGET>kurze</TARGET> <TARGET>Beine</TARGET>.“",
+        "members": [
+          "Lügen",
+          "haben",
+          "kurze",
+          "Beine"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Lügen",
+          "haben",
+          "kurze",
+          "Beine"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Lügen haben kurze Beine"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Lügen",
+          "haben",
+          "kurze",
+          "Beine"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Lügen haben kurze Beine"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1057,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Lügen\",\"haben\",\"kurze\",\"Beine\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Lügen haben kurze Beine\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01140d3be99cebfc016a7db17d5908819197d7b4554faa2913",
+      "usage": {
+        "input_tokens": 2545,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2615
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-reden-silber",
+      "input": {
+        "markedContext": "Bevor die Zeugin antwortete, erinnerte ihr Anwalt sie an den Satz „<TARGET>Reden</TARGET> <TARGET>ist</TARGET> <TARGET>Silber</TARGET>, <TARGET>Schweigen</TARGET> <TARGET>ist</TARGET> <TARGET>Gold</TARGET>.“",
+        "members": [
+          "Reden",
+          "ist",
+          "Silber",
+          "Schweigen",
+          "ist",
+          "Gold"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Reden",
+          "ist",
+          "Silber",
+          "Schweigen",
+          "ist",
+          "Gold"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Reden ist Silber Schweigen ist Gold"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Reden",
+          "ist",
+          "Silber",
+          "Schweigen",
+          "ist",
+          "Gold"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Reden ist Silber Schweigen ist Gold"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1913,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Reden\",\"ist\",\"Silber\",\"Schweigen\",\"ist\",\"Gold\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Reden ist Silber Schweigen ist Gold\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0095cdf5066591ae016a7db17e81d481a3b77d471ec0cfd2b0",
+      "usage": {
+        "input_tokens": 2567,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2649
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-wer-rastet",
+      "input": {
+        "markedContext": "Nach der Winterpause begann die Laufgruppe wieder zu trainieren, denn „<TARGET>Wer</TARGET> <TARGET>rastet</TARGET>, <TARGET>der</TARGET> <TARGET>rostet</TARGET>.“",
+        "members": [
+          "Wer",
+          "rastet",
+          "der",
+          "rostet"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "rastet",
+          "der",
+          "rostet"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer rastet der rostet"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "rastet",
+          "der",
+          "rostet"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer rastet der rostet"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1130,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"rastet\",\"der\",\"rostet\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer rastet der rostet\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08a0985021f78324016a7db1804c908191a495e0c48f795c1d",
+      "usage": {
+        "input_tokens": 2542,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2612
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-repeated-das",
+      "input": {
+        "markedContext": "Als der Schüler sich über denselben Streich beschwerte, zitierte die Lehrerin: „<TARGET>Was</TARGET> <TARGET>du</TARGET> <TARGET>nicht</TARGET> <TARGET>willst</TARGET>, <TARGET>das</TARGET> <TARGET>man</TARGET> <TARGET>dir</TARGET> <TARGET>tu</TARGET>, <TARGET>das</TARGET> <TARGET>füg</TARGET> <TARGET>auch</TARGET> <TARGET>keinem</TARGET> <TARGET>andern</TARGET> <TARGET>zu</TARGET>.“",
+        "members": [
+          "Was",
+          "du",
+          "nicht",
+          "willst",
+          "das",
+          "man",
+          "dir",
+          "tu",
+          "das",
+          "füg",
+          "auch",
+          "keinem",
+          "andern",
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Was",
+          "du",
+          "nicht",
+          "willst",
+          "das",
+          "man",
+          "dir",
+          "tu",
+          "das",
+          "füg",
+          "auch",
+          "keinem",
+          "andern",
+          "zu"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Was du nicht willst das man dir tu das füg auch keinem andern zu"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Was",
+          "du",
+          "nicht",
+          "willst",
+          "das",
+          "man",
+          "dir",
+          "tu",
+          "das",
+          "füg",
+          "auch",
+          "keinem",
+          "andern",
+          "zu"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Was du nicht willst das man dir tu das füg auch keinem andern zu"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1486,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Was\",\"du\",\"nicht\",\"willst\",\"das\",\"man\",\"dir\",\"tu\",\"das\",\"füg\",\"auch\",\"keinem\",\"andern\",\"zu\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Was du nicht willst das man dir tu das füg auch keinem andern zu\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_062634f31dd7ec86016a7db18183b481a389fd7012e0202072",
+      "usage": {
+        "input_tokens": 2638,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 120,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2758
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-casing-viele-koeche",
+      "input": {
+        "markedContext": "Auf dem Schild war der Sprichwortanfang fälschlich kleingeschrieben: „<TARGET>viele</TARGET> <TARGET>Köche</TARGET> <TARGET>verderben</TARGET> <TARGET>den</TARGET> <TARGET>Brei</TARGET>.“",
+        "members": [
+          "viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Viele Köche verderben den Brei"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Viele",
+          "Köche",
+          "verderben",
+          "den",
+          "Brei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Viele Köche verderben den Brei"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1337,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Viele\",\"Köche\",\"verderben\",\"den\",\"Brei\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Viele Köche verderben den Brei\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_042f2570b5d7de0f016a7db182ecd881a0ad3d5973b698ac7e",
+      "usage": {
+        "input_tokens": 2562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-stille-wasser-typo",
+      "input": {
+        "markedContext": "Im Schülerheft stand der fehlerhafte Satz „<TARGET>Stille</TARGET> <TARGET>Wasser</TARGET> <TARGET>sint</TARGET> <TARGET>tief</TARGET>.“",
+        "members": [
+          "Stille",
+          "Wasser",
+          "sint",
+          "tief"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Typo",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Stille",
+          "Wasser",
+          "sind",
+          "tief"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Stille Wasser sind tief"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Typo",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Stille",
+          "Wasser",
+          "sind",
+          "tief"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Stille Wasser sind tief"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1200,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Typo\",\"Standard\"],\"normalizedMembers\":[\"Stille\",\"Wasser\",\"sind\",\"tief\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Stille Wasser sind tief\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09e180f50dadf7cc016a7db18445148191a4602f976514de73",
+      "usage": {
+        "input_tokens": 2541,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2613
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-wes-brot-archaic",
+      "input": {
+        "markedContext": "Der Schauspieler verwendete im historischen Stück die alte Sprichwortform „<TARGET>Wes</TARGET> <TARGET>Brot</TARGET> <TARGET>ich</TARGET> <TARGET>ess</TARGET>, <TARGET>des</TARGET> <TARGET>Lied</TARGET> <TARGET>ich</TARGET> <TARGET>sing</TARGET>.“",
+        "members": [
+          "Wes",
+          "Brot",
+          "ich",
+          "ess",
+          "des",
+          "Lied",
+          "ich",
+          "sing"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wes",
+          "Brot",
+          "ich",
+          "ess",
+          "des",
+          "Lied",
+          "ich",
+          "sing"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Wes Brot ich ess des Lied ich sing"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wes",
+          "Brot",
+          "ich",
+          "ess",
+          "des",
+          "Lied",
+          "ich",
+          "sing"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Wes Brot ich ess des Lied ich sing"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 2909,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wes\",\"Brot\",\"ich\",\"ess\",\"des\",\"Lied\",\"ich\",\"sing\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":{\"historicalStatus\":\"Archaic\"}},\"lemma\":{\"canonicalForm\":\"Wes Brot ich ess des Lied ich sing\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_055d187c734952b5016a7db1864a50819cb76dc78dab173d66",
+      "usage": {
+        "input_tokens": 2578,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2675
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-dev-reden-silber-partial",
+      "input": {
+        "markedContext": "Der abgerissene Zettel enthielt nur die halbe Zeile „<TARGET>Reden</TARGET> <TARGET>ist</TARGET> <TARGET>Silber</TARGET> …“.",
+        "members": [
+          "Reden",
+          "ist",
+          "Silber"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Reden",
+          "ist",
+          "Silber"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Reden ist Silber Schweigen ist Gold"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Reden",
+          "ist",
+          "Silber"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Reden ist Silber Schweigen ist Gold"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1531,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Reden\",\"ist\",\"Silber\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Reden ist Silber Schweigen ist Gold\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e196e1c55245472016a7db1886728819caaad8136332d4cec",
+      "usage": {
+        "input_tokens": 2535,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2603
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

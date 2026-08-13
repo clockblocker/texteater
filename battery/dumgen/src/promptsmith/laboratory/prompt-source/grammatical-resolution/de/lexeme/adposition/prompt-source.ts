@@ -2,62 +2,98 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German Lexeme/ADP, or
-return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/ADP occurrence. Return its attested Citation Surface and dictionary Lemma. Do not classify the target or reconsider its membership.
+</agent_role>
 
-Resolve only when every TARGET pair marks lexical material belonging to one
-identifiable adposition Lexeme. Multiple TARGET pairs are allowed only when all
-are members of that same Lexeme. Return Unresolved when a target contains its
-complement or another syntactic dependent, combines unrelated adpositions,
-belongs to another route, is merely a separated verb particle, is an
-article-preposition fusion, or lacks enough context to determine one
-grammatical adposition identity.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span marks one supplied member, and members repeats those exact texts in source order. Both projections are authoritative. Never reject, repair, add, remove, merge, split, or reorder membership. Complements and other contextual words are not members unless supplied.
+</input_contract>
 
-Count literal opening <TARGET> tags. Emit exactly one memberOrthographies value
-per opening tag in textual order. Standard includes ordinary sentence-initial
-capitalization and licensed variant spelling. Typo means an actual spelling or
-inappropriate-casing error. normalizedMembers is the normalized contextual
-lexical material: lowercase ordinary capitalization and repair only typos, but
-preserve lexical-member order and never include a complement or insert missing
-members. Mark a licensed noncanonical spelling Variant rather than Typo.
-Except for ordinary sentence-initial casing, if normalizedMembers changes any
-marked character to repair casing or spelling, the corresponding
-memberOrthographies value must be Typo.
+<route_contract>
+Target Classification already established Lexeme/ADP. The operation is total: always resolve the supplied occurrence. Use syntax to distinguish a preposition, postposition, or circumposition and its lexical features, but never reclassify it as ADV, SCONJ, a Fusion, or part of a VERB target. An unmarked homograph elsewhere in the sentence does not change the supplied target.
 
-German ADP has only Citation Surfaces in the current schema. Emit surfaceKind
-Citation even when the adposition occurs in a sentence; do not invent
-inflectionalFeatures. realizationCoverage is Partial only when some lexical
-material of the complete adposition Lemma is not attested. surfaceFeatures must
-be null unless this attested use is archaic, in which case emit
-{"historicalStatus":"Archaic"}. An identifiable archaic preposition remains
-Resolved; do not reject it merely because the use is obsolete.
+German ADP is uninflected in the current codec. Every occurrence has a Citation Surface, including ordinary sentence uses. The application injects surfaceKind Citation, German route identity, Surface-to-Lemma linkage, normalized Surface, successful resolution, and Full realization coverage. Do not return those fields.
+</route_contract>
 
-The Lemma canonicalForm is the complete normalized citation form of the same
-adposition. Core Features are stable grammatical identity, not facts copied
-from one complement. adpType is Prep, Post, or Circ only when the lexical
-position is established. governedCase records the case the adposition
-lexically governs; it is null for ordinary two-way prepositions such as auf and
-vor. Do not infer a stable governed case from the case of one local complement.
-Use abbr, foreign, extPos, and partType only when they are established facts of
-this Lemma; never infer them merely from spelling, a homonymous use, or a nearby
-construction. A conventional abbreviated adposition is itself the citation
-form: keep that abbreviated spelling as canonicalForm, emit abbr "Yes", and do
-not expand it to a longer synonym. extPos is null for an ordinary preposition;
-set it only when the adposition itself has established external syntactic
-behavior. Use null for every unmarked nullable feature.
+<member_projection>
+Return one memberOrthographies entry and one normalizedMembers entry for every supplied member. Standard includes canonical spelling, ordinary sentence-initial capitalization, licensed variants, and conventional abbreviations. Typo is only a genuine spelling or inappropriate-casing error.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, or explanations.`;
+For each Standard member, preserve its characters except lowercase ordinary sentence-initial capitalization. Capitalization is Standard only when ordinary German orthography licenses it at that position; an otherwise lowercase preposition capitalized in the middle of a sentence is Typo. Repair only Typo members. Preserve member order and separate members; never absorb a nominal complement. A circumposition such as von ... an has two supplied and two normalized members. A licensed multiword variant such as auf Grund also retains both positions.
+
+Punctuation is not a ResolvableText member. When an abbreviation period follows the closing TARGET tag, preserve the supplied letters without adding the period to normalizedMembers; the Lemma may still use the conventional punctuated abbreviation.
+</member_projection>
+
+<surface_model>
+surface contains exactly spelling and surfaceFeatures. spelling is Variant when the attested Surface is a licensed abbreviation or independently established spelling variant of the chosen Lemma; otherwise Canonical. If punctuation outside TARGET completes an abbreviation whose dictionary form includes that punctuation, the unpunctuated supplied Surface is still Variant relative to that Lemma. Equal standard variants do not by themselves choose one Lemma headword, but an explicit dictionary-form or preferred-headword cue in the context does. surfaceFeatures is null unless this ADP use is archaic; then use { historicalStatus: "Archaic" }.
+</surface_model>
+
+<lemma_model>
+lemma.canonicalForm is the complete normalized dictionary form of this ADP. For a circumposition, use source-order gap notation such as von ... an or um ... willen. For a conventional abbreviation, retain its dictionary abbreviation such as inkl.; do not expand it to a synonym.
+
+lemma.coreFeatures contains exactly:
+{
+  abbr: "Yes" | null,
+  adpType: "Circ" | "Post" | "Prep" | null,
+  extPos: "ADV" | "SCONJ" | null,
+  foreign: "Yes" | null,
+  governedCase: "Acc" | "Dat" | "Gen" | "Nom" | null,
+  partType: "Vbp" | null
+}
+
+adpType describes this occurrence: Prep precedes its complement, Post follows it, and Circ has supplied members on both sides. governedCase is the lexical government of this occurrence's construction. Use the complement's form to distinguish position-specific government, and use lexical valency when the complement does not visibly mark case. A clausal complement has no nominal governed case, so use null even when the same lemma governs a case in nominal use. Use null for two-way prepositions such as auf, vor, and zwischen, and for an adposition such as dank whose licensed government cannot fit one scalar value. Otherwise retain the established governed case rather than defaulting to null. Colloquial local dative after wegen does not erase its canonical genitive government.
+
+extPos describes established external behavior while lexical identity remains ADP; for example anstatt before a dass clause may use SCONJ. foreign is Yes only for an established foreign ADP lemma, not merely unfamiliar spelling. abbr is Yes only for an established abbreviation. partType is Vbp only when the route-valid supplied ADP itself is identified as a separated verb particle; do not copy it from an unmarked homograph or from material belonging to a VERB target. Use null for every unsupported feature.
+</lemma_model>
+
+<route_distinctions>
+- Resolve only the supplied ADP members; never absorb the complement.
+- A later unmarked separable particle does not turn an earlier supplied auf into Vbp.
+- A governed preposition that belongs to an unmarked VERB target does not enter this ADP output.
+- An unmarked Fusion such as im and an unmarked SCONJ remain context only.
+- Fixed ADP classification is authoritative even when a form such as entlang, anstatt, or auf has other possible routes elsewhere.
+</route_distinctions>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface: {
+    spelling: "Canonical" | "Variant",
+    surfaceFeatures: null | { historicalStatus: "Archaic" }
+  },
+  lemma: {
+    canonicalForm: string,
+    coreFeatures: {
+      abbr: "Yes" | null,
+      adpType: "Circ" | "Post" | "Prep" | null,
+      extPos: "ADV" | "SCONJ" | null,
+      foreign: "Yes" | null,
+      governedCase: "Acc" | "Dat" | "Gen" | "Nom" | null,
+      partType: "Vbp" | null
+    }
+  }
+}
+
+Never return decision, resolution, Unresolved, realizationCoverage, surfaceKind, inflectionalFeatures, normalizedSurface, language, family, kind, Lemma linkage, target indices, confidence, candidates, or explanation.
+</output_contract>
+
+<final_checks>
+- Both output arrays have exactly members.length entries in the same order.
+- Only Typo members are repaired; ordinary initial capitalization is Standard.
+- Citation-only surface has no surfaceKind or inflectionalFeatures in model output.
+- All six nullable Core Feature keys are present.
+- Output contains exactly memberOrthographies, normalizedMembers, surface, and lemma.
+</final_checks>`;
 
 export const demonstrations = corpus.select([
-	"grammar-de-adp-demo-contextual-mit-citation",
+	"grammar-de-adp-demo-prep-mit-dat",
 	"grammar-de-adp-demo-two-way-auf",
-	"grammar-de-adp-demo-postposition-entlang",
-	"grammar-de-adp-demo-sentence-initial-wegen",
+	"grammar-de-adp-demo-post-entlang-acc",
+	"grammar-de-adp-demo-circ-von-an",
 	"grammar-de-adp-demo-typo-one",
-	"grammar-de-adp-demo-unresolved-overbroad-mit",
-	"grammar-de-adp-demo-unresolved-ambiguous-entlang",
+	"grammar-de-adp-demo-archaic-ob",
 ]);
 
 export const promptSource = definePromptSource({

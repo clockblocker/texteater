@@ -1,0 +1,1311 @@
+{
+  "runnerVersion": "grammatical-resolution-paired-frame-v6",
+  "route": "grammatical-resolution/de/construction/paired-frame",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T10:26:55.560Z",
+  "completedAt": "2026-08-13T10:27:20.887Z",
+  "finalizedAt": "2026-08-13T10:27:27.425Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "a25da71dd8b85767efb283ce8d665c77797ae17a73e824934796ab244de96865",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "236b0d4424dc6133c12f74e84fc59dae1d84672f5c77990a40536f6ad98065e9",
+  "inputSchemaSha256": "1d92c6f36380f1bd34d0175e84f9a8266f67b6748d072e7b50ec5d0f0900866d",
+  "outputSchemaSha256": "57b759e0c7148a216a761948987a4f363542b473be940a9a8eb8fd3ed4b0fc63",
+  "suiteSha256": "2c2c7829a48fc0155a3f95a61d7d54b9ff67893e531490517dd64fdf7963add5",
+  "evaluationCaseIds": [
+    "grammar-de-paired-frame-dev-entweder-freitag",
+    "grammar-de-paired-frame-dev-entweder-clauses",
+    "grammar-de-paired-frame-dev-weder-noch",
+    "grammar-de-paired-frame-dev-sowohl-wie",
+    "grammar-de-paired-frame-dev-sowohl-wie-auch",
+    "grammar-de-paired-frame-dev-je-umso",
+    "grammar-de-paired-frame-dev-um-zu",
+    "grammar-de-paired-frame-dev-ohne-zu",
+    "grammar-de-paired-frame-dev-statt-zu",
+    "grammar-de-paired-frame-dev-teils-teils",
+    "grammar-de-paired-frame-dev-je-je",
+    "grammar-de-paired-frame-dev-casing-entweder",
+    "grammar-de-paired-frame-dev-desto-typo",
+    "grammar-de-paired-frame-dev-andererseits-typo",
+    "grammar-de-paired-frame-dev-near-cconj",
+    "grammar-de-paired-frame-dev-near-sconj",
+    "grammar-de-paired-frame-dev-near-adv",
+    "grammar-de-paired-frame-dev-repeated-um-zu-context"
+  ],
+  "boundedCalls": 18,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 18,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-paired-frame-dev-entweder-freitag",
+      "input": {
+        "markedContext": "Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
+        "members": [
+          "entweder",
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1038,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"entweder\",\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"entweder … oder\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09713da26dd4c2c4016a7d9befd31c81a0955fe98af13fd3ab",
+      "usage": {
+        "input_tokens": 1835,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1891
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-entweder-clauses",
+      "input": {
+        "markedContext": "<TARGET>Entweder</TARGET> fährt Mia heute, <TARGET>oder</TARGET> sie bleibt bis morgen.",
+        "members": [
+          "Entweder",
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 4006,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"entweder\",\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"entweder … oder\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0317354f8b14f806016a7d9bf0d404819e890dd31dbc4e7698",
+      "usage": {
+        "input_tokens": 1837,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1893
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-weder-noch",
+      "input": {
+        "markedContext": "Sie trinkt <TARGET>weder</TARGET> Tee <TARGET>noch</TARGET> Kaffee.",
+        "members": [
+          "weder",
+          "noch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "weder",
+          "noch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "weder … noch"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "weder",
+          "noch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "weder … noch"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1274,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"weder\",\"noch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"weder … noch\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d33dbd695fa74f5016a7d9bf4c7a081a2915dd2b486935d99",
+      "usage": {
+        "input_tokens": 1831,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1885
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-sowohl-wie",
+      "input": {
+        "markedContext": "Die Regel gilt <TARGET>sowohl</TARGET> für Kinder <TARGET>wie</TARGET> für Erwachsene.",
+        "members": [
+          "sowohl",
+          "wie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … wie"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "wie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … wie"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1351,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"sowohl\",\"wie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sowohl … wie\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fe8c7d41d280ec3016a7d9bf610dc819da9c0224d99f340ff",
+      "usage": {
+        "input_tokens": 1835,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1891
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-sowohl-wie-auch",
+      "input": {
+        "markedContext": "Das Angebot gilt <TARGET>sowohl</TARGET> online <TARGET>wie</TARGET> <TARGET>auch</TARGET> im Laden.",
+        "members": [
+          "sowohl",
+          "wie",
+          "auch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "wie",
+          "auch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … wie auch"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "wie",
+          "auch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … wie auch"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 951,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"sowohl\",\"wie\",\"auch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sowohl … wie auch\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_089b1dec447629f6016a7d9bf7664081a090f38e96220bf746",
+      "usage": {
+        "input_tokens": 1843,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 61,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1904
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-je-umso",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> genauer wir messen, <TARGET>umso</TARGET> sicherer wird das Ergebnis.",
+        "members": [
+          "Je",
+          "umso"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "je",
+          "umso"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … umso"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "je",
+          "umso"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … umso"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1024,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"je\",\"umso\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"je … umso\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04e303eea87045b3016a7d9bf85c94819195baae4c2e5f3a02",
+      "usage": {
+        "input_tokens": 1836,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1890
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-um-zu",
+      "input": {
+        "markedContext": "Noah spart, <TARGET>um</TARGET> im Sommer verreisen <TARGET>zu</TARGET> können.",
+        "members": [
+          "um",
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um … zu"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um … zu"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1374,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"um\",\"zu\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"um … zu\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fc1b721ee369856016a7d9bf95f10819e92203824fa405fd7",
+      "usage": {
+        "input_tokens": 1834,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 52,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1886
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-ohne-zu",
+      "input": {
+        "markedContext": "Er ging, <TARGET>ohne</TARGET> sich <TARGET>zu</TARGET> verabschieden.",
+        "members": [
+          "ohne",
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ohne",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ohne … zu"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ohne",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ohne … zu"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 999,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"ohne\",\"zu\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ohne … zu\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_086bea6615c81d23016a7d9bfabe90819dad540b0c2d8be163",
+      "usage": {
+        "input_tokens": 1833,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1887
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-statt-zu",
+      "input": {
+        "markedContext": "Lina schwieg, <TARGET>statt</TARGET> offen <TARGET>zu</TARGET> widersprechen.",
+        "members": [
+          "statt",
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "statt",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "statt … zu"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "statt",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "statt … zu"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1005,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"statt\",\"zu\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"statt … zu\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a17a6e9dd95ce4a016a7d9bfbc0d881a09394d6afbf122c6f",
+      "usage": {
+        "input_tokens": 1833,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 52,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1885
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-teils-teils",
+      "input": {
+        "markedContext": "Die Antworten waren <TARGET>teils</TARGET> hilfreich, <TARGET>teils</TARGET> widersprüchlich.",
+        "members": [
+          "teils",
+          "teils"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "teils",
+          "teils"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "teils … teils"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "teils",
+          "teils"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "teils … teils"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 981,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"teils\",\"teils\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"teils … teils\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_032ecfdbea4c1d91016a7d9bfcc3dc8192b7b18202b041aaf8",
+      "usage": {
+        "input_tokens": 1838,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1894
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-je-je",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> mehr er versprach, <TARGET>je</TARGET> weniger glaubte man ihm.",
+        "members": [
+          "Je",
+          "je"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "je",
+          "je"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … je"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "je",
+          "je"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … je"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 4177,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"je\",\"je\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"je … je\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_071107e68fb1ba8c016a7d9bfe790081a3a12d4324873fcb6a",
+      "usage": {
+        "input_tokens": 1835,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 52,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1887
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-casing-entweder",
+      "input": {
+        "markedContext": "<TARGET>Entweder</TARGET> gewinnen wir heute, <TARGET>oder</TARGET> wir üben morgen weiter.",
+        "members": [
+          "Entweder",
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1024,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"entweder\",\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"entweder … oder\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e1d3061c62bd8cf016a7d9c01e860819f818a5d172fd19f8a",
+      "usage": {
+        "input_tokens": 1838,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1894
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-desto-typo",
+      "input": {
+        "markedContext": "<TARGET>Je</TARGET> höher der Druck, <TARGET>desdo</TARGET> größer das Risiko.",
+        "members": [
+          "Je",
+          "desdo"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "je",
+          "desto"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … desto"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "je",
+          "desto"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "je … desto"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1117,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Typo\"],\"normalizedMembers\":[\"je\",\"desto\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"je … desto\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f1bb8f8893e4ac5016a7d9c02f12881a39f8f77ed9570f250",
+      "usage": {
+        "input_tokens": 1834,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1888
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-andererseits-typo",
+      "input": {
+        "markedContext": "Die Lösung ist <TARGET>einerseits</TARGET> schnell, <TARGET>anderrerseits</TARGET> aber teuer.",
+        "members": [
+          "einerseits",
+          "anderrerseits"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "einerseits",
+          "andererseits"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "einerseits … andererseits"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "einerseits",
+          "andererseits"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "einerseits … andererseits"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 965,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Typo\"],\"normalizedMembers\":[\"einerseits\",\"andererseits\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"einerseits … andererseits\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_052a9993e6e8b48c016a7d9c040fa881a19d262c5109c1f8c3",
+      "usage": {
+        "input_tokens": 1840,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1899
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-near-cconj",
+      "input": {
+        "markedContext": "Die Frage lautet „Kaffee oder Tee?“, doch wir bestellen <TARGET>entweder</TARGET> Saft <TARGET>oder</TARGET> Wasser.",
+        "members": [
+          "entweder",
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1064,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"entweder\",\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"entweder … oder\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0608bd8ff2fd8ee1016a7d9c0508c481a0b1459039dd8f649c",
+      "usage": {
+        "input_tokens": 1846,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1902
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-near-sconj",
+      "input": {
+        "markedContext": "Ob es regnet, weiß niemand; wir fahren <TARGET>entweder</TARGET> mit dem Bus <TARGET>oder</TARGET> mit der Bahn.",
+        "members": [
+          "entweder",
+          "oder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "entweder",
+          "oder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "entweder … oder"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 981,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"entweder\",\"oder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"entweder … oder\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00ab423e8c62e404016a7d9c0616d8819d8ac0738f5f67b615",
+      "usage": {
+        "input_tokens": 1845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1901
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-near-adv",
+      "input": {
+        "markedContext": "Außerdem ist der Entwurf <TARGET>sowohl</TARGET> klar <TARGET>als</TARGET> <TARGET>auch</TARGET> knapp.",
+        "members": [
+          "sowohl",
+          "als",
+          "auch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "als",
+          "auch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … als auch"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sowohl",
+          "als",
+          "auch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sowohl … als auch"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1025,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"sowohl\",\"als\",\"auch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sowohl … als auch\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_075b6d2e58d5156b016a7d9c0711d881a0a7bdd36fccf8798c",
+      "usage": {
+        "input_tokens": 1845,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 61,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1906
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-paired-frame-dev-repeated-um-zu-context",
+      "input": {
+        "markedContext": "Um das Haus blieb es zu laut, <TARGET>um</TARGET> dort ruhig schlafen <TARGET>zu</TARGET> können.",
+        "members": [
+          "um",
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um … zu"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "um",
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "um … zu"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 958,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"um\",\"zu\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"um … zu\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08c099e28b16c54c016a7d9c0817ec819face777fbfb260635",
+      "usage": {
+        "input_tokens": 1837,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1792
+        },
+        "output_tokens": 52,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1889
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

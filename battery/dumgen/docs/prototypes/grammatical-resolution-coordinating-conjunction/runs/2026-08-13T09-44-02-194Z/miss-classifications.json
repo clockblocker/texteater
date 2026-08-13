@@ -1,0 +1,6 @@
+{
+  "grammar-de-cconj-dev-variant-bzw-initial": {
+    "classification": "prompt-defect",
+    "explanation": "The casing rule did not explicitly cover a sentence-initial abbreviation whose punctuation remains outside TARGET."
+  }
+}

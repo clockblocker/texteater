@@ -1,0 +1,6 @@
+{
+	"grammar-de-noun-dev-variant-photographie": {
+		"classification": "corpus-or-evaluator-defect",
+		"explanation": "The official 2024 orthography treats Fotografie and fachsprachlich Photographie as equal standard variants, while the original sentence gave no evidence selecting Fotografie as the unique Lemma canonical form."
+	}
+}

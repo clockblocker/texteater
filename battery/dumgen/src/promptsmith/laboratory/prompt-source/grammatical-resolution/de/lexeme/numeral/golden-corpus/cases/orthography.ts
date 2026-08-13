@@ -3,43 +3,64 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { citation } from "./builders";
+import { cardinalCore, citationCase, inflectionCase } from "./builders";
 
 export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-num-typo-dreii": {
-			input: {
-				markedContext: "Sie braucht <TARGET>dreii</TARGET> Umschläge.",
-			},
-			idealOutput: citation({
+		"grammar-de-num-demo-typo-dreii": citationCase(
+			"Für das Experiment fehlen <TARGET>dreii</TARGET> Kabel.",
+			["dreii"],
+			"drei",
+			cardinalCore,
+			{
+				orthographies: ["Typo"],
 				normalizedMembers: ["drei"],
-				canonicalForm: "drei",
-				memberOrthography: "Typo",
-			}),
-			explanation:
-				"Repair the duplicated final i in both normalizedMembers and canonicalForm and classify the attested member as Typo.",
-			contaminationKeys: ["de-num-orthography:word-cardinal-typo"],
-		},
-		"grammar-de-num-sentence-initial-fuenf": {
-			input: {
-				markedContext: "<TARGET>Fünf</TARGET> Gäste sind schon da.",
+				explanation:
+					"Repair the duplicated final i and mark the occurrence Typo.",
 			},
-			idealOutput: citation({ normalizedMembers: ["fünf"] }),
-			explanation:
-				"Ordinary sentence-initial capitalization is Standard while normalizedMembers and canonicalForm use lowercase.",
-			contaminationKeys: ["de-num-orthography:sentence-initial"],
-		},
-		"grammar-de-num-typo-siebn": {
-			input: {
-				markedContext: "Es fehlen <TARGET>siebn</TARGET> Seiten.",
+		),
+		"grammar-de-num-dev-archaic-zween": inflectionCase(
+			"<TARGET>Zween</TARGET> Ritter bewachten der Sage nach das Tor.",
+			["Zween"],
+			"zwei",
+			{ case: "Nom", gender: "Masc", number: "Plur" },
+			cardinalCore,
+			{
+				spelling: "Variant",
+				historicalStatus: "Archaic",
+				normalizedMembers: ["zween"],
+				explanation:
+					"Zween is an archaic masculine inflected form of zwei; initial capitalization remains Standard.",
 			},
-			idealOutput: citation({
-				normalizedMembers: ["sieben"],
-				canonicalForm: "sieben",
-				memberOrthography: "Typo",
-			}),
-			contaminationKeys: ["de-num-orthography:word-cardinal-typo"],
-		},
+		),
+		"grammar-de-num-dev-variant-zwo": citationCase(
+			"Im Funkverkehr meldete die Pilotin <TARGET>zwo</TARGET> Kontakte.",
+			["zwo"],
+			"zwei",
+			cardinalCore,
+			{
+				spelling: "Variant",
+				explanation:
+					"The licensed disambiguating form zwo is Standard occurrence evidence and a Variant Surface of zwei.",
+			},
+		),
+		"grammar-de-num-accept-v3-typo-neunzhen": citationCase(
+			"Im Protokoll stehen <TARGET>neunzhen</TARGET> einzelne Meldungen.",
+			["neunzhen"],
+			"neunzehn",
+			cardinalCore,
+			{
+				orthographies: ["Typo"],
+				normalizedMembers: ["neunzehn"],
+			},
+		),
+		"grammar-de-num-accept-v3-archaic-fuenff": citationCase(
+			"Im alten Rechenbuch steht die Zahl <TARGET>fünff</TARGET>.",
+			["fünff"],
+			"fünf",
+			cardinalCore,
+			{ spelling: "Variant", historicalStatus: "Archaic" },
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

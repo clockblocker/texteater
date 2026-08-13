@@ -2,133 +2,117 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German
-Phraseme/Idiom, or return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the German Phraseme/Idiom Analysis Target to its Lemma and Surface grammar.
+The caller has already classified one valid Idiom target. Always resolve it.
+</agent_role>
 
-This route owns established German multiword lexical units whose contextual
-whole has a conventional global or figurative meaning that is not computed in
-the ordinary way from the individual words.
+<input_contract>
+Input is exactly {markedContext,members}. TARGET spans in markedContext and the
+members array are two authoritative projections of the same target. They have
+already passed syntax, route, occurrence, and membership validation.
 
-Apply these gates in order and stop at the first failure. A familiar or
-figurative expression does not override a failed gate.
+Never add, remove, reorder, reject, repair, or reclassify input membership.
+Unmarked text is context only. It may contain literal wording, a different
+Phraseme kind, a free Lexeme, or another occurrence. Resolve only the marked
+members. Return one memberOrthographies value and one normalizedMembers value
+for every supplied member, in source order.
+</input_contract>
 
-Gate 1 — Route boundary. First classify the whole marked expression by its
-contextual function. A restricted but semantically compositional support-verb
-expression belongs to Phraseme/Collocation. A complete autonomous anonymous
-generalizing saying belongs to Phraseme/Proverb even when its wording is
-figurative. A complete formula that independently performs a recurrent
-interactional act belongs to Phraseme/DiscourseFormula. An independently
-enacted greeting is always DiscourseFormula here, never Idiom. The later
-nonverbal Citation allowance never overrides this route gate.
-A verb-plus-noun shape alone does not make a Collocation: use that route only
-when the noun retains its ordinary lexical predication and the verb primarily
-supports it. A conventional whole meaning not recoverable that way remains an
-Idiom.
-A literal free phrase and a separable verb do not become Idioms merely because
-their words resemble an idiom. Return Unresolved for every route contradiction;
-continue only for an established Idiom.
+<fixed_contract>
+Return a flat object. Never return decision, resolution, language, family,
+kind, coreFeatures, normalizedSurface, a Surface-linked Lemma, indices,
+confidence, candidates, provenance, or explanations.
 
-Gate 2 — One occurrence and marked inventory. The input contract has already
-validated TARGET syntax and supplies one marked word-like member per pair.
-Every selected token must be a fixed member of one occurrence of the same
-established Idiom. The perfect, future, or passive auxiliary attached to its
-route-owning verbal head is also a fixed high-level member. Return Unresolved
-when targets mix or repeat occurrences, or include a modal, copula, subject,
-free argument, modifier, adjunct, or other external material. Every Resolved
-Idiom has at least two selected members.
+The application supplies language de, Family Phraseme, Kind Idiom, empty Lemma
+Core Features, Surface-to-Lemma linkage, the normalized Surface scalar, and the
+successful result wrapper.
+</fixed_contract>
 
-Evaluate fixed-member identity after repairing an unambiguous selected-member
-typo. An unambiguous spelling error does not fail the route or fixed-member
-gate: continue with the intended established Idiom, record Typo only for that
-member, and repair it in the outputs. Return Unresolved only when the intended
-member or correction is genuinely uncertain; this is distinct from a disputed
-component alternant or lexicalized variant.
+<idiom_analysis>
+Infer the established Idiom's normalized dictionary form. canonicalForm keeps
+the complete settled lexical inventory in dictionary order and German noun
+capitalization. Retain obligatory reflexive pronouns and fixed function words.
+Free arguments and inserted modifiers can inform grammar but do not enter the
+Lemma. canonicalForm contains entity-owned lexical material, not dictionary
+valency placeholders: never insert jemandem, jemanden, jemandes, etwas, or
+similar placeholders for a free participant that is absent from the fixed
+inventory.
 
-For a contextual Inflection, the selected members must include the inflecting
-verbal head: an omitted contextual verbal head forces Unresolved even if the
-unmarked verb identifies the Idiom. Never borrow Inflection features from an
-unselected verb or from another occurrence. A selected verbal head alone
-remains Lexeme/VERB and is Unresolved here. Infinitival zu, free arguments, and
-modifiers may establish grammar without becoming Surface members; a realized
-analytic auxiliary must be selected.
-For a contextual clause, inspect the selected members themselves before using
-surrounding grammar. If no selected member is the occurrence's finite,
-infinitive, or participial verbal head, return Unresolved. An unmarked verbal
-head never satisfies this requirement. The only no-head allowance is an
-explicitly identified Citation, not an ordinary clause.
+The selected members are authoritative even when discontinuous, repeated
+elsewhere, or surrounded by wording typical of a Proverb, Aphorism,
+DiscourseFormula, Collocation, literal phrase, or ordinary Lexeme. Such context
+does not reopen classification.
+</idiom_analysis>
 
-Gate 3 — Realization coverage. Use Full when every overt fixed member
-of this idiom occurrence is selected. The only authoritative positive Partial
-evidence is the repository's heulte mit Surface for the Lemma mit den Wölfen
-heulen, reproduced below. Do not generalize that one example to another idiom
-merely because its verbal head and one fixed member are selected. Broader
-head-plus-member Partial semantics, ellipsis, and lexical substitution remain
-unsettled and are Unresolved. Never insert absent or unselected material. This
-narrow exception is Idiom-specific; do not import it into another Phraseme
-route.
+<coverage>
+realizationCoverage is Full when this occurrence realizes all entity-owned
+lexical material. It is Partial only when settled Idiom material is genuinely
+unrealized yet the exact occurrence and full Lemma remain defensible, chiefly
+recoverable coordination ellipsis such as a second parallel clause whose fixed
+object is omitted. Partial never licenses inventing a normalized member: emit
+only supplied realized members. An overt but unselected word is not evidence
+of Partial because membership is outside this operation.
+</coverage>
 
-Only after all three gates pass, return Resolved. Emit exactly one
-memberOrthographies value per supplied pair in textual order.
+<surface_projection>
+normalizedMembers repairs only unambiguous selected-member typos and otherwise
+preserves contextual form and source order. Standard includes conventional
+spelling and ordinary sentence-initial capitalization; normalize lexical
+casing without calling it Typo. In particular, a sentence-initial or imperative
+verb such as Wirf normalizes to wirf, while German nouns retain capitalization.
+Typo means a real selected-member error. A typo repair does not make Surface
+spelling Variant. Use Variant only for a licensed noncanonical orthographic
+form. surfaceFeatures is null unless this exact use is archaic, then
+{historicalStatus:"Archaic"}.
 
-normalizedMembers contains exactly one normalized string per selected member
-in actual sentence order, without leading, trailing, or repeated whitespace.
-Never invent an unselected member,
-reorder to dictionary order,
-or replace contextual inflection with canonicalForm. A realized perfect,
-future, or passive auxiliary must be selected and appears in this projection,
-while unmarked infinitival zu never appears. The Lemma canonicalForm is
-the normalized dictionary form with German noun capitalization and the entire
-settled fixed-member inventory. Retain an obligatory reflexive pronoun such as
-sich in canonicalForm; do not drop a fixed member merely because context makes
-it predictable. Idiom Core Features are exactly {}. Return Unresolved rather
-than guess a disputed component alternant or lexicalized variant.
+Use Citation only when the sentence explicitly presents the target as a
+dictionary, list, or citation form. Ordinary clause uses are Inflection.
 
-Use Citation only for an explicitly identified dictionary or citation entry.
-An ordinary clause use is Inflection. This initial contextual route resolves
-verbal Idioms because the Dumling Idiom Inflection Surface carries German VERB
-features. Citation may represent an established nonverbal Idiom because it has
-no inflectional payload.
+For Inflection, describe the route-owning lexical verbal head, not an analytic
+auxiliary. A finite head uses verbForm Fin. Indicative and subjunctive finite
+forms use mood Ind or Sub with recoverable person, number, and tense; German
+Konjunktiv I maps to Pres and Konjunktiv II to Past. Imperatives use mood Imp,
+verbForm Fin, tense null, and recoverable person and number. An infinitive uses
+verbForm Inf with mood, person, and tense null. A Partizip II uses verbForm Part
+with aspect, gender, mood, number, person, and tense null unless the form itself
+settles one of those values. Do not copy perfect, future, or passive auxiliary
+tense onto an infinitive or participle. Set voice Pass only when the Idiom
+Surface itself is grammatically passive.
 
-Determine verbForm from the route-owning selected lexical head before assigning
-features. Only a finite lexical head licenses verbForm Fin. A lexical infinitive
-licenses Inf, and a lexical Partizip II licenses Part; a selected finite
-analytic auxiliary cannot change either one to Fin.
+Decide lexical head before recognizing an auxiliary. A finite form of haben,
+sein, or werden is the lexical head when the Idiom Lemma itself is headed by
+that verb, and therefore stays Fin. It is analytic only when a different
+selected lexical infinitive or participle heads the Idiom.
 
-Finite indicative and subjunctive forms use verbForm Fin with every established
-mood, number, person, and tense. German Konjunktiv I receives tense Pres and
-Konjunktiv II receives tense Past. Imperatives use mood Imp, verbForm Fin, and
-tense null; retain recoverable number and person, so a singular second-person
-imperative has number Sing and person 2. Contextual infinitives use verbForm
-Inf with mood, person, and tense null. A marked Partizip II remains verbForm
-Part even when a selected finite analytic auxiliary establishes its clause
-context. For an ordinary unagreed Partizip II, emit exactly
-{"aspect":null,"gender":null,"mood":null,"number":null,"person":null,"tense":null,"verbForm":"Part","voice":null}.
-Never use Aspect=Perf merely for Partizip II and never copy tense from its
-auxiliary. Keep voice null unless the marked Idiom Surface itself has a settled
-grammatically passive analysis.
+Aspect=Perf does not mean German perfect tense and is not licensed merely by a
+Partizip II or a selected perfect auxiliary. For an ordinary unagreed German
+Partizip II, aspect is null along with gender, mood, number, person, and tense.
 
-Standard is exact conventional spelling or ordinary sentence-initial
-capitalization. Normalize ordinary sentence-initial capitalization to the
-lexical casing without calling it a Typo: in particular, imperative Blase
-normalizes to blase while the noun Trübsal stays uppercase. Typo means a real
-error in that selected member. Repair typos in normalizedMembers and
-canonicalForm without changing order. A Typo repair does not make Surface
-spelling Variant: memberOrthographies records the input error, while the
-repaired canonical Surface uses spelling Canonical. Reserve Variant for a
-licensed noncanonical orthographic form. surfaceFeatures is null unless this
-exact attested use is archaic, when it is {"historicalStatus":"Archaic"}.
+The codec also permits the fifth, underspecified verbal branch:
+{number,tense,verbForm:null,voice}. Use it only when contextual evidence cannot
+classify the verbal head as Fin, Inf, or Part. Do not use it merely to avoid a
+recoverable analysis.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, the Surface's linked Lemma,
-target indices, Reading data, provenance, confidence, candidates, or
-explanations.`;
+Perfect, future, and passive auxiliaries supplied in members remain projected
+members because classification already owns membership. Infinitival zu that is
+not supplied remains context only.
+</surface_projection>
+
+<final_checks>
+Return every required field and no extra field. Array lengths equal
+members.length. normalizedMembers follow source order. canonicalForm follows
+dictionary order. realizationCoverage describes entity-owned lexical
+realization, not array completeness. Always resolve the classified target.
+</final_checks>`;
 
 export const demonstrations = corpus.select([
 	"grammar-de-idiom-flinte-past-full",
-	"grammar-de-idiom-flinte-participle-typo-full",
 	"grammar-de-idiom-grass-citation",
-	"grammar-de-idiom-woelfe-past-partial",
-	"grammar-de-idiom-unresolved-proverb-grube",
+	"grammar-de-idiom-woelfe-present-full",
+	"grammar-de-idiom-teufel-wand-full",
+	"grammar-de-idiom-nase-typo-full",
+	"grammar-de-idiom-handtuch-ellipsis-partial",
 ]);
 
 export const promptSource = definePromptSource({

@@ -1,0 +1,10 @@
+{
+  "grammar-de-adv-dev-cardinal-2x": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt distinguished Card from Mult semantically but did not state the official German-GSD digit-x ADV convention, so the model expanded the canonical written identity to the spelled-out multiplicative Lemma."
+  },
+  "grammar-de-adv-dev-variant-bisschen": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt taught Ind for several quantitative ADV identities but did not make explicit that lemma-owned Core Features survive a licensed Surface spelling variant. The model dropped PronType only on the pre-reform variant."
+  }
+}

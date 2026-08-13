@@ -1,65 +1,66 @@
 const memberPattern = /[\p{L}\p{N}]+(?:[’'-][\p{L}\p{N}]+)*/gu;
+const targetPattern = /<TARGET>([^<>]+)<\/TARGET>/gu;
 
 export function markEveryMember(text: string): string {
 	return text.replace(memberPattern, "<TARGET>$&</TARGET>");
 }
 
-export function memberCount(text: string): number {
-	return text.match(memberPattern)?.length ?? 0;
+function lexicalMembers(text: string): string[] {
+	return text.match(memberPattern) ?? [];
 }
 
-export function memberText(text: string): string {
-	return text.match(memberPattern)?.join(" ") ?? "";
+function targetMembers(markedContext: string): string[] {
+	return [...markedContext.matchAll(targetPattern)].map(
+		(match) => match[1] ?? "",
+	);
+}
+
+export function proverbInput(markedContext: string) {
+	const members = targetMembers(markedContext);
+	if (members.length === 0 || members.some((member) => member.length === 0)) {
+		throw new Error(
+			"A Proverb Golden Case needs non-empty TARGET members.",
+		);
+	}
+	return { markedContext, members };
 }
 
 export function resolvedProverb(args: {
 	readonly attested: string;
-	readonly before?: string;
-	readonly after?: string;
 	readonly canonical?: string;
 	readonly normalized?: string;
 	readonly typoMemberIndices?: readonly number[];
 	readonly spelling?: "Canonical" | "Variant";
 	readonly historical?: boolean;
+	readonly realizationCoverage?: "Full" | "Partial";
+	readonly prefix?: string;
+	readonly suffix?: string;
+	readonly markedContext?: string;
 }) {
-	const count = memberCount(args.attested);
+	const markedContext =
+		args.markedContext ??
+		`${args.prefix ?? ""}${markEveryMember(args.attested)}${args.suffix ?? ""}`;
+	const members = targetMembers(markedContext);
 	const typoIndices = new Set(args.typoMemberIndices ?? []);
-	const normalized = args.normalized ?? memberText(args.attested);
+	const normalized =
+		args.normalized ?? lexicalMembers(args.attested).join(" ");
 	return {
-		input: {
-			markedContext: `${args.before ?? ""}${markEveryMember(args.attested)}${args.after ?? ""}`,
-		},
+		input: { markedContext, members },
 		idealOutput: {
-			decision: "Resolved" as const,
-			resolution: {
-				memberOrthographies: Array.from(
-					{ length: count },
-					(_, index) =>
-						typoIndices.has(index)
-							? ("Typo" as const)
-							: ("Standard" as const),
-				),
-				realizationCoverage: "Full" as const,
-				normalizedMembers: normalized.match(memberPattern) ?? [],
-				surface: {
-					spelling: args.spelling ?? "Canonical",
-					surfaceKind: "Citation" as const,
-					surfaceFeatures: args.historical
-						? ({ historicalStatus: "Archaic" } as const)
-						: null,
-				},
-				lemma: {
-					canonicalForm: args.canonical ?? normalized,
-					coreFeatures: {},
-				},
+			memberOrthographies: members.map((_, index) =>
+				typoIndices.has(index)
+					? ("Typo" as const)
+					: ("Standard" as const),
+			),
+			normalizedMembers: lexicalMembers(normalized),
+			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
+			surface: {
+				spelling: args.spelling ?? ("Canonical" as const),
+				surfaceFeatures: args.historical
+					? ({ historicalStatus: "Archaic" } as const)
+					: null,
 			},
+			lemma: { canonicalForm: args.canonical ?? normalized },
 		},
-	};
-}
-
-export function unresolved(markedContext: string) {
-	return {
-		input: { markedContext },
-		idealOutput: { decision: "Unresolved" as const, resolution: null },
 	};
 }

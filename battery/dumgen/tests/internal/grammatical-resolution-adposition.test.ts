@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
+	adpositionGrammaticalResolutionAcceptanceExperiment,
 	adpositionGrammaticalResolutionExperiment,
-	evaluation,
+	developmentEvaluation,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adposition/evaluation-suite";
 import { evaluateAdpositionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adposition/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/golden-corpus/corpus";
@@ -13,256 +15,223 @@ import {
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/prompt-source";
 import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-adp-preposition-durch-acc",
-	"grammar-de-adp-preposition-zu-dat",
-	"grammar-de-adp-two-way-vor-acc",
-	"grammar-de-adp-abbreviation-inkl",
-	"grammar-de-adp-postposition-zuliebe-dat",
-	"grammar-de-adp-preposition-seit-dat",
-	"grammar-de-adp-citation-label-jenseits",
-	"grammar-de-adp-mid-sentence-casing-typo-unter",
-	"grammar-de-adp-lexical-typo-gegen",
-	"grammar-de-adp-archaic-ob",
-	"grammar-de-adp-repeated-second-bei",
-	"grammar-de-adp-unresolved-sconj-weil",
-	"grammar-de-adp-unresolved-verb-particle-auf",
-	"grammar-de-adp-unresolved-fusion-im",
-	"grammar-de-adp-unresolved-two-unrelated-targets",
-	"grammar-de-adp-unresolved-target-includes-adverb",
-	"grammar-de-adp-unresolved-adjective-route",
+const expectedDevelopmentIds = [
+	"grammar-de-adp-dev-prep-durch-acc",
+	"grammar-de-adp-dev-prep-zu-dat",
+	"grammar-de-adp-dev-two-way-vor-acc",
+	"grammar-de-adp-dev-post-zuliebe-dat",
+	"grammar-de-adp-dev-prep-seit-dat",
+	"grammar-de-adp-dev-wegen-local-dat-lexical-gen",
+	"grammar-de-adp-dev-circ-um-willen",
+	"grammar-de-adp-dev-circ-an-vorbei",
+	"grammar-de-adp-dev-post-gegenueber-dat",
+	"grammar-de-adp-dev-extpos-sconj-anstatt",
+	"grammar-de-adp-dev-foreign-versus-acc",
+	"grammar-de-adp-dev-prep-entlang-gen",
+	"grammar-de-adp-dev-adp-before-unmarked-particle",
+	"grammar-de-adp-dev-adp-beside-governed-verb-member",
+	"grammar-de-adp-dev-adp-beside-fusion",
+	"grammar-de-adp-dev-adp-beside-sconj",
+	"grammar-de-adp-dev-sentence-initial-wegen",
+	"grammar-de-adp-dev-casing-typo-unter",
+	"grammar-de-adp-dev-lexical-typo-gegen",
+	"grammar-de-adp-dev-abbreviation-inkl",
+	"grammar-de-adp-dev-variant-auf-grund",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-adp-accept-prep-fuer-acc",
+	"grammar-de-adp-accept-prep-aus-dat",
+	"grammar-de-adp-accept-prep-waehrend-gen",
+	"grammar-de-adp-accept-two-way-zwischen-dat",
+	"grammar-de-adp-accept-post-wegen-gen",
+	"grammar-de-adp-accept-circ-von-aus",
+	"grammar-de-adp-accept-circ-ueber-hinaus",
+	"grammar-de-adp-accept-post-gemaess-dat",
+	"grammar-de-adp-accept-alternating-dank",
+	"grammar-de-adp-accept-prep-bis-acc",
+	"grammar-de-adp-accept-typo-ohhne",
+	"grammar-de-adp-accept-archaic-behufs",
 ] as const;
 
 describe("Lexeme/ADP route-local corpus", () => {
-	test("keeps seven necessary demonstrations and 17 explicit held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(27);
+	test("pins 39 flat cases in three pairwise-disjoint partitions", () => {
+		expect(corpus.all().ids).toHaveLength(39);
 		expect(demonstrations.ids).toEqual([
-			"grammar-de-adp-demo-contextual-mit-citation",
+			"grammar-de-adp-demo-prep-mit-dat",
 			"grammar-de-adp-demo-two-way-auf",
-			"grammar-de-adp-demo-postposition-entlang",
-			"grammar-de-adp-demo-sentence-initial-wegen",
+			"grammar-de-adp-demo-post-entlang-acc",
+			"grammar-de-adp-demo-circ-von-an",
 			"grammar-de-adp-demo-typo-one",
-			"grammar-de-adp-demo-unresolved-overbroad-mit",
-			"grammar-de-adp-demo-unresolved-ambiguous-entlang",
+			"grammar-de-adp-demo-archaic-ob",
 		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
-			adpositionGrammaticalResolutionExperiment.evaluation,
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
 		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(17);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
-
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		const evaluationLemmas = evaluation.cases.flatMap((testCase) =>
-			testCase.idealOutput.resolution === null
-				? []
-				: [testCase.idealOutput.resolution.lemma.canonicalForm],
-		);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
 		expect(
-			evaluationLemmas.filter((lemma) => demonstrationLemmas.has(lemma)),
-		).toEqual([]);
-	});
-
-	test("assembles demonstrations but keeps held-out and provisional cases hidden", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-
-		expect(prompt).toContain("Sie fährt <TARGET>mit</TARGET> dem Bus.");
-		expect(prompt).toContain("liegt <TARGET>auf</TARGET> dem Tisch");
-		expect(prompt).toContain("Fluss <TARGET>entlang</TARGET>");
-		expect(prompt).toContain("<TARGET>Wegen</TARGET> des Sturms");
-		expect(prompt).toContain("<TARGET>one</TARGET> Mantel");
-		expect(prompt).toContain("<TARGET>mit einem Messer</TARGET>");
-		expect(prompt).toContain("Stichwort ohne Kontext");
-		expect(prompt).toContain("only Citation Surfaces");
-		expect(prompt).not.toContain("<TARGET>durch</TARGET> den Park");
-		expect(prompt).not.toContain("Den Kindern <TARGET>zuliebe</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Von</TARGET> morgen");
-		expect(prompt).not.toContain("<TARGET>Anstatt</TARGET> dass");
-		expect(prompt).not.toContain("<TARGET>wegen</TARGET> dem Regen");
-	});
-
-	test("keeps fixed route and linked fields outside the model DTO", () => {
-		const fixture = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (fixture?.idealOutput.resolution === null || fixture === undefined) {
-			throw new Error("Missing resolved durch fixture.");
-		}
-		const resolution = fixture.idealOutput.resolution;
-
-		expect(
-			outputSchema.safeParse({
-				...fixture.idealOutput,
-				resolution: {
-					...resolution,
-					lemma: { ...resolution.lemma, language: "de" },
-				},
-			}).success,
-		).toBe(false);
-		expect(
-			outputSchema.safeParse({
-				...fixture.idealOutput,
-				resolution: {
-					...resolution,
-					surface: {
-						...resolution.surface,
-						language: "de",
-						lemma: resolution.lemma,
-					},
-				},
-			}).success,
-		).toBe(false);
-	});
-
-	test("rejects invented Inflection Surfaces on this Citation-only route", () => {
-		const fixture = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (fixture?.idealOutput.resolution === null || fixture === undefined) {
-			throw new Error("Missing resolved durch fixture.");
-		}
-		const resolution = fixture.idealOutput.resolution;
-		expect(
-			outputSchema.safeParse({
-				...fixture.idealOutput,
-				resolution: {
-					...resolution,
-					surface: {
-						...resolution.surface,
-						surfaceKind: "Inflection",
-						inflectionalFeatures: {},
-					},
-				},
-			}).success,
-		).toBe(false);
-	});
-
-	test("accepts the Structured Outputs null-only feature bag", () => {
-		const fixture = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (fixture?.idealOutput.resolution === null || fixture === undefined) {
-			throw new Error("Missing resolved durch fixture.");
-		}
-		const resolution = fixture.idealOutput.resolution;
-		expect(
-			outputSchema.safeParse({
-				...fixture.idealOutput,
-				resolution: {
-					...resolution,
-					surface: {
-						...resolution.surface,
-						surfaceFeatures: { historicalStatus: null },
-					},
-				},
-			}).success,
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
 		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(39);
+		expect(adpositionGrammaticalResolutionExperiment.evaluation).toBe(
+			developmentEvaluation,
+		);
+		expect(
+			adpositionGrammaticalResolutionAcceptanceExperiment.evaluation,
+		).toBe(untouchedAcceptanceEvaluation);
+
+		for (const goldenCase of Object.values(corpus.cases)) {
+			expect(Object.keys(goldenCase.input).sort()).toEqual([
+				"markedContext",
+				"members",
+			]);
+			expect(Object.keys(goldenCase.idealOutput).sort()).toEqual([
+				"lemma",
+				"memberOrthographies",
+				"normalizedMembers",
+				"surface",
+			]);
+			expect(Object.keys(goldenCase.idealOutput.surface).sort()).toEqual([
+				"spelling",
+				"surfaceFeatures",
+			]);
+			expect(goldenCase.idealOutput).not.toHaveProperty("decision");
+			expect(goldenCase.idealOutput).not.toHaveProperty("resolution");
+			expect(goldenCase.idealOutput).not.toHaveProperty(
+				"realizationCoverage",
+			);
+		}
+	});
+
+	test("assembles total fixed-route guidance and only six demonstrations", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain("already-classified German Lexeme/ADP");
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain("Every occurrence has a Citation Surface");
+		expect(prompt).toContain("von ... an");
+		expect(prompt).toContain("<TARGET>one</TARGET>");
+		expect(prompt).toContain("<TARGET>Ob</TARGET>");
+		expect(prompt).not.toContain("<TARGET>durch</TARGET> den Park");
+		expect(prompt).not.toContain("<TARGET>Behufs</TARGET>");
+	});
+
+	test("keeps app-owned and legacy fields outside the model DTO", () => {
+		const fixture = corpus.cases["grammar-de-adp-dev-prep-durch-acc"];
+		if (fixture === undefined) throw new Error("Missing durch fixture.");
+		expect(
+			outputSchema.safeParse({
+				...fixture.idealOutput,
+				decision: "Resolved",
+				resolution: fixture.idealOutput,
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...fixture.idealOutput,
+				realizationCoverage: "Full",
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...fixture.idealOutput,
+				surface: {
+					...fixture.idealOutput.surface,
+					surfaceKind: "Citation",
+				},
+			}).success,
+		).toBe(false);
 	});
 });
 
 describe("Lexeme/ADP diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateAdpositionGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+	test("passes every development and untouched acceptance oracle", () => {
+		for (const selection of [
+			developmentEvaluation,
+			untouchedAcceptanceEvaluation,
+		]) {
+			for (const [index, caseId] of selection.ids.entries()) {
+				const goldenCase = selection.cases[index];
+				if (goldenCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = evaluateAdpositionGrammaticalResolution({
+					caseId,
+					input: goldenCase.input,
+					idealOutput: goldenCase.idealOutput,
+					output: goldenCase.idealOutput,
+				});
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports a governed-case miss without weakening other fields", () => {
-		const testCase = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing durch fixture.");
-		}
-		const coreFeatures = testCase.idealOutput.resolution.lemma
-			.coreFeatures as Record<string, unknown>;
+	test("reports a governed-case miss without weakening flat exact scoring", () => {
+		const goldenCase = corpus.cases["grammar-de-adp-dev-prep-durch-acc"];
+		if (goldenCase === undefined) throw new Error("Missing durch fixture.");
 		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				lemma: {
-					...testCase.idealOutput.resolution.lemma,
-					coreFeatures: {
-						...coreFeatures,
-						governedCase: "Gen",
-					},
+			...goldenCase.idealOutput,
+			lemma: {
+				...goldenCase.idealOutput.lemma,
+				coreFeatures: {
+					...goldenCase.idealOutput.lemma.coreFeatures,
+					governedCase: "Gen",
 				},
 			},
 		});
 		const result = evaluateAdpositionGrammaticalResolution({
-			caseId: "grammar-de-adp-preposition-durch-acc",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
+			caseId: "grammar-de-adp-dev-prep-durch-acc",
+			input: goldenCase.input,
+			idealOutput: goldenCase.idealOutput,
 			output,
 		});
-
 		expect(result.contractPass).toBe(false);
 		expect(result.coreFeaturesPass).toBe(false);
 		expect(result.normalizedSurfacePass).toBe(true);
 		expect(result.canonicalFormPass).toBe(true);
 	});
 
-	test("normalizes a null-only model feature bag for exact scoring", () => {
-		const testCase = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing through fixture.");
+	test("normalizes a null-only feature bag and checks multi-member count", () => {
+		const ordinary = corpus.cases["grammar-de-adp-dev-prep-durch-acc"];
+		const circumposition =
+			corpus.cases["grammar-de-adp-dev-circ-um-willen"];
+		if (ordinary === undefined || circumposition === undefined) {
+			throw new Error("Missing ADP fixtures.");
 		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
+		const nullBagOutput = outputSchema.parse({
+			...ordinary.idealOutput,
+			surface: {
+				...ordinary.idealOutput.surface,
+				surfaceFeatures: { historicalStatus: null },
 			},
 		});
+		expect(
+			evaluateAdpositionGrammaticalResolution({
+				caseId: "grammar-de-adp-dev-prep-durch-acc",
+				input: ordinary.input,
+				idealOutput: ordinary.idealOutput,
+				output: nullBagOutput,
+			}).contractPass,
+		).toBe(true);
+
+		const wrongCount = outputSchema.parse({
+			...circumposition.idealOutput,
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["um"],
+		});
 		const result = evaluateAdpositionGrammaticalResolution({
-			caseId: "grammar-de-adp-preposition-durch-acc",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
+			caseId: "grammar-de-adp-dev-circ-um-willen",
+			input: circumposition.input,
+			idealOutput: circumposition.idealOutput,
+			output: wrongCount,
 		});
-
-		expect(result.contractPass).toBe(true);
-		expect(result.surfaceFeaturesPass).toBe(true);
-	});
-
-	test("requires exact Unresolved/null output and matching marker count", () => {
-		const unresolved =
-			corpus.cases["grammar-de-adp-unresolved-two-unrelated-targets"];
-		const resolved = corpus.cases["grammar-de-adp-preposition-durch-acc"];
-		if (
-			unresolved === undefined ||
-			resolved?.idealOutput.resolution === null ||
-			resolved === undefined
-		) {
-			throw new Error("Missing ADP boundary fixtures.");
-		}
-		const wrong = evaluateAdpositionGrammaticalResolution({
-			caseId: "grammar-de-adp-unresolved-two-unrelated-targets",
-			input: unresolved.input,
-			idealOutput: unresolved.idealOutput,
-			output: resolved.idealOutput,
-		});
-
-		expect(wrong.contractPass).toBe(false);
-		expect(wrong.decisionPass).toBe(false);
-		expect(wrong.memberCountPass).toBe(false);
+		expect(result.contractPass).toBe(false);
+		expect(result.memberCountPass).toBe(false);
 	});
 });

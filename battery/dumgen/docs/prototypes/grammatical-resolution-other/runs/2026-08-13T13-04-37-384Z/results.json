@@ -1,0 +1,893 @@
+{
+  "runnerVersion": "grammatical-resolution-other-v6",
+  "route": "grammatical-resolution/de/lexeme/other",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T13:04:37.384Z",
+  "completedAt": "2026-08-13T13:04:53.457Z",
+  "finalizedAt": "2026-08-13T13:05:20.990Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "127eb6b8160eaf0edb75f070fcb50a03feaabae6f7e704ce327936b9f5be4adf",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "b04a10f50741ecf7cd11285d4f33ec0d8912438ad897811a161fbe82dba23382",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "8dcb137812f811b3c6f3e06c071fa94e3ff09cbc45d1a1c4380122a3dcb9606b",
+  "suiteSha256": "edf8e036af951ebe11c80871db4e757a24587f19a74ddf83902c9c5e54b5d167",
+  "evaluationCaseIds": [
+    "grammar-de-x-accept-unknown-flob",
+    "grammar-de-x-accept-unknown-glorps-gen",
+    "grammar-de-x-accept-unknown-blarga-fem",
+    "grammar-de-x-accept-unknown-glorpe-sub",
+    "grammar-de-x-accept-foreign-outdated",
+    "grammar-de-x-accept-abbr-fyi",
+    "grammar-de-x-accept-fragment-inter",
+    "grammar-de-x-accept-alphanumeric-2-in-1",
+    "grammar-de-x-accept-typo-whatevr",
+    "grammar-de-x-accept-archaic-wherefore"
+  ],
+  "boundedCalls": 10,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 7,
+  "scoreRatio": 0.7,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-x-accept-unknown-flob",
+      "input": {
+        "markedContext": "In der Rubrik für unbestimmte Wortarten erschien <TARGET>flob</TARGET>.",
+        "members": [
+          "flob"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "flob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "flob",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "flob"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "flob",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1618,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"flob\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"flob\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0dd96addc2cf0f0e016a7dc0e5c61481929b7ee509a56e8e59",
+      "usage": {
+        "input_tokens": 3475,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3543
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-unknown-glorps-gen",
+      "input": {
+        "markedContext": "Die Funktion des <TARGET>Glorps</TARGET> blieb im Versuchsprotokoll unklar.",
+        "members": [
+          "Glorps"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Glorps"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": "Neut",
+            "mood": null,
+            "number": "Sing",
+            "verbForm": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Glorp",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Glorps"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": null,
+            "mood": null,
+            "number": "Sing",
+            "verbForm": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Glorp",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1645,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Glorps\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Gen\",\"gender\":null,\"mood\":null,\"number\":\"Sing\",\"verbForm\":null}},\"lemma\":{\"canonicalForm\":\"Glorp\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a37c6b31beaeb1c016a7dc0e73f6081a1af50ac91bf4db257",
+      "usage": {
+        "input_tokens": 3477,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 103,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3580
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The article des and genitive -s license Gen and Sing but do not distinguish masculine from neuter. The oracle's Neut value is unsupported; the model's gender null is the conservative codec-derived answer."
+    },
+    {
+      "caseId": "grammar-de-x-accept-unknown-blarga-fem",
+      "input": {
+        "markedContext": "Die <TARGET>Blarga</TARGET> fiel im nächsten Satz erneut auf.",
+        "members": [
+          "Blarga"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Blarga"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "mood": null,
+            "number": "Sing",
+            "verbForm": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Blarga",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Blarga"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "mood": null,
+            "number": "Sing",
+            "verbForm": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Blarga",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1635,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Blarga\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Fem\",\"mood\":null,\"number\":\"Sing\",\"verbForm\":null}},\"lemma\":{\"canonicalForm\":\"Blarga\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d1db34892076e25016a7dc0e8e388819d869583ee0608ecd1",
+      "usage": {
+        "input_tokens": 3470,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3572
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-unknown-glorpe-sub",
+      "input": {
+        "markedContext": "Der Bericht behauptete, die Figur <TARGET>glorpe</TARGET> jeden Abend.",
+        "members": [
+          "glorpe"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "glorpe"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "gender": null,
+            "mood": "Sub",
+            "number": "Sing",
+            "verbForm": "Fin"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "glorpen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "glorpe"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "gender": null,
+            "mood": "Ind",
+            "number": null,
+            "verbForm": "Fin"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "glorpen",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1587,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"glorpe\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":null,\"gender\":null,\"mood\":\"Ind\",\"number\":null,\"verbForm\":\"Fin\"}},\"lemma\":{\"canonicalForm\":\"glorpen\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0caaecc08aad9714016a7dc0ea82c0819eb92a190c672eae44",
+      "usage": {
+        "input_tokens": 3474,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 103,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3577
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The reported-speech frame behauptete, die Figur glorpe licenses finite singular subjunctive morphology, and the model already recovers the nonce infinitive Lemma. The prompt taught transparent indicative and imperative templates but did not make indirect-speech Sub explicit."
+    },
+    {
+      "caseId": "grammar-de-x-accept-foreign-outdated",
+      "input": {
+        "markedContext": "Im deutschen Gespräch bezeichnete sie den Entwurf als <TARGET>outdated</TARGET>.",
+        "members": [
+          "outdated"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "outdated"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "outdated",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "outdated"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "outdated",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1289,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"outdated\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"outdated\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0571ef33ee1896ce016a7dc0ec17648192b0384b2ca27dfc27",
+      "usage": {
+        "input_tokens": 3473,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3541
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-abbr-fyi",
+      "input": {
+        "markedContext": "In der kurzen deutschen Chatzeile stand lediglich <TARGET>FYI</TARGET> vor dem Link.",
+        "members": [
+          "FYI"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "FYI"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "FYI",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "FYI"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "FYI",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1676,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"FYI\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"FYI\",\"coreFeatures\":{\"abbr\":\"Yes\",\"foreign\":\"Yes\",\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03978b229024b2db016a7dc0ed6af4819e871c01a8c715fc79",
+      "usage": {
+        "input_tokens": 3475,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3543
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-fragment-inter",
+      "input": {
+        "markedContext": "Der abgebrochene Vortrag endete mitten im Wort nach <TARGET>inter</TARGET>…",
+        "members": [
+          "inter"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "inter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "inter",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "inter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "inter",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1653,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"inter\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"inter\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0933297481e2f8c0016a7dc0ef15a4819f83b23c36ccd2c07d",
+      "usage": {
+        "input_tokens": 3474,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3540
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-alphanumeric-2-in-1",
+      "input": {
+        "markedContext": "Der importierte Aufkleber trug isoliert die Angabe <TARGET>2-in-1</TARGET>.",
+        "members": [
+          "2-in-1"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "2-in-1"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "2-in-1",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": "Yes",
+            "numType": "Card"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "2-in-1"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "2-in-1",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "hyph": "Yes",
+            "numType": "Mult"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1523,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"2-in-1\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"2-in-1\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"hyph\":\"Yes\",\"numType\":\"Mult\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_079e78ef256cc1ef016a7dc0f0b57481a39a849ba57a07ca59",
+      "usage": {
+        "input_tokens": 3480,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3552
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The imported-label context supports Foreign Yes and the hyphens support Hyph Yes, but the provisional Card oracle is not defensible: 2-in-1 expresses a multiplicative/compositional two-in-one relation, and the model's Mult analysis exposes the ambiguity. This case must be replaced rather than used to tune the prompt."
+    },
+    {
+      "caseId": "grammar-de-x-accept-typo-whatevr",
+      "input": {
+        "markedContext": "Die Tippnachricht enthielt erkennbar das fehlerhafte Wort <TARGET>whatevr</TARGET>.",
+        "members": [
+          "whatevr"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "whatever"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "whatever",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "whatever"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "whatever",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1567,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"whatever\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"whatever\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01ee8e0e27640efe016a7dc0f2474c8192abd14c1f551076c8",
+      "usage": {
+        "input_tokens": 3479,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 67,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3546
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-x-accept-archaic-wherefore",
+      "input": {
+        "markedContext": "Im frühneuenglischen Zitat wurde <TARGET>wherefore</TARGET> nicht übersetzt.",
+        "members": [
+          "wherefore"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wherefore"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wherefore",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wherefore"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wherefore",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "hyph": null,
+            "numType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1869,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wherefore\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":{\"historicalStatus\":\"Archaic\"}},\"lemma\":{\"canonicalForm\":\"wherefore\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"hyph\":null,\"numType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00801cb9df1fc3a5016a7dc0f3e06c81a39736c0dae9ae719f",
+      "usage": {
+        "input_tokens": 3474,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3437
+        },
+        "output_tokens": 75,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3549
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

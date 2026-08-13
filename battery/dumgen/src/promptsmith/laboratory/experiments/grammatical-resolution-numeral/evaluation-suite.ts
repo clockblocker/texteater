@@ -6,32 +6,66 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/lexeme/numeral/prompt-source";
 import { evaluateNumeralGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-num-sentence-initial-fuenf",
-	"grammar-de-num-digit-42",
-	"grammar-de-num-roman-ix",
-	"grammar-de-num-year-2024",
-	"grammar-de-num-anderthalb",
-	"grammar-de-num-citation-hundert",
-	"grammar-de-num-unresolved-determiner-beide",
-	"grammar-de-num-unresolved-adverb-dreimal",
-	"grammar-de-num-unresolved-ordinal-zweiten",
-	"grammar-de-num-unresolved-proper-name-ii",
-	"grammar-de-num-unresolved-symbol-percent",
-	"grammar-de-num-unresolved-multi-token-sechs-billionen",
-	"grammar-de-num-unresolved-repeated-acht",
-	"grammar-de-num-unresolved-two-unrelated-targets",
-	"grammar-de-num-unresolved-adjective-60er",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-num-dev-initial-fuenf",
+	"grammar-de-num-dev-decimal-drei-komma-vierzehn",
+	"grammar-de-num-dev-year-2024",
+	"grammar-de-num-dev-roman-xiv",
+	"grammar-de-num-dev-abbreviation-t",
+	"grammar-de-num-dev-foreign-three",
+	"grammar-de-num-dev-distributive-zwei",
+	"grammar-de-num-dev-collective-zwei",
+	"grammar-de-num-dev-multi-member-ein-komma-fuenf",
+	"grammar-de-num-dev-multiplicative-dreifach",
+	"grammar-de-num-dev-inflected-million-acc",
+	"grammar-de-num-dev-inflected-millionen-gen",
+	"grammar-de-num-dev-archaic-zween",
+	"grammar-de-num-dev-variant-zwo",
+	"grammar-de-num-dev-route-adj-drei",
+	"grammar-de-num-dev-route-det-zwei",
+	"grammar-de-num-dev-route-pron-drei",
+	"grammar-de-num-dev-route-noun-eins",
+	"grammar-de-num-dev-route-symbol-7",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
+export const untouchedAcceptanceEvaluation = corpus.select([
+	"grammar-de-num-accept-v3-word-dreizehn",
+	"grammar-de-num-accept-v3-digit-73",
+	"grammar-de-num-accept-v3-decimal-sieben-komma-acht",
+	"grammar-de-num-accept-v3-year-1987",
+	"grammar-de-num-accept-v3-roman-xix",
+	"grammar-de-num-accept-v3-multi-member-vier-komma-neun",
+	"grammar-de-num-accept-v3-fraction-siebenachtel",
+	"grammar-de-num-accept-v3-multiplicative-sechsfach",
+	"grammar-de-num-accept-v3-range-zwoelf-bis-sechzehn",
+	"grammar-de-num-accept-v3-inflected-quadrillionen-nom",
+	"grammar-de-num-accept-v3-typo-neunzhen",
+	"grammar-de-num-accept-v3-archaic-fuenff",
+]);
+
+if (!developmentEvaluation.isDisjointFrom(demonstrations)) {
+	throw new Error("NUM demonstrations and development must be disjoint.");
+}
+if (!untouchedAcceptanceEvaluation.isDisjointFrom(demonstrations)) {
 	throw new Error(
-		"NUM Grammatical Resolution demonstrations and evaluation must be disjoint.",
+		"NUM demonstrations and untouched acceptance must be disjoint.",
+	);
+}
+if (!developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation)) {
+	throw new Error(
+		"NUM development and untouched acceptance must be disjoint.",
 	);
 }
 
 export const numeralGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
 	evaluator: evaluateNumeralGrammaticalResolution,
 });
+
+export const numeralGrammaticalResolutionAcceptanceExperiment =
+	defineExperiment({
+		promptSource,
+		evaluation: untouchedAcceptanceEvaluation,
+		evaluator: evaluateNumeralGrammaticalResolution,
+	});

@@ -3,120 +3,86 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { conjunctionCase } from "./case-helpers";
 
-export const coreFeaturesAndOrthographyCases = defineGoldenCaseCollection(
+export const orthographyAndHistoryCases = defineGoldenCaseCollection(
 	import.meta.url,
 	{
 		cases: {
-			"grammar-de-cconj-demo-comparative-als": {
-				input: {
-					markedContext:
-						"Mira ist größer <TARGET>als</TARGET> ihre Schwester.",
+			"grammar-de-cconj-demo-typo-udn": conjunctionCase(
+				"Tee <TARGET>udn</TARGET> Kaffee stehen bereit.",
+				"udn",
+				{
+					normalizedMember: "und",
+					canonicalForm: "und",
+					orthography: "Typo",
+					explanation:
+						"Letters swapped. Mark Typo. Repair normalized member and Lemma.",
 				},
-				idealOutput: resolved("als", {
-					conjType: "Comp",
-				}),
-				explanation:
-					"The comparative conjunction als carries the only marked German CCONJ Core Feature, ConjType=Comp.",
-			},
-			"grammar-de-cconj-comparative-wie": {
-				input: {
-					markedContext:
-						"Mira ist so groß <TARGET>wie</TARGET> ihre Schwester.",
+			),
+			"grammar-de-cconj-demo-variant-bzw": conjunctionCase(
+				"Die Eltern <TARGET>bzw</TARGET>. Sorgeberechtigten unterschreiben.",
+				"bzw",
+				{
+					canonicalForm: "beziehungsweise",
+					spelling: "Variant",
+					explanation:
+						"Licensed abbreviation. Standard member. Variant Surface. Full Lemma.",
 				},
-				idealOutput: resolved("wie", { conjType: "Comp" }),
-			},
-			"grammar-de-cconj-comparative-als-held-out": {
-				input: {
-					markedContext:
-						"Der Turm ist höher <TARGET>als</TARGET> das Rathaus.",
+			),
+			"grammar-de-cconj-demo-archaic-allein": conjunctionCase(
+				"Ich wollte helfen, <TARGET>allein</TARGET> mir fehlte die Zeit.",
+				"allein",
+				{
+					historicalStatus: "Archaic",
+					explanation:
+						"Old adversative coordinator. Mark Surface Archaic.",
 				},
-				idealOutput: resolved("als", { conjType: "Comp" }),
-			},
-			"grammar-de-cconj-demo-typo-udn": {
-				input: {
-					markedContext:
-						"Tee <TARGET>udn</TARGET> Kaffee stehen bereit.",
+			),
+			"grammar-de-cconj-dev-typo-odre": conjunctionCase(
+				"Nimm den Bus <TARGET>odre</TARGET> geh zu Fuß.",
+				"odre",
+				{
+					normalizedMember: "oder",
+					canonicalForm: "oder",
+					orthography: "Typo",
 				},
-				idealOutput: resolved("und", { conjType: null }, "Typo"),
-				explanation:
-					"Repair the transposition only in normalizedMembers and canonicalForm; the marked member is a Typo.",
-			},
-			"grammar-de-cconj-typo-odre": {
-				input: {
-					markedContext:
-						"Nimm den Bus <TARGET>odre</TARGET> geh zu Fuß.",
+			),
+			"grammar-de-cconj-dev-typo-sonedrn": conjunctionCase(
+				"Das Paket ist nicht leicht, <TARGET>sonedrn</TARGET> schwer.",
+				"sonedrn",
+				{
+					normalizedMember: "sondern",
+					canonicalForm: "sondern",
+					orthography: "Typo",
 				},
-				idealOutput: resolved("oder", { conjType: null }, "Typo"),
-			},
-			"grammar-de-cconj-demo-variant-bzw": {
-				input: {
-					markedContext:
-						"Die Eltern <TARGET>bzw.</TARGET> Sorgeberechtigten unterschreiben.",
+			),
+			"grammar-de-cconj-dev-variant-bzw-initial": conjunctionCase(
+				"<TARGET>Bzw</TARGET>. die gesetzliche Vertretung muss zustimmen.",
+				"Bzw",
+				{
+					normalizedMember: "bzw",
+					canonicalForm: "beziehungsweise",
+					spelling: "Variant",
 				},
-				idealOutput: resolved(
-					"bzw.",
-					{ conjType: null },
-					"Standard",
-					"beziehungsweise",
-					"Variant",
-				),
-				explanation:
-					"The licensed abbreviation is Standard attestation of a Variant Surface; normalization must not expand it to the Lemma's canonicalForm.",
-			},
-			"grammar-de-cconj-provisional-archaic-allein": {
-				input: {
-					markedContext:
-						"Ich wollte helfen, <TARGET>allein</TARGET> mir fehlte die Zeit.",
+			),
+			"grammar-de-cconj-accept-typo-jedcoh": conjunctionCase(
+				"Der Versuch war riskant, <TARGET>jedcoh</TARGET> das Team setzte ihn fort.",
+				"jedcoh",
+				{
+					normalizedMember: "jedoch",
+					canonicalForm: "jedoch",
+					orthography: "Typo",
 				},
-				idealOutput: {
-					decision: "Resolved",
-					resolution: {
-						memberOrthographies: ["Standard"],
-						realizationCoverage: "Full",
-						normalizedMembers: ["allein"],
-						surface: {
-							spelling: "Canonical",
-							surfaceKind: "Citation",
-							surfaceFeatures: {
-								historicalStatus: "Archaic",
-							},
-						},
-						lemma: {
-							canonicalForm: "allein",
-							coreFeatures: { conjType: null },
-						},
-					},
-				},
-				explanation:
-					"Corpus-only policy probe: the adversative conjunction allein is identifiable, while its historical-status boundary needs human confirmation before scoring.",
-			},
+			),
+			"grammar-de-cconj-accept-archaic-allein": conjunctionCase(
+				"Die Mannschaft kämpfte tapfer, <TARGET>allein</TARGET> der Sieg blieb aus.",
+				"allein",
+				{ historicalStatus: "Archaic" },
+			),
 		} as const satisfies GoldenCaseRegistry<
 			typeof inputSchema,
 			typeof outputSchema
 		>,
 	},
 );
-
-function resolved(
-	normalizedMembers: string,
-	coreFeatures: { readonly conjType: "Comp" | null },
-	orthography: "Standard" | "Typo" = "Standard",
-	canonicalForm = normalizedMembers,
-	spelling: "Canonical" | "Variant" = "Canonical",
-) {
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [orthography],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [normalizedMembers],
-			surface: {
-				spelling,
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
-			lemma: { canonicalForm, coreFeatures },
-		},
-	};
-}

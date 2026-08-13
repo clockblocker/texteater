@@ -17,7 +17,6 @@ import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-rou
 
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
-	realizationCoverage: "Full",
 	normalizedMembers: ["Banken"],
 	surface: {
 		spelling: "Canonical",
@@ -303,7 +302,7 @@ describe("grammatical resolution", () => {
 					kind: "NOUN",
 				},
 			},
-			{ decision: "Resolved", resolution: modelGrammar },
+			modelGrammar,
 		]);
 		const exchanges: DumgenModelExchange[] = [];
 		const dumgen = buildDumgen({
@@ -368,7 +367,17 @@ describe("grammatical resolution", () => {
 			clickedIndex: 1,
 		});
 		expect(calls[1]?.input).toBe(
-			'{"markedContext":"Die <TARGET>Banken</TARGET>"}',
+			'{"markedContext":"Die <TARGET>Banken</TARGET>","members":["Banken"]}',
+		);
+		expect(exchanges).toContainEqual(
+			expect.objectContaining({
+				phase: "attempted",
+				promptPath: "laboratory.grammaticalResolution.de.Lexeme.NOUN",
+				modelInput: {
+					markedContext: "Die <TARGET>Banken</TARGET>",
+					members: ["Banken"],
+				},
+			}),
 		);
 		expect(
 			exchanges
@@ -404,7 +413,7 @@ describe("grammatical resolution", () => {
 					kind: "NOUN",
 				},
 			},
-			{ decision: "Resolved", resolution: modelGrammar },
+			modelGrammar,
 		]);
 		const source = sentence([{ kind: "ResolvableText", text: "Banken" }]);
 		const dumgen = buildDumgen({
@@ -449,12 +458,9 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					...modelGrammar,
-					memberOrthographies: ["Standard", "Standard"],
-					normalizedMembers: ["sage", "auf&"],
-				},
+				...modelGrammar,
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["sage", "auf&"],
 			},
 		]);
 		const source = sentence([
@@ -471,7 +477,7 @@ describe("grammatical resolution", () => {
 		});
 
 		expect(calls[1]?.input).toBe(
-			'{"markedContext":"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>"}',
+			'{"markedContext":"<TARGET>sage</TARGET> &lt;TARGET&gt; <TARGET>auf&amp;</TARGET>","members":["sage","auf&"]}',
 		);
 		expect(result).toMatchObject({
 			decision: "Resolved",
@@ -482,7 +488,7 @@ describe("grammatical resolution", () => {
 		});
 	});
 
-	test("returns expected target and grammar Unresolved outcomes", async () => {
+	test("keeps target Unresolved public before Grammatical Resolution", async () => {
 		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
 		const targetUnresolved = queueSdk([
 			{
@@ -498,25 +504,6 @@ describe("grammatical resolution", () => {
 			),
 		).resolves.toEqual({ decision: "Unresolved", language: "de" });
 		expect(targetUnresolved.calls).toHaveLength(1);
-
-		const grammarUnresolved = queueSdk([
-			{
-				decision: "Resolved",
-				additionalMemberIndices: [],
-				target: {
-					family: "Lexeme",
-					kind: "NOUN",
-				},
-			},
-			{ decision: "Unresolved", resolution: null },
-		]);
-		await expect(
-			buildDumgen({ sdk: grammarUnresolved.sdk }).resolve.grammatical(
-				"de",
-				{ sentence: source, clickedSegmentIndex: 0 },
-			),
-		).resolves.toEqual({ decision: "Unresolved", language: "de" });
-		expect(grammarUnresolved.calls).toHaveLength(2);
 	});
 
 	test("validates sentence language, aggregate, and click before dispatch", async () => {
@@ -573,7 +560,7 @@ describe("grammatical resolution", () => {
 					kind: "NOUN",
 				},
 			},
-			{ decision: "Resolved", resolution: modelGrammar },
+			modelGrammar,
 		]);
 		await expect(
 			buildDumgen({ sdk: invalidCount.sdk }).resolve.grammatical("de", {
@@ -593,11 +580,8 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					...modelGrammar,
-					memberOrthographies: ["Standard", "Standard"],
-				},
+				...modelGrammar,
+				memberOrthographies: ["Standard", "Standard"],
 			},
 		]);
 		await expect(
@@ -718,18 +702,14 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					...modelGrammar,
-					memberOrthographies: ["Typo", "Standard"],
-					normalizedMembers: ["Bank", "Bank"],
-					realizationCoverage: "Full" as const,
-					surface: {
-						...modelGrammar.surface,
-						inflectionalFeatures: {
-							case: "Nom",
-							number: "Sing",
-						},
+				...modelGrammar,
+				memberOrthographies: ["Typo", "Standard"],
+				normalizedMembers: ["Bank", "Bank"],
+				surface: {
+					...modelGrammar.surface,
+					inflectionalFeatures: {
+						case: "Nom",
+						number: "Sing",
 					},
 				},
 			},
@@ -801,15 +781,12 @@ describe("grammatical resolution", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					...modelGrammar,
-					lemma: {
-						...modelGrammar.lemma,
-						language: "en",
-						family: "Phraseme",
-						kind: "Idiom",
-					},
+				...modelGrammar,
+				lemma: {
+					...modelGrammar.lemma,
+					language: "en",
+					family: "Phraseme",
+					kind: "Idiom",
 				},
 			},
 		]);
@@ -914,8 +891,8 @@ test("keeps the complete prompt catalog internal for authoring tests", () => {
 	const grammaticalPrompts = Object.values(grammatical).flatMap((family) =>
 		Object.values(family).map((entry) => entry.prompt),
 	);
-	expect(grammaticalPrompts).toHaveLength(24);
-	expect(new Set(grammaticalPrompts).size).toBe(24);
+	expect(grammaticalPrompts).toHaveLength(22);
+	expect(new Set(grammaticalPrompts).size).toBe(22);
 	expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("NOUN");
 });
 

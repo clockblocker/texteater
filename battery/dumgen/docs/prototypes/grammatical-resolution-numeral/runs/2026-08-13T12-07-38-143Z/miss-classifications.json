@@ -1,0 +1,6 @@
+{
+  "grammar-de-num-dev-archaic-zween": {
+    "classification": "accepted-model-limitation",
+    "explanation": "This repeats the isolated stochastic surface-kind limitation under the selected explicit prompt: normalization, Standard occurrence orthography, Variant spelling, modern Lemma linkage, and Archaic status are all correct, but the agreeing historical form is returned as Citation rather than Inflection. The intervening round passed it, so no further prompt change is justified."
+  }
+}

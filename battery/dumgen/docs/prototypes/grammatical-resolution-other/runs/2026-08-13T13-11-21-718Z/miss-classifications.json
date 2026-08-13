@@ -1,0 +1,10 @@
+{
+  "grammar-de-x-accept-v2-unknown-zarg-nom-masc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "This fresh determinate nominal case repeats the development limitation: despite two different nominal Inflection demonstrations and the explicit determiner rule, the model chooses Citation for an unknown X noun. The masculine nominative singular oracle is licensed by dieser; the persistent Surface-kind bias is accepted."
+  },
+  "grammar-de-x-accept-v2-unknown-zorps-gen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model correctly resolves Inflection, Gen, Sing, and the singular nonce Lemma but overcommits gender to Neut. Dieses is syncretic between masculine and neuter, so the conservative null oracle follows the prompt and codec; this isolated unsupported-feature inference is accepted."
+  }
+}

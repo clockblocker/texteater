@@ -1,0 +1,6 @@
+{
+  "grammar-de-num-dev-archaic-zween": {
+    "classification": "prompt-defect",
+    "explanation": "The strengthened historical-form rule fixed normalization, spelling, Lemma, and archaic status, but the model still chose Citation instead of Inflection. The prompt must make visible historical agreement a mandatory Surface-kind decision."
+  }
+}

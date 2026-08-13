@@ -1,0 +1,18 @@
+{
+  "grammar-de-det-dev-negative-kein": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again assigned Neut instead of the lexical Masc gender of plural Umstände despite the established explicit plural-gender policy."
+  },
+  "grammar-de-det-dev-superlative-meisten": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again omitted the lexical Masc gender of plural Gäste despite the established explicit plural-gender policy."
+  },
+  "grammar-de-det-dev-possessive-seinen-masc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again omitted antecedent-established Gender[psor]=Masc despite the direct policy and exact remaining fields."
+  },
+  "grammar-de-det-dev-possessive-ihr-fem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again omitted antecedent-established Gender[psor]=Fem despite the direct policy and exact remaining fields."
+  }
+}

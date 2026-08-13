@@ -1,10 +1,10 @@
 # Shared grammatical-resolution Batch runner
 
-This prototype submits one OpenAI Batch for either all five registered evidence
-routes or an explicit ordered subset. The default 100-request Batch covers
-Aphorism, Collocation, Idiom, Fusion, and PairedFrame. A remediation Batch may
-select fewer routes; every selected route contributes its current 20 Golden Cases,
-prompt, strict Zod response format, evaluator, and retained-evidence parser.
+This historical prototype remains available only for the excluded
+Phraseme/Collocation laboratory route. The default Batch contains its current
+20 Golden Cases, prompt, strict Zod response format, evaluator, and
+retained-evidence parser. All routes modernized by Wayfinder #90 use the shared
+serial direct runner instead.
 
 The transport follows the official [Batch API guide](https://developers.openai.com/api/docs/guides/batch):
 the input is one JSONL file uploaded with purpose `batch`; every line has a unique
@@ -19,16 +19,14 @@ Run commands from `battery/dumgen`:
 
 ```sh
 bun run prototype:grammatical-resolution-batch submit
-bun run prototype:grammatical-resolution-batch submit-routes collocation,idiom
+bun run prototype:grammatical-resolution-batch submit-routes collocation
 bun run prototype:grammatical-resolution-batch status docs/prototypes/grammatical-resolution-batch/runs/<run>/manifest.json
 bun run prototype:grammatical-resolution-batch collect docs/prototypes/grammatical-resolution-batch/runs/<run>/manifest.json
 ```
 
-`submit` preserves the original all-five-route behavior. `submit-routes` creates
-one Batch for the comma-separated route slugs and accepts the same optional run
-directory after the list. Slugs must be unique registered routes in canonical
-order: `aphorism,collocation,idiom,fusion,paired-frame`. The example above therefore
-creates exactly 40 requests. Both submission commands create billable work and require
+`submit` and `submit-routes collocation` both select the only retained route;
+the latter accepts the same optional run directory after the list. Both
+submission commands create billable work and require
 `OPENAI_API_KEY`. Each creates a new run directory, writes the complete immutable input
 and manifest before calling OpenAI, uploads the input, and creates one Batch. The
 OpenAI client uses `maxRetries: 0`: a connection failure around Batch creation is
@@ -58,9 +56,9 @@ route-specific classifications JSON (`{}` when there are no misses), then use th
 existing route finalizer, for example:
 
 ```sh
-bun run prototype:grammatical-resolution-aphorism finalize \
-  docs/prototypes/grammatical-resolution-aphorism/runs/<run>/results.json \
-  docs/prototypes/grammatical-resolution-aphorism/runs/<run>/miss-classifications.json
+bun run prototype:grammatical-resolution-collocation finalize \
+  docs/prototypes/grammatical-resolution-collocation/runs/<run>/results.json \
+  docs/prototypes/grammatical-resolution-collocation/runs/<run>/miss-classifications.json
 ```
 
 Repeat that finalization step for every selected route. A route with a

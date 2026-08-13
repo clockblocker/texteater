@@ -1,0 +1,1715 @@
+{
+  "runnerVersion": "grammatical-resolution-idiom-v3",
+  "route": "grammatical-resolution/de/phraseme/idiom",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T09:46:40.490Z",
+  "completedAt": "2026-08-13T09:47:05.832Z",
+  "finalizedAt": "2026-08-13T09:47:18.328Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "80941212166033c75f74d2341915f9aa3bebddfa74a927dce5d98fdb954d8182",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "c7b2fc9cd5e2023cd43b6b69b746e47c57c6d2f6f294c4a8331d86e0036b4bab",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "d86db3ea31a18cf3d9cefee845b0638de0c76bbe349cfad9c4ce22264aef8334",
+  "suiteSha256": "afda00190bc4bbb068d2bf0bbb5bae24d2ec84dadb2382228c2ec3ceae7cb095",
+  "evaluationCaseIds": [
+    "grammar-de-idiom-faeustchen-perfect-full",
+    "grammar-de-idiom-truebsal-imperative-full",
+    "grammar-de-idiom-hand-fuss-subjunctive-full",
+    "grammar-de-idiom-schneider-past-full",
+    "grammar-de-idiom-fliegen-present-full",
+    "grammar-de-idiom-loeffel-typo-full",
+    "grammar-de-idiom-kalte-schulter-future-full",
+    "grammar-de-idiom-fettnaepfchen-infinitive-full",
+    "grammar-de-idiom-tomaten-present-full",
+    "grammar-de-idiom-nagel-passive-full",
+    "grammar-de-idiom-zunge-im-zaum-infinitive-full",
+    "grammar-de-idiom-dick-duenn-past-full",
+    "grammar-de-idiom-faden-perfect-full",
+    "grammar-de-idiom-ohr-present-full",
+    "grammar-de-idiom-kuerzeren-ellipsis-partial",
+    "grammar-de-idiom-bett-literal-figurative-full"
+  ],
+  "boundedCalls": 16,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 13,
+  "scoreRatio": 0.8125,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-idiom-faeustchen-perfect-full",
+      "input": {
+        "markedContext": "Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",
+        "members": [
+          "hat",
+          "sich",
+          "ins",
+          "Fäustchen",
+          "gelacht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "ins",
+          "Fäustchen",
+          "gelacht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich ins Fäustchen lachen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "ins",
+          "Fäustchen",
+          "gelacht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich ins Fäustchen lachen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1569,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"sich\",\"ins\",\"Fäustchen\",\"gelacht\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sich ins Fäustchen lachen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b357168b0654974016a7d9280d41c81a1a061fe56f79b8500",
+      "usage": {
+        "input_tokens": 3102,
+        "input_tokens_details": {
+          "cache_write_tokens": 3025,
+          "cached_tokens": 0
+        },
+        "output_tokens": 126,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3228
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-truebsal-imperative-full",
+      "input": {
+        "markedContext": "<TARGET>Blase</TARGET> jetzt nicht länger <TARGET>Trübsal</TARGET>!",
+        "members": [
+          "Blase",
+          "Trübsal"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "blase",
+          "Trübsal"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Imp",
+            "number": "Sing",
+            "person": "2",
+            "tense": null,
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Trübsal blasen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Blase",
+          "Trübsal"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Imp",
+            "number": "Sing",
+            "person": "2",
+            "tense": null,
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Trübsal blasen"
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1679,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Blase\",\"Trübsal\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Imp\",\"number\":\"Sing\",\"person\":\"2\",\"tense\":null,\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Trübsal blasen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_045aa42e8f2c3a36016a7d92824a54819d954146f747bc6629",
+      "usage": {
+        "input_tokens": 3070,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 103,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3173
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model preserved contextual sentence-initial Blase after both an explicit lexical-casing rule and a distinct imperative demonstration; all other fields were correct."
+    },
+    {
+      "caseId": "grammar-de-idiom-hand-fuss-subjunctive-full",
+      "input": {
+        "markedContext": "Wenn der Vorschlag <TARGET>Hand</TARGET> <TARGET>und</TARGET> <TARGET>Fuß</TARGET> <TARGET>hätte</TARGET>, stimmte ich zu.",
+        "members": [
+          "Hand",
+          "und",
+          "Fuß",
+          "hätte"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hand",
+          "und",
+          "Fuß",
+          "hätte"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Hand und Fuß haben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Hand",
+          "und",
+          "Fuß",
+          "hätte"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Sub",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Hand und Fuß haben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1477,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Hand\",\"und\",\"Fuß\",\"hätte\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Sub\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Hand und Fuß haben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f4f3e60a4f96947016a7d9283f7c8819e918520f61baa976f",
+      "usage": {
+        "input_tokens": 3089,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3196
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-schneider-past-full",
+      "input": {
+        "markedContext": "Ohne Mantel <TARGET>fror</TARGET> sie <TARGET>wie</TARGET> <TARGET>ein</TARGET> <TARGET>Schneider</TARGET>.",
+        "members": [
+          "fror",
+          "wie",
+          "ein",
+          "Schneider"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fror",
+          "wie",
+          "ein",
+          "Schneider"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "frieren wie ein Schneider"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "fror",
+          "wie",
+          "ein",
+          "Schneider"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "frieren wie ein Schneider"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1374,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"fror\",\"wie\",\"ein\",\"Schneider\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"frieren wie ein Schneider\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0caef13b3d881b1e016a7d928572508191bdae366e90648971",
+      "usage": {
+        "input_tokens": 3085,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3193
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-fliegen-present-full",
+      "input": {
+        "markedContext": "Mit derselben Maßnahme <TARGET>schlägt</TARGET> sie <TARGET>zwei</TARGET> <TARGET>Fliegen</TARGET> <TARGET>mit</TARGET> <TARGET>einer</TARGET> <TARGET>Klappe</TARGET>.",
+        "members": [
+          "schlägt",
+          "zwei",
+          "Fliegen",
+          "mit",
+          "einer",
+          "Klappe"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "schlägt",
+          "zwei",
+          "Fliegen",
+          "mit",
+          "einer",
+          "Klappe"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "zwei Fliegen mit einer Klappe schlagen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "schlägt",
+          "zwei",
+          "Fliegen",
+          "mit",
+          "einer",
+          "Klappe"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "zwei Fliegen mit einer Klappe schlagen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1998,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"schlägt\",\"zwei\",\"Fliegen\",\"mit\",\"einer\",\"Klappe\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"zwei Fliegen mit einer Klappe schlagen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b4720aa77f635cc016a7d9286d4d081a28e93df61ce9ef615",
+      "usage": {
+        "input_tokens": 3112,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 124,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3236
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-loeffel-typo-full",
+      "input": {
+        "markedContext": "Im Nachruf stand, dass er <TARGET>den</TARGET> <TARGET>Löfel</TARGET> schließlich <TARGET>abgab</TARGET>.",
+        "members": [
+          "den",
+          "Löfel",
+          "abgab"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "den",
+          "Löffel",
+          "abgab"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Löffel abgeben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Typo",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "den",
+          "Löffel",
+          "abgab"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Löffel abgeben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1573,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Typo\",\"Standard\"],\"normalizedMembers\":[\"den\",\"Löffel\",\"abgab\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"den Löffel abgeben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b9c945a1d53c400016a7d9288d8ac81a1b1987906583b111a",
+      "usage": {
+        "input_tokens": 3080,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3187
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-kalte-schulter-future-full",
+      "input": {
+        "markedContext": "Morgen <TARGET>wird</TARGET> sie ihm wohl <TARGET>die</TARGET> <TARGET>kalte</TARGET> <TARGET>Schulter</TARGET> <TARGET>zeigen</TARGET>.",
+        "members": [
+          "wird",
+          "die",
+          "kalte",
+          "Schulter",
+          "zeigen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird",
+          "die",
+          "kalte",
+          "Schulter",
+          "zeigen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "die kalte Schulter zeigen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird",
+          "die",
+          "kalte",
+          "Schulter",
+          "zeigen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "jemandem die kalte Schulter zeigen"
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "latencyMs": 1401,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"wird\",\"die\",\"kalte\",\"Schulter\",\"zeigen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"jemandem die kalte Schulter zeigen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0209ce87940a3f71016a7d928a60fc81a289adbf06dac72647",
+      "usage": {
+        "input_tokens": 3095,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 116,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3211
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model inserted the free dative placeholder jemandem despite an explicit prohibition and a distinct demonstration omitting a free dative argument."
+    },
+    {
+      "caseId": "grammar-de-idiom-fettnaepfchen-infinitive-full",
+      "input": {
+        "markedContext": "Er versucht, nicht wieder <TARGET>ins</TARGET> <TARGET>Fettnäpfchen</TARGET> zu <TARGET>treten</TARGET>.",
+        "members": [
+          "ins",
+          "Fettnäpfchen",
+          "treten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ins",
+          "Fettnäpfchen",
+          "treten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ins Fettnäpfchen treten"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ins",
+          "Fettnäpfchen",
+          "treten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ins Fettnäpfchen treten"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1381,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"ins\",\"Fettnäpfchen\",\"treten\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"ins Fettnäpfchen treten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06da14cf8d109b2d016a7d928bd3b481a1ae7c7b0b5e5a294f",
+      "usage": {
+        "input_tokens": 3085,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3195
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-tomaten-present-full",
+      "input": {
+        "markedContext": "Du <TARGET>hast</TARGET> heute wohl <TARGET>Tomaten</TARGET> <TARGET>auf</TARGET> <TARGET>den</TARGET> <TARGET>Augen</TARGET>.",
+        "members": [
+          "hast",
+          "Tomaten",
+          "auf",
+          "den",
+          "Augen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hast",
+          "Tomaten",
+          "auf",
+          "den",
+          "Augen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "2",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tomaten auf den Augen haben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hast",
+          "Tomaten",
+          "auf",
+          "den",
+          "Augen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "2",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tomaten auf den Augen haben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1394,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hast\",\"Tomaten\",\"auf\",\"den\",\"Augen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"2\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"Tomaten auf den Augen haben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06287ba1b68a9d86016a7d928d257c819dabe42ac2f1b0ae96",
+      "usage": {
+        "input_tokens": 3094,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3208
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-nagel-passive-full",
+      "input": {
+        "markedContext": "Mit dieser Diagnose <TARGET>wurde</TARGET> <TARGET>der</TARGET> <TARGET>Nagel</TARGET> genau <TARGET>auf</TARGET> <TARGET>den</TARGET> <TARGET>Kopf</TARGET> <TARGET>getroffen</TARGET>.",
+        "members": [
+          "wurde",
+          "der",
+          "Nagel",
+          "auf",
+          "den",
+          "Kopf",
+          "getroffen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wurde",
+          "der",
+          "Nagel",
+          "auf",
+          "den",
+          "Kopf",
+          "getroffen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Nagel auf den Kopf treffen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wurde",
+          "der",
+          "Nagel",
+          "auf",
+          "den",
+          "Kopf",
+          "getroffen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": "Pass"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Nagel auf den Kopf treffen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1314,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"wurde\",\"der\",\"Nagel\",\"auf\",\"den\",\"Kopf\",\"getroffen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":\"Pass\"}},\"lemma\":{\"canonicalForm\":\"den Nagel auf den Kopf treffen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a2784c8e138668b016a7d928e8e94819db33546ba7e6dc371",
+      "usage": {
+        "input_tokens": 3113,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 132,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3245
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-zunge-im-zaum-infinitive-full",
+      "input": {
+        "markedContext": "Sie versprach, künftig <TARGET>die</TARGET> <TARGET>Zunge</TARGET> <TARGET>im</TARGET> <TARGET>Zaum</TARGET> zu <TARGET>halten</TARGET>.",
+        "members": [
+          "die",
+          "Zunge",
+          "im",
+          "Zaum",
+          "halten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "die",
+          "Zunge",
+          "im",
+          "Zaum",
+          "halten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "die Zunge im Zaum halten"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "die",
+          "Zunge",
+          "im",
+          "Zaum",
+          "halten"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "die Zunge im Zaum halten"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1960,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"die\",\"Zunge\",\"im\",\"Zaum\",\"halten\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"die Zunge im Zaum halten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f87b0fbb3d96b69016a7d928fde6081a0a099136e814f66ed",
+      "usage": {
+        "input_tokens": 3094,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3208
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-dick-duenn-past-full",
+      "input": {
+        "markedContext": "Die Freunde <TARGET>gingen</TARGET> gemeinsam <TARGET>durch</TARGET> <TARGET>dick</TARGET> <TARGET>und</TARGET> <TARGET>dünn</TARGET>.",
+        "members": [
+          "gingen",
+          "durch",
+          "dick",
+          "und",
+          "dünn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gingen",
+          "durch",
+          "dick",
+          "und",
+          "dünn"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "durch dick und dünn gehen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gingen",
+          "durch",
+          "dick",
+          "und",
+          "dünn"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "durch dick und dünn gehen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1177,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"gingen\",\"durch\",\"dick\",\"und\",\"dünn\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"durch dick und dünn gehen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ede835ac2d64ee3016a7d9291d24c819fa50fe4ee5289787f",
+      "usage": {
+        "input_tokens": 3094,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 116,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3210
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-faden-perfect-full",
+      "input": {
+        "markedContext": "Mitten in der Erklärung <TARGET>hat</TARGET> er völlig <TARGET>den</TARGET> <TARGET>Faden</TARGET> <TARGET>verloren</TARGET>.",
+        "members": [
+          "hat",
+          "den",
+          "Faden",
+          "verloren"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "den",
+          "Faden",
+          "verloren"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Faden verlieren"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "den",
+          "Faden",
+          "verloren"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Faden verlieren"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 3076,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"den\",\"Faden\",\"verloren\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"den Faden verlieren\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0348e0f0fb088008016a7d929303cc81a2b2233935ce6c9507",
+      "usage": {
+        "input_tokens": 3089,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 116,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3205
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-ohr-present-full",
+      "input": {
+        "markedContext": "Der Verkäufer <TARGET>haut</TARGET> die Kundschaft ständig <TARGET>übers</TARGET> <TARGET>Ohr</TARGET>.",
+        "members": [
+          "haut",
+          "übers",
+          "Ohr"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "haut",
+          "übers",
+          "Ohr"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "übers Ohr hauen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "haut",
+          "übers",
+          "Ohr"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "jemanden übers Ohr hauen"
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "latencyMs": 1543,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"haut\",\"übers\",\"Ohr\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"jemanden übers Ohr hauen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09269be6d0ad6120016a7d92963178819eba1e476d0664cd17",
+      "usage": {
+        "input_tokens": 3075,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 104,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3179
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The model inserted the free accusative placeholder jemanden despite an explicit prohibition and a distinct demonstration omitting a free argument."
+    },
+    {
+      "caseId": "grammar-de-idiom-kuerzeren-ellipsis-partial",
+      "input": {
+        "markedContext": "Im ersten Duell hat Anna den Kürzeren gezogen; im zweiten <TARGET>hat</TARGET> auch Ben <TARGET>gezogen</TARGET>.",
+        "members": [
+          "hat",
+          "gezogen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "gezogen"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Kürzeren ziehen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "gezogen"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "den Kürzeren ziehen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1202,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"gezogen\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"den Kürzeren ziehen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_023447f96ba9f0fa016a7d9297a58c819cb973a194e127dbb3",
+      "usage": {
+        "input_tokens": 3074,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3180
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-idiom-bett-literal-figurative-full",
+      "input": {
+        "markedContext": "Während der Wärter das historische Bett hütete, <TARGET>hütete</TARGET> die kranke Kuratorin <TARGET>das</TARGET> <TARGET>Bett</TARGET>.",
+        "members": [
+          "hütete",
+          "das",
+          "Bett"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hütete",
+          "das",
+          "Bett"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "das Bett hüten"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hütete",
+          "das",
+          "Bett"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "das Bett hüten"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1210,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hütete\",\"das\",\"Bett\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"das Bett hüten\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03b94f760bc47ae7016a7d9298d26081a287843d0d8e679d79",
+      "usage": {
+        "input_tokens": 3089,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3025
+        },
+        "output_tokens": 104,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3193
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

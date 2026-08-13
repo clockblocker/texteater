@@ -44,6 +44,8 @@ is absent while the exact Surface and Lemma remain defensible. Discontinuity,
 intervening context, typo repair, casing repair, and missing arguments or other
 valency participants do not by themselves make an Attestation Partial. A
 licensed conventional short form is a Full Variant Surface.
+An official German Ergänzungsstrich realization with the narrowly licensed
+NOUN contextual completion is likewise `Full`, not `Partial`.
 
 ## Identity and retention
 
@@ -73,5 +75,7 @@ Licensed `Canonical | Variant` spelling remains on Surface.
 - Dumgen owns marked context, clicks, Segmented Sentence identity, target
   membership, member Segment indices, and their validation.
 - Exact source reconstruction and interaction routing occur outside Dumling.
-- Applications return `Unresolved` rather than constructing a speculative
-  Partial Attestation when exact grammatical resolution is not defensible.
+- Target Classification may return `Unresolved` before a route is fixed.
+  Grammatical Resolution is total after valid classification: malformed or
+  indefensible model output is an execution/contract error, never a speculative
+  Partial Attestation or a linguistic `Unresolved` result.

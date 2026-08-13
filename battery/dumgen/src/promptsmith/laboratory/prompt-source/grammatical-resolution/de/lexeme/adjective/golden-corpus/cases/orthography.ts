@@ -3,50 +3,42 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { inflection } from "./builders";
+import { inflectionCase } from "./builders";
 
 export const orthographyCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-adj-typo-freundlcih": {
-			input: {
-				markedContext:
-					"Die Antwort klingt <TARGET>freundlcih</TARGET>.",
+		"grammar-de-adj-demo-typo-freundlcih": inflectionCase(
+			"Die Antwort klingt <TARGET>freundlcih</TARGET>.",
+			"freundlcih",
+			"freundlich",
+			{ case: null, degree: "Pos", gender: null, number: null },
+			{
+				normalizedMember: "freundlich",
+				orthography: "Typo",
+				explanation:
+					"Letters transposed. Mark Typo. Repair Surface and Lemma.",
 			},
-			idealOutput: inflection({
-				normalizedMembers: ["freundlich"],
-				canonicalForm: "freundlich",
-				inflectionalFeatures: {
-					case: null,
-					degree: "Pos",
-					gender: null,
-					number: null,
-				},
-				memberOrthographies: ["Typo"],
-			}),
-			explanation:
-				"Repair the transposed letters without changing the contextual morphology.",
-			contaminationKeys: ["de-adj-orthography:typo"],
-		},
-		"grammar-de-adj-typo-grsser": {
-			input: {
-				markedContext:
-					"Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
+		),
+		"grammar-de-adj-dev-typo-grsser": inflectionCase(
+			"Ein <TARGET>grßer</TARGET> Hund wartet draußen.",
+			"grßer",
+			"groß",
+			{ case: "Nom", degree: "Pos", gender: "Masc", number: "Sing" },
+			{
+				normalizedMember: "großer",
+				orthography: "Typo",
 			},
-			idealOutput: inflection({
-				normalizedMembers: ["großer"],
-				canonicalForm: "groß",
-				inflectionalFeatures: {
-					case: "Nom",
-					degree: "Pos",
-					gender: "Masc",
-					number: "Sing",
-				},
-				memberOrthographies: ["Typo"],
-			}),
-			explanation:
-				"Repair the missing o while preserving the attested German sharp-s spelling and contextual morphology.",
-			contaminationKeys: ["de-adj-orthography:typo"],
-		},
+		),
+		"grammar-de-adj-accept-typo-wunderschoen": inflectionCase(
+			"Der Garten sieht <TARGET>wundershcön</TARGET> aus.",
+			"wundershcön",
+			"wunderschön",
+			{ case: null, degree: "Pos", gender: null, number: null },
+			{
+				normalizedMember: "wunderschön",
+				orthography: "Typo",
+			},
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

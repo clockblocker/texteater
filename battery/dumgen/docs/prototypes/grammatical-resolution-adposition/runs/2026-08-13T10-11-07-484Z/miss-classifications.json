@@ -1,0 +1,6 @@
+{
+  "grammar-de-adp-accept-archaic-behufs": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The response resolved the fixed ADP route, member projection, canonical form, prepositional type, and genitive government correctly, but omitted the Archaic historicalStatus for behufs. The prompt explicitly requires that feature for archaic ADP uses and includes a disjoint archaic demonstration, so the untouched corpus and evaluator expectation remain sound."
+  }
+}

@@ -1,0 +1,2079 @@
+{
+  "runnerVersion": "grammatical-resolution-pronoun-v2",
+  "route": "grammatical-resolution/de/lexeme/pronoun",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 2
+  },
+  "startedAt": "2026-08-13T10:45:45.720Z",
+  "completedAt": "2026-08-13T10:46:31.998Z",
+  "finalizedAt": "2026-08-13T10:46:42.569Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "dca54cbaba85aa156ab2b73a86ddbd118ee0c209b0d2c2a1b2349a4ebe47efe9",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "ff6531bf520f3af452af10bc5cf3573a2ddeede341d8fd4993ab903b0afd5d90",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "ade781ff4cae7128e4942659c37e30609c60267776637a12156bcb7d18c2d6c0",
+  "suiteSha256": "ca029dc086a668702be696ee07f238e201ace4a1c4ac8cb43a7d0ba3c108fa55",
+  "evaluationCaseIds": [
+    "grammar-de-pron-dev-personal-ich",
+    "grammar-de-pron-dev-personal-sie-fem",
+    "grammar-de-pron-dev-personal-sie-plur-acc",
+    "grammar-de-pron-dev-personal-euch",
+    "grammar-de-pron-dev-formal-sie-nom",
+    "grammar-de-pron-dev-reflexive-mich",
+    "grammar-de-pron-dev-nonreflexive-mich",
+    "grammar-de-pron-dev-reciprocal-einander",
+    "grammar-de-pron-dev-inherent-reflexive-sich",
+    "grammar-de-pron-dev-demonstrative-das-nom",
+    "grammar-de-pron-dev-relative-die-nom",
+    "grammar-de-pron-dev-interrogative-wer-nom",
+    "grammar-de-pron-dev-indefinite-jemandem",
+    "grammar-de-pron-dev-negative-niemanden",
+    "grammar-de-pron-dev-total-foreign-all",
+    "grammar-de-pron-dev-extpos-was",
+    "grammar-de-pron-dev-poss-meiner",
+    "grammar-de-pron-dev-contraction-s",
+    "grammar-de-pron-dev-typo-ihc",
+    "grammar-de-pron-dev-archaic-euer",
+    "grammar-de-pron-dev-formal-lowercase-typo"
+  ],
+  "boundedCalls": 21,
+  "maximumEvaluationCases": 30,
+  "retries": 0,
+  "store": false,
+  "contractScore": 21,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-pron-dev-personal-ich",
+      "input": {
+        "markedContext": "Heute fahre <TARGET>ich</TARGET> mit dem Zug nach Leipzig.",
+        "members": [
+          "ich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1727,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"1\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0159ccbc5bb8089e016a7da05a0c7c81a39222bdc781e28c19",
+      "usage": {
+        "input_tokens": 3905,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4012
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-personal-sie-fem",
+      "input": {
+        "markedContext": "Nach dem Essen liest <TARGET>sie</TARGET> noch eine Stunde.",
+        "members": [
+          "sie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1292,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Fem\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"sie\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"3\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fa5b7d4f81cecf4016a7da05ba36481a0be79973b60119eb2",
+      "usage": {
+        "input_tokens": 3904,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4011
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-personal-sie-plur-acc",
+      "input": {
+        "markedContext": "Die Gäste warten draußen; der Portier ruft <TARGET>sie</TARGET> herein.",
+        "members": [
+          "sie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1841,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":\"Plur\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"sie\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"3\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b277c108f0a2051016a7da05cf50481a1ba9844841af9785f",
+      "usage": {
+        "input_tokens": 3908,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4016
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-personal-euch",
+      "input": {
+        "markedContext": "Morgen besuche ich <TARGET>euch</TARGET> in Dresden.",
+        "members": [
+          "euch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "euch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Infm",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "euch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Infm",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 6480,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"euch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":\"Plur\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ihr\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"2\",\"polite\":\"Infm\",\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fed3aed86ce008f016a7da05f883481919722a8a294e2e39e",
+      "usage": {
+        "input_tokens": 3906,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 111,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4017
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-formal-sie-nom",
+      "input": {
+        "markedContext": "Herr Yilmaz, <TARGET>Sie</TARGET> beginnen bitte mit dem Bericht.",
+        "members": [
+          "Sie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": null,
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": null,
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1245,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Sie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":null,\"number\":null,\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"Sie\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"2\",\"polite\":\"Form\",\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04e6e4c8693850aa016a7da065415c819eb198d281dd362a41",
+      "usage": {
+        "input_tokens": 3907,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4014
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-reflexive-mich",
+      "input": {
+        "markedContext": "Vor dem Spiegel kämme ich <TARGET>mich</TARGET> sorgfältig.",
+        "members": [
+          "mich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": "Yes"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": "Yes"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1286,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":\"Sing\",\"reflex\":\"Yes\"}},\"lemma\":{\"canonicalForm\":\"ich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"1\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0eb127a56e511e03016a7da066820081a28a0115f87eaf7ac6",
+      "usage": {
+        "input_tokens": 3907,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4015
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-nonreflexive-mich",
+      "input": {
+        "markedContext": "Die Ärztin untersucht <TARGET>mich</TARGET> am Montag.",
+        "members": [
+          "mich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3687,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"1\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05d3d9b839c425eb016a7da067ca30819cb40d5370b5806b85",
+      "usage": {
+        "input_tokens": 3906,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4014
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-reciprocal-einander",
+      "input": {
+        "markedContext": "Nach dem Streit hörten die beiden <TARGET>einander</TARGET> wieder zu.",
+        "members": [
+          "einander"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "einander"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "einander",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rcp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "einander"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "einander",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rcp"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1206,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"einander\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"einander\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Rcp\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0883f7372bec170a016a7da06b7f448192a0699c7a9109801f",
+      "usage": {
+        "input_tokens": 3906,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3989
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-inherent-reflexive-sich",
+      "input": {
+        "markedContext": "Mara schämt <TARGET>sich</TARGET> für den Irrtum.",
+        "members": [
+          "sich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": null,
+            "reflex": "Yes"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": null,
+            "reflex": "Yes"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1371,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":null,\"reflex\":\"Yes\"}},\"lemma\":{\"canonicalForm\":\"sich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"3\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_045598cfc334cefe016a7da06cb8b881a18c9ce28fab418df3",
+      "usage": {
+        "input_tokens": 3907,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4016
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-demonstrative-das-nom",
+      "input": {
+        "markedContext": "<TARGET>Das</TARGET> gefällt der ganzen Familie.",
+        "members": [
+          "Das"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "das"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "der",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "das"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "der",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1457,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"das\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Neut\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"der\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Dem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0229e3ecfb51465a016a7da06e18fc8191845a69d7dfdb5188",
+      "usage": {
+        "input_tokens": 3901,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4008
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-relative-die-nom",
+      "input": {
+        "markedContext": "Die Musikerin, <TARGET>die</TARGET> heute auftritt, kommt aus Köln.",
+        "members": [
+          "die"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "die"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "der",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "die"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Fem",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "der",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1390,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"die\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Fem\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"der\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Rel\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a4cb487ecc28f54016a7da06f8af081a0a0dfc927e79258a5",
+      "usage": {
+        "input_tokens": 3908,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4014
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-interrogative-wer-nom",
+      "input": {
+        "markedContext": "<TARGET>Wer</TARGET> übernimmt morgen den Bereitschaftsdienst?",
+        "members": [
+          "Wer"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wer",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wer",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3278,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wer\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"wer\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Int\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09f0d354ac13310c016a7da070ea2881a19fe5db7300a265a5",
+      "usage": {
+        "input_tokens": 3905,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4011
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-indefinite-jemandem",
+      "input": {
+        "markedContext": "Die Notiz muss <TARGET>jemandem</TARGET> aus dem Team gehören.",
+        "members": [
+          "jemandem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "jemandem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "jemand",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "jemandem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "jemand",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 4173,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"jemandem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"jemand\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Ind\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02c130b6bda7086a016a7da0743398819c9fd88525677791e2",
+      "usage": {
+        "input_tokens": 3909,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4018
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-negative-niemanden",
+      "input": {
+        "markedContext": "Am Eingang sah der Pförtner <TARGET>niemanden</TARGET> mehr.",
+        "members": [
+          "niemanden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "niemanden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "niemand",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "niemanden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "niemand",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 5252,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"niemanden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"niemand\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0688427187539497016a7da0786b0881a3b2fb6c6e702cec0c",
+      "usage": {
+        "input_tokens": 3909,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4018
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-total-foreign-all",
+      "input": {
+        "markedContext": "Im englischen Bericht stand: „<TARGET>All</TARGET> had arrived safely.“",
+        "members": [
+          "All"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "all"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "all",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": "Yes",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "all"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "all",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": "Yes",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1529,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"all\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"all\",\"coreFeatures\":{\"extPos\":null,\"foreign\":\"Yes\",\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Tot\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_065d3b3028bd9556016a7da07da5dc8191887a1b738eba5fbe",
+      "usage": {
+        "input_tokens": 3908,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3990
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-extpos-was",
+      "input": {
+        "markedContext": "<TARGET>Was</TARGET> für eine Überraschung war das!",
+        "members": [
+          "Was"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "was"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "was",
+          "coreFeatures": {
+            "extPos": "DET",
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "was"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "was",
+          "coreFeatures": {
+            "extPos": "DET",
+            "foreign": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1535,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"was\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Neut\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"was\",\"coreFeatures\":{\"extPos\":\"DET\",\"foreign\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Int\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0eafd3fdf5e31b0b016a7da07f27e8819e94bbfd846692f672",
+      "usage": {
+        "input_tokens": 3904,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 107,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4011
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-poss-meiner",
+      "input": {
+        "markedContext": "Der rote Regenschirm am Eingang ist <TARGET>meiner</TARGET>.",
+        "members": [
+          "meiner"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "meiner"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Masc",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "meiner"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Masc",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1371,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"meiner\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Masc\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"1\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ee8306b37928830016a7da080aec0819ea68ec02379461410",
+      "usage": {
+        "input_tokens": 3907,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4015
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-contraction-s",
+      "input": {
+        "markedContext": "Wenn '<TARGET>s</TARGET> morgen regnet, bleibt das Turnier in der Halle.",
+        "members": [
+          "s"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "s"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "es",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "s"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": "Neut",
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "es",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "3",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1714,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"s\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":\"Neut\",\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"es\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"3\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fca81123010a3ea016a7da082190c8192b4c6b73aae181758",
+      "usage": {
+        "input_tokens": 3908,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4016
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-typo-ihc",
+      "input": {
+        "markedContext": "Nach der Sitzung fahre <TARGET>ihc</TARGET> direkt nach Hause.",
+        "members": [
+          "ihc"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "ich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "ich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": "Sing",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ich",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "1",
+            "polite": null,
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1402,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"ich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":null,\"number\":\"Sing\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ich\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"1\",\"polite\":null,\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_056084c19457556e016a7da083c4b881929f88a9b8cc67265e",
+      "usage": {
+        "input_tokens": 3907,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4015
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-archaic-euer",
+      "input": {
+        "markedContext": "<TARGET>Euer</TARGET> gedenke ich in dieser schweren Stunde.",
+        "members": [
+          "Euer"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "euer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          },
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Infm",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "euer"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          },
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "gender": null,
+            "number": "Plur",
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Infm",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1655,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"euer\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":{\"historicalStatus\":\"Archaic\"},\"inflectionalFeatures\":{\"case\":\"Gen\",\"gender\":null,\"number\":\"Plur\",\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"ihr\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"2\",\"polite\":\"Infm\",\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03a65ecc4ec1e625016a7da0852cc4819d947899aedd65a6f9",
+      "usage": {
+        "input_tokens": 3906,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 118,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4024
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-pron-dev-formal-lowercase-typo",
+      "input": {
+        "markedContext": "Frau Doktor, bitte setzen <TARGET>sie</TARGET> sich an den Tisch.",
+        "members": [
+          "sie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "Sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": null,
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "Sie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "gender": null,
+            "number": null,
+            "reflex": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Sie",
+          "coreFeatures": {
+            "extPos": null,
+            "foreign": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": null,
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1368,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"Sie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"gender\":null,\"number\":null,\"reflex\":null}},\"lemma\":{\"canonicalForm\":\"Sie\",\"coreFeatures\":{\"extPos\":null,\"foreign\":null,\"person\":\"2\",\"polite\":\"Form\",\"poss\":null,\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02503a4dd878bb0b016a7da086d04881a183a9e687f411c80f",
+      "usage": {
+        "input_tokens": 3908,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3873
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 4016
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

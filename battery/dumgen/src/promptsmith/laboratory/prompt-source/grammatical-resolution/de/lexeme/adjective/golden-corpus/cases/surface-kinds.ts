@@ -3,21 +3,24 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { citation } from "./builders";
+import { citationCase } from "./builders";
 
 export const surfaceKindCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-adj-citation-sanft": {
-			input: {
-				markedContext: "Wörterbucheintrag: <TARGET>sanft</TARGET>",
+		"grammar-de-adj-demo-citation-sanft": citationCase(
+			"Im Wörterbuch steht das Adjektiv <TARGET>sanft</TARGET>.",
+			"sanft",
+			"sanft",
+			{
+				explanation:
+					"Dictionary mention. Citation Surface. No inflection bag.",
 			},
-			idealOutput: citation({
-				normalizedMembers: ["sanft"],
-				canonicalForm: "sanft",
-			}),
-			explanation:
-				"An explicit dictionary label is Citation and carries no Inflectional Features.",
-		},
+		),
+		"grammar-de-adj-accept-citation-mild": citationCase(
+			"Als Grundform wird <TARGET>mild</TARGET> angegeben.",
+			"mild",
+			"mild",
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

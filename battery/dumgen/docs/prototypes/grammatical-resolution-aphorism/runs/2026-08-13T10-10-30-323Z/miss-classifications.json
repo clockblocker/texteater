@@ -1,0 +1,10 @@
+{
+  "grammar-de-aphorism-widerspruch-partial": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model correctly resolved the occurrence as Partial and preserved every supplied member, but recalled a different aphoristic completion instead of the source-attested Ebner-Eschenbach wording. The prompt already requires exact complete-wording recovery, and the untouched acceptance result is retained without post-hoc prompt or corpus changes."
+  },
+  "grammar-de-aphorism-kunst-tempel-partial": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model correctly resolved the occurrence as Partial and preserved every supplied member, but returned only the quoted beginning rather than recovering the source-attested omitted tail. The prompt already requires exact complete-wording recovery, and the untouched acceptance result is retained without post-hoc prompt or corpus changes."
+  }
+}

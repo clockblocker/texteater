@@ -2,59 +2,101 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Target Classification has already fixed this request to German
-Construction/Fusion and supplied the marked material. Resolve the Surface and
-Lemma grammar for that fixed route. Do not re-run broad target classification.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Construction/Fusion
+occurrence. Return its Citation Surface and Lemma. Do not classify the target or
+reconsider its membership.
+</agent_role>
 
-A Fusion on this route is one written word in which a German preposition and
-article are conventionally merged, for example im = in dem, zum = zu dem, zur
-= zu der, am = an dem, beim = bei dem, vom = von dem, ins = in das, or ans =
-an das. The fused word itself is the complete Construction. It is not merely
-an ordinary Lexeme/ADP and it is not the larger phrase that follows it.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. The sole TARGET
+span and sole members entry are two authoritative projections of the same
+written fused word. The caller already proved that the member is a valid
+Construction/Fusion in this context.
 
-Apply this decision procedure in order:
+Always resolve it. Never reject, repair, add, remove, merge, split, or reorder
+membership. In particular, never split a fused word into hidden preposition and
+article members, and never absorb a following article, noun, complement, Idiom
+word, or other unmarked material. Other fused-looking forms, standalone ADP or
+DET words, route contrasts, and repeated spellings in unmarked context do not
+change the supplied member.
+</input_contract>
 
-1. Check whether all and only one complete orthographic Fusion occurrence is
-   marked and whether its context supports the preposition-plus-article
-   expansion. In particular, am is Fusion only when it realizes an dem; the
-   superlative am in am schnellsten and progressive am in am Essen sein are
-   nondecomposable and return Unresolved.
-2. Return Unresolved when TARGET instead marks separately written preposition
-   and article words, a plain adposition, a nondecomposable lookalike, a larger
-   noun phrase or multiword unit, a different Construction kind, or material
-   spanning two occurrences.
-3. Otherwise keep the fixed Construction/Fusion route and return Resolved.
+<route_contract>
+The route is fixed as German Construction/Fusion. A Fusion is one written form
+conventionally realizing a German preposition plus article, such as am, beim,
+im, ins, vom, zum, zur, ans, aufs, fürs, ums, durchs, übers, hinterm, vorm, or
+unterm. The fused member itself is the complete Construction. The operation is
+total even when nearby context mentions a lexicalized lookalike, a separately
+written preposition and article, a dialect form, or another route such as an
+Idiom or PairedFrame.
+</route_contract>
 
-TARGET membership is authoritative. A Resolved Fusion has exactly one
-memberOrthographies value for its one marked word. Do not merge two TARGET
-words, borrow an unmarked article, split the fused word into hidden members,
-or widen target scope. A fused member inside a wholly marked Idiom,
-DiscourseFormula, or other multiword unit does not make that whole target a
-Fusion.
+<application_projection>
+This route has Citation Surface only. The application injects German language,
+Construction family, Fusion kind, empty Lemma Core Features, Citation
+surfaceKind, Surface-to-Lemma linkage, normalized Surface, Full realization
+coverage, and the successful result wrapper.
 
-This route is Citation-only under the current Dumling codec. Every Resolved
-result has surfaceKind Citation, realizationCoverage Full, no
-inflectionalFeatures, surfaceFeatures null, and Lemma coreFeatures exactly {}.
+Never return decision, resolution, Unresolved, realizationCoverage,
+surfaceKind, normalizedSurface, coreFeatures, language, family, kind, Lemma
+linkage, target indices, confidence, candidates, sources, or explanation.
+</application_projection>
 
-normalizedMembers is the normalized spelling of the single marked word.
-Ordinary sentence-initial capitalization is Standard and lowercases in
-normalizedMembers. Repair an evident local spelling error only when context
-positively identifies the intended fused form; then mark Typo and use the
-repaired form for normalizedMembers and canonicalForm. A different valid word,
-such as the pronoun ihm, is not evidence of a typo. canonicalForm is the
-conventional fused spelling. Use spelling Canonical unless the attested form is
-a licensed spelling variant of that same Fusion.
+<member_projection>
+Return exactly one memberOrthographies and one normalizedMembers entry.
+Standard means exact conventional spelling, ordinary sentence-initial
+capitalization, or a licensed historical spelling. Typo means a genuine local
+spelling or inappropriate-casing error.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, source citations, or
-explanations.`;
+For ordinary sentence-initial capitalization, lowercase normalizedMembers but
+classify the member Standard: Im becomes im and Beim becomes beim. Repair only
+genuine Typos inside the supplied member: zun in a context selecting zum becomes
+normalized zum, and beimm becomes beim. Do not repair valid unmarked context.
+
+Licensed historical apostrophe spellings such as für's and in's remain
+unchanged in normalizedMembers, remain Standard, and use Surface spelling
+Variant while lemma.canonicalForm gives current fürs or ins. A typo repair uses
+Surface spelling Canonical, not Variant.
+</member_projection>
+
+<surface_and_lemma>
+surface contains exactly spelling and surfaceFeatures. spelling is Canonical
+for an ordinary current fused form and Variant for a licensed spelling variant
+of the same Fusion Lemma. surfaceFeatures is null unless the grammatical use of
+the fused form itself is archaic; then use { historicalStatus: "Archaic" }.
+Archaic wording or a historical source in unmarked context does not by itself
+make a current Fusion use archaic.
+
+lemma.canonicalForm is the conventional current fused spelling of the supplied
+member, not its expanded preposition-plus-article paraphrase and not the larger
+phrase. Thus Im maps to im, zun maps to zum, and historical für's maps to fürs.
+</surface_and_lemma>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: [("Standard" | "Typo")],
+  normalizedMembers: [string],
+  surface: {
+    spelling: "Canonical" | "Variant",
+    surfaceFeatures: null | { historicalStatus: "Archaic" }
+  },
+  lemma: { canonicalForm: string }
+}
+
+Final check: both arrays have length one, preserve the supplied member only,
+and the output contains no application-owned fields. Always resolve the fixed
+route.
+</output_contract>`;
 
 export const demonstrations = corpus.select([
 	"grammar-de-fusion-demo-im-initial",
-	"grammar-de-fusion-demo-zur",
+	"grammar-de-fusion-demo-zur-noun-control",
 	"grammar-de-fusion-demo-zum-typo",
-	"grammar-de-fusion-demo-uncontracted-in-dem",
+	"grammar-de-fusion-demo-fuers-historical-variant",
+	"grammar-de-fusion-demo-am-near-route-controls",
+	"grammar-de-fusion-demo-ins-near-idiom-and-dialect",
 ]);
 
 export const promptSource = definePromptSource({

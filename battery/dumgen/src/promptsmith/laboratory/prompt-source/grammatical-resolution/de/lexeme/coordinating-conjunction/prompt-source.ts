@@ -2,50 +2,87 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German Lexeme/CCONJ, or
-return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/CCONJ occurrence.
+Return its attested Citation Surface and dictionary Lemma. Do not classify the
+target or reconsider its membership.
+</agent_role>
 
-Resolve only when exactly one TARGET pair marks exactly one complete German
-coordinating-conjunction Lexeme in a context that distinguishes that use. A
-German CCONJ is uninflected, so this route has only Citation Surfaces: use
-surfaceKind Citation for both dictionary labels and ordinary contextual uses.
-Never invent an Inflection Surface or inflectional features.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }.
+Every TARGET span marks one supplied member, and members repeats those exact
+texts in source order. Both projections are authoritative. Never reject,
+repair, add, remove, merge, split, or reorder membership.
+</input_contract>
 
-Return Unresolved when the target includes a conjunct or other non-lexical
-material, contains more than one TARGET pair, belongs to another route, or does
-not provide enough context to distinguish one grammatical CCONJ identity.
-Words such as aber, denn, doch, jedoch, als, and wie are route-ambiguous; resolve
-them only when the syntax supports a coordinating or comparative-conjunction
-use. Do not absorb a full correlative construction into this Lexeme route.
+<route_contract>
+Target Classification already established Lexeme/CCONJ. The operation is
+total: always resolve the supplied occurrence. Ambiguous forms such as aber,
+denn, doch, jedoch, als, and wie are CCONJ here; use the surrounding syntax only
+to resolve their grammatical identity and features. Do not reclassify a token
+as SCONJ, ADV, PART, or a PairedFrame, and do not absorb unmarked context.
 
-Emit exactly one memberOrthographies value. Typo means the marked spelling is
-erroneous and must be repaired. Standard includes ordinary sentence-initial
-capitalization and licensed abbreviations or variants. A licensed abbreviation
-is a Variant Surface, not a Typo.
+German CCONJ is uninflected. Every occurrence has a Citation Surface, including
+ordinary contextual uses. The application injects Citation, German route
+identity, Surface-to-Lemma linkage, normalized Surface, successful resolution,
+and Full realization coverage. Do not return any of those fields.
+</route_contract>
 
-The Surface is the normalized contextual conjunction. Lowercase ordinary
-sentence-initial capitalization, repair only typos, and preserve licensed
-abbreviations without expanding them. Never substitute a synonym or otherwise
-replace the Surface with the Lemma canonicalForm. Because this single-word route
-requires the complete lexical item, realizationCoverage is Full; an incomplete
-or overbroad target is Unresolved rather than Partial.
+<member_projection>
+Return one memberOrthographies entry and one normalizedMembers entry for every
+supplied member. Standard includes canonical spelling, ordinary
+sentence-initial capitalization, and licensed abbreviations or variants. Typo
+is only a genuine spelling error.
 
-surfaceFeatures must be null unless the attested conjunction is archaic; then
-emit {"historicalStatus":"Archaic"}. An archaic but identifiable conjunction
-remains Resolved.
+For each Standard member, preserve its spelling except lowercase ordinary
+sentence-initial capitalization. Repair only Typo members. Preserve licensed
+abbreviations such as bzw rather than expanding them. Array position is the
+alignment key.
 
-The Lemma canonicalForm is the normalized unabbreviated form of the same
-Lexeme. coreFeatures is {"conjType":"Comp"} only for a comparing conjunction,
-such as comparative als or wie. Ordinary coordinating conjunctions use
-{"conjType":null}. Resolved has a non-null resolution; Unresolved has
-resolution null.`;
+When a sentence-initial abbreviation has its period immediately after the
+closing TARGET tag, lowercase the supplied member itself and leave the unmarked
+period outside normalizedMembers.
+</member_projection>
+
+<surface_and_lemma>
+surface contains exactly spelling and surfaceFeatures. spelling is Variant for
+a licensed abbreviation or spelling variant and Canonical otherwise.
+surfaceFeatures is null unless the attested conjunction is archaic; then use
+{ historicalStatus: "Archaic" }.
+
+lemma.canonicalForm is the normalized unabbreviated dictionary form of the same
+CCONJ. lemma.coreFeatures contains exactly { conjType: "Comp" | null }. Use Comp
+only when als or wie introduces the comparison complement. Ordinary coordinators,
+including adversative and causal conjunctions, use null.
+</surface_and_lemma>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface: {
+    spelling: "Canonical" | "Variant",
+    surfaceFeatures: null | { historicalStatus: "Archaic" }
+  },
+  lemma: {
+    canonicalForm: string,
+    coreFeatures: { conjType: "Comp" | null }
+  }
+}
+
+Never return decision, resolution, Unresolved, realizationCoverage,
+surfaceKind, inflectionalFeatures, normalizedSurface, language, family, kind,
+Lemma linkage, target indices, confidence, candidates, or explanation.
+</output_contract>`;
 
 export const demonstrations = corpus.select([
-	"grammar-de-cconj-demo-contextual-und-citation",
+	"grammar-de-cconj-demo-ordinary-und",
 	"grammar-de-cconj-demo-comparative-als",
+	"grammar-de-cconj-demo-causal-denn",
 	"grammar-de-cconj-demo-typo-udn",
 	"grammar-de-cconj-demo-variant-bzw",
-	"grammar-de-cconj-demo-ambiguous-doch",
+	"grammar-de-cconj-demo-archaic-allein",
 ]);
 
 export const promptSource = definePromptSource({

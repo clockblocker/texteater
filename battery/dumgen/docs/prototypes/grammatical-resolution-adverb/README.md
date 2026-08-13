@@ -1,99 +1,132 @@
-# German Lexeme/ADV Grammatical Resolution evaluation
+# German Lexeme/ADV grammatical-resolution evidence
 
-This route-local prototype evaluates the exact
-`grammatical-resolution/de/lexeme/adverb` Prompt Source. Its Golden Corpus has
-32 cases spanning uninflected Citation Surfaces, degree-marked Inflection
-Surfaces, all modeled German ADV Core Features, orthography, normalization, and
-route boundaries. Nine cases are demonstrations and 15 settled cases form the
-disjoint authoritative held-out suite. Eight policy probes remain corpus-only:
-historical status for `allhier`, `Foreign=Yes` for lexicalized `circa`,
-unsupported ordinal `erstens`, colloquial split `da … für`, `Card`/`Ind` on
-quantitative `viel`, the single-Lemma ambiguity of `am häufigsten`, lexical
-`PronType=Int` versus relative use for `wo`, and the ADV/PART plus
-`PronType=Ind` tension for degree-modifier `etwas`. Resolved demonstration
-Lemmas do not occur in held-out scoring.
+Issue [#104](https://github.com/clockblocker/texteater/issues/104) migrates
+this leaf to the total classified-target contract established by #90 and the
+#91 migration matrix.
 
-The corpus-only `am häufigsten` case remains intentionally Unresolved: the same
-marked superlative can realize regular `häufig` or the suppletive paradigm of
-`oft`, and its context does not establish one Lemma identity. The `wo` and
-`etwas` cases likewise retain their exact inputs and oracles as policy probes;
-none of the three is an authoritative score, evaluator tolerance, or promoted
-demonstration.
+## Contract
 
-The demonstrations establish the schema-sensitive boundaries: ordinary
-ungraded ADV uses are Citation because Dumling requires a non-null Degree on an
-Inflection Surface; dictionary labels are also Citation; pronominal `dazu`
-establishes a non-null `PronType=Dem` Core Feature without sharing a Lemma with
-held-out `damit`; quantitative `genug` establishes GSD-attested
-`PronType=Ind` without sharing corpus-only `etwas`; and negative `nie`
-establishes `PronType=Neg` without sharing held-out `keineswegs`. German GSD's
-only negative ADV lemma is `keineswegs`, so the `nie` annotation is sourced
-from the official German-LIT treebank and applies the German UD
-negative-proform policy without claiming a GSD attestation. Irregular
-comparative and periphrastic superlative forms are Inflection; TARGET pairs
-determine member count; actual misspellings are repaired and marked Typo; and
-productive adverbial use of an adjective stays on Lexeme/ADJ.
+The model receives exactly `{ markedContext, members }`. The two projections
+are authoritative and positionally aligned; this leaf never repairs, rejects,
+or reclassifies target membership. The model returns the flat codec-derived
+ADV DTO:
 
-The prompt also makes the reviewed generic decisions explicit: verb-second
-matrix uses distinguish pronominal adverbs from homographic verb-final
-subordinators; applicable PronType and NumType values are mandatory rather than
-optional just because their fields are nullable; `Mult` marks occurrence-count
-and `-mal` adverbs while `Card` marks cardinal quantity; and literal TARGET
-counts do not license an overbroad modifier-plus-head span.
-
-The bounded runner makes one serial call per held-out case with the shared
-`gpt-5.6-luna` model, no reasoning, a 4,096-token output budget, no
-retries, and `store: false`. Higher reasoning did not improve the authoritative
-outcomes, while independent review identified three recurring failures as
-unsettled corpus policy rather than honest scoreable contracts. The exact
-15-case suite remains at the acceptance minimum and preserves the settled Core
-Feature, degree, normalization, route, and target-scope coverage. Integration
-ticket #54 must configure ADV with the same `gpt-5.6-luna` and no-reasoning
-policy. The runner preflights exactly 15 cases against the authored Prompt
-Source schemas before creating a provider client.
-Retained evidence binds the exact ordered suite, Golden Case values, assembled
-prompt hash, authored input/output schema hashes, literal retained `model`,
-catalog output-token policy, runner version, response metadata, field-level
-diagnostics, and errors. Imports, tests, validation, and finalization make no
-provider calls.
-
-## Suggested prompt-logbook wording
-
-- `wo`: German GSD keeps ADV lemma `wo` lexically `PronType=Int`, including in
-  relative-clause attestations, but Dumgen still needs a policy ruling on
-  whether lexical Core Feature identity or the contextual relative use governs
-  this route's learner-facing resolution. Keep the exact case corpus-only until
-  that boundary is settled.
-- `etwas`: Degree-modifier `etwas` is attested as ADV with `PronType=Ind`, but
-  its ADV/PART route boundary and the requirement to preserve that lexical Core
-  Feature remain a combined policy tension. Keep the exact case corpus-only
-  rather than treating either analysis as authoritative evidence.
-
-Root integration must register the Prompt Source and package script. A live run
-is then an explicit manual action from `battery/dumgen`:
-
-```sh
-bun run prototype:grammatical-resolution-adverb
+```text
+{
+  memberOrthographies,
+  normalizedMembers,
+  surface: Citation | Inflection(Degree),
+  lemma: { canonicalForm, coreFeatures: { foreign, numType, pronType } }
+}
 ```
 
-Draft results are written atomically below `runs/<timestamp>/results.json`.
-The live command exits unsuccessfully after retaining the draft because human
-miss classification is a required gate. Provider errors require a fresh run.
+The application owns German route identity, Surface-to-Lemma linkage,
+`normalizedSurface`, successful resolution, and `Full` realization coverage.
+The model owns the Citation/Inflection discriminator because the ADV codec has
+both Surface kinds. Inflection is restricted to non-null `Cmp | Pos | Sup`;
+invariant contextual occurrences use Citation.
 
-## Evidence finalization
+## Frozen partitions
 
-Create a JSON sidecar keyed by every failed case, using one of
-`prompt-defect`, `corpus-or-evaluator-defect`, or
-`accepted-model-limitation`, with a non-empty explanation. Finalize offline:
+The 37 realistic full-sentence cases are frozen into disjoint selections:
+
+- demonstrations: 6 cases;
+- classified development: 19 cases;
+- untouched acceptance: 12 cases.
+
+Coverage includes temporal and locative ADV, demonstrative, indefinite,
+interrogative, relative, and negative pronominal classes, Card and Mult,
+Foreign, every supported Degree, initial capitalization, abbreviation, typo,
+licensed spelling variant, archaic use, and fixed-route contrasts against ADJ,
+PART, ADP, SCONJ, and PairedFrame payload. Exact IDs are pinned in the Prompt
+Source, evaluation suite, and focused tests.
+
+## Deterministic gate
+
+From `battery/dumgen`:
 
 ```sh
-bun run docs/prototypes/grammatical-resolution-adverb/run.ts finalize \
+bun test tests/internal/grammatical-resolution-adverb.test.ts \
+  tests/internal/grammatical-resolution-adverb-runner.test.ts
+bun run check
+bunx biome check \
+  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb \
+  src/promptsmith/laboratory/experiments/grammatical-resolution-adverb \
+  docs/prototypes/grammatical-resolution-adverb/run.ts \
+  tests/internal/grammatical-resolution-adverb.test.ts \
+  tests/internal/grammatical-resolution-adverb-runner.test.ts
+bun docs/prototypes/grammatical-resolution-adverb/run.ts \
+  preflight development 1
+```
+
+Preflight is zero-call and must not construct a provider client.
+
+## Authorized live protocol
+
+No provider call is allowed without orchestrator authorization. Once
+authorized, run three serial development rounds, classify every scored miss,
+and finalize each result offline before continuing. Failed exact cases remain
+held out. Run untouched acceptance exactly once only after the development
+gate succeeds.
+
+```sh
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adverb/run.ts run development 1
+
+bun docs/prototypes/grammatical-resolution-adverb/run.ts finalize \
   docs/prototypes/grammatical-resolution-adverb/runs/<timestamp>/results.json \
   docs/prototypes/grammatical-resolution-adverb/runs/<timestamp>/miss-classifications.json
+
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adverb/run.ts run acceptance
 ```
 
-Finalization rejects obsolete prompt, catalog, suite, Golden Case, schema, or
-runner bindings; recomputes every diagnostic and score; rejects provider
-errors; and requires every miss to be classified. Evidence qualifies with at
-least 15 calls, at least 80% exact-contract score, zero execution errors, and
-zero unclassified misses.
+The current protocol has 69 calls: `19 × 3` development plus 12 acceptance. A
+deliberately pessimistic assumption that every call consumes the full
+4,096-token output cap and all input is uncached remains below about `$1.80`;
+retained provider usage is authoritative after each run. A practical reserve of
+`$0.15` is expected from the currently integrated cached-run evidence, but it is
+not a spending guarantee.
+
+The retained `2026-08-03` run directories predate this input, output, corpus,
+model binding, and phase protocol. They remain historical evidence only and do
+not satisfy issue #104.
+
+## Retained current-contract evidence
+
+The authorized protocol completed on 2026-08-13 with 68 serial provider calls,
+zero execution errors, and every development miss classified. Round 1 used the
+initial 18-case development selection; its two source-backed corpus corrections
+split the provisional combined `viel` oracle into independent Pos and Card
+cases, producing the final 19-case development selection for rounds 2 and 3.
+
+| Phase | Retained result | Score | Miss disposition |
+| --- | --- | ---: | --- |
+| Development 1 | `runs/2026-08-13T11-08-49-321Z/results.json` | 12/18 (66.7%) | Four casing-normalization prompt defects; two corpus/evaluator defects in combined `viel` features and `ca` Foreign |
+| Development 2 | `runs/2026-08-13T11-12-09-067Z/results.json` | 17/19 (89.5%) | Two prompt defects: digit-x Card identity and preserving lemma Core Features across a licensed spelling variant |
+| Development 3 | `runs/2026-08-13T11-13-29-652Z/results.json` | 18/19 (94.7%) | One accepted model limitation: the pre-reform variant still lost PronType Ind despite the general correlation rule |
+| Untouched acceptance | `runs/2026-08-13T11-14-24-146Z/results.json` | 12/12 (100%) | None |
+
+The round-1 corpus correction is backed by official UD German-GSD
+[NumType statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-feat-NumType.html):
+the only ADV `NumType=Card` form is `2x`, while ordinary `viel` is among ADV
+forms without NumType. German-GSD
+[PronType statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-feat-PronType.html)
+also explicitly list `bisschen`, `bischen`, and `bißchen` as ADV
+`PronType=Ind`. The prompt changes therefore teach general feature correlations
+rather than copying an exact failed case into demonstrations. The selected
+round-3 and acceptance prompt SHA is
+`a493c8dfecc3d03b8e0e6406cfc28ab067daa0d9899778c6826ffeb890620034`.
+
+The four retained runs report 173,506 input tokens, including 163,693 cached
+tokens and 7,505 cache-write tokens, plus 4,866 output tokens and zero reasoning
+tokens. At published Luna rates of `$1.00/M` ordinary input, `$0.10/M` cached
+input, `$1.25/M` cache-write input, and `$6.00/M` output, the measured content
+estimate is `$0.05725455`, safely below both the `$0.15` reserve and the
+authorized `$5` leaf cap. Exact billed cost remains authoritative in the
+provider billing export.
+
+The untouched acceptance reservation is retained at
+`runs/acceptance-reservation.json`; acceptance passed without a prompt defect,
+so the replacement protocol was not invoked and the suite must not be run
+again.

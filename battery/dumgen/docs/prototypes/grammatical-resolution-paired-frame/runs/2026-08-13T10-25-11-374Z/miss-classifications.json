@@ -1,0 +1,18 @@
+{
+  "grammar-de-paired-frame-dev-entweder-clauses": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt said to lowercase ordinary sentence-initial capitalization but did not make the positional transformation mechanical enough, so the model preserved source Entweder in normalizedMembers."
+  },
+  "grammar-de-paired-frame-dev-je-je-archaic": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The oracle labeled the je … je grammatical use Archaic, but current dictionary evidence still lists this comparative correlator without an obsolescence label. The model correctly returned null surfaceFeatures; the corpus must be corrected."
+  },
+  "grammar-de-paired-frame-dev-casing-entweder": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt said to lowercase ordinary sentence-initial capitalization but did not make the positional transformation mechanical enough, so the model preserved source Entweder in normalizedMembers."
+  },
+  "grammar-de-paired-frame-dev-desto-typo": {
+    "classification": "prompt-defect",
+    "explanation": "The model repaired the actual desdo typo but preserved ordinary sentence-initial Je; the prompt did not make the separate Standard casing normalization mechanical enough."
+  }
+}

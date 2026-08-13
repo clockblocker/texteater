@@ -1,0 +1,6 @@
+{
+  "grammar-de-num-accept-v2-inflected-billionen-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The selected prompt explicitly states that sentence-initial lowercasing applies to Inflection quantity numerals, but the model preserved initial capitalization and also collapsed the overt feminine plural quantity form to Citation. This repeats the v1 quantity-numeral defect on a wholly fresh lexeme and sentence, so the numeric threshold alone is not terminal evidence."
+  }
+}

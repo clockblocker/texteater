@@ -1,0 +1,1159 @@
+{
+  "runnerVersion": "grammatical-resolution-noun-v5",
+  "route": "grammatical-resolution/de/lexeme/noun",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T09:47:12.383Z",
+  "completedAt": "2026-08-13T09:47:35.204Z",
+  "finalizedAt": "2026-08-13T09:48:06.153Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "09c81a91ec6a3fa74c73bb59f548cb487a3603335efaea1edc886e1ffb9a2333",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "a099de4cb476db29830f3aeec25beb0c0e7870319ed0d9e0b8df58e593495f22",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "f57a3ff99b47aee08b7819e92e96c8002465d536f0fd2fc00e4a36efbe8a114f",
+  "suiteSha256": "625b0e7ce2c10f9f2809c531b29abb643e6290ee130496f6b672ed8e55e62470",
+  "evaluationCaseIds": [
+    "grammar-de-noun-accept-nom-sing-mark",
+    "grammar-de-noun-accept-nom-sing-tisch",
+    "grammar-de-noun-accept-acc-sing-tuer",
+    "grammar-de-noun-accept-dat-plur-haeusern",
+    "grammar-de-noun-accept-gen-plur-kinder",
+    "grammar-de-noun-accept-invariant-plur-maedchen",
+    "grammar-de-noun-accept-plural-only-ferien",
+    "grammar-de-noun-accept-hyphenated-e-mail",
+    "grammar-de-noun-accept-substantivized-angestellten",
+    "grammar-de-noun-accept-suspended-nonbreaking",
+    "grammar-de-noun-accept-suspended-oder-singular",
+    "grammar-de-noun-accept-suspended-dativ-plural",
+    "grammar-de-noun-accept-suspended-nominativ-plural"
+  ],
+  "boundedCalls": 13,
+  "maximumEvaluationCases": 30,
+  "retries": 0,
+  "store": false,
+  "contractScore": 12,
+  "scoreRatio": 0.9230769230769231,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-noun-accept-nom-sing-mark",
+      "input": {
+        "markedContext": "Die <TARGET>Mark</TARGET> war damals die Währung.",
+        "members": [
+          "Mark"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mark"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Mark",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mark"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Mark",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1938,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Mark\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Mark\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05cd53b94738dd7f016a7d92a0e87c819f9734c2d1b816992b",
+      "usage": {
+        "input_tokens": 2161,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2239
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-nom-sing-tisch",
+      "input": {
+        "markedContext": "Der <TARGET>Tisch</TARGET> steht am Fenster.",
+        "members": [
+          "Tisch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Tisch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tisch",
+          "coreFeatures": {
+            "gender": "Masc",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Tisch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tisch",
+          "coreFeatures": {
+            "gender": "Masc",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1267,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Tisch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Tisch\",\"coreFeatures\":{\"gender\":\"Masc\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07b740a2b8b91810016a7d92a287208192bdb1471da59d2996",
+      "usage": {
+        "input_tokens": 2160,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2240
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-acc-sing-tuer",
+      "input": {
+        "markedContext": "Sie öffnet die <TARGET>Tür</TARGET> ganz leise.",
+        "members": [
+          "Tür"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Tür"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tür",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Tür"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Tür",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2004,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Tür\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Tür\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01d3ee06ddd7c4fe016a7d92a42968819caed39b5e16bdea7b",
+      "usage": {
+        "input_tokens": 2162,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2240
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-dat-plur-haeusern",
+      "input": {
+        "markedContext": "Zwischen den <TARGET>Häusern</TARGET> liegt ein Hof.",
+        "members": [
+          "Häusern"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Häusern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Haus",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Häusern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Haus",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1240,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Häusern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Haus\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09892d98d4bef236016a7d92a5cf24819fbe6437e7ab66a8a5",
+      "usage": {
+        "input_tokens": 2167,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2250
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-gen-plur-kinder",
+      "input": {
+        "markedContext": "Das Lachen der <TARGET>Kinder</TARGET> war laut.",
+        "members": [
+          "Kinder"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kind",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinder"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Gen",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kind",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3406,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kinder\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Gen\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Kind\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f7d73cc08856395016a7d92a9159881a1809d1745c968688e",
+      "usage": {
+        "input_tokens": 2161,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2241
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-invariant-plur-maedchen",
+      "input": {
+        "markedContext": "Die drei <TARGET>Mädchen</TARGET> spielen draußen.",
+        "members": [
+          "Mädchen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mädchen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Mädchen",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Mädchen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Mädchen",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1213,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Mädchen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Mädchen\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0593b16ebd196797016a7d92aa7610819dbb82810dde4b6e02",
+      "usage": {
+        "input_tokens": 2160,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2242
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-plural-only-ferien",
+      "input": {
+        "markedContext": "Die <TARGET>Ferien</TARGET> beginnen morgen.",
+        "members": [
+          "Ferien"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ferien"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Ferien",
+          "coreFeatures": {
+            "gender": null,
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ferien"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Ferien",
+          "coreFeatures": {
+            "gender": null,
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1376,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Ferien\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Ferien\",\"coreFeatures\":{\"gender\":null,\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08fdb7507b76ef0d016a7d92aba904819c95c9da21d0ca6bd6",
+      "usage": {
+        "input_tokens": 2160,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 81,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2241
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-hyphenated-e-mail",
+      "input": {
+        "markedContext": "Sie beantwortet die <TARGET>E-Mail</TARGET> sofort.",
+        "members": [
+          "E-Mail"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "E-Mail"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "E-Mail",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": "Yes"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "E-Mail"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "E-Mail",
+          "coreFeatures": {
+            "gender": "Fem",
+            "hyph": "Yes"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1309,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"E-Mail\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"E-Mail\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":\"Yes\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0dcbd500c801c0ce016a7d92ad0acc819ca6764f9a4c839bd0",
+      "usage": {
+        "input_tokens": 2161,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2241
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-substantivized-angestellten",
+      "input": {
+        "markedContext": "Wir danken den <TARGET>Angestellten</TARGET> für ihre Hilfe.",
+        "members": [
+          "Angestellten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Angestellten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Angestellte",
+          "coreFeatures": {
+            "gender": null,
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Angestellten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Angestellte",
+          "coreFeatures": {
+            "gender": null,
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1325,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Angestellten\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Angestellte\",\"coreFeatures\":{\"gender\":null,\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a5f1239baafa7f5016a7d92ae5ca08191941a00b1f2a91a0b",
+      "usage": {
+        "input_tokens": 2165,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2248
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-suspended-nonbreaking",
+      "input": {
+        "markedContext": "Der Laden führt <TARGET>Kinder‑</TARGET> und Jugendbücher.",
+        "members": [
+          "Kinder‑"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbücher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbücher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2616,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kinderbücher\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Kinderbuch\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ca0b3f7dd0a587b016a7d92afae0c819fb26fb77c09ba5db3",
+      "usage": {
+        "input_tokens": 2164,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2247
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-suspended-oder-singular",
+      "input": {
+        "markedContext": "Sie kauft ein <TARGET>Kinder-</TARGET> oder Jugendbuch.",
+        "members": [
+          "Kinder-"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbuch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinder-"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "number": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2548,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kinder-\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"number\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Kinderbuch\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f8a229d0a065f0d016a7d92b24bdc81a3a3c7a8023010c63e",
+      "usage": {
+        "input_tokens": 2164,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 81,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2245
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The selected prompt explicitly requires binary und/oder suspended completion, and the model resolved every other field while missing only the normalized singular member after oder."
+    },
+    {
+      "caseId": "grammar-de-noun-accept-suspended-dativ-plural",
+      "input": {
+        "markedContext": "Mit <TARGET>Kinder-</TARGET> und Jugendbüchern kennt sie sich aus.",
+        "members": [
+          "Kinder-"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbüchern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbüchern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1227,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kinderbüchern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Kinderbuch\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0571659243e4461c016a7d92b4d560819290b07f702ec8fbc8",
+      "usage": {
+        "input_tokens": 2166,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2249
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-noun-accept-suspended-nominativ-plural",
+      "input": {
+        "markedContext": "<TARGET>Kinder-</TARGET> und Jugendbücher sind beliebt.",
+        "members": [
+          "Kinder-"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbücher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Kinderbücher"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "number": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Kinderbuch",
+          "coreFeatures": {
+            "gender": "Neut",
+            "hyph": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1339,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Kinderbücher\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"number\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"Kinderbuch\",\"coreFeatures\":{\"gender\":\"Neut\",\"hyph\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00193f96169f26b0016a7d92b61168819c8ccd7f16a0291771",
+      "usage": {
+        "input_tokens": 2163,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2131
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2246
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

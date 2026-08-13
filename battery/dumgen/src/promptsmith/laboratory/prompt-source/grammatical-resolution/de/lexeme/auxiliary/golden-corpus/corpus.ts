@@ -1,6 +1,6 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
-import { boundaryCases } from "./cases/boundaries";
+import { classifiedContrastCases } from "./cases/boundaries";
 import { inflectionCases } from "./cases/inflection";
 import { orthographyAndSurfaceCases } from "./cases/orthography-and-surface";
 
@@ -11,13 +11,15 @@ export const corpus = defineGoldenCorpus({
 	collections: {
 		inflection: inflectionCases,
 		orthographyAndSurface: orthographyAndSurfaceCases,
-		boundaries: boundaryCases,
+		classifiedContrasts: classifiedContrastCases,
 	},
 	fingerprintInput(input) {
-		return input.markedContext
-			.normalize("NFC")
-			.replaceAll(/\s+/gu, " ")
-			.trim()
-			.toLocaleLowerCase("de");
+		return JSON.stringify({
+			markedContext: input.markedContext
+				.normalize("NFC")
+				.replaceAll(/\s+/gu, " ")
+				.trim(),
+			members: input.members.map((member) => member.normalize("NFC")),
+		});
 	},
 });

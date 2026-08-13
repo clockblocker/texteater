@@ -1,0 +1,6 @@
+{
+  "grammar-de-pron-dev-reflexive-mich": {
+    "classification": "prompt-defect",
+    "explanation": "Every field except Polite passed. Despite the person restriction, the response still treated a first-person reflexive as informal address. The prompt must clarify that Infm is a second-person grammatical feature, not a default for non-formal speech."
+  }
+}

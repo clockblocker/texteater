@@ -1,0 +1,1037 @@
+{
+  "runnerVersion": "grammatical-resolution-adposition-v4",
+  "route": "grammatical-resolution/de/lexeme/adposition",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T10:11:07.484Z",
+  "completedAt": "2026-08-13T10:11:26.828Z",
+  "finalizedAt": "2026-08-13T10:11:42.956Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "e71c6d03edfd6a79df1f9a30762423ba154fc71caac1135811b49531b7571e1b",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "66137404a396b8cf752ec500bedad92ed72159657844a1abee5564e37a60132d",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "fe65ab200a0306e1c592ce4adcd443cd6dab1acb34330fc7dc8128e26883cc4d",
+  "suiteSha256": "c46bdabd75f063a4deea927aeab99870db74a320ba4bf3cd4ab4df628f199fc7",
+  "evaluationCaseIds": [
+    "grammar-de-adp-accept-prep-fuer-acc",
+    "grammar-de-adp-accept-prep-aus-dat",
+    "grammar-de-adp-accept-prep-waehrend-gen",
+    "grammar-de-adp-accept-two-way-zwischen-dat",
+    "grammar-de-adp-accept-post-wegen-gen",
+    "grammar-de-adp-accept-circ-von-aus",
+    "grammar-de-adp-accept-circ-ueber-hinaus",
+    "grammar-de-adp-accept-post-gemaess-dat",
+    "grammar-de-adp-accept-alternating-dank",
+    "grammar-de-adp-accept-prep-bis-acc",
+    "grammar-de-adp-accept-typo-ohhne",
+    "grammar-de-adp-accept-archaic-behufs"
+  ],
+  "boundedCalls": 12,
+  "maximumEvaluationCases": 30,
+  "retries": 0,
+  "store": false,
+  "contractScore": 11,
+  "scoreRatio": 0.9166666666666666,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adp-accept-prep-fuer-acc",
+      "input": {
+        "markedContext": "Sie backt einen Kuchen <TARGET>für</TARGET> ihre Nachbarin.",
+        "members": [
+          "für"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "für"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "für",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "für"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "für",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1599,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"für\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"für\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Acc\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02b81ebd84f40235016a7d983bd914819d92e40e79327a9b4d",
+      "usage": {
+        "input_tokens": 2564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2644
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-prep-aus-dat",
+      "input": {
+        "markedContext": "Der Tisch besteht <TARGET>aus</TARGET> massivem Holz.",
+        "members": [
+          "aus"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1589,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"aus\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"aus\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Dat\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_007bd1f5135c396f016a7d983d4e9881a0abebbcf1d762014b",
+      "usage": {
+        "input_tokens": 2561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2641
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-prep-waehrend-gen",
+      "input": {
+        "markedContext": "<TARGET>Während</TARGET> des Konzerts blieb ihr Handy aus.",
+        "members": [
+          "Während"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "während"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "während",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1425,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"während\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"während\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Gen\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06ca4ee7069a2cab016a7d983ee1b4819e8dfef505bab7c8d9",
+      "usage": {
+        "input_tokens": 2562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2644
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-two-way-zwischen-dat",
+      "input": {
+        "markedContext": "Der Schlüssel liegt <TARGET>zwischen</TARGET> den Büchern.",
+        "members": [
+          "zwischen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwischen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwischen",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": null,
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zwischen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zwischen",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": null,
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1442,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zwischen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zwischen\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":null,\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_078c38cf61cf849d016a7d98405290819faaf30a45c55fa97f",
+      "usage": {
+        "input_tokens": 2561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2641
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-post-wegen-gen",
+      "input": {
+        "markedContext": "Des dichten Nebels <TARGET>wegen</TARGET> fiel der Flug aus.",
+        "members": [
+          "wegen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wegen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wegen",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Post",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wegen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wegen",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Post",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2065,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wegen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wegen\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Post\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Gen\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fa0f887d7bd6b3b016a7d9841cea487d289197bd207a83b90",
+      "usage": {
+        "input_tokens": 2564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2644
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-circ-von-aus",
+      "input": {
+        "markedContext": "<TARGET>Von</TARGET> der Terrasse <TARGET>aus</TARGET> sieht man den See.",
+        "members": [
+          "Von",
+          "aus"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "von",
+          "aus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "von ... aus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Circ",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "von",
+          "aus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "von ... aus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Circ",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1675,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"von\",\"aus\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"von ... aus\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Circ\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Dat\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0114c43cd3cf6eae016a7d9843e4a081a19e194d538ead0b81",
+      "usage": {
+        "input_tokens": 2570,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2656
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-circ-ueber-hinaus",
+      "input": {
+        "markedContext": "Die Wirkung reicht <TARGET>über</TARGET> das Jahr <TARGET>hinaus</TARGET>.",
+        "members": [
+          "über",
+          "hinaus"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "über",
+          "hinaus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "über ... hinaus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Circ",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "über",
+          "hinaus"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "über ... hinaus",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Circ",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1491,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"über\",\"hinaus\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"über ... hinaus\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Circ\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Acc\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e4ac345a825eaa0016a7d98457ce0819c9e5fe428259aadf0",
+      "usage": {
+        "input_tokens": 2571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2658
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-post-gemaess-dat",
+      "input": {
+        "markedContext": "Den Regeln <TARGET>gemäß</TARGET> beginnt die Sitzung pünktlich.",
+        "members": [
+          "gemäß"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gemäß"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gemäß",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Post",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gemäß"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gemäß",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Post",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Dat",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1903,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"gemäß\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gemäß\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Post\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Dat\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04828c6b57200d8b016a7d9847006081a1b5d00a6334cdea96",
+      "usage": {
+        "input_tokens": 2566,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2648
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-alternating-dank",
+      "input": {
+        "markedContext": "<TARGET>Dank</TARGET> des schnellen Einsatzes blieb niemand verletzt.",
+        "members": [
+          "Dank"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dank"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dank",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": null,
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dank"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dank",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": null,
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1761,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"dank\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dank\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":null,\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0805afb068b2b48a016a7d9848e5b081a1bb3c60ca2d9e55ba",
+      "usage": {
+        "input_tokens": 2562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2644
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-prep-bis-acc",
+      "input": {
+        "markedContext": "Die Sperrung gilt <TARGET>bis</TARGET> nächsten Montag.",
+        "members": [
+          "bis"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bis"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bis",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1334,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bis\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bis\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Acc\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f9059fec90b4a43016a7d984aac1081a391214f130b71e00d",
+      "usage": {
+        "input_tokens": 2562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-typo-ohhne",
+      "input": {
+        "markedContext": "Er verließ das Haus <TARGET>ohhne</TARGET> seine Schlüssel.",
+        "members": [
+          "ohhne"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "ohne"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ohne",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "ohne"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ohne",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Acc",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1408,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"ohne\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ohne\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Acc\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09b06e0d1e898383016a7d984bfd6881a094b4a8f478e9cf56",
+      "usage": {
+        "input_tokens": 2564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2647
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adp-accept-archaic-behufs",
+      "input": {
+        "markedContext": "<TARGET>Behufs</TARGET> einer Prüfung wurden die Akten versiegelt.",
+        "members": [
+          "Behufs"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "behufs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "behufs",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "behufs"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "behufs",
+          "coreFeatures": {
+            "abbr": null,
+            "adpType": "Prep",
+            "extPos": null,
+            "foreign": null,
+            "governedCase": "Gen",
+            "partType": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1621,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"behufs\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"behufs\",\"coreFeatures\":{\"abbr\":null,\"adpType\":\"Prep\",\"extPos\":null,\"foreign\":null,\"governedCase\":\"Gen\",\"partType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_094263ba949fc4c0016a7d984d6960819e9fda682ade9b4138",
+      "usage": {
+        "input_tokens": 2565,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2531
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2647
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The response resolved the fixed ADP route, member projection, canonical form, prepositional type, and genitive government correctly, but omitted the Archaic historicalStatus for behufs. The prompt explicitly requires that feature for archaic ADP uses and includes a disjoint archaic demonstration, so the untouched corpus and evaluator expectation remain sound."
+    }
+  ]
+}

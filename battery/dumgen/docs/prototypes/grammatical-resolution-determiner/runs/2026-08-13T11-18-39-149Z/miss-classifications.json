@@ -1,0 +1,10 @@
+{
+  "grammar-de-det-dev-relative-welchem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The same rare relative-connective case again collapsed to interrogative Int and truncated welch despite explicit policy and otherwise exact grammar."
+  },
+  "grammar-de-det-dev-possessive-seinen-masc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again omitted antecedent-established Gender[psor]=Masc despite the explicit rule, while resolving the parallel feminine and neuter cases."
+  }
+}

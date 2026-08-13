@@ -1,0 +1,6 @@
+{
+  "grammar-de-adj-dev-archaic-hold": {
+    "classification": "prompt-defect",
+    "explanation": "The new prose contrast still did not teach the model how to project an archaic adjective use into Surface Features; a different demonstrative adjective is needed while this exact development case stays held out."
+  }
+}

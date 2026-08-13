@@ -1,0 +1,2238 @@
+{
+  "runnerVersion": "grammatical-resolution-determiner-v7",
+  "route": "grammatical-resolution/de/lexeme/determiner",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 1
+  },
+  "startedAt": "2026-08-13T11:08:49.701Z",
+  "completedAt": "2026-08-13T11:09:35.907Z",
+  "finalizedAt": "2026-08-13T11:10:54.570Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "646bdbcb3513c3aab5b501eac98a9d83e4730706efe3ada8e5c2b49198ef8c78",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "958c389d4aae024aa21ae87bff21ca73d97c042ddaad6b7a67e43fde0df2aca0",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "066178da0434081aee4d1a148f1b8e5dbeb04b99be7c756613e68e8d94829bf2",
+  "suiteSha256": "67f5d2bc82cf60499263e650ffd7253ce043a921eaac73c35d0d85ef6e973b1c",
+  "evaluationCaseIds": [
+    "grammar-de-det-dev-indefinite-article-einen",
+    "grammar-de-det-dev-demonstrative-diesem",
+    "grammar-de-det-dev-emphatic-selben",
+    "grammar-de-det-dev-exclamative-welch",
+    "grammar-de-det-dev-interrogative-welchen",
+    "grammar-de-det-dev-relative-welchem",
+    "grammar-de-det-dev-negative-kein",
+    "grammar-de-det-dev-total-alle",
+    "grammar-de-det-dev-total-beide",
+    "grammar-de-det-dev-indefinite-viele",
+    "grammar-de-det-dev-comparative-mehr",
+    "grammar-de-det-dev-comparative-weniger",
+    "grammar-de-det-dev-superlative-meisten",
+    "grammar-de-det-dev-possessive-deinen",
+    "grammar-de-det-dev-possessive-unserem",
+    "grammar-de-det-dev-possessive-seinen-masc",
+    "grammar-de-det-dev-possessive-sein-neut",
+    "grammar-de-det-dev-possessive-ihr-fem",
+    "grammar-de-det-dev-formal-ihrem",
+    "grammar-de-det-dev-foreign-the",
+    "grammar-de-det-dev-ordinal-wievielte"
+  ],
+  "boundedCalls": 21,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 7,
+  "scoreRatio": 0.3333333333333333,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-det-dev-indefinite-article-einen",
+      "input": {
+        "markedContext": "Er zählt eins und kauft danach <TARGET>einen</TARGET> Mantel.",
+        "members": [
+          "einen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "einen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ein",
+          "coreFeatures": {
+            "definite": "Ind",
+            "extPos": null,
+            "foreign": null,
+            "numType": "Card",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Art"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "einen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ein",
+          "coreFeatures": {
+            "definite": "Ind",
+            "extPos": null,
+            "foreign": null,
+            "numType": "Card",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Art"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1743,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"einen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"ein\",\"coreFeatures\":{\"definite\":\"Ind\",\"extPos\":null,\"foreign\":null,\"numType\":\"Card\",\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Art\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_015b26e8b1922f1e016a7da5c20bac819f81ffd9c93726e73d",
+      "usage": {
+        "input_tokens": 2520,
+        "input_tokens_details": {
+          "cache_write_tokens": 2485,
+          "cached_tokens": 0
+        },
+        "output_tokens": 132,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2652
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-demonstrative-diesem",
+      "input": {
+        "markedContext": "Mit <TARGET>diesem</TARGET> Plan schaffen wir den Termin.",
+        "members": [
+          "diesem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "diesem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dieser",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "diesem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dieser",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1721,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"diesem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"dieser\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Dem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_098ad7ae2a340214016a7da5c3a9d4819c957ca692ab6691e4",
+      "usage": {
+        "input_tokens": 2517,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2650
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-emphatic-selben",
+      "input": {
+        "markedContext": "Am <TARGET>selben</TARGET> Morgen fiel erneut der Strom aus.",
+        "members": [
+          "selben"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "selben"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "selbe",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Emp"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "selben"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "selb",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 6042,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"selben\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"selb\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Dem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0db011fc7eea5423016a7da5c5e65481a084f347242ce1a435",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2651
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The expected canonicalForm selbe was invalid. UD German GSD lemmatizes selben as selber; the retained output's selb is also not the corrected oracle, so the case must be rescored only after the corpus repair."
+    },
+    {
+      "caseId": "grammar-de-det-dev-exclamative-welch",
+      "input": {
+        "markedContext": "<TARGET>Welch</TARGET> ein Glück, dass niemand verletzt wurde!",
+        "members": [
+          "Welch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "welch",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Exc"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "welch",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Exc"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3152,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"welch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"welch\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Exc\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0daed35adc592488016a7da5cbeebc8192b622d77667fdeb62",
+      "usage": {
+        "input_tokens": 2519,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2653
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output ignored the invariant-Surface policy and invented contextual Inflection features for the uninflected exclamative welch."
+    },
+    {
+      "caseId": "grammar-de-det-dev-interrogative-welchen",
+      "input": {
+        "markedContext": "<TARGET>Welchen</TARGET> Weg nehmen wir nach dem Bahnhof?",
+        "members": [
+          "Welchen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welchen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "welcher",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welchen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "welcher",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1766,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"welchen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"welcher\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Int\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01b89b7347458e13016a7da5ce9e28819cbdbdd32a1db4f9e0",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2651
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-relative-welchem",
+      "input": {
+        "markedContext": "Er versprach pünktliche Lieferung, <TARGET>welchem</TARGET> Versprechen niemand glaubte.",
+        "members": [
+          "welchem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welchem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "welcher",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "welchem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "welcher",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1790,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"welchem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"welcher\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Rel\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f05165f6e050ec5016a7da5d06ce4819d8674b174aa21e3be",
+      "usage": {
+        "input_tokens": 2525,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2659
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-negative-kein",
+      "input": {
+        "markedContext": "Unter <TARGET>keinen</TARGET> Umständen geben wir das Passwort weiter.",
+        "members": [
+          "keinen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "keinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "kein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "keinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "kein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1796,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"keinen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Plur\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"kein\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f6e652f7fae7e48016a7da5d223f481a189baa77b230a0c88",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2651
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-total-alle",
+      "input": {
+        "markedContext": "<TARGET>Alle</TARGET> Stühle stehen schon im Saal.",
+        "members": [
+          "Alle"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "alle"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "alle",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "alle"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": null,
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "alle",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1574,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"alle\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":null,\"gender\":null,\"gender[psor]\":null,\"number\":\"Plur\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"alle\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Tot\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e995e33490c005c016a7da5d3ec50819eb32bb11a05935d95",
+      "usage": {
+        "input_tokens": 2516,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 132,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2648
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output dropped the known masculine lexical gender of plural Stuehle despite the prompt's plural-agreement rule."
+    },
+    {
+      "caseId": "grammar-de-det-dev-total-beide",
+      "input": {
+        "markedContext": "Sie prüfte <TARGET>beide</TARGET> Geräte vor dem Versand.",
+        "members": [
+          "beide"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beide"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "beide",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": "Card",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "beide"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": [
+              "Masc",
+              "Neut"
+            ],
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "beide",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": "Card",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2377,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"beide\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":[\"Masc\",\"Neut\"],\"gender[psor]\":null,\"number\":\"Plur\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"beide\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":\"Card\",\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Tot\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_069eea60da4309fe016a7da5d60adc8192835e4f72ede4ae9d",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 138,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2656
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output emitted syncretic Masc/Neut although the overt plural noun Geraete fixes Neut agreement."
+    },
+    {
+      "caseId": "grammar-de-det-dev-indefinite-viele",
+      "input": {
+        "markedContext": "<TARGET>Viele</TARGET> Bücher wurden an die Schule gespendet.",
+        "members": [
+          "Viele"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "viele"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "viel",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "viele"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": null,
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "viel",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1496,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"viele\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":null,\"gender\":null,\"gender[psor]\":null,\"number\":\"Plur\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"viel\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Ind\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f2439fdda6bb01d016a7da5d7dde881a3bff50faf10a385e8",
+      "usage": {
+        "input_tokens": 2517,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2650
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output dropped the known neuter lexical gender of plural Buecher despite local noun evidence."
+    },
+    {
+      "caseId": "grammar-de-det-dev-comparative-mehr",
+      "input": {
+        "markedContext": "<TARGET>Mehr</TARGET> als die Hälfte der Gäste blieb bis zum Ende.",
+        "members": [
+          "Mehr"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mehr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Cmp",
+            "gender": null,
+            "gender[psor]": null,
+            "number": null,
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "viel",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": "DET",
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mehr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "mehr",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": "DET",
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 5973,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mehr\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"mehr\",\"coreFeatures\":{\"definite\":null,\"extPos\":\"DET\",\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Ind\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a19a9eff5a19ab1016a7da5da444081a2bce040adbe265c3d",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 92,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2610
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "UD German GSD lemmatizes DET mehr as mehr rather than viel, so the expected canonical form was invalid. The corrected case will separately test the supported Degree=Cmp Inflection policy."
+    },
+    {
+      "caseId": "grammar-de-det-dev-comparative-weniger",
+      "input": {
+        "markedContext": "Heute kamen <TARGET>weniger</TARGET> als zwanzig Besucher.",
+        "members": [
+          "weniger"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "weniger"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": null,
+            "degree": "Cmp",
+            "gender": null,
+            "gender[psor]": null,
+            "number": null,
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wenig",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": "ADV",
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "weniger"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "weniger",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": "ADV",
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": true,
+      "latencyMs": 1742,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"weniger\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"weniger\",\"coreFeatures\":{\"definite\":null,\"extPos\":\"ADV\",\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Ind\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07bdf9ef8c8f4ac7016a7da5df57b081a394f68cef2909619f",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 94,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2612
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output treated the supported comparative DET occurrence as Citation and discarded Degree=Cmp rather than using the inflection feature bag."
+    },
+    {
+      "caseId": "grammar-de-det-dev-superlative-meisten",
+      "input": {
+        "markedContext": "Die <TARGET>meisten</TARGET> Gäste reisten am Sonntag ab.",
+        "members": [
+          "meisten"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "meisten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Sup",
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "viel",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "meisten"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Sup",
+            "gender": null,
+            "gender[psor]": null,
+            "number": "Plur",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "meist",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Tot"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": false,
+      "coreFeaturesPass": false,
+      "latencyMs": 2267,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"meisten\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Sup\",\"gender\":null,\"gender[psor]\":null,\"number\":\"Plur\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"meist\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Tot\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06eeb1daba5cc9bb016a7da5e13958819e8812b3511ff512ea",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2652
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "UD German GSD lemmatizes meisten as meist rather than viel, so the expected canonical form was invalid. The corrected case will separately test PronType=Ind and plural gender."
+    },
+    {
+      "caseId": "grammar-de-det-dev-possessive-deinen",
+      "input": {
+        "markedContext": "Du legst <TARGET>deinen</TARGET> Schlüssel auf den Tisch.",
+        "members": [
+          "deinen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "deinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "2",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "deinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "dein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "2",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1669,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"deinen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"dein\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"2\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0623187947c18655016a7da5e37b4081a0b15a6fc30ca129e8",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2652
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-possessive-unserem",
+      "input": {
+        "markedContext": "Wir vertrauen <TARGET>unserem</TARGET> Team auch unter Zeitdruck.",
+        "members": [
+          "unserem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "unserem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "unser",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "1",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "unserem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Plur"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "unser",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "1",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1573,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"unserem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Plur\"}},\"lemma\":{\"canonicalForm\":\"unser\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"1\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_032502b507ea0f30016a7da5e508f8819f8c6db57fd6db2002",
+      "usage": {
+        "input_tokens": 2521,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 137,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2658
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-det-dev-possessive-seinen-masc",
+      "input": {
+        "markedContext": "Paul sucht <TARGET>seinen</TARGET> Ausweis seit dem Morgen.",
+        "members": [
+          "seinen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "seinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": "Masc",
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "seinen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1519,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"seinen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"3\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a4260c7f659d285016a7da5e69714819f90296a3e6b5488db",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2651
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output omitted Gender[psor]=Masc even though the explicit antecedent Paul establishes the possessor gender."
+    },
+    {
+      "caseId": "grammar-de-det-dev-possessive-sein-neut",
+      "input": {
+        "markedContext": "Das Kind räumt <TARGET>sein</TARGET> Zimmer vor dem Essen auf.",
+        "members": [
+          "sein"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sein"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": "Neut",
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sein"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sein",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1573,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sein\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"sein\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"3\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00fc788068dd76d4016a7da5e81e58819299bd9a29a2245c69",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 133,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2651
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output omitted Gender[psor]=Neut even though the explicit antecedent das Kind establishes the possessor gender."
+    },
+    {
+      "caseId": "grammar-de-det-dev-possessive-ihr-fem",
+      "input": {
+        "markedContext": "Mara repariert <TARGET>ihr</TARGET> Radio noch heute.",
+        "members": [
+          "ihr"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ihr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": "Fem",
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ihr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ihr",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "3",
+            "polite": null,
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1442,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ihr\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Acc\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"ihr\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"3\",\"polite\":null,\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e7383a3ba3916b6016a7da5e9ac84819ca1a888cf02d1c0ac",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2653
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output omitted Gender[psor]=Fem even though the explicit antecedent Mara establishes the possessor gender."
+    },
+    {
+      "caseId": "grammar-de-det-dev-formal-ihrem",
+      "input": {
+        "markedContext": "Wir helfen <TARGET>Ihrem</TARGET> Team bei der Umstellung.",
+        "members": [
+          "Ihrem"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ihrem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Ihr",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ihrem"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Dat",
+            "degree": null,
+            "gender": "Neut",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": "Sing"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "Ihr",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": null,
+            "person": "2",
+            "polite": "Form",
+            "poss": "Yes",
+            "pronType": "Prs"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1654,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Ihrem\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Dat\",\"degree\":null,\"gender\":\"Neut\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":\"Sing\"}},\"lemma\":{\"canonicalForm\":\"Ihr\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":null,\"person\":\"2\",\"polite\":\"Form\",\"poss\":\"Yes\",\"pronType\":\"Prs\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05604c2d3b231b47016a7da5eb2308819f8cb576c9260c8347",
+      "usage": {
+        "input_tokens": 2519,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2654
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output invented Number[psor]=Sing for formal Ihr although the addressee may be singular or plural and the sentence does not establish possessor number."
+    },
+    {
+      "caseId": "grammar-de-det-dev-foreign-the",
+      "input": {
+        "markedContext": "Im Workshop diskutierten wir <TARGET>the</TARGET> main issue zuerst.",
+        "members": [
+          "the"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "the"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Acc",
+            "degree": null,
+            "gender": null,
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "the",
+          "coreFeatures": {
+            "definite": "Def",
+            "extPos": null,
+            "foreign": "Yes",
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Art"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "the"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "the",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": "Yes",
+            "numType": null,
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Art"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": false,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1530,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"the\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"the\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":\"Yes\",\"numType\":null,\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Art\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a8f539748b0791b016a7da5eccad081a2ad50dc5a99665a3b",
+      "usage": {
+        "input_tokens": 2517,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 92,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2609
+      },
+      "missClassification": "corpus-or-evaluator-defect",
+      "missClassificationExplanation": "The invariant English article should use Citation under the route's exact-codec invariant policy; the retained output correctly selected Citation, so the expected Surface was invalid."
+    },
+    {
+      "caseId": "grammar-de-det-dev-ordinal-wievielte",
+      "input": {
+        "markedContext": "Der <TARGET>wievielte</TARGET> Versuch war schließlich erfolgreich?",
+        "members": [
+          "wievielte"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wievielte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": null,
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wievielte",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": "Ord",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wievielte"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "case": "Nom",
+            "degree": "Pos",
+            "gender": "Masc",
+            "gender[psor]": null,
+            "number": "Sing",
+            "number[psor]": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "wievielte",
+          "coreFeatures": {
+            "definite": null,
+            "extPos": null,
+            "foreign": null,
+            "numType": "Ord",
+            "person": null,
+            "polite": null,
+            "poss": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": false,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1788,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wievielte\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"case\":\"Nom\",\"degree\":\"Pos\",\"gender\":\"Masc\",\"gender[psor]\":null,\"number\":\"Sing\",\"number[psor]\":null}},\"lemma\":{\"canonicalForm\":\"wievielte\",\"coreFeatures\":{\"definite\":null,\"extPos\":null,\"foreign\":null,\"numType\":\"Ord\",\"person\":null,\"polite\":null,\"poss\":null,\"pronType\":\"Int\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c0b3e6e3c569aca016a7da5eea094819dbd4554f87a763d29",
+      "usage": {
+        "input_tokens": 2518,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2485
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2653
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The output invented Degree=Pos for an interrogative ordinal; NumType=Ord carries the ordinal identity and no comparison degree is established."
+    }
+  ]
+}

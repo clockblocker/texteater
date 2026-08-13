@@ -3,45 +3,54 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { cardinalCore, citation } from "./builders";
-
-const unresolved = { decision: "Unresolved", resolution: null } as const;
+import { cardinalCore, citationCase } from "./builders";
 
 export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-num-provisional-fraction-half": {
-			input: { markedContext: "Der Anteil beträgt <TARGET>½</TARGET>." },
-			idealOutput: unresolved,
-			explanation:
-				"Quarantined representation dispute: German GSD uses NumType=Card for fraction glyphs while the Dumling NUM codec also permits Frac; do not guess until domain policy chooses an identity.",
-		},
-		"grammar-de-num-provisional-range-10-12": {
-			input: {
-				markedContext: "Geöffnet von <TARGET>10–12</TARGET> Uhr.",
+		"grammar-de-num-demo-fraction-eineinhalb": citationCase(
+			"Die Fahrt dauert <TARGET>eineinhalb</TARGET> Stunden.",
+			["eineinhalb"],
+			"eineinhalb",
+			{ ...cardinalCore, numType: "Frac" },
+			{
+				explanation:
+					"The fixed NUM route and exact fraction glyph establish the codec-supported Frac identity.",
 			},
-			idealOutput: unresolved,
-			explanation:
-				"Quarantined representation dispute: tokenization and Range identity are not stable enough for an authoritative one-Lexeme oracle.",
-		},
-		"grammar-de-num-provisional-multiplicative-2x": {
-			input: { markedContext: "Bitte <TARGET>2x</TARGET> wiederholen." },
-			idealOutput: unresolved,
-			explanation:
-				"Quarantined representation dispute: German GSD has isolated numeric ADV forms while multiplicatives are outside this NUM route.",
-		},
-		"grammar-de-num-provisional-abbreviation-t": {
-			input: {
-				markedContext:
-					"Numeral-Abkürzung für Tausend: <TARGET>T</TARGET>",
+		),
+		"grammar-de-num-demo-range-zehn-bis-zwoelf": citationCase(
+			"Die Sprechstunde läuft von <TARGET>zehn</TARGET> <TARGET>bis</TARGET> <TARGET>zwölf</TARGET> Uhr.",
+			["zehn", "bis", "zwölf"],
+			"zehn bis zwölf",
+			{ ...cardinalCore, numType: "Range" },
+			{
+				explanation:
+					"The supplied one-member interval is a Range; never split or replace the authoritative member.",
 			},
-			idealOutput: citation({
-				normalizedMembers: ["T"],
-				canonicalForm: "Tausend",
-				coreFeatures: { ...cardinalCore, abbr: "Yes" },
-			}),
-			explanation:
-				"Corpus-only abbreviation probe: establish whether T is a licensed Surface of Tausend and whether Lemma-level Abbr=Yes is the intended exact representation.",
-		},
+		),
+		"grammar-de-num-dev-multiplicative-dreifach": citationCase(
+			"Der klassifizierte Multiplikator lautet <TARGET>dreifach</TARGET>.",
+			["dreifach"],
+			"dreifach",
+			{ ...cardinalCore, numType: "Mult" },
+		),
+		"grammar-de-num-accept-v3-fraction-siebenachtel": citationCase(
+			"Der Tank ist zu <TARGET>siebenachtel</TARGET> gefüllt.",
+			["siebenachtel"],
+			"siebenachtel",
+			{ ...cardinalCore, numType: "Frac" },
+		),
+		"grammar-de-num-accept-v3-multiplicative-sechsfach": citationCase(
+			"Die Beschichtung schützt <TARGET>sechsfach</TARGET> besser.",
+			["sechsfach"],
+			"sechsfach",
+			{ ...cardinalCore, numType: "Mult" },
+		),
+		"grammar-de-num-accept-v3-range-zwoelf-bis-sechzehn": citationCase(
+			"Das Angebot gilt für Gruppen von <TARGET>zwölf</TARGET> <TARGET>bis</TARGET> <TARGET>sechzehn</TARGET> Personen.",
+			["zwölf", "bis", "sechzehn"],
+			"zwölf bis sechzehn",
+			{ ...cardinalCore, numType: "Range" },
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

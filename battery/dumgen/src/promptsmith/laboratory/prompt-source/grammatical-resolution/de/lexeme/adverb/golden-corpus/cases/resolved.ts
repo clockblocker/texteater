@@ -3,366 +3,300 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { citationCase, inflectionCase, unmarkedCoreFeatures } from "./builders";
 
-type CoreFeatures = {
-	readonly foreign: "Yes" | null;
-	readonly numType: "Card" | "Mult" | null;
-	readonly pronType: "Dem" | "Ind" | "Int" | "Neg" | "Rel" | null;
+const demonstrative = {
+	...unmarkedCoreFeatures,
+	pronType: "Dem" as const,
 };
-
-const unmarked = {
-	foreign: null,
-	numType: null,
-	pronType: null,
-} satisfies CoreFeatures;
+const indefinite = {
+	...unmarkedCoreFeatures,
+	pronType: "Ind" as const,
+};
+const interrogative = {
+	...unmarkedCoreFeatures,
+	pronType: "Int" as const,
+};
+const relative = {
+	...unmarkedCoreFeatures,
+	pronType: "Rel" as const,
+};
+const negative = {
+	...unmarkedCoreFeatures,
+	pronType: "Neg" as const,
+};
 
 export const resolvedCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-adv-demo-contextual-heute": {
-			input: { markedContext: "Wir treffen uns <TARGET>heute</TARGET>." },
-			idealOutput: resolvedSurface("heute", "heute", unmarked, null),
-			explanation:
-				"An ordinary ungraded contextual use remains Citation because the current ADV Inflection schema requires a non-null Degree.",
-		},
-		"grammar-de-adv-demo-citation-hier": {
-			input: {
-				markedContext: "Wörterbucheintrag: <TARGET>hier</TARGET>",
+		"grammar-de-adv-demo-temporal-heute": citationCase(
+			"Wir treffen uns <TARGET>heute</TARGET> vor der Bibliothek.",
+			["heute"],
+			"heute",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"The classified temporal adverb is invariant and therefore uses Citation.",
 			},
-			idealOutput: citation("hier", "hier", unmarked),
-			explanation:
-				"A dictionary label is Citation; German GSD leaves ordinary locative hier without PronType.",
-		},
-		"grammar-de-adv-demo-demonstrative-dazu": {
-			input: {
-				markedContext: "<TARGET>Dazu</TARGET> brauchen wir mehr Zeit.",
+		),
+		"grammar-de-adv-demo-demonstrative-dazu": citationCase(
+			"<TARGET>Dazu</TARGET> brauchen wir noch einen Schlüssel.",
+			["Dazu"],
+			"dazu",
+			demonstrative,
+			{
+				normalizedMembers: ["dazu"],
+				explanation:
+					"Ordinary sentence-initial capitalization is Standard; the pronominal adverb has PronType Dem.",
 			},
-			idealOutput: resolvedSurface(
-				"dazu",
-				"dazu",
-				{ ...unmarked, pronType: "Dem" },
-				null,
-			),
-			explanation:
-				"German GSD treats the pronominal adverb dazu as lexically PronType=Dem; its ungraded contextual Surface remains Citation under the current codec.",
-		},
-		"grammar-de-adv-demo-indefinite-genug": {
-			input: {
-				markedContext: "Sie hat <TARGET>genug</TARGET> gearbeitet.",
+		),
+		"grammar-de-adv-demo-interrogative-warum": citationCase(
+			"<TARGET>Warum</TARGET> bleibt das Fenster heute geschlossen?",
+			["Warum"],
+			"warum",
+			interrogative,
+			{
+				normalizedMembers: ["warum"],
+				explanation:
+					"The direct question establishes the interrogative pronominal identity.",
 			},
-			idealOutput: resolvedSurface(
-				"genug",
-				"genug",
-				{ ...unmarked, pronType: "Ind" },
-				null,
-			),
-			explanation:
-				"German GSD treats the quantitative adverb genug as lexically PronType=Ind; the nullable field remains non-null when the lexical class applies.",
-		},
-		"grammar-de-adv-demo-negative-nie": {
-			input: {
-				markedContext: "Er kommt <TARGET>nie</TARGET> zu spät.",
+		),
+		"grammar-de-adv-demo-comparative-lieber": inflectionCase(
+			"Mina fährt <TARGET>lieber</TARGET> mit dem Zug als mit dem Auto.",
+			["lieber"],
+			"gern",
+			"Cmp",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"Lieber is the suppletive comparative Surface of the ADV Lemma gern.",
 			},
-			idealOutput: resolvedSurface(
-				"nie",
-				"nie",
-				{ ...unmarked, pronType: "Neg" },
-				null,
-			),
-			explanation:
-				"German-LIT attests the negative adverb nie with PronType=Neg; German GSD has no lemma-disjoint Neg ADV beyond held-out keineswegs, so this demonstration applies the official German UD negative-proform policy without contaminating that held-out Lemma.",
-		},
-		"grammar-de-adv-demo-comparative-lieber": {
-			input: {
-				markedContext:
-					"Sie fährt <TARGET>lieber</TARGET> mit dem Zug als mit dem Auto.",
+		),
+		"grammar-de-adv-demo-superlative-am-liebsten": inflectionCase(
+			"Mina reist <TARGET>am</TARGET> <TARGET>liebsten</TARGET> im Frühling.",
+			["am", "liebsten"],
+			"gern",
+			"Sup",
+			unmarkedCoreFeatures,
+			{
+				explanation:
+					"Both authoritative members form the complete periphrastic superlative Surface.",
 			},
-			idealOutput: resolvedSurface("lieber", "gern", unmarked, "Cmp"),
-			explanation:
-				"The irregular comparative is the contextual Surface of gern and carries Degree=Cmp.",
-		},
-		"grammar-de-adv-demo-superlative-am-liebsten": {
-			input: {
-				markedContext:
-					"Sie reist <TARGET>am</TARGET> <TARGET>liebsten</TARGET> im Frühling.",
+		),
+		"grammar-de-adv-demo-typo-gester": citationCase(
+			"Der Regionalzug kam <TARGET>gester</TARGET> pünktlich an.",
+			["gester"],
+			"gestern",
+			unmarkedCoreFeatures,
+			{
+				orthographies: ["Typo"],
+				normalizedMembers: ["gestern"],
+				explanation:
+					"The missing final n is repaired in normalizedMembers while the occurrence is marked Typo.",
 			},
-			idealOutput: resolvedSurface(
-				["am", "liebsten"],
-				"gern",
-				unmarked,
-				"Sup",
-				["Standard", "Standard"],
-			),
-			explanation:
-				"Both marked members realize the complete periphrastic superlative Surface, so coverage is Full and member counts follow TARGET pairs.",
-		},
-		"grammar-de-adv-demo-typo-gester": {
-			input: { markedContext: "Er kam <TARGET>gester</TARGET> an." },
-			idealOutput: resolvedSurface("gestern", "gestern", unmarked, null, [
-				"Typo",
-			]),
-			explanation:
-				"Repair the missing final n in normalizedMembers and canonicalForm and mark the attested member Typo.",
-		},
-		"grammar-de-adv-morgen": {
-			input: { markedContext: "Der Zug fährt <TARGET>morgen</TARGET>." },
-			idealOutput: resolvedSurface("morgen", "morgen", unmarked, null),
-		},
-		"grammar-de-adv-demonstrative-damit": {
-			input: {
-				markedContext: "<TARGET>Damit</TARGET> öffnen wir die Tür.",
+		),
+
+		"grammar-de-adv-dev-temporal-morgen": citationCase(
+			"Der Nachtzug fährt <TARGET>morgen</TARGET> um sechs Uhr ab.",
+			["morgen"],
+			"morgen",
+		),
+		"grammar-de-adv-dev-initial-vielleicht": citationCase(
+			"<TARGET>Vielleicht</TARGET> endet die Sitzung etwas früher.",
+			["Vielleicht"],
+			"vielleicht",
+			unmarkedCoreFeatures,
+			{ normalizedMembers: ["vielleicht"] },
+		),
+		"grammar-de-adv-dev-demonstrative-damit": citationCase(
+			"<TARGET>Damit</TARGET> öffnet der Hausmeister das Seitentor.",
+			["Damit"],
+			"damit",
+			demonstrative,
+			{ normalizedMembers: ["damit"] },
+		),
+		"grammar-de-adv-dev-relative-weshalb": citationCase(
+			"Das ist der Grund, <TARGET>weshalb</TARGET> die Fähre heute ausfällt.",
+			["weshalb"],
+			"weshalb",
+			relative,
+			{
+				explanation:
+					"The relative clause links weshalb to an antecedent and establishes PronType Rel.",
 			},
-			idealOutput: resolvedSurface(
-				"damit",
-				"damit",
-				{ ...unmarked, pronType: "Dem" },
-				null,
-			),
-		},
-		"grammar-de-adv-comparative-oefter": {
-			input: {
-				markedContext: "Seitdem kommt sie <TARGET>öfter</TARGET>.",
+		),
+		"grammar-de-adv-dev-negative-keineswegs": citationCase(
+			"Die Reparatur ist <TARGET>keineswegs</TARGET> abgeschlossen.",
+			["keineswegs"],
+			"keineswegs",
+			negative,
+		),
+		"grammar-de-adv-dev-multiplicative-zweimal": citationCase(
+			"Die Besucherin klingelte <TARGET>zweimal</TARGET> an der Hintertür.",
+			["zweimal"],
+			"zweimal",
+			{ ...unmarkedCoreFeatures, numType: "Mult" },
+		),
+		"grammar-de-adv-dev-positive-viel": inflectionCase(
+			"Heute regnete es <TARGET>viel</TARGET>, gestern mehr und vorgestern am meisten.",
+			["viel"],
+			"viel",
+			"Pos",
+			indefinite,
+			{
+				explanation:
+					"The explicit degree contrast establishes Degree Pos; the indefinite ADV identity carries PronType Ind without adding NumType from quantity meaning alone.",
 			},
-			idealOutput: resolvedSurface("öfter", "oft", unmarked, "Cmp"),
-		},
-		"grammar-de-adv-superlative-am-haeufigsten": {
-			input: {
-				markedContext:
-					"Im Herbst regnet es <TARGET>am</TARGET> <TARGET>häufigsten</TARGET>.",
+		),
+		"grammar-de-adv-dev-cardinal-2x": citationCase(
+			"Ich war bereits <TARGET>2x</TARGET> in dieser Werkstatt.",
+			["2x"],
+			"2x",
+			{ ...unmarkedCoreFeatures, numType: "Card" },
+			{
+				explanation:
+					"The cardinal ADV identity follows the official UD German-GSD train-s562 2x analysis; the sentence is minimally adapted.",
 			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-			explanation:
-				"The marked superlative Surface is compatible with the regular Lemma häufig and the suppletive paradigm of oft; this context does not establish exactly one Lemma identity.",
-		},
-		"grammar-de-adv-demonstrative-dort": {
-			input: {
-				markedContext: "Der Schlüssel liegt <TARGET>dort</TARGET>.",
+		),
+		"grammar-de-adv-dev-foreign-remotely": citationCase(
+			"Das internationale Team arbeitete diese Woche <TARGET>remotely</TARGET>.",
+			["remotely"],
+			"remotely",
+			{ ...unmarkedCoreFeatures, foreign: "Yes" },
+			{
+				explanation:
+					"The fixed ADV route and code-switched English Lemma establish Foreign Yes.",
 			},
-			idealOutput: resolvedSurface("dort", "dort", unmarked, null),
-		},
-		"grammar-de-adv-interrogative-warum": {
-			input: { markedContext: "<TARGET>Warum</TARGET> gehst du schon?" },
-			idealOutput: resolvedSurface(
-				"warum",
-				"warum",
-				{
-					...unmarked,
-					pronType: "Int",
-				},
-				null,
-			),
-		},
-		"grammar-de-adv-interrogative-identity-wo": {
-			input: {
-				markedContext:
-					"Das ist die Stadt, <TARGET>wo</TARGET> ihre Familie lebt.",
+		),
+		"grammar-de-adv-dev-comparative-weniger": inflectionCase(
+			"Seit dem Umbau lärmt die Anlage <TARGET>weniger</TARGET> als zuvor.",
+			["weniger"],
+			"wenig",
+			"Cmp",
+			indefinite,
+		),
+		"grammar-de-adv-dev-superlative-am-fruehesten": inflectionCase(
+			"Von allen Zügen kommt dieser <TARGET>am</TARGET> <TARGET>frühesten</TARGET> an.",
+			["am", "frühesten"],
+			"früh",
+			"Sup",
+		),
+		"grammar-de-adv-dev-typo-vielleich": citationCase(
+			"Die Vertretung kommt <TARGET>vielleich</TARGET> erst am Nachmittag.",
+			["vielleich"],
+			"vielleicht",
+			unmarkedCoreFeatures,
+			{
+				orthographies: ["Typo"],
+				normalizedMembers: ["vielleicht"],
 			},
-			idealOutput: resolvedSurface(
-				"wo",
-				"wo",
-				{
-					...unmarked,
-					pronType: "Int",
-				},
-				null,
-			),
-			explanation:
-				"German GSD keeps the ADV lemma wo at PronType=Int even in a relative-clause use; local syntax does not change stable Core Features.",
-		},
-		"grammar-de-adv-indefinite-etwas": {
-			input: {
-				markedContext:
-					"Der zweite Entwurf ist <TARGET>etwas</TARGET> besser.",
+		),
+		"grammar-de-adv-dev-variant-bisschen": citationCase(
+			"Der historische Brief klingt <TARGET>bißchen</TARGET> förmlich.",
+			["bißchen"],
+			"bisschen",
+			indefinite,
+			{
+				spelling: "Variant",
+				explanation:
+					"The licensed pre-reform spelling is Standard occurrence evidence and a Variant Surface.",
 			},
-			idealOutput: resolvedSurface(
-				"etwas",
-				"etwas",
-				{
-					...unmarked,
-					pronType: "Ind",
-				},
-				null,
-			),
-		},
-		"grammar-de-adv-negative-keineswegs": {
-			input: {
-				markedContext:
-					"Das Ergebnis ist <TARGET>keineswegs</TARGET> sicher.",
+		),
+		"grammar-de-adv-dev-abbreviation-ca": citationCase(
+			"Die Wanderung dauert <TARGET>ca</TARGET>. drei Stunden.",
+			["ca"],
+			"circa",
+			{ ...unmarkedCoreFeatures, foreign: "Yes" },
+			{
+				spelling: "Variant",
+				explanation:
+					"The licensed abbreviation is a full Variant Surface; punctuation remains outside the member.",
 			},
-			idealOutput: resolvedSurface(
-				"keineswegs",
-				"keineswegs",
-				{
-					...unmarked,
-					pronType: "Neg",
-				},
-				null,
-			),
-		},
-		"grammar-de-adv-multiplicative-zweimal": {
-			input: { markedContext: "Sie klingelte <TARGET>zweimal</TARGET>." },
-			idealOutput: resolvedSurface(
-				"zweimal",
-				"zweimal",
-				{
-					...unmarked,
-					numType: "Mult",
-				},
-				null,
-			),
-		},
-		"grammar-de-adv-causal-deshalb": {
-			input: {
-				markedContext:
-					"Der Bus fiel aus; <TARGET>deshalb</TARGET> kam sie später.",
+		),
+
+		"grammar-de-adv-accept-temporal-gestern": citationCase(
+			"Die Bibliothek schloss <TARGET>gestern</TARGET> schon um sechs Uhr.",
+			["gestern"],
+			"gestern",
+		),
+		"grammar-de-adv-accept-locative-hier": citationCase(
+			"Bitte warten Sie <TARGET>hier</TARGET> vor dem Eingang.",
+			["hier"],
+			"hier",
+		),
+		"grammar-de-adv-accept-initial-draussen": citationCase(
+			"<TARGET>Draußen</TARGET> warten noch drei Gäste.",
+			["Draußen"],
+			"draußen",
+			unmarkedCoreFeatures,
+			{ normalizedMembers: ["draußen"] },
+		),
+		"grammar-de-adv-accept-demonstrative-dafuer": citationCase(
+			"<TARGET>Dafür</TARGET> fehlt uns heute das passende Werkzeug.",
+			["Dafür"],
+			"dafür",
+			demonstrative,
+			{ normalizedMembers: ["dafür"] },
+		),
+		"grammar-de-adv-accept-indefinite-wenig": citationCase(
+			"Nach dem Umbau arbeitet die Pumpe <TARGET>wenig</TARGET>.",
+			["wenig"],
+			"wenig",
+			indefinite,
+		),
+		"grammar-de-adv-accept-interrogative-wo": citationCase(
+			"<TARGET>Wo</TARGET> steht der reservierte Kleinbus?",
+			["Wo"],
+			"wo",
+			interrogative,
+			{ normalizedMembers: ["wo"] },
+		),
+		"grammar-de-adv-accept-relative-wobei": citationCase(
+			"Das war der Versuch, <TARGET>wobei</TARGET> die Sicherung ausfiel.",
+			["wobei"],
+			"wobei",
+			relative,
+		),
+		"grammar-de-adv-accept-negative-nie": citationCase(
+			"Der alte Aufzug bleibt <TARGET>nie</TARGET> zwischen den Etagen stehen.",
+			["nie"],
+			"nie",
+			negative,
+		),
+		"grammar-de-adv-accept-multiplicative-dreimal": citationCase(
+			"Vor dem Öffnen klopfte sie <TARGET>dreimal</TARGET> an.",
+			["dreimal"],
+			"dreimal",
+			{ ...unmarkedCoreFeatures, numType: "Mult" },
+		),
+		"grammar-de-adv-accept-comparative-oefter": inflectionCase(
+			"Seit dem Fahrplanwechsel kommt der Bus <TARGET>öfter</TARGET>.",
+			["öfter"],
+			"oft",
+			"Cmp",
+		),
+		"grammar-de-adv-accept-typo-morgne": citationCase(
+			"Die Lieferung erreicht uns <TARGET>morgne</TARGET> am Vormittag.",
+			["morgne"],
+			"morgen",
+			unmarkedCoreFeatures,
+			{
+				orthographies: ["Typo"],
+				normalizedMembers: ["morgen"],
 			},
-			idealOutput: resolvedSurface("deshalb", "deshalb", unmarked, null),
-		},
-		"grammar-de-adv-sentence-initial-vielleicht": {
-			input: {
-				markedContext: "<TARGET>Vielleicht</TARGET> regnet es später.",
+		),
+		"grammar-de-adv-accept-archaic-allhier": citationCase(
+			"Der Unterzeichnete erklärt <TARGET>allhier</TARGET> die Übergabe.",
+			["allhier"],
+			"allhier",
+			unmarkedCoreFeatures,
+			{
+				historicalStatus: "Archaic",
+				explanation:
+					"The deliberately historical register licenses the archaic Surface feature.",
 			},
-			idealOutput: resolvedSurface(
-				"vielleicht",
-				"vielleicht",
-				unmarked,
-				null,
-			),
-		},
-		"grammar-de-adv-typo-vielleich": {
-			input: {
-				markedContext: "Sie kommt <TARGET>vielleich</TARGET> später.",
-			},
-			idealOutput: resolvedSurface(
-				"vielleicht",
-				"vielleicht",
-				unmarked,
-				null,
-				["Typo"],
-			),
-		},
-		"grammar-de-adv-provisional-archaic-allhier": {
-			input: {
-				markedContext:
-					"Der Unterzeichnete erklärt <TARGET>allhier</TARGET>.",
-			},
-			idealOutput: resolvedSurface(
-				"allhier",
-				"allhier",
-				unmarked,
-				null,
-				["Standard"],
-				{ historicalStatus: "Archaic" },
-			),
-			explanation:
-				"Corpus-only probe: the form is identifiable, while the threshold for Archaic versus merely dated needs policy confirmation.",
-		},
-		"grammar-de-adv-provisional-foreign-circa": {
-			input: {
-				markedContext: "Es kamen <TARGET>circa</TARGET> hundert Gäste.",
-			},
-			idealOutput: resolvedSurface(
-				"circa",
-				"circa",
-				{
-					...unmarked,
-					foreign: "Yes",
-				},
-				null,
-			),
-			explanation:
-				"Corpus-only probe: whether lexicalized circa should retain Foreign=Yes is a Lemma-policy question.",
-		},
-		"grammar-de-adv-provisional-ordinal-erstens": {
-			input: {
-				markedContext: "<TARGET>Erstens</TARGET> fehlt uns die Zeit.",
-			},
-			idealOutput: resolvedSurface("erstens", "erstens", unmarked, null),
-			explanation:
-				"Corpus-only probe: erstens is an ordinal adverb, but the German ADV codec excludes NumType=Ord; policy must confirm whether the unsupported feature collapses to null.",
-		},
-		"grammar-de-adv-provisional-cardinal-indefinite-viel": {
-			input: { markedContext: "Sie arbeitet <TARGET>viel</TARGET>." },
-			idealOutput: resolvedSurface(
-				"viel",
-				"viel",
-				{
-					...unmarked,
-					numType: "Card",
-					pronType: "Ind",
-				},
-				null,
-			),
-			explanation:
-				"Corpus-only probe: the codec permits ADV NumType=Card, but German annotation policy must confirm whether quantitative viel on this route carries Card together with PronType=Ind.",
-		},
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema
 	>,
 });
-
-function citation(
-	normalizedMembers: string,
-	canonicalForm: string,
-	coreFeatures: CoreFeatures,
-) {
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: ["Standard" as const],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
-			lemma: { canonicalForm, coreFeatures },
-		},
-	};
-}
-
-function resolvedSurface(
-	normalizedMembers: string | readonly string[],
-	canonicalForm: string,
-	coreFeatures: CoreFeatures,
-	degree: "Cmp" | "Pos" | "Sup" | null,
-	memberOrthographies: ("Standard" | "Typo")[] = ["Standard"],
-	surfaceFeatures: { readonly historicalStatus: "Archaic" } | null = null,
-) {
-	const alignedNormalizedMembers =
-		typeof normalizedMembers === "string"
-			? [normalizedMembers]
-			: [...normalizedMembers];
-	if (degree === null) {
-		return {
-			decision: "Resolved" as const,
-			resolution: {
-				memberOrthographies,
-				realizationCoverage: "Full" as const,
-				normalizedMembers: alignedNormalizedMembers,
-				surface: {
-					spelling: "Canonical" as const,
-					surfaceKind: "Citation" as const,
-					surfaceFeatures,
-				},
-				lemma: { canonicalForm, coreFeatures },
-			},
-		};
-	}
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies,
-			realizationCoverage: "Full" as const,
-			normalizedMembers: alignedNormalizedMembers,
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Inflection" as const,
-				surfaceFeatures,
-				inflectionalFeatures: { degree },
-			},
-			lemma: { canonicalForm, coreFeatures },
-		},
-	};
-}

@@ -1,0 +1,22 @@
+{
+  "grammar-de-det-accept-possessive-sein-syncretic": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires Masc/Neut possessor syncretism when sein has no established antecedent. The output reproduced the persistent omission already isolated in development."
+  },
+  "grammar-de-det-accept-comparative-mehrere": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "UD German GSD lemmatizes DET mehrere as mehr, so canonicalForm mehrere made this oracle invalid; the failed suite is retained rather than silently rescored."
+  },
+  "grammar-de-det-accept-typo-diser": {
+    "classification": "prompt-defect",
+    "explanation": "The output correctly marked and repaired the typo but called the repaired canonical Surface a Variant. Orthographic error status belongs to memberOrthographies; spelling must describe the normalized Surface."
+  },
+  "grammar-de-det-accept-archaic-jeglicher": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The synthetic context does not establish that productive formal jeglicher is archaic, and its Ind versus Tot role is disputable. The oracle is not defensible enough for acceptance evidence."
+  },
+  "grammar-de-det-accept-formal-casing-ihrem": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "Lowercase ihrem Unternehmen is naturally a third-person feminine possessive; without an addressee cue the sentence cannot establish formal Ihr, so the expected typo repair and formal features were invalid."
+  }
+}

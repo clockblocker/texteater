@@ -1,0 +1,18 @@
+{
+  "grammar-de-det-dev-interrogative-welchen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model intermittently truncated canonical welcher to welch despite the explicit lexical rule and exact remaining fields."
+  },
+  "grammar-de-det-dev-relative-welchem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The rare relative-connective DET again collapsed to Int despite the explicit Rel policy and exact remaining fields."
+  },
+  "grammar-de-det-dev-negative-kein": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model recovered the explicitly taught dative case but assigned Neut instead of the lexical Masc gender of plural Umstände; the prompt already states plural noun gender must be preserved."
+  },
+  "grammar-de-det-dev-possessive-ihr-fem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model again omitted the explicit antecedent's Gender[psor]=Fem despite the direct general rule and exact remaining fields."
+  }
+}

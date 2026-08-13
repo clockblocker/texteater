@@ -3,146 +3,103 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { inflection, unmarkedCore } from "./builders";
+import { inflectionCase } from "./builders";
 
 export const agreementAndPositionCases = defineGoldenCaseCollection(
 	import.meta.url,
 	{
 		cases: {
-			"grammar-de-adj-attributive-nom-masc-klein": {
-				input: {
-					markedContext: "Der <TARGET>kleine</TARGET> Hund schläft.",
+			"grammar-de-adj-demo-attributive-klein": inflectionCase(
+				"Der <TARGET>kleine</TARGET> Hund schläft.",
+				"kleine",
+				"klein",
+				{ case: "Nom", degree: "Pos", gender: "Masc", number: "Sing" },
+				{
+					explanation:
+						"Attributive ADJ. Context gives nominative masculine singular.",
 				},
-				idealOutput: inflection({
-					normalizedMembers: ["kleine"],
-					canonicalForm: "klein",
-					inflectionalFeatures: {
-						case: "Nom",
-						degree: "Pos",
-						gender: "Masc",
-						number: "Sing",
-					},
-				}),
-				explanation:
-					"Attributive adjectives carry contextual agreement together with Degree.",
-			},
-			"grammar-de-adj-adverbial-schnell": {
-				input: {
-					markedContext: "Der Hund läuft <TARGET>schnell</TARGET>.",
+			),
+			"grammar-de-adj-demo-adverbial-schnell": inflectionCase(
+				"Der Hund läuft <TARGET>schnell</TARGET>.",
+				"schnell",
+				"schnell",
+				{ case: null, degree: "Pos", gender: null, number: null },
+				{
+					explanation:
+						"Productive adverbial ADJ, not lexical ADV. Degree Pos. No agreement.",
 				},
-				idealOutput: inflection({
-					normalizedMembers: ["schnell"],
-					canonicalForm: "schnell",
-					inflectionalFeatures: {
-						case: null,
-						degree: "Pos",
-						gender: null,
-						number: null,
-					},
-				}),
-				explanation:
-					"Productive adverbial use remains ADJ and has Degree but no agreement features.",
-				contaminationKeys: ["de-adj-position:adverbial-positive"],
-			},
-			"grammar-de-adj-attributive-acc-fem-rot": {
-				input: {
-					markedContext:
-						"Sie trägt die <TARGET>rote</TARGET> Tasche.",
+			),
+			"grammar-de-adj-dev-attributive-acc-fem-rot": inflectionCase(
+				"Sie trägt die <TARGET>rote</TARGET> Tasche.",
+				"rote",
+				"rot",
+				{ case: "Acc", degree: "Pos", gender: "Fem", number: "Sing" },
+			),
+			"grammar-de-adj-dev-attributive-dat-neut-kalt": inflectionCase(
+				"Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drinnen.",
+				"kaltem",
+				"kalt",
+				{ case: "Dat", degree: "Pos", gender: "Neut", number: "Sing" },
+			),
+			"grammar-de-adj-dev-attributive-gen-plur-neu": inflectionCase(
+				"Wegen <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
+				"neuer",
+				"neu",
+				{ case: "Gen", degree: "Pos", gender: "Fem", number: "Plur" },
+				{
+					explanation:
+						"Ending syncretic. Context gives genitive plural; noun gives feminine identity.",
 				},
-				idealOutput: inflection({
-					normalizedMembers: ["rote"],
-					canonicalForm: "rot",
-					inflectionalFeatures: {
-						case: "Acc",
-						degree: "Pos",
-						gender: "Fem",
-						number: "Sing",
-					},
-				}),
-			},
-			"grammar-de-adj-attributive-dat-neut-kalt": {
-				input: {
-					markedContext:
-						"Bei <TARGET>kaltem</TARGET> Wetter bleiben wir drin.",
-				},
-				idealOutput: inflection({
-					normalizedMembers: ["kaltem"],
-					canonicalForm: "kalt",
-					inflectionalFeatures: {
-						case: "Dat",
-						degree: "Pos",
-						gender: "Neut",
-						number: "Sing",
-					},
-				}),
-			},
-			"grammar-de-adj-attributive-gen-plur-neu": {
-				input: {
-					markedContext:
-						"Aufgrund <TARGET>neuer</TARGET> Regeln änderte sich der Ablauf.",
-				},
-				idealOutput: inflection({
-					normalizedMembers: ["neuer"],
-					canonicalForm: "neu",
-					inflectionalFeatures: {
-						case: "Gen",
-						degree: "Pos",
-						gender: "Fem",
-						number: "Plur",
-					},
-				}),
-			},
-			"grammar-de-adj-predicative-blau": {
-				input: {
-					markedContext: "<TARGET>Blau</TARGET> ist der Himmel.",
-				},
-				idealOutput: inflection({
-					normalizedMembers: ["blau"],
-					canonicalForm: "blau",
-					inflectionalFeatures: {
-						case: null,
-						degree: "Pos",
-						gender: null,
-						number: null,
-					},
-				}),
-			},
-			"grammar-de-adj-adverbial-leise": {
-				input: {
-					markedContext:
-						"Sie schließt die Tür <TARGET>leise</TARGET>.",
-				},
-				idealOutput: inflection({
-					normalizedMembers: ["leise"],
-					canonicalForm: "leise",
-					inflectionalFeatures: {
-						case: null,
-						degree: "Pos",
-						gender: null,
-						number: null,
-					},
-				}),
-				contaminationKeys: ["de-adj-position:adverbial-positive"],
-			},
-			"grammar-de-adj-participial-geschlossen": {
-				input: {
-					markedContext:
-						"Die <TARGET>geschlossene</TARGET> Tür bleibt zu.",
-				},
-				idealOutput: inflection({
-					normalizedMembers: ["geschlossene"],
-					canonicalForm: "geschlossen",
-					coreFeatures: unmarkedCore,
-					inflectionalFeatures: {
-						case: "Nom",
-						degree: "Pos",
-						gender: "Fem",
-						number: "Sing",
-					},
-				}),
-				explanation:
-					"German GSD directly attests geschlossene as an agreement-bearing ADJ Surface of the representable adjective Lemma geschlossen.",
-			},
+			),
+			"grammar-de-adj-dev-attributive-nom-plur-alt": inflectionCase(
+				"Die <TARGET>alten</TARGET> Häuser stehen am Marktplatz.",
+				"alten",
+				"alt",
+				{ case: "Nom", degree: "Pos", gender: "Neut", number: "Plur" },
+			),
+			"grammar-de-adj-dev-predicative-blau": inflectionCase(
+				"<TARGET>Blau</TARGET> ist der Himmel über dem Meer.",
+				"Blau",
+				"blau",
+				{ case: null, degree: "Pos", gender: null, number: null },
+				{ normalizedMember: "blau" },
+			),
+			"grammar-de-adj-dev-adverbial-leise": inflectionCase(
+				"Sie schließt die Tür <TARGET>leise</TARGET>.",
+				"leise",
+				"leise",
+				{ case: null, degree: "Pos", gender: null, number: null },
+			),
+			"grammar-de-adj-accept-attributive-dat-fem-lang": inflectionCase(
+				"Mit <TARGET>langer</TARGET> Geduld löste sie das Rätsel.",
+				"langer",
+				"lang",
+				{ case: "Dat", degree: "Pos", gender: "Fem", number: "Sing" },
+			),
+			"grammar-de-adj-accept-attributive-acc-neut-gruen": inflectionCase(
+				"Sie kaufte ein <TARGET>grünes</TARGET> Fahrrad.",
+				"grünes",
+				"grün",
+				{ case: "Acc", degree: "Pos", gender: "Neut", number: "Sing" },
+			),
+			"grammar-de-adj-accept-attributive-gen-masc-stark": inflectionCase(
+				"Trotz <TARGET>starken</TARGET> Regens begann das Spiel.",
+				"starken",
+				"stark",
+				{ case: "Gen", degree: "Pos", gender: "Masc", number: "Sing" },
+			),
+			"grammar-de-adj-accept-predicative-ruhig": inflectionCase(
+				"Der See bleibt <TARGET>ruhig</TARGET>.",
+				"ruhig",
+				"ruhig",
+				{ case: null, degree: "Pos", gender: null, number: null },
+			),
+			"grammar-de-adj-accept-adverbial-deutlich": inflectionCase(
+				"Die Zeugin sprach <TARGET>deutlich</TARGET>.",
+				"deutlich",
+				"deutlich",
+				{ case: null, degree: "Pos", gender: null, number: null },
+			),
 		} as const satisfies GoldenCaseRegistry<
 			typeof inputSchema,
 			typeof outputSchema

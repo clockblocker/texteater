@@ -1,0 +1,14 @@
+{
+  "grammar-de-sym-dev-inflection-acc-plus": {
+    "classification": "prompt-defect",
+    "explanation": "The target is the head of the noun phrase governed by das and used as the object of markiert, but the model returned Citation. The prompt needs an operational rule that a determiner directly governing the target symbol makes the occurrence nominal Inflection."
+  },
+  "grammar-de-sym-dev-inflection-gen-percent": {
+    "classification": "prompt-defect",
+    "explanation": "The target is the head of the genitive noun phrase des %, but the model returned Citation. The prompt needs an operational rule that a determiner directly governing the target symbol makes the occurrence nominal Inflection."
+  },
+  "grammar-de-sym-dev-inflection-feminine-at": {
+    "classification": "prompt-defect",
+    "explanation": "The target is the head of the accusative noun phrase die @ with an explicit feminine article, but the model returned Citation. The prompt needs an operational rule that a determiner directly governing the target symbol makes the occurrence nominal Inflection."
+  }
+}

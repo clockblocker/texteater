@@ -1,0 +1,6 @@
+{
+  "grammar-de-sconj-accept-v2-archaic-dieweil": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved member alignment, normalization, Canonical spelling, lemma identity, and Core Features correctly but omitted Archaic for the deliberately historical dieweil occurrence. The unchanged prompt explicitly defines historicalStatus and includes a distinct historical demonstration; this mirrors the already accepted narrow lexical-recognition limitation without revealing a prompt or corpus defect."
+  }
+}

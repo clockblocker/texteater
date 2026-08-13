@@ -1,0 +1,6 @@
+{
+  "grammar-de-pron-dev-archaic-euer": {
+    "classification": "prompt-defect",
+    "explanation": "Surface morphology and archaic status passed, but the response confused archaic second-person plural euer with first-person plural wir. The prompt's archaic-genitive rule needs to preserve the ordinary personal paradigm identity: euer is the genitive of ihr."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "grammar-de-propn-dev-org-deutsche-bank": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt and distinct contextual organization and multi-member demonstrations require Inflection; the model still treated this ordinary multi-member subject occurrence as Citation."
+  },
+  "grammar-de-propn-dev-work-zauberfloete": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt distinguishes quoted title mentions from ordinary contextual work-title objects and includes multi-member Inflection guidance; the model still used Citation."
+  },
+  "grammar-de-propn-dev-transliteration-kyjiw": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The sentence itself does not establish whether Kyjiw is an integrated German spelling or overt source-language material, so the oracle's foreign=null is not defensible from the supplied context."
+  },
+  "grammar-de-propn-dev-variant-pressburg": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The sentence explicitly identifies Pressburg as the historical German name for Bratislava and the prompt permits the different canonicalForm only under that relation; the model retained Pressburg as Lemma."
+  }
+}

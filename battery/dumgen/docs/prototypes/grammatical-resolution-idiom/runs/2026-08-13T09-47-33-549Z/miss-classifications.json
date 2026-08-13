@@ -1,0 +1,10 @@
+{
+	"grammar-de-idiom-licht-passive-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model returned the correct participial branch but dropped voice Pass, despite the explicit passive rule and a distinct passing passive development case."
+	},
+	"grammar-de-idiom-haende-present-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model misread the visibly infinitival selected head tun as Part and omitted fixed haben from the Idiom Lemma; the prompt's distinct lexical-haben repair passed in development."
+	}
+}

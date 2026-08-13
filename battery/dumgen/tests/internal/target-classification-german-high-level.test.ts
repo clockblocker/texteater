@@ -256,7 +256,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 	});
 
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(221);
+		expect(corpus.all().ids).toHaveLength(227);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
@@ -463,6 +463,45 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 					),
 				),
 		).toBe(false);
+	});
+
+	test("pins the suspended-compound target boundary matrix", () => {
+		const cases = corpus.cases;
+		expect(
+			cases["target-de-suspended-compound-and-left"]?.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			cases["target-de-suspended-compound-and-right"]?.idealOutput,
+		).toMatchObject({ target: { memberSegmentIndices: [8] } });
+		expect(
+			cases["target-de-suspended-compound-or-left"]?.idealOutput,
+		).toMatchObject({ target: { memberSegmentIndices: [4] } });
+		expect(
+			cases["target-de-suspended-compound-context-free"]?.idealOutput,
+		).toEqual({ decision: "Unresolved" });
+		expect(
+			cases["target-de-suspended-compound-en-dash-lookalike"]?.input
+				.segments[5],
+		).toEqual({ kind: "Punctuation", text: "–" });
+		expect(
+			cases["target-de-suspended-compound-malformed-double-hyphen"]
+				?.idealOutput,
+		).toEqual({ decision: "Unresolved" });
+		expect(
+			cases[
+				"target-de-suspended-compound-malformed-double-hyphen"
+			]?.input.segments.slice(4, 6),
+		).toEqual([
+			{ kind: "ResolvableText", text: "Kinder-" },
+			{ kind: "Punctuation", text: "-" },
+		]);
 	});
 
 	test("classifies former Collocation members as standalone Lexemes", () => {

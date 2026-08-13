@@ -1,142 +1,129 @@
-# German Construction/PairedFrame Grammatical Resolution
+# German Construction/PairedFrame Grammatical Resolution prototype
 
-This route-local prototype covers exactly
-`grammatical-resolution/de/construction/paired-frame`. Its package command and
-generated prompt are registered; catalog/runtime dispatch remains outside this
-route-local prototype.
-The Golden Corpus has 24 cases: four minimized demonstrations and exactly 20
-held-out cases. Promptsmith rejects overlap by case fingerprint and explicit
-contamination key.
+This route resolves an already classified German PairedFrame Analysis Target.
+The legacy contract accepted only `markedContext`, reopened route and membership
+decisions, and returned a `Resolved | Unresolved` wrapper around a nullable
+payload. The current contract accepts exactly `{markedContext,members}` and
+returns one total flat codec-derived DTO. Both input projections are
+authoritative.
 
-The four demonstrations teach four irreducible facts: `anstatt ... zu` is a
-discontinuous frame whose infinitive is a filler; `sowohl ... als auch` has
-three lexical members; `sowohl ... wie auch` has its own three-member Canonical
-Lemma; and marking a conjunct determiner makes the target overbroad.
-The heldouts cover coordinators (including the independently licensed
-two-member `sowohl ... wie`), proportional linkages, infinitive frames,
-sentence-initial normalization, two one-member typos, single-arm selection,
-unmarked third members, overselection, mixed occurrences, mismatched arms,
-accidentally co-occurring lookalikes, and the neighboring one-word CCONJ route.
+The model owns one orthography classification and normalized string per anchor,
+Citation spelling/features, and the Lemma `canonicalForm`. The application owns
+German language, Construction family, PairedFrame kind, empty Lemma Core
+Features, Citation `surfaceKind`, Surface-to-Lemma linkage, normalized Surface
+construction, `Full` realization coverage, and successful result construction.
+Construction has no model-owned coverage field and this Dumling route has no
+Inflection Surface.
 
-## Dumling and route contract
+Grammatical Resolution never repairs membership. All supplied members are
+already the complete anchors of one classified occurrence in source order.
+Comparatives, degree expressions, predicates, infinitives, conjuncts, and other
+payload remain unmarked context. Nearby ordinary CCONJ, SCONJ, ADV, ADP, and
+PART occurrences do not alter the target, even when their spellings repeat an
+anchor.
 
-The model DTOs are projected from Dumling's German
-`Construction/PairedFrame` Lemma and Citation Surface schemas. The fixed route
-fields `language`, `family`, and `kind`, and the Surface's linked Lemma, are
-absent from model exchange and restored by codecs. Both German PairedFrame
-feature bags are empty in Dumling, so the complete Lemma `coreFeatures` is
-exactly `{}`. Construction has no Inflection branch: every accepted Surface is
-`Citation` and `Full`, with no `inflectionalFeatures`.
+## Frozen corpus
 
-The input schema reuses the shared grammatical-resolution TARGET preflight.
-Each pair must contain one word-like member, but one-pair inputs remain valid
-inputs so the model can return `Unresolved` for a classified single arm. A
-Resolved output requires at least two `memberOrthographies` entries and exactly
-one entry per marked member. The prompt then applies occurrence, all-member,
-and Full-realization gates in that order.
+The 34 synthetic, natural full-sentence cases are frozen as:
 
-The canonical-form notation uses a spaced ellipsis (`entweder … oder`), matching
-the existing Reading Resolution fixture. `normalizedSurface` is instead the
-space-separated projection of the actually marked arms (`entweder oder`), with
-fillers and punctuation excluded. Lexical arm substitutions or member-inventory
-changes are not spelling variants: `je … desto`, `je … umso`, `sowohl … als
-auch`, `sowohl … wie`, and `sowohl … wie auch` are five separate empty-Core
-Lemmas, and their full Surfaces are `Canonical`. The optional `auch` in the IDS
-inventory changes member cardinality, so the last two are not two Surfaces of
-one Lemma. Dumling reserves `Variant` for licensed orthographic variation of
-the same lexical members. A repaired typo also remains a Canonical Surface and
-marks only the affected member `Typo`.
+- 6 demonstrations covering a discontinuous infinitive frame, three anchors,
+  comparative payload exclusion, typo repair, historical spelling Variant, and
+  predicate payload around `einerseits … andererseits`;
+- 18 development cases covering two- and three-anchor coordinator frames,
+  proportional and infinitive frames, repeated `teils` anchors, independent
+  lexical alternants, ordinary initial casing, two typo positions, an archaic
+  spelling form, repeated `je` anchors, and unmarked CCONJ/SCONJ/ADV or
+  same-spelled ADP/PART context;
+- 10 untouched acceptance cases covering unseen sentences across the principal
+  two- and three-anchor families, repeated spellings, clauses, predicates,
+  comparatives, and infinitive discontinuity.
 
-The pure evaluator checks decision/null coherence, mechanical TARGET-member
-count, orthographies, every Citation Surface field, Canonical Form, and the
-empty Core Feature bag. It canonicalizes only the schema-equivalent
-`{"historicalStatus":null}` Surface feature bag to `null`.
+The three selections are explicit and pairwise disjoint. Exact observed
+development cases cannot become demonstrations, while a genuinely different
+sentence may teach the same grammatical distinction.
 
-## Source record
+Every Canonical Form writes anchor groups in normalized order separated by a
+spaced ellipsis, such as `entweder … oder` or `sowohl … als auch`.
+`normalizedMembers` instead contains only the realized anchor strings in source
+order and no ellipsis. Licensed lexical alternatives create separate empty-Core
+Lemmas: `je … desto` differs from `je … umso`; `sowohl … als auch`, `sowohl …
+wie`, and `sowohl … wie auch` differ; and `anstatt … zu` differs from `statt …
+zu`. They are Canonical Surfaces, not orthographic Variants.
 
-The product taxonomy is authoritative for route placement. Dumling's own
-README names German `um_zu` as the example of a PairedFrame, and the existing
-Reading Resolution Golden Corpus classifies the complete `entweder … oder`
-target as `Construction/PairedFrame`. Conversely, the existing German CCONJ
-corpus resolves a single marked `noch` in `weder ... noch` as a one-word
-Lexeme. The resulting operational boundary is: the complete licensed frame is
-the Construction; one selected arm is still a Lexeme target and is unresolved
-on this route.
+The historical `so … daß` case is the spelling Variant: the attested `daß`
+stays Standard and unchanged in `normalizedMembers`, while the current Lemma is
+`so … dass`. The Rat für deutsche Rechtschreibung documents current `dass` as
+the post-reform spelling after a short vowel in its
+[reform overview](https://www.rechtschreibrat.com/service/handreichungen/).
+Historical spelling alone does not make the grammatical use archaic. The
+separate `je … je` proportional case remains Canonical; current dictionaries
+still list this repeated-anchor pattern.
 
-The linguistic inventory and case shapes are grounded in the Leibniz Institute
-for the German Language's grammis, not generated examples treated as authority:
+The frame inventory and anchor/payload distinction follow the product's German
+High-Level Target Classification corpus and its `einerseits … andererseits`,
+`sowohl … als auch`, and `je … desto` cases. The broader patterns are grounded
+in the Leibniz Institute for the German Language's grammis descriptions of
+[multi-part coordinators](https://grammis.ids-mannheim.de/kontrastive-grammatik/3789),
+[proportional connectors](https://grammis.ids-mannheim.de/systematische-grammatik/366),
+[correlative `so … dass`](https://grammis.ids-mannheim.de/konnektoren/406996),
+and [German infinitive constructions](https://grammis.ids-mannheim.de/terminologie/909).
+All corpus sentences are original synthetic examples; no external sentence is
+represented as a verbatim attestation.
 
-- [Konjunktor](https://grammis.ids-mannheim.de/kontrastive-grammatik/3789)
-  explicitly lists `entweder ... oder`, `sowohl ... als auch`,
-  `sowohl ... wie (auch)`, and `weder ... noch` as multi-part coordinators and
-  describes their discontinuous placement.
-- [Stellung von entweder ... oder](https://grammis.ids-mannheim.de/systematische-grammatik/2566)
-  documents both phrase and clause coordination and the variable position of
-  the first arm. The corpus paraphrases those configurations rather than
-  copying source sentences.
-- [Stellung von sowohl ... als auch](https://grammis.ids-mannheim.de/systematische-grammatik/2567)
-  licenses `als auch` and `wie (auch)` second-arm sequences and continuous or
-  discontinuous coordination. This supports separate two-member `sowohl ...
-  wie` and three-member `sowohl ... wie auch` Canonical Lemmas, alongside the
-  three-member `sowohl ... als auch` Lemma.
-- [Morphosyntaktische Klassifikation der Nebensätze](https://grammis.ids-mannheim.de/systematische-grammatik/1950)
-  describes `je ... desto/umso` as an obligatory two-part linkage between a
-  proportional subordinate clause and its correlate.
-- [Konnektoren als funktionale Klasse](https://grammis.ids-mannheim.de/systematische-grammatik/366)
-  lists both `je ... desto` and `je ... umso` under proportional connectors,
-  supporting two distinct lexical frame inventories.
-- [Infinitivkonstruktion](https://grammis.ids-mannheim.de/terminologie/909)
-  groups `um ... zu`, `ohne ... zu`, and `anstatt ... zu` as German infinitive
-  constructions. Dumling supplies the product-level PairedFrame precedent for
-  `um ... zu`; this prototype extends that same frame treatment to the two
-  structurally parallel members of the IDS group.
+## Shared evidence runner
 
-All positive corpus sentences are short original paraphrases of these sourced
-patterns. Source wording is not copied into the prompt or treated as output
-metadata.
+The thin route configuration uses the shared direct cached runner with
+`gpt-5.6-luna`, no reasoning, low text verbosity, no retries, `store:false`, a
+4,096-token response ceiling, and an explicit 30-minute cache breakpoint after
+the stable system prompt. Import and preflight make no provider call.
 
-## Bounded evidence runner
+The authorized protocol used 18 calls for each of three development rounds and
+10 calls for one untouched acceptance run: 64 calls total. Retained usage is
+116,857 input tokens, of which 110,390 were cached, plus 3,545 output tokens and
+zero reasoning tokens. That is conservatively estimated below $1.25 under the
+shared model policy and well below the leaf's $5 authorization; exact currency
+cost requires the provider billing export because Responses usage reports only
+tokens.
 
-The runner imports the shared Dumgen policy, currently `gpt-5.6-luna` with
-reasoning effort `none`. It performs one serial call per heldout, no retries,
-`store: false`, with an exact 20-case suite capped at 25. Import and preflight
-make no provider call. Draft evidence is written atomically and cannot satisfy
-the threshold until offline finalization. The retained schema binds the exact
-prompt, input and output schemas, ordered cases, model policy, raw provider
-output, response metadata, and recomputed diagnostics. Finalization rejects a
-parsed output that differs from the retained raw text and requires every
-scored miss to be classified. Evidence requires at least 15 attempts, at least
-80%, no execution errors, and no unclassified misses.
+## Retained evidence
 
-The current finalized evidence is the 20-case `gpt-5.6-luna` Batch API run at
-`runs/2026-08-03T16-00-15-793Z/results.json`. It scores 20/20 (100%), with zero
-execution errors, no misses to classify, and `evidenceThresholdMet` true. The
-retained record identifies the `openai-batch-v1` transport, Batch and file IDs,
-request counts, and content hashes; per-request latency is correctly null
-because Batch does not expose it. No fallback model was used.
+All four current-contract runs are finalized, have zero execution errors, and
+classify every miss:
 
-## Taxonomy decisions still needing integration review
+| Phase | Score | Evidence |
+| --- | ---: | --- |
+| Development 1 | 14/18 (77.78%) | `runs/2026-08-13T10-25-11-374Z/results.json` |
+| Development 2 | 18/18 (100%) | `runs/2026-08-13T10-26-23-176Z/results.json` |
+| Development 3 | 18/18 (100%) | `runs/2026-08-13T10-26-55-560Z/results.json` |
+| Untouched acceptance | 10/10 (100%) | `runs/2026-08-13T10-27-33-414Z/results.json` |
 
-Two boundaries cannot be proved by the empty PairedFrame codec alone. First,
-IDS calls the coordinator pairs multi-word lexemes or multi-part coordinators,
-while the product places the complete `entweder … oder` pair under
-Construction. This prototype consistently follows the product at whole-pair
-scope, but runtime Target Classification must preserve that override for
-`weder ... noch` and `sowohl ... als auch` too. Second, Dumling explicitly names
-only `um_zu`; treating IDS-parallel `ohne ... zu` and `anstatt ... zu` as the
-same product kind is a documented extrapolation. If integration wants a closed
-product inventory limited to explicitly named frames, those two cases should
-move to an unresolved policy probe rather than silently becoming another
-route.
+Round 1 exposed one repeated prompt defect: ordinary sentence-initial
+`Entweder` and `Je` remained capitalized in `normalizedMembers`. It also exposed
+one corpus defect: the `je … je` case was incorrectly labeled as an archaic
+grammatical use despite current dictionary coverage. The prompt made the
+Standard lowercase transformation mechanical, and the oracle was corrected to
+null Surface Features. Both subsequent development rounds scored 100%, so the
+best observed prompt was frozen without further changes. No exact failed case
+became a demonstration.
 
-Canonical Lemma identity includes `canonicalForm`, so replacing a frame arm
-creates a different empty-Core Lemma. The distinct-Lemma policy also keeps the
-Surface `spelling` field aligned with Dumling's orthographic meaning rather
-than using `Variant` for lexical substitutions.
+Untouched acceptance was invoked exactly once behind the shared gate and scored
+100%. The exact miss inventory and disposition is retained beside every
+`results.json` as `miss-classifications.json`. The earlier v5 Batch evidence
+binds the obsolete markedContext-only input, decision wrapper, mixed valid and
+invalid suite, copied runner, prompt, schema, and transport; it is not evidence
+for this migration.
 
-## Deferred shared additions
+From `battery/dumgen`, deterministic checks and offline preflight are:
 
-This slice registers the Prompt Source with system-prompt code generation,
-commits its generated artifact, and exposes its bounded runner command. Runtime
-catalog dispatch remains deferred to issue #54. The prompt logbook records the
-lexical-alternant identity decision.
+```sh
+bun test tests/internal/grammatical-resolution-paired-frame.test.ts \
+  tests/internal/grammatical-resolution-paired-frame-runner.test.ts
+bun run check
+bun run docs/prototypes/grammatical-resolution-paired-frame/run.ts \
+  preflight development 1
+```
+
+After explicit authorization, each development round uses `run development
+<1|2|3>`, followed by offline `finalize <results.json>
+<miss-classifications.json>`. Only after all three finalized rounds may the
+orchestrator invoke `preflight acceptance` and `run acceptance`.

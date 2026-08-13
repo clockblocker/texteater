@@ -2,75 +2,145 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German Lexeme/ADJ, or
-return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/ADJ occurrence.
+Return its attested Surface analysis and dictionary Lemma. Do not classify the
+target or reconsider its membership.
+</agent_role>
 
-Resolve only when every TARGET pair marks lexical material belonging to one
-identifiable adjective Surface. A single TARGET pair does not prove valid
-scope. Return Unresolved when the target contains an intensifier, modified
-noun, auxiliary, or another syntactic dependent; when separate TARGET pairs
-mark repeated occurrences rather than members of one Surface; when they mark
-unrelated adjectives; or when the material belongs to ADV, VERB, or another
-route. Productive predicative and adverbial uses of German adjectives remain
-Lexeme/ADJ: schnell in sie läuft schnell is ADJ, not lexical ADV.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }.
+Every TARGET span marks one supplied member, and members repeats those exact
+texts in source order. Both projections are authoritative. Never reject,
+repair, add, remove, merge, split, or reorder membership.
+</input_contract>
 
-Before resolving, count literal opening and closing TARGET tags. They must be
-balanced, and emit exactly one memberOrthographies value per opening tag in
-textual order. Standard includes canonical spelling and ordinary
-sentence-initial capitalization. Typo means an actual spelling or
-inappropriate-casing error. normalizedMembers is the normalized contextual
-adjective: lowercase ordinary capitalization and repair only typos, while
-preserving the complete attested morphology and marked-member order. Never
-substitute a synonym, silently add unmarked lexical material, or replace an
-inflected form with its dictionary form. Except for ordinary sentence-initial
-casing, a changed marked spelling requires Typo.
+<route_contract>
+Target Classification already established Lexeme/ADJ and complete membership.
+The operation is total: always resolve the supplied occurrence. Context may
+distinguish a productive adverbial ADJ from lexical ADV, an ordinal or cardinal
+ADJ from NUM, a color ADJ from a NOUN, or an established participial ADJ from a
+verbal participle. Trust the ADJ route and resolve its grammar; never return a
+different route.
 
-Use Citation only when the marked Surface is explicitly presented as a
-dictionary entry or citation form. Ordinary contextual adjectives are
-Inflection because German UD assigns Degree even when predicative or adverbial
-use has no agreement suffix. Degree is Pos for a positive form, Cmp for a
-comparative, and Sup for a superlative. Attributive adjectives additionally
-carry every Case, Gender, and Number value licensed by their whole noun phrase.
-Recover those agreement values from the determiner and noun when necessary:
-even a syncretic plural adjective Surface carries the noun's lexical Gender.
-Predicative and adverbial adjectives are uninflected for agreement, so their
-Case, Gender, and Number are null. Do not manufacture agreement from a nearby
-noun. Inflectional Features are a complete nullable bag: include case, degree,
-gender, and number, and use null only where the contextual Surface does not
-mark the feature.
+The application injects German route identity, Surface-to-Lemma linkage,
+normalized Surface, successful resolution, and Full realization coverage. Do
+not return those fields.
+</route_contract>
 
-Preserve comparison paradigms and irregularity. The canonicalForm is the
-dictionary positive adjective, so besser and beste resolve to gut; a regular
-comparative or superlative resolves to its positive Lemma. Do not treat the
-article in am plus an unmarked superlative target as part of the adjective
-Surface. Resolve only the marked adjective form.
+<member_projection>
+Return one memberOrthographies entry and one normalizedMembers entry for every
+supplied member. Standard includes canonical spelling, ordinary
+sentence-initial capitalization, licensed variants, and invariant forms. Typo
+is only a genuine spelling error.
 
-surfaceFeatures is null unless the attested use is archaic, when it is
-{"historicalStatus":"Archaic"}. Lemma coreFeatures are stable grammatical
-identity and always include abbr, foreign, numType, and variant. abbr is Yes
-only for an established abbreviated adjective Lemma; foreign is Yes only for
-an established foreign Lemma. Ordinary ordinal adjective Lemmas use numType
-Ord; cardinal adjective Lemmas on the ADJ route use numType Card. Otherwise
-numType is null. variant is Short only for a registered short
-variant identity; do not infer this Lemma Core Feature merely from ordinary
-predicative or adverbial position. Otherwise these fields are null. Nullable
-does not mean optional.
+For each Standard member, preserve the complete contextual morphology except
+lowercase ordinary sentence-initial capitalization. Repair only Typo members.
+Never replace an inflected Surface with its Lemma. Array position is the
+alignment key. Sentence-initial lowercasing also applies when the adjective is
+suffixless and predicative; normalize that initial Standard member to lowercase.
+</member_projection>
 
-Resolve an established adjective formed from a participle when its ADJ Lemma
-and the modeled agreement and Degree are identifiable; geschlossen in die
-geschlossene Tür has canonicalForm geschlossen. Some treebank ADJ-Part analyses
-retain a verbal Lemma or VerbForm/Tense that the current ADJ codec cannot
-represent. Return Unresolved when that contrast prevents one representable ADJ
-identity. A participle selected by a perfect auxiliary belongs to VERB and is
-always Unresolved here.
+<surface_kind>
+Use Citation only when context explicitly presents the adjective as a
+dictionary or citation form. Citation has no inflectionalFeatures.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, or explanations.`;
+Every ordinary contextual occurrence is Inflection, including suffixless
+predicative and adverbial uses. Inflection includes exactly:
+{
+  case: "Acc" | "Dat" | "Gen" | "Nom" | null,
+  degree: "Cmp" | "Pos" | "Sup" | null,
+  gender: "Fem" | "Masc" | "Neut" | null,
+  number: "Plur" | "Sing" | null
+}
+At least one value must be non-null.
+</surface_kind>
+
+<inflection>
+Degree is Pos for positive forms, Cmp for comparatives, and Sup for
+superlatives. Attributive adjectives carry contextual Case, Gender, and Number
+from their noun phrase even when the ending is syncretic. Predicative and
+adverbial adjectives have null Case, Gender, and Number. Nearby nouns do not
+give agreement to those suffixless uses.
+
+Keep comparison paradigms. The Lemma canonicalForm is the positive dictionary
+adjective: besser and beste map to gut; höher maps to hoch; näher maps to nah.
+In am sorgfältigsten, only the marked adjective is the Surface.
+</inflection>
+
+<lemma_and_features>
+lemma.coreFeatures contains exactly four nullable keys:
+{
+  abbr: "Yes" | null,
+  foreign: "Yes" | null,
+  numType: "Card" | "Ord" | null,
+  variant: "Short" | null
+}
+Use abbr Yes for an established adjective abbreviation, foreign Yes for an
+overt foreign adjective identity, Ord for ordinal adjectives, and Card for a
+cardinal adjective on this fixed route. Use variant Short only for a licensed
+short Lemma identity, never merely because a predicative or adverbial Surface
+lacks an ending. When the Surface abbreviates a full adjective Lemma, use abbr
+Yes and variant null; do not relabel the abbreviation as variant Short.
+Otherwise use null. Nullable keys are never omitted.
+
+Established participial adjectives keep an adjective Lemma: geschlossene maps
+to geschlossen, spannende maps to spannend. Invariant attributive color forms
+still receive contextual agreement.
+</lemma_and_features>
+
+<surface_features>
+surface.spelling is Variant only for a licensed variant or abbreviation and
+Canonical otherwise. surface.surfaceFeatures is null unless the attested use is
+archaic; then use { historicalStatus: "Archaic" }. An old poetic adjective use
+is archaic even when its inflection is ordinary. Current adjectives keep null.
+</surface_features>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface:
+    | {
+        spelling: "Canonical" | "Variant",
+        surfaceKind: "Citation",
+        surfaceFeatures: null | { historicalStatus: "Archaic" | null }
+      }
+    | {
+        spelling: "Canonical" | "Variant",
+        surfaceKind: "Inflection",
+        surfaceFeatures: null | { historicalStatus: "Archaic" | null },
+        inflectionalFeatures: {
+          case: "Acc" | "Dat" | "Gen" | "Nom" | null,
+          degree: "Cmp" | "Pos" | "Sup" | null,
+          gender: "Fem" | "Masc" | "Neut" | null,
+          number: "Plur" | "Sing" | null
+        }
+      },
+  lemma: {
+    canonicalForm: string,
+    coreFeatures: {
+      abbr: "Yes" | null,
+      foreign: "Yes" | null,
+      numType: "Card" | "Ord" | null,
+      variant: "Short" | null
+    }
+  }
+}
+
+Never return decision, resolution, Unresolved, realizationCoverage,
+normalizedSurface, language, family, kind, Lemma linkage, target indices,
+confidence, candidates, or explanation.
+</output_contract>`;
 
 export const demonstrations = corpus.select([
-	"grammar-de-adj-citation-sanft",
-	"grammar-de-adj-attributive-nom-masc-klein",
+	"grammar-de-adj-demo-citation-sanft",
+	"grammar-de-adj-demo-attributive-klein",
+	"grammar-de-adj-demo-adverbial-schnell",
+	"grammar-de-adj-demo-comparative-besser",
+	"grammar-de-adj-demo-ordinal-erste",
+	"grammar-de-adj-demo-typo-freundlcih",
 ]);
 
 export const promptSource = definePromptSource({

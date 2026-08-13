@@ -1,0 +1,10 @@
+{
+  "grammar-de-sym-accept-division": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The sentence directly governs the target with ein and uses the symbol as the accusative object of enthält. Under the settled operational rule, the valid oracle is Inflection with Acc/Neut/Sing; the retained Citation oracle is wrong."
+  },
+  "grammar-de-sym-accept-card-hash": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The context explicitly identifies # as a Nummernzeichen, the prompt defines Card for an established cardinal-number marker, and a distinct № demonstration teaches that feature. The model matched every other field but left numType null."
+  }
+}

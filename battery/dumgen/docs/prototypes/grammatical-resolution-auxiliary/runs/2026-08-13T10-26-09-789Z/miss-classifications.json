@@ -1,0 +1,6 @@
+{
+  "grammar-de-aux-dev-modal-sollen-syncretic": {
+    "classification": "prompt-defect",
+    "explanation": "The revised rule correctly produced null mood but did not explicitly say that mood ambiguity must not erase person and number independently established by the overt subject wir."
+  }
+}

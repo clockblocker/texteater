@@ -2,7 +2,7 @@
 
 This route-local prototype evaluates the exact
 `grammatical-resolution/de/lexeme/verb` Prompt Source. Its Golden Corpus has 46
-explicit cases: six demonstrations, 25 disjoint held-out cases, and 15
+explicit cases: six demonstrations, 25 disjoint development cases, and 15
 corpus-only cases. Stable IDs do not encode demonstration or evaluation roles.
 
 The demonstration set combines two compact contract anchors with four
@@ -41,15 +41,15 @@ are accepted in Structured Outputs and canonicalized to null by the evaluator.
 These probes are neither demonstrations nor authoritative scores. Persistent
 logbook registration is owned by root integration.
 
-## Bounded evidence runner
+## Shared bounded evidence runner
 
-The runner makes exactly one direct serial Responses API call for each of the
-25 held-out cases
-with `gpt-5.6-luna`, no reasoning, a 16,384-token output budget, zero retries,
-and `store: false`. It does not use the Batch API or group cases into one model
-request. Import and preflight make no provider call. Transport,
-JSON, or exact-schema failures retain the available raw response text,
-response ID, resolved model, usage, and error metadata.
+This route is a thin configuration over the shared direct cached evaluation
+runner. The development suite has 25 cases. The shared runner makes exactly one direct serial
+Responses API call per selected case with `gpt-5.6-luna`, no reasoning, a
+16,384-token output budget, zero retries, and `store: false`. It does not use
+the Batch API or group cases into one request. Import and preflight make no
+provider call. Transport, JSON, or exact-schema failures retain the available
+raw response text, response ID, resolved model, usage, and error metadata.
 
 Every call uses the same deterministic cache key for the assembled system
 prompt. The request marks an explicit cache breakpoint at the end of that
@@ -58,14 +58,24 @@ TTL. The retained run binds the cache key, mode, TTL, and breakpoint policy so
 finalization rejects evidence produced under another cache setup. Raw provider
 usage is retained for inspecting `cached_tokens` and `cache_write_tokens`.
 
-Shared generator registration, package wiring, prompt logbook updates, and
-runtime catalog registration are deliberately outside this route-local slice.
-No live call is made while preparing the slice. A later explicit run from
-`battery/dumgen` can invoke:
+The shared protocol requires three separately finalized and fully classified
+development rounds before acceptance, and persists an acceptance reservation
+before transport is created. VERB cannot yet run that phase: all 12 otherwise
+eligible cases were inspected in legacy v1 evidence, while the remaining three
+are documented policy probes. The runner refuses to mislabel any of them as
+untouched; a fresh disjoint acceptance corpus must be authored in a separate
+ticket. A development preflight can be run without provider access:
 
 ```sh
 bun --env-file ../../.env.local \
-  docs/prototypes/grammatical-resolution-verb/run.ts
+  docs/prototypes/grammatical-resolution-verb/run.ts preflight development 1
+```
+
+An explicitly authorized development run can invoke:
+
+```sh
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-verb/run.ts run development 1
 ```
 
 Draft results are written atomically below `runs/<timestamp>/results.json` and

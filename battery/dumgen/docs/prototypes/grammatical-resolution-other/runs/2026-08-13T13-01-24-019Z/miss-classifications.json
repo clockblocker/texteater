@@ -1,0 +1,22 @@
+{
+  "grammar-de-x-dev-unknown-blarg-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The new prose still lost to the model's Citation default for a determiner-governed X. A second, structurally different nominal Inflection demonstration is needed while this exact case remains held out."
+  },
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "prompt-defect",
+    "explanation": "The model now projects the full finite feature bag correctly but keeps the contextual finite spelling as canonicalForm. The prompt needs an explicit output-level distinction between normalized member and nonce-verb Lemma identity."
+  },
+  "grammar-de-x-dev-unknown-glorp-imp": {
+    "classification": "prompt-defect",
+    "explanation": "The corrected Standard oracle and inflection features now pass, but the model preserves ordinary sentence-initial capitalization in normalizedMembers and canonicalForm. The imperative example needs a direct sentence-initial normalization mapping."
+  },
+  "grammar-de-x-dev-slang-sus": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "This case is explicitly presented as German-language game-chat slang, parallel to the integrated cringe and w00t cases. Its provisional Foreign Yes oracle contradicts the current-use policy and must be null."
+  },
+  "grammar-de-x-dev-near-known-routes-yeet": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The target is described only as a form in a German chat, not an overt code-switch. Under the strengthened current-use policy the Foreign Yes oracle is unsupported and must be null."
+  }
+}

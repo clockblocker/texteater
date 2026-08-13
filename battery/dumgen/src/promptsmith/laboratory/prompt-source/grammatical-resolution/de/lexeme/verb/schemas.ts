@@ -250,55 +250,6 @@ const restoreRuntimeLemmaOutputCodec = codecBuilder4.helpers.pipeCodecs(
 	restoreRuntimeLemmaCodec,
 );
 
-const runtimeResolutionSchema = z.strictObject({
-	memberOrthographies: modelOutputSchema.shape.memberOrthographies,
-	normalizedMembers: modelOutputSchema.shape.normalizedMembers,
-	realizationCoverage: z.literal("Full"),
-	surface: modelOutputSchema.shape.surface,
-	lemma: modelLemmaCodec.out,
-});
-const realizationCoverageCodec = codecBuilder4.buildFixedFieldsCodec(
-	runtimeResolutionSchema,
-	{ realizationCoverage: "Full" },
-);
-const runtimeResolutionCodec = codecBuilder4.helpers.pipeCodecs(
-	restoreRuntimeLemmaOutputCodec,
-	realizationCoverageCodec,
-);
+export const verbResolutionCodec = restoreRuntimeLemmaOutputCodec;
 
-const nestResolutionCodec = codecBuilder4.buildReshapeCodec(
-	runtimeResolutionSchema,
-	{
-		fieldName: "resolution",
-		fieldSchema: runtimeResolutionSchema,
-		dropFields: [
-			"memberOrthographies",
-			"normalizedMembers",
-			"realizationCoverage",
-			"surface",
-			"lemma",
-		],
-		construct: (resolution) => resolution,
-		reconstruct: (resolution) => resolution,
-	},
-);
-const nestedResolutionCodec = codecBuilder4.helpers.pipeCodecs(
-	runtimeResolutionCodec,
-	nestResolutionCodec,
-);
-
-const resolvedRuntimeOutputSchema = z.strictObject({
-	decision: z.literal("Resolved"),
-	resolution: runtimeResolutionSchema,
-});
-const decisionCodec = codecBuilder4.buildFixedFieldsCodec(
-	resolvedRuntimeOutputSchema,
-	{ decision: "Resolved" },
-);
-
-export const verbOutputCodec = codecBuilder4.helpers.pipeCodecs(
-	nestedResolutionCodec,
-	decisionCodec,
-);
-
-export const outputSchema = verbOutputCodec.in satisfies PromptOutputSchema;
+export const outputSchema = verbResolutionCodec.in satisfies PromptOutputSchema;

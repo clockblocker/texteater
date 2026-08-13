@@ -1,0 +1,951 @@
+{
+  "runnerVersion": "grammatical-resolution-proverb-v6",
+  "route": "grammatical-resolution/de/phraseme/proverb",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T12:00:34.619Z",
+  "completedAt": "2026-08-13T12:00:50.956Z",
+  "finalizedAt": "2026-08-13T12:01:24.355Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "ba1a2b6f9083e748340dd16c9149cc0d41614bf5aa357d5df5a30dc6bdfeea34",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "013cd4700c043090f3bf61b6de97d68d802bacc9d8e07a9e6ac919a570095cb4",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "bebb7534e1fc34744efdf332f5aa7b8f9485586f4d4128e510eaf86362b4f200",
+  "suiteSha256": "f122c7f8ae926e9eea129c0746d86d507dc7942909923d5b382532864fa3cab4",
+  "evaluationCaseIds": [
+    "grammar-de-proverb-accept-wer-zuerst",
+    "grammar-de-proverb-accept-wo-rauch",
+    "grammar-de-proverb-accept-wo-wille",
+    "grammar-de-proverb-accept-geteiltes-leid",
+    "grammar-de-proverb-accept-glashaus-partial",
+    "grammar-de-proverb-accept-frueher-vogel-slogan-context",
+    "grammar-de-proverb-accept-eile-discourse-context",
+    "grammar-de-proverb-accept-betten-idiom-context",
+    "grammar-de-proverb-accept-doppelt-quotation-context",
+    "grammar-de-proverb-accept-gaul-aphorism-context"
+  ],
+  "boundedCalls": 10,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 10,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-proverb-accept-wer-zuerst",
+      "input": {
+        "markedContext": "Vor dem Kartenverkauf wies die Veranstalterin auf die begrenzten Plätze hin: „<TARGET>Wer</TARGET> <TARGET>zuerst</TARGET> <TARGET>kommt</TARGET>, <TARGET>mahlt</TARGET> <TARGET>zuerst</TARGET>.“",
+        "members": [
+          "Wer",
+          "zuerst",
+          "kommt",
+          "mahlt",
+          "zuerst"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "zuerst",
+          "kommt",
+          "mahlt",
+          "zuerst"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer zuerst kommt mahlt zuerst"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "zuerst",
+          "kommt",
+          "mahlt",
+          "zuerst"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer zuerst kommt mahlt zuerst"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1535,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"zuerst\",\"kommt\",\"mahlt\",\"zuerst\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer zuerst kommt mahlt zuerst\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09b800f298002b43016a7db1e2df38819ca39320967f506915",
+      "usage": {
+        "input_tokens": 2562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2639
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-wo-rauch",
+      "input": {
+        "markedContext": "Als mehrere voneinander unabhängige Hinweise eintrafen, meinte der Redakteur: „<TARGET>Wo</TARGET> <TARGET>Rauch</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>auch</TARGET> <TARGET>Feuer</TARGET>.“",
+        "members": [
+          "Wo",
+          "Rauch",
+          "ist",
+          "ist",
+          "auch",
+          "Feuer"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wo",
+          "Rauch",
+          "ist",
+          "ist",
+          "auch",
+          "Feuer"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wo Rauch ist ist auch Feuer"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wo",
+          "Rauch",
+          "ist",
+          "ist",
+          "auch",
+          "Feuer"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wo Rauch ist ist auch Feuer"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 2849,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wo\",\"Rauch\",\"ist\",\"ist\",\"auch\",\"Feuer\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wo Rauch ist ist auch Feuer\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e94c79a59a6960b016a7db1e4667c819cb7fbd125a452206c",
+      "usage": {
+        "input_tokens": 2564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 78,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-wo-wille",
+      "input": {
+        "markedContext": "Trotz des knappen Zeitplans blieb die Ingenieurin zuversichtlich: „<TARGET>Wo</TARGET> <TARGET>ein</TARGET> <TARGET>Wille</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>auch</TARGET> <TARGET>ein</TARGET> <TARGET>Weg</TARGET>.“",
+        "members": [
+          "Wo",
+          "ein",
+          "Wille",
+          "ist",
+          "ist",
+          "auch",
+          "ein",
+          "Weg"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wo",
+          "ein",
+          "Wille",
+          "ist",
+          "ist",
+          "auch",
+          "ein",
+          "Weg"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wo ein Wille ist ist auch ein Weg"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wo",
+          "ein",
+          "Wille",
+          "ist",
+          "ist",
+          "auch",
+          "ein",
+          "Weg"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wo ein Wille ist ist auch ein Weg"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1474,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wo\",\"ein\",\"Wille\",\"ist\",\"ist\",\"auch\",\"ein\",\"Weg\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wo ein Wille ist ist auch ein Weg\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c22e530289e4fe8016a7db1e725b0819c8440a6cb3ca87f0e",
+      "usage": {
+        "input_tokens": 2580,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2668
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-geteiltes-leid",
+      "input": {
+        "markedContext": "Nachdem er seine Sorge endlich erzählt hatte, erinnerte ihn seine Freundin: „<TARGET>Geteiltes</TARGET> <TARGET>Leid</TARGET> <TARGET>ist</TARGET> <TARGET>halbes</TARGET> <TARGET>Leid</TARGET>.“",
+        "members": [
+          "Geteiltes",
+          "Leid",
+          "ist",
+          "halbes",
+          "Leid"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Geteiltes",
+          "Leid",
+          "ist",
+          "halbes",
+          "Leid"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Geteiltes Leid ist halbes Leid"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Geteiltes",
+          "Leid",
+          "ist",
+          "halbes",
+          "Leid"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Geteiltes Leid ist halbes Leid"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1376,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Geteiltes\",\"Leid\",\"ist\",\"halbes\",\"Leid\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Geteiltes Leid ist halbes Leid\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02097283c7af69aa016a7db1e8a0c881a094b6487c1cfeabde",
+      "usage": {
+        "input_tokens": 2557,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 79,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2636
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-glashaus-partial",
+      "input": {
+        "markedContext": "Die Aufnahme endete nach dem klar erkennbaren Sprichwortanfang „<TARGET>Wer</TARGET> <TARGET>im</TARGET> <TARGET>Glashaus</TARGET> <TARGET>sitzt</TARGET> …“.",
+        "members": [
+          "Wer",
+          "im",
+          "Glashaus",
+          "sitzt"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "im",
+          "Glashaus",
+          "sitzt"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer im Glashaus sitzt soll nicht mit Steinen werfen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "im",
+          "Glashaus",
+          "sitzt"
+        ],
+        "realizationCoverage": "Partial",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer im Glashaus sitzt soll nicht mit Steinen werfen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1628,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"im\",\"Glashaus\",\"sitzt\"],\"realizationCoverage\":\"Partial\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer im Glashaus sitzt soll nicht mit Steinen werfen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_087be19eb733860e016a7db1ea09e8819cba39d71a8a2bc6cf",
+      "usage": {
+        "input_tokens": 2546,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2623
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-frueher-vogel-slogan-context",
+      "input": {
+        "markedContext": "Nachdem die Gruppe den Werbeslogan „Geiz ist geil“ verworfen hatte, begründete Tom den frühen Start mit dem Sprichwort „<TARGET>Der</TARGET> <TARGET>frühe</TARGET> <TARGET>Vogel</TARGET> <TARGET>fängt</TARGET> <TARGET>den</TARGET> <TARGET>Wurm</TARGET>.“",
+        "members": [
+          "Der",
+          "frühe",
+          "Vogel",
+          "fängt",
+          "den",
+          "Wurm"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "frühe",
+          "Vogel",
+          "fängt",
+          "den",
+          "Wurm"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der frühe Vogel fängt den Wurm"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Der",
+          "frühe",
+          "Vogel",
+          "fängt",
+          "den",
+          "Wurm"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Der frühe Vogel fängt den Wurm"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1604,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Der\",\"frühe\",\"Vogel\",\"fängt\",\"den\",\"Wurm\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Der frühe Vogel fängt den Wurm\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06a4fbbb400c2c0e016a7db1eba17881a2b47720df3fd28d09",
+      "usage": {
+        "input_tokens": 2581,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2665
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-eile-discourse-context",
+      "input": {
+        "markedContext": "Nach der Begrüßung „Guten Morgen“ bremste die Ausbilderin den hektischen Lehrling mit „<TARGET>Eile</TARGET> <TARGET>mit</TARGET> <TARGET>Weile</TARGET>.“",
+        "members": [
+          "Eile",
+          "mit",
+          "Weile"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Eile",
+          "mit",
+          "Weile"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Eile mit Weile"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Eile",
+          "mit",
+          "Weile"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Eile mit Weile"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1631,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Eile\",\"mit\",\"Weile\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Eile mit Weile\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fb7795f1516dd90016a7db1ed3a94819c91e72d09ce8100ef",
+      "usage": {
+        "input_tokens": 2542,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 65,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-betten-idiom-context",
+      "input": {
+        "markedContext": "Obwohl im Gespräch zuvor die Redewendung „den Nagel auf den Kopf treffen“ gefallen war, kommentierte sie die selbst gewählte Lage mit „<TARGET>Wie</TARGET> <TARGET>man</TARGET> <TARGET>sich</TARGET> <TARGET>bettet</TARGET>, <TARGET>so</TARGET> <TARGET>liegt</TARGET> <TARGET>man</TARGET>.“",
+        "members": [
+          "Wie",
+          "man",
+          "sich",
+          "bettet",
+          "so",
+          "liegt",
+          "man"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wie",
+          "man",
+          "sich",
+          "bettet",
+          "so",
+          "liegt",
+          "man"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wie man sich bettet so liegt man"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wie",
+          "man",
+          "sich",
+          "bettet",
+          "so",
+          "liegt",
+          "man"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wie man sich bettet so liegt man"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1357,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wie\",\"man\",\"sich\",\"bettet\",\"so\",\"liegt\",\"man\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wie man sich bettet so liegt man\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02346202b3bfd9c7016a7db1eede0c819fa01490afdcac4103",
+      "usage": {
+        "input_tokens": 2584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2668
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-doppelt-quotation-context",
+      "input": {
+        "markedContext": "Die bloße Meldung „Der Bus kommt später“ war nur eine gewöhnliche Aussage; als sie beide Kopien einpackte, scherzte Mia dagegen: „<TARGET>Doppelt</TARGET> <TARGET>gemoppelt</TARGET> <TARGET>hält</TARGET> <TARGET>besser</TARGET>.“",
+        "members": [
+          "Doppelt",
+          "gemoppelt",
+          "hält",
+          "besser"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Doppelt",
+          "gemoppelt",
+          "hält",
+          "besser"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Doppelt gemoppelt hält besser"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Doppelt",
+          "gemoppelt",
+          "hält",
+          "besser"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Doppelt gemoppelt hält besser"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1348,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Doppelt\",\"gemoppelt\",\"hält\",\"besser\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Doppelt gemoppelt hält besser\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d1dc29a6a7918f8016a7db1f036d081a0b6f71fe48402d348",
+      "usage": {
+        "input_tokens": 2566,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-proverb-accept-gaul-aphorism-context",
+      "input": {
+        "markedContext": "Nach dem Aphorismus „Alt werden heißt sehend werden“ wechselte die Dozentin zu einem traditionellen Sprichwort: „<TARGET>Einem</TARGET> <TARGET>geschenkten</TARGET> <TARGET>Gaul</TARGET> <TARGET>schaut</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>ins</TARGET> <TARGET>Maul</TARGET>.“",
+        "members": [
+          "Einem",
+          "geschenkten",
+          "Gaul",
+          "schaut",
+          "man",
+          "nicht",
+          "ins",
+          "Maul"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Einem",
+          "geschenkten",
+          "Gaul",
+          "schaut",
+          "man",
+          "nicht",
+          "ins",
+          "Maul"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Einem geschenkten Gaul schaut man nicht ins Maul"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Einem",
+          "geschenkten",
+          "Gaul",
+          "schaut",
+          "man",
+          "nicht",
+          "ins",
+          "Maul"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Einem geschenkten Gaul schaut man nicht ins Maul"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1526,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Einem\",\"geschenkten\",\"Gaul\",\"schaut\",\"man\",\"nicht\",\"ins\",\"Maul\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Einem geschenkten Gaul schaut man nicht ins Maul\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0819d57e7a8bfa06016a7db1f1921081a1ad3bf371bac3073c",
+      "usage": {
+        "input_tokens": 2597,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2471
+        },
+        "output_tokens": 97,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2694
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

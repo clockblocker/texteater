@@ -1,0 +1,10 @@
+{
+  "grammar-de-propn-accept-v3-citation-mainz": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt says a surrounding label's grammar is not copied onto a Citation and the Berlin demonstration establishes neuter city-name convention. The model matched every field except gender and appears to have borrowed masculine gender from the neighboring label Ortsnamen."
+  },
+  "grammar-de-propn-accept-v3-foreign-rio-de-janeiro": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt permits stable gender from lexical convention and the Berlin demonstration establishes neuter city-name convention. The model matched the multi-member foreign contextual resolution in every other field but returned masculine rather than neuter gender."
+  }
+}

@@ -8,18 +8,23 @@ import {
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
 	finalizeEvidence,
+	NOUN_PROMPT_CACHE_POLICY,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-noun/run";
 import { nounGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -31,6 +36,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
+		rawOutputText: JSON.stringify(testCase.idealOutput),
 		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
@@ -42,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -52,76 +58,116 @@ function draftResult() {
 	};
 }
 
-test("NOUN runner preflights the exact bounded suite before calls", () => {
-	expect(prepareCurrentTestCases()).toHaveLength(15);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
-	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
+test("NOUN runner import and preflight make no provider call", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(binding.runnerVersion).toBe("grammatical-resolution-noun-v5");
+	expect(binding.route).toBe("grammatical-resolution/de/lexeme/noun");
+	expect(binding.transport).toBe("openai-responses-direct-serial");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
+	expect(binding.maxOutputTokens).toBe(4096);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(13);
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
+	expect(() => assertEvaluationSuiteBounds(31)).toThrow(/capped at 30/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(10)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(30)).not.toThrow();
 });
 
-test("NOUN retained evidence is completely validated", () => {
-	const valid = draftResult();
-	expect(parseRetainedRun(valid).evaluationCaseIds).toEqual(
-		valid.evaluationCaseIds,
-	);
-	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			completedAt: "2020-01-01T09:59:00.000Z",
-		}),
-	).toThrow(/completedAt/);
-	expect(() =>
-		parseRetainedRun({ ...valid, contractScore: Number.POSITIVE_INFINITY }),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			evaluationCaseIds: [
-				valid.evaluationCaseIds[0],
-				...valid.evaluationCaseIds,
-			],
-		}),
-	).toThrow(/unique|attempt order/);
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			attempts: valid.attempts.map((attempt, index) =>
-				index === 0
-					? { ...attempt, normalizedSurfacePass: undefined }
-					: attempt,
-			),
-		}),
-	).toThrow();
+test("NOUN requests cache the stable prompt prefix explicitly", () => {
+	const testCases = prepareCurrentTestCases(developmentPhase);
+	const first = testCases[0];
+	const second = testCases[1];
+	if (first === undefined || second === undefined) {
+		throw new Error("Expected at least two NOUN evaluation cases.");
+	}
+	const binding = currentEvidenceBinding(developmentPhase);
+	const firstRequest = responseRequestFor(first.input);
+	const secondRequest = responseRequestFor(second.input);
+
+	expect(NOUN_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(firstRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(secondRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(firstRequest).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
 });
 
-test("NOUN binding rejects obsolete policy and Golden Cases", () => {
+test("NOUN retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
-		assertCurrentEvidenceBinding({ ...valid, model: "obsolete-model" }),
-	).toThrow(/obsolete evidence policy/);
-	const firstAttempt = valid.attempts[0];
-	if (firstAttempt === undefined) throw new Error("Expected a current case.");
+		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
+	).toThrow(/Retained evidence summary field/);
+	expect(() =>
+		parseRetainedRun({
+			...valid,
+			runnerVersion: "grammatical-resolution-noun-v4",
+		}),
+	).toThrow();
 	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
-			attempts: [
-				{
-					...firstAttempt,
-					idealOutput: {
-						decision: "Unresolved" as const,
-						resolution: null,
-					},
-				},
-				...valid.attempts.slice(1),
-			],
+			outputSchemaSha256: "0".repeat(64),
 		}),
-	).toThrow(/current Golden Case/);
+	).toThrow(/obsolete evidence policy/);
+
+	const first = valid.attempts[0];
+	if (first === undefined) throw new Error("Expected an attempt.");
+	const { output: _output, ...withoutOutput } = first;
+	const parseFailure = {
+		...withoutOutput,
+		memberCountPass: false,
+		memberOrthographiesPass: false,
+		surfaceKindPass: false,
+		normalizedSurfacePass: false,
+		spellingPass: false,
+		surfaceFeaturesPass: false,
+		inflectionalFeaturesPass: false,
+		canonicalFormPass: false,
+		coreFeaturesPass: false,
+		error: { name: "SyntaxError", message: "invalid provider JSON" },
+		contractPass: false,
+	};
+	const retained = parseRetainedRun({
+		...valid,
+		attempts: [parseFailure, ...valid.attempts.slice(1)],
+		contractScore: valid.contractScore - 1,
+		scoreRatio: (valid.contractScore - 1) / valid.boundedCalls,
+		executionErrorCount: 1,
+	});
+	expect(retained.attempts[0]?.error).toEqual({
+		name: "SyntaxError",
+		message: "invalid provider JSON",
+	});
+	expect(retained.attempts[0]?.rawOutputText).toBe(first.rawOutputText);
 });
 
 test("NOUN finalization is offline, atomic, and recomputed", async () => {
@@ -129,13 +175,18 @@ test("NOUN finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
+		const attempts = passingAttempts();
+		const firstAttempt = attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		attempts[0] = { ...firstAttempt, contractPass: false };
 		const draft = {
-			...draftResult(),
-			contractScore: 0,
-			scoreRatio: 0,
-			meetsMinimumEvaluationCases: false,
-			meetsMinimumScoreRatio: false,
-			evidenceThresholdMet: false,
+			...currentEvidenceBinding(developmentPhase),
+			startedAt,
+			completedAt,
+			finalizedAt: null,
+			boundedCalls: attempts.length,
+			...summarizeEvidence(attempts, false),
+			attempts,
 		};
 		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 		await writeFile(classificationsPath, "{}", "utf8");
@@ -147,7 +198,6 @@ test("NOUN finalization is offline, atomic, and recomputed", async () => {
 		expect(finalized.completedAt).toBe(completedAt);
 		expect(finalized.finalizedAt).not.toBeNull();
 		expect(finalized.contractScore).toBe(finalized.boundedCalls);
-		expect(finalized.scoreRatio).toBe(1);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))

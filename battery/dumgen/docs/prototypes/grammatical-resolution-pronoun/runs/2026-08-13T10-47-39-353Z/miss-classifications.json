@@ -1,0 +1,10 @@
+{
+  "grammar-de-pron-accept-v3-indefinite-irgendjemand-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The response correctly produced nominative singular Inflection but collapsed the compound indefinite Lemma irgendjemand to its base jemand. A lexicalized compound keeps its complete normalized dictionary identity as canonicalForm."
+  },
+  "grammar-de-pron-accept-v3-foreign-she": {
+    "classification": "prompt-defect",
+    "explanation": "The response now preserved the foreign source-language identity and all Core Features, but treated contextual finite-clause subject she as invariant Citation. A contextual foreign personal-pronoun paradigm remains Inflection and carries its established nominative feminine singular morphology."
+  }
+}

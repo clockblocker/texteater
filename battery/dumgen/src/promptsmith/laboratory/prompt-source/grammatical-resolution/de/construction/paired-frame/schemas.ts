@@ -22,7 +22,12 @@ export const dePairedFrameLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ language: "de", family: "Construction", kind: "PairedFrame" },
 );
 
-export const dePairedFrameModelLemmaSchema = dePairedFrameLemmaCodec.in;
+const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+	dePairedFrameLemmaCodec.in,
+	{ coreFeatures: {} },
+);
+
+export const dePairedFrameModelLemmaSchema = modelLemmaCodec.in;
 
 type DePairedFrameLemma = z.output<typeof dePairedFrameLemmaCodec>;
 
@@ -59,34 +64,82 @@ export function buildDePairedFrameCitationSurfaceCodec(
 	return z.codec(modelSchema, canonicalCodec.out, {
 		decode: (model) =>
 			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
-		encode: (canonical) =>
-			modelSchema.parse(canonicalCodec.encode(canonical)),
+		encode: (canonical) => canonicalCodec.encode(canonical),
 	});
 }
 
-const schemaProjectionLemma = dePairedFrameLemmaCodec.decode({
+const schemaProjectionLemma = {
+	language: "de",
 	canonicalForm: "entweder … oder",
+	family: "Construction",
+	kind: "PairedFrame",
 	coreFeatures: {},
-});
+} satisfies DePairedFrameLemma;
 
 export const dePairedFrameModelCitationSurfaceSchema =
 	buildDePairedFrameCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
+		surfaceKind: true,
 	});
 
-export const inputSchema = z.strictObject({
-	markedContext: grammaticalResolutionMarkedContextSchema,
-}) satisfies PromptInputSchema;
+export const inputSchema = z
+	.strictObject({
+		markedContext: grammaticalResolutionMarkedContextSchema,
+		members: z.array(z.string().min(1)).min(2),
+	})
+	.superRefine((input, context) => {
+		const markedMembers = [
+			...input.markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+		].map((match) => match[1]);
+		if (
+			markedMembers.length !== input.members.length ||
+			markedMembers.some(
+				(member, position) => member !== input.members[position],
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["members"],
+				message:
+					"members must exactly match TARGET contents in source order.",
+			});
+		}
+	}) satisfies PromptInputSchema;
 
-export const outputSchema = z.strictObject({
-	decision: z.enum(["Resolved", "Unresolved"]),
-	resolution: z
-		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
-			normalizedMembers: normalizedMembersSchema,
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			surface: dePairedFrameModelCitationSurfaceSchema,
-			lemma: dePairedFrameModelLemmaSchema,
-		})
-		.nullable(),
-}) satisfies PromptOutputSchema;
+const modelOutputSchema = z.strictObject({
+	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
+	normalizedMembers: normalizedMembersSchema,
+	surface: dePairedFrameModelCitationSurfaceSchema,
+	lemma: dePairedFrameModelLemmaSchema,
+});
+
+const extractModelLemmaCodec = codecBuilder4.buildReshapeCodec(
+	modelOutputSchema,
+	{
+		fieldName: "modelLemma",
+		fieldSchema: modelLemmaCodec.in,
+		dropFields: ["lemma"],
+		construct: (output) => output.lemma,
+		reconstruct: (modelLemma) => ({ lemma: modelLemma }),
+	},
+);
+const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
+	extractModelLemmaCodec.out,
+	{
+		fieldName: "lemma",
+		fieldSchema: modelLemmaCodec.out,
+		dropFields: ["modelLemma"],
+		construct: (output) => modelLemmaCodec.decode(output.modelLemma),
+		reconstruct: (lemma) => ({
+			modelLemma: modelLemmaCodec.encode(lemma),
+		}),
+	},
+);
+
+export const pairedFrameResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+	extractModelLemmaCodec,
+	restoreRuntimeLemmaCodec,
+);
+
+export const outputSchema =
+	pairedFrameResolutionCodec.in satisfies PromptOutputSchema;

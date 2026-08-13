@@ -1,0 +1,22 @@
+{
+  "grammar-de-propn-dev-org-deutsche-bank": {
+    "classification": "prompt-defect",
+    "explanation": "The model continues to use Citation for an ordinary contextual multi-member organization; a different multi-member organization demonstration is warranted."
+  },
+  "grammar-de-propn-dev-product-iphone": {
+    "classification": "prompt-defect",
+    "explanation": "The model marked an established product name Foreign solely from its origin/shape; a different integrated foreign-origin brand example is warranted."
+  },
+  "grammar-de-propn-dev-work-zauberfloete": {
+    "classification": "prompt-defect",
+    "explanation": "The model continues to use Citation for an ordinary contextual multi-member work-title object; a different contextual work-title demonstration is warranted."
+  },
+  "grammar-de-propn-dev-transliteration-kyjiw": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The input still did not operationally establish whether the transliterated form was integrated German or source-language material; the oracle must make that status explicit."
+  },
+  "grammar-de-propn-dev-variant-pressburg": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The sentence explicitly identifies Pressburg as the historical German name for Bratislava and the prompt permits the different canonicalForm only under that relation; the model retained Pressburg as Lemma."
+  }
+}

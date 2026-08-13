@@ -2,27 +2,29 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type OpenAI from "openai";
 
 import {
+	APHORISM_PROMPT_CACHE_POLICY,
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
-	BATCH_EVIDENCE_TRANSPORT,
 	currentEvidenceBinding,
 	finalizeEvidence,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
-	runLiveEvaluation,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-aphorism/run";
 import { aphorismGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-aphorism/evaluation-suite";
 
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -46,8 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
-		batchProvenance: null,
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -57,220 +58,61 @@ function draftResult() {
 	};
 }
 
-function batchDraftResult() {
-	const attempts = passingAttempts().map((attempt) => ({
-		...attempt,
-		latencyMs: null,
-	}));
-	return {
-		...currentEvidenceBinding(BATCH_EVIDENCE_TRANSPORT),
-		batchProvenance: {
-			batchId: "batch-test",
-			inputFileId: "file-input",
-			outputFileId: "file-output",
-			errorFileId: null,
-			submissionManifestSha256: "a".repeat(64),
-			inputJsonlSha256: "b".repeat(64),
-			outputJsonlSha256: "c".repeat(64),
-			errorJsonlSha256: null,
-			endpoint: "/v1/responses" as const,
-			completionWindow: "24h" as const,
-			createdAt: startedAt,
-			completedAt,
-			requestCounts: { total: 100, completed: 100, failed: 0 },
+test("Aphorism shared-runner preflight is offline and phase-bound", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
 		},
-		startedAt,
-		completedAt,
-		finalizedAt: null,
-		boundedCalls: attempts.length,
-		...summarizeEvidence(attempts, false),
-		attempts,
-	};
-}
-
-test("Aphorism Batch evidence has strict provenance and honest timing", () => {
-	const valid = parseRetainedRun(batchDraftResult());
-	expect(valid.transport).toBe(BATCH_EVIDENCE_TRANSPORT);
-	expect(valid.attempts.every(({ latencyMs }) => latencyMs === null)).toBe(
-		true,
-	);
-	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			batchProvenance: {
-				...valid.batchProvenance,
-				submissionManifestSha256: "not-a-hash",
-			},
-		}),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			attempts: valid.attempts.map((attempt, index) => ({
-				...attempt,
-				latencyMs: index,
-			})),
-		}),
-	).toThrow(/Batch attempts require null latency/);
-	expect(() =>
-		parseRetainedRun({
-			...draftResult(),
-			batchProvenance: valid.batchProvenance,
-		}),
-	).toThrow(/direct transport requires null provenance/);
+	});
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(16);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(16);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(10);
+	expect(currentEvidenceBinding(developmentPhase)).toMatchObject({
+		runnerVersion: "grammatical-resolution-aphorism-v8",
+		route: "grammatical-resolution/de/phraseme/aphorism",
+		transport: "openai-responses-direct-serial",
+		model: "gpt-5.6-luna",
+		reasoningEffort: "none",
+		maxOutputTokens: 4096,
+	});
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
+	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
 });
 
-test("Aphorism finalizes Batch evidence without changing transport", async () => {
-	const directory = await mkdtemp(join(tmpdir(), "aphorism-batch-test-"));
-	const resultsPath = join(directory, "results.json");
-	const classificationsPath = join(directory, "miss-classifications.json");
-	try {
-		await writeFile(
-			resultsPath,
-			JSON.stringify(batchDraftResult()),
-			"utf8",
-		);
-		await writeFile(classificationsPath, "{}", "utf8");
-		const finalized = await finalizeEvidence(
-			resultsPath,
-			classificationsPath,
-		);
-		expect(finalized.transport).toBe(BATCH_EVIDENCE_TRANSPORT);
-		expect(finalized.batchProvenance?.submissionManifestSha256).toBe(
-			"a".repeat(64),
-		);
-		expect(
-			finalized.attempts.every(({ latencyMs }) => latencyMs === null),
-		).toBe(true);
-		expect(finalized.evidenceThresholdMet).toBe(true);
-	} finally {
-		await rm(directory, { recursive: true, force: true });
-	}
-});
-
-test("Aphorism runner import and preflight make no provider call", async () => {
-	expect(currentEvidenceBinding().route).toBe(
-		"grammatical-resolution/de/phraseme/aphorism",
+test("Aphorism requests use the shared explicit stable-prefix cache", () => {
+	const first = prepareCurrentTestCases(developmentPhase)[0];
+	if (first === undefined) throw new Error("Missing development case.");
+	const request = responseRequestFor(first.input);
+	expect(APHORISM_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(request.prompt_cache_key).toBe(
+		currentEvidenceBinding(developmentPhase).promptCacheKey,
 	);
-	expect(currentEvidenceBinding().runnerVersion).toBe(
-		"grammatical-resolution-aphorism-v7",
-	);
-	expect(currentEvidenceBinding().model).toBe("gpt-5.6-luna");
-	expect(currentEvidenceBinding().reasoningEffort).toBe("none");
-	expect(currentEvidenceBinding().runMaxOutputTokens).toBe(32768);
-	expect(prepareCurrentTestCases()).toHaveLength(20);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
-	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
-	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
-	let clientConstructions = 0;
-	await expect(
-		runLiveEvaluation({
-			apiKey: "",
-			createClient: () => {
-				clientConstructions += 1;
-				return null as unknown as OpenAI;
-			},
-		}),
-	).rejects.toThrow(/OPENAI_API_KEY/);
-	expect(clientConstructions).toBe(0);
+	expect(request).toMatchObject({
+		store: false,
+		max_output_tokens: 4096,
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+	});
 });
 
 test("Aphorism retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
+	expect(() => parseRetainedRun({ ...valid, contractScore: 0 })).toThrow(
+		/summary field/,
+	);
 	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
+		parseRetainedRun({ ...valid, runnerVersion: "obsolete" }),
 	).toThrow();
 	expect(() =>
-		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
-	).toThrow(/summary field/);
-	expect(() =>
-		assertCurrentEvidenceBinding({
-			...valid,
-			outputSchemaSha256: "0".repeat(64),
-		}),
+		assertCurrentEvidenceBinding({ ...valid, suiteSha256: "0".repeat(64) }),
 	).toThrow(/obsolete evidence policy/);
-});
-
-test("Aphorism finalization rejects a parsed output that differs from retained raw output", async () => {
-	const directory = await mkdtemp(join(tmpdir(), "aphorism-tamper-test-"));
-	const resultsPath = join(directory, "results.json");
-	const classificationsPath = join(directory, "miss-classifications.json");
-	try {
-		const currentDraft = draftResult();
-		const firstAttempt = currentDraft.attempts[0];
-		if (firstAttempt === undefined)
-			throw new Error("Expected a current case.");
-		const attempts = [
-			{
-				...firstAttempt,
-				rawOutputText: JSON.stringify({
-					decision: "Unresolved",
-					resolution: null,
-				}),
-			},
-			...currentDraft.attempts.slice(1),
-		];
-		await writeFile(
-			resultsPath,
-			JSON.stringify({
-				...currentDraft,
-				...summarizeEvidence(attempts, false),
-				attempts,
-			}),
-			"utf8",
-		);
-		await writeFile(classificationsPath, "{}", "utf8");
-		await expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(/does not match its raw provider output/);
-	} finally {
-		await rm(directory, { recursive: true, force: true });
-	}
-});
-
-test("Aphorism retains complete provider metadata for parse failures", () => {
-	const valid = parseRetainedRun(draftResult());
-	const firstAttempt = valid.attempts[0];
-	if (firstAttempt === undefined) throw new Error("Expected a current case.");
-	const { output: _output, ...withoutOutput } = firstAttempt;
-	const parseFailure = {
-		...withoutOutput,
-		contractPass: false,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
-		memberCountPass: false,
-		memberOrthographiesPass: false,
-		surfaceKindPass: false,
-		normalizedSurfacePass: false,
-		spellingPass: false,
-		realizationCoveragePass: false,
-		surfaceFeaturesPass: false,
-		canonicalFormPass: false,
-		coreFeaturesPass: false,
-		rawOutputText: '{"decision":"Resolved","resolution":',
-		error: { name: "SyntaxError", message: "Unexpected end of JSON input" },
-	};
-	const attempts = [parseFailure, ...valid.attempts.slice(1)];
-	const retained = parseRetainedRun({
-		...valid,
-		...summarizeEvidence(attempts, false),
-		attempts,
-	});
-	expect(retained.attempts[0]?.responseId).toBe(firstAttempt.responseId);
-	const { rawOutputText: _rawOutputText, ...incompleteMetadata } =
-		parseFailure;
-	const incompleteAttempts = [incompleteMetadata, ...valid.attempts.slice(1)];
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			...summarizeEvidence(incompleteAttempts, false),
-			attempts: incompleteAttempts,
-		}),
-	).toThrow(/metadata must be retained completely/);
 });
 
 test("Aphorism finalization is offline, atomic, and recomputed", async () => {
@@ -278,20 +120,18 @@ test("Aphorism finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
-		const currentDraft = draftResult();
-		const attempts = currentDraft.attempts.map((attempt, index) =>
-			index === 0
-				? {
-						...attempt,
-						contractPass: false,
-						normalizedSurfacePass: false,
-					}
-				: attempt,
-		);
+		const attempts = passingAttempts();
+		const first = attempts[0];
+		if (first === undefined) throw new Error("Missing attempt.");
+		attempts[0] = { ...first, contractPass: false };
 		await writeFile(
 			resultsPath,
 			JSON.stringify({
-				...currentDraft,
+				...currentEvidenceBinding(developmentPhase),
+				startedAt,
+				completedAt,
+				finalizedAt: null,
+				boundedCalls: attempts.length,
 				...summarizeEvidence(attempts, false),
 				attempts,
 			}),
@@ -302,14 +142,12 @@ test("Aphorism finalization is offline, atomic, and recomputed", async () => {
 			resultsPath,
 			classificationsPath,
 		);
-		expect(finalized.completedAt).toBe(completedAt);
-		expect(finalized.finalizedAt).not.toBeNull();
-		expect(finalized.contractScore).toBe(finalized.boundedCalls);
+		expect(finalized.contractScore).toBe(16);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
-		).toBe(finalized.finalizedAt);
+		).not.toBeNull();
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

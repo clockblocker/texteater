@@ -1,99 +1,170 @@
 # German Lexeme/PART Grammatical Resolution evaluation
 
-This route-local prototype covers the exact
-`grammatical-resolution/de/lexeme/particle` route. Root integration registers
-it for prompt generation, commits the generated module, and provides the
-package prototype command; catalog and runtime wiring remain deferred. Its Golden Corpus has
-28 cases: four necessary demonstrations, 22 explicitly pinned held-out cases,
-and two corpus-only policy probes. Demonstration and evaluation selections are
-disjoint by case, normalized input, and explicit lemma/form contamination keys;
-no demonstration Lemma appears in the held-out selection.
+This route-local prototype evaluates the already-classified
+`grammatical-resolution/de/lexeme/particle` route against the total modern
+Grammatical Resolution contract. Input is exactly `{ markedContext, members }`;
+the supplied ordered membership is authoritative and is never repaired or
+reclassified.
 
-The demonstrations teach four non-redundant policies: a contextual modal
-particle still has a Citation Surface with null Core Features under the exact
-codec; typo repair changes normalization and orthography status; a German
-separable-verb prefix stays outside PART; and a standalone negative response is
-an INTJ rather than the negative particle `nicht`. The held-out selection
-covers negative `nicht`, infinitival `zu`, seven lemma-disjoint modal-particle
-uses, ordinary casing, typo normalization, repeated tokens, a bare ambiguous
-label, and ADV, INTJ, CCONJ, SCONJ, ADP, separable-verb, and discourse-Phraseme
-boundaries. It also tests overbroad and multiple TARGET scopes.
+The model returns the smallest flat codec-derived DTO:
 
-The model DTOs are projected from Dumling's German Lexeme/PART Lemma and
-Citation Surface schemas. The fixed route fields `language`, `family`, `kind`,
-and the Surface's linked Lemma are absent from the model exchange. PART has no
-Dumling Inflection Surface. The complete model Core Feature object is `abbr`,
-`foreign`, `partType`, and `polarity`; the German codec permits only
-`PartType=Inf` and `Polarity=Neg|Pos` as non-null values.
-
-The pure evaluator reports exact diagnostics for the decision/coherence pair,
-TARGET-member count and orthographies, every Surface field, Canonical Form, and
-the complete Core Feature object. It canonicalizes only the all-null
-`surfaceFeatures` bag in the same way as the route-local Surface codec.
-
-The bounded runner makes one serial `gpt-5.6-luna` call per held-out case with
-no reasoning, no retries, `store: false`, and a 2,048-token route-local response
-budget. Import and preflight make no provider call. Draft evidence is written
-atomically and cannot meet the evidence threshold until offline finalization.
-The retained schema binds the exact prompt, input/output schemas, ordered cases,
-model policy, attempts, and recomputed summary. If JSON or schema parsing fails
-after a provider response, the raw output text and complete provider metadata
-remain attached to the errored attempt. Runs with any execution/provider error
-cannot be finalized.
-
-A deliberate live run can be started from `battery/dumgen` after shared review:
-
-```sh
-bun run prototype:grammatical-resolution-particle
+```ts
+{
+  memberOrthographies: ("Standard" | "Typo")[];
+  normalizedMembers: string[];
+  surface: {
+    spelling: "Canonical" | "Variant";
+    surfaceFeatures: null | { historicalStatus: "Archaic" };
+  };
+  lemma: {
+    canonicalForm: string;
+    coreFeatures: {
+      abbr: "Yes" | null;
+      foreign: "Yes" | null;
+      partType: "Inf" | null;
+      polarity: "Neg" | "Pos" | null;
+    };
+  };
+}
 ```
 
-Create a miss-classification sidecar beside the draft result, then finalize
-without another provider call:
+PART is Citation-only in the Dumling codec. Application projection owns German
+route identity, `surfaceKind: Citation`, normalized Surface construction,
+Surface-to-Lemma linkage, the successful wrapper, and
+`realizationCoverage: Full`. The model never emits those fields, decision or
+resolution wrappers, `Unresolved`, route data, or membership changes.
+
+## Frozen corpus and partitions
+
+The corpus contains 42 realistic full sentences in disjoint 9/21/12
+demonstration, development, and untouched-acceptance partitions. It covers
+negative, affirmative-answer, infinitival, modal, focus, intensifying, foreign,
+and abbreviated particles; all four codec Core Features; ordinary and erroneous
+casing; licensed regional/expressive variation; typo repair; and archaic use.
+Context-rich cases pin upstream PART distinctions from ADV, ADP, INTJ, CCONJ,
+SCONJ, and separable VERB material without turning those distinctions back into
+Grammatical Resolution rejection cases.
+
+Demonstrations:
+
+- `grammar-de-part-demo-negative-nicht`
+- `grammar-de-part-demo-infinitival-zu`
+- `grammar-de-part-demo-modal-halt`
+- `grammar-de-part-demo-focus-sogar`
+- `grammar-de-part-demo-typo-ebn`
+- `grammar-de-part-demo-archaic-nit`
+- `grammar-de-part-demo-distinct-archaic-ni`
+- `grammar-de-part-demo-foreign-yes`
+- `grammar-de-part-demo-abbreviation-aff`
+
+Development:
+
+- `grammar-de-part-dev-negative-initial`
+- `grammar-de-part-dev-answer-ja`
+- `grammar-de-part-dev-foreign-not`
+- `grammar-de-part-dev-abbreviation-n`
+- `grammar-de-part-dev-modal-doch`
+- `grammar-de-part-dev-modal-denn`
+- `grammar-de-part-dev-modal-wohl`
+- `grammar-de-part-dev-modal-mal`
+- `grammar-de-part-dev-modal-ja`
+- `grammar-de-part-dev-focus-nur`
+- `grammar-de-part-dev-focus-selbst`
+- `grammar-de-part-dev-intensifying-sehr`
+- `grammar-de-part-dev-answer-doch`
+- `grammar-de-part-dev-infinitival-beside-adp`
+- `grammar-de-part-dev-focus-beside-adv`
+- `grammar-de-part-dev-modal-beside-sconj`
+- `grammar-de-part-dev-modal-aber-not-cconj`
+- `grammar-de-part-dev-beside-verb-particle`
+- `grammar-de-part-dev-variant-nich`
+- `grammar-de-part-dev-typo-dohc`
+- `grammar-de-part-dev-other-eigentlich`
+
+Untouched acceptance:
+
+- `grammar-de-part-accept-v2-negative-nicht`
+- `grammar-de-part-accept-v2-infinitival-zu`
+- `grammar-de-part-accept-v2-answer-doch`
+- `grammar-de-part-accept-v2-foreign-never`
+- `grammar-de-part-accept-v2-abbreviation-pos`
+- `grammar-de-part-accept-v2-modal-bloss`
+- `grammar-de-part-accept-v2-focus-lediglich`
+- `grammar-de-part-accept-v2-intensifying-gar`
+- `grammar-de-part-accept-v2-modal-ja-not-intj`
+- `grammar-de-part-accept-v2-typo-nciht`
+- `grammar-de-part-accept-v2-explicit-variant-nedd`
+- `grammar-de-part-accept-v2-distinct-archaic-en`
+
+The original modern acceptance suite was observed once at 10/12. Its
+corpus/evaluator and prompt-defect dispositions, evidence, and reservation are
+retained. The current v2 selection contains entirely fresh IDs, sentences,
+inputs, and oracles. Its terminal acceptance evidence is 12/12.
+
+## Retained live evidence
+
+All scored misses are classified, every listed run is finalized, and no run
+has an execution error.
+
+- Initial diagnostic development round 1, old prompt:
+  `2026-08-13T11-57-05-512Z`, 19/21. Its two prompt defects motivated distinct
+  foreign-Lemma and abbreviation demonstrations.
+- Original counted development, prompt `00027d6c…`:
+  `2026-08-13T11-58-28-829Z` 19/21,
+  `2026-08-13T11-59-20-597Z` 19/21, and
+  `2026-08-13T12-00-05-231Z` 18/21. The remaining misses were accepted model
+  limitations involving sentence-initial normalization and abbreviation
+  polarity.
+- Original acceptance: `2026-08-13T12-00-49-078Z`, 10/12. The regional
+  `nüscht` oracle was classified as a corpus/evaluator defect; the archaic
+  `ne` result exposed a prompt defect in the operational lexical-identity rule.
+  This run and its suite-specific reservation remain immutable.
+- V2 post-failure development, prompt `ba46aaa8…`, suite `505c47cd…`:
+  `2026-08-13T12-04-36-651Z`, `2026-08-13T12-05-24-703Z`, and
+  `2026-08-13T12-06-06-761Z`, each 19/21 with the same two accepted model
+  limitations.
+- V2 untouched acceptance: `2026-08-13T12-06-55-496Z`, 12/12, 100%, zero
+  misses, `evidenceThresholdMet=true`, prompt `ba46aaa8…`, suite
+  `bcb6b23e…`. This suite is terminal and reserved.
+
+Cumulative modern evidence used 171 calls, 447,707 input tokens (432,007
+cached and 9,968 cache-write tokens), and 11,394 output tokens. At the current
+Luna rates this is approximately $0.1298, below the $5 leaf ceiling.
+
+## Runner protocol
+
+The thin route configuration uses the shared direct Responses runner: serial
+calls, zero retries, `store: false`, explicit 30-minute prompt caching with a
+breakpoint after the stable System Prompt, atomic retained evidence, offline
+miss classification/finalization, suite-specific untouched-acceptance
+reservation, and a bounded preflight that creates no provider client.
+
+The shared replacement protocol retained the failed original acceptance,
+required a prompt change and entirely fresh v2 suite, then required three
+post-failure development rounds bound to that prompt/suite before reserving the
+v2 acceptance run.
+
+From `battery/dumgen`, deterministic verification is:
 
 ```sh
-bun run docs/prototypes/grammatical-resolution-particle/run.ts \
-  finalize \
-  docs/prototypes/grammatical-resolution-particle/runs/<timestamp>/results.json \
-  docs/prototypes/grammatical-resolution-particle/runs/<timestamp>/miss-classifications.json
+bun test tests/internal/grammatical-resolution-particle.test.ts \
+  tests/internal/grammatical-resolution-particle-runner.test.ts
+bun run check
+bunx biome check \
+  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle \
+  src/promptsmith/laboratory/experiments/grammatical-resolution-particle \
+  docs/prototypes/grammatical-resolution-particle/run.ts \
+  tests/internal/grammatical-resolution-particle.test.ts \
+  tests/internal/grammatical-resolution-particle-runner.test.ts
+git diff --check
 ```
 
-Each failed case must have exactly one `prompt-defect`,
-`corpus-or-evaluator-defect`, or `accepted-model-limitation` classification and
-a non-empty explanation. Final evidence additionally requires at least 15
-attempted cases, an 80% score, and zero execution/provider errors.
+Zero-call preflight:
 
-## Linguistic basis and policy probes
+```sh
+bun docs/prototypes/grammatical-resolution-particle/run.ts preflight development 1
+bun docs/prototypes/grammatical-resolution-particle/run.ts preflight acceptance
+```
 
-The [UD German overview](https://universaldependencies.org/de/) identifies
-`nicht` and infinitival `zu` as German PART, states that German uses only
-`Polarity=Neg`, and distinguishes infinitives from finite verbs and
-participles. The universal [PART definition](https://universaldependencies.org/u/pos/PART.html)
-explicitly excludes German separable-verb prefixes from PART, while the
-[PartType definition](https://universaldependencies.org/u/feat/PartType.html)
-defines `Inf` for German `zu` and documents `Vbp` for separated prefixes.
-The draft makes one explicit cross-taxonomy decision: IDS owns lexical route
-membership for traditional modal/attenuation particles, while UD supplies the
-Core Feature vocabulary that the Dumling codec can represent. The modal
-inventory and its clause-level, non-answer behavior therefore follow the Leibniz
-Institute for the German Language's primary grammis descriptions of
-[Abtönungspartikeln](https://grammis.ids-mannheim.de/terminologie/2) and their
-[distribution](https://grammis.ids-mannheim.de/systematische-grammatik/769).
-The grammis [Negationspartikel](https://grammis.ids-mannheim.de/terminologie/164)
-description supports keeping clause-negating `nicht` distinct from a
-standalone response.
-
-Two uncertain annotations are intentionally corpus-only. One asks whether the
-codec's `Polarity=Pos` should identify an explicitly affirmative PART `ja`
-despite current German UD policy using only `Neg`; the other asks whether an
-English negative particle inside German context belongs to a German Lemma with
-`foreign=Yes` or should be stopped earlier by the language/segmentation
-boundary. Neither case is demonstrated or scored.
-
-## Deferred shared registration
-
-Root integration has registered this Prompt Source with the
-generated-system-prompt manifest, committed the generated particle module, and
-added `prototype:grammatical-resolution-particle`. The catalog/runtime remains
-for the final integration ticket. The shared prompt logbook intentionally keeps
-the broader UD-versus-IDS policy tension visible even though this draft now
-states the ownership rule it evaluates.
+Further live execution is neither needed nor permitted for the terminal v2
+acceptance suite.

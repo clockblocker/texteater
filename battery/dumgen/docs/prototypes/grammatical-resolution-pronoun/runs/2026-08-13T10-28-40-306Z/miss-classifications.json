@@ -1,0 +1,22 @@
+{
+  "grammar-de-pron-dev-personal-sie-plur-acc": {
+    "classification": "prompt-defect",
+    "explanation": "All occurrence-level features passed, but the response generalized the plural personal paradigm to canonical er. The prompt must state that third-person plural sie keeps canonicalForm=sie, unlike singular gendered forms."
+  },
+  "grammar-de-pron-dev-reflexive-mich": {
+    "classification": "prompt-defect",
+    "explanation": "Every Surface field passed, but the response still assigned Polite=Infm to first-person reflexive mich. The prompt's person restriction needs stronger final-check priority."
+  },
+  "grammar-de-pron-dev-inherent-reflexive-sich": {
+    "classification": "prompt-defect",
+    "explanation": "The response inferred singular Number from the clause subject for invariant sich. In the fixed PRON contract, invariant third-person sich does not encode the antecedent's Number and must keep number null."
+  },
+  "grammar-de-pron-dev-poss-meiner": {
+    "classification": "prompt-defect",
+    "explanation": "All fields except canonicalForm passed. The substantive first-person possessive meiner belongs to the personal-pronoun paradigm and must canonicalize to ich rather than to its Surface form."
+  },
+  "grammar-de-pron-dev-typo-ihc": {
+    "classification": "prompt-defect",
+    "explanation": "The typo repair, Inflection analysis, and Lemma passed, but the response labelled the corrected ordinary spelling as Variant. A Typo repair to the canonical Surface spelling must use spelling=Canonical; Variant is reserved for licensed alternatives."
+  }
+}

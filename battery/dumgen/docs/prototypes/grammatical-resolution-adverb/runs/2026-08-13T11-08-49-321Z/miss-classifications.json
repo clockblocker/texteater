@@ -1,0 +1,26 @@
+{
+  "grammar-de-adv-dev-initial-vielleicht": {
+    "classification": "prompt-defect",
+    "explanation": "The member-projection rule and one demonstration required lowercasing ordinary sentence-initial capitalization, but the instruction did not make the canonical lowercase projection sufficiently salient at the final decision point."
+  },
+  "grammar-de-adv-dev-demonstrative-damit": {
+    "classification": "prompt-defect",
+    "explanation": "The model preserved ordinary sentence-initial capitalization in normalizedMembers despite the route rule. This is the same prompt-level normalization defect as the Vielleicht miss."
+  },
+  "grammar-de-adv-dev-cardinal-positive-viel": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The case combined Degree Pos with a provisional NumType Card oracle for viel. Official UD German-GSD uses the ADV Card feature on 2x while ordinary viel is among feature-empty ADV forms, so the frozen case must be split into independent positive-degree and cardinal cases."
+  },
+  "grammar-de-adv-dev-abbreviation-ca": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The corpus expected Foreign null for abbreviation ca even though the prior ADV corpus oracle and an official German-GSD ADV attestation license Foreign Yes. The model followed the defensible foreign-Lemma analysis."
+  },
+  "grammar-de-adv-dev-route-sconj-da": {
+    "classification": "prompt-defect",
+    "explanation": "The model resolved the fixed ADV route correctly but preserved ordinary sentence-initial capitalization in normalizedMembers, the same prompt-level normalization defect as the other initial cases."
+  },
+  "grammar-de-adv-dev-route-adp-davor": {
+    "classification": "prompt-defect",
+    "explanation": "The model resolved the pronominal ADV identity and core feature correctly but preserved ordinary sentence-initial capitalization in normalizedMembers, the shared normalization prompt defect."
+  }
+}

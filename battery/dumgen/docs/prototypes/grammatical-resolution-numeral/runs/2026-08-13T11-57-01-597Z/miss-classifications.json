@@ -1,0 +1,10 @@
+{
+  "grammar-de-num-dev-initial-fuenf": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt required lowercasing ordinary sentence-initial word numerals, but did not repeat the normalizedMembers consequence strongly enough at the final decision point."
+  },
+  "grammar-de-num-dev-archaic-zween": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt allowed explicitly gendered historical word forms to carry Inflection but did not tightly correlate their archaic Surface, Variant spelling, modern canonical Lemma, and visible agreement features."
+  }
+}

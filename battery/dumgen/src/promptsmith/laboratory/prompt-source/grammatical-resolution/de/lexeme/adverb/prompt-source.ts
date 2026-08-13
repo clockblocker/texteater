@@ -2,82 +2,156 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German Lexeme/ADV, or
-return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/ADV occurrence.
+Return its attested Surface analysis and dictionary Lemma. Do not classify the
+target or reconsider membership.
+</agent_role>
 
-Resolve only when every TARGET pair marks lexical material belonging to one
-identifiable lexical adverb. Multiple TARGET pairs are allowed only when all
-marked members together realize that same adverb Surface. Return Unresolved
-when the target includes a syntactic modifier or dependent, combines unrelated
-adverbs, belongs to another route, or lacks enough context to distinguish one
-grammatical adverb identity. Productive adverbial use of an adjective remains
-Lexeme/ADJ; do not reclassify it as ADV merely because it modifies a verb.
-Particles, conjunctions, adpositions, and larger discourse formulas likewise
-remain on their own routes.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied member, and members repeats those exact texts in source
+order. Both projections are authoritative. Never reject, repair, add, remove,
+merge, split, or reorder membership.
+</input_contract>
 
-Use clause structure to distinguish homographs across routes. A pronominal
-adverb can occupy the prefield of a verb-second matrix clause, with the finite
-verb immediately following it. A homographic form that introduces a
-subordinate clause whose finite verb is clause-final is a Lexeme/SCONJ, not an
-ADV, and is Unresolved on this route.
+<fixed_route_contract>
+Target Classification already established Lexeme/ADV and complete membership.
+The operation is total: always resolve the supplied ADV occurrence. Context
+distinguishes identity and grammatical features but never changes the route.
 
-Before resolving, count literal opening and closing TARGET tags. They must be
-balanced, and emit exactly one memberOrthographies value per opening tag in
-textual order. A single TARGET pair does not prove valid scope: if it encloses
-a syntactic modifier together with its adverb head, such as an intensifier plus
-adverb, the target is overbroad and must be Unresolved rather than collapsed
-into one orthography member. Standard includes canonical spelling and ordinary
-sentence-initial capitalization. Typo means an actual spelling or
-inappropriate-casing error. normalizedMembers is the normalized contextual
-adverb: lowercase ordinary capitalization and repair only typos, while
-preserving the complete attested morphology and the order of marked members.
-Never substitute a synonym or silently add unmarked lexical material. Except
-for ordinary sentence-initial casing, a changed marked spelling requires Typo.
+Do not reject a target because a homograph can be an adverbially used ADJ, PART,
+ADP, SCONJ, or a PairedFrame payload elsewhere. Those route distinctions were
+fixed upstream. Clause structure and local syntax identify the ADV reading: for
+example, locative da in a verb-second matrix clause differs from subordinate
+SCONJ da, and a pronominal adverb such as davor is not the ADP vor. Never move
+or split members to fit another route.
 
-Use Citation for an uninflected adverb, including its ordinary contextual use;
-the current Dumling Inflection schema requires a non-null Degree. Use
-Inflection only for a degree-marked Surface, with degree Cmp for a comparative,
-Sup for a superlative, or Pos only for an explicitly degree-marked positive
-form. Never emit an Inflection Surface with degree null. Preserve irregular
-forms: for example lieber is a comparative Surface of gern. A periphrastic
-superlative such as am liebsten is Full only when both lexical members are
-marked. Resolve a degree-marked Surface only when the context identifies one
-Lemma canonicalForm. If regular and suppletive analyses remain equally
-defensible, return Unresolved rather than guessing one Lemma. Citation Surfaces
-never carry inflectionalFeatures.
+The application injects German route identity, Surface-to-Lemma linkage,
+normalized Surface, successful resolution, and Full realization coverage. Do
+not return those fields.
+</fixed_route_contract>
 
-surfaceFeatures is null unless the attested use is archaic, when it is
-{"historicalStatus":"Archaic"}. The Lemma canonicalForm is the dictionary form
-of the same adverb. Lemma coreFeatures are stable grammatical identity:
-pronType is Dem, Ind, Int, Neg, or Rel only for the corresponding pronominal
-adverb identity under German annotation policy: true pronominal adverbs such as
-damit are Dem, etwas is Ind, wo and warum are Int, and keineswegs is Neg. When
-the lexical identity establishes one of these classes, pronType is mandatory;
-nullable does not mean optional. Determine the lexical class before filling the
-feature bag.
-Ordinary locatives such as hier, dort, and nirgends have pronType null; wo stays
-Int even in a relative use because Core Features are stable grammatical
-identity. numType is Mult for an occurrence count, especially productive
-n-mal forms such as zweimal, and Card for a cardinal-quantity adverb. When the
-lexical numerical class applies, numType is mandatory; otherwise it is null.
-foreign is Yes only for an established foreign Lemma. Do not infer any Core
-Feature from meaning alone or from a homonymous non-ADV use. Use null only for
-features that the established lexical identity does not mark.
+<member_projection>
+Return one memberOrthographies and one normalizedMembers value for each supplied
+member. Standard includes canonical spelling, ordinary sentence-initial
+capitalization, licensed abbreviations, and licensed historical variants. Typo
+is only a genuine spelling or inappropriate-casing error.
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, or explanations.`;
+Preserve each Standard member exactly except lowercase ordinary sentence-initial
+capitalization. Repair only Typo members. Preserve morphology and source order;
+never replace an attested degree Surface with its Lemma. A licensed Variant
+Surface remains Standard occurrence evidence. Sentence-initial capitalization
+must not survive in normalizedMembers when the same ADV is ordinarily lowercase
+inside a sentence: for example, initial Heute projects to heute while remaining
+Standard. Apply this lowercase projection independently of PronType and route
+homography.
+</member_projection>
+
+<surface_kind>
+Use Citation for an invariant ADV occurrence, including ordinary clause use,
+not only a dictionary label. The ADV codec supports Inflection only when Degree
+is non-null. Use Inflection exactly for an established graded form:
+
+{ inflectionalFeatures: { degree: "Cmp" | "Pos" | "Sup" } }
+
+Use Cmp for a comparative, Sup for a superlative, and Pos only when context
+explicitly establishes the positive member of a degree contrast. Do not emit
+Inflection with a null Degree. Preserve irregular paradigms: lieber is a Cmp
+Surface of gern and öfter is a Cmp Surface of oft. A periphrastic superlative
+such as am liebsten has two members when both are supplied.
+
+surface.spelling is Variant only for a licensed spelling variant or conventional
+abbreviation such as bißchen or ca; use Canonical otherwise. surfaceFeatures is
+null unless the attested use itself is archaic, when it is
+{ historicalStatus: "Archaic" }. A licensed historical spelling can be Variant
+without making the use archaic.
+</surface_kind>
+
+<lemma_model>
+lemma.canonicalForm is the dictionary form of the same ADV. It may differ from
+the contextual Surface because of degree, typo repair, abbreviation expansion,
+or ordinary initial capitalization.
+
+lemma.coreFeatures contains exactly:
+{
+  foreign: "Yes" | null,
+  numType: "Card" | "Mult" | null,
+  pronType: "Dem" | "Ind" | "Int" | "Neg" | "Rel" | null
+}
+
+These are grammatical classes, not free semantic labels. Use foreign Yes only
+when the ADV Lemma itself is foreign in this German occurrence. Use numType Card
+for a cardinal-quantity ADV and Mult for an occurrence-count ADV such as zweimal.
+Follow the German ADV convention for compact digit-x identities: keep the
+written digit-x form as canonicalForm and use Card; do not expand it to a
+spelled-out multiplicative Lemma. Spelled-out occurrence-count identities
+remain Mult.
+Use pronType Dem for demonstrative pronominal adverbs such as damit or dafür;
+Ind for indefinite forms such as genug, wenig, or viel; Int for interrogative
+forms in questions such as warum or wo; Neg for negative proforms such as
+keineswegs or nie; and Rel for a relative proform linked to an antecedent, such
+as weshalb or wobei in a relative clause. Context determines Int versus Rel.
+
+Use null when the established ADV identity does not carry the feature. Ordinary
+temporal or locative ADV identities such as heute, gestern, hier, and draußen do
+not acquire PronType merely from their meaning. Do not infer Card, Mult, or
+Foreign from topic or broad semantics alone. Core Features belong to the Lemma
+identity and therefore survive a typo, licensed Surface spelling variant,
+abbreviation, casing change, or degree realization; never erase an established
+feature merely because the Surface spelling differs from canonicalForm.
+</lemma_model>
+
+<route_distinctions>
+- A lexical ADV remains ADV even where a homograph has a PART or conjunction use.
+- A productive adverbial ADJ belongs to the fixed ADJ route; do not imitate ADJ
+  agreement or position features on ADV.
+- A complete pronominal ADV is not reanalyzed as an ADP plus another member.
+- A verb-second ADV clause use is not reanalyzed as a clause-final SCONJ use.
+- An ordinary ADV auch is not expanded into a PairedFrame or given its partner.
+</route_distinctions>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface: CitationSurface | InflectionSurface,
+  lemma: {
+    canonicalForm: string,
+    coreFeatures: {
+      foreign: "Yes" | null,
+      numType: "Card" | "Mult" | null,
+      pronType: "Dem" | "Ind" | "Int" | "Neg" | "Rel" | null
+    }
+  }
+}
+
+CitationSurface contains exactly spelling, surfaceKind Citation, and
+surfaceFeatures. InflectionSurface contains exactly spelling, surfaceKind
+Inflection, surfaceFeatures, and the non-null Degree feature bag.
+
+Never return decision, resolution, Unresolved, realizationCoverage,
+normalizedSurface, language, family, kind, Lemma linkage, target indices,
+confidence, candidates, or explanation.
+</output_contract>
+
+<final_checks>
+- Both output arrays have exactly members.length entries in source order.
+- Only Typo members are repaired; ordinary initial capitalization is Standard
+  but must project to ordinary lowercase in normalizedMembers.
+- Citation omits inflectionalFeatures; Inflection contains a non-null Degree.
+- Lemma Core Features contain exactly foreign, numType, and pronType.
+- Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
+</final_checks>`;
 
 export const demonstrations = corpus.select([
-	"grammar-de-adv-demo-contextual-heute",
-	"grammar-de-adv-demo-citation-hier",
+	"grammar-de-adv-demo-temporal-heute",
 	"grammar-de-adv-demo-demonstrative-dazu",
-	"grammar-de-adv-demo-indefinite-genug",
-	"grammar-de-adv-demo-negative-nie",
+	"grammar-de-adv-demo-interrogative-warum",
 	"grammar-de-adv-demo-comparative-lieber",
 	"grammar-de-adv-demo-superlative-am-liebsten",
 	"grammar-de-adv-demo-typo-gester",
-	"grammar-de-adv-demo-unresolved-adverbial-adjective",
 ]);
 
 export const promptSource = definePromptSource({

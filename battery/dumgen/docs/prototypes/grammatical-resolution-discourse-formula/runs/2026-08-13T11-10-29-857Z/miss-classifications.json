@@ -1,0 +1,14 @@
+{
+	"grammar-de-discourse-formula-dev-nein-danke": {
+		"classification": "prompt-defect",
+		"explanation": "The output preserved ordinary utterance-initial capitalization on a non-noun member despite Standard orthography; the prompt needs an explicit first-member normalization rule independent of Surface spelling."
+	},
+	"grammar-de-discourse-formula-dev-tut-mir-leid-sympathy": {
+		"classification": "prompt-defect",
+		"explanation": "The output again treated a complete unbroken shorter formula as Partial and invented a longer related form; the existing mechanical rule needs an explicit no-ellipsis Full invariant."
+	},
+	"grammar-de-discourse-formula-dev-auf-wiedersehn-variant": {
+		"classification": "prompt-defect",
+		"explanation": "The output preserved ordinary utterance-initial capitalization on a non-noun first member when spelling was Variant; the casing rule needs to apply equally to Canonical and Variant Surfaces."
+	}
+}

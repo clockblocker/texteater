@@ -62,10 +62,13 @@ Surface identity is the tuple of language, normalized contextual form, Surface
 kind, applicable inflectional features, and Lemma identity. An embedded copy of
 the Lemma's fields does not establish a different Surface identity.
 
-`normalizedSurface` may repair a typo or ordinary casing, but it is exactly the
-one-space projection of the Attestation members in occurrence order. It never
-inserts an unrealized member or replaces a contextual realization with the
-Lemma's Canonical Form. Because Surface identity includes this projection,
+`normalizedSurface` may repair a typo or ordinary casing, but it is the
+one-space projection of the Attestation members in occurrence order. The sole
+licensed contextual completion is German `Lexeme/NOUN` with an official
+trailing Ergänzungsstrich under system ADR 0004; it preserves one-to-one member
+cardinality and attested source identity. Otherwise normalization never inserts
+unrealized material or replaces a contextual realization with the Lemma's
+Canonical Form. Because Surface identity includes this projection,
 adding a previously omitted fixed realized member intentionally creates a
 different Surface without changing the linked Lemma's identity.
 

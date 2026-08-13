@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
+	developmentEvaluation,
+	symbolGrammaticalResolutionAcceptanceExperiment,
 	symbolGrammaticalResolutionExperiment,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-symbol/evaluation-suite";
 import { evaluateSymbolGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-symbol/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/golden-corpus/corpus";
@@ -12,215 +14,244 @@ import {
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/prompt-source";
 import {
-	modelCitationSurfaceSchema,
-	modelInflectionalFeaturesSchema,
-	modelInflectionSurfaceSchema,
-	modelLemmaSchema,
+	deSymbolModelCitationSurfaceSchema,
+	deSymbolModelInflectionalFeaturesSchema,
+	deSymbolModelInflectionSurfaceSchema,
+	deSymbolModelLemmaSchema,
+	inputSchema,
+	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-sym-equals-equation",
-	"grammar-de-sym-slash-per",
-	"grammar-de-sym-plus-operator",
-	"grammar-de-sym-ampersand-symbolic-coordinator",
-	"grammar-de-sym-euro-currency",
-	"grammar-de-sym-degree-unit",
-	"grammar-de-sym-asterisk-birth",
-	"grammar-de-sym-emoticon-smile",
-	"grammar-de-sym-emoji-smile",
-	"grammar-de-sym-hashtag-sign",
-	"grammar-de-sym-letter-x-multiplication",
-	"grammar-de-sym-middle-dot-dative",
-	"grammar-de-sym-unresolved-numeral-seven",
-	"grammar-de-sym-unresolved-noun-prozent",
-	"grammar-de-sym-unresolved-proper-name-plus",
-	"grammar-de-sym-unresolved-function-word-und",
-	"grammar-de-sym-unresolved-overbroad-emoji-punctuation",
-	"grammar-de-sym-unresolved-two-symbol-occurrences",
+const expectedDemoIds = [
+	"grammar-de-sym-demo-percent-unit",
+	"grammar-de-sym-demo-times-nominal",
+	"grammar-de-sym-demo-euro-currency",
+	"grammar-de-sym-demo-section-dative",
+	"grammar-de-sym-demo-equals-genitive",
+	"grammar-de-sym-demo-feminine-hash",
+	"grammar-de-sym-demo-foreign-arabic-percent",
+	"grammar-de-sym-demo-card-number-sign",
+	"grammar-de-sym-demo-range-dash",
+	"grammar-de-sym-demo-variant-fullwidth-plus",
+	"grammar-de-sym-demo-typo-ocr-euro",
+	"grammar-de-sym-demo-sections-plural",
 ] as const;
 
-describe("Lexeme/SYM exact model contract", () => {
-	test("derives only the fixed route Core fields", () => {
-		const lemma = {
-			canonicalForm: "%",
-			coreFeatures: { foreign: null, numType: null },
-		};
-		expect(modelLemmaSchema.parse(lemma)).toEqual(lemma);
-		expect(
-			modelLemmaSchema.safeParse({
-				...lemma,
-				language: "de",
-				family: "Lexeme",
-				kind: "SYM",
-			}).success,
-		).toBe(false);
-		expect(
-			modelLemmaSchema.safeParse({
-				...lemma,
-				coreFeatures: { foreign: null, numType: "Ord" },
-			}).success,
-		).toBe(false);
-	});
+const expectedAcceptanceIds = [
+	"grammar-de-sym-accept-v2-division-inflection",
+	"grammar-de-sym-accept-v2-not-equal",
+	"grammar-de-sym-accept-v2-sum",
+	"grammar-de-sym-accept-v2-rupee",
+	"grammar-de-sym-accept-v2-registered",
+	"grammar-de-sym-accept-v2-double-arrow",
+	"grammar-de-sym-accept-v2-basis-point",
+	"grammar-de-sym-accept-v2-card-numero",
+	"grammar-de-sym-accept-v2-range-tilde",
+	"grammar-de-sym-accept-v2-foreign-japanese-reference",
+	"grammar-de-sym-accept-v2-variant-small-percent",
+	"grammar-de-sym-accept-v2-typo-double-permille",
+] as const;
 
-	test("supports Citation and structurally non-empty Inflection Surfaces", () => {
-		const citation = {
-			spelling: "Canonical" as const,
-			surfaceKind: "Citation" as const,
-			surfaceFeatures: null,
-		};
-		expect(modelCitationSurfaceSchema.parse(citation)).toEqual(citation);
+describe("Lexeme/SYM route-local migration", () => {
+	test("uses exact input and the smallest total flat C|I DTO", () => {
 		expect(
-			modelInflectionalFeaturesSchema.safeParse({
+			inputSchema.parse({
+				markedContext: "Die Rechnung enthält ein <TARGET>+</TARGET>.",
+				members: ["+"],
+			}),
+		).toBeDefined();
+		expect(() =>
+			inputSchema.parse({
+				markedContext: "Die Rechnung enthält ein <TARGET>+</TARGET>.",
+				members: ["−"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const citation = corpus.cases["grammar-de-sym-demo-percent-unit"];
+		const inflection = corpus.cases["grammar-de-sym-demo-times-nominal"];
+		if (citation === undefined || inflection === undefined) {
+			throw new Error("Expected SYM fixtures.");
+		}
+		expect(outputSchema.parse(citation.idealOutput)).toEqual(
+			citation.idealOutput,
+		);
+		expect(Object.keys(citation.idealOutput)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
+		]);
+		expect(
+			outputSchema.safeParse({
+				decision: "Resolved",
+				resolution: citation.idealOutput,
+			}).success,
+		).toBe(false);
+		expect(
+			deSymbolModelCitationSurfaceSchema.safeParse(
+				citation.idealOutput.surface,
+			).success,
+		).toBe(true);
+		expect(
+			deSymbolModelInflectionSurfaceSchema.safeParse(
+				inflection.idealOutput.surface,
+			).success,
+		).toBe(true);
+		expect(
+			deSymbolModelInflectionalFeaturesSchema.safeParse({
 				case: null,
 				gender: null,
 				number: null,
 			}).success,
 		).toBe(false);
-		const inflection = {
-			...citation,
-			surfaceKind: "Inflection" as const,
-			inflectionalFeatures: {
-				case: "Nom" as const,
-				gender: "Neut" as const,
-				number: "Sing" as const,
-			},
-		};
-		expect(modelInflectionSurfaceSchema.parse(inflection)).toEqual(
-			inflection,
-		);
+		expect(() =>
+			deSymbolModelLemmaSchema.parse({
+				...citation.idealOutput.lemma,
+				language: "de",
+			}),
+		).toThrow();
 	});
-});
 
-describe("Lexeme/SYM Golden Corpus", () => {
-	test("pins role-neutral IDs, four demonstrations, and 18 held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(29);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-sym-percent-unit-citation",
-			"grammar-de-sym-times-nominal-inflection",
-			"grammar-de-sym-punctuation-comma",
-			"grammar-de-sym-overbroad-five-percent",
-		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
+	test("freezes 45 realistic cases into disjoint 12/21/12 partitions", () => {
+		expect(corpus.all().ids).toHaveLength(45);
+		expect(demonstrations.ids).toEqual(expectedDemoIds);
+		expect(developmentEvaluation.ids).toHaveLength(21);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
+		);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(45);
+		expect(developmentEvaluation).toBe(
 			symbolGrammaticalResolutionExperiment.evaluation,
 		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(18);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(22);
-		expect(corpus.all().ids.some((id) => /-(?:demo|eval)-/u.test(id))).toBe(
-			false,
+		expect(untouchedAcceptanceEvaluation).toBe(
+			symbolGrammaticalResolutionAcceptanceExperiment.evaluation,
 		);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-sym-provisional-cardinal-percent",
-		);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-sym-unresolved-name-ampersand",
-		);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-sym-unresolved-period",
-		);
-		expect(evaluation.ids).not.toContain(
-			"grammar-de-sym-unresolved-exclamation",
-		);
-	});
 
-	test("contamination-links sentence-punctuation semantic twins", () => {
-		for (const caseId of [
-			"grammar-de-sym-punctuation-comma",
-			"grammar-de-sym-unresolved-period",
-			"grammar-de-sym-unresolved-exclamation",
-		] as const) {
-			expect(corpus.cases[caseId]?.contaminationKeys).toContain(
-				"de-sym-boundary:sentence-punctuation",
+		for (const testCase of corpus.all().cases) {
+			const markedMembers = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<>]+)<\/TARGET>/gu,
+				),
+			].map((match) => match[1]);
+			expect(markedMembers).toEqual(testCase.input.members);
+			expect(testCase.idealOutput.memberOrthographies).toHaveLength(
+				testCase.input.members.length,
 			);
+			expect(testCase.idealOutput.normalizedMembers).toHaveLength(
+				testCase.input.members.length,
+			);
+			expect("decision" in testCase.idealOutput).toBe(false);
+			expect("realizationCoverage" in testCase.idealOutput).toBe(false);
 		}
 	});
 
-	test("keeps unsupported middle-dot gender null", () => {
-		const output =
-			corpus.cases["grammar-de-sym-middle-dot-dative"]?.idealOutput;
-		if (output?.resolution === null || output === undefined) {
-			throw new Error("Missing resolved middle-dot case.");
+	test("covers codec fields, symbol domains, forms, and fixed neighbors", () => {
+		const cases = corpus.all().cases;
+		for (const numType of ["Card", "Range"] as const) {
+			expect(
+				cases.some(
+					(testCase) =>
+						testCase.idealOutput.lemma.coreFeatures.numType ===
+						numType,
+				),
+			).toBe(true);
 		}
-		const surface = output.resolution.surface;
-		if (surface.surfaceKind !== "Inflection") {
-			throw new Error("Expected an Inflection Surface.");
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.lemma.coreFeatures.foreign === "Yes",
+			),
+		).toBe(true);
+		for (const caseValue of ["Acc", "Dat", "Gen", "Nom"] as const) {
+			expect(
+				cases.some(
+					(testCase) =>
+						"inflectionalFeatures" in
+							testCase.idealOutput.surface &&
+						testCase.idealOutput.surface.inflectionalFeatures
+							.case === caseValue,
+				),
+			).toBe(true);
 		}
-		expect(surface.inflectionalFeatures).toEqual({
-			case: "Dat",
-			gender: null,
-			number: "Sing",
-		});
+		expect(
+			cases.some((testCase) =>
+				testCase.idealOutput.memberOrthographies.includes("Typo"),
+			),
+		).toBe(true);
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.surface.spelling === "Variant",
+			),
+		).toBe(true);
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceFeatures !== null,
+			),
+		).toBe(true);
+		for (const anchor of [
+			"nicht anklickbaren Emoji",
+			"Abs. 2",
+			"47 <TARGET>%</TARGET>",
+			"abschließenden Komma",
+		]) {
+			expect(
+				cases.some((testCase) =>
+					testCase.input.markedContext.includes(anchor),
+				),
+			).toBe(true);
+		}
 	});
 
-	test("assembles only demonstrations and explicit route policy", () => {
+	test("assembles fixed-route policy and scores exact diagnostics", () => {
 		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("80 <TARGET>%</TARGET> Ladezustand");
-		expect(prompt).toContain("Ein einziges <TARGET>×</TARGET>");
-		expect(prompt).toContain("Brot<TARGET>,</TARGET>");
-		expect(prompt).toContain("<TARGET>5 %</TARGET>");
-		expect(prompt).toContain("German GSD attests no\nSYM NumType");
-		expect(prompt).not.toContain("a <TARGET>=</TARGET> b");
-		expect(prompt).not.toContain("<TARGET>😀</TARGET>");
-		expect(prompt).not.toContain("Disney<TARGET>+</TARGET>");
-	});
-});
+		expect(prompt).toContain("already-classified German Lexeme/SYM");
+		expect(prompt).toContain("Always return one total");
+		expect(prompt).toContain("members: string[]");
+		expect(prompt).toContain("NUM digits, sentence PUNCT");
+		expect(prompt).toContain("numType is Card");
+		expect(prompt).toContain("realizationCoverage Full");
+		expect(prompt).toContain("<TARGET>٪</TARGET>");
+		expect(prompt).not.toContain("<TARGET>÷</TARGET>");
 
-describe("Lexeme/SYM diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateSymbolGrammaticalResolution({
-				caseId,
+		const testCase = corpus.cases["grammar-de-sym-dev-inflection-acc-plus"];
+		if (testCase === undefined) throw new Error("Expected SYM fixture.");
+		expect(
+			evaluateSymbolGrammaticalResolution({
+				caseId: "grammar-de-sym-dev-inflection-acc-plus",
 				input: testCase.input,
 				idealOutput: testCase.idealOutput,
 				output: testCase.idealOutput,
-			});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
-		}
-	});
+			}).contractPass,
+		).toBe(true);
 
-	test("diagnoses Core and Inflection misses independently", () => {
-		const testCase = corpus.cases["grammar-de-sym-middle-dot-dative"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing resolved middle-dot case.");
-		}
-		const expectedSurface = testCase.idealOutput.resolution.surface;
-		if (expectedSurface.surfaceKind !== "Inflection") {
-			throw new Error("Expected an Inflection Surface.");
-		}
-		const output = {
+		const wrong = {
 			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...expectedSurface,
-					inflectionalFeatures: {
-						case: "Nom" as const,
-						gender: "Neut" as const,
-						number: "Sing" as const,
-					},
-				},
-				lemma: {
-					...testCase.idealOutput.resolution.lemma,
-					coreFeatures: { foreign: "Yes" as const, numType: null },
-				},
+			lemma: {
+				...testCase.idealOutput.lemma,
+				coreFeatures: { foreign: "Yes" as const, numType: null },
 			},
 		};
 		const result = evaluateSymbolGrammaticalResolution({
-			caseId: "grammar-de-sym-middle-dot-dative",
+			caseId: "grammar-de-sym-dev-inflection-acc-plus",
 			input: testCase.input,
 			idealOutput: testCase.idealOutput,
-			output,
+			output: wrong,
 		});
 		expect(result.contractPass).toBe(false);
-		expect(result.inflectionalFeaturesPass).toBe(false);
 		expect(result.coreFeaturesPass).toBe(false);
-		expect(result.decisionPass).toBe(true);
+		expect(result.memberOrthographiesPass).toBe(true);
 	});
 });

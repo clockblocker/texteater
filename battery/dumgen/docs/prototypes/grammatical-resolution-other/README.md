@@ -1,132 +1,143 @@
-# German Lexeme/X Grammatical Resolution evaluation
+# German Lexeme/X Grammatical Resolution prototype
 
-This route-local prototype evaluates the exact
-`grammatical-resolution/de/lexeme/other` Prompt Source. Its Golden Corpus has
-26 explicit cases: four minimized demonstrations, 19 disjoint authoritative
-held-out cases, and three corpus-only feature-ownership probes. Every oracle is
-`Unresolved` by deliberate domain policy.
+This route resolves one valid, already classified German Lexeme/X Analysis
+Target. The legacy contract treated X as a diagnostic rejection leaf. The
+current contract accepts exactly `{markedContext,members}` and returns one total
+flat codec-derived DTO. Both input projections are authoritative; Grammatical
+Resolution never reclassifies or repairs membership and never returns
+`Unresolved`.
 
-## Reachable policy
+This dispatchable leaf does not change product reachability or fabricate a
+clickable X target. The orchestrator owns inventory and High-Level Target
+Classification policy. If upstream supplies valid X, this leaf must resolve it
+instead of converting the classification into a failure.
 
-There is currently no defensible German-scope `ResolvableText` X identity.
-Dumgen Intake resolves one primary language, and `Segmentation<de>` preserves
-every non-primary-language span as `OpaqueText`. Multilingual and code-switched
-click routing remains explicitly deferred to
-[texteater#19](https://github.com/clockblocker/texteater/issues/19).
+## Codec ownership
 
-Universal Dependencies defines X restrictively, principally for
-unintelligible material, word fragments, and wholly unanalyzed foreign
-material. Those three legitimate families are unreachable here:
+The model owns member orthography and normalization, Citation or Inflection
+Surface spelling/features, Lemma `canonicalForm`, and all codec-supported Lemma
+Core Features:
 
-- gibberish and unintelligible material are `OpaqueText`;
-- incomplete word fragments are `OpaqueText`; and
-- foreign or code-switched spans outside the one primary language are
-  `OpaqueText`.
-
-The remainder of German GSD's X inventory is not a stable positive class. It
-contains abbreviations, symbols, punctuation, alphanumeric codes, foreign
-multiword fragments, and annotation inconsistencies that have more informative
-routes or are not Lexemes. UD itself discourages X for identifiable native
-words merely because their distribution is unusual.
-
-Consequently this scoped resolver is an intentionally negative diagnostic
-leaf. Any downstream call means Segmentation violated the `ResolvableText`
-promise or Target Classification selected X instead of a real route. The
-resolver returns `Unresolved` to expose that upstream defect; it does not
-normalize or invent a residual Lemma. This is coherent with Dumgen's current
-chain, but it means an eventual live score would validate rejection behavior,
-not demonstrate a reachable learner-facing X analysis.
-
-Primary references are the
-[universal UD X definition](https://universaldependencies.org/u/pos/X.html),
-[UD guidance for foreign expressions](https://universaldependencies.org/foreign.html),
-and [German GSD X statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-pos-X.html).
-
-## Corpus and demonstrations
-
-The four demonstrations reject distinct upstream failures:
-
-- English `green` is non-primary-language `OpaqueText`, not German X;
-- `Kaffe` is a recoverable typo of German NOUN `Kaffee`, so normalization
-  belongs to the NOUN route rather than an invented X Lemma;
-- `Computer` is an established German loan with ordinary NOUN syntax; and
-- `xqzv` is gibberish owned by `OpaqueText`.
-
-The 19 held-out cases cover additional Hebrew, French, Japanese, and Swedish
-non-primary-language spans; a German abbreviation and recoverable verb typo;
-foreign spans with explicit hypothetical NOUN and INTJ identities; established
-PROPN, SYM, and PUNCT; a punctuation-only placeholder, fragment, email address,
-overbroad phrase, repeated targets, and unbalanced markup. There are no
-positive semantic twins in demonstrations or evaluation.
-
-Three corpus-only probes record dormant Core Feature ownership without
-asserting an X Lemma. `Drive-in` has German NOUN syntax despite the X codec's
-`Hyph` field; foreign abbreviation `og` remains `OpaqueText` despite GSD's
-`Abbr=Yes` X attestation; and opaque code `S8` does not become X merely because
-GSD can attach `NumType=Card` to similar codes.
-
-## Exact DTO and dormant output shapes
-
-The model DTO remains faithful to every Dumling German Lexeme/X Surface kind.
-It derives the Lemma, Citation Surface, and Inflection Surface from Dumling and
-omits only fixed `language`, `family`, `kind`, and the Surface's linked Lemma.
-The Inflection schema structurally requires at least one non-null value among
-case, gender, mood, number, and verb form, matching Dumling's refined contract
-in generated JSON Schema as well as Zod parsing.
-
-Citation and Inflection outputs are intentionally dormant: the current domain
-policy has no reachable positive X identity, so no corpus oracle constructs a
-Surface or Lemma. Keeping both shapes prevents the model boundary from lying
-about Dumling and allows a future #19 decision to activate X without first
-repairing a narrowed DTO. Focused schema and evaluator tests exercise both
-dormant shapes directly.
-
-The pure evaluator scores decision coherence, member count and orthography,
-Surface kind, normalization, spelling, coverage, Surface Features,
-Inflectional Features, canonical form, and Core Features. It canonicalizes only
-the codec-equivalent null-only Surface Feature bag.
-
-## Bounded evidence runner
-
-Runner v1 makes one serial call for each of the 19 held-out cases using the
-shared `gpt-5.6-luna` model, no reasoning, a 2,048-token output budget, zero
-retries, and `store: false`. A 25-case cap prevents accidental corpus growth
-from expanding a live run. No live call was made while authoring this slice.
-
-Each retained run binds the route, runner version, model policy, assembled
-prompt and schema hashes, exact ordered evaluation IDs, and current Golden Case
-inputs and ideals. Successful responses retain raw output, response ID,
-resolved model, and usage metadata. JSON or exact-schema failures retain that
-complete response metadata with the error; transport errors remain error-only.
-
-After shared generated-prompt and package integration, an explicitly
-authorized live run can invoke the runner from `battery/dumgen`:
-
-```sh
-bun --env-file ../../.env.local \
-  docs/prototypes/grammatical-resolution-other/run.ts
+```text
+{ abbr: Yes|null, foreign: Yes|null, hyph: Yes|null,
+  numType: Card|Mult|Range|null }
 ```
 
-The draft exits unsuccessfully until every scored miss is classified offline
-as `prompt-defect`, `corpus-or-evaluator-defect`, or
-`accepted-model-limitation`. Finalize without a provider call:
+Citation is used when the occurrence expresses no codec-supported inflection,
+including invariant contextual foreign or slang forms. Inflection is used only
+when syntax supports at least one value in its mandatory five-key feature bag:
 
-```sh
-bun docs/prototypes/grammatical-resolution-other/run.ts finalize \
-  docs/prototypes/grammatical-resolution-other/runs/<timestamp>/results.json \
-  docs/prototypes/grammatical-resolution-other/runs/<timestamp>/miss-classifications.json
+```text
+{ case: Acc|Dat|Gen|Nom|null, gender: Fem|Masc|Neut|null,
+  mood: Imp|Ind|Sub|null, number: Plur|Sing|null,
+  verbForm: Fin|Inf|Part|null }
 ```
 
-Evidence qualifies with at least 15 cases, at least 80% exact-contract score,
-zero execution errors, and zero unclassified misses. Finalization rejects stale
-policy, prompt, schema, suite, and Golden Case bindings and atomically replaces
-the retained result.
+The application owns German language, Lexeme family, X kind, Citation
+`surfaceKind`, normalized Surface construction, Surface-to-Lemma linkage, Full
+realization coverage, and the successful-result wrapper. Inflection retains its
+model-owned `surfaceKind: "Inflection"` discriminator. Unsupported distinctions
+remain null; the prompt never invents a feature merely to choose Inflection.
 
-## Retained evidence
+## Frozen corpus
 
-The finalized run at
-`runs/2026-08-03T12-55-20-418Z/results.json` scored 19/19 (100%) with zero
-execution errors and zero unclassified misses. This validates the current
-negative diagnostic policy only: every illegitimate downstream X target was
-rejected. It does not establish a positive learner-facing X identity while the
-German-only segmentation and code-switching boundary remains unchanged.
+The v2 recovery corpus contains 36 original synthetic full sentences in
+exhaustive,
+pairwise-disjoint partitions:
+
+- 8 demonstrations: unknown Citation identity, code-switched foreign form, two
+  conservatively inflected unknown nominal forms, a different reported-speech
+  subjunctive nonce verb, genuine typo, foreign abbreviation, and readable word
+  fragment;
+- 18 development cases: all four nominal cases; feminine, masculine, neuter,
+  singular, and plural cues; finite indicative and imperative, infinitive, and
+  participle; foreign/code-switched Latin material; integrated and foreign
+  slang; sentence-initial casing; archaic use; licensed spelling Variant;
+  mixed alphanumeric spelling; repetition; OpaqueText and nearby PROPN,
+  abbreviation, INTJ, SYM, and identifiable German-POS controls; and a numeric
+  X feature;
+- 10 replacement acceptance cases: wholly fresh IDs, sentences, and oracles
+  covering unseen Citation, determinate nominal and reported-speech verbal
+  Inflection, foreign and abbreviated forms, readable fragments, an
+  unambiguous hyphen-bearing foreign form, typo repair, and archaic foreign use.
+  The observed v1 acceptance cases are absent from this corpus; no v2 case
+  carries underdetermined gender or a disputed NumType value.
+
+All route contrasts are unmarked context. They do not become negative outputs
+and cannot change the authoritative X target. Exact observed development cases
+cannot become demonstrations; only genuinely different teaching examples may
+be added after classified evidence.
+
+The examples are natural synthetic sentences; no external sentence is claimed
+as an attestation. Citation `spelling` is Canonical for ordinary forms and
+repaired typos. British `colour` is the licensed Variant mapped to canonical
+`color`. Sentence-initial `Whatever` remains Standard while normalizing to
+`whatever`. Mixed spellings such as `w00t`, `3D`, and `off-grid` are not typos
+solely because they combine writing systems or character classes. Archaic
+`thou` and replacement `hither` carry an Archaic Surface Feature because the
+forms' grammatical use is historical.
+
+## Shared evidence runner
+
+The thin route configuration uses the shared direct cached runner with
+`gpt-5.6-luna`, no reasoning, low text verbosity, no retries, `store:false`, a
+4,096-token response ceiling, and an explicit 30-minute cache breakpoint after
+the stable system prompt. Import and preflight make no provider call.
+
+The v1 protocol used 64 calls: three 18-case development rounds followed by one
+10-case untouched acceptance. It retained 208,439 input tokens (196,465 cached
+and 9,535 cache writes), 4,950 output tokens, and zero reasoning tokens, for a
+content estimate of approximately $0.061. V1 scores were 10/18, 13/18, 16/18,
+and 7/10; every miss is classified and every run has zero execution errors.
+
+The failed v1 acceptance is finalized and its reservation remains retained.
+Its replaceable prompt and corpus defects triggered the shared replacement
+protocol. V2 added one genuinely different indirect-speech subjunctive teaching
+example and a narrow rule; no observed failed sentence became a demonstration.
+The v2 acceptance suite is wholly fresh and passed the runner's ID, input, and
+oracle-fingerprint freshness checks.
+
+V2 used another 64 calls after three new finalized current-binding development
+rounds unlocked replacement acceptance. Retained v2 usage is 239,356 input
+tokens (233,226 cached and 3,702 cache writes), 4,957 output tokens, and zero
+reasoning tokens, for an estimated content cost of approximately $0.060. Across
+v1 and v2, the measured estimate is approximately $0.121, safely below the $5
+leaf cap. Provider billing remains authoritative.
+
+## Retained v2 recovery evidence
+
+All four v2 runs are finalized, have zero execution errors and zero unclassified
+misses, and use the selected v2 prompt. Round 3 and replacement acceptance meet
+the shared score threshold:
+
+| Phase | Score | Evidence |
+| --- | ---: | --- |
+| Development 1 | 12/18 (66.7%) | `runs/2026-08-13T13-08-40-024Z/results.json` |
+| Development 2 | 14/18 (77.8%) | `runs/2026-08-13T13-09-38-425Z/results.json` |
+| Development 3 | 16/18 (88.9%) | `runs/2026-08-13T13-10-31-301Z/results.json` |
+| Fresh replacement acceptance | 8/10 (80%) | `runs/2026-08-13T13-11-21-718Z/results.json` |
+
+Development misses were fully classified as bounded residual-X model
+limitations after the prompt's nominal, verbal, casing, and current-use rules
+were explicit. The recurring limitations are Citation bias for an unknown noun,
+conservative nonce-base lemmatization, and occasional overmarking of Foreign.
+Replacement acceptance was invoked exactly once. Its two misses are accepted
+model limitations, not replaceable defects: one repeats the nominal Citation
+bias, and one assigns Neut where the syncretic determiner `dieses` supports only
+conservative gender null. The fresh acceptance reservation is retained at
+`runs/acceptance-reservation-92750345f3a33e24.json`.
+
+The retained 2026-08-03 v2 evidence binds the obsolete markedContext-only
+input, all-Unresolved policy, nullable decision wrapper, negative corpus, and
+copied runner. It remains a historical diagnostic and is not evidence for this
+migration.
+
+From `battery/dumgen`, deterministic checks and offline preflight are:
+
+```sh
+bun test tests/internal/grammatical-resolution-other.test.ts \
+  tests/internal/grammatical-resolution-other-runner.test.ts
+bun run check
+bun run docs/prototypes/grammatical-resolution-other/run.ts \
+  preflight development 1
+```

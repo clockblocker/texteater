@@ -97,30 +97,33 @@ context. It resolves member orthography, Surface normalization, spelling,
 realization coverage, Surface kind and features, canonical form, and Lemma core
 features.
 
-Each supported route is a separate prompt with its own schema. It must preserve
-its route or return `Unresolved`; it cannot change Family or Kind.
+Each supported route is a separate prompt with its own smallest codec-derived
+schema. Target Classification already fixed route and membership, so the
+operation is total: invalid model output is a contract error, not a route
+decision or `Unresolved` result.
 
 The complete prompt input is:
 
 ```ts
-{ markedContext: string }
+{ markedContext: string; members: string[] }
 ```
 
 Its internal projected result contains one orthography per `<TARGET>` marker:
 
 ```ts
-type GrammaticalResolution =
-  | {
-      decision: "Resolved";
-      memberOrthographies: ("Standard" | "Typo")[];
-      realizationCoverage: "Full" | "Partial";
-      surface: Omit<Surface<Lang>, "lemma">;
-      lemma: Lemma<Lang>;
-    }
-  | { decision: "Unresolved" };
+type ModelGrammaticalResolution = {
+  memberOrthographies: ("Standard" | "Typo")[];
+  normalizedMembers: string[];
+  surface: RouteSpecificModelSurface;
+  lemma: RouteSpecificModelLemma;
+  // Phraseme only; application injects Full for Lexeme and Construction.
+  realizationCoverage?: "Full" | "Partial";
+};
 ```
 
-Dumgen aligns orthographies with Analysis Target members. It owns Segmented
+Dumgen injects language, Family, Kind, Surface-to-Lemma linkage, normalized
+Surface, successful result construction, and fixed route fields. It aligns
+orthographies with Analysis Target members. It owns Segmented
 Sentence identity, the click and member indices, and exact attested member text.
 It zips target members with orthographies, constructs the Attestation, links the
 Surface to the Lemma, and returns the click-independent Attestation beside the
@@ -239,9 +242,10 @@ and its per-member orthographies remain unchanged.
 Target Classification may select any valid route allowed by its policy. A WIP
 catalog prompt does not enable that route.
 
-Initially, only `<de, Lexeme, NOUN>` Grammatical Resolution is enabled. Every
-resolved German Lemma then uses `Reading Resolution<de>`. For another valid
-route, orchestration stops before Grammatical Resolution and returns:
+Every route reachable from the current German classifier is enabled. The
+authored `Lexeme/X` resolver remains available for upstream compatibility but
+is not currently selected. `Lexeme/PUNCT`, Morphemes, and excluded
+`Phraseme/Collocation` stop before Grammatical Resolution and return:
 
 ```ts
 type ResolutionRouteNotImplemented = {
@@ -262,7 +266,7 @@ Analysis Target, Attestation, Surface, and Lemma. A valid disabled route ends in
 `NotImplemented`. Known unresolvable material must be `OpaqueText` and never
 reach Target Classification.
 
-Target Classification and Grammatical Resolution still support `Unresolved`.
-`Unresolved` creates no Attestation and is a diagnostic failure, not a normal
-learner-flow branch. Record each case and fix the responsible Segmentation,
-Target Classification, or Grammatical Resolution prompt.
+Target Classification may still return `Unresolved` before it establishes a
+valid route. Grammatical Resolution does not: after classification, malformed
+or indefensible output is an execution/contract error. Record it and fix the
+responsible projection, schema, or route prompt.

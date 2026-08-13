@@ -1,0 +1,1679 @@
+{
+  "runnerVersion": "grammatical-resolution-particle-v2",
+  "route": "grammatical-resolution/de/lexeme/particle",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T12:06:06.761Z",
+  "completedAt": "2026-08-13T12:06:38.361Z",
+  "finalizedAt": "2026-08-13T12:06:52.235Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "6671c24aa301b59db019da22b4032dc6618b6431fd251d22274bfde514cd20d2",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "ba46aaa8c4a19d9c56ff8a234e28440b4cf1c87b12469254eca6a031a3e476c3",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "5517e9200f0367b4a9acab50010d6d63685a0d503327b86a1ecc7ebde6b100a0",
+  "suiteSha256": "505c47cd952575c9a54bc0f19074c4c6a37434f373e53101d53e32fc7460f454",
+  "evaluationCaseIds": [
+    "grammar-de-part-dev-negative-initial",
+    "grammar-de-part-dev-answer-ja",
+    "grammar-de-part-dev-foreign-not",
+    "grammar-de-part-dev-abbreviation-n",
+    "grammar-de-part-dev-modal-doch",
+    "grammar-de-part-dev-modal-denn",
+    "grammar-de-part-dev-modal-wohl",
+    "grammar-de-part-dev-modal-mal",
+    "grammar-de-part-dev-modal-ja",
+    "grammar-de-part-dev-focus-nur",
+    "grammar-de-part-dev-focus-selbst",
+    "grammar-de-part-dev-intensifying-sehr",
+    "grammar-de-part-dev-answer-doch",
+    "grammar-de-part-dev-infinitival-beside-adp",
+    "grammar-de-part-dev-focus-beside-adv",
+    "grammar-de-part-dev-modal-beside-sconj",
+    "grammar-de-part-dev-modal-aber-not-cconj",
+    "grammar-de-part-dev-beside-verb-particle",
+    "grammar-de-part-dev-variant-nich",
+    "grammar-de-part-dev-typo-dohc",
+    "grammar-de-part-dev-other-eigentlich"
+  ],
+  "boundedCalls": 21,
+  "maximumEvaluationCases": 25,
+  "retries": 0,
+  "store": false,
+  "contractScore": 19,
+  "scoreRatio": 0.9047619047619048,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-part-dev-negative-initial",
+      "input": {
+        "markedContext": "<TARGET>Nicht</TARGET> jeder Vorschlag wurde angenommen.",
+        "members": [
+          "Nicht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nicht"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nicht",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nicht"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nicht",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1183,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nicht\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nicht\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_049086f869f39154016a7db32f02a087d2997c825d8619e30d",
+      "usage": {
+        "input_tokens": 2804,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2870
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-answer-ja",
+      "input": {
+        "markedContext": "Auf die Kontrollfrage antwortete sie klar mit <TARGET>ja</TARGET>.",
+        "members": [
+          "ja"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ja"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ja",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Pos"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ja"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ja",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Pos"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1107,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ja\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ja\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Pos\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07a81a405bba384c016a7db33011a4819e9538640bb5d23a49",
+      "usage": {
+        "input_tokens": 2808,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2874
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-foreign-not",
+      "input": {
+        "markedContext": "Im deutsch-englischen Gespräch sagte er: „Das ist <TARGET>not</TARGET> okay.“",
+        "members": [
+          "not"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "not"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "not",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "not"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "not",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": "Yes",
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1422,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"not\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"not\",\"coreFeatures\":{\"abbr\":null,\"foreign\":\"Yes\",\"partType\":null,\"polarity\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_072695ca1529e933016a7db3314d408192b74a9af6b963a152",
+      "usage": {
+        "input_tokens": 2813,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2879
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-abbreviation-n",
+      "input": {
+        "markedContext": "Im Transkript wurde die Partikel nicht als <TARGET>n</TARGET>. abgekürzt.",
+        "members": [
+          "n"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "n"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "n.",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "n"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "n.",
+          "coreFeatures": {
+            "abbr": "Yes",
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1270,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"n\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"n.\",\"coreFeatures\":{\"abbr\":\"Yes\",\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07d6e9879dac390c016a7db3329e28819ea5291885f4eff48a",
+      "usage": {
+        "input_tokens": 2811,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2877
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt explicitly says negative particles retain Polarity=Neg and the context labels this as an abbreviation of nicht; the model preserved abbreviation identity but dropped the already-taught polarity feature."
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-doch",
+      "input": {
+        "markedContext": "Komm <TARGET>doch</TARGET> nach der Arbeit kurz vorbei!",
+        "members": [
+          "doch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1380,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"doch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01b8b69c38944d9f016a7db333e4bc81a291cd8ab8737a0007",
+      "usage": {
+        "input_tokens": 2807,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2873
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-denn",
+      "input": {
+        "markedContext": "Wie hast du das <TARGET>denn</TARGET> so schnell geschafft?",
+        "members": [
+          "denn"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "denn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "denn",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "denn"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "denn",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1126,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"denn\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"denn\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0974f52feaf0a5af016a7db33542f081a2a050fa0ac107719c",
+      "usage": {
+        "input_tokens": 2809,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2877
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-wohl",
+      "input": {
+        "markedContext": "Der Zug wird <TARGET>wohl</TARGET> erst am Abend eintreffen.",
+        "members": [
+          "wohl"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wohl"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wohl",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wohl"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wohl",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1033,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wohl\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wohl\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_094f32452c01b973016a7db336626881a29b06c2df91c67b4e",
+      "usage": {
+        "input_tokens": 2807,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2873
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-mal",
+      "input": {
+        "markedContext": "Sieh <TARGET>mal</TARGET> im oberen Fach nach.",
+        "members": [
+          "mal"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "mal",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "mal",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1224,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mal\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"mal\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_090432c2636b94ac016a7db3376c1881a1ab88865f9ed77508",
+      "usage": {
+        "input_tokens": 2805,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2871
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-ja",
+      "input": {
+        "markedContext": "Du kennst den Weg <TARGET>ja</TARGET> bereits.",
+        "members": [
+          "ja"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ja"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ja",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ja"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "ja",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1684,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ja\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"ja\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f1fa73eefa493fd016a7db338a93c819dab87167f09dc5cca",
+      "usage": {
+        "input_tokens": 2805,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2871
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-focus-nur",
+      "input": {
+        "markedContext": "Für die Reparatur braucht sie <TARGET>nur</TARGET> einen Schraubendreher.",
+        "members": [
+          "nur"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nur"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nur",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nur"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nur",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1023,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nur\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nur\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06cab09f1c3cf2c3016a7db33a52088192a3e3c9aed1837f6b",
+      "usage": {
+        "input_tokens": 2810,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2876
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-focus-selbst",
+      "input": {
+        "markedContext": "<TARGET>Selbst</TARGET> der erfahrenste Techniker übersah den Riss.",
+        "members": [
+          "Selbst"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "selbst"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "selbst",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Selbst"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "selbst",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": false,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1094,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"Selbst\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"selbst\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03560e5c8cbbe340016a7db33b5f3081a0b52b2b9a0cc02884",
+      "usage": {
+        "input_tokens": 2811,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2879
+      },
+      "missClassification": "accepted-model-limitation",
+      "missClassificationExplanation": "The prompt and demonstrations explicitly require lowercasing ordinary sentence-initial capitalization; the model nevertheless copied the initial capital into normalizedMembers."
+    },
+    {
+      "caseId": "grammar-de-part-dev-intensifying-sehr",
+      "input": {
+        "markedContext": "Das Ergebnis ist <TARGET>sehr</TARGET> viel besser als erwartet.",
+        "members": [
+          "sehr"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sehr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sehr",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sehr"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "sehr",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3547,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"sehr\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"sehr\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07f17a4a564501bf016a7db33c881081919652c73e496459d6",
+      "usage": {
+        "input_tokens": 2808,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2876
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-answer-doch",
+      "input": {
+        "markedContext": "Auf die negative Frage antwortete Pavel entschieden mit <TARGET>doch</TARGET>.",
+        "members": [
+          "doch"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Pos"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Pos"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1154,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"doch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Pos\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01f7f468cb66318e016a7db34002a481a18faf7b659eb2f9c1",
+      "usage": {
+        "input_tokens": 2808,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2874
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-infinitival-beside-adp",
+      "input": {
+        "markedContext": "Sie fährt zum Archiv, um die Akte <TARGET>zu</TARGET> prüfen.",
+        "members": [
+          "zu"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zu",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": "Inf",
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "zu"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "zu",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": "Inf",
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1102,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"zu\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"zu\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":\"Inf\",\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f58fa0d49575dbf016a7db34126248191a5daf3eff7b66aa2",
+      "usage": {
+        "input_tokens": 2809,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2875
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-focus-beside-adv",
+      "input": {
+        "markedContext": "Er arbeitet heute <TARGET>bloß</TARGET> vormittags von zu Hause.",
+        "members": [
+          "bloß"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bloß"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bloß",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bloß"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "bloß",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1141,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"bloß\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"bloß\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_060459c1024c6562016a7db342439081918d2f27ba753ca5ca",
+      "usage": {
+        "input_tokens": 2810,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2878
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-beside-sconj",
+      "input": {
+        "markedContext": "Sie ist <TARGET>eben</TARGET> gegangen, weil der Bus schon kam.",
+        "members": [
+          "eben"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eben"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eben",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eben"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eben",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1244,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"eben\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"eben\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05a3581c16701409016a7db3436f6081a39b4ee764b5d03cb1",
+      "usage": {
+        "input_tokens": 2808,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2874
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-modal-aber-not-cconj",
+      "input": {
+        "markedContext": "Das ist <TARGET>aber</TARGET> eine erfreuliche Nachricht!",
+        "members": [
+          "aber"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "aber"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "aber",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1215,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"aber\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"aber\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e7394d5e74c830f016a7db344a34481a28aba8c03c864c764",
+      "usage": {
+        "input_tokens": 2807,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2873
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-beside-verb-particle",
+      "input": {
+        "markedContext": "Hör <TARGET>mal</TARGET> mit dem Lärm auf!",
+        "members": [
+          "mal"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "mal",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "mal",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1224,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mal\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"mal\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07a0fe7afdba1c67016a7db345dfb481a393aa24fc86cc10af",
+      "usage": {
+        "input_tokens": 2807,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2873
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-variant-nich",
+      "input": {
+        "markedContext": "Das Dialektwörterbuch bezeichnet <TARGET>nich</TARGET> als regionale Variante von nicht.",
+        "members": [
+          "nich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nich"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nicht",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nich"
+        ],
+        "surface": {
+          "spelling": "Variant",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nicht",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 3196,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nich\"],\"surface\":{\"spelling\":\"Variant\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nicht\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0950c09af517ad2c016a7db3472f5081a29ab6ff48644c6c38",
+      "usage": {
+        "input_tokens": 2811,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 66,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2877
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-typo-dohc",
+      "input": {
+        "markedContext": "Komm <TARGET>dohc</TARGET> bitte kurz herein.",
+        "members": [
+          "dohc"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "doch"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "doch",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1742,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"doch\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"doch\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00474bb46c742596016a7db34a57e881a3af84f192e2b8d105",
+      "usage": {
+        "input_tokens": 2807,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 67,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2874
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-part-dev-other-eigentlich",
+      "input": {
+        "markedContext": "Was wolltest du <TARGET>eigentlich</TARGET> noch erzählen?",
+        "members": [
+          "eigentlich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eigentlich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eigentlich",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "eigentlich"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "eigentlich",
+          "coreFeatures": {
+            "abbr": null,
+            "foreign": null,
+            "partType": null,
+            "polarity": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2474,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"eigentlich\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"eigentlich\",\"coreFeatures\":{\"abbr\":null,\"foreign\":null,\"partType\":null,\"polarity\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b35dcd1a60397f6016a7db34c0fac81929c2ef8d7737c324d",
+      "usage": {
+        "input_tokens": 2808,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2775
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2876
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

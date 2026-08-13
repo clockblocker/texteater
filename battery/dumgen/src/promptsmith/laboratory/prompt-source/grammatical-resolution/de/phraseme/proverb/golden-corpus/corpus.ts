@@ -1,8 +1,8 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
-import { boundaryCases } from "./cases/boundaries";
+import { contextualContrastCases } from "./cases/boundaries";
 import { proverbCases } from "./cases/proverbs";
-import { wordingVariantCases } from "./cases/wording-variants";
+import { wordingAndCoverageCases } from "./cases/wording-variants";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/phraseme/proverb",
@@ -10,8 +10,8 @@ export const corpus = defineGoldenCorpus({
 	outputSchema,
 	collections: {
 		proverbs: proverbCases,
-		boundaries: boundaryCases,
-		wordingVariants: wordingVariantCases,
+		wordingAndCoverage: wordingAndCoverageCases,
+		contextualContrasts: contextualContrastCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

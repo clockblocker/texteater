@@ -1,0 +1,10 @@
+{
+  "grammar-de-num-accept-inflected-milliarden-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The model preserved sentence-initial capitalization in normalizedMembers for an inflected word numeral. The prompt's lowercasing rule was phrased around ordinary word numerals and needs to state that the rule applies independently of Citation versus Inflection."
+  },
+  "grammar-de-num-accept-archaic-drey": {
+    "classification": "prompt-defect",
+    "explanation": "The model repaired a licensed historical spelling as a Typo and lost Variant plus Archaic metadata. The prompt needs an explicit precedence rule that recognized historical spellings are Standard orthography with preserved normalization, not spelling errors."
+  }
+}

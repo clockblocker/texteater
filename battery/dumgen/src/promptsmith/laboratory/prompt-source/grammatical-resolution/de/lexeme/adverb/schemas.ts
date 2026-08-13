@@ -1,55 +1,141 @@
+import { codecBuilder4 } from "codec-builder-library/v4";
 import { schemasFor } from "dumling/schema";
 import { z } from "zod";
 
+import { asObjectSchema } from "../../../../../../../schema/as-object-schema";
 import {
+	grammaticalResolutionMarkedContextSchema,
 	normalizedMembersSchema,
 	type PromptInputSchema,
 	type PromptOutputSchema,
 } from "../../../../../../assembly";
 
-type ObjectSchema = z.ZodObject<z.ZodRawShape>;
+const canonicalLemmaSchema = asObjectSchema(
+	schemasFor.de.entity.Lemma.Lexeme.ADV(),
+);
+const canonicalCitationSurfaceSchema = asObjectSchema(
+	schemasFor.de.entity.Surface.Citation.Lexeme.ADV(),
+);
+const canonicalInflectionSurfaceSchema = asObjectSchema(
+	schemasFor.de.entity.Surface.Inflection.Lexeme.ADV(),
+);
 
-const canonicalLemmaSchema =
-	schemasFor.de.entity.Lemma.Lexeme.ADV() as unknown as ObjectSchema;
-const canonicalCitationSurfaceSchema =
-	schemasFor.de.entity.Surface.Citation.Lexeme.ADV() as unknown as ObjectSchema;
-const canonicalInflectionSurfaceSchema =
-	schemasFor.de.entity.Surface.Inflection.Lexeme.ADV() as unknown as ObjectSchema;
+export const deAdverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+	canonicalLemmaSchema,
+	{
+		language: "de",
+		family: "Lexeme",
+		kind: "ADV",
+	},
+);
 
-export const modelLemmaSchema = canonicalLemmaSchema.omit({
-	language: true,
-	family: true,
-	kind: true,
-});
+export const modelLemmaSchema = deAdverbLemmaCodec.in;
+
+type DeAdverbLemma = z.output<typeof deAdverbLemmaCodec>;
 
 const modelSurfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.nullable();
 
-export const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
-	.omit({ language: true, lemma: true, normalizedSurface: true })
-	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
+function normalizeModelSurfaceFeatures<
+	Surface extends {
+		readonly surfaceFeatures: {
+			readonly historicalStatus: "Archaic" | null;
+		} | null;
+	},
+>(surface: Surface): Surface {
+	if (
+		surface.surfaceFeatures === null ||
+		surface.surfaceFeatures.historicalStatus !== null
+	) {
+		return surface;
+	}
+	return { ...surface, surfaceFeatures: null };
+}
 
-export const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
-	.omit({ language: true, lemma: true, normalizedSurface: true })
-	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
+export const modelInflectionalFeaturesSchema = z.strictObject({
+	degree: z.enum(["Cmp", "Pos", "Sup"]),
+});
 
-export const inputSchema = z.strictObject({
-	markedContext: z.string().min(1),
-}) satisfies PromptInputSchema;
+export function buildDeAdverbCitationSurfaceCodec(lemma: DeAdverbLemma) {
+	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
+		canonicalCitationSurfaceSchema,
+		{ language: "de", lemma },
+	);
+	const modelSchema = canonicalCodec.in.extend({
+		surfaceFeatures: modelSurfaceFeaturesSchema,
+	});
+	return z.codec(modelSchema, canonicalCodec.out, {
+		decode: (model) =>
+			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
+		encode: (canonical) => canonicalCodec.encode(canonical),
+	});
+}
+
+export function buildDeAdverbInflectionSurfaceCodec(lemma: DeAdverbLemma) {
+	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
+		canonicalInflectionSurfaceSchema,
+		{ language: "de", lemma },
+	);
+	const modelSchema = canonicalCodec.in.extend({
+		surfaceFeatures: modelSurfaceFeaturesSchema,
+		inflectionalFeatures: modelInflectionalFeaturesSchema,
+	});
+	return z.codec(modelSchema, canonicalCodec.out, {
+		decode: (model) =>
+			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
+		encode: (canonical) =>
+			modelSchema.parse(canonicalCodec.encode(canonical)),
+	});
+}
+
+const schemaProjectionLemma = deAdverbLemmaCodec.decode({
+	canonicalForm: "heute",
+	coreFeatures: { foreign: null, numType: null, pronType: null },
+});
+
+export const modelCitationSurfaceSchema = buildDeAdverbCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
+
+export const modelInflectionSurfaceSchema = buildDeAdverbInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
+
+export const inputSchema = z
+	.strictObject({
+		markedContext: grammaticalResolutionMarkedContextSchema,
+		members: z.array(z.string().min(1)).min(1),
+	})
+	.superRefine((input, context) => {
+		const markedMembers = [
+			...input.markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+		].map((match) => match[1]);
+		if (
+			markedMembers.length !== input.members.length ||
+			markedMembers.some(
+				(member, position) => member !== input.members[position],
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["members"],
+				message:
+					"members must exactly match TARGET contents in source order.",
+			});
+		}
+	}) satisfies PromptInputSchema;
 
 export const outputSchema = z.strictObject({
-	decision: z.enum(["Resolved", "Unresolved"]),
-	resolution: z
-		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
-			normalizedMembers: normalizedMembersSchema,
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			surface: z.union([
-				modelCitationSurfaceSchema,
-				modelInflectionSurfaceSchema,
-			]),
-			lemma: modelLemmaSchema,
-		})
-		.nullable(),
+	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+	normalizedMembers: normalizedMembersSchema,
+	surface: z.union([
+		modelCitationSurfaceSchema,
+		modelInflectionSurfaceSchema,
+	]),
+	lemma: modelLemmaSchema,
 }) satisfies PromptOutputSchema;

@@ -1,0 +1,10 @@
+{
+  "grammar-de-adj-dev-invariant-lila": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt limits Foreign Yes to an overt foreign adjective identity, and the same established invariant German color adjective passed in round 2; this isolated Foreign Yes output is a bounded-model feature miss."
+  },
+  "grammar-de-adj-dev-archaic-hold": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly maps old poetic adjective use to Surface Archaic and a different archaic adjective demonstration still did not change this output, so the persistent null status is accepted as a bounded-model limitation."
+  }
+}

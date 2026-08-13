@@ -1,0 +1,14 @@
+{
+  "grammar-de-aphorism-nachsicht": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt said punctuation does not enter canonicalForm but did not make the serialization mechanical enough, so the model reinserted the source comma."
+  },
+  "grammar-de-aphorism-casing-menschen": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt repaired the lowercase initial member but did not sharply distinguish this inappropriate lowercase source token from ordinary licensed sentence-initial capitalization, so the model labeled it Standard instead of Typo; it also reinserted commas into canonicalForm."
+  },
+  "grammar-de-aphorism-selbstverstaendlich": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt said punctuation does not enter canonicalForm but did not make the serialization mechanical enough, so the model reinserted several source commas."
+  }
+}

@@ -1,0 +1,14 @@
+{
+	"grammar-de-discourse-formula-dev-darf-ich-bitten": {
+		"classification": "prompt-defect",
+		"explanation": "The output absorbed the unmarked free request complement 'um Ruhe' into canonicalForm despite authoritative members; the prompt needs a mechanical Full/current-spelling canonicalForm invariant."
+	},
+	"grammar-de-discourse-formula-dev-tut-mir-leid-sympathy": {
+		"classification": "prompt-defect",
+		"explanation": "The output invented unrealized 'es' and labeled a complete standalone formula Partial even though no ellipsis or broken-off signal exists; the prompt needs to forbid invented material outside explicit Partial or Variant cases."
+	},
+	"grammar-de-discourse-formula-dev-danke-danke-repetition": {
+		"classification": "prompt-defect",
+		"explanation": "The output collapsed an authoritative repeated member position in canonicalForm; the prompt needs to state that Full current canonicalForm preserves normalized supplied repetitions."
+	}
+}

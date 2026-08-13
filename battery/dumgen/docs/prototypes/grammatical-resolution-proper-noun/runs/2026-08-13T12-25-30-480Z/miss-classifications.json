@@ -1,0 +1,26 @@
+{
+  "grammar-de-propn-dev-person-peters-gen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt and a distinct Hans demonstration explicitly teach articleless genitive suffix stripping; the model treated Peters as a nominative surname despite the possessive construction."
+  },
+  "grammar-de-propn-dev-product-adidas": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The sentence provides no reliable grammatical-gender agreement and the prompt requires null rather than shape-based inference; the model invented Neut."
+  },
+  "grammar-de-propn-dev-work-prozess": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly assigns quoted-title mentions without contextual name case to Citation; the model borrowed accusative from the surrounding common noun Titel."
+  },
+  "grammar-de-propn-dev-transliteration-kyjiw": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The oracle called Kyjiw Variant while also making Kyjiw the canonicalForm and gave no alternative identity relation; this should be Canonical."
+  },
+  "grammar-de-propn-dev-variant-pressburg": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The original sentence merely mentioned Pressburg in a historical report and did not establish that it was an archaic exonym of Bratislava; the asserted Variant/Lemma relation lacked input evidence."
+  },
+  "grammar-de-propn-dev-casing-berLin": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model repaired casing correctly but assigned dative after directional nach; the prompt requires case from syntax and the motion destination is accusative."
+  }
+}

@@ -1,6 +1,5 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
-import { boundaryCases } from "./cases/boundaries";
 import { coreFeatureCases } from "./cases/core-features";
 import { orthographyAndSurfaceCases } from "./cases/orthography-and-surface";
 
@@ -11,7 +10,6 @@ export const corpus = defineGoldenCorpus({
 	collections: {
 		coreFeatures: coreFeatureCases,
 		orthographyAndSurface: orthographyAndSurfaceCases,
-		boundaries: boundaryCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

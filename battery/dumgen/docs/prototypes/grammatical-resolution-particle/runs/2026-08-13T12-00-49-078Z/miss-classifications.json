@@ -1,0 +1,10 @@
+{
+  "grammar-de-part-accept-variant-nuescht": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The sentence establishes a regional nüscht lexeme but contains no lexicographic cue that makes it a Surface of Lemma nicht; preserving canonicalForm nüscht is the defensible oracle for this input."
+  },
+  "grammar-de-part-accept-archaic-ne": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt demonstrated one historical form as a Variant of nicht while only vaguely allowing another archaic form to retain distinct Lemma identity 'as context states'; it lacked an operational lexicographic cue rule for choosing between those outcomes."
+  }
+}

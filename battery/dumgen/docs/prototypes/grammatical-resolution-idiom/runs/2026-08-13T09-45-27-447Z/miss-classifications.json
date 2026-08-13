@@ -1,0 +1,14 @@
+{
+	"grammar-de-idiom-truebsal-imperative-full": {
+		"classification": "prompt-defect",
+		"explanation": "The prose-only sentence-initial casing repair remained too weak; a distinct demonstration is needed to show verbal lowercasing without treating it as Typo."
+	},
+	"grammar-de-idiom-kalte-schulter-future-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "Despite an explicit no-placeholder rule, the model preferred the conventional dictionary-style free dative placeholder jemandem; the DTO remained structurally valid."
+	},
+	"grammar-de-idiom-ohr-present-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "Despite an explicit no-placeholder rule, the model preferred the conventional dictionary-style free accusative placeholder jemanden; the DTO remained structurally valid."
+	}
+}

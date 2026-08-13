@@ -2,77 +2,114 @@
 
 This route-local prototype evaluates the exact
 `grammatical-resolution/de/lexeme/adposition` Prompt Source. Its Golden Corpus
-contains 27 cases across Citation Surface behavior, position and case-government
-Core Features, orthography, normalization, historical status, and Unresolved
-boundaries. Seven cases are selected as demonstrations and 17 settled,
-explicitly pinned cases form the disjoint held-out evaluation suite. Three
-provisional policy cases (circumposition representation, `ExtPos=SCONJ`, and
-the canonical governed case of `wegen` in a colloquial-dative attestation) are
-intentionally corpus-only pending human review. Resolved demonstration Lemmas
-are absent from held-out scoring.
+has 39 realistic cases: six demonstrations, 21 development cases, and 12
+untouched acceptance cases. The selections are pairwise disjoint.
 
-The seven demonstrations each carry a distinct burden:
+The model input is exactly `{ markedContext, members }`; the model output is the
+total flat `{ memberOrthographies, normalizedMembers, surface, lemma }` DTO.
+The ADP Surface is Citation-only, so the application injects `surfaceKind`,
+German Lexeme/ADP identity, normalized Surface, Surface-to-Lemma linkage,
+successful result construction, and `realizationCoverage: Full`.
 
-- contextual `mit` establishes that this non-inflecting route always emits a
-  Citation Surface and keeps dative government on the Lemma;
-- two-way `auf` prevents copying a local complement case into `governedCase`;
-- postpositional `entlang` establishes `AdpType=Post` and accusative government;
-- sentence-initial `Wegen` separates normal capitalization from a typo;
-- misspelled `one` establishes repair plus `memberOrthographies=Typo`;
-- overbroad `mit einem Messer` establishes the complement boundary; and
-- context-free `entlang` establishes Unresolved when Core Features cannot be
-  chosen defensibly.
+Coverage includes prepositions, postpositions, multi-member circumpositions,
+accusative/dative/genitive and alternating government, sentence-initial casing,
+genuine typos, a multiword standard variant, abbreviation, foreign and archaic
+forms, and contextual contrasts with a separable particle, governed VERB
+member, SCONJ, and Fusion. Authoritative target membership is never repaired or
+expanded to include the complement.
 
-The bounded runner makes one serial call per held-out case with the shared
-`gpt-5.6-luna` model, no reasoning effort, no retries, `store:
-false`, and a 1,024-token output cap. It preflights 15–25 cases against the
-authored Prompt Source's exact input and output schemas before constructing a
-provider client; the legacy catalog schemas are not evaluation authority. A
-retained run binds the exact ordered case IDs, current Golden Case values,
-assembled prompt hash, authored input and output schema hashes, catalog model
-and token policy, runner version, response metadata, field-level diagnostics,
-and errors. The route-local model schema accepts Structured Outputs' null-only
-`surfaceFeatures` bag, and evaluation normalizes it to canonical null semantics.
+## Shared bounded evidence runner
 
-No provider call is made by imports, tests, evidence validation, or
-finalization. A live run is an explicit manual action from `battery/dumgen`:
+This route is a thin configuration over the shared direct cached evaluation
+runner. Each development round makes 21 direct serial Responses API calls; the
+acceptance phase makes 12. The policy uses `gpt-5.6-luna`, no reasoning, a
+4,096-token output ceiling, zero retries, and `store: false`. Import and
+preflight make no provider call.
 
-The root integration registers this Prompt Source with system-prompt codegen and
-adds the package command, so run:
+Every request shares a deterministic cache key, explicit breakpoint after the
+stable system prompt, and 30-minute cache TTL. Evidence binds the exact prompt,
+schemas, suite, generation and cache policy, raw provider metadata,
+field diagnostics, and errors.
+
+Run a deterministic development preflight from `battery/dumgen`:
 
 ```sh
-bun run prototype:grammatical-resolution-adposition
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adposition/run.ts preflight development 1
 ```
 
-Draft results are written atomically beneath `runs/<timestamp>/results.json`.
-The live command always exits unsuccessfully after retaining the draft so that
-human classification remains a required gate. Provider or execution errors
-require a fresh run.
-
-## Evidence finalization
-
-For each scored miss, create a JSON sidecar keyed by case ID:
-
-```json
-{
-  "grammar-de-adp-example": {
-    "classification": "prompt-defect",
-    "explanation": "The prompt does not state the applicable boundary."
-  }
-}
-```
-
-The classification must be `prompt-defect`, `corpus-or-evaluator-defect`, or
-`accepted-model-limitation`. Finalize without a provider call:
+After explicit authorization, run one development round:
 
 ```sh
-bun run docs/prototypes/grammatical-resolution-adposition/run.ts finalize \
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adposition/run.ts run development 1
+```
+
+Create a JSON sidecar for every scored miss using `prompt-defect`,
+`corpus-or-evaluator-defect`, or `accepted-model-limitation`, then finalize
+offline:
+
+```sh
+bun docs/prototypes/grammatical-resolution-adposition/run.ts finalize \
   docs/prototypes/grammatical-resolution-adposition/runs/<timestamp>/results.json \
   docs/prototypes/grammatical-resolution-adposition/runs/<timestamp>/miss-classifications.json
 ```
 
-Finalization rejects obsolete prompt, catalog, suite, Golden Case, or runner
-policy bindings. It recomputes every diagnostic and score, rejects runs with
-provider errors, and requires a non-empty classification for every miss.
-Evidence qualifies only with at least 15 attempts, an 80% or better exact
-contract score, zero execution errors, and zero unclassified misses.
+After three finalized, fully classified development rounds, the shared runner
+permits one reserved untouched acceptance run. Reservation is persisted before
+transport creation and can never be relabelled untouched after failure:
+
+```sh
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adposition/run.ts preflight acceptance
+bun --env-file ../../.env.local \
+  docs/prototypes/grammatical-resolution-adposition/run.ts run acceptance
+```
+
+The complete protocol is bounded at 75 provider calls: `3 × 21 + 12`. No live
+call was made during deterministic implementation.
+
+The assembled prompt is currently about 2,436 tokens by the conservative
+characters-per-four estimate; ideal outputs average about 69 tokens. Assuming
+four cold batch starts, 71 cache reads, and the published GPT-5.6 Luna rates of
+$1.00/M input, $0.10/M cached input, and $6.00/M output, the content estimate is
+about $0.06. Structured Output schema overhead and cache-write billing make
+$0.15 a practical expected reserve. Even the deliberately pessimistic case in
+which every response consumes the full 4,096-token output ceiling and all input
+is uncached stays near $2.05, below the leaf's $5 authorization ceiling.
+Retained provider usage is authoritative after each authorized run; see the
+[OpenAI API pricing page](https://openai.com/api/pricing/).
+
+## Retained classified evidence
+
+The authorized protocol completed on 2026-08-13 with 75 serial provider calls,
+zero execution errors, and every scored miss classified.
+
+| Phase | Retained result | Score | Miss disposition |
+| --- | --- | ---: | --- |
+| Development 1 | `runs/2026-08-13T10-07-15-745Z/results.json` | 14/21 (66.7%) | Seven prompt defects: government, positional casing, abbreviation spelling, and preferred-headword guidance |
+| Development 2 | `runs/2026-08-13T10-09-15-691Z/results.json` | 18/21 (85.7%) | Three accepted model limitations: two lexical-government omissions and a two-way-preposition scalar error |
+| Development 3 | `runs/2026-08-13T10-10-11-345Z/results.json` | 18/21 (85.7%) | The same three accepted model limitations on the unchanged selected prompt |
+| Untouched acceptance | `runs/2026-08-13T10-11-07-484Z/results.json` | 11/12 (91.7%) | One accepted model limitation: omitted Archaic status for `behufs` |
+
+After round 1, the prompt clarified three general policies without adding any
+failed case as a demonstration: capitalization is positional; abbreviation
+punctuation and explicit preferred-headword cues affect Surface/Lemma fields;
+and governedCase follows the occurrence construction, including clausal,
+position-sensitive, and morphologically unmarked complements. Round 2 cleared
+the score gate. Round 3 reproduced that score on the unchanged binding, which
+was then selected for untouched acceptance.
+
+The four retained runs report 189,451 input tokens, including 181,983 cached
+tokens and 4,923 cache-write tokens, plus 6,128 output tokens. Applying the
+published Luna rates and the 1.25× cache-write multiplier gives an estimated
+total of `$0.06366505`, below both the `$0.15` reserve and the authorized `$5`
+leaf cap. The acceptance reservation is retained at
+`runs/acceptance-reservation.json`; the suite cannot be claimed untouched or
+run again.
+
+## Legacy evidence
+
+Existing v3 artifacts bind the old nullable Resolved/Unresolved wrapper,
+membership-rejection corpus, and copied route runner. They remain historical
+diagnostics and cannot finalize under v4.

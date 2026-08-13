@@ -307,8 +307,9 @@ A reusable global grammatical form shared by normalized-equivalent Attestations.
 
 A Surface contains:
 - `normalizedSurface`, which is the normalized one-space projection of exactly
-  the ordered target members without inserting, reordering, or lemmatizing
-  occurrence constituents;
+  the ordered target members without reordering or lemmatizing occurrence
+  constituents, except for the narrow German NOUN Ergänzungsstrich completion
+  fixed by system ADR 0004;
 - `spelling`, explicitly `Canonical` or `Variant`;
 - its Surface kind and applicable inflectional features;
 - one Lemma.
@@ -444,18 +445,21 @@ handwritten `PROMPT_CATALOG` imports those assets together with each authored
 
 The structured Prompt Source scope is batch Intake, Target Classification<de,
 HighLevelWholeUnit>, the enabled German Grammatical Resolution inventory, and
-Reading Resolution<de>. Target Classification retains
-its explicit policy dimension so later target policies can have distinct
-contracts. Only the German Lexeme/NOUN Grammatical Resolution route is
-initially enabled through the complete post-click chain. Every successfully
+Reading Resolution<de>. Target Classification retains its explicit policy
+dimension so later target policies can have distinct contracts. Every route
+reachable from the current German classifier has a total flat Grammatical
+Resolution prompt. `Lexeme/X` is authored for upstream compatibility but is not
+currently selected by that classifier. `Lexeme/PUNCT`, Morphemes, and
+`Phraseme/Collocation` remain explicitly NotImplemented. Every successfully
 resolved German Lemma continues through the shared German Reading Resolution
-prompt. When classification selects a route without an enabled Grammatical
-Resolution prompt, the Dumgen module returns Resolution Route Not Implemented
-and stops. Other existing laboratory prompts remain unmigrated work in progress
-and are not automatically enabled by their presence in the catalog.
+prompt.
 
-There is no production prompt namespace. Laboratory results and prompt paths do
-not claim production readiness.
+The production prompt namespace contains the promoted German High-Level Target
+Classification policy and its generated System Prompt. The catalog imports that
+production asset before dispatching an accepted target to the laboratory-owned
+German Grammatical Resolution inventory. Batch Intake, Grammatical Resolution,
+and German Reading Resolution remain under the laboratory namespace;
+laboratory evidence and paths do not by themselves claim production readiness.
 
 ## Relationships
 

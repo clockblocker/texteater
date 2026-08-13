@@ -1,0 +1,6 @@
+{
+  "grammar-de-num-dev-archaic-zween": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The selected prompt explicitly mandates Inflection for visibly marked historical agreement, and the model now consistently gets normalization, Variant spelling, modern Lemma linkage, and Archaic status correct but still chooses Citation. Additional generic wording did not change this isolated surface-kind decision, so the stable 18/19 prompt is retained without contaminating demonstrations."
+  }
+}

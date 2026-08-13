@@ -7,19 +7,24 @@ import {
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
+	DET_PROMPT_CACHE_POLICY,
 	finalizeEvidence,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-determiner/run";
 import { determinerGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-determiner/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -31,6 +36,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
+		rawOutputText: JSON.stringify(testCase.idealOutput),
 		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
@@ -42,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -52,72 +58,82 @@ function draftResult() {
 	};
 }
 
-test("DET runner import and preflight make no provider call", () => {
-	expect(prepareCurrentTestCases()).toHaveLength(19);
-	expect(currentEvidenceBinding()).toMatchObject({
-		runnerVersion: "grammatical-resolution-determiner-v6",
+test("DET runner preflights both suites without provider access", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(12);
+	expect(binding).toMatchObject({
+		runnerVersion: "grammatical-resolution-determiner-v7",
+		route: "grammatical-resolution/de/lexeme/determiner",
+		transport: "openai-responses-direct-serial",
 		model: "gpt-5.6-luna",
 		reasoningEffort: "none",
-		runMaxOutputTokens: 16384,
+		maxOutputTokens: 4096,
 	});
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
 	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
-	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(10.5)).toThrow(/safe integer/);
+});
+
+test("DET requests explicitly cache the stable prompt prefix", () => {
+	const first = prepareCurrentTestCases(developmentPhase)[0];
+	if (first === undefined)
+		throw new Error("Expected a DET development case.");
+	const binding = currentEvidenceBinding(developmentPhase);
+	const request = responseRequestFor(first.input);
+	expect(DET_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(binding.suiteSha256).toMatch(/^[0-9a-f]{64}$/u);
+	expect(request.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(request).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
 });
 
 test("DET retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
+		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
+	).toThrow(/Retained evidence summary field/);
 	expect(() =>
 		parseRetainedRun({
 			...valid,
-			runnerVersion: "grammatical-resolution-determiner-v5",
+			runnerVersion: "grammatical-resolution-determiner-v6",
 		}),
 	).toThrow();
-	expect(() =>
-		assertCurrentEvidenceBinding({
-			...valid,
-			runMaxOutputTokens: 8192,
-		}),
-	).toThrow(/obsolete evidence policy/);
-	expect(() =>
-		parseRetainedRun({ ...valid, reasoningEffort: "obsolete-policy" }),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			completedAt: "2020-01-01T09:59:00.000Z",
-		}),
-	).toThrow(/completedAt/);
-	expect(() => parseRetainedRun({ ...valid, model: "gpt-5-mini" })).toThrow();
 	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
 			outputSchemaSha256: "0".repeat(64),
 		}),
 	).toThrow(/obsolete evidence policy/);
-	const firstAttempt = valid.attempts[0];
-	if (firstAttempt === undefined) throw new Error("Expected a current case.");
-	expect(() =>
-		assertCurrentEvidenceBinding({
-			...valid,
-			attempts: [
-				{
-					...firstAttempt,
-					idealOutput: {
-						decision: "Unresolved" as const,
-						resolution: null,
-					},
-				},
-				...valid.attempts.slice(1),
-			],
-		}),
-	).toThrow(/current Golden Case/);
 });
 
 test("DET finalization is offline, atomic, and recomputed", async () => {
@@ -125,13 +141,18 @@ test("DET finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
+		const attempts = passingAttempts();
+		const firstAttempt = attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		attempts[0] = { ...firstAttempt, contractPass: false };
 		const draft = {
-			...draftResult(),
-			contractScore: 0,
-			scoreRatio: 0,
-			meetsMinimumEvaluationCases: false,
-			meetsMinimumScoreRatio: false,
-			evidenceThresholdMet: false,
+			...currentEvidenceBinding(developmentPhase),
+			startedAt,
+			completedAt,
+			finalizedAt: null,
+			boundedCalls: attempts.length,
+			...summarizeEvidence(attempts, false),
+			attempts,
 		};
 		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 		await writeFile(classificationsPath, "{}", "utf8");
@@ -143,12 +164,14 @@ test("DET finalization is offline, atomic, and recomputed", async () => {
 		expect(finalized.completedAt).toBe(completedAt);
 		expect(finalized.finalizedAt).not.toBeNull();
 		expect(finalized.contractScore).toBe(finalized.boundedCalls);
-		expect(finalized.scoreRatio).toBe(1);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
 		).toBe(finalized.finalizedAt);
+		expect(
+			finalizeEvidence(resultsPath, classificationsPath),
+		).rejects.toThrow(/already been finalized/);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

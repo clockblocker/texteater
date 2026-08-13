@@ -1,9 +1,8 @@
 import { defineGoldenCorpus } from "../../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
-import { boundaryCases } from "./cases/boundaries";
+import { contextualContrastCases } from "./cases/boundaries";
 import { formulaCases } from "./cases/formulas";
-import { orthographyCases } from "./cases/orthography";
-import { roleAmbiguityAndBoundaryCases } from "./cases/role-ambiguity-and-boundaries";
+import { orthographyAndCoverageCases } from "./cases/orthography";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/phraseme/discourse-formula",
@@ -11,9 +10,8 @@ export const corpus = defineGoldenCorpus({
 	outputSchema,
 	collections: {
 		formulas: formulaCases,
-		orthography: orthographyCases,
-		boundaries: boundaryCases,
-		roleAmbiguityAndBoundaries: roleAmbiguityAndBoundaryCases,
+		orthographyAndCoverage: orthographyAndCoverageCases,
+		contextualContrasts: contextualContrastCases,
 	},
 	fingerprintInput(input) {
 		return input.markedContext

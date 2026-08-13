@@ -177,6 +177,20 @@ describe("production Source Segmentation corpora", () => {
 			expect(() => segmentHebrew(invalid)).toThrow(/Stitched Text/);
 		}
 	});
+
+	test("pins the trailing Divis characters used by suspended compounds", () => {
+		for (const [id, input, expected] of [
+			["hyphen-minus", "Kinder-", "R:Kinder-"],
+			["hyphen", "Kinder‐", "R:Kinder‐"],
+			["non-breaking-hyphen", "Kinder‑", "R:Kinder‑"],
+			["figure-dash", "Kinder‒", "R:Kinder¦P:‒"],
+			["en-dash", "Kinder–", "R:Kinder¦P:–"],
+			["em-dash", "Kinder—", "R:Kinder¦P:—"],
+			["minus-sign", "Kinder−", "R:Kinder¦O:−"],
+		] as const) {
+			expect(render(segmentGerman(input).segments), id).toBe(expected);
+		}
+	});
 });
 
 const marker: Readonly<Record<SegmentKind, string>> = {

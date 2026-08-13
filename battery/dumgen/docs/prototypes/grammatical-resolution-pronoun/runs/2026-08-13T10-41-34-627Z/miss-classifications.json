@@ -1,0 +1,14 @@
+{
+  "grammar-de-pron-accept-v2-indefinite-jemand-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The response found the correct indefinite identity and normalized spelling but treated contextual nominative singular jemand as invariant Citation. The jemand paradigm is inflecting even when its nominative Surface equals its Lemma and requires nominative singular Inflection."
+  },
+  "grammar-de-pron-accept-v2-negative-niemand-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The response found the correct negative identity but treated contextual nominative singular niemand as invariant Citation. The niemand paradigm is inflecting even when its nominative Surface equals its Lemma and requires nominative singular Inflection."
+  },
+  "grammar-de-pron-accept-v2-foreign-we": {
+    "classification": "prompt-defect",
+    "explanation": "All occurrence features and Foreign=Yes passed, but the response translated the foreign Lemma we to German wir. A fixed foreign code-switch identity keeps its normalized source-language dictionary form and must never be translated."
+  }
+}

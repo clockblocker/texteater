@@ -1,3 +1,15 @@
+export function fusionInput(markedContext: string) {
+	const members = [
+		...markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+	].map((match) => match[1] ?? "");
+	if (members.length !== 1 || members[0] === "") {
+		throw new Error(
+			"A Fusion Golden Case needs exactly one TARGET member.",
+		);
+	}
+	return { markedContext, members };
+}
+
 export function resolvedFusion(args: {
 	readonly attested: string;
 	readonly before?: string;
@@ -6,37 +18,25 @@ export function resolvedFusion(args: {
 	readonly normalized?: string;
 	readonly typo?: boolean;
 	readonly spelling?: "Canonical" | "Variant";
+	readonly historical?: boolean;
 }) {
 	const normalized = args.normalized ?? args.attested.toLocaleLowerCase("de");
 	return {
-		input: {
-			markedContext: `${args.before ?? ""}<TARGET>${args.attested}</TARGET>${args.after ?? ""}`,
-		},
+		input: fusionInput(
+			`${args.before ?? ""}<TARGET>${args.attested}</TARGET>${args.after ?? ""}`,
+		),
 		idealOutput: {
-			decision: "Resolved" as const,
-			resolution: {
-				memberOrthographies: [
-					args.typo ? ("Typo" as const) : ("Standard" as const),
-				],
-				realizationCoverage: "Full" as const,
-				normalizedMembers: [normalized],
-				surface: {
-					spelling: args.spelling ?? ("Canonical" as const),
-					surfaceKind: "Citation" as const,
-					surfaceFeatures: null,
-				},
-				lemma: {
-					canonicalForm: args.canonical ?? normalized,
-					coreFeatures: {},
-				},
+			memberOrthographies: [
+				args.typo ? ("Typo" as const) : ("Standard" as const),
+			],
+			normalizedMembers: [normalized],
+			surface: {
+				spelling: args.spelling ?? ("Canonical" as const),
+				surfaceFeatures: args.historical
+					? ({ historicalStatus: "Archaic" } as const)
+					: null,
 			},
+			lemma: { canonicalForm: args.canonical ?? normalized },
 		},
-	};
-}
-
-export function unresolved(markedContext: string) {
-	return {
-		input: { markedContext },
-		idealOutput: { decision: "Unresolved" as const, resolution: null },
 	};
 }

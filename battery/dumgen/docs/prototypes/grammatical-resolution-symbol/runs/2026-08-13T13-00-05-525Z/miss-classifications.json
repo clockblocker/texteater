@@ -1,0 +1,10 @@
+{
+  "grammar-de-sym-dev-inflection-gen-percent": {
+    "classification": "prompt-defect",
+    "explanation": "The strengthened operational rule explicitly maps des plus TARGET to genitive Inflection, but no demonstration shows this feature combination and the model still returned Citation. A distinct genitive nominal-symbol demonstration is needed."
+  },
+  "grammar-de-sym-dev-inflection-feminine-at": {
+    "classification": "prompt-defect",
+    "explanation": "The strengthened operational rule explicitly maps die plus TARGET to feminine singular Inflection, but no demonstration shows this feature combination and the model still returned Citation. A distinct feminine nominal-symbol demonstration is needed."
+  }
+}

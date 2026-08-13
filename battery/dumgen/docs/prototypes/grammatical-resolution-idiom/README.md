@@ -1,112 +1,98 @@
 # German Phraseme/Idiom Grammatical Resolution prototype
 
-This route-local vertical slice resolves established German multiword Idioms to
-the exact Dumling Phraseme/Idiom Lemma and Citation or VERB-backed Inflection
-Surface DTO. Its Prompt Source participates in committed system-prompt codegen
-and has a package-level prototype command. The generated prompt is registered
-in the shared German grammatical-resolution inventory for runtime dispatch.
+This route-local pilot resolves an already classified German Idiom Analysis
+Target. The former model contract accepted only `markedContext`, rechecked the
+route and selected inventory, and returned a `Resolved | Unresolved` wrapper
+around a nullable payload. The current contract accepts exactly
+`{markedContext,members}` and returns one total flat DTO. Both input projections
+are authoritative.
 
-The corpus contains five minimized prompt demonstrations, 20 disjoint held-out
-cases, and six additional corpus-only adversarial or policy boundaries.
-Held-out coverage includes Citation; indicative, subjunctive, imperative,
-infinitive, and participle Surfaces; sentence-order discontinuity; Full
-realization; spelling normalization; selected-head underselection;
-overselection; literal readings; and Collocation, Proverb, and DiscourseFormula
-boundaries.
+The model owns member spelling classification and normalization, Phraseme
+`realizationCoverage`, Citation versus Inflection Surface grammar, and the
+Lemma `canonicalForm`. The application owns German language, Phraseme family,
+Idiom kind, empty Lemma Core Features, Surface-to-Lemma linkage, normalized
+Surface construction, and successful result construction. The leaf exports a
+codec that restores the empty Core Features without exposing them in model
+output.
 
-The five demonstrations carry distinct burdens: a Full finite Surface, a Full
-Partizip-II Surface with an unambiguous member typo, Citation, the
-repository-authoritative Partial finite Surface, and a source-backed figurative
-Proverb rejected at the route boundary. The literal Gras case and the clearly
-idiomatic contextual occurrence whose finite verbal head is unselected remain
-corpus-only probes.
+`Partial` is deliberately narrow. It means settled Idiom material is genuinely
+unrealized while a particular occurrence and full Lemma remain defensible. The
+three corpus examples use recoverable coordination ellipsis in a second
+parallel clause. Overt-but-unselected material is not a `Partial` case: target
+membership is upstream and authoritative.
 
-Core Features are exactly `{}`. A contextual Inflection must select the
-inflecting verbal head, and `normalizedSurface` contains only normalized marked
-members in textual order. Citation is reserved for explicitly identified
-dictionary/citation entries. The route does not guess component alternants,
-ellipsis, or variable argument slots.
+## Frozen corpus
 
-## Partial realization tension
+The 32 synthetic full-sentence cases are partitioned before live evaluation:
 
-The repository explicitly represents `heulte mit` as a Partial Surface of `mit
-den Wölfen heulen` in Dumling's internal API test and domain documentation. This
-exact family and selection is this slice's only positive Partial evidence. It
-does not establish a general “selected head plus one member” rule: `lachte ins`
-is a corpus-only Unresolved policy probe, and the corpus-only occurrence whose
-finite verbal head is merely present in context is also Unresolved.
+- 6 demonstrations: finite discontinuity, Citation, inserted material,
+  source-order normalization, typo repair, and coordination-ellipsis Partial;
+- 16 development cases: perfect, future, passive, imperative, subjunctive,
+  infinitive and participle grammar; free arguments/modifiers; capitalization,
+  typo repair, literal-versus-figurative identical wording, and a second
+  ellipsis family;
+- 10 untouched acceptance cases: unseen Idiom families covering the same
+  grammatical burdens, contextual Proverb/Aphorism/DiscourseFormula/
+  Collocation contrasts, repeated forms, and a third ellipsis family.
 
-The one established exception remains in tension with whole-unit Target
-Classification and the Collocation route's Full-only policy. Any broader
-Partial semantics require a domain decision before entering demonstrations or
-scored evaluation.
+The exact IDs are frozen in `evaluation-suite.ts`. Contamination keys and
+selection checks keep all three partitions disjoint. Every target has exact
+`members` equality with its TARGET contents in source order. External
+sentences are not copied: all stimuli are synthetic, so no sentence-level
+external provenance is claimed.
 
-## Positive-family provenance
+## Shared evidence runner
 
-The German sentences in the Golden Corpus are synthesized test stimuli. The
-sources below establish the lexical family and category, not the exact invented
-sentence. No unsourced positive family is used.
+The thin route configuration uses the shared direct cached runner with
+`gpt-5.6-luna`, no reasoning, low text verbosity, no retries, `store:false`, a
+4,096-token response ceiling, and an explicit 30-minute cache breakpoint after
+the stable system prompt. Preflight is offline and constructs no provider
+client.
 
-| Positive family | Route use | Direct provenance |
-| --- | --- | --- |
-| `die Flinte ins Korn werfen` | Full finite and Full Partizip-II plus typo demonstrations | [IDS grammis: Phraseolexem](https://grammis.ids-mannheim.de/terminologie/1175), which lists it as a Verbphraseolexem |
-| `Trübsal blasen` | Imperative heldout | [Kwaśniak/Fellbaum, *Muttersprache* 1/2008](https://gfds.de/muttersprache-1-2008/), which explicitly describes it as a German Verb-Nomen idiom; also [IDS Phraseolexem](https://grammis.ids-mannheim.de/terminologie/1175) |
-| `mit den Wölfen heulen` | Partial finite demonstration | [Kwaśniak/Fellbaum, *Muttersprache* 1/2008](https://gfds.de/muttersprache-1-2008/), explicitly a Verb-Nomen idiom; additionally repository-authoritative Dumling example |
-| `sich ins Fäustchen lachen` | Finite, infinitive, participle, typo, and corpus-only Partial probe | [IDS Phraseolexem](https://grammis.ids-mannheim.de/terminologie/1175), including a corpus attestation; [IDS FVG contrast](https://grammis.ids-mannheim.de/kontrastive-grammatik/3773) |
-| `Hand und Fuß haben` | Indicative and subjunctive | [IDS Phraseolexem](https://grammis.ids-mannheim.de/terminologie/1175); [IDS syntactic-semantic status](https://grammis.ids-mannheim.de/systematische-grammatik/801) |
-| `frieren wie ein Schneider` | Finite and Citation | [IDS Phraseolexem](https://grammis.ids-mannheim.de/terminologie/1175) |
-| `das Bett hüten` | Finite plus literal boundary | [IDS FVG/Phraseolexem boundary](https://grammis.ids-mannheim.de/systematische-grammatik/514) |
-| `zwei Fliegen mit einer Klappe schlagen` | Finite and participle | [IDS Wörterbuch zur Verbvalenz](https://grammis.ids-mannheim.de/verbs/view/400867/5), explicitly identified as an idiomatic Wendung |
-| `den Löffel abgeben` | Finite and typo normalization | [Gesellschaft für deutsche Sprache](https://gfds.de/woher-kommt-die-redewendung-den-loeffel-abgeben/) |
-| `ins Gras beißen` | Citation demonstration; contextual selected-head-negative and literal corpus-only cases | [IDS contrastive grammar](https://grammis.ids-mannheim.de/kontrastive-grammatik/4479), where it occurs as a phraseological unit |
-| `Wer anderen eine Grube gräbt, fällt selbst hinein` | Proverb route-boundary demonstration | [OWID article 401865](https://www.owid.de/artikel/401865), which records the complete proverb |
+The authorized protocol used 16 calls for each of three development rounds and
+10 calls for one untouched acceptance run: 58 calls total. Retained usage is
+174,764 input tokens, of which 162,115 were cached, plus 6,593 output tokens and
+zero reasoning tokens. That is conservatively estimated below $1 under the
+shared model policy and well below the leaf's $5 authorization; exact currency
+cost requires the provider billing export because Responses usage reports only
+tokens.
 
-IDS uses `Phraseolexem` more broadly than this product taxonomy and includes
-some Funktionsverbgefüge. The prompt therefore applies the product's narrower
-boundary: a figurative/global lexical meaning routes to Idiom, while a
-restricted but semantically compositional support-verb expression routes to
-Collocation.
+## Retained evidence
 
-## Evidence runner
+All four current-contract runs are finalized, have zero execution errors, and
+classify every miss:
 
-The route runner is bounded to exactly the current 20 held-out cases. Direct
-execution makes one serial `gpt-5.6-luna` call per case; the shared Batch runner
-can submit the same current-bound cases to `/v1/responses` in one OpenAI Batch.
-Both transports use no reasoning, no retries, and `store: false`. Import and
-missing-key preflight make no provider call. Draft evidence is bound to hashes
-of the exact assembled prompt, input/output schemas, ordered case IDs, and
-runner policy. Provider raw output and metadata survive parse errors. Batch
-evidence additionally retains the Batch and file IDs, request counts, JSONL
-hashes, submission-manifest hash, transport, and truthful null per-request
-latency.
+| Phase | Score | Evidence |
+| --- | ---: | --- |
+| Development 1 | 10/16 (62.5%) | `runs/2026-08-13T09-43-54-262Z/results.json` |
+| Development 2 | 13/16 (81.25%) | `runs/2026-08-13T09-45-27-447Z/results.json` |
+| Development 3 | 13/16 (81.25%) | `runs/2026-08-13T09-46-40-490Z/results.json` |
+| Untouched acceptance | 8/10 (80%) | `runs/2026-08-13T09-47-33-549Z/results.json` |
 
-Offline finalization rejects provider/execution errors, reparses each retained
-`rawOutputText` through the current output schema, exact-compares it with the
-retained parsed output, recomputes diagnostics, and requires a classification
-for every scored miss. Evidence needs at least 15 cases, an 80% score, no
-execution errors, and no unclassified misses.
+Round 1 exposed weak guidance for Partizip-II Aspect, lexical versus analytic
+`haben`, initial verbal casing, and argument placeholders. The first two were
+repaired for subsequent rounds. The remaining stable development limitations
+are initial `Blase` preservation and insertion of free argument placeholders
+in two Lemmas despite explicit rules and distinct teaching examples.
 
-The qualifying current-bound evidence is the finalized Batch run at
-`runs/2026-08-03T16-47-17-938Z/results.json`: 19/20 (95%), zero provider or
-execution errors, `gpt-5.6-luna`, reasoning `none`, and Batch transport. The
-sole miss is an accepted model limitation: although Gate 2 twice requires an
-Unresolved decision when the selected inventory omits its verbal head, the
-model resolved `sich ins Fäustchen` and borrowed finite features from the
-unselected contextual `lachte`. Earlier retained drafts are diagnostic only;
-successive prompt and corpus refinements reduced their broader route-boundary,
-spelling, verb-form, and inventory failures to this one stable miss.
+Untouched acceptance met the configured 80% gate. Its two classified model
+limitations are omission of passive `voice:Pass` and misanalysis of selected
+infinitive `tun` as Part together with omission of fixed `haben` from the
+Lemma. The exact miss inventory and disposition is retained beside every
+`results.json` as `miss-classifications.json`. Earlier v2/Batch evidence binds
+the obsolete contract and is not evidence for this migration.
 
-A direct run and offline finalization can be invoked from `battery/dumgen`:
+From `battery/dumgen`, deterministic checks and offline preflight are:
 
 ```sh
-bun run prototype:grammatical-resolution-idiom
-
+bun test tests/internal/grammatical-resolution-idiom.test.ts \
+  tests/internal/grammatical-resolution-idiom-runner.test.ts
+bun run check
 bun run docs/prototypes/grammatical-resolution-idiom/run.ts \
-  finalize \
-  docs/prototypes/grammatical-resolution-idiom/runs/<timestamp>/results.json \
-  docs/prototypes/grammatical-resolution-idiom/runs/<timestamp>/miss-classifications.json
+  preflight development 1
 ```
 
-For Batch submission, collection, and provenance rules, use the shared
-[`grammatical-resolution-batch`](../grammatical-resolution-batch/README.md)
-runner.
+After explicit authorization, each development round uses `run development
+<1|2|3>`, followed by offline `finalize <results.json>
+<miss-classifications.json>`. Only after all three finalized rounds may the
+orchestrator invoke `preflight acceptance` and `run acceptance`.

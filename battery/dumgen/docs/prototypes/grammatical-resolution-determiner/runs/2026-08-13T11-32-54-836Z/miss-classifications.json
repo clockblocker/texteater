@@ -1,0 +1,14 @@
+{
+  "grammar-de-det-accept-v3-interrogative-welchem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model reproduced the established intermittent truncation of canonical welcher to welch despite the explicit complete-citation-form policy and exact remaining fields."
+  },
+  "grammar-de-det-accept-v3-indefinite-manchen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "UD German GSD supports canonical mancher, but the model truncated it to manch despite the general complete-citation-form rule and exact remaining fields."
+  },
+  "grammar-de-det-accept-v3-archaic-welchselbig": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The explicitly quoted and labelled archaic form welchselbig is attested, but the model invented a typo repair to wechselbig while otherwise resolving Citation, Archaic, and Dem exactly."
+  }
+}

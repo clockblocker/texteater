@@ -1,0 +1,14 @@
+{
+  "grammar-de-intj-accept-jawoll-variant-response": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "Duden records jawoll as its own colloquial headword, while the oracle combines a jawohl Lemma with Variant spelling. The model's Standard occurrence and correct Res function expose an under-specified identity choice; this case cannot adjudicate Canonical versus Variant under the current oracle."
+  },
+  "grammar-de-intj-accept-typo-pfiu": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The intended transposition typo is not unambiguous: historical German lexicography attests pfiu alongside pfui. Given the authoritative INTJ route, the model's Standard/Canonical pfiu identity is defensible, so this case cannot serve as a genuine modern typo probe."
+  },
+  "grammar-de-intj-accept-archaic-sapperlot": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The historical context and dictionary marking support the Archaic oracle, and the prompt explicitly governs historical uses with separate juchhei and potz examples succeeding. The model resolves every other field correctly but omits the historical feature for this lexeme, an isolated lexical-recognition limitation rather than a prompt defect."
+  }
+}

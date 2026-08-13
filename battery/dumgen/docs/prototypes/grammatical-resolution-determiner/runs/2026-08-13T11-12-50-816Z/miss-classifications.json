@@ -1,0 +1,14 @@
+{
+  "grammar-de-det-dev-relative-welchem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt already names relative determiner Rel and canonical welcher, and the sentence is an explicit relative connective. The isolated output instead chose the interrogative reading and a truncated lemma despite correct Surface grammar; no narrower general instruction is justified."
+  },
+  "grammar-de-det-dev-superlative-meisten": {
+    "classification": "accepted-model-limitation",
+    "explanation": "After two explicit prompt treatments of plural lexical-gender recovery, the model still omitted Masc only on meisten while resolving the same rule for alle, beide, viele, and the rest of the suite."
+  },
+  "grammar-de-det-dev-possessive-seinen-masc": {
+    "classification": "accepted-model-limitation",
+    "explanation": "After two explicit prompt treatments of antecedent-based possessor gender, the model still omitted Gender[psor]=Masc only for Paul/seinen while correctly resolving the parallel neuter and feminine cases in this round."
+  }
+}

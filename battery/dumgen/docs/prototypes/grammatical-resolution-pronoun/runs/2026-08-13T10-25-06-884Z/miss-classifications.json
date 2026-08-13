@@ -1,0 +1,58 @@
+{
+  "grammar-de-pron-dev-personal-ich": {
+    "classification": "prompt-defect",
+    "explanation": "The response treated contextual ich as Citation and assigned Polite=Infm. The prompt needs an explicit rule that ordinary contextual personal forms are Inflection even when identical to the Lemma, and that Infm applies only to second person."
+  },
+  "grammar-de-pron-dev-reflexive-mich": {
+    "classification": "prompt-defect",
+    "explanation": "Every Surface field passed, but the response assigned Polite=Infm to first-person mich. The prompt's informal-address wording needs to state that first and third person always keep polite null."
+  },
+  "grammar-de-pron-dev-nonreflexive-mich": {
+    "classification": "prompt-defect",
+    "explanation": "Every Surface field passed, but the response assigned Polite=Infm to first-person mich. The prompt needs an explicit person restriction on Polite."
+  },
+  "grammar-de-pron-dev-demonstrative-das-nom": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "Current German GSD lemmatizes demonstrative PRON das as der. The response's canonicalForm was correct; the Golden Case incorrectly expected das. The separate sentence-initial normalization miss still motivates a general prompt clarification."
+  },
+  "grammar-de-pron-dev-interrogative-wer-nom": {
+    "classification": "prompt-defect",
+    "explanation": "The response found interrogative nominative wer but left Number null and preserved ordinary sentence-initial capitalization. German GSD supplies Number=Sing for wer, and the target contract requires lowercasing ordinary initial capitalization."
+  },
+  "grammar-de-pron-dev-indefinite-jemandem": {
+    "classification": "prompt-defect",
+    "explanation": "The response resolved dative jemandem but omitted its established singular Number. The prompt needs a direct invariant-number rule for jemand and niemand paradigms."
+  },
+  "grammar-de-pron-dev-negative-niemanden": {
+    "classification": "prompt-defect",
+    "explanation": "The response resolved accusative niemanden but omitted its established singular Number. The prompt needs a direct invariant-number rule for jemand and niemand paradigms."
+  },
+  "grammar-de-pron-dev-total-foreign-all": {
+    "classification": "prompt-defect",
+    "explanation": "All grammar and identity fields passed, but the response preserved ordinary sentence-initial All in normalizedMembers. The general lowercase rule needs a distinct demonstration and final-check emphasis."
+  },
+  "grammar-de-pron-dev-extpos-was": {
+    "classification": "prompt-defect",
+    "explanation": "The codec-supported was für construction is attested with ExtPos=DET, nominative neuter singular in this construction. The response omitted ExtPos, chose accusative, and preserved ordinary initial capitalization; the prompt names the construction but does not give its feature interaction."
+  },
+  "grammar-de-pron-dev-poss-meiner": {
+    "classification": "prompt-defect",
+    "explanation": "All fields except Polite passed. The response assigned Infm to first-person possessive meiner, so the prompt needs the same explicit person restriction on Polite."
+  },
+  "grammar-de-pron-dev-contraction-s": {
+    "classification": "prompt-defect",
+    "explanation": "The provider returned the right Variant contraction and Lemma but an all-null Inflection bag, causing exact-schema failure. The prompt needs to state that contracted es in subject position retains nominative neuter singular morphology. This retained draft cannot be finalized because the shared runner treats the malformed provider output as an execution error."
+  },
+  "grammar-de-pron-dev-typo-ihc": {
+    "classification": "prompt-defect",
+    "explanation": "The repair and Lemma passed, but the response treated repaired contextual ich as Citation and assigned Infm. The prompt needs explicit contextual-personal Inflection and person-restricted Polite rules."
+  },
+  "grammar-de-pron-dev-archaic-euer": {
+    "classification": "prompt-defect",
+    "explanation": "The response read archaic governed genitive euer as a possessive Lemma, omitted Archaic status and plural Number, and preserved ordinary initial capitalization. The prompt needs a general rule for verb-governed archaic personal genitives versus substantive possessives."
+  },
+  "grammar-de-pron-dev-formal-lowercase-typo": {
+    "classification": "prompt-defect",
+    "explanation": "The response repaired formal capitalization and all Lemma fields, but copied accusative from the neighboring reflexive. The addressed subject of a formal imperative is nominative; the prompt needs to warn against taking case from sich."
+  }
+}

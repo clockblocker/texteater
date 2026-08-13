@@ -6,36 +6,62 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/lexeme/other/prompt-source";
 import { evaluateOtherGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-x-unresolved-opaque-hebrew-shalom",
-	"grammar-de-x-unresolved-opaque-french-bonjour",
-	"grammar-de-x-unresolved-opaque-japanese-arigatou",
-	"grammar-de-x-unresolved-opaque-swedish-chocktillstand",
-	"grammar-de-x-unresolved-abbreviation-zb",
-	"grammar-de-x-unresolved-typo-gelauffen",
-	"grammar-de-x-unresolved-foreign-noun-house",
-	"grammar-de-x-unresolved-propn-paris",
-	"grammar-de-x-unresolved-propn-apple",
-	"grammar-de-x-unresolved-intj-ouch",
-	"grammar-de-x-unresolved-sym-percent",
-	"grammar-de-x-unresolved-sym-dagger",
-	"grammar-de-x-unresolved-punct-exclamation",
-	"grammar-de-x-unresolved-opaque-question-marks",
-	"grammar-de-x-unresolved-fragment-unver",
-	"grammar-de-x-unresolved-email",
-	"grammar-de-x-unresolved-overbroad-good-morning",
-	"grammar-de-x-unresolved-repeated-bonjour",
-	"grammar-de-x-unresolved-unbalanced-bonjour",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-x-dev-unknown-blarg-nom",
+	"grammar-de-x-dev-unknown-glorps-acc",
+	"grammar-de-x-dev-unknown-glorpen-inf",
+	"grammar-de-x-dev-unknown-glorpt-fin",
+	"grammar-de-x-dev-unknown-geglorpt-part",
+	"grammar-de-x-dev-unknown-glorp-imp",
+	"grammar-de-x-dev-foreign-anyway",
+	"grammar-de-x-dev-foreign-low-key",
+	"grammar-de-x-dev-slang-cringe",
+	"grammar-de-x-dev-slang-sus",
+	"grammar-de-x-dev-casing-whatever",
+	"grammar-de-x-dev-archaic-thou",
+	"grammar-de-x-dev-variant-colour",
+	"grammar-de-x-dev-mixed-w00t",
+	"grammar-de-x-dev-repeated-whatever",
+	"grammar-de-x-dev-near-opaque-foobar",
+	"grammar-de-x-dev-near-known-routes-yeet",
+	"grammar-de-x-dev-alphanumeric-3d",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
-	throw new Error(
-		"X Grammatical Resolution demonstrations and evaluation must be disjoint.",
-	);
+export const acceptanceEvaluation = corpus.select([
+	"grammar-de-x-accept-v2-unknown-quend",
+	"grammar-de-x-accept-v2-unknown-zarg-nom-masc",
+	"grammar-de-x-accept-v2-unknown-zorps-gen",
+	"grammar-de-x-accept-v2-unknown-nerge-sub",
+	"grammar-de-x-accept-v2-foreign-random",
+	"grammar-de-x-accept-v2-abbr-tbh",
+	"grammar-de-x-accept-v2-fragment-trans",
+	"grammar-de-x-accept-v2-hyphen-off-grid",
+	"grammar-de-x-accept-v2-typo-wierd",
+	"grammar-de-x-accept-v2-archaic-hither",
+]);
+
+for (const [leftName, left, rightName, right] of [
+	["demonstrations", demonstrations, "development", developmentEvaluation],
+	["demonstrations", demonstrations, "acceptance", acceptanceEvaluation],
+	["development", developmentEvaluation, "acceptance", acceptanceEvaluation],
+] as const) {
+	if (!left.isDisjointFrom(right)) {
+		throw new Error(
+			`X ${leftName} and ${rightName} selections must be disjoint.`,
+		);
+	}
 }
+
+export const evaluation = developmentEvaluation;
 
 export const otherGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
+	evaluator: evaluateOtherGrammaticalResolution,
+});
+
+export const otherGrammaticalResolutionAcceptanceExperiment = defineExperiment({
+	promptSource,
+	evaluation: acceptanceEvaluation,
 	evaluator: evaluateOtherGrammaticalResolution,
 });

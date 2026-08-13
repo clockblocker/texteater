@@ -1,0 +1,6 @@
+{
+  "grammar-de-sconj-dev-multiword-als-ob": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model preserved both authoritative members, normalization, canonical lemma als ob, and ConjType=Comp, but again labeled the ordinary realization Variant. The prompt explicitly defines the ordinary dictionary spelling as Canonical, the case has passed under the same prompt in other rounds, and this isolated spelling-label variance was already observed and accepted, so no additional rule or failed-case demonstration is justified."
+  }
+}

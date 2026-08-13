@@ -6,36 +6,68 @@ import {
 } from "../../prompt-source/grammatical-resolution/de/lexeme/determiner/prompt-source";
 import { evaluateDeterminerGrammaticalResolution } from "./evaluator";
 
-export const evaluation = corpus.select([
-	"grammar-de-det-indefinite-article-einen",
-	"grammar-de-det-demonstrative-diesem",
-	"grammar-de-det-interrogative-welchen",
-	"grammar-de-det-negative-kein",
-	"grammar-de-det-total-alle",
-	"grammar-de-det-total-beide-cardinal",
-	"grammar-de-det-possessive-deinen",
-	"grammar-de-det-possessive-unserem",
-	"grammar-de-det-possessive-seinen",
-	"grammar-de-det-formal-possessive-ihrem",
-	"grammar-de-det-citation-jeglicher",
-	"grammar-de-det-typo-keien",
-	"grammar-de-det-repeated-second-einem",
-	"grammar-de-det-unresolved-personal-pronoun-er",
-	"grammar-de-det-unresolved-interrogative-pronoun-wer",
-	"grammar-de-det-unresolved-numeral-eins",
-	"grammar-de-det-unresolved-two-unrelated-targets",
-	"grammar-de-det-unresolved-repeated-same-lemma-dieser",
-	"grammar-de-det-unresolved-fusion-im",
+export const developmentEvaluation = corpus.select([
+	"grammar-de-det-dev-indefinite-article-einen",
+	"grammar-de-det-dev-demonstrative-diesem",
+	"grammar-de-det-dev-emphatic-selben",
+	"grammar-de-det-dev-exclamative-welch",
+	"grammar-de-det-dev-interrogative-welchen",
+	"grammar-de-det-dev-relative-welchem",
+	"grammar-de-det-dev-negative-kein",
+	"grammar-de-det-dev-total-alle",
+	"grammar-de-det-dev-total-beide",
+	"grammar-de-det-dev-indefinite-viele",
+	"grammar-de-det-dev-comparative-mehr",
+	"grammar-de-det-dev-comparative-weniger",
+	"grammar-de-det-dev-superlative-meisten",
+	"grammar-de-det-dev-possessive-deinen",
+	"grammar-de-det-dev-possessive-unserem",
+	"grammar-de-det-dev-possessive-seinen-masc",
+	"grammar-de-det-dev-possessive-sein-neut",
+	"grammar-de-det-dev-possessive-ihr-fem",
+	"grammar-de-det-dev-formal-ihrem",
+	"grammar-de-det-dev-foreign-the",
+	"grammar-de-det-dev-ordinal-wievielte",
 ]);
 
-if (!evaluation.isDisjointFrom(demonstrations)) {
+export const untouchedAcceptanceEvaluation = corpus.select([
+	"grammar-de-det-accept-v4-definite-des",
+	"grammar-de-det-accept-v4-indefinite-ein",
+	"grammar-de-det-accept-v4-demonstrative-jenem",
+	"grammar-de-det-accept-v4-interrogative-welches",
+	"grammar-de-det-accept-v4-negative-keinen",
+	"grammar-de-det-accept-v4-total-jeder",
+	"grammar-de-det-accept-v4-possessive-deinem",
+	"grammar-de-det-accept-v4-formal-ihrem",
+	"grammar-de-det-accept-v4-indefinite-manches",
+	"grammar-de-det-accept-v4-typo-disem",
+	"grammar-de-det-accept-v4-variant-n",
+	"grammar-de-det-accept-v4-archaic-etwelches",
+]);
+
+if (!developmentEvaluation.isDisjointFrom(demonstrations)) {
+	throw new Error("DET demonstrations and development must be disjoint.");
+}
+if (!untouchedAcceptanceEvaluation.isDisjointFrom(demonstrations)) {
 	throw new Error(
-		"DET Grammatical Resolution demonstrations and evaluation must be disjoint.",
+		"DET demonstrations and untouched acceptance must be disjoint.",
+	);
+}
+if (!developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation)) {
+	throw new Error(
+		"DET development and untouched acceptance must be disjoint.",
 	);
 }
 
 export const determinerGrammaticalResolutionExperiment = defineExperiment({
 	promptSource,
-	evaluation,
+	evaluation: developmentEvaluation,
 	evaluator: evaluateDeterminerGrammaticalResolution,
 });
+
+export const determinerGrammaticalResolutionAcceptanceExperiment =
+	defineExperiment({
+		promptSource,
+		evaluation: untouchedAcceptanceEvaluation,
+		evaluator: evaluateDeterminerGrammaticalResolution,
+	});

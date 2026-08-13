@@ -198,7 +198,8 @@ describe("Prompt Assembly", () => {
 describe("German prompt projections", () => {
 	test("derive the Promptsmith model schemas from the runtime codecs", () => {
 		const resolvedSchema =
-			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN.prompt.outputSchema.shape.resolution.unwrap();
+			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN
+				.prompt.outputSchema;
 
 		expect(resolvedSchema.shape.lemma).toBe(deNounModelLemmaSchema);
 		expect(resolvedSchema.shape.normalizedMembers).toBe(

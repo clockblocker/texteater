@@ -1,0 +1,10 @@
+{
+  "grammar-de-part-dev-foreign-not": {
+    "classification": "prompt-defect",
+    "explanation": "The output preserved foreign identity and features but called the source-language Lemma's own canonical spelling Variant; the prompt must state that spelling is evaluated relative to the chosen foreign Lemma."
+  },
+  "grammar-de-part-dev-abbreviation-n": {
+    "classification": "prompt-defect",
+    "explanation": "The output correctly identified an abbreviation but expanded its canonicalForm to nicht; the prompt needs a distinct teaching example that an established abbreviation is itself the Lemma identity, including punctuation outside TARGET."
+  }
+}

@@ -1,0 +1,6 @@
+{
+	"grammar-de-discourse-formula-accept-schoenen-guten-tag": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model invented uppercase Guten and called the correctly lowercase supplied adjective a Typo, despite the prompt defining Standard as exact conventional spelling, requiring repair only for actual errors, and reserving German capitals for required nouns. The canonical form and all other fields were correct, so this is a localized model limitation rather than a prompt defect."
+	}
+}

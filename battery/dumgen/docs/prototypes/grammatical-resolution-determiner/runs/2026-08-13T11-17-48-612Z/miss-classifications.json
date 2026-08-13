@@ -1,0 +1,14 @@
+{
+  "grammar-de-det-dev-interrogative-welchen": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt and lexical table already pin inflected welcher as canonicalForm welcher. The isolated truncation to welch occurred despite otherwise exact interrogative grammar."
+  },
+  "grammar-de-det-dev-relative-welchem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt already distinguishes relative determiner Rel from interrogative Int. The model again collapsed this rare relative-connective use to Int while resolving every other field."
+  },
+  "grammar-de-det-dev-possessive-ihr-fem": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires antecedent-based Gender[psor] and names Mara as Fem. This round's isolated omission persisted despite otherwise exact possessive grammar."
+  }
+}

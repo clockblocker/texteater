@@ -25,17 +25,23 @@ is worth revisiting.
 
 <!-- Append new entries here. -->
 
-### Coordinate ellipsis as a Partial noun Surface
+> Grammatical Resolution entries below that propose a model-level
+> `Unresolved`, decision wrapper, or membership repair are historical questions
+> superseded by Wayfinder #90. The current operation is total after classified
+> `{ markedContext, members }` input; invalid output is a contract error. Route
+> READMEs and retained phase-bound evidence contain the current dispositions.
+
+### Ergänzungsstrich reconstruction as a Full noun Surface
 
 - **Route:** `grammatical-resolution/de/lexeme/noun`
-- **Golden Case:** `grammar-de-noun-partial-coordinate-ellipse-kinderbuch`
-- **Raised by:** Wayfinder issue #30
-- **Question:** In `Kinder- und Jugendbücher`, should the selected `Kinder`
-  attestation resolve as a Partial inflected Surface of `Kinderbuch`, including
-  plural features supplied by the shared final constituent?
-- **Current take:** Provisionally yes. The corpus pins `Kinder` as Partial,
-  accusative plural, while preserving the unattested `buch` only in the
-  complete Lemma. This needs domain review before becoming general policy.
+- **Golden Case:** suspended-compound matrix in Wayfinder issue #93
+- **Raised by:** Wayfinder issues #30 and #93
+- **Question:** How may `Kinder-` in `Kinder- und Jugendbücher` resolve without
+  weakening target-member identity?
+- **Current take:** Resolved by system ADRs 0003/0004. The singleton attested
+  member stays `Kinder-`; the NOUN-only positional projector licenses
+  `Kinderbücher` from the literal right-conjunct suffix, with Standard
+  orthography and Full realization. Only U+002D, U+2010, and U+2011 qualify.
 
 ### Gender for the plural-only Lemma Leute
 

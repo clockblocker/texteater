@@ -2,63 +2,138 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Resolve the Surface and Lemma grammar of the marked German Lexeme/INTJ, or
-return Unresolved without changing the route.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Lexeme/INTJ occurrence.
+Return its attested Surface analysis and dictionary Lemma. Do not classify the
+target or reconsider membership.
+</agent_role>
 
-Resolve only when every TARGET pair marks lexical material belonging to one
-identifiable single-word interjection Lexeme. Multiple TARGET pairs are allowed
-only when all are members of that same lexical realization. Return Unresolved
-when a target is a particle, adverb, nominalized expression, another route, a
-member of a larger fixed discourse formula, or contains punctuation or other
-non-lexical material. Do not detach ja from na ja or o from o wei: those larger
-meaning-bearing units belong to a Phraseme route. Expressive sound words such as
-wupp may be interjections when they independently form the exclamation. An
-interjection can also stand parenthetically inside a larger sentence; nearby
-unmarked discourse material does not become part of its lexical realization.
-Conversely, a marked form used as a noun under a possessive or adjective is a
-nominalized expression and remains outside INTJ.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied member, and members repeats those exact texts in source
+order. Both projections are authoritative. Never reject, repair, add, remove,
+merge, split, or reorder membership.
+</input_contract>
 
-Count literal opening <TARGET> tags, not words or characters. Emit exactly one
-memberOrthographies value per opening tag in textual order. Typo means an actual
-spelling error. Standard includes canonical spelling, licensed variants, and
-ordinary sentence-initial capitalization. Normalize ordinary casing without
-calling it a Typo. Repair only spelling errors and ordinary casing; never
-replace the marked interjection with a synonym or expand it into a formula.
-Except for ordinary sentence-initial casing, if normalizedMembers changes any
-marked character to repair a spelling, the corresponding memberOrthographies
-value must be Typo; Standard is not permitted merely because the repaired
-dictionary form is canonical.
+<fixed_route_contract>
+Target Classification already established Lexeme/INTJ and complete membership.
+The operation is total: always resolve the supplied occurrence. Context
+distinguishes identity, response function, orthography, and historical status,
+but never changes the route.
 
-German Lexeme/INTJ has Citation Surfaces only. Every Resolved result therefore
-uses surfaceKind Citation, even for an interjection used inside an ordinary
-sentence; never invent an Inflection Surface or inflectional features.
-normalizedMembers is the normalized contextual interjection. spelling is
-Canonical for the canonical spelling and Variant only for a licensed written
-variant such as expressive lengthening. Licensed lengthening repeats sounds
-while preserving the canonical character sequence; deletion, transposition, or
-substitution is a Typo, even when the result resembles expressive spelling.
-realizationCoverage is Full for an
-independent complete interjection. A clipped or partial string that does not
-defensibly identify the Lexeme is Unresolved. surfaceFeatures is null unless the
-attested Surface is archaic; then emit {"historicalStatus":"Archaic"}.
+Do not return Unresolved because an identical spelling can be a PART, ADV,
+NOUN, ordinary lexical word, onomatopoeia, or part of a DiscourseFormula in a
+different occurrence. Do not expand a supplied singleton into a nearby formula.
+An independently supplied sound effect is resolved as INTJ. Unmarked neighbors
+remain outside the target. Preserve all authoritative members of expressive
+reduplication.
 
-The Lemma canonicalForm is the normalized dictionary form of the same Lexeme.
-coreFeatures.partType is "Res" only for an answer or response interjection such
-as standalone ja, nein, or corrective doch. In particular, a one-word doch
-answer contradicting a negative yes/no question is a Res interjection, while
-doch inside the proposition as a modal particle is outside this route.
-Expressive, emotive, hesitation,
-greeting, prompting, and sound-effect interjections use null. The same spelling
-used as a modal or discourse particle is outside this route, not an INTJ with a
-different feature. Resolved has a non-null resolution; Unresolved has resolution
-null.`;
+The application injects German route identity, Citation surfaceKind,
+Surface-to-Lemma linkage, normalized Surface, successful resolution, and Full
+realization coverage. Do not return those fields.
+</fixed_route_contract>
+
+<member_projection>
+Return exactly one memberOrthographies and one normalizedMembers entry per
+supplied member. Standard includes canonical spellings, licensed variants,
+ordinary sentence-initial capitalization, expressive lengthening, and licensed
+reduplication. Typo is only a genuine spelling error.
+
+Preserve Standard members exactly except lowercase ordinary initial
+capitalization of a normally lowercase interjection. Preserve lexical uppercase
+in noun-origin secondary interjections and acronymic identities. Repair only
+Typo members. Never substitute a synonym, expand an acronym, or collapse,
+create, or reorder reduplicated members.
+</member_projection>
+
+<surface_model>
+German INTJ exposes Citation Surfaces only, and the application injects the
+Citation discriminator. Return surface with exactly spelling and
+surfaceFeatures.
+
+Use spelling Canonical when the attested realization uses its ordinary
+dictionary spelling. Use Variant for a licensed alternate realization:
+expressive sound lengthening, expressive reduplication, or an independently
+licensed written variant. These variants remain Standard occurrence evidence.
+Deletion, transposition, or substitution that is not licensed expression is a
+Typo; after repair, the Surface is Canonical.
+
+surfaceFeatures is null unless this exact use is deliberately historical or
+archaic, when it is { historicalStatus: "Archaic" }. Historical forms remain
+Standard unless the attested characters also contain a genuine error. Current
+expressive variants are not Archaic.
+</surface_model>
+
+<lemma_model>
+lemma.canonicalForm is the dictionary identity of the same classified INTJ.
+Map lengthening and reduplication to the unlengthened single identity. Map an
+established written variant or repaired typo to its dictionary form. Preserve
+the lexical capitalization of noun-origin identities such as Mensch or Mist.
+Keep an acronymic INTJ such as OMG as its own identity; the exact codec has no
+abbreviation or foreign feature, so never add either and never expand it.
+
+lemma.coreFeatures contains exactly { partType: "Res" | null }.
+
+Use partType Res only for a standalone answer or response interjection: ja,
+nein, corrective doch, jawohl, and licensed response variants in answer
+function. Expressive, emotive, greeting, hesitation, prompting, sound-effect,
+and secondary interjections use null. Context owns the function: do not copy Res
+from an unmarked response word, and do not remove Res merely because another
+occurrence of the same spelling is a modal particle.
+</lemma_model>
+
+<route_distinctions>
+- A nearby multiword greeting, farewell, or other DiscourseFormula does not
+  absorb the authoritative singleton INTJ.
+- An unmarked modal PART such as ja does not change a separately supplied ja
+  answer, and a supplied answer remains Res.
+- An unmarked ADV such as nun does not change a supplied prompting INTJ.
+- A sound imitation such as wupp, miau, or peng is resolved here when the
+  supplied occurrence was classified as an independent INTJ.
+- A noun-origin form such as Mensch or Mist keeps lexical uppercase when used as
+  a secondary INTJ; an unmarked ordinary noun elsewhere does not control it.
+</route_distinctions>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface: {
+    spelling: "Canonical" | "Variant",
+    surfaceFeatures: null | { historicalStatus: "Archaic" | null }
+  },
+  lemma: {
+    canonicalForm: string,
+    coreFeatures: { partType: "Res" | null }
+  }
+}
+
+Never return decision, resolution, Unresolved, surfaceKind,
+realizationCoverage, normalizedSurface, language, family, kind, Lemma linkage,
+target indices, confidence, alternatives, or explanation.
+</output_contract>
+
+<final_checks>
+- Both arrays have exactly members.length entries in source order.
+- Only Typo members are repaired; licensed lengthening and reduplication remain
+  Standard Variant evidence.
+- Reduplicated members remain separate and ordered while canonicalForm names
+  the single base identity.
+- Res appears only for an actual answer or response occurrence.
+- Surface contains exactly spelling and surfaceFeatures; Lemma Core Features
+  contain exactly partType.
+- Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
+</final_checks>`;
 
 export const demonstrations = corpus.select([
 	"grammar-de-intj-demo-pfui-expressive",
 	"grammar-de-intj-demo-ja-response",
-	"grammar-de-intj-demo-hmm-variant",
-	"grammar-de-intj-demo-o-wei-phraseme-boundary",
-	"grammar-de-intj-demo-punctuation-in-target",
+	"grammar-de-intj-demo-hmm-lengthened",
+	"grammar-de-intj-demo-ha-ha-reduplication",
+	"grammar-de-intj-demo-typo-huraa",
+	"grammar-de-intj-demo-archaic-juchhei",
+	"grammar-de-intj-demo-contextual-ach-after-noun",
 ]);
 
 export const promptSource = definePromptSource({

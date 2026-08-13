@@ -1,0 +1,22 @@
+{
+  "grammar-de-propn-dev-org-deutsche-bank": {
+    "classification": "prompt-defect",
+    "explanation": "The model used Citation for an ordinary subject occurrence with explicit article agreement; the prompt needs stronger teaching that contextual organization names are Inflection."
+  },
+  "grammar-de-propn-dev-org-spd": {
+    "classification": "prompt-defect",
+    "explanation": "The model used Citation for an ordinary subject occurrence; the prompt needs a distinct contextual abbreviated-organization example."
+  },
+  "grammar-de-propn-dev-product-adidas": {
+    "classification": "prompt-defect",
+    "explanation": "The model used Citation and invented Neut for a contextual stylized brand without gender evidence; the prompt needs a different contextual stylized-name example with null gender."
+  },
+  "grammar-de-propn-dev-vocative-lukas": {
+    "classification": "prompt-defect",
+    "explanation": "The model used Citation for a contextual vocative despite the stated number-only Inflection rule; a different vocative demonstration is warranted."
+  },
+  "grammar-de-propn-dev-variant-pressburg": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The edited lexicon-entry frame itself called for Citation, conflicting with the retained Inflection oracle; the case must use a genuine contextual occurrence while still establishing the historical exonym relation."
+  }
+}

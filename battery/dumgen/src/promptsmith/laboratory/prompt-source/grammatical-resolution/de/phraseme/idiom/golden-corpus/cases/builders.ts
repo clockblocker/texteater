@@ -7,6 +7,13 @@ export type FiniteFeatures = {
 	readonly voice: "Pass" | null;
 };
 
+export type UnspecifiedFeatures = {
+	readonly number: "Plur" | "Sing" | null;
+	readonly tense: "Past" | "Pres" | null;
+	readonly verbForm: null;
+	readonly voice: "Pass" | null;
+};
+
 export type InfinitiveFeatures = {
 	readonly mood: null;
 	readonly number: "Plur" | "Sing" | null;
@@ -37,40 +44,39 @@ export type ParticipleFeatures = {
 };
 
 type InflectionalFeatures =
+	| UnspecifiedFeatures
 	| FiniteFeatures
 	| ImperativeFeatures
 	| InfinitiveFeatures
 	| ParticipleFeatures;
 type MemberOrthography = "Standard" | "Typo";
-type MemberOrthographies = readonly [
-	MemberOrthography,
-	MemberOrthography,
-	...MemberOrthography[],
-];
 
-export const emptyCore = {};
+export function idiomInput(markedContext: string) {
+	const members = [
+		...markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+	].map((match) => match[1] ?? "");
+	if (members.length === 0 || members.some((member) => member.length === 0)) {
+		throw new Error("An Idiom Golden Case needs non-empty TARGET members.");
+	}
+	return { markedContext, members };
+}
 
 export function citation(args: {
 	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
-	readonly memberOrthographies: MemberOrthographies;
+	readonly memberOrthographies: readonly MemberOrthography[];
+	readonly realizationCoverage?: "Full" | "Partial";
 }) {
 	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [...args.memberOrthographies],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: emptyCore,
-			},
+		memberOrthographies: [...args.memberOrthographies],
+		realizationCoverage: args.realizationCoverage ?? ("Full" as const),
+		normalizedMembers: [...args.normalizedMembers],
+		surface: {
+			spelling: "Canonical" as const,
+			surfaceKind: "Citation" as const,
+			surfaceFeatures: null,
 		},
+		lemma: { canonicalForm: args.canonicalForm },
 	};
 }
 
@@ -78,26 +84,20 @@ export function inflection(args: {
 	readonly normalizedMembers: readonly string[];
 	readonly canonicalForm: string;
 	readonly inflectionalFeatures: InflectionalFeatures;
-	readonly memberOrthographies: MemberOrthographies;
+	readonly memberOrthographies: readonly MemberOrthography[];
 	readonly realizationCoverage?: "Full" | "Partial";
 }) {
 	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [...args.memberOrthographies],
-			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: "Canonical" as const,
-				surfaceKind: "Inflection" as const,
-				surfaceFeatures: null,
-				inflectionalFeatures: args.inflectionalFeatures,
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: emptyCore,
-			},
+		memberOrthographies: [...args.memberOrthographies],
+		realizationCoverage: args.realizationCoverage ?? ("Full" as const),
+		normalizedMembers: [...args.normalizedMembers],
+		surface: {
+			spelling: "Canonical" as const,
+			surfaceKind: "Inflection" as const,
+			surfaceFeatures: null,
+			inflectionalFeatures: args.inflectionalFeatures,
 		},
+		lemma: { canonicalForm: args.canonicalForm },
 	};
 }
 
@@ -105,7 +105,7 @@ export function finite(
 	normalizedMembers: readonly string[],
 	canonicalForm: string,
 	features: Omit<FiniteFeatures, "verbForm" | "voice">,
-	memberOrthographies: MemberOrthographies,
+	memberOrthographies: readonly MemberOrthography[],
 	realizationCoverage: "Full" | "Partial" = "Full",
 ) {
 	return inflection({
@@ -120,8 +120,3 @@ export function finite(
 		},
 	});
 }
-
-export const unresolved = {
-	decision: "Unresolved" as const,
-	resolution: null,
-};

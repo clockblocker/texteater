@@ -1,0 +1,6 @@
+{
+  "grammar-de-propn-dev-variant-pressburg": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The sentence explicitly identifies Pressburg as the historical German name for Bratislava and the prompt permits the different canonicalForm under that relation; the model retained Pressburg as Lemma and fell back to Citation."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "grammar-de-x-dev-unknown-blarg-nom": {
+    "classification": "accepted-model-limitation",
+    "explanation": "Despite two distinct nominal demonstrations and the determiner rule, the model again chooses Citation for this single residual-X noun context. Other nominal cases pass; the persistent isolated bias is accepted."
+  },
+  "grammar-de-x-dev-unknown-glorpt-fin": {
+    "classification": "accepted-model-limitation",
+    "explanation": "All finite Surface diagnostics pass, but the model repeats its conservative attested-form canonicalForm instead of the inferred nonce infinitive. This is the documented residual-X lemmatization limitation."
+  },
+  "grammar-de-x-dev-unknown-geglorpt-part": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The participial Surface is exact while the inferred nonce base differs. With no established lexicon identity for X and an explicit prompt rule already present, the remaining Lemma miss is accepted model uncertainty."
+  },
+  "grammar-de-x-dev-slang-sus": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The current-use Foreign rule and multiple integrated-slang contrasts are explicit, yet this game-chat form alone is again marked Foreign. Other integrated forms pass, so this is accepted feature instability."
+  }
+}

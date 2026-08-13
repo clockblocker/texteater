@@ -1,0 +1,10 @@
+{
+  "grammar-de-sconj-accept-archaic-sintemal": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The model resolved member alignment, normalization, spelling, lemma identity, and Core Features correctly but omitted Archaic for the deliberately historical sintemal occurrence. The prompt already states the historical-status rule and includes a distinct historical demonstration, so this isolated lexical-recognition miss does not justify contaminating the prompt with the failed case."
+  },
+  "grammar-de-sconj-accept-variant-obzwar": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The oracle declared obzwar to be both the lemma's own canonicalForm and a Variant realization. Under the prompt's exact spelling semantics, the ordinary realization of that same dictionary identity is Canonical, which is what the model returned. The contradictory acceptance oracle must be retired rather than taught."
+  }
+}

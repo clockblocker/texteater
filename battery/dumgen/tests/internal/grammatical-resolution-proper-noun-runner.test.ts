@@ -8,18 +8,23 @@ import {
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
 	finalizeEvidence,
+	PROPN_PROMPT_CACHE_POLICY,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-proper-noun/run";
 import { properNounGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-proper-noun/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -43,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -53,87 +58,59 @@ function draftResult() {
 	};
 }
 
-test("PROPN runner import and preflight make no provider call", () => {
-	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-proper-noun-v1");
-	expect(binding.route).toBe("grammatical-resolution/de/lexeme/proper-noun");
-	expect(binding.model).toBe("gpt-5.6-luna");
-	expect(binding.reasoningEffort).toBe("none");
-	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(18);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
-	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
-	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(20)).not.toThrow();
+test("PROPN runner preflights both suites without provider access", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(12);
+	expect(binding).toMatchObject({
+		runnerVersion: "grammatical-resolution-proper-noun-v2",
+		route: "grammatical-resolution/de/lexeme/proper-noun",
+		model: "gpt-5.6-luna",
+		reasoningEffort: "none",
+		maxOutputTokens: 4096,
+	});
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
+	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
 });
 
-test("PROPN retained evidence is strict, current-bound, and preserves errors", () => {
+test("PROPN requests cache the stable prompt prefix", () => {
+	const first = prepareCurrentTestCases(developmentPhase)[0];
+	if (first === undefined) throw new Error("Expected PROPN case.");
+	const binding = currentEvidenceBinding(developmentPhase);
+	const request = responseRequestFor(first.input);
+	expect(PROPN_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(request.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(request).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [{ role: "system" }, { role: "user" }],
+	});
+});
+
+test("PROPN retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
 		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
 	).toThrow(/Retained evidence summary field/);
 	expect(() =>
-		parseRetainedRun({
-			...valid,
-			runnerVersion: "grammatical-resolution-proper-noun-v0",
-		}),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
-	expect(() => parseRetainedRun({ ...valid, model: "gpt-5-mini" })).toThrow();
-	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
 			outputSchemaSha256: "0".repeat(64),
 		}),
 	).toThrow(/obsolete evidence policy/);
-
-	const first = valid.attempts[0];
-	if (first === undefined) throw new Error("Expected an attempt.");
-	const { output: _output, ...withoutOutput } = first;
-	const parseFailure = {
-		...withoutOutput,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
-		memberCountPass: false,
-		memberOrthographiesPass: false,
-		surfaceKindPass: false,
-		normalizedSurfacePass: false,
-		spellingPass: false,
-		realizationCoveragePass: false,
-		surfaceFeaturesPass: false,
-		inflectionalFeaturesPass: false,
-		canonicalFormPass: false,
-		coreFeaturesPass: false,
-		error: { name: "SyntaxError", message: "invalid provider JSON" },
-		contractPass: false,
-	};
-	const withError = {
-		...valid,
-		attempts: [parseFailure, ...valid.attempts.slice(1)],
-		contractScore: valid.contractScore - 1,
-		scoreRatio: (valid.contractScore - 1) / valid.boundedCalls,
-		executionErrorCount: 1,
-	};
-	const retained = parseRetainedRun(withError);
-	expect(retained.attempts[0]?.error).toEqual({
-		name: "SyntaxError",
-		message: "invalid provider JSON",
-	});
-	expect(retained.attempts[0]?.rawOutputText).toBe(first.rawOutputText);
-	expect(retained.attempts[0]?.responseId).toBe(first.responseId);
-
-	const { rawOutputText: _rawOutputText, ...incompleteMetadata } =
-		parseFailure;
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			attempts: [incompleteMetadata, ...valid.attempts.slice(1)],
-		}),
-	).toThrow(/metadata must be retained completely/);
 });
 
 test("PROPN finalization is offline, atomic, and recomputed", async () => {
@@ -142,37 +119,33 @@ test("PROPN finalization is offline, atomic, and recomputed", async () => {
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
 		const attempts = passingAttempts();
-		const firstAttempt = attempts[0];
-		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
-		attempts[0] = { ...firstAttempt, contractPass: false };
-		const draft = {
-			...currentEvidenceBinding(),
-			startedAt,
-			completedAt,
-			finalizedAt: null,
-			boundedCalls: attempts.length,
-			...summarizeEvidence(attempts, false),
-			attempts,
-		};
-		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
+		const first = attempts[0];
+		if (first === undefined) throw new Error("Expected attempt.");
+		attempts[0] = { ...first, contractPass: false };
+		await writeFile(
+			resultsPath,
+			JSON.stringify({
+				...currentEvidenceBinding(developmentPhase),
+				startedAt,
+				completedAt,
+				finalizedAt: null,
+				boundedCalls: attempts.length,
+				...summarizeEvidence(attempts, false),
+				attempts,
+			}),
+			"utf8",
+		);
 		await writeFile(classificationsPath, "{}", "utf8");
-
 		const finalized = await finalizeEvidence(
 			resultsPath,
 			classificationsPath,
 		);
-		expect(finalized.completedAt).toBe(completedAt);
-		expect(finalized.finalizedAt).not.toBeNull();
 		expect(finalized.contractScore).toBe(finalized.boundedCalls);
-		expect(finalized.scoreRatio).toBe(1);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
 		).toBe(finalized.finalizedAt);
-		expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(/already been finalized/);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

@@ -1,0 +1,10 @@
+{
+  "grammar-de-propn-accept-work-buddenbrooks": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt distinguishes contextual work titles and demonstrates a contextual title without lexical gender; the model matched the complete surface and lemma contract but hallucinated masculine gender for the title."
+  },
+  "grammar-de-propn-accept-variant-aix-la-chapelle": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The sentence identifies the spelling only as a historical map label and never establishes its relation to Aachen. Therefore canonicalForm=Aachen, Variant spelling, and foreign=null are not inferable from the supplied context; the oracle is underdetermined."
+  }
+}

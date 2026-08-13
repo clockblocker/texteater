@@ -25,7 +25,13 @@ export const deIdiomLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ language: "de", family: "Phraseme", kind: "Idiom" },
 );
 
-export const deIdiomModelLemmaSchema = deIdiomLemmaCodec.in;
+const modelLemmaWithCoreFeaturesSchema = deIdiomLemmaCodec.in;
+const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+	modelLemmaWithCoreFeaturesSchema,
+	{ coreFeatures: {} },
+);
+
+export const deIdiomModelLemmaSchema = modelLemmaCodec.in;
 export const modelLemmaSchema = deIdiomModelLemmaSchema;
 
 type DeIdiomLemma = z.output<typeof deIdiomLemmaCodec>;
@@ -33,6 +39,13 @@ type DeIdiomLemma = z.output<typeof deIdiomLemmaCodec>;
 const modelSurfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.nullable();
+
+const unspecifiedInflectionalFeaturesSchema = z.strictObject({
+	number: z.enum(["Plur", "Sing"]).nullable(),
+	tense: z.enum(["Past", "Pres"]).nullable(),
+	verbForm: z.null(),
+	voice: z.literal("Pass").nullable(),
+});
 
 const finiteInflectionalFeaturesSchema = z.strictObject({
 	mood: z.enum(["Ind", "Sub"]).nullable(),
@@ -73,6 +86,7 @@ const participleInflectionalFeaturesSchema = z.strictObject({
 });
 
 export const modelInflectionalFeaturesSchema = z.union([
+	unspecifiedInflectionalFeaturesSchema,
 	finiteInflectionalFeaturesSchema,
 	imperativeInflectionalFeaturesSchema,
 	infinitiveInflectionalFeaturesSchema,
@@ -144,22 +158,68 @@ export const deIdiomModelInflectionSurfaceSchema =
 export const modelCitationSurfaceSchema = deIdiomModelCitationSurfaceSchema;
 export const modelInflectionSurfaceSchema = deIdiomModelInflectionSurfaceSchema;
 
-export const inputSchema = z.strictObject({
-	markedContext: grammaticalResolutionMarkedContextSchema,
-}) satisfies PromptInputSchema;
+export const inputSchema = z
+	.strictObject({
+		markedContext: grammaticalResolutionMarkedContextSchema,
+		members: z.array(z.string().min(1)).min(1),
+	})
+	.superRefine((input, context) => {
+		const markedMembers = [
+			...input.markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+		].map((match) => match[1]);
+		if (
+			markedMembers.length !== input.members.length ||
+			markedMembers.some(
+				(member, position) => member !== input.members[position],
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["members"],
+				message:
+					"members must exactly match TARGET contents in source order.",
+			});
+		}
+	}) satisfies PromptInputSchema;
 
-export const outputSchema = z.strictObject({
-	decision: z.enum(["Resolved", "Unresolved"]),
-	resolution: z
-		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
-			normalizedMembers: normalizedMembersSchema,
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			surface: z.union([
-				deIdiomModelCitationSurfaceSchema,
-				deIdiomModelInflectionSurfaceSchema,
-			]),
-			lemma: deIdiomModelLemmaSchema,
-		})
-		.nullable(),
-}) satisfies PromptOutputSchema;
+const modelOutputSchema = z.strictObject({
+	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+	normalizedMembers: normalizedMembersSchema,
+	realizationCoverage: z.enum(["Full", "Partial"]),
+	surface: z.union([
+		deIdiomModelCitationSurfaceSchema,
+		deIdiomModelInflectionSurfaceSchema,
+	]),
+	lemma: deIdiomModelLemmaSchema,
+});
+
+const extractModelLemmaCodec = codecBuilder4.buildReshapeCodec(
+	modelOutputSchema,
+	{
+		fieldName: "modelLemma",
+		fieldSchema: modelLemmaCodec.in,
+		dropFields: ["lemma"],
+		construct: (output) => output.lemma,
+		reconstruct: (modelLemma) => ({ lemma: modelLemma }),
+	},
+);
+const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
+	extractModelLemmaCodec.out,
+	{
+		fieldName: "lemma",
+		fieldSchema: modelLemmaCodec.out,
+		dropFields: ["modelLemma"],
+		construct: (output) => modelLemmaCodec.decode(output.modelLemma),
+		reconstruct: (lemma) => ({
+			modelLemma: modelLemmaCodec.encode(lemma),
+		}),
+	},
+);
+
+export const idiomResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+	extractModelLemmaCodec,
+	restoreRuntimeLemmaCodec,
+);
+
+export const outputSchema =
+	idiomResolutionCodec.in satisfies PromptOutputSchema;

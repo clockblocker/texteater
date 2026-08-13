@@ -1,10 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
-import { stableJson } from "../../src/lib/stable-json";
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
-	evaluation,
-	fusionGrammaticalResolutionExperiment,
+	acceptanceEvaluation,
+	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-fusion/evaluation-suite";
 import { evaluateFusionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-fusion/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/fusion/golden-corpus/corpus";
@@ -15,274 +14,167 @@ import {
 import {
 	buildDeFusionCitationSurfaceCodec,
 	deFusionLemmaCodec,
-	deFusionModelCitationSurfaceSchema,
-	deFusionModelLemmaSchema,
+	fusionResolutionCodec,
 	inputSchema,
 	outputSchema,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/fusion/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-fusion-am",
-	"grammar-de-fusion-beim-typo",
-	"grammar-de-fusion-vom",
-	"grammar-de-fusion-ins",
-	"grammar-de-fusion-ans",
-	"grammar-de-fusion-aufs",
-	"grammar-de-fusion-fuers",
-	"grammar-de-fusion-ums",
-	"grammar-de-fusion-durchs",
-	"grammar-de-fusion-uebers",
-	"grammar-de-fusion-beim-initial",
-	"grammar-de-fusion-unresolved-adp-mit",
-	"grammar-de-fusion-unresolved-am-superlative",
-	"grammar-de-fusion-unresolved-overbroad-noun",
-	"grammar-de-fusion-unresolved-two-fusions",
-	"grammar-de-fusion-unresolved-mixed-fusion-adp",
-	"grammar-de-fusion-unresolved-valid-ihm",
-	"grammar-de-fusion-unresolved-idiom-whole",
-	"grammar-de-fusion-unresolved-discourse-whole",
-	"grammar-de-fusion-unresolved-paired-frame",
-] as const;
-
-describe("Construction/Fusion route-local schemas and corpus", () => {
-	test("uses the shared TARGET preflight without rejecting route adversaries", () => {
-		for (const markedContext of [
-			"Wir sind im Garten.",
-			"Wir sind <TARGET>im Garten.",
-			"Wir sind <TARGET></TARGET> Garten.",
-			"Wir sind <TARGET> </TARGET> Garten.",
-			"Wir sind <TARGET>im Garten</TARGET>.",
-			"Wir sind <TARGET>,</TARGET> im Garten.",
-		]) {
-			expect(inputSchema.safeParse({ markedContext }).success).toBe(
-				false,
-			);
-		}
-		expect(
-			inputSchema.safeParse({
-				markedContext: "Wir sind <TARGET>im</TARGET> Garten.",
-			}).success,
-		).toBe(true);
-		expect(
-			inputSchema.safeParse({
-				markedContext:
-					"Wir sind <TARGET>in</TARGET> <TARGET>dem</TARGET> Garten.",
-			}).success,
-		).toBe(true);
-	});
-
-	test("round-trips every fixed Lemma and Citation Surface field", () => {
-		const modelLemma = { canonicalForm: "im", coreFeatures: {} };
-		const canonicalLemma = deFusionLemmaCodec.decode(modelLemma);
-		expect(canonicalLemma).toEqual({
-			language: "de",
-			canonicalForm: "im",
-			family: "Construction",
-			kind: "Fusion",
-			coreFeatures: {},
-		});
-		expect(deFusionLemmaCodec.encode(canonicalLemma)).toEqual(modelLemma);
-
-		const modelSurface = {
-			normalizedSurface: "im",
-			spelling: "Canonical" as const,
-			surfaceKind: "Citation" as const,
-			surfaceFeatures: { historicalStatus: null },
-		};
-		const codec = buildDeFusionCitationSurfaceCodec(canonicalLemma);
-		const canonicalSurface = codec.decode(modelSurface);
-		expect(canonicalSurface).toEqual({
-			language: "de",
-			normalizedSurface: "im",
-			spelling: "Canonical",
-			surfaceKind: "Citation",
-			surfaceFeatures: null,
-			lemma: canonicalLemma,
-		});
-		expect(codec.encode(canonicalSurface)).toEqual({
-			...modelSurface,
-			surfaceFeatures: null,
-		});
-	});
-
-	test("projects the exact empty-Core Citation-only DTO", () => {
-		expect(
-			deFusionModelLemmaSchema.parse({
-				canonicalForm: "im",
-				coreFeatures: {},
-			}),
-		).toEqual({ canonicalForm: "im", coreFeatures: {} });
-		for (const invalid of [
-			{ language: "de", canonicalForm: "im", coreFeatures: {} },
-			{ canonicalForm: "im", coreFeatures: { preposition: "in" } },
-		]) {
-			expect(deFusionModelLemmaSchema.safeParse(invalid).success).toBe(
-				false,
-			);
-		}
-		const citation = {
-			spelling: "Canonical" as const,
-			surfaceKind: "Citation" as const,
-			surfaceFeatures: null,
-		};
-		expect(deFusionModelCitationSurfaceSchema.parse(citation)).toEqual(
-			citation,
+describe("Construction/Fusion canonical total contract", () => {
+	test("freezes 34 cases into disjoint 6/18/10 partitions", () => {
+		expect(corpus.all().ids).toHaveLength(34);
+		expect(demonstrations.ids).toHaveLength(6);
+		expect(developmentEvaluation.ids).toHaveLength(18);
+		expect(acceptanceEvaluation.ids).toHaveLength(10);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(demonstrations.isDisjointFrom(acceptanceEvaluation)).toBe(true);
+		expect(developmentEvaluation.isDisjointFrom(acceptanceEvaluation)).toBe(
+			true,
 		);
-		for (const invalid of [
-			{ ...citation, realizationCoverage: "Partial" },
-			{ ...citation, language: "de" },
-			{
-				...citation,
-				lemma: {
-					language: "de",
-					canonicalForm: "im",
-					family: "Construction",
-					kind: "Fusion",
-					coreFeatures: {},
-				},
-			},
-			{
-				...citation,
-				surfaceKind: "Inflection",
-				inflectionalFeatures: {},
-			},
+		expect(
+			new Set(
+				demonstrations
+					.union(developmentEvaluation)
+					.union(acceptanceEvaluation).ids,
+			),
+		).toEqual(new Set(corpus.all().ids));
+	});
+
+	test("uses aligned canonical inputs and a strict flat Citation DTO", () => {
+		for (const testCase of corpus.all().cases) {
+			expect(inputSchema.parse(testCase.input).members).toEqual(
+				[
+					...testCase.input.markedContext.matchAll(
+						/<TARGET>([^<>]+)<\/TARGET>/gu,
+					),
+				].map((match) => match[1] ?? ""),
+			);
+			expect(testCase.input.members).toHaveLength(1);
+			expect(outputSchema.safeParse(testCase.idealOutput).success).toBe(
+				true,
+			);
+			expect(
+				evaluateFusionGrammaticalResolution({
+					caseId: "ideal-output",
+					input: testCase.input,
+					idealOutput: testCase.idealOutput,
+					output: testCase.idealOutput,
+				}).contractPass,
+			).toBe(true);
+		}
+
+		const fixture = corpus.cases["grammar-de-fusion-dev-am-bahnhof"];
+		if (fixture === undefined) throw new Error("Missing Fusion fixture.");
+		for (const extra of [
+			{ decision: "Resolved" },
+			{ realizationCoverage: "Full" },
+			{ language: "de" },
 		]) {
 			expect(
-				deFusionModelCitationSurfaceSchema.safeParse(invalid).success,
+				outputSchema.safeParse({ ...fixture.idealOutput, ...extra })
+					.success,
 			).toBe(false);
 		}
 		expect(
 			outputSchema.safeParse({
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard", "Standard"],
-					realizationCoverage: "Full" as const,
-					surface: citation,
-					lemma: { canonicalForm: "im", coreFeatures: {} },
+				...fixture.idealOutput,
+				lemma: { ...fixture.idealOutput.lemma, coreFeatures: {} },
+			}).success,
+		).toBe(false);
+		expect(
+			outputSchema.safeParse({
+				...fixture.idealOutput,
+				surface: {
+					...fixture.idealOutput.surface,
+					surfaceKind: "Citation",
 				},
+			}).success,
+		).toBe(false);
+		expect(
+			inputSchema.safeParse({
+				markedContext:
+					"Wir sitzen <TARGET>in</TARGET> <TARGET>dem</TARGET> Garten.",
+				members: ["in", "dem"],
 			}).success,
 		).toBe(false);
 	});
 
-	test("pins exactly 20 held-outs disjoint from four minimized demonstrations", () => {
-		expect(corpus.all().ids).toHaveLength(25);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-fusion-demo-im-initial",
-			"grammar-de-fusion-demo-zur",
-			"grammar-de-fusion-demo-zum-typo",
-			"grammar-de-fusion-demo-uncontracted-in-dem",
-		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation.ids).toHaveLength(20);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
-		expect(evaluation).toBe(
-			fusionGrammaticalResolutionExperiment.evaluation,
+	test("keeps authoritative singleton membership beside route contrasts", () => {
+		const prompt = assembleSystemPrompt(promptSource).replaceAll(
+			/\s+/gu,
+			" ",
 		);
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain(
+			"Never reject, repair, add, remove, merge, split, or reorder membership",
+		);
+		expect(prompt).toContain("application injects German language");
+		expect(prompt).toContain("Full realization coverage");
+		expect(prompt).not.toContain('"decision":');
 		expect(
-			evaluation.cases.filter(
-				(testCase) => testCase.idealOutput.decision === "Resolved",
-			),
-		).toHaveLength(11);
-		const typoCase = corpus.cases["grammar-de-fusion-beim-typo"];
-		expect(typoCase?.input.markedContext).toContain(
-			"<TARGET>beimm</TARGET>",
-		);
-		expect(typoCase?.idealOutput.resolution).toMatchObject({
+			corpus.cases["grammar-de-fusion-demo-am-near-route-controls"]?.input
+				.markedContext,
+		).toContain("am schnellsten");
+		expect(
+			corpus.cases["grammar-de-fusion-demo-ins-near-idiom-and-dialect"]
+				?.input.markedContext,
+		).toContain("ins Gras beißen");
+		expect(
+			corpus.cases["grammar-de-fusion-accept-im-garten"]?.input
+				.markedContext,
+		).toStartWith("Im Haus");
+	});
+
+	test("pins casing, typo, historical Variant, and archaic-context controls", () => {
+		expect(
+			corpus.cases["grammar-de-fusion-demo-im-initial"]?.idealOutput,
+		).toMatchObject({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["im"],
+			lemma: { canonicalForm: "im" },
+		});
+		expect(
+			corpus.cases["grammar-de-fusion-dev-beimm-typo"]?.idealOutput,
+		).toMatchObject({
 			memberOrthographies: ["Typo"],
-			realizationCoverage: "Full" as const,
 			normalizedMembers: ["beim"],
-			lemma: { canonicalForm: "beim" },
+			surface: { spelling: "Canonical", surfaceFeatures: null },
 		});
 		expect(
-			evaluation.ids.includes(
-				"grammar-de-fusion-unresolved-discourse-whole",
-			),
-		).toBe(true);
-		expect(
-			evaluation.ids.includes("grammar-de-fusion-unresolved-von-dem"),
-		).toBe(false);
-	});
-
-	test("maps every resolved case to exactly one marked word", () => {
-		for (const testCase of corpus.all().cases) {
-			if (testCase.idealOutput.resolution === null) continue;
-			expect(
-				testCase.input.markedContext.match(/<TARGET>/gu),
-			).toHaveLength(1);
-			expect(
-				testCase.idealOutput.resolution.memberOrthographies,
-			).toHaveLength(1);
-		}
-	});
-
-	test("assembles a self-contained fixed-route prompt", () => {
-		const assembled = assembleSystemPrompt(promptSource);
-		expect(assembled).toContain("Construction/Fusion");
-		expect(assembled).toContain("im = in dem");
-		expect(assembled).toContain(
-			"am is Fusion only when it realizes an dem",
-		);
-		expect(assembled).toContain("am schnellsten");
-		expect(assembled).toContain("Citation-only");
-		expect(assembled).toContain("coreFeatures exactly {}");
-		expect(assembled).toContain("valid word");
-		for (const testCase of demonstrations.cases) {
-			expect(assembled).toContain(stableJson(testCase.input));
-			expect(assembled).toContain(stableJson(testCase.idealOutput));
-		}
-	});
-
-	test("the evaluator is pure and exact over every projected field", () => {
-		const testCase = corpus.cases["grammar-de-fusion-ins"];
-		if (testCase === undefined) throw new Error("Missing fixture.");
-		const inputBefore = structuredClone(testCase.input);
-		const idealBefore = structuredClone(testCase.idealOutput);
-		const passing = evaluateFusionGrammaticalResolution({
-			caseId: "grammar-de-fusion-ins",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output: structuredClone(testCase.idealOutput),
-		});
-		expect(passing.contractPass).toBe(true);
-		expect(testCase.input).toEqual(inputBefore);
-		expect(testCase.idealOutput).toEqual(idealBefore);
-
-		const resolved = testCase.idealOutput.resolution;
-		if (resolved === null) throw new Error("Expected resolved fixture.");
-		const equivalentAllNullFeatures = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...resolved,
-				surface: {
-					...resolved.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
-			},
-		});
-		const equivalentEvaluation = evaluateFusionGrammaticalResolution({
-			caseId: "grammar-de-fusion-ins",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output: equivalentAllNullFeatures,
-		});
-		expect(equivalentEvaluation.surfaceFeaturesPass).toBe(true);
-		expect(equivalentEvaluation.contractPass).toBe(true);
-
-		const miss = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...resolved,
-				lemma: { ...resolved.lemma, canonicalForm: "in das" },
-			},
+			corpus.cases["grammar-de-fusion-demo-fuers-historical-variant"]
+				?.idealOutput,
+		).toMatchObject({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["für's"],
+			surface: { spelling: "Variant", surfaceFeatures: null },
+			lemma: { canonicalForm: "fürs" },
 		});
 		expect(
-			evaluateFusionGrammaticalResolution({
-				caseId: "grammar-de-fusion-ins",
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: miss,
-			}).canonicalFormPass,
-		).toBe(false);
+			corpus.cases["grammar-de-fusion-dev-zum-behufe-archaic-context"]
+				?.idealOutput.surface.surfaceFeatures,
+		).toBeNull();
+	});
+
+	test("restores application-owned empty core and linked Citation through codecs", () => {
+		const model =
+			corpus.cases["grammar-de-fusion-dev-am-bahnhof"]?.idealOutput;
+		if (model === undefined) throw new Error("Missing Fusion fixture.");
+		const runtime = fusionResolutionCodec.decode(model);
+		expect(runtime.lemma).toEqual({
+			canonicalForm: "am",
+			coreFeatures: {},
+		});
+		const lemma = deFusionLemmaCodec.decode(runtime.lemma);
+		expect(lemma).toMatchObject({
+			language: "de",
+			family: "Construction",
+			kind: "Fusion",
+		});
+		expect(
+			buildDeFusionCitationSurfaceCodec(lemma).decode({
+				...model.surface,
+				surfaceKind: "Citation",
+				normalizedSurface: model.normalizedMembers.join(" "),
+			}),
+		).toMatchObject({ language: "de", surfaceKind: "Citation", lemma });
 	});
 });

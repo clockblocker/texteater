@@ -4,22 +4,27 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import {
+	ADP_PROMPT_CACHE_POLICY,
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
 	finalizeEvidence,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-adposition/run";
 import { adpositionGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adposition/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -31,6 +36,7 @@ function passingAttempts(): RetainedAttempt[] {
 			output: testCase.idealOutput,
 		}),
 		latencyMs: index,
+		rawOutputText: JSON.stringify(testCase.idealOutput),
 		resolvedModel: "provider-test-snapshot",
 		responseId: `response-${index}`,
 		usage: {},
@@ -42,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -52,53 +58,113 @@ function draftResult() {
 	};
 }
 
-test("ADP runner import and preflight make no provider call", () => {
-	expect(prepareCurrentTestCases()).toHaveLength(17);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
-	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
+test("ADP runner import and preflight make no provider call", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(binding.runnerVersion).toBe("grammatical-resolution-adposition-v4");
+	expect(binding.route).toBe("grammatical-resolution/de/lexeme/adposition");
+	expect(binding.transport).toBe("openai-responses-direct-serial");
+	expect(binding.model).toBe("gpt-5.6-luna");
+	expect(binding.reasoningEffort).toBe("none");
+	expect(binding.maxOutputTokens).toBe(4096);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(12);
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
+	expect(() => assertEvaluationSuiteBounds(31)).toThrow(/capped at 30/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(10)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(30)).not.toThrow();
+});
+
+test("ADP requests cache the stable prompt prefix explicitly", () => {
+	const testCases = prepareCurrentTestCases(developmentPhase);
+	const first = testCases[0];
+	const second = testCases[1];
+	if (first === undefined || second === undefined) {
+		throw new Error("Expected at least two ADP evaluation cases.");
+	}
+	const binding = currentEvidenceBinding(developmentPhase);
+	const firstRequest = responseRequestFor(first.input);
+	const secondRequest = responseRequestFor(second.input);
+	expect(ADP_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(firstRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(secondRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(firstRequest).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
 });
 
 test("ADP retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
+		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
+	).toThrow(/Retained evidence summary field/);
 	expect(() =>
 		parseRetainedRun({
 			...valid,
-			completedAt: "2020-01-01T09:59:00.000Z",
+			runnerVersion: "grammatical-resolution-adposition-v3",
 		}),
-	).toThrow(/completedAt/);
-	expect(() =>
-		assertCurrentEvidenceBinding({ ...valid, model: "obsolete-model" }),
-	).toThrow(/obsolete evidence policy/);
+	).toThrow();
 	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
 			outputSchemaSha256: "0".repeat(64),
 		}),
 	).toThrow(/obsolete evidence policy/);
-	const firstAttempt = valid.attempts[0];
-	if (firstAttempt === undefined) throw new Error("Expected a current case.");
-	expect(() =>
-		assertCurrentEvidenceBinding({
-			...valid,
-			attempts: [
-				{
-					...firstAttempt,
-					idealOutput: {
-						decision: "Unresolved" as const,
-						resolution: null,
-					},
-				},
-				...valid.attempts.slice(1),
-			],
-		}),
-	).toThrow(/current Golden Case/);
+
+	const first = valid.attempts[0];
+	if (first === undefined) throw new Error("Expected an attempt.");
+	const { output: _output, ...withoutOutput } = first;
+	const parseFailure = {
+		...withoutOutput,
+		memberCountPass: false,
+		memberOrthographiesPass: false,
+		normalizedSurfacePass: false,
+		spellingPass: false,
+		surfaceFeaturesPass: false,
+		canonicalFormPass: false,
+		coreFeaturesPass: false,
+		error: { name: "SyntaxError", message: "invalid provider JSON" },
+		contractPass: false,
+	};
+	const retained = parseRetainedRun({
+		...valid,
+		attempts: [parseFailure, ...valid.attempts.slice(1)],
+		contractScore: valid.contractScore - 1,
+		scoreRatio: (valid.contractScore - 1) / valid.boundedCalls,
+		executionErrorCount: 1,
+	});
+	expect(retained.attempts[0]?.error).toEqual({
+		name: "SyntaxError",
+		message: "invalid provider JSON",
+	});
+	expect(retained.attempts[0]?.rawOutputText).toBe(first.rawOutputText);
 });
 
 test("ADP finalization is offline, atomic, and recomputed", async () => {
@@ -106,13 +172,18 @@ test("ADP finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
+		const attempts = passingAttempts();
+		const firstAttempt = attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		attempts[0] = { ...firstAttempt, contractPass: false };
 		const draft = {
-			...draftResult(),
-			contractScore: 0,
-			scoreRatio: 0,
-			meetsMinimumEvaluationCases: false,
-			meetsMinimumScoreRatio: false,
-			evidenceThresholdMet: false,
+			...currentEvidenceBinding(developmentPhase),
+			startedAt,
+			completedAt,
+			finalizedAt: null,
+			boundedCalls: attempts.length,
+			...summarizeEvidence(attempts, false),
+			attempts,
 		};
 		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
 		await writeFile(classificationsPath, "{}", "utf8");

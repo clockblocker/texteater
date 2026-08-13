@@ -1,0 +1,26 @@
+{
+	"grammar-de-idiom-faeustchen-perfect-full": {
+		"classification": "prompt-defect",
+		"explanation": "The prompt did not sharply distinguish Dumling Aspect from German perfect-tense construction, so the model set Aspect=Perf on an ordinary Partizip II."
+	},
+	"grammar-de-idiom-truebsal-imperative-full": {
+		"classification": "prompt-defect",
+		"explanation": "The general sentence-initial casing rule did not give a concrete verbal example, and the model preserved contextual Blase instead of lexical-case blase."
+	},
+	"grammar-de-idiom-kalte-schulter-future-full": {
+		"classification": "prompt-defect",
+		"explanation": "The canonical-form rule left argument placeholders insufficiently explicit, so the model inserted the free dative placeholder jemandem."
+	},
+	"grammar-de-idiom-tomaten-present-full": {
+		"classification": "prompt-defect",
+		"explanation": "The lexical-head rule did not explicitly contrast idioms headed by haben with analytic haben, so the model misread lexical hast as an auxiliary and emitted Inf."
+	},
+	"grammar-de-idiom-faden-perfect-full": {
+		"classification": "prompt-defect",
+		"explanation": "The prompt did not sharply distinguish Dumling Aspect from German perfect-tense construction, so the model set Aspect=Perf on an ordinary Partizip II."
+	},
+	"grammar-de-idiom-ohr-present-full": {
+		"classification": "prompt-defect",
+		"explanation": "The canonical-form rule left argument placeholders insufficiently explicit, so the model inserted the free argument placeholder jemandem."
+	}
+}

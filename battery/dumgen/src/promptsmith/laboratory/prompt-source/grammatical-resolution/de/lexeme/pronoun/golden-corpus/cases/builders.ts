@@ -1,3 +1,8 @@
+import type { input } from "zod";
+
+import type { GoldenCase } from "../../../../../../../../assembly";
+import type { inputSchema, outputSchema } from "../../schemas";
+
 export type PronounCoreFeatures = {
 	readonly extPos: "DET" | null;
 	readonly foreign: "Yes" | null;
@@ -12,7 +17,8 @@ export type PronounCoreFeatures = {
 		| "Prs"
 		| "Rcp"
 		| "Rel"
-		| "Tot";
+		| "Tot"
+		| null;
 };
 
 export type PronounInflectionalFeatures = {
@@ -22,78 +28,100 @@ export type PronounInflectionalFeatures = {
 	readonly reflex: "Yes" | null;
 };
 
+type CaseMetadata = {
+	readonly explanation?: string;
+};
+
+type SurfaceOptions = CaseMetadata & {
+	readonly normalizedMember?: string;
+	readonly orthography?: "Standard" | "Typo";
+	readonly spelling?: "Canonical" | "Variant";
+	readonly historicalStatus?: "Archaic" | null;
+	readonly coreFeatures?: PronounCoreFeatures;
+};
+
+export const unmarkedCore = {
+	extPos: null,
+	foreign: null,
+	person: null,
+	polite: null,
+	poss: null,
+	pronType: null,
+} satisfies PronounCoreFeatures;
+
 export function core(
 	pronType: PronounCoreFeatures["pronType"],
 	overrides: Partial<Omit<PronounCoreFeatures, "pronType">> = {},
 ): PronounCoreFeatures {
-	return {
-		extPos: null,
-		foreign: null,
-		person: null,
-		polite: null,
-		poss: null,
-		pronType,
-		...overrides,
-	};
+	return { ...unmarkedCore, pronType, ...overrides };
 }
 
-export function citation(args: {
-	readonly normalizedMembers: readonly string[];
-	readonly canonicalForm: string;
-	readonly coreFeatures: PronounCoreFeatures;
-	readonly spelling?: "Canonical" | "Variant";
-}) {
+export function citationCase(
+	markedContext: string,
+	member: string,
+	canonicalForm: string,
+	options: SurfaceOptions = {},
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
+	return pronounCase(
+		markedContext,
+		member,
+		{
+			spelling: options.spelling ?? "Canonical",
+			surfaceKind: "Citation",
+			surfaceFeatures: surfaceFeatures(options.historicalStatus),
+		},
+		canonicalForm,
+		options,
+	);
+}
+
+export function inflectionCase(
+	markedContext: string,
+	member: string,
+	canonicalForm: string,
+	inflectionalFeatures: PronounInflectionalFeatures,
+	options: SurfaceOptions = {},
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
+	return pronounCase(
+		markedContext,
+		member,
+		{
+			spelling: options.spelling ?? "Canonical",
+			surfaceKind: "Inflection",
+			surfaceFeatures: surfaceFeatures(options.historicalStatus),
+			inflectionalFeatures,
+		},
+		canonicalForm,
+		options,
+	);
+}
+
+function pronounCase(
+	markedContext: string,
+	member: string,
+	surface: input<typeof outputSchema>["surface"],
+	canonicalForm: string,
+	options: SurfaceOptions,
+): GoldenCase<input<typeof inputSchema>, input<typeof outputSchema>> {
 	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: ["Standard" as const],
-			realizationCoverage: "Full" as const,
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: args.spelling ?? ("Canonical" as const),
-				surfaceKind: "Citation" as const,
-				surfaceFeatures: null,
-			},
+		input: { markedContext, members: [member] },
+		idealOutput: {
+			memberOrthographies: [options.orthography ?? "Standard"],
+			normalizedMembers: [options.normalizedMember ?? member],
+			surface,
 			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: args.coreFeatures,
+				canonicalForm,
+				coreFeatures: options.coreFeatures ?? unmarkedCore,
 			},
 		},
+		...(options.explanation === undefined
+			? {}
+			: { explanation: options.explanation }),
 	};
 }
 
-export function inflection(args: {
-	readonly normalizedMembers: readonly string[];
-	readonly canonicalForm: string;
-	readonly coreFeatures: PronounCoreFeatures;
-	readonly inflectionalFeatures: PronounInflectionalFeatures;
-	readonly memberOrthography?: "Standard" | "Typo";
-	readonly spelling?: "Canonical" | "Variant";
-	readonly realizationCoverage?: "Full" | "Partial";
-}) {
-	return {
-		decision: "Resolved" as const,
-		resolution: {
-			memberOrthographies: [
-				args.memberOrthography ?? ("Standard" as const),
-			],
-			realizationCoverage: args.realizationCoverage ?? ("Full" as const),
-			normalizedMembers: [...args.normalizedMembers],
-			surface: {
-				spelling: args.spelling ?? ("Canonical" as const),
-				surfaceKind: "Inflection" as const,
-				surfaceFeatures: null,
-				inflectionalFeatures: args.inflectionalFeatures,
-			},
-			lemma: {
-				canonicalForm: args.canonicalForm,
-				coreFeatures: args.coreFeatures,
-			},
-		},
-	};
+function surfaceFeatures(historicalStatus: "Archaic" | null | undefined) {
+	return historicalStatus === "Archaic"
+		? ({ historicalStatus: "Archaic" } as const)
+		: null;
 }
-
-export const unresolved = {
-	decision: "Unresolved" as const,
-	resolution: null,
-};

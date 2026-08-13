@@ -1,0 +1,10 @@
+{
+  "grammar-de-aux-dev-modal-moechte-bleiben": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt stated the general Konjunktiv-II tense policy and the mögen lemma mapping, but did not explicitly connect present-day modal möchte to mood Sub and tense Past."
+  },
+  "grammar-de-aux-dev-modal-sollen-syncretic": {
+    "classification": "prompt-defect",
+    "explanation": "The nullable-feature rule did not explicitly require mood null when a sollen form is morphologically indicative/subjunctive syncretic and the deliberately damaged context cannot disambiguate it."
+  }
+}

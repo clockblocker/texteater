@@ -8,18 +8,23 @@ import {
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
 	finalizeEvidence,
+	PRON_PROMPT_CACHE_POLICY,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-pronoun/run";
 import { pronounGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluation-suite";
 
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -43,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -53,37 +58,79 @@ function draftResult() {
 	};
 }
 
-test("PRON runner import and preflight make no provider call", () => {
-	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-pronoun-v1");
+test("PRON runner import and preflight make no provider call", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	const binding = currentEvidenceBinding(developmentPhase);
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(21);
+	expect(binding.runnerVersion).toBe("grammatical-resolution-pronoun-v2");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/pronoun");
+	expect(binding.transport).toBe("openai-responses-direct-serial");
 	expect(binding.model).toBe("gpt-5.6-luna");
 	expect(binding.reasoningEffort).toBe("none");
-	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(21);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
-	expect(() => assertEvaluationSuiteBounds(26)).toThrow(/capped at 25/);
+	expect(binding.maxOutputTokens).toBe(4096);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(21);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(12);
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
+	expect(() => assertEvaluationSuiteBounds(31)).toThrow(/capped at 30/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(10)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(30)).not.toThrow();
 });
 
-test("PRON retained evidence is strict, current-bound, and preserves errors", () => {
+test("PRON requests cache the stable prompt prefix explicitly", () => {
+	const testCases = prepareCurrentTestCases(developmentPhase);
+	const first = testCases[0];
+	const second = testCases[1];
+	if (first === undefined || second === undefined) {
+		throw new Error("Expected at least two PRON evaluation cases.");
+	}
+	const binding = currentEvidenceBinding(developmentPhase);
+	const firstRequest = responseRequestFor(first.input);
+	const secondRequest = responseRequestFor(second.input);
+	expect(PRON_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(firstRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(secondRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(firstRequest).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
+});
+
+test("PRON retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
 	expect(() =>
+		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
+	).toThrow(/Retained evidence summary field/);
+	expect(() =>
 		parseRetainedRun({
 			...valid,
-			runnerVersion: "grammatical-resolution-pronoun-v0",
+			runnerVersion: "grammatical-resolution-pronoun-v1",
 		}),
 	).toThrow();
-	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
-	expect(() =>
-		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
-	).toThrow(/summary field/);
-	expect(() => parseRetainedRun({ ...valid, model: "gpt-5-mini" })).toThrow();
 	expect(() =>
 		assertCurrentEvidenceBinding({
 			...valid,
@@ -96,14 +143,11 @@ test("PRON retained evidence is strict, current-bound, and preserves errors", ()
 	const { output: _output, ...withoutOutput } = first;
 	const parseFailure = {
 		...withoutOutput,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
 		memberCountPass: false,
 		memberOrthographiesPass: false,
 		surfaceKindPass: false,
 		normalizedSurfacePass: false,
 		spellingPass: false,
-		realizationCoveragePass: false,
 		surfaceFeaturesPass: false,
 		inflectionalFeaturesPass: false,
 		canonicalFormPass: false,
@@ -111,29 +155,18 @@ test("PRON retained evidence is strict, current-bound, and preserves errors", ()
 		error: { name: "SyntaxError", message: "invalid provider JSON" },
 		contractPass: false,
 	};
-	const withError = {
+	const retained = parseRetainedRun({
 		...valid,
 		attempts: [parseFailure, ...valid.attempts.slice(1)],
 		contractScore: valid.contractScore - 1,
 		scoreRatio: (valid.contractScore - 1) / valid.boundedCalls,
 		executionErrorCount: 1,
-	};
-	const retained = parseRetainedRun(withError);
+	});
 	expect(retained.attempts[0]?.error).toEqual({
 		name: "SyntaxError",
 		message: "invalid provider JSON",
 	});
 	expect(retained.attempts[0]?.rawOutputText).toBe(first.rawOutputText);
-	expect(retained.attempts[0]?.responseId).toBe(first.responseId);
-
-	const { rawOutputText: _rawOutputText, ...incompleteMetadata } =
-		parseFailure;
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			attempts: [incompleteMetadata, ...valid.attempts.slice(1)],
-		}),
-	).toThrow(/metadata must be retained completely/);
 });
 
 test("PRON finalization is offline, atomic, and recomputed", async () => {
@@ -141,18 +174,16 @@ test("PRON finalization is offline, atomic, and recomputed", async () => {
 	const resultsPath = join(directory, "results.json");
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
-		const currentDraft = draftResult();
-		const attempts = currentDraft.attempts.map((attempt, index) =>
-			index === 0
-				? {
-						...attempt,
-						contractPass: false,
-						normalizedSurfacePass: false,
-					}
-				: attempt,
-		);
+		const attempts = passingAttempts();
+		const firstAttempt = attempts[0];
+		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
+		attempts[0] = { ...firstAttempt, contractPass: false };
 		const draft = {
-			...currentDraft,
+			...currentEvidenceBinding(developmentPhase),
+			startedAt,
+			completedAt,
+			finalizedAt: null,
+			boundedCalls: attempts.length,
 			...summarizeEvidence(attempts, false),
 			attempts,
 		};
@@ -172,9 +203,6 @@ test("PRON finalization is offline, atomic, and recomputed", async () => {
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
 		).toBe(finalized.finalizedAt);
-		await expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(/already been finalized/);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

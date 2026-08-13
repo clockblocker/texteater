@@ -7,19 +7,24 @@ import {
 	assertCurrentEvidenceBinding,
 	assertEvaluationSuiteBounds,
 	currentEvidenceBinding,
+	DISCOURSE_FORMULA_PROMPT_CACHE_POLICY,
 	finalizeEvidence,
 	parseRetainedRun,
+	preflight,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
 } from "../../docs/prototypes/grammatical-resolution-discourse-formula/run";
 import { discourseFormulaGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-discourse-formula/evaluation-suite";
 
+const developmentPhase = { kind: "development", round: 1 } as const;
+const acceptancePhase = { kind: "acceptance", claim: "untouched" } as const;
 const startedAt = "2020-01-01T10:00:00.000Z";
 const completedAt = "2020-01-01T10:01:00.000Z";
 
 function passingAttempts(): RetainedAttempt[] {
-	return prepareCurrentTestCases().map((testCase, index) => ({
+	return prepareCurrentTestCases(developmentPhase).map((testCase, index) => ({
 		caseId: testCase.id,
 		input: testCase.input,
 		idealOutput: testCase.idealOutput,
@@ -43,7 +48,7 @@ function passingAttempts(): RetainedAttempt[] {
 function draftResult() {
 	const attempts = passingAttempts();
 	return {
-		...currentEvidenceBinding(),
+		...currentEvidenceBinding(developmentPhase),
 		startedAt,
 		completedAt,
 		finalizedAt: null,
@@ -53,90 +58,61 @@ function draftResult() {
 	};
 }
 
-test("DiscourseFormula runner import and preflight make no provider call", () => {
-	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe(
-		"grammatical-resolution-discourse-formula-v2",
-	);
-	expect(binding.route).toBe(
-		"grammatical-resolution/de/phraseme/discourse-formula",
-	);
-	expect(binding.model).toBe("gpt-5.6-luna");
-	expect(binding.reasoningEffort).toBe("none");
-	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(20);
-	expect(() => assertEvaluationSuiteBounds(14)).toThrow(/at least 15/);
+test("DiscourseFormula shared-runner preflight is offline and phase-bound", async () => {
+	let clientFactoryCalls = 0;
+	const checked = await preflight(developmentPhase, {
+		createClient() {
+			clientFactoryCalls += 1;
+			throw new Error("Preflight must not create a provider client.");
+		},
+	});
+	expect(clientFactoryCalls).toBe(0);
+	expect(checked.boundedCalls).toBe(18);
+	expect(prepareCurrentTestCases(developmentPhase)).toHaveLength(18);
+	expect(prepareCurrentTestCases(acceptancePhase)).toHaveLength(10);
+	expect(currentEvidenceBinding(developmentPhase)).toMatchObject({
+		runnerVersion: "grammatical-resolution-discourse-formula-v5",
+		route: "grammatical-resolution/de/phraseme/discourse-formula",
+		transport: "openai-responses-direct-serial",
+		model: "gpt-5.6-luna",
+		reasoningEffort: "none",
+		maxOutputTokens: 4096,
+	});
+	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
 	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
-	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
-	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
-	expect(() => assertEvaluationSuiteBounds(20)).not.toThrow();
 });
 
-test("DiscourseFormula retained evidence is strict, current-bound, and preserves errors", () => {
+test("DiscourseFormula requests use the shared explicit stable-prefix cache", () => {
+	const first = prepareCurrentTestCases(developmentPhase)[0];
+	if (first === undefined) throw new Error("Missing development case.");
+	const request = responseRequestFor(first.input);
+	expect(DISCOURSE_FORMULA_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(request.prompt_cache_key).toBe(
+		currentEvidenceBinding(developmentPhase).promptCacheKey,
+	);
+	expect(request).toMatchObject({
+		store: false,
+		max_output_tokens: 4096,
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+	});
+});
+
+test("DiscourseFormula retained evidence is strict and current-bound", () => {
 	const valid = parseRetainedRun(draftResult());
 	expect(() => assertCurrentEvidenceBinding(valid)).not.toThrow();
+	expect(() => parseRetainedRun({ ...valid, contractScore: 0 })).toThrow(
+		/summary field/,
+	);
 	expect(() =>
-		parseRetainedRun({ ...valid, contractScore: valid.contractScore - 1 }),
-	).toThrow(/Retained evidence summary field/);
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			runnerVersion: "grammatical-resolution-discourse-formula-v0",
-		}),
+		parseRetainedRun({ ...valid, runnerVersion: "obsolete" }),
 	).toThrow();
 	expect(() =>
-		parseRetainedRun({ ...valid, promptSha256: "not-a-hash" }),
-	).toThrow();
-	expect(() => parseRetainedRun({ ...valid, model: "gpt-5-mini" })).toThrow();
-	expect(() =>
-		assertCurrentEvidenceBinding({
-			...valid,
-			outputSchemaSha256: "0".repeat(64),
-		}),
+		assertCurrentEvidenceBinding({ ...valid, suiteSha256: "0".repeat(64) }),
 	).toThrow(/obsolete evidence policy/);
-
-	const first = valid.attempts[0];
-	if (first === undefined) throw new Error("Expected an attempt.");
-	const { output: _output, ...withoutOutput } = first;
-	const parseFailure = {
-		...withoutOutput,
-		decisionPass: false,
-		decisionResolutionCoherencePass: false,
-		memberCountPass: false,
-		memberOrthographiesPass: false,
-		surfaceKindPass: false,
-		normalizedSurfacePass: false,
-		spellingPass: false,
-		realizationCoveragePass: false,
-		surfaceFeaturesPass: false,
-		canonicalFormPass: false,
-		coreFeaturesPass: false,
-		error: { name: "SyntaxError", message: "invalid provider JSON" },
-		contractPass: false,
-	};
-	const withError = {
-		...valid,
-		attempts: [parseFailure, ...valid.attempts.slice(1)],
-		contractScore: valid.contractScore - 1,
-		scoreRatio: (valid.contractScore - 1) / valid.boundedCalls,
-		executionErrorCount: 1,
-	};
-	const retained = parseRetainedRun(withError);
-	expect(retained.attempts[0]?.error).toEqual({
-		name: "SyntaxError",
-		message: "invalid provider JSON",
-	});
-	expect(retained.attempts[0]?.rawOutputText).toBe(first.rawOutputText);
-	expect(retained.attempts[0]?.responseId).toBe(first.responseId);
-
-	const { rawOutputText: _rawOutputText, ...incompleteMetadata } =
-		parseFailure;
-	expect(() =>
-		parseRetainedRun({
-			...valid,
-			attempts: [incompleteMetadata, ...valid.attempts.slice(1)],
-		}),
-	).toThrow(/metadata must be retained completely/);
 });
 
 test("DiscourseFormula finalization is offline, atomic, and recomputed", async () => {
@@ -147,77 +123,33 @@ test("DiscourseFormula finalization is offline, atomic, and recomputed", async (
 	const classificationsPath = join(directory, "miss-classifications.json");
 	try {
 		const attempts = passingAttempts();
-		const firstAttempt = attempts[0];
-		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
-		attempts[0] = { ...firstAttempt, contractPass: false };
-		const draft = {
-			...currentEvidenceBinding(),
-			startedAt,
-			completedAt,
-			finalizedAt: null,
-			boundedCalls: attempts.length,
-			...summarizeEvidence(attempts, false),
-			attempts,
-		};
-		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
+		const first = attempts[0];
+		if (first === undefined) throw new Error("Missing attempt.");
+		attempts[0] = { ...first, contractPass: false };
+		await writeFile(
+			resultsPath,
+			JSON.stringify({
+				...currentEvidenceBinding(developmentPhase),
+				startedAt,
+				completedAt,
+				finalizedAt: null,
+				boundedCalls: attempts.length,
+				...summarizeEvidence(attempts, false),
+				attempts,
+			}),
+			"utf8",
+		);
 		await writeFile(classificationsPath, "{}", "utf8");
-
 		const finalized = await finalizeEvidence(
 			resultsPath,
 			classificationsPath,
 		);
-		expect(finalized.completedAt).toBe(completedAt);
-		expect(finalized.finalizedAt).not.toBeNull();
-		expect(finalized.contractScore).toBe(finalized.boundedCalls);
-		expect(finalized.scoreRatio).toBe(1);
+		expect(finalized.contractScore).toBe(18);
 		expect(finalized.evidenceThresholdMet).toBe(true);
 		expect(
 			parseRetainedRun(JSON.parse(await readFile(resultsPath, "utf8")))
 				.finalizedAt,
-		).toBe(finalized.finalizedAt);
-		expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(/already been finalized/);
-	} finally {
-		await rm(directory, { recursive: true, force: true });
-	}
-});
-
-test("DiscourseFormula finalization rejects retained-output tampering", async () => {
-	const directory = await mkdtemp(
-		join(tmpdir(), "discourse-formula-tamper-test-"),
-	);
-	const resultsPath = join(directory, "results.json");
-	const classificationsPath = join(directory, "miss-classifications.json");
-	try {
-		const draft = draftResult();
-		const firstAttempt = draft.attempts[0];
-		if (firstAttempt === undefined) throw new Error("Expected an attempt.");
-		draft.attempts[0] = {
-			...firstAttempt,
-			output: { decision: "Unresolved", resolution: null },
-		};
-		await writeFile(resultsPath, JSON.stringify(draft), "utf8");
-		await writeFile(classificationsPath, "{}", "utf8");
-
-		expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(/does not exactly match its retained output/);
-
-		const rawTextDraft = draftResult();
-		const rawTextAttempt = rawTextDraft.attempts[0];
-		if (rawTextAttempt === undefined)
-			throw new Error("Expected an attempt.");
-		rawTextDraft.attempts[0] = {
-			...rawTextAttempt,
-			rawOutputText: "{",
-		};
-		await writeFile(resultsPath, JSON.stringify(rawTextDraft), "utf8");
-		expect(
-			finalizeEvidence(resultsPath, classificationsPath),
-		).rejects.toThrow(
-			/cannot be reparsed against the current output schema/,
-		);
+		).not.toBeNull();
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}

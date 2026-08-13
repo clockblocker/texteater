@@ -8,11 +8,8 @@ import type {
 
 export type DiscourseFormulaGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;
-	readonly decisionPass: boolean;
-	readonly decisionResolutionCoherencePass: boolean;
 	readonly memberCountPass: boolean;
 	readonly memberOrthographiesPass: boolean;
-	readonly surfaceKindPass: boolean;
 	readonly normalizedSurfacePass: boolean;
 	readonly spellingPass: boolean;
 	readonly realizationCoveragePass: boolean;
@@ -27,60 +24,54 @@ export function evaluateDiscourseFormulaGrammaticalResolution(args: {
 	readonly idealOutput: output<typeof outputSchema>;
 	readonly output: output<typeof outputSchema>;
 }): DiscourseFormulaGrammaticalResolutionEvaluation {
-	const expectedResolution = args.idealOutput.resolution;
-	const actualResolution = args.output.resolution;
-	const expectedSurface = expectedResolution?.surface;
-	const actualSurface = actualResolution?.surface;
 	const markerCount =
 		args.input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
 	const closingMarkerCount =
 		args.input.markedContext.match(/<\/TARGET>/gu)?.length ?? 0;
-
 	const diagnostics = {
-		decisionPass: args.output.decision === args.idealOutput.decision,
-		decisionResolutionCoherencePass:
-			(args.output.decision === "Resolved" &&
-				actualResolution !== null) ||
-			(args.output.decision === "Unresolved" &&
-				actualResolution === null),
 		memberCountPass:
-			actualResolution === null || expectedResolution === null
-				? actualResolution === expectedResolution
-				: markerCount > 0 &&
-					markerCount === closingMarkerCount &&
-					actualResolution.memberOrthographies.length === markerCount,
+			markerCount === closingMarkerCount &&
+			markerCount === args.input.members.length &&
+			args.output.memberOrthographies.length ===
+				args.input.members.length &&
+			args.output.normalizedMembers.length === args.input.members.length,
 		memberOrthographiesPass: equal(
-			actualResolution?.memberOrthographies ?? null,
-			expectedResolution?.memberOrthographies ?? null,
+			args.output.memberOrthographies,
+			args.idealOutput.memberOrthographies,
 		),
-		surfaceKindPass:
-			(actualSurface?.surfaceKind ?? null) ===
-			(expectedSurface?.surfaceKind ?? null),
 		normalizedSurfacePass:
-			(actualResolution?.normalizedMembers.join(" ") ?? null) ===
-			(expectedResolution?.normalizedMembers.join(" ") ?? null),
+			args.output.normalizedMembers.join(" ") ===
+			args.idealOutput.normalizedMembers.join(" "),
 		spellingPass:
-			(actualSurface?.spelling ?? null) ===
-			(expectedSurface?.spelling ?? null),
+			args.output.surface.spelling === args.idealOutput.surface.spelling,
 		realizationCoveragePass:
-			(actualResolution?.realizationCoverage ?? null) ===
-			(expectedResolution?.realizationCoverage ?? null),
+			args.output.realizationCoverage ===
+			args.idealOutput.realizationCoverage,
 		surfaceFeaturesPass: equal(
-			actualSurface?.surfaceFeatures ?? null,
-			expectedSurface?.surfaceFeatures ?? null,
+			canonicalSurfaceFeatures(args.output.surface.surfaceFeatures),
+			canonicalSurfaceFeatures(args.idealOutput.surface.surfaceFeatures),
 		),
 		canonicalFormPass:
-			(actualResolution?.lemma.canonicalForm ?? null) ===
-			(expectedResolution?.lemma.canonicalForm ?? null),
+			args.output.lemma.canonicalForm ===
+			args.idealOutput.lemma.canonicalForm,
 		coreFeaturesPass: equal(
-			actualResolution?.lemma.coreFeatures ?? null,
-			expectedResolution?.lemma.coreFeatures ?? null,
+			args.output.lemma.coreFeatures,
+			args.idealOutput.lemma.coreFeatures,
 		),
 	};
 	return {
 		contractPass: Object.values(diagnostics).every(Boolean),
 		...diagnostics,
 	};
+}
+
+function canonicalSurfaceFeatures(features: unknown): unknown {
+	return features !== null &&
+		typeof features === "object" &&
+		"historicalStatus" in features &&
+		features.historicalStatus === null
+		? null
+		: features;
 }
 
 function equal(left: unknown, right: unknown): boolean {

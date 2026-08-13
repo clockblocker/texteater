@@ -1,0 +1,14 @@
+{
+  "grammar-de-det-accept-v2-total-beiden": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires the modified plural noun's lexical gender and names Geräte/Teams as Neut examples. The output nevertheless emitted ending-based Masc/Neut syncretism while resolving every other field."
+  },
+  "grammar-de-det-accept-v2-indefinite-manche": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "UD German GSD lemmatizes DET manche as mancher; expected canonicalForm manche was invalid. The output's manch was also not the corrected oracle, so the retained miss cannot be rescored as a prompt defect."
+  },
+  "grammar-de-det-accept-v2-archaic-welchselbiger": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The inflected target's normalized citation lemma is welchselbig, not welchselbiger. Because the expected canonical form was invalid and the unquoted metalinguistic syntax also made Surface interpretation unnecessarily fragile, this attempt is retained as a corpus defect rather than used for prompt tuning."
+  }
+}

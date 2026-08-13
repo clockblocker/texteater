@@ -1,0 +1,18 @@
+{
+  "grammar-de-pron-accept-reflexive-dir": {
+    "classification": "prompt-defect",
+    "explanation": "The dative personal paradigm and Lemma passed, but the response missed the reflexive relation in sich eine Pause gönnen. The fixed target is reflexive in this clause and requires reflex=Yes."
+  },
+  "grammar-de-pron-accept-demonstrative-das-acc": {
+    "classification": "prompt-defect",
+    "explanation": "The response correctly selected the demonstrative der Lemma and accusative singular Surface, but copied masculine gender from the neighboring noun. The supplied standalone das form realizes neuter gender in this deictic occurrence."
+  },
+  "grammar-de-pron-accept-interrogative-wem-dat": {
+    "classification": "prompt-defect",
+    "explanation": "Every field except Number passed. The prompt states that the wer paradigm is singular, but the response omitted singular Number from dative wem."
+  },
+  "grammar-de-pron-accept-indefinite-irgendwer": {
+    "classification": "prompt-defect",
+    "explanation": "The response found the indefinite identity but treated contextual nominative irgendwer as invariant Citation. The wer-derived paradigm realizes nominative singular and must be an Inflection."
+  }
+}

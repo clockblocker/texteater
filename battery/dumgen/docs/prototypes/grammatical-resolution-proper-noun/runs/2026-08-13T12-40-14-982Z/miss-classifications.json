@@ -1,0 +1,10 @@
+{
+  "grammar-de-propn-accept-v2-genitive-moritz": {
+    "classification": "prompt-defect",
+    "explanation": "The prompt says normalizedMembers preserves genitive apostrophes without limiting that rule to characters already inside the supplied member. That ambiguity caused the model to import the apostrophe outside TARGET into normalizedMembers, contrary to authoritative membership. The general rule must say external punctuation is never imported and an apostrophe is preserved only when it is part of the supplied member string."
+  },
+  "grammar-de-propn-accept-v2-variant-coeln": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The sentence explicitly identifies Cöln as the old spelling of Köln and the prompt permits a different canonicalForm when context establishes that relation. The model matched membership, Variant spelling, archaic status, Citation shape, and core features but retained Cöln as canonicalForm."
+  }
+}

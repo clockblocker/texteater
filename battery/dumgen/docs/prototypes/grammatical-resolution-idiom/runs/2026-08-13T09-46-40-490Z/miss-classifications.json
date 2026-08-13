@@ -1,0 +1,14 @@
+{
+	"grammar-de-idiom-truebsal-imperative-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model preserved contextual sentence-initial Blase after both an explicit lexical-casing rule and a distinct imperative demonstration; all other fields were correct."
+	},
+	"grammar-de-idiom-kalte-schulter-future-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model inserted the free dative placeholder jemandem despite an explicit prohibition and a distinct demonstration omitting a free dative argument."
+	},
+	"grammar-de-idiom-ohr-present-full": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model inserted the free accusative placeholder jemanden despite an explicit prohibition and a distinct demonstration omitting a free argument."
+	}
+}

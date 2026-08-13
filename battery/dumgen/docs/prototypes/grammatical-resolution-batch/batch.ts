@@ -12,8 +12,8 @@ import { BATCH_ROUTES, type BatchRoute } from "./routes";
 
 export const BATCH_ENDPOINT = "/v1/responses" as const;
 export const BATCH_COMPLETION_WINDOW = "24h" as const;
-export const BATCH_REQUEST_COUNT = 100;
 export const CASES_PER_ROUTE = 20;
+export const BATCH_REQUEST_COUNT = BATCH_ROUTES.length * CASES_PER_ROUTE;
 export const UNAVAILABLE_REQUEST_LATENCY_MS = null;
 
 const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/u);

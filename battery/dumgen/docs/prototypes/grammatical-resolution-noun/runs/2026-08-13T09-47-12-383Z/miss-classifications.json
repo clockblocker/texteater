@@ -1,0 +1,6 @@
+{
+	"grammar-de-noun-accept-suspended-oder-singular": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The selected prompt explicitly requires binary und/oder suspended completion, and the model resolved every other field while missing only the normalized singular member after oder."
+	}
+}

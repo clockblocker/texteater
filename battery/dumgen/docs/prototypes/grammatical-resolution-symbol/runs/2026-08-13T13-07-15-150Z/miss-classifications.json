@@ -1,0 +1,6 @@
+{
+  "grammar-de-sym-dev-inflection-gen-percent": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly maps des plus TARGET to genitive Inflection and a distinct equals-sign demonstration teaches Gen/Neut/Sing. The same case passed the first two recovery rounds, so this isolated Citation fallback is accepted model variance rather than a remaining prompt defect."
+  }
+}

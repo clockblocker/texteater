@@ -2,71 +2,111 @@ import { definePromptSource } from "../../../../../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 
-const body = `Target Classification has already fixed this request to German
-Construction/PairedFrame and supplied the marked lexical frame members. Resolve
-the Surface and Lemma grammar for that fixed route. Do not flatten the complete
-frame into one of its member Lexemes and do not absorb its intervening fillers.
+const body = `<agent_role>
+Resolve the grammar of one already-classified German Construction/PairedFrame
+occurrence. Return its Citation Surface and Lemma. Do not classify the target or
+reconsider its membership.
+</agent_role>
 
-A PairedFrame is one conventionalized discontinuous grammatical unit whose two
-or more lexical arms jointly organize intervening or following material. The
-prototype's source-backed inventory includes multi-part coordinators,
-proportional linkages, and marked infinitive frames: entweder ... oder, weder ... noch,
-sowohl ... als auch, sowohl ... wie, sowohl ... wie auch, je ... desto (also
-je ... umso), and um/ohne/anstatt ... zu. This list is closed for this
-prototype. A single
-conjunction, preposition, particle, or infinitive marker belongs to its Lexeme
-route, not here.
+<input_contract>
+Input is exactly { markedContext: string, members: string[] }. Every TARGET span
+marks one supplied anchor, and members repeats those exact texts in source
+order. Both projections are authoritative. The caller already proved that all
+and only the anchors of one valid frame are present.
 
-Apply these gates in order and stop at the first failure:
+Never reject, repair, add, remove, merge, split, or reorder membership. Never
+absorb comparative words, degree expressions, predicates, infinitives,
+conjuncts, arguments, or other payload from unmarked context. Return one
+memberOrthographies and one normalizedMembers entry per supplied member.
+</input_contract>
 
-1. One occurrence: every marked member must belong to one occurrence of one
-   licensed frame. Return Unresolved for mixed occurrences, mismatched arms, or
-   words that merely happen to resemble different frame members.
-2. All-member marking: all and only the lexical frame members must be marked.
-   Return Unresolved when one arm is unmarked or when a conjunct, infinitive,
-   modifier, or other filler is marked. In sowohl ... als auch and sowohl ...
-   wie auch, als/wie and auch are two separate members, so there are three
-   marked members. In the independently licensed sowohl ... wie frame, wie is
-   the complete second arm and there are two members.
-3. Full realization: every accepted Surface is Full. Never repair scope and
-   never return Partial.
+<route_contract>
+The route is fixed as German Construction/PairedFrame and the operation is
+total: always resolve it. PairedFrame members are the small closed-class
+correlating anchors; the open material organized by them remains context.
 
-The shared input preflight has already proved that every TARGET pair contains
-exactly one word-like member. Emit exactly one memberOrthographies value per
-TARGET pair in textual order. Typo means a real spelling or inappropriate-
-casing error. Ordinary sentence-initial capitalization is Standard.
+Valid frames include two-anchor forms such as entweder … oder, weder … noch,
+je … desto, je … umso, einerseits … andererseits, teils … teils, so … dass,
+um … zu, ohne … zu, anstatt … zu, and statt … zu, plus three-anchor forms such as
+sowohl … als auch and sowohl … wie auch. The independently licensed
+sowohl … wie form has two anchors. Other valid classified frames follow the
+same anchor-only rule.
 
-This route is Citation-only under the current Dumling codec, including when the
-frame appears in an ordinary sentence. Every Resolved output has surfaceKind
-Citation, realizationCoverage Full, and no inflectionalFeatures.
-surfaceFeatures is null unless the grammatical use itself is archaic. The
-complete Lemma coreFeatures object is exactly {}.
+The same spellings can appear nearby as standalone CCONJ, SCONJ, ADV, ADP, or
+PART occurrences. Those unmarked occurrences are context only. Repeated
+anchor spellings such as teils … teils occupy two positions and must remain two
+entries.
+</route_contract>
 
-normalizedMembers is the normalized space-separated projection of marked frame
-members in textual order. Lowercase ordinary sentence-initial capitalization
-and repair only actual typos. It excludes all fillers and punctuation.
-canonicalForm writes the exact lexical frame inventory with a spaced ellipsis
-between its arms: entweder … oder, weder … noch, sowohl … als auch, sowohl …
-wie, sowohl … wie auch, je … desto, je … umso, um … zu, ohne … zu, or anstatt
-… zu.
+<application_projection>
+This route has Citation Surface only. The application injects German language,
+Construction family, PairedFrame kind, empty Lemma Core Features, Citation
+surfaceKind, Surface-to-Lemma linkage, normalized Surface, Full realization
+coverage, and the successful result wrapper.
 
-Alternative lexical arms or member inventories create separate empty-Core
-Lemmas: je ... desto and je ... umso do not share a Lemma, nor do sowohl ...
-als auch, sowohl ... wie, and sowohl ... wie auch. Every licensed frame in this
-closed inventory therefore uses spelling Canonical. Reserve Variant for
-licensed orthographic variation of the same lexical members; no such Variant
-is established here. A repaired typo remains a Canonical Surface because typo
-status belongs to memberOrthographies.
+Never return decision, resolution, Unresolved, realizationCoverage,
+surfaceKind, normalizedSurface, coreFeatures, language, family, kind, Lemma
+linkage, target indices, confidence, candidates, sources, or explanation.
+</application_projection>
 
-Resolved has a non-null resolution. Unresolved has resolution null. Return only
-the model fields: never language, family, kind, a linked Lemma inside Surface,
-target indices, Reading data, confidence, candidates, sources, or explanations.`;
+<member_projection>
+Standard means exact conventional spelling, ordinary sentence-initial
+capitalization, or a licensed historical spelling. Typo means a genuine
+spelling or inappropriate-casing error. Apply casing mechanically: when the
+first supplied anchor is capitalized only because it begins the sentence,
+return its conventional lowercase anchor in normalizedMembers but classify it
+Standard. Thus source Entweder and Je become normalized entweder and je. This
+lowercasing is not a Typo repair. Repair only Typo members. Preserve every
+member position and source order.
+
+A licensed historical anchor stays unchanged in normalizedMembers and remains
+Standard. Use Surface spelling Variant when it is an orthographic realization
+of a current anchor, for example old daß for current dass. A typo repair uses
+Surface spelling Canonical, not Variant.
+</member_projection>
+
+<surface_and_lemma>
+surface contains exactly spelling and surfaceFeatures. spelling is Canonical
+for the ordinary current anchor inventory and Variant for a licensed
+orthographic variant of that same Lemma. surfaceFeatures is null unless the
+attested grammatical use itself is archaic; then return
+{ historicalStatus: "Archaic" }.
+
+lemma.canonicalForm names the complete frame in current spelling and canonical
+anchor order. Join its anchor groups with a spaced ellipsis, for example
+entweder … oder, sowohl … als auch, or je … umso. It is not normalizedMembers:
+the Surface array stays in source order and contains no ellipsis.
+
+Lexical anchor substitutions or different anchor counts create distinct
+Lemmas, not spelling Variants. Thus je … desto differs from je … umso;
+sowohl … als auch, sowohl … wie, and sowohl … wie auch are distinct; anstatt …
+zu differs from statt … zu. A historical orthographic anchor maps to the
+current spelling in canonicalForm, and a Typo maps to its repaired anchor.
+</surface_and_lemma>
+
+<output_contract>
+Return exactly:
+{
+  memberOrthographies: ("Standard" | "Typo")[],
+  normalizedMembers: string[],
+  surface: {
+    spelling: "Canonical" | "Variant",
+    surfaceFeatures: null | { historicalStatus: "Archaic" }
+  },
+  lemma: { canonicalForm: string }
+}
+
+Final check: both arrays equal members.length, preserve all positions in source
+order, and contain anchors only. Always resolve the classified target.
+</output_contract>`;
 
 export const demonstrations = corpus.select([
-	"grammar-de-paired-frame-anstatt-zu",
-	"grammar-de-paired-frame-sowohl-als-auch",
-	"grammar-de-paired-frame-sowohl-wie-auch",
-	"grammar-de-paired-frame-unresolved-overselected-determiner",
+	"grammar-de-paired-frame-demo-anstatt-zu",
+	"grammar-de-paired-frame-demo-sowohl-als-auch",
+	"grammar-de-paired-frame-demo-je-desto-payload",
+	"grammar-de-paired-frame-demo-entweder-typo",
+	"grammar-de-paired-frame-demo-so-dass-variant",
+	"grammar-de-paired-frame-demo-einerseits-andererseits",
 ]);
 
 export const promptSource = definePromptSource({

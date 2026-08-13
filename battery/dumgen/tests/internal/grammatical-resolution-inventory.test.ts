@@ -67,11 +67,13 @@ describe("German Grammatical Resolution inventory", () => {
 		const notImplemented =
 			DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES.map(routeKey);
 
-		expect(enabled).toHaveLength(23);
+		expect(enabled).toHaveLength(22);
 		expect(new Set([...enabled, ...notImplemented])).toEqual(
 			new Set(dumlingRoutes),
 		);
 		expect(enabled).not.toContain("Lexeme/PUNCT");
+		expect(notImplemented).toContain("Lexeme/PUNCT");
+		expect(notImplemented).toContain("Phraseme/Collocation");
 		expect(
 			notImplemented.filter((key) => key.startsWith("Morpheme/")),
 		).toHaveLength(11);
@@ -101,15 +103,24 @@ describe("German Grammatical Resolution inventory", () => {
 			);
 		}
 
-		expect(catalog.Lexeme?.PUNCT?.prompt.systemPrompt).toStartWith(
-			"Legacy disabled Lexeme/PUNCT",
-		);
+		expect(catalog.Lexeme?.PUNCT).toBeUndefined();
+		expect(catalog.Phraseme?.Collocation).toBeUndefined();
+		for (const family of Object.values(catalog)) {
+			for (const { prompt } of Object.values(family)) {
+				expect(
+					prompt.outputSchema?.safeParse({
+						decision: "Unresolved",
+						resolution: null,
+					}).success,
+				).toBe(false);
+			}
+		}
 		expect(
 			Object.keys(PROMPT_CATALOG.laboratory.readingResolution),
 		).toEqual(["de"]);
 	});
 
-	test("dispatches every target-reachable enabled route through its exact catalog leaf", async () => {
+	test("dispatches every target-reachable route uniformly through its exact catalog leaf", async () => {
 		const targetReachableRoutes =
 			DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES.filter(
 				({ family, kind }) =>
@@ -128,34 +139,7 @@ describe("German Grammatical Resolution inventory", () => {
 		for (const route of targetReachableRoutes) {
 			const multipleMembers =
 				route.family === "Phraseme" || route.kind === "PairedFrame";
-			const grammarOutput =
-				route.family === "Lexeme" && route.kind === "VERB"
-					? {
-							memberOrthographies: ["Standard"],
-							normalizedMembers: ["eins"],
-							surface: {
-								spelling: "Canonical",
-								surfaceKind: "Inflection",
-								surfaceFeatures: null,
-								inflectionalFeatures: {
-									mood: "Ind",
-									number: "Sing",
-									person: "3",
-									tense: "Pres",
-									verbForm: "Fin",
-									voice: null,
-								},
-							},
-							lemma: {
-								canonicalForm: "einsen",
-								coreFeatures: {
-									hasGovPrep: null,
-									hasSepPrefix: null,
-									lexicallyReflexive: null,
-								},
-							},
-						}
-					: { decision: "Unresolved", resolution: null };
+			const grammarOutput = {};
 			const { pending, sdk } = queueSdk([
 				{
 					decision: "Resolved",
@@ -167,7 +151,7 @@ describe("German Grammatical Resolution inventory", () => {
 				grammarOutput,
 			]);
 			const exchanges: DumgenModelExchange[] = [];
-			const result = await buildDumgen({
+			const operation = buildDumgen({
 				sdk,
 				onModelExchange(exchange) {
 					exchanges.push(exchange);
@@ -177,17 +161,10 @@ describe("German Grammatical Resolution inventory", () => {
 				clickedSegmentIndex: 0,
 			});
 
-			if (route.family === "Lexeme" && route.kind === "VERB") {
-				expect(result).toMatchObject({
-					decision: "Resolved",
-					language: "de",
-				});
-			} else {
-				expect(result).toEqual({
-					decision: "Unresolved",
-					language: "de",
-				});
-			}
+			await expect(operation).rejects.toMatchObject({
+				name: "DumgenError",
+				code: "invalid-output",
+			});
 			expect(pending).toHaveLength(0);
 			expect(
 				exchanges
@@ -211,17 +188,12 @@ describe("German Grammatical Resolution inventory", () => {
 				},
 			},
 			{
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					lemma: { canonicalForm: "im", coreFeatures: {} },
-					realizationCoverage: "Full",
-					normalizedMembers: ["im"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
+				memberOrthographies: ["Standard"],
+				lemma: { canonicalForm: "im" },
+				normalizedMembers: ["im"],
+				surface: {
+					spelling: "Canonical",
+					surfaceFeatures: null,
 				},
 			},
 		]);
@@ -259,77 +231,70 @@ describe("German Grammatical Resolution inventory", () => {
 		const fusionPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Construction.Fusion;
 		const fusionGenerated = fusionPrompt.outputSchema.parse({
-			decision: "Resolved",
-			resolution: {
-				memberOrthographies: ["Standard"],
-				lemma: { canonicalForm: "im", coreFeatures: {} },
-				realizationCoverage: "Full",
-				normalizedMembers: ["im"],
-				surface: {
-					spelling: "Canonical",
-					surfaceKind: "Citation",
-					surfaceFeatures: { historicalStatus: null },
-				},
+			memberOrthographies: ["Standard"],
+			lemma: { canonicalForm: "im" },
+			normalizedMembers: ["im"],
+			surface: {
+				spelling: "Canonical",
+				surfaceFeatures: { historicalStatus: null },
 			},
 		});
 		const fusion = fusionPrompt.projectOutput(
-			{ markedContext: "<TARGET>im</TARGET>" },
+			{ markedContext: "<TARGET>im</TARGET>", members: ["im"] },
 			fusionGenerated,
 		);
 
 		expect(fusion).toMatchObject({
-			decision: "Resolved",
-			lemma: {
+			surface: {
 				language: "de",
-				family: "Construction",
-				kind: "Fusion",
+				normalizedSurface: "im",
+				surfaceFeatures: null,
+				lemma: {
+					language: "de",
+					family: "Construction",
+					kind: "Fusion",
+				},
 			},
-			surface: { language: "de", surfaceFeatures: null },
 		});
-		if (fusion.decision === "Resolved") {
-			expect("lemma" in fusion.surface).toBe(false);
-		}
 
 		const proverbPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Phraseme.Proverb;
 		const proverbGenerated = proverbPrompt.outputSchema.parse({
-			decision: "Resolved",
-			resolution: {
-				memberOrthographies: [
-					"Standard",
-					"Standard",
-					"Standard",
-					"Standard",
-				],
-				lemma: {
-					canonicalForm: "Ende gut, alles gut",
-					coreFeatures: {},
-				},
-				realizationCoverage: "Full",
-				normalizedMembers: ["Ende", "gut", "alles", "gut"],
-				surface: {
-					spelling: "Canonical",
-					surfaceKind: "Citation",
-					surfaceFeatures: null,
-				},
+			memberOrthographies: [
+				"Standard",
+				"Standard",
+				"Standard",
+				"Standard",
+			],
+			lemma: {
+				canonicalForm: "Ende gut, alles gut",
+			},
+			realizationCoverage: "Full",
+			normalizedMembers: ["Ende", "gut", "alles", "gut"],
+			surface: {
+				spelling: "Canonical",
+				surfaceFeatures: null,
 			},
 		});
 		const proverb = proverbPrompt.projectOutput(
 			{
 				markedContext:
 					"<TARGET>Ende</TARGET> <TARGET>gut</TARGET> <TARGET>alles</TARGET> <TARGET>gut</TARGET>",
+				members: ["Ende", "gut", "alles", "gut"],
 			},
 			proverbGenerated,
 		);
 
 		expect(proverb).toMatchObject({
-			decision: "Resolved",
-			lemma: {
+			surface: {
 				language: "de",
-				family: "Phraseme",
-				kind: "Proverb",
+				normalizedSurface: "Ende gut alles gut",
+				lemma: {
+					language: "de",
+					family: "Phraseme",
+					kind: "Proverb",
+				},
 			},
-			surface: { language: "de" },
 		});
 	});
 });

@@ -1,16 +1,12 @@
 import { schemasFor } from "dumling/schema";
-import type { Attestation, Lemma, Surface } from "dumling/types";
+import type { Attestation, Surface } from "dumling/types";
 
 import type { PROMPT_CATALOG } from "../catalog/prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
 import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
-import {
-	constructNormalizedSurface,
-	extractMarkedContextMembers,
-	NormalizedSurfaceProjectionError,
-} from "../schema/normalized-surface-projection";
+import { projectGrammaticalResolutionInput } from "../schema/normalized-surface-projection";
 import { segmentSource } from "../source-segmentation";
 import type { SourceSegmentationTrace } from "../source-segmentation/contracts";
 import type {
@@ -24,7 +20,6 @@ import type {
 	ReadingResolution,
 	ReadingResolutionLanguage,
 	Section1Error,
-	Segment,
 	SegmentationDecision,
 	SegmentationResult,
 	SegmentedSentence,
@@ -38,6 +33,7 @@ type DumgenImplementationOptions = Readonly<{
 }>;
 type GrammaticalGenerator = (input: {
 	readonly markedContext: string;
+	readonly members: string[];
 }) => Promise<GrammaticalResolution>;
 type GrammaticalRouteKey<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
@@ -87,16 +83,11 @@ export function createDumgenImplementation(
 			generators.laboratory.grammaticalResolution.de.Lexeme.SCONJ,
 		"de/Lexeme/SYM":
 			generators.laboratory.grammaticalResolution.de.Lexeme.SYM,
-		"de/Lexeme/VERB": async ({ markedContext }) =>
-			generators.laboratory.grammaticalResolution.de.Lexeme.VERB({
-				markedContext,
-				members: [...extractMarkedContextMembers(markedContext)],
-			}),
+		"de/Lexeme/VERB":
+			generators.laboratory.grammaticalResolution.de.Lexeme.VERB,
 		"de/Lexeme/X": generators.laboratory.grammaticalResolution.de.Lexeme.X,
 		"de/Phraseme/Aphorism":
 			generators.laboratory.grammaticalResolution.de.Phraseme.Aphorism,
-		"de/Phraseme/Collocation":
-			generators.laboratory.grammaticalResolution.de.Phraseme.Collocation,
 		"de/Phraseme/DiscourseFormula":
 			generators.laboratory.grammaticalResolution.de.Phraseme
 				.DiscourseFormula,
@@ -268,14 +259,17 @@ export function createDumgenImplementation(
 			}) as GrammaticalResult<L>;
 		}
 
-		const markedContext = constructMarkedContext(
-			sentence.segments,
-			target.memberSegmentIndices,
-		);
-		const resolution = await grammar({ markedContext });
-		if (resolution.decision === "Unresolved") {
-			return Object.freeze({ decision: "Unresolved", language });
-		}
+		const grammarInput = projectGrammaticalResolutionInput({
+			segments: sentence.segments,
+			memberSegmentIndices: target.memberSegmentIndices as readonly [
+				number,
+				...number[],
+			],
+		});
+		const resolution = await grammar({
+			markedContext: grammarInput.markedContext,
+			members: [...grammarInput.members],
+		});
 		assertGrammaticalResolution(target, resolution);
 
 		const attestation = constructAttestation(
@@ -291,7 +285,7 @@ export function createDumgenImplementation(
 		const cachedResolution = Object.freeze({
 			target,
 			attestation,
-			markedContext,
+			markedContext: grammarInput.markedContext,
 		});
 		const cachedByMember =
 			resolvedGrammarBySentence.get(germanSentence) ??
@@ -304,7 +298,7 @@ export function createDumgenImplementation(
 		return Object.freeze({
 			decision: "Resolved",
 			language,
-			markedContext,
+			markedContext: grammarInput.markedContext,
 			attestation,
 			interaction: constructInteraction(
 				germanSentence,
@@ -455,16 +449,13 @@ function assertTarget(
 
 function assertGrammaticalResolution(
 	target: AnalysisTarget,
-	resolution: Extract<
-		GrammaticalResolution,
-		{ readonly decision: "Resolved" }
-	>,
+	resolution: GrammaticalResolution,
 ): void {
 	if (
-		resolution.lemma.language !== "de" ||
-		resolution.lemma.family !== target.family ||
-		resolution.lemma.kind !== target.kind ||
-		resolution.surface.language !== "de"
+		resolution.surface.language !== "de" ||
+		resolution.surface.lemma.language !== "de" ||
+		resolution.surface.lemma.family !== target.family ||
+		resolution.surface.lemma.kind !== target.kind
 	) {
 		throw invalidOutput(
 			"Grammatical Resolution did not preserve its language, Family, and Kind route.",
@@ -483,44 +474,19 @@ function assertGrammaticalResolution(
 function constructAttestation(
 	sentence: SegmentedSentence<"de">,
 	target: AnalysisTarget,
-	resolution: Extract<
-		GrammaticalResolution,
-		{ readonly decision: "Resolved" }
-	>,
+	resolution: GrammaticalResolution,
 ): Attestation<"de"> {
-	let normalizedSurface: string;
-	try {
-		normalizedSurface = constructNormalizedSurface({
-			attestedMembers: target.memberSegmentIndices.map(
-				(segmentIndex) => sentence.segments[segmentIndex]?.text ?? "",
-			),
-			normalizedMembers: resolution.normalizedMembers,
-			memberOrthographies: resolution.memberOrthographies,
-		});
-	} catch (cause) {
-		if (cause instanceof NormalizedSurfaceProjectionError) {
-			throw invalidOutput(cause.message, cause);
-		}
-		throw cause;
-	}
-	const linkedSurface = {
-		...resolution.surface,
-		normalizedSurface,
-		lemma: resolution.lemma,
-	} as Surface<"de">;
 	const value = {
 		members: target.memberSegmentIndices.map((segmentIndex, position) => ({
 			attested: sentence.segments[segmentIndex]?.text,
 			orthography: resolution.memberOrthographies[position],
 		})),
 		realizationCoverage: resolution.realizationCoverage,
-		surface: linkedSurface,
+		surface: resolution.surface,
 	};
 
 	try {
-		return attestationSchemaFor(linkedSurface, resolution.lemma).parse(
-			value,
-		);
+		return attestationSchemaFor(resolution.surface).parse(value);
 	} catch (cause) {
 		throw invalidOutput(
 			"Grammatical Resolution could not construct a valid Attestation.",
@@ -529,10 +495,9 @@ function constructAttestation(
 	}
 }
 
-function attestationSchemaFor(
-	surface: Surface<"de">,
-	lemma: Lemma<"de">,
-): { parse(value: unknown): Attestation<"de"> } {
+function attestationSchemaFor(surface: Surface<"de">): {
+	parse(value: unknown): Attestation<"de">;
+} {
 	type Getter = () => { parse(value: unknown): Attestation<"de"> };
 	const attestationSchemas = schemasFor.de.entity
 		.Attestation as unknown as Record<
@@ -541,10 +506,12 @@ function attestationSchemaFor(
 		| undefined
 	>;
 	const getSchema =
-		attestationSchemas[surface.surfaceKind]?.[lemma.family]?.[lemma.kind];
+		attestationSchemas[surface.surfaceKind]?.[surface.lemma.family]?.[
+			surface.lemma.kind
+		];
 	if (!getSchema) {
 		throw invalidOutput(
-			`No Attestation schema exists for de/${lemma.family}/${lemma.kind}/${surface.surfaceKind}.`,
+			`No Attestation schema exists for de/${surface.lemma.family}/${surface.lemma.kind}/${surface.surfaceKind}.`,
 		);
 	}
 	return getSchema();
@@ -562,24 +529,6 @@ function constructInteraction(
 			...target.memberSegmentIndices,
 		]) as readonly [number, ...number[]],
 	});
-}
-
-function constructMarkedContext(
-	segments: readonly Segment[],
-	memberSegmentIndices: readonly number[],
-): string {
-	const members = new Set(memberSegmentIndices);
-	return segments
-		.map((segment, index) => {
-			const escapedText = segment.text
-				.replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;");
-			return members.has(index)
-				? `<TARGET>${escapedText}</TARGET>`
-				: escapedText;
-		})
-		.join("");
 }
 
 function validateSegmentationInput(

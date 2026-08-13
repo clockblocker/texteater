@@ -22,7 +22,12 @@ export const deProverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ language: "de", family: "Phraseme", kind: "Proverb" },
 );
 
-export const deProverbModelLemmaSchema = deProverbLemmaCodec.in;
+const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+	deProverbLemmaCodec.in,
+	{ coreFeatures: {} },
+);
+
+export const deProverbModelLemmaSchema = modelLemmaCodec.in;
 
 type DeProverbLemma = z.output<typeof deProverbLemmaCodec>;
 
@@ -57,51 +62,83 @@ export function buildDeProverbCitationSurfaceCodec(lemma: DeProverbLemma) {
 	return z.codec(modelSchema, canonicalCodec.out, {
 		decode: (model) =>
 			canonicalCodec.decode(normalizeModelSurfaceFeatures(model)),
-		encode: (canonical) =>
-			modelSchema.parse(canonicalCodec.encode(canonical)),
+		encode: (canonical) => canonicalCodec.encode(canonical),
 	});
 }
 
-const schemaProjectionLemma = deProverbLemmaCodec.decode({
+const schemaProjectionLemma = {
+	language: "de",
 	canonicalForm: "Morgenstund hat Gold im Mund",
+	family: "Phraseme",
+	kind: "Proverb",
 	coreFeatures: {},
-});
+} satisfies DeProverbLemma;
 
 export const deProverbModelCitationSurfaceSchema =
 	buildDeProverbCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
+		surfaceKind: true,
 	});
 
-const targetPairPattern = /<TARGET>(.*?)<\/TARGET>/gsu;
-const proverbMarkedContextSchema =
-	grammaticalResolutionMarkedContextSchema.superRefine(
-		(markedContext, context) => {
-			const members = [...markedContext.matchAll(targetPairPattern)].map(
-				(match) => match[1] ?? "",
-			);
-			if (members.length < 2) {
-				context.addIssue({
-					code: "custom",
-					message:
-						"Proverb input requires at least two TARGET members.",
-				});
-			}
-		},
-	);
+export const inputSchema = z
+	.strictObject({
+		markedContext: grammaticalResolutionMarkedContextSchema,
+		members: z.array(z.string().min(1)).min(1),
+	})
+	.superRefine((input, context) => {
+		const markedMembers = [
+			...input.markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
+		].map((match) => match[1]);
+		if (
+			markedMembers.length !== input.members.length ||
+			markedMembers.some(
+				(member, position) => member !== input.members[position],
+			)
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["members"],
+				message:
+					"members must exactly match TARGET contents in source order.",
+			});
+		}
+	}) satisfies PromptInputSchema;
 
-export const inputSchema = z.strictObject({
-	markedContext: proverbMarkedContextSchema,
-}) satisfies PromptInputSchema;
+const modelOutputSchema = z.strictObject({
+	memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
+	normalizedMembers: normalizedMembersSchema,
+	realizationCoverage: z.enum(["Full", "Partial"]),
+	surface: deProverbModelCitationSurfaceSchema,
+	lemma: deProverbModelLemmaSchema,
+});
 
-export const outputSchema = z.strictObject({
-	decision: z.enum(["Resolved", "Unresolved"]),
-	resolution: z
-		.strictObject({
-			memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(2),
-			normalizedMembers: normalizedMembersSchema,
-			realizationCoverage: z.enum(["Full", "Partial"]),
-			surface: deProverbModelCitationSurfaceSchema,
-			lemma: deProverbModelLemmaSchema,
-		})
-		.nullable(),
-}) satisfies PromptOutputSchema;
+const extractModelLemmaCodec = codecBuilder4.buildReshapeCodec(
+	modelOutputSchema,
+	{
+		fieldName: "modelLemma",
+		fieldSchema: modelLemmaCodec.in,
+		dropFields: ["lemma"],
+		construct: (output) => output.lemma,
+		reconstruct: (modelLemma) => ({ lemma: modelLemma }),
+	},
+);
+const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
+	extractModelLemmaCodec.out,
+	{
+		fieldName: "lemma",
+		fieldSchema: modelLemmaCodec.out,
+		dropFields: ["modelLemma"],
+		construct: (output) => modelLemmaCodec.decode(output.modelLemma),
+		reconstruct: (lemma) => ({
+			modelLemma: modelLemmaCodec.encode(lemma),
+		}),
+	},
+);
+
+export const proverbResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+	extractModelLemmaCodec,
+	restoreRuntimeLemmaCodec,
+);
+
+export const outputSchema =
+	proverbResolutionCodec.in satisfies PromptOutputSchema;

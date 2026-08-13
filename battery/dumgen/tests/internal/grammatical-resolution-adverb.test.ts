@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
+	adverbGrammaticalResolutionAcceptanceExperiment,
 	adverbGrammaticalResolutionExperiment,
-	evaluation,
+	developmentEvaluation,
+	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adverb/evaluation-suite";
 import { evaluateAdverbGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adverb/evaluator";
 import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/golden-corpus/corpus";
@@ -11,287 +13,319 @@ import {
 	demonstrations,
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/schemas";
+import {
+	inputSchema,
+	modelCitationSurfaceSchema,
+	modelInflectionalFeaturesSchema,
+	modelInflectionSurfaceSchema,
+	modelLemmaSchema,
+	outputSchema,
+} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-adv-morgen",
-	"grammar-de-adv-demonstrative-damit",
-	"grammar-de-adv-comparative-oefter",
-	"grammar-de-adv-demonstrative-dort",
-	"grammar-de-adv-interrogative-warum",
-	"grammar-de-adv-negative-keineswegs",
-	"grammar-de-adv-multiplicative-zweimal",
-	"grammar-de-adv-causal-deshalb",
-	"grammar-de-adv-sentence-initial-vielleicht",
-	"grammar-de-adv-typo-vielleich",
-	"grammar-de-adv-unresolved-attributive-adjective",
-	"grammar-de-adv-unresolved-modal-particle-doch",
-	"grammar-de-adv-unresolved-subordinating-conjunction",
-	"grammar-de-adv-unresolved-overbroad-target",
-	"grammar-de-adv-unresolved-two-unrelated-targets",
+const expectedDemonstrationIds = [
+	"grammar-de-adv-demo-temporal-heute",
+	"grammar-de-adv-demo-demonstrative-dazu",
+	"grammar-de-adv-demo-interrogative-warum",
+	"grammar-de-adv-demo-comparative-lieber",
+	"grammar-de-adv-demo-superlative-am-liebsten",
+	"grammar-de-adv-demo-typo-gester",
 ] as const;
 
-describe("Lexeme/ADV route-local corpus", () => {
-	test("keeps nine necessary demonstrations and 15 authoritative held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(32);
-		expect(demonstrations.ids).toEqual([
-			"grammar-de-adv-demo-contextual-heute",
-			"grammar-de-adv-demo-citation-hier",
-			"grammar-de-adv-demo-demonstrative-dazu",
-			"grammar-de-adv-demo-indefinite-genug",
-			"grammar-de-adv-demo-negative-nie",
-			"grammar-de-adv-demo-comparative-lieber",
-			"grammar-de-adv-demo-superlative-am-liebsten",
-			"grammar-de-adv-demo-typo-gester",
-			"grammar-de-adv-demo-unresolved-adverbial-adjective",
-		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(
-			adverbGrammaticalResolutionExperiment.evaluation,
-		);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(15);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(24);
+const expectedDevelopmentIds = [
+	"grammar-de-adv-dev-temporal-morgen",
+	"grammar-de-adv-dev-initial-vielleicht",
+	"grammar-de-adv-dev-demonstrative-damit",
+	"grammar-de-adv-dev-relative-weshalb",
+	"grammar-de-adv-dev-negative-keineswegs",
+	"grammar-de-adv-dev-multiplicative-zweimal",
+	"grammar-de-adv-dev-positive-viel",
+	"grammar-de-adv-dev-cardinal-2x",
+	"grammar-de-adv-dev-foreign-remotely",
+	"grammar-de-adv-dev-comparative-weniger",
+	"grammar-de-adv-dev-superlative-am-fruehesten",
+	"grammar-de-adv-dev-typo-vielleich",
+	"grammar-de-adv-dev-variant-bisschen",
+	"grammar-de-adv-dev-abbreviation-ca",
+	"grammar-de-adv-dev-route-sconj-da",
+	"grammar-de-adv-dev-route-part-doch",
+	"grammar-de-adv-dev-route-adp-davor",
+	"grammar-de-adv-dev-route-adj-gern",
+	"grammar-de-adv-dev-route-paired-frame-auch",
+] as const;
 
-		const demonstrationLemmas = new Set(
-			demonstrations.cases.flatMap((testCase) =>
-				testCase.idealOutput.resolution === null
-					? []
-					: [testCase.idealOutput.resolution.lemma.canonicalForm],
-			),
-		);
-		const leaked = evaluation.cases.flatMap((testCase) =>
-			testCase.idealOutput.resolution !== null &&
-			demonstrationLemmas.has(
-				testCase.idealOutput.resolution.lemma.canonicalForm,
-			)
-				? [testCase.idealOutput.resolution.lemma.canonicalForm]
-				: [],
-		);
-		expect(leaked).toEqual([]);
-	});
+const expectedAcceptanceIds = [
+	"grammar-de-adv-accept-temporal-gestern",
+	"grammar-de-adv-accept-locative-hier",
+	"grammar-de-adv-accept-initial-draussen",
+	"grammar-de-adv-accept-demonstrative-dafuer",
+	"grammar-de-adv-accept-indefinite-wenig",
+	"grammar-de-adv-accept-interrogative-wo",
+	"grammar-de-adv-accept-relative-wobei",
+	"grammar-de-adv-accept-negative-nie",
+	"grammar-de-adv-accept-multiplicative-dreimal",
+	"grammar-de-adv-accept-comparative-oefter",
+	"grammar-de-adv-accept-typo-morgne",
+	"grammar-de-adv-accept-archaic-allhier",
+] as const;
 
-	test("assembles demonstrations while keeping held-out and provisional cases hidden", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain("<TARGET>heute</TARGET>");
-		expect(prompt).toContain("Wörterbucheintrag: <TARGET>hier</TARGET>");
-		expect(prompt).toContain(
-			"<TARGET>Dazu</TARGET> brauchen wir mehr Zeit",
-		);
-		expect(prompt).toContain("<TARGET>genug</TARGET> gearbeitet");
-		expect(prompt).toContain("<TARGET>nie</TARGET> zu spät");
-		expect(prompt).toContain("<TARGET>lieber</TARGET>");
-		expect(prompt).toContain(
-			"<TARGET>am</TARGET> <TARGET>liebsten</TARGET>",
-		);
-		expect(prompt).toContain("<TARGET>gester</TARGET>");
-		expect(prompt).toContain("Hund läuft <TARGET>schnell</TARGET>");
-		expect(prompt).not.toContain("<TARGET>öfter</TARGET>");
-		expect(prompt).not.toContain(
-			"<TARGET>Damit</TARGET> öffnen wir die Tür",
-		);
-		expect(prompt).not.toContain("<TARGET>etwas</TARGET> besser");
-		expect(prompt).not.toContain("<TARGET>keineswegs</TARGET> sicher");
-		expect(prompt).not.toContain("<TARGET>allhier</TARGET>");
-		expect(prompt).not.toContain("<TARGET>circa</TARGET>");
-		expect(prompt).not.toContain("<TARGET>Erstens</TARGET>");
-		expect(prompt).not.toContain("arbeitet <TARGET>viel</TARGET>");
-		expect(prompt).not.toContain("<TARGET>da</TARGET> nichts");
-		expect(prompt).toContain("verb-second matrix clause");
-		expect(prompt).toContain("finite verb is clause-final");
-		expect(prompt).toContain("nullable does not mean optional");
-		expect(prompt).toContain("n-mal forms such as zweimal");
-		expect(prompt).toContain("target is overbroad");
-		expect(prompt).toContain(
-			"return Unresolved rather than guessing one Lemma",
-		);
-	});
-
-	test("keeps unresolved policy tensions corpus-only without changing their oracles", () => {
+describe("Lexeme/ADV route-local schemas and corpus", () => {
+	test("uses canonical input and a total flat ADV codec DTO", () => {
 		expect(
-			corpus.cases["grammar-de-adv-superlative-am-haeufigsten"]
-				?.idealOutput,
-		).toEqual({ decision: "Unresolved", resolution: null });
-		expect(
-			corpus.cases["grammar-de-adv-interrogative-identity-wo"]?.input,
+			inputSchema.parse({
+				markedContext: "Wir kommen <TARGET>morgen</TARGET>.",
+				members: ["morgen"],
+			}),
 		).toEqual({
-			markedContext:
-				"Das ist die Stadt, <TARGET>wo</TARGET> ihre Familie lebt.",
+			markedContext: "Wir kommen <TARGET>morgen</TARGET>.",
+			members: ["morgen"],
 		});
-		expect(corpus.cases["grammar-de-adv-indefinite-etwas"]?.input).toEqual({
-			markedContext:
-				"Der zweite Entwurf ist <TARGET>etwas</TARGET> besser.",
+		expect(() =>
+			inputSchema.parse({
+				markedContext: "Wir kommen <TARGET>morgen</TARGET>.",
+				members: ["heute"],
+			}),
+		).toThrow(/members must exactly match/);
+
+		const modelOutput = outputSchema.parse({
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["öfter"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: { degree: "Cmp" },
+			},
+			lemma: {
+				canonicalForm: "oft",
+				coreFeatures: {
+					foreign: null,
+					numType: null,
+					pronType: null,
+				},
+			},
 		});
-		for (const caseId of [
-			"grammar-de-adv-superlative-am-haeufigsten",
-			"grammar-de-adv-interrogative-identity-wo",
-			"grammar-de-adv-indefinite-etwas",
-		]) {
-			expect(corpus.cases[caseId]).toBeDefined();
-			expect(demonstrations.ids).not.toContain(caseId);
-			expect(evaluation.ids).not.toContain(caseId);
-		}
-	});
-
-	test("pins reviewed German UD adverb PronType identity", () => {
-		const expectPronType = (caseId: string, pronType: string | null) => {
-			expect(corpus.cases[caseId]?.idealOutput).toMatchObject({
-				resolution: { lemma: { coreFeatures: { pronType } } },
-			});
-		};
-
-		expectPronType("grammar-de-adv-demo-citation-hier", null);
-		expectPronType("grammar-de-adv-demo-demonstrative-dazu", "Dem");
-		expectPronType("grammar-de-adv-demo-indefinite-genug", "Ind");
-		expectPronType("grammar-de-adv-demo-negative-nie", "Neg");
-		expectPronType("grammar-de-adv-demonstrative-dort", null);
-		expectPronType("grammar-de-adv-demonstrative-damit", "Dem");
-		expectPronType("grammar-de-adv-interrogative-identity-wo", "Int");
-		expectPronType("grammar-de-adv-indefinite-etwas", "Ind");
-		expectPronType("grammar-de-adv-negative-keineswegs", "Neg");
-	});
-
-	test("derives a minimal DTO and distinguishes Citation from Inflection", () => {
-		const citationCase = corpus.cases["grammar-de-adv-demo-citation-hier"];
-		const inflectionCase =
-			corpus.cases["grammar-de-adv-comparative-oefter"];
-		if (
-			citationCase?.idealOutput.resolution === null ||
-			citationCase === undefined ||
-			inflectionCase?.idealOutput.resolution === null ||
-			inflectionCase === undefined
-		) {
-			throw new Error("Missing ADV fixtures.");
-		}
+		expect(Object.keys(modelOutput)).toEqual([
+			"memberOrthographies",
+			"normalizedMembers",
+			"surface",
+			"lemma",
+		]);
 		expect(
 			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					lemma: {
-						...citationCase.idealOutput.resolution.lemma,
-						language: "de",
-					},
-				},
+				decision: "Resolved",
+				resolution: modelOutput,
 			}).success,
 		).toBe(false);
 		expect(
 			outputSchema.safeParse({
-				...citationCase.idealOutput,
-				resolution: {
-					...citationCase.idealOutput.resolution,
-					surface: {
-						...citationCase.idealOutput.resolution.surface,
-						inflectionalFeatures: { degree: null },
-					},
-				},
+				...modelOutput,
+				realizationCoverage: "Full",
 			}).success,
 		).toBe(false);
+		expect(() =>
+			modelLemmaSchema.parse({ ...modelOutput.lemma, language: "de" }),
+		).toThrow();
 		expect(
-			outputSchema.safeParse({
-				...inflectionCase.idealOutput,
-				resolution: {
-					...inflectionCase.idealOutput.resolution,
-					surface: {
-						...inflectionCase.idealOutput.resolution.surface,
-						inflectionalFeatures: undefined,
-					},
-				},
-			}).success,
-		).toBe(false);
-	});
-
-	test("accepts Structured Outputs' null-only feature bag", () => {
-		const fixture = corpus.cases["grammar-de-adv-morgen"];
-		if (fixture?.idealOutput.resolution === null || fixture === undefined) {
-			throw new Error("Missing ADV fixture.");
-		}
-		expect(
-			outputSchema.safeParse({
-				...fixture.idealOutput,
-				resolution: {
-					...fixture.idealOutput.resolution,
-					surface: {
-						...fixture.idealOutput.resolution.surface,
-						surfaceFeatures: { historicalStatus: null },
-					},
-				},
+			modelCitationSurfaceSchema.safeParse({
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
 			}).success,
 		).toBe(true);
+		expect(
+			modelInflectionSurfaceSchema.safeParse(modelOutput.surface).success,
+		).toBe(true);
+	});
+
+	test("preserves every codec-supported non-null ADV Degree", () => {
+		for (const degree of ["Cmp", "Pos", "Sup"] as const) {
+			expect(
+				modelInflectionalFeaturesSchema.safeParse({ degree }).success,
+			).toBe(true);
+		}
+		expect(
+			modelInflectionalFeaturesSchema.safeParse({ degree: null }).success,
+		).toBe(false);
+		expect(modelInflectionalFeaturesSchema.safeParse({}).success).toBe(
+			false,
+		);
+	});
+
+	test("freezes 37 cases into disjoint grammatical partitions", () => {
+		expect(corpus.all().ids).toHaveLength(37);
+		expect(demonstrations.ids).toEqual(expectedDemonstrationIds);
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(untouchedAcceptanceEvaluation.ids).toEqual(
+			expectedAcceptanceIds,
+		);
+		expect(demonstrations.ids).toHaveLength(6);
+		expect(developmentEvaluation.ids).toHaveLength(19);
+		expect(untouchedAcceptanceEvaluation.ids).toHaveLength(12);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(
+			demonstrations.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			developmentEvaluation.isDisjointFrom(untouchedAcceptanceEvaluation),
+		).toBe(true);
+		expect(
+			demonstrations
+				.union(developmentEvaluation)
+				.union(untouchedAcceptanceEvaluation).ids,
+		).toHaveLength(37);
+		expect(developmentEvaluation).toBe(
+			adverbGrammaticalResolutionExperiment.evaluation,
+		);
+		expect(untouchedAcceptanceEvaluation).toBe(
+			adverbGrammaticalResolutionAcceptanceExperiment.evaluation,
+		);
+
+		for (const testCase of corpus.all().cases) {
+			const markedMembers = [
+				...testCase.input.markedContext.matchAll(
+					/<TARGET>([^<>]+)<\/TARGET>/gu,
+				),
+			].map((match) => match[1]);
+			expect(markedMembers).toEqual(testCase.input.members);
+			expect(testCase.idealOutput.memberOrthographies).toHaveLength(
+				testCase.input.members.length,
+			);
+			expect(testCase.idealOutput.normalizedMembers).toHaveLength(
+				testCase.input.members.length,
+			);
+			expect("decision" in testCase.idealOutput).toBe(false);
+			expect("realizationCoverage" in testCase.idealOutput).toBe(false);
+		}
+	});
+
+	test("covers ADV core features, Surface kinds, degrees, and orthography", () => {
+		const cases = corpus.all().cases;
+		const coreFeatures = cases.map(
+			(testCase) => testCase.idealOutput.lemma.coreFeatures,
+		);
+		expect(
+			coreFeatures.some((features) => features.foreign === "Yes"),
+		).toBe(true);
+		for (const numType of ["Card", "Mult"] as const) {
+			expect(
+				coreFeatures.some((features) => features.numType === numType),
+			).toBe(true);
+		}
+		for (const pronType of ["Dem", "Ind", "Int", "Neg", "Rel"] as const) {
+			expect(
+				coreFeatures.some((features) => features.pronType === pronType),
+			).toBe(true);
+		}
+		const inflectional = cases.flatMap((testCase) =>
+			testCase.idealOutput.surface.surfaceKind === "Inflection"
+				? [testCase.idealOutput.surface.inflectionalFeatures]
+				: [],
+		);
+		for (const degree of ["Cmp", "Pos", "Sup"] as const) {
+			expect(
+				inflectional.some((features) => features.degree === degree),
+			).toBe(true);
+		}
+		expect(
+			cases.some(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceKind === "Citation",
+			),
+		).toBe(true);
+		expect(
+			cases.filter((testCase) =>
+				testCase.idealOutput.memberOrthographies.includes("Typo"),
+			),
+		).toHaveLength(3);
+		expect(
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.surface.spelling === "Variant",
+			),
+		).toHaveLength(2);
+		expect(
+			cases.filter(
+				(testCase) =>
+					testCase.idealOutput.surface.surfaceFeatures !== null,
+			),
+		).toHaveLength(1);
+	});
+
+	test("keeps all route contrasts total and fixed upstream", () => {
+		for (const caseId of [
+			"grammar-de-adv-dev-route-sconj-da",
+			"grammar-de-adv-dev-route-part-doch",
+			"grammar-de-adv-dev-route-adp-davor",
+			"grammar-de-adv-dev-route-adj-gern",
+			"grammar-de-adv-dev-route-paired-frame-auch",
+		] as const) {
+			const [testCase] = corpus.select([caseId]).cases;
+			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
+			expect(outputSchema.safeParse(testCase.idealOutput).success).toBe(
+				true,
+			);
+			expect("decision" in testCase.idealOutput).toBe(false);
+		}
+	});
+
+	test("assembles only total ADV instructions and demonstrations", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+
+		expect(prompt).toContain("already-classified German Lexeme/ADV");
+		expect(prompt).toContain("operation is total");
+		expect(prompt).toContain('degree: "Cmp" | "Pos" | "Sup"');
+		expect(prompt).toContain("Context determines Int versus Rel");
+		expect(prompt).toContain("<TARGET>heute</TARGET>");
+		expect(prompt).toContain("<TARGET>lieber</TARGET>");
+		expect(prompt).toContain("<TARGET>gester</TARGET>");
+		expect(prompt).not.toContain("<TARGET>keineswegs</TARGET>");
+		expect(prompt).not.toContain("<TARGET>allhier</TARGET>");
 	});
 });
 
-describe("Lexeme/ADV diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateAdverbGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+describe("Lexeme/ADV pure diagnostic evaluator", () => {
+	test("passes every frozen development and acceptance ideal output", () => {
+		for (const experiment of [
+			adverbGrammaticalResolutionExperiment,
+			adverbGrammaticalResolutionAcceptanceExperiment,
+		]) {
+			for (const [index, caseId] of experiment.evaluation.ids.entries()) {
+				const testCase = experiment.evaluation.cases[index];
+				if (testCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = experiment.evaluator({
+					caseId,
+					input: testCase.input,
+					idealOutput: testCase.idealOutput,
+					output: testCase.idealOutput,
+				});
+				expect(result.contractPass).toBe(true);
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports a degree miss without weakening independent fields", () => {
-		const testCase = corpus.cases["grammar-de-adv-comparative-oefter"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing comparative fixture.");
-		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					inflectionalFeatures: { degree: "Pos" },
+	test("reports structural and grammatical misses independently", () => {
+		const [testCase] = developmentEvaluation.cases;
+		if (testCase === undefined)
+			throw new Error("Missing development case.");
+		const result = evaluateAdverbGrammaticalResolution({
+			caseId: developmentEvaluation.ids[0] ?? "missing",
+			input: testCase.input,
+			idealOutput: testCase.idealOutput,
+			output: {
+				...testCase.idealOutput,
+				normalizedMembers: ["gestern"],
+				lemma: {
+					...testCase.idealOutput.lemma,
+					canonicalForm: "gestern",
 				},
 			},
 		});
-		const result = evaluateAdverbGrammaticalResolution({
-			caseId: "grammar-de-adv-comparative-oefter",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
+
 		expect(result.contractPass).toBe(false);
-		expect(result.inflectionalFeaturesPass).toBe(false);
-		expect(result.canonicalFormPass).toBe(true);
-		expect(result.coreFeaturesPass).toBe(true);
-	});
-
-	test("normalizes a null-only model feature bag for exact scoring", () => {
-		const testCase = corpus.cases["grammar-de-adv-morgen"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing ADV fixture.");
-		}
-		const output = outputSchema.parse({
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
-				},
-			},
-		});
-		const result = evaluateAdverbGrammaticalResolution({
-			caseId: "grammar-de-adv-morgen",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
-		expect(result.contractPass).toBe(true);
-		expect(result.surfaceFeaturesPass).toBe(true);
+		expect(result.normalizedSurfacePass).toBe(false);
+		expect(result.canonicalFormPass).toBe(false);
+		expect(result.memberOrthographiesPass).toBe(true);
 	});
 });

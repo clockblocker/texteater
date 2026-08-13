@@ -3,82 +3,92 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { nounInflection } from "./builders";
 
 export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-noun-demo-unresolved-adjective-route": {
-			input: {
-				markedContext: "Der Zug ist <TARGET>schnell</TARGET>.",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
+		"grammar-de-noun-demo-suspended-kinderbuecher": nounInflection({
+			markedContext:
+				"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+			members: ["Kinder-"],
+			normalizedMembers: ["Kinderbücher"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Acc",
+			number: "Plur",
 			explanation:
-				"The marked material is an adjective, so the fixed Lexeme/NOUN route must remain Unresolved.",
-		},
-		"grammar-de-noun-demo-unresolved-ambiguous-see": {
-			input: {
-				markedContext: "Stichwort ohne Kontext: <TARGET>See</TARGET>",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-			explanation:
-				"Without context, masculine See 'lake' and feminine See 'sea' do not determine one grammatical noun identity.",
-		},
-		"grammar-de-noun-demo-unresolved-overbroad-rathaus": {
-			input: {
-				markedContext:
-					"Sie fotografiert das <TARGET>alte Rathaus</TARGET>.",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-			explanation:
-				"The TARGET includes the adjective alte, which is not lexical material of the noun Rathaus.",
-		},
-		"grammar-de-noun-repeated-token-second-bank": {
-			input: {
-				markedContext:
-					"Die Bank steht neben der <TARGET>Bank</TARGET>.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["Bank"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						surfaceFeatures: null,
-						inflectionalFeatures: { case: "Dat", number: "Sing" },
-					},
-					lemma: {
-						canonicalForm: "Bank",
-						coreFeatures: { gender: "Fem", hyph: null },
-					},
-				},
-			},
-		},
-		"grammar-de-noun-unresolved-verb-route": {
-			input: { markedContext: "Sie <TARGET>laufen</TARGET> schnell." },
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-noun-unresolved-ambiguous-leiter": {
-			input: {
-				markedContext:
-					"Stichwort ohne Kontext: <TARGET>Leiter</TARGET>",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-noun-unresolved-overbroad-phrase": {
-			input: {
-				markedContext: "Sie sieht das <TARGET>rote Haus</TARGET>.",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
-		"grammar-de-noun-unresolved-two-unrelated-targets": {
-			input: {
-				markedContext:
-					"Die <TARGET>Bank</TARGET> steht neben der <TARGET>Kirche</TARGET>.",
-			},
-			idealOutput: { decision: "Unresolved", resolution: null },
-		},
+				"Ergänzungsstrich points to shared Bücher; one member stays Standard and Full.",
+		}),
+		"grammar-de-noun-dev-suspended-right-jugendbuecher": nounInflection({
+			markedContext:
+				"Sie verkauft Kinder- und <TARGET>Jugendbücher</TARGET>.",
+			members: ["Jugendbücher"],
+			canonicalForm: "Jugendbuch",
+			gender: "Neut",
+			case: "Acc",
+			number: "Plur",
+		}),
+		"grammar-de-noun-dev-suspended-hyphen-genitiv": nounInflection({
+			markedContext:
+				"Die Seiten des <TARGET>Kinder‐</TARGET> und Jugendbuchs fehlen.",
+			members: ["Kinder‐"],
+			normalizedMembers: ["Kinderbuchs"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Gen",
+			number: "Sing",
+		}),
+		"grammar-de-noun-dev-suspended-typo": nounInflection({
+			markedContext:
+				"Sie verkauft <TARGET>Kidner-</TARGET> und Jugendbücher.",
+			members: ["Kidner-"],
+			normalizedMembers: ["Kinderbücher"],
+			memberOrthographies: ["Typo"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Acc",
+			number: "Plur",
+		}),
+		"grammar-de-noun-accept-suspended-nonbreaking": nounInflection({
+			markedContext:
+				"Der Laden führt <TARGET>Kinder‑</TARGET> und Jugendbücher.",
+			members: ["Kinder‑"],
+			normalizedMembers: ["Kinderbücher"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Acc",
+			number: "Plur",
+		}),
+		"grammar-de-noun-accept-suspended-oder-singular": nounInflection({
+			markedContext:
+				"Sie kauft ein <TARGET>Kinder-</TARGET> oder Jugendbuch.",
+			members: ["Kinder-"],
+			normalizedMembers: ["Kinderbuch"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Acc",
+			number: "Sing",
+		}),
+		"grammar-de-noun-accept-suspended-dativ-plural": nounInflection({
+			markedContext:
+				"Mit <TARGET>Kinder-</TARGET> und Jugendbüchern kennt sie sich aus.",
+			members: ["Kinder-"],
+			normalizedMembers: ["Kinderbüchern"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Dat",
+			number: "Plur",
+		}),
+		"grammar-de-noun-accept-suspended-nominativ-plural": nounInflection({
+			markedContext:
+				"<TARGET>Kinder-</TARGET> und Jugendbücher sind beliebt.",
+			members: ["Kinder-"],
+			normalizedMembers: ["Kinderbücher"],
+			canonicalForm: "Kinderbuch",
+			gender: "Neut",
+			case: "Nom",
+			number: "Plur",
+		}),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema

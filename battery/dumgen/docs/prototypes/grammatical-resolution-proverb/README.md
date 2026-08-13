@@ -1,141 +1,138 @@
-# German Phraseme/Proverb Grammatical Resolution evaluation
+# German Phraseme/Proverb Grammatical Resolution prototype
 
-This route-local prototype covers exactly
-`grammatical-resolution/de/phraseme/proverb`. It adds no catalog or runtime
-dispatch wiring. The Golden Corpus has 26 cases:
-four necessary demonstrations, 20 explicitly pinned held-out cases, and two
-corpus-only wording-variant boundaries. Demonstration and evaluation selections
-are disjoint by case, normalized input, and explicit lemma contamination keys.
+This route resolves one already classified German Proverb Analysis Target. The
+legacy contract accepted only `markedContext`, reopened route and membership
+decisions, and returned a `Resolved | Unresolved` wrapper around a nullable
+payload. The current contract accepts exactly `{markedContext,members}` and
+returns one total flat codec-derived DTO. Both input projections are
+authoritative.
 
-The four demonstrations teach distinct policies: quoted reporting context is
-outside whole-unit membership; a one-member spelling error is repaired and
-marked `Typo`; internal punctuation is excluded from the normalized Surface;
-and an explicitly editorially classified authored Aphorism contradicts the
-fixed Proverb route. The held-out suite contains 13 source-verified Proverbs and
-seven boundaries: Aphorism, Idiom, DiscourseFormula, arbitrary direct speech,
-incomplete target scope, overbroad attribution, and members spanning two
-independent proverbs.
+The model owns one orthography classification and normalized string per member,
+`Full | Partial` realization coverage, Citation spelling/features, and the
+Lemma `canonicalForm`. The application owns German language, Phraseme family,
+Proverb kind, empty Lemma Core Features, Citation `surfaceKind`,
+Surface-to-Lemma linkage, normalized Surface construction, and successful
+result construction. This Dumling route has Citation only.
 
-The model DTOs are projected from Dumling's German Phraseme/Proverb Lemma and
-Citation Surface schemas. Fixed route fields (`language`, `family`, `kind`) and
-the Surface's linked Lemma are absent from model exchange. The complete Core
-Feature object is `{}`. Proverb exposes no Dumling Inflection Surface, so
-`surfaceKind` is always `Citation` and `inflectionalFeatures` is never emitted.
-The route tests both directions of the fixed-fields codecs: model DTOs decode to
-canonical Dumling entities with every fixed field restored, and encoding those
-entities removes exactly the fixed fields again.
+Grammatical Resolution never repairs membership. Attributions, discourse
+framing, punctuation, modifiers, and nearby Aphorism, Idiom,
+DiscourseFormula, slogan, quotation, or ordinary-statement material remain
+context when unmarked. Repeated and discontinuous supplied members retain every
+position in source order. Lack of familiarity or provenance is not a reason to
+reopen the already-settled Proverb route.
 
-Whole-unit membership follows the Attestation-member contract rather than treating a
-sentence as one opaque string. The input schema reuses the shared TARGET
-preflight and additionally requires at least two pairs. Each pair therefore
-identifies exactly one word-like lexical member before a model call.
-`memberOrthographies` maps one-to-one to validated members in textual order.
-The normalized Surface is their space-separated projection, so it excludes
-commas, quotation marks, and terminal punctuation. Only a complete, single
-Proverb can resolve; partial, overbroad, or two-unit scope is `Unresolved`
-rather than `Partial`.
+## Frozen corpus
 
-The prompt treats the upstream route as authoritative. It asks only whether
-the marked context provides positive evidence of a route or scope
-contradiction; lack of recognition or independent attestation is not evidence
-for `Unresolved`. A named speaker may quote a proverb without changing its
-route. Aphorism contradiction therefore requires observable editorial evidence
-such as explicit identification as an entry in an aphorism collection.
+The 34 original synthetic full-sentence cases are frozen as:
 
-The pure evaluator reports exact diagnostics for decision/coherence,
-mechanical TARGET-member count and orthographies, every Citation Surface field,
-Canonical Form, and the empty Core Feature object. It canonicalizes only an
-all-null `surfaceFeatures` bag to `null`, matching the route-local codec.
+- 6 demonstrations covering quoted attribution, member-level typo repair,
+  internal punctuation, explicit ellipsis Partial, pre-reform spelling Variant,
+  and a reporting clause interrupting one Proverb quotation;
+- 18 development cases covering well-established complete sayings,
+  punctuation and framing, repeated members, initial-casing and lexical typos,
+  an archaic grammatical use, and an explicitly truncated two-clause Proverb;
+- 10 untouched acceptance cases covering unseen complete and Partial sayings
+  plus unmarked slogan, DiscourseFormula, Idiom, arbitrary quotation, ordinary
+  assertion, and Aphorism contrasts.
 
-The bounded runner makes one serial `gpt-5.6-luna` call per held-out case with
-no reasoning, no retries, `store: false`, and a 16,384-token route-local
-response budget. Import and preflight make no provider call. Draft evidence is
-written atomically and cannot meet the evidence threshold until offline
-finalization. The retained schema binds the exact prompt, schemas, ordered case
-IDs, model policy, attempts, and recomputed summary. Provider metadata and raw
-output are retained even when parsing fails. Offline finalization reparses each
-successful attempt's `rawOutputText` with the current output schema and rejects
-it unless it exactly equals the retained parsed output before rescoring.
+The three selections are explicit, exhaustive, and pairwise disjoint. Exact
+observed development cases cannot become demonstrations; a genuinely different
+sentence may teach the same grammatical distinction.
 
-A deliberate live run can be started from `battery/dumgen` through the package
-command or by invoking the runner directly with an explicit environment file.
-Finalization is offline:
+`realizationCoverage: "Partial"` occurs only in three visibly broken-off
+quotations whose missing fixed tail is genuinely unrealized and whose complete
+wording remains recoverable: `Wer anderen eine Grube gräbt …`,
+`Reden ist Silber …`, and `Wer im Glashaus sitzt …`. A present but unmarked
+word, extra supplied member, component substitution, or mixed occurrence is an
+upstream membership or identity matter and cannot be repaired with Partial.
+
+Canonical Forms contain the complete current wording with appropriate initial
+and German noun capitalization, lexical words joined by single spaces, and no
+punctuation. For an ordinary Full Canonical Surface, `canonicalForm` is exactly
+`normalizedMembers.join(" ")`. The pre-reform `muß` case remains Standard in
+member orthography and normalized Surface, uses Variant spelling, and maps to
+current `muss` in the Lemma. Typo repair remains Canonical spelling. The
+historical `Wes Brot ich ess, des Lied ich sing` use has Canonical spelling and
+an Archaic Surface Feature because its case forms and apocopated verbs belong to
+the grammatical use rather than to a mere historical orthography.
+
+## Textual authority and transcription
+
+The category authority for the traditional sayings is the Leibniz Institute
+for the German Language's [OWID Sprichwörterbuch complete list](https://www.owid.de/service/stichwortlisten/sprw).
+OWID describes the resource as a corpus-based lexicographic documentation of
+current fixed German sentence forms and explains its Kernform and variant
+policy in [About the dictionary](https://www.owid.de/wb/sprw/ueber.html) and
+[usage guidance](https://www.owid.de/wb/sprw/hilfe/hinweise.html). Existing
+article-level anchors include [Aller Anfang ist schwer](https://www.owid.de/artikel/404225),
+[Andere Länder, andere Sitten](https://www.owid.de/artikel/404233),
+[Ende gut, alles gut](https://www.owid.de/artikel/401702),
+[Übung macht den Meister](https://www.owid.de/artikel/401787),
+[Viele Köche verderben den Brei](https://www.owid.de/artikel/401852),
+[Wer anderen eine Grube gräbt, fällt selbst hinein](https://www.owid.de/artikel/401865),
+[Stille Wasser sind tief](https://www.owid.de/artikel/401836), and
+[Wer rastet, der rostet](https://www.owid.de/artikel/401798).
+
+All contextual sentences are original synthetic examples; no external sentence
+is represented as a verbatim attestation. Commas, periods, quotation marks, and
+other punctuation are transcribed in context but excluded from member identity,
+normalized Surface, and Canonical Form.
+
+## Shared evidence runner
+
+The thin route configuration uses the shared direct cached runner with
+`gpt-5.6-luna`, no reasoning, low text verbosity, no retries, `store:false`, a
+4,096-token response ceiling, and an explicit 30-minute cache breakpoint after
+the stable system prompt. Import and preflight make no provider call.
+
+The authorized protocol used 18 calls for each of three development rounds and
+10 calls for untouched acceptance: 64 calls total. Retained usage is 161,339
+input tokens, of which 150,822 were cached and 4,802 were cache writes, plus
+5,046 output tokens and zero reasoning tokens. At published Luna rates of
+$1.00/M ordinary input, $0.10/M cached input, $1.25/M cache-write input, and
+$6.00/M output, the measured content estimate is approximately $0.058, safely
+below the $5 leaf cap. Exact billed cost remains authoritative in the provider
+billing export.
+
+## Retained current-contract evidence
+
+All four runs are finalized, have zero execution errors, classify every miss,
+and meet the shared evidence threshold:
+
+| Phase | Score | Evidence |
+| --- | ---: | --- |
+| Development 1 | 16/18 (88.9%) | `runs/2026-08-13T11-57-10-647Z/results.json` |
+| Development 2 | 18/18 (100%) | `runs/2026-08-13T11-58-40-084Z/results.json` |
+| Development 3 | 18/18 (100%) | `runs/2026-08-13T11-59-39-431Z/results.json` |
+| Untouched acceptance | 10/10 (100%) | `runs/2026-08-13T12-00-34-619Z/results.json` |
+
+Round 1 exposed two prompt defects. The model called a conventional
+apocopated verb member a Typo even while preserving it, and inserted a comma
+into a Partial Proverb's Canonical Form. The prompt now states that fixed
+proverbial contractions, apocope, and older morphology are Standard rather than
+free-prose spelling errors, and applies a final punctuation-free lexical
+serialization check to every Full or Partial Canonical Form. No failed case
+became a demonstration and no corpus case moved between partitions.
+
+Rounds 2 and 3 both scored 100%, selecting the repaired prompt for acceptance.
+Untouched acceptance was reserved and invoked exactly once, scored 100%, and
+therefore required no replacement. The reservation is retained at
+`runs/acceptance-reservation.json`.
+
+The retained 2026-08-03 v4 file binds the obsolete markedContext-only input,
+decision wrapper, mixed positive/negative suite, copied runner, and old
+prompt/schema. It remains a historical diagnostic and is not evidence for this
+migration.
+
+From `battery/dumgen`, deterministic checks and offline preflight are:
 
 ```sh
-bun --env-file ../../.env.local \
-  docs/prototypes/grammatical-resolution-proverb/run.ts
-
+bun test tests/internal/grammatical-resolution-proverb.test.ts \
+  tests/internal/grammatical-resolution-proverb-runner.test.ts
+bun run check
 bun run docs/prototypes/grammatical-resolution-proverb/run.ts \
-  finalize \
-  docs/prototypes/grammatical-resolution-proverb/runs/<timestamp>/results.json \
-  docs/prototypes/grammatical-resolution-proverb/runs/<timestamp>/miss-classifications.json
+  preflight development 1
 ```
 
-Each scored miss must be classified as `prompt-defect`,
-`corpus-or-evaluator-defect`, or `accepted-model-limitation`, with a non-empty
-explanation. Final evidence additionally requires at least 15 attempted cases,
-an 80% score, and zero execution/provider errors.
-
-## Retained evidence
-
-The finalized run at `runs/2026-08-03T14-47-28-312Z/results.json` scored 19/20
-(95%) with zero provider errors and zero unclassified misses. Its only miss,
-`grammar-de-proverb-unresolved-idiom`, is classified as an accepted model
-limitation: the model ignored the explicit Idiom boundary and treated *den
-Nagel auf den Kopf treffen* as a sentence-valued Proverb. Finalization reparsed
-and rebound every successful raw provider output before recomputing the score.
-This retained historical run used the then-current `gpt-5-nano`/high policy;
-all new Dumgen generation uses the shared `gpt-5.6-luna`/none policy.
-
-## Textual source and transcription policy
-
-The category authority for every positive Lemma is the Leibniz Institute for
-the German Language's
-[OWID Sprichwörterbuch complete list](https://www.owid.de/service/stichwortlisten/sprw).
-OWID describes this resource as a corpus-based scientific lexicographic
-documentation of current fixed German sentence forms and defines the displayed
-Sprichwort name as the normally most frequent sentence-valued Kernform. See
-[About the dictionary](https://www.owid.de/wb/sprw/ueber.html) and its
-[usage and variant policy](https://www.owid.de/wb/sprw/hilfe/hinweise.html).
-
-The exact positive-family mapping is:
-
-- `Morgenstund hat Gold im Mund` — OWID complete list; independently discussed
-  explicitly as a proverb by
-  [Duden](https://www.duden.de/sprachwissen/sprachratgeber/Morgenstund-hat-Gold-im-Mund).
-- `Aller Anfang ist schwer` — [OWID article 404225](https://www.owid.de/artikel/404225).
-- `Was du heute kannst besorgen, das verschiebe nicht auf morgen` — OWID
-  complete list; independently attested in the proofread
-  [Wikisource edition of *Lieutenant Gustl*](https://de.wikisource.org/wiki/Seite:Schnitzler_Leutnant_Gustl.djvu/059).
-- `Andere Länder, andere Sitten` — [OWID article 404233](https://www.owid.de/artikel/404233).
-- `Ende gut, alles gut` — [OWID article 401702](https://www.owid.de/artikel/401702).
-- `Übung macht den Meister` — [OWID article 401787](https://www.owid.de/artikel/401787).
-- `Viele Köche verderben den Brei` — [OWID article 401852](https://www.owid.de/artikel/401852).
-- `Wer anderen eine Grube gräbt, fällt selbst hinein` — [OWID article 401865](https://www.owid.de/artikel/401865).
-- `Wer zuletzt lacht, lacht am besten` — [OWID article 401884](https://www.owid.de/artikel/401884).
-- `Stille Wasser sind tief` — [OWID article 401836](https://www.owid.de/artikel/401836).
-- `Gelegenheit macht Diebe` — [OWID article 401658](https://www.owid.de/artikel/401658).
-- `Der Apfel fällt nicht weit vom Stamm` — [OWID article 401688](https://www.owid.de/artikel/401688).
-- `Kleinvieh macht auch Mist` — [OWID article 401723](https://www.owid.de/artikel/401723).
-- `Lügen haben kurze Beine` — OWID complete list.
-- `Reden ist Silber, Schweigen ist Gold` — [OWID article 401829](https://www.owid.de/artikel/401829).
-- `Wer rastet, der rostet` — [OWID article 401798](https://www.owid.de/artikel/401798).
-
-Punctuation is transcribed in context but excluded from grammatical membership
-and from `canonicalForm`, following the existing Aphorism route and Dumgen's
-`ResolvableText` boundary. The scored corpus uses exact modern OWID Kernformen
-apart from the explicit `Anfank` typo perturbation. Wikisource, Project
-Gutenberg, or a Duden entry under the mixed heading “Wendungen, Redensarten,
-Sprichwörter” is corroboration rather than sole category authority.
-
-OWID documents both formal variants and recurrent lexical component
-replacements. The corpus-only `Andere Zeiten, andere Sitten` and `Wer rastet,
-rostet` cases preserve the unresolved identity question. They are not scored
-until the project decides whether such forms are Variant Surfaces of the
-Kernform Lemma or separate Lemmas under the current empty-Core codec.
-
-## Deferred runtime registration
-
-The Prompt Source is registered only for generated-system-prompt assembly, and
-the prototype runner is exposed through the package script. Catalog and runtime
-dispatch wiring remain deferred to issue #54.
+The four retained runs are already finalized. The untouched suite cannot be
+claimed or run again under the current reservation.

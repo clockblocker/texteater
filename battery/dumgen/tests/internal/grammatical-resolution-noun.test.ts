@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { runCodegen } from "codegen";
 
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
-import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
 import {
-	evaluation,
+	acceptanceEvaluation,
+	developmentEvaluation,
+	nounGrammaticalResolutionAcceptanceExperiment,
 	nounGrammaticalResolutionExperiment,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluation-suite";
 import { evaluateNounGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluator";
@@ -13,204 +13,378 @@ import {
 	demonstrations,
 	promptSource,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/prompt-source";
+import {
+	outputSchema,
+	projectNounNormalizedSurface,
+} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/schemas";
 
-const expectedEvaluationIds = [
-	"grammar-de-noun-citation-haus",
-	"grammar-de-noun-inflection-nom-plur-banken",
-	"grammar-de-noun-inflection-acc-sing-hund",
-	"grammar-de-noun-inflection-acc-plur-buecher",
-	"grammar-de-noun-inflection-dat-plur-kindern",
-	"grammar-de-noun-inflection-gen-sing-mannes",
-	"grammar-de-noun-inflection-gen-plur-frauen",
-	"grammar-de-noun-hyphenated-u-bahn",
-	"grammar-de-noun-casing-typo-katze",
-	"grammar-de-noun-archaic-odem",
-	"grammar-de-noun-repeated-token-second-bank",
-	"grammar-de-noun-unresolved-verb-route",
-	"grammar-de-noun-unresolved-ambiguous-leiter",
-	"grammar-de-noun-unresolved-overbroad-phrase",
-	"grammar-de-noun-unresolved-two-unrelated-targets",
+const expectedDevelopmentIds = [
+	"grammar-de-noun-dev-nom-plur-banken",
+	"grammar-de-noun-dev-dat-sing-bibliothek",
+	"grammar-de-noun-dev-gen-sing-mannes",
+	"grammar-de-noun-dev-gen-plur-frauen",
+	"grammar-de-noun-dev-vocative-leute",
+	"grammar-de-noun-dev-acc-plur-buecher",
+	"grammar-de-noun-dev-nom-sing-maedchen",
+	"grammar-de-noun-dev-acc-sing-stadt",
+	"grammar-de-noun-dev-dat-sing-chef",
+	"grammar-de-noun-dev-nom-plur-eltern",
+	"grammar-de-noun-dev-acc-plur-knie",
+	"grammar-de-noun-dev-hyphenated-u-bahn",
+	"grammar-de-noun-dev-variant-photographie",
+	"grammar-de-noun-dev-lowercase-katze",
+	"grammar-de-noun-dev-archaic-odem",
+	"grammar-de-noun-dev-compound-haustuer",
+	"grammar-de-noun-dev-substantivized-reisenden",
+	"grammar-de-noun-dev-gen-sing-schule",
+	"grammar-de-noun-dev-suspended-right-jugendbuecher",
+	"grammar-de-noun-dev-suspended-hyphen-genitiv",
+	"grammar-de-noun-dev-suspended-typo",
+] as const;
+
+const expectedAcceptanceIds = [
+	"grammar-de-noun-accept-nom-sing-mark",
+	"grammar-de-noun-accept-nom-sing-tisch",
+	"grammar-de-noun-accept-acc-sing-tuer",
+	"grammar-de-noun-accept-dat-plur-haeusern",
+	"grammar-de-noun-accept-gen-plur-kinder",
+	"grammar-de-noun-accept-invariant-plur-maedchen",
+	"grammar-de-noun-accept-plural-only-ferien",
+	"grammar-de-noun-accept-hyphenated-e-mail",
+	"grammar-de-noun-accept-substantivized-angestellten",
+	"grammar-de-noun-accept-suspended-nonbreaking",
+	"grammar-de-noun-accept-suspended-oder-singular",
+	"grammar-de-noun-accept-suspended-dativ-plural",
+	"grammar-de-noun-accept-suspended-nominativ-plural",
 ] as const;
 
 describe("Lexeme/NOUN reference corpus", () => {
-	test("keeps necessary policy demonstrations and 15 explicitly pinned held-out cases", () => {
-		expect(corpus.all().ids).toHaveLength(26);
+	test("pins 40 total flat cases in three pairwise-disjoint partitions", () => {
+		expect(corpus.all().ids).toHaveLength(40);
 		expect(demonstrations.ids).toEqual([
-			"grammar-de-noun-typo-kaffe",
-			"grammar-de-noun-demo-unresolved-adjective-route",
-			"grammar-de-noun-demo-citation-hyphen-u-boot",
-			"grammar-de-noun-demo-unresolved-ambiguous-see",
+			"grammar-de-noun-demo-citation-haus",
+			"grammar-de-noun-demo-acc-sing-hund",
+			"grammar-de-noun-demo-dat-plur-kindern",
+			"grammar-de-noun-demo-typo-kaffe",
 			"grammar-de-noun-demo-archaic-antlitz",
-			"grammar-de-noun-demo-lowercase-stadt",
-			"grammar-de-noun-demo-unresolved-overbroad-rathaus",
+			"grammar-de-noun-demo-suspended-kinderbuecher",
 		]);
-		expect(evaluation.ids).toEqual(expectedEvaluationIds);
-		expect(evaluation).toBe(nounGrammaticalResolutionExperiment.evaluation);
-		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(evaluation.ids).toHaveLength(15);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(22);
-	});
-
-	test("assembles only the selected policy demonstrations", () => {
-		const prompt = assembleSystemPrompt(promptSource);
-
-		expect(prompt).toContain("Kaffe");
-		expect(prompt).toContain("Der Zug ist <TARGET>schnell</TARGET>.");
-		expect(prompt).toContain("Wörterbucheintrag: <TARGET>U-Boot</TARGET>");
-		expect(prompt).toContain(
-			"Stichwort ohne Kontext: <TARGET>See</TARGET>",
-		);
-		expect(prompt).toContain("Antlitz");
-		expect(prompt).toContain("<TARGET>stadt</TARGET>");
-		expect(prompt).toContain("<TARGET>alte Rathaus</TARGET>");
-		expect(prompt).toContain(
-			"A noun in an ordinary sentence is Inflection",
-		);
-		expect(prompt).not.toContain("Bibliothek");
-		expect(prompt).not.toContain("Banken");
-		expect(prompt).not.toContain("Photographie");
-		expect(prompt).not.toContain("Leute");
-		expect(prompt).not.toContain("Kinder- und Jugendbücher");
-	});
-
-	test("derives generated provenance from both selected semantic modules", async () => {
-		const result = await runCodegen(systemPromptRecipe, { mode: "check" });
-		const artifact = result.plan.artifacts.find(
-			({ meta }) =>
-				meta.route === "grammatical-resolution/de/lexeme/noun",
-		);
-		expect(artifact).toBeDefined();
-		const paths =
-			artifact?.provenance.flatMap((provenance) =>
-				provenance.kind === "source" ? [provenance.path] : [],
-			) ?? [];
-		expect(paths.some((path) => path.endsWith("prompt-source.ts"))).toBe(
+		expect(developmentEvaluation.ids).toEqual(expectedDevelopmentIds);
+		expect(acceptanceEvaluation.ids).toEqual(expectedAcceptanceIds);
+		expect(demonstrations.isDisjointFrom(developmentEvaluation)).toBe(true);
+		expect(demonstrations.isDisjointFrom(acceptanceEvaluation)).toBe(true);
+		expect(developmentEvaluation.isDisjointFrom(acceptanceEvaluation)).toBe(
 			true,
 		);
-		expect(paths.some((path) => path.endsWith("schemas.ts"))).toBe(true);
 		expect(
-			paths.some((path) => path.endsWith("golden-corpus/corpus.ts")),
-		).toBe(true);
-		expect(
-			paths.some((path) =>
-				path.endsWith("golden-corpus/cases/boundaries.ts"),
-			),
-		).toBe(true);
-		expect(
-			paths.some((path) =>
-				path.endsWith("golden-corpus/cases/orthography-and-surface.ts"),
-			),
-		).toBe(true);
-		expect(
-			paths.some((path) =>
-				path.endsWith("golden-corpus/cases/inflection.ts"),
-			),
-		).toBe(false);
+			demonstrations
+				.union(developmentEvaluation)
+				.union(acceptanceEvaluation).ids,
+		).toHaveLength(40);
+		expect(nounGrammaticalResolutionExperiment.evaluation).toBe(
+			developmentEvaluation,
+		);
+		expect(nounGrammaticalResolutionAcceptanceExperiment.evaluation).toBe(
+			acceptanceEvaluation,
+		);
+
+		for (const goldenCase of Object.values(corpus.cases)) {
+			expect(Object.keys(goldenCase.input).sort()).toEqual([
+				"markedContext",
+				"members",
+			]);
+			expect(Object.keys(goldenCase.idealOutput).sort()).toEqual([
+				"lemma",
+				"memberOrthographies",
+				"normalizedMembers",
+				"surface",
+			]);
+			expect(goldenCase.idealOutput).not.toHaveProperty("decision");
+			expect(goldenCase.idealOutput).not.toHaveProperty("resolution");
+			expect(goldenCase.idealOutput).not.toHaveProperty(
+				"realizationCoverage",
+			);
+		}
+	});
+
+	test("assembles the fixed upstream contract and only six demonstrations", () => {
+		const prompt = assembleSystemPrompt(promptSource);
+		expect(prompt).toContain("already-classified German Lexeme/NOUN");
+		expect(prompt).toContain("Always return a Surface and Lemma");
+		expect(prompt).toContain("Kinder- becomes Kinderbücher");
+		expect(prompt).toContain("Return exactly one object");
+		expect(prompt).toContain("Kaffe");
+		expect(prompt).toContain("Antlitz");
+		expect(prompt).toContain("Kinder-</TARGET> und Jugendbücher");
+		expect(prompt).not.toContain("Bibliothek");
+		expect(prompt).not.toContain("<TARGET>Mark</TARGET>");
 	});
 });
 
 describe("Lexeme/NOUN diagnostic evaluator", () => {
-	test("passes every pinned ideal output exactly", () => {
-		for (const [index, caseId] of evaluation.ids.entries()) {
-			const testCase = evaluation.cases[index];
-			if (testCase === undefined) throw new Error(`Missing ${caseId}.`);
-			const result = evaluateNounGrammaticalResolution({
-				caseId,
-				input: testCase.input,
-				idealOutput: testCase.idealOutput,
-				output: testCase.idealOutput,
-			});
-
-			expect(result.contractPass).toBe(true);
-			expect(Object.values(result).every(Boolean)).toBe(true);
+	test("passes every development and untouched acceptance oracle exactly", () => {
+		for (const selection of [developmentEvaluation, acceptanceEvaluation]) {
+			for (const [index, caseId] of selection.ids.entries()) {
+				const goldenCase = selection.cases[index];
+				if (goldenCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				const result = evaluateNounGrammaticalResolution({
+					caseId,
+					input: goldenCase.input,
+					idealOutput: goldenCase.idealOutput,
+					output: goldenCase.idealOutput,
+				});
+				expect(Object.values(result).every(Boolean)).toBe(true);
+			}
 		}
 	});
 
-	test("reports a field miss without weakening exact structural scoring", () => {
-		const testCase = corpus.cases["grammar-de-noun-typo-kaffe"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing resolved Kaffee case.");
-		}
+	test("reports a flat field miss and rejects legacy wrappers", () => {
+		const goldenCase = corpus.cases["grammar-de-noun-demo-typo-kaffe"];
+		if (goldenCase === undefined) throw new Error("Missing Kaffee case.");
 		const output = {
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				normalizedMembers: ["Kaffe"],
-			},
+			...goldenCase.idealOutput,
+			normalizedMembers: ["Kaffe"],
 		};
 		const result = evaluateNounGrammaticalResolution({
-			caseId: "grammar-de-noun-typo-kaffe",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
+			caseId: "grammar-de-noun-demo-typo-kaffe",
+			input: goldenCase.input,
+			idealOutput: goldenCase.idealOutput,
 			output,
 		});
 
 		expect(result.contractPass).toBe(false);
 		expect(result.normalizedSurfacePass).toBe(false);
-		expect(result.decisionPass).toBe(true);
 		expect(result.memberOrthographiesPass).toBe(true);
+		expect(
+			outputSchema.safeParse({
+				decision: "Resolved",
+				resolution: goldenCase.idealOutput,
+			}).success,
+		).toBe(false);
 	});
+});
 
-	test("treats a null-only model feature bag like the runtime codec does", () => {
-		const testCase =
-			corpus.cases["grammar-de-noun-inflection-acc-sing-hund"];
-		if (
-			testCase?.idealOutput.resolution === null ||
-			testCase === undefined
-		) {
-			throw new Error("Missing resolved Hund case.");
+describe("Lexeme/NOUN suspended-compound projection", () => {
+	test("admits only the narrow #93 completion rule", () => {
+		for (const caseId of [
+			"grammar-de-noun-demo-suspended-kinderbuecher",
+			"grammar-de-noun-dev-suspended-hyphen-genitiv",
+			"grammar-de-noun-dev-suspended-typo",
+			"grammar-de-noun-accept-suspended-nonbreaking",
+			"grammar-de-noun-accept-suspended-oder-singular",
+			"grammar-de-noun-accept-suspended-dativ-plural",
+			"grammar-de-noun-accept-suspended-nominativ-plural",
+		] as const) {
+			const goldenCase = corpus.cases[caseId];
+			if (goldenCase === undefined) throw new Error(`Missing ${caseId}.`);
+			const projected = projectNounNormalizedSurface({
+				input: goldenCase.input,
+				memberOrthographies: goldenCase.idealOutput.memberOrthographies,
+				normalizedMembers: goldenCase.idealOutput.normalizedMembers,
+				lemma: goldenCase.idealOutput.lemma,
+				surface: goldenCase.idealOutput.surface,
+			});
+			const expected = goldenCase.idealOutput.normalizedMembers[0];
+			if (expected === undefined) throw new Error(`Empty ${caseId}.`);
+			expect(projected).toBe(expected);
 		}
-		const output = {
-			...testCase.idealOutput,
-			resolution: {
-				...testCase.idealOutput.resolution,
-				surface: {
-					...testCase.idealOutput.resolution.surface,
-					surfaceFeatures: { historicalStatus: null },
+
+		expect(
+			projectNounNormalizedSurface({
+				input: {
+					markedContext:
+						"Sie verkauft <TARGET>Jugendbücher</TARGET>.",
+					members: ["Jugendbücher"],
 				},
-			},
-		};
-		const result = evaluateNounGrammaticalResolution({
-			caseId: "grammar-de-noun-inflection-acc-sing-hund",
-			input: testCase.input,
-			idealOutput: testCase.idealOutput,
-			output,
-		});
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["Jugendbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toBe("Jugendbücher");
 
-		expect(result.contractPass).toBe(true);
-		expect(result.surfaceFeaturesPass).toBe(true);
+		for (const invalid of [
+			{
+				markedContext: "Sie verkauft <TARGET>Kinder-</TARGET>.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext: "<TARGET>Kinder-</TARGET> Überraschung",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"<TARGET>Kinder-</TARGET> und gestern kamen alle.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Bücher.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher und Sachbücher.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+				normalized: "Kinderhefte",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendliche.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugend Bücher.",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+				normalized: "Kinder",
+			},
+			{
+				markedContext:
+					"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
+				normalized: "Kinderbuch",
+			},
+		] as const) {
+			expect(() =>
+				projectNounNormalizedSurface({
+					input: {
+						markedContext: invalid.markedContext,
+						members: ["Kinder-"],
+					},
+					memberOrthographies: ["Standard"],
+					normalizedMembers: [invalid.normalized],
+					lemma: {},
+					surface: { surfaceKind: "Inflection" },
+				}),
+			).toThrow(/suspended completion/);
+		}
+
+		expect(() =>
+			projectNounNormalizedSurface({
+				input: {
+					markedContext: "<TARGET>Mutter-</TARGET> und Kind",
+					members: ["Mutter-"],
+				},
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["Mutterkind"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toThrow(/suspended completion/);
+
+		expect(() =>
+			projectNounNormalizedSurface({
+				input: {
+					markedContext: "<TARGET>Kinder-</TARGET> und Jugendbücher",
+					members: ["Kinder-"],
+				},
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["Kinderbücher", "Jugendbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toThrow(/suspended completion/);
+
+		expect(() =>
+			projectNounNormalizedSurface({
+				input: {
+					markedContext: "<TARGET>Kinder‒</TARGET> und Jugendbücher",
+					members: ["Kinder‒"],
+				},
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["Kinderbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toThrow(/positional normalization/);
+
+		expect(() =>
+			projectNounNormalizedSurface({
+				input: {
+					markedContext: "<TARGET>Kinder-</TARGET> und Jugendbücher",
+					members: ["Kinder-"],
+				},
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["Kinderbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Citation" },
+			}),
+		).toThrow(/suspended completion/);
+
+		for (const invalid of [
+			{
+				markedContext:
+					"Kinder-, <TARGET>Jugend-</TARGET> und Sachbücher",
+				member: "Jugend-",
+				normalized: "Jugendbücher",
+			},
+			{
+				markedContext:
+					"<TARGET>Kinder-</TARGET> und Jugendbücher, und Sachbücher",
+				member: "Kinder-",
+				normalized: "Kinderbücher",
+			},
+			{
+				markedContext:
+					"Kinder- sowie <TARGET>Jugend-</TARGET> und Sachbücher",
+				member: "Jugend-",
+				normalized: "Jugendbücher",
+			},
+			{
+				markedContext:
+					"<TARGET>Kinder-</TARGET> und Jugendbücher sowie Sachbücher",
+				member: "Kinder-",
+				normalized: "Kinderbücher",
+			},
+		]) {
+			expect(() =>
+				projectNounNormalizedSurface({
+					input: {
+						markedContext: invalid.markedContext,
+						members: [invalid.member],
+					},
+					memberOrthographies: ["Standard"],
+					normalizedMembers: [invalid.normalized],
+					lemma: {},
+					surface: { surfaceKind: "Inflection" },
+				}),
+			).toThrow(/suspended completion/);
+		}
 	});
 
-	test("requires exact Unresolved/null output and checks member count", () => {
-		const unresolved =
-			corpus.cases["grammar-de-noun-unresolved-two-unrelated-targets"];
-		const resolved = corpus.cases["grammar-de-noun-hyphenated-u-bahn"];
-		if (
-			unresolved === undefined ||
-			resolved?.idealOutput.resolution === null ||
-			resolved === undefined
-		) {
-			throw new Error("Missing boundary fixtures.");
-		}
-		const exact = evaluateNounGrammaticalResolution({
-			caseId: "grammar-de-noun-unresolved-two-unrelated-targets",
-			input: unresolved.input,
-			idealOutput: unresolved.idealOutput,
-			output: unresolved.idealOutput,
-		});
-		const wrong = evaluateNounGrammaticalResolution({
-			caseId: "grammar-de-noun-unresolved-two-unrelated-targets",
-			input: unresolved.input,
-			idealOutput: unresolved.idealOutput,
-			output: resolved.idealOutput,
-		});
+	test("derives the shared suffix after Unicode normalization", () => {
+		const input = {
+			markedContext: "<TARGET>Ku\u0308nstler-</TARGET> und Sachbücher",
+			members: ["Ku\u0308nstler-"],
+		};
 
-		expect(exact.contractPass).toBe(true);
-		expect(wrong.contractPass).toBe(false);
-		expect(wrong.decisionPass).toBe(false);
-		expect(wrong.memberCountPass).toBe(false);
+		expect(
+			projectNounNormalizedSurface({
+				input,
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["Künstlerbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toBe("Künstlerbücher");
+
+		expect(() =>
+			projectNounNormalizedSurface({
+				input,
+				memberOrthographies: ["Standard"],
+				normalizedMembers: ["KünstlerXbücher"],
+				lemma: {},
+				surface: { surfaceKind: "Inflection" },
+			}),
+		).toThrow(/suspended completion/);
 	});
 });

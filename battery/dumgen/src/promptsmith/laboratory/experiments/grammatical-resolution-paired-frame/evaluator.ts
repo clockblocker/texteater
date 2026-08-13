@@ -8,17 +8,12 @@ import type {
 
 export type PairedFrameGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;
-	readonly decisionPass: boolean;
-	readonly decisionResolutionCoherencePass: boolean;
 	readonly memberCountPass: boolean;
 	readonly memberOrthographiesPass: boolean;
-	readonly surfaceKindPass: boolean;
 	readonly normalizedSurfacePass: boolean;
 	readonly spellingPass: boolean;
-	readonly realizationCoveragePass: boolean;
 	readonly surfaceFeaturesPass: boolean;
 	readonly canonicalFormPass: boolean;
-	readonly coreFeaturesPass: boolean;
 };
 
 export function evaluatePairedFrameGrammaticalResolution(args: {
@@ -27,50 +22,33 @@ export function evaluatePairedFrameGrammaticalResolution(args: {
 	readonly idealOutput: output<typeof outputSchema>;
 	readonly output: output<typeof outputSchema>;
 }): PairedFrameGrammaticalResolutionEvaluation {
-	const expected = args.idealOutput.resolution;
-	const actual = args.output.resolution;
 	const markerCount =
 		args.input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
-	const closingCount =
+	const closingMarkerCount =
 		args.input.markedContext.match(/<\/TARGET>/gu)?.length ?? 0;
 	const diagnostics = {
-		decisionPass: args.output.decision === args.idealOutput.decision,
-		decisionResolutionCoherencePass:
-			(args.output.decision === "Resolved" && actual !== null) ||
-			(args.output.decision === "Unresolved" && actual === null),
 		memberCountPass:
-			actual === null || expected === null
-				? actual === expected
-				: markerCount >= 2 &&
-					closingCount === markerCount &&
-					actual.memberOrthographies.length === markerCount,
+			markerCount === closingMarkerCount &&
+			markerCount === args.input.members.length &&
+			args.output.memberOrthographies.length ===
+				args.input.members.length &&
+			args.output.normalizedMembers.length === args.input.members.length,
 		memberOrthographiesPass: equal(
-			actual?.memberOrthographies ?? null,
-			expected?.memberOrthographies ?? null,
+			args.output.memberOrthographies,
+			args.idealOutput.memberOrthographies,
 		),
-		surfaceKindPass:
-			(actual?.surface.surfaceKind ?? null) ===
-			(expected?.surface.surfaceKind ?? null),
 		normalizedSurfacePass:
-			(actual?.normalizedMembers.join(" ") ?? null) ===
-			(expected?.normalizedMembers.join(" ") ?? null),
+			args.output.normalizedMembers.join(" ") ===
+			args.idealOutput.normalizedMembers.join(" "),
 		spellingPass:
-			(actual?.surface.spelling ?? null) ===
-			(expected?.surface.spelling ?? null),
-		realizationCoveragePass:
-			(actual?.realizationCoverage ?? null) ===
-			(expected?.realizationCoverage ?? null),
+			args.output.surface.spelling === args.idealOutput.surface.spelling,
 		surfaceFeaturesPass: equal(
-			canonicalSurfaceFeatures(actual?.surface.surfaceFeatures),
-			canonicalSurfaceFeatures(expected?.surface.surfaceFeatures),
+			canonicalSurfaceFeatures(args.output.surface.surfaceFeatures),
+			canonicalSurfaceFeatures(args.idealOutput.surface.surfaceFeatures),
 		),
 		canonicalFormPass:
-			(actual?.lemma.canonicalForm ?? null) ===
-			(expected?.lemma.canonicalForm ?? null),
-		coreFeaturesPass: equal(
-			actual?.lemma.coreFeatures ?? null,
-			expected?.lemma.coreFeatures ?? null,
-		),
+			args.output.lemma.canonicalForm ===
+			args.idealOutput.lemma.canonicalForm,
 	};
 	return {
 		contractPass: Object.values(diagnostics).every(Boolean),
@@ -78,10 +56,13 @@ export function evaluatePairedFrameGrammaticalResolution(args: {
 	};
 }
 
-function canonicalSurfaceFeatures(value: unknown): unknown {
-	return stableJson(value) === stableJson({ historicalStatus: null })
+function canonicalSurfaceFeatures(features: unknown): unknown {
+	return features !== null &&
+		typeof features === "object" &&
+		"historicalStatus" in features &&
+		features.historicalStatus === null
 		? null
-		: value;
+		: features;
 }
 
 function equal(left: unknown, right: unknown): boolean {

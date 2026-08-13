@@ -14,7 +14,7 @@ import {
 import {
 	inputSchema,
 	outputSchema,
-	verbOutputCodec,
+	verbResolutionCodec,
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
 
 const expectedEvaluationIds = [
@@ -198,15 +198,13 @@ describe("Lexeme/VERB route-local corpus", () => {
 			}).success,
 		).toBe(false);
 
-		const runtimeOutput = verbOutputCodec.decode(finiteCase.idealOutput);
+		const runtimeOutput = verbResolutionCodec.decode(
+			finiteCase.idealOutput,
+		);
 		expect(runtimeOutput).toMatchObject({
-			decision: "Resolved",
-			resolution: {
-				realizationCoverage: "Full",
-				lemma: { coreFeatures: { verbType: null } },
-			},
+			lemma: { coreFeatures: { verbType: null } },
 		});
-		expect(verbOutputCodec.encode(runtimeOutput)).toEqual(
+		expect(verbResolutionCodec.encode(runtimeOutput)).toEqual(
 			finiteCase.idealOutput,
 		);
 	});

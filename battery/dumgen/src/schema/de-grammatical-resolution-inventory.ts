@@ -25,7 +25,6 @@ export const DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES = [
 	{ family: "Lexeme", kind: "VERB" },
 	{ family: "Lexeme", kind: "X" },
 	{ family: "Phraseme", kind: "Aphorism" },
-	{ family: "Phraseme", kind: "Collocation" },
 	{ family: "Phraseme", kind: "DiscourseFormula" },
 	{ family: "Phraseme", kind: "Idiom" },
 	{ family: "Phraseme", kind: "Proverb" },
@@ -35,6 +34,7 @@ export const DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES = [
 
 export const DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES = [
 	{ family: "Lexeme", kind: "PUNCT" },
+	{ family: "Phraseme", kind: "Collocation" },
 	{ family: "Morpheme", kind: "Root" },
 	{ family: "Morpheme", kind: "Prefix" },
 	{ family: "Morpheme", kind: "Suffix" },

@@ -1,4 +1,4 @@
-// PROTOTYPE ONLY — shared OpenAI Batch transport for five retained evaluations.
+// PROTOTYPE ONLY — OpenAI Batch transport retained for excluded Collocation work.
 
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";

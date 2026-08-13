@@ -1,0 +1,14 @@
+{
+  "grammar-de-x-accept-unknown-glorps-gen": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The article des and genitive -s license Gen and Sing but do not distinguish masculine from neuter. The oracle's Neut value is unsupported; the model's gender null is the conservative codec-derived answer."
+  },
+  "grammar-de-x-accept-unknown-glorpe-sub": {
+    "classification": "prompt-defect",
+    "explanation": "The reported-speech frame behauptete, die Figur glorpe licenses finite singular subjunctive morphology, and the model already recovers the nonce infinitive Lemma. The prompt taught transparent indicative and imperative templates but did not make indirect-speech Sub explicit."
+  },
+  "grammar-de-x-accept-alphanumeric-2-in-1": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The imported-label context supports Foreign Yes and the hyphens support Hyph Yes, but the provisional Card oracle is not defensible: 2-in-1 expresses a multiplicative/compositional two-in-one relation, and the model's Mult analysis exposes the ambiguity. This case must be replaced rather than used to tune the prompt."
+  }
+}

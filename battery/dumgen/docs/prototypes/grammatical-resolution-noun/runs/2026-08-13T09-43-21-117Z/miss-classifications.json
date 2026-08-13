@@ -1,0 +1,10 @@
+{
+	"grammar-de-noun-dev-variant-photographie": {
+		"classification": "prompt-defect",
+		"explanation": "Prompt did not make the preferred dictionary spelling requirement concrete enough for a licensed secondary spelling."
+	},
+	"grammar-de-noun-dev-suspended-typo": {
+		"classification": "prompt-defect",
+		"explanation": "Prompt licensed Typo repair before suspended completion but did not explicitly forbid carrying the misspelled prefix into the completed member."
+	}
+}

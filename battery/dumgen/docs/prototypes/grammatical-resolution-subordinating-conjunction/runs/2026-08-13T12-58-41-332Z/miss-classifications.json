@@ -1,0 +1,6 @@
+{
+  "grammar-de-sconj-dev-variant-sodass": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The oracle contradicted the prompt's canonical multi-member identity and the demonstration for authoritative members [\"so\",\"dass\"] by calling the same realization a Variant of the one-word lemma sodass. The model consistently preserved the supplied multi-member identity as canonical so dass; correct the oracle rather than teach contradictory behavior."
+  }
+}

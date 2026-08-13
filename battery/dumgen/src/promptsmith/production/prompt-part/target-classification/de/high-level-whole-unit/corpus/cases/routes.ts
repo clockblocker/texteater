@@ -3,7 +3,7 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../assembly";
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
-import { resolved, type Segment, sentence } from "./builders";
+import { resolved, type Segment, sentence, unresolved } from "./builders";
 import { evidence, IDS, udPartOfSpeech } from "./sources";
 
 const JE_DESTO_CONTAMINATION_KEY = "target-construction:paired-frame:je-desto";
@@ -57,6 +57,47 @@ const fusion = {
 		"The IDS preposition entry explicitly identifies zum as the fusion of zu plus dem. IDS does not assign Dumgen's Construction/Fusion route; issue #82 product policy maps the one fused source Segment at original index 4 to that route.",
 	),
 };
+
+const suspendedCompoundAnd = sentence([
+	"Sie",
+	"verkauft",
+	"Kinder-",
+	"und",
+	"Jugendbücher",
+]);
+const suspendedCompoundOr = sentence([
+	"Sie",
+	"verkauft",
+	"Kinder-",
+	"oder",
+	"Jugendbücher",
+]);
+const suspendedCompoundDashLookalike: readonly Segment[] = [
+	{ kind: "ResolvableText", text: "Sie" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "verkauft" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Kinder" },
+	{ kind: "Punctuation", text: "–" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "und" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Jugendbücher" },
+	{ kind: "Punctuation", text: "." },
+];
+const suspendedCompoundMalformedDoubleHyphen: readonly Segment[] = [
+	{ kind: "ResolvableText", text: "Sie" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "verkauft" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Kinder-" },
+	{ kind: "Punctuation", text: "-" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "und" },
+	{ kind: "Whitespace", text: " " },
+	{ kind: "ResolvableText", text: "Jugendbücher" },
+	{ kind: "Punctuation", text: "." },
+];
 
 const fixedPhraseme = (
 	segments: readonly Segment[],
@@ -709,6 +750,57 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 		"target-de-route-phraseme-collocation-antrag-click-antrag":
 			formerCollocationMember(applicationCollocation, 14, "NOUN"),
 		"target-de-route-construction-fusion": fusion,
+		"target-de-suspended-compound-and-left": {
+			...resolved(suspendedCompoundAnd, 4, [4], "Lexeme", "NOUN"),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Issue #82 and #93 policy keeps Kinder- as one ResolvableText member and one NOUN target. The right conjunct remains separate.",
+			),
+		},
+		"target-de-suspended-compound-and-right": {
+			...resolved(suspendedCompoundAnd, 8, [8], "Lexeme", "NOUN"),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Issue #82 policy treats Jugendbücher as the ordinary right-conjunct NOUN, independent of Kinder-.",
+			),
+		},
+		"target-de-suspended-compound-or-left": {
+			...resolved(suspendedCompoundOr, 4, [4], "Lexeme", "NOUN"),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Issue #82 and #93 policy preserves the singleton Kinder- NOUN target in the licensed oder coordination.",
+			),
+		},
+		"target-de-suspended-compound-context-free": {
+			...unresolved(
+				sentence(["Auf", "dem", "Zettel", "steht", "Kinder-"]),
+				8,
+			),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Under issue #82 and #93 policy, a trailing fragment without a visible right conjunct has no defensible route.",
+			),
+		},
+		"target-de-suspended-compound-en-dash-lookalike": {
+			...resolved(
+				suspendedCompoundDashLookalike,
+				4,
+				[4],
+				"Lexeme",
+				"NOUN",
+			),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Under issue #82 and #93 policy, the en dash is separate punctuation, so Kinder is only its ordinary singleton NOUN and has no suspended-compound license.",
+			),
+		},
+		"target-de-suspended-compound-malformed-double-hyphen": {
+			...unresolved(suspendedCompoundMalformedDoubleHyphen, 4),
+			explanation: evidence(
+				udPartOfSpeech("NOUN"),
+				"Under issue #82 and #93 policy, the malformed double-hyphen fragment has no defensible route and no licensed suspended-compound target.",
+			),
+		},
 		"target-de-diagnostic-fusion-am": {
 			...resolved(
 				sentence(["Sie", "wartet", "am", "Bahnhof"]),

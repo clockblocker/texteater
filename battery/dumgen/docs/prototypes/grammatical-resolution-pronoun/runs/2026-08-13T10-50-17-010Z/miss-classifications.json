@@ -1,0 +1,6 @@
+{
+  "grammar-de-pron-dev-total-foreign-all": {
+    "classification": "prompt-defect",
+    "explanation": "The response preserved foreign total identity but overgeneralized the new foreign-personal rule and invented nominative singular Inflection for invariant all. Foreign status alone determines neither Surface kind: contextual personal paradigms inflect, while invariant foreign total forms remain Citation."
+  }
+}

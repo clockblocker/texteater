@@ -8,23 +8,18 @@ import type {
 
 export type SymbolGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;
-	readonly decisionPass: boolean;
-	readonly decisionResolutionCoherencePass: boolean;
 	readonly memberCountPass: boolean;
 	readonly memberOrthographiesPass: boolean;
 	readonly surfaceKindPass: boolean;
 	readonly normalizedSurfacePass: boolean;
 	readonly spellingPass: boolean;
-	readonly realizationCoveragePass: boolean;
 	readonly surfaceFeaturesPass: boolean;
 	readonly inflectionalFeaturesPass: boolean;
 	readonly canonicalFormPass: boolean;
 	readonly coreFeaturesPass: boolean;
 };
 
-type SymbolSurface = NonNullable<
-	output<typeof outputSchema>["resolution"]
->["surface"];
+type SymbolSurface = output<typeof outputSchema>["surface"];
 
 export function evaluateSymbolGrammaticalResolution(args: {
 	readonly caseId: string;
@@ -32,44 +27,30 @@ export function evaluateSymbolGrammaticalResolution(args: {
 	readonly idealOutput: output<typeof outputSchema>;
 	readonly output: output<typeof outputSchema>;
 }): SymbolGrammaticalResolutionEvaluation {
-	const expectedResolution = args.idealOutput.resolution;
-	const actualResolution = args.output.resolution;
-	const expectedSurface = expectedResolution?.surface;
-	const actualSurface = actualResolution?.surface;
+	const actualSurface = args.output.surface;
+	const expectedSurface = args.idealOutput.surface;
 	const markerCount =
 		args.input.markedContext.match(/<TARGET>/gu)?.length ?? 0;
 	const closingMarkerCount =
 		args.input.markedContext.match(/<\/TARGET>/gu)?.length ?? 0;
-
 	const diagnostics = {
-		decisionPass: args.output.decision === args.idealOutput.decision,
-		decisionResolutionCoherencePass:
-			(args.output.decision === "Resolved" &&
-				actualResolution !== null) ||
-			(args.output.decision === "Unresolved" &&
-				actualResolution === null),
 		memberCountPass:
-			actualResolution === null || expectedResolution === null
-				? actualResolution === expectedResolution
-				: markerCount > 0 &&
-					markerCount === closingMarkerCount &&
-					actualResolution.memberOrthographies.length === markerCount,
+			markerCount === closingMarkerCount &&
+			markerCount === args.input.members.length &&
+			args.output.memberOrthographies.length ===
+				args.input.members.length &&
+			args.output.normalizedMembers.length === args.input.members.length,
 		memberOrthographiesPass: equal(
-			actualResolution?.memberOrthographies ?? null,
-			expectedResolution?.memberOrthographies ?? null,
+			args.output.memberOrthographies,
+			args.idealOutput.memberOrthographies,
 		),
 		surfaceKindPass:
-			(actualSurface?.surfaceKind ?? null) ===
-			(expectedSurface?.surfaceKind ?? null),
-		normalizedSurfacePass:
-			(actualResolution?.normalizedMembers.join(" ") ?? null) ===
-			(expectedResolution?.normalizedMembers.join(" ") ?? null),
-		spellingPass:
-			(actualSurface?.spelling ?? null) ===
-			(expectedSurface?.spelling ?? null),
-		realizationCoveragePass:
-			(actualResolution?.realizationCoverage ?? null) ===
-			(expectedResolution?.realizationCoverage ?? null),
+			surfaceKind(actualSurface) === surfaceKind(expectedSurface),
+		normalizedSurfacePass: equal(
+			args.output.normalizedMembers,
+			args.idealOutput.normalizedMembers,
+		),
+		spellingPass: actualSurface.spelling === expectedSurface.spelling,
 		surfaceFeaturesPass: equal(
 			canonicalSurfaceFeatures(actualSurface),
 			canonicalSurfaceFeatures(expectedSurface),
@@ -79,33 +60,34 @@ export function evaluateSymbolGrammaticalResolution(args: {
 			inflectionalFeatures(expectedSurface),
 		),
 		canonicalFormPass:
-			(actualResolution?.lemma.canonicalForm ?? null) ===
-			(expectedResolution?.lemma.canonicalForm ?? null),
+			args.output.lemma.canonicalForm ===
+			args.idealOutput.lemma.canonicalForm,
 		coreFeaturesPass: equal(
-			actualResolution?.lemma.coreFeatures ?? null,
-			expectedResolution?.lemma.coreFeatures ?? null,
+			args.output.lemma.coreFeatures,
+			args.idealOutput.lemma.coreFeatures,
 		),
 	};
-
 	return {
 		contractPass: Object.values(diagnostics).every(Boolean),
 		...diagnostics,
 	};
 }
 
-function canonicalSurfaceFeatures(surface: SymbolSurface | undefined): unknown {
-	const features = (surface?.surfaceFeatures ?? null) as {
-		readonly historicalStatus: "Archaic" | null;
-	} | null;
+function surfaceKind(surface: SymbolSurface): "Citation" | "Inflection" {
+	return "surfaceKind" in surface ? "Inflection" : "Citation";
+}
+
+function inflectionalFeatures(surface: SymbolSurface): unknown {
+	return "inflectionalFeatures" in surface
+		? surface.inflectionalFeatures
+		: null;
+}
+
+function canonicalSurfaceFeatures(surface: SymbolSurface): unknown {
+	const features = surface.surfaceFeatures ?? null;
 	return features !== null && features.historicalStatus === null
 		? null
 		: features;
-}
-
-function inflectionalFeatures(surface: SymbolSurface | undefined): unknown {
-	return surface?.surfaceKind === "Inflection"
-		? surface.inflectionalFeatures
-		: null;
 }
 
 function equal(left: unknown, right: unknown): boolean {

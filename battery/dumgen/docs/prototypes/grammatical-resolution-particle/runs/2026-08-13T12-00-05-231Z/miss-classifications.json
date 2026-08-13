@@ -1,0 +1,14 @@
+{
+  "grammar-de-part-dev-negative-initial": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly requires ordinary sentence-initial capitalization to be lowercased in normalizedMembers; the model copied the capital despite correctly resolving every grammatical field."
+  },
+  "grammar-de-part-dev-abbreviation-n": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt explicitly says negative particles retain Polarity=Neg and the context labels this as an abbreviation of nicht; the model preserved abbreviation identity but dropped the already-taught polarity feature."
+  },
+  "grammar-de-part-dev-focus-selbst": {
+    "classification": "accepted-model-limitation",
+    "explanation": "The prompt and demonstrations explicitly require lowercasing ordinary sentence-initial capitalization; the model nevertheless copied the initial capital into normalizedMembers."
+  }
+}

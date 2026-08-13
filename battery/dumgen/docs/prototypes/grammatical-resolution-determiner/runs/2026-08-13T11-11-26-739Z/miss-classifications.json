@@ -1,0 +1,30 @@
+{
+  "grammar-de-det-dev-negative-kein": {
+    "classification": "prompt-defect",
+    "explanation": "The output chose accusative from the syncretic form instead of using the governing preposition and idiomatic state reading to resolve dative plural."
+  },
+  "grammar-de-det-dev-comparative-mehr": {
+    "classification": "prompt-defect",
+    "explanation": "The repaired comparative Surface and lemma passed, but the output omitted the licensed PronType=Ind identity."
+  },
+  "grammar-de-det-dev-comparative-weniger": {
+    "classification": "prompt-defect",
+    "explanation": "The repaired comparative Surface and lemma passed, but the output omitted the licensed PronType=Ind identity."
+  },
+  "grammar-de-det-dev-superlative-meisten": {
+    "classification": "prompt-defect",
+    "explanation": "The output treated a plural DET ending as Masc/Neut syncretic instead of resolving the modified noun's known lexical gender."
+  },
+  "grammar-de-det-dev-possessive-seinen-masc": {
+    "classification": "prompt-defect",
+    "explanation": "The output again omitted Gender[psor]=Masc despite an explicit named male antecedent."
+  },
+  "grammar-de-det-dev-possessive-sein-neut": {
+    "classification": "prompt-defect",
+    "explanation": "The output again omitted Gender[psor]=Neut despite an explicit neuter antecedent."
+  },
+  "grammar-de-det-dev-possessive-ihr-fem": {
+    "classification": "prompt-defect",
+    "explanation": "The output again omitted Gender[psor]=Fem despite an explicit named female antecedent."
+  }
+}

@@ -1,0 +1,1894 @@
+{
+  "runnerVersion": "grammatical-resolution-aphorism-v8",
+  "route": "grammatical-resolution/de/phraseme/aphorism",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-13T10:09:34.917Z",
+  "completedAt": "2026-08-13T10:10:04.808Z",
+  "finalizedAt": "2026-08-13T10:10:13.812Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "9cac9eabfb1277b59b6ad995f52c6730e4b036728945de70b11b327aced4d858",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "0d6a0653c264892d3f69fb52d967aab76b2d3b32b53ac0c93af264d46d94217a",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "bebb7534e1fc34744efdf332f5aa7b8f9485586f4d4128e510eaf86362b4f200",
+  "suiteSha256": "c764db8979bba805e40d4c172c597ed01dbc072a38eda926d346553cf4efa6d6",
+  "evaluationCaseIds": [
+    "grammar-de-aphorism-nachahmer",
+    "grammar-de-aphorism-nachsicht",
+    "grammar-de-aphorism-kindheit",
+    "grammar-de-aphorism-alter",
+    "grammar-de-aphorism-jugend",
+    "grammar-de-aphorism-tadel",
+    "grammar-de-aphorism-gegenwart",
+    "grammar-de-aphorism-streiten",
+    "grammar-de-aphorism-unbezahlbar",
+    "grammar-de-aphorism-grundsaetze",
+    "grammar-de-aphorism-casing-menschen",
+    "grammar-de-aphorism-aphorismus-ring",
+    "grammar-de-aphorism-selbstverstaendlich",
+    "grammar-de-aphorism-sichtbare-schoenheit",
+    "grammar-de-aphorism-geduld-streitsucht",
+    "grammar-de-aphorism-weise-gut"
+  ],
+  "boundedCalls": 16,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 16,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-aphorism-nachahmer",
+      "input": {
+        "markedContext": "Ebner-Eschenbach schrieb: „<TARGET>Die</TARGET> <TARGET>meisten</TARGET> <TARGET>Nachahmer</TARGET> <TARGET>lockt</TARGET> <TARGET>das</TARGET> <TARGET>Unnachahmliche</TARGET>.“",
+        "members": [
+          "Die",
+          "meisten",
+          "Nachahmer",
+          "lockt",
+          "das",
+          "Unnachahmliche"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "meisten",
+          "Nachahmer",
+          "lockt",
+          "das",
+          "Unnachahmliche"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die meisten Nachahmer lockt das Unnachahmliche"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "meisten",
+          "Nachahmer",
+          "lockt",
+          "das",
+          "Unnachahmliche"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die meisten Nachahmer lockt das Unnachahmliche"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 4560,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"meisten\",\"Nachahmer\",\"lockt\",\"das\",\"Unnachahmliche\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die meisten Nachahmer lockt das Unnachahmliche\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c1a3f23ef52b919016a7d97e0171081a1b9642283d22fd294",
+      "usage": {
+        "input_tokens": 2237,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2330
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-nachsicht",
+      "input": {
+        "markedContext": "<TARGET>Die</TARGET> <TARGET>meiste</TARGET> <TARGET>Nachsicht</TARGET> <TARGET>übt</TARGET> <TARGET>der</TARGET>, <TARGET>der</TARGET> <TARGET>die</TARGET> <TARGET>wenigste</TARGET> <TARGET>braucht</TARGET>.",
+        "members": [
+          "Die",
+          "meiste",
+          "Nachsicht",
+          "übt",
+          "der",
+          "der",
+          "die",
+          "wenigste",
+          "braucht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "meiste",
+          "Nachsicht",
+          "übt",
+          "der",
+          "der",
+          "die",
+          "wenigste",
+          "braucht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die meiste Nachsicht übt der der die wenigste braucht"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "meiste",
+          "Nachsicht",
+          "übt",
+          "der",
+          "der",
+          "die",
+          "wenigste",
+          "braucht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die meiste Nachsicht übt der der die wenigste braucht"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1414,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"meiste\",\"Nachsicht\",\"übt\",\"der\",\"der\",\"die\",\"wenigste\",\"braucht\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die meiste Nachsicht übt der der die wenigste braucht\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0018a9c1fe681244016a7d97e3b1848191ab691e32c0cd5455",
+      "usage": {
+        "input_tokens": 2248,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2350
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-kindheit",
+      "input": {
+        "markedContext": "<TARGET>Wer</TARGET> <TARGET>sich</TARGET> <TARGET>seiner</TARGET> <TARGET>eigenen</TARGET> <TARGET>Kindheit</TARGET> <TARGET>nicht</TARGET> <TARGET>mehr</TARGET> <TARGET>deutlich</TARGET> <TARGET>erinnert</TARGET>, <TARGET>ist</TARGET> <TARGET>ein</TARGET> <TARGET>schlechter</TARGET> <TARGET>Erzieher</TARGET>.",
+        "members": [
+          "Wer",
+          "sich",
+          "seiner",
+          "eigenen",
+          "Kindheit",
+          "nicht",
+          "mehr",
+          "deutlich",
+          "erinnert",
+          "ist",
+          "ein",
+          "schlechter",
+          "Erzieher"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "sich",
+          "seiner",
+          "eigenen",
+          "Kindheit",
+          "nicht",
+          "mehr",
+          "deutlich",
+          "erinnert",
+          "ist",
+          "ein",
+          "schlechter",
+          "Erzieher"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wer",
+          "sich",
+          "seiner",
+          "eigenen",
+          "Kindheit",
+          "nicht",
+          "mehr",
+          "deutlich",
+          "erinnert",
+          "ist",
+          "ein",
+          "schlechter",
+          "Erzieher"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1474,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wer\",\"sich\",\"seiner\",\"eigenen\",\"Kindheit\",\"nicht\",\"mehr\",\"deutlich\",\"erinnert\",\"ist\",\"ein\",\"schlechter\",\"Erzieher\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_018e3530a6b474e3016a7d97e519448192810a0682d604b9e5",
+      "usage": {
+        "input_tokens": 2295,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 127,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2422
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-alter",
+      "input": {
+        "markedContext": "Im Lektorat stand erst „Das Alter verklärt oder versteinert“; später wiederholte sie: „<TARGET>Das</TARGET> <TARGET>Alter</TARGET> <TARGET>verklärt</TARGET> <TARGET>oder</TARGET> <TARGET>versteinert</TARGET>.“",
+        "members": [
+          "Das",
+          "Alter",
+          "verklärt",
+          "oder",
+          "versteinert"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Das",
+          "Alter",
+          "verklärt",
+          "oder",
+          "versteinert"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Das Alter verklärt oder versteinert"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Das",
+          "Alter",
+          "verklärt",
+          "oder",
+          "versteinert"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Das Alter verklärt oder versteinert"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1577,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Das\",\"Alter\",\"verklärt\",\"oder\",\"versteinert\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Das Alter verklärt oder versteinert\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_034b1e8b7d95e041016a7d97e69b2081a0848028c878621455",
+      "usage": {
+        "input_tokens": 2235,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2315
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-jugend",
+      "input": {
+        "markedContext": "<TARGET>In</TARGET> <TARGET>der</TARGET> <TARGET>Jugend</TARGET> <TARGET>lernt</TARGET>, <TARGET>im</TARGET> <TARGET>Alter</TARGET> <TARGET>versteht</TARGET> <TARGET>man</TARGET>.",
+        "members": [
+          "In",
+          "der",
+          "Jugend",
+          "lernt",
+          "im",
+          "Alter",
+          "versteht",
+          "man"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "In",
+          "der",
+          "Jugend",
+          "lernt",
+          "im",
+          "Alter",
+          "versteht",
+          "man"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "In der Jugend lernt im Alter versteht man"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "In",
+          "der",
+          "Jugend",
+          "lernt",
+          "im",
+          "Alter",
+          "versteht",
+          "man"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "In der Jugend lernt im Alter versteht man"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1278,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"In\",\"der\",\"Jugend\",\"lernt\",\"im\",\"Alter\",\"versteht\",\"man\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"In der Jugend lernt im Alter versteht man\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b9e239f2c9deefa016a7d97e826c8819db728d63aebf7ff89",
+      "usage": {
+        "input_tokens": 2235,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 92,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2327
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-tadel",
+      "input": {
+        "markedContext": "<TARGET>Unbegründeter</TARGET> <TARGET>Tadel</TARGET> <TARGET>ist</TARGET> <TARGET>manchmal</TARGET> <TARGET>eine</TARGET> <TARGET>feine</TARGET> <TARGET>Form</TARGET> <TARGET>der</TARGET> <TARGET>Schmeichelei</TARGET>.",
+        "members": [
+          "Unbegründeter",
+          "Tadel",
+          "ist",
+          "manchmal",
+          "eine",
+          "feine",
+          "Form",
+          "der",
+          "Schmeichelei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Unbegründeter",
+          "Tadel",
+          "ist",
+          "manchmal",
+          "eine",
+          "feine",
+          "Form",
+          "der",
+          "Schmeichelei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Unbegründeter",
+          "Tadel",
+          "ist",
+          "manchmal",
+          "eine",
+          "feine",
+          "Form",
+          "der",
+          "Schmeichelei"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 2120,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Unbegründeter\",\"Tadel\",\"ist\",\"manchmal\",\"eine\",\"feine\",\"Form\",\"der\",\"Schmeichelei\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_061fd209139f6373016a7d97e992e881a3953c7920c5ed6aa7",
+      "usage": {
+        "input_tokens": 2255,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2365
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-gegenwart",
+      "input": {
+        "markedContext": "Nachdem sie die Redewendung „den Nagel auf den Kopf treffen“ erklärt hatte, zitierte sie: „<TARGET>Nur</TARGET> <TARGET>was</TARGET> <TARGET>für</TARGET> <TARGET>die</TARGET> <TARGET>Gegenwart</TARGET> <TARGET>zu</TARGET> <TARGET>gut</TARGET> <TARGET>ist</TARGET>, <TARGET>ist</TARGET> <TARGET>gut</TARGET> <TARGET>genug</TARGET> <TARGET>für</TARGET> <TARGET>die</TARGET> <TARGET>Zukunft</TARGET>.“",
+        "members": [
+          "Nur",
+          "was",
+          "für",
+          "die",
+          "Gegenwart",
+          "zu",
+          "gut",
+          "ist",
+          "ist",
+          "gut",
+          "genug",
+          "für",
+          "die",
+          "Zukunft"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Nur",
+          "was",
+          "für",
+          "die",
+          "Gegenwart",
+          "zu",
+          "gut",
+          "ist",
+          "ist",
+          "gut",
+          "genug",
+          "für",
+          "die",
+          "Zukunft"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Nur was für die Gegenwart zu gut ist ist gut genug für die Zukunft"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Nur",
+          "was",
+          "für",
+          "die",
+          "Gegenwart",
+          "zu",
+          "gut",
+          "ist",
+          "ist",
+          "gut",
+          "genug",
+          "für",
+          "die",
+          "Zukunft"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Nur was für die Gegenwart zu gut ist ist gut genug für die Zukunft"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1794,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Nur\",\"was\",\"für\",\"die\",\"Gegenwart\",\"zu\",\"gut\",\"ist\",\"ist\",\"gut\",\"genug\",\"für\",\"die\",\"Zukunft\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Nur was für die Gegenwart zu gut ist ist gut genug für die Zukunft\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01c4fb4f9b59f669016a7d97eb8ff0819d862c4f2836f1bab1",
+      "usage": {
+        "input_tokens": 2314,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 123,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2437
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-streiten",
+      "input": {
+        "markedContext": "Nach dem Grammatikbeispiel „eine Entscheidung treffen“ folgte: „<TARGET>Nicht</TARGET> <TARGET>jene</TARGET>, <TARGET>die</TARGET> <TARGET>streiten</TARGET>, <TARGET>sind</TARGET> <TARGET>zu</TARGET> <TARGET>fürchten</TARGET>, <TARGET>sondern</TARGET> <TARGET>jene</TARGET>, <TARGET>die</TARGET> <TARGET>ausweichen</TARGET>.“",
+        "members": [
+          "Nicht",
+          "jene",
+          "die",
+          "streiten",
+          "sind",
+          "zu",
+          "fürchten",
+          "sondern",
+          "jene",
+          "die",
+          "ausweichen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Nicht",
+          "jene",
+          "die",
+          "streiten",
+          "sind",
+          "zu",
+          "fürchten",
+          "sondern",
+          "jene",
+          "die",
+          "ausweichen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Nicht jene die streiten sind zu fürchten sondern jene die ausweichen"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Nicht",
+          "jene",
+          "die",
+          "streiten",
+          "sind",
+          "zu",
+          "fürchten",
+          "sondern",
+          "jene",
+          "die",
+          "ausweichen"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Nicht jene die streiten sind zu fürchten sondern jene die ausweichen"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1535,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Nicht\",\"jene\",\"die\",\"streiten\",\"sind\",\"zu\",\"fürchten\",\"sondern\",\"jene\",\"die\",\"ausweichen\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Nicht jene die streiten sind zu fürchten sondern jene die ausweichen\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02dda1358fc93464016a7d97ed5af081a2a707e5d4268a01ec",
+      "usage": {
+        "input_tokens": 2284,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 113,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2397
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-unbezahlbar",
+      "input": {
+        "markedContext": "Die Protokollnotiz „Die Sitzung endet um fünf“ war nur episodisch; danach zitierte sie: „<TARGET>Man</TARGET> <TARGET>kann</TARGET> <TARGET>viele</TARGET> <TARGET>Dinge</TARGET> <TARGET>kaufen</TARGET>, <TARGET>die</TARGET> <TARGET>unbezahlbar</TARGET> <TARGET>sind</TARGET>.“",
+        "members": [
+          "Man",
+          "kann",
+          "viele",
+          "Dinge",
+          "kaufen",
+          "die",
+          "unbezahlbar",
+          "sind"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Man",
+          "kann",
+          "viele",
+          "Dinge",
+          "kaufen",
+          "die",
+          "unbezahlbar",
+          "sind"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Man kann viele Dinge kaufen die unbezahlbar sind"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Man",
+          "kann",
+          "viele",
+          "Dinge",
+          "kaufen",
+          "die",
+          "unbezahlbar",
+          "sind"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Man kann viele Dinge kaufen die unbezahlbar sind"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1324,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Man\",\"kann\",\"viele\",\"Dinge\",\"kaufen\",\"die\",\"unbezahlbar\",\"sind\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Man kann viele Dinge kaufen die unbezahlbar sind\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05a53ce4b991952b016a7d97eee54481a2a75240f230f9376d",
+      "usage": {
+        "input_tokens": 2268,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 98,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-grundsaetze",
+      "input": {
+        "markedContext": "Anders als das Sprichwort „Morgenstund hat Gold im Mund“ ist dies ein zugeschriebener Aphorismus: „<TARGET>Wenn</TARGET> <TARGET>zwei</TARGET> <TARGET>brave</TARGET> <TARGET>Menschen</TARGET> <TARGET>über</TARGET> <TARGET>Grundsätze</TARGET> <TARGET>streiten</TARGET>, <TARGET>haben</TARGET> <TARGET>immer</TARGET> <TARGET>beide</TARGET> <TARGET>recht</TARGET>.“",
+        "members": [
+          "Wenn",
+          "zwei",
+          "brave",
+          "Menschen",
+          "über",
+          "Grundsätze",
+          "streiten",
+          "haben",
+          "immer",
+          "beide",
+          "recht"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "zwei",
+          "brave",
+          "Menschen",
+          "über",
+          "Grundsätze",
+          "streiten",
+          "haben",
+          "immer",
+          "beide",
+          "recht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn zwei brave Menschen über Grundsätze streiten haben immer beide recht"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wenn",
+          "zwei",
+          "brave",
+          "Menschen",
+          "über",
+          "Grundsätze",
+          "streiten",
+          "haben",
+          "immer",
+          "beide",
+          "recht"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wenn zwei brave Menschen über Grundsätze streiten haben immer beide recht"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1498,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wenn\",\"zwei\",\"brave\",\"Menschen\",\"über\",\"Grundsätze\",\"streiten\",\"haben\",\"immer\",\"beide\",\"recht\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wenn zwei brave Menschen über Grundsätze streiten haben immer beide recht\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_086054a988f7b0b9016a7d97f03a94819ea5404a4af8148920",
+      "usage": {
+        "input_tokens": 2301,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 113,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2414
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-casing-menschen",
+      "input": {
+        "markedContext": "<TARGET>die</TARGET> <TARGET>Menschen</TARGET>, <TARGET>denen</TARGET> <TARGET>wir</TARGET> <TARGET>eine</TARGET> <TARGET>Stütze</TARGET> <TARGET>sind</TARGET>, <TARGET>die</TARGET> <TARGET>geben</TARGET> <TARGET>uns</TARGET> <TARGET>den</TARGET> <TARGET>Halt</TARGET> <TARGET>im</TARGET> <TARGET>Leben</TARGET>.",
+        "members": [
+          "die",
+          "Menschen",
+          "denen",
+          "wir",
+          "eine",
+          "Stütze",
+          "sind",
+          "die",
+          "geben",
+          "uns",
+          "den",
+          "Halt",
+          "im",
+          "Leben"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Menschen",
+          "denen",
+          "wir",
+          "eine",
+          "Stütze",
+          "sind",
+          "die",
+          "geben",
+          "uns",
+          "den",
+          "Halt",
+          "im",
+          "Leben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Die",
+          "Menschen",
+          "denen",
+          "wir",
+          "eine",
+          "Stütze",
+          "sind",
+          "die",
+          "geben",
+          "uns",
+          "den",
+          "Halt",
+          "im",
+          "Leben"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 3198,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Die\",\"Menschen\",\"denen\",\"wir\",\"eine\",\"Stütze\",\"sind\",\"die\",\"geben\",\"uns\",\"den\",\"Halt\",\"im\",\"Leben\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_048f4d4df45b2067016a7d97f1b65481a1a155f11530b712b4",
+      "usage": {
+        "input_tokens": 2295,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2423
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-aphorismus-ring",
+      "input": {
+        "markedContext": "<TARGET>Ein</TARGET> <TARGET>Aphorismus</TARGET> <TARGET>ist</TARGET> <TARGET>der</TARGET> <TARGET>letzte</TARGET> <TARGET>Ring</TARGET> <TARGET>einer</TARGET> <TARGET>langen</TARGET> <TARGET>Gedankenkette</TARGET>.",
+        "members": [
+          "Ein",
+          "Aphorismus",
+          "ist",
+          "der",
+          "letzte",
+          "Ring",
+          "einer",
+          "langen",
+          "Gedankenkette"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ein",
+          "Aphorismus",
+          "ist",
+          "der",
+          "letzte",
+          "Ring",
+          "einer",
+          "langen",
+          "Gedankenkette"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Ein",
+          "Aphorismus",
+          "ist",
+          "der",
+          "letzte",
+          "Ring",
+          "einer",
+          "langen",
+          "Gedankenkette"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1321,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Ein\",\"Aphorismus\",\"ist\",\"der\",\"letzte\",\"Ring\",\"einer\",\"langen\",\"Gedankenkette\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Ein Aphorismus ist der letzte Ring einer langen Gedankenkette\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b313d5d7ac7fd10016a7d97f4e53081a281bb1d9ffb484e4f",
+      "usage": {
+        "input_tokens": 2253,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2359
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-selbstverstaendlich",
+      "input": {
+        "markedContext": "<TARGET>Sag</TARGET> <TARGET>etwas</TARGET>, <TARGET>das</TARGET> <TARGET>sich</TARGET> <TARGET>von</TARGET> <TARGET>selbst</TARGET> <TARGET>versteht</TARGET>, <TARGET>zum</TARGET> <TARGET>ersten</TARGET> <TARGET>Mal</TARGET>, <TARGET>und</TARGET> <TARGET>du</TARGET> <TARGET>bist</TARGET> <TARGET>unsterblich</TARGET>.",
+        "members": [
+          "Sag",
+          "etwas",
+          "das",
+          "sich",
+          "von",
+          "selbst",
+          "versteht",
+          "zum",
+          "ersten",
+          "Mal",
+          "und",
+          "du",
+          "bist",
+          "unsterblich"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Sag",
+          "etwas",
+          "das",
+          "sich",
+          "von",
+          "selbst",
+          "versteht",
+          "zum",
+          "ersten",
+          "Mal",
+          "und",
+          "du",
+          "bist",
+          "unsterblich"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Sag",
+          "etwas",
+          "das",
+          "sich",
+          "von",
+          "selbst",
+          "versteht",
+          "zum",
+          "ersten",
+          "Mal",
+          "und",
+          "du",
+          "bist",
+          "unsterblich"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 2069,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Sag\",\"etwas\",\"das\",\"sich\",\"von\",\"selbst\",\"versteht\",\"zum\",\"ersten\",\"Mal\",\"und\",\"du\",\"bist\",\"unsterblich\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07fbd54cb0299026016a7d97f67718819d8d6ead11d8eda313",
+      "usage": {
+        "input_tokens": 2299,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 130,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2429
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-sichtbare-schoenheit",
+      "input": {
+        "markedContext": "<TARGET>Was</TARGET> <TARGET>uns</TARGET> <TARGET>an</TARGET> <TARGET>der</TARGET> <TARGET>sichtbaren</TARGET> <TARGET>Schönheit</TARGET> <TARGET>entzückt</TARGET>, <TARGET>ist</TARGET> <TARGET>ewig</TARGET> <TARGET>nur</TARGET> <TARGET>die</TARGET> <TARGET>unsichtbare</TARGET>.",
+        "members": [
+          "Was",
+          "uns",
+          "an",
+          "der",
+          "sichtbaren",
+          "Schönheit",
+          "entzückt",
+          "ist",
+          "ewig",
+          "nur",
+          "die",
+          "unsichtbare"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Was",
+          "uns",
+          "an",
+          "der",
+          "sichtbaren",
+          "Schönheit",
+          "entzückt",
+          "ist",
+          "ewig",
+          "nur",
+          "die",
+          "unsichtbare"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Was",
+          "uns",
+          "an",
+          "der",
+          "sichtbaren",
+          "Schönheit",
+          "entzückt",
+          "ist",
+          "ewig",
+          "nur",
+          "die",
+          "unsichtbare"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1635,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Was\",\"uns\",\"an\",\"der\",\"sichtbaren\",\"Schönheit\",\"entzückt\",\"ist\",\"ewig\",\"nur\",\"die\",\"unsichtbare\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Was uns an der sichtbaren Schönheit entzückt ist ewig nur die unsichtbare\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03208fc6a8934bcb016a7d97f88030819f988c677a7cc55f73",
+      "usage": {
+        "input_tokens": 2279,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 120,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2399
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-geduld-streitsucht",
+      "input": {
+        "markedContext": "<TARGET>Geduld</TARGET> <TARGET>mit</TARGET> <TARGET>der</TARGET> <TARGET>Streitsucht</TARGET> <TARGET>der</TARGET> <TARGET>Einfältigen</TARGET>! <TARGET>Es</TARGET> <TARGET>ist</TARGET> <TARGET>nicht</TARGET> <TARGET>leicht</TARGET> <TARGET>zu</TARGET> <TARGET>begreifen</TARGET>, <TARGET>dass</TARGET> <TARGET>man</TARGET> <TARGET>nicht</TARGET> <TARGET>begreift</TARGET>.",
+        "members": [
+          "Geduld",
+          "mit",
+          "der",
+          "Streitsucht",
+          "der",
+          "Einfältigen",
+          "Es",
+          "ist",
+          "nicht",
+          "leicht",
+          "zu",
+          "begreifen",
+          "dass",
+          "man",
+          "nicht",
+          "begreift"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Geduld",
+          "mit",
+          "der",
+          "Streitsucht",
+          "der",
+          "Einfältigen",
+          "Es",
+          "ist",
+          "nicht",
+          "leicht",
+          "zu",
+          "begreifen",
+          "dass",
+          "man",
+          "nicht",
+          "begreift"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Geduld",
+          "mit",
+          "der",
+          "Streitsucht",
+          "der",
+          "Einfältigen",
+          "Es",
+          "ist",
+          "nicht",
+          "leicht",
+          "zu",
+          "begreifen",
+          "dass",
+          "man",
+          "nicht",
+          "begreift"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1566,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Geduld\",\"mit\",\"der\",\"Streitsucht\",\"der\",\"Einfältigen\",\"Es\",\"ist\",\"nicht\",\"leicht\",\"zu\",\"begreifen\",\"dass\",\"man\",\"nicht\",\"begreift\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b6eda5401f315f3016a7d97f9f2a0819f81a351fa6de40702",
+      "usage": {
+        "input_tokens": 2322,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 147,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2469
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-aphorism-weise-gut",
+      "input": {
+        "markedContext": "<TARGET>Wie</TARGET> <TARGET>weise</TARGET> <TARGET>muss</TARGET> <TARGET>man</TARGET> <TARGET>sein</TARGET>, <TARGET>um</TARGET> <TARGET>immer</TARGET> <TARGET>gut</TARGET> <TARGET>zu</TARGET> <TARGET>sein</TARGET>!",
+        "members": [
+          "Wie",
+          "weise",
+          "muss",
+          "man",
+          "sein",
+          "um",
+          "immer",
+          "gut",
+          "zu",
+          "sein"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wie",
+          "weise",
+          "muss",
+          "man",
+          "sein",
+          "um",
+          "immer",
+          "gut",
+          "zu",
+          "sein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wie weise muss man sein um immer gut zu sein"
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "Wie",
+          "weise",
+          "muss",
+          "man",
+          "sein",
+          "um",
+          "immer",
+          "gut",
+          "zu",
+          "sein"
+        ],
+        "realizationCoverage": "Full",
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "Wie weise muss man sein um immer gut zu sein"
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "realizationCoveragePass": true,
+      "surfaceFeaturesPass": true,
+      "canonicalFormPass": true,
+      "latencyMs": 1509,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"Wie\",\"weise\",\"muss\",\"man\",\"sein\",\"um\",\"immer\",\"gut\",\"zu\",\"sein\"],\"realizationCoverage\":\"Full\",\"surface\":{\"spelling\":\"Canonical\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"Wie weise muss man sein um immer gut zu sein\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06980ef1df8bfc44016a7d97fb817481928eca9aee9f0cbcdf",
+      "usage": {
+        "input_tokens": 2250,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2142
+        },
+        "output_tokens": 100,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2350
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

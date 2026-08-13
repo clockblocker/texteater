@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { DUMGEN_GENERATION_MODEL } from "../ai-sdk/model-policy";
 import {
 	assertIntakeBatch,
@@ -25,7 +23,6 @@ import {
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
-import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
@@ -123,26 +120,8 @@ function promptEntries<const Prompts extends Readonly<Record<string, Prompt>>>(
 	) as { readonly [Key in keyof Prompts]: PromptCatalogEntry<Prompts[Key]> };
 }
 
-const grammarFallbackInputSchema = z.strictObject({
-	markedContext: z.string().min(1),
-});
-const grammarFallbackOutputSchema = z.strictObject({
-	decision: z.literal("Unresolved"),
-	resolution: z.null(),
-});
-
-const punctuationFallbackPrompt = createDeGrammaticalResolutionPrompt({
-	family: "Lexeme",
-	kind: "PUNCT",
-	systemPrompt: "Legacy disabled Lexeme/PUNCT route.",
-	inputSchema: grammarFallbackInputSchema,
-	outputSchema: grammarFallbackOutputSchema,
-});
 const grammaticalResolutionCatalog = {
-	Lexeme: {
-		...promptEntries(DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme),
-		PUNCT: promptEntry(punctuationFallbackPrompt),
-	},
+	Lexeme: promptEntries(DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme),
 	Phraseme: promptEntries(
 		DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Phraseme,
 	),

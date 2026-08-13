@@ -1,0 +1,10 @@
+{
+	"grammar-de-discourse-formula-dev-tut-mir-leid-sympathy": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model persistently preferred a longer related formula despite the prompt's explicit no-ellipsis Full invariant and mechanical Full canonicalForm rule; further exact-case teaching would contaminate this development case."
+	},
+	"grammar-de-discourse-formula-dev-auf-wiedersehn-variant": {
+		"classification": "accepted-model-limitation",
+		"explanation": "The model persistently preserved ordinary initial capitalization on this Variant despite an explicit rule applying first-member lowercasing equally to Canonical and Variant Surfaces; exact-case teaching would contaminate the development case."
+	}
+}

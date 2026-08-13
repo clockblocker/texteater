@@ -1,88 +1,156 @@
 # German Lexeme/SYM Grammatical Resolution evaluation
 
-This route-local vertical slice evaluates the exact
-`grammatical-resolution/de/lexeme/symbol` Prompt Source. Its Golden Corpus has
-29 cases: four necessary demonstrations, 18 authoritative disjoint held-out
-cases, and seven corpus-only policy or boundary probes. The held-out suite covers
-mathematical operators, unit and currency signs, technical marks, emoticons,
-emoji, invariant Citation Surfaces, explicitly nominal Inflection Surfaces, and
-SYM boundaries with PUNCT, NUM, NOUN, PROPN, CCONJ, overbroad targets, and
-multiple occurrences. No resolved demonstration Lemma appears in held-out
-scoring.
+This prototype evaluates the total already-classified
+`grammatical-resolution/de/lexeme/symbol` route. Input is exactly
+`{ markedContext, members }`; the complete ordered membership is authoritative
+and is never repaired or reclassified.
 
-## Annotation and DTO policy
+The model returns the smallest flat codec-derived DTO:
 
-The policy follows the Universal Dependencies SYM distinction and the German
-GSD evidence. GSD has 101 SYM tokens and 19 types; its frequent examples include
-`&`, `=`, `/`, `×`, `%`, `+`, `°`, `*`, `:-)`, and `€`. Ninety tokens have no
-features. Ten carry case, gender, and number, establishing that an unchanged
-symbol can have an Inflection Surface when contextual nominal agreement is
-explicit. One ampersand carries `Foreign=Yes`; no German GSD SYM carries
-`NumType`.
-
-The authoritative Core is therefore `{foreign:null,numType:null}`. Foreign and
-the codec-supported `NumType=Card|Range` remain corpus-only probes because the
-available evidence does not establish stable symbol identities for them.
-Ordinary symbols use Citation. Inflection requires explicit German nominal
-agreement and at least one non-null case, gender, or number value. The provider
-schema expresses that requirement as a structural union, matching Dumling's
-non-empty refinement.
-
-The four demonstrations have separate burdens: `%` shows the conservative
-Citation shape, nominal `×` shows a supported non-all-null Inflection, comma
-shows the PUNCT boundary, and a target spanning `5 %` shows the exact one-token
-scope gate. Operators, currency, technical marks, emotive symbols, route
-mirrors, and alternative nominal symbols stay held out. Route fingerprints,
-granular contamination keys, and explicit selection keep demonstration inputs
-and their sentence-punctuation semantic twins out of held-out scoring.
-
-Primary references:
-
-- [Universal Dependencies SYM](https://universaldependencies.org/u/pos/SYM.html)
-- [German GSD SYM statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-pos-SYM.html)
-- [German GSD Case statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-feat-Case.html)
-- [German GSD Foreign statistics](https://universaldependencies.org/treebanks/de_gsd/de_gsd-feat-Foreign.html)
-
-## Bounded evidence runner
-
-The runner makes one serial call per held-out case with `gpt-5.6-luna`, no
-reasoning effort, no retries, `store: false`, and a 16,384-token route-local
-output cap. It preflights 15–25 cases before constructing a provider client.
-Retained evidence binds the ordered Golden Cases, assembled prompt and schema
-hashes, intended registration policy, model, reasoning policy, and runner
-version. Provider output text and complete response metadata survive parse or
-schema failures. Imports, tests, checks, and offline finalization make no model
-calls.
-
-Root integration will register the Prompt Source, generated prompt, and package
-command. Catalog/runtime wiring belongs to the integration ticket. An explicit
-live run from `battery/dumgen` can later use the package command or:
-
-```sh
-bun run docs/prototypes/grammatical-resolution-symbol/run.ts
+```ts
+{
+  memberOrthographies: ("Standard" | "Typo")[];
+  normalizedMembers: string[];
+  surface:
+    | { spelling; surfaceFeatures }
+    | { spelling; surfaceKind: "Inflection"; surfaceFeatures;
+        inflectionalFeatures: { case; gender; number } };
+  lemma: {
+    canonicalForm;
+    coreFeatures: { foreign: "Yes" | null; numType: "Card" | "Range" | null };
+  };
+}
 ```
 
-The live command writes atomically beneath `runs/<timestamp>/results.json` and
-exits unsuccessfully until every scored miss is classified offline. Provider
-errors require a fresh bounded run. Finalize with:
+Citation's fixed discriminator, German route identity, normalized Surface,
+Surface-to-Lemma linkage, successful result, and `realizationCoverage: Full`
+are application-owned. Inflection keeps its model-owned discriminator and
+structurally non-empty contextual feature bag.
+
+## Frozen corpus
+
+The 45 realistic full sentences are frozen into 12 demonstrations, 21
+development cases, and 12 untouched acceptance cases. The partitions are
+disjoint by case ID, exact parsed input, route fingerprint, and contamination
+key.
+
+Demonstrations:
+
+- `grammar-de-sym-demo-percent-unit`
+- `grammar-de-sym-demo-times-nominal`
+- `grammar-de-sym-demo-euro-currency`
+- `grammar-de-sym-demo-section-dative`
+- `grammar-de-sym-demo-equals-genitive`
+- `grammar-de-sym-demo-feminine-hash`
+- `grammar-de-sym-demo-foreign-arabic-percent`
+- `grammar-de-sym-demo-card-number-sign`
+- `grammar-de-sym-demo-range-dash`
+- `grammar-de-sym-demo-variant-fullwidth-plus`
+- `grammar-de-sym-demo-typo-ocr-euro`
+- `grammar-de-sym-demo-sections-plural`
+
+Development:
+
+- `grammar-de-sym-dev-math-plus`
+- `grammar-de-sym-dev-math-minus`
+- `grammar-de-sym-dev-science-integral`
+- `grammar-de-sym-dev-measurement-micro`
+- `grammar-de-sym-dev-measurement-degree`
+- `grammar-de-sym-dev-measurement-permille`
+- `grammar-de-sym-dev-currency-dollar`
+- `grammar-de-sym-dev-currency-pound`
+- `grammar-de-sym-dev-legal-copyright`
+- `grammar-de-sym-dev-coordinator-ampersand`
+- `grammar-de-sym-dev-marker-hash`
+- `grammar-de-sym-dev-emoticon-wink`
+- `grammar-de-sym-dev-repeated-plus-second`
+- `grammar-de-sym-dev-numeric-neighbor-percent`
+- `grammar-de-sym-dev-punctuation-neighbor-star`
+- `grammar-de-sym-dev-opaque-neighbor-hash`
+- `grammar-de-sym-dev-abbreviation-neighbor-section`
+- `grammar-de-sym-dev-inflection-acc-plus`
+- `grammar-de-sym-dev-inflection-gen-percent`
+- `grammar-de-sym-dev-inflection-feminine-at`
+- `grammar-de-sym-dev-archaic-dagger`
+
+Untouched acceptance:
+
+- `grammar-de-sym-accept-v2-division-inflection`
+- `grammar-de-sym-accept-v2-not-equal`
+- `grammar-de-sym-accept-v2-sum`
+- `grammar-de-sym-accept-v2-rupee`
+- `grammar-de-sym-accept-v2-registered`
+- `grammar-de-sym-accept-v2-double-arrow`
+- `grammar-de-sym-accept-v2-basis-point`
+- `grammar-de-sym-accept-v2-card-numero`
+- `grammar-de-sym-accept-v2-range-tilde`
+- `grammar-de-sym-accept-v2-foreign-japanese-reference`
+- `grammar-de-sym-accept-v2-variant-small-percent`
+- `grammar-de-sym-accept-v2-typo-double-permille`
+
+Coverage includes currency, mathematical, scientific, measurement, legal, and
+other word-like symbols; Citation and explicitly nominal Inflection; all four
+cases, three genders, singular and plural; both codec-supported NumType values
+and explicit Foreign; single- and multi-grapheme forms; repeated occurrences;
+surrounding numeric context; canonical, Unicode Variant, casing-sensitive,
+Typo, and archaic forms. Fixed upstream distinctions are exercised with
+unmarked NUM, PUNCT, OpaqueText emoji, abbreviation, ordinary lexical, and
+repeated-symbol neighbors.
+
+The retained 2026-08-03 run uses the retired decision-wrapper contract and is
+historical only. Current-contract development diagnostics scored 18/21 and
+19/21 before the determiner-governed Inflection rule and two distinct teaching
+examples produced three consecutive 21/21 rounds. The immutable v1 acceptance
+reservation at `runs/2026-08-13T13-03-19-920Z` is finalized at 10/12 (83.3%).
+The cardinal-number-marker miss is an accepted model limitation. The division
+case is a corpus/evaluator defect: its `ein ÷` syntax requires contextual
+Acc/Neut/Sing Inflection, not the retained Citation oracle.
+
+The approved corpus-defect recovery keeps the prompt unchanged and uses the 12
+fresh `grammar-de-sym-accept-v2-*` cases listed above. Their IDs, sentences,
+inputs, and oracles are disjoint from the observed v1 acceptance suite. V1
+evidence and its suite-specific reservation remain immutable.
+
+V2 development is finalized at 21/21, 21/21, and 20/21; the sole round-three
+genitive Citation fallback is accepted model variance after two passes under an
+explicit rule and distinct demonstration. The immutable v2 acceptance
+reservation at `runs/2026-08-13T13-08-09-014Z` is finalized at 11/12 (91.7%)
+with `evidenceThresholdMet=true`. Its sole division-symbol Citation fallback is
+an accepted model limitation: the prompt mandates determiner-governed
+Inflection and a distinct plus-sign case repeatedly teaches the same
+Acc/Neut/Sing pattern. No prompt, corpus, or evaluator defect remains.
+
+## Runner protocol
+
+The thin runner uses the shared direct Responses evaluator: serial calls, zero
+retries, `store: false`, explicit 30-minute prompt caching, atomic retained
+evidence, offline miss classification/finalization, suite-specific acceptance
+reservation, and bounded preflight without provider-client construction.
+
+The two protocols used 192 calls, 525,374 input tokens (505,770 cached and
+13,413 cache-write), and 11,458 output tokens, an estimated $0.142 at the
+configured Luna rates, far below the $5 leaf ceiling.
+
+From `battery/dumgen`:
 
 ```sh
-bun run docs/prototypes/grammatical-resolution-symbol/run.ts finalize \
-  docs/prototypes/grammatical-resolution-symbol/runs/<timestamp>/results.json \
-  docs/prototypes/grammatical-resolution-symbol/runs/<timestamp>/miss-classifications.json
+bun test tests/internal/grammatical-resolution-symbol.test.ts \
+  tests/internal/grammatical-resolution-symbol-runner.test.ts
+bun run check
+bunx biome check \
+  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol \
+  src/promptsmith/laboratory/experiments/grammatical-resolution-symbol \
+  docs/prototypes/grammatical-resolution-symbol \
+  tests/internal/grammatical-resolution-symbol.test.ts \
+  tests/internal/grammatical-resolution-symbol-runner.test.ts
+git diff --check
 ```
 
-Finalization rejects stale bindings, recomputes every diagnostic and score,
-rejects provider errors, and requires every scored miss classification. Evidence
-qualifies only with at least 15 attempts, at least 80% exact accuracy, zero
-execution errors, and zero unclassified misses.
+Zero-call preflight:
 
-## Retained evidence
+```sh
+bun docs/prototypes/grammatical-resolution-symbol/run.ts preflight development 1
+bun docs/prototypes/grammatical-resolution-symbol/run.ts preflight acceptance
+```
 
-The finalized run at
-`runs/2026-08-03T12-55-20-295Z/results.json` scored 17/18 (94.4%)
-with zero execution errors and zero unclassified misses. The sole miss is an
-independently accepted model limitation: despite the explicit nominal-symbol
-rule and demonstration, the model returned Citation for the dative-singular
-middle dot instead of the conservative Inflection `{case:"Dat", gender:null,
-number:"Sing"}`.
+Live execution requires explicit orchestrator authorization.

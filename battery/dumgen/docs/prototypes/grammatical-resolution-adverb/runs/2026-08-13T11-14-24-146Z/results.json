@@ -1,0 +1,1011 @@
+{
+  "runnerVersion": "grammatical-resolution-adverb-v3",
+  "route": "grammatical-resolution/de/lexeme/adverb",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "acceptance",
+    "claim": "untouched"
+  },
+  "startedAt": "2026-08-13T11:14:24.146Z",
+  "completedAt": "2026-08-13T11:14:41.519Z",
+  "finalizedAt": "2026-08-13T11:14:50.413Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "2522ce8305dd28f86b8c9861c0b4168653d607c93d838854fe86d22bd2368c41",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "a493c8dfecc3d03b8e0e6406cfc28ab067daa0d9899778c6826ffeb890620034",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "daae71f76287b159f4bb7a3e86ab71c7464f7837c2b8fd0e5a136b76244b9bf2",
+  "suiteSha256": "919e9ee2c9348162f685abbf5b81ab1ffa97694969f087b322ede9c4875c94de",
+  "evaluationCaseIds": [
+    "grammar-de-adv-accept-temporal-gestern",
+    "grammar-de-adv-accept-locative-hier",
+    "grammar-de-adv-accept-initial-draussen",
+    "grammar-de-adv-accept-demonstrative-dafuer",
+    "grammar-de-adv-accept-indefinite-wenig",
+    "grammar-de-adv-accept-interrogative-wo",
+    "grammar-de-adv-accept-relative-wobei",
+    "grammar-de-adv-accept-negative-nie",
+    "grammar-de-adv-accept-multiplicative-dreimal",
+    "grammar-de-adv-accept-comparative-oefter",
+    "grammar-de-adv-accept-typo-morgne",
+    "grammar-de-adv-accept-archaic-allhier"
+  ],
+  "boundedCalls": 12,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 12,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "grammar-de-adv-accept-temporal-gestern",
+      "input": {
+        "markedContext": "Die Bibliothek schloss <TARGET>gestern</TARGET> schon um sechs Uhr.",
+        "members": [
+          "gestern"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gestern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gestern",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "gestern"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "gestern",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1551,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"gestern\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"gestern\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03baea812db7308b016a7da7106868819fbb3d3e48ca9d1e8e",
+      "usage": {
+        "input_tokens": 2621,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2691
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-locative-hier",
+      "input": {
+        "markedContext": "Bitte warten Sie <TARGET>hier</TARGET> vor dem Eingang.",
+        "members": [
+          "hier"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hier"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "hier",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hier"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "hier",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1521,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"hier\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"hier\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06caa4726f6b6223016a7da711de90819caacd1338a02bc215",
+      "usage": {
+        "input_tokens": 2616,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2684
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-initial-draussen",
+      "input": {
+        "markedContext": "<TARGET>Draußen</TARGET> warten noch drei Gäste.",
+        "members": [
+          "Draußen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "draußen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "draußen",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "draußen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "draußen",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1434,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"draußen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"draußen\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02b35325883e71a6016a7da713761c81a09bb7f5b7f9fd58f9",
+      "usage": {
+        "input_tokens": 2617,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 72,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2689
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-demonstrative-dafuer",
+      "input": {
+        "markedContext": "<TARGET>Dafür</TARGET> fehlt uns heute das passende Werkzeug.",
+        "members": [
+          "Dafür"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dafür"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dafür",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dafür"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dafür",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Dem"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1235,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"dafür\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dafür\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":\"Dem\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00c3551df00f83e1016a7da714d5e481918b61d53baa6f9f5f",
+      "usage": {
+        "input_tokens": 2619,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2689
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-indefinite-wenig",
+      "input": {
+        "markedContext": "Nach dem Umbau arbeitet die Pumpe <TARGET>wenig</TARGET>.",
+        "members": [
+          "wenig"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wenig"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wenig",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wenig"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wenig",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Ind"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1446,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wenig\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wenig\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":\"Ind\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_084c26cee99ff0e6016a7da71617988192bbc1d16553c12842",
+      "usage": {
+        "input_tokens": 2620,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2690
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-interrogative-wo",
+      "input": {
+        "markedContext": "<TARGET>Wo</TARGET> steht der reservierte Kleinbus?",
+        "members": [
+          "Wo"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wo"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wo",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wo"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wo",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Int"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1373,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wo\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wo\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":\"Int\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05a00391e21c4228016a7da71784b8819ea2d7dca95d1cdecc",
+      "usage": {
+        "input_tokens": 2617,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2685
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-relative-wobei",
+      "input": {
+        "markedContext": "Das war der Versuch, <TARGET>wobei</TARGET> die Sicherung ausfiel.",
+        "members": [
+          "wobei"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wobei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wobei",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wobei"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "wobei",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Rel"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1303,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"wobei\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"wobei\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":\"Rel\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_041769d6ef2a296b016a7da718e57c819f81247f2e2d527d6c",
+      "usage": {
+        "input_tokens": 2622,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2692
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-negative-nie",
+      "input": {
+        "markedContext": "Der alte Aufzug bleibt <TARGET>nie</TARGET> zwischen den Etagen stehen.",
+        "members": [
+          "nie"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nie",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "nie"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "nie",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": "Neg"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1202,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"nie\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"nie\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":\"Neg\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0598b22dbacd03fa016a7da71a31d0819eb65887093ce7957d",
+      "usage": {
+        "input_tokens": 2620,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 68,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2688
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-multiplicative-dreimal",
+      "input": {
+        "markedContext": "Vor dem Öffnen klopfte sie <TARGET>dreimal</TARGET> an.",
+        "members": [
+          "dreimal"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dreimal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dreimal",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": "Mult",
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "dreimal"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "dreimal",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": "Mult",
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1328,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"dreimal\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"dreimal\",\"coreFeatures\":{\"foreign\":null,\"numType\":\"Mult\",\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_025b9a730b1272a8016a7da71b63c0819199f4e54be4b11bbf",
+      "usage": {
+        "input_tokens": 2621,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 70,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2691
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-comparative-oefter",
+      "input": {
+        "markedContext": "Seit dem Fahrplanwechsel kommt der Bus <TARGET>öfter</TARGET>.",
+        "members": [
+          "öfter"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "öfter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "degree": "Cmp"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "oft",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "öfter"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "degree": "Cmp"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "oft",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2026,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"öfter\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"degree\":\"Cmp\"}},\"lemma\":{\"canonicalForm\":\"oft\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02c813f4ada9e5a3016a7da71cbb1881a38339c4d20591eab9",
+      "usage": {
+        "input_tokens": 2620,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 80,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2700
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-typo-morgne",
+      "input": {
+        "markedContext": "Die Lieferung erreicht uns <TARGET>morgne</TARGET> am Vormittag.",
+        "members": [
+          "morgne"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "morgen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "morgen",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "morgen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": null
+        },
+        "lemma": {
+          "canonicalForm": "morgen",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1483,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"morgen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":null},\"lemma\":{\"canonicalForm\":\"morgen\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ef2c61e791688b9016a7da71ed08881a19822cd19b825010d",
+      "usage": {
+        "input_tokens": 2622,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 69,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2691
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-adv-accept-archaic-allhier",
+      "input": {
+        "markedContext": "Der Unterzeichnete erklärt <TARGET>allhier</TARGET> die Übergabe.",
+        "members": [
+          "allhier"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "allhier"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "allhier",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "allhier"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Citation",
+          "surfaceFeatures": {
+            "historicalStatus": "Archaic"
+          }
+        },
+        "lemma": {
+          "canonicalForm": "allhier",
+          "coreFeatures": {
+            "foreign": null,
+            "numType": null,
+            "pronType": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1462,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"allhier\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Citation\",\"surfaceFeatures\":{\"historicalStatus\":\"Archaic\"}},\"lemma\":{\"canonicalForm\":\"allhier\",\"coreFeatures\":{\"foreign\":null,\"numType\":null,\"pronType\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c5e69c9cee2c4a1016a7da7203bf081a08689cdb8cc7c9b9c",
+      "usage": {
+        "input_tokens": 2620,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2586
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2697
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

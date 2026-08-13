@@ -124,23 +124,16 @@ export type AnalysisTarget = {
 	readonly memberSegmentIndices: readonly number[];
 };
 
-type WithoutLemma<Value> = Value extends { readonly lemma: unknown }
-	? Omit<Value, "lemma">
-	: never;
+/** Canonical input projected directly from one already classified target. */
+export type GrammaticalResolutionInput = {
+	readonly markedContext: string;
+	readonly members: readonly string[];
+};
 
-type GrammarSurfaceProjection = Omit<
-	WithoutLemma<import("dumling/types").Surface<"de">>,
-	"normalizedSurface"
->;
-
-/** Internal result of a Grammatical Resolution prompt. */
-export type GrammaticalResolution =
-	| Unresolved
-	| {
-			readonly decision: "Resolved";
-			readonly memberOrthographies: readonly ("Standard" | "Typo")[];
-			readonly normalizedMembers: readonly string[];
-			readonly realizationCoverage: "Full" | "Partial";
-			readonly surface: GrammarSurfaceProjection;
-			readonly lemma: import("dumling/types").Lemma<"de">;
-	  };
+/** Total internal result after the model DTO crosses the shared route seam. */
+export type GrammaticalResolution = {
+	readonly memberOrthographies: readonly ("Standard" | "Typo")[];
+	readonly normalizedMembers: readonly string[];
+	readonly realizationCoverage: "Full" | "Partial";
+	readonly surface: import("dumling/types").Surface<"de">;
+};

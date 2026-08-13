@@ -3,294 +3,123 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
+import { interjectionCase } from "./builders";
 
 export const interjectionCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-intj-demo-pfui-expressive": {
-			input: {
-				markedContext:
-					"Sieh einmal, hier steht er, <TARGET>pfui</TARGET>, der Struwwelpeter!",
+		"grammar-de-intj-demo-pfui-expressive": interjectionCase(
+			"Sieh einmal, hier steht er, <TARGET>pfui</TARGET>, der Struwwelpeter!",
+			["pfui"],
+			"pfui",
+			null,
+			{
+				explanation:
+					"Pfui independently expresses disgust; it is not a response interjection.",
 			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["pfui"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "pfui",
-						coreFeatures: { partType: null },
-					},
-				},
+		),
+		"grammar-de-intj-demo-ja-response": interjectionCase(
+			"Sie fragte, ob er komme; er antwortete: „<TARGET>Ja</TARGET>.“",
+			["Ja"],
+			"ja",
+			"Res",
+			{
+				normalizedMembers: ["ja"],
+				explanation:
+					"The standalone answer carries response partType Res; quotation-initial capitalization remains Standard.",
 			},
-			explanation:
-				"Pfui independently expresses disgust. Its contextual use still has a Citation Surface, and expressive INTJ does not receive response partType Res.",
-		},
-		"grammar-de-intj-demo-ja-response": {
-			input: {
-				markedContext:
-					"Sie fragte, ob er komme; er antwortete: „<TARGET>Ja</TARGET>.“",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["ja"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "ja",
-						coreFeatures: { partType: "Res" },
-					},
-				},
-			},
-			explanation:
-				"The directly quoted standalone answer ja carries the route's narrow response-interjection feature; ordinary quotation-initial capitalization remains Standard and normalizes to lowercase.",
-		},
-		"grammar-de-intj-wupp-sound-effect": {
-			input: {
-				markedContext:
-					"Fort geht nun die Mutter und <TARGET>wupp</TARGET>! den Daumen in den Mund.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["wupp"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "wupp",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-hallo-greeting": {
-			input: { markedContext: "<TARGET>Hallo</TARGET>, Lisa!" },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["hallo"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "hallo",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-hurra-joy": {
-			input: { markedContext: "Alle riefen <TARGET>hurra</TARGET>." },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["hurra"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "hurra",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-oh-reaction": {
-			input: { markedContext: "Sie sagte nur: <TARGET>oh</TARGET>." },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["oh"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "oh",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-huch-surprise": {
-			input: { markedContext: "Da sagte sie <TARGET>huch</TARGET>." },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["huch"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "huch",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-au-pain": {
-			input: {
-				markedContext: "Er stieß sich und rief <TARGET>au</TARGET>.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["au"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "au",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-aeh-hesitation": {
-			input: {
-				markedContext: "Ich wollte, <TARGET>äh</TARGET>, nur fragen.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["äh"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "äh",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-tja-resignation": {
-			input: { markedContext: "Nun, <TARGET>tja</TARGET>, so ist es." },
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["tja"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "tja",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-miau-sound": {
-			input: {
-				markedContext: "Da sprang die Katze: <TARGET>miau</TARGET>!",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["miau"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "miau",
-						coreFeatures: { partType: null },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-nein-response": {
-			input: {
-				markedContext:
-					"Sie fragte, ob er komme; er antwortete <TARGET>nein</TARGET>.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["nein"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "nein",
-						coreFeatures: { partType: "Res" },
-					},
-				},
-			},
-		},
-		"grammar-de-intj-doch-corrective-response": {
-			input: {
-				markedContext:
-					"Er fragte: „Nicht heute?“ Sie antwortete <TARGET>doch</TARGET>.",
-			},
-			idealOutput: {
-				decision: "Resolved",
-				resolution: {
-					memberOrthographies: ["Standard"],
-					realizationCoverage: "Full",
-					normalizedMembers: ["doch"],
-					surface: {
-						spelling: "Canonical",
-						surfaceKind: "Citation",
-						surfaceFeatures: null,
-					},
-					lemma: {
-						canonicalForm: "doch",
-						coreFeatures: { partType: "Res" },
-					},
-				},
-			},
-		},
+		),
+
+		"grammar-de-intj-dev-wupp-onomatopoeia": interjectionCase(
+			"Fort geht nun die Mutter und <TARGET>wupp</TARGET>! den Daumen in den Mund.",
+			["wupp"],
+			"wupp",
+		),
+		"grammar-de-intj-dev-hallo-greeting": interjectionCase(
+			"Am Gartentor rief sie <TARGET>hallo</TARGET> zu den Nachbarn.",
+			["hallo"],
+			"hallo",
+		),
+		"grammar-de-intj-dev-hurra-joy": interjectionCase(
+			"Nach dem Sieg riefen alle <TARGET>hurra</TARGET>.",
+			["hurra"],
+			"hurra",
+		),
+		"grammar-de-intj-dev-oh-reaction": interjectionCase(
+			"Als sie die Nachricht las, sagte sie nur <TARGET>oh</TARGET>.",
+			["oh"],
+			"oh",
+		),
+		"grammar-de-intj-dev-huch-surprise": interjectionCase(
+			"Beim Anblick der Maus rief er <TARGET>huch</TARGET>!",
+			["huch"],
+			"huch",
+		),
+		"grammar-de-intj-dev-au-pain": interjectionCase(
+			"Er stieß sich am Tisch und rief <TARGET>au</TARGET>.",
+			["au"],
+			"au",
+		),
+		"grammar-de-intj-dev-aeh-hesitation": interjectionCase(
+			"Ich wollte, <TARGET>äh</TARGET>, nur kurz nachfragen.",
+			["äh"],
+			"äh",
+		),
+		"grammar-de-intj-dev-tja-resignation": interjectionCase(
+			"Nach dem letzten Fehlschlag sagte sie <TARGET>tja</TARGET> und ging.",
+			["tja"],
+			"tja",
+		),
+		"grammar-de-intj-dev-miau-onomatopoeia": interjectionCase(
+			"Die Katze sprang aufs Fensterbrett: <TARGET>miau</TARGET>!",
+			["miau"],
+			"miau",
+		),
+		"grammar-de-intj-dev-nein-response": interjectionCase(
+			"Auf die Frage nach dem Termin antwortete er <TARGET>nein</TARGET>.",
+			["nein"],
+			"nein",
+			"Res",
+		),
+		"grammar-de-intj-dev-doch-corrective-response": interjectionCase(
+			"Sie fragte: „Kommst du nicht?“ Er antwortete <TARGET>doch</TARGET>.",
+			["doch"],
+			"doch",
+			"Res",
+		),
+		"grammar-de-intj-dev-jawohl-response": interjectionCase(
+			"Der Offizier fragte nach dem Auftrag; sie antwortete <TARGET>jawohl</TARGET>.",
+			["jawohl"],
+			"jawohl",
+			"Res",
+		),
+
+		"grammar-de-intj-accept-v2-aha-realization": interjectionCase(
+			"Als sie den Zusammenhang verstand, sagte sie <TARGET>aha</TARGET>.",
+			["aha"],
+			"aha",
+		),
+		"grammar-de-intj-accept-v2-hoppla-mishap": interjectionCase(
+			"Als das Glas beinahe fiel, rief er <TARGET>hoppla</TARGET>!",
+			["hoppla"],
+			"hoppla",
+		),
+		"grammar-de-intj-accept-v2-maeh-onomatopoeia": interjectionCase(
+			"Das Lamm lief zum Gatter: <TARGET>mäh</TARGET>!",
+			["mäh"],
+			"mäh",
+		),
+		"grammar-de-intj-accept-v2-ja-response-initial": interjectionCase(
+			"Auf die Frage nach der Reservierung antwortete sie: „<TARGET>Ja</TARGET>.“",
+			["Ja"],
+			"ja",
+			"Res",
+			{ normalizedMembers: ["ja"] },
+		),
+		"grammar-de-intj-accept-v2-heda-prompting": interjectionCase(
+			"Vom anderen Ufer rief der Fährmann <TARGET>heda</TARGET>!",
+			["heda"],
+			"heda",
+		),
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,
 		typeof outputSchema
