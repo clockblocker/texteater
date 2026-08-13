@@ -15,6 +15,7 @@ import {
 	finalizeEvidence,
 	parseBatchingFlag,
 	parsePoolFlag,
+	parseProfileFlag,
 	preparePrototypeBatch,
 	promptCacheKeyForScheduleKey,
 	resumePrototypeBatch,
@@ -24,6 +25,7 @@ import {
 	submitPrototypeBatch,
 } from "../../docs/prototypes/target-classification-high-level-contracts/run";
 import { stableJson } from "../../src/lib/stable-json";
+import { assertCaseSelectionsUncontaminated } from "../../src/promptsmith/assembly";
 import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import {
 	canonicalInputSchema,
@@ -31,6 +33,7 @@ import {
 	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
 } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
 import {
+	adaptiveDevelopmentSelection,
 	demonstrationSelection,
 	diagnosticSelection,
 	evaluationSelection,
@@ -46,6 +49,7 @@ import {
 	preparePrototypePreflight,
 	prepareRepresentationCases,
 	REASONING_EFFORT,
+	rankAdaptiveIterations,
 	runnerParametersSchema,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/contract-prototype";
 import {
@@ -57,9 +61,38 @@ import {
 	projectClassificationInput,
 	REPRESENTATION_IDS,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/representations";
+import { promptPart as productionPromptPart } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
 
 describe("target classification high-level contract prototype", () => {
+	test("promotes the frozen adaptive prompt through the production prompt-part seam", () => {
+		const adaptive = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-5",
+		});
+		const frozen = preparePrototypePreflight({
+			batching: false,
+			pool: "development",
+			profile: "frozen-94",
+		});
+
+		expect(Buffer.byteLength(productionPromptPart, "utf8")).toBe(8_577);
+		expect(
+			createHash("sha256").update(productionPromptPart).digest("hex"),
+		).toBe(
+			"f2cbab05f32719139efa931962ae699e81918a5632cb63bcaa11312ee376f5a8",
+		);
+		expect(adaptive.promptUtf8Bytes).toBe(8_577);
+		expect(frozen.promptUtf8Bytes).toBe(8_577);
+		expect(adaptive.arms[0]?.promptSha256).toBe(
+			"3c71bc5ded78c53c503f0377cb5af55e2afa6ed03f9c98998126a708e13908bd",
+		);
+		expect(frozen.arms[0]?.promptSha256).toBe(
+			adaptive.arms[0]?.promptSha256,
+		);
+	});
+
 	function fakeResponsesClient(
 		resolvedModelForCall: (callIndex: number) => string = () =>
 			"gpt-5.6-luna",
@@ -100,7 +133,7 @@ describe("target classification high-level contract prototype", () => {
 
 	function fakeResponsesClientByInput(
 		onCall?: () => Promise<void> | void,
-		pool: "development" | "diagnostic" = "development",
+		pool: "development" | "adaptive" | "diagnostic" = "development",
 	) {
 		const ideals = new Map(
 			REPRESENTATION_IDS.flatMap((id) =>
@@ -535,7 +568,12 @@ describe("target classification high-level contract prototype", () => {
 				unclassifiedMissCount: 0,
 				safetyGatePass: true,
 				clickGatePass: true,
-				sliceRatios: { routes: 0.9, boundaries: 0.9, robustness: 0.9 },
+				sliceRatios: {
+					routes: 0.9,
+					boundaries: 0.9,
+					robustness: 0.9,
+					adaptiveDevelopment: 0,
+				},
 			}) satisfies ArmEvidenceSummary;
 		expect(
 			decidePrototypeWinner([passing("additional-compact-indices", 175)]),
@@ -559,6 +597,7 @@ describe("target classification high-level contract prototype", () => {
 						routes: 0.5,
 						boundaries: 0.5,
 						robustness: 0.5,
+						adaptiveDevelopment: 0,
 					},
 				},
 			]),
@@ -594,8 +633,13 @@ describe("target classification high-level contract prototype", () => {
 		expect(() => parseBatchingFlag(undefined)).toThrow(/explicit/u);
 		expect(() => parseBatchingFlag("false")).toThrow(/explicit/u);
 		expect(parsePoolFlag("--pool=development")).toBe("development");
+		expect(parsePoolFlag("--pool=adaptive")).toBe("adaptive");
 		expect(parsePoolFlag("--pool=diagnostic")).toBe("diagnostic");
 		expect(() => parsePoolFlag(undefined)).toThrow(/explicit/u);
+		expect(parseProfileFlag("--profile=adaptive-1")).toBe("adaptive-1");
+		expect(parseProfileFlag("--profile=adaptive-5")).toBe("adaptive-5");
+		expect(parseProfileFlag("--profile=frozen-94")).toBe("frozen-94");
+		expect(() => parseProfileFlag(undefined)).toThrow(/explicit/u);
 		expect(() => assertBatchingForMode("run", true)).toThrow(
 			/--batching=false/u,
 		);
@@ -614,10 +658,12 @@ describe("target classification high-level contract prototype", () => {
 		expect(batch.runnerParameters).toEqual({
 			batching: true,
 			pool: "development",
+			profile: "frozen-94",
 		});
 		expect(direct.runnerParameters).toEqual({
 			batching: false,
 			pool: "development",
+			profile: "frozen-94",
 		});
 		expect(batch.priceSchedule.shortContext).toMatchObject({
 			inputUsdPerMillion: 0.1,
@@ -670,6 +716,313 @@ describe("target classification high-level contract prototype", () => {
 				2,
 			),
 		).toBe(false);
+	});
+
+	test("binds five adaptive profiles to the separate 30-case pool", () => {
+		expect(evaluationSelection.ids).toHaveLength(94);
+		expect(adaptiveDevelopmentSelection.ids).toHaveLength(30);
+		for (const profile of [
+			"adaptive-1",
+			"adaptive-2",
+			"adaptive-3",
+			"adaptive-4",
+			"adaptive-5",
+		] as const) {
+			const preflight = preparePrototypePreflight({
+				batching: false,
+				pool: "adaptive",
+				profile,
+			});
+			expect(preflight.runnerParameters.profile).toBe(profile);
+			expect(preflight.evaluationCaseIds).toEqual(
+				adaptiveDevelopmentSelection.ids,
+			);
+			expect(preflight.demonstrationCaseIds).toHaveLength(
+				profile === "adaptive-4" || profile === "adaptive-5" ? 21 : 20,
+			);
+			expect(preflight.exactCallCap).toBe(60);
+			expect(preflight.promptUtf8Bytes).toBeGreaterThan(0);
+			expect(preflight.arms[0]?.promptSha256).toMatch(/^[0-9a-f]{64}$/u);
+		}
+		const iterationOne = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-1",
+		});
+		const iterationTwo = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-2",
+		});
+		const iterationThree = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-3",
+		});
+		const iterationFour = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-4",
+		});
+		const iterationFive = preparePrototypePreflight({
+			batching: false,
+			pool: "adaptive",
+			profile: "adaptive-5",
+		});
+		const frozenRegression = preparePrototypePreflight({
+			batching: false,
+			pool: "development",
+			profile: "frozen-94",
+		});
+		expect(iterationOne.promptUtf8Bytes).toBe(5_995);
+		expect(iterationOne.arms[0]?.promptSha256).toBe(
+			"4f544ca8d141b279f5675600b91e4dedfeb5c7301534937ca9bd53a8cc6461a7",
+		);
+		expect(iterationTwo.demonstrationCaseIds).toEqual(
+			iterationOne.demonstrationCaseIds,
+		);
+		expect(iterationTwo.promptUtf8Bytes).toBeGreaterThan(
+			iterationOne.promptUtf8Bytes,
+		);
+		expect(iterationTwo.arms[0]?.promptSha256).not.toBe(
+			iterationOne.arms[0]?.promptSha256,
+		);
+		expect(iterationTwo.promptUtf8Bytes).toBe(7_253);
+		expect(iterationTwo.arms[0]?.promptSha256).toBe(
+			"593f0d71b8dad92fb221e266f18adb917f296a14ae6ad70279501587f08d1a10",
+		);
+		expect(iterationThree.promptUtf8Bytes).toBe(
+			iterationTwo.promptUtf8Bytes,
+		);
+		expect(iterationThree.demonstrationCaseIds).toHaveLength(20);
+		expect(iterationThree.demonstrationCaseIds).toEqual(
+			iterationTwo.demonstrationCaseIds.map((caseId) => {
+				switch (caseId) {
+					case "target-de-demo-paired-einerseits-click-einerseits":
+						return "target-de-demo-paired-einerseits-click-lokal";
+					case "target-de-demo-repeated-anfangen-click-final-an":
+						return "target-de-demo-repeated-anfangen-click-first-an";
+					case "target-de-demo-idiom-katze-click-verdammte":
+						return "target-de-demo-idiom-katze-click-aus";
+					default:
+						return caseId;
+				}
+			}),
+		);
+		const iterationThreeSentenceFingerprints = new Set(
+			iterationThree.demonstrationCaseIds.map((caseId) => {
+				const goldenCase = corpus.cases[caseId];
+				if (goldenCase === undefined)
+					throw new Error(`Missing ${caseId}.`);
+				return stableJson(goldenCase.input.segments);
+			}),
+		);
+		expect(iterationThreeSentenceFingerprints.size).toBe(20);
+		expect(iterationThree.arms[0]?.promptSha256).not.toBe(
+			iterationTwo.arms[0]?.promptSha256,
+		);
+		expect(iterationThree.promptUtf8Bytes).toBe(7_253);
+		expect(iterationThree.arms[0]?.promptSha256).toBe(
+			"a8f49bb2a4aa34ae56ca2c6b6dddba715d01c13c8bad17abf9e0edd9a0b1bde4",
+		);
+		expect(iterationFour.demonstrationCaseIds).toEqual([
+			...iterationThree.demonstrationCaseIds.map((caseId) => {
+				switch (caseId) {
+					case "target-de-demo-idiom-katze-click-aus":
+						return "target-de-demo-idiom-katze-click-verdammte";
+					case "target-de-demo-idiom-kragen-click-kragen":
+						return "target-de-demo-idiom-kragen-click-der";
+					default:
+						return caseId;
+				}
+			}),
+			"target-de-diagnostic-idiom-oel-click-ins",
+		]);
+		expect(iterationFour.demonstrationCaseIds).toContain(
+			"target-de-demo-paired-einerseits-click-lokal",
+		);
+		expect(iterationFour.demonstrationCaseIds).toContain(
+			"target-de-demo-repeated-anfangen-click-first-an",
+		);
+		expect(iterationFour.demonstrationCaseIds).toContain(
+			"target-de-demo-idiom-katze-click-verdammte",
+		);
+		expect(iterationFour.demonstrationCaseIds).toContain(
+			"target-de-demo-idiom-kragen-click-der",
+		);
+		expect(iterationFour.demonstrationCaseIds).toContain(
+			"target-de-diagnostic-idiom-oel-click-ins",
+		);
+		expect(
+			new Set(
+				iterationFour.demonstrationCaseIds.map((caseId) => {
+					const goldenCase = corpus.cases[caseId];
+					if (goldenCase === undefined)
+						throw new Error(`Missing ${caseId}.`);
+					return stableJson(goldenCase.input.segments);
+				}),
+			).size,
+		).toBe(iterationFour.demonstrationCaseIds.length);
+		expect(iterationFour.demonstrationCaseIds).toHaveLength(21);
+		expect(iterationFour.promptUtf8Bytes).toBe(7_773);
+		expect(iterationFour.arms[0]?.promptSha256).toBe(
+			"d0db55dc110cc8d054587ec8c5b580314a3cd9ced754417679c38a7ef50ffea5",
+		);
+		assertCaseSelectionsUncontaminated({
+			route: corpus.route,
+			demonstrations: corpus.select(iterationFour.demonstrationCaseIds),
+			evaluation: evaluationSelection,
+		});
+		expect(iterationFive.demonstrationCaseIds).toEqual(
+			iterationFour.demonstrationCaseIds.map((caseId) => {
+				switch (caseId) {
+					case "target-de-demo-idiom-katze-click-verdammte":
+						return "target-de-demo-idiom-katze-click-dem";
+					case "target-de-demo-question-stattfinden-click-statt":
+						return "target-de-diagnostic-repeated-click-final-an";
+					default:
+						return caseId;
+				}
+			}),
+		);
+		expect(iterationFive.demonstrationCaseIds).toHaveLength(21);
+		expect(
+			new Set(
+				iterationFive.demonstrationCaseIds.map((caseId) => {
+					const goldenCase = corpus.cases[caseId];
+					if (goldenCase === undefined)
+						throw new Error(`Missing ${caseId}.`);
+					return stableJson(goldenCase.input.segments);
+				}),
+			).size,
+		).toBe(21);
+		const iterationFiveDemonstrations = corpus.select(
+			iterationFive.demonstrationCaseIds,
+		);
+		for (const evaluation of [
+			adaptiveDevelopmentSelection,
+			evaluationSelection,
+		]) {
+			assertCaseSelectionsUncontaminated({
+				route: corpus.route,
+				demonstrations: iterationFiveDemonstrations,
+				evaluation,
+			});
+		}
+		expect(frozenRegression.demonstrationCaseIds).toEqual(
+			iterationFive.demonstrationCaseIds,
+		);
+		expect(frozenRegression.promptUtf8Bytes).toBe(
+			iterationFive.promptUtf8Bytes,
+		);
+		expect(
+			frozenRegression.arms.map(({ promptSha256 }) => promptSha256),
+		).toEqual(iterationFive.arms.map(({ promptSha256 }) => promptSha256));
+		expect(frozenRegression.evaluationCaseIds).toEqual(
+			evaluationSelection.ids,
+		);
+		expect(frozenRegression.exactCallCap).toBe(188);
+		expect(() =>
+			preparePrototypePreflight({
+				batching: false,
+				pool: "development",
+				profile: "adaptive-1",
+			}),
+		).toThrow(/requires pool adaptive/u);
+	});
+
+	test("summarizes a complete adaptive run without treating new cases as unknown", async () => {
+		const directory = await mkdtemp(
+			join(tmpdir(), "target-contract-adaptive-"),
+		);
+		try {
+			const client = fakeResponsesClientByInput(undefined, "adaptive");
+			const run = await runLivePrototype({
+				batching: false,
+				pool: "adaptive",
+				profile: "adaptive-1",
+				client,
+				runDirectory: directory,
+			});
+			expect(run.actualCallCount).toBe(60);
+			expect(run.arms[0]?.attemptContractScores).toEqual([30, 30]);
+			expect(run.arms[0]?.sliceRatios.adaptiveDevelopment).toBe(1);
+		} finally {
+			await rm(directory, { recursive: true, force: true });
+		}
+	}, 15_000);
+
+	test("ranks adaptive iterations by gates, replicate floor, and parsimony", () => {
+		const candidate = (
+			profile: "adaptive-1" | "adaptive-2" | "adaptive-3",
+			scores: readonly [number, number],
+			demonstrationCount: number,
+			promptUtf8Bytes: number,
+		) => ({
+			profile,
+			attemptContractScores: scores,
+			evaluationCasesPerAttempt: 30,
+			executionErrorCount: 0,
+			unclassifiedMissCount: 0,
+			safetyGatePass: true,
+			clickGatePass: true,
+			demonstrationCount,
+			promptUtf8Bytes,
+		});
+		expect(
+			rankAdaptiveIterations([
+				candidate("adaptive-1", [28, 30], 18, 7_000),
+				candidate("adaptive-2", [29, 29], 20, 8_000),
+			]),
+		).toHaveProperty("0.profile", "adaptive-2");
+		expect(
+			rankAdaptiveIterations([
+				candidate("adaptive-1", [29, 30], 20, 7_000),
+				candidate("adaptive-2", [30, 30], 18, 8_000),
+				candidate("adaptive-3", [30, 30], 18, 6_000),
+			]),
+		).toHaveProperty("0.profile", "adaptive-3");
+		expect(
+			rankAdaptiveIterations([
+				{
+					...candidate("adaptive-1", [30, 30], 1, 1),
+					safetyGatePass: false,
+				},
+			]),
+		).toEqual([]);
+	});
+
+	test("does not call an ineligible adaptive fallback a winner", () => {
+		const evidence = [
+			["adaptive-1", [23, 21]],
+			["adaptive-2", [23, 24]],
+			["adaptive-3", [23, 25]],
+			["adaptive-4", [23, 25]],
+			["adaptive-5", [28, 27]],
+		] as const;
+		expect(
+			rankAdaptiveIterations(
+				evidence.map(([profile, attemptContractScores]) => ({
+					profile,
+					attemptContractScores,
+					evaluationCasesPerAttempt: 30,
+					executionErrorCount: 0,
+					unclassifiedMissCount:
+						60 -
+						attemptContractScores[0] -
+						attemptContractScores[1],
+					safetyGatePass: true,
+					clickGatePass: false,
+					demonstrationCount:
+						profile === "adaptive-4" || profile === "adaptive-5"
+							? 21
+							: 20,
+					promptUtf8Bytes: 1,
+				})),
+			),
+		).toEqual([]);
+		// Adaptive-5 is frozen only as the best score fallback for the requested
+		// regression; it did not satisfy the declared eligibility gates.
 	});
 
 	test("binds an explicit diagnostic pool to only the failing and analogue cases", () => {

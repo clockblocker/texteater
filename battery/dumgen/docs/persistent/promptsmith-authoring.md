@@ -111,6 +111,17 @@ module and only the semantic case modules that contribute selected cases.
 
 Run `bun run check:system-prompts` to detect stale generated output.
 
+## Production Prompt Parts
+
+A laboratory instruction body may be promoted under
+`production/prompt-part`, preserving the stage-first route. Each route-local
+module exposes the small production interface `promptPart: string`. It must not
+import laboratory corpora, experiments, runners, or provider clients.
+
+Promotion pins the exact reviewed bytes to retained experiment evidence. Model
+schemas, demonstrations, assembly, and runtime projection remain separate
+seams; promotion of a Prompt Part does not silently promote those concerns.
+
 ## Runtime boundary
 
 Promptsmith owns prompt bodies, model schemas, Golden Cases, selections, and

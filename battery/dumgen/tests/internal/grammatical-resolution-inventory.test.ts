@@ -15,6 +15,7 @@ import {
 	DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES,
 	DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES,
 } from "../../src/schema/de-grammatical-resolution-inventory";
+import { isGermanReachableHighLevelRoute } from "../../src/schema/german-high-level-routes";
 
 type CatalogEntry = { readonly prompt: Prompt };
 
@@ -108,8 +109,19 @@ describe("German Grammatical Resolution inventory", () => {
 		).toEqual(["de"]);
 	});
 
-	test("dispatches all 23 enabled routes through their exact catalog leaves", async () => {
-		for (const route of DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES) {
+	test("dispatches every target-reachable enabled route through its exact catalog leaf", async () => {
+		const targetReachableRoutes =
+			DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES.filter(
+				({ family, kind }) =>
+					isGermanReachableHighLevelRoute(family, kind),
+			);
+		expect(targetReachableRoutes).toHaveLength(22);
+		expect(targetReachableRoutes).not.toContainEqual({
+			family: "Lexeme",
+			kind: "X",
+		});
+
+		for (const route of targetReachableRoutes) {
 			const multipleMembers =
 				route.family === "Phraseme" || route.kind === "PairedFrame";
 			const { pending, sdk } = queueSdk([

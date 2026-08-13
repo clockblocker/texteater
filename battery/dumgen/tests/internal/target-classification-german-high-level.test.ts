@@ -3,6 +3,9 @@ import { assertCaseSelectionsUncontaminated } from "../../src/promptsmith/assemb
 import { corpus } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/corpus";
 import { semanticTargetFingerprint } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/fingerprints";
 import {
+	adaptiveCarryoverSelection,
+	adaptiveDevelopmentSelection,
+	adaptiveNovelSelection,
 	demonstrationSelection,
 	diagnosticSelection,
 	evaluationSelection,
@@ -36,10 +39,126 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(systemPrompt).not.toContain("Collocation");
 	});
 
+	test("keeps adaptive iteration one immutable and gives iteration two generic boundary reasoning", () => {
+		const iterationOne = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-1",
+		);
+		const iterationTwo = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-2",
+		);
+		expect(iterationOne).not.toContain("<membership_decision_order>");
+		expect(iterationTwo).toContain("<membership_decision_order>");
+		expect(iterationTwo).toContain(
+			"If the mark is payload, stop with its singleton Lexeme.",
+		);
+		expect(iterationTwo).toContain(
+			"Only an objectless occurrence can be the separable particle.",
+		);
+		expect(iterationTwo).toContain(
+			"All fixed-member clicks must produce identical membership.",
+		);
+		for (const heldOutWord of [
+			"früher",
+			"besser",
+			"Wölfen",
+			"Zahn",
+			"Publikum",
+		]) {
+			expect(iterationTwo).not.toContain(heldOutWord);
+		}
+	});
+
+	test("retains iteration-two reasoning while iteration three swaps only click-contrast demonstrations", () => {
+		const iterationTwo = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-2",
+		);
+		const iterationThree = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-3",
+		);
+		expect(iterationThree).toContain("<membership_decision_order>");
+		expect(iterationThree).toContain("<target>lokal</target>");
+		expect(iterationThree).toContain("<target>an</target> der Kreuzung");
+		expect(iterationThree).toContain("<target>aus</target> dem Sack");
+		expect(iterationThree).not.toContain("<target>Einerseits</target>");
+		expect(iterationThree).not.toContain("Kreuzung an<target>");
+		expect(iterationThree).not.toContain("<target>verdammte</target>");
+		expect(iterationThree.length).not.toBe(iterationTwo.length);
+	});
+
+	test("iteration four restores the free-modifier contrast and teaches fixed articles plus reflexive particles", () => {
+		const iterationFour = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-4",
+		);
+		expect(iterationFour).toContain("<target>verdammte</target>");
+		expect(iterationFour).toContain("<target>der</target>");
+		expect(iterationFour).toContain(
+			"Its function-word click selects the whole Idiom.",
+		);
+		expect(iterationFour).toContain("<target>ins</target>");
+		expect(iterationFour).toContain(
+			"The marked function token is a fixed realized member of the Idiom.",
+		);
+		expect(iterationFour).toContain(
+			"inserted descriptive modifier remains outside membership",
+		);
+		expect(iterationFour).toContain("<reflexive_separable_membership>");
+		expect(iterationFour).toContain(
+			"finite verb, required reflexive pronoun, and objectless separable particle",
+		);
+		expect(iterationFour).toContain("<target>lokal</target>");
+		expect(iterationFour).toContain("<target>an</target> der Kreuzung");
+		for (const heldOutWord of ["Wölfen", "Zahn", "gründlich", "Publikum"]) {
+			expect(iterationFour).not.toContain(heldOutWord);
+		}
+	});
+
+	test("iteration five fixes scalar ADJ routing and adds function-word and final-particle contrasts", () => {
+		const iterationFive = systemPromptForRepresentation(
+			"additional-compact-indices",
+			"adaptive-5",
+		);
+		expect(iterationFive).toContain("<final_boundary_rules>");
+		expect(iterationFive).toContain(
+			"A comparative form of an adjective remains Lexeme/ADJ when used adverbially",
+		);
+		expect(iterationFive).toContain(
+			"adverbial grammatical function does not turn that adjectival lexeme into ADV",
+		);
+		expect(iterationFive).not.toContain(
+			"scalar or comparative payload word",
+		);
+		expect(iterationFive).toContain(
+			"preposition followed by a fixed article, both function words remain members",
+		);
+		expect(iterationFive).toContain(
+			"delete every earlier same-spelled occurrence that heads a nominal phrase",
+		);
+		expect(iterationFive).toContain("<target>dem</target> Sack");
+		expect(iterationFive).toContain("<target>an</target>");
+		expect(iterationFive).toContain("an der Haltestelle");
+		expect(iterationFive).not.toContain("<target>verdammte</target>");
+		expect(iterationFive).not.toContain("<target>statt</target>");
+		for (const heldOutWord of [
+			"früher",
+			"besser",
+			"Wölfen",
+			"Zahn",
+			"Publikum",
+		]) {
+			expect(iterationFive).not.toContain(heldOutWord);
+		}
+	});
+
 	test("teaches a frame-disjoint PairedFrame filler through the assembled prompt", () => {
 		const caseId = "target-de-demo-paired-einerseits-click-einerseits";
 		const systemPrompt = systemPromptForRepresentation(
 			"additional-compact-indices",
+			"adaptive-1",
 		);
 
 		expect(demonstrationSelection.ids).toContain(caseId);
@@ -61,6 +180,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		const caseId = "target-de-demo-idiom-kragen-click-kragen";
 		const systemPrompt = systemPromptForRepresentation(
 			"additional-compact-indices",
+			"adaptive-1",
 		);
 
 		expect(demonstrationSelection.ids).toContain(caseId);
@@ -134,11 +254,12 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 	});
 
 	test("pins named collections and explicit published selections", () => {
-		expect(corpus.all().ids).toHaveLength(198);
+		expect(corpus.all().ids).toHaveLength(221);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"routes",
 			"boundaries",
 			"robustness",
+			"adaptiveDevelopment",
 		]);
 		expect(demonstrationSelection.ids).toEqual([
 			"target-de-demo-perfect-arbeiten-click-habe",
@@ -177,6 +298,64 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(new Set(demonstrationSentences).size).toBe(
 			demonstrationSentences.length,
 		);
+	});
+
+	test("freezes the 7 v16 misses plus 23 novel adaptive probes", () => {
+		expect(adaptiveDevelopmentSelection.ids).toHaveLength(30);
+		expect(adaptiveCarryoverSelection.ids).toEqual([
+			"target-de-route-construction-fusion",
+			"target-de-route-construction-paired-near-frueher",
+			"target-de-route-construction-paired-near-besser",
+			"target-de-boundary-perfect-near-laut",
+			"target-de-boundary-fixed-function-click-mit",
+			"target-de-boundary-fixed-function-click-den",
+			"target-de-robust-repeated-near-first-auf",
+		]);
+		expect(adaptiveNovelSelection.ids).toHaveLength(23);
+		expect(adaptiveDevelopmentSelection.ids.slice(0, 7)).toEqual([
+			...adaptiveCarryoverSelection.ids,
+		]);
+		expect(adaptiveDevelopmentSelection.ids.slice(7)).toEqual([
+			...adaptiveNovelSelection.ids,
+		]);
+		const additions = adaptiveNovelSelection;
+		expect(
+			additions.ids.every((id) => id.startsWith("target-de-adaptive-")),
+		).toBe(true);
+		expect(
+			demonstrationSelection.isDisjointFrom(adaptiveDevelopmentSelection),
+		).toBe(true);
+		assertCaseSelectionsUncontaminated({
+			route: corpus.route,
+			demonstrations: demonstrationSelection,
+			evaluation: adaptiveDevelopmentSelection,
+		});
+		assertCaseSelectionsUncontaminated({
+			route: corpus.route,
+			demonstrations: evaluationSelection,
+			evaluation: adaptiveNovelSelection,
+		});
+		for (const goldenCase of additions.cases) {
+			expect(goldenCase.explanation).toContain("Source: https://");
+			expect(goldenCase.contaminationKeys).toHaveLength(1);
+		}
+		expect(
+			additions.ids.filter((id) => id.includes("-fusion-")),
+		).toHaveLength(4);
+		expect(
+			additions.ids.filter((id) => id.includes("-paired-")),
+		).toHaveLength(6);
+		expect(
+			additions.ids.filter((id) =>
+				/[/-](perfect|future|passive|separable)-/u.test(id),
+			),
+		).toHaveLength(4);
+		expect(
+			additions.ids.filter((id) => id.includes("-idiom-")),
+		).toHaveLength(5);
+		expect(
+			additions.ids.filter((id) => id.includes("-repeated-")),
+		).toHaveLength(4);
 	});
 
 	test("covers every classifier route except deliberately omitted Collocation", () => {

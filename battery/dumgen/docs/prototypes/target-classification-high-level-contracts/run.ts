@@ -29,7 +29,10 @@ import {
 	RUNNER_VERSION,
 	type RunnerParameterInput,
 	type RunnerPoolId,
+	type RunProfileId,
 	runnerParametersSchema,
+	SLICE_IDS,
+	type SliceId,
 	sliceForCase,
 	systemPromptForRepresentation,
 	TEXT_VERBOSITY,
@@ -251,6 +254,7 @@ const armSummarySchema = z.strictObject({
 		routes: z.number().min(0).max(1),
 		boundaries: z.number().min(0).max(1),
 		robustness: z.number().min(0).max(1),
+		adaptiveDevelopment: z.number().min(0).max(1),
 	}),
 }) satisfies z.ZodType<ArmEvidenceSummary>;
 
@@ -554,7 +558,10 @@ function preparePrototypeSchedule(
 	const schedule: PrototypeScheduleEntry[] = [];
 	let scheduleIndex = 0;
 	for (const armId of REPRESENTATION_IDS) {
-		const systemPrompt = systemPromptForRepresentation(armId);
+		const systemPrompt = systemPromptForRepresentation(
+			armId,
+			runnerParameters.profile,
+		);
 		for (
 			let attemptNumber = 1;
 			attemptNumber <= ATTEMPTS_PER_ARM;
@@ -609,10 +616,12 @@ function preparePrototypeSchedule(
 export function preparePrototypeBatch(parameters: {
 	readonly batching: true;
 	readonly pool?: RunnerPoolId;
+	readonly profile?: RunProfileId;
 }): PreparedPrototypeBatch {
 	const runnerParameters = runnerParametersSchema.parse({
 		batching: parameters.batching,
 		pool: parameters.pool,
+		profile: parameters.profile,
 	});
 	if (!runnerParameters.batching) {
 		throw new Error("Batch preparation requires batching: true.");
@@ -671,9 +680,20 @@ export function parseBatchingFlag(value: string | undefined): boolean {
 
 export function parsePoolFlag(value: string | undefined): RunnerPoolId {
 	if (value === "--pool=development") return "development";
+	if (value === "--pool=adaptive") return "adaptive";
 	if (value === "--pool=diagnostic") return "diagnostic";
 	throw new Error(
-		"Expected explicit --pool=development or --pool=diagnostic.",
+		"Expected explicit --pool=development, --pool=adaptive, or --pool=diagnostic.",
+	);
+}
+
+export function parseProfileFlag(value: string | undefined): RunProfileId {
+	const match = /^--profile=(frozen-94|adaptive-[1-5]|diagnostic)$/u.exec(
+		value ?? "",
+	);
+	if (match?.[1] !== undefined) return match[1] as RunProfileId;
+	throw new Error(
+		"Expected explicit --profile=frozen-94, --profile=adaptive-1..5, or --profile=diagnostic.",
 	);
 }
 
@@ -697,6 +717,7 @@ export function printPreflight(parameters: RunnerParameterInput): void {
 export async function submitPrototypeBatch(options: {
 	readonly batching: true;
 	readonly pool?: RunnerPoolId;
+	readonly profile?: RunProfileId;
 	readonly apiKey?: string;
 	readonly client?: PrototypeBatchClient;
 	readonly runDirectory?: string;
@@ -713,6 +734,7 @@ export async function submitPrototypeBatch(options: {
 		!runnerParametersSchema.parse({
 			batching: options.batching,
 			pool: options.pool,
+			profile: options.profile,
 		}).batching
 	) {
 		throw new Error("Batch submission requires batching: true.");
@@ -1205,6 +1227,7 @@ function assertDirectCheckpointCurrent(
 export async function runLivePrototype(options: {
 	readonly batching: false;
 	readonly pool?: RunnerPoolId;
+	readonly profile?: RunProfileId;
 	readonly apiKey?: string;
 	readonly client?: PrototypeResponsesClient;
 	readonly runDirectory?: string;
@@ -1215,6 +1238,7 @@ export async function runLivePrototype(options: {
 	const parameters = runnerParametersSchema.parse({
 		batching: options.batching,
 		pool: options.pool,
+		profile: options.profile,
 	});
 	if (parameters.batching) {
 		throw new Error("Direct runner requires batching: false.");
@@ -2443,7 +2467,7 @@ export function summarizeArms(
 				).length,
 		);
 		const sliceRatios = Object.fromEntries(
-			(["routes", "boundaries", "robustness"] as const).map((slice) => {
+			SLICE_IDS.map((slice) => {
 				const sliced = armAttempts.filter(
 					(attempt) => sliceForCase(attempt.caseId) === slice,
 				);
@@ -2456,7 +2480,7 @@ export function summarizeArms(
 							).length / sliced.length,
 				];
 			}),
-		) as Record<"routes" | "boundaries" | "robustness", number>;
+		) as Record<SliceId, number>;
 		const clickGatePass = Array.from(
 			{ length: ATTEMPTS_PER_ARM },
 			(_, index) => index + 1,
@@ -3099,6 +3123,7 @@ async function runCli(): Promise<void> {
 		printPreflight({
 			batching: parseBatchingFlag(process.argv[3]),
 			pool: parsePoolFlag(process.argv[4]),
+			profile: parseProfileFlag(process.argv[5]),
 		});
 	} else if (mode === "run") {
 		const batching = parseBatchingFlag(process.argv[3]);
@@ -3106,7 +3131,8 @@ async function runCli(): Promise<void> {
 		await runLivePrototype({
 			batching: false,
 			pool: parsePoolFlag(process.argv[4]),
-			runDirectory: process.argv[5],
+			profile: parseProfileFlag(process.argv[5]),
+			runDirectory: process.argv[6],
 		});
 	} else if (mode === "batch-submit") {
 		const batching = parseBatchingFlag(process.argv[3]);
@@ -3114,7 +3140,8 @@ async function runCli(): Promise<void> {
 		const manifestPath = await submitPrototypeBatch({
 			batching: true,
 			pool: parsePoolFlag(process.argv[4]),
-			runDirectory: process.argv[5],
+			profile: parseProfileFlag(process.argv[5]),
+			runDirectory: process.argv[6],
 		});
 		console.log(`Submitted Batch; manifest: ${manifestPath}`);
 	} else if (mode === "batch-resume") {
@@ -3160,7 +3187,7 @@ async function runCli(): Promise<void> {
 		await finalizeEvidence(resultsPath, classificationsPath);
 	} else {
 		throw new Error(
-			"Usage: run.ts <preflight|run|batch-submit> --batching=<true|false> --pool=<development|diagnostic> [run-directory], diagnostic-follow-up --batching=false <diagnostic-results.json> [artifact-directory], or batch-resume/finalize with their artifact paths.",
+			"Usage: run.ts <preflight|run|batch-submit> --batching=<true|false> --pool=<development|adaptive|diagnostic> --profile=<frozen-94|adaptive-1..5|diagnostic> [run-directory], diagnostic-follow-up --batching=false <diagnostic-results.json> [artifact-directory], or batch-resume/finalize with their artifact paths.",
 		);
 	}
 }

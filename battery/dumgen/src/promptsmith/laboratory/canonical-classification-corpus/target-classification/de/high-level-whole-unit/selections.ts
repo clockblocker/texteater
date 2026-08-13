@@ -164,10 +164,68 @@ export const diagnosticSelection = corpus.select([
 	"target-de-diagnostic-overlap-click-aus",
 ]);
 
+/** The seven stable v16 misses, retained as adaptive-development carryovers. */
+export const adaptiveCarryoverSelection = corpus.select([
+	"target-de-route-construction-fusion",
+	"target-de-route-construction-paired-near-frueher",
+	"target-de-route-construction-paired-near-besser",
+	"target-de-boundary-perfect-near-laut",
+	"target-de-boundary-fixed-function-click-mit",
+	"target-de-boundary-fixed-function-click-den",
+	"target-de-robust-repeated-near-first-auf",
+]);
+
+/** The frozen 23-case novel analogue set, disjoint from the historical 94. */
+export const adaptiveNovelSelection = corpus.select([
+	"target-de-adaptive-fusion-beim",
+	"target-de-adaptive-fusion-vom",
+	"target-de-adaptive-fusion-ins",
+	"target-de-adaptive-fusion-ans",
+	"target-de-adaptive-paired-weder-click-weder",
+	"target-de-adaptive-paired-weder-click-noch",
+	"target-de-adaptive-paired-weder-near-regen",
+	"target-de-adaptive-paired-weder-near-wind",
+	"target-de-adaptive-paired-nicht-nur-near-klug",
+	"target-de-adaptive-paired-nicht-nur-near-fleissig",
+	"target-de-adaptive-perfect-near-gestern",
+	"target-de-adaptive-future-near-bald",
+	"target-de-adaptive-passive-near-sorgfaeltig",
+	"target-de-adaptive-separable-near-ploetzlich",
+	"target-de-adaptive-idiom-zahn-click-fuehlte",
+	"target-de-adaptive-idiom-zahn-click-auf",
+	"target-de-adaptive-idiom-zahn-click-den",
+	"target-de-adaptive-idiom-zahn-click-zahn",
+	"target-de-adaptive-idiom-zahn-near-gruendlich",
+	"target-de-adaptive-repeated-vor-near-first-vor",
+	"target-de-adaptive-repeated-vor-click-stellt",
+	"target-de-adaptive-repeated-vor-click-sich",
+	"target-de-adaptive-repeated-vor-click-final-vor",
+]);
+
+/**
+ * Frozen adaptive prompt-development set: carryovers first, then novel probes.
+ * The unchanged 94-case evaluation selection remains the final regression set.
+ */
+export const adaptiveDevelopmentSelection = adaptiveCarryoverSelection.union(
+	adaptiveNovelSelection,
+);
+
 assertCaseSelectionsUncontaminated({
 	route: corpus.route,
 	demonstrations: demonstrationSelection,
 	evaluation: evaluationSelection,
+});
+
+assertCaseSelectionsUncontaminated({
+	route: corpus.route,
+	demonstrations: demonstrationSelection,
+	evaluation: adaptiveDevelopmentSelection,
+});
+
+assertCaseSelectionsUncontaminated({
+	route: corpus.route,
+	demonstrations: evaluationSelection,
+	evaluation: adaptiveNovelSelection,
 });
 
 assertCaseSelectionsUncontaminated({

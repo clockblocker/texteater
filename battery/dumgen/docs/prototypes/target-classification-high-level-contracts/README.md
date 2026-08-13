@@ -3,8 +3,11 @@
 Question: **Does the lean additional-member-indices contract preserve the
 German high-level target policy across the development suite?**
 
-This is issue #85's throwaway logic experiment, not a production Prompt Source
-or public DTO. It retains one private Structured Output contract: the click is
+This remains issue #85's logic experiment, not a production Prompt Source or
+public DTO. Its frozen Adaptive-5 instruction body has now been promoted as the
+first production `prompt-part`; schemas, demonstrations, adapters, and runner
+remain laboratory concerns. The experiment retains one private Structured
+Output contract: the click is
 implicit membership. For every Resolved result, the model returns a top-level
 `additionalMemberIndices` array containing only the other members; a
 one-segment target uses `[]`. Unresolved uses `target: null` and
@@ -161,6 +164,28 @@ adverb inside a perfect; two fixed-function-word clicks inside `mit den
 Wölfen heulen`; and the first, prepositional `auf` near a later separable
 particle. Retained results are in
 `runs/2026-08-13T04-43-20-629Z/results.json`.
+
+The following five-profile adaptive study used a separate frozen 30-case set:
+the seven v16 misses plus 23 novel analogues. Adaptive-5 had the strongest
+replicate floor and aggregate score at 28/30 and 27/30 (55/60), but no profile
+was formally eligible: every profile retained unclassified misses and failed
+the click-invariance gate. Adaptive-5 is therefore not a winner. Its exact
+prompt and exact 21 demonstration IDs are frozen into `frozen-94` only as the
+explicitly ineligible best-score fallback for the requested final regression.
+The assembled system-prompt hash and demonstration IDs are byte-identical
+between `adaptive-5` and `frozen-94`; no prompt or demonstration changes are
+permitted after this freeze.
+
+Across the five direct adaptive runs, replicate scores were 23/21, 23/24,
+23/25, 23/25, and 28/27 out of 30. The final frozen-94 regression then scored
+89/94 in both replicates, or 178/188 (94.68%), with zero execution errors,
+membership safety passing, and a $0.04645772 billed-cost upper bound. Its ten
+missed observations occupy five case slots: `Dank` was split from `Herzlichen
+Dank`; the comparative payload `früher` remained singleton but routed ADV
+instead of ADJ; and clicks within `mit den Wölfen heulen` produced incomplete
+or standalone targets. Click invariance therefore remained false. The final
+artifact is `runs/2026-08-13T05-29-01-478Z/results.json`; the five immediately
+preceding adaptive artifacts retain every intermediate profile binding.
 
 ## Deterministic preflight
 

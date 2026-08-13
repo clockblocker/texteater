@@ -1,4 +1,5 @@
 import { defineGoldenCorpus } from "../../../../../assembly";
+import { adaptiveDevelopmentCases } from "./cases/adaptive-development";
 import { boundaryCases } from "./cases/boundaries";
 import { robustnessCases } from "./cases/robustness";
 import { routeCases } from "./cases/routes";
@@ -14,6 +15,7 @@ export const corpus = defineGoldenCorpus({
 		routes: routeCases,
 		boundaries: boundaryCases,
 		robustness: robustnessCases,
+		adaptiveDevelopment: adaptiveDevelopmentCases,
 	},
 	fingerprintInput: targetStimulusFingerprint,
 });
