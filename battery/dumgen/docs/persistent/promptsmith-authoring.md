@@ -103,9 +103,11 @@ or selected Golden Cases in order, writes inputs and ideal outputs as stable
 JSON, and omits IDs.
 Explanations appear after the ideal output under a guidance-only label.
 
-Codegen writes committed deterministic modules under
-`laboratory/generated-system-prompt`, mirroring route paths. Provenance is
-derived from the Prompt Source and always includes `prompt-source.ts` and
+Codegen writes committed deterministic modules under the owning stage's
+`generated-system-prompt` directory, mirroring route paths. Laboratory Prompt
+Sources compile under `laboratory/generated-system-prompt`; promoted production
+Prompt Sources compile under `production/generated-system-prompt`. Provenance
+is derived from the Prompt Source and always includes `prompt-source.ts` and
 `schemas.ts`. Corpus-backed demonstrations additionally include the corpus
 module and only the semantic case modules that contribute selected cases.
 
@@ -132,6 +134,13 @@ laboratory experiments, runners, provider clients, or retained results.
 Laboratory experiments consume the production corpus and content through the
 route's interface. Runtime projection and provider execution remain separate
 seams.
+
+Once a private representation is selected, the production route owns its
+model-facing schemas, Prompt Representation Adapter, and Prompt Source. Prompt
+Assembly deterministically compiles that source into the committed production
+Generated System Prompt. The corresponding `PROMPT_CATALOG` entry imports the
+generated artifact and uses the production Adapter for input projection and
+output canonicalization.
 
 ## Runtime boundary
 

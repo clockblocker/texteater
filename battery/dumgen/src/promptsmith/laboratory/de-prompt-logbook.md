@@ -123,3 +123,8 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - The production route has no laboratory dependency. Its instruction bytes,
   demonstration selection, guidance, and assembled regression prompt hash are
   pinned by focused tests.
+- The selected additional-indices representation, execution-ready Prompt
+  Source, and generated 20,231-byte System Prompt are production-owned.
+  `PROMPT_CATALOG.laboratory.targetClassification.de.highLevelWholeUnit`
+  consumes that production artifact while preserving the catalog's established
+  route path.

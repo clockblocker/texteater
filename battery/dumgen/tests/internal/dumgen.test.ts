@@ -297,8 +297,8 @@ describe("grammatical resolution", () => {
 		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [],
 				target: {
-					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -359,7 +359,14 @@ describe("grammatical resolution", () => {
 		expect("target" in result).toBe(false);
 		expect("memberOrthographies" in result).toBe(false);
 		expect(calls).toHaveLength(2);
-		expect(calls[0]?.input).toContain('"clickedSegmentIndex":2');
+		expect(JSON.parse(calls[0]?.input ?? "{}")).toEqual({
+			markedSentence: "Die <target>Banken</target>",
+			segments: [
+				{ s: "Die", i: 0 },
+				{ s: "Banken", i: 1 },
+			],
+			clickedIndex: 1,
+		});
 		expect(calls[1]?.input).toBe(
 			'{"markedContext":"Die <TARGET>Banken</TARGET>"}',
 		);
@@ -391,8 +398,8 @@ describe("grammatical resolution", () => {
 		const { sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [],
 				target: {
-					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -435,8 +442,8 @@ describe("grammatical resolution", () => {
 		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [2],
 				target: {
-					additionalMemberSegmentIndices: [4],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -478,7 +485,11 @@ describe("grammatical resolution", () => {
 	test("returns expected target and grammar Unresolved outcomes", async () => {
 		const source = sentence([{ kind: "ResolvableText", text: "Bank" }]);
 		const targetUnresolved = queueSdk([
-			{ decision: "Unresolved", target: null },
+			{
+				decision: "Unresolved",
+				target: null,
+				additionalMemberIndices: null,
+			},
 		]);
 		await expect(
 			buildDumgen({ sdk: targetUnresolved.sdk }).resolve.grammatical(
@@ -491,8 +502,8 @@ describe("grammatical resolution", () => {
 		const grammarUnresolved = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [],
 				target: {
-					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -538,8 +549,8 @@ describe("grammatical resolution", () => {
 		const invalidTarget = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [2],
 				target: {
-					additionalMemberSegmentIndices: [1],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -556,8 +567,8 @@ describe("grammatical resolution", () => {
 		const invalidCount = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [1],
 				target: {
-					additionalMemberSegmentIndices: [2],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -575,8 +586,8 @@ describe("grammatical resolution", () => {
 		const invalidNormalization = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [1],
 				target: {
-					additionalMemberSegmentIndices: [2],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -612,8 +623,8 @@ describe("grammatical resolution", () => {
 		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [1, 3],
 				target: {
-					additionalMemberSegmentIndices: [2, 6],
 					family: "Lexeme",
 					kind: "VERB",
 				},
@@ -700,8 +711,8 @@ describe("grammatical resolution", () => {
 		const { calls, sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [1],
 				target: {
-					additionalMemberSegmentIndices: [2],
 					family: "Lexeme",
 					kind: "NOUN",
 				},
@@ -783,8 +794,8 @@ describe("grammatical resolution", () => {
 		const drifting = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [],
 				target: {
-					additionalMemberSegmentIndices: [],
 					family: "Lexeme",
 					kind: "NOUN",
 				},

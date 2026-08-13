@@ -11,11 +11,11 @@ import { DUMGEN_GENERATION_MODEL } from "../../src/ai-sdk/model-policy";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "../../src/catalog/laboratory/de-authored-grammatical-resolution-prompts";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import type { Prompt } from "../../src/catalog/prompt-definition";
+import { isGermanHighLevelTargetClassificationRoute } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import {
 	DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES,
 	DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES,
 } from "../../src/schema/de-grammatical-resolution-inventory";
-import { isGermanReachableHighLevelRoute } from "../../src/schema/german-high-level-routes";
 
 type CatalogEntry = { readonly prompt: Prompt };
 
@@ -113,12 +113,16 @@ describe("German Grammatical Resolution inventory", () => {
 		const targetReachableRoutes =
 			DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES.filter(
 				({ family, kind }) =>
-					isGermanReachableHighLevelRoute(family, kind),
+					isGermanHighLevelTargetClassificationRoute(family, kind),
 			);
-		expect(targetReachableRoutes).toHaveLength(22);
+		expect(targetReachableRoutes).toHaveLength(21);
 		expect(targetReachableRoutes).not.toContainEqual({
 			family: "Lexeme",
 			kind: "X",
+		});
+		expect(targetReachableRoutes).not.toContainEqual({
+			family: "Phraseme",
+			kind: "Collocation",
 		});
 
 		for (const route of targetReachableRoutes) {
@@ -155,11 +159,9 @@ describe("German Grammatical Resolution inventory", () => {
 			const { pending, sdk } = queueSdk([
 				{
 					decision: "Resolved",
+					additionalMemberIndices: multipleMembers ? [1] : [],
 					target: {
 						...route,
-						additionalMemberSegmentIndices: multipleMembers
-							? [2]
-							: [],
 					},
 				},
 				grammarOutput,
@@ -202,10 +204,10 @@ describe("German Grammatical Resolution inventory", () => {
 		const { pending, sdk } = queueSdk([
 			{
 				decision: "Resolved",
+				additionalMemberIndices: [],
 				target: {
 					family: "Construction",
 					kind: "Fusion",
-					additionalMemberSegmentIndices: [],
 				},
 			},
 			{

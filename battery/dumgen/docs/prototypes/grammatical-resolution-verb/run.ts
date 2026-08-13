@@ -6,6 +6,7 @@ import { basename, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import type { ResponseCreateParamsNonStreaming } from "openai/resources/responses/responses";
 import { z } from "zod";
 
 import {
@@ -18,13 +19,19 @@ import { verbGrammaticalResolutionExperiment } from "../../../src/promptsmith/la
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RUNS = join(HERE, "runs");
-const RUNNER_VERSION = "grammatical-resolution-verb-v2";
+const RUNNER_VERSION = "grammatical-resolution-verb-v4";
 const RUN_ROUTE = "grammatical-resolution/de/lexeme/verb";
+const RUN_TRANSPORT = "openai-responses-direct-serial";
 const RUN_MAX_OUTPUT_TOKENS = 16384;
 const MINIMUM_EVALUATION_CASES = 10;
-const MAXIMUM_EVALUATION_CASES = 20;
+const MAXIMUM_EVALUATION_CASES = 30;
 const MINIMUM_SCORE_RATIO = 0.8;
 const TEXT_VERBOSITY = "low";
+export const VERB_PROMPT_CACHE_POLICY = Object.freeze({
+	mode: "explicit" as const,
+	ttl: "30m" as const,
+	breakpoint: "end-of-stable-system-prompt" as const,
+});
 const MISS_CLASSIFICATIONS = [
 	"prompt-defect",
 	"corpus-or-evaluator-defect",
@@ -36,6 +43,12 @@ type Evaluation = ReturnType<
 >;
 const promptSource = verbGrammaticalResolutionExperiment.promptSource;
 const currentSystemPrompt = assembleSystemPrompt(promptSource);
+const currentPromptCacheKey = createHash("sha256")
+	.update(
+		`${RUN_ROUTE}\u0000${RUN_MODEL}\u0000${currentSystemPrompt}`,
+		"utf8",
+	)
+	.digest("hex");
 
 const nonEmptyIdSchema = z.string().trim().min(1);
 const missClassificationSchema = z.enum(MISS_CLASSIFICATIONS);
@@ -141,6 +154,7 @@ const retainedRunSchema = z
 	.strictObject({
 		runnerVersion: z.literal(RUNNER_VERSION),
 		route: z.literal(RUN_ROUTE),
+		transport: z.literal(RUN_TRANSPORT),
 		startedAt: z.iso.datetime({ offset: true }),
 		completedAt: z.iso.datetime({ offset: true }),
 		finalizedAt: z.iso.datetime({ offset: true }).nullable(),
@@ -148,6 +162,10 @@ const retainedRunSchema = z
 		maxOutputTokens: z.literal(RUN_MAX_OUTPUT_TOKENS),
 		reasoningEffort: z.literal(REASONING_EFFORT),
 		textVerbosity: z.literal(TEXT_VERBOSITY),
+		promptCacheKey: z.string().regex(/^[0-9a-f]{64}$/u),
+		promptCacheMode: z.literal(VERB_PROMPT_CACHE_POLICY.mode),
+		promptCacheTtl: z.literal(VERB_PROMPT_CACHE_POLICY.ttl),
+		promptCacheBreakpoint: z.literal(VERB_PROMPT_CACHE_POLICY.breakpoint),
 		promptSha256: z.string().regex(/^[0-9a-f]{64}$/u),
 		inputSchemaSha256: z.string().regex(/^[0-9a-f]{64}$/u),
 		outputSchemaSha256: z.string().regex(/^[0-9a-f]{64}$/u),
@@ -288,23 +306,9 @@ async function runLiveEvaluation(): Promise<void> {
 			  }
 			| undefined;
 		try {
-			const response = await client.responses.create({
-				model: RUN_MODEL,
-				input: [
-					{ role: "system", content: currentSystemPrompt },
-					{ role: "user", content: stableJson(testCase.input) },
-				],
-				max_output_tokens: RUN_MAX_OUTPUT_TOKENS,
-				reasoning: { effort: REASONING_EFFORT },
-				store: false,
-				text: {
-					format: zodTextFormat(
-						promptSource.outputSchema,
-						"grammatical_resolution_verb",
-					),
-					verbosity: TEXT_VERBOSITY,
-				},
-			});
+			const response = await client.responses.create(
+				responseRequestFor(testCase.input),
+			);
 			responseMetadata = {
 				rawOutputText: response.output_text,
 				resolvedModel: response.model,
@@ -375,6 +379,42 @@ async function runLiveEvaluation(): Promise<void> {
 	console.log("Evidence threshold: NOT MET (offline finalization required)");
 	console.log(`Wrote ${relative(process.cwd(), destination)}`);
 	process.exitCode = 1;
+}
+
+export function responseRequestFor(
+	input: z.output<typeof promptSource.inputSchema>,
+): ResponseCreateParamsNonStreaming {
+	return {
+		model: RUN_MODEL,
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						text: currentSystemPrompt,
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user", content: stableJson(input) },
+		],
+		max_output_tokens: RUN_MAX_OUTPUT_TOKENS,
+		prompt_cache_key: currentPromptCacheKey,
+		prompt_cache_options: {
+			mode: VERB_PROMPT_CACHE_POLICY.mode,
+			ttl: VERB_PROMPT_CACHE_POLICY.ttl,
+		},
+		reasoning: { effort: REASONING_EFFORT },
+		store: false,
+		text: {
+			format: zodTextFormat(
+				promptSource.outputSchema,
+				"grammatical_resolution_verb",
+			),
+			verbosity: TEXT_VERBOSITY,
+		},
+	};
 }
 
 export function prepareCurrentTestCases(): readonly PreparedTestCase[] {
@@ -463,10 +503,15 @@ export function currentEvidenceBinding() {
 	return {
 		runnerVersion: RUNNER_VERSION,
 		route: RUN_ROUTE,
+		transport: RUN_TRANSPORT,
 		model: RUN_MODEL,
 		maxOutputTokens: RUN_MAX_OUTPUT_TOKENS,
 		reasoningEffort: REASONING_EFFORT,
 		textVerbosity: TEXT_VERBOSITY,
+		promptCacheKey: currentPromptCacheKey,
+		promptCacheMode: VERB_PROMPT_CACHE_POLICY.mode,
+		promptCacheTtl: VERB_PROMPT_CACHE_POLICY.ttl,
+		promptCacheBreakpoint: VERB_PROMPT_CACHE_POLICY.breakpoint,
 		promptSha256: createHash("sha256")
 			.update(currentSystemPrompt, "utf8")
 			.digest("hex"),
@@ -489,10 +534,15 @@ export function assertCurrentEvidenceBinding(
 	for (const field of [
 		"runnerVersion",
 		"route",
+		"transport",
 		"model",
 		"maxOutputTokens",
 		"reasoningEffort",
 		"textVerbosity",
+		"promptCacheKey",
+		"promptCacheMode",
+		"promptCacheTtl",
+		"promptCacheBreakpoint",
 		"promptSha256",
 		"inputSchemaSha256",
 		"outputSchemaSha256",

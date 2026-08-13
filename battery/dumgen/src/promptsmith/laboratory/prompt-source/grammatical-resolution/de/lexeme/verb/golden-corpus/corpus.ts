@@ -4,6 +4,7 @@ import { dwArticleCases } from "./cases/dw-articles";
 import { formCases } from "./cases/forms";
 import { lexicalFeatureCases } from "./cases/lexical-features";
 import { policyProbeCases } from "./cases/policy-probes";
+import { prepositionContrastCases } from "./cases/preposition-contrasts";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/lexeme/verb",
@@ -14,6 +15,7 @@ export const corpus = defineGoldenCorpus({
 		lexicalFeatures: lexicalFeatureCases,
 		policyProbes: policyProbeCases,
 		dwArticles: dwArticleCases,
+		prepositionContrasts: prepositionContrastCases,
 	},
 	fingerprintInput(input) {
 		return JSON.stringify({

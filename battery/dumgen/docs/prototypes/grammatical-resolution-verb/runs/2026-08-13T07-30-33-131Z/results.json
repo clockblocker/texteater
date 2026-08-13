@@ -1,0 +1,1607 @@
+{
+  "runnerVersion": "grammatical-resolution-verb-v3",
+  "route": "grammatical-resolution/de/lexeme/verb",
+  "startedAt": "2026-08-13T07:30:33.131Z",
+  "completedAt": "2026-08-13T07:31:00.114Z",
+  "finalizedAt": null,
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 16384,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "8250189fe578f11b9d342f1e8b2e46aa68076ec33b26127610b6571573f136c6",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "37ccbb7d9492c4c506ed755a9c683705bfd89c8613079bfdcbeedfae4de98256",
+  "inputSchemaSha256": "03bbcffdf988b3cdd92c91409a10ff66955dbf7d0ff654c8c794311387226fb4",
+  "outputSchemaSha256": "538f0291b155c3ed00fa1be7d2e5bc9f51d6066d44e6c706ae63cebc96aa3af7",
+  "evaluationCaseIds": [
+    "grammar-de-verb-dw-perfect-etabliert",
+    "grammar-de-verb-dw-perfect-eingependelt",
+    "grammar-de-verb-dw-perfect-ausgeschlossen",
+    "grammar-de-verb-dw-separable-nachwirken",
+    "grammar-de-verb-dw-passive-weitergeleitet",
+    "grammar-de-verb-dw-future-finden",
+    "grammar-de-verb-dw-pluperfect-angekuendigt",
+    "grammar-de-verb-dw-passive-aufgefressen",
+    "grammar-de-verb-dw-perfect-ausgesprochen",
+    "grammar-de-verb-dw-pluperfect-passive-verschifft",
+    "grammar-de-verb-dw-separable-vorbereiten",
+    "grammar-de-verb-finite-liest",
+    "grammar-de-verb-past-ging",
+    "grammar-de-verb-typo-tanzd",
+    "grammar-de-verb-full-modal-mag"
+  ],
+  "boundedCalls": 15,
+  "maximumEvaluationCases": 20,
+  "retries": 0,
+  "store": false,
+  "contractScore": 14,
+  "scoreRatio": 0.9333333333333333,
+  "minimumEvaluationCases": 10,
+  "minimumScoreRatio": 0.8,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 1,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "grammar-de-verb-dw-perfect-etabliert",
+      "input": {
+        "markedContext": "Die Weltordnung, die <TARGET>sich</TARGET> nach dem Zweiten Weltkrieg <TARGET>etabliert</TARGET> <TARGET>hat</TARGET>, scheint an ihr Ende gekommen zu sein.",
+        "members": [
+          "sich",
+          "etabliert",
+          "hat"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sich",
+          "etabliert",
+          "hat"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich etablieren",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "sich",
+          "etabliert",
+          "hat"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich etablieren",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2528,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"sich\",\"etabliert\",\"hat\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sich etablieren\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":\"Yes\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04daaffa0b400040016a7d729a1cdc81a28bb8a66f95a9faf3",
+      "usage": {
+        "input_tokens": 3779,
+        "input_tokens_details": {
+          "cache_write_tokens": 3714,
+          "cached_tokens": 0
+        },
+        "output_tokens": 130,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3909
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-perfect-eingependelt",
+      "input": {
+        "markedContext": "Mittlerweile <TARGET>hat</TARGET> <TARGET>sich</TARGET> der Preis auf rund 4150 US-Dollar pro Feinunze <TARGET>eingependelt</TARGET> (Stand 27. November).",
+        "members": [
+          "hat",
+          "sich",
+          "eingependelt"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "eingependelt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich einpendeln",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "ein",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "eingependelt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich einpendeln",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "ein",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1862,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"sich\",\"eingependelt\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sich einpendeln\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":\"ein\",\"lexicallyReflexive\":\"Yes\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f89b0c6a9917c71016a7d729bec08819d89753017342bbe52",
+      "usage": {
+        "input_tokens": 3782,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 131,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3913
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-perfect-ausgeschlossen",
+      "input": {
+        "markedContext": "Die tansanische Wahlkommission <TARGET>hat</TARGET> die CHADEMA-Partei des Oppositionsführers Tundu Lissu <TARGET>von</TARGET> den Präsidentschafts- und Parlamentswahlen 2025 <TARGET>ausgeschlossen</TARGET>.",
+        "members": [
+          "hat",
+          "von",
+          "ausgeschlossen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "von",
+          "ausgeschlossen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ausschließen",
+          "coreFeatures": {
+            "hasGovPrep": "von",
+            "hasSepPrefix": "aus",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "von",
+          "ausgeschlossen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ausschließen",
+          "coreFeatures": {
+            "hasGovPrep": "von",
+            "hasSepPrefix": "aus",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1763,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"von\",\"ausgeschlossen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"ausschließen\",\"coreFeatures\":{\"hasGovPrep\":\"von\",\"hasSepPrefix\":\"aus\",\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a66246cc8b7c135016a7d729db90c819fbe321c83f2da58e6",
+      "usage": {
+        "input_tokens": 3796,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 127,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3923
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-separable-nachwirken",
+      "input": {
+        "markedContext": "Die Eindrücke <TARGET>wirken</TARGET> noch <TARGET>nach</TARGET>, sagt der Historiker beim Treffen mit der DW in seiner Berliner Wohnung.",
+        "members": [
+          "wirken",
+          "nach"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wirken",
+          "nach"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "nachwirken",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "nach",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wirken",
+          "nach"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Plur",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "nachwirken",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "nach",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1914,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"wirken\",\"nach\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Plur\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"nachwirken\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":\"nach\",\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07996688b576c1c8016a7d729f8a6481a3992b5ba15cf5212f",
+      "usage": {
+        "input_tokens": 3767,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 116,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3883
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-passive-weitergeleitet",
+      "input": {
+        "markedContext": "Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt <TARGET>an</TARGET> die Rentner <TARGET>weitergeleitet</TARGET> <TARGET>werden</TARGET>, ist an seine Grenzen gekommen.",
+        "members": [
+          "an",
+          "weitergeleitet",
+          "werden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "an",
+          "weitergeleitet",
+          "werden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "weiterleiten",
+          "coreFeatures": {
+            "hasGovPrep": "an",
+            "hasSepPrefix": "weiter",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "an",
+          "weitergeleitet",
+          "werden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "weiterleiten",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "weiter",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": false,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": false,
+      "latencyMs": 1540,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"an\",\"weitergeleitet\",\"werden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"weiterleiten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":\"weiter\",\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_090ff4e0c47aaa93016a7d72a16fb081a2a94eeb44ea32a1a0",
+      "usage": {
+        "input_tokens": 3786,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3914
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-future-finden",
+      "input": {
+        "markedContext": "Auch Emilia <TARGET>wird</TARGET> vermutlich schnell einen Job <TARGET>finden</TARGET>, sobald sie fertig mit ihrem Studium der nachhaltigen Mode sein wird.",
+        "members": [
+          "wird",
+          "finden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird",
+          "finden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "finden",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "wird",
+          "finden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Inf",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "finden",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1498,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"wird\",\"finden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Inf\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"finden\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f1708f3054e08d5016a7d72a2f06881a2a82774d86976f5b3",
+      "usage": {
+        "input_tokens": 3766,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 113,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3879
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-pluperfect-angekuendigt",
+      "input": {
+        "markedContext": "Die Grünen <TARGET>hatten</TARGET> in ihrem Wahlprogramm <TARGET>angekündigt</TARGET>, dass sie gegenüber der Türkei eine prinzipienfestere Politik verfolgen und stärker auf Menschenrechte und Rechtsstaatlichkeit achten wollen.",
+        "members": [
+          "hatten",
+          "angekündigt"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hatten",
+          "angekündigt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ankündigen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "an",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hatten",
+          "angekündigt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "ankündigen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "an",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1924,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hatten\",\"angekündigt\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"ankündigen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":\"an\",\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e7c3a879031b7ac016a7d72a4762881a29156593b75a98a5f",
+      "usage": {
+        "input_tokens": 3785,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 126,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3911
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-passive-aufgefressen",
+      "input": {
+        "markedContext": "Diese Erfolge <TARGET>werden</TARGET> jedoch von den steigenden Emissionen im Verkehrs- und Gebäudesektor <TARGET>aufgefressen</TARGET>.",
+        "members": [
+          "werden",
+          "aufgefressen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "werden",
+          "aufgefressen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "auffressen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "auf",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "werden",
+          "aufgefressen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "auffressen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": "auf",
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1687,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\"],\"normalizedMembers\":[\"werden\",\"aufgefressen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"auffressen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":\"auf\",\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_013d31bd221c645f016a7d72a665e881a094ed03c597d513c5",
+      "usage": {
+        "input_tokens": 3769,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 123,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3892
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-perfect-ausgesprochen",
+      "input": {
+        "markedContext": "Der Deutsche Ärztetag, die Vertretung der Mediziner in Deutschland, <TARGET>hat</TARGET> <TARGET>sich</TARGET> <TARGET>für</TARGET> ein Verbot jeder Form der organisierten Sterbehilfe <TARGET>ausgesprochen</TARGET>.",
+        "members": [
+          "hat",
+          "sich",
+          "für",
+          "ausgesprochen"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "für",
+          "ausgesprochen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich aussprechen",
+          "coreFeatures": {
+            "hasGovPrep": "für",
+            "hasSepPrefix": "aus",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "hat",
+          "sich",
+          "für",
+          "ausgesprochen"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich aussprechen",
+          "coreFeatures": {
+            "hasGovPrep": "für",
+            "hasSepPrefix": "aus",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1521,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"hat\",\"sich\",\"für\",\"ausgesprochen\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sich aussprechen\",\"coreFeatures\":{\"hasGovPrep\":\"für\",\"hasSepPrefix\":\"aus\",\"lexicallyReflexive\":\"Yes\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03b6ba5a22b3a2c9016a7d72a80c18819e89a4afac8170f657",
+      "usage": {
+        "input_tokens": 3798,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3933
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-pluperfect-passive-verschifft",
+      "input": {
+        "markedContext": "Durch die Meerenge <TARGET>war</TARGET> zuvor fast ein Fünftel des weltweit verbrauchten Rohöls <TARGET>verschifft</TARGET> <TARGET>worden</TARGET>.",
+        "members": [
+          "war",
+          "verschifft",
+          "worden"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "war",
+          "verschifft",
+          "worden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "verschiffen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "war",
+          "verschifft",
+          "worden"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "aspect": null,
+            "gender": null,
+            "mood": null,
+            "number": null,
+            "person": null,
+            "tense": null,
+            "verbForm": "Part",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "verschiffen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 2436,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"war\",\"verschifft\",\"worden\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"aspect\":null,\"gender\":null,\"mood\":null,\"number\":null,\"person\":null,\"tense\":null,\"verbForm\":\"Part\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"verschiffen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_029bf4f163339316016a7d72aa3720819e8c492d458077b5b4",
+      "usage": {
+        "input_tokens": 3779,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 127,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3906
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-dw-separable-vorbereiten",
+      "input": {
+        "markedContext": "Die Bundeswehr <TARGET>bereitet</TARGET> <TARGET>sich</TARGET> <TARGET>auf</TARGET> einen möglichen Minenräum-Einsatz in der Straße von Hormus <TARGET>vor</TARGET>.",
+        "members": [
+          "bereitet",
+          "sich",
+          "auf",
+          "vor"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bereitet",
+          "sich",
+          "auf",
+          "vor"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich vorbereiten",
+          "coreFeatures": {
+            "hasGovPrep": "auf",
+            "hasSepPrefix": "vor",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard",
+          "Standard",
+          "Standard",
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "bereitet",
+          "sich",
+          "auf",
+          "vor"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "sich vorbereiten",
+          "coreFeatures": {
+            "hasGovPrep": "auf",
+            "hasSepPrefix": "vor",
+            "lexicallyReflexive": "Yes"
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1517,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\",\"Standard\",\"Standard\",\"Standard\"],\"normalizedMembers\":[\"bereitet\",\"sich\",\"auf\",\"vor\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"sich vorbereiten\",\"coreFeatures\":{\"hasGovPrep\":\"auf\",\"hasSepPrefix\":\"vor\",\"lexicallyReflexive\":\"Yes\"}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0dd79bce320e34bd016a7d72ac0108819ea52fd6715a137f92",
+      "usage": {
+        "input_tokens": 3785,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 125,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3910
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-finite-liest",
+      "input": {
+        "markedContext": "Sie <TARGET>liest</TARGET> leise.",
+        "members": [
+          "liest"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "liest"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "lesen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "liest"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "lesen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1993,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"liest\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"lesen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08a1b115335bc403016a7d72ad8d84819d860c139de28d1844",
+      "usage": {
+        "input_tokens": 3741,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3849
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-past-ging",
+      "input": {
+        "markedContext": "Er <TARGET>ging</TARGET> nach Hause.",
+        "members": [
+          "ging"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ging"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "gehen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "ging"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Past",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "gehen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1731,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"ging\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Past\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"gehen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bbafd4163f5e3cc016a7d72af88408192b56a6acda5b69d26",
+      "usage": {
+        "input_tokens": 3741,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 108,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3849
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-typo-tanzd",
+      "input": {
+        "markedContext": "Er <TARGET>tanzd</TARGET> gern.",
+        "members": [
+          "tanzd"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "tanzt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "tanzen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Typo"
+        ],
+        "normalizedMembers": [
+          "tanzt"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "tanzen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1564,
+      "rawOutputText": "{\"memberOrthographies\":[\"Typo\"],\"normalizedMembers\":[\"tanzt\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"tanzen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ae9890b892a2dfc016a7d72b148e08192b8a0230990ac210f",
+      "usage": {
+        "input_tokens": 3744,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 111,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3855
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "grammar-de-verb-full-modal-mag",
+      "input": {
+        "markedContext": "Sie <TARGET>mag</TARGET> Schokolade.",
+        "members": [
+          "mag"
+        ]
+      },
+      "idealOutput": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mag"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "output": {
+        "memberOrthographies": [
+          "Standard"
+        ],
+        "normalizedMembers": [
+          "mag"
+        ],
+        "surface": {
+          "spelling": "Canonical",
+          "surfaceKind": "Inflection",
+          "surfaceFeatures": null,
+          "inflectionalFeatures": {
+            "mood": "Ind",
+            "number": "Sing",
+            "person": "3",
+            "tense": "Pres",
+            "verbForm": "Fin",
+            "voice": null
+          }
+        },
+        "lemma": {
+          "canonicalForm": "mögen",
+          "coreFeatures": {
+            "hasGovPrep": null,
+            "hasSepPrefix": null,
+            "lexicallyReflexive": null
+          }
+        }
+      },
+      "contractPass": true,
+      "memberCountPass": true,
+      "memberOrthographiesPass": true,
+      "surfaceKindPass": true,
+      "normalizedSurfacePass": true,
+      "spellingPass": true,
+      "surfaceFeaturesPass": true,
+      "inflectionalFeaturesPass": true,
+      "canonicalFormPass": true,
+      "coreFeaturesPass": true,
+      "latencyMs": 1498,
+      "rawOutputText": "{\"memberOrthographies\":[\"Standard\"],\"normalizedMembers\":[\"mag\"],\"surface\":{\"spelling\":\"Canonical\",\"surfaceKind\":\"Inflection\",\"surfaceFeatures\":null,\"inflectionalFeatures\":{\"mood\":\"Ind\",\"number\":\"Sing\",\"person\":\"3\",\"tense\":\"Pres\",\"verbForm\":\"Fin\",\"voice\":null}},\"lemma\":{\"canonicalForm\":\"mögen\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null}}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0586ecfa7a19c84b016a7d72b2d0248191b0d3305a529d0c85",
+      "usage": {
+        "input_tokens": 3741,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 3714
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 3850
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

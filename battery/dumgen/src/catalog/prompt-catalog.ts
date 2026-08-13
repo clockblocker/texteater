@@ -8,7 +8,6 @@ import {
 } from "../intake/contracts";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
-import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
@@ -17,12 +16,13 @@ import {
 	inputSchema as readingModelInputSchema,
 	outputSchema as readingOutputSchema,
 } from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
+import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
 	additionalIndicesAdapter,
+	projectClassificationInput,
 	inputSchema as targetInputSchema,
 	modelInputSchema as targetModelInputSchema,
 	outputSchema as targetOutputSchema,
-	projectClassificationInput,
 } from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { createDeGrammaticalResolutionPrompt } from "./laboratory/create-de-grammatical-resolution-prompt";
@@ -84,7 +84,9 @@ const targetPrompt = {
 
 function canonicalizeTargetClassification(
 	input: Parameters<typeof projectClassificationInput>[0],
-	generated: Parameters<typeof additionalIndicesAdapter.canonicalize>[0]["output"],
+	generated: Parameters<
+		typeof additionalIndicesAdapter.canonicalize
+	>[0]["output"],
 ) {
 	return additionalIndicesAdapter.canonicalize({
 		canonicalInput: input,

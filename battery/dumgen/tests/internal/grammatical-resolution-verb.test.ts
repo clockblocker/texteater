@@ -17,36 +17,54 @@ import {
 } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
 
 const expectedEvaluationIds = [
-	"grammar-de-verb-infinitive-hinauszulaufen",
-	"grammar-de-verb-participle-mitgebracht",
-	"grammar-de-verb-participle-gesungen",
-	"grammar-de-verb-governed-preposition-wartet",
-	"grammar-de-verb-separable-finite-aufstehen",
-	"grammar-de-verb-reflexive-schaemt",
-	"grammar-de-verb-future-wird-reisen",
-	"grammar-de-verb-passive-wurde-gebeten",
-	"grammar-de-verb-full-werden",
-	"grammar-de-verb-full-hat",
+	"grammar-de-verb-dw-perfect-etabliert",
+	"grammar-de-verb-dw-perfect-eingependelt",
+	"grammar-de-verb-dw-perfect-ausgeschlossen",
+	"grammar-de-verb-dw-separable-nachwirken",
+	"grammar-de-verb-dw-passive-weitergeleitet",
+	"grammar-de-verb-dw-future-finden",
+	"grammar-de-verb-dw-pluperfect-angekuendigt",
+	"grammar-de-verb-dw-passive-aufgefressen",
+	"grammar-de-verb-dw-perfect-ausgesprochen",
+	"grammar-de-verb-dw-pluperfect-passive-verschifft",
+	"grammar-de-verb-dw-separable-vorbereiten",
+	"grammar-de-verb-finite-liest",
+	"grammar-de-verb-past-ging",
+	"grammar-de-verb-typo-tanzd",
+	"grammar-de-verb-full-modal-mag",
+	"grammar-de-verb-prep-governed-warten-auf",
+	"grammar-de-verb-prep-free-warten-im",
+	"grammar-de-verb-prep-governed-verzichten-auf",
+	"grammar-de-verb-prep-free-sprechen-im",
+	"grammar-de-verb-prep-governed-reflexive-erinnern-an",
+	"grammar-de-verb-prep-governed-reflexive-sehnen-nach",
+	"grammar-de-verb-prep-free-reflexive-erholen-im",
+	"grammar-de-verb-prep-governed-warnen-vor",
+	"grammar-de-verb-prep-free-arbeiten-mit",
+	"grammar-de-verb-prep-free-spielen-auf",
 ] as const;
 
 describe("Lexeme/VERB route-local corpus", () => {
 	test("contains only resolvable cases under the classified-target contract", () => {
-		expect(corpus.all().ids).toHaveLength(36);
+		expect(corpus.all().ids).toHaveLength(46);
 		expect(demonstrations.ids).toEqual([
-			"grammar-de-verb-finite-liest",
 			"grammar-de-verb-citation-arbeiten",
 			"grammar-de-verb-separable-imperative-aufpassen",
-			"grammar-de-verb-reflexive-erinnert",
+			"grammar-de-verb-dw-future-beteiligen",
+			"grammar-de-verb-dw-separable-aufsetzen",
+			"grammar-de-verb-dw-modal-passive-hergestellt",
+			"grammar-de-verb-dw-perfect-passive-aufgefunden",
 		]);
 		expect(evaluation.ids).toEqual(expectedEvaluationIds);
 		expect(evaluation).toBe(verbGrammaticalResolutionExperiment.evaluation);
 		expect(demonstrations.isDisjointFrom(evaluation)).toBe(true);
-		expect(demonstrations.union(evaluation).ids).toHaveLength(14);
+		expect(demonstrations.union(evaluation).ids).toHaveLength(31);
 		expect(Object.keys(corpus.collections)).toEqual([
 			"forms",
 			"lexicalFeatures",
 			"policyProbes",
 			"dwArticles",
+			"prepositionContrasts",
 		]);
 		expect(corpus.all().ids.some((id) => id.includes("unresolved"))).toBe(
 			false,
@@ -56,11 +74,38 @@ describe("Lexeme/VERB route-local corpus", () => {
 		).toBe(false);
 	});
 
-	test("keeps the DW article cases source-backed and corpus-only", () => {
+	test("holds out balanced governed and free preposition contrasts", () => {
+		const contrasts = corpus.collections.prepositionContrasts;
+		expect(contrasts.ids).toHaveLength(10);
+		expect(demonstrations.isDisjointFrom(contrasts)).toBe(true);
+		expect(
+			contrasts.ids.filter((id) => id.includes("-governed-")),
+		).toHaveLength(5);
+		expect(
+			contrasts.ids.filter((id) => id.includes("-free-")),
+		).toHaveLength(5);
+		expect(
+			contrasts.ids.filter((id) => id.includes("-reflexive-")),
+		).toHaveLength(3);
+		for (const id of contrasts.ids) {
+			expect(evaluation.ids).toContain(id);
+		}
+	});
+
+	test("keeps the DW article cases source-backed and deliberately split", () => {
 		const dwCases = corpus.collections.dwArticles;
 		expect(dwCases.ids).toHaveLength(15);
-		expect(demonstrations.isDisjointFrom(dwCases)).toBe(true);
-		expect(evaluation.isDisjointFrom(dwCases)).toBe(true);
+		const demonstrationDwIds = demonstrations.ids.filter((id) =>
+			id.includes("-dw-"),
+		);
+		const evaluationDwIds = evaluation.ids.filter((id) =>
+			id.includes("-dw-"),
+		);
+		expect(demonstrationDwIds).toHaveLength(4);
+		expect(evaluationDwIds).toHaveLength(11);
+		expect(new Set([...demonstrationDwIds, ...evaluationDwIds])).toEqual(
+			new Set(dwCases.ids),
+		);
 
 		for (const testCase of dwCases.cases) {
 			expect(testCase.contaminationKeys).toHaveLength(1);
@@ -90,8 +135,13 @@ describe("Lexeme/VERB route-local corpus", () => {
 
 	test("assembles flattened demonstrations for an already classified target", () => {
 		const prompt = assembleSystemPrompt(promptSource);
-		expect(prompt).toContain('"members":["liest"]');
+		expect(prompt).toContain("<agent_role>");
+		expect(prompt).toContain("<fixed_contract>");
+		expect(prompt).toContain("<lexical_head_repairs>");
+		expect(prompt).toContain("<final_checks>");
 		expect(prompt).toContain('"members":["Pass","auf","auf"]');
+		expect(prompt).toContain('"members":["hergestellt","werden"]');
+		expect(prompt).toContain('"members":["ist","aufgefunden","worden"]');
 		expect(prompt).toContain(
 			"Target Classification has already established",
 		);

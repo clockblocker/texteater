@@ -29,3 +29,9 @@ Classification Corpus is a distinct Laboratory concept and becomes prompt
 material only through an Adapter; after #85 selects a representation, later
 work may attach an execution-ready model-facing Golden Corpus without changing
 the canonical oracle.
+
+After the additional-indices representation was selected, the unchanged
+Canonical Classification Corpus and selected Adapter were promoted together.
+Production now materializes its Demonstration Selection through that Adapter;
+evaluation and historical development selections remain views over the same
+corpus rather than copied registries.

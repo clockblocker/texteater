@@ -14,3 +14,8 @@ Production Prompt Parts have no dependency on laboratory experiments, runners,
 provider clients, or retained results. Laboratory code imports production
 content and selects cases from the production corpus; it does not own duplicate
 cases.
+
+An execution-ready production route also owns its selected model representation,
+Prompt Source, and deterministic Generated System Prompt. `PROMPT_CATALOG`
+imports the generated production artifact together with the production schemas
+and projection Adapter; it never assembles prompt text at runtime.

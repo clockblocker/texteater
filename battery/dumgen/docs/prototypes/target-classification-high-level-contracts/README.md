@@ -7,8 +7,9 @@ This remains issue #85's logic experiment, not a public DTO. Its frozen
 Adaptive-5 prompt is now the first complete production `prompt-part`: the
 instruction body, canonical corpus, exact 21 demonstrations, and their guidance
 live together under the production route. Evaluation, adaptive, and diagnostic
-pools are selections over that corpus. Representation adapters and runner
-evidence remain laboratory concerns. The experiment retains one private Structured
+pools are selections over that corpus. The selected additional-indices Adapter
+and model schemas are now production-owned; the historical experiment
+re-exports them while runner evidence remains laboratory-owned. The experiment retains one private Structured
 Output contract: the click is
 implicit membership. For every Resolved result, the model returns a top-level
 `additionalMemberIndices` array containing only the other members; a

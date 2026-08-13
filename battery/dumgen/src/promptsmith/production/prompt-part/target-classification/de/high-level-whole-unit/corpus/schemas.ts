@@ -19,6 +19,20 @@ export const GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES = {
 	readonly [Family in keyof typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES]: readonly (typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES)[Family][number][];
 };
 
+export function isGermanHighLevelTargetClassificationRoute(
+	family: string,
+	kind: string,
+): boolean {
+	if (!(family in GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES)) {
+		return false;
+	}
+	return (
+		GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES[
+			family as keyof typeof GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES
+		] as readonly string[]
+	).includes(kind);
+}
+
 export const canonicalInputSchema = z
 	.strictObject({
 		clickedSegmentIndex: z.number().int().nonnegative(),

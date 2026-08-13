@@ -31,9 +31,7 @@ export function defineSystemPromptCodegen(args: {
 	readonly expectedRouteEntries?: (
 		source: AnyPromptSource,
 	) => readonly string[];
-	readonly provenancePaths?: (
-		source: AnyPromptSource,
-	) => readonly string[];
+	readonly provenancePaths?: (source: AnyPromptSource) => readonly string[];
 }): {
 	readonly recipe: SystemPromptRecipe;
 	run(argv?: readonly string[]): Promise<void>;

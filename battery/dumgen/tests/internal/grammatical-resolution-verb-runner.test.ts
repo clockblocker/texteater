@@ -11,7 +11,9 @@ import {
 	parseRetainedRun,
 	prepareCurrentTestCases,
 	type RetainedAttempt,
+	responseRequestFor,
 	summarizeEvidence,
+	VERB_PROMPT_CACHE_POLICY,
 } from "../../docs/prototypes/grammatical-resolution-verb/run";
 import { verbGrammaticalResolutionExperiment } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-verb/evaluation-suite";
 
@@ -55,17 +57,59 @@ function draftResult() {
 
 test("VERB runner import and preflight make no provider call", () => {
 	const binding = currentEvidenceBinding();
-	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v2");
+	expect(binding.runnerVersion).toBe("grammatical-resolution-verb-v4");
 	expect(binding.route).toBe("grammatical-resolution/de/lexeme/verb");
+	expect(binding.transport).toBe("openai-responses-direct-serial");
 	expect(binding.model).toBe("gpt-5.6-luna");
 	expect(binding.reasoningEffort).toBe("none");
 	expect(binding.maxOutputTokens).toBe(16384);
-	expect(prepareCurrentTestCases()).toHaveLength(10);
+	expect(prepareCurrentTestCases()).toHaveLength(25);
 	expect(() => assertEvaluationSuiteBounds(9)).toThrow(/at least 10/);
-	expect(() => assertEvaluationSuiteBounds(21)).toThrow(/capped at 20/);
+	expect(() => assertEvaluationSuiteBounds(31)).toThrow(/capped at 30/);
 	expect(() => assertEvaluationSuiteBounds(15.5)).toThrow(/safe integer/);
 	expect(() => assertEvaluationSuiteBounds(15)).not.toThrow();
 	expect(() => assertEvaluationSuiteBounds(20)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(25)).not.toThrow();
+	expect(() => assertEvaluationSuiteBounds(30)).not.toThrow();
+});
+
+test("VERB requests cache the stable prompt prefix explicitly", () => {
+	const testCases = prepareCurrentTestCases();
+	const first = testCases[0];
+	const second = testCases[1];
+	if (first === undefined || second === undefined) {
+		throw new Error("Expected at least two VERB evaluation cases.");
+	}
+	const binding = currentEvidenceBinding();
+	const firstRequest = responseRequestFor(first.input);
+	const secondRequest = responseRequestFor(second.input);
+
+	expect(VERB_PROMPT_CACHE_POLICY).toEqual({
+		mode: "explicit",
+		ttl: "30m",
+		breakpoint: "end-of-stable-system-prompt",
+	});
+	expect(binding.promptCacheKey).toMatch(/^[0-9a-f]{64}$/u);
+	expect(binding.promptCacheMode).toBe("explicit");
+	expect(binding.promptCacheTtl).toBe("30m");
+	expect(binding.promptCacheBreakpoint).toBe("end-of-stable-system-prompt");
+	expect(firstRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(secondRequest.prompt_cache_key).toBe(binding.promptCacheKey);
+	expect(firstRequest).toMatchObject({
+		prompt_cache_options: { mode: "explicit", ttl: "30m" },
+		input: [
+			{
+				role: "system",
+				content: [
+					{
+						type: "input_text",
+						prompt_cache_breakpoint: { mode: "explicit" },
+					},
+				],
+			},
+			{ role: "user" },
+		],
+	});
 });
 
 test("VERB retained evidence is strict, current-bound, and preserves errors", () => {

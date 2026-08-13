@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { createHash } from "node:crypto";
 import { runCodegen } from "codegen";
 import type { Lemma, Surface } from "dumling/types";
-import { createHash } from "node:crypto";
 import { zodTextFormat } from "openai/helpers/zod";
 
 import type { AiSdk } from "../../src/ai-sdk/ai-sdk";
@@ -12,7 +12,10 @@ import {
 	assembleSystemPrompt,
 	defineLocalDemonstrations,
 } from "../../src/promptsmith/assembly";
-import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
+import {
+	productionSystemPromptRecipe,
+	systemPromptRecipe,
+} from "../../src/promptsmith/assembly/generate-system-prompts";
 import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/laboratory/generated-system-prompt/intake";
 import { corpus as intakeCorpus } from "../../src/promptsmith/laboratory/prompt-source/intake/golden-corpus/corpus";
 import { promptSource as intakePromptSource } from "../../src/promptsmith/laboratory/prompt-source/intake/prompt-source";
@@ -99,9 +102,14 @@ describe("Prompt Assembly", () => {
 	});
 
 	test("committed generated system prompts are current", async () => {
-		const result = await runCodegen(systemPromptRecipe, { mode: "check" });
-		expect(result.status).toBe("clean");
-		expect(result.applied).toEqual([]);
+		for (const recipe of [
+			systemPromptRecipe,
+			productionSystemPromptRecipe,
+		]) {
+			const result = await runCodegen(recipe, { mode: "check" });
+			expect(result.status).toBe("clean");
+			expect(result.applied).toEqual([]);
+		}
 	});
 
 	test("catalog uses the promoted production target-classification prompt", () => {
@@ -117,9 +125,7 @@ describe("Prompt Assembly", () => {
 			"3c71bc5ded78c53c503f0377cb5af55e2afa6ed03f9c98998126a708e13908bd",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
-		expect(targetPrompt.systemPrompt).toContain(
-			"Examples to follow:",
-		);
+		expect(targetPrompt.systemPrompt).toContain("Examples to follow:");
 	});
 
 	test("all four active schemas are accepted by OpenAI Structured Outputs", () => {

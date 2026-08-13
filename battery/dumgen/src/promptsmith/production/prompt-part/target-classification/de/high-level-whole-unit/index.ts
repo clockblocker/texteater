@@ -7,6 +7,7 @@ export {
 	canonicalInputSchema,
 	canonicalOutputSchema,
 	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
+	isGermanHighLevelTargetClassificationRoute,
 } from "./corpus/schemas";
 export {
 	adaptiveCarryoverSelection,
