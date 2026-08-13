@@ -12,16 +12,20 @@ const firstTurnAttempt = Object.freeze({
 	key: "additional-compact-indices/1/target-de-boundary-fusion-zum",
 	caseId: "target-de-boundary-fusion-zum",
 	privateInput: Object.freeze({
+		markedSentence: "Sie <target>zum</target>",
 		clickedIndex: 1,
-		segments: Object.freeze(["Sie", "zum"]),
+		segments: Object.freeze([
+			Object.freeze({ s: "Sie", i: 0 }),
+			Object.freeze({ s: "zum", i: 1 }),
+		]),
 	}),
 	privateOutputJson: Object.freeze({
 		decision: "Resolved",
 		target: Object.freeze({
 			family: "Lexeme",
 			kind: "ADP",
-			membership: null,
 		}),
+		additionalMemberIndices: Object.freeze([]),
 	}),
 	canonicalInput: Object.freeze({
 		clickedSegmentIndex: 2,
@@ -66,12 +70,13 @@ describe("target-classification diagnostic follow-up", () => {
 		});
 		expect(request.input[1]).toEqual({
 			role: "user",
-			content: '{"clickedIndex":1,"segments":["Sie","zum"]}',
+			content:
+				'{"clickedIndex":1,"markedSentence":"Sie <target>zum</target>","segments":[{"i":0,"s":"Sie"},{"i":1,"s":"zum"}]}',
 		});
 		expect(request.input[2]).toEqual({
 			role: "assistant",
 			content:
-				'{"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP","membership":null}}',
+				'{"additionalMemberIndices":[],"decision":"Resolved","target":{"family":"Lexeme","kind":"ADP"}}',
 		});
 		const modelFacingTranscript = JSON.stringify(request.input);
 		expect(modelFacingTranscript).toContain(
@@ -97,7 +102,6 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: null,
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
@@ -117,12 +121,36 @@ describe("target-classification diagnostic follow-up", () => {
 					target: {
 						family: "Construction",
 						kind: "Fusion",
-						membership: null,
 					},
+					additionalMemberIndices: [],
 				},
 			}),
 		).not.toThrow();
 		expect(JSON.stringify(firstTurnAttempt)).toBe(before);
+	});
+
+	test("rejects Collocation from diagnostic target corrections", () => {
+		const diagnostic = {
+			chosenUnit: {
+				family: "Phraseme",
+				kind: "Collocation",
+			},
+			clickRole: "FixedMember",
+			segmentJudgments: [
+				{
+					index: 1,
+					judgment: "Fixed",
+					reason: "The retained answer grouped the visible words.",
+				},
+			],
+			ruleApplied: "Use only routes exposed by this prompt contract.",
+			conciseCritique: "Collocation is not an available route.",
+			wouldRevise: false,
+			correctedClassification: null,
+		};
+		expect(
+			diagnosticFollowUpOutputSchema.safeParse(diagnostic).success,
+		).toBe(false);
 	});
 
 	test("retains a parsed diagnostic beside the unchanged first-turn evidence", () => {
@@ -134,7 +162,6 @@ describe("target-classification diagnostic follow-up", () => {
 				chosenUnit: {
 					family: "Construction",
 					kind: "Fusion",
-					membership: null,
 				},
 				clickRole: "SoleMember",
 				segmentJudgments: [
@@ -154,8 +181,8 @@ describe("target-classification diagnostic follow-up", () => {
 					target: {
 						family: "Construction",
 						kind: "Fusion",
-						membership: null,
 					},
+					additionalMemberIndices: [],
 				},
 			}),
 			selectionReason: "first-turn route miss",

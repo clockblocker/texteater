@@ -6,6 +6,19 @@ import type {
 	PromptOutputSchema,
 } from "../../../../../assembly";
 
+/**
+ * Routes owned by this target-classification contract. Dumling's global
+ * German model remains broader: Morpheme and Phraseme/Collocation are
+ * intentionally outside this corpus and its model-facing interface.
+ */
+export const GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES = {
+	Lexeme: GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme,
+	Phraseme: ["Aphorism", "DiscourseFormula", "Idiom", "Proverb"],
+	Construction: GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Construction,
+} as const satisfies {
+	readonly [Family in keyof typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES]: readonly (typeof GERMAN_REACHABLE_HIGH_LEVEL_ROUTES)[Family][number][];
+};
+
 export const canonicalInputSchema = z
 	.strictObject({
 		clickedSegmentIndex: z.number().int().nonnegative(),
@@ -43,17 +56,23 @@ export const canonicalOutputSchema = z.discriminatedUnion("decision", [
 		target: z.discriminatedUnion("family", [
 			z.strictObject({
 				family: z.literal("Lexeme"),
-				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme),
+				kind: z.enum(
+					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Lexeme,
+				),
 				memberSegmentIndices,
 			}),
 			z.strictObject({
 				family: z.literal("Phraseme"),
-				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme),
+				kind: z.enum(
+					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Phraseme,
+				),
 				memberSegmentIndices,
 			}),
 			z.strictObject({
 				family: z.literal("Construction"),
-				kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Construction),
+				kind: z.enum(
+					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Construction,
+				),
 				memberSegmentIndices,
 			}),
 		]),

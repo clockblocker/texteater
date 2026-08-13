@@ -348,7 +348,7 @@ const diagnosticFollowUpResultSchema = z
 	});
 
 const diagnosticFollowUpArtifactSchema = z.strictObject({
-	version: z.literal("target-classification-diagnostic-follow-up-v3"),
+	version: z.literal("target-classification-diagnostic-follow-up-v4"),
 	startedAt: z.iso.datetime({ offset: true }),
 	updatedAt: z.iso.datetime({ offset: true }),
 	completedAt: z.iso.datetime({ offset: true }).nullable(),
@@ -1797,7 +1797,7 @@ export async function runDiagnosticFollowUp(options: {
 		if ((cause as NodeJS.ErrnoException).code !== "ENOENT") throw cause;
 		const now = new Date().toISOString();
 		artifact = diagnosticFollowUpArtifactSchema.parse({
-			version: "target-classification-diagnostic-follow-up-v3",
+			version: "target-classification-diagnostic-follow-up-v4",
 			startedAt: now,
 			updatedAt: now,
 			completedAt: null,

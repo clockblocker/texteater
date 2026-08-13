@@ -92,22 +92,21 @@ const fixedPhrasemeEvidence = {
 	},
 } as const;
 
-const strongCollocation = (
+const formerCollocationMember = (
 	segments: readonly Segment[],
 	clickedSegmentIndex: number,
-	memberSegmentIndices: readonly number[],
-	canonicalForm: string,
+	kind: Parameters<typeof resolved<"Lexeme">>[4],
 ) => ({
 	...resolved(
 		segments,
 		clickedSegmentIndex,
-		memberSegmentIndices,
-		"Phraseme",
-		"Collocation",
+		[clickedSegmentIndex],
+		"Lexeme",
+		kind,
 	),
 	explanation: evidence(
 		IDS.functionVerbGroup,
-		`IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. Under issue #82's strict product threshold, ${canonicalForm} is treated as a strongly restricted but compositional Phraseme/Collocation; only its realized lexical members belong to the target.`,
+		`IDS distinguishes conventional function-verb combinations from ordinary full-verb predicates. This classifier omits that multiword route and classifies the clicked occurrence independently as Lexeme/${kind}.`,
 	),
 });
 
@@ -675,79 +674,40 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			"Proverb",
 		),
 		"target-de-route-phraseme-collocation-massnahmen-click-ergriff":
-			strongCollocation(
-				measuresCollocation,
-				6,
-				[6, 16],
-				"Maßnahmen ergreifen",
-			),
+			formerCollocationMember(measuresCollocation, 6, "VERB"),
 		"target-de-route-phraseme-collocation-massnahmen-click-massnahmen":
-			strongCollocation(
-				measuresCollocation,
-				16,
-				[6, 16],
-				"Maßnahmen ergreifen",
-			),
+			formerCollocationMember(measuresCollocation, 16, "NOUN"),
 		"target-de-route-phraseme-collocation-kritik-click-uebte":
-			strongCollocation(criticismCollocation, 4, [4, 12], "Kritik üben"),
+			formerCollocationMember(criticismCollocation, 4, "VERB"),
 		"target-de-route-phraseme-collocation-kritik-click-kritik":
-			strongCollocation(criticismCollocation, 12, [4, 12], "Kritik üben"),
+			formerCollocationMember(criticismCollocation, 12, "NOUN"),
 		"target-de-route-phraseme-collocation-ruecksicht-click-nahm":
-			strongCollocation(
-				considerationCollocation,
-				6,
-				[6, 12],
-				"Rücksicht nehmen",
-			),
+			formerCollocationMember(considerationCollocation, 6, "VERB"),
 		"target-de-route-phraseme-collocation-ruecksicht-click-ruecksicht":
-			strongCollocation(
-				considerationCollocation,
-				12,
-				[6, 12],
-				"Rücksicht nehmen",
-			),
+			formerCollocationMember(considerationCollocation, 12, "NOUN"),
 		"target-de-route-phraseme-collocation-verfuegung-click-stellte":
-			strongCollocation(
-				availabilityCollocation,
-				6,
-				[6, 16, 18],
-				"zur Verfügung stellen",
-			),
-		"target-de-route-phraseme-collocation-verfuegung-click-zur":
-			strongCollocation(
+			formerCollocationMember(availabilityCollocation, 6, "VERB"),
+		"target-de-route-phraseme-collocation-verfuegung-click-zur": {
+			...resolved(
 				availabilityCollocation,
 				16,
-				[6, 16, 18],
-				"zur Verfügung stellen",
+				[16],
+				"Construction",
+				"Fusion",
 			),
+			explanation: evidence(
+				IDS.fusionZu,
+				"IDS identifies zur as the fusion of zu plus der. Once this classifier omits the larger Collocation route, the clicked fused source word independently routes as the singleton Construction/Fusion.",
+			),
+		},
 		"target-de-route-phraseme-collocation-verfuegung-click-verfuegung":
-			strongCollocation(
-				availabilityCollocation,
-				18,
-				[6, 16, 18],
-				"zur Verfügung stellen",
-			),
+			formerCollocationMember(availabilityCollocation, 18, "NOUN"),
 		"target-de-route-phraseme-collocation-antrag-click-stellte":
-			strongCollocation(
-				applicationCollocation,
-				6,
-				[6, 12, 14],
-				"einen Antrag stellen",
-			),
+			formerCollocationMember(applicationCollocation, 6, "VERB"),
 		"target-de-route-phraseme-collocation-antrag-click-einen":
-			strongCollocation(
-				applicationCollocation,
-				12,
-				[6, 12, 14],
-				"einen Antrag stellen",
-			),
+			formerCollocationMember(applicationCollocation, 12, "DET"),
 		"target-de-route-phraseme-collocation-antrag-click-antrag":
-			strongCollocation(
-				applicationCollocation,
-				14,
-				[6, 12, 14],
-				"einen Antrag stellen",
-			),
+			formerCollocationMember(applicationCollocation, 14, "NOUN"),
 		"target-de-route-construction-fusion": fusion,
 		"target-de-diagnostic-fusion-am": {
 			...resolved(

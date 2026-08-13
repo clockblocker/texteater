@@ -2,33 +2,26 @@ import { assertCaseSelectionsUncontaminated } from "../../../../../assembly";
 import { corpus } from "./corpus";
 
 export const demonstrationSelection = corpus.select([
-	"target-de-demo-governed-rechnen-click-mit",
+	"target-de-demo-perfect-arbeiten-click-habe",
+	"target-de-demo-governed-rechnen-click-rechnet",
 	"target-de-demo-adjunct-rechnen-click-mit",
-	"target-de-demo-idiom-faden-click-verlor",
 	"target-de-demo-idiom-faden-click-den",
 	"target-de-demo-aphorism-zeit-click-ist",
 	"target-de-demo-literal-gras-click-biss",
-	"target-de-demo-literal-gras-click-gras",
-	"target-de-demo-idiom-katze-click-die",
 	"target-de-demo-idiom-katze-click-verdammte",
 	"target-de-demo-paired-einerseits-click-einerseits",
-	"target-de-demo-paired-einerseits-click-lokal",
-	"target-de-demo-paired-einerseits-click-andererseits",
 	"target-de-demo-inherent-reflexive-click-beeile",
-	"target-de-demo-inherent-reflexive-click-mich",
-	"target-de-demo-optional-reflexive-click-kaemmst",
 	"target-de-demo-optional-reflexive-click-dich",
 	"target-de-demo-modal-arbeiten-click-kann",
 	"target-de-demo-passive-briefe-click-werden",
-	"target-de-demo-default-interjection-oh",
-	"target-de-demo-repeated-anfangen-click-faengt",
 	"target-de-demo-repeated-anfangen-click-final-an",
-	"target-de-demo-repeated-anfangen-click-first-an",
 	"target-de-demo-question-stattfinden-click-statt",
 	"target-de-demo-typo-mitmachen-click-mit",
 	"target-de-demo-predicative-cringe-click-cringe",
 	"target-de-demo-paired-sowohl-click-robust",
 	"target-de-demo-idiom-kragen-click-kragen",
+	"target-de-demo-symbol-percent",
+	"target-de-core-unresolved-qzxv",
 ]);
 
 if (demonstrationSelection.ids.length > 35) {

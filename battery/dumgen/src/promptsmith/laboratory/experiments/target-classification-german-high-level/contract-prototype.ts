@@ -37,7 +37,8 @@ import {
 
 export const PROTOTYPE_QUESTION =
 	"Does the lean additional-member indices contract preserve the German high-level target policy across the development suite?";
-export const RUNNER_VERSION = "target-classification-high-level-contracts-v12";
+export const RUNNER_VERSION =
+	"target-classification-high-level-contracts-v16-no-collocation";
 export const RUN_MODEL = "gpt-5.6-luna";
 export const EXPECTED_RESOLVED_MODEL = "gpt-5.6-luna";
 export const REASONING_EFFORT = "none";
@@ -134,7 +135,54 @@ export type RunnerParameterInput = Readonly<{
 	pool?: RunnerPoolId;
 }>;
 
-const commonPrompt = `<agent_role>
+// biome-ignore lint/correctness/noUnusedVariables: Retained as the historical prompt comparison artifact while the newer prompt is tested.
+const oldBsCommonPrompt = `You are resolving exactly one clicked segment for a German learner. Return the complete high-level language unit that contains the click and its Family/Kind route. This is target selection only: no grammatical drill-down, lemma resolution, or canonical form.
+
+Dumling's big picture:
+
+- An ordinary word is a Lexeme with its contextually correct UD-like word class.
+- Dumling can also select established Phraseme and Construction units that bare word-by-word analysis would miss.
+- A separable, multi-part, perfect, future, or passive realization of one verb counts here as one inflected Lexeme/VERB.
+
+CLICK FIRST — this constraint is non-negotiable:
+
+1. clickedIndex is zero-based and identifies the exact clicked position in segments.
+2. Consider only targets containing that exact segment. Discard every target that does not contain it, even if it is the most salient expression in the surrounding context.
+3. If the click is on a free word inside, between, or beside the members of another unit, return the clicked word as its own Lexeme. Do not return the nearby unit.
+
+FIXED TOGETHER. FREE APART.
+
+Idiom: fixed members only; skip inserted free modifiers, and a modifier click = that Lexeme only.
+
+Parts go together for three reasons:
+
+- FIXED EXPRESSION: realized fixed members of an established Phraseme or Construction.
+- VALENCY: a verb plus its governed preposition, or an inherently reflexive verb plus its required reflexive pronoun. The argument itself stays free.
+- GRAMMAR: the realized pieces of one inflected verb, including separable pieces and tense or voice auxiliaries.
+
+Idiom recognition is about the meaning of this occurrence, not whether its words match a known idiom. When the supplied context makes the wording physical or otherwise compositional, do not group it as an Idiom.
+
+Read all supplied context; it may contain several sentences. Choose the largest defensible unit containing the click. Mere syntactic relation or familiar co-occurrence is not enough. If the larger unit is doubtful, choose the smaller defensible target.
+
+Route only the click-containing target:
+
+- Lexeme is the default for one word and for a multi-segment realization of one verb. Use the contextually correct word-class kind.
+- Phraseme is a sufficiently fixed multiword expression: Aphorism for a fixed concise maxim; Collocation for a conventional lexical combination with a restricted or non-obvious component; Proverb for a conventional sentential saying; DiscourseFormula for a conventional interactional formula; Idiom for a fixed expression used here with a non-compositional meaning.
+- Construction/Fusion is exactly the clicked fused source segment; take no neighbors.
+- PairedFrame: anchor click = all anchors, no fillers; filler click = that Lexeme only.
+
+The input contains markedSentence with the exact click wrapped in <target>...</target>, plus targetable words as { s, i }. Each i is the stable coordinate among all non-whitespace source segments, not an array position; omitted punctuation or unreadable context may leave gaps. clickedIndex equals the marked word's i. Only values present as segments[].i can be target members.
+
+Membership is positional. The click is an implicit member. For Resolved, list every other member in the top-level additionalMemberIndices array; use [] when the click is the only member. Include all and only the source segments realizing the selected unit in this occurrence, including every realized member when the unit is discontinuous. Exclude the clicked index, punctuation, unreadable text, free material, neighboring units, and identical spellings at the wrong position. Preserve increasing array order; do not rewrite the members into lemma, canonical, or grammatical order. For Unresolved, additionalMemberIndices must be null.
+
+Return Unresolved only when the clicked segment has no defensible Family/Kind route. If a standalone route is defensible but a larger fixed group is uncertain, choose the standalone target. For Resolved, target must be non-null. For Unresolved, target must be null.
+
+Before returning, silently verify that the selected target contains the exact clicked segment, contains every and only member required by the policy, and follows the representation-specific membership instruction supplied after this policy.
+
+Return only an object matching the supplied output schema. Do not return a lemma, canonical form, surface form, explanation, or alternative candidate.`;
+
+// biome-ignore lint/correctness/noUnusedVariables: Retained as the v12/v14 comparison prompt.
+const newCommonPrompt = `<agent_role>
 You are helping a learner of German who has selected one part of a sentence. Classify the selected target in a custom UD-like system, prioritizing the highest-level defensible language unit.
 </agent_role>
 
@@ -181,12 +229,13 @@ The input is one JSON object:
 
 \`\`\`
 {
-    clickedIndex: number, // Zero-based position of the segment clicked by the learner.
-    segments: string[], // Source-ordered text segments with whitespace removed.
+    markedSentence: string, // Natural source text with the exact clicked segment wrapped once in <target>...</target>.
+    segments: { s: string, i: number }[], // Only targetable words. i is a stable non-whitespace source coordinate, not the array position, so values may have gaps.
+    clickedIndex: number, // Equals the marked segment's i.
 }
 \`\`\`
 
-Read \`segments\` in order as one-spaced text. Array positions are segment indices. Punctuation and unreadable context may clarify the sentence but are never target members.
+Read markedSentence for meaning and the authoritative click. Use segments only as membership candidates, copying their i values into the output. Punctuation and unreadable context may clarify the sentence but are absent from segments and can never be target members.
 </input_format>
 
 <output_format>
@@ -198,9 +247,8 @@ Return exactly one JSON object in one of these forms:
     target: {
         family: "Lexeme" | "Phraseme" | "Construction",
         kind: string, // A Kind belonging to the selected Family in classification_model.
-        membership: null  // null when none of the other segments are used to make up a unit targeted with a click
-     		| { additionalMemberIndices: number[] } // Example: clickedIndex 1 in ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."] => { additionalMemberIndices: [2, 5] } for governed "mit" and separable "auf"; exclude the free argument "dem Rauchen".
-		},
+    },
+    additionalMemberIndices: number[], // Every target member except clickedIndex, in increasing source order. Use [] when the click is the only member. Example: clickedIndex 1 in ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."] => [2, 5] for governed "mit" and separable "auf"; exclude the free argument "dem Rauchen".
 } 
 
 or
@@ -208,6 +256,7 @@ or
 {
     decision: "Unresolved", // no Family/Kind classification is defensible
     target: null,
+    additionalMemberIndices: null,
 }
 \`\`\`
 
@@ -232,13 +281,179 @@ Examples:
 </classification_rules>
 
 `;
+const iterationOnePrompt = `<agent_role>
+Classify the exact German source segment marked <target>...</target>. Select the complete learner-facing language unit that contains that marked segment, then return its high-level Family/Kind route and membership. Do not perform lemma resolution, canonicalization, or grammatical drill-down.
+</agent_role>
+
+<input_format>
+Input is exactly:
+
+{
+  markedSentence: string,
+  segments: { s: string, i: number }[],
+  clickedIndex: number
+}
+
+markedSentence is the natural source text. Exactly one source segment is wrapped in <target>...</target>; that marker is authoritative.
+
+segments is the complete list of targetable words in source order. s is surface text. i is an opaque source occurrence ID, not an array position. Punctuation and unreadable source material are omitted from segments, so i values may have gaps. clickedIndex equals the marked word's i.
+</input_format>
+
+<classification_model>
+Choose exactly one reachable route:
+
+- Lexeme: ADJ | ADP | ADV | AUX | CCONJ | DET | INTJ | NOUN | NUM | PART | PRON | PROPN | SCONJ | SYM | VERB
+- Phraseme: Aphorism | Collocation | DiscourseFormula | Idiom | Proverb
+- Construction: Fusion | PairedFrame
+</classification_model>
+
+<decision_procedure>
+1. Start at the marked <target>. Reject every candidate unit that does not contain that exact occurrence.
+2. Decide which source words are fixed members of the marked occurrence. Fixed material belongs together; free material stays separate.
+3. Choose the largest defensible fixed unit containing the mark. Mere syntax, proximity, or familiar co-occurrence does not make material fixed. When a larger unit is doubtful, choose the defensible smaller unit.
+4. Route that unit. Lexeme is the default for one word and for all realized pieces of one inflected verb. Phraseme requires an established expression. Fusion is one fused source word. PairedFrame contains only its correlated anchors.
+5. Copy membership IDs only from segments[].i. The marked word is implicit: never include clickedIndex. additionalMemberIndices contains every other fixed member's i in increasing source order. Use [] for a singleton.
+6. Silently verify: the route contains the marked occurrence; every output index exists in segments; clickedIndex is absent; no free word, punctuation, unreadable text, duplicate, or neighboring unit is included.
+</decision_procedure>
+
+<fixedness_policy>
+Treat these as one Lexeme/VERB when they realize one verb: separable pieces; lexical verb plus perfect, future, or passive auxiliaries; verb plus a lexically governed preposition; inherently reflexive verb plus its required reflexive pronoun. A governed preposition joins the verb, but its nominal argument remains free.
+
+Keep these separate: meaning-bearing modal AUX plus infinitive; copula AUX plus predicate; optional or contextual reflexive objects; ordinary arguments, objects, complements, adjuncts, modifiers, fillers, and inserted words.
+
+An established non-compositional occurrence is Phraseme/Idiom; the same wording used literally is separate. A Collocation must be a conventional lexical combination with a restricted or non-obvious component, not a freely composed phrase. A PairedFrame includes only fixed anchors; a marked filler is its own Lexeme. A marked fused source word is Construction/Fusion unless it is a fixed member of a larger established unit.
+</fixedness_policy>
+
+<output_format>
+Return exactly one object:
+
+Resolved:
+{
+  decision: "Resolved",
+  target: { family: "Lexeme" | "Phraseme" | "Construction", kind: string },
+  additionalMemberIndices: number[]
+}
+
+Unresolved, only when no Family/Kind route is defensible for the marked word:
+{
+  decision: "Unresolved",
+  target: null,
+  additionalMemberIndices: null
+}
+
+Return no explanation, lemma, surface form, or alternatives.
+</output_format>`;
+
+const iterationTwoPrompt = `${iterationOnePrompt}
+
+<hard_boundary_checks>
+Apply these occurrence-level checks before returning:
+
+- Collocation: when a conventional support-verb combination is defensible, include every fixed realized lexical and function-word member, including a fixed determiner. Every click on one of those fixed members selects the same Collocation. Do not downgrade a fixed-member click to its standalone POS.
+- Fusion: a single source word that contracts a preposition with an article is Construction/Fusion, not Lexeme/ADP. It remains a one-word target, so additionalMemberIndices is [].
+- PairedFrame: first identify only the lexical correlating anchors. An anchor click selects all anchors. Any marked filler between, around, or after the anchors is its standalone Lexeme and must not select or join the frame.
+- Idiom: include fixed function words such as articles when they are part of the established wording. Exclude freely inserted descriptive modifiers. A click on a fixed function word selects the whole Idiom; a click on an inserted modifier selects only that modifier.
+- Repeated spelling: resolve the exact marked occurrence. A marked preposition that introduces a nominal phrase is standalone Lexeme/ADP even if an identical later particle completes a separable verb. Never merge two occurrences merely because their surface strings match.
+
+Final click-consistency check: if the marked word is a fixed member, return the same whole unit that any other fixed-member click would return. If it is free material, return its standalone route even when a larger unit is visible nearby.
+</hard_boundary_checks>`;
+
+// biome-ignore lint/correctness/noUnusedVariables: Retained as the iteration-4 comparison prompt.
+const iterationFourPrompt = `${iterationTwoPrompt}
+
+<remaining_contrasts>
+- Collocation has a high threshold. A light/support verb with a determiner and noun is not automatically a Collocation, even if the wording is conventional. Select Phraseme/Collocation only when the lexical choice is notably restricted or non-obvious in this occurrence; otherwise each marked word is its standalone Lexeme. Follow the positive and negative demonstrations as the threshold anchors.
+- In a proportional PairedFrame, the anchors are the closed-class correlating operators. Comparative adjectives and their phrases carry the freely supplied payload: never include them as anchors. When an operator is marked, include only the operators. When a comparative payload word is marked, return only that Lexeme.
+- For repeated forms, assign a role to each occurrence before membership. A preposition with its own nominal phrase is not a separable particle. The same earlier preposition stays excluded when the marked finite verb or its later particle selects the separable VERB.
+</remaining_contrasts>`;
+
+// biome-ignore lint/correctness/noUnusedVariables: Retained as the v15 iteration-5 comparison prompt.
+const iterationFivePrompt = `${iterationTwoPrompt}
+
+<final_error_checks>
+- Collocation: a lexically restricted action/result combination may include its support verb, fixed determiner, and noun. A freely predictable speech-act/content object selected by a general placement, production, or communication verb remains compositional: each marked word is a standalone Lexeme. Do not generalize Collocation from the syntactic pattern alone.
+- PairedFrame: output only the small closed-class correlating operators. Degree adjectives, comparative forms, predicates, and other payload words are fillers even when the construction requires a slot there. If such payload is marked, stop and return its standalone Lexeme. Before returning a PairedFrame, remove every proposed member that carries the comparison's lexical content rather than the correlation itself.
+- Repeated forms: membership follows occurrence role, never spelling. When the marked finite verb or final separable particle is selected, exclude every earlier same-spelled preposition that introduces a nominal phrase. When that earlier preposition is marked, return ADP only.
+</final_error_checks>`;
+
+const noCollocationPrompt = `<agent_role>
+Classify the exact German source segment marked <target>...</target>. Select the complete learner-facing language unit containing that occurrence, then return its high-level Family/Kind route and membership. Do not perform lemma resolution, canonicalization, or grammatical drill-down.
+</agent_role>
+
+<input_format>
+Input is exactly:
+{
+  markedSentence: string,
+  segments: { s: string, i: number }[],
+  clickedIndex: number
+}
+
+markedSentence is the natural source text. Its one <target>...</target> span is authoritative. segments is the complete list of targetable words in source order. s is surface text. i is an opaque occurrence ID, not an array position. Omitted punctuation or unreadable context may leave gaps. clickedIndex equals the marked word's i.
+</input_format>
+
+<classification_model>
+Choose exactly one reachable route:
+
+- Lexeme: ADJ | ADP | ADV | AUX | CCONJ | DET | INTJ | NOUN | NUM | PART | PRON | PROPN | SCONJ | SYM | VERB
+- Phraseme: Aphorism | DiscourseFormula | Idiom | Proverb
+- Construction: Fusion | PairedFrame
+</classification_model>
+
+<decision_procedure>
+1. Start at the marked occurrence. Reject every unit that does not contain it.
+2. Decide which words are fixed members of that occurrence. Fixed material belongs together; free material stays separate.
+3. Choose the largest available fixed unit containing the mark. Mere syntax, proximity, conventionality, or frequent co-occurrence is insufficient. Ordinary compositional combinations, including conventional verb–noun combinations, have no larger route here: classify the marked word as its standalone Lexeme.
+4. Route the chosen unit. Lexeme is the default for one word and for all realized pieces of one inflected verb. Phraseme requires one of the four available established-expression routes. Fusion is one fused source word. PairedFrame contains only its correlating operators.
+5. Copy membership only from segments[].i. The marked word is implicit: never include clickedIndex. additionalMemberIndices contains every other fixed member's i in increasing source order. Use [] for a singleton.
+6. Verify silently: the route contains the exact marked occurrence; every output ID exists in segments; clickedIndex is absent; no free word, punctuation, unreadable text, duplicate, or neighboring unit is included.
+</decision_procedure>
+
+<verbal_units>
+Treat these as one Lexeme/VERB when they realize one verb: separable pieces; lexical verb plus perfect, future, or passive auxiliaries; verb plus a lexically governed preposition; inherently reflexive verb plus its required reflexive pronoun.
+
+Keep these separate: meaning-bearing modal AUX plus infinitive; copula AUX plus predicate; optional or contextual reflexive objects; ordinary arguments, objects, complements, adjuncts, modifiers, and inserted words.
+
+For a possible governed preposition, first ask whether this verb lexically selects that exact preposition in this meaning. If yes, verb and preposition are one Lexeme/VERB. A click on either fixed member selects the same verb target. Include the other member's i only; the marked member is already implicit. Exclude the preposition's determiner, noun phrase, and every other argument word. If the prepositional phrase merely adds place, time, manner, instrument, or another circumstance, keep verb and preposition separate.
+</verbal_units>
+
+<paired_frames>
+PairedFrame anchors are the small closed-class correlating operators. Fillers are the open-class words and phrases carrying the construction's lexical content. An anchor click selects every anchor and no filler. A filler click returns only that filler as its standalone Lexeme, even when the construction requires a slot there.
+
+Comparative adjectives, degree words, predicates, noun phrases, and all other content-bearing payload stay outside PairedFrame membership. Before returning PairedFrame, remove every proposed member that supplies lexical content rather than correlation. If the marked occurrence is payload, do not return the nearby frame.
+</paired_frames>
+
+<other_fixedness>
+An established non-compositional occurrence is Phraseme/Idiom; the same wording used literally is separate. Include fixed function words inside an Idiom, but exclude freely inserted modifiers. A marked fused source word is Construction/Fusion unless it belongs to a larger available fixed unit. Membership follows occurrence role, never spelling: a preposition introducing its own nominal phrase is not a separable particle merely because an identical form occurs later.
+</other_fixedness>
+
+<output_format>
+Return exactly one object.
+
+Resolved:
+{
+  decision: "Resolved",
+  target: { family: "Lexeme" | "Phraseme" | "Construction", kind: string },
+  additionalMemberIndices: number[]
+}
+
+Unresolved, only when no Family/Kind route is defensible for the marked word:
+{
+  decision: "Unresolved",
+  target: null,
+  additionalMemberIndices: null
+}
+
+Final mechanical check: if additionalMemberIndices contains clickedIndex, delete it. Return no explanation, lemma, surface form, or alternatives.
+</output_format>`;
+
+const commonPrompt = noCollocationPrompt;
 const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 	"target-de-demo-perfect-arbeiten-click-habe":
 		"habe + gearbeitet = one perfect verb. Take both. gestern is extra. VERB.",
 	"target-de-demo-perfect-arbeiten-click-gearbeitet":
 		"gearbeitet is the lexical part of this perfect. Take habe + gearbeitet as one VERB. Leave gestern out.",
 	"target-de-demo-governed-rechnen-click-rechnet":
-		"rechnen needs mit. Take rechnet + mit. Regen is the argument; leave it out. VERB.",
+		"mit is lexically governed by rechnet. The marked verb is implicit; return only mit's i as the additional member. The nominal complement remains free. VERB.",
 	"target-de-demo-governed-rechnen-click-mit":
 		"mit is required by rechnen. Same verb target: rechnet + mit. No Regen.",
 	"target-de-demo-adjunct-rechnen-click-mit":
@@ -309,6 +524,10 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 		"zur is one fused source token: zu + der. Fusion only. Do not absorb the surrounding wording.",
 	"target-de-demo-symbol-percent":
 		"% is the clicked symbol. zwölf is a separate number. SYM only.",
+	"target-de-core-unresolved-qzxv":
+		"The marked string has no defensible German Family/Kind route in this context. Return Unresolved with both nullable fields null.",
+	"target-de-route-phraseme-collocation-antrag-click-einen":
+		"The marked determiner is a fixed realized member of this strong conventional support-verb combination. Select the whole Collocation, including its verb, determiner, and noun; exclude free context.",
 	"target-de-demo-default-interjection-oh":
 		"Oh is one reaction word. Not a multiword discourse formula. INTJ only.",
 	"target-de-demo-repeated-anfangen-click-faengt":
@@ -329,7 +548,7 @@ const DEMONSTRATION_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
 
 const membershipInstructions: Readonly<Record<RepresentationId, string>> = {
 	"additional-compact-indices":
-		"For Resolved, the semantic target contains the click implicitly. Use membership: null when it has no other members. Otherwise, membership.additionalMemberIndices lists every other member's array index in strictly increasing source order; do not include the clicked index or repeat an index.",
+		"For Resolved, the semantic target contains the click implicitly. additionalMemberIndices lists every other member by its segments[].i value in strictly increasing source order. i is an opaque occurrence ID, not an array position. Use [] when the click is the only member. Never include clickedIndex or a value absent from segments[].i. For Unresolved, use additionalMemberIndices: null.",
 };
 
 export type PreparedRepresentationCase = Readonly<{

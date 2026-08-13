@@ -3,9 +3,10 @@ import type { ResponseCreateParamsNonStreaming } from "openai/resources/response
 import { z } from "zod";
 
 import { stableJson } from "../../../../lib/stable-json";
-import { additionalIndicesOutputSchema } from "./representations";
-
-const privateTargetSchema = additionalIndicesOutputSchema.shape.target.unwrap();
+import {
+	additionalIndicesOutputSchema,
+	classificationTargetSchema,
+} from "./representations";
 
 export const DIAGNOSTIC_FOLLOW_UP_SYSTEM_INSTRUCTION = [
 	"Produce a neutral, non-scoring diagnostic note about the retained German target-classification exchange.",
@@ -18,7 +19,7 @@ const conciseReason = z.string().trim().min(1).max(500);
 
 export const diagnosticFollowUpOutputSchema = z
 	.strictObject({
-		chosenUnit: privateTargetSchema.nullable(),
+		chosenUnit: classificationTargetSchema.nullable(),
 		clickRole: z.enum([
 			"SoleMember",
 			"FixedMember",

@@ -5,16 +5,21 @@ German high-level target policy across the development suite?**
 
 This is issue #85's throwaway logic experiment, not a production Prompt Source
 or public DTO. It retains one private Structured Output contract: the click is
-implicit membership. A one-segment target uses `membership: null`; otherwise,
-the model returns only the array indices additional to that click.
+implicit membership. For every Resolved result, the model returns a top-level
+`additionalMemberIndices` array containing only the other members; a
+one-segment target uses `[]`. Unresolved uses `target: null` and
+`additionalMemberIndices: null`.
 
-The model input is exactly `{ clickedIndex: number, segments: string[] }`.
-Whitespace is removed while every other source segment remains in order as
-plain surface text, including punctuation and opaque text. Array position is
-the only model-facing segment identity. Canonical segment kinds and the
-original source indices stay inside the deterministic adapter, which accepts
-only a `ResolvableText` click and rejects output membership that maps to
-anything else. The adapter materializes the selected demonstrations, decodes
+The model input is exactly
+`{ markedSentence: string, segments: { s: string, i: number }[], clickedIndex: number }`.
+`markedSentence` preserves the natural source and wraps the exact clicked
+surface once in `<target>...</target>`. The adapter XML-escapes source text so
+those are the only real markers. `segments` exposes only `ResolvableText`
+candidates; `i` is the stable coordinate among all non-whitespace source
+segments, so omitted punctuation or opaque context leaves gaps. `clickedIndex`
+equals the marked candidate's `i`. Canonical kinds and original source indices
+stay deterministic, and output membership can use only exposed `i` values.
+The adapter materializes the selected demonstrations, decodes
 into the canonical original-index output, and is scored by the #84 evaluator
 over the exact 94-case development suite. Demonstrations are capped at 35 and
 kept as small as the current policy coverage permits.
@@ -93,6 +98,69 @@ target returns a non-null membership object with at least one
 `additionalMemberIndices` entry. The adapter restores the implicit click in
 both cases, and the schema rejects a non-null empty membership object. The
 diagnostic follow-up artifact is correspondingly versioned as v3.
+
+Version v13 reactivates the retained policy-first historical prompt, with only
+the private contract vocabulary migrated to the lean positional input,
+nullable membership, and currently reachable Collocation route. The newer
+three-rule prompt remains retained beside it as an inactive comparison
+artifact. This creates a direct development-suite comparison against the v12
+prompt under the same model and generation settings.
+
+Version v14 moves `additionalMemberIndices` beside `decision` and `target`, so
+the target object describes only the Family/Kind route. The materialized
+demonstration and evaluation corpus now uses `[]` for a Resolved singleton and
+`null` only for Unresolved. The deterministic adapter continues to restore the
+implicit click before producing canonical `memberSegmentIndices`; the
+canonical corpus itself retains that richer internal shape. Both retained
+prompts describe the v14 contract, and the newer three-rule prompt is active
+for this run. Adapter fixtures are v4, as is the diagnostic follow-up artifact.
+The direct v14 development run completed all 188 calls without provider
+errors. Its two attempts scored 47/94 and 48/94 (95/188, 50.53%), versus
+54/94 and 52/94 for v12's earlier use of the newer prompt. Structured output
+always supplied the new fields, but 37 answers failed deterministic
+canonicalization: 20 repeated the implicit click and 22 selected punctuation
+or opaque context, with five answers doing both. The run therefore fails the
+membership-safety and click-invariance gates and remains unfinalized pending
+miss classification.
+
+Version v15 ran five adaptive direct iterations on the unchanged 94-case
+development selection, with two replicates each. Concrete examples were
+removed from active policy prose; all examples are corpus-backed,
+contamination-checked, and selected at most once per source sentence. The
+marked-input seam eliminated v14's deterministic punctuation/opaque-index
+failures immediately. Scores progressed 82/83, 85/84, 87/86, 83/83, and
+89/88. Iteration 5 is the best aggregate configuration at 177/188 (94.15%)
+with 21 unique-sentence demonstrations, zero provider errors, 93.33% routes,
+98.86% boundaries, and 85% robustness. It remains below the predeclared
+threshold because neither replicate reached 90/94; demonstration ablation did
+not activate. Its one safety miss repeated `clickedIndex` in one governed-
+preposition answer. These are adaptive development scores, not generalization
+evidence.
+
+Version v16 narrows this classifier's route interface again: Dumling's global
+German model still supports `Phraseme/Collocation`, but this prompt and its
+canonical development corpus omit it just as they omit the Morpheme Family.
+All 18 former Collocation ideals retain their historical case IDs. Seventeen
+now select only the clicked singleton Lexeme; the fused `zur` occurrence
+independently routes as singleton `Construction/Fusion`. The active Structured
+Output and canonical corpus schemas share one local route table that rejects
+Collocation; the global Dumling route table remains unchanged. The removed
+route and demonstration space is spent on explicit PairedFrame
+operator-versus-payload rules and governed-preposition membership checks. This
+is a policy-oracle change, so its run is a new development baseline rather than
+a directly comparable improvement over v15.
+
+The direct, non-batch v16 run completed both replicates at 87/94, for 174/188
+(92.55%) overall, with zero execution errors and a $0.0461968 billed-cost
+upper bound. Every evaluated former-Collocation occurrence followed the new
+singleton-Lexeme oracle in both replicates. Membership safety passed, but the
+click-invariance gate failed because two clicks inside the same four-member
+Idiom were classified outside that Idiom. The seven stable misses per
+replicate were Fusion `zum`; both `je ... desto` comparative fillers; the free
+adverb inside a perfect; two fixed-function-word clicks inside `mit den
+Wölfen heulen`; and the first, prepositional `auf` near a later separable
+particle. Retained results are in
+`runs/2026-08-13T04-43-20-629Z/results.json`.
 
 ## Deterministic preflight
 

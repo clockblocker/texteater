@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { z } from "zod";
 import {
 	assertAttemptSchedule,
 	assertBatchingForMode,
@@ -27,6 +28,7 @@ import { corpus } from "../../src/promptsmith/laboratory/canonical-classificatio
 import {
 	canonicalInputSchema,
 	canonicalOutputSchema,
+	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
 } from "../../src/promptsmith/laboratory/canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
 import {
 	demonstrationSelection,
@@ -49,11 +51,13 @@ import {
 import {
 	additionalIndicesOutputSchema,
 	classificationInputSchema,
+	classificationTargetSchema,
 	materializeRepresentation,
 	parseAndCanonicalizeRepresentation,
 	projectClassificationInput,
 	REPRESENTATION_IDS,
 } from "../../src/promptsmith/laboratory/experiments/target-classification-german-high-level/representations";
+import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
 
 describe("target classification high-level contract prototype", () => {
 	function fakeResponsesClient(
@@ -148,7 +152,7 @@ describe("target classification high-level contract prototype", () => {
 		};
 	}
 
-	test("exposes only positional text while retaining opaque and punctuation context", () => {
+	test("marks the exact clicked surface and indexes only resolvable candidates", () => {
 		const projection = projectClassificationInput({
 			clickedSegmentIndex: 2,
 			segments: [
@@ -159,11 +163,78 @@ describe("target classification high-level contract prototype", () => {
 			],
 		});
 		expect(projection.input).toEqual({
+			markedSentence: "[x] <target>steht</target>.",
+			segments: [{ s: "steht", i: 1 }],
 			clickedIndex: 1,
-			segments: ["[x]", "steht", "."],
 		});
 		expect(projection.compactToOriginal).toEqual([0, 2, 3]);
 		expect(projection.originalToCompact.get(2)).toBe(1);
+	});
+
+	test("omits Collocation only from this prompt's reachable routes", () => {
+		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).toContain(
+			"Collocation",
+		);
+		expect(
+			GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Phraseme,
+		).not.toContain("Collocation" as never);
+		expect(
+			canonicalOutputSchema.safeParse({
+				decision: "Resolved",
+				target: {
+					family: "Phraseme",
+					kind: "Collocation",
+					memberSegmentIndices: [0],
+				},
+			}).success,
+		).toBe(false);
+		expect(
+			classificationTargetSchema.safeParse({
+				family: "Phraseme",
+				kind: "Collocation",
+			}).success,
+		).toBe(false);
+		expect(
+			additionalIndicesOutputSchema.safeParse({
+				decision: "Resolved",
+				target: {
+					family: "Phraseme",
+					kind: "Collocation",
+				},
+				additionalMemberIndices: [],
+			}).success,
+		).toBe(false);
+		expect(
+			stableJson(z.toJSONSchema(additionalIndicesOutputSchema)),
+		).not.toContain("Collocation");
+	});
+
+	test("preserves source spacing and assigns stable candidate positions", () => {
+		const canonicalInput = {
+			clickedSegmentIndex: 2,
+			segments: [
+				{ kind: "ResolvableText" as const, text: "Guten" },
+				{ kind: "Whitespace" as const, text: "\t" },
+				{ kind: "ResolvableText" as const, text: "Morgen" },
+				{ kind: "Punctuation" as const, text: "," },
+				{ kind: "Whitespace" as const, text: "  " },
+				{ kind: "OpaqueText" as const, text: "[???]" },
+				{ kind: "ResolvableText" as const, text: "Mutter" },
+				{ kind: "Punctuation" as const, text: "!" },
+			],
+		};
+		const first = projectClassificationInput(canonicalInput);
+		const second = projectClassificationInput(canonicalInput);
+		expect(first.input).toEqual({
+			markedSentence: "Guten\t<target>Morgen</target>,  [???]Mutter!",
+			segments: [
+				{ s: "Guten", i: 0 },
+				{ s: "Morgen", i: 1 },
+				{ s: "Mutter", i: 4 },
+			],
+			clickedIndex: 1,
+		});
+		expect(second.input).toEqual(first.input);
 	});
 
 	test("rejects clicks that the deterministic adapter cannot expose", () => {
@@ -175,10 +246,44 @@ describe("target classification high-level contract prototype", () => {
 		).toThrow(/ResolvableText/u);
 		expect(() =>
 			classificationInputSchema.parse({
-				clickedIndex: 2,
-				segments: ["Sie", "kommt"],
+				markedSentence: "Sie <target>kommt</target>",
+				clickedIndex: 4,
+				segments: [
+					{ s: "Sie", i: 0 },
+					{ s: "kommt", i: 2 },
+				],
 			}),
 		).toThrow(/clickedIndex/u);
+		expect(() =>
+			classificationInputSchema.parse({
+				markedSentence: "Sie <target>kommt</target>",
+				clickedIndex: 2,
+				segments: [
+					{ s: "Sie", i: 2 },
+					{ s: "kommt", i: 2 },
+				],
+			}),
+		).toThrow(/strictly increasing/u);
+		const escaped = projectClassificationInput({
+			clickedSegmentIndex: 0,
+			segments: [
+				{
+					kind: "ResolvableText",
+					text: "<target>A&B</target>",
+				},
+				{ kind: "Whitespace", text: " " },
+				{ kind: "OpaqueText", text: "<&>" },
+			],
+		});
+		expect(escaped.input.markedSentence).toBe(
+			"<target>&lt;target&gt;A&amp;B&lt;/target&gt;</target> &lt;&amp;&gt;",
+		);
+		expect(escaped.input.markedSentence.match(/<target>/gu)).toHaveLength(
+			1,
+		);
+		expect(escaped.input.markedSentence.match(/<\/target>/gu)).toHaveLength(
+			1,
+		);
 	});
 
 	test("preflights the frozen additional-indices contract with exact hashes and cost cap", () => {
@@ -277,7 +382,7 @@ describe("target classification high-level contract prototype", () => {
 		}
 	});
 
-	test("emits membership only when the target has additional members", () => {
+	test("emits top-level additional membership for every resolved target", () => {
 		const singleton = corpus.cases["target-de-route-lexeme-adj"];
 		if (singleton === undefined)
 			throw new Error("Missing singleton fixture.");
@@ -287,7 +392,8 @@ describe("target classification high-level contract prototype", () => {
 		);
 		expect(materializedSingleton.idealOutput).toMatchObject({
 			decision: "Resolved",
-			target: { membership: null },
+			target: { family: "Lexeme", kind: "ADJ" },
+			additionalMemberIndices: [],
 		});
 		expect(
 			additionalIndicesOutputSchema.safeParse({
@@ -295,8 +401,8 @@ describe("target classification high-level contract prototype", () => {
 				target: {
 					family: "Lexeme",
 					kind: "ADJ",
-					membership: { additionalMemberIndices: [] },
 				},
+				additionalMemberIndices: null,
 			}).success,
 		).toBe(false);
 
@@ -332,14 +438,21 @@ describe("target classification high-level contract prototype", () => {
 			governedSeparable,
 		);
 		expect(materializedMultiMember.input).toEqual({
+			markedSentence: "Sie <target>hört</target> mit dem Rauchen auf.",
 			clickedIndex: 1,
-			segments: ["Sie", "hört", "mit", "dem", "Rauchen", "auf", "."],
+			segments: [
+				{ s: "Sie", i: 0 },
+				{ s: "hört", i: 1 },
+				{ s: "mit", i: 2 },
+				{ s: "dem", i: 3 },
+				{ s: "Rauchen", i: 4 },
+				{ s: "auf", i: 5 },
+			],
 		});
 		expect(materializedMultiMember.idealOutput).toMatchObject({
 			decision: "Resolved",
-			target: {
-				membership: { additionalMemberIndices: [2, 5] },
-			},
+			target: { family: "Lexeme", kind: "VERB" },
+			additionalMemberIndices: [2, 5],
 		});
 	});
 
@@ -360,15 +473,7 @@ describe("target classification high-level contract prototype", () => {
 				privateInput,
 				output: additionalIndicesOutputSchema.parse({
 					...(additional.idealOutput as object),
-					target: {
-						...(additional.idealOutput as { target: object })
-							.target,
-						membership: {
-							additionalMemberIndices: [
-								privateInput.clickedIndex,
-							],
-						},
-					},
+					additionalMemberIndices: [privateInput.clickedIndex],
 				}),
 			}),
 		).toThrow(/exclude/u);
@@ -383,13 +488,7 @@ describe("target classification high-level contract prototype", () => {
 					privateInput,
 					output: additionalIndicesOutputSchema.parse({
 						...(additional.idealOutput as object),
-						target: {
-							...(additional.idealOutput as { target: object })
-								.target,
-							membership: {
-								additionalMemberIndices,
-							},
-						},
+						additionalMemberIndices,
 					}),
 				}),
 			).toThrow(/ordered and unique/u);
@@ -415,8 +514,8 @@ describe("target classification high-level contract prototype", () => {
 					target: {
 						family: "Phraseme",
 						kind: "DiscourseFormula",
-						membership: { additionalMemberIndices: [2] },
 					},
+					additionalMemberIndices: [2],
 				}),
 			}),
 		).toThrow(/ResolvableText/u);
@@ -651,7 +750,7 @@ describe("target classification high-level contract prototype", () => {
 						},
 					},
 				}),
-			).rejects.toThrow(/runnerVersion|v12/u);
+			).rejects.toThrow(/runnerVersion|v15/u);
 			const missKeys = [
 				"additional-compact-indices/1/target-de-diagnostic-fusion-am",
 				"additional-compact-indices/2/target-de-diagnostic-idiom-oel-click-oel",
@@ -692,7 +791,7 @@ describe("target classification high-level contract prototype", () => {
 				},
 			});
 			expect(followUp.version).toBe(
-				"target-classification-diagnostic-follow-up-v3",
+				"target-classification-diagnostic-follow-up-v4",
 			);
 			expect(providerCallCount).toBe(8);
 			expect(followUp.callCap).toBe(DIAGNOSTIC_FOLLOW_UP_CALL_CAP);

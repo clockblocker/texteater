@@ -226,33 +226,15 @@ const cases = {
 		contaminationKeys: ["target-stimulus:guten-morgen"],
 	},
 	"target-de-core-entscheidung-click-entscheidung": {
-		...resolved(
-			demonstrationDecisionSupportVerb,
-			8,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 8, [8], "Lexeme", "NOUN"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-entscheidung-click-trifft": {
-		...resolved(
-			demonstrationDecisionSupportVerb,
-			4,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 4, [4], "Lexeme", "VERB"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-entscheidung-click-eine": {
-		...resolved(
-			demonstrationDecisionSupportVerb,
-			6,
-			[4, 6, 8],
-			"Phraseme",
-			"Collocation",
-		),
+		...resolved(demonstrationDecisionSupportVerb, 6, [6], "Lexeme", "DET"),
 		contaminationKeys: [DECISION_TREFFEN_CONTAMINATION_KEY],
 	},
 	"target-de-core-aufstehen-click-steht": {
@@ -506,33 +488,15 @@ const cases = {
 	),
 
 	"target-de-boundary-collocation-click-trifft": contaminated(
-		resolved(
-			supportVerbCombination,
-			4,
-			[4, 8, 10],
-			"Phraseme",
-			"Collocation",
-		),
+		resolved(supportVerbCombination, 4, [4], "Lexeme", "VERB"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-click-eine": contaminated(
-		resolved(
-			supportVerbCombination,
-			8,
-			[4, 8, 10],
-			"Phraseme",
-			"Collocation",
-		),
+		resolved(supportVerbCombination, 8, [8], "Lexeme", "DET"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-click-entscheidung": contaminated(
-		resolved(
-			supportVerbCombination,
-			10,
-			[4, 8, 10],
-			"Phraseme",
-			"Collocation",
-		),
+		resolved(supportVerbCombination, 10, [10], "Lexeme", "NOUN"),
 		DECISION_TREFFEN_CONTAMINATION_KEY,
 	),
 	"target-de-boundary-collocation-near-heute": contaminated(
@@ -1107,7 +1071,7 @@ function boundaryEvidence(caseId: string): string {
 	if (caseId.includes("collocation") || caseId.includes("entscheidung")) {
 		return evidence(
 			IDS.functionVerbGroup,
-			"IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. Under issue #82's strict Collocation threshold, eine Entscheidung treffen is a strongly restricted but compositional Phraseme/Collocation: trifft, eine, and Entscheidung are fixed members, while the inserted adverb heute remains a separate Lexeme.",
+			"IDS distinguishes a conventional support-verb predicate from an ordinary full verb plus object and notes that borderline cases are gradual. This classifier omits that multiword route: trifft is Lexeme/VERB, eine is Lexeme/DET, Entscheidung is Lexeme/NOUN, and heute is Lexeme/ADV; every target is a singleton.",
 		);
 	}
 	if (caseId.includes("free-object")) {

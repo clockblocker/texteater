@@ -26,17 +26,18 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 
 		expect(systemPrompt).toContain("clickedIndex");
 		expect(systemPrompt).toContain("additionalMemberIndices");
-		expect(systemPrompt).toContain('"membership":null');
-		expect(systemPrompt).not.toContain('"additionalMemberIndices":[]');
+		expect(systemPrompt).toContain('"additionalMemberIndices":[]');
+		expect(systemPrompt).not.toContain('"membership"');
 		expect(systemPrompt).not.toContain("clickedCompactIndex");
 		expect(systemPrompt).not.toContain("additionalMemberCompactIndices");
 		expect(systemPrompt).not.toContain("compactIndex");
 		expect(systemPrompt).not.toContain('"clicked":');
 		expect(systemPrompt).not.toContain('"kind":"ResolvableText"');
+		expect(systemPrompt).not.toContain("Collocation");
 	});
 
 	test("teaches a frame-disjoint PairedFrame filler through the assembled prompt", () => {
-		const caseId = "target-de-demo-paired-sowohl-click-robust";
+		const caseId = "target-de-demo-paired-einerseits-click-einerseits";
 		const systemPrompt = systemPromptForRepresentation(
 			"additional-compact-indices",
 		);
@@ -45,14 +46,14 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(corpus.cases[caseId]?.idealOutput).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Lexeme",
-				kind: "ADJ",
-				memberSegmentIndices: [14],
+				family: "Construction",
+				kind: "PairedFrame",
+				memberSegmentIndices: [0, 5],
 			},
 		});
-		expect(systemPrompt).toContain('"robust"');
+		expect(systemPrompt).toContain("<target>Einerseits</target>");
 		expect(systemPrompt).toContain(
-			"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
+			"einerseits + andererseits are the two anchors. lokal and digital are adjective fillers. Take the anchors only.",
 		);
 	});
 
@@ -140,35 +141,28 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 			"robustness",
 		]);
 		expect(demonstrationSelection.ids).toEqual([
-			"target-de-demo-governed-rechnen-click-mit",
+			"target-de-demo-perfect-arbeiten-click-habe",
+			"target-de-demo-governed-rechnen-click-rechnet",
 			"target-de-demo-adjunct-rechnen-click-mit",
-			"target-de-demo-idiom-faden-click-verlor",
 			"target-de-demo-idiom-faden-click-den",
 			"target-de-demo-aphorism-zeit-click-ist",
 			"target-de-demo-literal-gras-click-biss",
-			"target-de-demo-literal-gras-click-gras",
-			"target-de-demo-idiom-katze-click-die",
 			"target-de-demo-idiom-katze-click-verdammte",
 			"target-de-demo-paired-einerseits-click-einerseits",
-			"target-de-demo-paired-einerseits-click-lokal",
-			"target-de-demo-paired-einerseits-click-andererseits",
 			"target-de-demo-inherent-reflexive-click-beeile",
-			"target-de-demo-inherent-reflexive-click-mich",
-			"target-de-demo-optional-reflexive-click-kaemmst",
 			"target-de-demo-optional-reflexive-click-dich",
 			"target-de-demo-modal-arbeiten-click-kann",
 			"target-de-demo-passive-briefe-click-werden",
-			"target-de-demo-default-interjection-oh",
-			"target-de-demo-repeated-anfangen-click-faengt",
 			"target-de-demo-repeated-anfangen-click-final-an",
-			"target-de-demo-repeated-anfangen-click-first-an",
 			"target-de-demo-question-stattfinden-click-statt",
 			"target-de-demo-typo-mitmachen-click-mit",
 			"target-de-demo-predicative-cringe-click-cringe",
 			"target-de-demo-paired-sowohl-click-robust",
 			"target-de-demo-idiom-kragen-click-kragen",
+			"target-de-demo-symbol-percent",
+			"target-de-core-unresolved-qzxv",
 		]);
-		expect(demonstrationSelection.ids).toHaveLength(27);
+		expect(demonstrationSelection.ids).toHaveLength(20);
 		expect(demonstrationSelection.ids.length).toBeLessThanOrEqual(35);
 		expect(evaluationSelection.ids).toHaveLength(94);
 		expect(demonstrationSelection.isDisjointFrom(evaluationSelection)).toBe(
@@ -176,10 +170,16 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		);
 		expect(
 			demonstrationSelection.union(evaluationSelection).ids,
-		).toHaveLength(121);
+		).toHaveLength(114);
+		const demonstrationSentences = demonstrationSelection.cases.map(
+			(testCase) => JSON.stringify(testCase.input.segments),
+		);
+		expect(new Set(demonstrationSentences).size).toBe(
+			demonstrationSentences.length,
+		);
 	});
 
-	test("covers every reachable route and records unreachable PUNCT and X gaps", () => {
+	test("covers every classifier route except deliberately omitted Collocation", () => {
 		const covered = new Set(
 			corpus
 				.all()
@@ -191,11 +191,11 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 						: [],
 				),
 		);
-		const reachable = Object.entries(
-			GERMAN_REACHABLE_HIGH_LEVEL_ROUTES,
-		).flatMap(([family, kinds]) =>
-			kinds.map((kind) => `${family}/${kind}`),
-		);
+		const reachable = Object.entries(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES)
+			.flatMap(([family, kinds]) =>
+				kinds.map((kind) => `${family}/${kind}`),
+			)
+			.filter((route) => route !== "Phraseme/Collocation");
 		expect([...covered].toSorted()).toEqual(reachable.toSorted());
 		const heldOutRoutes = new Set(
 			evaluationSelection.cases.flatMap(({ idealOutput }) =>
@@ -220,6 +220,7 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		expect(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme).toContain(
 			"Collocation",
 		);
+		expect(covered.has("Phraseme/Collocation")).toBe(false);
 		expect(
 			corpus.outputSchema.safeParse({
 				decision: "Resolved",
@@ -253,16 +254,16 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toBe(false);
 	});
 
-	test("groups every fixed member of a strong Collocation", () => {
+	test("classifies former Collocation members as standalone Lexemes", () => {
 		expect(
 			corpus.cases["target-de-core-entscheidung-click-trifft"]
 				?.idealOutput,
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Phraseme",
-				kind: "Collocation",
-				memberSegmentIndices: [4, 6, 8],
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [4],
 			},
 		});
 		expect(
@@ -270,9 +271,9 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Phraseme",
-				kind: "Collocation",
-				memberSegmentIndices: [4, 6, 8],
+				family: "Lexeme",
+				kind: "DET",
+				memberSegmentIndices: [6],
 			},
 		});
 		expect(
@@ -281,39 +282,59 @@ describe("German High-Level Target Classification Canonical Classification Corpu
 		).toEqual({
 			decision: "Resolved",
 			target: {
-				family: "Phraseme",
-				kind: "Collocation",
-				memberSegmentIndices: [4, 6, 8],
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [8],
 			},
 		});
 	});
 
-	test("provides five strong Collocations in realistic contexts", () => {
+	test("routes former Collocation stimuli by the clicked occurrence", () => {
 		const expected = {
 			"target-de-route-phraseme-collocation-massnahmen-click-ergriff": [
-				6, 16,
+				"VERB",
+				6,
 			],
-			"target-de-route-phraseme-collocation-kritik-click-kritik": [4, 12],
+			"target-de-route-phraseme-collocation-kritik-click-kritik": [
+				"NOUN",
+				12,
+			],
 			"target-de-route-phraseme-collocation-ruecksicht-click-nahm": [
-				6, 12,
+				"VERB",
+				6,
 			],
 			"target-de-route-phraseme-collocation-verfuegung-click-verfuegung":
-				[6, 16, 18],
+				["NOUN", 18],
 			"target-de-route-phraseme-collocation-antrag-click-antrag": [
-				6, 12, 14,
+				"NOUN",
+				14,
 			],
 		} as const;
 
-		for (const [caseId, memberSegmentIndices] of Object.entries(expected)) {
+		for (const [caseId, [kind, memberSegmentIndex]] of Object.entries(
+			expected,
+		)) {
 			expect(corpus.cases[caseId]?.idealOutput).toEqual({
 				decision: "Resolved",
 				target: {
-					family: "Phraseme",
-					kind: "Collocation",
-					memberSegmentIndices: [...memberSegmentIndices],
+					family: "Lexeme",
+					kind,
+					memberSegmentIndices: [memberSegmentIndex],
 				},
 			});
 		}
+		expect(
+			corpus.cases[
+				"target-de-route-phraseme-collocation-verfuegung-click-zur"
+			]?.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Construction",
+				kind: "Fusion",
+				memberSegmentIndices: [16],
+			},
+		});
 	});
 
 	test("teaches click anchoring through fixed-member and free-neighbor contrasts", () => {

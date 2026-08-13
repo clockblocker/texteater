@@ -1,74 +1,118 @@
 import { z } from "zod";
 
 import { stableJson } from "../../../../lib/stable-json";
-import { GERMAN_REACHABLE_HIGH_LEVEL_ROUTES } from "../../../../schema/german-high-level-routes";
 import type { PromptRepresentationAdapter } from "../../../assembly";
 import {
 	canonicalInputSchema,
 	canonicalOutputSchema,
+	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
 } from "../../canonical-classification-corpus/target-classification/de/high-level-whole-unit/schemas";
 
 export const REPRESENTATION_IDS = ["additional-compact-indices"] as const;
 
 export type RepresentationId = (typeof REPRESENTATION_IDS)[number];
 
+const TARGET_OPEN = "<target>";
+const TARGET_CLOSE = "</target>";
+
+function escapeXmlText(text: string): string {
+	return text
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;");
+}
+
 export const classificationInputSchema = z
 	.strictObject({
+		markedSentence: z.string().min(1),
+		segments: z
+			.array(
+				z.strictObject({
+					s: z.string().min(1),
+					i: z.number().int().nonnegative(),
+				}),
+			)
+			.min(1),
 		clickedIndex: z.number().int().nonnegative(),
-		segments: z.array(z.string().min(1)).min(1),
 	})
 	.superRefine((input, context) => {
-		if (input.clickedIndex >= input.segments.length) {
+		let previousIndex = -1;
+		for (const [position, segment] of input.segments.entries()) {
+			if (segment.i <= previousIndex) {
+				context.addIssue({
+					code: "custom",
+					path: ["segments", position, "i"],
+					message:
+						"Candidate indices must be strictly increasing and unique.",
+				});
+			}
+			previousIndex = segment.i;
+		}
+		if (
+			!input.segments.some((segment) => segment.i === input.clickedIndex)
+		) {
 			context.addIssue({
 				code: "custom",
 				path: ["clickedIndex"],
-				message: "clickedIndex must reference a segment.",
+				message:
+					"clickedIndex must equal the i of a candidate in segments.",
+			});
+		}
+		const openingCount = input.markedSentence.split(TARGET_OPEN).length - 1;
+		const closingCount =
+			input.markedSentence.split(TARGET_CLOSE).length - 1;
+		const openingIndex = input.markedSentence.indexOf(TARGET_OPEN);
+		const closingIndex = input.markedSentence.indexOf(TARGET_CLOSE);
+		if (
+			openingCount !== 1 ||
+			closingCount !== 1 ||
+			closingIndex < openingIndex + TARGET_OPEN.length
+		) {
+			context.addIssue({
+				code: "custom",
+				path: ["markedSentence"],
+				message:
+					"markedSentence must contain exactly one non-empty <target>...</target> span.",
 			});
 		}
 	});
 
-const routeTarget = <Membership extends z.ZodType>(membership: Membership) =>
-	z.discriminatedUnion("family", [
-		z.strictObject({
-			family: z.literal("Lexeme"),
-			kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Lexeme),
-			membership,
-		}),
-		z.strictObject({
-			family: z.literal("Phraseme"),
-			kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Phraseme),
-			membership,
-		}),
-		z.strictObject({
-			family: z.literal("Construction"),
-			kind: z.enum(GERMAN_REACHABLE_HIGH_LEVEL_ROUTES.Construction),
-			membership,
-		}),
-	]);
-
-const privateOutput = <Membership extends z.ZodType>(membership: Membership) =>
-	z
-		.strictObject({
-			decision: z.enum(["Resolved", "Unresolved"]),
-			target: routeTarget(membership).nullable(),
-		})
-		.superRefine((output, context) => {
-			if ((output.decision === "Resolved") !== (output.target !== null)) {
-				context.addIssue({
-					code: "custom",
-					message:
-						"Resolved requires target; Unresolved requires target null.",
-				});
-			}
-		});
+export const classificationTargetSchema = z.discriminatedUnion("family", [
+	z.strictObject({
+		family: z.literal("Lexeme"),
+		kind: z.enum(GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Lexeme),
+	}),
+	z.strictObject({
+		family: z.literal("Phraseme"),
+		kind: z.enum(GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Phraseme),
+	}),
+	z.strictObject({
+		family: z.literal("Construction"),
+		kind: z.enum(
+			GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Construction,
+		),
+	}),
+]);
 
 const memberIndexArray = z.array(z.number().int().nonnegative());
 
-export const additionalIndicesOutputSchema = privateOutput(
-	z
-		.strictObject({ additionalMemberIndices: memberIndexArray.min(1) })
-		.nullable(),
-);
+export const additionalIndicesOutputSchema = z
+	.strictObject({
+		decision: z.enum(["Resolved", "Unresolved"]),
+		target: classificationTargetSchema.nullable(),
+		additionalMemberIndices: memberIndexArray.nullable(),
+	})
+	.superRefine((output, context) => {
+		const resolvedShape =
+			output.target !== null && output.additionalMemberIndices !== null;
+		if ((output.decision === "Resolved") !== resolvedShape) {
+			context.addIssue({
+				code: "custom",
+				message:
+					"Resolved requires a target and additionalMemberIndices array; Unresolved requires both fields null.",
+			});
+		}
+	});
 
 type CanonicalInput = z.output<typeof canonicalInputSchema>;
 type CanonicalOutput = z.output<typeof canonicalOutputSchema>;
@@ -84,26 +128,39 @@ export function projectClassificationInput(
 	input: CanonicalInput,
 ): ClassificationProjection {
 	const canonicalInput = canonicalInputSchema.parse(input);
+	const markedSentence = canonicalInput.segments
+		.map((segment, originalIndex) =>
+			originalIndex === canonicalInput.clickedSegmentIndex
+				? `${TARGET_OPEN}${escapeXmlText(segment.text)}${TARGET_CLOSE}`
+				: escapeXmlText(segment.text),
+		)
+		.join("");
 	const segments: ClassificationInput["segments"] = [];
 	const compactToOriginal: number[] = [];
 	const originalToCompact = new Map<number, number>();
 	for (const [originalIndex, segment] of canonicalInput.segments.entries()) {
 		if (segment.kind === "Whitespace") continue;
-		const compactIndex = segments.length;
-		segments.push(segment.text);
+		const compactIndex = compactToOriginal.length;
 		compactToOriginal.push(originalIndex);
 		originalToCompact.set(originalIndex, compactIndex);
+		if (segment.kind === "ResolvableText") {
+			segments.push({ s: segment.text, i: compactIndex });
+		}
 	}
 	const clickedIndex = originalToCompact.get(
 		canonicalInput.clickedSegmentIndex,
 	);
 	if (clickedIndex === undefined) {
 		throw new Error(
-			"The clicked canonical segment was removed by compaction.",
+			"The clicked canonical segment is not a ResolvableText candidate.",
 		);
 	}
 	return Object.freeze({
-		input: classificationInputSchema.parse({ clickedIndex, segments }),
+		input: classificationInputSchema.parse({
+			markedSentence,
+			segments,
+			clickedIndex,
+		}),
 		compactToOriginal: Object.freeze(compactToOriginal),
 		originalToCompact,
 	});
@@ -200,6 +257,7 @@ export const additionalIndicesAdapter = {
 				idealOutput: additionalIndicesOutputSchema.parse({
 					decision: "Unresolved",
 					target: null,
+					additionalMemberIndices: null,
 				}),
 			};
 		}
@@ -214,13 +272,8 @@ export const additionalIndicesAdapter = {
 			input,
 			idealOutput: additionalIndicesOutputSchema.parse({
 				decision: "Resolved" as const,
-				target: {
-					...privateRoute(goldenCase.idealOutput),
-					membership:
-						additionalMemberIndices.length === 0
-							? null
-							: { additionalMemberIndices },
-				},
+				target: privateRoute(goldenCase.idealOutput),
+				additionalMemberIndices,
 			}),
 		};
 	},
@@ -228,11 +281,12 @@ export const additionalIndicesAdapter = {
 		if (output.decision === "Unresolved") {
 			return canonicalOutputSchema.parse({ decision: "Unresolved" });
 		}
-		if (output.target === null) {
-			throw new Error("Resolved output requires a target.");
+		if (output.target === null || output.additionalMemberIndices === null) {
+			throw new Error(
+				"Resolved output requires target and additionalMemberIndices.",
+			);
 		}
-		const additional =
-			output.target.membership?.additionalMemberIndices ?? [];
+		const additional = output.additionalMemberIndices;
 		let previous = -1;
 		for (const memberIndex of additional) {
 			if (!Number.isSafeInteger(memberIndex) || memberIndex <= previous) {
@@ -327,44 +381,30 @@ const postconditionCanonicalSingletonOutput = canonicalOutputSchema.parse({
 });
 
 export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
-	version: "target-classification-adapter-postconditions-v3",
+	version: "target-classification-adapter-postconditions-v4",
 	canonicalInput: postconditionCanonicalInput,
 	privateInput: projectClassificationInput(postconditionCanonicalInput).input,
 	canonicalOutput: postconditionCanonicalOutput,
 	arms: Object.freeze({
 		"additional-compact-indices": Object.freeze({
-			validNullOutput: {
+			validSingletonOutput: {
 				decision: "Resolved",
 				target: {
 					family: "Lexeme",
 					kind: "VERB",
-					membership: null,
 				},
+				additionalMemberIndices: [],
 			},
-			canonicalNullOutput: postconditionCanonicalSingletonOutput,
+			canonicalSingletonOutput: postconditionCanonicalSingletonOutput,
 			validOutput: {
 				decision: "Resolved",
 				target: {
 					family: "Lexeme",
 					kind: "VERB",
-					membership: { additionalMemberIndices: [0, 2] },
 				},
+				additionalMemberIndices: [0, 2],
 			},
 			invalidOutputs: Object.freeze([
-				Object.freeze({
-					name: "empty-additional-members",
-					output: {
-						decision: "Resolved",
-						target: {
-							family: "Lexeme",
-							kind: "VERB",
-							membership: {
-								additionalMemberIndices: [],
-							},
-						},
-					},
-					expectedError: "Too small",
-				}),
 				Object.freeze({
 					name: "unordered-additional-members",
 					output: {
@@ -372,10 +412,8 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 						target: {
 							family: "Lexeme",
 							kind: "VERB",
-							membership: {
-								additionalMemberIndices: [2, 0],
-							},
 						},
+						additionalMemberIndices: [2, 0],
 					},
 					expectedError: "ordered and unique before click insertion",
 				}),
@@ -386,10 +424,8 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 						target: {
 							family: "Lexeme",
 							kind: "VERB",
-							membership: {
-								additionalMemberIndices: [0, 0],
-							},
 						},
+						additionalMemberIndices: [0, 0],
 					},
 					expectedError: "ordered and unique before click insertion",
 				}),
@@ -400,10 +436,8 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 						target: {
 							family: "Lexeme",
 							kind: "VERB",
-							membership: {
-								additionalMemberIndices: [3],
-							},
 						},
+						additionalMemberIndices: [3],
 					},
 					expectedError: "Membership must reference ResolvableText",
 				}),
@@ -414,10 +448,8 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 						target: {
 							family: "Lexeme",
 							kind: "VERB",
-							membership: {
-								additionalMemberIndices: [4],
-							},
 						},
+						additionalMemberIndices: [4],
 					},
 					expectedError: "Membership must reference ResolvableText",
 				}),
@@ -428,18 +460,18 @@ export const ADAPTER_POSTCONDITION_FIXTURES = Object.freeze({
 
 export function proveAdapterPostconditions(id: RepresentationId) {
 	const fixture = ADAPTER_POSTCONDITION_FIXTURES.arms[id];
-	const canonicalizedNull = parseAndCanonicalizeRepresentation({
+	const canonicalizedSingleton = parseAndCanonicalizeRepresentation({
 		id,
 		canonicalInput: ADAPTER_POSTCONDITION_FIXTURES.canonicalInput,
 		privateInput: ADAPTER_POSTCONDITION_FIXTURES.privateInput,
-		output: fixture.validNullOutput,
+		output: fixture.validSingletonOutput,
 	});
 	if (
-		stableJson(canonicalizedNull) !==
-		stableJson(fixture.canonicalNullOutput)
+		stableJson(canonicalizedSingleton) !==
+		stableJson(fixture.canonicalSingletonOutput)
 	) {
 		throw new Error(
-			`${id} valid null postcondition fixture did not round-trip.`,
+			`${id} valid singleton postcondition fixture did not round-trip.`,
 		);
 	}
 	const canonicalized = parseAndCanonicalizeRepresentation({
@@ -484,8 +516,8 @@ export function proveAdapterPostconditions(id: RepresentationId) {
 		id,
 		canonicalInput: ADAPTER_POSTCONDITION_FIXTURES.canonicalInput,
 		privateInput: ADAPTER_POSTCONDITION_FIXTURES.privateInput,
-		validNullOutput: fixture.validNullOutput,
-		canonicalizedNull,
+		validSingletonOutput: fixture.validSingletonOutput,
+		canonicalizedSingleton,
 		validOutput: fixture.validOutput,
 		canonicalized,
 		invalidResults: Object.freeze(invalidResults),
