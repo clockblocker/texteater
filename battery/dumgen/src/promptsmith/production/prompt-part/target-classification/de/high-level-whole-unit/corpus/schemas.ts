@@ -64,32 +64,30 @@ export const canonicalInputSchema = z
 
 const memberSegmentIndices = z.array(z.number().int().nonnegative()).min(1);
 
+export const canonicalTargetSchema = z.discriminatedUnion("family", [
+	z.strictObject({
+		family: z.literal("Lexeme"),
+		kind: z.enum(GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Lexeme),
+		memberSegmentIndices,
+	}),
+	z.strictObject({
+		family: z.literal("Phraseme"),
+		kind: z.enum(GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Phraseme),
+		memberSegmentIndices,
+	}),
+	z.strictObject({
+		family: z.literal("Construction"),
+		kind: z.enum(
+			GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Construction,
+		),
+		memberSegmentIndices,
+	}),
+]);
+
 export const canonicalOutputSchema = z.discriminatedUnion("decision", [
 	z.strictObject({
 		decision: z.literal("Resolved"),
-		target: z.discriminatedUnion("family", [
-			z.strictObject({
-				family: z.literal("Lexeme"),
-				kind: z.enum(
-					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Lexeme,
-				),
-				memberSegmentIndices,
-			}),
-			z.strictObject({
-				family: z.literal("Phraseme"),
-				kind: z.enum(
-					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Phraseme,
-				),
-				memberSegmentIndices,
-			}),
-			z.strictObject({
-				family: z.literal("Construction"),
-				kind: z.enum(
-					GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES.Construction,
-				),
-				memberSegmentIndices,
-			}),
-		]),
+		target: canonicalTargetSchema,
 	}),
 	z.strictObject({ decision: z.literal("Unresolved") }),
 ]) satisfies PromptOutputSchema;

@@ -6,6 +6,7 @@ export {
 export {
 	canonicalInputSchema,
 	canonicalOutputSchema,
+	canonicalTargetSchema,
 	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
 	isGermanHighLevelTargetClassificationRoute,
 } from "./corpus/schemas";
