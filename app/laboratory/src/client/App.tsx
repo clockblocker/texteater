@@ -51,6 +51,23 @@ const sampleText =
 	"Guten Morgen! Fritz steht sofort auf. Draußen ist es noch still, und in der Küche wartet schon der erste Kaffee.";
 const layoutStoragePrefix = "texteater.laboratory.layout.v2";
 
+type ErrorPayload = {
+	error?: string;
+	details?: string[];
+};
+
+function requestFailureMessage(
+	payload: ErrorPayload,
+	fallback: string,
+): string {
+	const message = payload.error ?? fallback;
+	const redundantDetail = `DumgenError: ${message}`;
+	const details = (payload.details ?? []).filter(
+		(detail) => detail !== message && detail !== redundantDetail,
+	);
+	return [message, ...details].join("\n");
+}
+
 type ResolvedClickResolution = Extract<
 	ClickResolutionResponse,
 	{ decision: "Resolved" }
@@ -225,11 +242,12 @@ function useLaboratory(): LaboratoryState {
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ text: selectedText }),
 			});
-			const payload = (await response.json()) as SegmentationResponse & {
-				error?: string;
-			};
+			const payload = (await response.json()) as SegmentationResponse &
+				ErrorPayload;
 			if (!response.ok) {
-				throw new Error(payload.error ?? "Segmentation failed.");
+				throw new Error(
+					requestFailureMessage(payload, "Segmentation failed."),
+				);
 			}
 			setResult(payload);
 		} catch (cause) {
@@ -257,11 +275,12 @@ function useLaboratory(): LaboratoryState {
 					}),
 				});
 				const payload =
-					(await response.json()) as ClickResolutionResponse & {
-						error?: string;
-					};
+					(await response.json()) as ClickResolutionResponse &
+						ErrorPayload;
 				if (!response.ok) {
-					throw new Error(payload.error ?? "Resolution failed.");
+					throw new Error(
+						requestFailureMessage(payload, "Resolution failed."),
+					);
 				}
 				setResolution(payload);
 			} catch (cause) {
@@ -359,7 +378,9 @@ function SourceEditor({ state }: { state: LaboratoryState }) {
 				<Alert variant="destructive">
 					<CircleAlertIcon />
 					<AlertTitle>Segmentation chain failed</AlertTitle>
-					<AlertDescription>{state.error}</AlertDescription>
+					<AlertDescription className="whitespace-pre-line">
+						{state.error}
+					</AlertDescription>
 				</Alert>
 			) : null}
 			{state.sessionError ? (
@@ -666,7 +687,9 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 				<Alert variant="destructive">
 					<CircleAlertIcon />
 					<AlertTitle>Resolution request failed</AlertTitle>
-					<AlertDescription>{state.resolutionError}</AlertDescription>
+					<AlertDescription className="whitespace-pre-line">
+						{state.resolutionError}
+					</AlertDescription>
 				</Alert>
 			) : resolution ? (
 				<Tabs

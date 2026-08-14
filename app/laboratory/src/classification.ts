@@ -35,18 +35,21 @@ export function createGermanClassificationTrace(): GermanClassificationTrace {
 	return {};
 }
 
-type ResolvedUnit = {
+type ResolvedGrammaticalResult = Extract<
+	GrammaticalResult<"de">,
+	{ decision: "Resolved" }
+>;
+
+type GrammaticalUnit = {
 	target: AnalysisTarget;
-	reading: Reading;
-	attestation: Extract<
-		GrammaticalResult<"de">,
-		{ decision: "Resolved" }
-	>["attestation"];
-	interaction: Extract<
-		GrammaticalResult<"de">,
-		{ decision: "Resolved" }
-	>["interaction"];
+	markedContext: string;
+	attestation: ResolvedGrammaticalResult["attestation"];
+	interaction: ResolvedGrammaticalResult["interaction"];
 	stages: GermanClassificationTrace;
+};
+
+type ResolvedUnit = Omit<GrammaticalUnit, "markedContext"> & {
+	reading: Reading;
 	diagnostics: ResolutionDiagnostic[];
 };
 
@@ -177,6 +180,7 @@ export class GermanClassificationResolver {
 	#dumgen: Dumgen;
 	readonly #createDumgen: DumgenFactory;
 	readonly #unitsByMember = new Map<string, ResolvedUnit>();
+	readonly #grammaticalUnitsByMember = new Map<string, GrammaticalUnit>();
 	readonly #emojiDescriptionsByLemma = new Map<string, string[]>();
 
 	constructor(createDumgen: DumgenFactory) {
@@ -187,6 +191,7 @@ export class GermanClassificationResolver {
 	clear(): void {
 		this.#dumgen = this.#createDumgen();
 		this.#unitsByMember.clear();
+		this.#grammaticalUnitsByMember.clear();
 		this.#emojiDescriptionsByLemma.clear();
 	}
 
@@ -208,115 +213,152 @@ export class GermanClassificationResolver {
 		}
 
 		const exchangeStart = modelExchanges.length;
-		let grammatical: GrammaticalResult<"de">;
-		try {
-			grammatical = await this.#dumgen.resolve.grammatical("de", {
-				sentence,
-				clickedSegmentIndex,
-			});
-		} catch (error) {
-			attemptedPrompts.push(
-				...promptsFromExchanges(modelExchanges, exchangeStart),
-			);
-			throw error;
-		}
-		if (
-			grammatical.decision === "Resolved" &&
-			(grammatical.interaction.segmentedSentenceId !== sentence.id ||
-				grammatical.interaction.clickedSegmentIndex !==
-					clickedSegmentIndex)
-		) {
-			throw new Error(
-				"Dumgen returned a fresh Attestation for a different clicked member or Segmented Sentence.",
-			);
-		}
-
-		const stages = createGermanClassificationTrace();
-		const target =
-			grammatical.decision === "Resolved"
-				? targetFromResolved(grammatical)
-				: targetFromExchange(modelExchanges, exchangeStart);
-		stages.target = stage(
-			targetClassificationPrompt,
-			modelExchanges,
-			exchangeStart,
-		);
-
-		if (grammatical.decision === "NotImplemented") {
-			if (!target) {
+		let grammaticalUnit = this.#grammaticalUnitsByMember.get(cacheKey);
+		let stages: GermanClassificationTrace;
+		if (grammaticalUnit) {
+			stages = cachedStages(grammaticalUnit.stages);
+			grammaticalUnit = {
+				...grammaticalUnit,
+				interaction: {
+					...grammaticalUnit.interaction,
+					clickedSegmentIndex,
+				},
+				stages,
+			};
+		} else {
+			let grammatical: GrammaticalResult<"de">;
+			try {
+				grammatical = await this.#dumgen.resolve.grammatical("de", {
+					sentence,
+					clickedSegmentIndex,
+				});
+			} catch (error) {
+				attemptedPrompts.push(
+					...promptsFromExchanges(modelExchanges, exchangeStart),
+				);
+				throw error;
+			}
+			if (
+				grammatical.decision === "Resolved" &&
+				(grammatical.interaction.segmentedSentenceId !== sentence.id ||
+					grammatical.interaction.clickedSegmentIndex !==
+						clickedSegmentIndex)
+			) {
 				throw new Error(
-					"NotImplemented requires an observable Analysis Target.",
+					"Dumgen returned a fresh Attestation for a different clicked member or Segmented Sentence.",
 				);
 			}
-			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
-			attemptedPrompts.push(...prompts);
-			return {
-				decision: "NotImplemented",
-				stage: "GrammaticalResolution",
-				language: grammatical.language,
-				family: grammatical.route.family,
-				kind: grammatical.route.kind,
-				target,
-				stages,
-				diagnostics: [
-					{
-						stage: "grammatical",
-						kind: "ResolutionRouteNotImplemented",
-						message: `GrammaticalResolution is not enabled for de/${grammatical.route.family}/${grammatical.route.kind}.`,
-					},
-				],
-				generation: {
-					model: "gpt-5.6-luna",
-					prompts,
-					cache: "miss",
-					modelCalls: prompts.length,
-				},
-			};
-		}
 
-		if (grammatical.decision === "Unresolved") {
-			const grammaticalPrompt = target
-				? grammaticalResolutionPrompt(target)
-				: undefined;
-			if (grammaticalPrompt) {
-				stages.grammatical = stage(
-					grammaticalPrompt,
+			stages = createGermanClassificationTrace();
+			const target =
+				grammatical.decision === "Resolved"
+					? targetFromResolved(grammatical)
+					: targetFromExchange(modelExchanges, exchangeStart);
+			stages.target = stage(
+				targetClassificationPrompt,
+				modelExchanges,
+				exchangeStart,
+			);
+
+			if (grammatical.decision === "NotImplemented") {
+				if (!target) {
+					throw new Error(
+						"NotImplemented requires an observable Analysis Target.",
+					);
+				}
+				const prompts = promptsFromExchanges(
 					modelExchanges,
 					exchangeStart,
 				);
-			}
-			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
-			attemptedPrompts.push(...prompts);
-			const failedStage = target ? "grammatical" : "target";
-			return {
-				decision: "Unresolved",
-				...(target ? { target } : undefined),
-				stages,
-				diagnostics: [
-					{
-						stage: failedStage,
-						kind: "Unresolved",
-						message: `${failedStage === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
+				attemptedPrompts.push(...prompts);
+				return {
+					decision: "NotImplemented",
+					stage: "GrammaticalResolution",
+					language: grammatical.language,
+					family: grammatical.route.family,
+					kind: grammatical.route.kind,
+					target,
+					stages,
+					diagnostics: [
+						{
+							stage: "grammatical",
+							kind: "ResolutionRouteNotImplemented",
+							message: `GrammaticalResolution is not enabled for de/${grammatical.route.family}/${grammatical.route.kind}.`,
+						},
+					],
+					generation: {
+						model: "gpt-5.6-luna",
+						prompts,
+						cache: "miss",
+						modelCalls: prompts.length,
 					},
-				],
-				generation: {
-					model: "gpt-5.6-luna",
-					prompts,
-					cache: "miss",
-					modelCalls: prompts.length,
-				},
+				};
+			}
+
+			if (grammatical.decision === "Unresolved") {
+				const grammaticalPrompt = target
+					? grammaticalResolutionPrompt(target)
+					: undefined;
+				if (grammaticalPrompt) {
+					stages.grammatical = stage(
+						grammaticalPrompt,
+						modelExchanges,
+						exchangeStart,
+					);
+				}
+				const prompts = promptsFromExchanges(
+					modelExchanges,
+					exchangeStart,
+				);
+				attemptedPrompts.push(...prompts);
+				const failedStage = target ? "grammatical" : "target";
+				return {
+					decision: "Unresolved",
+					...(target ? { target } : undefined),
+					stages,
+					diagnostics: [
+						{
+							stage: failedStage,
+							kind: "Unresolved",
+							message: `${failedStage === "target" ? "Target Classification" : "Grammatical Resolution"} returned Unresolved for clickable ResolvableText.`,
+						},
+					],
+					generation: {
+						model: "gpt-5.6-luna",
+						prompts,
+						cache: "miss",
+						modelCalls: prompts.length,
+					},
+				};
+			}
+			if (!target) {
+				throw new Error(
+					"Resolved grammar requires an Analysis Target.",
+				);
+			}
+
+			stages.grammatical = stage(
+				grammaticalResolutionPrompt(target),
+				modelExchanges,
+				exchangeStart,
+			);
+			grammaticalUnit = {
+				target,
+				markedContext: grammatical.markedContext,
+				attestation: grammatical.attestation,
+				interaction: grammatical.interaction,
+				stages,
 			};
-		}
-		if (!target) {
-			throw new Error("Resolved grammar requires an Analysis Target.");
+			for (const memberIndex of target.memberSegmentIndices) {
+				this.#grammaticalUnitsByMember.set(
+					this.#cacheKey(sentence.id, memberIndex),
+					grammaticalUnit,
+				);
+			}
 		}
 
-		stages.grammatical = stage(
-			grammaticalResolutionPrompt(target),
-			modelExchanges,
-			exchangeStart,
-		);
-		const lemma = grammatical.attestation.surface.lemma;
+		const { target } = grammaticalUnit;
+		const lemma = grammaticalUnit.attestation.surface.lemma;
 		const lemmaKey = stableJson(lemma);
 		const existingEmojiDescriptions = [
 			...(this.#emojiDescriptionsByLemma.get(lemmaKey) ?? []),
@@ -324,7 +366,7 @@ export class GermanClassificationResolver {
 		let reading: ReadingResolution;
 		try {
 			reading = await this.#dumgen.resolve.reading("de", {
-				markedContext: grammatical.markedContext,
+				markedContext: grammaticalUnit.markedContext,
 				lemma: lemma.canonicalForm,
 				existingEmojiDescriptions,
 			});
@@ -368,8 +410,8 @@ export class GermanClassificationResolver {
 
 		const resolvedUnit: ResolvedUnit = {
 			target,
-			attestation: grammatical.attestation,
-			interaction: grammatical.interaction,
+			attestation: grammaticalUnit.attestation,
+			interaction: grammaticalUnit.interaction,
 			reading: {
 				lemma,
 				emojiDescription: reading.emojiDescription,

@@ -316,6 +316,45 @@ describe("German classification through the Dumgen module", () => {
 		expect(testHarness.modelExchanges).toHaveLength(7);
 	});
 
+	test("retries only Reading after a provider failure without losing cached grammar traces", async () => {
+		const testHarness = harness([
+			targetOutput,
+			grammarOutput,
+			new Error("reading provider unavailable"),
+			{ decision: "New", emojiDescription: "🏦" },
+		]);
+
+		await expect(
+			testHarness.resolver.resolve(
+				multiMemberSentence,
+				0,
+				testHarness.modelExchanges,
+			),
+		).rejects.toThrow("language-model provider");
+		testHarness.modelExchanges.length = 0;
+
+		const retry = await testHarness.resolver.resolve(
+			multiMemberSentence,
+			0,
+			testHarness.modelExchanges,
+		);
+
+		expect(retry).toMatchObject({
+			decision: "Resolved",
+			stages: {
+				target: { traceOrigin: "cached" },
+				grammatical: { traceOrigin: "cached" },
+				reading: { traceOrigin: "generated" },
+			},
+			generation: {
+				prompts: [readingResolutionPrompt],
+				cache: "miss",
+				modelCalls: 1,
+			},
+		});
+		expect(testHarness.calls).toHaveLength(4);
+	});
+
 	test("uses exact Emoji Description membership and reports model disagreement", async () => {
 		const testHarness = harness([
 			targetOutput,
