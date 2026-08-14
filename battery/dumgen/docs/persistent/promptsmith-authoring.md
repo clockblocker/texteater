@@ -14,7 +14,6 @@ src/promptsmith/
     ├── prompt-source/
     │   ├── intake/
     │   ├── segmentation/de/
-    │   ├── target-classification/de/high-level-whole-unit/
     │   ├── grammatical-resolution/de/lexeme/noun/
     │   └── reading-resolution/de/
     ├── experiments/

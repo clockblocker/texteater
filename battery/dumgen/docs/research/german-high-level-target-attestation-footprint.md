@@ -152,7 +152,7 @@ public result above must remain stable whichever private prompt arm wins.
 The current high-level route inventory includes `Lexeme/PUNCT`
 ([`german-high-level-routes.ts`](../../src/schema/german-high-level-routes.ts)),
 and the target output schema consequently offers it to the model
-([target schema](../../src/promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas.ts)).
+([target schema](../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/schemas.ts)).
 That route is unreachable through the public interaction contract. Only a
 `ResolvableText` Segment can be clicked or become a target member
 ([Dumgen context](../../CONTEXT.md),
@@ -225,10 +225,10 @@ Concretely, that directory's `schemas.ts` must own both canonical input and
 canonical output schemas; `corpus.ts`, `cases/*.ts`, `validators.ts`, and
 `selections.ts` depend inward on them. The pure evaluator under
 `experiments/target-classification-german-high-level/evaluator.ts` imports only
-those canonical types. Neither it nor the canonical `corpus.ts` may import
-`prompt-source/target-classification/de/high-level-whole-unit/schemas.ts`,
-because that file becomes the selected candidate's private model contract in
-#85. Likewise remove `target-de-route-lexeme-punct` from `cases/routes.ts` and
+those canonical types. Neither it nor the canonical `corpus.ts` may import the
+selected candidate's private model contract in
+`production/prompt-part/target-classification/de/high-level-whole-unit/schemas.ts`.
+Likewise remove `target-de-route-lexeme-punct` from `cases/routes.ts` and
 `selections.ts`; punctuation robustness cases keep Punctuation Segments only as
 unclicked context.
 
@@ -416,9 +416,9 @@ fixed component from the target is instead a target/Attestation alignment bug.
 | Contract | Exact locations | Required correction |
 | --- | --- | --- |
 | Dumgen context and public API | [`battery/dumgen/CONTEXT.md`](../../CONTEXT.md), [`src/dumgen.ts`](../../src/dumgen.ts), [`src/types.ts`](../../src/types.ts) | Supersede “Analysis Target is internal”; publish the classification action and complete result types above. |
-| Unreachable `Lexeme/PUNCT` high-level route | [`german-high-level-routes.ts`](../../src/schema/german-high-level-routes.ts), [German Source Segmentation](../../src/source-segmentation/de.ts), [target schema](../../src/promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas.ts), [inventory tests](../../tests/internal/grammatical-resolution-inventory.test.ts) | Remove PUNCT from the high-level route set and remove manufactured `ResolvableText` punctuation coverage. Keep punctuation as indexed context and keep the general PUNCT Lemma/drill-down inventory unchanged. |
+| Unreachable `Lexeme/PUNCT` high-level route | [`german-high-level-routes.ts`](../../src/schema/german-high-level-routes.ts), [German Source Segmentation](../../src/source-segmentation/de.ts), [target schema](../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/schemas.ts), [inventory tests](../../tests/internal/grammatical-resolution-inventory.test.ts) | Remove PUNCT from the high-level route set and remove manufactured `ResolvableText` punctuation coverage. Keep punctuation as indexed context and keep the general PUNCT Lemma/drill-down inventory unchanged. |
 | Prompt-owned, DTO-shaped target evidence | [`battery/dumgen/CONTEXT.md`](../../CONTEXT.md), [`assembly/contracts.ts`](../../src/promptsmith/assembly/contracts.ts), [`define-prompt-source.ts`](../../src/promptsmith/assembly/define-prompt-source.ts), [`define-experiment.ts`](../../src/promptsmith/assembly/define-experiment.ts), [`system-prompt-codegen.ts`](../../src/promptsmith/assembly/system-prompt-codegen.ts) | Supersede Prompt Source ownership for this comparison: #84 owns one canonical full-Segment/original-index corpus and frozen selections; #85 candidates adapt that same evidence into/out of private DTOs. Add canonical-experiment and external-provenance seams without migrating unrelated schema-bound corpora. |
-| German high-level target prompt | [`target-classification/.../schemas.ts`](../../src/promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/schemas.ts), [`prompt-source.ts`](../../src/promptsmith/laboratory/prompt-source/target-classification/de/high-level-whole-unit/prompt-source.ts) | Teach the entire fixed-member boundary, not only conventional phrasemes and separable verbs. Keep modal/copula/free-material negatives. Use the #85-selected private DTO without exposing it. |
+| German high-level target prompt | [`schemas.ts`](../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/schemas.ts), [`prompt-source.ts`](../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/prompt-source.ts) | Teach the entire fixed-member boundary, not only conventional phrasemes and separable verbs. Keep modal/copula/free-material negatives. Use the #85-selected private DTO without exposing it. |
 | VERB resolution policy | [`grammatical-resolution/de/lexeme/verb/prompt-source.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/prompt-source.ts), [`cases/lexical-features.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/golden-corpus/cases/lexical-features.ts), [`cases/boundaries.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/golden-corpus/cases/boundaries.ts) | Remove rules that reject reflexive, governed-preposition, and analytic-auxiliary target members. Convert those boundary negatives into aligned positive cases. Keep modal and copular negatives. |
 | Phraseme resolution policy | [`collocation/prompt-source.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/prompt-source.ts), [`collocation/cases/forms.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/golden-corpus/cases/forms.ts), [`idiom/prompt-source.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/prompt-source.ts), [`idiom/cases/forms.ts`](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/golden-corpus/cases/forms.ts) | Stop removing realized perfect/future/passive auxiliaries from members and normalized Surface. Preserve canonical lexical-form rules separately. Audit aphorism, proverb, discourse-formula, paired-frame, and fusion wording for the same “lexical member = target member” conflation. |
 | Runtime result retention | [`src/dumgen/implementation.ts`](../../src/dumgen/implementation.ts), [`src/types.ts`](../../src/types.ts) | Return the target on Resolved, NotImplemented, and post-target Unresolved branches. Delete duplicate route/member-index projections and retain stage on failures. |

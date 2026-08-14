@@ -26,7 +26,6 @@ import { promptSource as grammarIdiomPromptSource } from "../laboratory/prompt-s
 import { promptSource as grammarProverbPromptSource } from "../laboratory/prompt-source/grammatical-resolution/de/phraseme/proverb/prompt-source";
 import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
 import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
-import { promptSource as targetPromptSource } from "../laboratory/prompt-source/target-classification/de/high-level-whole-unit/prompt-source";
 import {
 	productionDemonstrationSelection,
 	promptSource as productionTargetPromptSource,
@@ -39,7 +38,6 @@ const promptsmithRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const codegen = defineSystemPromptCodegen({
 	promptSources: [
 		intakePromptSource,
-		targetPromptSource,
 		grammarFusionPromptSource,
 		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,
