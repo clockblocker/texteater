@@ -8,11 +8,11 @@ import {
 	otherGrammaticalResolutionExperiment,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-other/evaluation-suite";
 import { evaluateOtherGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-other/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/other/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/other/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/other/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/other/prompt-source";
 import {
 	buildDeOtherCitationSurfaceCodec,
 	buildDeOtherInflectionSurfaceCodec,
@@ -22,7 +22,7 @@ import {
 	deOtherModelInflectionSurfaceSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/other/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/other/schemas";
 
 describe("Lexeme/X canonical total contract", () => {
 	test("freezes 36 cases into disjoint 8/18/10 partitions", () => {

@@ -8,18 +8,18 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-proper-noun/evaluation-suite";
 import { evaluateProperNounGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-proper-noun/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/proper-noun/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/proper-noun/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/proper-noun/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/proper-noun/prompt-source";
 import {
 	deProperNounModelCitationSurfaceSchema,
 	deProperNounModelInflectionSurfaceSchema,
 	deProperNounModelLemmaSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/proper-noun/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/proper-noun/schemas";
 
 const expectedDemoIds = [
 	"grammar-de-propn-demo-person-maria",

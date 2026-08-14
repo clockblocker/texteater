@@ -8,18 +8,18 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adjective/evaluation-suite";
 import { evaluateAdjectiveGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adjective/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adjective/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adjective/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
 	modelInflectionSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adjective/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adjective/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-adj-demo-citation-sanft",

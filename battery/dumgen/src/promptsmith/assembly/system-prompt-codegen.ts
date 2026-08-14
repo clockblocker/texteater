@@ -19,9 +19,11 @@ export type SystemPromptRecipe = CodegenRecipe<
 
 type AnyPromptSource = PromptSource<PromptInputSchema, PromptOutputSchema>;
 
+type PromptSourceRoot = string | ((source: AnyPromptSource) => string);
+
 export function defineSystemPromptCodegen(args: {
 	readonly promptSources: readonly AnyPromptSource[];
-	readonly promptSourceRoot: string;
+	readonly promptSourceRoot: PromptSourceRoot;
 	readonly generatedRoot: string;
 	readonly displayRoot: string;
 	readonly artifactIdPrefix: string;
@@ -30,8 +32,10 @@ export function defineSystemPromptCodegen(args: {
 	readonly staleLabel: string;
 	readonly expectedRouteEntries?: (
 		source: AnyPromptSource,
-	) => readonly string[];
-	readonly provenancePaths?: (source: AnyPromptSource) => readonly string[];
+	) => readonly string[] | undefined;
+	readonly provenancePaths?: (
+		source: AnyPromptSource,
+	) => readonly string[] | undefined;
 }): {
 	readonly recipe: SystemPromptRecipe;
 	run(argv?: readonly string[]): Promise<void>;
@@ -85,14 +89,17 @@ export function defineSystemPromptCodegen(args: {
 
 async function assertPromptSourceLayout(args: {
 	readonly promptSources: readonly AnyPromptSource[];
-	readonly promptSourceRoot: string;
+	readonly promptSourceRoot: PromptSourceRoot;
 	readonly sourceLabel?: string;
 	readonly expectedRouteEntries?: (
 		source: AnyPromptSource,
-	) => readonly string[];
+	) => readonly string[] | undefined;
 }): Promise<void> {
 	for (const source of args.promptSources) {
-		const directory = join(args.promptSourceRoot, source.route);
+		const directory = join(
+			resolvePromptSourceRoot(args.promptSourceRoot, source),
+			source.route,
+		);
 		let actualFiles: string[];
 		try {
 			actualFiles = (await readdir(directory, { withFileTypes: true }))
@@ -120,17 +127,23 @@ async function assertPromptSourceLayout(args: {
 }
 
 function promptSourceProvenance(
-	promptSourceRoot: string,
+	promptSourceRoot: PromptSourceRoot,
 	source: AnyPromptSource,
-	provenancePaths?: (source: AnyPromptSource) => readonly string[],
+	provenancePaths?: (
+		source: AnyPromptSource,
+	) => readonly string[] | undefined,
 ): readonly { readonly kind: "source"; readonly path: string }[] {
-	if (provenancePaths !== undefined) {
-		return provenancePaths(source).map((path) => ({
+	const customProvenancePaths = provenancePaths?.(source);
+	if (customProvenancePaths !== undefined) {
+		return customProvenancePaths.map((path) => ({
 			kind: "source",
 			path,
 		}));
 	}
-	const routeRoot = join(promptSourceRoot, source.route);
+	const routeRoot = join(
+		resolvePromptSourceRoot(promptSourceRoot, source),
+		source.route,
+	);
 	const selected =
 		source.demonstrations === undefined
 			? undefined
@@ -148,6 +161,15 @@ function promptSourceProvenance(
 				]),
 	];
 	return paths.map((path) => ({ kind: "source", path }));
+}
+
+function resolvePromptSourceRoot(
+	promptSourceRoot: PromptSourceRoot,
+	source: AnyPromptSource,
+): string {
+	return typeof promptSourceRoot === "function"
+		? promptSourceRoot(source)
+		: promptSourceRoot;
 }
 
 function renderModule(generatedBy: string, systemPrompt: string): string {

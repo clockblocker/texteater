@@ -58,7 +58,7 @@ bun test tests/internal/grammatical-resolution-subordinating-conjunction.test.ts
   tests/internal/grammatical-resolution-subordinating-conjunction-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/subordinating-conjunction \
   src/promptsmith/laboratory/experiments/grammatical-resolution-subordinating-conjunction \
   docs/prototypes/grammatical-resolution-subordinating-conjunction \
   tests/internal/grammatical-resolution-subordinating-conjunction.test.ts \

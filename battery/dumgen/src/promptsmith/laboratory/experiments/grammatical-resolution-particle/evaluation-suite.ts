@@ -1,9 +1,9 @@
 import { defineExperiment } from "../../../assembly";
-import { corpus } from "../../prompt-source/grammatical-resolution/de/lexeme/particle/golden-corpus/corpus";
+import { corpus } from "../../../production/grammatical-resolution/de/lexeme/particle/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../prompt-source/grammatical-resolution/de/lexeme/particle/prompt-source";
+} from "../../../production/grammatical-resolution/de/lexeme/particle/prompt-source";
 import { evaluateParticleGrammaticalResolution } from "./evaluator";
 
 export const developmentEvaluation = corpus.select([

@@ -1,9 +1,9 @@
 import { defineExperiment } from "../../../assembly";
-import { corpus } from "../../prompt-source/grammatical-resolution/de/construction/paired-frame/golden-corpus/corpus";
+import { corpus } from "../../../production/grammatical-resolution/de/construction/paired-frame/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../prompt-source/grammatical-resolution/de/construction/paired-frame/prompt-source";
+} from "../../../production/grammatical-resolution/de/construction/paired-frame/prompt-source";
 import { evaluatePairedFrameGrammaticalResolution } from "./evaluator";
 
 export const developmentEvaluation = corpus.select([

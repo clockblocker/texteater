@@ -1,9 +1,9 @@
 import { defineExperiment } from "../../../assembly";
-import { corpus } from "../../prompt-source/grammatical-resolution/de/lexeme/adverb/golden-corpus/corpus";
+import { corpus } from "../../../production/grammatical-resolution/de/lexeme/adverb/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../prompt-source/grammatical-resolution/de/lexeme/adverb/prompt-source";
+} from "../../../production/grammatical-resolution/de/lexeme/adverb/prompt-source";
 import { evaluateAdverbGrammaticalResolution } from "./evaluator";
 
 export const developmentEvaluation = corpus.select([

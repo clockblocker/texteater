@@ -52,7 +52,7 @@ export const phrasemes = defineGoldenCaseCollection(import.meta.url, {
 				markedContext:
 					"Als sie von seiner Krankheit hörte, sagte sie: „<TARGET>Das</TARGET> <TARGET>tut</TARGET> <TARGET>mir</TARGET> <TARGET>leid</TARGET>.“",
 				lemma: "Das tut mir leid",
-				existingEmojiDescriptions: ["😔", "🙏"],
+				existingEmojiDescriptions: ["😔"],
 			},
 			idealOutput: { decision: "Reuse", emojiDescription: "😔" },
 			explanation:

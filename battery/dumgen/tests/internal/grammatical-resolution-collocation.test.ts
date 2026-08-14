@@ -6,12 +6,12 @@ import {
 	evaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-collocation/evaluation-suite";
 import { evaluateCollocationGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-collocation/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/collocation/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/collocation/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/collocation/prompt-source";
+import { outputSchema } from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/collocation/schemas";
 
 const expectedEvaluationIds = [
 	"grammar-de-coll-antrag-present-full",

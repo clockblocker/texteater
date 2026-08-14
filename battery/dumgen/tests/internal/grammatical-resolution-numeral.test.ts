@@ -8,11 +8,11 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-numeral/evaluation-suite";
 import { evaluateNumeralGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-numeral/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/numeral/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/numeral/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
@@ -20,7 +20,7 @@ import {
 	modelInflectionSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/numeral/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-num-demo-word-vier",

@@ -8,15 +8,15 @@ import {
 	nounGrammaticalResolutionExperiment,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluation-suite";
 import { evaluateNounGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-noun/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/noun/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/noun/prompt-source";
 import {
 	outputSchema,
 	projectNounNormalizedSurface,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/noun/schemas";
 
 const expectedDevelopmentIds = [
 	"grammar-de-noun-dev-nom-plur-banken",

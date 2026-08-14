@@ -58,7 +58,7 @@ bun test tests/internal/grammatical-resolution-interjection.test.ts \
   tests/internal/grammatical-resolution-interjection-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/interjection \
   src/promptsmith/laboratory/experiments/grammatical-resolution-interjection \
   docs/prototypes/grammatical-resolution-interjection \
   tests/internal/grammatical-resolution-interjection.test.ts \

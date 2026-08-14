@@ -50,7 +50,7 @@ bun test tests/internal/grammatical-resolution-adverb.test.ts \
   tests/internal/grammatical-resolution-adverb-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/adverb \
   src/promptsmith/laboratory/experiments/grammatical-resolution-adverb \
   docs/prototypes/grammatical-resolution-adverb/run.ts \
   tests/internal/grammatical-resolution-adverb.test.ts \

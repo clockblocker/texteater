@@ -8,11 +8,11 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adverb/evaluation-suite";
 import { evaluateAdverbGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adverb/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adverb/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adverb/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
@@ -20,7 +20,7 @@ import {
 	modelInflectionSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adverb/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adverb/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-adv-demo-temporal-heute",

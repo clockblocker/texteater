@@ -8,18 +8,18 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-determiner/evaluation-suite";
 import { evaluateDeterminerGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-determiner/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/determiner/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/determiner/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/determiner/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/determiner/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
 	modelInflectionSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/determiner/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/determiner/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-det-demo-definite-article-der",

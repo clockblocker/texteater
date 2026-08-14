@@ -8,12 +8,12 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adposition/evaluation-suite";
 import { evaluateAdpositionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-adposition/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adposition/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/adposition/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adposition/prompt-source";
+import { outputSchema } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/adposition/schemas";
 
 const expectedDevelopmentIds = [
 	"grammar-de-adp-dev-prep-durch-acc",

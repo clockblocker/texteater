@@ -6,18 +6,18 @@ import {
 	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-discourse-formula/evaluation-suite";
 import { evaluateDiscourseFormulaGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-discourse-formula/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/discourse-formula/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/discourse-formula/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
 import {
 	buildDeDiscourseFormulaCitationSurfaceCodec,
 	deDiscourseFormulaLemmaCodec,
 	discourseFormulaResolutionCodec,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/discourse-formula/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/discourse-formula/schemas";
 
 describe("Phraseme/DiscourseFormula canonical total contract", () => {
 	test("freezes 34 cases into disjoint 6/18/10 partitions", () => {

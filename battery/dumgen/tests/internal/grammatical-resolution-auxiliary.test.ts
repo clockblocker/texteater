@@ -8,11 +8,11 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-auxiliary/evaluation-suite";
 import { evaluateAuxiliaryGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-auxiliary/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/auxiliary/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/auxiliary/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/auxiliary/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/auxiliary/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
@@ -20,7 +20,7 @@ import {
 	modelInflectionSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/auxiliary/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/auxiliary/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-aux-demo-future-wird",

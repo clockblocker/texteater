@@ -8,18 +8,18 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-coordinating-conjunction/evaluation-suite";
 import { evaluateCoordinatingConjunctionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-coordinating-conjunction/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/coordinating-conjunction/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/coordinating-conjunction/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/coordinating-conjunction/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/coordinating-conjunction/prompt-source";
 import {
 	deCoordinatingConjunctionLemmaCodec,
 	deCoordinatingConjunctionModelCitationSurfaceSchema,
 	deCoordinatingConjunctionModelLemmaSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/coordinating-conjunction/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/coordinating-conjunction/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-cconj-demo-ordinary-und",

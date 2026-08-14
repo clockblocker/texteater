@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/lexeme/numeral/schemas";
+} from "../../../production/grammatical-resolution/de/lexeme/numeral/schemas";
 
 export type NumeralGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;

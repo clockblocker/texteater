@@ -138,7 +138,7 @@ bun test tests/internal/grammatical-resolution-symbol.test.ts \
   tests/internal/grammatical-resolution-symbol-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/symbol \
   src/promptsmith/laboratory/experiments/grammatical-resolution-symbol \
   docs/prototypes/grammatical-resolution-symbol \
   tests/internal/grammatical-resolution-symbol.test.ts \

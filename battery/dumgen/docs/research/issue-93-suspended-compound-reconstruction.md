@@ -71,7 +71,7 @@ only exception for repairing characters absent from the source.
   `Kinder-`, not `Kinder` plus punctuation.
 - The previous NOUN Golden Case marks only `Kinder`, emits normalized `Kinder`,
   and calls the occurrence `Partial`
-  ([legacy case](../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/golden-corpus/cases/orthography-and-surface.ts)).
+  ([legacy case](../../src/promptsmith/production/grammatical-resolution/de/lexeme/noun/golden-corpus/cases/orthography-and-surface.ts)).
   That case predates the production Segment/member projection and was replaced
   by the NOUN-01 policy under #96.
 - The shared validator currently rejects `Standard` changes beyond equality,

@@ -6,18 +6,18 @@ import {
 	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-fusion/evaluation-suite";
 import { evaluateFusionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-fusion/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/fusion/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/construction/fusion/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/fusion/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/construction/fusion/prompt-source";
 import {
 	buildDeFusionCitationSurfaceCodec,
 	deFusionLemmaCodec,
 	fusionResolutionCodec,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/fusion/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/construction/fusion/schemas";
 
 describe("Construction/Fusion canonical total contract", () => {
 	test("freezes 34 cases into disjoint 6/18/10 partitions", () => {

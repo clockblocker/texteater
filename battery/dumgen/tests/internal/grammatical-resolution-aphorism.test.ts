@@ -6,18 +6,18 @@ import {
 	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-aphorism/evaluation-suite";
 import { evaluateAphorismGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-aphorism/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/aphorism/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/aphorism/prompt-source";
 import {
 	aphorismResolutionCodec,
 	buildDeAphorismCitationSurfaceCodec,
 	deAphorismLemmaCodec,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/aphorism/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/aphorism/schemas";
 
 describe("Phraseme/Aphorism canonical total contract", () => {
 	test("freezes 32 cases into disjoint 6/16/10 partitions", () => {

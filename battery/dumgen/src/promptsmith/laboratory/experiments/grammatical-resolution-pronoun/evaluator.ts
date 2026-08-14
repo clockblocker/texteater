@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/lexeme/pronoun/schemas";
+} from "../../../production/grammatical-resolution/de/lexeme/pronoun/schemas";
 
 export type PronounGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;

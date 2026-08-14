@@ -8,11 +8,11 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-symbol/evaluation-suite";
 import { evaluateSymbolGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-symbol/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/symbol/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/symbol/prompt-source";
 import {
 	deSymbolModelCitationSurfaceSchema,
 	deSymbolModelInflectionalFeaturesSchema,
@@ -20,7 +20,7 @@ import {
 	deSymbolModelLemmaSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/symbol/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/symbol/schemas";
 
 const expectedDemoIds = [
 	"grammar-de-sym-demo-percent-unit",

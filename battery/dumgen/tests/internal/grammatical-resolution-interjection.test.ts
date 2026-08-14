@@ -8,17 +8,17 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-interjection/evaluation-suite";
 import { evaluateInterjectionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-interjection/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/interjection/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/interjection/prompt-source";
 import {
 	inputSchema,
 	modelCitationSurfaceSchema,
 	modelLemmaSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/interjection/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/interjection/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-intj-demo-pfui-expressive",

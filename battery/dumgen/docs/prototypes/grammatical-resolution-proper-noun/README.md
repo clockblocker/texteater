@@ -124,7 +124,7 @@ bun test tests/internal/grammatical-resolution-proper-noun.test.ts \
   tests/internal/grammatical-resolution-proper-noun-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/proper-noun \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/proper-noun \
   src/promptsmith/laboratory/experiments/grammatical-resolution-proper-noun \
   docs/prototypes/grammatical-resolution-proper-noun \
   tests/internal/grammatical-resolution-proper-noun.test.ts \

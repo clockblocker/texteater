@@ -6,11 +6,11 @@ import {
 	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-idiom/evaluation-suite";
 import { evaluateIdiomGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-idiom/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/idiom/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/idiom/prompt-source";
 import {
 	buildDeIdiomCitationSurfaceCodec,
 	buildDeIdiomInflectionSurfaceCodec,
@@ -18,7 +18,7 @@ import {
 	idiomResolutionCodec,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/idiom/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/phraseme/idiom/schemas";
 
 describe("Phraseme/Idiom canonical total contract", () => {
 	test("freezes 32 cases into disjoint 6/16/10 partitions", () => {

@@ -6,18 +6,18 @@ import {
 	developmentEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-paired-frame/evaluation-suite";
 import { evaluatePairedFrameGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-paired-frame/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/paired-frame/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/construction/paired-frame/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/paired-frame/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/construction/paired-frame/prompt-source";
 import {
 	buildDePairedFrameCitationSurfaceCodec,
 	dePairedFrameLemmaCodec,
 	inputSchema,
 	outputSchema,
 	pairedFrameResolutionCodec,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/paired-frame/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/construction/paired-frame/schemas";
 
 describe("Construction/PairedFrame canonical total contract", () => {
 	test("freezes 34 cases into disjoint 6/18/10 partitions", () => {

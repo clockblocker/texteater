@@ -8,17 +8,17 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-subordinating-conjunction/evaluation-suite";
 import { evaluateSubordinatingConjunctionGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-subordinating-conjunction/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/subordinating-conjunction/prompt-source";
 import {
 	deSubordinatingConjunctionModelCitationSurfaceSchema,
 	deSubordinatingConjunctionModelLemmaSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/subordinating-conjunction/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-sconj-demo-finite-weil",
@@ -201,7 +201,7 @@ describe("Lexeme/SCONJ route-local schemas and corpus", () => {
 
 	test("rejects a Variant oracle identical to its own canonical form", async () => {
 		const { subordinatingConjunctionCase } = await import(
-			"../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/cases/builders"
+			"../../src/promptsmith/production/grammatical-resolution/de/lexeme/subordinating-conjunction/golden-corpus/cases/builders"
 		);
 		expect(() =>
 			subordinatingConjunctionCase(

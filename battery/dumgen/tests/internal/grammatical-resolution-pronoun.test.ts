@@ -8,12 +8,12 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluation-suite";
 import { evaluatePronounGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-pronoun/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/pronoun/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/prompt-source";
-import { outputSchema } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/pronoun/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/pronoun/prompt-source";
+import { outputSchema } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/pronoun/schemas";
 
 const expectedDevelopmentIds = [
 	"grammar-de-pron-dev-personal-ich",

@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/phraseme/proverb/schemas";
+} from "../../../production/grammatical-resolution/de/phraseme/proverb/schemas";
 
 export type ProverbGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;

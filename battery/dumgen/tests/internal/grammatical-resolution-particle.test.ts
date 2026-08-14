@@ -8,17 +8,17 @@ import {
 	untouchedAcceptanceEvaluation,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-particle/evaluation-suite";
 import { evaluateParticleGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-particle/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/particle/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/particle/prompt-source";
 import {
 	deParticleModelCitationSurfaceSchema,
 	deParticleModelLemmaSchema,
 	inputSchema,
 	outputSchema,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/particle/schemas";
 
 const expectedDemonstrationIds = [
 	"grammar-de-part-demo-negative-nicht",

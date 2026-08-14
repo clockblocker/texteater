@@ -151,7 +151,7 @@ bun test tests/internal/grammatical-resolution-particle.test.ts \
   tests/internal/grammatical-resolution-particle-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/particle \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/particle \
   src/promptsmith/laboratory/experiments/grammatical-resolution-particle \
   docs/prototypes/grammatical-resolution-particle/run.ts \
   tests/internal/grammatical-resolution-particle.test.ts \

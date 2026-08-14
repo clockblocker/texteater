@@ -6,16 +6,16 @@ import {
 	verbGrammaticalResolutionExperiment,
 } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-verb/evaluation-suite";
 import { evaluateVerbGrammaticalResolution } from "../../src/promptsmith/laboratory/experiments/grammatical-resolution-verb/evaluator";
-import { corpus } from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/golden-corpus/corpus";
+import { corpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/verb/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/prompt-source";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/verb/prompt-source";
 import {
 	inputSchema,
 	outputSchema,
 	verbResolutionCodec,
-} from "../../src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/verb/schemas";
+} from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/verb/schemas";
 
 const expectedEvaluationIds = [
 	"grammar-de-verb-dw-perfect-etabliert",

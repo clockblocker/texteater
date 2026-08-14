@@ -10,13 +10,16 @@ Prompt Sources use a stage-first filesystem hierarchy:
 ```text
 src/promptsmith/
 ├── assembly/
-└── laboratory/
+├── laboratory/
     ├── prompt-source/
     │   ├── intake/
     │   ├── segmentation/de/
-    │   ├── grammatical-resolution/de/lexeme/noun/
     │   └── reading-resolution/de/
     ├── experiments/
+    └── generated-system-prompt/
+└── production/
+    ├── grammatical-resolution/de/lexeme/noun/
+    ├── prompt-part/
     └── generated-system-prompt/
 ```
 

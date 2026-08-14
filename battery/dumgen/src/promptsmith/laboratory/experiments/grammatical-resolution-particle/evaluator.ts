@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/lexeme/particle/schemas";
+} from "../../../production/grammatical-resolution/de/lexeme/particle/schemas";
 
 export type ParticleGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;

@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/construction/paired-frame/schemas";
+} from "../../../production/grammatical-resolution/de/construction/paired-frame/schemas";
 
 export type PairedFrameGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;

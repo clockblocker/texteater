@@ -62,7 +62,7 @@ bun test tests/internal/grammatical-resolution-numeral.test.ts \
   tests/internal/grammatical-resolution-numeral-runner.test.ts
 bun run check
 bunx biome check \
-  src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/numeral \
+  src/promptsmith/production/grammatical-resolution/de/lexeme/numeral \
   src/promptsmith/laboratory/experiments/grammatical-resolution-numeral \
   docs/prototypes/grammatical-resolution-numeral/run.ts \
   tests/internal/grammatical-resolution-numeral.test.ts \

@@ -1,9 +1,9 @@
 import { defineExperiment } from "../../../assembly";
-import { corpus } from "../../prompt-source/grammatical-resolution/de/phraseme/aphorism/golden-corpus/corpus";
+import { corpus } from "../../../production/grammatical-resolution/de/phraseme/aphorism/golden-corpus/corpus";
 import {
 	demonstrations,
 	promptSource,
-} from "../../prompt-source/grammatical-resolution/de/phraseme/aphorism/prompt-source";
+} from "../../../production/grammatical-resolution/de/phraseme/aphorism/prompt-source";
 import { evaluateAphorismGrammaticalResolution } from "./evaluator";
 
 export const developmentEvaluation = corpus.select([

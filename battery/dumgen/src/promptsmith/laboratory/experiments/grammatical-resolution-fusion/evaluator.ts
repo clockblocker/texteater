@@ -4,7 +4,7 @@ import { stableJson } from "../../../../lib/stable-json";
 import type {
 	inputSchema,
 	outputSchema,
-} from "../../prompt-source/grammatical-resolution/de/construction/fusion/schemas";
+} from "../../../production/grammatical-resolution/de/construction/fusion/schemas";
 
 export type FusionGrammaticalResolutionEvaluation = {
 	readonly contractPass: boolean;
