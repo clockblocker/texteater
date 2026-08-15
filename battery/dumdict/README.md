@@ -5,8 +5,8 @@
 Semantic glue for dictionary-note applications built on top of `dumling`.
 
 `dumdict` sits between host-owned dictionary storage and user-facing application
-workflows. It does not own persistence, sync, serialization, conflict UX, or LLM
-calls. A host supplies storage functions at setup time; UI code calls a small
+workflows. It does not own persistence, sync, conflict UX, or LLM calls. A host
+supplies storage functions at setup time; UI code calls a small
 task-oriented service at runtime.
 
 The intended v1 hosts are:
@@ -43,9 +43,10 @@ collects a full note draft and calls `addNewNote`.
 - keeping Lemma, Surface, and learner Reading identities distinct
 - loading only the storage slice required for the operation
 - planning semantic changes and preconditions
-- maintaining inverse-paired relations and pending unresolved relation targets
+- applying owner-associated Knowledge Changes
+- maintaining inverse-paired Semantic Relations and explicit pending work
 
-Relation names, schemas, and inverse/family rules come from `dumrel`; Dumdict
+Knowledge DTOs, schemas, and inverse rules come from `dumrel`; Dumdict
 owns the dictionary workflows that apply those rules to stored records.
 
 Host storage owns the actual writes. Obsidian can translate planned changes into
@@ -56,17 +57,17 @@ Normal app flows do not load the full dictionary.
 
 `dumdict` keeps three data concerns separate:
 
-- `LemmaRecord`: a grammatical Lemma plus morphological relations
-- `ReadingEntry`: learner-facing notes for one structural Reading
+- `LemmaRecord`: a grammatical Lemma plus optional Lemma Knowledge
+- `ReadingEntry`: learner-facing notes plus optional Reading Knowledge
 - `SurfaceEntry`: an owned normalized Surface tied to a Lemma
-- pending Lemma refs: unresolved relation targets that can be linked later
+- `PendingSemanticRelationRecord`: a source Reading, a pending Unit Shadow, and
+  its exact storage locator
 
 A `LemmaRecord` stores the grammatical identity:
 
 ```ts
 const walkLemmaRecord = {
 	lemma: walkLemma,
-	morphologicalRelations: {},
 } satisfies LemmaRecord<"en">;
 ```
 
@@ -76,7 +77,6 @@ share the same Lemma while their emoji descriptions distinguish them:
 ```ts
 const walkReadingEntry = {
 	reading: walkReading,
-	lexicalRelations: {},
 	attestedTranslations: ["caminar", "gehen"],
 	attestations: ["They walk home together."],
 	notes: "Core motion sense.",
@@ -149,7 +149,10 @@ The root export is intentionally focused:
 
 - `createDumdictService`: creates a language-bound service over a storage port
 - DTO types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictReadingDraft`
-- compatibility type re-exports for relation payloads whose source of truth is `dumrel`
+- `applyDumdictKnowledgeChange`: validates an exact owner and applies one
+  owner-compatible Dumrel Knowledge Change
+- explicit version-0-to-version-1 serialized-note migration with typed loss
+  failures
 - storage port types for host adapters
 - dumling helpers such as `dumling`, `makeSurfaceId`, and `inspectDumlingId`
 

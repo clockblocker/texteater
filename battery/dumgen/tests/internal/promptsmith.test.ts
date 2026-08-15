@@ -12,14 +12,11 @@ import {
 	assembleSystemPrompt,
 	defineLocalDemonstrations,
 } from "../../src/promptsmith/assembly";
-import {
-	productionSystemPromptRecipe,
-	systemPromptRecipe,
-} from "../../src/promptsmith/assembly/generate-system-prompts";
-import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/laboratory/generated-system-prompt/intake";
-import { corpus as intakeCorpus } from "../../src/promptsmith/laboratory/prompt-source/intake/golden-corpus/corpus";
-import { promptSource as intakePromptSource } from "../../src/promptsmith/laboratory/prompt-source/intake/prompt-source";
-import { corpus as readingCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
+import { productionSystemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
+import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/production/generated-system-prompt/intake";
+import { corpus as intakeCorpus } from "../../src/promptsmith/production/intake/golden-corpus/corpus";
+import { promptSource as intakePromptSource } from "../../src/promptsmith/production/intake/prompt-source";
+import { corpus as readingCorpus } from "../../src/promptsmith/production/reading-resolution/de/golden-corpus/corpus";
 import {
 	buildDeNounCitationSurfaceCodec,
 	buildDeNounInflectionSurfaceCodec,
@@ -102,14 +99,11 @@ describe("Prompt Assembly", () => {
 	});
 
 	test("committed generated system prompts are current", async () => {
-		for (const recipe of [
-			systemPromptRecipe,
-			productionSystemPromptRecipe,
-		]) {
-			const result = await runCodegen(recipe, { mode: "check" });
-			expect(result.status).toBe("clean");
-			expect(result.applied).toEqual([]);
-		}
+		const result = await runCodegen(productionSystemPromptRecipe, {
+			mode: "check",
+		});
+		expect(result.status).toBe("clean");
+		expect(result.applied).toEqual([]);
 	});
 
 	test("catalog uses the promoted production target-classification prompt", () => {

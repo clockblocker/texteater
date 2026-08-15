@@ -2,6 +2,16 @@
 
 ## Glossary
 
+### Knowledge Analysis
+A Dumgen model workflow that interprets encounter context and returns a private
+candidate DTO. Knowledge Analysis ends before a value crosses the Dumrel
+boundary.
+
+### Knowledge Projection
+The deterministic conversion of a validated Knowledge Analysis result and any
+resolved Morpheme Readings into a Dumrel Knowledge Change or Pending Semantic
+Relation. Projection performs no model call, persistence, matching, or cleanup.
+
 ### Prompt Source
 A leaf directory that is the complete human-authored source for exactly one
 executable prompt. Prompt Sources begin in the Laboratory; a reviewed source may

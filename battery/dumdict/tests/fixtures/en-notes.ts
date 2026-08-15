@@ -1,6 +1,10 @@
-import type { Lemma, Reading, Surface } from "../../src";
+import type {
+	Lemma,
+	Reading,
+	SerializedDictionaryNoteV0,
+	Surface,
+} from "../../src";
 import { derivePendingEntryId } from "../../src/core/pending/identity";
-import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
 
 const englishVerbFeatures = {
 	style: null,
@@ -92,7 +96,7 @@ export const enSerializedNotes = [
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
-] satisfies SerializedDictionaryNote<"en">[];
+] satisfies SerializedDictionaryNoteV0<"en">[];
 
 export const pendingSwimEntryId = derivePendingEntryId({
 	language: "en",
@@ -127,4 +131,4 @@ export const enSerializedNotesWithPendingSwimRelation = [
 			},
 		],
 	},
-] satisfies SerializedDictionaryNote<"en">[];
+] satisfies SerializedDictionaryNoteV0<"en">[];

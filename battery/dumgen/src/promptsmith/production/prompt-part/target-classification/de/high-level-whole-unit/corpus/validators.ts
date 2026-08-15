@@ -5,7 +5,7 @@ import type { canonicalInputSchema, canonicalOutputSchema } from "./schemas";
 type Input = output<typeof canonicalInputSchema>;
 type CanonicalOutput = output<typeof canonicalOutputSchema>;
 
-export type MembershipValidation = {
+type MembershipValidation = {
 	readonly pass: boolean;
 	readonly nonEmptyPass: boolean;
 	readonly integerPass: boolean;
@@ -16,7 +16,7 @@ export type MembershipValidation = {
 	readonly clickInclusionPass: boolean;
 };
 
-export function validateOriginalIndexMembership(
+function validateOriginalIndexMembership(
 	input: Input,
 	memberSegmentIndices: readonly number[],
 ): MembershipValidation {

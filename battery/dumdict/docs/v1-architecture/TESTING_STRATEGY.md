@@ -1,38 +1,22 @@
 # Testing strategy
 
-> **Superseded terminology:** This document predates ADRs 0002 and 0003 and is
-> retained as pre-refactor design history. Its Selection fixtures describe the
-> removed contract and are not compatibility fixtures. Use
-> `battery/dumdict/CONTEXT.md` and the generated package README for the current
-> Lemma/Reading model and API.
+The internal in-memory adapter exercises the same storage port and atomic
+planned-change protocol expected of production hosts. Tests cover:
 
-## Fixture rules
-
-- Linguistic Entries use explicit opaque IDs.
-- Meaning IDs are explicit, opaque, non-empty, trimmed, and NFC.
-- Meaning content uses `meaningInEmojis`, `descriptionBlocks`, and
-  `engTranslation`.
-- Surfaces carry their Entry and the settled normalization, spelling, coverage,
-  kind, and feature fields.
-- Selections use Segmented Sentence IDs plus local Segment indices.
-
-Selection fixtures include multi-segment realizations and noisy clicks. The
-`gvae up` fixture, for example, keeps the typo in `attestedSurface`, resolves to
-normalized `gave up`, and records both member indices while identity remains the
-clicked index.
-
-## Service tests
-
-The internal in-memory adapter exercises the same storage port and semantic
-change protocol expected of production hosts. Tests cover:
-
-- exact Entry-ID Meaning lookup
-- multiple Meanings per Entry
-- Meaning attestation patches
-- transactional Entry, Meaning, and Surface creation
-- lexical and morphological inverse relations
-- pending relation creation, pickup, cleanup, and discard
-- slice validation and revision conflicts
+- exact Lemma Reading lookup and multiple Readings per Lemma;
+- Reading attestation patches and transactional Lemma, Reading, and Surface
+  creation;
+- owner/aspect validation and empty-Knowledge omission;
+- forward/inverse Reading Knowledge writes and direct-self rejection;
+- pending creation, exact matching, zero-match retention, explicit selection,
+  discard, and no automatic fan-out;
+- version 0 lexical and shared-ref migration;
+- normalized/deduplicated direct target migration and typed duplicate,
+  missing, orphan, cross-language, self-edge, and unrepresentable-morphology
+  failures;
+- preservation of encounter translations;
+- slice validation, revision conflicts, and rollback after a late operation
+  fails with forward, inverse, and delete changes already staged.
 
 The generated README example is typechecked and its committed output is tested
 byte-for-byte.

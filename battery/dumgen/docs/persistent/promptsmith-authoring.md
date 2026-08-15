@@ -1,7 +1,7 @@
 # Promptsmith Authoring
 
-Rules for authoring and generating Dumgen laboratory prompts. All remain work
-in progress.
+Rules for authoring and generating Dumgen Prompt Sources across laboratory and
+production.
 
 ## Stage-first routes
 
@@ -10,14 +10,13 @@ Prompt Sources use a stage-first filesystem hierarchy:
 ```text
 src/promptsmith/
 ├── assembly/
-└── laboratory/
-    ├── prompt-source/
-    │   ├── intake/
-    │   ├── segmentation/de/
-    │   ├── target-classification/de/high-level-whole-unit/
-    │   ├── grammatical-resolution/de/lexeme/noun/
-    │   └── reading-resolution/de/
-    ├── experiments/
+├── laboratory/
+    └── experiments/
+└── production/
+    ├── intake/
+    ├── grammatical-resolution/de/lexeme/noun/
+    ├── prompt-part/
+    ├── reading-resolution/de/
     └── generated-system-prompt/
 ```
 

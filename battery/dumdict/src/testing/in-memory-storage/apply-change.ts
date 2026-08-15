@@ -1,11 +1,7 @@
-import {
-	lemmaKey,
-	readingKey,
-	sameLemma,
-	sameReading,
-} from "../../core/identity";
+import { applyDumdictKnowledgeChange } from "../../core/apply-owned-knowledge-change";
+import { sameReading } from "../../core/identity";
 import type { PlannedChangeOp } from "../../core/planned-changes";
-import type { PendingEntryRelation } from "../../dto";
+import type { PendingSemanticRelationRecord } from "../../dto";
 import type { SupportedLanguage } from "../../dumling";
 import type { DraftStorageState } from "./preconditions";
 import {
@@ -13,21 +9,11 @@ import {
 	findDraftBundleByReading,
 } from "./preconditions";
 
-function sourceKeyFor<L extends SupportedLanguage>(
-	relation: PendingEntryRelation<L>,
+function locatorKey<L extends SupportedLanguage>(
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	return relation.relationFamily === "lexical"
-		? readingKey(relation.sourceReading)
-		: lemmaKey(relation.sourceLemma);
-}
-
-function bundleForPendingRelation<L extends SupportedLanguage>(
-	draft: DraftStorageState<L>,
-	relation: PendingEntryRelation<L>,
-) {
-	return relation.relationFamily === "lexical"
-		? findDraftBundleByReading(draft, relation.sourceReading)
-		: findDraftBundleByLemma(draft, relation.sourceLemma);
+	const { sourceReadingKey, relation, targetPendingId } = record.locator;
+	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
 }
 
 export function applyChange<L extends SupportedLanguage>(
@@ -37,6 +23,7 @@ export function applyChange<L extends SupportedLanguage>(
 	switch (change.type) {
 		case "createLemma":
 			draft.draftNotes.push({
+				schemaVersion: 1,
 				lemmaRecord: structuredClone(change.record),
 				readingEntries: [],
 				ownedSurfaceEntries: [],
@@ -48,9 +35,7 @@ export function applyChange<L extends SupportedLanguage>(
 				draft,
 				change.entry.reading.lemma,
 			);
-			if (!bundle) {
-				return false;
-			}
+			if (!bundle) return false;
 			bundle.readingEntries.push(structuredClone(change.entry));
 			return true;
 		}
@@ -59,56 +44,33 @@ export function applyChange<L extends SupportedLanguage>(
 				draft,
 				change.entry.ownerLemma,
 			);
-			if (!bundle) {
-				return false;
-			}
+			if (!bundle) return false;
 			bundle.ownedSurfaceEntries.push(structuredClone(change.entry));
 			return true;
 		}
-		case "createPendingRef":
-			draft.draftPendingRefs?.push(structuredClone(change.ref));
-			return true;
-		case "createPendingRelation": {
-			const bundle = bundleForPendingRelation(draft, change.relation);
-			if (!bundle) {
-				return false;
-			}
-			bundle.pendingRelations.push(structuredClone(change.relation));
-			return true;
-		}
-		case "deletePendingRelation": {
-			const bundle = bundleForPendingRelation(draft, change.relation);
-			if (!bundle) {
-				return false;
-			}
-			bundle.pendingRelations = bundle.pendingRelations.filter(
-				(relation) =>
-					!(
-						sourceKeyFor(relation) ===
-							sourceKeyFor(change.relation) &&
-						relation.relationFamily ===
-							change.relation.relationFamily &&
-						relation.relation === change.relation.relation &&
-						relation.targetPendingId ===
-							change.relation.targetPendingId
-					),
+		case "createPendingSemanticRelation": {
+			const bundle = findDraftBundleByReading(
+				draft,
+				change.record.sourceReading,
 			);
+			if (!bundle) return false;
+			bundle.pendingRelations.push(structuredClone(change.record));
 			return true;
 		}
-		case "deletePendingRef": {
-			const refIndex =
-				draft.draftPendingRefs?.findIndex(
-					({ pendingId }) => pendingId === change.pendingId,
-				) ?? -1;
-			if (refIndex >= 0) {
-				draft.draftPendingRefs?.splice(refIndex, 1);
-			}
+		case "deletePendingSemanticRelation": {
+			const bundle = findDraftBundleByReading(
+				draft,
+				change.record.sourceReading,
+			);
+			if (!bundle) return false;
+			const key = locatorKey(change.record);
+			bundle.pendingRelations = bundle.pendingRelations.filter(
+				(record) => locatorKey(record) !== key,
+			);
 			return true;
 		}
 		case "patchReading":
 			return applyReadingPatch(draft, change);
-		case "patchLemma":
-			return applyLemmaPatch(draft, change);
 	}
 }
 
@@ -117,52 +79,21 @@ function applyReadingPatch<L extends SupportedLanguage>(
 	change: Extract<PlannedChangeOp<L>, { type: "patchReading" }>,
 ) {
 	const bundle = findDraftBundleByReading(draft, change.reading);
-	const reading = bundle?.readingEntries.find((entry) =>
-		sameReading(entry.reading, change.reading),
-	);
-	if (!reading) {
-		return false;
-	}
-
+	const index =
+		bundle?.readingEntries.findIndex((entry) =>
+			sameReading(entry.reading, change.reading),
+		) ?? -1;
+	if (!bundle || index < 0) return false;
+	let reading = bundle.readingEntries[index];
+	if (!reading) return false;
 	for (const op of change.ops) {
-		if (op.kind === "addAttestation") {
-			reading.attestations.push(op.value);
-		} else {
-			const existingTargets = reading.lexicalRelations[op.relation] ?? [];
-			if (
-				!existingTargets.some((target) =>
-					sameReading(target, op.targetReading),
-				)
-			) {
-				reading.lexicalRelations[op.relation] = [
-					...existingTargets,
-					op.targetReading,
-				];
-			}
-		}
+		if (op.kind === "addAttestation")
+			reading = {
+				...reading,
+				attestations: [...reading.attestations, op.value],
+			};
+		else reading = applyDumdictKnowledgeChange(reading, op.envelope);
 	}
-	return true;
-}
-
-function applyLemmaPatch<L extends SupportedLanguage>(
-	draft: DraftStorageState<L>,
-	change: Extract<PlannedChangeOp<L>, { type: "patchLemma" }>,
-) {
-	const record = findDraftBundleByLemma(draft, change.lemma)?.lemmaRecord;
-	if (!record) {
-		return false;
-	}
-	for (const op of change.ops) {
-		const existingTargets =
-			record.morphologicalRelations[op.relation] ?? [];
-		if (
-			!existingTargets.some((target) => sameLemma(target, op.targetLemma))
-		) {
-			record.morphologicalRelations[op.relation] = [
-				...existingTargets,
-				op.targetLemma,
-			];
-		}
-	}
+	bundle.readingEntries[index] = reading;
 	return true;
 }

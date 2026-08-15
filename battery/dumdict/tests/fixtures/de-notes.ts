@@ -1,5 +1,4 @@
-import type { Lemma, Reading } from "../../src";
-import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
+import type { Lemma, Reading, SerializedDictionaryNoteV0 } from "../../src";
 
 export const germanGehenLemma = {
 	canonicalForm: "gehen",
@@ -37,4 +36,4 @@ export const deSerializedNotes = [
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
-] satisfies SerializedDictionaryNote<"de">[];
+] satisfies SerializedDictionaryNoteV0<"de">[];

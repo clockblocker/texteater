@@ -13,10 +13,6 @@ import type {
 } from "./types";
 
 export {
-	AiSdkGenerationError,
-	type GenerationFailureReason,
-} from "./ai-sdk/ai-sdk";
-export {
 	DumgenError,
 	type DumgenErrorCode,
 } from "./generator/generator-error";

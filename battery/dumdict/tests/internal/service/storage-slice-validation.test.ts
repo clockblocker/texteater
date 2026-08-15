@@ -23,7 +23,6 @@ describe("storage slice validation", () => {
 					reading: englishWalkReadingEntry(),
 					lemma: {
 						lemma: englishRunLemma,
-						morphologicalRelations: {},
 					},
 				},
 			],
@@ -42,7 +41,6 @@ describe("storage slice validation", () => {
 					reading: englishWalkReadingEntry(),
 					lemma: {
 						lemma: englishWalkLemma,
-						morphologicalRelations: {},
 					},
 				},
 			],
@@ -60,16 +58,10 @@ describe("storage slice validation", () => {
 			revision,
 			existingLemma: {
 				lemma: englishWalkLemma,
-				morphologicalRelations: {},
 			},
 			existingOwnedSurfaces: [],
 			explicitExistingReadingTargets: [],
-			explicitExistingLemmaTargets: [],
-			existingPendingRefsForProposedPendingTargets: [],
-			matchingPendingRefsForNewEntry: [],
-			incomingPendingRelationsForNewEntry: [],
-			incomingPendingSourceReadings: [],
-			incomingPendingSourceLemmas: [],
+			existingPendingRelationsForProposedPendingTargets: [],
 		} satisfies NewNoteSlice<"en">;
 
 		expect(() =>

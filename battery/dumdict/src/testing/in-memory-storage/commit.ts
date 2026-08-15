@@ -1,6 +1,6 @@
+import type { SerializedDictionaryNote } from "../../dto";
 import type { SupportedLanguage } from "../../dumling";
 import type { CommitChangesRequest, CommitChangesResult } from "../../storage";
-import type { SerializedDictionaryNote } from "../serialized-note";
 import { applyChange } from "./apply-change";
 import {
 	type DraftStorageState,
@@ -25,7 +25,6 @@ export function commitChanges<L extends SupportedLanguage>(
 		draftNotes: structuredClone(
 			state.storedNotes,
 		) as SerializedDictionaryNote<L>[],
-		draftPendingRefs: structuredClone(state.storedPendingRefs),
 	};
 
 	for (const change of request.changes) {
@@ -42,7 +41,6 @@ export function commitChanges<L extends SupportedLanguage>(
 	}
 
 	state.storedNotes = draft.draftNotes;
-	state.storedPendingRefs = draft.draftPendingRefs ?? [];
 	state.revisionNumber += 1;
 	return {
 		status: "committed",

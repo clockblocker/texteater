@@ -1,0 +1,6 @@
+{
+	"unit-shadow-en-duplifix": {
+		"classification": "prompt-defect",
+		"explanation": "The prompt inventories Duplifix but does not define its echo-reduplicative boundary against an ordinary Prefix, allowing the model to classify shm- by linear position alone."
+	}
+}

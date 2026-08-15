@@ -1,0 +1,2096 @@
+{
+  "runnerVersion": "unit-shadow-classification-v1",
+  "route": "unit-shadow-classification",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 2
+  },
+  "startedAt": "2026-08-15T04:08:38.563Z",
+  "completedAt": "2026-08-15T04:09:23.259Z",
+  "finalizedAt": "2026-08-15T04:09:46.030Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 128,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "cef991c3a4dcc64bbe095c664e386369370b395ad8f221fab6b4b7a2a8ca84a4",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "a50bf00cb7baadab22109df23c6863caa1d211ecac61ba5275c1bb127e6e6fb3",
+  "inputSchemaSha256": "35993cca0e0540cd20af32021e46d700fd9fc947e39dd23fa662bf877f671465",
+  "outputSchemaSha256": "15cb217125e49438aa61a7fbffccdbc3fe96645d8c25ebff3efd7a150fe6e394",
+  "suiteSha256": "0ee7567bcbdd06e768e4d1a3f0b5bd18ab5903f1ebaa020382586d4ada3b399c",
+  "evaluationCaseIds": [
+    "unit-shadow-de-adjective",
+    "unit-shadow-en-to-adposition",
+    "unit-shadow-he-adverb",
+    "unit-shadow-en-auxiliary",
+    "unit-shadow-he-coordinating-conjunction",
+    "unit-shadow-en-that-determiner",
+    "unit-shadow-en-interjection",
+    "unit-shadow-he-yesh-verb",
+    "unit-shadow-en-numeral",
+    "unit-shadow-en-to-particle",
+    "unit-shadow-en-that-pronoun",
+    "unit-shadow-de-proper-noun",
+    "unit-shadow-en-punctuation",
+    "unit-shadow-en-that-subordinating-conjunction",
+    "unit-shadow-de-symbol",
+    "unit-shadow-de-verb",
+    "unit-shadow-en-other",
+    "unit-shadow-en-record-noun",
+    "unit-shadow-de-waehrend-adposition",
+    "unit-shadow-de-waehrend-subordinator",
+    "unit-shadow-he-yesh-adverb",
+    "unit-shadow-en-idiom",
+    "unit-shadow-he-proverb",
+    "unit-shadow-de-aphorism",
+    "unit-shadow-he-discourse-formula",
+    "unit-shadow-de-lexical-synonym-phrase",
+    "unit-shadow-en-prefix",
+    "unit-shadow-en-suffix",
+    "unit-shadow-de-interfix",
+    "unit-shadow-de-circumfix",
+    "unit-shadow-en-clitic",
+    "unit-shadow-en-duplifix",
+    "unit-shadow-en-suffixoid",
+    "unit-shadow-de-fusion",
+    "unit-shadow-de-paired-frame",
+    "unit-shadow-unresolved-en-bank",
+    "unit-shadow-unresolved-he-sefer",
+    "unit-shadow-unresolved-free-noun-phrase",
+    "unit-shadow-unresolved-free-verb-phrase",
+    "unit-shadow-unresolved-plausible-nonce-word",
+    "unit-shadow-unresolved-incomplete-idiom",
+    "unit-shadow-unresolved-prefix-versus-word",
+    "unit-shadow-unresolved-proverb-versus-aphorism",
+    "unit-shadow-unresolved-pattern-fragment",
+    "unit-shadow-unresolved-translation-only",
+    "unit-shadow-en-kindergarten-noun-not-phrase",
+    "unit-shadow-en-down-adverb-not-prefix"
+  ],
+  "boundedCalls": 47,
+  "maximumEvaluationCases": 50,
+  "retries": 0,
+  "store": false,
+  "contractScore": 46,
+  "scoreRatio": 0.9787234042553191,
+  "minimumEvaluationCases": 40,
+  "minimumScoreRatio": 1,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "unit-shadow-de-adjective",
+      "input": {
+        "language": "de",
+        "canonicalForm": "ruhig",
+        "intendedUse": "Describes a person as calm rather than acting calmly."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1242,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01492619d264e57a016a7fe647055c87d2b8de98d82676bbf7",
+      "usage": {
+        "input_tokens": 1943,
+        "input_tokens_details": {
+          "cache_write_tokens": 1910,
+          "cached_tokens": 0
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1970
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-to-adposition",
+      "input": {
+        "language": "en",
+        "canonicalForm": "to",
+        "intendedUse": "Marks the relation to a nominal destination, as in to Berlin."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 794,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c492c712bc5542f016a7fe647f6c4819f8ec5733e6e825a16",
+      "usage": {
+        "input_tokens": 1944,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1971
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-adverb",
+      "input": {
+        "language": "he",
+        "canonicalForm": "מהר",
+        "intendedUse": "Modifies an action by saying it happens quickly."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 988,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08fe875f6595cffe016a7fe648c80c87d29bb5321bcedb2d10",
+      "usage": {
+        "input_tokens": 1942,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-auxiliary",
+      "input": {
+        "language": "en",
+        "canonicalForm": "have",
+        "intendedUse": "The perfect auxiliary as in they have finished."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 729,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0bba23ece5f95795016a7fe649bcf487d29d47ee00e0c118a5",
+      "usage": {
+        "input_tokens": 1940,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1967
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-coordinating-conjunction",
+      "input": {
+        "language": "he",
+        "canonicalForm": "אבל",
+        "intendedUse": "Coordinates two contrasting clauses with the sense but."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 759,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"CCONJ\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05b240345eff9b6c016a7fe64a78d081a191f5c79bf1aeb064",
+      "usage": {
+        "input_tokens": 1940,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-that-determiner",
+      "input": {
+        "language": "en",
+        "canonicalForm": "that",
+        "intendedUse": "Modifies a noun as the demonstrative in that soldier."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 779,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_093132950421ffb4016a7fe64b3a14819d8963b2ef14f88bae",
+      "usage": {
+        "input_tokens": 1943,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1969
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-interjection",
+      "input": {
+        "language": "en",
+        "canonicalForm": "ouch",
+        "intendedUse": "A standalone exclamation of sudden pain."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "INTJ"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "INTJ"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 711,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"INTJ\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f5e11325e7fd7e9016a7fe64c011881a0832de189d018372d",
+      "usage": {
+        "input_tokens": 1939,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1966
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-yesh-verb",
+      "input": {
+        "language": "he",
+        "canonicalForm": "יש",
+        "intendedUse": "The existential predicate meaning there is or there are."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 898,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_070f6f3a288f887d016a7fe64cb8b081a09c57fc2950a8c80c",
+      "usage": {
+        "input_tokens": 1941,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-numeral",
+      "input": {
+        "language": "en",
+        "canonicalForm": "twelve",
+        "intendedUse": "Expresses the cardinal number 12."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NUM"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NUM"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 936,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NUM\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0666728299cdd664016a7fe64da234819f8ba76dd3c9e339e2",
+      "usage": {
+        "input_tokens": 1940,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1966
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-to-particle",
+      "input": {
+        "language": "en",
+        "canonicalForm": "to",
+        "intendedUse": "The infinitive marker before a verb, as in to come."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PART"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PART"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 956,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PART\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b416d2d6270353e016a7fe64e92b487d29718614c58af31ca",
+      "usage": {
+        "input_tokens": 1944,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1970
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-that-pronoun",
+      "input": {
+        "language": "en",
+        "canonicalForm": "that",
+        "intendedUse": "Replaces a noun phrase as the demonstrative in that is okay."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1033,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PRON\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0845010ebeaf14d5016a7fe64f860481a2975d3bfc3aa758c6",
+      "usage": {
+        "input_tokens": 1945,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1972
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-proper-noun",
+      "input": {
+        "language": "de",
+        "canonicalForm": "Berlin",
+        "intendedUse": "The name of Germany's capital city."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PROPN"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PROPN"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 710,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PROPN\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b64fd0ee8e0a211016a7fe65089b481a394551cf1a545b99a",
+      "usage": {
+        "input_tokens": 1939,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1966
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-punctuation",
+      "input": {
+        "language": "en",
+        "canonicalForm": ";",
+        "intendedUse": "The semicolon punctuation mark as a grammatical symbol, not a lexical meaning target."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PUNCT"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PUNCT"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1580,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PUNCT\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_045664895789b476016a7fe651410c81a2a8353b5308103cb3",
+      "usage": {
+        "input_tokens": 1947,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1975
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-that-subordinating-conjunction",
+      "input": {
+        "language": "en",
+        "canonicalForm": "that",
+        "intendedUse": "Introduces a finite complement clause in I know that it works."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 687,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"SCONJ\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b30a7dbbae41e76016a7fe652d37c819c96ea3df03ebb5f9e",
+      "usage": {
+        "input_tokens": 1944,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1972
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-symbol",
+      "input": {
+        "language": "de",
+        "canonicalForm": "€",
+        "intendedUse": "The conventional symbol for the euro currency."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SYM"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SYM"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 831,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"SYM\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07094d1da95f5248016a7fe65389d8819295b74cc508d58cb5",
+      "usage": {
+        "input_tokens": 1939,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1965
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-verb",
+      "input": {
+        "language": "de",
+        "canonicalForm": "laufen",
+        "intendedUse": "To move by running on foot."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 754,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a33bcbd8208535c016a7fe6545b4881a09004394d44ea7622",
+      "usage": {
+        "input_tokens": 1938,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1965
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-other",
+      "input": {
+        "language": "en",
+        "canonicalForm": "wug",
+        "intendedUse": "The deliberately unanalyzed nonce lexical item in a metalinguistic test; no ordinary part of speech is asserted."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "X"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "X"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 901,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"X\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06547fcd4df5658a016a7fe65523d081a2aa41a95e2fe18f16",
+      "usage": {
+        "input_tokens": 1955,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1981
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-record-noun",
+      "input": {
+        "language": "en",
+        "canonicalForm": "record",
+        "intendedUse": "A stored account of facts or events."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 854,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_093ae0f900230213016a7fe656034887d285f0b4553336225e",
+      "usage": {
+        "input_tokens": 1939,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1966
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-waehrend-adposition",
+      "input": {
+        "language": "de",
+        "canonicalForm": "während",
+        "intendedUse": "Means during and governs a nominal time span."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1885,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0caa29c1c0d88d09016a7fe656e63c819e94c320c7fa6dba51",
+      "usage": {
+        "input_tokens": 1941,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-waehrend-subordinator",
+      "input": {
+        "language": "de",
+        "canonicalForm": "während",
+        "intendedUse": "Means while and introduces a subordinate finite clause."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1154,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"SCONJ\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02797553d455aba9016a7fe658c2fc87d28cefd5b02090fb27",
+      "usage": {
+        "input_tokens": 1941,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1969
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-yesh-adverb",
+      "input": {
+        "language": "he",
+        "canonicalForm": "יש",
+        "intendedUse": "The modal use meaning it is possible or one can, rather than existential there is."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1057,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_026be995bbef2712016a7fe659e8dc81919ed2743297bafbeb",
+      "usage": {
+        "input_tokens": 1948,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1974
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-idiom",
+      "input": {
+        "language": "en",
+        "canonicalForm": "kick the bucket",
+        "intendedUse": "The conventional non-compositional expression meaning to die."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 2134,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f85871b292eccbd016a7fe65af38c87d290e148f60e752f11",
+      "usage": {
+        "input_tokens": 1944,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-proverb",
+      "input": {
+        "language": "he",
+        "canonicalForm": "לא דובים ולא יער",
+        "intendedUse": "The traditional complete proverb denying that the alleged thing existed at all."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1207,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01a057b6f26e0993016a7fe65d208c819d81f1329cfc1ddad5",
+      "usage": {
+        "input_tokens": 1949,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1978
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-aphorism",
+      "input": {
+        "language": "de",
+        "canonicalForm": "Zeit ist Geld",
+        "intendedUse": "The concise attributed maxim asserting that time has economic value, not a general traditional proverb narrative."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1162,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Aphorism\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09a24e9995a90130016a7fe65e520481a2bd37a610001a8e52",
+      "usage": {
+        "input_tokens": 1951,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 31,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1982
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-he-discourse-formula",
+      "input": {
+        "language": "he",
+        "canonicalForm": "תודה רבה",
+        "intendedUse": "The conventional standalone formula for thanking someone warmly."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1231,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"DiscourseFormula\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e26aa37f8a439c1016a7fe65f7924819c86e82c95b6ee4d80",
+      "usage": {
+        "input_tokens": 1942,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 30,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1972
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-lexical-synonym-phrase",
+      "input": {
+        "language": "de",
+        "canonicalForm": "in Betracht ziehen",
+        "intendedUse": "The conventional support-verb expression used as a lexical synonym of erwägen; the meaning is compositional but the lexical choices are restricted."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Collocation"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Collocation"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1023,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Collocation\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f668115eaaa637d016a7fe660af68819c98832b82afbd4458",
+      "usage": {
+        "input_tokens": 1960,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1989
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-prefix",
+      "input": {
+        "language": "en",
+        "canonicalForm": "un-",
+        "intendedUse": "The bound negative element before happy in unhappy."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Prefix"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Prefix"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1082,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Prefix\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0806ebf4715ae65b016a7fe661b96087d298dc2b97c48922f3",
+      "usage": {
+        "input_tokens": 1941,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-suffix",
+      "input": {
+        "language": "en",
+        "canonicalForm": "-ness",
+        "intendedUse": "The bound nominalizing ending in happiness."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Suffix"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Suffix"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 822,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Suffix\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c5893f5f11067ed016a7fe662cdd881a3b13017ddf8dcb822",
+      "usage": {
+        "input_tokens": 1940,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1967
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-interfix",
+      "input": {
+        "language": "de",
+        "canonicalForm": "-s-",
+        "intendedUse": "The linking element between Arbeit and Amt in Arbeitsamt; it is neither lexical root."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Interfix"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Interfix"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1083,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Interfix\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d6691be55c76a4e016a7fe6639f5487d2a7293f96cb4a477d",
+      "usage": {
+        "input_tokens": 1950,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1978
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-circumfix",
+      "input": {
+        "language": "de",
+        "canonicalForm": "ge-…-t",
+        "intendedUse": "The discontinuous bound marker surrounding the stem in a weak past participle such as gemacht."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Circumfix"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Circumfix"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 808,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Circumfix\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0961ddc88f861db5016a7fe664b470819e8ad09c5ba77a6645",
+      "usage": {
+        "input_tokens": 1953,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1982
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-clitic",
+      "input": {
+        "language": "en",
+        "canonicalForm": "'s",
+        "intendedUse": "The possessive element attached to the edge of a noun phrase, as in the person next door's car."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Clitic"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Clitic"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 746,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Clitic\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c46b77b0a5fd9e1016a7fe665812c819eb0d5b2a92bab5212",
+      "usage": {
+        "input_tokens": 1953,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1981
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-duplifix",
+      "input": {
+        "language": "en",
+        "canonicalForm": "shm-",
+        "intendedUse": "The bound dismissive echo-reduplicative element in fancy-shmancy."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Duplifix"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Prefix"
+        }
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": false,
+      "latencyMs": 834,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Prefix\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0408d1fe14b6fbb7016a7fe666421c819dbc3005b754200908",
+      "usage": {
+        "input_tokens": 1948,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1975
+      },
+      "missClassification": "prompt-defect",
+      "missClassificationExplanation": "The prompt inventories Duplifix but does not define its echo-reduplicative boundary against an ordinary Prefix, allowing the model to classify shm- by linear position alone."
+    },
+    {
+      "caseId": "unit-shadow-en-suffixoid",
+      "input": {
+        "language": "en",
+        "canonicalForm": "-gate",
+        "intendedUse": "The productive scandal-forming bound element in names such as Deflategate, synchronically more word-like than an ordinary suffix."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Suffixoid"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Morpheme",
+          "kind": "Suffixoid"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 806,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Morpheme\",\"kind\":\"Suffixoid\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a71b4f91087be42016a7fe66717a481a2b90436cc8ec259b4",
+      "usage": {
+        "input_tokens": 1958,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1986
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-fusion",
+      "input": {
+        "language": "de",
+        "canonicalForm": "am",
+        "intendedUse": "The grammatical contraction in am Bahnhof that fuses the preposition an with the article dem."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "Fusion"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "Fusion"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 744,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Construction\",\"kind\":\"Fusion\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01e4127585ffeada016a7fe667e58c87d2a0cdac9e89fe93c7",
+      "usage": {
+        "input_tokens": 1949,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 25,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1974
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-de-paired-frame",
+      "input": {
+        "language": "de",
+        "canonicalForm": "je … desto …",
+        "intendedUse": "The productive two-part comparative-correlative frame with open slots."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1015,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Construction\",\"kind\":\"PairedFrame\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0799e0df54b76af8016a7fe668a71887d2abab497a0a43384c",
+      "usage": {
+        "input_tokens": 1946,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-en-bank",
+      "input": {
+        "language": "en",
+        "canonicalForm": "bank",
+        "intendedUse": "A semantically related target with this spelling; no grammatical use or conventional expression is identified."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 818,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0587565ad4096081016a7fe669aaec819fb3ad8f8375f63a64",
+      "usage": {
+        "input_tokens": 1949,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1969
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-he-sefer",
+      "input": {
+        "language": "he",
+        "canonicalForm": "ספר",
+        "intendedUse": "A proposed target preserved without pointing or any statement of its nominal or verbal use."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 694,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0448294bb837b625016a7fe66a78d487d2b844057819b143f8",
+      "usage": {
+        "input_tokens": 1947,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1967
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-free-noun-phrase",
+      "input": {
+        "language": "en",
+        "canonicalForm": "red bicycle",
+        "intendedUse": "A bicycle that happens to be red; the wording is freely composed and no conventionalized unit is claimed."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 1055,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0900b14f1e531556016a7fe66b51d887d2b98220fea638092f",
+      "usage": {
+        "input_tokens": 1953,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-free-verb-phrase",
+      "input": {
+        "language": "de",
+        "canonicalForm": "sehr schnell gehen",
+        "intendedUse": "A newly composed descriptive paraphrase of eilen, not an established multiword unit."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 726,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a5a9c5c57f7cdfc016a7fe66c3d2081a1ac9023e70df1966e",
+      "usage": {
+        "input_tokens": 1951,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1971
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-plausible-nonce-word",
+      "input": {
+        "language": "de",
+        "canonicalForm": "Glorf",
+        "intendedUse": "A plausible invented target said to concern motion, without evidence of a grammatical category."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 780,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c773ac614350918016a7fe66cf48487d293283173c35b6514",
+      "usage": {
+        "input_tokens": 1948,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-incomplete-idiom",
+      "input": {
+        "language": "en",
+        "canonicalForm": "the bucket",
+        "intendedUse": "Proposed as the target meaning die only because it occurs inside kick the bucket; no independent unit with that meaning is established."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 757,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0364f2f070580e99016a7fe66dbf64819e82aee2f74fa0238b",
+      "usage": {
+        "input_tokens": 1957,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1977
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-prefix-versus-word",
+      "input": {
+        "language": "en",
+        "canonicalForm": "down",
+        "intendedUse": "Proposed alternately as a standalone direction word and as a bound element, with no evidence choosing either analysis."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 979,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0feb8b76fbd2737d016a7fe66eae8081a1a3972eb47c093f85",
+      "usage": {
+        "input_tokens": 1953,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-proverb-versus-aphorism",
+      "input": {
+        "language": "de",
+        "canonicalForm": "Wissen ist Macht",
+        "intendedUse": "A saying supplied without evidence whether the intended unit is an attributed authored maxim or a traditional proverb."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 708,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07d3bbaca14c8ea1016a7fe66f77cc819eab5bdd378f0f0e7a",
+      "usage": {
+        "input_tokens": 1953,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-pattern-fragment",
+      "input": {
+        "language": "de",
+        "canonicalForm": "desto",
+        "intendedUse": "A fragment extracted from je … desto … and proposed as the whole paired construction."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 747,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f7889afec56a545016a7fe6702ea4819c9702b4d682bc8d02",
+      "usage": {
+        "input_tokens": 1948,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1968
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-unresolved-translation-only",
+      "input": {
+        "language": "he",
+        "canonicalForm": "על",
+        "intendedUse": "The proposer supplies only the English gloss on, with no defensible choice among its grammatical uses."
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 793,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08cccb0f25bcf938016a7fe670ffa8819d9516e23aea526260",
+      "usage": {
+        "input_tokens": 1950,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1970
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-kindergarten-noun-not-phrase",
+      "input": {
+        "language": "en",
+        "canonicalForm": "kindergarten",
+        "intendedUse": "The single conventional word naming a preschool, despite its historically transparent components."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 954,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09f6d3c16f6d9d5f016a7fe671be94819fa0bb2ca324dfe37d",
+      "usage": {
+        "input_tokens": 1946,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 27,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1973
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "unit-shadow-en-down-adverb-not-prefix",
+      "input": {
+        "language": "en",
+        "canonicalForm": "down",
+        "intendedUse": "The standalone directional modifier in sit down."
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        }
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "familyPass": true,
+      "kindPass": true,
+      "latencyMs": 732,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0680714861b889ec016a7fe672aa58819ea768712d4ea4af3b",
+      "usage": {
+        "input_tokens": 1939,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1910
+        },
+        "output_tokens": 26,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1965
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

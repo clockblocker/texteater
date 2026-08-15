@@ -1,24 +1,13 @@
 import { sameLemma, sameReading } from "../../core/identity";
 import type {
-	PendingEntryRef,
-	PendingEntryRelation,
+	PendingSemanticRelationRecord,
 	Reading,
 	ReadingEntry,
+	SerializedDictionaryNote,
 	StoreRevision,
 } from "../../dto";
 import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { DumdictStoragePort } from "../../storage";
-import type { SerializedDictionaryNote } from "../serialized-note";
-
-function dedupePendingRefs<L extends SupportedLanguage>(
-	pendingRefs: PendingEntryRef<L>[],
-) {
-	const byId = new Map<string, PendingEntryRef<L>>();
-	for (const pendingRef of pendingRefs) {
-		byId.set(pendingRef.pendingId, pendingRef);
-	}
-	return Array.from(byId.values());
-}
 
 export type InMemoryTestStorage<L extends SupportedLanguage> =
 	DumdictStoragePort<L> & {
@@ -29,7 +18,6 @@ export type InMemoryStorageState<L extends SupportedLanguage> = {
 	language: L;
 	revisionNumber: number;
 	storedNotes: SerializedDictionaryNote<L>[];
-	storedPendingRefs: PendingEntryRef<L>[];
 	currentRevision(): StoreRevision;
 	findStoredBundleByLemma(
 		lemma: Lemma<L>,
@@ -41,8 +29,7 @@ export type InMemoryStorageState<L extends SupportedLanguage> = {
 	findStoredSurfaceById(
 		surfaceId: string,
 	): SerializedDictionaryNote<L>["ownedSurfaceEntries"][number] | undefined;
-	allPendingRelations(): PendingEntryRelation<L>[];
-	findStoredPendingRefById(pendingId: string): PendingEntryRef<L> | undefined;
+	allPendingRelations(): PendingSemanticRelationRecord<L>[];
 };
 
 export function createInMemoryStorageState<L extends SupportedLanguage>(
@@ -54,45 +41,29 @@ export function createInMemoryStorageState<L extends SupportedLanguage>(
 		language,
 		revisionNumber: 1,
 		storedNotes,
-		storedPendingRefs: dedupePendingRefs(
-			storedNotes.flatMap(({ pendingRefs }) => pendingRefs ?? []),
-		),
-		currentRevision() {
-			return `mem-${state.revisionNumber}` as StoreRevision;
-		},
-		findStoredBundleByLemma(lemma) {
-			return state.storedNotes.find(({ lemmaRecord }) =>
+		currentRevision: () => `mem-${state.revisionNumber}` as StoreRevision,
+		findStoredBundleByLemma: (lemma) =>
+			state.storedNotes.find(({ lemmaRecord }) =>
 				sameLemma(lemmaRecord.lemma, lemma),
-			);
-		},
-		findStoredReading(reading) {
-			return state.storedNotes
+			),
+		findStoredReading: (reading) =>
+			state.storedNotes
 				.flatMap(({ readingEntries }) => readingEntries)
-				.find((entry) => sameReading(entry.reading, reading));
-		},
-		findStoredBundleByReading(reading) {
-			return state.storedNotes.find(({ readingEntries }) =>
+				.find((entry) => sameReading(entry.reading, reading)),
+		findStoredBundleByReading: (reading) =>
+			state.storedNotes.find(({ readingEntries }) =>
 				readingEntries.some((entry) =>
 					sameReading(entry.reading, reading),
 				),
-			);
-		},
-		findStoredSurfaceById(surfaceId) {
-			return state.storedNotes
+			),
+		findStoredSurfaceById: (surfaceId) =>
+			state.storedNotes
 				.flatMap(({ ownedSurfaceEntries }) => ownedSurfaceEntries)
-				.find(({ id }) => id === surfaceId);
-		},
-		allPendingRelations() {
-			return state.storedNotes.flatMap(
+				.find(({ id }) => id === surfaceId),
+		allPendingRelations: () =>
+			state.storedNotes.flatMap(
 				({ pendingRelations }) => pendingRelations,
-			);
-		},
-		findStoredPendingRefById(pendingId) {
-			return state.storedPendingRefs.find(
-				({ pendingId: id }) => id === pendingId,
-			);
-		},
+			),
 	};
-
 	return state;
 }

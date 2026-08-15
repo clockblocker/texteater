@@ -24,7 +24,7 @@ type ModelOwnedSurface<Value> = Value extends { readonly lemma: unknown }
 	? Omit<Value, "language" | "lemma" | "normalizedSurface">
 	: never;
 
-export type GrammarSurfaceProjection = ModelOwnedSurface<Surface<"de">>;
+type GrammarSurfaceProjection = ModelOwnedSurface<Surface<"de">>;
 
 export type NormalizedSurfaceProjector = (args: {
 	readonly input: GrammaticalResolutionInput;

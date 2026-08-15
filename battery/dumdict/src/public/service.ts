@@ -1,7 +1,6 @@
-import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
 	DumdictReadingDraft,
-	PendingEntryId,
+	PendingSemanticRelationLocator,
 	Reading,
 	StoreRevision,
 } from "../dto";
@@ -29,21 +28,10 @@ export type GetInfoForRelationsCleanupRequest<_L extends SupportedLanguage> = {
 	canonicalForm: string;
 };
 
-export type CleanupRelationResolution<L extends SupportedLanguage> =
-	| {
-			relationFamily: "lexical";
-			sourceReading: Reading<L>;
-			relation: LexicalRelation;
-			targetPendingId: PendingEntryId<L>;
-			targetReading?: Reading<L>;
-	  }
-	| {
-			relationFamily: "morphological";
-			sourceLemma: Lemma<L>;
-			relation: MorphologicalRelation;
-			targetPendingId: PendingEntryId<L>;
-			targetLemma?: Lemma<L>;
-	  };
+export type CleanupRelationResolution<L extends SupportedLanguage> = {
+	locator: PendingSemanticRelationLocator<L>;
+	targetReading?: Reading<L>;
+};
 
 export type CleanupRelationsRequest<L extends SupportedLanguage> = {
 	baseRevision: StoreRevision;

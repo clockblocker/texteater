@@ -53,3 +53,9 @@ When in the dictonary note for the `heulen` user click on `heul`, we will resolv
 the morpheme root `heul`
 
 This is how we do the drilldown to the atoms, while keeping all in one system.
+
+---
+
+UD is a base for our feature sets and avaliale POSes for lang
+
+wordnet is a base for our relations

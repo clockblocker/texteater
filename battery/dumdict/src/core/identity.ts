@@ -23,7 +23,7 @@ function stableValue(value: unknown): unknown {
 	return value;
 }
 
-export function lemmaKey(lemma: LemmaLike): string {
+function lemmaKey(lemma: LemmaLike): string {
 	return JSON.stringify(stableValue(lemma));
 }
 
@@ -32,7 +32,7 @@ export function readingKey<L extends SupportedLanguage>(
 ): string {
 	return JSON.stringify([
 		stableValue(reading.lemma),
-		reading.emojiDescription.normalize("NFC"),
+		reading.emojiDescription.trim().normalize("NFC"),
 	]);
 }
 

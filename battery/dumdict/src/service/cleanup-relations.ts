@@ -1,5 +1,5 @@
-import { isKnownRelation } from "dumrel";
-import { lemmaKey, readingKey } from "../core/identity";
+import { semanticRelationSchema } from "dumrel";
+import { readingKey } from "../core/identity";
 import { planCleanupRelations } from "../core/plan-mutation";
 import { validateCleanupRelationsSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
@@ -8,22 +8,10 @@ import type { CreateDumdictServiceOptions } from "../storage";
 import { assertLanguageMatches } from "./language-guard";
 import { mutationResultFromCommit } from "./result-mapping";
 
-function sourceKeyFor<L extends SupportedLanguage>(
-	resolution: CleanupRelationsRequest<L>["resolutions"][number],
+function locatorKey(
+	value: CleanupRelationsRequest<SupportedLanguage>["resolutions"][number]["locator"],
 ) {
-	return resolution.relationFamily === "lexical"
-		? readingKey(resolution.sourceReading)
-		: lemmaKey(resolution.sourceLemma);
-}
-
-function hasDuplicateResolutionKey<L extends SupportedLanguage>(
-	request: CleanupRelationsRequest<L>,
-) {
-	const keys = request.resolutions.map(
-		(resolution) =>
-			`${resolution.relationFamily}:${sourceKeyFor(resolution)}:${resolution.relation}:${resolution.targetPendingId}`,
-	);
-	return new Set(keys).size !== keys.length;
+	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
 }
 
 export async function cleanupRelations<L extends SupportedLanguage>(
@@ -31,28 +19,11 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	request: CleanupRelationsRequest<L>,
 ): Promise<MutationResult<L>> {
 	for (const resolution of request.resolutions) {
-		if (resolution.relationFamily === "lexical") {
+		if (resolution.targetReading) {
 			assertLanguageMatches(
 				options.language,
-				resolution.sourceReading.lemma.language,
+				resolution.targetReading.lemma.language,
 			);
-			if (resolution.targetReading) {
-				assertLanguageMatches(
-					options.language,
-					resolution.targetReading.lemma.language,
-				);
-			}
-		} else {
-			assertLanguageMatches(
-				options.language,
-				resolution.sourceLemma.language,
-			);
-			if (resolution.targetLemma) {
-				assertLanguageMatches(
-					options.language,
-					resolution.targetLemma.language,
-				);
-			}
 		}
 	}
 	if (request.resolutions.length === 0) {
@@ -64,28 +35,12 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 			summary: { message: "No relations cleaned up." },
 		};
 	}
+	const keys = request.resolutions.map(({ locator }) => locatorKey(locator));
 	if (
-		hasDuplicateResolutionKey(request) ||
+		new Set(keys).size !== keys.length ||
 		request.resolutions.some(
-			(resolution) =>
-				!isKnownRelation(resolution.relation) ||
-				(resolution.relationFamily === "lexical" &&
-					![
-						"synonym",
-						"nearSynonym",
-						"antonym",
-						"hypernym",
-						"hyponym",
-						"meronym",
-						"holonym",
-					].includes(resolution.relation)) ||
-				(resolution.relationFamily === "morphological" &&
-					![
-						"consistsOf",
-						"usedIn",
-						"derivedFrom",
-						"sourceFor",
-					].includes(resolution.relation)),
+			({ locator }) =>
+				!semanticRelationSchema.safeParse(locator.relation).success,
 		)
 	) {
 		return {
@@ -99,7 +54,6 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 		resolutions: request.resolutions,
 	});
 	validateCleanupRelationsSlice(options.language, slice);
-
 	if (slice.revision !== request.baseRevision) {
 		return {
 			status: "conflict",
@@ -113,17 +67,10 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	const targetReadings = new Set(
 		slice.targetReadings.map(({ reading }) => readingKey(reading.reading)),
 	);
-	const targetLemmas = new Set(
-		slice.targetLemmas.map(({ lemma }) => lemmaKey(lemma)),
-	);
 	for (const resolution of request.resolutions) {
 		if (
-			(resolution.relationFamily === "lexical" &&
-				resolution.targetReading &&
-				!targetReadings.has(readingKey(resolution.targetReading))) ||
-			(resolution.relationFamily === "morphological" &&
-				resolution.targetLemma &&
-				!targetLemmas.has(lemmaKey(resolution.targetLemma)))
+			resolution.targetReading &&
+			!targetReadings.has(readingKey(resolution.targetReading))
 		) {
 			return {
 				status: "conflict",
@@ -134,19 +81,11 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 			};
 		}
 	}
-
-	const pendingRelationKeys = new Set(
-		slice.pendingRelations.map((relation) => {
-			const source =
-				relation.relationFamily === "lexical"
-					? readingKey(relation.sourceReading)
-					: lemmaKey(relation.sourceLemma);
-			return `${relation.relationFamily}:${source}:${relation.relation}:${relation.targetPendingId}`;
-		}),
+	const pendingKeys = new Set(
+		slice.pendingRelations.map(({ locator }) => locatorKey(locator)),
 	);
 	for (const resolution of request.resolutions) {
-		const key = `${resolution.relationFamily}:${sourceKeyFor(resolution)}:${resolution.relation}:${resolution.targetPendingId}`;
-		if (!pendingRelationKeys.has(key)) {
+		if (!pendingKeys.has(locatorKey(resolution.locator))) {
 			return {
 				status: "conflict",
 				code: "semanticPreconditionFailed",
@@ -158,9 +97,7 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	}
 
 	const plan = planCleanupRelations(slice, request);
-	if (plan.status === "rejected") {
-		return plan;
-	}
+	if (plan.status === "rejected") return plan;
 	const commit = await options.storage.commitChanges({
 		baseRevision: plan.baseRevision,
 		changes: plan.changes,

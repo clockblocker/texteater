@@ -5,5 +5,8 @@
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],
+	"ignore": [
+		"src/promptsmith/production/generated-system-prompt/grammatical-resolution/de/phraseme/collocation.ts"
+	],
 	"project": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }

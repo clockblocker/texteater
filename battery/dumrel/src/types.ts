@@ -4,66 +4,156 @@ import type {
 	LemmaKindFor,
 	SupportedLanguage,
 } from "dumling/types";
-import type { z } from "zod";
-import type {
-	lexicalRelationSchema,
-	morphologicalRelationSchema,
-	relationFamilySchema,
-	relationSchema,
-} from "./schema.js";
+import type { semanticRelationValues } from "./vocabulary.js";
 
-export type RelationFamily = z.infer<typeof relationFamilySchema>;
-export type LexicalRelation = z.infer<typeof lexicalRelationSchema>;
-export type MorphologicalRelation = z.infer<typeof morphologicalRelationSchema>;
-export type Relation = z.infer<typeof relationSchema>;
+export type NonEmptyStrings = [string, ...string[]];
 
-/** The structural seam required of a lexical relation endpoint. */
-export type ReadingRelationTarget<L extends SupportedLanguage> = {
-	lemma: Lemma<L>;
+export type UnitShadow<
+	L extends SupportedLanguage = SupportedLanguage,
+	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+> = {
+	language: L;
+	canonicalForm: string;
+	family: F;
+	kind: LemmaKindFor<L, F>;
+};
+
+export type LexicalUnitShadow<L extends SupportedLanguage = SupportedLanguage> =
+	| UnitShadow<L, Extract<LemmaFamilyFor<L>, "Lexeme">>
+	| UnitShadow<L, Extract<LemmaFamilyFor<L>, "Phraseme">>;
+
+export type LexemeUnitShadow<L extends SupportedLanguage = SupportedLanguage> =
+	UnitShadow<L, Extract<LemmaFamilyFor<L>, "Lexeme">>;
+
+export type ReadingReference<
+	L extends SupportedLanguage = SupportedLanguage,
+	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+	K extends LemmaKindFor<L, F> = LemmaKindFor<L, F>,
+> = {
+	lemma: Lemma<L, F, K>;
 	emojiDescription: string;
 };
 
-export type LexicalRelations<L extends SupportedLanguage> = Partial<
-	Record<LexicalRelation, ReadingRelationTarget<L>[]>
+export type MorphemeReadingReference<
+	L extends SupportedLanguage = SupportedLanguage,
+> = ReadingReference<
+	L,
+	Extract<LemmaFamilyFor<L>, "Morpheme">,
+	LemmaKindFor<L, Extract<LemmaFamilyFor<L>, "Morpheme">>
 >;
 
-export type MorphologicalRelations<L extends SupportedLanguage> = Partial<
-	Record<MorphologicalRelation, Lemma<L>[]>
->;
+export type MorphologicalTreeNode<
+	MorphemeReading extends MorphemeReadingReference = MorphemeReadingReference,
+	LexicalShadow extends LexicalUnitShadow = LexicalUnitShadow,
+> =
+	| { nodeKind: "morphemeReading"; reading: MorphemeReading }
+	| { nodeKind: "unitShadow"; unitShadow: LexicalShadow }
+	| MorphologicalTreeStructure<MorphemeReading, LexicalShadow>;
 
-export type RelationNotesForDisambiguation<L extends SupportedLanguage> = {
-	lexical?: LexicalRelations<L>;
-	morphological?: MorphologicalRelations<L>;
+export type MorphologicalTreeStructure<
+	MorphemeReading extends MorphemeReadingReference = MorphemeReadingReference,
+	LexicalShadow extends LexicalUnitShadow = LexicalUnitShadow,
+> = {
+	nodeKind: "structure";
+	children: [
+		MorphologicalTreeNode<MorphemeReading, LexicalShadow>,
+		...MorphologicalTreeNode<MorphemeReading, LexicalShadow>[],
+	];
 };
 
-export type ProposedRelation<L extends SupportedLanguage> =
+export type MorphologicalTree<
+	MorphemeReading extends MorphemeReadingReference = MorphemeReadingReference,
+	LexicalShadow extends LexicalUnitShadow = LexicalUnitShadow,
+> = {
+	root: MorphologicalTreeStructure<MorphemeReading, LexicalShadow>;
+};
+
+export type LexicalBreakdown<
+	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+> = [LexicalShadow, LexicalShadow, ...LexicalShadow[]];
+
+export type SemanticRelation = (typeof semanticRelationValues)[number];
+
+export type SemanticRelations<
+	Reading extends ReadingReference = ReadingReference,
+> = Partial<Record<SemanticRelation, Reading[]>>;
+
+export type LemmaKnowledge<TargetLang extends string = string> = {
+	transcriptions?: [TargetLang] extends [never]
+		? never
+		: Record<TargetLang, NonEmptyStrings>;
+};
+
+export type ReadingKnowledge<
+	TargetLang extends string = string,
+	Reading extends ReadingReference = ReadingReference,
+	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+> = {
+	definition?: string;
+	translations?: [TargetLang] extends [never]
+		? never
+		: Record<TargetLang, NonEmptyStrings>;
+	morphologicalTree?: MorphologicalTree;
+	lexicalBreakdown?: LexicalBreakdown<LexicalShadow>;
+	semanticRelations?: SemanticRelations<Reading>;
+};
+
+export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
+	relation: SemanticRelation;
+	target: Shadow;
+};
+
+export type SemanticRelationGraphEdge = {
+	source: string;
+	relation: SemanticRelation;
+	target: string;
+};
+
+export type KnowledgeChange<
+	TargetLang extends string = string,
+	Reading extends ReadingReference = ReadingReference,
+	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+> =
 	| {
-			relationFamily: "lexical";
-			relation: LexicalRelation;
-			target: ProposedLexicalRelationTarget<L>;
+			kind: "Contribute" | "Correct";
+			aspect: "transcriptions";
+			language: TargetLang;
+			value: NonEmptyStrings;
+	  }
+	| { kind: "Retract"; aspect: "transcriptions"; language: TargetLang }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "translations";
+			language: TargetLang;
+			value: NonEmptyStrings;
+	  }
+	| { kind: "Retract"; aspect: "translations"; language: TargetLang }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "semanticRelations";
+			relation: SemanticRelation;
+			value: Reading[];
 	  }
 	| {
-			relationFamily: "morphological";
-			relation: MorphologicalRelation;
-			target: ProposedMorphologicalRelationTarget<L>;
-	  };
-
-export type ProposedLexicalRelationTarget<L extends SupportedLanguage> =
-	| { kind: "existing"; reading: ReadingRelationTarget<L> }
+			kind: "Retract";
+			aspect: "semanticRelations";
+			relation: SemanticRelation;
+	  }
 	| {
-			kind: "pending";
-			ref: PendingRelationTargetRef<L>;
-	  };
-
-export type ProposedMorphologicalRelationTarget<L extends SupportedLanguage> =
-	| { kind: "existing"; lemma: Lemma<L> }
+			kind: "Contribute" | "Correct";
+			aspect: "definition";
+			value: string;
+	  }
+	| { kind: "Retract"; aspect: "definition" }
 	| {
-			kind: "pending";
-			ref: PendingRelationTargetRef<L>;
-	  };
-
-export type PendingRelationTargetRef<L extends SupportedLanguage> = {
-	canonicalForm: string;
-	family: LemmaFamilyFor<L>;
-	kind: LemmaKindFor<L, LemmaFamilyFor<L>>;
-};
+			kind: "Contribute" | "Correct";
+			aspect: "morphologicalTree";
+			value: MorphologicalTree;
+	  }
+	| { kind: "Retract"; aspect: "morphologicalTree" }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "lexicalBreakdown";
+			value: LexicalBreakdown<LexicalShadow>;
+	  }
+	| { kind: "Retract"; aspect: "lexicalBreakdown" };

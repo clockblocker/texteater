@@ -1,9 +1,7 @@
-import type { RelationNotesForDisambiguation } from "dumrel";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
-	PendingEntryRef,
-	PendingEntryRelation,
+	PendingSemanticRelationRecord,
 	Reading,
 	ReadingEntry,
 	StoreRevision,
@@ -21,7 +19,6 @@ export type StoredReadingsSlice<L extends SupportedLanguage> = {
 	candidates: Array<{
 		reading: ReadingEntry<L>;
 		lemma: LemmaRecord<L>;
-		relationNotes?: RelationNotesForDisambiguation<L>;
 	}>;
 };
 
@@ -44,12 +41,7 @@ export type NewNoteSlice<L extends SupportedLanguage> = {
 	existingReading?: ReadingEntry<L>;
 	existingOwnedSurfaces: SurfaceEntry<L>[];
 	explicitExistingReadingTargets: ReadingEntry<L>[];
-	explicitExistingLemmaTargets: LemmaRecord<L>[];
-	existingPendingRefsForProposedPendingTargets: PendingEntryRef<L>[];
-	matchingPendingRefsForNewEntry: PendingEntryRef<L>[];
-	incomingPendingRelationsForNewEntry: PendingEntryRelation<L>[];
-	incomingPendingSourceReadings: ReadingEntry<L>[];
-	incomingPendingSourceLemmas: LemmaRecord<L>[];
+	existingPendingRelationsForProposedPendingTargets: PendingSemanticRelationRecord<L>[];
 };
 
 export type GetInfoForRelationsCleanupStorageRequest<
@@ -62,8 +54,7 @@ export type RelationsCleanupInfoSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
 	canonicalForm: string;
 	candidateLemmas: LemmaRecord<L>[];
-	pendingRefs: PendingEntryRef<L>[];
-	pendingRelations: PendingEntryRelation<L>[];
+	pendingRelations: PendingSemanticRelationRecord<L>[];
 };
 
 export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
@@ -72,11 +63,9 @@ export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
 
 export type CleanupRelationsSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
-	pendingRefs: PendingEntryRef<L>[];
-	pendingRelations: PendingEntryRelation<L>[];
+	pendingRelations: PendingSemanticRelationRecord<L>[];
 	targetReadings: Array<{
 		reading: ReadingEntry<L>;
 		lemma: LemmaRecord<L>;
 	}>;
-	targetLemmas: LemmaRecord<L>[];
 };

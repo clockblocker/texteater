@@ -17,7 +17,6 @@ describe("in-memory storage", () => {
 					type: "createLemma",
 					record: {
 						lemma: englishSwimLemma,
-						morphologicalRelations: {},
 					},
 					preconditions: [
 						{

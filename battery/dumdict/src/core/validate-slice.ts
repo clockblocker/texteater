@@ -1,9 +1,13 @@
-import { relationFamilyFor } from "dumrel";
+import {
+	lemmaKnowledgeSchema,
+	pendingSemanticRelationSchema,
+	readingKnowledgeSchema,
+	semanticRelationSchema,
+} from "dumrel";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
-	PendingEntryRef,
-	PendingEntryRelation,
+	PendingSemanticRelationRecord,
 	Reading,
 	ReadingEntry,
 	SurfaceEntry,
@@ -23,414 +27,239 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import { lemmaKey, readingKey, sameLemma, sameReading } from "./identity";
-import { derivePendingEntryId, makePendingEntryRef } from "./pending/identity";
+import { readingKey, sameLemma, sameReading } from "./identity";
 
 function assertLanguage(
-	expectedLanguage: SupportedLanguage,
-	actualLanguage: SupportedLanguage | undefined,
+	expected: SupportedLanguage,
+	actual: SupportedLanguage | undefined,
 ) {
-	if (actualLanguage !== expectedLanguage) {
+	if (actual !== expected)
 		throw new DumdictLanguageMismatchError({
-			expectedLanguage,
-			actualLanguage,
+			expectedLanguage: expected,
+			actualLanguage: actual,
 		});
-	}
-}
-
-function assertDumlingId(
-	expectedLanguage: SupportedLanguage,
-	expectedKind: EntityKind,
-	id: string,
-	context: string,
-) {
-	const inspected = inspectDumlingId(id);
-	assertLanguage(expectedLanguage, inspected?.language);
-	if (inspected?.kind !== expectedKind) {
-		throw new Error(`${context} must be a ${expectedKind} id.`);
-	}
-}
-
-function assertEqualId(actual: string, expected: string, context: string) {
-	if (actual !== expected) {
-		throw new Error(`${context} does not match its derived id.`);
-	}
 }
 
 function assertNoDuplicates(values: string[], context: string) {
-	if (new Set(values).size !== values.length) {
+	if (new Set(values).size !== values.length)
 		throw new Error(`${context} contains duplicates.`);
-	}
 }
 
-function validateLemma(
-	expectedLanguage: SupportedLanguage,
-	lemma: { language: SupportedLanguage },
+function locatorKey<L extends SupportedLanguage>(
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	assertLanguage(expectedLanguage, lemma.language);
+	const { sourceReadingKey, relation, targetPendingId } = record.locator;
+	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
 }
 
 function validateLemmaRecord<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	record: LemmaRecord<L>,
 ) {
-	validateLemma(expectedLanguage, record.lemma);
-	for (const targets of Object.values(record.morphologicalRelations)) {
-		for (const target of targets ?? []) {
-			validateLemma(expectedLanguage, target);
-		}
-	}
+	assertLanguage(expected, record.lemma.language);
+	if (record.knowledge !== undefined)
+		lemmaKnowledgeSchema.parse(record.knowledge);
 }
 
 function validateReading<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	reading: Reading<L>,
 ) {
-	validateLemma(expectedLanguage, reading.lemma);
-	if (!reading.emojiDescription.trim()) {
+	assertLanguage(expected, reading.lemma.language);
+	if (!reading.emojiDescription.trim())
 		throw new Error("Reading emoji description must not be empty.");
-	}
 	if (
-		reading.emojiDescription.normalize("NFC") !== reading.emojiDescription
-	) {
+		reading.emojiDescription.trim().normalize("NFC") !==
+		reading.emojiDescription
+	)
 		throw new Error(
 			"Reading emoji description must use NFC normalization.",
 		);
-	}
 }
 
 function validateReadingEntry<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	entry: ReadingEntry<L>,
 ) {
-	validateReading(expectedLanguage, entry.reading);
-	for (const targets of Object.values(entry.lexicalRelations)) {
-		for (const target of targets ?? []) {
-			validateReading(expectedLanguage, target);
+	validateReading(expected, entry.reading);
+	if (entry.knowledge !== undefined) {
+		readingKnowledgeSchema.parse(entry.knowledge);
+		for (const targets of Object.values(
+			entry.knowledge.semanticRelations ?? {},
+		)) {
+			for (const target of targets ?? []) {
+				validateReading(expected, target as Reading<L>);
+				if (sameReading(entry.reading, target as Reading<L>))
+					throw new Error(
+						"Reading Knowledge contains a direct self relation.",
+					);
+			}
 		}
 	}
 }
 
 function validateSurfaceEntry<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	entry: SurfaceEntry<L>,
 ) {
-	assertLanguage(expectedLanguage, entry.surface.language);
-	validateLemma(expectedLanguage, entry.surface.lemma);
-	assertDumlingId(expectedLanguage, "Surface", entry.id, "surface entry id");
-	assertEqualId(
-		entry.id,
-		makeSurfaceId(expectedLanguage, entry.surface),
-		"surface entry id",
-	);
-	if (!sameLemma(entry.ownerLemma, entry.surface.lemma)) {
+	assertLanguage(expected, entry.surface.language);
+	assertLanguage(expected, entry.surface.lemma.language);
+	const inspected = inspectDumlingId(entry.id);
+	assertLanguage(expected, inspected?.language);
+	if (inspected?.kind !== ("Surface" satisfies EntityKind))
+		throw new Error("surface entry id must be a Surface id.");
+	if (entry.id !== makeSurfaceId(expected, entry.surface))
+		throw new Error("surface entry id does not match its derived id.");
+	if (!sameLemma(entry.ownerLemma, entry.surface.lemma))
 		throw new Error(
 			"surface owner Lemma does not match the realized Lemma.",
 		);
-	}
 }
 
-function validatePendingRef<L extends SupportedLanguage>(
-	expectedLanguage: L,
-	ref: PendingEntryRef<L>,
+function validatePendingRecord<L extends SupportedLanguage>(
+	expected: L,
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	assertLanguage(expectedLanguage, ref.language);
-	assertEqualId(ref.pendingId, derivePendingEntryId(ref), "pending ref id");
-}
-
-function pendingRelationSourceKey<L extends SupportedLanguage>(
-	relation: PendingEntryRelation<L>,
-) {
-	return relation.relationFamily === "lexical"
-		? readingKey(relation.sourceReading)
-		: lemmaKey(relation.sourceLemma);
-}
-
-function validatePendingRelation<L extends SupportedLanguage>(
-	expectedLanguage: L,
-	relation: PendingEntryRelation<L>,
-) {
-	if (relation.relationFamily === "lexical") {
-		validateReading(expectedLanguage, relation.sourceReading);
-	} else {
-		validateLemma(expectedLanguage, relation.sourceLemma);
-	}
-	if (relation.relationFamily !== relationFamilyFor(relation.relation)) {
-		throw new Error("pending relation family does not match its relation.");
-	}
+	validateReading(expected, record.sourceReading);
+	const parsed = pendingSemanticRelationSchema.parse(record.pending);
+	assertLanguage(expected, parsed.target.language);
+	if (parsed.target.language !== record.sourceReading.lemma.language)
+		throw new Error(
+			"Pending Semantic Relation endpoints must use the same language.",
+		);
+	semanticRelationSchema.parse(record.locator.relation);
+	if (record.locator.sourceReadingKey !== readingKey(record.sourceReading))
+		throw new Error(
+			"Pending Semantic Relation locator has the wrong source Reading key.",
+		);
+	if (record.locator.relation !== parsed.relation)
+		throw new Error(
+			"Pending Semantic Relation locator has the wrong relation.",
+		);
 }
 
 export function validateStoredReadingsSlice<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	slice: StoredReadingsSlice<L>,
 	requestedLemma?: Lemma<L>,
 ) {
 	for (const candidate of slice.candidates) {
-		validateReadingEntry(expectedLanguage, candidate.reading);
-		validateLemmaRecord(expectedLanguage, candidate.lemma);
-		if (
-			!sameLemma(candidate.reading.reading.lemma, candidate.lemma.lemma)
-		) {
+		validateReadingEntry(expected, candidate.reading);
+		validateLemmaRecord(expected, candidate.lemma);
+		if (!sameLemma(candidate.reading.reading.lemma, candidate.lemma.lemma))
 			throw new Error(
 				"stored Reading does not reference its candidate Lemma.",
 			);
-		}
-		if (
-			requestedLemma &&
-			!sameLemma(candidate.lemma.lemma, requestedLemma)
-		) {
+		if (requestedLemma && !sameLemma(candidate.lemma.lemma, requestedLemma))
 			throw new Error(
 				"stored Reading candidate does not match the requested Lemma identity.",
 			);
-		}
 	}
 }
 
 export function validateReadingPatchSlice<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	slice: ReadingPatchSlice<L>,
-	requestedReading?: Reading<L>,
+	requested?: Reading<L>,
 ) {
-	if (slice.reading) {
-		validateReadingEntry(expectedLanguage, slice.reading);
-		if (
-			requestedReading &&
-			!sameReading(slice.reading.reading, requestedReading)
-		) {
-			throw new Error(
-				"reading patch slice does not match the requested Reading.",
-			);
-		}
-	}
+	if (!slice.reading) return;
+	validateReadingEntry(expected, slice.reading);
+	if (requested && !sameReading(slice.reading.reading, requested))
+		throw new Error(
+			"reading patch slice does not match the requested Reading.",
+		);
 }
 
 export function validateNewNoteSlice<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	slice: NewNoteSlice<L>,
 	draft?: DumdictReadingDraft<L>,
 ) {
 	if (draft) {
-		validateReading(expectedLanguage, draft.reading);
+		validateReading(expected, draft.reading);
+		for (const relation of draft.relations ?? []) {
+			if (relation.target.kind === "pending")
+				pendingSemanticRelationSchema.parse(relation.target.pending);
+			else if ("relation" in relation)
+				semanticRelationSchema.parse(relation.relation);
+		}
 	}
-	const draftOwnedSurfaceIds = new Set(
-		draft?.ownedSurfaces?.map(({ surface }) =>
-			makeSurfaceId(expectedLanguage, surface),
-		) ?? [],
-	);
-	const proposedPendingTargetIds = new Set(
-		(draft?.relations ?? [])
-			.filter((relation) => relation.target.kind === "pending")
-			.map((relation) =>
-				relation.target.kind === "pending"
-					? makePendingEntryRef({
-							language: expectedLanguage,
-							...relation.target.ref,
-						}).pendingId
-					: undefined,
-			)
-			.filter((id) => id !== undefined),
-	);
-	const matchingPendingId = draft
-		? derivePendingEntryId({
-				language: expectedLanguage,
-				canonicalForm: draft.reading.lemma.canonicalForm,
-				family: draft.reading.lemma.family,
-				kind: draft.reading.lemma.kind,
-			})
-		: undefined;
-
 	if (slice.existingLemma) {
-		validateLemmaRecord(expectedLanguage, slice.existingLemma);
-		if (
-			draft &&
-			!sameLemma(slice.existingLemma.lemma, draft.reading.lemma)
-		) {
+		validateLemmaRecord(expected, slice.existingLemma);
+		if (draft && !sameLemma(slice.existingLemma.lemma, draft.reading.lemma))
 			throw new Error(
 				"existing Lemma does not match the draft identity.",
 			);
-		}
 	}
 	if (slice.existingReading) {
-		validateReadingEntry(expectedLanguage, slice.existingReading);
-		if (
-			draft &&
-			!sameReading(slice.existingReading.reading, draft.reading)
-		) {
+		validateReadingEntry(expected, slice.existingReading);
+		if (draft && !sameReading(slice.existingReading.reading, draft.reading))
 			throw new Error(
 				"existing Reading does not match the draft identity.",
 			);
-		}
 	}
-	for (const entry of slice.existingOwnedSurfaces) {
-		validateSurfaceEntry(expectedLanguage, entry);
-		if (draft && !draftOwnedSurfaceIds.has(entry.id)) {
-			throw new Error(
-				"existing owned Surface does not match a requested draft Surface.",
-			);
-		}
-	}
-	for (const reading of slice.explicitExistingReadingTargets) {
-		validateReadingEntry(expectedLanguage, reading);
-	}
-	for (const record of slice.explicitExistingLemmaTargets) {
-		validateLemmaRecord(expectedLanguage, record);
-	}
-	for (const ref of slice.existingPendingRefsForProposedPendingTargets) {
-		validatePendingRef(expectedLanguage, ref);
-		if (draft && !proposedPendingTargetIds.has(ref.pendingId)) {
-			throw new Error(
-				"existing pending ref does not match a proposed relation target.",
-			);
-		}
-	}
-	for (const ref of slice.matchingPendingRefsForNewEntry) {
-		validatePendingRef(expectedLanguage, ref);
-		if (matchingPendingId && ref.pendingId !== matchingPendingId) {
-			throw new Error(
-				"matching pending ref does not match the draft Lemma description.",
-			);
-		}
-	}
-	for (const relation of slice.incomingPendingRelationsForNewEntry) {
-		validatePendingRelation(expectedLanguage, relation);
-	}
-
-	const sourceReadings = new Set(
-		slice.incomingPendingSourceReadings.map(({ reading }) =>
-			readingKey(reading),
-		),
-	);
-	const sourceLemmas = new Set(
-		slice.incomingPendingSourceLemmas.map(({ lemma }) => lemmaKey(lemma)),
-	);
-	for (const relation of slice.incomingPendingRelationsForNewEntry) {
-		if (
-			(relation.relationFamily === "lexical" &&
-				!sourceReadings.has(readingKey(relation.sourceReading))) ||
-			(relation.relationFamily === "morphological" &&
-				!sourceLemmas.has(lemmaKey(relation.sourceLemma)))
-		) {
-			throw new Error(
-				"incoming pending relation source is missing from the slice.",
-			);
-		}
-	}
-	const matchingPendingIds = new Set(
-		slice.matchingPendingRefsForNewEntry.map(({ pendingId }) => pendingId),
-	);
-	for (const relation of slice.incomingPendingRelationsForNewEntry) {
-		if (!matchingPendingIds.has(relation.targetPendingId)) {
-			throw new Error(
-				"incoming pending relation target ref is missing from the slice.",
-			);
-		}
-	}
+	for (const entry of slice.existingOwnedSurfaces)
+		validateSurfaceEntry(expected, entry);
+	for (const entry of slice.explicitExistingReadingTargets)
+		validateReadingEntry(expected, entry);
+	for (const record of slice.existingPendingRelationsForProposedPendingTargets)
+		validatePendingRecord(expected, record);
 }
 
 export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	slice: RelationsCleanupInfoSlice<L>,
 	requestedCanonicalForm?: string,
 ) {
 	if (
 		requestedCanonicalForm !== undefined &&
 		slice.canonicalForm !== requestedCanonicalForm
-	) {
+	)
 		throw new Error(
 			"relations cleanup slice canonical form does not match the request.",
 		);
-	}
 	for (const record of slice.candidateLemmas) {
-		validateLemmaRecord(expectedLanguage, record);
+		validateLemmaRecord(expected, record);
 		if (
 			requestedCanonicalForm !== undefined &&
 			record.lemma.canonicalForm !== requestedCanonicalForm
-		) {
+		)
 			throw new Error(
 				"relations cleanup candidate Lemma has a different canonical form.",
 			);
-		}
 	}
-	for (const ref of slice.pendingRefs) {
-		validatePendingRef(expectedLanguage, ref);
+	for (const record of slice.pendingRelations) {
+		validatePendingRecord(expected, record);
 		if (
 			requestedCanonicalForm !== undefined &&
-			ref.canonicalForm !== requestedCanonicalForm
-		) {
+			record.pending.target.canonicalForm !== requestedCanonicalForm
+		)
 			throw new Error(
-				"relations cleanup pending ref has a different canonical form.",
+				"pending Unit Shadow has a different canonical form.",
 			);
-		}
 	}
 	assertNoDuplicates(
-		slice.pendingRefs.map(({ pendingId }) => pendingId),
-		"relations cleanup pending refs",
-	);
-	validatePendingRelations(
-		expectedLanguage,
-		slice.pendingRefs,
-		slice.pendingRelations,
-	);
-}
-
-function validatePendingRelations<L extends SupportedLanguage>(
-	expectedLanguage: L,
-	refs: PendingEntryRef<L>[],
-	relations: PendingEntryRelation<L>[],
-) {
-	const pendingIds = new Set(refs.map(({ pendingId }) => pendingId));
-	for (const relation of relations) {
-		validatePendingRelation(expectedLanguage, relation);
-		if (!pendingIds.has(relation.targetPendingId)) {
-			throw new Error(
-				"pending relation target ref is missing from the slice.",
-			);
-		}
-	}
-	assertNoDuplicates(
-		relations.map(
-			(relation) =>
-				`${relation.relationFamily}:${pendingRelationSourceKey(relation)}:${relation.relation}:${relation.targetPendingId}`,
-		),
-		"pending relations",
+		slice.pendingRelations.map(locatorKey),
+		"pending Semantic Relations",
 	);
 }
 
 export function validateCleanupRelationsSlice<L extends SupportedLanguage>(
-	expectedLanguage: L,
+	expected: L,
 	slice: CleanupRelationsSlice<L>,
 ) {
-	for (const ref of slice.pendingRefs) {
-		validatePendingRef(expectedLanguage, ref);
-	}
+	for (const record of slice.pendingRelations)
+		validatePendingRecord(expected, record);
 	assertNoDuplicates(
-		slice.pendingRefs.map(({ pendingId }) => pendingId),
-		"cleanup pending refs",
+		slice.pendingRelations.map(locatorKey),
+		"pending Semantic Relations",
 	);
-	validatePendingRelations(
-		expectedLanguage,
-		slice.pendingRefs,
-		slice.pendingRelations,
-	);
-
 	for (const target of slice.targetReadings) {
-		validateReadingEntry(expectedLanguage, target.reading);
-		validateLemmaRecord(expectedLanguage, target.lemma);
-		if (!sameLemma(target.reading.reading.lemma, target.lemma.lemma)) {
+		validateReadingEntry(expected, target.reading);
+		validateLemmaRecord(expected, target.lemma);
+		if (!sameLemma(target.reading.reading.lemma, target.lemma.lemma))
 			throw new Error(
-				"cleanup target Reading does not reference its Lemma.",
+				"cleanup target Reading does not reference its target Lemma.",
 			);
-		}
 	}
-	assertNoDuplicates(
-		slice.targetReadings.map(({ reading }) => readingKey(reading.reading)),
-		"cleanup target Readings",
-	);
-	for (const record of slice.targetLemmas) {
-		validateLemmaRecord(expectedLanguage, record);
-	}
-	assertNoDuplicates(
-		slice.targetLemmas.map(({ lemma }) => lemmaKey(lemma)),
-		"cleanup target Lemmas",
-	);
 }

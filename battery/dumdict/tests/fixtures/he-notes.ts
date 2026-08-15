@@ -1,5 +1,4 @@
-import type { Lemma, Reading } from "../../src";
-import type { SerializedDictionaryNote } from "../../src/testing/serialized-note";
+import type { Lemma, Reading, SerializedDictionaryNoteV0 } from "../../src";
 
 export const hebrewKatavLemma = {
 	canonicalForm: "כתב",
@@ -35,4 +34,4 @@ export const heSerializedNotes = [
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
-] satisfies SerializedDictionaryNote<"he">[];
+] satisfies SerializedDictionaryNoteV0<"he">[];
