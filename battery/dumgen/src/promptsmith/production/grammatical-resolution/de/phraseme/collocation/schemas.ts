@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema =
 const canonicalInflectionSurfaceSchema =
 	schemasFor.de.entity.Surface.Inflection.Phraseme.Collocation() as unknown as ObjectSchema;
 
-export const modelLemmaSchema = canonicalLemmaSchema.omit({
+const modelLemmaSchema = canonicalLemmaSchema.omit({
 	language: true,
 	family: true,
 	kind: true,
@@ -65,18 +65,18 @@ const participleInflectionalFeaturesSchema = z.strictObject({
 	voice: z.literal("Pass").nullable(),
 });
 
-export const modelInflectionalFeaturesSchema = z.union([
+const modelInflectionalFeaturesSchema = z.union([
 	finiteInflectionalFeaturesSchema,
 	imperativeInflectionalFeaturesSchema,
 	infinitiveInflectionalFeaturesSchema,
 	participleInflectionalFeaturesSchema,
 ]);
 
-export const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
+const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
 	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
 
-export const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
+const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
 	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({
 		surfaceFeatures: modelSurfaceFeaturesSchema,

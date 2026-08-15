@@ -119,7 +119,7 @@ target indices, confidence, alternatives, or explanation.
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-sconj-demo-finite-weil",
 	"grammar-de-sconj-demo-reduced-wie",
 	"grammar-de-sconj-demo-infinitival-um",

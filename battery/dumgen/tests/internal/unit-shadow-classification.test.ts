@@ -113,9 +113,9 @@ describe("Unit Shadow Family and Kind classification", () => {
 			...expected.keys(),
 		]);
 		for (const [family, kinds] of expected) {
-			expect([...UNIT_SHADOW_CLASSIFICATION_ROUTES[family]]).toEqual(
-				kinds,
-			);
+			const routes = UNIT_SHADOW_CLASSIFICATION_ROUTES[family];
+			expect(routes).toBeDefined();
+			expect([...(routes ?? [])]).toEqual(kinds);
 		}
 		expect(
 			outputSchema.safeParse({

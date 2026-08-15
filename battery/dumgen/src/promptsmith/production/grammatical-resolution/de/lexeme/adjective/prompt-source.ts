@@ -134,7 +134,7 @@ normalizedSurface, language, family, kind, Lemma linkage, target indices,
 confidence, candidates, or explanation.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-adj-demo-citation-sanft",
 	"grammar-de-adj-demo-attributive-klein",
 	"grammar-de-adj-demo-adverbial-schnell",

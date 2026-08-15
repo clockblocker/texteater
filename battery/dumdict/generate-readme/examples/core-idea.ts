@@ -59,14 +59,12 @@ const walkSurface = {
 // README_BLOCK:english-walk-entry-record:start
 const walkLemmaRecord = {
 	lemma: walkLemma,
-	morphologicalRelations: {},
 } satisfies LemmaRecord<"en">;
 // README_BLOCK:english-walk-entry-record:end
 
 // README_BLOCK:english-walk-reading-entry:start
 const walkReadingEntry = {
 	reading: walkReading,
-	lexicalRelations: {},
 	attestedTranslations: ["caminar", "gehen"],
 	attestations: ["They walk home together."],
 	notes: "Core motion sense.",
@@ -85,6 +83,7 @@ const walkSurfaceEntry = {
 // README_BLOCK:english-walk-surface-entry:end
 
 const serializedWalk = {
+	schemaVersion: 1 as const,
 	lemmaRecord: walkLemmaRecord,
 	readingEntries: [walkReadingEntry],
 	ownedSurfaceEntries: [walkSurfaceEntry],

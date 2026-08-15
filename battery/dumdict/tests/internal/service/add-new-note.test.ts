@@ -119,12 +119,7 @@ describe("configured service", () => {
 					revision: "stub-1" as StoreRevision,
 					existingOwnedSurfaces: [existingSurfaceEntry],
 					explicitExistingReadingTargets: [],
-					explicitExistingLemmaTargets: [],
-					existingPendingRefsForProposedPendingTargets: [],
-					matchingPendingRefsForNewEntry: [],
-					incomingPendingRelationsForNewEntry: [],
-					incomingPendingSourceReadings: [],
-					incomingPendingSourceLemmas: [],
+					existingPendingRelationsForProposedPendingTargets: [],
 				};
 			},
 			async commitChanges() {
@@ -170,12 +165,7 @@ describe("configured service", () => {
 					revision: "new-1" as StoreRevision,
 					existingOwnedSurfaces: [],
 					explicitExistingReadingTargets: [],
-					explicitExistingLemmaTargets: [],
-					existingPendingRefsForProposedPendingTargets: [],
-					matchingPendingRefsForNewEntry: [],
-					incomingPendingRelationsForNewEntry: [],
-					incomingPendingSourceReadings: [],
-					incomingPendingSourceLemmas: [],
+					existingPendingRelationsForProposedPendingTargets: [],
 				};
 			},
 			async commitChanges() {

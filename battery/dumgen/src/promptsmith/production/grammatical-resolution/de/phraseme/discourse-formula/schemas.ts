@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Phraseme.DiscourseFormula(),
 );
 
-export const deDiscourseFormulaLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deDiscourseFormulaLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -26,8 +26,7 @@ export const deDiscourseFormulaLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const deDiscourseFormulaModelLemmaSchema =
-	deDiscourseFormulaLemmaCodec.in;
+const deDiscourseFormulaModelLemmaSchema = deDiscourseFormulaLemmaCodec.in;
 
 type DeDiscourseFormulaLemma = z.output<typeof deDiscourseFormulaLemmaCodec>;
 
@@ -51,7 +50,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeDiscourseFormulaCitationSurfaceCodec(
+function buildDeDiscourseFormulaCitationSurfaceCodec(
 	lemma: DeDiscourseFormulaLemma,
 ) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
@@ -73,7 +72,7 @@ const schemaProjectionLemma = deDiscourseFormulaLemmaCodec.decode({
 	coreFeatures: { discourseFormulaRole: "Greeting" },
 });
 
-export const deDiscourseFormulaModelCitationSurfaceSchema =
+const deDiscourseFormulaModelCitationSurfaceSchema =
 	buildDeDiscourseFormulaCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,
@@ -103,7 +102,7 @@ export const inputSchema = z
 		}
 	}) satisfies PromptInputSchema;
 
-export const discourseFormulaResolutionCodec = z.codec(
+const discourseFormulaResolutionCodec = z.codec(
 	z.strictObject({
 		memberOrthographies: z.array(z.enum(["Standard", "Typo"])).min(1),
 		normalizedMembers: normalizedMembersSchema,

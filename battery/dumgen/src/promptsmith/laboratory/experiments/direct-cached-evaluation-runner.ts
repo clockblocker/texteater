@@ -58,7 +58,7 @@ type DirectResponse = {
 	readonly incomplete_details?: { readonly reason?: string | null } | null;
 };
 
-export type DirectResponsesClient = {
+type DirectResponsesClient = {
 	readonly responses: {
 		create(
 			request: ResponseCreateParamsNonStreaming,

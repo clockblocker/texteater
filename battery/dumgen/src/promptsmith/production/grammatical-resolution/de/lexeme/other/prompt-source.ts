@@ -160,7 +160,7 @@ the discriminator and at least one non-null feature; all Core keys are present;
 the result contains no application-owned fields.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-x-demo-unknown-citation-zorp",
 	"grammar-de-x-demo-foreign-whatever",
 	"grammar-de-x-demo-inflection-glorp-dat",

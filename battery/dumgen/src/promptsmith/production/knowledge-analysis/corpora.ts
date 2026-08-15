@@ -12,6 +12,8 @@ import {
 	morphologicalResolutionOutputSchema,
 	morphologicalSegmentationInputSchema,
 	morphologicalSegmentationOutputSchema,
+	translationAnalysisInputSchema,
+	translationAnalysisOutputSchema,
 } from "./schemas";
 
 const reading = (
@@ -328,4 +330,127 @@ export const lexicalResolutionCorpus = defineGoldenCorpus({
 	inputSchema: lexicalResolutionInputSchema,
 	outputSchema: lexicalResolutionOutputSchema,
 	collections: { core: lexicalResolutionCases },
+});
+
+const translationCases = defineGoldenCaseCollection(import.meta.url, {
+	cases: {
+		"translation-add-polysemy-sensitive-literal": {
+			input: {
+				markedContext:
+					"Sie <TARGET>fährt</TARGET> mit dem Fahrrad zur Arbeit.",
+				sourceReading: reading("de", "fahren", "Lexeme", "VERB", "🚲"),
+				targetLanguage: "en",
+				existingTranslations: ["drive"],
+			},
+			idealOutput: { decision: "Add", translation: "ride" },
+			explanation:
+				"Drive does not cover this bicycle encounter, so the fixed Reading gains a context-appropriate literal.",
+		},
+		"translation-cover-near-equivalent": {
+			input: {
+				markedContext: "Die Sitzung <TARGET>beginnt</TARGET> um neun.",
+				sourceReading: reading("de", "beginnen", "Lexeme", "VERB", "▶️"),
+				targetLanguage: "en",
+				existingTranslations: ["start", "commence"],
+			},
+			idealOutput: { decision: "Covered", existingIndex: 0 },
+			explanation:
+				"The ordinary context is already covered by start; wording novelty alone is not a reason to add begin.",
+		},
+		"translation-cover-concise-paraphrase": {
+			input: {
+				markedContext:
+					"Wir müssen diesen Faktor <TARGET>in Betracht ziehen</TARGET>.",
+				sourceReading: reading(
+					"de",
+					"in Betracht ziehen",
+					"Phraseme",
+					"Collocation",
+					"🤔",
+				),
+				targetLanguage: "en",
+				existingTranslations: ["consider"],
+			},
+			idealOutput: { decision: "Covered", existingIndex: 0 },
+			explanation:
+				"A concise existing literal may cover a longer source expression without mirroring its form.",
+		},
+		"translation-add-register-distinction": {
+			input: {
+				markedContext:
+					"Der <TARGET>Knirps</TARGET> ist schon wieder draußen.",
+				sourceReading: reading("de", "Knirps", "Lexeme", "NOUN", "🧒"),
+				targetLanguage: "en",
+				existingTranslations: ["child"],
+			},
+			idealOutput: { decision: "Add", translation: "kid" },
+			explanation:
+				"The colloquial register is useful encounter Knowledge and is not erased by a neutral literal.",
+		},
+		"translation-add-punctuation-distinction": {
+			input: {
+				markedContext: "<TARGET>Echt?</TARGET> Das wusste ich nicht.",
+				sourceReading: reading(
+					"de",
+					"echt?",
+					"Phraseme",
+					"DiscourseFormula",
+					"❓",
+				),
+				targetLanguage: "en",
+				existingTranslations: ["Really!"],
+			},
+			idealOutput: { decision: "Add", translation: "Really?" },
+			explanation:
+				"Question and exclamation punctuation distinguish the contextual discourse act and remain literal.",
+		},
+		"translation-add-casing-distinction": {
+			input: {
+				markedContext: "Sie spricht <TARGET>Polnisch</TARGET>.",
+				sourceReading: reading(
+					"de",
+					"Polnisch",
+					"Lexeme",
+					"NOUN",
+					"🇵🇱",
+				),
+				targetLanguage: "en",
+				existingTranslations: ["polish"],
+			},
+			idealOutput: { decision: "Add", translation: "Polish" },
+			explanation:
+				"The required proper-language casing is preserved; Dumrel does not case-fold literals.",
+		},
+		"translation-add-context-specific-wording": {
+			input: {
+				markedContext:
+					"Die Mannschaft <TARGET>gab</TARGET> den Vorsprung in der letzten Minute <TARGET>auf</TARGET>.",
+				sourceReading: reading("de", "aufgeben", "Lexeme", "VERB", "🏳️"),
+				targetLanguage: "en",
+				existingTranslations: ["surrender"],
+			},
+			idealOutput: { decision: "Add", translation: "give up" },
+			explanation:
+				"The encounter calls for a context-specific wording not covered by the existing literal.",
+		},
+		"translation-add-first-target-language-literal": {
+			input: {
+				markedContext: "Das <TARGET>Haus</TARGET> ist alt.",
+				sourceReading: reading("de", "Haus", "Lexeme", "NOUN", "🏠"),
+				targetLanguage: "en",
+				existingTranslations: [],
+			},
+			idealOutput: { decision: "Add", translation: "house" },
+		},
+	} as const satisfies GoldenCaseRegistry<
+		typeof translationAnalysisInputSchema,
+		typeof translationAnalysisOutputSchema
+	>,
+});
+
+export const translationAnalysisCorpus = defineGoldenCorpus({
+	route: "knowledge-analysis/translation",
+	inputSchema: translationAnalysisInputSchema,
+	outputSchema: translationAnalysisOutputSchema,
+	collections: { adversarial: translationCases },
 });

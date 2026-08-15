@@ -1,231 +1,344 @@
+import {
+	knowledgeChangeSchema,
+	lemmaKnowledgeSchema,
+	readingKnowledgeSchema,
+} from "./schema.js";
 import type {
-	LemmaFamilyFor,
-	LemmaKindFor,
-	SupportedLanguage,
-} from "dumling/types";
-import type { SemanticRelation } from "./relation-vocabulary.js";
+	KnowledgeChange,
+	LemmaKnowledge,
+	LexemeUnitShadow,
+	ReadingKnowledge,
+	ReadingReference,
+} from "./types.js";
 
-/** An identityless grammatical sketch. Its containing structure owns context. */
-export type UnitShadow<
-	L extends SupportedLanguage = SupportedLanguage,
-	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
-> = {
-	language: L;
-	canonicalForm: string;
-	family: F;
-	kind: LemmaKindFor<L, F>;
-};
+type SetTranscriptions<Language extends string> = Extract<
+	KnowledgeChange<Language>,
+	{ aspect: "transcriptions"; kind: "Contribute" | "Correct" }
+>;
 
-export type LexicalUnitShadow<L extends SupportedLanguage = SupportedLanguage> =
-	| UnitShadow<L, Extract<LemmaFamilyFor<L>, "Lexeme">>
-	| UnitShadow<L, Extract<LemmaFamilyFor<L>, "Phraseme">>;
+type RetractTranscriptions<Language extends string> = Extract<
+	KnowledgeChange<Language>,
+	{ aspect: "transcriptions"; kind: "Retract" }
+>;
 
-export type LexemeUnitShadow<L extends SupportedLanguage = SupportedLanguage> =
-	UnitShadow<L, Extract<LemmaFamilyFor<L>, "Lexeme">>;
+type SetTranslations<
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+> = Extract<
+	KnowledgeChange<Language, Reading, LexicalShadow>,
+	{ aspect: "translations"; kind: "Contribute" | "Correct" }
+>;
 
-/**
- * A Morphological Tree stores only hierarchy and component pointers. Dumling's
- * Lemma DTO on a resolved Morpheme Reading owns its grammatical distinctions.
- */
-export type MorphologicalTreeNode<MorphemeReading, LexicalShadow> =
-	| { nodeKind: "morphemeReading"; reading: MorphemeReading }
-	| { nodeKind: "unitShadow"; unitShadow: LexicalShadow }
-	| MorphologicalTreeStructure<MorphemeReading, LexicalShadow>;
+type RetractTranslations<
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+> = Extract<
+	KnowledgeChange<Language, Reading, LexicalShadow>,
+	{ aspect: "translations"; kind: "Retract" }
+>;
 
-export type MorphologicalTreeStructure<MorphemeReading, LexicalShadow> = {
-	nodeKind: "structure";
-	/** Runtime schemas require this ordered array to be non-empty. */
-	children: MorphologicalTreeNode<MorphemeReading, LexicalShadow>[];
-};
+type NonLanguageReadingChange<
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+> = Exclude<
+	KnowledgeChange<string, Reading, LexicalShadow>,
+	{ aspect: "transcriptions" | "translations" }
+>;
 
-export type MorphologicalTree<MorphemeReading, LexicalShadow> = {
-	root: MorphologicalTreeStructure<MorphemeReading, LexicalShadow>;
-};
+export function applyKnowledgeChange<Language extends string>(
+	existing: undefined,
+	change: SetTranscriptions<Language>,
+): LemmaKnowledge<Language>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+>(
+	existing: LemmaKnowledge<ExistingLanguage>,
+	change: SetTranscriptions<Language>,
+): LemmaKnowledge<ExistingLanguage | Language>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+>(
+	existing: LemmaKnowledge<ExistingLanguage> | undefined,
+	change: SetTranscriptions<Language>,
+): LemmaKnowledge<ExistingLanguage | Language> | LemmaKnowledge<Language>;
 
-export type MorphologicalTreeContribution<MorphemeReading, LexicalShadow> =
-	MorphologicalTree<MorphemeReading, LexicalShadow>;
+export function applyKnowledgeChange<Language extends string>(
+	existing: undefined,
+	change: RetractTranscriptions<Language>,
+): LemmaKnowledge<never>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+>(
+	existing: LemmaKnowledge<ExistingLanguage>,
+	change: RetractTranscriptions<Language>,
+): LemmaKnowledge<Exclude<ExistingLanguage, Language>>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+>(
+	existing: LemmaKnowledge<ExistingLanguage> | undefined,
+	change: RetractTranscriptions<Language>,
+): LemmaKnowledge<Exclude<ExistingLanguage, Language>> | LemmaKnowledge<never>;
 
-/** Order and repetition are represented only by list position and entries. */
-export type LexicalBreakdown<LexemeShadow> = LexemeShadow[];
+export function applyKnowledgeChange<Language extends string>(
+	existing: undefined,
+	change: SetTranslations<Language, ReadingReference, LexemeUnitShadow>,
+): ReadingKnowledge<Language>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
+	change: SetTranslations<Language, Reading, LexicalShadow>,
+): ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing:
+		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| undefined,
+	change: SetTranslations<Language, Reading, LexicalShadow>,
+):
+	| ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>
+	| ReadingKnowledge<Language, Reading, LexicalShadow>;
 
-export type LexicalBreakdownContribution<LexemeShadow> =
-	LexicalBreakdown<LexemeShadow>;
+export function applyKnowledgeChange<Language extends string>(
+	existing: undefined,
+	change: RetractTranslations<Language, ReadingReference, LexemeUnitShadow>,
+): ReadingKnowledge<never>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
+	change: RetractTranslations<Language, Reading, LexicalShadow>,
+): ReadingKnowledge<
+	Exclude<ExistingLanguage, Language>,
+	Reading,
+	LexicalShadow
+>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing:
+		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| undefined,
+	change: RetractTranslations<Language, Reading, LexicalShadow>,
+):
+	| ReadingKnowledge<
+			Exclude<ExistingLanguage, Language>,
+			Reading,
+			LexicalShadow
+	  >
+	| ReadingKnowledge<never, Reading, LexicalShadow>;
 
-export type ReadingKnowledge<MorphemeReading, LexicalShadow> = {
-	definition?: string;
-	translations?: Translation[];
-	morphologicalTree?: MorphologicalTree<MorphemeReading, LexicalShadow>;
-	lexicalBreakdown?: LexicalBreakdown<LexicalShadow>;
-	semanticRelations?: Partial<Record<SemanticRelation, MorphemeReading[]>>;
-};
+export function applyKnowledgeChange<
+	Reading extends ReadingReference = ReadingReference,
+	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+>(
+	existing: undefined,
+	change: NonLanguageReadingChange<Reading, LexicalShadow>,
+): ReadingKnowledge<never, Reading, LexicalShadow>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
+	change: NonLanguageReadingChange<Reading, LexicalShadow>,
+): ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>;
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing:
+		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| undefined,
+	change: NonLanguageReadingChange<Reading, LexicalShadow>,
+):
+	| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+	| ReadingKnowledge<never, Reading, LexicalShadow>;
 
-export type ReadingKnowledgeContribution<MorphemeReading, LexicalShadow> = {
-	definition?: string;
-	translations?: Translation[];
-	morphologicalTree?: MorphologicalTreeContribution<
-		MorphemeReading,
-		LexicalShadow
-	>;
-	lexicalBreakdown?: LexicalBreakdownContribution<LexicalShadow>;
-	semanticRelations?: Partial<Record<SemanticRelation, MorphemeReading[]>>;
-};
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+>(
+	existing: LemmaKnowledge<ExistingLanguage> | undefined,
+	change: Extract<KnowledgeChange<Language>, { aspect: "transcriptions" }>,
+):
+	| LemmaKnowledge<ExistingLanguage | Language>
+	| LemmaKnowledge<Exclude<ExistingLanguage, Language>>
+	| LemmaKnowledge<Language>
+	| LemmaKnowledge<never>;
 
-export type Translation = {
-	targetLanguage: string;
-	text: string;
-};
+export function applyKnowledgeChange<
+	ExistingLanguage extends string,
+	Language extends string,
+	Reading extends ReadingReference,
+	LexicalShadow extends LexemeUnitShadow,
+>(
+	existing:
+		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| undefined,
+	change: Exclude<
+		KnowledgeChange<Language, Reading, LexicalShadow>,
+		{ aspect: "transcriptions" }
+	>,
+):
+	| ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>
+	| ReadingKnowledge<
+			Exclude<ExistingLanguage, Language>,
+			Reading,
+			LexicalShadow
+	  >
+	| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+	| ReadingKnowledge<Language, Reading, LexicalShadow>
+	| ReadingKnowledge<never, Reading, LexicalShadow>;
 
-export type LemmaKnowledge = {
-	transcription: string;
-};
+export function applyKnowledgeChange(
+	existing: LemmaKnowledge | ReadingKnowledge | undefined,
+	change: KnowledgeChange,
+): LemmaKnowledge | ReadingKnowledge {
+	const parsedChange = knowledgeChangeSchema.parse(change);
+	if (parsedChange.aspect === "transcriptions") {
+		const result = lemmaKnowledgeSchema.parse(existing ?? {});
+		applyLanguageBucket(result, parsedChange);
+		return lemmaKnowledgeSchema.parse(result);
+	}
 
-/** Knowledge values are identityless; the owner kind is supplied externally. */
-export type Knowledge<
-	Owner extends "Lemma" | "Reading",
-	Reading = never,
-	Shadow = never,
-> = Owner extends "Lemma" ? LemmaKnowledge : ReadingKnowledge<Reading, Shadow>;
-
-/** Phrasemes and learner-useful verbal Lexemes admit Lexical Breakdown. */
-export function admitsLexicalBreakdown(owner: {
-	readonly family: string;
-	readonly kind: string;
-}): boolean {
-	return (
-		owner.family === "Phraseme" ||
-		(owner.family === "Lexeme" && owner.kind === "VERB")
-	);
+	const result = readingKnowledgeSchema.parse(existing ?? {});
+	switch (parsedChange.aspect) {
+		case "translations":
+			applyLanguageBucket(result, parsedChange);
+			break;
+		case "semanticRelations":
+			applyRelationBucket(result, parsedChange);
+			break;
+		case "definition":
+		case "morphologicalTree":
+		case "lexicalBreakdown":
+			applyAtomicAspect(result, parsedChange);
+			break;
+	}
+	return readingKnowledgeSchema.parse(result);
 }
 
-export function assertReadingKnowledgeForOwner(
-	owner:
-		| { readonly family: string; readonly kind: string }
-		| {
-				readonly lemma: {
-					readonly family: string;
-					readonly kind: string;
-				};
-		  },
-	knowledge: { readonly lexicalBreakdown?: unknown },
+type LanguageBucketChange = Extract<
+	KnowledgeChange,
+	{ aspect: "transcriptions" | "translations" }
+>;
+
+function applyLanguageBucket(
+	knowledge: LemmaKnowledge | ReadingKnowledge,
+	change: LanguageBucketChange,
 ): void {
-	const descriptor = "lemma" in owner ? owner.lemma : owner;
-	if (
-		knowledge.lexicalBreakdown !== undefined &&
-		!admitsLexicalBreakdown(descriptor)
-	) {
-		throw new Error(
-			`${descriptor.family}/${descriptor.kind} does not admit a Lexical Breakdown.`,
-		);
+	const aspect = change.aspect;
+	const buckets = (Reflect.get(knowledge, aspect) ?? {}) as Record<
+		string,
+		string[]
+	>;
+	if (change.kind === "Retract") {
+		delete buckets[change.language];
+		if (Object.keys(buckets).length === 0)
+			Reflect.deleteProperty(knowledge, aspect);
+		else Reflect.set(knowledge, aspect, buckets);
+		return;
 	}
+
+	const existing = buckets[change.language];
+	buckets[change.language] =
+		change.kind === "Correct"
+			? stableUnique(change.value)
+			: appendUnique(existing ?? [], change.value);
+	Reflect.set(knowledge, aspect, buckets);
 }
 
-export function mergeReadingKnowledge<Reading, Shadow>(
-	existing: ReadingKnowledge<Reading, Shadow> | undefined,
-	contribution: ReadingKnowledgeContribution<Reading, Shadow>,
-): ReadingKnowledge<Reading, Shadow> {
-	const merged: ReadingKnowledge<Reading, Shadow> = {
-		...(existing?.definition === undefined
-			? {}
-			: { definition: existing.definition }),
-		...(existing?.translations === undefined
-			? {}
-			: { translations: existing.translations }),
-		...(existing?.morphologicalTree === undefined
-			? {}
-			: { morphologicalTree: existing.morphologicalTree }),
-		...(existing?.lexicalBreakdown === undefined
-			? {}
-			: { lexicalBreakdown: existing.lexicalBreakdown }),
-		...(existing?.semanticRelations === undefined
-			? {}
-			: { semanticRelations: existing.semanticRelations }),
-	};
+type RelationBucketChange = Extract<
+	KnowledgeChange,
+	{ aspect: "semanticRelations" }
+>;
 
-	if (contribution.definition !== undefined) {
-		if (
-			existing?.definition !== undefined &&
-			existing.definition !== contribution.definition
-		) {
-			throw new Error(
-				"A conflicting Definition requires an explicit correction, not an additive Knowledge Contribution.",
-			);
-		}
-		merged.definition = contribution.definition;
-	}
-	if (contribution.translations !== undefined) {
-		merged.translations = mergeUniqueValues(
-			existing?.translations,
-			contribution.translations,
-		);
-	}
-	if (contribution.morphologicalTree !== undefined) {
-		merged.morphologicalTree = mergeExactAspect(
-			existing?.morphologicalTree,
-			contribution.morphologicalTree,
-			"Morphological Tree",
-		);
-	}
-	if (contribution.lexicalBreakdown !== undefined) {
-		merged.lexicalBreakdown = mergeExactAspect(
-			existing?.lexicalBreakdown,
-			contribution.lexicalBreakdown,
-			"Lexical Breakdown",
-		);
-	}
-	if (contribution.semanticRelations !== undefined) {
-		merged.semanticRelations = mergeSemanticRelations(
-			existing?.semanticRelations,
-			contribution.semanticRelations,
-		);
+function applyRelationBucket(
+	knowledge: ReadingKnowledge,
+	change: RelationBucketChange,
+): void {
+	const relations = { ...knowledge.semanticRelations };
+	if (change.kind === "Retract") {
+		delete relations[change.relation];
+		if (Object.keys(relations).length === 0)
+			delete knowledge.semanticRelations;
+		else knowledge.semanticRelations = relations;
+		return;
 	}
 
-	return deepFreeze(merged);
+	const existing = relations[change.relation] ?? [];
+	relations[change.relation] =
+		change.kind === "Correct"
+			? stableUnique(change.value)
+			: appendUnique(existing, change.value);
+	knowledge.semanticRelations = relations;
 }
 
-function mergeExactAspect<Value>(
-	existing: Value | undefined,
-	contribution: Value,
-	label: string,
-): Value {
+type AtomicChange = Extract<
+	KnowledgeChange,
+	{ aspect: "definition" | "morphologicalTree" | "lexicalBreakdown" }
+>;
+
+function applyAtomicAspect(
+	knowledge: ReadingKnowledge,
+	change: AtomicChange,
+): void {
+	if (change.kind === "Retract") {
+		delete knowledge[change.aspect];
+		return;
+	}
+
+	const existing = knowledge[change.aspect];
 	if (
+		change.kind === "Contribute" &&
 		existing !== undefined &&
-		stableFingerprint(existing) !== stableFingerprint(contribution)
+		stableFingerprint(existing) !== stableFingerprint(change.value)
 	) {
 		throw new Error(
-			`A different ${label} requires an explicit correction, not an additive Knowledge Contribution.`,
+			`Contribute conflicts with existing ${change.aspect}; use Correct to replace it.`,
 		);
 	}
-	return existing ?? contribution;
+	Reflect.set(knowledge, change.aspect, structuredClone(change.value));
 }
 
-function mergeSemanticRelations<Reading>(
-	existing: Partial<Record<SemanticRelation, Reading[]>> | undefined,
-	contribution: Partial<Record<SemanticRelation, Reading[]>>,
-): Partial<Record<SemanticRelation, Reading[]>> {
-	const merged = { ...existing };
-	for (const [relation, targets] of Object.entries(contribution) as [
-		SemanticRelation,
-		Reading[],
-	][]) {
-		merged[relation] = mergeUniqueValues(existing?.[relation], targets);
-	}
-	return merged;
-}
-
-function mergeUniqueValues<Value>(
-	existing: Value[] | undefined,
-	contribution: Value[],
+function appendUnique<Value>(
+	existing: readonly Value[],
+	contribution: readonly Value[],
 ): Value[] {
-	const merged = existing === undefined ? [] : [...existing];
-	const fingerprints = new Set(merged.map(stableFingerprint));
+	const result = existing.map((value) => structuredClone(value));
+	const fingerprints = new Set(result.map(stableFingerprint));
 	for (const value of contribution) {
 		const fingerprint = stableFingerprint(value);
-		if (!fingerprints.has(fingerprint)) {
-			merged.push(value);
-			fingerprints.add(fingerprint);
-		}
+		if (fingerprints.has(fingerprint)) continue;
+		result.push(structuredClone(value));
+		fingerprints.add(fingerprint);
 	}
-	return merged;
+	return result;
+}
+
+function stableUnique<Value>(values: readonly Value[]): Value[] {
+	return appendUnique([], values);
 }
 
 function stableFingerprint(value: unknown): string {
@@ -237,21 +350,13 @@ function sortValue(value: unknown): unknown {
 	if (value !== null && typeof value === "object") {
 		return Object.fromEntries(
 			Object.entries(value)
-				.sort(([left], [right]) => left.localeCompare(right))
+				.sort(([left], [right]) => compareStrings(left, right))
 				.map(([key, child]) => [key, sortValue(child)]),
 		);
 	}
 	return value;
 }
 
-function deepFreeze<T>(value: T): T {
-	if (
-		value !== null &&
-		typeof value === "object" &&
-		!Object.isFrozen(value)
-	) {
-		Object.freeze(value);
-		for (const child of Object.values(value)) deepFreeze(child);
-	}
-	return value;
+function compareStrings(left: string, right: string): number {
+	return left < right ? -1 : left > right ? 1 : 0;
 }

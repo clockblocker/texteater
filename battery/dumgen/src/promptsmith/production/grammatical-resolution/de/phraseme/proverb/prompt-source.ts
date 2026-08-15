@@ -119,7 +119,7 @@ Final check: both arrays equal members.length, preserve all positions in source
 order, and contain only supplied members. Always resolve the classified target.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-proverb-demo-morgenstund-attribution",
 	"grammar-de-proverb-demo-aller-anfang-typo",
 	"grammar-de-proverb-demo-was-heute-punctuation",

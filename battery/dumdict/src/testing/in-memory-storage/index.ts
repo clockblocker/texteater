@@ -1,3 +1,4 @@
+import type { SerializedDictionaryNote } from "../../dto";
 import type { SupportedLanguage } from "../../dumling";
 import type {
 	CommitChangesRequest,
@@ -7,7 +8,6 @@ import type {
 	LoadNewNoteContextRequest,
 	LoadReadingForPatchRequest,
 } from "../../storage";
-import type { SerializedDictionaryNote } from "../serialized-note";
 import { commitChanges } from "./commit";
 import {
 	findStoredReadings,
@@ -56,18 +56,9 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 		},
 
 		loadAll() {
-			const clonedNotes = structuredClone(
+			return structuredClone(
 				state.storedNotes,
 			) as SerializedDictionaryNote<L>[];
-			return clonedNotes.map((note) => ({
-				...note,
-				pendingRefs: state.storedPendingRefs.filter((ref) =>
-					note.pendingRelations.some(
-						(relation) =>
-							relation.targetPendingId === ref.pendingId,
-					),
-				),
-			}));
 		},
 	};
 }

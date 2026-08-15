@@ -90,7 +90,7 @@ and the output contains no application-owned fields. Always resolve the fixed
 route.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-fusion-demo-im-initial",
 	"grammar-de-fusion-demo-zur-noun-control",
 	"grammar-de-fusion-demo-zum-typo",

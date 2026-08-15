@@ -1,18 +1,15 @@
-import {
-	lemmaKey,
-	readingKey,
-	sameLemma,
-	sameReading,
-} from "../../core/identity";
-import type { PendingEntryRelation, Reading } from "../../dto";
+import { sameLemma, sameReading } from "../../core/identity";
+import type {
+	PendingSemanticRelationRecord,
+	Reading,
+	SerializedDictionaryNote,
+} from "../../dto";
 import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { ChangePrecondition } from "../../storage";
-import type { SerializedDictionaryNote } from "../serialized-note";
 
 export type DraftStorageState<L extends SupportedLanguage> = {
 	currentRevision(): string;
 	draftNotes: SerializedDictionaryNote<L>[];
-	draftPendingRefs: SerializedDictionaryNote<L>["pendingRefs"];
 };
 
 export function findDraftBundleByLemma<L extends SupportedLanguage>(
@@ -42,40 +39,21 @@ function findDraftSurfaceById<L extends SupportedLanguage>(
 		.find(({ id }) => id === surfaceId);
 }
 
-function draftPendingRelations<L extends SupportedLanguage>(
-	draft: DraftStorageState<L>,
+function locatorKey<L extends SupportedLanguage>(
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	return draft.draftNotes.flatMap(({ pendingRelations }) => pendingRelations);
-}
-
-function relationSourceKey<L extends SupportedLanguage>(
-	relation: PendingEntryRelation<L>,
-) {
-	return relation.relationFamily === "lexical"
-		? readingKey(relation.sourceReading)
-		: lemmaKey(relation.sourceLemma);
-}
-
-function findDraftPendingRefById<L extends SupportedLanguage>(
-	draft: DraftStorageState<L>,
-	pendingId: string,
-) {
-	return draft.draftPendingRefs?.find(
-		({ pendingId: id }) => id === pendingId,
-	);
+	const { sourceReadingKey, relation, targetPendingId } = record.locator;
+	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
 }
 
 function hasDraftPendingRelation<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
-	relation: PendingEntryRelation<L>,
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	return draftPendingRelations(draft).some(
-		(storedRelation) =>
-			relationSourceKey(storedRelation) === relationSourceKey(relation) &&
-			storedRelation.relationFamily === relation.relationFamily &&
-			storedRelation.relation === relation.relation &&
-			storedRelation.targetPendingId === relation.targetPendingId,
-	);
+	const expected = locatorKey(record);
+	return draft.draftNotes
+		.flatMap(({ pendingRelations }) => pendingRelations)
+		.some((stored) => locatorKey(stored) === expected);
 }
 
 export function draftPreconditionFails<L extends SupportedLanguage>(
@@ -99,21 +77,10 @@ export function draftPreconditionFails<L extends SupportedLanguage>(
 			return !findDraftSurfaceById(draft, precondition.surfaceId);
 		case "surfaceMissing":
 			return Boolean(findDraftSurfaceById(draft, precondition.surfaceId));
-		case "pendingRefExists":
-			return !findDraftPendingRefById(draft, precondition.pendingId);
-		case "pendingRefMissing":
-			return Boolean(
-				findDraftPendingRefById(draft, precondition.pendingId),
-			);
 		case "pendingRelationExists":
-			return !hasDraftPendingRelation(draft, precondition.relation);
+			return !hasDraftPendingRelation(draft, precondition.record);
 		case "pendingRelationMissing":
-			return hasDraftPendingRelation(draft, precondition.relation);
-		case "pendingRefHasNoIncomingRelations":
-			return draftPendingRelations(draft).some(
-				(relation) =>
-					relation.targetPendingId === precondition.pendingId,
-			);
+			return hasDraftPendingRelation(draft, precondition.record);
 		case "readingAttestationMissing": {
 			const bundle = findDraftBundleByReading(
 				draft,

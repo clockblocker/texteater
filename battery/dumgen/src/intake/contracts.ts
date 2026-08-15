@@ -6,7 +6,7 @@ export const INTAKE_LIMITS = Object.freeze({
 	maxCodePointsPerSentence: 205,
 });
 
-export type IntakeItemDecision = Readonly<{
+type IntakeItemDecision = Readonly<{
 	readonly id: string;
 	readonly decision: "Accepted" | "UnsupportedLanguage" | "Unintelligible";
 	readonly language: EnabledSegmentationLanguage | null;

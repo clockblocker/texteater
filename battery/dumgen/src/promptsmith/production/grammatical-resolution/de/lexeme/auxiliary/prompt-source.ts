@@ -176,7 +176,7 @@ confidence, candidates, explanation, or VERB-only features.
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-aux-demo-future-wird",
 	"grammar-de-aux-demo-modal-kann",
 	"grammar-de-aux-demo-copula-ist",

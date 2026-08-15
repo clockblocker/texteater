@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.AUX(),
 );
 
-export const deAuxiliaryLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deAuxiliaryLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -29,7 +29,7 @@ export const deAuxiliaryLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const modelLemmaSchema = deAuxiliaryLemmaCodec.in;
+const modelLemmaSchema = deAuxiliaryLemmaCodec.in;
 
 type DeAuxiliaryLemma = z.output<typeof deAuxiliaryLemmaCodec>;
 
@@ -126,7 +126,7 @@ export const modelInflectionalFeaturesSchema = z.union([
 	participleInflectionalFeaturesSchema,
 ]);
 
-export function buildDeAuxiliaryCitationSurfaceCodec(lemma: DeAuxiliaryLemma) {
+function buildDeAuxiliaryCitationSurfaceCodec(lemma: DeAuxiliaryLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -141,9 +141,7 @@ export function buildDeAuxiliaryCitationSurfaceCodec(lemma: DeAuxiliaryLemma) {
 	});
 }
 
-export function buildDeAuxiliaryInflectionSurfaceCodec(
-	lemma: DeAuxiliaryLemma,
-) {
+function buildDeAuxiliaryInflectionSurfaceCodec(lemma: DeAuxiliaryLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -165,16 +163,17 @@ const schemaProjectionLemma = deAuxiliaryLemmaCodec.decode({
 	coreFeatures: { verbType: null },
 });
 
-export const modelCitationSurfaceSchema = buildDeAuxiliaryCitationSurfaceCodec(
+const modelCitationSurfaceSchema = buildDeAuxiliaryCitationSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({
 	normalizedSurface: true,
 });
 
-export const modelInflectionSurfaceSchema =
-	buildDeAuxiliaryInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-	});
+const modelInflectionSurfaceSchema = buildDeAuxiliaryInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
 
 export const inputSchema = z
 	.strictObject({

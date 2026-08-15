@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.PROPN(),
 );
 
-export const deProperNounLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deProperNounLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -29,7 +29,7 @@ export const deProperNounLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const deProperNounModelLemmaSchema = deProperNounLemmaCodec.in;
+const deProperNounModelLemmaSchema = deProperNounLemmaCodec.in;
 
 type DeProperNounLemma = z.output<typeof deProperNounLemmaCodec>;
 
@@ -53,9 +53,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeProperNounCitationSurfaceCodec(
-	lemma: DeProperNounLemma,
-) {
+function buildDeProperNounCitationSurfaceCodec(lemma: DeProperNounLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -70,9 +68,7 @@ export function buildDeProperNounCitationSurfaceCodec(
 	});
 }
 
-export function buildDeProperNounInflectionSurfaceCodec(
-	lemma: DeProperNounLemma,
-) {
+function buildDeProperNounInflectionSurfaceCodec(lemma: DeProperNounLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -95,12 +91,12 @@ const schemaProjectionLemma = {
 	coreFeatures: { abbr: null, foreign: null, gender: "Neut" },
 } satisfies DeProperNounLemma;
 
-export const deProperNounModelCitationSurfaceSchema =
+const deProperNounModelCitationSurfaceSchema =
 	buildDeProperNounCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,
 	});
-export const deProperNounModelInflectionSurfaceSchema =
+const deProperNounModelInflectionSurfaceSchema =
 	buildDeProperNounInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 	});

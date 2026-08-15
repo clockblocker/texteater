@@ -11,7 +11,7 @@ export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Promise<GetInfoForRelationsCleanupResult<L>> {
-	const canonicalForm = request.canonicalForm.trim();
+	const canonicalForm = request.canonicalForm.trim().normalize("NFC");
 	if (!canonicalForm) {
 		throw new Error("canonicalForm is required.");
 	}

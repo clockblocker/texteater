@@ -7,14 +7,14 @@ export type FiniteFeatures = {
 	readonly voice: "Pass" | null;
 };
 
-export type UnspecifiedFeatures = {
+type UnspecifiedFeatures = {
 	readonly number: "Plur" | "Sing" | null;
 	readonly tense: "Past" | "Pres" | null;
 	readonly verbForm: null;
 	readonly voice: "Pass" | null;
 };
 
-export type InfinitiveFeatures = {
+type InfinitiveFeatures = {
 	readonly mood: null;
 	readonly number: "Plur" | "Sing" | null;
 	readonly person: null;
@@ -23,7 +23,7 @@ export type InfinitiveFeatures = {
 	readonly voice: "Pass" | null;
 };
 
-export type ImperativeFeatures = {
+type ImperativeFeatures = {
 	readonly mood: "Imp";
 	readonly number: "Plur" | "Sing" | null;
 	readonly person: "1" | "2" | "3" | null;
@@ -32,7 +32,7 @@ export type ImperativeFeatures = {
 	readonly voice: "Pass" | null;
 };
 
-export type ParticipleFeatures = {
+type ParticipleFeatures = {
 	readonly aspect: "Perf" | null;
 	readonly gender: "Fem" | "Masc" | "Neut" | null;
 	readonly mood: null;

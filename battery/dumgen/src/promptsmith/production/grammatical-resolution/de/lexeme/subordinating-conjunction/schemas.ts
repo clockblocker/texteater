@@ -17,14 +17,14 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Lexeme.SCONJ(),
 );
 
-export const deSubordinatingConjunctionLemmaCodec =
+const deSubordinatingConjunctionLemmaCodec =
 	codecBuilder4.buildFixedFieldsCodec(canonicalLemmaSchema, {
 		language: "de",
 		family: "Lexeme",
 		kind: "SCONJ",
 	});
 
-export const deSubordinatingConjunctionModelLemmaSchema =
+const deSubordinatingConjunctionModelLemmaSchema =
 	deSubordinatingConjunctionLemmaCodec.in;
 
 type DeSubordinatingConjunctionLemma = z.output<
@@ -51,7 +51,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeSubordinatingConjunctionCitationSurfaceCodec(
+function buildDeSubordinatingConjunctionCitationSurfaceCodec(
 	lemma: DeSubordinatingConjunctionLemma,
 ) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
@@ -76,7 +76,7 @@ const schemaProjectionLemma = {
 	coreFeatures: { conjType: null },
 } satisfies DeSubordinatingConjunctionLemma;
 
-export const deSubordinatingConjunctionModelCitationSurfaceSchema =
+const deSubordinatingConjunctionModelCitationSurfaceSchema =
 	buildDeSubordinatingConjunctionCitationSurfaceCodec(
 		schemaProjectionLemma,
 	).in.omit({ normalizedSurface: true, surfaceKind: true });

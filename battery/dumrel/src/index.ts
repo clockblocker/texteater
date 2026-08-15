@@ -1,24 +1,41 @@
+export { applyKnowledgeChange } from "./knowledge.js";
+export { inverseRelationFor, propagateRelations } from "./rules.js";
 export {
-	admitsLexicalBreakdown,
-	assertReadingKnowledgeForOwner,
-	mergeReadingKnowledge,
-} from "./knowledge.js";
-export * from "./knowledge-schema.js";
-export {
-	inverseRelationFor,
-	isKnownRelation,
-	relationFamilyFor,
-} from "./rules.js";
-export {
-	lexicalRelationSchema,
-	lexicalRelationsSchemaFor,
-	morphologicalRelationSchema,
-	morphologicalRelationsSchemaFor,
-	proposedRelationSchemaFor,
-	relationFamilySchema,
-	relationNotesSchemaFor,
-	relationSchema,
+	knowledgeChangeSchema,
+	lemmaKnowledgeSchema,
+	lexemeUnitShadowSchema,
+	lexicalBreakdownSchema,
+	lexicalUnitShadowSchema,
+	morphemeReadingReferenceSchema,
+	morphologicalTreeNodeSchema,
+	morphologicalTreeSchema,
+	morphologicalTreeStructureSchema,
+	nonEmptyStringsSchema,
+	pendingSemanticRelationSchema,
+	readingKnowledgeSchema,
+	readingReferenceSchema,
+	semanticRelationGraphEdgeSchema,
 	semanticRelationSchema,
-	semanticRelationsSchemaFor,
+	semanticRelationsSchema,
+	unitShadowSchema,
 } from "./schema.js";
-export type * from "./types.js";
+export type {
+	KnowledgeChange,
+	LemmaKnowledge,
+	LexemeUnitShadow,
+	LexicalBreakdown,
+	LexicalUnitShadow,
+	MorphemeReadingReference,
+	MorphologicalTree,
+	MorphologicalTreeNode,
+	MorphologicalTreeStructure,
+	NonEmptyStrings,
+	PendingSemanticRelation,
+	ReadingKnowledge,
+	ReadingReference,
+	SemanticRelation,
+	SemanticRelationGraphEdge,
+	SemanticRelations,
+	UnitShadow,
+} from "./types.js";
+export { semanticRelationValues } from "./vocabulary.js";

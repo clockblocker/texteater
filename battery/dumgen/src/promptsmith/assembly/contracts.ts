@@ -74,7 +74,7 @@ export interface LocalDemonstrations<
 	>[];
 }
 
-export type ResolvedGoldenGroups<
+type ResolvedGoldenGroups<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
 	Collections extends GoldenCaseCollectionRegistry,
@@ -92,7 +92,7 @@ export type ResolvedGoldenGroups<
 		: never;
 };
 
-export type ResolvedGoldenCollections<
+type ResolvedGoldenCollections<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
 	Collections extends GoldenCaseCollectionRegistry,

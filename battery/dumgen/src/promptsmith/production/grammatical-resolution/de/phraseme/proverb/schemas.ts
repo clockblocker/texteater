@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Phraseme.Proverb(),
 );
 
-export const deProverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deProverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Phraseme", kind: "Proverb" },
 );
@@ -27,7 +27,7 @@ const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ coreFeatures: {} },
 );
 
-export const deProverbModelLemmaSchema = modelLemmaCodec.in;
+const deProverbModelLemmaSchema = modelLemmaCodec.in;
 
 type DeProverbLemma = z.output<typeof deProverbLemmaCodec>;
 
@@ -51,7 +51,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeProverbCitationSurfaceCodec(lemma: DeProverbLemma) {
+function buildDeProverbCitationSurfaceCodec(lemma: DeProverbLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -74,11 +74,12 @@ const schemaProjectionLemma = {
 	coreFeatures: {},
 } satisfies DeProverbLemma;
 
-export const deProverbModelCitationSurfaceSchema =
-	buildDeProverbCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-		surfaceKind: true,
-	});
+const deProverbModelCitationSurfaceSchema = buildDeProverbCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+	surfaceKind: true,
+});
 
 export const inputSchema = z
 	.strictObject({
@@ -135,7 +136,7 @@ const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
 	},
 );
 
-export const proverbResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+const proverbResolutionCodec = codecBuilder4.helpers.pipeCodecs(
 	extractModelLemmaCodec,
 	restoreRuntimeLemmaCodec,
 );

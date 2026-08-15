@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.X(),
 );
 
-export const deOtherLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deOtherLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -29,7 +29,7 @@ export const deOtherLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const deOtherModelLemmaSchema = deOtherLemmaCodec.in;
+const deOtherModelLemmaSchema = deOtherLemmaCodec.in;
 
 type DeOtherLemma = z.output<typeof deOtherLemmaCodec>;
 
@@ -53,7 +53,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeOtherCitationSurfaceCodec(lemma: DeOtherLemma) {
+function buildDeOtherCitationSurfaceCodec(lemma: DeOtherLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -85,7 +85,7 @@ const nullableOtherInflectionalShape = {
 // Dumling's German X codec exposes Inflection and rejects an all-null feature
 // bag. Keep that constraint structural so generated JSON Schema is faithful
 // even though the current Dumgen route has no reachable positive X output.
-export const deOtherModelInflectionalFeaturesSchema = z.union([
+const deOtherModelInflectionalFeaturesSchema = z.union([
 	z.strictObject({
 		...nullableOtherInflectionalShape,
 		case: otherCaseSchema,
@@ -108,7 +108,7 @@ export const deOtherModelInflectionalFeaturesSchema = z.union([
 	}),
 ]);
 
-export function buildDeOtherInflectionSurfaceCodec(lemma: DeOtherLemma) {
+function buildDeOtherInflectionSurfaceCodec(lemma: DeOtherLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -138,15 +138,17 @@ const schemaProjectionLemma = {
 	},
 } satisfies DeOtherLemma;
 
-export const deOtherModelCitationSurfaceSchema =
-	buildDeOtherCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-		surfaceKind: true,
-	});
-export const deOtherModelInflectionSurfaceSchema =
-	buildDeOtherInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-	});
+const deOtherModelCitationSurfaceSchema = buildDeOtherCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+	surfaceKind: true,
+});
+const deOtherModelInflectionSurfaceSchema = buildDeOtherInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
 
 export const inputSchema = z
 	.strictObject({

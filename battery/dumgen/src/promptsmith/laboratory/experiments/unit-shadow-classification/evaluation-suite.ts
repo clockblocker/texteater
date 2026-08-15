@@ -3,7 +3,7 @@ import { corpus } from "../../../production/unit-shadow-classification/golden-co
 import { promptSource } from "../../../production/unit-shadow-classification/prompt-source";
 import { evaluateUnitShadowClassification } from "./evaluator";
 
-export const evaluationSelection = corpus.collections.lexemes
+const evaluationSelection = corpus.collections.lexemes
 	.union(corpus.collections.nonLexemes)
 	.union(corpus.collections.rejectionsAndTraps);
 

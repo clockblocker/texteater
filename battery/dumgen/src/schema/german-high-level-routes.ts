@@ -60,20 +60,6 @@ export type GermanHighLevelFamily = keyof typeof GERMAN_HIGH_LEVEL_ROUTES;
 export type GermanHighLevelKind<Family extends GermanHighLevelFamily> =
 	(typeof GERMAN_HIGH_LEVEL_ROUTES)[Family][number];
 
-export function isGermanHighLevelRoute(
-	family: string,
-	kind: string,
-): family is GermanHighLevelFamily {
-	return (
-		family in GERMAN_HIGH_LEVEL_ROUTES &&
-		(
-			GERMAN_HIGH_LEVEL_ROUTES[
-				family as GermanHighLevelFamily
-			] as readonly string[]
-		).includes(kind)
-	);
-}
-
 export function isGermanReachableHighLevelRoute(
 	family: string,
 	kind: string,

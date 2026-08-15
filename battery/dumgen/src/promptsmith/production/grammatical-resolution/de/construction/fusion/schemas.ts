@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Construction.Fusion(),
 );
 
-export const deFusionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deFusionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Construction", kind: "Fusion" },
 );
@@ -27,7 +27,7 @@ const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ coreFeatures: {} },
 );
 
-export const deFusionModelLemmaSchema = modelLemmaCodec.in;
+const deFusionModelLemmaSchema = modelLemmaCodec.in;
 
 type DeFusionLemma = z.output<typeof deFusionLemmaCodec>;
 
@@ -51,7 +51,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeFusionCitationSurfaceCodec(lemma: DeFusionLemma) {
+function buildDeFusionCitationSurfaceCodec(lemma: DeFusionLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -74,11 +74,12 @@ const schemaProjectionLemma = {
 	coreFeatures: {},
 } satisfies DeFusionLemma;
 
-export const deFusionModelCitationSurfaceSchema =
-	buildDeFusionCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-		surfaceKind: true,
-	});
+const deFusionModelCitationSurfaceSchema = buildDeFusionCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+	surfaceKind: true,
+});
 
 export const inputSchema = z
 	.strictObject({
@@ -134,7 +135,7 @@ const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
 	},
 );
 
-export const fusionResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+const fusionResolutionCodec = codecBuilder4.helpers.pipeCodecs(
 	extractModelLemmaCodec,
 	restoreRuntimeLemmaCodec,
 );

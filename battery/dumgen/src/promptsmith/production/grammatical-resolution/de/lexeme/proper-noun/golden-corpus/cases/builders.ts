@@ -3,7 +3,7 @@ import type { input } from "zod";
 import type { GoldenCase } from "../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
 
-export type CoreFeatures = input<typeof outputSchema>["lemma"]["coreFeatures"];
+type CoreFeatures = input<typeof outputSchema>["lemma"]["coreFeatures"];
 export type InflectionalFeatures = Extract<
 	input<typeof outputSchema>["surface"],
 	{ surfaceKind: "Inflection" }
@@ -18,7 +18,7 @@ type Options = {
 	readonly explanation?: string;
 };
 
-export const unmarkedCore = {
+const unmarkedCore = {
 	abbr: null,
 	foreign: null,
 	gender: null,

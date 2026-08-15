@@ -26,7 +26,7 @@ realization labels, alternatives, confidence, or a default-selection field.
 Dumling component DTOs own the grammatical distinctions; hierarchy and order
 are the entire structural output.`;
 
-export const demonstrations = morphologicalSegmentationCorpus.select([
+const demonstrations = morphologicalSegmentationCorpus.select([
 	"morphology-segment-compound-high-value-chunks",
 	"morphology-segment-mixed-morpheme-and-lexeme",
 	"morphology-segment-nested-derivation",

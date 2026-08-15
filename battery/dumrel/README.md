@@ -1,37 +1,41 @@
 # `dumrel`
 
-Typed Lemma and Reading Knowledge plus semantic relation vocabulary for
-Textfresser modules.
+An ownerless typed Knowledge kernel for Textfresser modules.
 
-`dumrel` owns identityless Knowledge values, runtime validation, additive
-Knowledge Contribution merging, and semantic relation algebra. It deliberately
-does not own generation, dictionary storage, pending-target lifecycle, or
-cleanup workflows.
+`dumrel` defines separate concrete DTOs and Dumling-backed runtime schemas for
+Lemma Knowledge and Reading Knowledge, pointer-only morphological structures,
+Semantic Relations, and Pending Semantic Relations. It deliberately exposes no
+combined `Knowledge` union or schema: callers choose the owner-specific
+contract before validation. Its only behavioral functions are:
 
 ```ts
 import {
+	applyKnowledgeChange,
 	inverseRelationFor,
-	semanticRelationSchema,
-	type SemanticRelations,
+	propagateRelations,
+	type ReadingKnowledge,
 } from "dumrel";
 
-semanticRelationSchema.parse("nearSynonym");
-inverseRelationFor("lexical", "hypernym"); // "hyponym"
+const knowledge: ReadingKnowledge<"en"> = applyKnowledgeChange(undefined, {
+	kind: "Contribute",
+	aspect: "translations",
+	language: "en",
+	value: ["house"],
+});
 
-declare const relations: SemanticRelations<"en">;
-void relations;
+inverseRelationFor("hypernym"); // "hyponym"
+
+propagateRelations([
+	{ source: "a", relation: "synonym", target: "b" },
+]); // [{ source: "b", relation: "synonym", target: "a" }]
 ```
 
-Schema builders accept endpoint schemas from their owning modules, so Dumrel
-can validate relation structure without taking ownership of Lemmas, Readings,
-or persistence identities. Reading Knowledge includes Definition,
-Translations, Morphological Tree, Lexical Breakdown, and direct Semantic
-Relations. Use the owner-aware schema returned by
-`readingKnowledgeSchemasFor(...).ownedValueSchemaFor(ownerSchema)` when
-accepting a final value so Lexical Breakdown eligibility is enforced.
+Knowledge values contain no owner identity. Callers choose the exact Lemma or
+Reading, own persistence and pending-relation resolution, and decide whether
+to store an empty Knowledge value. `applyKnowledgeChange` never mutates its
+inputs and returns ordinary mutable DTOs. Its return type tracks Target
+Language bucket changes: Contribute and Correct add the addressed key, while
+Retract removes it.
 
-Morphological Tree and Lexical Breakdown are pointer-only values. A
-Morphological Tree contains ordered hierarchy with resolved Morpheme Readings
-and lexical Unit Shadows. A Lexical Breakdown is an ordered list of Lexeme Unit
-Shadows. Dumling DTOs carry the grammatical distinctions; Dumrel adds no
-operation, role, source-alignment, realization, or alternative-analysis model.
+Schemas are also available from `dumrel/schema`; DTO types are available from
+`dumrel/types`. Both subpaths use explicit export allowlists.

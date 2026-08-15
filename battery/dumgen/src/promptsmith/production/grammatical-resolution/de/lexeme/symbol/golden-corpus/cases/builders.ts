@@ -7,11 +7,9 @@ import type {
 	outputSchema,
 } from "../../schemas";
 
-export type SymbolCoreFeatures = input<
-	typeof outputSchema
->["lemma"]["coreFeatures"];
+type SymbolCoreFeatures = input<typeof outputSchema>["lemma"]["coreFeatures"];
 
-export const ordinarySymbolCore = {
+const ordinarySymbolCore = {
 	foreign: null,
 	numType: null,
 } satisfies SymbolCoreFeatures;

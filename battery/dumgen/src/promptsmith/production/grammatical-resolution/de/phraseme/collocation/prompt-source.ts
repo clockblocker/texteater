@@ -98,7 +98,7 @@ Resolved has a non-null resolution. Unresolved has resolution null. Return only
 the model fields: never language, family, kind, a linked Lemma inside Surface,
 target indices, Reading data, confidence, candidates, or explanations.`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-coll-decision-present-full",
 	"grammar-de-coll-frage-citation",
 	"grammar-de-coll-verfuegung-present-full",

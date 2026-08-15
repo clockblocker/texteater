@@ -19,12 +19,12 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.SYM(),
 );
 
-export const deSymbolLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deSymbolLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Lexeme", kind: "SYM" },
 );
 
-export const deSymbolModelLemmaSchema = deSymbolLemmaCodec.in;
+const deSymbolModelLemmaSchema = deSymbolLemmaCodec.in;
 
 type DeSymbolLemma = z.output<typeof deSymbolLemmaCodec>;
 
@@ -72,7 +72,7 @@ export const deSymbolModelInflectionalFeaturesSchema = z.union([
 	}),
 ]);
 
-export function buildDeSymbolCitationSurfaceCodec(lemma: DeSymbolLemma) {
+function buildDeSymbolCitationSurfaceCodec(lemma: DeSymbolLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -87,7 +87,7 @@ export function buildDeSymbolCitationSurfaceCodec(lemma: DeSymbolLemma) {
 	});
 }
 
-export function buildDeSymbolInflectionSurfaceCodec(lemma: DeSymbolLemma) {
+function buildDeSymbolInflectionSurfaceCodec(lemma: DeSymbolLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -109,13 +109,14 @@ const schemaProjectionLemma = deSymbolLemmaCodec.decode({
 	coreFeatures: { foreign: null, numType: null },
 });
 
-export const deSymbolModelCitationSurfaceSchema =
-	buildDeSymbolCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-		surfaceKind: true,
-	});
+const deSymbolModelCitationSurfaceSchema = buildDeSymbolCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+	surfaceKind: true,
+});
 
-export const deSymbolModelInflectionSurfaceSchema =
+const deSymbolModelInflectionSurfaceSchema =
 	buildDeSymbolInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 	});

@@ -106,7 +106,7 @@ dictionary order. realizationCoverage describes entity-owned lexical
 realization, not array completeness. Always resolve the classified target.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-idiom-flinte-past-full",
 	"grammar-de-idiom-grass-citation",
 	"grammar-de-idiom-woelfe-present-full",

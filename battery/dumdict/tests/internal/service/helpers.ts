@@ -110,12 +110,7 @@ export const storageRejectingNewNoteContext = () => {
 				revision: "never" as StoreRevision,
 				existingOwnedSurfaces: [],
 				explicitExistingReadingTargets: [],
-				explicitExistingLemmaTargets: [],
-				existingPendingRefsForProposedPendingTargets: [],
-				matchingPendingRefsForNewEntry: [],
-				incomingPendingRelationsForNewEntry: [],
-				incomingPendingSourceReadings: [],
-				incomingPendingSourceLemmas: [],
+				existingPendingRelationsForProposedPendingTargets: [],
 			};
 		},
 		async commitChanges() {

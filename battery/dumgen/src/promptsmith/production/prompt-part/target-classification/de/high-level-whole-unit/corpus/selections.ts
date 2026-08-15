@@ -1,7 +1,7 @@
 import { assertCaseSelectionsUncontaminated } from "../../../../../../assembly";
 import { corpus } from "./corpus";
 
-export const demonstrationSelection = corpus.select([
+const demonstrationSelection = corpus.select([
 	"target-de-demo-perfect-arbeiten-click-habe",
 	"target-de-demo-governed-rechnen-click-rechnet",
 	"target-de-demo-adjunct-rechnen-click-mit",
@@ -165,11 +165,11 @@ if (
 }
 
 /** The historical 94 cases after mechanically omitting demonstrations. */
-export const evaluationSelection = frozenEvaluationCandidates.difference(
+const evaluationSelection = frozenEvaluationCandidates.difference(
 	productionDemonstrationSelection,
 );
 
-export const diagnosticSelection = corpus.select([
+const diagnosticSelection = corpus.select([
 	"target-de-route-construction-fusion",
 	"target-de-diagnostic-fusion-am",
 	"target-de-route-construction-paired-near-frueher",
@@ -207,7 +207,7 @@ export const diagnosticSelection = corpus.select([
 ]);
 
 /** The seven stable v16 misses, retained as adaptive-development carryovers. */
-export const adaptiveCarryoverSelection = corpus.select([
+const adaptiveCarryoverSelection = corpus.select([
 	"target-de-route-construction-fusion",
 	"target-de-route-construction-paired-near-frueher",
 	"target-de-route-construction-paired-near-besser",
@@ -218,7 +218,7 @@ export const adaptiveCarryoverSelection = corpus.select([
 ]);
 
 /** The frozen 23-case novel analogue set, disjoint from the historical 94. */
-export const adaptiveNovelSelection = corpus.select([
+const adaptiveNovelSelection = corpus.select([
 	"target-de-adaptive-fusion-beim",
 	"target-de-adaptive-fusion-vom",
 	"target-de-adaptive-fusion-ins",
@@ -248,7 +248,7 @@ export const adaptiveNovelSelection = corpus.select([
  * Frozen adaptive prompt-development set: carryovers first, then novel probes.
  * The unchanged 94-case evaluation selection remains the final regression set.
  */
-export const adaptiveDevelopmentSelection = adaptiveCarryoverSelection.union(
+const adaptiveDevelopmentSelection = adaptiveCarryoverSelection.union(
 	adaptiveNovelSelection,
 );
 

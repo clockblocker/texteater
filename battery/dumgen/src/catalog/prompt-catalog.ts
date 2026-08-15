@@ -9,6 +9,7 @@ import { systemPrompt as lexicalResolutionSystemPrompt } from "../promptsmith/pr
 import { systemPrompt as lexicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/lexical-breakdown/segmentation";
 import { systemPrompt as morphologicalResolutionSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/resolution";
 import { systemPrompt as morphologicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/segmentation";
+import { systemPrompt as translationAnalysisSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/translation";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/production/generated-system-prompt/reading-resolution/de";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import { systemPrompt as unitShadowClassificationSystemPrompt } from "../promptsmith/production/generated-system-prompt/unit-shadow-classification";
@@ -16,6 +17,7 @@ import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
 } from "../promptsmith/production/intake/schemas";
+import { projectTranslationChange } from "../promptsmith/production/knowledge-analysis/projection";
 import {
 	lexicalResolutionInputSchema,
 	lexicalResolutionOutputSchema,
@@ -25,6 +27,8 @@ import {
 	morphologicalResolutionOutputSchema,
 	morphologicalSegmentationInputSchema,
 	morphologicalSegmentationOutputSchema,
+	translationAnalysisInputSchema,
+	translationAnalysisOutputSchema,
 } from "../promptsmith/production/knowledge-analysis/schemas";
 import {
 	additionalIndicesAdapter,
@@ -45,12 +49,6 @@ import { assertSupportedUnitShadowClassification } from "../schema/unit-shadow-c
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
-
-export type {
-	Prompt,
-	PromptCatalogEntry,
-	PromptTree,
-} from "./prompt-definition";
 
 const intakePrompt = {
 	systemPrompt: intakeSystemPrompt,
@@ -178,6 +176,33 @@ const lexicalResolutionPrompt = {
 	typeof lexicalResolutionOutputSchema
 >;
 
+const translationAnalysisPrompt = {
+	systemPrompt: translationAnalysisSystemPrompt,
+	inputSchema: translationAnalysisInputSchema,
+	outputSchema: translationAnalysisOutputSchema,
+	outputPostcondition: {
+		assert(input, generated) {
+			if (
+				generated.decision === "Covered" &&
+				input.existingTranslations[generated.existingIndex] ===
+					undefined
+			) {
+				throw new Error(
+					"Translation Analysis selected a missing existing Translation.",
+				);
+			}
+		},
+	},
+	projectOutput(input, generated) {
+		return projectTranslationChange(input, generated);
+	},
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 128 },
+} satisfies Prompt<
+	typeof translationAnalysisInputSchema,
+	typeof translationAnalysisOutputSchema,
+	ReturnType<typeof projectTranslationChange>
+>;
+
 function promptEntry<Definition extends Prompt>(
 	prompt: Definition,
 ): PromptCatalogEntry<Definition> {
@@ -225,6 +250,9 @@ export type LaboratoryPromptCatalog = {
 			typeof unitShadowClassificationPrompt
 		>;
 		readonly knowledge: {
+			readonly translation: PromptCatalogEntry<
+				typeof translationAnalysisPrompt
+			>;
 			readonly morphologicalTree: {
 				readonly segmentation: PromptCatalogEntry<
 					typeof morphologicalSegmentationPrompt
@@ -255,6 +283,7 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 		readingResolution: { de: promptEntry(readingPrompt) },
 		unitShadowClassification: promptEntry(unitShadowClassificationPrompt),
 		knowledge: {
+			translation: promptEntry(translationAnalysisPrompt),
 			morphologicalTree: {
 				segmentation: promptEntry(morphologicalSegmentationPrompt),
 				resolution: promptEntry(morphologicalResolutionPrompt),

@@ -19,7 +19,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.ADJ(),
 );
 
-export const modelLemmaSchema = canonicalLemmaSchema.omit({
+const modelLemmaSchema = canonicalLemmaSchema.omit({
 	language: true,
 	family: true,
 	kind: true,
@@ -29,11 +29,11 @@ const modelSurfaceFeaturesSchema = z
 	.strictObject({ historicalStatus: z.literal("Archaic").nullable() })
 	.nullable();
 
-export const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
+const modelCitationSurfaceSchema = canonicalCitationSurfaceSchema
 	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
 
-export const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
+const modelInflectionSurfaceSchema = canonicalInflectionSurfaceSchema
 	.omit({ language: true, lemma: true, normalizedSurface: true })
 	.extend({ surfaceFeatures: modelSurfaceFeaturesSchema });
 

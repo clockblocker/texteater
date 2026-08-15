@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.NUM(),
 );
 
-export const deNumeralLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deNumeralLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -29,7 +29,7 @@ export const deNumeralLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const modelLemmaSchema = deNumeralLemmaCodec.in;
+const modelLemmaSchema = deNumeralLemmaCodec.in;
 
 type DeNumeralLemma = z.output<typeof deNumeralLemmaCodec>;
 
@@ -77,7 +77,7 @@ export const modelInflectionalFeaturesSchema = z.union([
 	}),
 ]);
 
-export function buildDeNumeralCitationSurfaceCodec(lemma: DeNumeralLemma) {
+function buildDeNumeralCitationSurfaceCodec(lemma: DeNumeralLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -92,7 +92,7 @@ export function buildDeNumeralCitationSurfaceCodec(lemma: DeNumeralLemma) {
 	});
 }
 
-export function buildDeNumeralInflectionSurfaceCodec(lemma: DeNumeralLemma) {
+function buildDeNumeralInflectionSurfaceCodec(lemma: DeNumeralLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -114,16 +114,17 @@ const schemaProjectionLemma = deNumeralLemmaCodec.decode({
 	coreFeatures: { abbr: null, foreign: null, numType: "Card" },
 });
 
-export const modelCitationSurfaceSchema = buildDeNumeralCitationSurfaceCodec(
+const modelCitationSurfaceSchema = buildDeNumeralCitationSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({
 	normalizedSurface: true,
 });
 
-export const modelInflectionSurfaceSchema =
-	buildDeNumeralInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-	});
+const modelInflectionSurfaceSchema = buildDeNumeralInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
 
 export const inputSchema = z
 	.strictObject({

@@ -82,9 +82,9 @@ Citation omits inflectionalFeatures. Inflection includes it. Return only memberO
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const promptPart = core;
+const promptPart = core;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-noun-demo-citation-haus",
 	"grammar-de-noun-demo-acc-sing-hund",
 	"grammar-de-noun-demo-dat-plur-kindern",

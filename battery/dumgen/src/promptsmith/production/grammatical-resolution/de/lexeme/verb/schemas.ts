@@ -67,11 +67,11 @@ const modelLemmaCodec = codecBuilder4.helpers.pipeCodecs(
 	restoreCanonicalCoreFeaturesCodec,
 );
 
-export const deVerbLemmaCodec = codecBuilder4.helpers.pipeCodecs(
+const deVerbLemmaCodec = codecBuilder4.helpers.pipeCodecs(
 	modelLemmaCodec,
 	routeFieldsCodec,
 );
-export const modelLemmaSchema = deVerbLemmaCodec.in;
+const modelLemmaSchema = deVerbLemmaCodec.in;
 
 type DeVerbLemma = z.output<typeof deVerbLemmaCodec>;
 
@@ -140,7 +140,7 @@ const modelInflectionalFeaturesSchema = z.union([
 	participleInflectionalFeaturesSchema,
 ]);
 
-export function buildDeVerbCitationSurfaceCodec(lemma: DeVerbLemma) {
+function buildDeVerbCitationSurfaceCodec(lemma: DeVerbLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -155,7 +155,7 @@ export function buildDeVerbCitationSurfaceCodec(lemma: DeVerbLemma) {
 	});
 }
 
-export function buildDeVerbInflectionSurfaceCodec(lemma: DeVerbLemma) {
+function buildDeVerbInflectionSurfaceCodec(lemma: DeVerbLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -181,11 +181,11 @@ const schemaProjectionLemma = deVerbLemmaCodec.decode({
 	},
 });
 
-export const modelCitationSurfaceSchema = buildDeVerbCitationSurfaceCodec(
+const modelCitationSurfaceSchema = buildDeVerbCitationSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({ normalizedSurface: true });
 
-export const modelInflectionSurfaceSchema = buildDeVerbInflectionSurfaceCodec(
+const modelInflectionSurfaceSchema = buildDeVerbInflectionSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({ normalizedSurface: true });
 
@@ -250,6 +250,6 @@ const restoreRuntimeLemmaOutputCodec = codecBuilder4.helpers.pipeCodecs(
 	restoreRuntimeLemmaCodec,
 );
 
-export const verbResolutionCodec = restoreRuntimeLemmaOutputCodec;
+const verbResolutionCodec = restoreRuntimeLemmaOutputCodec;
 
 export const outputSchema = verbResolutionCodec.in satisfies PromptOutputSchema;

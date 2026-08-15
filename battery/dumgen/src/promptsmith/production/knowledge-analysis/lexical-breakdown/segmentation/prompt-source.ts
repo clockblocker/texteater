@@ -22,7 +22,7 @@ spans, alignment or realization labels, alternatives, or default selection.
 Do not resolve component grammar and do not generate component Knowledge in
 this phase. markedContext selects one durable breakdown.`;
 
-export const demonstrations = lexicalSegmentationCorpus.all();
+const demonstrations = lexicalSegmentationCorpus.all();
 
 export const promptSource = definePromptSource({
 	route: "knowledge-analysis/lexical-breakdown/segmentation",

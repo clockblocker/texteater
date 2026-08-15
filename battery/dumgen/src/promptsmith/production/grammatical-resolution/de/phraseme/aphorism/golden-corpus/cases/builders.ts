@@ -1,7 +1,7 @@
 const memberPattern = /[\p{L}\p{N}]+(?:[’'-][\p{L}\p{N}]+)*/gu;
 const targetPattern = /<TARGET>([^<>]+)<\/TARGET>/gu;
 
-export function markEveryMember(text: string): string {
+function markEveryMember(text: string): string {
 	return text.replace(memberPattern, "<TARGET>$&</TARGET>");
 }
 

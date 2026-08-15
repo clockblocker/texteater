@@ -81,7 +81,7 @@ order. canonicalForm contains the complete conventional wording. Always
 resolve the classified target.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-aphorism-alt-werden",
 	"grammar-de-aphorism-typo-hoert",
 	"grammar-de-aphorism-historical-muss",

@@ -93,7 +93,7 @@ surfaceKind or inflectionalFeatures; Inflection has surfaceKind Inflection and a
 non-empty feature bag; all nullable Core keys are present.
 </self_check>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-sym-demo-percent-unit",
 	"grammar-de-sym-demo-times-nominal",
 	"grammar-de-sym-demo-euro-currency",

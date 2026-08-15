@@ -20,7 +20,7 @@ const emptyCoreFeatures: CoreFeatures = {
 	numType: null,
 };
 
-export function otherInput(markedContext: string) {
+function otherInput(markedContext: string) {
 	const members = [
 		...markedContext.matchAll(/<TARGET>([^<>]+)<\/TARGET>/gu),
 	].map((match) => match[1] ?? "");

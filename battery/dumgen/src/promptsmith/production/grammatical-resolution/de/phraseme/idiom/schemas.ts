@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Phraseme.Idiom(),
 );
 
-export const deIdiomLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deIdiomLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Phraseme", kind: "Idiom" },
 );
@@ -31,8 +31,7 @@ const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ coreFeatures: {} },
 );
 
-export const deIdiomModelLemmaSchema = modelLemmaCodec.in;
-export const modelLemmaSchema = deIdiomModelLemmaSchema;
+const deIdiomModelLemmaSchema = modelLemmaCodec.in;
 
 type DeIdiomLemma = z.output<typeof deIdiomLemmaCodec>;
 
@@ -85,7 +84,7 @@ const participleInflectionalFeaturesSchema = z.strictObject({
 	voice: z.literal("Pass").nullable(),
 });
 
-export const modelInflectionalFeaturesSchema = z.union([
+const modelInflectionalFeaturesSchema = z.union([
 	unspecifiedInflectionalFeaturesSchema,
 	finiteInflectionalFeaturesSchema,
 	imperativeInflectionalFeaturesSchema,
@@ -109,7 +108,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeIdiomCitationSurfaceCodec(lemma: DeIdiomLemma) {
+function buildDeIdiomCitationSurfaceCodec(lemma: DeIdiomLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -124,7 +123,7 @@ export function buildDeIdiomCitationSurfaceCodec(lemma: DeIdiomLemma) {
 	});
 }
 
-export function buildDeIdiomInflectionSurfaceCodec(lemma: DeIdiomLemma) {
+function buildDeIdiomInflectionSurfaceCodec(lemma: DeIdiomLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -146,17 +145,16 @@ const schemaProjectionLemma = deIdiomLemmaCodec.decode({
 	coreFeatures: {},
 });
 
-export const deIdiomModelCitationSurfaceSchema =
-	buildDeIdiomCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-	});
-export const deIdiomModelInflectionSurfaceSchema =
-	buildDeIdiomInflectionSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-	});
-
-export const modelCitationSurfaceSchema = deIdiomModelCitationSurfaceSchema;
-export const modelInflectionSurfaceSchema = deIdiomModelInflectionSurfaceSchema;
+const deIdiomModelCitationSurfaceSchema = buildDeIdiomCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
+const deIdiomModelInflectionSurfaceSchema = buildDeIdiomInflectionSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+});
 
 export const inputSchema = z
 	.strictObject({
@@ -216,7 +214,7 @@ const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
 	},
 );
 
-export const idiomResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+const idiomResolutionCodec = codecBuilder4.helpers.pipeCodecs(
 	extractModelLemmaCodec,
 	restoreRuntimeLemmaCodec,
 );

@@ -1,6 +1,6 @@
 import {
-	lexicalBreakdownSchemasFor,
-	morphologicalTreeSchemasFor,
+	lexemeUnitShadowSchema,
+	lexicalUnitShadowSchema,
 	unitShadowSchema,
 } from "dumrel";
 import { z } from "zod";
@@ -8,7 +8,7 @@ import { z } from "zod";
 import type { PromptInputSchema, PromptOutputSchema } from "../../assembly";
 
 /** Model-facing context only; this is not a resolved Dumrel Reading value. */
-export const readingSketchSchema = z.strictObject({
+const readingSketchSchema = z.strictObject({
 	lemmaDescriptor: unitShadowSchema,
 	emojiDescription: z.string().trim().min(1),
 });
@@ -26,7 +26,7 @@ export const morphemeReadingDraftSchema = readingSketchSchema.superRefine(
 	},
 );
 
-export const knowledgeOwnerInputSchema = z.strictObject({
+const knowledgeOwnerInputSchema = z.strictObject({
 	source: z.string().min(1),
 	markedContext: z.string().min(1),
 	owner: readingSketchSchema,
@@ -66,12 +66,28 @@ export const morphologicalResolutionInputSchema = z.strictObject({
 	...knowledgeOwnerInputSchema.shape,
 	segmentation: morphologicalSegmentationOutputSchema,
 });
-const morphology = morphologicalTreeSchemasFor({
-	morphemeReading: morphemeReadingDraftSchema,
-	unitShadow: unitShadowSchema,
-});
-export const morphologicalResolutionOutputSchema =
-	morphology.contributionSchema satisfies PromptOutputSchema;
+const resolvedMorphologicalNodeSchema: z.ZodType = z.lazy(() =>
+	z.discriminatedUnion("nodeKind", [
+		z.strictObject({
+			nodeKind: z.literal("morphemeReading"),
+			reading: morphemeReadingDraftSchema,
+		}),
+		z.strictObject({
+			nodeKind: z.literal("unitShadow"),
+			unitShadow: lexicalUnitShadowSchema,
+		}),
+		z.strictObject({
+			nodeKind: z.literal("structure"),
+			children: z.array(resolvedMorphologicalNodeSchema).min(1),
+		}),
+	]),
+);
+export const morphologicalResolutionOutputSchema = z.strictObject({
+	root: z.strictObject({
+		nodeKind: z.literal("structure"),
+		children: z.array(resolvedMorphologicalNodeSchema).min(1),
+	}),
+}) satisfies PromptOutputSchema;
 
 export const lexicalSegmentationInputSchema =
 	knowledgeOwnerInputSchema satisfies PromptInputSchema;
@@ -83,6 +99,31 @@ export const lexicalResolutionInputSchema = z.strictObject({
 	...knowledgeOwnerInputSchema.shape,
 	segmentation: lexicalSegmentationOutputSchema,
 });
-const lexicalBreakdown = lexicalBreakdownSchemasFor(unitShadowSchema);
-export const lexicalResolutionOutputSchema =
-	lexicalBreakdown.contributionSchema satisfies PromptOutputSchema;
+export const lexicalResolutionOutputSchema = z
+	.array(lexemeUnitShadowSchema)
+	.min(2) satisfies PromptOutputSchema;
+
+const privateTranslationSchema = z.string().trim().normalize("NFC").min(1);
+
+/** Private model input. The source Reading remains a sketch, never an owner DTO. */
+export const translationAnalysisInputSchema = z.strictObject({
+	markedContext: z.string().trim().normalize("NFC").min(1),
+	sourceReading: readingSketchSchema,
+	targetLanguage: z.string().trim().normalize("NFC").min(1),
+	existingTranslations: z.array(privateTranslationSchema),
+});
+
+/** Private match-versus-add candidate; Dumrel never exports this DTO. */
+export const translationAnalysisOutputSchema = z.discriminatedUnion(
+	"decision",
+	[
+		z.strictObject({
+			decision: z.literal("Covered"),
+			existingIndex: z.number().int().nonnegative(),
+		}),
+		z.strictObject({
+			decision: z.literal("Add"),
+			translation: privateTranslationSchema,
+		}),
+	],
+) satisfies PromptOutputSchema;

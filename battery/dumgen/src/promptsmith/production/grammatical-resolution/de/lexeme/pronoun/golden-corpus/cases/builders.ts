@@ -40,7 +40,7 @@ type SurfaceOptions = CaseMetadata & {
 	readonly coreFeatures?: PronounCoreFeatures;
 };
 
-export const unmarkedCore = {
+const unmarkedCore = {
 	extPos: null,
 	foreign: null,
 	person: null,

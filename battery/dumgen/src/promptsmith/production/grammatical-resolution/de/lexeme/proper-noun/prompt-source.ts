@@ -95,7 +95,7 @@ inflectionalFeatures; Inflection has surfaceKind Inflection and a non-empty
 case/number bag; all nullable Core Feature keys are present.
 </self_check>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-propn-demo-person-maria",
 	"grammar-de-propn-demo-place-berlin",
 	"grammar-de-propn-demo-multi-angela-merkel",

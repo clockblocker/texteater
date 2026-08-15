@@ -76,7 +76,7 @@ surfaceKind, inflectionalFeatures, normalizedSurface, language, family, kind,
 Lemma linkage, target indices, confidence, candidates, or explanation.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-cconj-demo-ordinary-und",
 	"grammar-de-cconj-demo-comparative-als",
 	"grammar-de-cconj-demo-causal-denn",

@@ -19,7 +19,7 @@ Return no Reading identity, emoji, Core Features, role, source span, alignment,
 realization, alternative-analysis, or default-selection metadata. Never
 generate component Knowledge or recursively traverse the component graph.`;
 
-export const demonstrations = lexicalResolutionCorpus.all();
+const demonstrations = lexicalResolutionCorpus.all();
 
 export const promptSource = definePromptSource({
 	route: "knowledge-analysis/lexical-breakdown/resolution",

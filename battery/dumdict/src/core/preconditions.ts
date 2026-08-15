@@ -1,6 +1,5 @@
 import type {
-	PendingEntryId,
-	PendingEntryRelation,
+	PendingSemanticRelationRecord,
 	Reading,
 	StoreRevision,
 } from "../dto";
@@ -14,13 +13,13 @@ export type ChangePrecondition<L extends SupportedLanguage> =
 	| { kind: "readingMissing"; reading: Reading<L> }
 	| { kind: "surfaceExists"; surfaceId: SurfaceId<L> }
 	| { kind: "surfaceMissing"; surfaceId: SurfaceId<L> }
-	| { kind: "pendingRefExists"; pendingId: PendingEntryId<L> }
-	| { kind: "pendingRefMissing"; pendingId: PendingEntryId<L> }
-	| { kind: "pendingRelationExists"; relation: PendingEntryRelation<L> }
-	| { kind: "pendingRelationMissing"; relation: PendingEntryRelation<L> }
 	| {
-			kind: "pendingRefHasNoIncomingRelations";
-			pendingId: PendingEntryId<L>;
+			kind: "pendingRelationExists";
+			record: PendingSemanticRelationRecord<L>;
+	  }
+	| {
+			kind: "pendingRelationMissing";
+			record: PendingSemanticRelationRecord<L>;
 	  }
 	| {
 			kind: "readingAttestationMissing";

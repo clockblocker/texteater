@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Lexeme.INTJ(),
 );
 
-export const deInterjectionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deInterjectionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -26,7 +26,7 @@ export const deInterjectionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const modelLemmaSchema = deInterjectionLemmaCodec.in;
+const modelLemmaSchema = deInterjectionLemmaCodec.in;
 
 type DeInterjectionLemma = z.output<typeof deInterjectionLemmaCodec>;
 
@@ -50,9 +50,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeInterjectionCitationSurfaceCodec(
-	lemma: DeInterjectionLemma,
-) {
+function buildDeInterjectionCitationSurfaceCodec(lemma: DeInterjectionLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -75,11 +73,12 @@ const schemaProjectionLemma = {
 	coreFeatures: { partType: null },
 } satisfies DeInterjectionLemma;
 
-export const modelCitationSurfaceSchema =
-	buildDeInterjectionCitationSurfaceCodec(schemaProjectionLemma).in.omit({
-		normalizedSurface: true,
-		surfaceKind: true,
-	});
+const modelCitationSurfaceSchema = buildDeInterjectionCitationSurfaceCodec(
+	schemaProjectionLemma,
+).in.omit({
+	normalizedSurface: true,
+	surfaceKind: true,
+});
 
 export const inputSchema = z
 	.strictObject({

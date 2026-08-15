@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Lexeme.PART(),
 );
 
-export const deParticleLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deParticleLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -26,7 +26,7 @@ export const deParticleLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const deParticleModelLemmaSchema = deParticleLemmaCodec.in;
+const deParticleModelLemmaSchema = deParticleLemmaCodec.in;
 
 type DeParticleLemma = z.output<typeof deParticleLemmaCodec>;
 
@@ -50,7 +50,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeParticleCitationSurfaceCodec(lemma: DeParticleLemma) {
+function buildDeParticleCitationSurfaceCodec(lemma: DeParticleLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -78,7 +78,7 @@ const schemaProjectionLemma = {
 	},
 } satisfies DeParticleLemma;
 
-export const deParticleModelCitationSurfaceSchema =
+const deParticleModelCitationSurfaceSchema =
 	buildDeParticleCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,

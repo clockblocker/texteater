@@ -1,6 +1,5 @@
-import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
-	PendingEntryRef,
+	PendingSemanticRelationRecord,
 	Reading,
 	ReadingNoteForDisambiguation,
 	StoreRevision,
@@ -31,18 +30,7 @@ export type FindStoredReadingsResult<L extends SupportedLanguage> = {
 };
 
 export type CleanupPendingRelation<L extends SupportedLanguage> =
-	| {
-			relationFamily: "lexical";
-			sourceReading: Reading<L>;
-			pendingRef: PendingEntryRef<L>;
-			relation: LexicalRelation;
-	  }
-	| {
-			relationFamily: "morphological";
-			sourceLemma: Lemma<L>;
-			pendingRef: PendingEntryRef<L>;
-			relation: MorphologicalRelation;
-	  };
+	PendingSemanticRelationRecord<L>;
 
 export type GetInfoForRelationsCleanupResult<L extends SupportedLanguage> = {
 	revision: StoreRevision;

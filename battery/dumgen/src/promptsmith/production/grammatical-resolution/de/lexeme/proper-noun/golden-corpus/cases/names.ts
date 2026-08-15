@@ -3,7 +3,7 @@ import {
 	type GoldenCaseRegistry,
 } from "../../../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
-import { type CoreFeatures, citationCase, inflectionCase } from "./builders";
+import { citationCase, inflectionCase } from "./builders";
 
 const fem = { abbr: null, foreign: null, gender: "Fem" } as const;
 const masc = { abbr: null, foreign: null, gender: "Masc" } as const;
@@ -413,5 +413,3 @@ export const properNounCases = defineGoldenCaseCollection(import.meta.url, {
 		typeof outputSchema
 	>,
 });
-
-export type ProperNounCoreFeatures = CoreFeatures;

@@ -104,7 +104,7 @@ contextual forms rather than lemmas; Typo accompanies every repair; Inflection
 has at least one non-null feature; every nullable codec field is present.
 </self-check>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-det-demo-definite-article-der",
 	"grammar-de-det-demo-possessive-meinem",
 	"grammar-de-det-demo-feminine-article-die",

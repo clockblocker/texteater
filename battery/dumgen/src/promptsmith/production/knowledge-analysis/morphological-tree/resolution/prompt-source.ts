@@ -25,7 +25,7 @@ metadata. Dumling DTOs on the pointers carry the grammatical distinctions.
 Stop at this direct frontier. Never generate component Knowledge or recursively
 walk the component graph.`;
 
-export const demonstrations = morphologicalResolutionCorpus.all();
+const demonstrations = morphologicalResolutionCorpus.all();
 
 export const promptSource = definePromptSource({
 	route: "knowledge-analysis/morphological-tree/resolution",

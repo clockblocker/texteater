@@ -28,6 +28,7 @@ import { promptSource as lexicalResolutionPromptSource } from "../production/kno
 import { promptSource as lexicalSegmentationPromptSource } from "../production/knowledge-analysis/lexical-breakdown/segmentation/prompt-source";
 import { promptSource as morphologicalResolutionPromptSource } from "../production/knowledge-analysis/morphological-tree/resolution/prompt-source";
 import { promptSource as morphologicalSegmentationPromptSource } from "../production/knowledge-analysis/morphological-tree/segmentation/prompt-source";
+import { promptSource as translationAnalysisPromptSource } from "../production/knowledge-analysis/translation/prompt-source";
 import {
 	productionDemonstrationSelection,
 	promptSource as productionTargetPromptSource,
@@ -53,6 +54,7 @@ const knowledgePromptSources = [
 	morphologicalResolutionPromptSource,
 	lexicalSegmentationPromptSource,
 	lexicalResolutionPromptSource,
+	translationAnalysisPromptSource,
 ] as const;
 const productionCodegen = defineSystemPromptCodegen({
 	promptSources: [
@@ -64,6 +66,7 @@ const productionCodegen = defineSystemPromptCodegen({
 		morphologicalResolutionPromptSource,
 		lexicalSegmentationPromptSource,
 		lexicalResolutionPromptSource,
+		translationAnalysisPromptSource,
 		grammarFusionPromptSource,
 		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,

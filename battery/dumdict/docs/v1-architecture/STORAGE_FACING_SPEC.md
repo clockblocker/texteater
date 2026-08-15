@@ -1,57 +1,38 @@
 # Storage-facing port
 
-> **Superseded terminology:** This document predates ADR 0002 and is retained
-> as pre-refactor design history. Use `battery/dumdict/CONTEXT.md` and the
-> generated package README for the current Lemma/Reading model and API.
-
-Hosts implement `DumdictStoragePort<L>`.
-
-## Read operations
-
-- `findStoredMeanings({ linguisticEntryId })` returns Meaning records paired
-  with their `LinguisticEntryRecord`.
-- `loadMeaningForPatch({ meaningId })` returns one optional Meaning.
-- `loadNewNoteContext({ draft })` returns existing Entry and Meaning records,
-  colliding owned Surfaces, explicit relation targets, and relevant pending
-  work.
-- `getInfoForRelationsCleanup({ citationForm })` returns candidate Entries,
-  pending refs, and pending relations.
-- `loadCleanupRelationsContext({ resolutions })` returns the exact workset
-  needed for a cleanup commit.
-
-Every slice includes a `StoreRevision`. Dumdict validates references and
-identities in loaded slices before planning.
-
-## Commit operation
+Hosts implement `DumdictStoragePort<L>`. Reads return operation-shaped slices
+for exact Reading lookup, Reading patches, new-note planning, and pending
+cleanup. Every slice includes a `StoreRevision` and Dumdict validates its
+owners, languages, Knowledge schemas, and pending locators before planning.
 
 `commitChanges` receives one base revision and ordered semantic changes:
 
-- create or patch a Linguistic Entry
-- create or patch a Meaning
-- create an owned Surface
-- create or delete a pending ref
-- create or delete a pending relation
+- create a Lemma Record or Reading Entry;
+- patch a Reading attestation or apply a Reading Knowledge Change;
+- create an owned Surface;
+- create or delete one exact Pending Semantic Relation record.
 
-Every change carries explicit preconditions such as revision match, entity
-existence or absence, missing attestation, and pending-ref reachability.
+The adapter must apply every planned change atomically or return a conflict.
+It must not infer inverse edges, auto-resolve Unit Shadows, or remove other
+pending records.
 
-The adapter must apply all changes atomically or return a conflict. It must not
-silently garbage-collect pending refs or infer inverse relations; those are
-explicit planned changes.
-
-## Persisted aggregate
-
-The reference test adapter serializes:
+## Version 1 wire aggregate
 
 ```ts
 type SerializedDictionaryNote<L> = {
-  linguisticEntryRecord: LinguisticEntryRecord<L>;
-  meaningEntries: MeaningEntry<L>[];
+  schemaVersion: 1;
+  lemmaRecord: LemmaRecord<L>;
+  readingEntries: ReadingEntry<L>[];
   ownedSurfaceEntries: SurfaceEntry<L>[];
-  pendingRefs?: PendingEntryRef<L>[];
-  pendingRelations: PendingEntryRelation<L>[];
+  pendingRelations: PendingSemanticRelationRecord<L>[];
 };
 ```
 
-Production stores may normalize this differently as long as the port preserves
-the same semantics.
+The previous unversioned shape is version 0. The exported migration normalizes
+and deduplicates direct Reading targets, moves them under Reading Knowledge,
+and joins lexical pending relations to their descriptor refs. Duplicate,
+missing, or orphan ref IDs; cross-language pending records; cross-language or
+self direct edges; non-empty flat morphology; and morphological pending values
+all fail through a typed, all-or-nothing migration error. Empty morphology is
+omitted. Encounter `attestedTranslations` remain evidence and are never
+inferred to be Target-Language Knowledge.

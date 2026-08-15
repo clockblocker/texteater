@@ -20,7 +20,7 @@ const canonicalInflectionSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Inflection.Lexeme.ADV(),
 );
 
-export const deAdverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deAdverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -29,7 +29,7 @@ export const deAdverbLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const modelLemmaSchema = deAdverbLemmaCodec.in;
+const modelLemmaSchema = deAdverbLemmaCodec.in;
 
 type DeAdverbLemma = z.output<typeof deAdverbLemmaCodec>;
 
@@ -53,11 +53,11 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export const modelInflectionalFeaturesSchema = z.strictObject({
+const modelInflectionalFeaturesSchema = z.strictObject({
 	degree: z.enum(["Cmp", "Pos", "Sup"]),
 });
 
-export function buildDeAdverbCitationSurfaceCodec(lemma: DeAdverbLemma) {
+function buildDeAdverbCitationSurfaceCodec(lemma: DeAdverbLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -72,7 +72,7 @@ export function buildDeAdverbCitationSurfaceCodec(lemma: DeAdverbLemma) {
 	});
 }
 
-export function buildDeAdverbInflectionSurfaceCodec(lemma: DeAdverbLemma) {
+function buildDeAdverbInflectionSurfaceCodec(lemma: DeAdverbLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalInflectionSurfaceSchema,
 		{ language: "de", lemma },
@@ -94,13 +94,13 @@ const schemaProjectionLemma = deAdverbLemmaCodec.decode({
 	coreFeatures: { foreign: null, numType: null, pronType: null },
 });
 
-export const modelCitationSurfaceSchema = buildDeAdverbCitationSurfaceCodec(
+const modelCitationSurfaceSchema = buildDeAdverbCitationSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({
 	normalizedSurface: true,
 });
 
-export const modelInflectionSurfaceSchema = buildDeAdverbInflectionSurfaceCodec(
+const modelInflectionSurfaceSchema = buildDeAdverbInflectionSurfaceCodec(
 	schemaProjectionLemma,
 ).in.omit({
 	normalizedSurface: true,

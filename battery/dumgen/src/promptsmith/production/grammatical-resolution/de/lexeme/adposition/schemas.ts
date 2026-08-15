@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Lexeme.ADP(),
 );
 
-export const deAdpositionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deAdpositionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{
 		language: "de",
@@ -26,7 +26,7 @@ export const deAdpositionLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	},
 );
 
-export const deAdpositionModelLemmaSchema = deAdpositionLemmaCodec.in;
+const deAdpositionModelLemmaSchema = deAdpositionLemmaCodec.in;
 
 type DeAdpositionLemma = z.output<typeof deAdpositionLemmaCodec>;
 
@@ -50,9 +50,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeAdpositionCitationSurfaceCodec(
-	lemma: DeAdpositionLemma,
-) {
+function buildDeAdpositionCitationSurfaceCodec(lemma: DeAdpositionLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -82,7 +80,7 @@ const schemaProjectionLemma = {
 	},
 } satisfies DeAdpositionLemma;
 
-export const deAdpositionModelCitationSurfaceSchema =
+const deAdpositionModelCitationSurfaceSchema =
 	buildDeAdpositionCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,

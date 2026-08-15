@@ -73,7 +73,7 @@ export const inputSchema = z.strictObject({
 	intendedUse: z.string().trim().min(1),
 }) satisfies PromptInputSchema;
 
-export const classifiedUnitShadowTargetSchema = z
+const classifiedUnitShadowTargetSchema = z
 	.strictObject({
 		family: z.enum(UNIT_SHADOW_CLASSIFICATION_FAMILIES),
 		kind: z.enum(allKinds),

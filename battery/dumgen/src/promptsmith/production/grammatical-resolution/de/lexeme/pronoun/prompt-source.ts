@@ -125,7 +125,7 @@ Never return decision, resolution, Unresolved, realizationCoverage, normalizedSu
 - Output contains exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-pron-demo-personal-ihm",
 	"grammar-de-pron-demo-formal-ihnen",
 	"grammar-de-pron-demo-reflexive-sich",

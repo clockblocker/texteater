@@ -134,7 +134,7 @@ const finalChecks = `<final_checks>
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const promptPart = [
+const promptPart = [
 	core,
 	lexicalHeadRepairs,
 	inflectionDecisionOrder,
@@ -143,7 +143,7 @@ export const promptPart = [
 	finalChecks,
 ].join("\n\n");
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-verb-citation-arbeiten",
 	"grammar-de-verb-separable-imperative-aufpassen",
 	"grammar-de-verb-dw-future-beteiligen",

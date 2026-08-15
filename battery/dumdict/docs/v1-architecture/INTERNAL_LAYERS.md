@@ -1,14 +1,10 @@
 # Internal layers
 
-> **Superseded terminology:** This document predates ADR 0002 and is retained
-> as pre-refactor design history. Use `battery/dumdict/CONTEXT.md` and the
-> generated package README for the current Lemma/Reading model and API.
-
 ## DTO layer
 
-Defines persisted Entry, Meaning, Surface, pending-work, draft, relation, and
-revision types. Lexical relations belong to Meanings; morphological relations
-belong to Linguistic Entries.
+Defines persisted Lemma, Reading, Surface, pending-work, draft, Knowledge
+owner-envelope, and revision types. Dumrel types are imported deliberately;
+the Dumdict barrel does not wildcard re-export Dumrel.
 
 ## Service layer
 
@@ -18,24 +14,18 @@ and maps commit outcomes to public results.
 
 ## Semantic core
 
-- `lookupStoredMeanings` maps validated Meaning slices to UI candidates.
-- `planAddNewNote` plans Entry, Meaning, Surface, relation, and pending-work
-  mutations.
-- `planAppendMeaningAttestation` plans learner evidence updates.
-- `planCleanupRelations` materializes or discards pending relations.
-- relation rules own family classification and inverse pairs.
+- `applyDumdictKnowledgeChange` checks the exact owner and applies one
+  owner-compatible Dumrel Knowledge Change.
+- `planAddNewNote` plans Lemma, Reading, Surface, direct Semantic Relation, and
+  pending-work mutations.
+- `planAppendReadingAttestation` plans learner evidence updates.
+- `planCleanupRelations` accepts or discards exact pending records.
 
 The core is pure: it receives DTOs and returns results or planned changes.
 
 ## Storage boundary
 
-The storage port exposes semantic reads and one atomic commit. Planned changes
-distinguish Entry creation and patching from Meaning creation and patching.
-Preconditions cover revisions and every entity reference needed to prevent
-partial or stale writes.
-
-## Reference adapter
-
-The in-memory adapter is internal test infrastructure. It implements the full
-port, applies planned operations transactionally to cloned state, and exposes
-`loadAll()` only for assertions.
+The storage port exposes semantic reads and one atomic commit. Preconditions
+cover revisions and every entity or pending locator needed to prevent partial
+or stale writes. The in-memory reference adapter applies the same planned
+operations transactionally to cloned state.

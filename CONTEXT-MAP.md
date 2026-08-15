@@ -11,7 +11,7 @@
 
 - **Dumgen → Dumling**: Dumgen resolves learner text into Dumling grammatical entities and uses Dumling schemas at their boundary.
 - **Dumdict → Dumling**: Dumdict stores learner-owned records whose grammatical identities are Dumling Lemmas and Surfaces.
-- **Dumrel → Dumling**: Dumrel attaches Lemma Knowledge to Dumling Lemmas and uses Dumling's language, Canonical Form, Family, and Kind to describe Unit Shadows.
-- **Dumdict → Dumrel**: Dumdict stores Knowledge and applies Unit-Shadow cleanup workflows using Dumrel's Knowledge vocabulary and relation algebra.
-- **Dumgen → Dumrel**: Dumgen produces model-backed Knowledge Contributions that satisfy Dumrel's domain contracts.
+- **Dumrel → Dumling**: Dumrel validates identityless Knowledge values and Unit Shadows with concrete Dumling Lemma DTOs, languages, Canonical Forms, Families, and Kinds.
+- **Dumdict → Dumrel**: Dumdict stores Knowledge and cleans up Pending Semantic Relations using Dumrel's Knowledge vocabulary and relation algebra; structural Unit Shadows remain durable pointers.
+- **Dumgen → Dumrel**: Dumgen projects private model results into Dumrel-validated Knowledge Changes containing pointer-only structures, or Pending Semantic Relations.
 - **Dumgen → Dumdict**: Dumgen resolves an encountered Lemma against learner Reading candidates; Dumdict owns the resulting learner dictionary records and storage changes.

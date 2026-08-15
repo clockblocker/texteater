@@ -5,17 +5,14 @@
 			"**",
 			"!generate-readme/examples/**/*.ts",
 			"!docs/prototypes/**/runs/**",
-			"!src/promptsmith/laboratory/generated-system-prompt/**",
-			"!src/promptsmith/laboratory/experiments/**/generated-system-prompt/**",
-			"!prototypes/**/results/**"
+			"!src/promptsmith/laboratory/generated-system-prompt/**"
 		]
 	},
 	"linter": {
 		"includes": [
 			"**",
 			"!generate-readme/examples/**/*.ts",
-			"!docs/prototypes/**/runs/**",
-			"!prototypes/**/results/**"
+			"!docs/prototypes/**/runs/**"
 		]
 	}
 }

@@ -1,29 +1,20 @@
-import type { LexicalRelation, MorphologicalRelation } from "dumrel";
 import type {
 	LemmaRecord,
-	PendingEntryId,
-	PendingEntryRef,
-	PendingEntryRelation,
+	PendingSemanticRelationRecord,
 	Reading,
 	ReadingEntry,
+	ReadingKnowledgeChange,
 	SurfaceEntry,
 } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "../dumling";
 import type { ChangePrecondition } from "./preconditions";
 
 export type ReadingPatchOp<L extends SupportedLanguage> =
 	| { kind: "addAttestation"; value: string }
 	| {
-			kind: "addRelation";
-			relation: LexicalRelation;
-			targetReading: Reading<L>;
+			kind: "applyKnowledgeChange";
+			envelope: ReadingKnowledgeChange<L>;
 	  };
-
-type LemmaPatchOp<L extends SupportedLanguage> = {
-	kind: "addRelation";
-	relation: MorphologicalRelation;
-	targetLemma: Lemma<L>;
-};
 
 export type PlannedChangeOp<L extends SupportedLanguage> =
 	| {
@@ -43,33 +34,17 @@ export type PlannedChangeOp<L extends SupportedLanguage> =
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
-			type: "patchLemma";
-			lemma: Lemma<L>;
-			ops: LemmaPatchOp<L>[];
-			preconditions: ChangePrecondition<L>[];
-	  }
-	| {
 			type: "createOwnedSurface";
 			entry: SurfaceEntry<L>;
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
-			type: "createPendingRef";
-			ref: PendingEntryRef<L>;
+			type: "createPendingSemanticRelation";
+			record: PendingSemanticRelationRecord<L>;
 			preconditions: ChangePrecondition<L>[];
 	  }
 	| {
-			type: "deletePendingRef";
-			pendingId: PendingEntryId<L>;
-			preconditions: ChangePrecondition<L>[];
-	  }
-	| {
-			type: "createPendingRelation";
-			relation: PendingEntryRelation<L>;
-			preconditions: ChangePrecondition<L>[];
-	  }
-	| {
-			type: "deletePendingRelation";
-			relation: PendingEntryRelation<L>;
+			type: "deletePendingSemanticRelation";
+			record: PendingSemanticRelationRecord<L>;
 			preconditions: ChangePrecondition<L>[];
 	  };

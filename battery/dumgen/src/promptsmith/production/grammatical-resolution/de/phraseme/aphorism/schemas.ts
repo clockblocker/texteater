@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Phraseme.Aphorism(),
 );
 
-export const deAphorismLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const deAphorismLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Phraseme", kind: "Aphorism" },
 );
@@ -27,7 +27,7 @@ const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ coreFeatures: {} },
 );
 
-export const deAphorismModelLemmaSchema = modelLemmaCodec.in;
+const deAphorismModelLemmaSchema = modelLemmaCodec.in;
 
 type DeAphorismLemma = z.output<typeof deAphorismLemmaCodec>;
 
@@ -51,7 +51,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDeAphorismCitationSurfaceCodec(lemma: DeAphorismLemma) {
+function buildDeAphorismCitationSurfaceCodec(lemma: DeAphorismLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -74,7 +74,7 @@ const schemaProjectionLemma = {
 	coreFeatures: {},
 } satisfies DeAphorismLemma;
 
-export const deAphorismModelCitationSurfaceSchema =
+const deAphorismModelCitationSurfaceSchema =
 	buildDeAphorismCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,
@@ -135,7 +135,7 @@ const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
 	},
 );
 
-export const aphorismResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+const aphorismResolutionCodec = codecBuilder4.helpers.pipeCodecs(
 	extractModelLemmaCodec,
 	restoreRuntimeLemmaCodec,
 );

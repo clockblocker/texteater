@@ -1,42 +1,38 @@
-import { inverseRelationFor } from "dumrel";
-import type { PendingEntryRef, PendingEntryRelation, Reading } from "../../dto";
-import type { Lemma, SupportedLanguage } from "../../dumling";
+import { inverseRelationFor, unitShadowSchema } from "dumrel";
 import type {
-	CleanupRelationResolution,
-	CleanupRelationsRequest,
-} from "../../public";
+	PendingSemanticRelationLocator,
+	PendingSemanticRelationRecord,
+	Reading,
+} from "../../dto";
+import type { SupportedLanguage } from "../../dumling";
+import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
-import { lemmaKey, readingKey, sameLemma, sameReading } from "../identity";
+import { readingKey, sameReading } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-function sourceKeyFor<L extends SupportedLanguage>(
-	value: PendingEntryRelation<L> | CleanupRelationResolution<L>,
+function locatorKey<L extends SupportedLanguage>(
+	value: PendingSemanticRelationLocator<L>,
 ) {
-	return value.relationFamily === "lexical"
-		? readingKey(value.sourceReading)
-		: lemmaKey(value.sourceLemma);
+	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
 }
 
-function relationKey<L extends SupportedLanguage>(
-	value: PendingEntryRelation<L> | CleanupRelationResolution<L>,
+function targetMatches<L extends SupportedLanguage>(
+	target: Reading<L>,
+	record: PendingSemanticRelationRecord<L>,
 ) {
-	return [
-		value.relationFamily,
-		sourceKeyFor(value),
-		value.relation,
-		value.targetPendingId,
-	].join("\0");
-}
-
-function entryMatchesPendingRef(
-	entry: Lemma<SupportedLanguage>,
-	pendingRef: PendingEntryRef<SupportedLanguage>,
-) {
+	const lemma = target.lemma;
+	const shadow = unitShadowSchema.parse(record.pending.target);
+	const targetShadow = unitShadowSchema.parse({
+		language: lemma.language,
+		canonicalForm: lemma.canonicalForm,
+		family: lemma.family,
+		kind: lemma.kind,
+	});
 	return (
-		entry.language === pendingRef.language &&
-		entry.canonicalForm === pendingRef.canonicalForm &&
-		entry.family === pendingRef.family &&
-		entry.kind === pendingRef.kind
+		targetShadow.language === shadow.language &&
+		targetShadow.canonicalForm === shadow.canonicalForm &&
+		targetShadow.family === shadow.family &&
+		targetShadow.kind === shadow.kind
 	);
 }
 
@@ -44,7 +40,7 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 	slice: CleanupRelationsSlice<L>,
 	request: CleanupRelationsRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
-	const keys = request.resolutions.map(relationKey);
+	const keys = request.resolutions.map(({ locator }) => locatorKey(locator));
 	if (new Set(keys).size !== keys.length) {
 		return {
 			status: "rejected",
@@ -53,262 +49,132 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		};
 	}
 
-	const pendingRefsById = new Map(
-		slice.pendingRefs.map((ref) => [ref.pendingId, ref] as const),
+	const pendingByKey = new Map(
+		slice.pendingRelations.map(
+			(record) => [locatorKey(record.locator), record] as const,
+		),
 	);
-	const targetReadingsByKey = new Map(
-		slice.targetReadings.map((target) => [
-			readingKey(target.reading.reading),
-			target,
-		]),
+	const targetReadings = new Set(
+		slice.targetReadings.map(({ reading }) => readingKey(reading.reading)),
 	);
-	const targetLemmasByKey = new Map(
-		slice.targetLemmas.map((record) => [lemmaKey(record.lemma), record]),
-	);
-	const incomingCounts = new Map<string, number>();
-	for (const relation of slice.pendingRelations) {
-		incomingCounts.set(
-			relation.targetPendingId,
-			(incomingCounts.get(relation.targetPendingId) ?? 0) + 1,
-		);
-	}
 
 	for (const resolution of request.resolutions) {
-		const pendingRef = pendingRefsById.get(resolution.targetPendingId);
-		if (!pendingRef) {
-			continue;
+		const record = pendingByKey.get(locatorKey(resolution.locator));
+		if (!record) continue;
+		if (
+			record.sourceReading.lemma.language !==
+			record.pending.target.language
+		) {
+			return {
+				status: "rejected",
+				code: "invalidRequest",
+				message:
+					"Pending Semantic Relation endpoints must use the same language.",
+			};
 		}
-		if (resolution.relationFamily === "lexical") {
-			if (
-				resolution.targetReading &&
-				sameReading(resolution.targetReading, resolution.sourceReading)
-			) {
-				return {
-					status: "rejected",
-					code: "selfRelation",
-					message: "A reading cannot relate to itself.",
-				};
-			}
-			const target =
-				resolution.targetReading &&
-				targetReadingsByKey.get(readingKey(resolution.targetReading));
-			if (
-				target &&
-				!entryMatchesPendingRef(target.lemma.lemma, pendingRef)
-			) {
-				return {
-					status: "rejected",
-					code: "invalidRequest",
-					message:
-						"Cleanup target Reading must belong to a Lemma matching the pending description.",
-				};
-			}
-		} else {
-			if (
-				resolution.targetLemma &&
-				sameLemma(resolution.targetLemma, resolution.sourceLemma)
-			) {
-				return {
-					status: "rejected",
-					code: "selfRelation",
-					message: "A Lemma cannot relate to itself.",
-				};
-			}
-			const target =
-				resolution.targetLemma &&
-				targetLemmasByKey.get(lemmaKey(resolution.targetLemma));
-			if (target && !entryMatchesPendingRef(target.lemma, pendingRef)) {
-				return {
-					status: "rejected",
-					code: "invalidRequest",
-					message:
-						"Cleanup target Lemma must match the pending description.",
-				};
-			}
+		if (!resolution.targetReading) continue;
+		if (sameReading(resolution.targetReading, record.sourceReading)) {
+			return {
+				status: "rejected",
+				code: "selfRelation",
+				message: "A Reading cannot relate directly to itself.",
+			};
+		}
+		if (!targetReadings.has(readingKey(resolution.targetReading))) {
+			return {
+				status: "rejected",
+				code: "relationTargetMissing",
+				message: "Cleanup target Reading is missing.",
+			};
+		}
+		if (!targetMatches(resolution.targetReading, record)) {
+			return {
+				status: "rejected",
+				code: "invalidRequest",
+				message:
+					"Cleanup target Reading must exactly match the pending Unit Shadow.",
+			};
 		}
 	}
 
 	const changes: PlanMutationResult<L>["changes"] = [];
 	const affectedReadings = new Map<string, Reading<L>>();
-	const affectedLemmas = new Map<string, Lemma<L>>();
 	const affectedPendingIds = new Set<string>();
-
 	for (const resolution of request.resolutions) {
-		if (resolution.relationFamily === "lexical") {
-			const pendingRelation: Extract<
-				PendingEntryRelation<L>,
-				{ relationFamily: "lexical" }
-			> = {
-				relationFamily: "lexical",
-				sourceReading: resolution.sourceReading,
-				relation: resolution.relation,
-				targetPendingId: resolution.targetPendingId,
-			};
-			if (resolution.targetReading) {
-				const target = resolution.targetReading;
-				changes.push(
-					{
-						type: "patchReading",
-						reading: resolution.sourceReading,
-						ops: [
-							{
-								kind: "addRelation",
-								relation: resolution.relation,
-								targetReading: target,
+		const record = pendingByKey.get(locatorKey(resolution.locator));
+		if (!record) continue;
+		if (resolution.targetReading) {
+			const target = resolution.targetReading;
+			changes.push(
+				{
+					type: "patchReading",
+					reading: record.sourceReading,
+					ops: [
+						{
+							kind: "applyKnowledgeChange",
+							envelope: {
+								owner: {
+									kind: "Reading",
+									reading: record.sourceReading,
+								},
+								change: {
+									kind: "Contribute",
+									aspect: "semanticRelations",
+									relation: record.pending.relation,
+									value: [target],
+								},
 							},
-						],
-						preconditions: [
-							{
-								kind: "revisionMatches",
-								revision: slice.revision,
+						},
+					],
+					preconditions: [
+						{ kind: "revisionMatches", revision: slice.revision },
+						{
+							kind: "readingExists",
+							reading: record.sourceReading,
+						},
+						{ kind: "readingExists", reading: target },
+					],
+				},
+				{
+					type: "patchReading",
+					reading: target,
+					ops: [
+						{
+							kind: "applyKnowledgeChange",
+							envelope: {
+								owner: { kind: "Reading", reading: target },
+								change: {
+									kind: "Contribute",
+									aspect: "semanticRelations",
+									relation: inverseRelationFor(
+										record.pending.relation,
+									),
+									value: [record.sourceReading],
+								},
 							},
-							{
-								kind: "readingExists",
-								reading: resolution.sourceReading,
-							},
-							{ kind: "readingExists", reading: target },
-						],
-					},
-					{
-						type: "patchReading",
-						reading: target,
-						ops: [
-							{
-								kind: "addRelation",
-								relation: inverseRelationFor(
-									"lexical",
-									resolution.relation,
-								),
-								targetReading: resolution.sourceReading,
-							},
-						],
-						preconditions: [
-							{
-								kind: "revisionMatches",
-								revision: slice.revision,
-							},
-							{ kind: "readingExists", reading: target },
-						],
-					},
-				);
-				affectedReadings.set(readingKey(target), target);
-			}
-			changes.push({
-				type: "deletePendingRelation",
-				relation: pendingRelation,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{
-						kind: "pendingRelationExists",
-						relation: pendingRelation,
-					},
-				],
-			});
+						},
+					],
+					preconditions: [
+						{ kind: "revisionMatches", revision: slice.revision },
+						{ kind: "readingExists", reading: target },
+					],
+				},
+			);
+			affectedReadings.set(readingKey(target), target);
 			affectedReadings.set(
-				readingKey(resolution.sourceReading),
-				resolution.sourceReading,
-			);
-		} else {
-			const pendingRelation: Extract<
-				PendingEntryRelation<L>,
-				{ relationFamily: "morphological" }
-			> = {
-				relationFamily: "morphological",
-				sourceLemma: resolution.sourceLemma,
-				relation: resolution.relation,
-				targetPendingId: resolution.targetPendingId,
-			};
-			if (resolution.targetLemma) {
-				const target = resolution.targetLemma;
-				changes.push(
-					{
-						type: "patchLemma",
-						lemma: resolution.sourceLemma,
-						ops: [
-							{
-								kind: "addRelation",
-								relation: resolution.relation,
-								targetLemma: target,
-							},
-						],
-						preconditions: [
-							{
-								kind: "revisionMatches",
-								revision: slice.revision,
-							},
-							{
-								kind: "lemmaExists",
-								lemma: resolution.sourceLemma,
-							},
-							{
-								kind: "lemmaExists",
-								lemma: target,
-							},
-						],
-					},
-					{
-						type: "patchLemma",
-						lemma: target,
-						ops: [
-							{
-								kind: "addRelation",
-								relation: inverseRelationFor(
-									"morphological",
-									resolution.relation,
-								),
-								targetLemma: resolution.sourceLemma,
-							},
-						],
-						preconditions: [
-							{
-								kind: "revisionMatches",
-								revision: slice.revision,
-							},
-							{
-								kind: "lemmaExists",
-								lemma: target,
-							},
-						],
-					},
-				);
-				affectedLemmas.set(lemmaKey(target), target);
-			}
-			changes.push({
-				type: "deletePendingRelation",
-				relation: pendingRelation,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{
-						kind: "pendingRelationExists",
-						relation: pendingRelation,
-					},
-				],
-			});
-			affectedLemmas.set(
-				lemmaKey(resolution.sourceLemma),
-				resolution.sourceLemma,
+				readingKey(record.sourceReading),
+				record.sourceReading,
 			);
 		}
-
-		affectedPendingIds.add(resolution.targetPendingId);
-		incomingCounts.set(
-			resolution.targetPendingId,
-			(incomingCounts.get(resolution.targetPendingId) ?? 0) - 1,
-		);
-	}
-
-	for (const pendingId of affectedPendingIds) {
-		if ((incomingCounts.get(pendingId) ?? 0) === 0) {
-			changes.push({
-				type: "deletePendingRef",
-				pendingId,
-				preconditions: [
-					{ kind: "revisionMatches", revision: slice.revision },
-					{ kind: "pendingRefExists", pendingId },
-					{ kind: "pendingRefHasNoIncomingRelations", pendingId },
-				],
-			});
-		}
+		changes.push({
+			type: "deletePendingSemanticRelation",
+			record,
+			preconditions: [
+				{ kind: "revisionMatches", revision: slice.revision },
+				{ kind: "pendingRelationExists", record },
+			],
+		});
+		affectedPendingIds.add(record.locator.targetPendingId);
 	}
 
 	return {
@@ -319,10 +185,6 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 			readings:
 				affectedReadings.size > 0
 					? Array.from(affectedReadings.values())
-					: undefined,
-			lemmas:
-				affectedLemmas.size > 0
-					? Array.from(affectedLemmas.values())
 					: undefined,
 			pendingIds:
 				affectedPendingIds.size > 0

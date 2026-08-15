@@ -100,7 +100,7 @@ Final check: both arrays equal members.length, preserve all positions in source
 order, and contain anchors only. Always resolve the classified target.
 </output_contract>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-paired-frame-demo-anstatt-zu",
 	"grammar-de-paired-frame-demo-sowohl-als-auch",
 	"grammar-de-paired-frame-demo-je-desto-payload",

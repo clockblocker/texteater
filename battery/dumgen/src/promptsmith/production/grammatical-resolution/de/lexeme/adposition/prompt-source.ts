@@ -87,7 +87,7 @@ Never return decision, resolution, Unresolved, realizationCoverage, surfaceKind,
 - Output contains exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-adp-demo-prep-mit-dat",
 	"grammar-de-adp-demo-two-way-auf",
 	"grammar-de-adp-demo-post-entlang-acc",

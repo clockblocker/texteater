@@ -1,9 +1,16 @@
+import type { PendingEntryId } from "../../dto";
 import type {
-	PendingEntryId,
-	PendingEntryIdentity,
-	PendingEntryRef,
-} from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
+	LemmaFamilyFor,
+	LemmaKindFor,
+	SupportedLanguage,
+} from "../../dumling";
+
+type PendingEntryIdentity<L extends SupportedLanguage> = {
+	language: L;
+	canonicalForm: string;
+	family: LemmaFamilyFor<L>;
+	kind: LemmaKindFor<L, LemmaFamilyFor<L>>;
+};
 
 export function derivePendingEntryId<L extends SupportedLanguage>(
 	identity: PendingEntryIdentity<L>,
@@ -15,13 +22,4 @@ export function derivePendingEntryId<L extends SupportedLanguage>(
 		identity.canonicalForm,
 	].map(encodeURIComponent);
 	return `pending-entry:v2:${description.join(":")}` as PendingEntryId<L>;
-}
-
-export function makePendingEntryRef<L extends SupportedLanguage>(
-	identity: PendingEntryIdentity<L>,
-): PendingEntryRef<L> {
-	return {
-		...identity,
-		pendingId: derivePendingEntryId(identity),
-	};
 }

@@ -17,7 +17,7 @@ const canonicalCitationSurfaceSchema = asObjectSchema(
 	schemasFor.de.entity.Surface.Citation.Construction.PairedFrame(),
 );
 
-export const dePairedFrameLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
+const dePairedFrameLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	canonicalLemmaSchema,
 	{ language: "de", family: "Construction", kind: "PairedFrame" },
 );
@@ -27,7 +27,7 @@ const modelLemmaCodec = codecBuilder4.buildFixedFieldsCodec(
 	{ coreFeatures: {} },
 );
 
-export const dePairedFrameModelLemmaSchema = modelLemmaCodec.in;
+const dePairedFrameModelLemmaSchema = modelLemmaCodec.in;
 
 type DePairedFrameLemma = z.output<typeof dePairedFrameLemmaCodec>;
 
@@ -51,9 +51,7 @@ function normalizeModelSurfaceFeatures<
 	return { ...surface, surfaceFeatures: null };
 }
 
-export function buildDePairedFrameCitationSurfaceCodec(
-	lemma: DePairedFrameLemma,
-) {
+function buildDePairedFrameCitationSurfaceCodec(lemma: DePairedFrameLemma) {
 	const canonicalCodec = codecBuilder4.buildFixedFieldsCodec(
 		canonicalCitationSurfaceSchema,
 		{ language: "de", lemma },
@@ -76,7 +74,7 @@ const schemaProjectionLemma = {
 	coreFeatures: {},
 } satisfies DePairedFrameLemma;
 
-export const dePairedFrameModelCitationSurfaceSchema =
+const dePairedFrameModelCitationSurfaceSchema =
 	buildDePairedFrameCitationSurfaceCodec(schemaProjectionLemma).in.omit({
 		normalizedSurface: true,
 		surfaceKind: true,
@@ -136,7 +134,7 @@ const restoreRuntimeLemmaCodec = codecBuilder4.buildReshapeCodec(
 	},
 );
 
-export const pairedFrameResolutionCodec = codecBuilder4.helpers.pipeCodecs(
+const pairedFrameResolutionCodec = codecBuilder4.helpers.pipeCodecs(
 	extractModelLemmaCodec,
 	restoreRuntimeLemmaCodec,
 );

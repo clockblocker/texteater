@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { schemasFor } from "dumling/schema";
-import { z } from "zod";
+import { applyKnowledgeChange, knowledgeChangeSchema } from "dumrel";
 
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
@@ -9,21 +8,26 @@ import {
 	lexicalSegmentationCorpus,
 	morphologicalResolutionCorpus,
 	morphologicalSegmentationCorpus,
+	translationAnalysisCorpus,
 } from "../../src/promptsmith/production/knowledge-analysis/corpora";
 import { promptSource as lexicalResolutionSource } from "../../src/promptsmith/production/knowledge-analysis/lexical-breakdown/resolution/prompt-source";
 import { promptSource as lexicalSegmentationSource } from "../../src/promptsmith/production/knowledge-analysis/lexical-breakdown/segmentation/prompt-source";
 import { promptSource as morphologicalResolutionSource } from "../../src/promptsmith/production/knowledge-analysis/morphological-tree/resolution/prompt-source";
 import { promptSource as morphologicalSegmentationSource } from "../../src/promptsmith/production/knowledge-analysis/morphological-tree/segmentation/prompt-source";
 import {
-	projectLexicalBreakdownContribution,
-	projectMorphologicalTreeContribution,
+	projectLexicalBreakdownChange,
+	projectMorphologicalTreeChange,
+	projectPendingSemanticRelation,
+	projectTranslationChange,
 } from "../../src/promptsmith/production/knowledge-analysis/projection";
 import {
 	lexicalResolutionOutputSchema,
 	lexicalSegmentationOutputSchema,
 	morphologicalResolutionOutputSchema,
 	morphologicalSegmentationOutputSchema,
+	translationAnalysisOutputSchema,
 } from "../../src/promptsmith/production/knowledge-analysis/schemas";
+import { promptSource as translationAnalysisSource } from "../../src/promptsmith/production/knowledge-analysis/translation/prompt-source";
 
 describe("Knowledge analysis Prompt Sources", () => {
 	test("own separate pointer-only segmentation and resolution corpora", () => {
@@ -31,6 +35,7 @@ describe("Knowledge analysis Prompt Sources", () => {
 		expect(morphologicalResolutionCorpus.all().ids).toHaveLength(3);
 		expect(lexicalSegmentationCorpus.all().ids).toHaveLength(3);
 		expect(lexicalResolutionCorpus.all().ids).toHaveLength(3);
+		expect(translationAnalysisCorpus.all().ids).toHaveLength(8);
 
 		const verbal =
 			lexicalSegmentationCorpus.cases[
@@ -61,6 +66,7 @@ describe("Knowledge analysis Prompt Sources", () => {
 				catalog.lexicalBreakdown.resolution.prompt,
 				lexicalResolutionSource,
 			],
+			[catalog.translation.prompt, translationAnalysisSource],
 		] as const;
 
 		for (const [prompt, source] of pairs) {
@@ -126,37 +132,38 @@ describe("Knowledge analysis Prompt Sources", () => {
 		const lexical =
 			lexicalResolutionCorpus.cases["lexical-resolve-contextual-shadows"]
 				?.idealOutput;
-		if (morphology === undefined || lexical === undefined) {
+		const repeatedLexical =
+			lexicalResolutionCorpus.cases["lexical-resolve-repeated-shadows"]
+				?.idealOutput;
+		if (
+			morphology === undefined ||
+			lexical === undefined ||
+			repeatedLexical === undefined
+		) {
 			throw new Error("Missing resolution corpus cases.");
 		}
 
-		const identitySchema = z.string().regex(/^reading:[^:]+$/);
-		const morphemeReadingSchema = z.strictObject({
-			opaqueReadingIdentity: identitySchema,
-			lemma: schemasFor.de.entity.Lemma.Morpheme.Prefix(),
-			emojiDescription: z.string().min(1),
-		});
-		const projectedMorphology = projectMorphologicalTreeContribution(
+		const projectedMorphology = projectMorphologicalTreeChange(
 			morphology,
-			{
-				readingSchema: morphemeReadingSchema,
-				resolveReading: (draft) => ({
-					opaqueReadingIdentity: `reading:${draft.lemmaDescriptor.canonicalForm}`,
-					lemma: {
-						...draft.lemmaDescriptor,
-						coreFeatures: { hasSepPrefix: null },
-					},
-					emojiDescription: draft.emojiDescription,
-				}),
-			},
+			(draft) => ({
+				lemma: {
+					...draft.lemmaDescriptor,
+					coreFeatures: { hasSepPrefix: null },
+				},
+				emojiDescription: draft.emojiDescription,
+			}),
 		);
-		const prefix = projectedMorphology.root.children[0];
+		expect(projectedMorphology).toMatchObject({
+			kind: "Contribute",
+			aspect: "morphologicalTree",
+		});
+		const prefix = projectedMorphology.value.root.children[0];
 		expect(
 			prefix?.nodeKind === "morphemeReading"
-				? prefix.reading.opaqueReadingIdentity
+				? prefix.reading.lemma.canonicalForm
 				: null,
-		).toBe("reading:ent-");
-		expect(projectedMorphology.root.children[1]).toEqual({
+		).toBe("ent-");
+		expect(projectedMorphology.value.root.children[1]).toEqual({
 			nodeKind: "unitShadow",
 			unitShadow: {
 				language: "de",
@@ -166,21 +173,30 @@ describe("Knowledge analysis Prompt Sources", () => {
 			},
 		});
 
-		const projectedLexical = projectLexicalBreakdownContribution(lexical);
-		expect(projectedLexical).toEqual([
-			{
-				language: "de",
-				canonicalForm: "sich",
-				family: "Lexeme",
-				kind: "PRON",
-			},
-			{
-				language: "de",
-				canonicalForm: "erinnern",
-				family: "Lexeme",
-				kind: "VERB",
-			},
-		]);
+		const projectedLexical = projectLexicalBreakdownChange(lexical);
+		expect(projectedLexical).toEqual({
+			kind: "Contribute",
+			aspect: "lexicalBreakdown",
+			value: [
+				{
+					language: "de",
+					canonicalForm: "sich",
+					family: "Lexeme",
+					kind: "PRON",
+				},
+				{
+					language: "de",
+					canonicalForm: "erinnern",
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			],
+		});
+		expect(
+			projectLexicalBreakdownChange(repeatedLexical).value.map(
+				({ canonicalForm }) => canonicalForm,
+			),
+		).toEqual(["so", "oder", "so"]);
 	});
 
 	test("validates caller-resolved Morpheme Readings", () => {
@@ -190,21 +206,167 @@ describe("Knowledge analysis Prompt Sources", () => {
 			]?.idealOutput;
 		if (morphology === undefined)
 			throw new Error("Missing morphology case.");
-		const schema = z.strictObject({
-			opaqueReadingIdentity: z.string().regex(/^reading:/),
-			lemma: schemasFor.de.entity.Lemma.Morpheme.Prefix(),
-			emojiDescription: z.string().min(1),
-		});
-
 		expect(() =>
-			projectMorphologicalTreeContribution(morphology, {
-				readingSchema: schema,
-				resolveReading: (draft) => ({
-					opaqueReadingIdentity: "invented",
-					lemma: { ...draft.lemmaDescriptor, coreFeatures: {} },
-					emojiDescription: draft.emojiDescription,
-				}),
+			projectMorphologicalTreeChange(morphology, (draft) => ({
+				lemma: {
+					...draft.lemmaDescriptor,
+					family: "Lexeme",
+					kind: "NOUN",
+					coreFeatures: { gender: "Neut", hyph: null },
+				},
+				emojiDescription: draft.emojiDescription,
+			})),
+		).toThrow();
+	});
+
+	test("validates unresolved relation targets as pending DTOs only", () => {
+		expect(
+			projectPendingSemanticRelation({
+				relation: "antonym",
+				target: {
+					language: "de",
+					canonicalForm: "kalt",
+					family: "Lexeme",
+					kind: "ADJ",
+				},
+			}),
+		).toEqual({
+			relation: "antonym",
+			target: {
+				language: "de",
+				canonicalForm: "kalt",
+				family: "Lexeme",
+				kind: "ADJ",
+			},
+		});
+		expect(() =>
+			projectPendingSemanticRelation({
+				sourceReading: "invented-owner",
+				relation: "antonym",
+				target: {
+					language: "de",
+					canonicalForm: "kalt",
+					family: "Lexeme",
+					kind: "ADJ",
+				},
 			}),
 		).toThrow();
+	});
+
+	test("projects private Translation decisions into exact Dumrel Changes", () => {
+		const sourceReading = {
+			lemmaDescriptor: {
+				language: "de" as const,
+				canonicalForm: "Café",
+				family: "Lexeme" as const,
+				kind: "NOUN" as const,
+			},
+			emojiDescription: "☕",
+		};
+		const covered = projectTranslationChange(
+			{
+				markedContext: "Das <TARGET>Café</TARGET> öffnet früh.",
+				sourceReading,
+				targetLanguage: "fr" as const,
+				existingTranslations: ["cafe\u0301"],
+			},
+			{ decision: "Covered", existingIndex: 0 },
+		);
+		expect(covered).toEqual({
+			kind: "Contribute",
+			aspect: "translations",
+			language: "fr",
+			value: ["café"],
+		});
+		expect(
+			applyKnowledgeChange({ translations: { fr: ["café"] } }, covered),
+		).toEqual({ translations: { fr: ["café"] } });
+
+		const added = projectTranslationChange(
+			{
+				markedContext: "Der <TARGET>Knirps</TARGET> lacht.",
+				sourceReading: {
+					...sourceReading,
+					lemmaDescriptor: {
+						...sourceReading.lemmaDescriptor,
+						canonicalForm: "Knirps",
+					},
+				},
+				targetLanguage: "en" as const,
+				existingTranslations: ["child"],
+			},
+			{ decision: "Add", translation: " kid " },
+		);
+		expect(added.value).toEqual(["kid"]);
+		expect(
+			applyKnowledgeChange(
+				{
+					definition: "a young person",
+					translations: { en: ["child"] },
+				},
+				added,
+			),
+		).toEqual({
+			definition: "a young person",
+			translations: { en: ["child", "kid"] },
+		});
+	});
+
+	test("rejects a model-selected Translation index outside the supplied bucket", () => {
+		const input =
+			translationAnalysisCorpus.cases["translation-cover-near-equivalent"]
+				?.input;
+		if (input === undefined) throw new Error("Missing Translation case.");
+		expect(() =>
+			PROMPT_CATALOG.laboratory.knowledge.translation.prompt.outputPostcondition.assert(
+				input,
+				{ decision: "Covered", existingIndex: 2 },
+			),
+		).toThrow("missing existing Translation");
+	});
+
+	test("keeps Translation buckets atomic and rejects empty candidates", () => {
+		const existing = {
+			definition: "context stays",
+			translations: { en: ["child", "kid"] as [string, ...string[]] },
+		};
+		const corrected = applyKnowledgeChange(existing, {
+			kind: "Correct",
+			aspect: "translations",
+			language: "en",
+			value: ["youngster", "youngster"],
+		});
+		expect(corrected).toEqual({
+			definition: "context stays",
+			translations: { en: ["youngster"] },
+		});
+		expect(
+			applyKnowledgeChange(corrected, {
+				kind: "Retract",
+				aspect: "translations",
+				language: "en",
+			}),
+		).toEqual({ definition: "context stays" });
+		expect(
+			knowledgeChangeSchema.safeParse({
+				kind: "Contribute",
+				aspect: "translations",
+				language: "en",
+				value: [],
+			}).success,
+		).toBe(false);
+		expect(
+			translationAnalysisOutputSchema.safeParse({
+				decision: "Add",
+				translation: "   ",
+			}).success,
+		).toBe(false);
+		expect(
+			translationAnalysisOutputSchema.safeParse({
+				decision: "Add",
+				translation: "kid",
+				targetReading: "forbidden",
+			}).success,
+		).toBe(false);
 	});
 });

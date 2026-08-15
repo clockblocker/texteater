@@ -1,94 +1,161 @@
 import type {
-	LexicalBreakdownContribution,
-	MorphologicalTreeContribution,
+	KnowledgeChange,
+	MorphemeReadingReference,
+	MorphologicalTree,
 	MorphologicalTreeNode,
-	UnitShadow,
+	PendingSemanticRelation,
 } from "dumrel";
-import { unitShadowSchema } from "dumrel";
-import type { output, ZodType } from "zod";
+import {
+	knowledgeChangeSchema,
+	lexicalBreakdownSchema,
+	lexicalUnitShadowSchema,
+	morphemeReadingReferenceSchema,
+	morphologicalTreeSchema,
+	pendingSemanticRelationSchema,
+} from "dumrel";
+import type { output } from "zod";
 
 import {
-	lexicalResolutionOutputSchema,
+	type lexicalResolutionOutputSchema,
 	morphemeReadingDraftSchema,
 	type morphologicalResolutionOutputSchema,
+	translationAnalysisInputSchema,
+	translationAnalysisOutputSchema,
 } from "./schemas";
 
 export type MorphemeReadingDraft = output<typeof morphemeReadingDraftSchema>;
 
-/** The owning context supplies Reading identity and its complete endpoint schema. */
-export type ReadingProjectionEndpoint<Draft, ReadingSchema extends ZodType> = {
-	readingSchema: ReadingSchema;
-	resolveReading: (draft: Draft) => unknown;
-};
+type ContributeChange<Change, Aspect> = Change extends {
+	aspect: Aspect;
+	kind: infer Kind;
+}
+	? "Contribute" extends Kind
+		? Omit<Change, "kind"> & { kind: "Contribute" }
+		: never
+	: never;
+
+type MorphologicalTreeChange = ContributeChange<
+	KnowledgeChange,
+	"morphologicalTree"
+>;
+type LexicalBreakdownChange = ContributeChange<
+	KnowledgeChange,
+	"lexicalBreakdown"
+>;
+type TranslationChange = ContributeChange<KnowledgeChange, "translations">;
 
 /**
- * Projects only Morpheme drafts. Lexical leaves already are Unit Shadows and
- * no prompt-time segmentation metadata crosses into Dumrel Knowledge.
+ * Resolves only private Morpheme drafts, validates the completed pointer-only
+ * tree with Dumrel's concrete schema, and wraps it in one Knowledge Change.
  */
-export function projectMorphologicalTreeContribution<
-	ReadingSchema extends ZodType,
->(
+export function projectMorphologicalTreeChange(
 	draft: output<typeof morphologicalResolutionOutputSchema>,
-	endpoint: ReadingProjectionEndpoint<MorphemeReadingDraft, ReadingSchema>,
-): MorphologicalTreeContribution<output<ReadingSchema>, UnitShadow> {
-	return { root: projectStructureNode(draft.root, endpoint) };
+	resolveMorphemeReading: (draft: MorphemeReadingDraft) => unknown,
+): MorphologicalTreeChange {
+	const value = morphologicalTreeSchema.parse({
+		root: projectStructureNode(draft.root, resolveMorphemeReading),
+	});
+	return knowledgeChangeSchema.parse({
+		kind: "Contribute",
+		aspect: "morphologicalTree",
+		value,
+	}) as MorphologicalTreeChange;
 }
 
-/** Lexical Breakdown is already the final ordered list of Lexeme shadows. */
-export function projectLexicalBreakdownContribution(
+/**
+ * Validates the final ordered, repeat-preserving Lexeme-shadow list and wraps
+ * it in one Knowledge Change.
+ */
+export function projectLexicalBreakdownChange(
 	draft: output<typeof lexicalResolutionOutputSchema>,
-): LexicalBreakdownContribution<UnitShadow> {
-	return lexicalResolutionOutputSchema.parse(draft);
+): LexicalBreakdownChange {
+	const value = lexicalBreakdownSchema.parse(draft);
+	return knowledgeChangeSchema.parse({
+		kind: "Contribute",
+		aspect: "lexicalBreakdown",
+		value,
+	}) as LexicalBreakdownChange;
 }
 
-function projectStructureNode<ReadingSchema extends ZodType>(
+/** Unresolved relation targets cross the boundary only as validated pending DTOs. */
+export function projectPendingSemanticRelation(
+	candidate: unknown,
+): PendingSemanticRelation {
+	return pendingSemanticRelationSchema.parse(candidate);
+}
+
+/**
+ * Converts the private match-versus-add result into an idempotent Translation
+ * contribution. A Covered decision reuses the exact stored literal instead of
+ * trusting the model to reproduce its bytes.
+ */
+export function projectTranslationChange(
+	rawInput: output<typeof translationAnalysisInputSchema>,
+	rawAnalysis: output<typeof translationAnalysisOutputSchema>,
+): TranslationChange {
+	const input = translationAnalysisInputSchema.parse(rawInput);
+	const analysis = translationAnalysisOutputSchema.parse(rawAnalysis);
+	let translation: string;
+	if (analysis.decision === "Covered") {
+		const existing = input.existingTranslations[analysis.existingIndex];
+		if (existing === undefined) {
+			throw new Error(
+				"Translation Analysis selected a missing existing Translation.",
+			);
+		}
+		translation = existing;
+	} else {
+		translation = analysis.translation;
+	}
+
+	return knowledgeChangeSchema.parse({
+		kind: "Contribute",
+		aspect: "translations",
+		language: input.targetLanguage,
+		value: [translation],
+	}) as TranslationChange;
+}
+
+function projectStructureNode(
 	value: unknown,
-	endpoint: ReadingProjectionEndpoint<MorphemeReadingDraft, ReadingSchema>,
-): Extract<
-	MorphologicalTreeNode<output<ReadingSchema>, UnitShadow>,
-	{ nodeKind: "structure" }
-> {
+	resolveMorphemeReading: (draft: MorphemeReadingDraft) => unknown,
+): Extract<MorphologicalTree["root"], { nodeKind: "structure" }> {
 	const node = asRecord(value, "Morphological structure node");
 	if (node.nodeKind !== "structure" || !Array.isArray(node.children)) {
 		throw new Error("Expected a Morphological structure node.");
 	}
 	return {
 		nodeKind: "structure",
-		children: node.children.map((child) => projectNode(child, endpoint)),
+		children: node.children.map((child) =>
+			projectNode(child, resolveMorphemeReading),
+		) as MorphologicalTree["root"]["children"],
 	};
 }
 
-function projectNode<ReadingSchema extends ZodType>(
+function projectNode(
 	value: unknown,
-	endpoint: ReadingProjectionEndpoint<MorphemeReadingDraft, ReadingSchema>,
-): MorphologicalTreeNode<output<ReadingSchema>, UnitShadow> {
+	resolveMorphemeReading: (draft: MorphemeReadingDraft) => unknown,
+): MorphologicalTreeNode {
 	const node = asRecord(value, "Morphological node");
 	if (node.nodeKind === "structure") {
-		return projectStructureNode(node, endpoint);
+		return projectStructureNode(node, resolveMorphemeReading);
 	}
 	if (node.nodeKind === "morphemeReading") {
+		const draft = morphemeReadingDraftSchema.parse(node.reading);
 		return {
 			nodeKind: "morphemeReading",
-			reading: resolveAndValidateReading(
-				endpoint,
-				morphemeReadingDraftSchema.parse(node.reading),
-			),
+			reading: morphemeReadingReferenceSchema.parse(
+				resolveMorphemeReading(draft),
+			) as MorphemeReadingReference,
 		};
 	}
 	if (node.nodeKind === "unitShadow") {
 		return {
 			nodeKind: "unitShadow",
-			unitShadow: unitShadowSchema.parse(node.unitShadow),
+			unitShadow: lexicalUnitShadowSchema.parse(node.unitShadow),
 		};
 	}
 	throw new Error("Unknown Morphological Tree node.");
-}
-
-function resolveAndValidateReading<Draft, ReadingSchema extends ZodType>(
-	endpoint: ReadingProjectionEndpoint<Draft, ReadingSchema>,
-	draft: Draft,
-): output<ReadingSchema> {
-	return endpoint.readingSchema.parse(endpoint.resolveReading(draft));
 }
 
 function asRecord(value: unknown, label: string): Record<string, unknown> {

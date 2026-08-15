@@ -170,7 +170,7 @@ confidence, candidates, or explanation.
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-num-demo-word-vier",
 	"grammar-de-num-demo-digit-7",
 	"grammar-de-num-demo-fraction-eineinhalb",

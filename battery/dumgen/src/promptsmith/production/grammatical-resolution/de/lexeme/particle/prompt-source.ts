@@ -141,7 +141,7 @@ target indices, confidence, candidates, or explanation.
 - Output contains exactly memberOrthographies, normalizedMembers, surface, lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-part-demo-negative-nicht",
 	"grammar-de-part-demo-infinitival-zu",
 	"grammar-de-part-demo-modal-halt",

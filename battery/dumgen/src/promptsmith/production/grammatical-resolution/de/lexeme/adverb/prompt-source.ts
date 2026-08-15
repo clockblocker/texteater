@@ -145,7 +145,7 @@ confidence, candidates, or explanation.
 - Output has exactly memberOrthographies, normalizedMembers, surface, and lemma.
 </final_checks>`;
 
-export const demonstrations = corpus.select([
+const demonstrations = corpus.select([
 	"grammar-de-adv-demo-temporal-heute",
 	"grammar-de-adv-demo-demonstrative-dazu",
 	"grammar-de-adv-demo-interrogative-warum",
