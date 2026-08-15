@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { PromptInputSchema, PromptOutputSchema } from "../../../assembly";
+import type { PromptInputSchema, PromptOutputSchema } from "../../assembly";
 
 export const inputSchema = z.strictObject({
 	items: z

@@ -1,13 +1,13 @@
-import { defineGoldenCorpus } from "../../../../../assembly";
+import { defineGoldenCorpus } from "../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
-import { adpositions } from "./cases/hand-verivied/adp";
-import { adjectives } from "./cases/wip/adjective";
-import { constructions } from "./cases/wip/construction";
-import { functionWords } from "./cases/wip/function-words";
-import { labelsAndNames } from "./cases/wip/labels-and-names";
-import { nouns } from "./cases/wip/noun";
-import { phrasemes } from "./cases/wip/phraseme";
-import { verbs } from "./cases/wip/verb";
+import { adjectives } from "./cases/adjective";
+import { adpositions } from "./cases/adp";
+import { constructions } from "./cases/construction";
+import { functionWords } from "./cases/function-words";
+import { labelsAndNames } from "./cases/labels-and-names";
+import { nouns } from "./cases/noun";
+import { phrasemes } from "./cases/phraseme";
+import { verbs } from "./cases/verb";
 
 export const corpus = defineGoldenCorpus({
 	route: "reading-resolution/de",

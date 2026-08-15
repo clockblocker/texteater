@@ -10,14 +10,14 @@ import {
 	defineLocalDemonstrations,
 	definePromptSource,
 } from "../../src/promptsmith/assembly";
-import { systemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
+import { productionSystemPromptRecipe } from "../../src/promptsmith/assembly/generate-system-prompts";
 import { readingResolutionGauntlet } from "../../src/promptsmith/laboratory/experiments/reading-resolution-gauntlet/evaluation-suite";
 import { evaluateReadingResolution } from "../../src/promptsmith/laboratory/experiments/reading-resolution-gauntlet/evaluator";
-import { corpus as readingResolutionCorpus } from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/corpus";
+import { corpus as readingResolutionCorpus } from "../../src/promptsmith/production/reading-resolution/de/golden-corpus/corpus";
 import {
 	demonstrations as readingResolutionDemonstrations,
 	promptSource as readingResolutionPromptSource,
-} from "../../src/promptsmith/laboratory/prompt-source/reading-resolution/de/prompt-source";
+} from "../../src/promptsmith/production/reading-resolution/de/prompt-source";
 
 const inputSchema = z.strictObject({ text: z.string().min(1) });
 const outputSchema = z.strictObject({ value: z.string().min(1) });
@@ -476,17 +476,9 @@ describe("Prompt Experiments", () => {
 	});
 
 	test("derives generated provenance from selected demonstration modules", async () => {
-		const result = await runCodegen(systemPromptRecipe, { mode: "check" });
-		const localArtifact = result.plan.artifacts.find(
-			({ meta }) => meta.route === "segmentation/de",
-		);
-		const localPaths =
-			localArtifact?.provenance.flatMap((provenance) =>
-				provenance.kind === "source" ? [provenance.path] : [],
-			) ?? [];
-		expect(localPaths.some((path) => path.includes("golden-corpus"))).toBe(
-			false,
-		);
+		const result = await runCodegen(productionSystemPromptRecipe, {
+			mode: "check",
+		});
 
 		const artifact = result.plan.artifacts.find(
 			({ meta }) => meta.route === "reading-resolution/de",
@@ -503,28 +495,20 @@ describe("Prompt Experiments", () => {
 		expect(
 			paths.some((path) => path.endsWith("golden-corpus/corpus.ts")),
 		).toBe(true);
-		expect(paths.some((path) => path.endsWith("cases/wip/noun.ts"))).toBe(
+		expect(paths.some((path) => path.endsWith("cases/noun.ts"))).toBe(true);
+		expect(paths.some((path) => path.endsWith("cases/verb.ts"))).toBe(true);
+		expect(paths.some((path) => path.endsWith("cases/adp.ts"))).toBe(true);
+		expect(paths.some((path) => path.endsWith("cases/phraseme.ts"))).toBe(
 			true,
 		);
-		expect(paths.some((path) => path.endsWith("cases/wip/verb.ts"))).toBe(
-			true,
+		expect(
+			paths.some((path) => path.endsWith("cases/function-words.ts")),
+		).toBe(false);
+		expect(
+			paths.some((path) => path.endsWith("cases/labels-and-names.ts")),
+		).toBe(false);
+		expect(paths.some((path) => path.endsWith("cases/morpheme.ts"))).toBe(
+			false,
 		);
-		expect(
-			paths.some((path) => path.endsWith("cases/hand-verivied/adp.ts")),
-		).toBe(true);
-		expect(
-			paths.some((path) => path.endsWith("cases/wip/phraseme.ts")),
-		).toBe(true);
-		expect(
-			paths.some((path) => path.endsWith("cases/wip/function-words.ts")),
-		).toBe(false);
-		expect(
-			paths.some((path) =>
-				path.endsWith("cases/wip/labels-and-names.ts"),
-			),
-		).toBe(false);
-		expect(
-			paths.some((path) => path.endsWith("cases/wip/morpheme.ts")),
-		).toBe(false);
 	});
 });

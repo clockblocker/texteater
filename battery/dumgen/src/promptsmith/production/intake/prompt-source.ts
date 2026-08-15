@@ -1,4 +1,4 @@
-import { definePromptSource } from "../../../assembly";
+import { definePromptSource } from "../../assembly";
 import { corpus } from "./golden-corpus/corpus";
 import { inputSchema, outputSchema } from "./schemas";
 

@@ -1,7 +1,5 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promptSource as intakePromptSource } from "../laboratory/prompt-source/intake/prompt-source";
-import { promptSource as readingPromptSource } from "../laboratory/prompt-source/reading-resolution/de/prompt-source";
 import { promptSource as grammarFusionPromptSource } from "../production/grammatical-resolution/de/construction/fusion/prompt-source";
 import { promptSource as grammarPairedFramePromptSource } from "../production/grammatical-resolution/de/construction/paired-frame/prompt-source";
 import { promptSource as grammarAdjectivePromptSource } from "../production/grammatical-resolution/de/lexeme/adjective/prompt-source";
@@ -25,6 +23,7 @@ import { promptSource as grammarCollocationPromptSource } from "../production/gr
 import { promptSource as grammarDiscourseFormulaPromptSource } from "../production/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
 import { promptSource as grammarIdiomPromptSource } from "../production/grammatical-resolution/de/phraseme/idiom/prompt-source";
 import { promptSource as grammarProverbPromptSource } from "../production/grammatical-resolution/de/phraseme/proverb/prompt-source";
+import { promptSource as intakePromptSource } from "../production/intake/prompt-source";
 import { promptSource as lexicalResolutionPromptSource } from "../production/knowledge-analysis/lexical-breakdown/resolution/prompt-source";
 import { promptSource as lexicalSegmentationPromptSource } from "../production/knowledge-analysis/lexical-breakdown/segmentation/prompt-source";
 import { promptSource as morphologicalResolutionPromptSource } from "../production/knowledge-analysis/morphological-tree/resolution/prompt-source";
@@ -33,26 +32,13 @@ import {
 	productionDemonstrationSelection,
 	promptSource as productionTargetPromptSource,
 } from "../production/prompt-part/target-classification/de/high-level-whole-unit";
+import { promptSource as readingPromptSource } from "../production/reading-resolution/de/prompt-source";
+import { promptSource as unitShadowClassificationPromptSource } from "../production/unit-shadow-classification/prompt-source";
 import { selectedCaseSourcePaths } from "./golden-corpus";
 import type { SystemPromptRecipe } from "./system-prompt-codegen";
 import { defineSystemPromptCodegen } from "./system-prompt-codegen";
-import { promptSource as unitShadowClassificationPromptSource } from "../production/unit-shadow-classification/prompt-source";
 
 const promptsmithRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
-const laboratoryCodegen = defineSystemPromptCodegen({
-	promptSources: [intakePromptSource, readingPromptSource],
-	promptSourceRoot: join(promptsmithRoot, "laboratory", "prompt-source"),
-	generatedRoot: join(
-		promptsmithRoot,
-		"laboratory",
-		"generated-system-prompt",
-	),
-	displayRoot: promptsmithRoot,
-	artifactIdPrefix: "system-prompt",
-	generatedBy: "promptsmith/assembly/generate-system-prompts.ts",
-	staleLabel: "Generated system prompts are stale",
-});
-
 const productionPromptSourceRoot = join(
 	promptsmithRoot,
 	"production",
@@ -71,12 +57,14 @@ const knowledgePromptSources = [
 const productionCodegen = defineSystemPromptCodegen({
 	promptSources: [
 		productionTargetPromptSource,
-		grammarFusionPromptSource,
+		intakePromptSource,
+		readingPromptSource,
 		unitShadowClassificationPromptSource,
 		morphologicalSegmentationPromptSource,
 		morphologicalResolutionPromptSource,
 		lexicalSegmentationPromptSource,
 		lexicalResolutionPromptSource,
+		grammarFusionPromptSource,
 		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,
 		grammarAdpositionPromptSource,
@@ -167,11 +155,9 @@ const productionCodegen = defineSystemPromptCodegen({
 				: undefined,
 });
 
-export const systemPromptRecipe: SystemPromptRecipe = laboratoryCodegen.recipe;
 export const productionSystemPromptRecipe: SystemPromptRecipe =
 	productionCodegen.recipe;
 
 if (import.meta.main) {
-	await laboratoryCodegen.run();
 	await productionCodegen.run();
 }

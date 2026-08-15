@@ -1,4 +1,4 @@
-import { defineGoldenCorpus } from "../../../../assembly";
+import { defineGoldenCorpus } from "../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
 import { core } from "./cases/core";
 

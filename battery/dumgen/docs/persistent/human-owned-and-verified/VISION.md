@@ -133,8 +133,8 @@ This is how we resolve holonyms / plasemy. The "emoji as semantic identity" + "d
 The only piece, that we have working prompt for (as per 8 Aug 2026).
 
 Read
-`battery/dumgen/src/promptsmith/laboratory/prompt-source/reading-resolution/de/prompt-source.ts`
-`battery/dumgen/src/promptsmith/laboratory/prompt-source/reading-resolution/de/golden-corpus/cases/hand-verivied/adp.ts`
+`battery/dumgen/src/promptsmith/production/prompt-source/reading-resolution/de/prompt-source.ts`
+`battery/dumgen/src/promptsmith/production/prompt-source/reading-resolution/de/golden-corpus/cases/hand-verivied/adp.ts`
 
 
 ## 3 Relations 

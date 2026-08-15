@@ -4,22 +4,18 @@ import {
 	freezeIntakeBatch,
 	type IntakeBatch,
 } from "../intake/contracts";
-import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
-import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
+import { systemPrompt as intakeSystemPrompt } from "../promptsmith/production/generated-system-prompt/intake";
 import { systemPrompt as lexicalResolutionSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/lexical-breakdown/resolution";
 import { systemPrompt as lexicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/lexical-breakdown/segmentation";
 import { systemPrompt as morphologicalResolutionSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/resolution";
 import { systemPrompt as morphologicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/segmentation";
+import { systemPrompt as readingSystemPrompt } from "../promptsmith/production/generated-system-prompt/reading-resolution/de";
+import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import { systemPrompt as unitShadowClassificationSystemPrompt } from "../promptsmith/production/generated-system-prompt/unit-shadow-classification";
 import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
-} from "../promptsmith/laboratory/prompt-source/intake/schemas";
-import {
-	inputSchema as readingModelInputSchema,
-	outputSchema as readingOutputSchema,
-} from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
-import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
+} from "../promptsmith/production/intake/schemas";
 import {
 	lexicalResolutionInputSchema,
 	lexicalResolutionOutputSchema,
@@ -37,12 +33,16 @@ import {
 	modelInputSchema as targetModelInputSchema,
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
-import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
+import {
+	inputSchema as readingModelInputSchema,
+	outputSchema as readingOutputSchema,
+} from "../promptsmith/production/reading-resolution/de/schemas";
 import {
 	inputSchema as unitShadowClassificationInputSchema,
 	outputSchema as unitShadowClassificationOutputSchema,
 } from "../promptsmith/production/unit-shadow-classification/schemas";
 import { assertSupportedUnitShadowClassification } from "../schema/unit-shadow-classification";
+import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
@@ -123,8 +123,6 @@ const readingPrompt = {
 	ReadingResolution
 >;
 
-function promptEntry<Definition extends Prompt>(
-	prompt: Definition,
 const unitShadowClassificationPrompt = {
 	systemPrompt: unitShadowClassificationSystemPrompt,
 	inputSchema: unitShadowClassificationInputSchema,
@@ -180,6 +178,8 @@ const lexicalResolutionPrompt = {
 	typeof lexicalResolutionOutputSchema
 >;
 
+function promptEntry<Definition extends Prompt>(
+	prompt: Definition,
 ): PromptCatalogEntry<Definition> {
 	return { meta: { kind: "prompt" }, prompt };
 }
@@ -221,9 +221,6 @@ export type LaboratoryPromptCatalog = {
 		readonly readingResolution: {
 			readonly de: PromptCatalogEntry<typeof readingPrompt>;
 		};
-	};
-};
-
 		readonly unitShadowClassification: PromptCatalogEntry<
 			typeof unitShadowClassificationPrompt
 		>;
@@ -245,6 +242,9 @@ export type LaboratoryPromptCatalog = {
 				>;
 			};
 		};
+	};
+};
+
 export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 	laboratory: {
 		intake: promptEntry(intakePrompt),
@@ -253,8 +253,6 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 		},
 		grammaticalResolution: { de: grammaticalResolutionCatalog },
 		readingResolution: { de: promptEntry(readingPrompt) },
-	},
-};
 		unitShadowClassification: promptEntry(unitShadowClassificationPrompt),
 		knowledge: {
 			morphologicalTree: {
@@ -266,3 +264,5 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 				resolution: promptEntry(lexicalResolutionPrompt),
 			},
 		},
+	},
+};

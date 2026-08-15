@@ -1,10 +1,7 @@
 import emojiRegex from "emoji-regex";
 import { z } from "zod";
 
-import type {
-	PromptInputSchema,
-	PromptOutputSchema,
-} from "../../../../assembly";
+import type { PromptInputSchema, PromptOutputSchema } from "../../../assembly";
 
 const MAX_EMOJI_GRAPHEMES = 4;
 const emojiPatternSource = emojiRegex().source;

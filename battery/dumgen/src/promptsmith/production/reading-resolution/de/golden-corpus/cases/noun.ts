@@ -2,8 +2,8 @@ import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
 	type GoldenCaseRegistry,
-} from "../../../../../../../assembly";
-import type { inputSchema, outputSchema } from "../../../schemas";
+} from "../../../../../assembly";
+import type { inputSchema, outputSchema } from "../../schemas";
 
 const bankStorytelling = defineGoldenCaseGroup({
 	"reading-de-noun-bank-bench-new": {

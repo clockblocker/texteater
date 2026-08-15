@@ -2,8 +2,8 @@ import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
 	type GoldenCaseRegistry,
-} from "../../../../../../../assembly";
-import type { inputSchema, outputSchema } from "../../../schemas";
+} from "../../../../../assembly";
+import type { inputSchema, outputSchema } from "../../schemas";
 
 const ueberStorytelling = defineGoldenCaseGroup({
 	"reading-de-adp-ueber-connector": {
