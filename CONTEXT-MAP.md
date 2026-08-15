@@ -2,6 +2,7 @@
 
 ## Contexts
 
+- [tf-demo](./app/tf-demo/CONTEXT.md) — presents one shared linguistic graph while Visitors own only Click history
 - [Dumling](./battery/dumling/CONTEXT.md) — names and describes the grammatical entities to which learner text resolves
 - [Dumrel](./battery/dumrel/CONTEXT.md) — names typed Lemma and Reading Knowledge and its relation algebra
 - [Dumdict](./battery/dumdict/CONTEXT.md) — manages learner-owned dictionary records over Dumling entities

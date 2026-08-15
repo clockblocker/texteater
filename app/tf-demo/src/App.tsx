@@ -1,7 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
-import { BookOpenIcon } from "lucide-react";
+import { BookOpenIcon, DatabaseZapIcon, UserRoundXIcon } from "lucide-react";
 import { type FormEvent, lazy, Suspense, useState } from "react";
 import { ResolutionPipeline } from "@/components/resolution-pipeline";
 import { Badge } from "@/components/ui/badge";
@@ -51,8 +51,14 @@ export function App() {
 	});
 	const submitTextAction = useAction(api.orchestration.submitText);
 	const resolveSegmentAction = useAction(api.orchestration.resolveSegment);
+	const clearSharedDataAction = useAction(api.demoReset.clearSharedData);
+	const clearVisitorDataAction = useAction(api.demoReset.clearVisitorData);
 	const submitText = useMutation({ mutationFn: submitTextAction });
 	const resolveSegment = useMutation({ mutationFn: resolveSegmentAction });
+	const clearSharedData = useMutation({ mutationFn: clearSharedDataAction });
+	const clearVisitorData = useMutation({
+		mutationFn: clearVisitorDataAction,
+	});
 
 	const presentation = presentationQuery.data ?? null;
 	const visibleSentences =
@@ -65,7 +71,10 @@ export function App() {
 		interactionError ??
 		mutationMessage(submitText.error) ??
 		mutationMessage(resolveSegment.error) ??
+		mutationMessage(clearSharedData.error) ??
+		mutationMessage(clearVisitorData.error) ??
 		mutationMessage(presentationQuery.error);
+	const isClearing = clearSharedData.isPending || clearVisitorData.isPending;
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -115,6 +124,51 @@ export function App() {
 		}
 	}
 
+	async function handleClearSharedData() {
+		if (
+			!window.confirm(
+				"Clear shared data for every visitor? This removes all Texts, Sentences, Segments, Readings, Lemmas, relations, and Knowledge.",
+			)
+		) {
+			return;
+		}
+		setNotice(null);
+		setInteractionError(null);
+		try {
+			const result = await clearSharedData.mutateAsync({});
+			setSubmittedSentences([]);
+			setNotice(
+				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
+			);
+		} catch (cause) {
+			setInteractionError(
+				mutationMessage(cause) ?? "Shared-data reset failed.",
+			);
+		}
+	}
+
+	async function handleClearVisitorData() {
+		if (
+			!window.confirm(
+				"Clear this visitor's data? This removes only your click history; shared resolutions and Knowledge stay available.",
+			)
+		) {
+			return;
+		}
+		setNotice(null);
+		setInteractionError(null);
+		try {
+			const result = await clearVisitorData.mutateAsync({ visitorId });
+			setNotice(
+				`Cleared ${result.deleted} records owned by this visitor.`,
+			);
+		} catch (cause) {
+			setInteractionError(
+				mutationMessage(cause) ?? "Visitor-data reset failed.",
+			);
+		}
+	}
+
 	return (
 		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
@@ -136,8 +190,9 @@ export function App() {
 					<CardHeader>
 						<CardTitle>Reading workspace</CardTitle>
 						<CardDescription>
-							Linguistic Knowledge is global; only clicks and
-							resolved contexts belong to this anonymous visitor.
+							Linguistic resolutions and Knowledge are global;
+							only click history belongs to this anonymous
+							visitor.
 						</CardDescription>
 						<CardAction>
 							<Badge variant="secondary">Local demo</Badge>
@@ -242,6 +297,37 @@ export function App() {
 						</Button>
 					</CardFooter>
 				</Card>
+
+				<footer className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+					<p className="text-xs leading-relaxed text-muted-foreground">
+						Demo data controls. Shared data is global; your data is
+						only this Visitor&apos;s Click history.
+					</p>
+					<div className="flex flex-col gap-2 sm:flex-row">
+						<Button
+							type="button"
+							variant="outline"
+							disabled={isClearing}
+							onClick={() => void handleClearVisitorData()}
+						>
+							<UserRoundXIcon data-icon="inline-start" />
+							{clearVisitorData.isPending
+								? "Clearing your data…"
+								: "Clear my data"}
+						</Button>
+						<Button
+							type="button"
+							variant="destructive"
+							disabled={isClearing}
+							onClick={() => void handleClearSharedData()}
+						>
+							<DatabaseZapIcon data-icon="inline-start" />
+							{clearSharedData.isPending
+								? "Clearing shared data…"
+								: "Clear shared data"}
+						</Button>
+					</div>
+				</footer>
 			</div>
 		</main>
 	);

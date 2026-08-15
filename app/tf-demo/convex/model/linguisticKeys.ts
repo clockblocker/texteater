@@ -37,14 +37,16 @@ export function resolutionKeyFor(
 	return JSON.stringify([segmentedSentenceId, memberSegmentIndices]);
 }
 
-export function visitorContextKeyFor(
-	visitorId: string,
+export function resolvedContextKeyFor(
 	segmentedSentenceId: string,
 	clickedSegmentIndex: number,
 ): string {
-	return JSON.stringify([
-		visitorId,
-		segmentedSentenceId,
-		clickedSegmentIndex,
-	]);
+	return JSON.stringify([segmentedSentenceId, clickedSegmentIndex]);
+}
+
+export function visitorResolvedClickKeyFor(
+	visitorId: string,
+	resolvedContextKey: string,
+): string {
+	return JSON.stringify([visitorId, resolvedContextKey]);
 }

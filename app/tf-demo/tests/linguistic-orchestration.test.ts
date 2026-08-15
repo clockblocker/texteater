@@ -94,9 +94,15 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 				})),
 			} satisfies PersistedSentence;
 		},
+		async findResolvedContext() {
+			return null;
+		},
 		async persistResolvedClick(input) {
 			persistedClick = input;
 			return { contextId: "context-1" };
+		},
+		async persistReusedResolvedClick() {
+			throw new Error("A first resolution cannot reuse a context.");
 		},
 	};
 	const dumgen = buildDumgen({
@@ -201,7 +207,7 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 	});
 });
 
-test("records a repeated click without asking Dumdict to append duplicate evidence", async () => {
+test("reuses a globally resolved Segment without invoking Dumgen again", async () => {
 	const lemma = {
 		canonicalForm: "Bank",
 		coreFeatures: { gender: "Fem", hyph: null },
@@ -219,7 +225,25 @@ test("records a repeated click without asking Dumdict to append duplicate eviden
 		inflectionalFeatures: { case: "Nom", number: "Plur" },
 		lemma,
 	} as const;
+	const grammaticalResult = {
+		decision: "Resolved",
+		language: "de",
+		markedContext: "Die <TARGET>Banken</TARGET>.",
+		attestation: {
+			members: [{ attested: "Banken", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface,
+		},
+		interaction: {
+			segmentedSentenceId: "segmented-1",
+			clickedSegmentIndex: 2,
+			memberSegmentIndices: [2],
+		},
+	} as const;
 	let persisted = false;
+	let contextLookups = 0;
+	let grammaticalCalls = 0;
+	let readingCalls = 0;
 	const orchestrator = createTfDemoOrchestrator({
 		dumgen: {
 			async segment() {
@@ -227,28 +251,11 @@ test("records a repeated click without asking Dumdict to append duplicate eviden
 			},
 			resolve: {
 				async grammatical() {
-					return {
-						decision: "Resolved",
-						language: "de",
-						markedContext: "Die <TARGET>Banken</TARGET>.",
-						attestation: {
-							members: [
-								{
-									attested: "Banken",
-									orthography: "Standard",
-								},
-							],
-							realizationCoverage: "Full",
-							surface,
-						},
-						interaction: {
-							segmentedSentenceId: "segmented-1",
-							clickedSegmentIndex: 2,
-							memberSegmentIndices: [2],
-						},
-					};
+					grammaticalCalls += 1;
+					return grammaticalResult;
 				},
 				async reading() {
+					readingCalls += 1;
 					return { decision: "Reuse", emojiDescription: "🏦" };
 				},
 			},
@@ -299,7 +306,21 @@ test("records a repeated click without asking Dumdict to append duplicate eviden
 					],
 				};
 			},
+			async findResolvedContext() {
+				contextLookups += 1;
+				return contextLookups === 1
+					? null
+					: {
+							resolvedContextId: "resolved-context-1",
+							grammatical: grammaticalResult,
+							reading,
+						};
+			},
 			async persistResolvedClick() {
+				persisted = true;
+				return {};
+			},
+			async persistReusedResolvedClick() {
 				persisted = true;
 				return {};
 			},
@@ -312,9 +333,17 @@ test("records a repeated click without asking Dumdict to append duplicate eviden
 		sentenceId: "sentence-1",
 		clickedSegmentIndex: 2,
 	});
+	await orchestrator.resolveSegment({
+		requestId: "request-repeat-again",
+		visitorId: "visitor-2",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 2,
+	});
 
 	expect(result.dictionaryMutation.status).toBe("alreadyApplied");
 	expect(persisted).toBe(true);
+	expect(grammaticalCalls).toBe(1);
+	expect(readingCalls).toBe(1);
 });
 
 describe("Dumrel Knowledge Contribution seam", () => {

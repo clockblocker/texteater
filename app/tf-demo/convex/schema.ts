@@ -46,6 +46,20 @@ export default defineSchema({
 		.index("by_surface_key", ["surfaceKey"])
 		.index("by_lemma_key", ["lemmaKey"]),
 
+	resolvedContexts: defineTable({
+		contextKey: v.string(),
+		sentenceId: v.id("sentences"),
+		clickedSegmentIndex: v.number(),
+		resolutionId: v.id("grammaticalResolutions"),
+		readingId: v.id("readings"),
+		resolvedAt: v.number(),
+	})
+		.index("by_context_key", ["contextKey"])
+		.index("by_sentence_id_and_clicked_segment_index", [
+			"sentenceId",
+			"clickedSegmentIndex",
+		]),
+
 	dictionaryLemmas: defineTable({
 		lemmaKey: v.string(),
 		record: v.any(),
@@ -101,6 +115,7 @@ export default defineSchema({
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 		resolutionId: v.optional(v.id("grammaticalResolutions")),
+		resolvedContextId: v.optional(v.id("resolvedContexts")),
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
@@ -115,15 +130,21 @@ export default defineSchema({
 		contextKey: v.string(),
 		visitorId: v.string(),
 		clickId: v.id("visitorClicks"),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-		resolutionId: v.id("grammaticalResolutions"),
-		readingId: v.id("readings"),
+		resolvedContextId: v.optional(v.id("resolvedContexts")),
+		// Transitional fields for rows written before resolvedContexts existed.
+		sentenceId: v.optional(v.id("sentences")),
+		clickedSegmentIndex: v.optional(v.number()),
+		resolutionId: v.optional(v.id("grammaticalResolutions")),
+		readingId: v.optional(v.id("readings")),
 		resolvedAt: v.number(),
 	})
 		.index("by_context_key", ["contextKey"])
 		.index("by_click_id", ["clickId"])
 		.index("by_visitor_id_and_resolved_at", ["visitorId", "resolvedAt"])
+		.index("by_sentence_id_and_clicked_segment_index", [
+			"sentenceId",
+			"clickedSegmentIndex",
+		])
 		.index("by_visitor_id_and_sentence_id_and_clicked_segment_index", [
 			"visitorId",
 			"sentenceId",

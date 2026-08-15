@@ -1,12 +1,16 @@
 import { v } from "convex/values";
 
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { resolutionKeyFor, visitorContextKeyFor } from "./model/linguisticKeys";
+import {
+	resolutionKeyFor,
+	resolvedContextKeyFor,
+	visitorResolvedClickKeyFor,
+} from "./model/linguisticKeys";
 import {
 	grammaticalResolutionInputValidator,
 	knowledgeOwnerKindValidator,
@@ -83,6 +87,91 @@ function assertMatchingRetry(
 	) {
 		throw new Error("requestId was already used for a different click.");
 	}
+}
+
+async function recordResolvedVisitorClick(
+	ctx: MutationCtx,
+	args: {
+		requestId: string;
+		visitorId: string;
+		sentenceId: Id<"sentences">;
+		clickedSegmentIndex: number;
+	},
+	resolvedContext: Doc<"resolvedContexts">,
+) {
+	assertVisitorInput(args.visitorId, args.requestId);
+	await requireClickableSegment(
+		ctx,
+		args.sentenceId,
+		args.clickedSegmentIndex,
+	);
+	if (
+		resolvedContext.sentenceId !== args.sentenceId ||
+		resolvedContext.clickedSegmentIndex !== args.clickedSegmentIndex
+	) {
+		throw new Error("Resolved Segment Context does not match the click.");
+	}
+
+	const existingClick = await findClickByRequestId(ctx, args.requestId);
+	if (existingClick) {
+		assertMatchingRetry(existingClick, args);
+		const visitorContext = await ctx.db
+			.query("visitorResolvedContexts")
+			.withIndex("by_click_id", (q) => q.eq("clickId", existingClick._id))
+			.unique();
+		if (!visitorContext) {
+			throw new Error("requestId already records an unresolved click.");
+		}
+		return {
+			clickId: existingClick._id,
+			resolutionId: resolvedContext.resolutionId,
+			readingId: resolvedContext.readingId,
+			resolvedContextId: resolvedContext._id,
+			contextId: visitorContext._id,
+			deduplicated: true,
+		};
+	}
+
+	const now = Date.now();
+	const clickId = await ctx.db.insert("visitorClicks", {
+		...args,
+		resolutionId: resolvedContext.resolutionId,
+		resolvedContextId: resolvedContext._id,
+		clickedAt: now,
+	});
+	const contextKey = visitorResolvedClickKeyFor(
+		args.visitorId,
+		resolvedContext.contextKey,
+	);
+	const existingVisitorContext = await ctx.db
+		.query("visitorResolvedContexts")
+		.withIndex("by_context_key", (q) => q.eq("contextKey", contextKey))
+		.unique();
+	const contextValue = {
+		contextKey,
+		visitorId: args.visitorId,
+		clickId,
+		resolvedContextId: resolvedContext._id,
+		resolvedAt: now,
+	};
+	let contextId: Id<"visitorResolvedContexts">;
+	if (existingVisitorContext) {
+		await ctx.db.replace(existingVisitorContext._id, contextValue);
+		contextId = existingVisitorContext._id;
+	} else {
+		contextId = await ctx.db.insert(
+			"visitorResolvedContexts",
+			contextValue,
+		);
+	}
+	return {
+		clickId,
+		resolutionId: resolvedContext.resolutionId,
+		readingId: resolvedContext.readingId,
+		resolvedContextId: resolvedContext._id,
+		contextId,
+		deduplicated: false,
+	};
 }
 
 export const persistSubmittedText = internalMutation({
@@ -254,6 +343,80 @@ export const getSentenceForResolution = internalQuery({
 	},
 });
 
+export const findOrPromoteResolvedContextForSegment = internalMutation({
+	args: {
+		sentenceId: v.id("sentences"),
+		clickedSegmentIndex: v.number(),
+	},
+	returns: v.union(
+		v.null(),
+		v.object({
+			resolvedContextId: v.id("resolvedContexts"),
+			grammatical: v.any(),
+			reading: v.any(),
+		}),
+	),
+	handler: async (ctx, { sentenceId, clickedSegmentIndex }) => {
+		assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
+		let context = await ctx.db
+			.query("resolvedContexts")
+			.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
+				q
+					.eq("sentenceId", sentenceId)
+					.eq("clickedSegmentIndex", clickedSegmentIndex),
+			)
+			.unique();
+		if (!context) {
+			const legacy = await ctx.db
+				.query("visitorResolvedContexts")
+				.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
+					q
+						.eq("sentenceId", sentenceId)
+						.eq("clickedSegmentIndex", clickedSegmentIndex),
+				)
+				.first();
+			if (!legacy?.resolutionId || !legacy.readingId) return null;
+			const sentence = await ctx.db.get(sentenceId);
+			if (!sentence) return null;
+			const contextKey = resolvedContextKeyFor(
+				sentence.segmentedSentenceId,
+				clickedSegmentIndex,
+			);
+			const resolvedContextId = await ctx.db.insert("resolvedContexts", {
+				contextKey,
+				sentenceId,
+				clickedSegmentIndex,
+				resolutionId: legacy.resolutionId,
+				readingId: legacy.readingId,
+				resolvedAt: legacy.resolvedAt,
+			});
+			context = await ctx.db.get(resolvedContextId);
+		}
+		if (!context) return null;
+		const [sentence, resolution, reading] = await Promise.all([
+			ctx.db.get(context.sentenceId),
+			ctx.db.get(context.resolutionId),
+			ctx.db.get(context.readingId),
+		]);
+		if (!sentence || !resolution || !reading) return null;
+		return {
+			resolvedContextId: context._id,
+			grammatical: {
+				decision: "Resolved" as const,
+				language: resolution.language,
+				markedContext: resolution.markedContext,
+				attestation: resolution.attestation,
+				interaction: {
+					segmentedSentenceId: sentence.segmentedSentenceId,
+					clickedSegmentIndex,
+					memberSegmentIndices: [...resolution.memberSegmentIndices],
+				},
+			},
+			reading: reading.entry.reading,
+		};
+	},
+});
+
 export const findClickResultByRequestId = internalQuery({
 	args: { requestId: v.string() },
 	returns: v.union(
@@ -261,6 +424,7 @@ export const findClickResultByRequestId = internalQuery({
 		v.object({
 			clickId: v.id("visitorClicks"),
 			status: v.union(v.literal("Unresolved"), v.literal("Resolved")),
+			resolvedContextId: v.optional(v.id("resolvedContexts")),
 			resolutionId: v.optional(v.id("grammaticalResolutions")),
 			readingId: v.optional(v.id("readings")),
 		}),
@@ -275,7 +439,21 @@ export const findClickResultByRequestId = internalQuery({
 			.query("visitorResolvedContexts")
 			.withIndex("by_click_id", (q) => q.eq("clickId", click._id))
 			.unique();
-		return context
+		const resolvedContextId =
+			click.resolvedContextId ?? context?.resolvedContextId;
+		const resolvedContext = resolvedContextId
+			? await ctx.db.get(resolvedContextId)
+			: null;
+		if (resolvedContext) {
+			return {
+				clickId: click._id,
+				status: "Resolved" as const,
+				resolvedContextId: resolvedContext._id,
+				resolutionId: resolvedContext.resolutionId,
+				readingId: resolvedContext.readingId,
+			};
+		}
+		return context?.resolutionId && context.readingId
 			? {
 					clickId: click._id,
 					status: "Resolved" as const,
@@ -317,6 +495,31 @@ export const persistUnresolvedClick = internalMutation({
 	},
 });
 
+export const persistReusedResolvedClick = internalMutation({
+	args: {
+		requestId: v.string(),
+		visitorId: v.string(),
+		sentenceId: v.id("sentences"),
+		clickedSegmentIndex: v.number(),
+		resolvedContextId: v.id("resolvedContexts"),
+	},
+	returns: v.object({
+		clickId: v.id("visitorClicks"),
+		resolutionId: v.id("grammaticalResolutions"),
+		readingId: v.id("readings"),
+		resolvedContextId: v.id("resolvedContexts"),
+		contextId: v.id("visitorResolvedContexts"),
+		deduplicated: v.boolean(),
+	}),
+	handler: async (ctx, args) => {
+		const resolvedContext = await ctx.db.get(args.resolvedContextId);
+		if (!resolvedContext) {
+			throw new Error("Resolved Segment Context does not exist.");
+		}
+		return recordResolvedVisitorClick(ctx, args, resolvedContext);
+	},
+});
+
 export const persistResolvedClick = internalMutation({
 	args: {
 		requestId: v.string(),
@@ -330,6 +533,7 @@ export const persistResolvedClick = internalMutation({
 		clickId: v.id("visitorClicks"),
 		resolutionId: v.id("grammaticalResolutions"),
 		readingId: v.id("readings"),
+		resolvedContextId: v.id("resolvedContexts"),
 		contextId: v.id("visitorResolvedContexts"),
 		deduplicated: v.boolean(),
 	}),
@@ -341,28 +545,6 @@ export const persistResolvedClick = internalMutation({
 			args.sentenceId,
 			args.clickedSegmentIndex,
 		);
-		const existingClick = await findClickByRequestId(ctx, args.requestId);
-		if (existingClick) {
-			assertMatchingRetry(existingClick, args);
-			const context = await ctx.db
-				.query("visitorResolvedContexts")
-				.withIndex("by_click_id", (q) =>
-					q.eq("clickId", existingClick._id),
-				)
-				.unique();
-			if (!context) {
-				throw new Error(
-					"requestId already records an unresolved click.",
-				);
-			}
-			return {
-				clickId: existingClick._id,
-				resolutionId: context.resolutionId,
-				readingId: context.readingId,
-				contextId: context._id,
-				deduplicated: true,
-			};
-		}
 
 		const memberIndices = args.resolution.memberSegmentIndices;
 		if (memberIndices.length === 0) {
@@ -447,51 +629,46 @@ export const persistResolvedClick = internalMutation({
 			});
 		}
 
-		const now = Date.now();
-		const clickId = await ctx.db.insert("visitorClicks", {
-			requestId: args.requestId,
-			visitorId: args.visitorId,
-			sentenceId: args.sentenceId,
-			clickedSegmentIndex: args.clickedSegmentIndex,
-			resolutionId,
-			clickedAt: now,
-		});
-		const contextKey = visitorContextKeyFor(
-			args.visitorId,
+		const contextKey = resolvedContextKeyFor(
 			sentence.segmentedSentenceId,
 			args.clickedSegmentIndex,
 		);
 		const existingContext = await ctx.db
-			.query("visitorResolvedContexts")
+			.query("resolvedContexts")
 			.withIndex("by_context_key", (q) => q.eq("contextKey", contextKey))
 			.unique();
-		const contextValue = {
-			contextKey,
-			visitorId: args.visitorId,
-			clickId,
-			sentenceId: args.sentenceId,
-			clickedSegmentIndex: args.clickedSegmentIndex,
-			resolutionId,
-			readingId: reading._id,
-			resolvedAt: now,
-		};
-		let contextId: Id<"visitorResolvedContexts">;
+		let resolvedContext: Doc<"resolvedContexts">;
 		if (existingContext) {
-			await ctx.db.replace(existingContext._id, contextValue);
-			contextId = existingContext._id;
+			if (
+				existingContext.sentenceId !== args.sentenceId ||
+				existingContext.clickedSegmentIndex !==
+					args.clickedSegmentIndex ||
+				existingContext.resolutionId !== resolutionId ||
+				existingContext.readingId !== reading._id
+			) {
+				throw new Error(
+					"Resolved Segment Context key collides with a different resolution.",
+				);
+			}
+			resolvedContext = existingContext;
 		} else {
-			contextId = await ctx.db.insert(
-				"visitorResolvedContexts",
-				contextValue,
-			);
+			const resolvedContextId = await ctx.db.insert("resolvedContexts", {
+				contextKey,
+				sentenceId: args.sentenceId,
+				clickedSegmentIndex: args.clickedSegmentIndex,
+				resolutionId,
+				readingId: reading._id,
+				resolvedAt: Date.now(),
+			});
+			const inserted = await ctx.db.get(resolvedContextId);
+			if (!inserted) {
+				throw new Error(
+					"Resolved Segment Context could not be persisted.",
+				);
+			}
+			resolvedContext = inserted;
 		}
-		return {
-			clickId,
-			resolutionId,
-			readingId: reading._id,
-			contextId,
-			deduplicated: false,
-		};
+		return recordResolvedVisitorClick(ctx, args, resolvedContext);
 	},
 });
 

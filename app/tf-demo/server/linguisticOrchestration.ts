@@ -68,6 +68,15 @@ export type ResolvedClickPersistence = {
 	readonly readingKey: string;
 };
 
+export type ReusableResolvedContext = {
+	readonly resolvedContextId: string;
+	readonly grammatical: Extract<
+		GrammaticalResult<"de">,
+		{ decision: "Resolved" }
+	>;
+	readonly reading: Reading<"de">;
+};
+
 export type OrchestrationPersistence = {
 	persistSubmittedText(input: {
 		readonly submissionKey: string;
@@ -77,7 +86,16 @@ export type OrchestrationPersistence = {
 	getSentenceForResolution(input: {
 		readonly sentenceId: string;
 	}): Promise<PersistedSentence | null>;
+	findResolvedContext(input: {
+		readonly sentenceId: string;
+		readonly clickedSegmentIndex: number;
+	}): Promise<ReusableResolvedContext | null>;
 	persistResolvedClick(input: ResolvedClickPersistence): Promise<unknown>;
+	persistReusedResolvedClick(
+		input: ResolveSegmentInput & {
+			readonly resolvedContextId: string;
+		},
+	): Promise<unknown>;
 	persistUnresolvedClick?(input: {
 		readonly requestId: string;
 		readonly visitorId: string;
@@ -150,6 +168,23 @@ export function createTfDemoOrchestrator(options: {
 		assertNonEmpty(input.sentenceId, "sentenceId");
 		if (!Number.isSafeInteger(input.clickedSegmentIndex)) {
 			throw new TypeError("clickedSegmentIndex must be a safe integer.");
+		}
+		const reusable = await options.persistence.findResolvedContext({
+			sentenceId: input.sentenceId,
+			clickedSegmentIndex: input.clickedSegmentIndex,
+		});
+		if (reusable) {
+			const persisted =
+				await options.persistence.persistReusedResolvedClick({
+					...input,
+					resolvedContextId: reusable.resolvedContextId,
+				});
+			return {
+				grammatical: reusable.grammatical,
+				reading: reusable.reading,
+				reused: true as const,
+				persisted,
+			};
 		}
 
 		const stored = await options.persistence.getSentenceForResolution({

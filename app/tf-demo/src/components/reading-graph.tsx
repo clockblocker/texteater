@@ -203,7 +203,7 @@ function ReadingNoteView({
 				</div>
 				<p className="text-sm text-muted-foreground">
 					Reading Knowledge and Lemma Knowledge are projected
-					separately and combined only for this learner note.
+					separately and combined in this shared demo note.
 				</p>
 			</header>
 
@@ -435,7 +435,7 @@ function RelationComposer({
 					<FieldLabel>Connect this Reading</FieldLabel>
 					<FieldDescription>
 						Targets are real Dumdict Readings resolved by this
-						visitor.
+						Visitor and shared by the demo dictionary.
 					</FieldDescription>
 					{targets.length > 0 ? (
 						<div className="flex flex-wrap items-end gap-3">

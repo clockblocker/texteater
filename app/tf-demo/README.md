@@ -27,6 +27,11 @@ Knowledge. Resolve more than one Reading to create validated semantic relations
 between them and follow those relations from note to note; unresolved Dumdict
 relations remain visible as pending targets.
 
+Resolved Segment Contexts, Readings, relations, and Knowledge belong to one
+Shared Demo Dictionary. Repeating a Click on the same Segment in the same
+immutable Segmented Sentence reuses that universal result without invoking
+Dumgen again. The anonymous Visitor owns only Click history.
+
 The Dumgen actions read `OPENAI_API_KEY` from the Convex deployment. Set it once
 without putting the secret in application code:
 
@@ -36,8 +41,12 @@ bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 
 ## Reset demo data
 
-Reset is the one deliberate destructive demo operation. It is internal, so it
-is available from the CLI but not from the unauthenticated browser:
+The page footer separates the two destructive demo operations: **Clear my
+data** removes only the current Visitor's Click history, while **Clear shared
+data** removes the universal linguistic graph and Shared Demo Dictionary.
+Both require confirmation.
+
+The CLI also exposes the bounded full reset:
 
 ```sh
 bun run reset

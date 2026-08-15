@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { type GenericId, v } from "convex/values";
 import type { SemanticRelation } from "dumrel";
 
 import { type QueryCtx, query } from "./_generated/server";
@@ -177,6 +177,21 @@ export type PendingRelationProjection = {
 	readonly targetKind: string;
 };
 
+type ResolvedContextReferences = {
+	readonly sentenceId: GenericId<"sentences">;
+	readonly clickedSegmentIndex: number;
+	readonly resolutionId: GenericId<"grammaticalResolutions">;
+	readonly readingId: GenericId<"readings">;
+};
+
+type VisitorResolvedContextReference = {
+	readonly resolvedContextId?: GenericId<"resolvedContexts">;
+	readonly sentenceId?: GenericId<"sentences">;
+	readonly clickedSegmentIndex?: number;
+	readonly resolutionId?: GenericId<"grammaticalResolutions">;
+	readonly readingId?: GenericId<"readings">;
+};
+
 export function projectKnowledge(
 	readingKnowledgeValue: unknown,
 	lemmaKnowledgeValue: unknown,
@@ -262,15 +277,15 @@ export const forVisitor = query({
 			.order("desc")
 			.first();
 		if (!context) return null;
+		const references = await resolveContextReferences(ctx, context);
+		if (!references) return null;
 
 		const [reading, resolution, sentence] = await Promise.all([
-			ctx.db.get(context.readingId),
-			ctx.db.get(context.resolutionId),
-			ctx.db.get(context.sentenceId),
+			ctx.db.get(references.readingId),
+			ctx.db.get(references.resolutionId),
+			ctx.db.get(references.sentenceId),
 		]);
-		if (!reading || !resolution || !sentence) {
-			throw new Error("The selected visitor context is incomplete.");
-		}
+		if (!reading || !resolution || !sentence) return null;
 
 		const [segments, text, readingKnowledge, lemmaKnowledge] =
 			await Promise.all([
@@ -298,7 +313,7 @@ export const forVisitor = query({
 					)
 					.unique(),
 			]);
-		if (!text) throw new Error("The selected source Text is missing.");
+		if (!text) return null;
 
 		const identities = projectReadingIdentities(reading);
 		const projected = projectKnowledge(
@@ -309,7 +324,7 @@ export const forVisitor = query({
 
 		return {
 			resolvedAt: context.resolvedAt,
-			clickedSegmentIndex: context.clickedSegmentIndex,
+			clickedSegmentIndex: references.clickedSegmentIndex,
 			text: { textId: text._id, sourceText: text.sourceText },
 			grammaticalResolution: {
 				resolutionId: resolution._id,
@@ -341,7 +356,7 @@ export const forVisitor = query({
 						index,
 						kind,
 						text: segmentText,
-						isClicked: index === context.clickedSegmentIndex,
+						isClicked: index === references.clickedSegmentIndex,
 						isResolutionMember: memberIndices.has(index),
 					}),
 				),
@@ -371,8 +386,13 @@ export const readingHistoryForVisitor = query({
 			)
 			.order("desc")
 			.take(MAX_READING_HISTORY);
+		const references = await Promise.all(
+			contexts.map((context) => resolveContextReferences(ctx, context)),
+		);
 		const rows = await Promise.all(
-			contexts.map(({ readingId }) => ctx.db.get(readingId)),
+			references.map((reference) =>
+				reference ? ctx.db.get(reference.readingId) : null,
+			),
 		);
 		const seen = new Set<string>();
 		return rows.flatMap((row) => {
@@ -382,6 +402,34 @@ export const readingHistoryForVisitor = query({
 		});
 	},
 });
+
+async function resolveContextReferences(
+	ctx: QueryCtx,
+	context: VisitorResolvedContextReference,
+): Promise<ResolvedContextReferences | null> {
+	if (context.resolvedContextId) {
+		const resolvedContext = await ctx.db.get(context.resolvedContextId);
+		return resolvedContext
+			? {
+					sentenceId: resolvedContext.sentenceId,
+					clickedSegmentIndex: resolvedContext.clickedSegmentIndex,
+					resolutionId: resolvedContext.resolutionId,
+					readingId: resolvedContext.readingId,
+				}
+			: null;
+	}
+	return context.sentenceId &&
+		context.clickedSegmentIndex !== undefined &&
+		context.resolutionId &&
+		context.readingId
+		? {
+				sentenceId: context.sentenceId,
+				clickedSegmentIndex: context.clickedSegmentIndex,
+				resolutionId: context.resolutionId,
+				readingId: context.readingId,
+			}
+		: null;
+}
 
 async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 	const reading = await ctx.db

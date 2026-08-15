@@ -16,6 +16,7 @@ import {
 	lemmaIdentityKey,
 	type OrchestrationPersistence,
 	type PersistedSentence,
+	type ReusableResolvedContext,
 	readingIdentityKey,
 } from "../server/linguisticOrchestration";
 import { internal } from "./_generated/api";
@@ -47,13 +48,20 @@ export const resolveSegment = action({
 		const prior: {
 			clickId: Id<"visitorClicks">;
 			status: "Unresolved" | "Resolved";
+			resolvedContextId?: Id<"resolvedContexts">;
 			resolutionId?: Id<"grammaticalResolutions">;
 			readingId?: Id<"readings">;
 		} | null = await ctx.runQuery(
 			internal.persistence.findClickResultByRequestId,
 			{ requestId: args.requestId },
 		);
-		if (prior) return { deduplicated: true, persisted: prior };
+		if (prior) {
+			return {
+				deduplicated: true,
+				grammatical: { decision: prior.status },
+				persisted: prior,
+			};
+		}
 		return orchestratorFor(ctx).resolveSegment({
 			...args,
 			sentenceId: args.sentenceId,
@@ -191,6 +199,15 @@ function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
 				sentenceId: sentenceId as Id<"sentences">,
 			}) as Promise<PersistedSentence | null>;
 		},
+		async findResolvedContext({ sentenceId, clickedSegmentIndex }) {
+			return ctx.runMutation(
+				internal.persistence.findOrPromoteResolvedContextForSegment,
+				{
+					sentenceId: sentenceId as Id<"sentences">,
+					clickedSegmentIndex,
+				},
+			) as Promise<ReusableResolvedContext | null>;
+		},
 		async persistResolvedClick(input) {
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
 				...input,
@@ -202,6 +219,17 @@ function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
 					],
 				},
 			});
+		},
+		async persistReusedResolvedClick(input) {
+			return ctx.runMutation(
+				internal.persistence.persistReusedResolvedClick,
+				{
+					...input,
+					sentenceId: input.sentenceId as Id<"sentences">,
+					resolvedContextId:
+						input.resolvedContextId as Id<"resolvedContexts">,
+				},
+			);
 		},
 		async persistUnresolvedClick(input) {
 			return ctx.runMutation(

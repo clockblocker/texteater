@@ -4,7 +4,8 @@ import {
 	lemmaKeyFor,
 	readingKeyFor,
 	resolutionKeyFor,
-	visitorContextKeyFor,
+	resolvedContextKeyFor,
+	visitorResolvedClickKeyFor,
 } from "../convex/model/linguisticKeys";
 
 describe("global linguistic and visitor-scoped identities", () => {
@@ -26,12 +27,14 @@ describe("global linguistic and visitor-scoped identities", () => {
 		expect(lemmaKeyFor({ ...lemma })).toBe(lemmaKey);
 	});
 
-	test("the same click occurrence is isolated between visitors", () => {
-		const first = visitorContextKeyFor("visitor-a", "sentence-1", 2);
-		const second = visitorContextKeyFor("visitor-b", "sentence-1", 2);
+	test("the same resolved Segment Context is universal across visitors", () => {
+		const resolvedContextKey = resolvedContextKeyFor("sentence-1", 2);
 
-		expect(first).not.toBe(second);
-		expect(first).toBe(visitorContextKeyFor("visitor-a", "sentence-1", 2));
+		expect(resolvedContextKey).not.toContain("visitor-a");
+		expect(resolvedContextKey).toBe(resolvedContextKeyFor("sentence-1", 2));
+		expect(
+			visitorResolvedClickKeyFor("visitor-a", resolvedContextKey),
+		).not.toBe(visitorResolvedClickKeyFor("visitor-b", resolvedContextKey));
 	});
 
 	test("Reading identity follows Dumdict normalization", () => {

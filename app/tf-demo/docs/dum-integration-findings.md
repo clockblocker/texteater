@@ -18,8 +18,8 @@ The real German click chain composes for the first vertical slice:
 4. `resolve.reading("de", ...)` reuses or drafts a Reading.
 5. Dumdict plans `addAttestation` or `addNewNote`; the Convex storage adapter
    commits those planned changes in one mutation.
-6. A separate mutation persists the global resolution and visitor-scoped click
-   context.
+6. A separate mutation persists the universal Resolved Segment Context and a
+   Visitor-owned Click reference to it.
 
 Knowledge application also composes when the caller supplies a Dumrel
 `KnowledgeChange`: the action validates it with `knowledgeChangeSchema`, applies
@@ -97,19 +97,19 @@ Reproduction path:
 
 - `DumdictStoragePort.commitChanges` accepts only `{ baseRevision, changes }` in
   `battery/dumdict/src/storage/commit.ts`.
-- The visitor click, Dumgen resolution, and resolved context are application
-  data outside Dumdict's planned changes.
+- The Visitor Click and universal Resolved Segment Context are application data
+  outside Dumdict's planned changes.
 - Convex mutations cannot be nested into one transaction from an action.
 
 Workaround in tf-demo: the action first commits the real Dumdict plan, then calls
 the idempotent `persistResolvedClick` mutation. Each durable write is atomic, but
 the two writes are not jointly atomic. A failure between them can leave a valid
-global Reading without the visitor click. On a normal repeated encounter,
-tf-demo consults the candidate note and does not ask Dumdict to append an exact
-duplicate string attestation. This makes that common retry/re-encounter shape
-safe, but it does not make the two transactions jointly atomic. A future
-host-composition contract would be needed for exactly-once atomic application
-across dictionary and interaction state.
+global Reading without the Visitor Click. Once a Resolved Segment Context is
+stored, every Visitor reuses it before the Dumgen or Dumdict path and only a new
+Click is persisted. This makes the common retry/re-encounter shape safe and
+fast, but it does not make the two first-resolution transactions jointly
+atomic. A future host-composition contract would be needed for exactly-once
+atomic application across dictionary and interaction state.
 
 ### DUMDICT-4: Dumdict-planned relation cleanup needs a wider Convex slice adapter
 
@@ -154,9 +154,10 @@ range. Convex push passed. The real calls then produced:
 - accepted German Segments for `Die Banken sind geöffnet.`;
 - a resolved `Lexeme/NOUN` Lemma `Bank`, plural Surface `Banken`, structured
   Dumling Attestation, and Reading `🏦`;
-- one applied Dumdict new-note commit and one persisted visitor context;
-- Reading reuse on a second request without duplicating the exact string
-  attestation;
+- one applied Dumdict new-note commit, one universal Resolved Segment Context,
+  and one Visitor Click;
+- universal Resolved Segment Context reuse on a second Click without invoking
+  Dumgen or duplicating the exact string attestation;
 - request-ID deduplication on an exact retry; and
 - a validated Reading Definition contribution accumulated as
   `Ein Geldinstitut.`.
