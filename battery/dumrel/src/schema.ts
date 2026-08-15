@@ -1,34 +1,32 @@
 import { z } from "zod";
+import {
+	morphologicalRelationValues,
+	semanticRelationValues,
+} from "./relation-vocabulary.js";
 
 export const relationFamilySchema = z.enum(["lexical", "morphological"]);
 
-export const lexicalRelationSchema = z.enum([
-	"synonym",
-	"nearSynonym",
-	"antonym",
-	"hypernym",
-	"hyponym",
-	"meronym",
-	"holonym",
-]);
+export const semanticRelationSchema = z.enum(semanticRelationValues);
 
-export const morphologicalRelationSchema = z.enum([
-	"consistsOf",
-	"usedIn",
-	"derivedFrom",
-	"sourceFor",
-]);
+/** @deprecated Use semanticRelationSchema. */
+export const lexicalRelationSchema = semanticRelationSchema;
+
+/** @deprecated New writes use Reading Knowledge Morphological Tree. */
+export const morphologicalRelationSchema = z.enum(morphologicalRelationValues);
 
 export const relationSchema = z.union([
-	lexicalRelationSchema,
+	semanticRelationSchema,
 	morphologicalRelationSchema,
 ]);
 
-export function lexicalRelationsSchemaFor<T extends z.ZodType>(
+export function semanticRelationsSchemaFor<T extends z.ZodType>(
 	targetSchema: T,
 ) {
-	return z.partialRecord(lexicalRelationSchema, z.array(targetSchema));
+	return z.partialRecord(semanticRelationSchema, z.array(targetSchema));
 }
+
+/** @deprecated Use semanticRelationsSchemaFor. */
+export const lexicalRelationsSchemaFor = semanticRelationsSchemaFor;
 
 export function morphologicalRelationsSchemaFor<T extends z.ZodType>(
 	targetSchema: T,
@@ -41,7 +39,7 @@ export function relationNotesSchemaFor<
 	MorphologicalTarget extends z.ZodType,
 >(targets: { lexical: LexicalTarget; morphological: MorphologicalTarget }) {
 	return z.object({
-		lexical: lexicalRelationsSchemaFor(targets.lexical).optional(),
+		lexical: semanticRelationsSchemaFor(targets.lexical).optional(),
 		morphological: morphologicalRelationsSchemaFor(
 			targets.morphological,
 		).optional(),
@@ -60,7 +58,7 @@ export function proposedRelationSchemaFor<
 	return z.discriminatedUnion("relationFamily", [
 		z.object({
 			relationFamily: z.literal("lexical"),
-			relation: lexicalRelationSchema,
+			relation: semanticRelationSchema,
 			target: z.discriminatedUnion("kind", [
 				z.object({
 					kind: z.literal("existing"),

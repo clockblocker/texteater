@@ -3,13 +3,13 @@ import { z } from "zod";
 import {
 	inverseRelationFor,
 	isKnownRelation,
-	lexicalRelationsSchemaFor,
 	proposedRelationSchemaFor,
 	relationFamilyFor,
+	semanticRelationsSchemaFor,
 } from "../../src";
-import type { LexicalRelation, MorphologicalRelation } from "../../src/types";
+import type { MorphologicalRelation, SemanticRelation } from "../../src/types";
 
-const lexicalRelations = [
+const semanticRelations = [
 	"synonym",
 	"nearSynonym",
 	"antonym",
@@ -17,7 +17,7 @@ const lexicalRelations = [
 	"hyponym",
 	"meronym",
 	"holonym",
-] satisfies LexicalRelation[];
+] satisfies SemanticRelation[];
 
 const morphologicalRelations = [
 	"consistsOf",
@@ -28,7 +28,7 @@ const morphologicalRelations = [
 
 describe("relation registry", () => {
 	test("covers every relation with a family-preserving inverse pair", () => {
-		for (const relation of lexicalRelations) {
+		for (const relation of semanticRelations) {
 			expect(isKnownRelation(relation)).toBe(true);
 			expect(relationFamilyFor(relation)).toBe("lexical");
 			const inverse = inverseRelationFor("lexical", relation);
@@ -50,7 +50,7 @@ describe("relation registry", () => {
 
 describe("relation schemas", () => {
 	test("validate relation maps without owning endpoint schemas", () => {
-		const schema = lexicalRelationsSchemaFor(z.object({ id: z.string() }));
+		const schema = semanticRelationsSchemaFor(z.object({ id: z.string() }));
 		expect(schema.parse({ synonym: [{ id: "reading-1" }] })).toEqual({
 			synonym: [{ id: "reading-1" }],
 		});

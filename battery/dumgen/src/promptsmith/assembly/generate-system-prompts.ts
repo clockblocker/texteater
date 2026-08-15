@@ -25,6 +25,10 @@ import { promptSource as grammarCollocationPromptSource } from "../production/gr
 import { promptSource as grammarDiscourseFormulaPromptSource } from "../production/grammatical-resolution/de/phraseme/discourse-formula/prompt-source";
 import { promptSource as grammarIdiomPromptSource } from "../production/grammatical-resolution/de/phraseme/idiom/prompt-source";
 import { promptSource as grammarProverbPromptSource } from "../production/grammatical-resolution/de/phraseme/proverb/prompt-source";
+import { promptSource as lexicalResolutionPromptSource } from "../production/knowledge-analysis/lexical-breakdown/resolution/prompt-source";
+import { promptSource as lexicalSegmentationPromptSource } from "../production/knowledge-analysis/lexical-breakdown/segmentation/prompt-source";
+import { promptSource as morphologicalResolutionPromptSource } from "../production/knowledge-analysis/morphological-tree/resolution/prompt-source";
+import { promptSource as morphologicalSegmentationPromptSource } from "../production/knowledge-analysis/morphological-tree/segmentation/prompt-source";
 import {
 	productionDemonstrationSelection,
 	promptSource as productionTargetPromptSource,
@@ -32,6 +36,7 @@ import {
 import { selectedCaseSourcePaths } from "./golden-corpus";
 import type { SystemPromptRecipe } from "./system-prompt-codegen";
 import { defineSystemPromptCodegen } from "./system-prompt-codegen";
+import { promptSource as unitShadowClassificationPromptSource } from "../production/unit-shadow-classification/prompt-source";
 
 const promptsmithRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const laboratoryCodegen = defineSystemPromptCodegen({
@@ -57,10 +62,21 @@ const productionRouteRoot = join(
 	productionPromptSourceRoot,
 	productionTargetPromptSource.route,
 );
+const knowledgePromptSources = [
+	morphologicalSegmentationPromptSource,
+	morphologicalResolutionPromptSource,
+	lexicalSegmentationPromptSource,
+	lexicalResolutionPromptSource,
+] as const;
 const productionCodegen = defineSystemPromptCodegen({
 	promptSources: [
 		productionTargetPromptSource,
 		grammarFusionPromptSource,
+		unitShadowClassificationPromptSource,
+		morphologicalSegmentationPromptSource,
+		morphologicalResolutionPromptSource,
+		lexicalSegmentationPromptSource,
+		lexicalResolutionPromptSource,
 		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,
 		grammarAdpositionPromptSource,
@@ -109,7 +125,9 @@ const productionCodegen = defineSystemPromptCodegen({
 					"representation.ts",
 					"schemas.ts",
 				]
-			: undefined,
+			: knowledgePromptSources.some((candidate) => candidate === source)
+				? ["prompt-source.ts"]
+				: undefined,
 	provenancePaths: (source) =>
 		source === productionTargetPromptSource
 			? [
@@ -125,7 +143,28 @@ const productionCodegen = defineSystemPromptCodegen({
 						productionDemonstrationSelection,
 					),
 				]
-			: undefined,
+			: knowledgePromptSources.some((candidate) => candidate === source)
+				? [
+						join(
+							promptsmithRoot,
+							"production",
+							source.route,
+							"prompt-source.ts",
+						),
+						join(
+							promptsmithRoot,
+							"production",
+							"knowledge-analysis",
+							"schemas.ts",
+						),
+						join(
+							promptsmithRoot,
+							"production",
+							"knowledge-analysis",
+							"corpora.ts",
+						),
+					]
+				: undefined,
 });
 
 export const systemPromptRecipe: SystemPromptRecipe = laboratoryCodegen.recipe;

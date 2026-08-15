@@ -1,0 +1,6 @@
+{
+	"unit-shadow-en-suffixoid": {
+		"classification": "prompt-defect",
+		"explanation": "The prompt exposes Suffixoid in the Dumling-derived route inventory but does not define its boundary from an ordinary Suffix, so the model conservatively abstained despite explicit intended-use evidence."
+	}
+}

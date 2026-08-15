@@ -1,4 +1,10 @@
 export {
+	admitsLexicalBreakdown,
+	assertReadingKnowledgeForOwner,
+	mergeReadingKnowledge,
+} from "./knowledge.js";
+export * from "./knowledge-schema.js";
+export {
 	inverseRelationFor,
 	isKnownRelation,
 	relationFamilyFor,
@@ -12,5 +18,7 @@ export {
 	relationFamilySchema,
 	relationNotesSchemaFor,
 	relationSchema,
+	semanticRelationSchema,
+	semanticRelationsSchemaFor,
 } from "./schema.js";
 export type * from "./types.js";

@@ -1,9 +1,9 @@
 import type {
-	LexicalRelation,
 	MorphologicalRelation,
 	Relation,
 	RelationFamily,
-} from "./types.js";
+	SemanticRelation,
+} from "./relation-vocabulary.js";
 
 const relationRules = {
 	synonym: { family: "lexical", inverse: "synonym" },
@@ -18,8 +18,8 @@ const relationRules = {
 	derivedFrom: { family: "morphological", inverse: "sourceFor" },
 	sourceFor: { family: "morphological", inverse: "derivedFrom" },
 } as const satisfies Record<
-	LexicalRelation,
-	{ family: "lexical"; inverse: LexicalRelation }
+	SemanticRelation,
+	{ family: "lexical"; inverse: SemanticRelation }
 > &
 	Record<
 		MorphologicalRelation,
@@ -40,8 +40,8 @@ export function relationFamilyFor(relation: Relation): RelationFamily {
 
 export function inverseRelationFor(
 	family: "lexical",
-	relation: LexicalRelation,
-): LexicalRelation;
+	relation: SemanticRelation,
+): SemanticRelation;
 export function inverseRelationFor(
 	family: "morphological",
 	relation: MorphologicalRelation,

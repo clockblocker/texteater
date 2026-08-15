@@ -6,6 +6,11 @@ import {
 } from "../intake/contracts";
 import { systemPrompt as intakeSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/intake";
 import { systemPrompt as readingSystemPrompt } from "../promptsmith/laboratory/generated-system-prompt/reading-resolution/de";
+import { systemPrompt as lexicalResolutionSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/lexical-breakdown/resolution";
+import { systemPrompt as lexicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/lexical-breakdown/segmentation";
+import { systemPrompt as morphologicalResolutionSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/resolution";
+import { systemPrompt as morphologicalSegmentationSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/morphological-tree/segmentation";
+import { systemPrompt as unitShadowClassificationSystemPrompt } from "../promptsmith/production/generated-system-prompt/unit-shadow-classification";
 import {
 	inputSchema as intakeInputSchema,
 	outputSchema as intakeOutputSchema,
@@ -16,6 +21,16 @@ import {
 } from "../promptsmith/laboratory/prompt-source/reading-resolution/de/schemas";
 import { systemPrompt as targetSystemPrompt } from "../promptsmith/production/generated-system-prompt/target-classification/de/high-level-whole-unit";
 import {
+	lexicalResolutionInputSchema,
+	lexicalResolutionOutputSchema,
+	lexicalSegmentationInputSchema,
+	lexicalSegmentationOutputSchema,
+	morphologicalResolutionInputSchema,
+	morphologicalResolutionOutputSchema,
+	morphologicalSegmentationInputSchema,
+	morphologicalSegmentationOutputSchema,
+} from "../promptsmith/production/knowledge-analysis/schemas";
+import {
 	additionalIndicesAdapter,
 	projectClassificationInput,
 	inputSchema as targetInputSchema,
@@ -23,6 +38,11 @@ import {
 	outputSchema as targetOutputSchema,
 } from "../promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 import type { AnalysisTarget, ReadingResolution, Unresolved } from "../types";
+import {
+	inputSchema as unitShadowClassificationInputSchema,
+	outputSchema as unitShadowClassificationOutputSchema,
+} from "../promptsmith/production/unit-shadow-classification/schemas";
+import { assertSupportedUnitShadowClassification } from "../schema/unit-shadow-classification";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "./laboratory/de-authored-grammatical-resolution-prompts";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
@@ -105,6 +125,61 @@ const readingPrompt = {
 
 function promptEntry<Definition extends Prompt>(
 	prompt: Definition,
+const unitShadowClassificationPrompt = {
+	systemPrompt: unitShadowClassificationSystemPrompt,
+	inputSchema: unitShadowClassificationInputSchema,
+	outputSchema: unitShadowClassificationOutputSchema,
+	outputPostcondition: {
+		assert(input, generated) {
+			assertSupportedUnitShadowClassification(input, generated);
+		},
+	},
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 128 },
+} satisfies Prompt<
+	typeof unitShadowClassificationInputSchema,
+	typeof unitShadowClassificationOutputSchema
+>;
+
+const morphologicalSegmentationPrompt = {
+	systemPrompt: morphologicalSegmentationSystemPrompt,
+	inputSchema: morphologicalSegmentationInputSchema,
+	outputSchema: morphologicalSegmentationOutputSchema,
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 4096 },
+} satisfies Prompt<
+	typeof morphologicalSegmentationInputSchema,
+	typeof morphologicalSegmentationOutputSchema
+>;
+
+const morphologicalResolutionPrompt = {
+	systemPrompt: morphologicalResolutionSystemPrompt,
+	inputSchema: morphologicalResolutionInputSchema,
+	outputSchema: morphologicalResolutionOutputSchema,
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 4096 },
+} satisfies Prompt<
+	typeof morphologicalResolutionInputSchema,
+	typeof morphologicalResolutionOutputSchema
+>;
+
+const lexicalSegmentationPrompt = {
+	systemPrompt: lexicalSegmentationSystemPrompt,
+	inputSchema: lexicalSegmentationInputSchema,
+	outputSchema: lexicalSegmentationOutputSchema,
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 3072 },
+} satisfies Prompt<
+	typeof lexicalSegmentationInputSchema,
+	typeof lexicalSegmentationOutputSchema
+>;
+
+const lexicalResolutionPrompt = {
+	systemPrompt: lexicalResolutionSystemPrompt,
+	inputSchema: lexicalResolutionInputSchema,
+	outputSchema: lexicalResolutionOutputSchema,
+	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 3072 },
+} satisfies Prompt<
+	typeof lexicalResolutionInputSchema,
+	typeof lexicalResolutionOutputSchema
+>;
+
 ): PromptCatalogEntry<Definition> {
 	return { meta: { kind: "prompt" }, prompt };
 }
@@ -149,6 +224,27 @@ export type LaboratoryPromptCatalog = {
 	};
 };
 
+		readonly unitShadowClassification: PromptCatalogEntry<
+			typeof unitShadowClassificationPrompt
+		>;
+		readonly knowledge: {
+			readonly morphologicalTree: {
+				readonly segmentation: PromptCatalogEntry<
+					typeof morphologicalSegmentationPrompt
+				>;
+				readonly resolution: PromptCatalogEntry<
+					typeof morphologicalResolutionPrompt
+				>;
+			};
+			readonly lexicalBreakdown: {
+				readonly segmentation: PromptCatalogEntry<
+					typeof lexicalSegmentationPrompt
+				>;
+				readonly resolution: PromptCatalogEntry<
+					typeof lexicalResolutionPrompt
+				>;
+			};
+		};
 export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 	laboratory: {
 		intake: promptEntry(intakePrompt),
@@ -159,3 +255,14 @@ export const PROMPT_CATALOG: LaboratoryPromptCatalog = {
 		readingResolution: { de: promptEntry(readingPrompt) },
 	},
 };
+		unitShadowClassification: promptEntry(unitShadowClassificationPrompt),
+		knowledge: {
+			morphologicalTree: {
+				segmentation: promptEntry(morphologicalSegmentationPrompt),
+				resolution: promptEntry(morphologicalResolutionPrompt),
+			},
+			lexicalBreakdown: {
+				segmentation: promptEntry(lexicalSegmentationPrompt),
+				resolution: promptEntry(lexicalResolutionPrompt),
+			},
+		},

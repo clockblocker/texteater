@@ -4,29 +4,35 @@ import type {
 	LemmaKindFor,
 	SupportedLanguage,
 } from "dumling/types";
-import type { z } from "zod";
 import type {
-	lexicalRelationSchema,
-	morphologicalRelationSchema,
-	relationFamilySchema,
-	relationSchema,
-} from "./schema.js";
+	MorphologicalRelation,
+	SemanticRelation,
+} from "./relation-vocabulary.js";
 
-export type RelationFamily = z.infer<typeof relationFamilySchema>;
-export type LexicalRelation = z.infer<typeof lexicalRelationSchema>;
-export type MorphologicalRelation = z.infer<typeof morphologicalRelationSchema>;
-export type Relation = z.infer<typeof relationSchema>;
+export type * from "./knowledge.js";
+export type {
+	LexicalRelation,
+	MorphologicalRelation,
+	Relation,
+	RelationFamily,
+	SemanticRelation,
+} from "./relation-vocabulary.js";
 
-/** The structural seam required of a lexical relation endpoint. */
+/** The structural seam required of a Semantic Relation endpoint. */
 export type ReadingRelationTarget<L extends SupportedLanguage> = {
 	lemma: Lemma<L>;
 	emojiDescription: string;
 };
 
-export type LexicalRelations<L extends SupportedLanguage> = Partial<
-	Record<LexicalRelation, ReadingRelationTarget<L>[]>
+export type SemanticRelations<L extends SupportedLanguage> = Partial<
+	Record<SemanticRelation, ReadingRelationTarget<L>[]>
 >;
 
+/** @deprecated Use SemanticRelations. */
+export type LexicalRelations<L extends SupportedLanguage> =
+	SemanticRelations<L>;
+
+/** @deprecated New writes use Reading Knowledge Morphological Tree. */
 export type MorphologicalRelations<L extends SupportedLanguage> = Partial<
 	Record<MorphologicalRelation, Lemma<L>[]>
 >;
@@ -39,7 +45,7 @@ export type RelationNotesForDisambiguation<L extends SupportedLanguage> = {
 export type ProposedRelation<L extends SupportedLanguage> =
 	| {
 			relationFamily: "lexical";
-			relation: LexicalRelation;
+			relation: SemanticRelation;
 			target: ProposedLexicalRelationTarget<L>;
 	  }
 	| {

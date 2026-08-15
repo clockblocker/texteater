@@ -61,6 +61,7 @@
 		"prototype:grammatical-resolution-symbol": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-symbol/run.ts",
 		"prototype:grammatical-resolution-verb": "bun --env-file ../../.env.local docs/prototypes/grammatical-resolution-verb/run.ts",
 		"prototype:reading-resolution-gauntlet": "bun --env-file ../../.env.local docs/prototypes/reading-resolution-gauntlet/run.ts",
+		"prototype:unit-shadow-classification": "bun --env-file ../../.env.local docs/prototypes/unit-shadow-classification/run.ts",
 		"prototype:target-classification-high-level-contracts": "bun docs/prototypes/target-classification-high-level-contracts/run.ts",
 		"prototype:issue-6": "bun run prototypes/issue-6-selection-surface/run.ts",
 		"prototype:issue-6:summarize": "bun run prototypes/issue-6-selection-surface/summarize.ts",
@@ -73,6 +74,7 @@
 		"codec-builder-library": "workspace:^",
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
+		"dumrel": "workspace:^",
 		"emoji-regex": "^10.6.0",
 		"openai": "^7.0.0",
 		"zod": "^4.4.0"

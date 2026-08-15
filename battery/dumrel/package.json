@@ -1,7 +1,7 @@
 {
 	"name": "dumrel",
 	"version": "0.1.0",
-	"description": "Types, schemas, and rules for lexical and morphological relations.",
+	"description": "Typed Lemma and Reading Knowledge, validation, merge rules, and semantic relation algebra.",
 	"type": "module",
 	"packageManager": "bun@1.3.14",
 	"license": "MIT",
@@ -39,7 +39,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && bun build src/index.ts src/types.ts src/schema.ts --outdir dist --format esm --target node --packages external",
+		"build:js": "rm -rf dist && bun build src/index.ts src/types.ts src/schema.ts src/knowledge.ts src/knowledge-schema.ts --outdir dist --format esm --target node --packages external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",

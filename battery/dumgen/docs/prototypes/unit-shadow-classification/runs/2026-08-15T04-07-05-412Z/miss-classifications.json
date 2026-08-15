@@ -1,0 +1,6 @@
+{
+	"unit-shadow-he-yesh-adverb": {
+		"classification": "prompt-defect",
+		"explanation": "The prompt states the generic ADV/AUX inventory but does not preserve the pinned Hebrew HTB policy that modal יש is ADV while existential יש is VERB."
+	}
+}
