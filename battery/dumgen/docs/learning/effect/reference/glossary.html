@@ -60,11 +60,16 @@
 	</section>
 
 	<section>
+		<h2>Retry policy</h2>
+		<p>A rule that decides which typed failures deserve another attempt, how many attempts are allowed, and how long to wait between them. In Dumgen, each attempt borrows a provider permit; backoff does not.</p>
+	</section>
+
+	<section>
 		<h2>Intake Batch</h2>
 		<p>A Dumgen domain concept: one bounded, non-empty, ordered list of caller-delimited Source Sentences handled by exactly one Intake model call. Concurrency policy must not accidentally split it into one provider call per sentence.</p>
 	</section>
 
-	<nav><a href="effect-mental-model.html">← Mental model</a> · <a href="../lessons/0005-a-fiber-is-a-running-effect.html">Fiber lesson</a> · <a href="../lessons/0006-not-every-bad-outcome-is-an-error.html">Typed-failure lesson →</a></nav>
+	<nav><a href="effect-mental-model.html">← Mental model</a> · <a href="../lessons/0006-not-every-bad-outcome-is-an-error.html">Typed failures</a> · <a href="../lessons/0007-dont-sleep-holding-the-permit.html">Retry scope →</a></nav>
 </main>
 </body>
 </html>
