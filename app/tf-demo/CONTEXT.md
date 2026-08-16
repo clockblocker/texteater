@@ -31,17 +31,18 @@ Resolved Segment Context. Its request identifier provides delivery
 idempotency, never linguistic identity or resolution reuse.
 _Avoid_: Resolution, Resolved Segment Context
 
-## Text-scoped deletion
+## Text-scoped analysis stripping
 
-A Text owns its Sentences, Segments, grammatical resolutions, Resolved Segment
-Contexts, and every Visitor Click on those contexts. Deleting a Text removes
-that complete interaction graph.
+A Text and its Sentences are preserved source material. Stripping analysis
+removes the Sentences' Segments, grammatical resolutions, Resolved Segment
+Contexts, and every Visitor Click on those contexts. It never removes the Text
+or Sentence records.
 
 An attestation is identified by its `(Sentence ID, Text ID)` pair, encoded as an
 opaque Dumdict attestation key. A Resolved Segment Context is the durable link
-from the attested Reading use to its linguistic resolution. When text deletion
+from the attested Reading use to its linguistic resolution. When stripping
 leaves a Reading with no surviving attestation or context, the Shared Demo
 Dictionary also removes that Reading, its Reading Knowledge and relations,
 and—when no other Reading or grammatical resolution uses it—its Lemma,
 Surfaces, and Lemma Knowledge. Readings sourced by another Text remain shared;
-only the deleted Text's exact composite attestations are removed from them.
+only the stripped Text's exact composite attestations are removed from them.

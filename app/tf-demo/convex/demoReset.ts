@@ -142,7 +142,7 @@ export const resetDemoDataBatch = internalMutation({
 	},
 });
 
-const textDeletionCandidatesValidator = v.object({
+const textAnalysisCandidatesValidator = v.object({
 	readingIds: v.array(v.id("readings")),
 	attestationKeys: v.array(v.string()),
 	legacyAttestations: v.array(v.string()),
@@ -167,9 +167,9 @@ const mutationPageValidator = v.object({
 	patched: v.number(),
 });
 
-export const getTextDeletionCandidates = internalQuery({
+export const getTextAnalysisCandidates = internalQuery({
 	args: { textId: v.id("texts") },
-	returns: v.union(v.null(), textDeletionCandidatesValidator),
+	returns: v.union(v.null(), textAnalysisCandidatesValidator),
 	handler: async (ctx, { textId }) => {
 		if (!(await ctx.db.get(textId))) return null;
 		const sentences = await ctx.db
@@ -178,7 +178,7 @@ export const getTextDeletionCandidates = internalQuery({
 			.take(MAX_SENTENCES_PER_TEXT + 1);
 		if (sentences.length > MAX_SENTENCES_PER_TEXT) {
 			throw new Error(
-				`Text deletion supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
+				`Analysis stripping supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
 			);
 		}
 
@@ -205,7 +205,7 @@ export const getTextDeletionCandidates = internalQuery({
 				legacyContexts.length > MAX_CONTEXTS_PER_SENTENCE
 			) {
 				throw new Error(
-					`Text deletion exceeded ${MAX_CONTEXTS_PER_SENTENCE} resolution contexts for one Sentence.`,
+					`Analysis stripping exceeded ${MAX_CONTEXTS_PER_SENTENCE} resolution contexts for one Sentence.`,
 				);
 			}
 			for (const context of contexts) readingIds.add(context.readingId);
@@ -253,137 +253,126 @@ export const findReadingsByAttestationPage = internalQuery({
 	},
 });
 
-export const clearTextGraphBatch = internalMutation({
+export const stripTextAnalysisGraphBatch = internalMutation({
 	args: { textId: v.id("texts") },
 	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
 	handler: async (ctx, { textId }) => {
 		if (!(await ctx.db.get(textId))) return { deleted: 0, hasMore: false };
-		const sentence = await ctx.db
+		const sentences = await ctx.db
 			.query("sentences")
 			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
-			.first();
-		if (!sentence) return { deleted: 0, hasMore: false };
-
-		const legacyVisitorContexts = await ctx.db
-			.query("visitorResolvedContexts")
-			.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.take(BATCH_SIZE);
-		if (legacyVisitorContexts.length > 0) {
-			for (const context of legacyVisitorContexts) {
-				await ctx.db.delete(context._id);
-			}
-			return { deleted: legacyVisitorContexts.length, hasMore: true };
-		}
-
-		const clicks = await ctx.db
-			.query("visitorClicks")
-			.withIndex("by_sentence_id", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.take(Math.floor(BATCH_SIZE / 2));
-		if (clicks.length > 0) {
-			let deleted = 0;
-			for (const click of clicks) {
-				const visitorContext = await ctx.db
-					.query("visitorResolvedContexts")
-					.withIndex("by_click_id", (q) => q.eq("clickId", click._id))
-					.unique();
-				if (visitorContext) {
-					await ctx.db.delete(visitorContext._id);
-					deleted += 1;
-				}
-				await ctx.db.delete(click._id);
-				deleted += 1;
-			}
-			return { deleted, hasMore: true };
-		}
-
-		const resolvedContext = await ctx.db
-			.query("resolvedContexts")
-			.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.first();
-		if (resolvedContext) {
-			const visitorContexts = await ctx.db
-				.query("visitorResolvedContexts")
-				.withIndex("by_resolved_context_id", (q) =>
-					q.eq("resolvedContextId", resolvedContext._id),
-				)
-				.take(BATCH_SIZE);
-			if (visitorContexts.length > 0) {
-				for (const context of visitorContexts) {
-					await ctx.db.delete(context._id);
-				}
-				return { deleted: visitorContexts.length, hasMore: true };
-			}
-			await ctx.db.delete(resolvedContext._id);
-			return { deleted: 1, hasMore: true };
-		}
-
-		const resolutions = await ctx.db
-			.query("grammaticalResolutions")
-			.withIndex("by_sentence_id", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.take(BATCH_SIZE);
-		if (resolutions.length > 0) {
-			for (const resolution of resolutions) {
-				await ctx.db.delete(resolution._id);
-			}
-			return { deleted: resolutions.length, hasMore: true };
-		}
-
-		const segments = await ctx.db
-			.query("segments")
-			.withIndex("by_sentence_id_and_index", (q) =>
-				q.eq("sentenceId", sentence._id),
-			)
-			.take(BATCH_SIZE);
-		if (segments.length > 0) {
-			for (const segment of segments) await ctx.db.delete(segment._id);
-			return { deleted: segments.length, hasMore: true };
-		}
-
-		await ctx.db.delete(sentence._id);
-		return { deleted: 1, hasMore: true };
-	},
-});
-
-export const findLegacyAttestationsWithoutRemainingSentence = internalQuery({
-	args: { attestations: v.array(v.string()) },
-	returns: v.array(v.string()),
-	handler: async (ctx, { attestations }) => {
-		if (attestations.length > MAX_SENTENCES_PER_TEXT) {
+			.take(MAX_SENTENCES_PER_TEXT + 1);
+		if (sentences.length > MAX_SENTENCES_PER_TEXT) {
 			throw new Error(
-				`Check at most ${MAX_SENTENCES_PER_TEXT} legacy Text attestations per call.`,
+				`Analysis stripping supports at most ${MAX_SENTENCES_PER_TEXT} Sentences per Text.`,
 			);
 		}
-		const orphaned = [];
-		for (const attestation of attestations) {
-			const sentence = await ctx.db
-				.query("sentences")
-				.withIndex("by_stitched_text", (q) =>
-					q.eq("stitchedText", attestation),
+
+		for (const sentence of sentences) {
+			const legacyVisitorContexts = await ctx.db
+				.query("visitorResolvedContexts")
+				.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
+					q.eq("sentenceId", sentence._id),
+				)
+				.take(BATCH_SIZE);
+			if (legacyVisitorContexts.length > 0) {
+				for (const context of legacyVisitorContexts) {
+					await ctx.db.delete(context._id);
+				}
+				return { deleted: legacyVisitorContexts.length, hasMore: true };
+			}
+
+			const clicks = await ctx.db
+				.query("visitorClicks")
+				.withIndex("by_sentence_id", (q) =>
+					q.eq("sentenceId", sentence._id),
+				)
+				.take(Math.floor(BATCH_SIZE / 2));
+			if (clicks.length > 0) {
+				let deleted = 0;
+				for (const click of clicks) {
+					const visitorContext = await ctx.db
+						.query("visitorResolvedContexts")
+						.withIndex("by_click_id", (q) =>
+							q.eq("clickId", click._id),
+						)
+						.unique();
+					if (visitorContext) {
+						await ctx.db.delete(visitorContext._id);
+						deleted += 1;
+					}
+					await ctx.db.delete(click._id);
+					deleted += 1;
+				}
+				return { deleted, hasMore: true };
+			}
+
+			const resolvedContext = await ctx.db
+				.query("resolvedContexts")
+				.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
+					q.eq("sentenceId", sentence._id),
 				)
 				.first();
-			if (!sentence) orphaned.push(attestation);
+			if (resolvedContext) {
+				const visitorContexts = await ctx.db
+					.query("visitorResolvedContexts")
+					.withIndex("by_resolved_context_id", (q) =>
+						q.eq("resolvedContextId", resolvedContext._id),
+					)
+					.take(BATCH_SIZE);
+				if (visitorContexts.length > 0) {
+					for (const context of visitorContexts) {
+						await ctx.db.delete(context._id);
+					}
+					return { deleted: visitorContexts.length, hasMore: true };
+				}
+				await ctx.db.delete(resolvedContext._id);
+				return { deleted: 1, hasMore: true };
+			}
+
+			const resolutions = await ctx.db
+				.query("grammaticalResolutions")
+				.withIndex("by_sentence_id", (q) =>
+					q.eq("sentenceId", sentence._id),
+				)
+				.take(BATCH_SIZE);
+			if (resolutions.length > 0) {
+				for (const resolution of resolutions) {
+					await ctx.db.delete(resolution._id);
+				}
+				return { deleted: resolutions.length, hasMore: true };
+			}
+
+			const segments = await ctx.db
+				.query("segments")
+				.withIndex("by_sentence_id_and_index", (q) =>
+					q.eq("sentenceId", sentence._id),
+				)
+				.take(BATCH_SIZE);
+			if (segments.length > 0) {
+				for (const segment of segments)
+					await ctx.db.delete(segment._id);
+				return { deleted: segments.length, hasMore: true };
+			}
 		}
-		return orphaned;
+
+		return { deleted: 0, hasMore: false };
 	},
 });
 
-export const describeReadingDeletionCandidates = internalQuery({
-	args: { readingIds: v.array(v.id("readings")) },
+export const describeReadingCleanupCandidates = internalQuery({
+	args: {
+		readingIds: v.array(v.id("readings")),
+		strippedAttestations: v.array(v.string()),
+	},
 	returns: v.array(readingDescriptorValidator),
-	handler: async (ctx, { readingIds }) => {
+	handler: async (ctx, { readingIds, strippedAttestations }) => {
 		if (readingIds.length > DESCRIPTOR_PAGE_SIZE) {
 			throw new Error(
 				`Describe at most ${DESCRIPTOR_PAGE_SIZE} Readings per call.`,
 			);
 		}
+		const stripped = new Set(strippedAttestations);
 		const descriptors = [];
 		for (const readingId of readingIds) {
 			const reading = await ctx.db.get(readingId);
@@ -412,6 +401,7 @@ export const describeReadingDeletionCandidates = internalQuery({
 			let hasRemainingAttestation = false;
 			if (!context && !legacyContext) {
 				for (const attestation of attestations) {
+					if (stripped.has(attestation)) continue;
 					const identity = parseAttestationIdentityKey(attestation);
 					const sentence = identity
 						? await ctx.db.get(
@@ -695,7 +685,7 @@ export const clearLemmaDataBatch = internalMutation({
 	},
 });
 
-export const removeTextAttestationsBatch = internalMutation({
+export const removeStrippedReadingAttestationsBatch = internalMutation({
 	args: {
 		readingIds: v.array(v.id("readings")),
 		attestations: v.array(v.string()),
@@ -759,24 +749,6 @@ export const removeSurfaceAttestationsPage = internalMutation({
 	},
 });
 
-export const deleteTextRecord = internalMutation({
-	args: { textId: v.id("texts") },
-	returns: v.boolean(),
-	handler: async (ctx, { textId }) => {
-		const text = await ctx.db.get(textId);
-		if (!text) return false;
-		const sentence = await ctx.db
-			.query("sentences")
-			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
-			.first();
-		if (sentence) {
-			throw new Error("Text cannot be removed while Sentences remain.");
-		}
-		await ctx.db.delete(textId);
-		return true;
-	},
-});
-
 /**
  * The single explicit destructive demo operation.
  *
@@ -822,11 +794,11 @@ export const clearSharedData = action({
 	},
 });
 
-/** Local-demo control: removes one Text and any dictionary chain it solely sources. */
-export const clearTextData = action({
+/** Local-demo control: strips one Text's analysis while preserving its source Sentences. */
+export const stripTextAnalysis = action({
 	args: { textId: v.id("texts") },
 	returns: v.object({
-		deleted: v.number(),
+		removed: v.number(),
 		deletedReadings: v.number(),
 		deletedLemmas: v.number(),
 	}),
@@ -834,16 +806,16 @@ export const clearTextData = action({
 		ctx,
 		{ textId },
 	): Promise<{
-		deleted: number;
+		removed: number;
 		deletedReadings: number;
 		deletedLemmas: number;
 	}> => {
 		const candidates = await ctx.runQuery(
-			internal.demoReset.getTextDeletionCandidates,
+			internal.demoReset.getTextAnalysisCandidates,
 			{ textId },
 		);
 		if (!candidates) {
-			return { deleted: 0, deletedReadings: 0, deletedLemmas: 0 };
+			return { removed: 0, deletedReadings: 0, deletedLemmas: 0 };
 		}
 
 		const candidateReadingIds = new Set<Id<"readings">>(
@@ -872,7 +844,7 @@ export const clearTextData = action({
 			}
 			if (candidateReadingIds.size > MAX_READING_CANDIDATES) {
 				throw new Error(
-					`Text deletion exceeded ${MAX_READING_CANDIDATES} candidate Readings.`,
+					`Analysis stripping exceeded ${MAX_READING_CANDIDATES} candidate Readings.`,
 				);
 			}
 			if (result.isDone) {
@@ -883,36 +855,29 @@ export const clearTextData = action({
 		}
 		if (!readingScanFinished) {
 			throw new Error(
-				`Text deletion exceeded ${MAX_PAGES} Reading scan pages.`,
+				`Analysis stripping exceeded ${MAX_PAGES} Reading scan pages.`,
 			);
 		}
 
-		let deleted = 0;
-		let graphCleared = false;
+		let removed = 0;
+		let graphStripped = false;
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(
-				internal.demoReset.clearTextGraphBatch,
+				internal.demoReset.stripTextAnalysisGraphBatch,
 				{ textId },
 			);
-			deleted += result.deleted;
+			removed += result.deleted;
 			if (!result.hasMore) {
-				graphCleared = true;
+				graphStripped = true;
 				break;
 			}
 		}
-		if (!graphCleared) {
+		if (!graphStripped) {
 			throw new Error(
-				`Text deletion exceeded ${MAX_BATCHES} graph batches after deleting ${deleted} documents.`,
+				`Analysis stripping exceeded ${MAX_BATCHES} graph batches after removing ${removed} documents.`,
 			);
 		}
-		const orphanedLegacyAttestations = await ctx.runQuery(
-			internal.demoReset.findLegacyAttestationsWithoutRemainingSentence,
-			{ attestations: candidates.legacyAttestations },
-		);
-		const attestationsToRemove = [
-			...candidates.attestationKeys,
-			...orphanedLegacyAttestations,
-		];
+		const attestationsToRemove = candidateAttestations;
 
 		const descriptors: Array<{
 			readingId: Id<"readings">;
@@ -928,12 +893,13 @@ export const clearTextData = action({
 		) {
 			descriptors.push(
 				...(await ctx.runQuery(
-					internal.demoReset.describeReadingDeletionCandidates,
+					internal.demoReset.describeReadingCleanupCandidates,
 					{
 						readingIds: candidateIds.slice(
 							offset,
 							offset + DESCRIPTOR_PAGE_SIZE,
 						),
+						strippedAttestations: attestationsToRemove,
 					},
 				)),
 			);
@@ -974,7 +940,7 @@ export const clearTextData = action({
 				}
 				if (!pruningFinished) {
 					throw new Error(
-						`Text deletion exceeded ${MAX_PAGES} relation-pruning pages.`,
+						`Analysis stripping exceeded ${MAX_PAGES} relation-pruning pages.`,
 					);
 				}
 			}
@@ -988,13 +954,13 @@ export const clearTextData = action({
 				internal.demoReset.clearReadingDataBatch,
 				{ readingKeys: doomedReadingKeys },
 			);
-			deleted += result.deleted;
+			removed += result.deleted;
 			deletedReadings += result.deletedReadings;
 			if (result.deleted === 0) readingCleanupFinished = true;
 		}
 		if (!readingCleanupFinished) {
 			throw new Error(
-				`Text deletion exceeded ${MAX_BATCHES} Reading cleanup batches.`,
+				`Analysis stripping exceeded ${MAX_BATCHES} Reading cleanup batches.`,
 			);
 		}
 
@@ -1006,13 +972,13 @@ export const clearTextData = action({
 				internal.demoReset.clearLemmaDataBatch,
 				{ lemmaKeys: doomedLemmaKeys },
 			);
-			deleted += result.deleted;
+			removed += result.deleted;
 			deletedLemmas += result.deletedLemmas;
 			if (result.deleted === 0) lemmaCleanupFinished = true;
 		}
 		if (!lemmaCleanupFinished) {
 			throw new Error(
-				`Text deletion exceeded ${MAX_BATCHES} Lemma cleanup batches.`,
+				`Analysis stripping exceeded ${MAX_BATCHES} Lemma cleanup batches.`,
 			);
 		}
 
@@ -1021,7 +987,7 @@ export const clearTextData = action({
 		);
 		for (let offset = 0; offset < surviving.length; offset += PAGE_SIZE) {
 			await ctx.runMutation(
-				internal.demoReset.removeTextAttestationsBatch,
+				internal.demoReset.removeStrippedReadingAttestationsBatch,
 				{
 					readingIds: surviving
 						.slice(offset, offset + PAGE_SIZE)
@@ -1059,19 +1025,11 @@ export const clearTextData = action({
 			}
 			if (!surfaceCleanupFinished) {
 				throw new Error(
-					`Text deletion exceeded ${MAX_PAGES} Surface cleanup pages.`,
+					`Analysis stripping exceeded ${MAX_PAGES} Surface cleanup pages.`,
 				);
 			}
 		}
-
-		if (
-			await ctx.runMutation(internal.demoReset.deleteTextRecord, {
-				textId,
-			})
-		) {
-			deleted += 1;
-		}
-		return { deleted, deletedReadings, deletedLemmas };
+		return { removed, deletedReadings, deletedLemmas };
 	},
 });
 

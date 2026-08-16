@@ -6,8 +6,8 @@ import {
 	ArrowRightIcon,
 	BookOpenIcon,
 	DatabaseZapIcon,
+	EraserIcon,
 	LibraryIcon,
-	Trash2Icon,
 	UserRoundXIcon,
 } from "lucide-react";
 import { type FormEvent, lazy, Suspense, useState } from "react";
@@ -41,7 +41,7 @@ import {
 } from "@/lib/action-results";
 import { api } from "../convex/_generated/api";
 
-type TextId = FunctionArgs<typeof api.demoReset.clearTextData>["textId"];
+type TextId = FunctionArgs<typeof api.demoReset.stripTextAnalysis>["textId"];
 
 const exampleText = "Die Banken sind geöffnet.";
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -237,7 +237,6 @@ function TextPage() {
 }
 
 function TextWorkspace({ textId }: { textId: string }) {
-	const navigate = useNavigate();
 	const visitorId = useAnonymousVisitorId();
 	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
 		null,
@@ -363,7 +362,6 @@ function TextWorkspace({ textId }: { textId: string }) {
 								}
 							: undefined
 					}
-					onTextCleared={() => navigate("/library")}
 				/>
 			</div>
 		</main>
@@ -433,10 +431,8 @@ function NotFoundPage() {
 
 function DataControls({
 	text,
-	onTextCleared,
 }: {
 	text?: { textId: TextId; sourceText: string };
-	onTextCleared?: () => void;
 }) {
 	const navigate = useNavigate();
 	const visitorId = useAnonymousVisitorId();
@@ -450,18 +446,18 @@ function DataControls({
 	const clearVisitorData = useMutation({
 		mutationFn: useAction(api.demoReset.clearVisitorData),
 	});
-	const clearTextData = useMutation({
-		mutationFn: useAction(api.demoReset.clearTextData),
+	const stripTextAnalysis = useMutation({
+		mutationFn: useAction(api.demoReset.stripTextAnalysis),
 	});
 	const isClearing =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
-		clearTextData.isPending;
+		stripTextAnalysis.isPending;
 	const error =
 		interactionError ??
 		mutationMessage(clearSharedData.error) ??
 		mutationMessage(clearVisitorData.error) ??
-		mutationMessage(clearTextData.error);
+		mutationMessage(stripTextAnalysis.error);
 
 	async function handleClearVisitorData() {
 		if (
@@ -483,11 +479,11 @@ function DataControls({
 		}
 	}
 
-	async function handleClearTextData() {
+	async function handleStripTextAnalysis() {
 		if (!text) return;
 		if (
 			!window.confirm(
-				`Delete “${text.sourceText}” and everything sourced by it? Readings with no other source, their Knowledge and relations, and any unshared Lemmas and Surfaces will also be deleted.`,
+				`Strip the analysis from “${text.sourceText}”? The Text and its Sentences will remain. Segments, resolutions, Clicks, and Readings with no other source will be removed.`,
 			)
 		) {
 			return;
@@ -495,11 +491,15 @@ function DataControls({
 		setNotice(null);
 		setInteractionError(null);
 		try {
-			await clearTextData.mutateAsync({ textId: text.textId });
-			onTextCleared?.();
+			const result = await stripTextAnalysis.mutateAsync({
+				textId: text.textId,
+			});
+			setNotice(
+				`Stripped ${result.removed} analysis records. The Text and its Sentences were kept.`,
+			);
 		} catch (cause) {
 			setInteractionError(
-				mutationMessage(cause) ?? "Text deletion failed.",
+				mutationMessage(cause) ?? "Analysis stripping failed.",
 			);
 		}
 	}
@@ -551,12 +551,12 @@ function DataControls({
 							type="button"
 							variant="destructive"
 							disabled={isClearing}
-							onClick={() => void handleClearTextData()}
+							onClick={() => void handleStripTextAnalysis()}
 						>
-							<Trash2Icon data-icon="inline-start" />
-							{clearTextData.isPending
-								? "Deleting this text…"
-								: "Delete this text"}
+							<EraserIcon data-icon="inline-start" />
+							{stripTextAnalysis.isPending
+								? "Stripping analysis…"
+								: "Strip analysis"}
 						</Button>
 					) : null}
 					<Button
@@ -619,6 +619,9 @@ function SentenceList({
 					key={sentence.sentenceId}
 					className="text-xl leading-loose sm:text-2xl"
 				>
+					{sentence.segments.length === 0 ? (
+						<span>{sentence.stitchedText}</span>
+					) : null}
 					{sentence.segments.map((segment) => {
 						const isSelected =
 							segment.isClicked ||

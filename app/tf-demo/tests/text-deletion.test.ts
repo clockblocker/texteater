@@ -25,7 +25,7 @@ const institute = {
 	emojiDescription: "🏢",
 } as const;
 
-test("text deletion removes inbound relations to a deleted Reading", () => {
+test("analysis stripping removes inbound relations to a source-less Reading", () => {
 	const knowledge = {
 		definition: "A place.",
 		semanticRelations: {
@@ -49,7 +49,7 @@ test("text deletion removes inbound relations to a deleted Reading", () => {
 	expect(knowledge.semanticRelations.synonym).toEqual([bank]);
 });
 
-test("text deletion leaves unrelated Reading Knowledge unchanged", () => {
+test("analysis stripping leaves unrelated Reading Knowledge unchanged", () => {
 	const knowledge = {
 		semanticRelations: { hypernym: [institute] },
 	};
