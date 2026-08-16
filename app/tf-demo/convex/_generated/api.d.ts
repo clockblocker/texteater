@@ -15,6 +15,7 @@ import type * as model_validators from "../model/validators.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as presentation from "../presentation.js";
+import type * as texts from "../texts.js";
 
 import type {
   ApiFromModules,
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   presentation: typeof presentation;
+  texts: typeof texts;
 }>;
 
 /**

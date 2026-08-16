@@ -11,6 +11,7 @@ import {
 	readingKeyFor,
 	resolutionKeyFor,
 } from "../convex/model/linguisticKeys";
+import { attestationIdentityKey } from "../server/attestationIdentity";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
@@ -85,6 +86,8 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 			const sentence = submitted?.sentences[0];
 			if (!sentence) return null;
 			return {
+				sentenceId: "sentence-1",
+				textId: "text-1",
 				segmentedSentenceId: sentence.segmentedSentenceId,
 				language: sentence.language,
 				stitchedText: sentence.stitchedText,
@@ -183,7 +186,12 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 	).toMatchObject({
 		entry: {
 			reading: { emojiDescription: "🏦" },
-			attestations: ["Die Banken."],
+			attestations: [
+				attestationIdentityKey({
+					sentenceId: "sentence-1",
+					textId: "text-1",
+				}),
+			],
 		},
 	});
 	if (resolution.grammatical.decision !== "Resolved") {
@@ -269,7 +277,12 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 							reading,
 							note: {
 								attestedTranslations: [],
-								attestations: ["Die Banken."],
+								attestations: [
+									attestationIdentityKey({
+										sentenceId: "sentence-1",
+										textId: "text-1",
+									}),
+								],
 								notes: "",
 							},
 						},
@@ -295,6 +308,8 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 			},
 			async getSentenceForResolution() {
 				return {
+					sentenceId: "sentence-1",
+					textId: "text-1",
 					segmentedSentenceId: "segmented-1",
 					language: "de",
 					stitchedText: "Die Banken.",

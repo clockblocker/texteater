@@ -31,8 +31,11 @@ import {
 	readingKeyFor,
 	resolutionKeyFor,
 } from "../convex/model/linguisticKeys";
+import { attestationIdentityKey } from "./attestationIdentity";
 
 export type PersistedSentence = {
+	readonly sentenceId: string;
+	readonly textId: string;
 	readonly segmentedSentenceId: string;
 	readonly language: "de" | "he";
 	readonly stitchedText: string;
@@ -218,13 +221,11 @@ export function createTfDemoOrchestrator(options: {
 			lemma,
 			emojiDescription: readingResolution.emojiDescription,
 		}) as Reading<"de">;
-		const encounterText = sentence.segments
-			.map(({ text }) => text)
-			.join("");
+		const attestationKey = attestationIdentityKey(stored);
 		const encounterAlreadyStored = storedReadings.candidates.some(
 			({ note, reading: candidate }) =>
 				candidate.emojiDescription === reading.emojiDescription &&
-				note.attestations.includes(encounterText),
+				note.attestations.includes(attestationKey),
 		);
 
 		const dictionaryMutation =
@@ -233,24 +234,24 @@ export function createTfDemoOrchestrator(options: {
 						status: "alreadyApplied" as const,
 						summary: {
 							message:
-								"Dumdict already stores this exact string attestation.",
+								"Dumdict already stores this exact source attestation.",
 						},
 					}
 				: readingResolution.decision === "Reuse"
 					? await options.dictionary.addAttestation({
 							reading,
-							attestation: encounterText,
+							attestation: attestationKey,
 						})
 					: await options.dictionary.addNewNote({
 							draft: {
 								reading,
-								note: emptyNoteWithAttestation(encounterText),
+								note: emptyNoteWithAttestation(attestationKey),
 								ownedSurfaces: [
 									{
 										surface:
 											grammatical.attestation.surface,
 										note: emptyNoteWithAttestation(
-											encounterText,
+											attestationKey,
 										),
 									},
 								],

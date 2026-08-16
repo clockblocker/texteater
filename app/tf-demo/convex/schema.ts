@@ -22,6 +22,7 @@ export default defineSchema({
 		stitchedText: v.string(),
 	})
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
+		.index("by_stitched_text", ["stitchedText"])
 		.index("by_text_id_and_position", ["textId", "position"]),
 
 	segments: defineTable({
@@ -55,6 +56,7 @@ export default defineSchema({
 		resolvedAt: v.number(),
 	})
 		.index("by_context_key", ["contextKey"])
+		.index("by_reading_id", ["readingId"])
 		.index("by_sentence_id_and_clicked_segment_index", [
 			"sentenceId",
 			"clickedSegmentIndex",
@@ -119,6 +121,7 @@ export default defineSchema({
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
+		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
 		.index("by_visitor_id_and_sentence_id_and_clicked_segment_index", [
 			"visitorId",
@@ -140,6 +143,8 @@ export default defineSchema({
 	})
 		.index("by_context_key", ["contextKey"])
 		.index("by_click_id", ["clickId"])
+		.index("by_reading_id", ["readingId"])
+		.index("by_resolved_context_id", ["resolvedContextId"])
 		.index("by_visitor_id_and_resolved_at", ["visitorId", "resolvedAt"])
 		.index("by_sentence_id_and_clicked_segment_index", [
 			"sentenceId",

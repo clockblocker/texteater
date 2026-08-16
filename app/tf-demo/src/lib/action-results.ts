@@ -23,6 +23,22 @@ export type SentenceView = {
 	readonly segments: readonly SentenceSegmentView[];
 };
 
+export function parseSubmittedTextId(resultValue: unknown): GenericId<"texts"> {
+	const result = requireRecord(resultValue, "Text submission result");
+	if (result.ok !== true) {
+		const error = optionalRecord(result.error);
+		throw new Error(
+			optionalString(error?.message) ??
+				"Dumgen rejected the source text.",
+		);
+	}
+	const persisted = requireRecord(result.persisted, "Persisted submission");
+	if (typeof persisted.textId !== "string") {
+		throw new Error("Persisted submission has no Text identifier.");
+	}
+	return persisted.textId as GenericId<"texts">;
+}
+
 type UnknownRecord = Record<string, unknown>;
 
 export function parseSubmittedSentences(

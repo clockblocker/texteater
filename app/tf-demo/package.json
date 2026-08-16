@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run check && vite build",
 		"check": "bun ../../node_modules/typescript/bin/tsc -b",
-		"dev": "CONVEX_AGENT_MODE=anonymous convex dev --start 'vite'",
+		"dev": "CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"preview": "vite preview",
@@ -31,6 +31,7 @@
 		"lucide-react": "^1.31.0",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
+		"react-router-dom": "^7.18.2",
 		"shadcn": "^4.18.0",
 		"tailwind-merge": "^3.6.0",
 		"tailwindcss": "^4",

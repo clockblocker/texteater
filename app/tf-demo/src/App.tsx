@@ -1,94 +1,90 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
-import { BookOpenIcon, DatabaseZapIcon, UserRoundXIcon } from "lucide-react";
+import type { FunctionArgs } from "convex/server";
+import {
+	ArrowRightIcon,
+	BookOpenIcon,
+	DatabaseZapIcon,
+	LibraryIcon,
+	Trash2Icon,
+	UserRoundXIcon,
+} from "lucide-react";
 import { type FormEvent, lazy, Suspense, useState } from "react";
+import {
+	Link,
+	Navigate,
+	Route,
+	Routes,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import { ResolutionPipeline } from "@/components/resolution-pipeline";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
-	CardAction,
 	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	Field,
-	FieldDescription,
-	FieldGroup,
-	FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import {
 	parseResolutionDecision,
-	parseSubmittedSentences,
+	parseSubmittedTextId,
 	type SentenceView,
 } from "@/lib/action-results";
 import { api } from "../convex/_generated/api";
 
+type TextId = FunctionArgs<typeof api.demoReset.clearTextData>["textId"];
+
 const exampleText = "Die Banken sind geöffnet.";
+const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
+	dateStyle: "medium",
+});
 const ReadingGraph = lazy(() => import("@/components/reading-graph"));
 
 export function App() {
-	const visitorId = useAnonymousVisitorId();
+	return (
+		<Routes>
+			<Route path="/" element={<Navigate to="/library" replace />} />
+			<Route path="/library" element={<LibraryPage />} />
+			<Route path="/text/:textId" element={<TextPage />} />
+			<Route path="*" element={<NotFoundPage />} />
+		</Routes>
+	);
+}
+
+function LibraryPage() {
+	const navigate = useNavigate();
 	const [sourceText, setSourceText] = useState(exampleText);
-	const [submittedSentences, setSubmittedSentences] = useState<
-		readonly SentenceView[]
-	>([]);
-	const [notice, setNotice] = useState<string | null>(null);
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
-
-	const presentationQuery = useQuery({
-		...convexQuery(api.presentation.forVisitor, { visitorId }),
+	const textsQuery = useQuery({
+		...convexQuery(api.texts.list, {}),
 		gcTime: 10_000,
 	});
 	const submitTextAction = useAction(api.orchestration.submitText);
-	const resolveSegmentAction = useAction(api.orchestration.resolveSegment);
-	const clearSharedDataAction = useAction(api.demoReset.clearSharedData);
-	const clearVisitorDataAction = useAction(api.demoReset.clearVisitorData);
 	const submitText = useMutation({ mutationFn: submitTextAction });
-	const resolveSegment = useMutation({ mutationFn: resolveSegmentAction });
-	const clearSharedData = useMutation({ mutationFn: clearSharedDataAction });
-	const clearVisitorData = useMutation({
-		mutationFn: clearVisitorDataAction,
-	});
-
-	const presentation = presentationQuery.data ?? null;
-	const visibleSentences =
-		submittedSentences.length > 0
-			? submittedSentences
-			: presentation
-				? [presentation.sentence]
-				: [];
-	const error =
-		interactionError ??
-		mutationMessage(submitText.error) ??
-		mutationMessage(resolveSegment.error) ??
-		mutationMessage(clearSharedData.error) ??
-		mutationMessage(clearVisitorData.error) ??
-		mutationMessage(presentationQuery.error);
-	const isClearing = clearSharedData.isPending || clearVisitorData.isPending;
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		setNotice(null);
 		setInteractionError(null);
 		const normalized = sourceText.trim().normalize("NFC");
 		if (!normalized) return;
+
 		try {
 			const result = await submitText.mutateAsync({
 				submissionKey: `text:v1:${normalized}`,
 				sourceText: normalized,
 			});
-			setSubmittedSentences(parseSubmittedSentences(result, normalized));
-			setNotice("Text analyzed. Select a highlighted Segment.");
+			navigate(`/text/${parseSubmittedTextId(result)}`);
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Text analysis failed.",
@@ -96,12 +92,206 @@ export function App() {
 		}
 	}
 
+	const error = interactionError ?? mutationMessage(textsQuery.error);
+
+	return (
+		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
+			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+				<header className="flex flex-col gap-2">
+					<p className="text-sm font-medium text-muted-foreground">
+						tf-demo
+					</p>
+					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						Library
+					</h1>
+					<p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+						Open a stored text to inspect its sentences and resolve
+						German segments.
+					</p>
+				</header>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Add a text</CardTitle>
+						<CardDescription>
+							Analyze a short German sentence and save it to the
+							library.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<form
+							id="library-text-submission"
+							aria-label="Add text to library"
+							onSubmit={(event) => void handleSubmit(event)}
+						>
+							<FieldGroup>
+								<Field>
+									<FieldLabel htmlFor="library-source-text">
+										German sentence
+									</FieldLabel>
+									<Textarea
+										id="library-source-text"
+										name="text"
+										className="min-h-24 resize-y"
+										value={sourceText}
+										onChange={(event) =>
+											setSourceText(event.target.value)
+										}
+										disabled={submitText.isPending}
+									/>
+								</Field>
+							</FieldGroup>
+						</form>
+						{error ? (
+							<p
+								className="mt-4 text-sm text-destructive"
+								role="alert"
+							>
+								{error}
+							</p>
+						) : null}
+					</CardContent>
+					<CardFooter className="justify-end">
+						<Button
+							type="submit"
+							form="library-text-submission"
+							disabled={
+								submitText.isPending ||
+								sourceText.trim().length === 0
+							}
+						>
+							<BookOpenIcon data-icon="inline-start" />
+							{submitText.isPending
+								? "Analyzing…"
+								: "Analyze text"}
+						</Button>
+					</CardFooter>
+				</Card>
+
+				<section
+					className="flex flex-col gap-3"
+					aria-labelledby="library-title"
+				>
+					<div className="flex items-center justify-between gap-4">
+						<h2
+							id="library-title"
+							className="text-lg font-semibold"
+						>
+							Stored texts
+						</h2>
+						{textsQuery.data ? (
+							<Badge variant="secondary">
+								{textsQuery.data.length}
+							</Badge>
+						) : null}
+					</div>
+
+					{textsQuery.isPending ? (
+						<LibrarySkeleton />
+					) : textsQuery.data && textsQuery.data.length > 0 ? (
+						<div className="grid gap-3 sm:grid-cols-2">
+							{textsQuery.data.map((text) => (
+								<Link
+									key={text.textId}
+									to={`/text/${text.textId}`}
+									className="group rounded-xl bg-card p-4 text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+								>
+									<div className="flex items-start justify-between gap-4">
+										<div className="flex min-w-0 flex-col gap-2">
+											<p className="line-clamp-3 text-base leading-relaxed font-medium">
+												{text.sourceText}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Added{" "}
+												{formatDate(text.createdAt)}
+											</p>
+										</div>
+										<ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+									</div>
+								</Link>
+							))}
+						</div>
+					) : (
+						<Card size="sm">
+							<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
+								<LibraryIcon className="size-5" />
+								<p>No stored texts yet. Analyze one above.</p>
+							</CardContent>
+						</Card>
+					)}
+				</section>
+
+				<DataControls />
+			</div>
+		</main>
+	);
+}
+
+function TextPage() {
+	const { textId } = useParams();
+	return textId ? (
+		<TextWorkspace key={textId} textId={textId} />
+	) : (
+		<NotFoundPage />
+	);
+}
+
+function TextWorkspace({ textId }: { textId: string }) {
+	const navigate = useNavigate();
+	const visitorId = useAnonymousVisitorId();
+	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
+		null,
+	);
+	const [notice, setNotice] = useState<string | null>(null);
+	const [interactionError, setInteractionError] = useState<string | null>(
+		null,
+	);
+
+	const textQuery = useQuery({
+		...convexQuery(api.texts.get, { textId }),
+		gcTime: 10_000,
+	});
+	const presentationQuery = useQuery({
+		...convexQuery(api.presentation.forVisitor, { visitorId }),
+		gcTime: 10_000,
+	});
+	const resolveSegmentAction = useAction(api.orchestration.resolveSegment);
+	const resolveSegment = useMutation({ mutationFn: resolveSegmentAction });
+
+	const latestPresentation = presentationQuery.data ?? null;
+	const presentation =
+		latestPresentation?.text.textId === textId ? latestPresentation : null;
+	const textDetail = textQuery.data;
+	const storedSentences: readonly SentenceView[] =
+		textDetail?.sentences.map((sentence) => ({
+			...sentence,
+			sourceText: textDetail.sourceText,
+			segments: sentence.segments.map((segment) => ({
+				...segment,
+				isClicked: false,
+				isResolutionMember: false,
+			})),
+		})) ?? [];
+	const visibleSentences = storedSentences.map((sentence) =>
+		presentation?.sentence.sentenceId === sentence.sentenceId
+			? presentation.sentence
+			: sentence,
+	);
+	const error =
+		interactionError ??
+		mutationMessage(resolveSegment.error) ??
+		mutationMessage(textQuery.error) ??
+		mutationMessage(presentationQuery.error);
+
 	async function handleSegmentClick(
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 	) {
 		setNotice(null);
 		setInteractionError(null);
+		setSelectedSegmentKey(
+			segmentKey(sentence.sentenceId, clickedSegmentIndex),
+		);
 		try {
 			const result = await resolveSegment.mutateAsync({
 				requestId: crypto.randomUUID(),
@@ -112,7 +302,7 @@ export function App() {
 			const decision = parseResolutionDecision(result);
 			setNotice(
 				decision === "Resolved"
-					? "Reading resolved. Inspect the path and follow its note relations."
+					? null
 					: decision === "NotImplemented"
 						? "This grammatical route is not implemented yet."
 						: "Dumgen could not resolve this Segment.",
@@ -120,6 +310,196 @@ export function App() {
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Segment resolution failed.",
+			);
+		}
+	}
+
+	if (textQuery.isPending) return <TextPageSkeleton />;
+	if (textQuery.data === null) return <NotFoundPage />;
+
+	return (
+		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+			<div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
+				<SentenceList
+					sentences={visibleSentences}
+					isResolving={resolveSegment.isPending}
+					selectedSegmentKey={selectedSegmentKey}
+					onSegmentClick={handleSegmentClick}
+				/>
+
+				{notice ? (
+					<p
+						className="text-sm text-muted-foreground"
+						aria-live="polite"
+					>
+						{notice}
+					</p>
+				) : null}
+				{error ? (
+					<p className="text-sm text-destructive" role="alert">
+						{error}
+					</p>
+				) : null}
+
+				{presentation ? (
+					<>
+						<ResolutionPipeline presentation={presentation} />
+						<Suspense fallback={<ReadingGraphSkeleton />}>
+							<ReadingGraph
+								key={presentation.reading.ownerKey}
+								visitorId={visitorId}
+								origin={presentation.reading}
+							/>
+						</Suspense>
+					</>
+				) : null}
+
+				<DataControls
+					text={
+						textDetail
+							? {
+									textId: textDetail.textId,
+									sourceText: textDetail.sourceText,
+								}
+							: undefined
+					}
+					onTextCleared={() => navigate("/library")}
+				/>
+			</div>
+		</main>
+	);
+}
+
+function LibrarySkeleton() {
+	return (
+		<div
+			className="grid gap-3 sm:grid-cols-2"
+			role="status"
+			aria-label="Loading texts"
+		>
+			{[0, 1, 2, 3].map((index) => (
+				<Card key={index} size="sm">
+					<CardContent className="flex flex-col gap-3">
+						<Skeleton className="h-5 w-4/5" />
+						<Skeleton className="h-4 w-2/5" />
+					</CardContent>
+				</Card>
+			))}
+		</div>
+	);
+}
+
+function TextPageSkeleton() {
+	return (
+		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+			<div
+				className="mx-auto w-full max-w-5xl"
+				role="status"
+				aria-label="Loading text"
+			>
+				<Skeleton className="h-9 w-96 max-w-full" />
+			</div>
+		</main>
+	);
+}
+
+function NotFoundPage() {
+	return (
+		<main className="flex min-h-svh items-center justify-center bg-muted/30 px-4 py-12">
+			<div className="flex w-full max-w-5xl flex-col gap-8">
+				<Card className="w-full max-w-md self-center">
+					<CardHeader>
+						<CardTitle>Text not found</CardTitle>
+						<CardDescription>
+							This text does not exist, or it was removed from the
+							demo.
+						</CardDescription>
+					</CardHeader>
+					<CardFooter className="justify-end">
+						<Link
+							to="/library"
+							className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+						>
+							<LibraryIcon className="size-4" />
+							Back to library
+						</Link>
+					</CardFooter>
+				</Card>
+				<DataControls />
+			</div>
+		</main>
+	);
+}
+
+function DataControls({
+	text,
+	onTextCleared,
+}: {
+	text?: { textId: TextId; sourceText: string };
+	onTextCleared?: () => void;
+}) {
+	const navigate = useNavigate();
+	const visitorId = useAnonymousVisitorId();
+	const [notice, setNotice] = useState<string | null>(null);
+	const [interactionError, setInteractionError] = useState<string | null>(
+		null,
+	);
+	const clearSharedData = useMutation({
+		mutationFn: useAction(api.demoReset.clearSharedData),
+	});
+	const clearVisitorData = useMutation({
+		mutationFn: useAction(api.demoReset.clearVisitorData),
+	});
+	const clearTextData = useMutation({
+		mutationFn: useAction(api.demoReset.clearTextData),
+	});
+	const isClearing =
+		clearSharedData.isPending ||
+		clearVisitorData.isPending ||
+		clearTextData.isPending;
+	const error =
+		interactionError ??
+		mutationMessage(clearSharedData.error) ??
+		mutationMessage(clearVisitorData.error) ??
+		mutationMessage(clearTextData.error);
+
+	async function handleClearVisitorData() {
+		if (
+			!window.confirm(
+				"Clear this visitor's data? This removes only your Click history; shared resolutions and Knowledge stay available.",
+			)
+		) {
+			return;
+		}
+		setNotice(null);
+		setInteractionError(null);
+		try {
+			const result = await clearVisitorData.mutateAsync({ visitorId });
+			setNotice(`Cleared ${result.deleted} visitor-owned records.`);
+		} catch (cause) {
+			setInteractionError(
+				mutationMessage(cause) ?? "Visitor-data reset failed.",
+			);
+		}
+	}
+
+	async function handleClearTextData() {
+		if (!text) return;
+		if (
+			!window.confirm(
+				`Delete “${text.sourceText}” and everything sourced by it? Readings with no other source, their Knowledge and relations, and any unshared Lemmas and Surfaces will also be deleted.`,
+			)
+		) {
+			return;
+		}
+		setNotice(null);
+		setInteractionError(null);
+		try {
+			await clearTextData.mutateAsync({ textId: text.textId });
+			onTextCleared?.();
+		} catch (cause) {
+			setInteractionError(
+				mutationMessage(cause) ?? "Text deletion failed.",
 			);
 		}
 	}
@@ -136,7 +516,7 @@ export function App() {
 		setInteractionError(null);
 		try {
 			const result = await clearSharedData.mutateAsync({});
-			setSubmittedSentences([]);
+			navigate("/library");
 			setNotice(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
 			);
@@ -147,189 +527,62 @@ export function App() {
 		}
 	}
 
-	async function handleClearVisitorData() {
-		if (
-			!window.confirm(
-				"Clear this visitor's data? This removes only your click history; shared resolutions and Knowledge stay available.",
-			)
-		) {
-			return;
-		}
-		setNotice(null);
-		setInteractionError(null);
-		try {
-			const result = await clearVisitorData.mutateAsync({ visitorId });
-			setNotice(
-				`Cleared ${result.deleted} records owned by this visitor.`,
-			);
-		} catch (cause) {
-			setInteractionError(
-				mutationMessage(cause) ?? "Visitor-data reset failed.",
-			);
-		}
-	}
-
 	return (
-		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-				<header className="flex flex-col gap-2">
-					<p className="text-sm font-medium text-muted-foreground">
-						tf-demo
-					</p>
-					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-						Read German in context
-					</h1>
-					<p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-						Submit one short sentence, follow the complete
-						linguistic resolution path, then move between Reading
-						notes through real semantic relations.
-					</p>
-				</header>
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Reading workspace</CardTitle>
-						<CardDescription>
-							Linguistic resolutions and Knowledge are global;
-							only click history belongs to this anonymous
-							visitor.
-						</CardDescription>
-						<CardAction>
-							<Badge variant="secondary">Local demo</Badge>
-						</CardAction>
-					</CardHeader>
-
-					<CardContent className="flex flex-col gap-6">
-						<form
-							id="text-submission"
-							aria-label="Text submission"
-							onSubmit={(event) => void handleSubmit(event)}
-						>
-							<FieldGroup>
-								<Field>
-									<FieldLabel htmlFor="source-text">
-										German sentence
-									</FieldLabel>
-									<Textarea
-										id="source-text"
-										name="text"
-										className="min-h-32 resize-y"
-										value={sourceText}
-										onChange={(event) =>
-											setSourceText(event.target.value)
-										}
-										disabled={submitText.isPending}
-									/>
-									<FieldDescription>
-										Dumgen currently accepts
-										caller-delimited Source Sentences, so
-										this slice analyzes one sentence.
-									</FieldDescription>
-								</Field>
-							</FieldGroup>
-						</form>
-
-						{visibleSentences.length > 0 ? (
-							<SentenceList
-								sentences={visibleSentences}
-								isResolving={resolveSegment.isPending}
-								onSegmentClick={handleSegmentClick}
-							/>
-						) : null}
-
-						{presentation ? (
-							<>
-								<ResolutionPipeline
-									presentation={presentation}
-								/>
-								<Suspense fallback={<ReadingGraphSkeleton />}>
-									<ReadingGraph
-										key={presentation.reading.ownerKey}
-										visitorId={visitorId}
-										origin={presentation.reading}
-									/>
-								</Suspense>
-							</>
-						) : (
-							<Card size="sm">
-								<CardHeader>
-									<CardTitle>Resolution path</CardTitle>
-									<CardDescription>
-										Analyze a sentence and select a
-										ResolvableText Segment to open the
-										pipeline.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						)}
-
-						{notice ? (
-							<p
-								className="text-sm text-muted-foreground"
-								aria-live="polite"
-							>
-								{notice}
-							</p>
-						) : null}
-						{error ? (
-							<p
-								className="text-sm text-destructive"
-								role="alert"
-							>
-								{error}
-							</p>
-						) : null}
-					</CardContent>
-
-					<CardFooter className="justify-end">
-						<Button
-							type="submit"
-							form="text-submission"
-							disabled={
-								submitText.isPending ||
-								sourceText.trim().length === 0
-							}
-						>
-							<BookOpenIcon data-icon="inline-start" />
-							{submitText.isPending
-								? "Analyzing…"
-								: "Analyze text"}
-						</Button>
-					</CardFooter>
-				</Card>
-
-				<footer className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-					<p className="text-xs leading-relaxed text-muted-foreground">
-						Demo data controls. Shared data is global; your data is
-						only this Visitor&apos;s Click history.
-					</p>
-					<div className="flex flex-col gap-2 sm:flex-row">
-						<Button
-							type="button"
-							variant="outline"
-							disabled={isClearing}
-							onClick={() => void handleClearVisitorData()}
-						>
-							<UserRoundXIcon data-icon="inline-start" />
-							{clearVisitorData.isPending
-								? "Clearing your data…"
-								: "Clear my data"}
-						</Button>
+		<footer className="flex flex-col gap-3 border-t pt-4">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+				<p className="text-xs leading-relaxed text-muted-foreground">
+					Demo data controls. Destructive actions require
+					confirmation.
+				</p>
+				<div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+					<Button
+						type="button"
+						variant="outline"
+						disabled={isClearing}
+						onClick={() => void handleClearVisitorData()}
+					>
+						<UserRoundXIcon data-icon="inline-start" />
+						{clearVisitorData.isPending
+							? "Clearing your data…"
+							: "Clear my data"}
+					</Button>
+					{text ? (
 						<Button
 							type="button"
 							variant="destructive"
 							disabled={isClearing}
-							onClick={() => void handleClearSharedData()}
+							onClick={() => void handleClearTextData()}
 						>
-							<DatabaseZapIcon data-icon="inline-start" />
-							{clearSharedData.isPending
-								? "Clearing shared data…"
-								: "Clear shared data"}
+							<Trash2Icon data-icon="inline-start" />
+							{clearTextData.isPending
+								? "Deleting this text…"
+								: "Delete this text"}
 						</Button>
-					</div>
-				</footer>
+					) : null}
+					<Button
+						type="button"
+						variant="destructive"
+						disabled={isClearing}
+						onClick={() => void handleClearSharedData()}
+					>
+						<DatabaseZapIcon data-icon="inline-start" />
+						{clearSharedData.isPending
+							? "Clearing shared data…"
+							: "Clear shared data"}
+					</Button>
+				</div>
 			</div>
-		</main>
+			{notice ? (
+				<p className="text-sm text-muted-foreground" aria-live="polite">
+					{notice}
+				</p>
+			) : null}
+			{error ? (
+				<p className="text-sm text-destructive" role="alert">
+					{error}
+				</p>
+			) : null}
+		</footer>
 	);
 }
 
@@ -348,67 +601,65 @@ function ReadingGraphSkeleton() {
 function SentenceList({
 	sentences,
 	isResolving,
+	selectedSegmentKey,
 	onSegmentClick,
 }: {
 	sentences: readonly SentenceView[];
 	isResolving: boolean;
+	selectedSegmentKey: string | null;
 	onSegmentClick: (
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 	) => Promise<void>;
 }) {
 	return (
-		<section
-			className="flex flex-col gap-3"
-			aria-labelledby="source-sentence-title"
-		>
-			<div className="flex flex-col gap-1">
-				<h2 id="source-sentence-title" className="text-sm font-medium">
-					Source Sentence
-				</h2>
-				<p className="text-xs text-muted-foreground">
-					Only ResolvableText Segments are interactive.
-				</p>
-			</div>
+		<article className="flex flex-col gap-5" aria-label="Text">
 			{sentences.map((sentence) => (
 				<p
 					key={sentence.sentenceId}
-					className="rounded-lg border bg-background p-4 text-lg leading-9"
+					className="text-xl leading-loose sm:text-2xl"
 				>
-					{sentence.segments.map((segment) =>
-						segment.kind === "ResolvableText" ? (
-							<Button
+					{sentence.segments.map((segment) => {
+						const isSelected =
+							segment.isClicked ||
+							selectedSegmentKey ===
+								segmentKey(sentence.sentenceId, segment.index);
+
+						return segment.kind === "ResolvableText" ? (
+							<button
 								key={segment.index}
 								type="button"
-								variant={
-									segment.isResolutionMember
-										? "secondary"
-										: "ghost"
-								}
-								size="sm"
-								className="h-auto px-1 py-0.5 align-baseline"
+								className="-mx-0.5 cursor-pointer appearance-none rounded-sm border-0 bg-transparent px-0.5 py-0 align-baseline text-inherit transition-colors [font:inherit] leading-[1.35] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 aria-pressed:bg-primary aria-pressed:text-primary-foreground disabled:pointer-events-none"
 								disabled={
 									isResolving || sentence.language !== "de"
 								}
-								aria-pressed={segment.isClicked}
+								aria-pressed={isSelected}
 								onClick={() =>
 									void onSegmentClick(sentence, segment.index)
 								}
 							>
 								{segment.text}
-							</Button>
+							</button>
 						) : (
 							<span key={segment.index}>{segment.text}</span>
-						),
-					)}
+						);
+					})}
 				</p>
 			))}
-		</section>
+		</article>
 	);
 }
 
 function mutationMessage(error: unknown): string | null {
 	return error instanceof Error ? error.message : null;
+}
+
+function formatDate(timestamp: number): string {
+	return shortDateFormatter.format(timestamp);
+}
+
+function segmentKey(sentenceId: string, segmentIndex: number): string {
+	return `${sentenceId}:${segmentIndex}`;
 }
 
 export default App;

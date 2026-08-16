@@ -41,10 +41,17 @@ bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 
 ## Reset demo data
 
-The page footer separates the two destructive demo operations: **Clear my
-data** removes only the current Visitor's Click history, while **Clear shared
-data** removes the universal linguistic graph and Shared Demo Dictionary.
-Both require confirmation.
+Every page exposes the demo data controls. **Clear my data** removes only the
+current Visitor's Click history, while **Clear shared data** removes the
+universal linguistic graph and Shared Demo Dictionary. Both require
+confirmation.
+
+A stored Text page also exposes **Delete this text**. It removes the Text's
+Sentences, Segments, resolutions, contexts, and Clicks. A Reading remains when
+another Text still sources it; otherwise its Reading Knowledge, relations, and
+any now-unshared Lemma, Surfaces, and Lemma Knowledge are removed with it.
+Attestation identity is the exact `(Sentence ID, Text ID)` pair, so identical
+sentence wording in two Texts remains two distinct sources.
 
 The CLI also exposes the bounded full reset:
 

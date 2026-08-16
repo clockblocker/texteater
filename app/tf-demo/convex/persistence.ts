@@ -304,6 +304,8 @@ export const getSentenceForResolution = internalQuery({
 	returns: v.union(
 		v.null(),
 		v.object({
+			sentenceId: v.id("sentences"),
+			textId: v.id("texts"),
 			segmentedSentenceId: v.string(),
 			language: v.union(v.literal("de"), v.literal("he")),
 			stitchedText: v.string(),
@@ -331,6 +333,8 @@ export const getSentenceForResolution = internalQuery({
 			)
 			.take(MAX_SEGMENTS_PER_SENTENCE);
 		return {
+			sentenceId,
+			textId: sentence.textId,
 			segmentedSentenceId: sentence.segmentedSentenceId,
 			language: sentence.language,
 			stitchedText: sentence.stitchedText,
