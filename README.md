@@ -28,6 +28,19 @@ Turborepo and Prettier are intentionally not part of the toolchain. Bun runs
 the workspace commands, TypeScript 7 provides compilation and type checking,
 and Biome 2 provides formatting and linting.
 
+## Reference repositories
+
+Clone the Effect source alongside the monorepo packages so coding agents can
+inspect idiomatic implementations and usage patterns locally:
+
+```sh
+git clone https://github.com/Effect-TS/effect.git repos-for-refrence/effect
+```
+
+`repos-for-refrence/` is ignored by Git. Treat its contents as read-only
+reference material; application code must continue importing Effect from the
+normal package dependency.
+
 ## Package autonomy
 
 Every directory immediately below `app/` or `battery/` supports the same
