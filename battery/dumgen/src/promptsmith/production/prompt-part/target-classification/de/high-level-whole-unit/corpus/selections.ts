@@ -31,9 +31,9 @@ if (demonstrationSelection.ids.length > 35) {
 }
 
 /**
- * The exact 21 demonstrations retained by the promoted Adaptive-5 prompt.
- * This is production prompt content; historical adaptive profiles may select
- * other cases from the same corpus inside the laboratory runner.
+ * The 25 selected production cases render as 23 demonstrations: the promoted
+ * Adaptive-5 set plus the paired state-passive cases accepted by ADR 0007.
+ * Historical profiles may select other cases in the laboratory.
  */
 export const productionDemonstrationSelection = corpus.select([
 	"target-de-demo-perfect-arbeiten-click-habe",
@@ -48,6 +48,8 @@ export const productionDemonstrationSelection = corpus.select([
 	"target-de-demo-optional-reflexive-click-dich",
 	"target-de-demo-modal-arbeiten-click-kann",
 	"target-de-demo-passive-briefe-click-werden",
+	"target-de-demo-state-passive-banken-click-sind",
+	"target-de-demo-state-passive-banken-click-geoeffnet",
 	"target-de-demo-repeated-anfangen-click-first-an",
 	"target-de-diagnostic-repeated-click-final-an",
 	"target-de-demo-typo-mitmachen-click-mit",
@@ -119,6 +121,10 @@ const frozenEvaluationCandidates = corpus.select([
 	"target-de-boundary-future-click-lachen",
 	"target-de-boundary-passive-click-wird",
 	"target-de-boundary-passive-click-gelobt",
+	"target-de-boundary-lexicalized-participle-click-ist",
+	"target-de-boundary-lexicalized-participle-click-verrueckt",
+	"target-de-boundary-participle-one-attributive-lachende",
+	"target-de-boundary-participle-one-adverbial-lachend",
 	"target-de-boundary-modal-click-muss",
 	"target-de-boundary-modal-click-schlafen",
 	"target-de-boundary-copula-click-ist",
@@ -164,7 +170,7 @@ if (
 	);
 }
 
-/** The historical 94 cases after mechanically omitting demonstrations. */
+/** The historical 94 cases plus four ADR 0007 participle-boundary probes. */
 const evaluationSelection = frozenEvaluationCandidates.difference(
 	productionDemonstrationSelection,
 );
@@ -246,7 +252,7 @@ const adaptiveNovelSelection = corpus.select([
 
 /**
  * Frozen adaptive prompt-development set: carryovers first, then novel probes.
- * The unchanged 94-case evaluation selection remains the final regression set.
+ * The 98-case evaluation selection remains the final regression set.
  */
 const adaptiveDevelopmentSelection = adaptiveCarryoverSelection.union(
 	adaptiveNovelSelection,

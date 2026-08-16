@@ -1,9 +1,10 @@
 /**
  * Production instruction body for German high-level target classification.
  *
- * Promoted from adaptive profile 5 after the frozen 94-case regression retained
- * at docs/prototypes/target-classification-high-level-contracts/runs/
- * 2026-08-13T05-29-01-478Z/results.json.
+ * Originally promoted from adaptive profile 5 after the frozen 94-case
+ * regression retained at docs/prototypes/target-classification-high-level-
+ * contracts/runs/2026-08-13T05-29-01-478Z/results.json. The participial
+ * boundary was subsequently amended by ADR 0007.
  */
 
 const core = `<agent_role>
@@ -95,6 +96,18 @@ const reflexiveSeparableMembership = `<reflexive_separable_membership>
 Build a separable inherently reflexive verb conjunctively. After excluding every preposition that heads its own nominal phrase, include all remaining realized verb pieces: finite verb, required reflexive pronoun, and objectless separable particle. None of these three replaces another. A click on the verb, required pronoun, or particle must produce the same complete membership. If the pronoun is merely an optional object, keep it separate as usual.
 </reflexive_separable_membership>`;
 
+const participialBoundary = `<participial_boundary>
+Partizip I and Partizip II are forms, not automatic routes. Classify the occurrence before collecting members.
+
+- An adjectivally used Partizip I is Lexeme/ADJ, including attributive lachende and adverbial lachend. It is not an analytic verb complex.
+- A Partizip II inside a perfect, werden-passive, sein-perfect, or perfect-passive realization is Lexeme/VERB and groups with every fixed realized auxiliary under the verbal-unit rule.
+- For sein + Partizip II, follow the conservative TIGER boundary. If a corresponding werden-passive or active paraphrase preserves the contextual meaning and verbal participants, treat it as a productive state passive: sein and the participle are one Lexeme/VERB target. Die Banken sind geöffnet corresponds to Die Banken werden geöffnet, so either click selects sind + geöffnet.
+- Use copula plus Lexeme/ADJ instead when the participial form has a lexicalized or idiomatized property meaning, or adjective behavior dominates. Evidence includes a meaning not preserved by the active/werden paraphrase, adjective-specific intensification or comparison, un- formation, coordination with an ordinary adjective, or use after bleiben or wirken. The copula and adjective are separate singleton targets.
+- Attributive or adverbial participles used as adjective modifiers remain Lexeme/ADJ. Substantivized participles remain Lexeme/NOUN.
+
+Decide the construction once for the occurrence. Never let an auxiliary click produce a verbal complex while a click on that complex's participle produces an adjective; every member click of one productive state passive must return identical membership and route.
+</participial_boundary>`;
+
 const finalBoundaryRules = `<final_boundary_rules>
 - A comparative form of an adjective remains Lexeme/ADJ when used adverbially; adverbial grammatical function does not turn that adjectival lexeme into ADV. As PairedFrame payload it remains a singleton; only the closed-class correlating operators are anchors.
 - In an Idiom whose established wording contains a preposition followed by a fixed article, both function words remain members. A click on either selects the complete Idiom. Exclude freely supplied participants and modifiers.
@@ -106,5 +119,6 @@ export const promptPart = [
 	boundaryRepairs,
 	membershipDecisionOrder,
 	reflexiveSeparableMembership,
+	participialBoundary,
 	finalBoundaryRules,
 ].join("\n\n");

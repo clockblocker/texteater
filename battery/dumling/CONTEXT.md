@@ -15,6 +15,19 @@ _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 **Lexeme**:
 A word-like Lemma. A Lexeme is one Lemma Family, not a synonym for Lemma.
 
+**Verbal Participle**:
+A participial Surface whose contextual use belongs to a `VERB` or `AUX` Lexeme.
+Its Canonical Form is the verbal dictionary form rather than the participial
+spelling. Productive perfect, passive, and German state-passive uses are verbal
+participles.
+
+**Participial Adjective**:
+An adjectivally used participial form that resolves to an `ADJ` Lexeme rather
+than to its source verb. Its Canonical Form is the adjective's participial
+citation form. German Partizip I in ordinary adjectival functions, attributive
+or adverbial Partizip II, and lexicalized or idiomatized predicative Partizip II
+are participial adjectives.
+
 **Collocation**:
 A conventional multiword Phraseme whose lexical component choices are
 restricted while its overall meaning remains non-idiomatic. German support-verb

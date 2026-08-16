@@ -29,6 +29,28 @@ export const classifiedBoundaryCases = defineGoldenCaseCollection(
 						"Established property adjective. Route fixed ADJ, not verbal participle.",
 				},
 			),
+			"grammar-de-adj-dev-lexicalized-participial-verrueckt":
+				inflectionCase(
+					"Der Mann ist völlig <TARGET>verrückt</TARGET>.",
+					"verrückt",
+					"verrückt",
+					{ case: null, degree: "Pos", gender: null, number: null },
+					{
+						explanation:
+							"TIGER lexicalized property adjective. Predicative ADJ, not productive passive VERB.",
+					},
+				),
+			"grammar-de-adj-dev-adverbial-participle-one-lachend":
+				inflectionCase(
+					"Er kam <TARGET>lachend</TARGET> herein.",
+					"lachend",
+					"lachend",
+					{ case: null, degree: "Pos", gender: null, number: null },
+					{
+						explanation:
+							"TIGER adjectivally used Partizip I. Adverbial function keeps ADJ route.",
+					},
+				),
 			"grammar-de-adj-dev-invariant-lila": inflectionCase(
 				"Sie trug einen <TARGET>lila</TARGET> Schal.",
 				"lila",

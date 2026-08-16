@@ -23,7 +23,7 @@ Das wäre [fast] schief gewesen.,fast,Citation,Lexeme,ADV
 Das wäre fast schief [gewesen].,gewesen,Inflection,Lexeme,AUX
 Das wäre schön [gewesen].,gewesen,Inflection,Lexeme,AUX
 "Der Autor, [dessen] Buch fehlt, wartet draußen.",dessen,Inflection,Lexeme,PRON
-Der Brief ist schon [geschrieben].,geschrieben,Inflection,Lexeme,VERB
+Der Brief ist schon [geschrieben].,ist geschrieben,Inflection,Lexeme,VERB
 Der dritte [Band] ist längst vergriffen.,Band,Citation,Lexeme,NOUN
 Der Fährmann hat uns [übergesetzt].,übergesetzt,Inflection,Lexeme,VERB
 Der [geschriebene] Brief lag auf dem Tisch.,geschriebene,Inflection,Lexeme,ADJ
@@ -39,11 +39,11 @@ Der von allen [bewunderte] Lehrer ging in den Ruhestand.,bewunderte,Inflection,L
 Die alte [Kiefer] steht am Hang.,Kiefer,Citation,Lexeme,NOUN
 Die [Angestellten] streikten gestern.,Angestellten,Inflection,Lexeme,NOUN
 Die auf ihn [abgestimmte] Lösung half sofort.,abgestimmte,Inflection,Lexeme,ADJ
-Die Aufgabe bleibt [ungelöst].,ungelöst,Inflection,Lexeme,VERB
+Die Aufgabe bleibt [ungelöst].,ungelöst,Inflection,Lexeme,ADJ
 Die [Band] spielt heute im Kellerclub.,Band,Citation,Lexeme,NOUN
 Die [eingezeichneten] Seen sind jetzt besser zu sehen.,eingezeichneten,Inflection,Lexeme,ADJ
 Die [gekochten] Kartoffeln standen schon bereit.,gekochten,Inflection,Lexeme,ADJ
-Die Kartoffeln sind bereits [gekocht].,gekocht,Inflection,Lexeme,VERB
+Die Kartoffeln sind bereits [gekocht].,sind gekocht,Inflection,Lexeme,VERB
 Die [Leiter] wackelte auf dem nassen Boden.,Leiter,Citation,Lexeme,NOUN
 Die [linke] Hand zitterte.,linke,Inflection,Lexeme,ADJ
 Die mit Bleistift [geschriebene] Notiz lag noch auf dem Tisch.,geschriebene,Inflection,Lexeme,ADJ
@@ -64,7 +64,7 @@ Die [schlafenden] Kinder wurden nicht geweckt.,schlafenden,Inflection,Lexeme,ADJ
 Die schoß das Häschen ganz [entzwei]; da rief die Frau: »O wei! O wei!«,entzwei,Citation,Lexeme,ADJ
 Die schoß das Häschen ganz entzwei; da rief die Frau: »[O] wei! O wei!«,o wei,Citation,Phraseme,DiscourseFormula
 Die schoß das Häschen ganz entzwei; da rief die Frau: »O [wei]! O wei!«,o wei,Citation,Phraseme,DiscourseFormula
-Die Tür ist [geschlossen].,geschlossen,Inflection,Lexeme,VERB
+Die Tür ist [geschlossen].,ist geschlossen,Inflection,Lexeme,VERB
 "Die Zeugin, [deren] Aussage zählt, bleibt anonym.",deren,Inflection,Lexeme,PRON
 Ein [interessierter] Leser fragte nach.,interessierter,Inflection,Lexeme,ADJ
 Ein [Verletzter] lag am Straßenrand.,Verletzter,Citation,Lexeme,NOUN
@@ -76,7 +76,7 @@ Einst ging er an Ufers [Rand] mit der Mappe in der Hand.,Rand,Citation,Lexeme,NO
 Er ging [zum] Bahnhof.,zum,Citation,Construction,Fusion
 Er lief erst nach links und dann [hinaus].,hinaus,Citation,Lexeme,ADV
 Er [muss] heute arbeiten.,muss,Inflection,Lexeme,AUX
-Er saß [schweigend] am Fenster.,schweigend,Inflection,Lexeme,VERB
+Er saß [schweigend] am Fenster.,schweigend,Inflection,Lexeme,ADJ
 Er vergaß [seinen] Schlüssel im Büro.,seinen,Inflection,Lexeme,DET
 "Er versucht, [hinauszulaufen].",hinauszulaufen,Inflection,Lexeme,VERB
 Er [wartet] auf den Nachtbus.,wartet auf,Inflection,Lexeme,VERB
@@ -124,8 +124,8 @@ Pass auf dich [auf]!,pass auf auf,Inflection,Lexeme,VERB
 Sein ständiges [Meckern] nervt.,Meckern,Citation,Lexeme,NOUN
 Sie [erinnert] sich an den Geruch.,erinnert sich an,Inflection,Lexeme,VERB
 Sie folgte ihrem [Herzen].,Herzen,Inflection,Lexeme,NOUN
-Sie ist [verheiratet].,verheiratet,Inflection,Lexeme,VERB
-Sie kam [lachend] herein.,lachend,Inflection,Lexeme,VERB
+Sie ist [verheiratet].,verheiratet,Inflection,Lexeme,ADJ
+Sie kam [lachend] herein.,lachend,Inflection,Lexeme,ADJ
 Sie sprang [ins] kalte Wasser.,ins,Citation,Construction,Fusion
 Sie [übersetzt] den Vertrag ins Deutsche.,übersetzt,Inflection,Lexeme,VERB
 Sie [umfuhr] die Baustelle weiträumig.,umfuhr,Inflection,Lexeme,VERB

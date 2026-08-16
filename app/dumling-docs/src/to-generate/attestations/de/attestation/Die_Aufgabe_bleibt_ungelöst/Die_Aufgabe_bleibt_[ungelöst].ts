@@ -14,35 +14,31 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
-			aspect: "Perf",
-			verbForm: "Part",
+			case: null,
+			degree: "Pos",
 			gender: null,
-			mood: null,
 			number: null,
-			person: null,
-			tense: null,
-			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalForm: "lösen",
+			canonicalForm: "ungelöst",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasGovPrep: null,
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Inflection", "Lexeme", "VERB">;
+} satisfies Attestation<"de", "Inflection", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Aufgabe bleibt [ungelöst].",
 	classifierNotes:
-		"Ungelöst is treated here as a bare predicative Partizip-II form of lösen. Even though bleibt ungelöst strongly suggests a state reading, the stricter German participle rule keeps non-attributive participles of lexical verbs under VERB rather than shifting them to ADJ.",
+		"Bleibt plus un- formation supplies adjective diagnostics. Under the TIGER boundary in ADR 0007, ungelöst is a participial adjective and bleibt remains a separate copula.",
 	isVerified: true,
 } as const;

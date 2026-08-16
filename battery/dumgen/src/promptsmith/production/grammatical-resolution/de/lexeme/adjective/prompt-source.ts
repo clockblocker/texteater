@@ -84,9 +84,12 @@ lacks an ending. When the Surface abbreviates a full adjective Lemma, use abbr
 Yes and variant null; do not relabel the abbreviation as variant Short.
 Otherwise use null. Nullable keys are never omitted.
 
-Established participial adjectives keep an adjective Lemma: geschlossene maps
-to geschlossen, spannende maps to spannend. Invariant attributive color forms
-still receive contextual agreement.
+Participles already classified as ADJ keep an adjective Lemma: geschlossene
+maps to geschlossen, spannende maps to spannend, and lexicalized predicative
+verrückt maps to verrückt. Adverbially used Partizip I such as lachend also
+keeps its participial adjective Lemma. Productive perfect, passive, and TIGER
+state-passive participles are fixed upstream as VERB and never enter this
+route. Invariant attributive color forms still receive contextual agreement.
 </lemma_and_features>
 
 <surface_features>

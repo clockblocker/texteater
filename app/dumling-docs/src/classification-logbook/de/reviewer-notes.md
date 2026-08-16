@@ -26,9 +26,11 @@
 - State predicates stay `ADJ` when they predicate over an argument rather than
   modifying the event. Examples include `anders`, `tot`, and resultative
   `entzwei`.
-- Participial classification splits by use. Attributive participles carrying
-  adjectival agreement are `ADJ`; bare or predicative Partizip-II forms remain
-  `VERB` unless independently lexicalized as adjectives.
+- Participial classification follows the TIGER boundary. Adjectivally used
+  Partizip I and attributive or adverbial participles are `ADJ`; productive
+  perfect and passive Partizip II forms are `VERB`. For `sein + Partizip II`,
+  a meaning-preserving active or `werden`-passive counterpart keeps the
+  occurrence verbal, while lexicalized property meanings are `ADJ`.
 - Finite German modals are `AUX` with an overt infinitive and `VERB` when they
   stand as the main predicate in an elliptical clause.
 - Finite `werden` is `AUX` when it marks another verbal form and `VERB` when it

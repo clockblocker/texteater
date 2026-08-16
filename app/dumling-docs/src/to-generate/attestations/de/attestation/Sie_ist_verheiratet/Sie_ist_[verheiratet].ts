@@ -14,35 +14,31 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
-			aspect: "Perf",
-			verbForm: "Part",
+			case: null,
+			degree: "Pos",
 			gender: null,
-			mood: null,
 			number: null,
-			person: null,
-			tense: null,
-			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalForm: "verheiraten",
+			canonicalForm: "verheiratet",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasGovPrep: null,
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Inflection", "Lexeme", "VERB">;
+} satisfies Attestation<"de", "Inflection", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Sie ist [verheiratet].",
 	classifierNotes:
-		"Verheiratet is treated here as a bare predicative Partizip-II form of verheiraten. Under the stricter German participle rule, non-attributive participles of lexical verbs stay VERB even when the clause expresses a stable resulting state.",
+		"Verheiratet expresses an established personal property rather than a productive passive event. Under the TIGER boundary in ADR 0007, it is the participial adjective verheiratet/ADJ and the copula stays separate.",
 	isVerified: true,
 } as const;

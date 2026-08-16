@@ -7,34 +7,15 @@ import { inflection } from "./builders";
 
 export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
-		"grammar-de-verb-provisional-passive-participle-geschlossen": {
+		"grammar-de-verb-passive-participle-geschlossen": {
 			input: {
-				markedContext: "Die Tür wurde <TARGET>geschlossen</TARGET>.",
-				members: ["geschlossen"],
+				markedContext:
+					"Die Tür <TARGET>wurde</TARGET> <TARGET>geschlossen</TARGET>.",
+				members: ["wurde", "geschlossen"],
 			},
 			idealOutput: inflection({
-				normalizedMembers: ["geschlossen"],
-				canonicalForm: "schließen",
-				inflectionalFeatures: {
-					aspect: null,
-					gender: null,
-					mood: null,
-					number: null,
-					person: null,
-					tense: null,
-					verbForm: "Part",
-					voice: "Pass",
-				},
-			}),
-			explanation: "Passive reading. geschlossen head. voice Pass.",
-		},
-		"grammar-de-verb-provisional-predicative-geschlossen": {
-			input: {
-				markedContext: "Die Tür ist <TARGET>geschlossen</TARGET>.",
-				members: ["geschlossen"],
-			},
-			idealOutput: inflection({
-				normalizedMembers: ["geschlossen"],
+				normalizedMembers: ["wurde", "geschlossen"],
+				memberOrthographies: ["Standard", "Standard"],
 				canonicalForm: "schließen",
 				inflectionalFeatures: {
 					aspect: null,
@@ -47,7 +28,32 @@ export const policyProbeCases = defineGoldenCaseCollection(import.meta.url, {
 					voice: null,
 				},
 			}),
-			explanation: "Predicative reading. Treat as verbal Part, not ADJ.",
+			explanation:
+				"Productive werden-passive. wurde member. geschlossen head stays Part.",
+		},
+		"grammar-de-verb-state-passive-geschlossen": {
+			input: {
+				markedContext:
+					"Die Tür <TARGET>ist</TARGET> <TARGET>geschlossen</TARGET>.",
+				members: ["ist", "geschlossen"],
+			},
+			idealOutput: inflection({
+				normalizedMembers: ["ist", "geschlossen"],
+				memberOrthographies: ["Standard", "Standard"],
+				canonicalForm: "schließen",
+				inflectionalFeatures: {
+					aspect: null,
+					gender: null,
+					mood: null,
+					number: null,
+					person: null,
+					tense: null,
+					verbForm: "Part",
+					voice: null,
+				},
+			}),
+			explanation:
+				"TIGER productive state passive. ist member. geschlossen head stays Part under schließen.",
 		},
 		"grammar-de-verb-provisional-zu-infinitive-warten": {
 			input: {

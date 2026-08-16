@@ -20,6 +20,8 @@ export const IDS = {
 	fusionZu: "https://grammis.ids-mannheim.de/praepositionen/299700",
 	questionSupportVerb:
 		"https://grammis.ids-mannheim.de/systematische-grammatik/514",
+	participialBoundary:
+		"https://www.ims.uni-stuttgart.de/documents/ressourcen/korpora/tiger-corpus/annotation/tiger_scheme-syntax.pdf#page=70",
 } as const;
 
 export function udPartOfSpeech(kind: string): string {

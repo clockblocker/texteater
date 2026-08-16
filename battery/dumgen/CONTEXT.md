@@ -285,6 +285,12 @@ modifiers remain separate targets. High-level membership does not prevent a
 later drill-down analysis of an individual AUX, preposition, pronoun, or other
 member.
 
+For German participles, ADR 0007 applies the TIGER boundary. A productive
+`sein`-state-passive groups `sein` with Partizip II as one VERB target, while a
+lexicalized or idiomatized participial adjective remains an ADJ predicate
+separate from its copula. Ordinary attributive and adverbial participles are
+ADJ targets; substantivized participles are NOUN targets.
+
 The target level is policy-owned. German High-Level Target Classification does
 not group an ordinary non-idiomatic Collocation merely because its lexical
 choices are conventional. In `eine Entscheidung treffen`, clicks on `eine`,

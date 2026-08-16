@@ -14,35 +14,31 @@ const occurrenceAttestation = {
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
-			tense: "Pres",
-			verbForm: "Part",
-			aspect: null,
+			case: null,
+			degree: "Pos",
 			gender: null,
-			mood: null,
 			number: null,
-			person: null,
-			voice: null,
 		},
 		lemma: {
 			language: "de",
-			canonicalForm: "lachen",
+			canonicalForm: "lachend",
 			family: "Lexeme",
-			kind: "VERB",
+			kind: "ADJ",
 			coreFeatures: {
-				hasGovPrep: null,
-				hasSepPrefix: null,
-				lexicallyReflexive: null,
-				verbType: null,
+				abbr: null,
+				foreign: null,
+				numType: null,
+				variant: null,
 			},
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Inflection", "Lexeme", "VERB">;
+} satisfies Attestation<"de", "Inflection", "Lexeme", "ADJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Sie kam [lachend] herein.",
 	classifierNotes:
-		"Lachend is the present participial form of lachen used non-attributively, so under the repo's German participle rule it stays VERB rather than shifting to ADJ or ADV.",
+		"Lachend is an adverbially used Partizip I. Under the TIGER boundary in ADR 0007, adjectivally used Partizip I resolves to the participial adjective lachend/ADJ.",
 	isVerified: true,
 } as const;

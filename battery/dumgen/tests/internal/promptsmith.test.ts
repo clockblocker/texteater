@@ -16,6 +16,7 @@ import { productionSystemPromptRecipe } from "../../src/promptsmith/assembly/gen
 import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/production/generated-system-prompt/intake";
 import { corpus as intakeCorpus } from "../../src/promptsmith/production/intake/golden-corpus/corpus";
 import { promptSource as intakePromptSource } from "../../src/promptsmith/production/intake/prompt-source";
+import { corpus as germanTargetCorpus } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/corpus/corpus";
 import { corpus as readingCorpus } from "../../src/promptsmith/production/reading-resolution/de/golden-corpus/corpus";
 import {
 	buildDeNounCitationSurfaceCodec,
@@ -116,10 +117,73 @@ describe("Prompt Assembly", () => {
 				.update(targetPrompt.systemPrompt)
 				.digest("hex"),
 		).toBe(
-			"3c71bc5ded78c53c503f0377cb5af55e2afa6ed03f9c98998126a708e13908bd",
+			"900764902b06815a081b4edbad7c438d6b8dcbfbe83c1d3e765bed030bc5365b",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
+		expect(targetPrompt.systemPrompt).toContain("<participial_boundary>");
+		expect(targetPrompt.systemPrompt).toContain("Die Banken sind geöffnet");
 		expect(targetPrompt.systemPrompt).toContain("Examples to follow:");
+	});
+
+	test("keeps the TIGER participle boundary click-invariant", () => {
+		function goldenCase(caseId: keyof typeof germanTargetCorpus.cases) {
+			const result = germanTargetCorpus.cases[caseId];
+			if (result === undefined) {
+				throw new Error(`Missing German target case ${caseId}.`);
+			}
+			return result;
+		}
+
+		const stateAux = goldenCase(
+			"target-de-demo-state-passive-banken-click-sind",
+		);
+		const stateParticiple = goldenCase(
+			"target-de-demo-state-passive-banken-click-geoeffnet",
+		);
+		expect(stateAux.idealOutput).toEqual(stateParticiple.idealOutput);
+		expect(stateAux.idealOutput).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [4, 6],
+			},
+		});
+
+		expect(
+			goldenCase("target-de-boundary-lexicalized-participle-click-ist")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "AUX",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			goldenCase(
+				"target-de-boundary-lexicalized-participle-click-verrueckt",
+			).idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [8],
+			},
+		});
+		expect(
+			goldenCase("target-de-boundary-participle-one-adverbial-lachend")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [4],
+			},
+		});
 	});
 
 	test("all four active schemas are accepted by OpenAI Structured Outputs", () => {

@@ -30,6 +30,10 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"kann means ability. It is not tense or voice glue. AUX only.",
 		"target-de-demo-passive-briefe-click-werden":
 			"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
+		"target-de-demo-state-passive-banken-click-sind":
+			"sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet. TIGER treats this as a state passive. Take both as one VERB target.",
+		"target-de-demo-state-passive-banken-click-geoeffnet":
+			"The marked participle belongs to the same productive state passive as sind. Take sind + geöffnet as the identical VERB target for either click.",
 		"target-de-demo-repeated-anfangen-click-first-an":
 			"This first an introduces and governs der Kreuzung. It is an ADP, not the objectless final verb particle. Return this an alone.",
 		"target-de-diagnostic-repeated-click-final-an":

@@ -3,6 +3,10 @@ import type { Attestation } from "dumling/types";
 const occurrenceAttestation = {
 	members: [
 		{
+			attested: "ist",
+			orthography: "Standard",
+		},
+		{
 			attested: "geschrieben",
 			orthography: "Standard",
 		},
@@ -10,7 +14,7 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "geschrieben",
+		normalizedSurface: "ist geschrieben",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -43,6 +47,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Der Brief ist schon [geschrieben].",
 	classifierNotes:
-		"Geschrieben is a bare predicative Partizip-II form of schreiben. Under the current German verb rule, non-attributive participles of lexical verbs stay VERB rather than shifting to ADJ.",
+		"Ist plus geschrieben preserves the productive schreiben event and forms one state-passive VERB target. The participle owns morphology and the Lemma; the auxiliary is a fixed member.",
 	isVerified: true,
 } as const;
