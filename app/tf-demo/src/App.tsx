@@ -346,7 +346,6 @@ function TextWorkspace({ textId }: { textId: string }) {
 						<Suspense fallback={<ReadingGraphSkeleton />}>
 							<ReadingGraph
 								key={presentation.reading.ownerKey}
-								visitorId={visitorId}
 								origin={presentation.reading}
 							/>
 						</Suspense>
@@ -588,13 +587,14 @@ function DataControls({
 
 function ReadingGraphSkeleton() {
 	return (
-		<Card size="sm" role="status" aria-label="Loading Reading graph">
-			<CardContent className="flex flex-col gap-3">
-				<Skeleton className="h-7 w-48" />
-				<Skeleton className="h-4 w-full" />
-				<Skeleton className="h-24 w-full" />
-			</CardContent>
-		</Card>
+		<div
+			className="flex flex-col gap-3"
+			role="status"
+			aria-label="Loading Reading note"
+		>
+			<Skeleton className="h-7 w-48" />
+			<Skeleton className="h-20 w-full" />
+		</div>
 	);
 }
 
