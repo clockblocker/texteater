@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 2: yield* is lazy await</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 2</p>
+		<h1><code>yield*</code> is lazy <code>await</code></h1>
+		<p class="dek">Read Effect generator code using a mental model you already own—then learn the one difference that matters.</p>
+		<p class="meta">6 minutes · one retrieval check · Effect v4 RC syntax</p>
+	</header>
+
+	<section>
+		<h2>The useful lie</h2>
+		<p>When reading an <code>Effect.gen</code> block, mentally replace <code>yield*</code> with <code>await</code>:</p>
+		<pre><code>const resolveEncounter = Effect.gen(function* () {
+  const segmented = yield* dumgen.segment(sentences)
+  const grammar = yield* dumgen.grammatical(segmented)
+  return yield* dumgen.reading(grammar)
+})</code></pre>
+		<p>Each <code>yield*</code> says: run this Effect; if it succeeds, resume the generator with its success value. If it fails, stop the generator with its typed failure.</p>
+		<p class="thesis"><code>yield*</code> is to an Effect what <code>await</code> is to a Promise: it extracts the successful value so the next line can use it.</p>
+	</section>
+
+	<section>
+		<h2>Where the lie breaks</h2>
+		<div class="grid">
+			<article class="card"><h3><code>await promise</code></h3><p>The async function is already executing. The Promise operation has usually started. Rejection re-enters JavaScript's exception machinery.</p></article>
+			<article class="card"><h3><code>yield* effect</code></h3><p>The whole generator still describes an inert program. Expected failures and missing services become types of the parent Effect.</p></article>
+		</div>
+		<p>Under the syntax, Effect values participate in the generator protocol. <code>Effect.gen</code> receives each yielded Effect, and the runtime later interprets it. On success, the runtime resumes the generator with the value. On failure, it does not execute the remaining lines.</p>
+	</section>
+
+	<section>
+		<h2>Your sequential intuition was correct</h2>
+		<pre><code>const first = yield* request("first")
+const second = yield* request("second")</code></pre>
+		<p><code>second</code> does not start until <code>first</code> succeeds. Generator notation expresses data dependency cleanly; it does not imply concurrency.</p>
+		<p>For independent work, combine Effects first, then yield the combined Effect:</p>
+		<pre><code>const [grammarA, grammarB] = yield* Effect.all(
+  [resolveGrammar(a), resolveGrammar(b)],
+  { concurrency: 2 }
+)</code></pre>
+		<p>Here the parent generator still has one <code>yield*</code>. The yielded Effect internally runs two children with an explicit limit.</p>
+	</section>
+
+	<section>
+		<h2>What propagates upward</h2>
+		<p>TypeScript infers the parent program from everything you yield:</p>
+		<pre><code>Effect.Effect&lt;
+  Reading,
+  SegmentError | GrammarError | ReadingError,
+  AiSdk | Dictionary
+&gt;</code></pre>
+		<p>You did not manually write that union. Each <code>yield*</code> contributed its possible failure and service requirement. Providing services or handling errors removes them from the corresponding type parameter.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="b" data-correct-message="Correct. Successive yield* expressions are sequential; the second request is not started until the first succeeds." data-incorrect-message="Not quite. Successive yield* expressions describe a dependency chain unless you explicitly combine the Effects concurrently.">
+			<p><strong>What happens when this program is run?</strong></p>
+			<pre><code>const intake = yield* runIntake(batch)
+const grammar = yield* resolveGrammar(intake)</code></pre>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<ol type="A">
+				<li>Both operations start at same time.</li>
+				<li>Intake succeeds before the grammar starts.</li>
+				<li>Grammar starts before the Intake succeeds.</li>
+			</ol>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>Reply with the missing expression—nothing else:</p>
+		<pre><code>const program = Effect.gen(function* () {
+  const segmented = ______ dumgen.segment(sentences)
+  return segmented
+})</code></pre>
+		<p>Ask your teacher about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Skim the official <a href="https://www.effect.website/docs/v4/getting-started/using-generators">Using Generators</a> guide. The <a href="../reference/effect-mental-model.html">mental-model reference</a> now includes this translation.</p>
+	</section>
+
+	<nav><a href="0001-a-plan-not-a-promise.html">← Lesson 1</a> · <a href="../reference/effect-mental-model.html">Reference</a> · <a href="0003-bound-the-request-flood.html">Next: bound the request flood →</a></nav>
+</main>
+</body>
+</html>

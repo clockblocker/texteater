@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 6: Not every bad outcome is an error</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 6</p>
+		<h1>Not every bad outcome is an error</h1>
+		<p class="dek">Design Dumgen's success, typed-failure, and defect channels before adding retries.</p>
+		<p class="meta">8 minutes · one retrieval check · Effect v4 RC syntax</p>
+	</header>
+
+	<section>
+		<h2>Three places an outcome can live</h2>
+		<div class="grid">
+			<article class="card"><h3>Success</h3><p>The operation completed and made a legitimate domain decision—even if the answer is “unsupported” or “unresolved.”</p></article>
+			<article class="card"><h3>Expected error</h3><p>Normal operational failure that callers may handle, report, or retry. It appears in <code>Effect&lt;A, E, R&gt;</code>'s <code>E</code>.</p></article>
+			<article class="card"><h3>Defect</h3><p>A bug or broken invariant. It is retained in the runtime Cause, not advertised as recoverable domain control flow.</p></article>
+		</div>
+	</section>
+
+	<section>
+		<h2>Dumgen classification</h2>
+		<div class="type-line"><strong>Success</strong><span><code>Accepted</code>, <code>UnsupportedLanguage</code>, <code>Unintelligible</code>, <code>Unresolved</code>, and <code>NotImplemented</code> are legitimate decisions produced by completed workflows.</span></div>
+		<div class="type-line"><strong>Error</strong><span><code>ProviderRateLimited</code>, <code>ProviderUnavailable</code>, and an expected invalid provider response prevent the workflow from making its decision.</span></div>
+		<div class="type-line"><strong>Defect</strong><span>An impossible missing item after validated cardinality or a violated internal invariant indicates broken code or assumptions.</span></div>
+		<p class="thesis">“The user did not get the desired answer” does not automatically mean failure. Ask whether Dumgen completed its contract or was prevented from completing it.</p>
+	</section>
+
+	<section>
+		<h2>The type says what callers must confront</h2>
+		<pre><code>type Segment = (
+  sentences: readonly string[]
+) =&gt; Effect.Effect&lt;
+  readonly SegmentationDecision[],
+  ProviderRateLimited | ProviderUnavailable | InvalidProviderOutput,
+  AiSdk
+&gt;</code></pre>
+		<p>This Effect-native shape avoids representing the same operational failure twice as both <code>{ ok: false }</code> and an Effect error. A Promise-compatible boundary can convert the Effect back to the legacy result envelope if required.</p>
+	</section>
+
+	<section>
+		<h2>Typed errors are ordinary tagged values</h2>
+		<pre><code>class ProviderRateLimited extends Data.TaggedError(
+  "ProviderRateLimited"
+)&lt;{
+  readonly retryAfterMs?: number
+}&gt; {}</code></pre>
+		<p>When sequential Effects are composed with <code>yield*</code>, their error types accumulate into a union. A failure short-circuits the remaining generator lines.</p>
+	</section>
+
+	<section>
+		<h2>Retry only the transient subset</h2>
+		<pre><code>const resilientCall = providerCall.pipe(
+  Effect.retry({
+    times: 3,
+    while: (error) =&gt;
+      error._tag === "ProviderRateLimited" ||
+      error._tag === "ProviderUnavailable"
+  })
+)</code></pre>
+		<p>Do not retry <code>UnsupportedLanguage</code>: it is already a successful decision. Do not retry a refusal, content-policy rejection, invalid caller input, or broken invariant merely because a generic “retry everything” operator makes that easy.</p>
+		<p class="warning">Retries multiply provider traffic. They must run behind the same shared semaphore and use a bounded schedule with backoff and jitter.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="a" data-correct-message="Correct. UnsupportedLanguage is a legitimate Intake Decision, so the workflow succeeded in classifying the input." data-incorrect-message="Not quite. The model call completed and Dumgen produced a legitimate domain decision; no recovery or defect handling is required.">
+			<p><strong>Where should <code>UnsupportedLanguage</code> live?</strong></p>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<ol type="A">
+				<li>A successful domain decision in Success.</li>
+				<li>A recoverable typed failure in Error.</li>
+				<li>An unexpected invariant defect in Cause.</li>
+			</ol>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>OpenAI returns a temporary rate-limit response. Should that be Success, a typed Error, or a defect—and should Dumgen consider retrying it?</p>
+		<p>Reply in one sentence. Ask your teacher about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Read the official <a href="https://www.effect.website/docs/v4/error-management/two-error-types">Two Types of Errors</a> page, then the first section of <a href="https://www.effect.website/docs/v4/error-management/retrying">Retrying</a>.</p>
+	</section>
+
+	<nav><a href="0005-a-fiber-is-a-running-effect.html">← Lesson 5</a> · <a href="../reference/glossary.html">Glossary →</a></nav>
+</main>
+</body>
+</html>

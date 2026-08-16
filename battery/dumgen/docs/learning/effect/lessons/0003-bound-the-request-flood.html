@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 3: Bound the request flood</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 3</p>
+		<h1>Bound the request flood</h1>
+		<p class="dek">Turn “run many things” into visible policy without breaking Dumgen's Intake Batch.</p>
+		<p class="meta">7 minutes · one retrieval check · Effect v4 RC syntax</p>
+	</header>
+
+	<section>
+		<h2>Concurrency is explicit</h2>
+		<p>This program is sequential:</p>
+		<pre><code>const results = yield* Effect.all(effects)</code></pre>
+		<p>Effect's current default is one operation after another. To permit at most sixteen active children, say so:</p>
+		<pre><code>const results = yield* Effect.all(effects, {
+  concurrency: 16
+})</code></pre>
+		<p class="thesis">The concurrency number belongs to the parent workload, not to each network call. That makes capacity a policy you can find, test, and change.</p>
+	</section>
+
+	<section>
+		<h2><code>all</code> versus <code>forEach</code></h2>
+		<div class="grid">
+			<article class="card"><h3><code>Effect.all</code></h3><p>You already have a fixed structure of Effect values and want one Effect containing all their results.</p></article>
+			<article class="card"><h3><code>Effect.forEach</code></h3><p>You have a collection of inputs and a function that constructs one Effect for each input.</p></article>
+		</div>
+		<pre><code>// Fixed Effects
+yield* Effect.all(
+  [processBatch(first), processBatch(second)],
+  { concurrency: 2 }
+)
+
+// Collection of batch inputs
+yield* Effect.forEach(
+  intakeBatches,
+  processBatch,
+  { concurrency: 16 }
+)</code></pre>
+		<p>Both produce one parent Effect. The caller can yield that parent inside a larger <code>Effect.gen</code> workflow.</p>
+
+		<h3>The same Dumgen work, two ways</h3>
+		<pre><code>const batches = [batchA, batchB, batchC]
+
+// Step 1: turn each Batch value into an Effect value.
+const effects = batches.map(processBatch)
+// effects is [Effect, Effect, Effect]
+
+// Step 2: combine those Effect values.
+const withAll = Effect.all(effects, { concurrency: 2 })
+
+// forEach performs those two conceptual steps together.
+const withForEach = Effect.forEach(
+  batches,
+  processBatch,
+  { concurrency: 2 }
+)</code></pre>
+		<p class="thesis"><code>Effect.forEach(values, f, options)</code> is the collection-shaped spelling of <code>Effect.all(values.map(f), options)</code>.</p>
+
+		<h3>Use <code>all</code> when the Effects are unlike each other</h3>
+		<pre><code>const [segmented, policy] = yield* Effect.all([
+  dumgen.segment(sentences), // Effect&lt;Segmentation, ...&gt;
+  loadConcurrencyPolicy     // Effect&lt;Policy, ...&gt;
+])</code></pre>
+		<p>You manually assembled two different Effects and want their differently typed results.</p>
+
+		<h3>Use <code>forEach</code> when one recipe handles many values</h3>
+		<pre><code>const segmentations = yield* Effect.forEach(
+  intakeBatches,                        // IntakeBatch[]
+  (batch) =&gt; dumgen.segment(batch.items), // Batch → Effect
+  { concurrency: 16 }
+)</code></pre>
+		<p>You have many values of one kind and apply the same Effect-producing function to each.</p>
+	</section>
+
+	<section>
+		<h2>Preserve the Dumgen boundary</h2>
+		<p>An Intake Batch is one bounded, ordered list handled by one model call. Do not confuse “concurrent uploads” with “one provider call per sentence.”</p>
+		<pre><code>const processUploads = (batches: readonly IntakeBatch[]) =&gt;
+  Effect.forEach(
+    batches,
+    (batch) =&gt; dumgen.segment(batch.sourceSentences),
+    { concurrency: 16 }
+  )</code></pre>
+		<p>Sixteen batches may be active. Each batch still crosses the provider boundary as the single call required by Dumgen's domain model.</p>
+	</section>
+
+	<section>
+		<h2>The dangerous setting</h2>
+		<pre><code>{ concurrency: "unbounded" }</code></pre>
+		<p>This removes the combinator's limit. It does not mean “as fast as safely possible”; it means this parent program supplies no bound. That is usually wrong for paid, rate-limited provider traffic.</p>
+		<p class="warning"><strong>Scope warning:</strong> <code>concurrency: 16</code> limits children of this one combinator. If twenty user requests each start their own parent program, you could still have 320 provider calls. A shared provider-wide limit requires a shared semaphore or queue—a later lesson.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="a" data-correct-message="Correct. The numeric option is a maximum for active child Effects governed by that combinator." data-incorrect-message="Not quite. The numeric option is a local upper bound, not a durability or minimum-throughput guarantee.">
+			<p><strong>What does <code>{ concurrency: 8 }</code> guarantee?</strong></p>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<ol type="A">
+				<li>At most eight child Effects run.</li>
+				<li>Exactly eight child Effects always run.</li>
+				<li>Eight requests survive every process restart.</li>
+			</ol>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>Reply with the missing function name:</p>
+		<pre><code>const processed = yield* Effect.____(
+  intakeBatches,
+  processIntakeBatch,
+  { concurrency: 16 }
+)</code></pre>
+		<p>Ask your teacher about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Read the official <a href="https://www.effect.website/docs/v4/concurrency/basic-concurrency">Basic Concurrency</a> page through “Numbered Concurrency.” It confirms that sequential execution is the default and numbered concurrency is an upper bound.</p>
+	</section>
+
+	<nav><a href="0002-yield-star-is-lazy-await.html">← Lesson 2</a> · <a href="../reference/effect-mental-model.html">Reference</a> · <a href="0004-one-shared-provider-gate.html">Next: one shared provider gate →</a></nav>
+</main>
+</body>
+</html>
