@@ -1,6 +1,7 @@
 import type { PlanMutationResult } from "../core/plan-mutation";
 import type { SupportedLanguage } from "../dumling";
 import type { DumdictMutationOptions, MutationResult } from "../public";
+import { commitChangesResultSchema, getDumdictSchemasFor } from "../schema";
 import type { CreateDumdictServiceOptions, DumdictPlan } from "../storage";
 import { mutationResultFromCommit } from "./result-mapping";
 
@@ -28,20 +29,25 @@ export async function applyPlan<L extends SupportedLanguage>(
 	plan: PlanMutationResult<L>,
 	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
-	const publicPlan = immutableClone({
+	const schemas = getDumdictSchemasFor(serviceOptions.language);
+	const parsedPlan = schemas.dumdictPlanSchema.parse({
 		baseRevision: plan.baseRevision,
 		changes: plan.changes,
-	}) as unknown as DumdictPlan<L>;
-	const commit = mutationOptions?.applyPlan
+	});
+	const publicPlan = immutableClone(parsedPlan) as unknown as DumdictPlan<L>;
+	const rawCommit = mutationOptions?.applyPlan
 		? await mutationOptions.applyPlan(publicPlan)
 		: plan.changes.length === 0
 			? {
 					status: "committed" as const,
 					nextRevision: plan.baseRevision,
 				}
-			: await serviceOptions.storage.commitChanges({
-					baseRevision: plan.baseRevision,
-					changes: plan.changes,
-				});
+			: await serviceOptions.storage.commitChanges(
+					schemas.commitChangesRequestSchema.parse({
+						baseRevision: plan.baseRevision,
+						changes: plan.changes,
+					}),
+				);
+	const commit = commitChangesResultSchema.parse(rawCommit);
 	return mutationResultFromCommit(plan, commit);
 }

@@ -73,7 +73,8 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 	if (!reading) {
 		throw new Error("Expected English walk fixture.");
 	}
-	return reading;
+	const { lexicalRelations: _legacyRelations, ...entry } = reading;
+	return entry;
 };
 
 export function withUnusedCleanupStorageMethods<

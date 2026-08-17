@@ -16,6 +16,24 @@ export {
 	DumgenError,
 	type DumgenErrorCode,
 } from "./generator/generator-error";
+export {
+	enabledSegmentationLanguageSchema,
+	grammaticalInputSchema,
+	grammaticalInteractionSchema,
+	grammaticalResolutionLanguageSchema,
+	grammaticalResultSchema,
+	grammaticalRouteSchema,
+	notImplementedGrammaticalResultSchema,
+	resolvedGrammaticalResultSchema,
+	section1ErrorSchema,
+	segmentationDecisionSchema,
+	segmentationResultSchema,
+	segmentedSentenceIdSchema,
+	segmentedSentenceSchema,
+	segmentKindSchema,
+	segmentSchema,
+	unresolvedGrammaticalResultSchema,
+} from "./schemas/public-schemas";
 export type {
 	EnabledSegmentationLanguage,
 	GrammaticalInput,

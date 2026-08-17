@@ -1,20 +1,24 @@
 import { v } from "convex/values";
+import {
+	enabledSegmentationLanguageSchema,
+	grammaticalResolutionLanguageSchema,
+	segmentKindSchema,
+	segmentSchema,
+} from "dumgen/schema";
+import { semanticRelationSchema } from "dumrel";
+import { zodOutputToConvex } from "./zodConvex.js";
 
-export const languageValidator = v.union(v.literal("de"), v.literal("he"));
-
-export const grammaticalLanguageValidator = v.literal("de");
-
-export const segmentKindValidator = v.union(
-	v.literal("ResolvableText"),
-	v.literal("OpaqueText"),
-	v.literal("Whitespace"),
-	v.literal("Punctuation"),
+export const languageValidator = zodOutputToConvex(
+	enabledSegmentationLanguageSchema,
 );
 
-export const segmentInputValidator = v.object({
-	kind: segmentKindValidator,
-	text: v.string(),
-});
+export const grammaticalLanguageValidator = zodOutputToConvex(
+	grammaticalResolutionLanguageSchema,
+);
+
+export const segmentKindValidator = zodOutputToConvex(segmentKindSchema);
+
+export const segmentInputValidator = zodOutputToConvex(segmentSchema);
 
 export const orthographyValidator = v.union(
 	v.literal("Standard"),
@@ -68,14 +72,8 @@ export const knowledgeOwnerKindValidator = v.union(
 	v.literal("Reading"),
 );
 
-export const semanticRelationValidator = v.union(
-	v.literal("synonym"),
-	v.literal("nearSynonym"),
-	v.literal("antonym"),
-	v.literal("hypernym"),
-	v.literal("hyponym"),
-	v.literal("meronym"),
-	v.literal("holonym"),
+export const semanticRelationValidator = zodOutputToConvex(
+	semanticRelationSchema,
 );
 
 export const occurrenceAttestationInputValidator = v.object({
@@ -90,120 +88,40 @@ export const readingValueValidator = v.object({
 	emojiDescription: v.string(),
 });
 
-const unitShadowValidator = v.object({
-	language: languageValidator,
-	canonicalForm: v.string(),
-	family: v.string(),
-	kind: v.string(),
-});
-
-const pendingSemanticRelationRecordValidator = v.object({
-	sourceReading: readingValueValidator,
-	pending: v.object({
-		relation: semanticRelationValidator,
-		target: unitShadowValidator,
-	}),
-	locator: v.object({
-		sourceReadingKey: v.string(),
-		relation: semanticRelationValidator,
-		targetPendingId: v.string(),
-	}),
-});
-
-const dumdictPreconditionValidator = v.union(
-	v.object({ kind: v.literal("revisionMatches"), revision: v.string() }),
-	v.object({ kind: v.literal("lemmaExists"), lemma: lemmaValueValidator }),
-	v.object({ kind: v.literal("lemmaMissing"), lemma: lemmaValueValidator }),
-	v.object({
-		kind: v.literal("readingExists"),
-		reading: readingValueValidator,
-	}),
-	v.object({
-		kind: v.literal("readingMissing"),
-		reading: readingValueValidator,
-	}),
-	v.object({ kind: v.literal("surfaceExists"), surfaceId: v.string() }),
-	v.object({ kind: v.literal("surfaceMissing"), surfaceId: v.string() }),
-	v.object({
-		kind: v.literal("pendingRelationExists"),
-		record: pendingSemanticRelationRecordValidator,
-	}),
-	v.object({
-		kind: v.literal("pendingRelationMissing"),
-		record: pendingSemanticRelationRecordValidator,
-	}),
-	v.object({
-		kind: v.literal("readingAttestationMissing"),
-		reading: readingValueValidator,
-		value: v.string(),
-	}),
-);
-
-const readingEntryValidator = v.object({
-	reading: readingValueValidator,
-	knowledge: v.optional(v.any()),
-	attestedTranslations: v.array(v.string()),
-	attestations: v.array(v.string()),
-	notes: v.string(),
-});
-
-const surfaceEntryValidator = v.object({
-	id: v.string(),
-	surface: surfaceValueValidator,
-	ownerLemma: lemmaValueValidator,
-	attestedTranslations: v.array(v.string()),
-	attestations: v.array(v.string()),
-	notes: v.string(),
-});
-
-const readingPatchValidator = v.union(
-	v.object({ kind: v.literal("addAttestation"), value: v.string() }),
-	v.object({
-		kind: v.literal("applyKnowledgeChange"),
-		envelope: v.object({
-			owner: v.object({
-				kind: v.literal("Reading"),
-				reading: readingValueValidator,
-			}),
-			change: v.any(),
-		}),
-	}),
-);
-
+// Full conversion expands this union into megabytes of Convex function metadata.
+// Keep the transport envelope compact; dumdictStorage parses the canonical,
+// language-scoped Dumdict schema before applying any change.
 export const dumdictPlannedChangeValidator = v.union(
 	v.object({
 		type: v.literal("createLemma"),
-		record: v.object({
-			lemma: lemmaValueValidator,
-			knowledge: v.optional(v.any()),
-		}),
-		preconditions: v.array(dumdictPreconditionValidator),
+		record: v.any(),
+		preconditions: v.array(v.any()),
 	}),
 	v.object({
 		type: v.literal("createReading"),
-		entry: readingEntryValidator,
-		preconditions: v.array(dumdictPreconditionValidator),
+		entry: v.any(),
+		preconditions: v.array(v.any()),
 	}),
 	v.object({
 		type: v.literal("patchReading"),
-		reading: readingValueValidator,
-		ops: v.array(readingPatchValidator),
-		preconditions: v.array(dumdictPreconditionValidator),
+		reading: v.any(),
+		ops: v.array(v.any()),
+		preconditions: v.array(v.any()),
 	}),
 	v.object({
 		type: v.literal("createOwnedSurface"),
-		entry: surfaceEntryValidator,
-		preconditions: v.array(dumdictPreconditionValidator),
+		entry: v.any(),
+		preconditions: v.array(v.any()),
 	}),
 	v.object({
 		type: v.literal("createPendingSemanticRelation"),
-		record: pendingSemanticRelationRecordValidator,
-		preconditions: v.array(dumdictPreconditionValidator),
+		record: v.any(),
+		preconditions: v.array(v.any()),
 	}),
 	v.object({
 		type: v.literal("deletePendingSemanticRelation"),
-		record: pendingSemanticRelationRecordValidator,
-		preconditions: v.array(dumdictPreconditionValidator),
+		record: v.any(),
+		preconditions: v.array(v.any()),
 	}),
 );
 

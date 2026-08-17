@@ -7,43 +7,73 @@ export type GermanGrammaticalRoute = {
 	};
 }[LemmaFamilyFor<"de">];
 
-export const DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES = [
-	{ family: "Lexeme", kind: "ADJ" },
-	{ family: "Lexeme", kind: "ADP" },
-	{ family: "Lexeme", kind: "ADV" },
-	{ family: "Lexeme", kind: "AUX" },
-	{ family: "Lexeme", kind: "CCONJ" },
-	{ family: "Lexeme", kind: "DET" },
-	{ family: "Lexeme", kind: "INTJ" },
-	{ family: "Lexeme", kind: "NOUN" },
-	{ family: "Lexeme", kind: "NUM" },
-	{ family: "Lexeme", kind: "PART" },
-	{ family: "Lexeme", kind: "PRON" },
-	{ family: "Lexeme", kind: "PROPN" },
-	{ family: "Lexeme", kind: "SCONJ" },
-	{ family: "Lexeme", kind: "SYM" },
-	{ family: "Lexeme", kind: "VERB" },
-	{ family: "Lexeme", kind: "X" },
-	{ family: "Phraseme", kind: "Aphorism" },
-	{ family: "Phraseme", kind: "DiscourseFormula" },
-	{ family: "Phraseme", kind: "Idiom" },
-	{ family: "Phraseme", kind: "Proverb" },
-	{ family: "Construction", kind: "Fusion" },
-	{ family: "Construction", kind: "PairedFrame" },
-] as const satisfies readonly GermanGrammaticalRoute[];
+type GermanRouteKindInventory = {
+	readonly [Family in LemmaFamilyFor<"de">]: {
+		readonly enabled: readonly LemmaKindFor<"de", Family>[];
+		readonly notImplemented: readonly LemmaKindFor<"de", Family>[];
+	};
+};
 
-export const DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES = [
-	{ family: "Lexeme", kind: "PUNCT" },
-	{ family: "Phraseme", kind: "Collocation" },
-	{ family: "Morpheme", kind: "Root" },
-	{ family: "Morpheme", kind: "Prefix" },
-	{ family: "Morpheme", kind: "Suffix" },
-	{ family: "Morpheme", kind: "Suffixoid" },
-	{ family: "Morpheme", kind: "Infix" },
-	{ family: "Morpheme", kind: "Circumfix" },
-	{ family: "Morpheme", kind: "Interfix" },
-	{ family: "Morpheme", kind: "Transfix" },
-	{ family: "Morpheme", kind: "Clitic" },
-	{ family: "Morpheme", kind: "ToneMarking" },
-	{ family: "Morpheme", kind: "Duplifix" },
-] as const satisfies readonly GermanGrammaticalRoute[];
+export const DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS = {
+	Lexeme: {
+		enabled: [
+			"ADJ",
+			"ADP",
+			"ADV",
+			"AUX",
+			"CCONJ",
+			"DET",
+			"INTJ",
+			"NOUN",
+			"NUM",
+			"PART",
+			"PRON",
+			"PROPN",
+			"SCONJ",
+			"SYM",
+			"VERB",
+			"X",
+		],
+		notImplemented: ["PUNCT"],
+	},
+	Phraseme: {
+		enabled: ["Aphorism", "DiscourseFormula", "Idiom", "Proverb"],
+		notImplemented: ["Collocation"],
+	},
+	Morpheme: {
+		enabled: [],
+		notImplemented: [
+			"Root",
+			"Prefix",
+			"Suffix",
+			"Suffixoid",
+			"Infix",
+			"Circumfix",
+			"Interfix",
+			"Transfix",
+			"Clitic",
+			"ToneMarking",
+			"Duplifix",
+		],
+	},
+	Construction: {
+		enabled: ["Fusion", "PairedFrame"],
+		notImplemented: [],
+	},
+} as const satisfies GermanRouteKindInventory;
+
+export const DE_ENABLED_GRAMMATICAL_RESOLUTION_ROUTES = routesFor("enabled");
+
+export const DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES =
+	routesFor("notImplemented");
+
+function routesFor(
+	status: "enabled" | "notImplemented",
+): readonly GermanGrammaticalRoute[] {
+	return Object.entries(DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS).flatMap(
+		([family, kinds]) =>
+			kinds[status].map(
+				(kind) => ({ family, kind }) as GermanGrammaticalRoute,
+			),
+	);
+}

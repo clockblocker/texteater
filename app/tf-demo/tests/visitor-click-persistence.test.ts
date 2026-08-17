@@ -52,6 +52,32 @@ test("a host-composed empty Dumdict plan does not advance revision", async () =>
 	expect(inserts).toBe(0);
 });
 
+test("canonical Dumdict parsing rejects a malformed compact envelope", async () => {
+	let queries = 0;
+	const ctx = {
+		db: {
+			query() {
+				queries += 1;
+				throw new Error("storage must not be reached");
+			},
+		},
+	};
+
+	await expect(
+		applyDumdictPlanInTransaction(ctx as never, {
+			baseRevision: "convex-0",
+			changes: [
+				{
+					type: "createLemma",
+					record: {},
+					preconditions: [],
+				},
+			],
+		}),
+	).rejects.toThrow();
+	expect(queries).toBe(0);
+});
+
 test("stores occurrence membership and a minimal resolved Click", async () => {
 	const sentenceId = "sentence-1";
 	const segmentId = "segment-1";

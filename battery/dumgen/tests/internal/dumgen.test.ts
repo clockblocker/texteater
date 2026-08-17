@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 import {
 	type AiSdk,
 	AiSdkGenerationError,
@@ -14,6 +14,7 @@ import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import type { PromptTree } from "../../src/catalog/prompt-definition";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
 import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
+import { grammaticalResultSchema } from "../../src/schemas/public-schemas";
 
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
@@ -292,6 +293,100 @@ describe("Dumgen module interface", () => {
 });
 
 describe("grammatical resolution", () => {
+	test("parses fresh, cached, and unresolved public results through the canonical schema", async () => {
+		const parse = spyOn(grammaticalResultSchema, "parse");
+		try {
+			const source = sentence([
+				{ kind: "ResolvableText", text: "Bnak" },
+				{ kind: "Whitespace", text: " " },
+				{ kind: "ResolvableText", text: "Bank" },
+			]);
+			const resolved = queueSdk([
+				{
+					decision: "Resolved",
+					additionalMemberIndices: [1],
+					target: { family: "Lexeme", kind: "NOUN" },
+				},
+				{
+					...modelGrammar,
+					memberOrthographies: ["Typo", "Standard"],
+					normalizedMembers: ["Bank", "Bank"],
+					surface: {
+						...modelGrammar.surface,
+						inflectionalFeatures: {
+							case: "Nom",
+							number: "Sing",
+						},
+					},
+				},
+			]);
+			const dumgen = buildDumgen({ sdk: resolved.sdk });
+
+			await dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 0,
+			});
+			await dumgen.resolve.grammatical("de", {
+				sentence: source,
+				clickedSegmentIndex: 2,
+			});
+
+			const unresolved = queueSdk([
+				{
+					decision: "Unresolved",
+					target: null,
+					additionalMemberIndices: null,
+				},
+			]);
+			await buildDumgen({ sdk: unresolved.sdk }).resolve.grammatical(
+				"de",
+				{
+					sentence: sentence([
+						{ kind: "ResolvableText", text: "Bank" },
+					]),
+					clickedSegmentIndex: 0,
+				},
+			);
+
+			expect(parse).toHaveBeenCalledTimes(3);
+		} finally {
+			parse.mockRestore();
+		}
+	});
+
+	test("reports canonical public-result rejection as invalid output", async () => {
+		const parse = spyOn(
+			grammaticalResultSchema,
+			"parse",
+		).mockImplementation(() => {
+			throw new Error("forced public-result rejection");
+		});
+		try {
+			const unresolved = queueSdk([
+				{
+					decision: "Unresolved",
+					target: null,
+					additionalMemberIndices: null,
+				},
+			]);
+
+			await expect(
+				buildDumgen({ sdk: unresolved.sdk }).resolve.grammatical("de", {
+					sentence: sentence([
+						{ kind: "ResolvableText", text: "Bank" },
+					]),
+					clickedSegmentIndex: 0,
+				}),
+			).rejects.toMatchObject({
+				code: "invalid-output",
+				message:
+					"Grammatical Resolution produced an invalid public result.",
+			});
+		} finally {
+			parse.mockRestore();
+		}
+	});
+
 	test("returns an Attestation with Dumgen-owned interaction context", async () => {
 		const { calls, sdk } = queueSdk([
 			{

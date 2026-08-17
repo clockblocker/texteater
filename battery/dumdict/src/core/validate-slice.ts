@@ -22,6 +22,7 @@ import {
 	type SupportedLanguage,
 } from "../dumling";
 import { DumdictLanguageMismatchError } from "../public";
+import { getDumdictSchemasFor } from "../schema";
 import type {
 	CleanupRelationsSlice,
 	NewNoteSlice,
@@ -58,6 +59,7 @@ function validateLemmaRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: LemmaRecord<L>,
 ) {
+	getDumdictSchemasFor(expected).lemmaRecordSchema.parse(record);
 	assertLanguage(expected, record.lemma.language);
 	if (record.knowledge !== undefined)
 		lemmaKnowledgeSchema.parse(record.knowledge);
@@ -82,6 +84,7 @@ function validateReadingEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: ReadingEntry<L>,
 ) {
+	getDumdictSchemasFor(expected).readingEntrySchema.parse(entry);
 	validateReading(expected, entry.reading);
 	if (entry.knowledge !== undefined) {
 		readingKnowledgeSchema.parse(entry.knowledge);
@@ -103,6 +106,7 @@ function validateSurfaceEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: SurfaceEntry<L>,
 ) {
+	getDumdictSchemasFor(expected).surfaceEntrySchema.parse(entry);
 	assertLanguage(expected, entry.surface.language);
 	assertLanguage(expected, entry.surface.lemma.language);
 	const inspected = inspectDumlingId(entry.id);
@@ -121,6 +125,9 @@ function validatePendingRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: PendingSemanticRelationRecord<L>,
 ) {
+	getDumdictSchemasFor(expected).pendingSemanticRelationRecordSchema.parse(
+		record,
+	);
 	validateReading(expected, record.sourceReading);
 	const parsed = pendingSemanticRelationSchema.parse(record.pending);
 	assertLanguage(expected, parsed.target.language);

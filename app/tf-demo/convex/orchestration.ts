@@ -10,7 +10,13 @@ import {
 	type ReadingPatchSlice,
 	type StoredReadingsSlice,
 } from "dumdict";
+import { getDumdictSchemasFor } from "dumdict/schema";
 import { buildDumgen } from "dumgen";
+import {
+	notImplementedGrammaticalResultSchema,
+	resolvedGrammaticalResultSchema,
+	unresolvedGrammaticalResultSchema,
+} from "dumgen/schema";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
@@ -39,6 +45,7 @@ import {
 } from "./model/validators";
 
 const dumgen = buildDumgen();
+const germanDumdictSchemas = getDumdictSchemasFor("de");
 
 type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
 type ResolvedGrammaticalActionResult = Infer<
@@ -61,12 +68,14 @@ function nonResolvedGrammaticalActionResult(
 	>,
 ): NonResolvedGrammaticalActionResult {
 	if (input.decision === "Unresolved") {
-		return { decision: "Unresolved", language: input.language };
+		const parsed = unresolvedGrammaticalResultSchema.parse(input);
+		return { decision: "Unresolved", language: parsed.language };
 	}
+	const parsed = notImplementedGrammaticalResultSchema.parse(input);
 	return {
 		decision: "NotImplemented",
-		language: input.language,
-		route: { ...input.route },
+		language: parsed.language,
+		route: { ...parsed.route },
 	};
 }
 
@@ -76,19 +85,22 @@ function resolvedGrammaticalActionResult(
 		{ decision: "Resolved" }
 	>,
 ): ResolvedGrammaticalActionResult {
+	const parsed = resolvedGrammaticalResultSchema.parse(input);
 	return {
-		...input,
+		...parsed,
 		attestation: {
-			...input.attestation,
-			members: input.attestation.members.map((member) => ({ ...member })),
+			...parsed.attestation,
+			members: parsed.attestation.members.map((member) => ({
+				...member,
+			})),
 			surface: {
-				...input.attestation.surface,
-				lemma: { ...input.attestation.surface.lemma },
+				...parsed.attestation.surface,
+				lemma: { ...parsed.attestation.surface.lemma },
 			},
 		},
 		interaction: {
-			...input.interaction,
-			memberSegmentIndices: [...input.interaction.memberSegmentIndices],
+			...parsed.interaction,
+			memberSegmentIndices: [...parsed.interaction.memberSegmentIndices],
 		},
 	};
 }
@@ -158,9 +170,10 @@ function mutablePreconditions(
 }
 
 function dictionaryPlanResult(input: DumdictPlan<"de">): DictionaryPlanResult {
+	const parsed = germanDumdictSchemas.dumdictPlanSchema.parse(input);
 	return {
-		baseRevision: input.baseRevision,
-		changes: input.changes.map((change) => {
+		baseRevision: parsed.baseRevision,
+		changes: parsed.changes.map((change) => {
 			const preconditions = mutablePreconditions(change.preconditions);
 			switch (change.type) {
 				case "createLemma":

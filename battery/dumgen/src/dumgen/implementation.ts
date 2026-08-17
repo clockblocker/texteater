@@ -7,6 +7,11 @@ import { DumgenError } from "../generator/generator-error";
 import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import { projectGrammaticalResolutionInput } from "../schema/normalized-surface-projection";
+import {
+	grammaticalInputSchema,
+	grammaticalResultSchema,
+	segmentationResultSchema,
+} from "../schemas/public-schemas";
 import { segmentSource } from "../source-segmentation";
 import type { SourceSegmentationTrace } from "../source-segmentation/contracts";
 import type {
@@ -113,7 +118,12 @@ export function createDumgenImplementation(
 		sourceSentences: readonly string[],
 	): Promise<SegmentationResult> {
 		const inputError = validateSegmentationInput(sourceSentences);
-		if (inputError) return Object.freeze({ ok: false, error: inputError });
+		if (inputError) {
+			return segmentationResultSchema.parse({
+				ok: false,
+				error: inputError,
+			});
+		}
 
 		let intake: Awaited<ReturnType<typeof generators.laboratory.intake>>;
 		try {
@@ -130,13 +140,13 @@ export function createDumgenImplementation(
 					: new DumgenError("provider-error", "Intake failed.", {
 							cause,
 						});
-			return Object.freeze({
+			return segmentationResultSchema.parse({
 				ok: false,
-				error: Object.freeze({
+				error: {
 					code: "IntakeFailure",
 					reason: error.code,
 					message: error.message,
-				}),
+				},
 			});
 		}
 
@@ -200,7 +210,7 @@ export function createDumgenImplementation(
 			}
 		}
 
-		return Object.freeze({ ok: true, value: Object.freeze(decisions) });
+		return segmentationResultSchema.parse({ ok: true, value: decisions });
 	}
 
 	async function grammatical<L extends GrammaticalResolutionLanguage>(
@@ -214,7 +224,7 @@ export function createDumgenImplementation(
 			.get(germanSentence)
 			?.get(clickedSegmentIndex);
 		if (cached) {
-			return Object.freeze({
+			return parseGrammaticalResult({
 				decision: "Resolved",
 				language,
 				markedContext: cached.markedContext,
@@ -224,7 +234,7 @@ export function createDumgenImplementation(
 					clickedSegmentIndex,
 					cached.target,
 				),
-			}) as GrammaticalResult<L>;
+			});
 		}
 		const targetClassifier = targetClassificationRoutes[language];
 		if (!targetClassifier) {
@@ -241,7 +251,10 @@ export function createDumgenImplementation(
 			})),
 		});
 		if ("decision" in target) {
-			return Object.freeze({ decision: "Unresolved", language });
+			return parseGrammaticalResult({
+				decision: "Unresolved",
+				language,
+			});
 		}
 		assertTarget(sentence, clickedSegmentIndex, target);
 
@@ -249,14 +262,14 @@ export function createDumgenImplementation(
 		const grammar =
 			enabledGrammaticalRoutes[routeKey as GrammaticalRouteKey];
 		if (!grammar) {
-			return Object.freeze({
+			return parseGrammaticalResult({
 				decision: "NotImplemented",
 				language,
 				route: Object.freeze({
 					family: target.family,
 					kind: target.kind,
 				}),
-			}) as GrammaticalResult<L>;
+			});
 		}
 
 		const grammarInput = projectGrammaticalResolutionInput({
@@ -282,6 +295,18 @@ export function createDumgenImplementation(
 				"Grammatical Resolution returned an Attestation in another language.",
 			);
 		}
+		const result = parseGrammaticalResult<L>({
+			decision: "Resolved",
+			language,
+			markedContext: grammarInput.markedContext,
+			attestation,
+			interaction: constructInteraction(
+				germanSentence,
+				clickedSegmentIndex,
+				target,
+			),
+		});
+
 		const cachedResolution = Object.freeze({
 			target,
 			attestation,
@@ -295,17 +320,7 @@ export function createDumgenImplementation(
 		}
 		resolvedGrammarBySentence.set(germanSentence, cachedByMember);
 
-		return Object.freeze({
-			decision: "Resolved",
-			language,
-			markedContext: grammarInput.markedContext,
-			attestation,
-			interaction: constructInteraction(
-				germanSentence,
-				clickedSegmentIndex,
-				target,
-			),
-		}) as GrammaticalResult<L>;
+		return result;
 	}
 
 	async function reading<L extends ReadingResolutionLanguage>(
@@ -361,57 +376,25 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 	language: L,
 	input: GrammaticalInput<L>,
 ): void {
-	if (language !== "de") {
+	if (language !== "de" || !grammaticalInputSchema.safeParse(input).success) {
 		throw invalidInput(
-			`Grammatical Resolution is not enabled for language ${language}.`,
-		);
-	}
-	const sentence = input?.sentence;
-	if (
-		typeof sentence !== "object" ||
-		sentence === null ||
-		sentence.language !== language ||
-		typeof sentence.id !== "string" ||
-		sentence.id.length === 0 ||
-		!Array.isArray(sentence.segments)
-	) {
-		throw invalidInput(
-			"The explicit language must match a valid Segmented Sentence.",
-		);
-	}
-
-	for (const segment of sentence.segments) {
-		if (
-			!segment ||
-			typeof segment.text !== "string" ||
-			segment.text.length === 0 ||
-			!isSegmentKind(segment.kind) ||
-			(segment.kind === "Whitespace" && segment.text !== " ")
-		) {
-			throw invalidInput(
-				"The Segmented Sentence contains an invalid Segment aggregate.",
-			);
-		}
-	}
-
-	if (
-		!Number.isInteger(input.clickedSegmentIndex) ||
-		input.clickedSegmentIndex < 0 ||
-		sentence.segments[input.clickedSegmentIndex]?.kind !== "ResolvableText"
-	) {
-		throw invalidInput(
-			"The clicked index must reference a ResolvableText Segment.",
+			"The explicit language must match a valid Grammatical Input.",
 		);
 	}
 }
 
-function isSegmentKind(value: unknown): boolean {
-	return (
-		value === "ResolvableText" ||
-		value === "OpaqueText" ||
-		value === "Whitespace" ||
-		value === "Punctuation"
-	);
+function parseGrammaticalResult<L extends GrammaticalResolutionLanguage>(
+	value: object,
+): GrammaticalResult<L> {
+	try {
+		grammaticalResultSchema.parse(value);
+		return Object.freeze(value) as GrammaticalResult<L>;
+	} catch (cause) {
+		throw invalidOutput(
+			"Grammatical Resolution produced an invalid public result.",
+			cause,
+		);
+	}
 }
 
 function assertTarget(

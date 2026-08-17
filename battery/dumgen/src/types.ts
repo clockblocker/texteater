@@ -1,105 +1,74 @@
-import type { Attestation, SupportedLanguage } from "dumling/types";
-import type { GermanGrammaticalRoute } from "./schema/de-grammatical-resolution-inventory";
+import type { z } from "zod";
 import type {
 	GermanReachableHighLevelFamily,
 	GermanReachableHighLevelKind,
 } from "./schema/german-high-level-routes";
+import type {
+	enabledSegmentationLanguageSchema,
+	grammaticalInputSchema,
+	grammaticalInteractionSchema,
+	grammaticalResolutionLanguageSchema,
+	grammaticalResultSchema,
+	grammaticalRouteSchema,
+	section1ErrorSchema,
+	segmentationDecisionSchema,
+	segmentationResultSchema,
+	segmentedSentenceIdSchema,
+	segmentedSentenceSchema,
+	segmentKindSchema,
+	segmentSchema,
+} from "./schemas/public-schemas";
 
-export type EnabledSegmentationLanguage = "de" | "he";
-export type GrammaticalResolutionLanguage = "de";
+export type EnabledSegmentationLanguage = z.output<
+	typeof enabledSegmentationLanguageSchema
+>;
+export type GrammaticalResolutionLanguage = z.output<
+	typeof grammaticalResolutionLanguageSchema
+>;
 export type ReadingResolutionLanguage = "de";
 
-export type SegmentedSentenceId = string & {
-	readonly __segmentedSentenceIdBrand: unique symbol;
-};
+export type SegmentedSentenceId = z.output<typeof segmentedSentenceIdSchema>;
 
-export type SegmentKind =
-	| "ResolvableText"
-	| "OpaqueText"
-	| "Whitespace"
-	| "Punctuation";
+export type SegmentKind = z.output<typeof segmentKindSchema>;
 
-export type Segment = {
-	readonly text: string;
-	readonly kind: SegmentKind;
-};
+export type Segment = z.output<typeof segmentSchema>;
+
+type SegmentedSentenceValue = z.output<typeof segmentedSentenceSchema>;
 
 export type SegmentedSentence<
-	L extends SupportedLanguage = EnabledSegmentationLanguage,
-> = {
-	readonly id: SegmentedSentenceId;
-	readonly language: L;
-	readonly segments: readonly Segment[];
-};
+	L extends EnabledSegmentationLanguage = EnabledSegmentationLanguage,
+> = Omit<SegmentedSentenceValue, "language"> & { readonly language: L };
 
-export type SegmentationDecision =
-	| {
-			readonly [Language in EnabledSegmentationLanguage]: {
-				readonly decision: "Accepted";
-				readonly language: Language;
-				readonly sentence: SegmentedSentence<Language>;
-			};
-	  }[EnabledSegmentationLanguage]
-	| {
-			readonly decision: "UnsupportedLanguage";
-	  }
-	| {
-			readonly decision: "Unintelligible";
-	  };
+export type SegmentationDecision = z.output<typeof segmentationDecisionSchema>;
 
-export type Section1Error =
-	| {
-			readonly code: "InvalidInput";
-			readonly message: string;
-			readonly itemIndex?: number;
-	  }
-	| {
-			readonly code: "IntakeFailure";
-			readonly reason: import("./generator/generator-error").DumgenErrorCode;
-			readonly message: string;
-	  };
+export type Section1Error = z.output<typeof section1ErrorSchema>;
 
-export type SegmentationResult =
-	| {
-			readonly ok: true;
-			readonly value: readonly SegmentationDecision[];
-	  }
-	| { readonly ok: false; readonly error: Section1Error };
+export type SegmentationResult = z.output<typeof segmentationResultSchema>;
 
 export type GrammaticalRoute<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
-> = L extends "de" ? GermanGrammaticalRoute : never;
+> = L extends "de" ? z.output<typeof grammaticalRouteSchema> : never;
+
+type GrammaticalResultValue = z.output<typeof grammaticalResultSchema>;
 
 export type GrammaticalResult<
 	L extends GrammaticalResolutionLanguage = GrammaticalResolutionLanguage,
-> =
-	| {
-			readonly decision: "Resolved";
-			readonly language: L;
-			readonly markedContext: string;
-			readonly attestation: Attestation<L>;
-			readonly interaction: GrammaticalInteraction;
-	  }
-	| {
-			readonly decision: "NotImplemented";
-			readonly language: L;
-			readonly route: GrammaticalRoute<L>;
-	  }
-	| {
-			readonly decision: "Unresolved";
-			readonly language: L;
-	  };
+> = GrammaticalResultValue extends infer Result
+	? Result extends { readonly language: GrammaticalResolutionLanguage }
+		? Omit<Result, "language"> & { readonly language: L }
+		: never
+	: never;
 
-export type GrammaticalInteraction = {
-	readonly segmentedSentenceId: SegmentedSentenceId;
-	readonly clickedSegmentIndex: number;
-	readonly memberSegmentIndices: readonly [number, ...number[]];
-};
+export type GrammaticalInteraction = z.output<
+	typeof grammaticalInteractionSchema
+>;
 
-export type GrammaticalInput<L extends GrammaticalResolutionLanguage> = {
-	readonly sentence: SegmentedSentence<L>;
-	readonly clickedSegmentIndex: number;
-};
+type GrammaticalInputValue = z.output<typeof grammaticalInputSchema>;
+
+export type GrammaticalInput<L extends GrammaticalResolutionLanguage> = Omit<
+	GrammaticalInputValue,
+	"sentence"
+> & { readonly sentence: SegmentedSentence<L> };
 
 export type ReadingInput = {
 	readonly markedContext: string;
