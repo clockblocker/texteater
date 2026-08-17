@@ -1,6 +1,5 @@
 import type { SemanticRelations } from "dumrel";
-import type { SupportedLanguage } from "../dumling";
-import type { Reading } from "./reading";
+import type { Reading, SupportedLanguage } from "../dumling";
 
 export type ReadingNoteForDisambiguation<L extends SupportedLanguage> = {
 	attestedTranslations: string[];

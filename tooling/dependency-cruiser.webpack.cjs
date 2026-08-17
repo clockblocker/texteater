@@ -71,7 +71,16 @@ module.exports = {
 	resolve: {
 		alias: aliases,
 		conditionNames: ["types", "import", "node", "bun", "default"],
-		extensions: [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"],
+		extensions: [
+			".d.ts",
+			".ts",
+			".tsx",
+			".js",
+			".jsx",
+			".mjs",
+			".cjs",
+			".json",
+		],
 		exportsFields: ["exports"],
 		mainFields: ["types", "module", "main"],
 	},

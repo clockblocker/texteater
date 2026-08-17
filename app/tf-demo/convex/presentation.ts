@@ -1,14 +1,14 @@
-import { type GenericId, v } from "convex/values";
+import { v } from "convex/values";
+import { type Reading, readingFingerprint } from "dumling/reading";
 import type { SemanticRelation } from "dumrel";
 
 import { type QueryCtx, query } from "./_generated/server";
-import { readingKeyFor } from "./model/linguisticKeys";
+import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	segmentKindValidator,
 	semanticRelationValidator,
 } from "./model/validators";
 
-const MAX_SEGMENTS_PER_SENTENCE = 512;
 const MAX_VISITOR_ID_LENGTH = 200;
 const MAX_READING_HISTORY = 50;
 const MAX_RELATIONS_PER_NOTE = 50;
@@ -116,7 +116,7 @@ const presentationValidator = v.object({
 		sourceText: v.string(),
 	}),
 	grammaticalResolution: v.object({
-		resolutionId: v.id("grammaticalResolutions"),
+		attestationId: v.id("attestations"),
 		language: v.literal("de"),
 		markedContext: v.string(),
 		memberSegmentIndices: v.array(v.number()),
@@ -177,21 +177,6 @@ export type PendingRelationProjection = {
 	readonly targetKind: string;
 };
 
-type ResolvedContextReferences = {
-	readonly sentenceId: GenericId<"sentences">;
-	readonly clickedSegmentIndex: number;
-	readonly resolutionId: GenericId<"grammaticalResolutions">;
-	readonly readingId: GenericId<"readings">;
-};
-
-type VisitorResolvedContextReference = {
-	readonly resolvedContextId?: GenericId<"resolvedContexts">;
-	readonly sentenceId?: GenericId<"sentences">;
-	readonly clickedSegmentIndex?: number;
-	readonly resolutionId?: GenericId<"grammaticalResolutions">;
-	readonly readingId?: GenericId<"readings">;
-};
-
 export function projectKnowledge(
 	readingKnowledgeValue: unknown,
 	lemmaKnowledgeValue: unknown,
@@ -242,10 +227,10 @@ export function flattenDirectSemanticRelations(
 					? [
 							{
 								relation,
-								targetReadingKey: readingKeyFor({
+								targetReadingKey: readingFingerprint({
 									lemma,
 									emojiDescription: targetEmojiDescription,
-								}),
+								} as Reading),
 								targetCanonicalForm,
 								targetEmojiDescription,
 							},
@@ -269,69 +254,71 @@ export const forVisitor = query({
 	returns: v.union(v.null(), presentationValidator),
 	handler: async (ctx, { visitorId }) => {
 		assertVisitorId(visitorId);
-		const context = await ctx.db
-			.query("visitorResolvedContexts")
-			.withIndex("by_visitor_id_and_resolved_at", (q) =>
+		const clicks = await ctx.db
+			.query("visitorClicks")
+			.withIndex("by_visitor_id_and_clicked_at", (q) =>
 				q.eq("visitorId", visitorId),
 			)
 			.order("desc")
-			.first();
-		if (!context) return null;
-		const references = await resolveContextReferences(ctx, context);
-		if (!references) return null;
+			.take(MAX_READING_HISTORY);
+		const click = clicks.find(({ attestationId }) =>
+			Boolean(attestationId),
+		);
+		if (!click?.attestationId) return null;
+		const occurrence = await loadOccurrenceAttestation(
+			ctx,
+			click.attestationId,
+		);
+		if (!occurrence) return null;
+		const clickedSegment = await ctx.db.get(click.segmentId);
+		if (
+			!clickedSegment ||
+			clickedSegment.sentenceId !== occurrence.sentence._id
+		) {
+			return null;
+		}
 
-		const [reading, resolution, sentence] = await Promise.all([
-			ctx.db.get(references.readingId),
-			ctx.db.get(references.resolutionId),
-			ctx.db.get(references.sentenceId),
+		const [text, readingKnowledge, lemmaKnowledge] = await Promise.all([
+			ctx.db.get(occurrence.sentence.textId),
+			ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_kind_and_owner_key", (q) =>
+					q
+						.eq("ownerKind", "Reading")
+						.eq("ownerKey", occurrence.reading.readingKey),
+				)
+				.unique(),
+			ctx.db
+				.query("accumulatedKnowledge")
+				.withIndex("by_owner_kind_and_owner_key", (q) =>
+					q
+						.eq("ownerKind", "Lemma")
+						.eq("ownerKey", occurrence.lemma.lemmaKey),
+				)
+				.unique(),
 		]);
-		if (!reading || !resolution || !sentence) return null;
-
-		const [segments, text, readingKnowledge, lemmaKnowledge] =
-			await Promise.all([
-				ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", sentence._id),
-					)
-					.take(MAX_SEGMENTS_PER_SENTENCE),
-				ctx.db.get(sentence.textId),
-				ctx.db
-					.query("accumulatedKnowledge")
-					.withIndex("by_owner_kind_and_owner_key", (q) =>
-						q
-							.eq("ownerKind", "Reading")
-							.eq("ownerKey", reading.readingKey),
-					)
-					.unique(),
-				ctx.db
-					.query("accumulatedKnowledge")
-					.withIndex("by_owner_kind_and_owner_key", (q) =>
-						q
-							.eq("ownerKind", "Lemma")
-							.eq("ownerKey", reading.lemmaKey),
-					)
-					.unique(),
-			]);
 		if (!text) return null;
 
-		const identities = projectReadingIdentities(reading);
+		const identities = projectReadingIdentities(
+			occurrence.reading,
+			occurrence.lemma,
+		);
 		const projected = projectKnowledge(
 			readingKnowledge?.knowledge,
 			lemmaKnowledge?.knowledge,
 		);
-		const memberIndices = new Set(resolution.memberSegmentIndices);
+		const memberIndices = new Set(occurrence.memberSegmentIndices);
 
 		return {
-			resolvedAt: context.resolvedAt,
-			clickedSegmentIndex: references.clickedSegmentIndex,
+			resolvedAt: click.clickedAt,
+			clickedSegmentIndex: clickedSegment.index,
 			text: { textId: text._id, sourceText: text.sourceText },
 			grammaticalResolution: {
-				resolutionId: resolution._id,
-				language: resolution.language,
-				markedContext: resolution.markedContext,
-				memberSegmentIndices: [...resolution.memberSegmentIndices],
-				attestation: projectAttestation(resolution.attestation),
+				attestationId: occurrence.attestation._id,
+				language: "de" as const,
+				markedContext: occurrence.markedContext,
+				memberSegmentIndices: occurrence.memberSegmentIndices,
+				attestation: projectAttestation(occurrence.publicAttestation),
 			},
 			reading: identities.reading,
 			lemma: identities.lemma,
@@ -346,17 +333,17 @@ export const forVisitor = query({
 			},
 			relations: [...projected.relations],
 			sentence: {
-				sentenceId: sentence._id,
-				position: sentence.position,
-				language: sentence.language,
-				stitchedText: sentence.stitchedText,
+				sentenceId: occurrence.sentence._id,
+				position: occurrence.sentence.position,
+				language: occurrence.sentence.language,
+				stitchedText: occurrence.sentence.stitchedText,
 				sourceText: text.sourceText,
-				segments: segments.map(
+				segments: occurrence.segments.map(
 					({ index, kind, text: segmentText }) => ({
 						index,
 						kind,
 						text: segmentText,
-						isClicked: index === references.clickedSegmentIndex,
+						isClicked: index === clickedSegment.index,
 						isResolutionMember: memberIndices.has(index),
 					}),
 				),
@@ -379,57 +366,37 @@ export const readingHistoryForVisitor = query({
 	returns: v.array(readingProjectionValidator),
 	handler: async (ctx, { visitorId }) => {
 		assertVisitorId(visitorId);
-		const contexts = await ctx.db
-			.query("visitorResolvedContexts")
-			.withIndex("by_visitor_id_and_resolved_at", (q) =>
+		const clicks = await ctx.db
+			.query("visitorClicks")
+			.withIndex("by_visitor_id_and_clicked_at", (q) =>
 				q.eq("visitorId", visitorId),
 			)
 			.order("desc")
 			.take(MAX_READING_HISTORY);
-		const references = await Promise.all(
-			contexts.map((context) => resolveContextReferences(ctx, context)),
+		const attestations = await Promise.all(
+			clicks.map((click) =>
+				click.attestationId ? ctx.db.get(click.attestationId) : null,
+			),
 		);
-		const rows = await Promise.all(
-			references.map((reference) =>
-				reference ? ctx.db.get(reference.readingId) : null,
+		const readings = await Promise.all(
+			attestations.map((attestation) =>
+				attestation ? ctx.db.get(attestation.readingId) : null,
+			),
+		);
+		const lemmas = await Promise.all(
+			readings.map((reading) =>
+				reading ? ctx.db.get(reading.lemmaId) : null,
 			),
 		);
 		const seen = new Set<string>();
-		return rows.flatMap((row) => {
-			if (!row || seen.has(row.readingKey)) return [];
-			seen.add(row.readingKey);
-			return [projectReadingIdentities(row).reading];
+		return readings.flatMap((reading, index) => {
+			const lemma = lemmas[index];
+			if (!reading || !lemma || seen.has(reading.readingKey)) return [];
+			seen.add(reading.readingKey);
+			return [projectReadingIdentities(reading, lemma).reading];
 		});
 	},
 });
-
-async function resolveContextReferences(
-	ctx: QueryCtx,
-	context: VisitorResolvedContextReference,
-): Promise<ResolvedContextReferences | null> {
-	if (context.resolvedContextId) {
-		const resolvedContext = await ctx.db.get(context.resolvedContextId);
-		return resolvedContext
-			? {
-					sentenceId: resolvedContext.sentenceId,
-					clickedSegmentIndex: resolvedContext.clickedSegmentIndex,
-					resolutionId: resolvedContext.resolutionId,
-					readingId: resolvedContext.readingId,
-				}
-			: null;
-	}
-	return context.sentenceId &&
-		context.clickedSegmentIndex !== undefined &&
-		context.resolutionId &&
-		context.readingId
-		? {
-				sentenceId: context.sentenceId,
-				clickedSegmentIndex: context.clickedSegmentIndex,
-				resolutionId: context.resolutionId,
-				readingId: context.readingId,
-			}
-		: null;
-}
 
 async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 	const reading = await ctx.db
@@ -437,6 +404,8 @@ async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 		.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
 		.unique();
 	if (!reading) return null;
+	const lemma = await ctx.db.get(reading.lemmaId);
+	if (!lemma) return null;
 	const [readingKnowledge, lemmaKnowledge, pendingRelations] =
 		await Promise.all([
 			ctx.db
@@ -450,7 +419,7 @@ async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 			ctx.db
 				.query("accumulatedKnowledge")
 				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Lemma").eq("ownerKey", reading.lemmaKey),
+					q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
 				)
 				.unique(),
 			ctx.db
@@ -460,7 +429,7 @@ async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 				)
 				.take(MAX_RELATIONS_PER_NOTE),
 		]);
-	const identities = projectReadingIdentities(reading);
+	const identities = projectReadingIdentities(reading, lemma);
 	const projected = projectKnowledge(
 		readingKnowledge?.knowledge,
 		lemmaKnowledge?.knowledge,
@@ -482,43 +451,35 @@ async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 	};
 }
 
-function projectReadingIdentities(reading: {
-	readingKey: string;
-	lemmaKey: string;
-	emojiDescription: string;
-	entry: unknown;
-}) {
-	const entry = requireRecord(reading.entry, "Reading entry");
-	const readingReference = requireRecord(entry.reading, "Reading reference");
-	const lemmaReference = requireRecord(
-		readingReference.lemma,
-		"Reading Lemma",
-	);
-	const canonicalForm = requireNonEmptyString(
-		lemmaReference.canonicalForm,
-		"Reading Lemma canonicalForm",
-	);
+function projectReadingIdentities(
+	reading: {
+		readingKey: string;
+		emojiDescription: string;
+	},
+	lemma: {
+		lemmaKey: string;
+		language: string;
+		family: string;
+		kind: string;
+		canonicalForm: string;
+		coreFeatures: unknown;
+	},
+) {
 	return {
 		reading: {
 			ownerKind: "Reading" as const,
 			ownerKey: reading.readingKey,
-			canonicalForm,
+			canonicalForm: lemma.canonicalForm,
 			emojiDescription: reading.emojiDescription,
 		},
 		lemma: {
 			ownerKind: "Lemma" as const,
-			ownerKey: reading.lemmaKey,
-			language: requireNonEmptyString(
-				lemmaReference.language,
-				"Lemma language",
-			),
-			family: requireNonEmptyString(
-				lemmaReference.family,
-				"Lemma family",
-			),
-			kind: requireNonEmptyString(lemmaReference.kind, "Lemma kind"),
-			canonicalForm,
-			coreFeatures: projectFeatures(lemmaReference.coreFeatures),
+			ownerKey: lemma.lemmaKey,
+			language: lemma.language,
+			family: lemma.family,
+			kind: lemma.kind,
+			canonicalForm: lemma.canonicalForm,
+			coreFeatures: projectFeatures(lemma.coreFeatures),
 		},
 	};
 }

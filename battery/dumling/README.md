@@ -9,19 +9,20 @@ and provides types and Zod schemas for learner-facing meaning-focused segmentati
 
 This package ships working runtime surfaces for `de`, `en`, and `he`.
 
-`dumling` keeps three linked DTOs separate:
+`dumling` keeps the foundational linguistic values separate:
 
 - `Lemma`: the normalized grammatical identity
 - `Surface`: a persistent normalized form that carries licensed spelling and inflection
 - `Attestation`: fleeting, click-independent occurrence evidence linked to one Surface
+- `Reading`: semantic identity formed by one Lemma and one normalized emoji description
 
 ## Entrypoints
 
 | Import path      | Purpose                                                                                         |
 | ---------------- | ----------------------------------------------------------------------------------------------- |
-| `dumling`        | Root runtime API: `dumling.<language>`, `getLanguageApi`, and `supportedLanguages`              |
+| `dumling`        | Root runtime API, language helpers, and the stable `readingFingerprint` identity operation      |
 | `dumling/types`  | Public DTOs, feature helpers, descriptors, and API/result/error types                           |
-| `dumling/schema` | Concrete runtime schema registry: `schemasFor` and `getSchemaTreeFor(language)`                 |
+| `dumling/schema` | Concrete entity schema registry plus the canonical `readingSchema`                             |
 
 ## Runtime API
 
@@ -38,12 +39,14 @@ The root runtime entrypoint also exposes:
 
 - `supportedLanguages`: the curated runtime language inventory
 - `getLanguageApi(language)`: dynamic access to a language-bound workflow API
+- `readingFingerprint(reading)`: stable Reading equality/index identity derived from Lemma identity and normalized `emojiDescription`
 
 ## Public types
 
 `dumling/types` exports:
 
-- DTOs: `Lemma`, `Surface`, `Attestation`
+- DTOs: `Lemma`, `Surface`, `Attestation`, `Reading`
+- Reading identity: `ReadingFingerprint`
 - Entity and ID helpers: `EntityValue`, `EntityForKind`, `DumlingCsv`, `DumlingBase64Url`, `AttestationOptionsFor`
 - Language-aware helper types: `LemmaFamilyFor`, `LemmaKindFor`, `SurfaceKindFor`, `LemmaFamilyForSurfaceKind`
 - Feature typing helpers: `FeatureSet`, `FeatureName`, `FeatureValue`, `CoreFeaturesFor`, `InflectionalFeaturesFor`
@@ -66,6 +69,18 @@ const seeLemma = dumling.de.create.lemma({
 		hyph: null,
 	},
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
+```
+
+The `Reading` adds one learner-facing semantic identity without changing its
+Lemma. Its fingerprint is stable across object-key order and trimmed/NFC emoji
+input:
+
+```ts
+const seeReading = {
+	lemma: seeLemma,
+	emojiDescription: "\u{1F30A}",
+} satisfies Reading<"de", "Lexeme", "NOUN">;
+const seeReadingFingerprint = readingFingerprint(seeReading);
 ```
 
 The `Surface` is the normalized contextual form that the note belongs to:
@@ -116,13 +131,20 @@ npm install dumling
 Minimal end-to-end usage:
 
 ```ts
-import { dumling as packageDumling } from "dumling";
-import { schemasFor as packageSchemas } from "dumling/schema";
+import {
+	dumling as packageDumling,
+	readingFingerprint as packageReadingFingerprint,
+} from "dumling";
+import {
+	readingSchema as packageReadingSchema,
+	schemasFor as packageSchemas,
+} from "dumling/schema";
 import type {
 	Attestation as PackageAttestation,
 	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
 	FeatureValue as PackageFeatureValue,
 	Lemma as PackageLemma,
+	Reading as PackageReading,
 	Surface as PackageSurface,
 } from "dumling/types";
 
@@ -143,6 +165,11 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 		spelling: "Canonical",
 		surfaceFeatures: null,
 	});
+const reading = packageReadingSchema.parse({
+	lemma,
+	emojiDescription: "\u{1F30A}",
+}) as PackageReading<"de">;
+const readingIdentity = packageReadingFingerprint(reading);
 const attestation: PackageAttestation<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toAttestation(surface, {
 		members: [{ attested: "See", orthography: "Standard" }],
@@ -176,10 +203,11 @@ extractedLemma satisfies PackageLemma<"de">;
 gender satisfies "Masc";
 
 decoded.data.surfaceIdentity.normalizedSurface satisfies string;
+readingIdentity satisfies string;
 packageSchemas.de.entity.Attestation.Citation.Lexeme.NOUN().parse(parsed.data);
 ```
 
-`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
+`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. `readingSchema` is the canonical supported-language Reading schema. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
 
 ## Concepts / Search Terms
 
@@ -192,6 +220,7 @@ People often look for this package using adjacent terms:
 - attestation DTOs
 - Zod schema registries
 - stable linguistic IDs
+- semantic Reading fingerprints
 
 ## Model notes
 
@@ -209,8 +238,9 @@ Attestations are always hydrated:
 
 Lemma families also include `Construction` for learner-facing patterned entities such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction Lemmas are citation-only today.
 
-Dumling stops at Lemma. Learner-scoped semantic identity is a `Reading`—the
-pair of a Lemma and an emoji description—and belongs outside this package.
+Reading remains separate from Attestation because grammatical resolution
+precedes Reading Resolution. Host database document IDs and dictionary note
+content do not enter the public Reading DTO.
 
 ## Scope
 

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
+import { readingFingerprint } from "dumling";
 
-import { readingKeyFor } from "../convex/model/linguisticKeys";
 import { projectFeatures, projectKnowledge } from "../convex/presentation";
 
 test("projects learner Knowledge and direct relations without storing a view", () => {
@@ -10,7 +10,7 @@ test("projects learner Knowledge and direct relations without storing a view", (
 		kind: "NOUN",
 		canonicalForm: "Institut",
 		coreFeatures: { gender: "Neut", hyph: null },
-	};
+	} as const;
 
 	expect(
 		projectKnowledge(
@@ -32,7 +32,7 @@ test("projects learner Knowledge and direct relations without storing a view", (
 		relations: [
 			{
 				relation: "hypernym",
-				targetReadingKey: readingKeyFor({
+				targetReadingKey: readingFingerprint({
 					lemma: targetLemma,
 					emojiDescription: "🏛️",
 				}),

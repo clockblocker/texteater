@@ -56,12 +56,14 @@ language, Family, and Kind.
 _Avoid_: Inherent Features
 
 **Reading**:
-The learner-scoped semantic identity formed by one Lemma and one Emoji
-Description. Reading belongs outside Dumling; Dumling ends at Lemma.
+A foundational semantic value formed by exactly one Lemma and one Emoji
+Description. Dumling owns its DTO, schema, value equality, and stable
+tuple-derived identity operation; a dictionary establishes the learner or
+hosted scope in which that equality applies and owns any Reading record.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
-The stable learner-scoped semantic label that distinguishes Readings of the
+The stable dictionary-scoped semantic label that distinguishes Readings of the
 same Lemma. A classifier reuses an existing Reading when it is close enough or
 creates a new Reading; learners do not manually split semantic identity.
 

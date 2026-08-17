@@ -29,7 +29,8 @@ removes that exact pending record in one commit.
 ## Commitments
 
 1. Hosts own persistence and transaction mechanics.
-2. Dumdict owns Reading identity, owner applicability, exact matching,
+2. Dumling owns the foundational Reading value and stable identity operation;
+   Dumdict owns dictionary scope, owner applicability, exact matching,
    direct-self and same-language validation, inverse materialization, and
    pending lifecycle.
 3. Normal operations load only their required slice.

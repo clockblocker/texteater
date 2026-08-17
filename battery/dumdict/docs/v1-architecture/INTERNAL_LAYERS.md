@@ -9,8 +9,9 @@ the Dumdict barrel does not wildcard re-export Dumrel.
 ## Service layer
 
 Validates language-bound inputs, requests an operation-shaped storage slice,
-validates that slice, delegates to the semantic core, commits planned changes,
-and maps commit outcomes to public results.
+validates that slice, delegates to the semantic core, applies planned changes
+through either the storage port or a host-supplied transaction callback, and
+maps commit outcomes to public results.
 
 ## Semantic core
 

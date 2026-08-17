@@ -385,8 +385,8 @@ language, Lemma family, and Lemma kind.
 _Avoid_: Grammar Resolution
 
 ### Reading
-The learner-scoped semantic identity formed by one Lemma and one emoji
-description.
+A foundational Dumling semantic value formed by one Lemma and one emoji
+description, interpreted within one learner or hosted dictionary scope.
 
 A Reading is exactly `{ lemma, emojiDescription }`. When a learner encounters
 another use of the same Lemma, classification reuses one of that learner's
@@ -489,8 +489,9 @@ laboratory evidence and paths do not by themselves claim production readiness.
 - A **Surface** realizes exactly one **Lemma** under one grammatical
   analysis.
 - A **Lexeme** is a word-like **Lemma**.
-- A **Reading** combines exactly one **Lemma** and one learner-scoped Emoji
-  Description.
+- A **Reading** combines exactly one **Lemma** and one dictionary-scoped Emoji
+  Description; Dumling owns the value contract and Dumdict owns dictionary
+  scope and records.
 
 ## Example dialogue
 

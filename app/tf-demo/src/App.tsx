@@ -81,7 +81,7 @@ function LibraryPage() {
 
 		try {
 			const result = await submitText.mutateAsync({
-				submissionKey: `text:v1:${normalized}`,
+				submissionKey: submissionKeyFor(normalized),
 				sourceText: normalized,
 			});
 			navigate(`/text/${parseSubmittedTextId(result)}`);
@@ -358,6 +358,10 @@ function TextWorkspace({ textId }: { textId: string }) {
 							? {
 									textId: textDetail.textId,
 									sourceText: textDetail.sourceText,
+									isAnalyzed: textDetail.sentences.some(
+										(sentence) =>
+											sentence.segments.length > 0,
+									),
 								}
 							: undefined
 					}
@@ -431,7 +435,7 @@ function NotFoundPage() {
 function DataControls({
 	text,
 }: {
-	text?: { textId: TextId; sourceText: string };
+	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
 }) {
 	const navigate = useNavigate();
 	const visitorId = useAnonymousVisitorId();
@@ -448,15 +452,20 @@ function DataControls({
 	const stripTextAnalysis = useMutation({
 		mutationFn: useAction(api.demoReset.stripTextAnalysis),
 	});
-	const isClearing =
+	const analyzeText = useMutation({
+		mutationFn: useAction(api.orchestration.submitText),
+	});
+	const isBusy =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
-		stripTextAnalysis.isPending;
+		stripTextAnalysis.isPending ||
+		analyzeText.isPending;
 	const error =
 		interactionError ??
 		mutationMessage(clearSharedData.error) ??
 		mutationMessage(clearVisitorData.error) ??
-		mutationMessage(stripTextAnalysis.error);
+		mutationMessage(stripTextAnalysis.error) ??
+		mutationMessage(analyzeText.error);
 
 	async function handleClearVisitorData() {
 		if (
@@ -503,6 +512,27 @@ function DataControls({
 		}
 	}
 
+	async function handleAnalyzeText() {
+		if (!text) return;
+		setNotice(null);
+		setInteractionError(null);
+		try {
+			const result = await analyzeText.mutateAsync({
+				submissionKey: submissionKeyFor(text.sourceText),
+				sourceText: text.sourceText,
+			});
+			const analyzedTextId = parseSubmittedTextId(result);
+			if (analyzedTextId !== text.textId) {
+				throw new Error("Analysis was saved to a different Text.");
+			}
+			setNotice("Text analysis restored.");
+		} catch (cause) {
+			setInteractionError(
+				mutationMessage(cause) ?? "Text analysis failed.",
+			);
+		}
+	}
+
 	async function handleClearSharedData() {
 		if (
 			!window.confirm(
@@ -537,7 +567,7 @@ function DataControls({
 					<Button
 						type="button"
 						variant="outline"
-						disabled={isClearing}
+						disabled={isBusy}
 						onClick={() => void handleClearVisitorData()}
 					>
 						<UserRoundXIcon data-icon="inline-start" />
@@ -545,11 +575,11 @@ function DataControls({
 							? "Clearing your data…"
 							: "Clear my data"}
 					</Button>
-					{text ? (
+					{text?.isAnalyzed ? (
 						<Button
 							type="button"
 							variant="destructive"
-							disabled={isClearing}
+							disabled={isBusy}
 							onClick={() => void handleStripTextAnalysis()}
 						>
 							<EraserIcon data-icon="inline-start" />
@@ -557,11 +587,22 @@ function DataControls({
 								? "Stripping analysis…"
 								: "Strip analysis"}
 						</Button>
+					) : text ? (
+						<Button
+							type="button"
+							disabled={isBusy}
+							onClick={() => void handleAnalyzeText()}
+						>
+							<BookOpenIcon data-icon="inline-start" />
+							{analyzeText.isPending
+								? "Analyzing…"
+								: "Analyze text"}
+						</Button>
 					) : null}
 					<Button
 						type="button"
 						variant="destructive"
-						disabled={isClearing}
+						disabled={isBusy}
 						onClick={() => void handleClearSharedData()}
 					>
 						<DatabaseZapIcon data-icon="inline-start" />
@@ -663,6 +704,10 @@ function formatDate(timestamp: number): string {
 
 function segmentKey(sentenceId: string, segmentIndex: number): string {
 	return `${sentenceId}:${segmentIndex}`;
+}
+
+function submissionKeyFor(sourceText: string): string {
+	return `text:v1:${sourceText.trim().normalize("NFC")}`;
 }
 
 export default App;

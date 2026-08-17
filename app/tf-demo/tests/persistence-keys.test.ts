@@ -1,12 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { readingFingerprint } from "dumling";
 
-import {
-	lemmaKeyFor,
-	readingKeyFor,
-	resolutionKeyFor,
-	resolvedContextKeyFor,
-	visitorResolvedClickKeyFor,
-} from "../convex/model/linguisticKeys";
+import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 
 describe("global linguistic and visitor-scoped identities", () => {
 	test("global linguistic keys do not contain a visitor identity", () => {
@@ -15,39 +10,30 @@ describe("global linguistic and visitor-scoped identities", () => {
 			canonicalForm: "Haus",
 			family: "Lexeme",
 			kind: "NOUN",
-			coreFeatures: { gender: "Neuter" },
-		};
+			coreFeatures: { gender: "Neut", hyph: null },
+		} as const;
 		const lemmaKey = lemmaKeyFor(lemma);
-		const readingKey = readingKeyFor({ lemma, emojiDescription: "🏠" });
-		const resolutionKey = resolutionKeyFor("sentence-1", [2]);
+		const readingKey = readingFingerprint({
+			lemma,
+			emojiDescription: "🏠",
+		});
 
 		expect(lemmaKey).not.toContain("visitor-a");
 		expect(readingKey).not.toContain("visitor-a");
-		expect(resolutionKey).not.toContain("visitor-a");
 		expect(lemmaKeyFor({ ...lemma })).toBe(lemmaKey);
 	});
 
-	test("the same resolved Segment Context is universal across visitors", () => {
-		const resolvedContextKey = resolvedContextKeyFor("sentence-1", 2);
-
-		expect(resolvedContextKey).not.toContain("visitor-a");
-		expect(resolvedContextKey).toBe(resolvedContextKeyFor("sentence-1", 2));
-		expect(
-			visitorResolvedClickKeyFor("visitor-a", resolvedContextKey),
-		).not.toBe(visitorResolvedClickKeyFor("visitor-b", resolvedContextKey));
-	});
-
-	test("Reading identity follows Dumdict normalization", () => {
+	test("Reading identity follows Dumling normalization", () => {
 		const lemma = {
 			canonicalForm: "Haus",
-			coreFeatures: { gender: "Neuter" },
+			coreFeatures: { gender: "Neut", hyph: null },
 			family: "Lexeme",
 			kind: "NOUN",
 			language: "de",
-		};
+		} as const;
 
-		expect(readingKeyFor({ lemma, emojiDescription: "  🏠  " })).toBe(
-			readingKeyFor({ lemma, emojiDescription: "🏠" }),
+		expect(readingFingerprint({ lemma, emojiDescription: "  🏠  " })).toBe(
+			readingFingerprint({ lemma, emojiDescription: "🏠" }),
 		);
 	});
 });

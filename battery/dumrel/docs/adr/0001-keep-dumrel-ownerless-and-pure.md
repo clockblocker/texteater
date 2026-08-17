@@ -1,5 +1,6 @@
 ---
 status: accepted
+partially-superseded-by: system ADR 0008
 ---
 
 # Keep Dumrel ownerless and pure
@@ -7,12 +8,13 @@ status: accepted
 Dumrel is an identityless DTO and runtime-schema kernel with exactly three
 public operations: applying one Knowledge Change, looking up a Semantic
 Relation inverse, and propagating a caller-selected finite relation graph.
-Dumdict owns Reading identity, owner applicability, persistence, matching,
-resolution, inverse materialization, and housekeeping; Dumgen owns prompts and
-model calls. This boundary keeps reusable linguistic contracts independent of
-learner storage and generation workflows, at the cost of requiring callers to
-perform owner-aware checks such as same-language and direct-self-edge
-validation.
+Dumling owns the foundational Reading value, schema, equality, and stable
+identity operation under system ADR 0008. Dumdict owns its dictionary scope,
+owner applicability, persistence, matching, resolution, inverse
+materialization, and housekeeping; Dumgen owns prompts and model calls. This
+boundary keeps reusable linguistic contracts independent of learner storage
+and generation workflows, at the cost of requiring callers to perform
+owner-aware checks such as same-language and direct-self-edge validation.
 
 ## Consequences
 

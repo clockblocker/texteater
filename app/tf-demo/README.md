@@ -27,10 +27,10 @@ Knowledge. Resolve more than one Reading to create validated semantic relations
 between them and follow those relations from note to note; unresolved Dumdict
 relations remain visible as pending targets.
 
-Resolved Segment Contexts, Readings, relations, and Knowledge belong to one
-Shared Demo Dictionary. Repeating a Click on the same Segment in the same
-immutable Segmented Sentence reuses that universal result without invoking
-Dumgen again. The anonymous Visitor owns only Click history.
+Occurrence Attestations, Readings, relations, and Knowledge belong to one
+Shared Demo Dictionary. Clicking any member Segment of a committed occurrence
+reuses its universal Attestation and Reading without invoking Dumgen again. The
+anonymous Visitor owns only Click history.
 
 The Dumgen actions read `OPENAI_API_KEY` from the Convex deployment. Set it once
 without putting the secret in application code:
@@ -46,13 +46,15 @@ current Visitor's Click history, while **Clear shared data** removes the
 universal linguistic graph and Shared Demo Dictionary. Both require
 confirmation.
 
-A stored Text page also exposes **Strip analysis**. It preserves the Text and
-its Sentences while removing their Segments, resolutions, contexts, and Clicks.
+A stored Text page exposes **Strip analysis** while analysis exists, then
+replaces it with **Analyze text** after stripping. Stripping preserves the Text
+and its Sentences while removing their Segments, Attestation memberships,
+occurrence Attestations, and Clicks.
 A Reading remains when another Text still sources it; otherwise its Reading
 Knowledge, relations, and any now-unshared Lemma, Surfaces, and Lemma Knowledge
 are removed with it.
-Attestation identity is the exact `(Sentence ID, Text ID)` pair, so identical
-sentence wording in two Texts remains two distinct sources.
+Attestation identity is one occurrence-specific database ID. Equal reconstructed
+Attestation values at different source occurrences remain distinct records.
 
 The CLI also exposes the bounded full reset:
 

@@ -6,17 +6,25 @@ interaction history but do not partition linguistic identity or Knowledge.
 
 ## Language
 
-**Resolved Segment Context**:
-The universal result of resolving one clicked Segment in one immutable
-Segmented Sentence through Grammatical Resolution and Reading Resolution. Its
-identity is the Segmented Sentence identity plus the clicked Segment index.
-Every Visitor reuses the same Resolved Segment Context.
-_Avoid_: Visitor Context, learner resolution, click result
+**Occurrence Attestation**:
+A durable tf-demo record for one resolved high-level occurrence in one
+Sentence. Every member Segment shares it; its application-owned database ID
+distinguishes value-equal occurrences but never enters the public Dumling
+Attestation value.
+_Avoid_: Resolved Segment Context, Visitor Context, clicked context,
+grammatical resolution record
+
+**Attestation Membership**:
+The exclusive association of one Segment with at most one Occurrence
+Attestation, carrying that member's `Standard | Typo` orthography evidence.
+The ordered memberships of an occurrence reconstruct its Dumling Attestation
+members.
+_Avoid_: clicked-index context, target alias
 
 **Shared Demo Dictionary**:
-The one universal set of Lemmas, Readings, and Knowledge presented by tf-demo.
-The package-level learner scope of a Dumdict Reading is the whole demo, not an
-anonymous Visitor.
+The one universal set of Lemmas, Surfaces, Readings, and Knowledge presented by
+tf-demo. The package-level learner scope of a Dumdict Reading is the whole demo,
+not an anonymous Visitor.
 _Avoid_: Visitor Dictionary, personal dictionary
 
 **Visitor**:
@@ -26,23 +34,31 @@ Lemma, Reading, relation, or Knowledge identity.
 _Avoid_: Learner, User, account
 
 **Click**:
-One Visitor interaction with a Segment. A Click may point to a universal
-Resolved Segment Context. Its request identifier provides delivery
+One Visitor interaction with a Segment. Its result is either no Occurrence
+Attestation or one committed Occurrence Attestation, and that optional result
+remains stable for request retries. Its request identifier provides delivery
 idempotency, never linguistic identity or resolution reuse.
-_Avoid_: Resolution, Resolved Segment Context
+_Avoid_: Resolution, Occurrence Attestation
+
+**Membership Conflict**:
+A proposed occurrence whose member Segments overlap a committed Occurrence
+Attestation without matching all and only that occurrence's members. It is a
+rejected save, not a second analysis or a reason to change either occurrence.
+
+**Analysis Stripping**:
+The explicit removal of derived linguistic analysis for one Text while
+preserving that Text and its Sentences as source material. It is the only
+operation, apart from full demo reset, that ends Occurrence Attestations and
+their memberships.
 
 ## Text-scoped analysis stripping
 
 A Text and its Sentences are preserved source material. Stripping analysis
-removes the Sentences' Segments, grammatical resolutions, Resolved Segment
-Contexts, and every Visitor Click on those contexts. It never removes the Text
-or Sentence records.
+removes the Sentences' Segments, their Attestation Memberships and Occurrence
+Attestations, and every Visitor Click on those Segments or occurrences. It
+never removes the Text or Sentence records.
 
-An attestation is identified by its `(Sentence ID, Text ID)` pair, encoded as an
-opaque Dumdict attestation key. A Resolved Segment Context is the durable link
-from the attested Reading use to its linguistic resolution. When stripping
-leaves a Reading with no surviving attestation or context, the Shared Demo
-Dictionary also removes that Reading, its Reading Knowledge and relations,
-and—when no other Reading or grammatical resolution uses it—its Lemma,
-Surfaces, and Lemma Knowledge. Readings sourced by another Text remain shared;
-only the stripped Text's exact composite attestations are removed from them.
+When stripping leaves a Reading with no surviving Occurrence Attestation, the
+Shared Demo Dictionary also removes that Reading, its Reading Knowledge and
+relations, and—when no other surviving record uses them—its Lemma, Surfaces,
+and Lemma Knowledge. Readings used by another Text remain shared.

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
+import { readingFingerprint } from "dumling";
 
-import { readingKeyFor } from "../convex/model/linguisticKeys";
 import { pruneReadingReferences } from "../server/textDeletion";
 
 const bank = {
@@ -36,7 +36,7 @@ test("analysis stripping removes inbound relations to a source-less Reading", ()
 
 	const result = pruneReadingReferences(
 		knowledge,
-		new Set([readingKeyFor(bank)]),
+		new Set([readingFingerprint(bank)]),
 	);
 
 	expect(result).toEqual({
@@ -56,7 +56,7 @@ test("analysis stripping leaves unrelated Reading Knowledge unchanged", () => {
 
 	const result = pruneReadingReferences(
 		knowledge,
-		new Set([readingKeyFor(bank)]),
+		new Set([readingFingerprint(bank)]),
 	);
 
 	expect(result).toEqual({ changed: false, value: knowledge });

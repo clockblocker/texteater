@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { readingSchema } from "dumling/schema";
 
 import {
 	knowledgeChangeSchema,
@@ -23,6 +24,10 @@ import {
 } from "./fixtures";
 
 describe("concrete Dumling-backed schemas", () => {
+	test("re-exports Dumling's canonical Reading schema", () => {
+		expect(readingReferenceSchema).toBe(readingSchema);
+	});
+
 	test("validates Reading references through concrete Lemma routes", () => {
 		expect(readingReferenceSchema.parse(nounReading)).toEqual(nounReading);
 		expect(
@@ -34,6 +39,14 @@ describe("concrete Dumling-backed schemas", () => {
 		expect(morphemeReadingReferenceSchema.parse(morphemeReading)).toEqual(
 			morphemeReading,
 		);
+		for (const invalidEmojiDescription of ["plain prose", "😀😀😀😀😀"]) {
+			expect(
+				morphemeReadingReferenceSchema.safeParse({
+					...morphemeReading,
+					emojiDescription: invalidEmojiDescription,
+				}).success,
+			).toBe(false);
+		}
 		for (const nonMorpheme of [
 			nounReading,
 			phrasemeReading,

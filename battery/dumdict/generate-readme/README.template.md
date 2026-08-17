@@ -35,7 +35,7 @@ through its own LLM flow, `dumdict` returns candidate stored Readings, and the U
 one candidate matches. If one does, the UI calls `addAttestation`; otherwise it
 collects a full note draft and calls `addNewNote`.
 
-`dumdict` owns the dictionary semantics behind those calls:
+`dumdict` owns the dictionary workflow semantics behind those calls:
 
 - validating language and structural identity consistency
 - keeping Lemma, Surface, and learner Reading identities distinct
@@ -65,8 +65,9 @@ A `LemmaRecord` stores the grammatical identity:
 
 <!-- README_BLOCK:english-walk-entry-record -->
 
-A `Reading` is exactly `{ lemma, emojiDescription }`. Multiple Readings may
-share the same Lemma while their emoji descriptions distinguish them:
+A Dumling `Reading` is exactly `{ lemma, emojiDescription }`. Multiple Readings
+may share the same Lemma while their emoji descriptions distinguish them;
+Dumdict adds the learner note and workflow state around that canonical value:
 
 <!-- README_BLOCK:english-walk-reading-entry -->
 

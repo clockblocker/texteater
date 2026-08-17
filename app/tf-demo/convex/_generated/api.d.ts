@@ -11,6 +11,7 @@
 import type * as demoReset from "../demoReset.js";
 import type * as dumdictStorage from "../dumdictStorage.js";
 import type * as model_linguisticKeys from "../model/linguisticKeys.js";
+import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_validators from "../model/validators.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
@@ -27,6 +28,7 @@ declare const fullApi: ApiFromModules<{
   demoReset: typeof demoReset;
   dumdictStorage: typeof dumdictStorage;
   "model/linguisticKeys": typeof model_linguisticKeys;
+  "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/validators": typeof model_validators;
   orchestration: typeof orchestration;
   persistence: typeof persistence;

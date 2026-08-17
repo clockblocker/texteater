@@ -1,3 +1,4 @@
+import { readingFingerprint } from "dumling";
 import { inverseRelationFor, unitShadowSchema } from "dumrel";
 import type {
 	PendingSemanticRelationLocator,
@@ -7,7 +8,7 @@ import type {
 import type { SupportedLanguage } from "../../dumling";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
-import { readingKey, sameReading } from "../identity";
+import { sameReading } from "../identity";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function locatorKey<L extends SupportedLanguage>(
@@ -55,7 +56,9 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		),
 	);
 	const targetReadings = new Set(
-		slice.targetReadings.map(({ reading }) => readingKey(reading.reading)),
+		slice.targetReadings.map(({ reading }) =>
+			readingFingerprint(reading.reading),
+		),
 	);
 
 	for (const resolution of request.resolutions) {
@@ -80,7 +83,7 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 				message: "A Reading cannot relate directly to itself.",
 			};
 		}
-		if (!targetReadings.has(readingKey(resolution.targetReading))) {
+		if (!targetReadings.has(readingFingerprint(resolution.targetReading))) {
 			return {
 				status: "rejected",
 				code: "relationTargetMissing",
@@ -160,9 +163,9 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 					],
 				},
 			);
-			affectedReadings.set(readingKey(target), target);
+			affectedReadings.set(readingFingerprint(target), target);
 			affectedReadings.set(
-				readingKey(record.sourceReading),
+				readingFingerprint(record.sourceReading),
 				record.sourceReading,
 			);
 		}

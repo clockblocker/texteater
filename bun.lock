@@ -159,6 +159,7 @@
       "version": "0.1.12",
       "dependencies": {
         "codec-builder-library": "workspace:^",
+        "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
       "devDependencies": {

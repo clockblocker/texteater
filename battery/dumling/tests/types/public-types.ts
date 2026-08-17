@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import { dumling } from "../../src";
+import { dumling, readingFingerprint } from "../../src";
 import { abstractSchemas, schemasFor } from "../../src/schema";
 import type {
 	AbstractAttestation,
@@ -12,6 +12,8 @@ import type {
 	EntityForKind,
 	FeatureValue,
 	Lemma,
+	Reading,
+	ReadingFingerprint,
 	Surface,
 } from "../../src/types";
 
@@ -38,6 +40,14 @@ const attestation = dumling.de.convert.surface.toAttestation(
 	surface,
 	options,
 ) satisfies Attestation<"de", "Citation", "Lexeme", "NOUN">;
+
+const reading = {
+	lemma,
+	emojiDescription: "\u{1F30A}",
+} satisfies Reading<"de", "Lexeme", "NOUN">;
+reading.lemma satisfies Lemma<"de", "Lexeme", "NOUN">;
+const fingerprint: ReadingFingerprint = readingFingerprint(reading);
+void fingerprint;
 
 // @ts-expect-error Attestations require an explicit contextual Surface.
 dumling.de.convert.lemma.toAttestation(lemma, options);

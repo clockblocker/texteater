@@ -1,4 +1,5 @@
-import { readingKey, sameLemma } from "../../core/identity";
+import { readingFingerprint } from "dumling";
+import { sameLemma } from "../../core/identity";
 import { derivePendingEntryId } from "../../core/pending/identity";
 import { makeSurfaceId, type SupportedLanguage } from "../../dumling";
 import type {
@@ -72,7 +73,7 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 			const { pending } = relation.target;
 			return [
 				locatorKey({
-					sourceReadingKey: readingKey(reading),
+					sourceReadingKey: readingFingerprint(reading),
 					relation: pending.relation,
 					targetPendingId: derivePendingEntryId(pending.target),
 				}),

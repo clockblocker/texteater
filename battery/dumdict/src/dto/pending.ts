@@ -3,8 +3,7 @@ import type {
 	SemanticRelation,
 	UnitShadow,
 } from "dumrel";
-import type { SupportedLanguage } from "../dumling";
-import type { Reading } from "./reading";
+import type { Reading, SupportedLanguage } from "../dumling";
 
 export type PendingEntryId<L extends SupportedLanguage> = string & {
 	readonly __pendingEntryIdBrand?: unique symbol;

@@ -1,4 +1,3 @@
-import type { Reading as DumdictReading } from "dumdict";
 import type {
 	Segment as DumgenSegment,
 	SegmentedSentence as DumgenSegmentedSentence,
@@ -9,13 +8,14 @@ import type {
 import type {
 	Attestation as DumlingAttestation,
 	Lemma as DumlingLemma,
+	Reading as DumlingReading,
 	Surface as DumlingSurface,
 } from "dumling";
 
 export type Attestation = DumlingAttestation<"de">;
 export type Lemma = DumlingLemma<"de">;
 export type Surface = DumlingSurface<"de">;
-export type Reading = DumdictReading<"de">;
+export type Reading = DumlingReading<"de">;
 export type MemberOrthography = Attestation["members"][number]["orthography"];
 
 export type AnalysisTarget = GrammaticalRoute<"de"> & {

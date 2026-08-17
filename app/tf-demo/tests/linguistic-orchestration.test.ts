@@ -6,17 +6,14 @@ import {
 	type StoreRevision,
 } from "dumdict";
 import { type AiSdk, buildDumgen, type Dumgen } from "dumgen";
-import {
-	lemmaKeyFor,
-	readingKeyFor,
-	resolutionKeyFor,
-} from "../convex/model/linguisticKeys";
-import { attestationIdentityKey } from "../server/attestationIdentity";
+import { readingFingerprint } from "dumling";
+import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 	type PersistedSentence,
+	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
 
 const revision = "revision-0" as StoreRevision;
@@ -97,15 +94,49 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 				})),
 			} satisfies PersistedSentence;
 		},
-		async findResolvedContext() {
+		async findRecordedClick() {
+			return null;
+		},
+		async findAttestation() {
 			return null;
 		},
 		async persistResolvedClick(input) {
 			persistedClick = input;
-			return { contextId: "context-1" };
+			const createReading = input.dictionaryPlan.changes.find(
+				(change) => change.type === "createReading",
+			);
+			if (!createReading) throw new Error("Expected a Reading plan.");
+			const sentence = submitted?.sentences[0];
+			if (!sentence) throw new Error("Expected a submitted Sentence.");
+			return {
+				status: "Committed",
+				clickId: "click-1",
+				attestationId: "attestation-1",
+				readingId: "reading-1",
+				deduplicated: false,
+				occurrence: {
+					attestationId: "attestation-1",
+					grammatical: {
+						decision: "Resolved",
+						language: "de",
+						markedContext: "Die <TARGET>Banken</TARGET>.",
+						attestation: input.occurrence.attestation,
+						interaction: {
+							segmentedSentenceId: sentence.segmentedSentenceId,
+							clickedSegmentIndex: input.clickedSegmentIndex,
+							memberSegmentIndices:
+								input.occurrence.memberSegmentIndices,
+						},
+					},
+					reading: createReading.entry.reading,
+				},
+			};
 		},
 		async persistReusedResolvedClick() {
-			throw new Error("A first resolution cannot reuse a context.");
+			throw new Error("A first resolution cannot reuse an Attestation.");
+		},
+		async persistUnresolvedClick() {
+			throw new Error("Expected a resolved click.");
 		},
 	};
 	const dumgen = buildDumgen({
@@ -175,23 +206,18 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 			surface: { lemma: { canonicalForm: "Bank" } },
 		},
 	});
-	expect(commits).toHaveLength(1);
-	expect(commits[0]?.changes.map(({ type }) => type)).toEqual([
-		"createLemma",
-		"createReading",
-		"createOwnedSurface",
-	]);
+	expect(commits).toHaveLength(0);
 	expect(
-		commits[0]?.changes.find(({ type }) => type === "createReading"),
+		persistedClick?.dictionaryPlan.changes.map(({ type }) => type),
+	).toEqual(["createLemma", "createReading", "createOwnedSurface"]);
+	expect(
+		persistedClick?.dictionaryPlan.changes.find(
+			({ type }) => type === "createReading",
+		),
 	).toMatchObject({
 		entry: {
 			reading: { emojiDescription: "🏦" },
-			attestations: [
-				attestationIdentityKey({
-					sentenceId: "sentence-1",
-					textId: "text-1",
-				}),
-			],
+			attestations: [],
 		},
 	});
 	if (resolution.grammatical.decision !== "Resolved") {
@@ -202,16 +228,12 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 	expect(persistedClick).toMatchObject({
 		requestId: "request-1",
 		visitorId: "visitor-1",
-		resolution: {
-			resolutionKey: resolutionKeyFor(
-				submitted?.sentences[0]?.segmentedSentenceId ?? "",
-				[2],
-			),
+		occurrence: {
 			lemmaKey: lemmaKeyFor(lemma),
 			memberSegmentIndices: [2],
 			attestation: resolution.grammatical.attestation,
 		},
-		readingKey: readingKeyFor(reading),
+		readingKey: readingFingerprint(reading),
 	});
 });
 
@@ -277,12 +299,7 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 							reading,
 							note: {
 								attestedTranslations: [],
-								attestations: [
-									attestationIdentityKey({
-										sentenceId: "sentence-1",
-										textId: "text-1",
-									}),
-								],
+								attestations: [],
 								notes: "",
 							},
 						},
@@ -294,6 +311,21 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 			},
 			async addNewNote() {
 				throw new Error("An existing Reading must not be recreated.");
+			},
+			async ensureOwnedSurface(_request, options) {
+				if (!options?.applyPlan)
+					throw new Error("Expected host plan capture.");
+				await options.applyPlan({
+					baseRevision: revision,
+					changes: [],
+				});
+				return {
+					status: "applied",
+					baseRevision: revision,
+					nextRevision: revision,
+					affected: {},
+					summary: { message: "Already stored." },
+				};
 			},
 			async getInfoForRelationsCleanup() {
 				throw new Error("Unexpected cleanup.");
@@ -321,23 +353,46 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 					],
 				};
 			},
-			async findResolvedContext() {
+			async findRecordedClick() {
+				return null;
+			},
+			async findAttestation() {
 				contextLookups += 1;
 				return contextLookups === 1
 					? null
 					: {
-							resolvedContextId: "resolved-context-1",
+							attestationId: "attestation-1",
 							grammatical: grammaticalResult,
 							reading,
 						};
 			},
 			async persistResolvedClick() {
 				persisted = true;
-				return {};
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical: grammaticalResult,
+						reading,
+					},
+				};
 			},
 			async persistReusedResolvedClick() {
 				persisted = true;
-				return {};
+				return {
+					status: "Reused",
+					clickId: "click-2",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+				};
+			},
+			async persistUnresolvedClick() {
+				throw new Error("Expected a resolved click.");
 			},
 		},
 	});
@@ -355,10 +410,432 @@ test("reuses a globally resolved Segment without invoking Dumgen again", async (
 		clickedSegmentIndex: 2,
 	});
 
-	expect(result.dictionaryMutation.status).toBe("alreadyApplied");
+	expect(result.dictionaryPlan.changes).toEqual([]);
 	expect(persisted).toBe(true);
 	expect(grammaticalCalls).toBe(1);
 	expect(readingCalls).toBe(1);
+});
+
+for (const order of [
+	[4, 6],
+	[6, 4],
+] as const) {
+	test(`sequential ${order[0] === 4 ? "sind → geöffnet" : "geöffnet → sind"} clicks share one occurrence and one Dumgen resolution`, async () => {
+		const lemma = {
+			canonicalForm: "Bank",
+			coreFeatures: { gender: "Fem", hyph: null },
+			family: "Lexeme",
+			kind: "NOUN",
+			language: "de",
+		} as const;
+		const surface = {
+			language: "de",
+			normalizedSurface: "Banken",
+			spelling: "Canonical",
+			surfaceKind: "Inflection",
+			surfaceFeatures: null,
+			inflectionalFeatures: { case: "Nom", number: "Plur" },
+			lemma,
+		} as const;
+		const reading = { lemma, emojiDescription: "🏦" } as const;
+		const segments = [
+			{ index: 0, kind: "ResolvableText", text: "Die" },
+			{ index: 1, kind: "Whitespace", text: " " },
+			{ index: 2, kind: "ResolvableText", text: "Banken" },
+			{ index: 3, kind: "Whitespace", text: " " },
+			{ index: 4, kind: "ResolvableText", text: "sind" },
+			{ index: 5, kind: "Whitespace", text: " " },
+			{ index: 6, kind: "ResolvableText", text: "geöffnet" },
+		] as const;
+		let grammaticalCalls = 0;
+		let readingCalls = 0;
+		let committed: ReusableAttestation | null = null;
+		const visitorClicks: string[] = [];
+		const { storage } = createPlanningStorage();
+		const orchestrator = createTfDemoOrchestrator({
+			dumgen: {
+				async segment() {
+					throw new Error("Unexpected segmentation.");
+				},
+				resolve: {
+					async grammatical(_language, input) {
+						grammaticalCalls += 1;
+						return {
+							decision: "Resolved",
+							language: "de",
+							markedContext:
+								"Die Banken <TARGET>sind</TARGET> <TARGET>geöffnet</TARGET>",
+							attestation: {
+								members: [
+									{
+										attested: "sind",
+										orthography: "Standard",
+									},
+									{
+										attested: "geöffnet",
+										orthography: "Standard",
+									},
+								],
+								realizationCoverage: "Full",
+								surface,
+							},
+							interaction: {
+								segmentedSentenceId: "segmented-1",
+								clickedSegmentIndex: input.clickedSegmentIndex,
+								memberSegmentIndices: [4, 6],
+							},
+						} as const;
+					},
+					async reading() {
+						readingCalls += 1;
+						return {
+							decision: "New",
+							emojiDescription: "🏦",
+						} as const;
+					},
+				},
+			} as Dumgen,
+			dictionary: createDumdictService({ language: "de", storage }),
+			persistence: {
+				async persistSubmittedText() {
+					throw new Error("Unexpected submission.");
+				},
+				async getSentenceForResolution() {
+					return {
+						sentenceId: "sentence-1",
+						textId: "text-1",
+						segmentedSentenceId: "segmented-1",
+						language: "de",
+						stitchedText: "Die Banken sind geöffnet",
+						segments,
+					};
+				},
+				async findRecordedClick() {
+					return null;
+				},
+				async findAttestation({ clickedSegmentIndex }) {
+					if (!committed) return null;
+					return {
+						...committed,
+						grammatical: {
+							...committed.grammatical,
+							interaction: {
+								...committed.grammatical.interaction,
+								clickedSegmentIndex,
+							},
+						},
+					};
+				},
+				async persistResolvedClick(input) {
+					visitorClicks.push(input.visitorId);
+					committed = {
+						attestationId: "attestation-1",
+						grammatical: {
+							decision: "Resolved",
+							language: "de",
+							markedContext:
+								"Die Banken <TARGET>sind</TARGET> <TARGET>geöffnet</TARGET>",
+							attestation: input.occurrence.attestation,
+							interaction: {
+								segmentedSentenceId: "segmented-1",
+								clickedSegmentIndex: input.clickedSegmentIndex,
+								memberSegmentIndices: [4, 6],
+							},
+						},
+						reading,
+					};
+					return {
+						status: "Committed",
+						clickId: "click-1",
+						attestationId: committed.attestationId,
+						readingId: "reading-1",
+						deduplicated: false,
+						occurrence: committed,
+					};
+				},
+				async persistReusedResolvedClick(input) {
+					visitorClicks.push(input.visitorId);
+					return {
+						status: "Reused",
+						clickId: "click-2",
+						attestationId: input.attestationId,
+						readingId: "reading-1",
+						deduplicated: false,
+					};
+				},
+				async persistUnresolvedClick() {
+					throw new Error("Expected a resolved click.");
+				},
+			},
+		});
+
+		const first = await orchestrator.resolveSegment({
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: order[0],
+		});
+		const second = await orchestrator.resolveSegment({
+			requestId: "request-2",
+			visitorId: "visitor-2",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: order[1],
+		});
+
+		expect(grammaticalCalls).toBe(1);
+		expect(readingCalls).toBe(1);
+		expect(first.persisted.attestationId).toBe("attestation-1");
+		expect(second.grammatical.attestation).toEqual(
+			first.grammatical.attestation,
+		);
+		expect(second.reading).toEqual(first.reading);
+		expect(visitorClicks).toEqual(["visitor-1", "visitor-2"]);
+	});
+}
+
+test("replays a recorded unresolved Click without invoking Dumgen or dictionary work", async () => {
+	const orchestrator = createTfDemoOrchestrator({
+		dumgen: {
+			async segment() {
+				throw new Error("A request retry must not invoke Dumgen.");
+			},
+			resolve: {
+				async grammatical() {
+					throw new Error("A request retry must not invoke Dumgen.");
+				},
+				async reading() {
+					throw new Error("A request retry must not invoke Dumgen.");
+				},
+			},
+		} as Dumgen,
+		dictionary: {
+			findStoredReadings() {
+				throw new Error("A request retry must not consult Dumdict.");
+			},
+		} as never,
+		persistence: {
+			async persistSubmittedText() {
+				throw new Error("Unexpected submission.");
+			},
+			async getSentenceForResolution() {
+				throw new Error(
+					"A request retry must not reload the Sentence.",
+				);
+			},
+			async findRecordedClick() {
+				return { status: "Unresolved", clickId: "click-1" };
+			},
+			async findAttestation() {
+				throw new Error(
+					"A request retry must stop before membership lookup.",
+				);
+			},
+			async persistResolvedClick() {
+				throw new Error("A request retry must not write.");
+			},
+			async persistReusedResolvedClick() {
+				throw new Error("A request retry must not write.");
+			},
+			async persistUnresolvedClick() {
+				throw new Error("A request retry must not write.");
+			},
+		},
+	});
+
+	const result = await orchestrator.resolveSegment({
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toEqual({
+		grammatical: { decision: "Unresolved", language: "de" },
+		deduplicated: true,
+		persisted: { status: "Unresolved", clickId: "click-1" },
+	});
+});
+
+test("persists a fresh unresolved Click with a discriminated result", async () => {
+	const orchestrator = createTfDemoOrchestrator({
+		dumgen: {
+			async segment() {
+				throw new Error("Unexpected segmentation.");
+			},
+			resolve: {
+				async grammatical() {
+					return { decision: "Unresolved", language: "de" } as const;
+				},
+				async reading() {
+					throw new Error("An unresolved click has no Reading.");
+				},
+			},
+		} as Dumgen,
+		dictionary: {} as never,
+		persistence: {
+			async persistSubmittedText() {
+				throw new Error("Unexpected submission.");
+			},
+			async getSentenceForResolution() {
+				return {
+					sentenceId: "sentence-1",
+					textId: "text-1",
+					segmentedSentenceId: "segmented-1",
+					language: "de",
+					stitchedText: "qzxv",
+					segments: [
+						{ index: 0, kind: "ResolvableText", text: "qzxv" },
+					],
+				};
+			},
+			async findRecordedClick() {
+				return null;
+			},
+			async findAttestation() {
+				return null;
+			},
+			async persistResolvedClick() {
+				throw new Error("An unresolved click has no occurrence.");
+			},
+			async persistReusedResolvedClick() {
+				throw new Error(
+					"An unresolved click cannot reuse an occurrence.",
+				);
+			},
+			async persistUnresolvedClick() {
+				return {
+					status: "Unresolved",
+					clickId: "click-1",
+					deduplicated: false,
+				};
+			},
+		},
+	});
+
+	const result = await orchestrator.resolveSegment({
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toEqual({
+		grammatical: { decision: "Unresolved", language: "de" },
+		persisted: {
+			status: "Unresolved",
+			clickId: "click-1",
+			deduplicated: false,
+		},
+	});
+});
+
+test("an unresolved model result yields to membership committed during model work", async () => {
+	const lemma = {
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Bank",
+		coreFeatures: { gender: "Fem", hyph: null },
+	} as const;
+	const surface = {
+		language: "de",
+		normalizedSurface: "Banken",
+		spelling: "Canonical",
+		surfaceKind: "Inflection",
+		surfaceFeatures: null,
+		inflectionalFeatures: { case: "Nom", number: "Plur" },
+		lemma,
+	} as const;
+	const winner: ReusableAttestation = {
+		attestationId: "attestation-1",
+		grammatical: {
+			decision: "Resolved",
+			language: "de",
+			markedContext: "Die <TARGET>Banken</TARGET>",
+			attestation: {
+				members: [{ attested: "Banken", orthography: "Standard" }],
+				realizationCoverage: "Full",
+				surface,
+			},
+			interaction: {
+				segmentedSentenceId: "segmented-1",
+				clickedSegmentIndex: 2,
+				memberSegmentIndices: [2],
+			},
+		},
+		reading: { lemma, emojiDescription: "🏦" },
+	};
+	const orchestrator = createTfDemoOrchestrator({
+		dumgen: {
+			async segment() {
+				throw new Error("Unexpected segmentation.");
+			},
+			resolve: {
+				async grammatical() {
+					return { decision: "Unresolved", language: "de" } as const;
+				},
+				async reading() {
+					throw new Error("The losing result has no Reading.");
+				},
+			},
+		} as Dumgen,
+		dictionary: {} as never,
+		persistence: {
+			async persistSubmittedText() {
+				throw new Error("Unexpected submission.");
+			},
+			async getSentenceForResolution() {
+				return {
+					sentenceId: "sentence-1",
+					textId: "text-1",
+					segmentedSentenceId: "segmented-1",
+					language: "de",
+					stitchedText: "Die Banken",
+					segments: [
+						{ index: 0, kind: "ResolvableText", text: "Die" },
+						{ index: 1, kind: "Whitespace", text: " " },
+						{ index: 2, kind: "ResolvableText", text: "Banken" },
+					],
+				};
+			},
+			async findRecordedClick() {
+				return null;
+			},
+			async findAttestation() {
+				return null;
+			},
+			async persistResolvedClick() {
+				throw new Error("The losing result is unresolved.");
+			},
+			async persistReusedResolvedClick() {
+				throw new Error("No membership existed before model work.");
+			},
+			async persistUnresolvedClick() {
+				return {
+					status: "Reused",
+					clickId: "click-1",
+					attestationId: winner.attestationId,
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: winner,
+				};
+			},
+		},
+	});
+
+	const result = await orchestrator.resolveSegment({
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 2,
+	});
+
+	expect(result).toMatchObject({
+		grammatical: { decision: "Resolved" },
+		reading: { emojiDescription: "🏦" },
+		reused: true,
+		persisted: { status: "Reused", attestationId: "attestation-1" },
+	});
 });
 
 describe("Dumrel Knowledge Contribution seam", () => {

@@ -1,24 +1,51 @@
 import { v } from "convex/values";
-
-import type { Doc, Id } from "./_generated/dataModel";
+import { makeSurfaceId, type Surface } from "dumdict";
+import { type Reading, readingFingerprint } from "dumling/reading";
+import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
 	type MutationCtx,
+	type QueryCtx,
 } from "./_generated/server";
+import { applyDumdictPlanInTransaction } from "./dumdictStorage";
+import { lemmaKeyFor } from "./model/linguisticKeys";
 import {
-	resolutionKeyFor,
-	resolvedContextKeyFor,
-	visitorResolvedClickKeyFor,
-} from "./model/linguisticKeys";
+	loadOccurrenceAttestation,
+	readingValue,
+} from "./model/occurrenceAttestations";
 import {
-	grammaticalResolutionInputValidator,
+	dictionaryPlanValidator,
 	knowledgeOwnerKindValidator,
+	occurrenceAttestationInputValidator,
+	readingValueValidator,
+	recordedClickValidator,
+	resolvedClickCommitValidator,
+	reusableAttestationValidator,
+	reusedResolvedClickCommitValidator,
 	sentenceInputValidator,
+	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 
 const MAX_SENTENCES_PER_SUBMISSION = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
+
+function visitorClickDocument(request: {
+	requestId: string;
+	visitorId: string;
+	segmentId: Id<"segments">;
+	attestationId?: Id<"attestations">;
+}) {
+	return {
+		requestId: request.requestId,
+		visitorId: request.visitorId,
+		segmentId: request.segmentId,
+		...(request.attestationId
+			? { attestationId: request.attestationId }
+			: {}),
+		clickedAt: Date.now(),
+	};
+}
 
 function assertNonEmpty(value: string, name: string): void {
 	if (value.trim().length === 0)
@@ -42,7 +69,7 @@ function assertVisitorInput(visitorId: string, requestId: string): void {
 }
 
 async function requireClickableSegment(
-	ctx: MutationCtx,
+	ctx: MutationCtx | QueryCtx,
 	sentenceId: Id<"sentences">,
 	clickedSegmentIndex: number,
 ) {
@@ -61,117 +88,98 @@ async function requireClickableSegment(
 	return { sentence, segment };
 }
 
-async function findClickByRequestId(ctx: MutationCtx, requestId: string) {
+async function findClickByRequestId(
+	ctx: MutationCtx | QueryCtx,
+	requestId: string,
+) {
 	return ctx.db
 		.query("visitorClicks")
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 }
 
+async function reconstructReusableAttestation(
+	ctx: MutationCtx | QueryCtx,
+	attestationId: Id<"attestations">,
+	clickedSegmentIndex: number,
+) {
+	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
+	if (!occurrence) {
+		throw new Error("Click refers to an invalid Attestation.");
+	}
+	return {
+		sentenceId: occurrence.sentence._id,
+		value: {
+			attestationId,
+			grammatical: {
+				decision: "Resolved" as const,
+				language: "de" as const,
+				markedContext: occurrence.markedContext,
+				attestation: occurrence.publicAttestation,
+				interaction: {
+					segmentedSentenceId:
+						occurrence.sentence.segmentedSentenceId,
+					clickedSegmentIndex,
+					memberSegmentIndices: occurrence.memberSegmentIndices,
+				},
+			},
+			reading: occurrence.publicReading,
+		},
+	};
+}
+
+async function recordClickAgainstCommittedAttestation(
+	ctx: MutationCtx,
+	input: {
+		requestId: string;
+		visitorId: string;
+		segmentId: Id<"segments">;
+		clickedSegmentIndex: number;
+		attestationId: Id<"attestations">;
+	},
+) {
+	const { value: occurrence } = await reconstructReusableAttestation(
+		ctx,
+		input.attestationId,
+		input.clickedSegmentIndex,
+	);
+	const attestation = await ctx.db.get(input.attestationId);
+	if (!attestation) throw new Error("Attestation does not exist.");
+	const clickId = await ctx.db.insert(
+		"visitorClicks",
+		visitorClickDocument({
+			requestId: input.requestId,
+			visitorId: input.visitorId,
+			segmentId: input.segmentId,
+			attestationId: input.attestationId,
+		}),
+	);
+	return {
+		status: "Reused" as const,
+		clickId,
+		readingId: attestation.readingId,
+		attestationId: input.attestationId,
+		deduplicated: false,
+		occurrence,
+	};
+}
+
 function assertMatchingRetry(
 	click: {
 		visitorId: string;
-		sentenceId: Id<"sentences">;
-		clickedSegmentIndex: number;
+		segmentId: Id<"segments">;
 	},
 	args: {
 		visitorId: string;
-		sentenceId: Id<"sentences">;
-		clickedSegmentIndex: number;
+		segmentId: Id<"segments">;
 	},
 ): void {
 	if (
 		click.visitorId !== args.visitorId ||
-		click.sentenceId !== args.sentenceId ||
-		click.clickedSegmentIndex !== args.clickedSegmentIndex
+		click.segmentId !== args.segmentId
 	) {
 		throw new Error("requestId was already used for a different click.");
 	}
-}
-
-async function recordResolvedVisitorClick(
-	ctx: MutationCtx,
-	args: {
-		requestId: string;
-		visitorId: string;
-		sentenceId: Id<"sentences">;
-		clickedSegmentIndex: number;
-	},
-	resolvedContext: Doc<"resolvedContexts">,
-) {
-	assertVisitorInput(args.visitorId, args.requestId);
-	await requireClickableSegment(
-		ctx,
-		args.sentenceId,
-		args.clickedSegmentIndex,
-	);
-	if (
-		resolvedContext.sentenceId !== args.sentenceId ||
-		resolvedContext.clickedSegmentIndex !== args.clickedSegmentIndex
-	) {
-		throw new Error("Resolved Segment Context does not match the click.");
-	}
-
-	const existingClick = await findClickByRequestId(ctx, args.requestId);
-	if (existingClick) {
-		assertMatchingRetry(existingClick, args);
-		const visitorContext = await ctx.db
-			.query("visitorResolvedContexts")
-			.withIndex("by_click_id", (q) => q.eq("clickId", existingClick._id))
-			.unique();
-		if (!visitorContext) {
-			throw new Error("requestId already records an unresolved click.");
-		}
-		return {
-			clickId: existingClick._id,
-			resolutionId: resolvedContext.resolutionId,
-			readingId: resolvedContext.readingId,
-			resolvedContextId: resolvedContext._id,
-			contextId: visitorContext._id,
-			deduplicated: true,
-		};
-	}
-
-	const now = Date.now();
-	const clickId = await ctx.db.insert("visitorClicks", {
-		...args,
-		resolutionId: resolvedContext.resolutionId,
-		resolvedContextId: resolvedContext._id,
-		clickedAt: now,
-	});
-	const contextKey = visitorResolvedClickKeyFor(
-		args.visitorId,
-		resolvedContext.contextKey,
-	);
-	const existingVisitorContext = await ctx.db
-		.query("visitorResolvedContexts")
-		.withIndex("by_context_key", (q) => q.eq("contextKey", contextKey))
-		.unique();
-	const contextValue = {
-		contextKey,
-		visitorId: args.visitorId,
-		clickId,
-		resolvedContextId: resolvedContext._id,
-		resolvedAt: now,
-	};
-	let contextId: Id<"visitorResolvedContexts">;
-	if (existingVisitorContext) {
-		await ctx.db.replace(existingVisitorContext._id, contextValue);
-		contextId = existingVisitorContext._id;
-	} else {
-		contextId = await ctx.db.insert(
-			"visitorResolvedContexts",
-			contextValue,
-		);
-	}
-	return {
-		clickId,
-		resolutionId: resolvedContext.resolutionId,
-		readingId: resolvedContext.readingId,
-		resolvedContextId: resolvedContext._id,
-		contextId,
-		deduplicated: false,
-	};
 }
 
 export const persistSubmittedText = internalMutation({
@@ -192,32 +200,6 @@ export const persistSubmittedText = internalMutation({
 				`At most ${MAX_SENTENCES_PER_SUBMISSION} sentences are allowed.`,
 			);
 		}
-
-		const existingText = await ctx.db
-			.query("texts")
-			.withIndex("by_submission_key", (q) =>
-				q.eq("submissionKey", args.submissionKey),
-			)
-			.unique();
-		if (existingText) {
-			if (existingText.sourceText !== args.sourceText) {
-				throw new Error(
-					"submissionKey was already used for different text.",
-				);
-			}
-			const existingSentences = await ctx.db
-				.query("sentences")
-				.withIndex("by_text_id_and_position", (q) =>
-					q.eq("textId", existingText._id),
-				)
-				.take(MAX_SENTENCES_PER_SUBMISSION);
-			return {
-				textId: existingText._id,
-				sentenceIds: existingSentences.map(({ _id }) => _id),
-				deduplicated: true,
-			};
-		}
-
 		const positions = new Set<number>();
 		const sentenceKeys = new Set<string>();
 		for (const sentence of args.sentences) {
@@ -258,6 +240,118 @@ export const persistSubmittedText = internalMutation({
 					);
 				}
 			}
+		}
+
+		const existingText = await ctx.db
+			.query("texts")
+			.withIndex("by_submission_key", (q) =>
+				q.eq("submissionKey", args.submissionKey),
+			)
+			.unique();
+		if (existingText) {
+			if (existingText.sourceText !== args.sourceText) {
+				throw new Error(
+					"submissionKey was already used for different text.",
+				);
+			}
+			const existingSentences = await ctx.db
+				.query("sentences")
+				.withIndex("by_text_id_and_position", (q) =>
+					q.eq("textId", existingText._id),
+				)
+				.take(MAX_SENTENCES_PER_SUBMISSION);
+			const submittedSentences = [...args.sentences].sort(
+				(left, right) => left.position - right.position,
+			);
+			const existingSegments = await Promise.all(
+				existingSentences.map((sentence) =>
+					ctx.db
+						.query("segments")
+						.withIndex("by_sentence_id_and_index", (q) =>
+							q.eq("sentenceId", sentence._id),
+						)
+						.take(MAX_SEGMENTS_PER_SENTENCE),
+				),
+			);
+			if (existingSegments.some((segments) => segments.length > 0)) {
+				return {
+					textId: existingText._id,
+					sentenceIds: existingSentences.map(({ _id }) => _id),
+					deduplicated: true,
+				};
+			}
+			if (submittedSentences.length === 0) {
+				return {
+					textId: existingText._id,
+					sentenceIds: existingSentences.map(({ _id }) => _id),
+					deduplicated: true,
+				};
+			}
+
+			const existingByPosition = new Map(
+				existingSentences.map((sentence) => [
+					sentence.position,
+					sentence,
+				]),
+			);
+			if (
+				existingSentences.some(
+					(sentence) => !positions.has(sentence.position),
+				)
+			) {
+				throw new Error(
+					"Existing Sentences do not match the submitted analysis.",
+				);
+			}
+			for (const submitted of submittedSentences) {
+				const existing = existingByPosition.get(submitted.position);
+				const collision = await ctx.db
+					.query("sentences")
+					.withIndex("by_segmented_sentence_id", (q) =>
+						q.eq(
+							"segmentedSentenceId",
+							submitted.segmentedSentenceId,
+						),
+					)
+					.unique();
+				if (collision && collision._id !== existing?._id) {
+					throw new Error(
+						"Segmented Sentence ID already belongs to another submission.",
+					);
+				}
+			}
+
+			const sentenceIds: Id<"sentences">[] = [];
+			for (const submitted of submittedSentences) {
+				const existing = existingByPosition.get(submitted.position);
+				const sentenceValue = {
+					segmentedSentenceId: submitted.segmentedSentenceId,
+					textId: existingText._id,
+					position: submitted.position,
+					language: submitted.language,
+					stitchedText: submitted.stitchedText,
+				};
+				const sentenceId =
+					existing?._id ??
+					(await ctx.db.insert("sentences", sentenceValue));
+				if (existing) await ctx.db.replace(existing._id, sentenceValue);
+				sentenceIds.push(sentenceId);
+				for (const [index, segment] of submitted.segments.entries()) {
+					await ctx.db.insert("segments", {
+						sentenceId,
+						index,
+						...segment,
+					});
+				}
+			}
+			return {
+				textId: existingText._id,
+				sentenceIds,
+				deduplicated: true,
+			};
+		}
+
+		for (const sentence of args.sentences) {
 			const collision = await ctx.db
 				.query("sentences")
 				.withIndex("by_segmented_sentence_id", (q) =>
@@ -347,124 +441,70 @@ export const getSentenceForResolution = internalQuery({
 	},
 });
 
-export const findOrPromoteResolvedContextForSegment = internalMutation({
+export const findAttestationForSegment = internalQuery({
 	args: {
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 	},
-	returns: v.union(
-		v.null(),
-		v.object({
-			resolvedContextId: v.id("resolvedContexts"),
-			grammatical: v.any(),
-			reading: v.any(),
-		}),
-	),
+	returns: v.union(v.null(), reusableAttestationValidator),
 	handler: async (ctx, { sentenceId, clickedSegmentIndex }) => {
 		assertIndex(clickedSegmentIndex, "clickedSegmentIndex");
-		let context = await ctx.db
-			.query("resolvedContexts")
-			.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
-				q
-					.eq("sentenceId", sentenceId)
-					.eq("clickedSegmentIndex", clickedSegmentIndex),
-			)
-			.unique();
-		if (!context) {
-			const legacy = await ctx.db
-				.query("visitorResolvedContexts")
-				.withIndex("by_sentence_id_and_clicked_segment_index", (q) =>
-					q
-						.eq("sentenceId", sentenceId)
-						.eq("clickedSegmentIndex", clickedSegmentIndex),
-				)
-				.first();
-			if (!legacy?.resolutionId || !legacy.readingId) return null;
-			const sentence = await ctx.db.get(sentenceId);
-			if (!sentence) return null;
-			const contextKey = resolvedContextKeyFor(
-				sentence.segmentedSentenceId,
-				clickedSegmentIndex,
-			);
-			const resolvedContextId = await ctx.db.insert("resolvedContexts", {
-				contextKey,
-				sentenceId,
-				clickedSegmentIndex,
-				resolutionId: legacy.resolutionId,
-				readingId: legacy.readingId,
-				resolvedAt: legacy.resolvedAt,
-			});
-			context = await ctx.db.get(resolvedContextId);
-		}
-		if (!context) return null;
-		const [sentence, resolution, reading] = await Promise.all([
-			ctx.db.get(context.sentenceId),
-			ctx.db.get(context.resolutionId),
-			ctx.db.get(context.readingId),
-		]);
-		if (!sentence || !resolution || !reading) return null;
-		return {
-			resolvedContextId: context._id,
-			grammatical: {
-				decision: "Resolved" as const,
-				language: resolution.language,
-				markedContext: resolution.markedContext,
-				attestation: resolution.attestation,
-				interaction: {
-					segmentedSentenceId: sentence.segmentedSentenceId,
-					clickedSegmentIndex,
-					memberSegmentIndices: [...resolution.memberSegmentIndices],
-				},
-			},
-			reading: reading.entry.reading,
-		};
+		const { segment } = await requireClickableSegment(
+			ctx,
+			sentenceId,
+			clickedSegmentIndex,
+		);
+		const attestationId = segment.attestationMembership?.attestationId;
+		if (!attestationId) return null;
+		const reusable = await reconstructReusableAttestation(
+			ctx,
+			attestationId,
+			clickedSegmentIndex,
+		);
+		return reusable.sentenceId === sentenceId ? reusable.value : null;
 	},
 });
 
 export const findClickResultByRequestId = internalQuery({
-	args: { requestId: v.string() },
-	returns: v.union(
-		v.null(),
-		v.object({
-			clickId: v.id("visitorClicks"),
-			status: v.union(v.literal("Unresolved"), v.literal("Resolved")),
-			resolvedContextId: v.optional(v.id("resolvedContexts")),
-			resolutionId: v.optional(v.id("grammaticalResolutions")),
-			readingId: v.optional(v.id("readings")),
-		}),
-	),
-	handler: async (ctx, { requestId }) => {
+	args: {
+		requestId: v.string(),
+		visitorId: v.string(),
+		sentenceId: v.id("sentences"),
+		clickedSegmentIndex: v.number(),
+	},
+	returns: v.union(v.null(), recordedClickValidator),
+	handler: async (ctx, args) => {
+		assertVisitorInput(args.visitorId, args.requestId);
+		const { segment } = await requireClickableSegment(
+			ctx,
+			args.sentenceId,
+			args.clickedSegmentIndex,
+		);
 		const click = await ctx.db
 			.query("visitorClicks")
-			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
+			.withIndex("by_request_id", (q) =>
+				q.eq("requestId", args.requestId),
+			)
 			.unique();
 		if (!click) return null;
-		const context = await ctx.db
-			.query("visitorResolvedContexts")
-			.withIndex("by_click_id", (q) => q.eq("clickId", click._id))
-			.unique();
-		const resolvedContextId =
-			click.resolvedContextId ?? context?.resolvedContextId;
-		const resolvedContext = resolvedContextId
-			? await ctx.db.get(resolvedContextId)
-			: null;
-		if (resolvedContext) {
+		assertMatchingRetry(click, {
+			visitorId: args.visitorId,
+			segmentId: segment._id,
+		});
+		if (click.attestationId) {
 			return {
 				clickId: click._id,
 				status: "Resolved" as const,
-				resolvedContextId: resolvedContext._id,
-				resolutionId: resolvedContext.resolutionId,
-				readingId: resolvedContext.readingId,
+				occurrence: (
+					await reconstructReusableAttestation(
+						ctx,
+						click.attestationId,
+						args.clickedSegmentIndex,
+					)
+				).value,
 			};
 		}
-		return context?.resolutionId && context.readingId
-			? {
-					clickId: click._id,
-					status: "Resolved" as const,
-					resolutionId: context.resolutionId,
-					readingId: context.readingId,
-				}
-			: { clickId: click._id, status: "Unresolved" as const };
+		return { clickId: click._id, status: "Unresolved" as const };
 	},
 });
 
@@ -475,27 +515,51 @@ export const persistUnresolvedClick = internalMutation({
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 	},
-	returns: v.object({
-		clickId: v.id("visitorClicks"),
-		deduplicated: v.boolean(),
-	}),
+	returns: unresolvedClickPersistenceResultValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
-		await requireClickableSegment(
+		const { segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
 			args.clickedSegmentIndex,
 		);
 		const existing = await findClickByRequestId(ctx, args.requestId);
 		if (existing) {
-			assertMatchingRetry(existing, args);
-			return { clickId: existing._id, deduplicated: true };
+			assertMatchingRetry(existing, {
+				visitorId: args.visitorId,
+				segmentId: segment._id,
+			});
+			if (existing.attestationId) {
+				throw new Error("requestId already records a resolved click.");
+			}
+			return {
+				status: "Unresolved" as const,
+				clickId: existing._id,
+				deduplicated: true,
+			};
 		}
-		const clickId = await ctx.db.insert("visitorClicks", {
-			...args,
-			clickedAt: Date.now(),
-		});
-		return { clickId, deduplicated: false };
+		const committedAttestationId =
+			segment.attestationMembership?.attestationId;
+		if (committedAttestationId) {
+			return recordClickAgainstCommittedAttestation(ctx, {
+				...args,
+				segmentId: segment._id,
+				attestationId: committedAttestationId,
+			});
+		}
+		const clickId = await ctx.db.insert(
+			"visitorClicks",
+			visitorClickDocument({
+				requestId: args.requestId,
+				visitorId: args.visitorId,
+				segmentId: segment._id,
+			}),
+		);
+		return {
+			status: "Unresolved" as const,
+			clickId,
+			deduplicated: false,
+		};
 	},
 });
 
@@ -505,22 +569,60 @@ export const persistReusedResolvedClick = internalMutation({
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
-		resolvedContextId: v.id("resolvedContexts"),
+		attestationId: v.id("attestations"),
 	},
-	returns: v.object({
-		clickId: v.id("visitorClicks"),
-		resolutionId: v.id("grammaticalResolutions"),
-		readingId: v.id("readings"),
-		resolvedContextId: v.id("resolvedContexts"),
-		contextId: v.id("visitorResolvedContexts"),
-		deduplicated: v.boolean(),
-	}),
+	returns: reusedResolvedClickCommitValidator,
 	handler: async (ctx, args) => {
-		const resolvedContext = await ctx.db.get(args.resolvedContextId);
-		if (!resolvedContext) {
-			throw new Error("Resolved Segment Context does not exist.");
+		assertVisitorInput(args.visitorId, args.requestId);
+		const { segment } = await requireClickableSegment(
+			ctx,
+			args.sentenceId,
+			args.clickedSegmentIndex,
+		);
+		if (
+			segment.attestationMembership?.attestationId !== args.attestationId
+		) {
+			throw new Error(
+				"Clicked Segment is not a member of the Attestation.",
+			);
 		}
-		return recordResolvedVisitorClick(ctx, args, resolvedContext);
+		const attestation = await ctx.db.get(args.attestationId);
+		if (!attestation) throw new Error("Attestation does not exist.");
+		const existing = await findClickByRequestId(ctx, args.requestId);
+		if (existing) {
+			assertMatchingRetry(existing, {
+				visitorId: args.visitorId,
+				segmentId: segment._id,
+			});
+			if (existing.attestationId !== args.attestationId) {
+				throw new Error(
+					"requestId already records a different result.",
+				);
+			}
+			return {
+				status: "Reused" as const,
+				clickId: existing._id,
+				readingId: attestation.readingId,
+				attestationId: args.attestationId,
+				deduplicated: true,
+			};
+		}
+		const clickId = await ctx.db.insert(
+			"visitorClicks",
+			visitorClickDocument({
+				requestId: args.requestId,
+				visitorId: args.visitorId,
+				segmentId: segment._id,
+				attestationId: args.attestationId,
+			}),
+		);
+		return {
+			status: "Reused" as const,
+			clickId,
+			readingId: attestation.readingId,
+			attestationId: args.attestationId,
+			deduplicated: false,
+		};
 	},
 });
 
@@ -530,38 +632,106 @@ export const persistResolvedClick = internalMutation({
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
-		resolution: grammaticalResolutionInputValidator,
+		occurrence: occurrenceAttestationInputValidator,
+		reading: readingValueValidator,
 		readingKey: v.string(),
+		dictionaryPlan: dictionaryPlanValidator,
 	},
-	returns: v.object({
-		clickId: v.id("visitorClicks"),
-		resolutionId: v.id("grammaticalResolutions"),
-		readingId: v.id("readings"),
-		resolvedContextId: v.id("resolvedContexts"),
-		contextId: v.id("visitorResolvedContexts"),
-		deduplicated: v.boolean(),
-	}),
+	returns: resolvedClickCommitValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
 		assertNonEmpty(args.readingKey, "readingKey");
-		const { sentence } = await requireClickableSegment(
+		const { segment: clickedSegment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
 			args.clickedSegmentIndex,
 		);
-
-		const memberIndices = args.resolution.memberSegmentIndices;
-		if (memberIndices.length === 0) {
+		const existingClick = await findClickByRequestId(ctx, args.requestId);
+		if (existingClick) {
+			assertMatchingRetry(existingClick, {
+				visitorId: args.visitorId,
+				segmentId: clickedSegment._id,
+			});
+			if (!existingClick.attestationId) {
+				throw new Error(
+					"requestId already records an unresolved click.",
+				);
+			}
+			const { value: occurrence } = await reconstructReusableAttestation(
+				ctx,
+				existingClick.attestationId,
+				args.clickedSegmentIndex,
+			);
+			const existingAttestation = await ctx.db.get(
+				existingClick.attestationId,
+			);
+			if (!existingAttestation)
+				throw new Error("Attestation does not exist.");
+			return {
+				status: "Reused" as const,
+				clickId: existingClick._id,
+				readingId: existingAttestation.readingId,
+				attestationId: existingClick.attestationId,
+				deduplicated: true,
+				occurrence,
+			};
+		}
+		const committedAttestationId =
+			clickedSegment.attestationMembership?.attestationId;
+		if (committedAttestationId) {
+			return recordClickAgainstCommittedAttestation(ctx, {
+				...args,
+				segmentId: clickedSegment._id,
+				attestationId: committedAttestationId,
+			});
+		}
+		if (
+			makeSurfaceId(
+				"de",
+				args.occurrence.attestation.surface as Surface<"de">,
+			) !== args.occurrence.surfaceKey
+		) {
 			throw new Error(
-				"A grammatical resolution needs at least one member Segment.",
+				"occurrence.surfaceKey does not match Attestation Surface identity.",
 			);
 		}
+		if (
+			readingFingerprint(args.reading as Reading<"de">) !==
+			args.readingKey
+		) {
+			throw new Error(
+				"readingKey does not match the selected Reading identity.",
+			);
+		}
+		if (
+			lemmaKeyFor(args.reading.lemma) !== args.occurrence.lemmaKey ||
+			lemmaKeyFor(args.occurrence.attestation.surface.lemma) !==
+				args.occurrence.lemmaKey
+		) {
+			throw new Error(
+				"Attestation Surface and Reading must share the proposed Lemma.",
+			);
+		}
+
+		const memberIndices = args.occurrence.memberSegmentIndices;
+		const attestedMembers = args.occurrence.attestation.members;
+		if (memberIndices.length === 0) {
+			throw new Error(
+				"An Attestation needs at least one member Segment.",
+			);
+		}
+		if (memberIndices.length !== attestedMembers.length) {
+			throw new Error(
+				"Attestation members must match member Segment indices.",
+			);
+		}
+		const members = [];
 		let previous = -1;
-		for (const index of memberIndices) {
+		for (const [memberPosition, index] of memberIndices.entries()) {
 			assertIndex(index, "memberSegmentIndex");
 			if (index <= previous) {
 				throw new Error(
-					"Resolution member Segment indices must be ordered and unique.",
+					"Attestation member Segment indices must be ordered and unique.",
 				);
 			}
 			const member = await ctx.db
@@ -572,107 +742,138 @@ export const persistResolvedClick = internalMutation({
 				.unique();
 			if (member?.kind !== "ResolvableText") {
 				throw new Error(
-					"Resolution members must refer to ResolvableText Segments.",
+					"Attestation members must refer to ResolvableText Segments.",
 				);
 			}
+			if (member.text !== attestedMembers[memberPosition]?.attested) {
+				throw new Error(
+					"Attestation member text must equal its Segment text.",
+				);
+			}
+			members.push(member);
 			previous = index;
 		}
 		if (!memberIndices.includes(args.clickedSegmentIndex)) {
 			throw new Error(
-				"The grammatical resolution must contain the clicked Segment.",
+				"The Attestation must contain the clicked Segment.",
 			);
 		}
-		const expectedResolutionKey = resolutionKeyFor(
-			sentence.segmentedSentenceId,
-			memberIndices,
+		const conflictingAttestationIds = [
+			...new Set(
+				members.flatMap((member) =>
+					member.attestationMembership
+						? [member.attestationMembership.attestationId]
+						: [],
+				),
+			),
+		];
+		if (conflictingAttestationIds.length > 0) {
+			return {
+				status: "MembershipConflict" as const,
+				code: "partialOverlap" as const,
+				message:
+					"Proposed Attestation members partially overlap committed membership.",
+				conflictingAttestationIds: conflictingAttestationIds.sort(),
+			};
+		}
+
+		const dictionaryCommit = await applyDumdictPlanInTransaction(
+			ctx,
+			args.dictionaryPlan,
 		);
-		if (args.resolution.resolutionKey !== expectedResolutionKey) {
+		if (dictionaryCommit.status === "conflict") {
+			return {
+				status: "DictionaryConflict" as const,
+				code: dictionaryCommit.code,
+				message:
+					"The Shared Demo Dictionary changed before this click committed.",
+				latestRevision: dictionaryCommit.latestRevision,
+			};
+		}
+
+		const [reading, surface, lemma] = await Promise.all([
+			ctx.db
+				.query("readings")
+				.withIndex("by_reading_key", (q) =>
+					q.eq("readingKey", args.readingKey),
+				)
+				.unique(),
+			ctx.db
+				.query("surfaces")
+				.withIndex("by_surface_key", (q) =>
+					q.eq("surfaceKey", args.occurrence.surfaceKey),
+				)
+				.unique(),
+			ctx.db
+				.query("lemmas")
+				.withIndex("by_lemma_key", (q) =>
+					q.eq("lemmaKey", args.occurrence.lemmaKey),
+				)
+				.unique(),
+		]);
+		if (!reading || !surface || !lemma) {
 			throw new Error(
-				"resolutionKey does not match the Segmented Sentence and members.",
+				"Canonical Lemma, Surface, and Reading must be committed first.",
+			);
+		}
+		if (reading.lemmaId !== lemma._id || surface.lemmaId !== lemma._id) {
+			throw new Error(
+				"Attestation Surface and Reading must share one Lemma.",
+			);
+		}
+		if (reading.emojiDescription !== args.reading.emojiDescription) {
+			throw new Error(
+				"Stored Reading does not match the selected Reading value.",
+			);
+		}
+		if (
+			lemmaKeyFor(args.occurrence.attestation.surface.lemma) !==
+			lemma.lemmaKey
+		) {
+			throw new Error(
+				"Attestation Surface Lemma does not match lemmaKey.",
 			);
 		}
 
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", args.readingKey),
-			)
-			.unique();
-		if (!reading)
-			throw new Error("Reading must be committed through Dumdict first.");
-		if (reading.lemmaKey !== args.resolution.lemmaKey) {
-			throw new Error(
-				"Reading and grammatical resolution must own the same Lemma.",
-			);
-		}
-
-		const existingResolution = await ctx.db
-			.query("grammaticalResolutions")
-			.withIndex("by_resolution_key", (q) =>
-				q.eq("resolutionKey", args.resolution.resolutionKey),
-			)
-			.unique();
-		let resolutionId: Id<"grammaticalResolutions">;
-		if (existingResolution) {
-			if (
-				existingResolution.sentenceId !== args.sentenceId ||
-				existingResolution.surfaceKey !== args.resolution.surfaceKey ||
-				existingResolution.lemmaKey !== args.resolution.lemmaKey ||
-				JSON.stringify(existingResolution.memberSegmentIndices) !==
-					JSON.stringify(memberIndices)
-			) {
-				throw new Error(
-					"resolutionKey collides with different grammatical data.",
-				);
-			}
-			resolutionId = existingResolution._id;
-		} else {
-			resolutionId = await ctx.db.insert("grammaticalResolutions", {
-				...args.resolution,
-				sentenceId: args.sentenceId,
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId: surface._id,
+			readingId: reading._id,
+			realizationCoverage:
+				args.occurrence.attestation.realizationCoverage,
+		});
+		for (const [memberPosition, member] of members.entries()) {
+			const attested = attestedMembers[memberPosition];
+			if (!attested)
+				throw new Error("Missing Attestation member evidence.");
+			await ctx.db.patch(member._id, {
+				attestationMembership: {
+					attestationId,
+					orthography: attested.orthography,
+				},
 			});
 		}
-
-		const contextKey = resolvedContextKeyFor(
-			sentence.segmentedSentenceId,
+		const clickId = await ctx.db.insert(
+			"visitorClicks",
+			visitorClickDocument({
+				requestId: args.requestId,
+				visitorId: args.visitorId,
+				segmentId: clickedSegment._id,
+				attestationId,
+			}),
+		);
+		const { value: occurrence } = await reconstructReusableAttestation(
+			ctx,
+			attestationId,
 			args.clickedSegmentIndex,
 		);
-		const existingContext = await ctx.db
-			.query("resolvedContexts")
-			.withIndex("by_context_key", (q) => q.eq("contextKey", contextKey))
-			.unique();
-		let resolvedContext: Doc<"resolvedContexts">;
-		if (existingContext) {
-			if (
-				existingContext.sentenceId !== args.sentenceId ||
-				existingContext.clickedSegmentIndex !==
-					args.clickedSegmentIndex ||
-				existingContext.resolutionId !== resolutionId ||
-				existingContext.readingId !== reading._id
-			) {
-				throw new Error(
-					"Resolved Segment Context key collides with a different resolution.",
-				);
-			}
-			resolvedContext = existingContext;
-		} else {
-			const resolvedContextId = await ctx.db.insert("resolvedContexts", {
-				contextKey,
-				sentenceId: args.sentenceId,
-				clickedSegmentIndex: args.clickedSegmentIndex,
-				resolutionId,
-				readingId: reading._id,
-				resolvedAt: Date.now(),
-			});
-			const inserted = await ctx.db.get(resolvedContextId);
-			if (!inserted) {
-				throw new Error(
-					"Resolved Segment Context could not be persisted.",
-				);
-			}
-			resolvedContext = inserted;
-		}
-		return recordResolvedVisitorClick(ctx, args, resolvedContext);
+		return {
+			status: "Committed" as const,
+			clickId,
+			readingId: reading._id,
+			attestationId,
+			deduplicated: false,
+			occurrence,
+		};
 	},
 });
 
@@ -697,14 +898,20 @@ export const getKnowledgeOwner = internalQuery({
 			.unique();
 		if (args.ownerKind === "Lemma") {
 			const lemma = await ctx.db
-				.query("dictionaryLemmas")
+				.query("lemmas")
 				.withIndex("by_lemma_key", (q) =>
 					q.eq("lemmaKey", args.ownerKey),
 				)
 				.unique();
 			return lemma
 				? {
-						owner: lemma.record.lemma,
+						owner: {
+							language: lemma.language,
+							family: lemma.family,
+							kind: lemma.kind,
+							canonicalForm: lemma.canonicalForm,
+							coreFeatures: lemma.coreFeatures,
+						},
 						...(accumulated
 							? { knowledge: accumulated.knowledge }
 							: {}),
@@ -717,9 +924,11 @@ export const getKnowledgeOwner = internalQuery({
 				q.eq("readingKey", args.ownerKey),
 			)
 			.unique();
-		return reading
+		if (!reading) return null;
+		const lemma = await ctx.db.get(reading.lemmaId);
+		return lemma
 			? {
-					owner: reading.entry.reading,
+					owner: readingValue(reading, lemma),
 					...(accumulated
 						? { knowledge: accumulated.knowledge }
 						: {}),
@@ -775,16 +984,13 @@ export const persistKnowledgeContribution = internalMutation({
 
 		if (args.ownerKind === "Lemma") {
 			const lemma = await ctx.db
-				.query("dictionaryLemmas")
+				.query("lemmas")
 				.withIndex("by_lemma_key", (q) =>
 					q.eq("lemmaKey", args.ownerKey),
 				)
 				.unique();
 			if (!lemma)
 				throw new Error("Knowledge owner Lemma does not exist.");
-			await ctx.db.patch(lemma._id, {
-				record: { ...lemma.record, knowledge: args.knowledge },
-			});
 		} else {
 			const reading = await ctx.db
 				.query("readings")
@@ -794,9 +1000,23 @@ export const persistKnowledgeContribution = internalMutation({
 				.unique();
 			if (!reading)
 				throw new Error("Knowledge owner Reading does not exist.");
-			await ctx.db.patch(reading._id, {
-				entry: { ...reading.entry, knowledge: args.knowledge },
-			});
+			const entry = await ctx.db
+				.query("readingEntries")
+				.withIndex("by_reading_id", (q) =>
+					q.eq("readingId", reading._id),
+				)
+				.unique();
+			if (entry) {
+				const record =
+					entry.record !== null &&
+					typeof entry.record === "object" &&
+					!Array.isArray(entry.record)
+						? entry.record
+						: {};
+				await ctx.db.patch(entry._id, {
+					record: { ...record, knowledge: args.knowledge },
+				});
+			}
 		}
 		const now = Date.now();
 		let accumulatedKnowledgeId: Id<"accumulatedKnowledge">;

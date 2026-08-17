@@ -1,4 +1,4 @@
-import { readingKeyFor } from "../convex/model/linguisticKeys";
+import { type Reading, readingFingerprint } from "dumling/reading";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -46,11 +46,14 @@ export function pruneReadingReferences(
 
 function readingKeyFromUnknown(value: unknown): string | null {
 	const reading = optionalRecord(value);
-	if (!reading || typeof reading.emojiDescription !== "string") return null;
-	return readingKeyFor({
-		lemma: reading.lemma,
+	const lemma = optionalRecord(reading?.lemma);
+	if (!reading || !lemma || typeof reading.emojiDescription !== "string") {
+		return null;
+	}
+	return readingFingerprint({
+		lemma,
 		emojiDescription: reading.emojiDescription,
-	});
+	} as Reading);
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {

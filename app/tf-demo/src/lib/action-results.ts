@@ -1,4 +1,4 @@
-import type { GenericId } from "convex/values";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export type SegmentKind =
 	| "ResolvableText"
@@ -15,7 +15,7 @@ export type SentenceSegmentView = {
 };
 
 export type SentenceView = {
-	readonly sentenceId: GenericId<"sentences">;
+	readonly sentenceId: Id<"sentences">;
 	readonly position: number;
 	readonly language: "de" | "he";
 	readonly stitchedText: string;
@@ -23,7 +23,7 @@ export type SentenceView = {
 	readonly segments: readonly SentenceSegmentView[];
 };
 
-export function parseSubmittedTextId(resultValue: unknown): GenericId<"texts"> {
+export function parseSubmittedTextId(resultValue: unknown): Id<"texts"> {
 	const result = requireRecord(resultValue, "Text submission result");
 	if (result.ok !== true) {
 		const error = optionalRecord(result.error);
@@ -36,7 +36,7 @@ export function parseSubmittedTextId(resultValue: unknown): GenericId<"texts"> {
 	if (typeof persisted.textId !== "string") {
 		throw new Error("Persisted submission has no Text identifier.");
 	}
-	return persisted.textId as GenericId<"texts">;
+	return persisted.textId as Id<"texts">;
 }
 
 type UnknownRecord = Record<string, unknown>;
@@ -61,7 +61,7 @@ export function parseSubmittedSentences(
 		if (typeof value !== "string") {
 			throw new Error("A persisted Sentence identifier is invalid.");
 		}
-		return value as GenericId<"sentences">;
+		return value as Id<"sentences">;
 	});
 	if (!Array.isArray(result.value)) {
 		throw new Error("Dumgen returned no segmentation decisions.");

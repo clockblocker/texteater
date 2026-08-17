@@ -1,14 +1,19 @@
 import { planAppendReadingAttestation } from "../core/plan-mutation";
 import { validateReadingPatchSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
-import type { AddAttestationRequest, MutationResult } from "../public";
+import type {
+	AddAttestationRequest,
+	DumdictMutationOptions,
+	MutationResult,
+} from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
+import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
-import { mutationResultFromCommit } from "./result-mapping";
 
 export async function addAttestation<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: AddAttestationRequest<L>,
+	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
 	assertLanguageMatches(options.language, request.reading.lemma.language);
 	const slice = await options.storage.loadReadingForPatch({
@@ -21,9 +26,5 @@ export async function addAttestation<L extends SupportedLanguage>(
 		return plan;
 	}
 
-	const commit = await options.storage.commitChanges({
-		baseRevision: plan.baseRevision,
-		changes: plan.changes,
-	});
-	return mutationResultFromCommit(plan, commit);
+	return applyPlan(options, plan, mutationOptions);
 }

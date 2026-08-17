@@ -12,8 +12,9 @@ grammatical identity; there is no separate opaque Lemma ID.
 _Avoid_: Linguistic Entry record, Lemma entry
 
 **Reading**:
-The learner-scoped semantic identity formed by exactly one Lemma and one Emoji
-Description. Several Readings may share the same Lemma.
+A foundational Dumling semantic value formed by exactly one Lemma and one Emoji
+Description. Dumdict supplies the learner or hosted-dictionary scope in which
+tuple equality applies; several Readings may share the same Lemma.
 _Avoid_: Meaning, Sense, Semantic Unit
 
 **Emoji Description**:
@@ -22,8 +23,9 @@ same Lemma. It participates in Reading identity.
 
 **Reading Entry**:
 The learner-facing note content and optional Reading Knowledge stored for one
-Reading. The Reading is its semantic identity; note content and Knowledge do
-not create a second semantic identity.
+Reading. Dumdict owns this record and its workflows, while Dumling owns the
+Reading value contract; note content and Knowledge do not create a second
+semantic identity.
 _Avoid_: Meaning Entry, dictionary sense
 
 **Surface Entry**:

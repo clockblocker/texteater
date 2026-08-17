@@ -2,9 +2,10 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 import {
-	grammaticalLanguageValidator,
 	knowledgeOwnerKindValidator,
 	languageValidator,
+	orthographyValidator,
+	realizationCoverageValidator,
 	segmentKindValidator,
 } from "./model/validators";
 
@@ -30,59 +31,67 @@ export default defineSchema({
 		index: v.number(),
 		kind: segmentKindValidator,
 		text: v.string(),
-	}).index("by_sentence_id_and_index", ["sentenceId", "index"]),
+		attestationMembership: v.optional(
+			v.object({
+				attestationId: v.id("attestations"),
+				orthography: orthographyValidator,
+			}),
+		),
+	})
+		.index("by_sentence_id_and_index", ["sentenceId", "index"])
+		.index("by_attestation_id", ["attestationMembership.attestationId"]),
 
-	grammaticalResolutions: defineTable({
-		resolutionKey: v.string(),
-		sentenceId: v.id("sentences"),
-		language: grammaticalLanguageValidator,
-		markedContext: v.string(),
-		memberSegmentIndices: v.array(v.number()),
-		attestation: v.any(),
-		surfaceKey: v.string(),
+	lemmas: defineTable({
 		lemmaKey: v.string(),
-	})
-		.index("by_resolution_key", ["resolutionKey"])
-		.index("by_sentence_id", ["sentenceId"])
-		.index("by_surface_key", ["surfaceKey"])
-		.index("by_lemma_key", ["lemmaKey"]),
+		language: languageValidator,
+		family: v.string(),
+		kind: v.string(),
+		canonicalForm: v.string(),
+		coreFeatures: v.any(),
+	}).index("by_lemma_key", ["lemmaKey"]),
 
-	resolvedContexts: defineTable({
-		contextKey: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-		resolutionId: v.id("grammaticalResolutions"),
-		readingId: v.id("readings"),
-		resolvedAt: v.number(),
+	surfaces: defineTable({
+		surfaceKey: v.string(),
+		lemmaId: v.id("lemmas"),
+		language: languageValidator,
+		normalizedSurface: v.string(),
+		spelling: v.union(v.literal("Canonical"), v.literal("Variant")),
+		surfaceKind: v.union(v.literal("Citation"), v.literal("Inflection")),
+		surfaceFeatures: v.any(),
+		inflectionalFeatures: v.optional(v.any()),
 	})
-		.index("by_context_key", ["contextKey"])
-		.index("by_reading_id", ["readingId"])
-		.index("by_sentence_id_and_clicked_segment_index", [
-			"sentenceId",
-			"clickedSegmentIndex",
-		]),
+		.index("by_surface_key", ["surfaceKey"])
+		.index("by_lemma_id", ["lemmaId"]),
 
 	dictionaryLemmas: defineTable({
-		lemmaKey: v.string(),
-		record: v.any(),
-	}).index("by_lemma_key", ["lemmaKey"]),
+		lemmaId: v.id("lemmas"),
+	}).index("by_lemma_id", ["lemmaId"]),
 
 	readings: defineTable({
 		readingKey: v.string(),
-		lemmaKey: v.string(),
+		lemmaId: v.id("lemmas"),
 		emojiDescription: v.string(),
-		entry: v.any(),
 	})
 		.index("by_reading_key", ["readingKey"])
-		.index("by_lemma_key", ["lemmaKey"]),
+		.index("by_lemma_id", ["lemmaId"]),
+
+	readingEntries: defineTable({
+		readingId: v.id("readings"),
+		record: v.any(),
+	}).index("by_reading_id", ["readingId"]),
 
 	ownedSurfaces: defineTable({
-		surfaceKey: v.string(),
-		lemmaKey: v.string(),
-		entry: v.any(),
+		surfaceId: v.id("surfaces"),
+		record: v.any(),
+	}).index("by_surface_id", ["surfaceId"]),
+
+	attestations: defineTable({
+		surfaceId: v.id("surfaces"),
+		readingId: v.id("readings"),
+		realizationCoverage: realizationCoverageValidator,
 	})
-		.index("by_surface_key", ["surfaceKey"])
-		.index("by_lemma_key", ["lemmaKey"]),
+		.index("by_surface_id", ["surfaceId"])
+		.index("by_reading_id", ["readingId"]),
 
 	pendingSemanticRelations: defineTable({
 		locatorKey: v.string(),
@@ -114,47 +123,15 @@ export default defineSchema({
 	visitorClicks: defineTable({
 		requestId: v.string(),
 		visitorId: v.string(),
-		sentenceId: v.id("sentences"),
-		clickedSegmentIndex: v.number(),
-		resolutionId: v.optional(v.id("grammaticalResolutions")),
-		resolvedContextId: v.optional(v.id("resolvedContexts")),
+		segmentId: v.id("segments"),
+		attestationId: v.optional(v.id("attestations")),
 		clickedAt: v.number(),
 	})
 		.index("by_request_id", ["requestId"])
-		.index("by_sentence_id", ["sentenceId"])
+		.index("by_segment_id", ["segmentId"])
+		.index("by_attestation_id", ["attestationId"])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
-		.index("by_visitor_id_and_sentence_id_and_clicked_segment_index", [
-			"visitorId",
-			"sentenceId",
-			"clickedSegmentIndex",
-		]),
-
-	visitorResolvedContexts: defineTable({
-		contextKey: v.string(),
-		visitorId: v.string(),
-		clickId: v.id("visitorClicks"),
-		resolvedContextId: v.optional(v.id("resolvedContexts")),
-		// Transitional fields for rows written before resolvedContexts existed.
-		sentenceId: v.optional(v.id("sentences")),
-		clickedSegmentIndex: v.optional(v.number()),
-		resolutionId: v.optional(v.id("grammaticalResolutions")),
-		readingId: v.optional(v.id("readings")),
-		resolvedAt: v.number(),
-	})
-		.index("by_context_key", ["contextKey"])
-		.index("by_click_id", ["clickId"])
-		.index("by_reading_id", ["readingId"])
-		.index("by_resolved_context_id", ["resolvedContextId"])
-		.index("by_visitor_id_and_resolved_at", ["visitorId", "resolvedAt"])
-		.index("by_sentence_id_and_clicked_segment_index", [
-			"sentenceId",
-			"clickedSegmentIndex",
-		])
-		.index("by_visitor_id_and_sentence_id_and_clicked_segment_index", [
-			"visitorId",
-			"sentenceId",
-			"clickedSegmentIndex",
-		]),
+		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"]),
 
 	dictionaryState: defineTable({
 		key: v.literal("global"),

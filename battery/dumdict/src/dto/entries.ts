@@ -1,6 +1,11 @@
 import type { LemmaKnowledge, ReadingKnowledge } from "dumrel";
-import type { Lemma, SupportedLanguage, Surface, SurfaceId } from "../dumling";
-import type { Reading } from "./reading";
+import type {
+	Lemma,
+	Reading,
+	SupportedLanguage,
+	Surface,
+	SurfaceId,
+} from "../dumling";
 
 export type LemmaRecord<L extends SupportedLanguage> = {
 	lemma: Lemma<L>;

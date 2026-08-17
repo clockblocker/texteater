@@ -2,14 +2,19 @@ import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
 import { validateNewNoteSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
-import type { AddNewNoteRequest, MutationResult } from "../public";
+import type {
+	AddNewNoteRequest,
+	DumdictMutationOptions,
+	MutationResult,
+} from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
+import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
-import { mutationResultFromCommit } from "./result-mapping";
 
 export async function addNewNote<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: AddNewNoteRequest<L>,
+	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
 	assertLanguageMatches(
 		options.language,
@@ -41,9 +46,5 @@ export async function addNewNote<L extends SupportedLanguage>(
 		return plan;
 	}
 
-	const commit = await options.storage.commitChanges({
-		baseRevision: plan.baseRevision,
-		changes: plan.changes,
-	});
-	return mutationResultFromCommit(plan, commit);
+	return applyPlan(options, plan, mutationOptions);
 }

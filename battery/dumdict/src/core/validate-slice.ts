@@ -1,3 +1,5 @@
+import { readingFingerprint } from "dumling";
+import { readingSchema } from "dumling/schema";
 import {
 	lemmaKnowledgeSchema,
 	pendingSemanticRelationSchema,
@@ -27,7 +29,7 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import { readingKey, sameLemma, sameReading } from "./identity";
+import { sameLemma, sameReading } from "./identity";
 
 function assertLanguage(
 	expected: SupportedLanguage,
@@ -65,9 +67,8 @@ function validateReading<L extends SupportedLanguage>(
 	expected: L,
 	reading: Reading<L>,
 ) {
+	readingSchema.parse(reading);
 	assertLanguage(expected, reading.lemma.language);
-	if (!reading.emojiDescription.trim())
-		throw new Error("Reading emoji description must not be empty.");
 	if (
 		reading.emojiDescription.trim().normalize("NFC") !==
 		reading.emojiDescription
@@ -128,7 +129,10 @@ function validatePendingRecord<L extends SupportedLanguage>(
 			"Pending Semantic Relation endpoints must use the same language.",
 		);
 	semanticRelationSchema.parse(record.locator.relation);
-	if (record.locator.sourceReadingKey !== readingKey(record.sourceReading))
+	if (
+		record.locator.sourceReadingKey !==
+		readingFingerprint(record.sourceReading)
+	)
 		throw new Error(
 			"Pending Semantic Relation locator has the wrong source Reading key.",
 		);

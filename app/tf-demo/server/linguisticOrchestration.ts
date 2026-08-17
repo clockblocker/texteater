@@ -1,11 +1,11 @@
 import {
 	applyDumdictKnowledgeChange,
+	type DumdictPlan,
 	type DumdictService,
 	dumling,
 	type Lemma,
 	type LemmaRecord,
 	makeSurfaceId,
-	type Reading,
 	type ReadingEntry,
 	type ReadingKnowledgeChange,
 	type StoreRevision,
@@ -18,20 +18,17 @@ import type {
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "dumgen";
+import { readingFingerprint } from "dumling";
+import { readingSchema } from "dumling/schema";
+import type { Reading } from "dumling/types";
 import {
 	type KnowledgeChange,
 	knowledgeChangeSchema,
 	type LemmaKnowledge,
 	type ReadingKnowledge,
-	readingReferenceSchema,
 } from "dumrel";
 
-import {
-	lemmaKeyFor,
-	readingKeyFor,
-	resolutionKeyFor,
-} from "../convex/model/linguisticKeys";
-import { attestationIdentityKey } from "./attestationIdentity";
+import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -59,26 +56,156 @@ export type ResolvedClickPersistence = {
 	readonly visitorId: string;
 	readonly sentenceId: string;
 	readonly clickedSegmentIndex: number;
-	readonly resolution: {
-		readonly resolutionKey: string;
-		readonly language: "de";
-		readonly markedContext: string;
+	readonly occurrence: {
 		readonly memberSegmentIndices: readonly number[];
-		readonly attestation: unknown;
+		readonly attestation: Extract<
+			GrammaticalResult<"de">,
+			{ decision: "Resolved" }
+		>["attestation"];
 		readonly surfaceKey: string;
 		readonly lemmaKey: string;
 	};
+	readonly reading: Reading<"de">;
 	readonly readingKey: string;
+	readonly dictionaryPlan: DumdictPlan<"de">;
 };
 
-export type ReusableResolvedContext = {
-	readonly resolvedContextId: string;
+export type ReusableAttestation = {
+	readonly attestationId: string;
 	readonly grammatical: Extract<
 		GrammaticalResult<"de">,
 		{ decision: "Resolved" }
 	>;
 	readonly reading: Reading<"de">;
 };
+
+export type RecordedClick =
+	| {
+			readonly status: "Unresolved";
+			readonly clickId: string;
+	  }
+	| {
+			readonly status: "Resolved";
+			readonly clickId: string;
+			readonly occurrence: ReusableAttestation;
+	  };
+
+export type UnresolvedClickCommit = {
+	readonly status: "Unresolved";
+	readonly clickId: string;
+	readonly deduplicated: boolean;
+};
+
+export type ReusedResolvedClickCommit = {
+	readonly status: "Reused";
+	readonly clickId: string;
+	readonly attestationId: string;
+	readonly readingId: string;
+	readonly deduplicated: boolean;
+};
+
+export type LateResolvedClickCommit = {
+	readonly status: "Reused";
+	readonly clickId: string;
+	readonly attestationId: string;
+	readonly readingId: string;
+	readonly deduplicated: boolean;
+	readonly occurrence: ReusableAttestation;
+};
+
+export type ResolvedClickCommit =
+	| {
+			readonly status: "Committed" | "Reused";
+			readonly clickId: string;
+			readonly attestationId: string;
+			readonly readingId: string;
+			readonly deduplicated: boolean;
+			readonly occurrence: ReusableAttestation;
+	  }
+	| {
+			readonly status: "MembershipConflict";
+			readonly code: "partialOverlap";
+			readonly message: string;
+			readonly conflictingAttestationIds: readonly string[];
+	  }
+	| {
+			readonly status: "DictionaryConflict";
+			readonly code: "revisionConflict" | "semanticPreconditionFailed";
+			readonly message: string;
+			readonly latestRevision?: StoreRevision;
+	  };
+
+type ResolvedGrammatical = Extract<
+	GrammaticalResult<"de">,
+	{ decision: "Resolved" }
+>;
+
+type NonResolvedGrammatical = Exclude<
+	GrammaticalResult<"de">,
+	{ decision: "Resolved" }
+>;
+
+type ReadingResolution = {
+	readonly decision: "Reuse" | "New";
+	readonly emojiDescription: string;
+};
+
+export type ResolveSegmentResult =
+	| {
+			readonly grammatical: ResolvedGrammatical;
+			readonly reading: Reading<"de">;
+			readonly reused: true;
+			readonly deduplicated: true;
+			readonly persisted: Extract<RecordedClick, { status: "Resolved" }>;
+	  }
+	| {
+			readonly grammatical: {
+				readonly decision: "Unresolved";
+				readonly language: "de";
+			};
+			readonly deduplicated: true;
+			readonly persisted: Extract<
+				RecordedClick,
+				{ status: "Unresolved" }
+			>;
+	  }
+	| {
+			readonly grammatical: ResolvedGrammatical;
+			readonly reading: Reading<"de">;
+			readonly reused: true;
+			readonly persisted: ReusedResolvedClickCommit;
+	  }
+	| {
+			readonly grammatical: ResolvedGrammatical;
+			readonly reading: Reading<"de">;
+			readonly reused: true;
+			readonly persisted: LateResolvedClickCommit;
+	  }
+	| {
+			readonly grammatical: NonResolvedGrammatical;
+			readonly persisted: UnresolvedClickCommit;
+	  }
+	| {
+			readonly grammatical: ResolvedGrammatical;
+			readonly readingResolution: ReadingResolution;
+			readonly reading: Reading<"de">;
+			readonly dictionaryPlan: DumdictPlan<"de">;
+			readonly persisted: Extract<
+				ResolvedClickCommit,
+				{ status: "MembershipConflict" | "DictionaryConflict" }
+			>;
+	  }
+	| {
+			readonly grammatical: ResolvedGrammatical;
+			readonly readingResolution: ReadingResolution;
+			readonly reading: Reading<"de">;
+			readonly dictionaryPlan: DumdictPlan<"de">;
+			readonly reused: boolean;
+			readonly persisted: Extract<
+				ResolvedClickCommit,
+				{ status: "Committed" | "Reused" }
+			>;
+	  };
 
 export type OrchestrationPersistence = {
 	persistSubmittedText(input: {
@@ -89,22 +216,27 @@ export type OrchestrationPersistence = {
 	getSentenceForResolution(input: {
 		readonly sentenceId: string;
 	}): Promise<PersistedSentence | null>;
-	findResolvedContext(input: {
+	findRecordedClick(
+		input: ResolveSegmentInput,
+	): Promise<RecordedClick | null>;
+	findAttestation(input: {
 		readonly sentenceId: string;
 		readonly clickedSegmentIndex: number;
-	}): Promise<ReusableResolvedContext | null>;
-	persistResolvedClick(input: ResolvedClickPersistence): Promise<unknown>;
+	}): Promise<ReusableAttestation | null>;
+	persistResolvedClick(
+		input: ResolvedClickPersistence,
+	): Promise<ResolvedClickCommit>;
 	persistReusedResolvedClick(
 		input: ResolveSegmentInput & {
-			readonly resolvedContextId: string;
+			readonly attestationId: string;
 		},
-	): Promise<unknown>;
-	persistUnresolvedClick?(input: {
+	): Promise<ReusedResolvedClickCommit>;
+	persistUnresolvedClick(input: {
 		readonly requestId: string;
 		readonly visitorId: string;
 		readonly sentenceId: string;
 		readonly clickedSegmentIndex: number;
-	}): Promise<unknown>;
+	}): Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 };
 
 export type SubmitTextInput = {
@@ -165,14 +297,35 @@ export function createTfDemoOrchestrator(options: {
 		return { ...segmentation, persisted };
 	}
 
-	async function resolveSegment(input: ResolveSegmentInput) {
+	async function resolveSegment(
+		input: ResolveSegmentInput,
+	): Promise<ResolveSegmentResult> {
 		assertNonEmpty(input.requestId, "requestId");
 		assertNonEmpty(input.visitorId, "visitorId");
 		assertNonEmpty(input.sentenceId, "sentenceId");
 		if (!Number.isSafeInteger(input.clickedSegmentIndex)) {
 			throw new TypeError("clickedSegmentIndex must be a safe integer.");
 		}
-		const reusable = await options.persistence.findResolvedContext({
+		const recorded = await options.persistence.findRecordedClick(input);
+		if (recorded) {
+			return recorded.status === "Resolved"
+				? {
+						grammatical: recorded.occurrence.grammatical,
+						reading: recorded.occurrence.reading,
+						reused: true as const,
+						deduplicated: true as const,
+						persisted: recorded,
+					}
+				: {
+						grammatical: {
+							decision: "Unresolved" as const,
+							language: "de" as const,
+						},
+						deduplicated: true as const,
+						persisted: recorded,
+					};
+		}
+		const reusable = await options.persistence.findAttestation({
 			sentenceId: input.sentenceId,
 			clickedSegmentIndex: input.clickedSegmentIndex,
 		});
@@ -180,7 +333,7 @@ export function createTfDemoOrchestrator(options: {
 			const persisted =
 				await options.persistence.persistReusedResolvedClick({
 					...input,
-					resolvedContextId: reusable.resolvedContextId,
+					attestationId: reusable.attestationId,
 				});
 			return {
 				grammatical: reusable.grammatical,
@@ -201,8 +354,17 @@ export function createTfDemoOrchestrator(options: {
 		});
 
 		if (grammatical.decision !== "Resolved") {
-			await options.persistence.persistUnresolvedClick?.(input);
-			return { grammatical };
+			const persisted =
+				await options.persistence.persistUnresolvedClick(input);
+			if (persisted.status === "Reused") {
+				return {
+					grammatical: persisted.occurrence.grammatical,
+					reading: persisted.occurrence.reading,
+					reused: true as const,
+					persisted,
+				};
+			}
+			return { grammatical, persisted };
 		}
 
 		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
@@ -217,76 +379,92 @@ export function createTfDemoOrchestrator(options: {
 				({ reading }) => reading.emojiDescription,
 			),
 		});
-		const reading = readingReferenceSchema.parse({
+		const reading = readingSchema.parse({
 			lemma,
 			emojiDescription: readingResolution.emojiDescription,
 		}) as Reading<"de">;
-		const attestationKey = attestationIdentityKey(stored);
-		const encounterAlreadyStored = storedReadings.candidates.some(
-			({ note, reading: candidate }) =>
-				candidate.emojiDescription === reading.emojiDescription &&
-				note.attestations.includes(attestationKey),
-		);
-
-		const dictionaryMutation =
-			readingResolution.decision === "Reuse" && encounterAlreadyStored
-				? {
-						status: "alreadyApplied" as const,
-						summary: {
-							message:
-								"Dumdict already stores this exact source attestation.",
-						},
-					}
-				: readingResolution.decision === "Reuse"
-					? await options.dictionary.addAttestation({
+		let dictionaryPlan: DumdictPlan<"de"> | undefined;
+		const applyPlan = async (plan: DumdictPlan<"de">) => {
+			if (dictionaryPlan) {
+				throw new Error(
+					"Dumdict produced more than one plan for one click.",
+				);
+			}
+			dictionaryPlan = plan;
+			return {
+				status: "committed" as const,
+				nextRevision: plan.baseRevision,
+			};
+		};
+		const dictionaryPlanning =
+			readingResolution.decision === "Reuse"
+				? await options.dictionary.ensureOwnedSurface(
+						{
 							reading,
-							attestation: attestationKey,
-						})
-					: await options.dictionary.addNewNote({
+							ownedSurface: {
+								surface: grammatical.attestation.surface,
+								note: emptyNote(),
+							},
+						},
+						{ applyPlan },
+					)
+				: await options.dictionary.addNewNote(
+						{
 							draft: {
 								reading,
-								note: emptyNoteWithAttestation(attestationKey),
+								note: emptyNote(),
 								ownedSurfaces: [
 									{
 										surface:
 											grammatical.attestation.surface,
-										note: emptyNoteWithAttestation(
-											attestationKey,
-										),
+										note: emptyNote(),
 									},
 								],
 							},
-						});
-		if (dictionaryMutation.status !== "alreadyApplied") {
-			assertDumdictMutationApplied(dictionaryMutation);
+						},
+						{ applyPlan },
+					);
+		assertDumdictMutationApplied(dictionaryPlanning);
+		if (!dictionaryPlan) {
+			throw new Error(
+				"Dumdict did not provide a plan for the resolved click.",
+			);
 		}
 
 		const surfaceKey = surfaceIdentityKey(grammatical.attestation.surface);
 		const readingKey = readingIdentityKey(reading);
-		const resolutionKey = resolutionIdentityKey(
-			stored.segmentedSentenceId,
-			grammatical,
-		);
 		const persisted = await options.persistence.persistResolvedClick({
 			...input,
-			resolution: {
-				resolutionKey,
-				language: "de",
-				markedContext: grammatical.markedContext,
+			occurrence: {
 				memberSegmentIndices:
 					grammatical.interaction.memberSegmentIndices,
 				attestation: grammatical.attestation,
 				surfaceKey,
 				lemmaKey,
 			},
+			reading,
 			readingKey,
+			dictionaryPlan,
 		});
+		if (
+			persisted.status === "MembershipConflict" ||
+			persisted.status === "DictionaryConflict"
+		) {
+			return {
+				grammatical,
+				readingResolution,
+				reading,
+				dictionaryPlan,
+				persisted,
+			};
+		}
 
 		return {
-			grammatical,
+			grammatical: persisted.occurrence.grammatical,
 			readingResolution,
-			reading,
-			dictionaryMutation,
+			reading: persisted.occurrence.reading,
+			dictionaryPlan,
+			reused: persisted.status === "Reused",
 			persisted,
 		};
 	}
@@ -332,9 +510,7 @@ export function applyValidatedKnowledgeContribution(input: {
 		return { change, knowledge: updated.knowledge ?? {} };
 	}
 
-	const reading = readingReferenceSchema.parse(
-		input.owner.reading,
-	) as Reading<"de">;
+	const reading = readingSchema.parse(input.owner.reading) as Reading<"de">;
 	const record = {
 		reading,
 		...(input.owner.knowledge === undefined
@@ -366,17 +542,7 @@ export function surfaceIdentityKey(surface: Surface<"de">): string {
 }
 
 export function readingIdentityKey(reading: Reading<"de">): string {
-	return readingKeyFor(reading);
-}
-
-function resolutionIdentityKey(
-	segmentedSentenceId: string,
-	grammatical: Extract<GrammaticalResult<"de">, { decision: "Resolved" }>,
-): string {
-	return resolutionKeyFor(
-		segmentedSentenceId,
-		grammatical.interaction.memberSegmentIndices,
-	);
+	return readingFingerprint(reading);
 }
 
 function parseGermanSentence(
@@ -432,10 +598,10 @@ function isSegmentKind(value: string): value is Segment["kind"] {
 	);
 }
 
-function emptyNoteWithAttestation(attestation: string) {
+function emptyNote() {
 	return {
 		attestedTranslations: [] as string[],
-		attestations: [attestation],
+		attestations: [] as string[],
 		notes: "",
 	};
 }

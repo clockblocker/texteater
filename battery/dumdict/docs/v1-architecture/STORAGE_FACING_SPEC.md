@@ -16,6 +16,16 @@ The adapter must apply every planned change atomically or return a conflict.
 It must not infer inverse edges, auto-resolve Unit Shadows, or remove other
 pending records.
 
+Every mutating service operation also accepts an optional `applyPlan` callback.
+Dumdict invokes it only after the usual language checks, storage-slice
+validation, and semantic planning. The callback receives a public readonly
+`DumdictPlan` containing the base revision and ordered changes, so a database
+adapter can apply it inside an existing host transaction together with related
+host writes. When no callback is supplied, Dumdict delegates to the storage
+port's `commitChanges` exactly as before. The selected adapter remains
+responsible for checking the revision and every precondition and for publishing
+neither dictionary nor host writes when it returns a conflict.
+
 ## Version 1 wire aggregate
 
 ```ts

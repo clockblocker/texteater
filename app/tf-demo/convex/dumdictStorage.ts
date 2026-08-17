@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { type Reading, readingFingerprint } from "dumling/reading";
 
 import {
 	internalMutation,
@@ -6,7 +7,13 @@ import {
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
-import { lemmaKeyFor, readingKeyFor } from "./model/linguisticKeys";
+import { lemmaKeyFor } from "./model/linguisticKeys";
+import {
+	lemmaValue,
+	readingValue,
+	surfaceValue,
+} from "./model/occurrenceAttestations";
+import { dumdictPlannedChangeValidator } from "./model/validators";
 
 const STATE_KEY = "global" as const;
 const MAX_PLANNED_CHANGES = 50;
@@ -45,6 +52,12 @@ function requireString(value: unknown, context: string): string {
 	return value;
 }
 
+function withoutKeys(record: AnyRecord, keys: readonly string[]): AnyRecord {
+	const result = { ...record };
+	for (const key of keys) delete result[key];
+	return result;
+}
+
 function pendingLocatorKey(recordValue: unknown): string {
 	const record = requireRecord(recordValue, "Pending Semantic Relation");
 	const locator = requireRecord(
@@ -58,15 +71,25 @@ function pendingLocatorKey(recordValue: unknown): string {
 	]);
 }
 
-async function findLemma(ctx: ServerCtx, lemma: unknown) {
+async function findCanonicalLemma(ctx: ServerCtx, lemma: unknown) {
 	return ctx.db
-		.query("dictionaryLemmas")
+		.query("lemmas")
 		.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKeyFor(lemma)))
 		.unique();
 }
 
-async function findReading(ctx: ServerCtx, readingValue: unknown) {
-	const reading = requireRecord(readingValue, "Reading");
+async function findLemma(ctx: ServerCtx, lemma: unknown) {
+	const canonical = await findCanonicalLemma(ctx, lemma);
+	if (!canonical) return null;
+	const dictionary = await ctx.db
+		.query("dictionaryLemmas")
+		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+		.unique();
+	return dictionary ? { canonical, dictionary } : null;
+}
+
+async function findCanonicalReading(ctx: ServerCtx, readingInput: unknown) {
+	const reading = requireRecord(readingInput, "Reading");
 	const emojiDescription = requireString(
 		reading.emojiDescription,
 		"Reading emojiDescription",
@@ -76,17 +99,66 @@ async function findReading(ctx: ServerCtx, readingValue: unknown) {
 		.withIndex("by_reading_key", (q) =>
 			q.eq(
 				"readingKey",
-				readingKeyFor({ lemma: reading.lemma, emojiDescription }),
+				readingFingerprint({
+					lemma: reading.lemma,
+					emojiDescription,
+				} as Reading),
 			),
 		)
 		.unique();
 }
 
-async function findSurface(ctx: ServerCtx, surfaceKey: string) {
+async function findReading(ctx: ServerCtx, readingInput: unknown) {
+	const canonical = await findCanonicalReading(ctx, readingInput);
+	if (!canonical) return null;
+	const [entry, lemma] = await Promise.all([
+		ctx.db
+			.query("readingEntries")
+			.withIndex("by_reading_id", (q) => q.eq("readingId", canonical._id))
+			.unique(),
+		ctx.db.get(canonical.lemmaId),
+	]);
+	if (!entry || !lemma) return null;
+	return {
+		...canonical,
+		entry: {
+			...requireRecord(entry.record, "Reading Entry record"),
+			reading: readingValue(canonical, lemma),
+			attestations: [],
+		},
+		entryId: entry._id,
+	};
+}
+
+async function findCanonicalSurface(ctx: ServerCtx, surfaceKey: string) {
 	return ctx.db
-		.query("ownedSurfaces")
+		.query("surfaces")
 		.withIndex("by_surface_key", (q) => q.eq("surfaceKey", surfaceKey))
 		.unique();
+}
+
+async function findSurface(ctx: ServerCtx, surfaceKey: string) {
+	const canonical = await findCanonicalSurface(ctx, surfaceKey);
+	if (!canonical) return null;
+	const [entry, lemma] = await Promise.all([
+		ctx.db
+			.query("ownedSurfaces")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", canonical._id))
+			.unique(),
+		ctx.db.get(canonical.lemmaId),
+	]);
+	if (!entry || !lemma) return null;
+	return {
+		...canonical,
+		entry: {
+			...requireRecord(entry.record, "Owned Surface record"),
+			id: canonical.surfaceKey,
+			ownerLemma: lemmaValue(lemma),
+			surface: surfaceValue(canonical, lemma),
+			attestations: [],
+		},
+		entryId: entry._id,
+	};
 }
 
 async function findPending(ctx: ServerCtx, record: unknown) {
@@ -108,25 +180,55 @@ export const findDumdictStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
 	returns: v.object({ revision: v.string(), candidates: v.array(v.any()) }),
 	handler: async (ctx, { lemmaKey }) => {
-		const [revision, lemma, readings] = await Promise.all([
+		const [revision, lemma] = await Promise.all([
 			currentRevision(ctx),
 			ctx.db
-				.query("dictionaryLemmas")
+				.query("lemmas")
 				.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+				.unique(),
+		]);
+		if (!lemma) return { revision, candidates: [] };
+		const [dictionaryLemma, readings] = await Promise.all([
+			ctx.db
+				.query("dictionaryLemmas")
+				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 				.unique(),
 			ctx.db
 				.query("readings")
-				.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
 				.take(MAX_READING_CANDIDATES),
 		]);
+		if (!dictionaryLemma) return { revision, candidates: [] };
+		const entries = await Promise.all(
+			readings.map((reading) =>
+				ctx.db
+					.query("readingEntries")
+					.withIndex("by_reading_id", (q) =>
+						q.eq("readingId", reading._id),
+					)
+					.unique(),
+			),
+		);
 		return {
 			revision,
-			candidates: lemma
-				? readings.map(({ entry }) => ({
-						reading: entry,
-						lemma: lemma.record,
-					}))
-				: [],
+			candidates: readings.flatMap((reading, index) => {
+				const entry = entries[index];
+				return entry
+					? [
+							{
+								reading: {
+									...requireRecord(
+										entry.record,
+										"Reading Entry record",
+									),
+									reading: readingValue(reading, lemma),
+									attestations: [],
+								},
+								lemma: { lemma: lemmaValue(lemma) },
+							},
+						]
+					: [];
+			}),
 		};
 	},
 });
@@ -142,7 +244,7 @@ export const loadDumdictNewNoteContext = internalQuery({
 		const [revision, lemma, reading, surface] = await Promise.all([
 			currentRevision(ctx),
 			ctx.db
-				.query("dictionaryLemmas")
+				.query("lemmas")
 				.withIndex("by_lemma_key", (q) =>
 					q.eq("lemmaKey", args.lemmaKey),
 				)
@@ -155,18 +257,73 @@ export const loadDumdictNewNoteContext = internalQuery({
 				.unique(),
 			args.surfaceKey
 				? ctx.db
-						.query("ownedSurfaces")
+						.query("surfaces")
 						.withIndex("by_surface_key", (q) =>
 							q.eq("surfaceKey", args.surfaceKey as string),
 						)
 						.unique()
 				: null,
 		]);
+		const [dictionaryLemma, readingEntry, surfaceEntry] = await Promise.all(
+			[
+				lemma
+					? ctx.db
+							.query("dictionaryLemmas")
+							.withIndex("by_lemma_id", (q) =>
+								q.eq("lemmaId", lemma._id),
+							)
+							.unique()
+					: null,
+				reading
+					? ctx.db
+							.query("readingEntries")
+							.withIndex("by_reading_id", (q) =>
+								q.eq("readingId", reading._id),
+							)
+							.unique()
+					: null,
+				surface
+					? ctx.db
+							.query("ownedSurfaces")
+							.withIndex("by_surface_id", (q) =>
+								q.eq("surfaceId", surface._id),
+							)
+							.unique()
+					: null,
+			],
+		);
 		return {
 			revision,
-			...(lemma ? { existingLemma: lemma.record } : {}),
-			...(reading ? { existingReading: reading.entry } : {}),
-			existingOwnedSurfaces: surface ? [surface.entry] : [],
+			...(lemma && dictionaryLemma
+				? { existingLemma: { lemma: lemmaValue(lemma) } }
+				: {}),
+			...(reading && readingEntry && lemma
+				? {
+						existingReading: {
+							...requireRecord(
+								readingEntry.record,
+								"Reading Entry record",
+							),
+							reading: readingValue(reading, lemma),
+							attestations: [],
+						},
+					}
+				: {}),
+			existingOwnedSurfaces:
+				surface && surfaceEntry && lemma
+					? [
+							{
+								...requireRecord(
+									surfaceEntry.record,
+									"Owned Surface record",
+								),
+								id: surface.surfaceKey,
+								ownerLemma: lemmaValue(lemma),
+								surface: surfaceValue(surface, lemma),
+								attestations: [],
+							},
+						]
+					: [],
 			explicitExistingReadingTargets: [],
 			existingPendingRelationsForProposedPendingTargets: [],
 		};
@@ -186,9 +343,31 @@ export const loadDumdictReadingForPatch = internalQuery({
 				)
 				.unique(),
 		]);
+		const [entry, lemma] = reading
+			? await Promise.all([
+					ctx.db
+						.query("readingEntries")
+						.withIndex("by_reading_id", (q) =>
+							q.eq("readingId", reading._id),
+						)
+						.unique(),
+					ctx.db.get(reading.lemmaId),
+				])
+			: [null, null];
 		return {
 			revision,
-			...(reading ? { reading: reading.entry } : {}),
+			...(reading && entry && lemma
+				? {
+						reading: {
+							...requireRecord(
+								entry.record,
+								"Reading Entry record",
+							),
+							reading: readingValue(reading, lemma),
+							attestations: [],
+						},
+					}
+				: {}),
 		};
 	},
 });
@@ -198,7 +377,6 @@ type PreflightState = {
 	readings: Map<string, boolean>;
 	surfaces: Map<string, boolean>;
 	pendingRelations: Map<string, boolean>;
-	readingAttestations: Map<string, Set<string>>;
 };
 
 function createPreflightState(): PreflightState {
@@ -207,19 +385,18 @@ function createPreflightState(): PreflightState {
 		readings: new Map(),
 		surfaces: new Map(),
 		pendingRelations: new Map(),
-		readingAttestations: new Map(),
 	};
 }
 
 function readingIdentityKey(value: unknown): string {
 	const reading = requireRecord(value, "Reading");
-	return readingKeyFor({
+	return readingFingerprint({
 		lemma: reading.lemma,
 		emojiDescription: requireString(
 			reading.emojiDescription,
 			"Reading emojiDescription",
 		),
-	});
+	} as Reading);
 }
 
 async function cachedPresence(
@@ -296,22 +473,8 @@ async function preconditionFails(
 			);
 		}
 		case "readingAttestationMissing": {
-			const key = readingIdentityKey(precondition.reading);
-			let attestations = shadow.readingAttestations.get(key);
-			if (!attestations) {
-				const reading = await findReading(ctx, precondition.reading);
-				attestations = new Set(
-					Array.isArray(reading?.entry.attestations)
-						? reading.entry.attestations.filter(
-								(value: unknown): value is string =>
-									typeof value === "string",
-							)
-						: [],
-				);
-				shadow.readingAttestations.set(key, attestations);
-			}
-			return attestations.has(
-				requireString(precondition.value, "attestation"),
+			throw new Error(
+				"tf-demo stores occurrence Attestations in its host graph, not in Dumdict Reading Entries.",
 			);
 		}
 		default:
@@ -322,7 +485,7 @@ async function preconditionFails(
 }
 
 async function advancePreflightState(
-	ctx: MutationCtx,
+	_ctx: MutationCtx,
 	changeValue: unknown,
 	shadow: PreflightState,
 ): Promise<void> {
@@ -337,17 +500,6 @@ async function advancePreflightState(
 			const entry = requireRecord(change.entry, "Reading Entry");
 			const key = readingIdentityKey(entry.reading);
 			shadow.readings.set(key, true);
-			shadow.readingAttestations.set(
-				key,
-				new Set(
-					Array.isArray(entry.attestations)
-						? entry.attestations.filter(
-								(value): value is string =>
-									typeof value === "string",
-							)
-						: [],
-				),
-			);
 			return;
 		}
 		case "createOwnedSurface": {
@@ -376,28 +528,14 @@ async function advancePreflightState(
 					`A Reading patch supports at most ${MAX_PATCH_OPS} operations.`,
 				);
 			}
-			const key = readingIdentityKey(change.reading);
-			let attestations = shadow.readingAttestations.get(key);
-			if (!attestations) {
-				const reading = await findReading(ctx, change.reading);
-				attestations = new Set(
-					Array.isArray(reading?.entry.attestations)
-						? reading.entry.attestations.filter(
-								(value: unknown): value is string =>
-									typeof value === "string",
-							)
-						: [],
-				);
-				shadow.readingAttestations.set(key, attestations);
-			}
 			for (const operationValue of change.ops) {
 				const operation = requireRecord(
 					operationValue,
 					"Reading patch operation",
 				);
 				if (operation.kind === "addAttestation") {
-					attestations.add(
-						requireString(operation.value, "Reading attestation"),
+					throw new Error(
+						"tf-demo stores occurrence Attestations in its host graph, not in Dumdict Reading Entries.",
 					);
 				} else if (operation.kind !== "applyKnowledgeChange") {
 					throw new Error(
@@ -443,9 +581,28 @@ async function applyChange(
 	switch (change.type) {
 		case "createLemma": {
 			const record = requireRecord(change.record, "Lemma Record");
-			const lemmaKey = lemmaKeyFor(record.lemma);
+			const lemma = requireRecord(record.lemma, "Lemma");
+			const lemmaKey = lemmaKeyFor(lemma);
 			if (await findLemma(ctx, record.lemma)) return false;
-			await ctx.db.insert("dictionaryLemmas", { lemmaKey, record });
+			const language = requireString(lemma.language, "Lemma language");
+			if (language !== "de" && language !== "he") {
+				throw new Error("Unsupported Lemma language.");
+			}
+			const canonical = await findCanonicalLemma(ctx, record.lemma);
+			const lemmaId =
+				canonical?._id ??
+				(await ctx.db.insert("lemmas", {
+					lemmaKey,
+					language,
+					family: requireString(lemma.family, "Lemma family"),
+					kind: requireString(lemma.kind, "Lemma kind"),
+					canonicalForm: requireString(
+						lemma.canonicalForm,
+						"Lemma canonicalForm",
+					),
+					coreFeatures: lemma.coreFeatures,
+				}));
+			await ctx.db.insert("dictionaryLemmas", { lemmaId });
 			await syncAccumulatedKnowledge(
 				ctx,
 				"Lemma",
@@ -461,22 +618,34 @@ async function applyChange(
 				reading.emojiDescription,
 				"Reading emojiDescription",
 			);
-			const lemmaKey = lemmaKeyFor(reading.lemma);
-			if (
-				!(await findLemma(ctx, reading.lemma)) ||
-				(await findReading(ctx, reading))
-			) {
+			const storedLemma = await findLemma(ctx, reading.lemma);
+			if (!storedLemma || (await findReading(ctx, reading))) {
 				return false;
 			}
-			const readingKey = readingKeyFor({
+			const readingKey = readingFingerprint({
 				lemma: reading.lemma,
 				emojiDescription,
-			});
-			await ctx.db.insert("readings", {
-				readingKey,
-				lemmaKey,
-				emojiDescription,
-				entry,
+			} as Reading);
+			const canonical = await findCanonicalReading(ctx, reading);
+			if (
+				canonical &&
+				(canonical.lemmaId !== storedLemma.canonical._id ||
+					canonical.emojiDescription !== emojiDescription)
+			) {
+				throw new Error(
+					"Canonical Reading does not match its dictionary proposal.",
+				);
+			}
+			const readingId =
+				canonical?._id ??
+				(await ctx.db.insert("readings", {
+					readingKey,
+					lemmaId: storedLemma.canonical._id,
+					emojiDescription,
+				}));
+			await ctx.db.insert("readingEntries", {
+				readingId,
+				record: withoutKeys(entry, ["reading", "attestations"]),
 			});
 			await syncAccumulatedKnowledge(
 				ctx,
@@ -489,16 +658,66 @@ async function applyChange(
 		case "createOwnedSurface": {
 			const entry = requireRecord(change.entry, "Surface Entry");
 			const surfaceKey = requireString(entry.id, "Surface Entry id");
-			if (
-				!(await findLemma(ctx, entry.ownerLemma)) ||
-				(await findSurface(ctx, surfaceKey))
-			) {
+			const storedLemma = await findLemma(ctx, entry.ownerLemma);
+			if (!storedLemma || (await findSurface(ctx, surfaceKey))) {
 				return false;
 			}
+			const surface = requireRecord(entry.surface, "Owned Surface value");
+			const language = requireString(
+				surface.language,
+				"Surface language",
+			);
+			if (language !== "de" && language !== "he") {
+				throw new Error("Unsupported Surface language.");
+			}
+			const spelling = requireString(
+				surface.spelling,
+				"Surface spelling",
+			);
+			if (spelling !== "Canonical" && spelling !== "Variant") {
+				throw new Error("Unsupported Surface spelling.");
+			}
+			const surfaceKind = requireString(
+				surface.surfaceKind,
+				"Surface kind",
+			);
+			if (surfaceKind !== "Citation" && surfaceKind !== "Inflection") {
+				throw new Error("Unsupported Surface kind.");
+			}
+			const canonical = await findCanonicalSurface(ctx, surfaceKey);
+			if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
+				throw new Error(
+					"Canonical Surface does not match its dictionary proposal.",
+				);
+			}
+			const surfaceId =
+				canonical?._id ??
+				(await ctx.db.insert("surfaces", {
+					surfaceKey,
+					lemmaId: storedLemma.canonical._id,
+					language,
+					normalizedSurface: requireString(
+						surface.normalizedSurface,
+						"normalizedSurface",
+					),
+					spelling,
+					surfaceKind,
+					surfaceFeatures: surface.surfaceFeatures,
+					...(surface.inflectionalFeatures === undefined
+						? {}
+						: {
+								inflectionalFeatures:
+									surface.inflectionalFeatures,
+							}),
+				}));
 			await ctx.db.insert("ownedSurfaces", {
-				surfaceKey,
-				lemmaKey: lemmaKeyFor(entry.ownerLemma),
-				entry,
+				surfaceId,
+				record: withoutKeys(entry, [
+					"id",
+					"ownerLemma",
+					"surface",
+					"attestations",
+				]),
 			});
 			return true;
 		}
@@ -513,21 +732,19 @@ async function applyChange(
 					`A Reading patch supports at most ${MAX_PATCH_OPS} operations.`,
 				);
 			}
-			let entry = stored.entry;
+			const entry: AnyRecord = requireRecord(
+				stored.entry,
+				"Stored Reading Entry",
+			);
 			for (const operationValue of change.ops) {
 				const operation = requireRecord(
 					operationValue,
 					"Reading patch operation",
 				);
 				if (operation.kind === "addAttestation") {
-					const value = requireString(
-						operation.value,
-						"Reading attestation",
+					throw new Error(
+						"tf-demo stores occurrence Attestations in its host graph, not in Dumdict Reading Entries.",
 					);
-					entry = {
-						...entry,
-						attestations: [...entry.attestations, value],
-					};
 				} else if (operation.kind === "applyKnowledgeChange") {
 					throw new Error(
 						"Dumdict Reading knowledge patches must be validated in the Node action and persisted through persistKnowledgeContribution.",
@@ -538,7 +755,9 @@ async function applyChange(
 					);
 				}
 			}
-			await ctx.db.patch(stored._id, { entry });
+			await ctx.db.patch(stored.entryId, {
+				record: withoutKeys(entry, ["reading", "attestations"]),
+			});
 			await syncAccumulatedKnowledge(
 				ctx,
 				"Reading",
@@ -607,63 +826,72 @@ const commitResultValidator = v.union(
 	}),
 );
 
-export const commitDumdictChanges = internalMutation({
-	args: { baseRevision: v.string(), changes: v.array(v.any()) },
-	returns: commitResultValidator,
-	handler: async (ctx, args) => {
-		if (args.changes.length > MAX_PLANNED_CHANGES) {
+export async function applyDumdictPlanInTransaction(
+	ctx: MutationCtx,
+	args: { baseRevision: string; changes: readonly unknown[] },
+) {
+	if (args.changes.length > MAX_PLANNED_CHANGES) {
+		throw new Error(
+			`A commit supports at most ${MAX_PLANNED_CHANGES} planned changes.`,
+		);
+	}
+	const state = await getState(ctx);
+	const revision = revisionString(state?.revision ?? 0);
+	if (args.changes.length === 0) {
+		return { status: "committed" as const, nextRevision: revision };
+	}
+	if (args.baseRevision !== revision) {
+		return {
+			status: "conflict" as const,
+			code: "revisionConflict" as const,
+			latestRevision: revision,
+		};
+	}
+	const shadow = createPreflightState();
+	for (const changeValue of args.changes) {
+		const change = requireRecord(changeValue, "Dumdict planned change");
+		if (!Array.isArray(change.preconditions)) {
 			throw new Error(
-				`A commit supports at most ${MAX_PLANNED_CHANGES} planned changes.`,
+				"Every Dumdict planned change needs preconditions.",
 			);
 		}
-		const state = await getState(ctx);
-		const revision = revisionString(state?.revision ?? 0);
-		if (args.baseRevision !== revision) {
-			return {
-				status: "conflict" as const,
-				code: "revisionConflict" as const,
-				latestRevision: revision,
-			};
-		}
-		const shadow = createPreflightState();
-		for (const changeValue of args.changes) {
-			const change = requireRecord(changeValue, "Dumdict planned change");
-			if (!Array.isArray(change.preconditions)) {
-				throw new Error(
-					"Every Dumdict planned change needs preconditions.",
-				);
-			}
-			for (const precondition of change.preconditions) {
-				if (
-					await preconditionFails(ctx, precondition, revision, shadow)
-				) {
-					return {
-						status: "conflict" as const,
-						code: "semanticPreconditionFailed" as const,
-						latestRevision: revision,
-					};
-				}
-			}
-			await advancePreflightState(ctx, change, shadow);
-		}
-		for (const change of args.changes) {
-			if (!(await applyChange(ctx, change))) {
-				throw new Error(
-					"Dumdict preflight and transactional apply diverged.",
-				);
+		for (const precondition of change.preconditions) {
+			if (await preconditionFails(ctx, precondition, revision, shadow)) {
+				return {
+					status: "conflict" as const,
+					code: "semanticPreconditionFailed" as const,
+					latestRevision: revision,
+				};
 			}
 		}
+		await advancePreflightState(ctx, change, shadow);
+	}
+	for (const change of args.changes) {
+		if (!(await applyChange(ctx, change))) {
+			throw new Error(
+				"Dumdict preflight and transactional apply diverged.",
+			);
+		}
+	}
 
-		const nextNumber = (state?.revision ?? 0) + 1;
-		if (state) await ctx.db.patch(state._id, { revision: nextNumber });
-		else
-			await ctx.db.insert("dictionaryState", {
-				key: STATE_KEY,
-				revision: nextNumber,
-			});
-		return {
-			status: "committed" as const,
-			nextRevision: revisionString(nextNumber),
-		};
+	const nextNumber = (state?.revision ?? 0) + 1;
+	if (state) await ctx.db.patch(state._id, { revision: nextNumber });
+	else
+		await ctx.db.insert("dictionaryState", {
+			key: STATE_KEY,
+			revision: nextNumber,
+		});
+	return {
+		status: "committed" as const,
+		nextRevision: revisionString(nextNumber),
+	};
+}
+
+export const commitDumdictChanges = internalMutation({
+	args: {
+		baseRevision: v.string(),
+		changes: v.array(dumdictPlannedChangeValidator),
 	},
+	returns: commitResultValidator,
+	handler: applyDumdictPlanInTransaction,
 });

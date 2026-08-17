@@ -16,7 +16,9 @@ planned-change protocol expected of production hosts. Tests cover:
   failures;
 - preservation of encounter translations;
 - slice validation, revision conflicts, and rollback after a late operation
-  fails with forward, inverse, and delete changes already staged.
+  fails with forward, inverse, and delete changes already staged;
+- host-composed plan application that rejects an exclusive host-state conflict
+  without publishing either dictionary or host changes.
 
 The generated README example is typechecked and its committed output is tested
 byte-for-byte.

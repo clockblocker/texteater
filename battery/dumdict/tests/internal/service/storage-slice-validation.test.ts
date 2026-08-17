@@ -68,4 +68,23 @@ describe("storage slice validation", () => {
 			validateNewNoteSlice("en", slice, englishSwimDraft),
 		).toThrow("existing Lemma does not match the draft identity");
 	});
+
+	test("rejects a Reading whose emoji description is not canonical", () => {
+		const slice = {
+			revision,
+			existingOwnedSurfaces: [],
+			explicitExistingReadingTargets: [],
+			existingPendingRelationsForProposedPendingTargets: [],
+		} satisfies NewNoteSlice<"en">;
+
+		expect(() =>
+			validateNewNoteSlice("en", slice, {
+				...englishSwimDraft,
+				reading: {
+					...englishSwimDraft.reading,
+					emojiDescription: "plain prose",
+				},
+			}),
+		).toThrow();
+	});
 });

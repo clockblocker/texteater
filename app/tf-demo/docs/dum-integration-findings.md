@@ -16,10 +16,11 @@ The real German click chain composes for the first vertical slice:
 3. A real `createDumdictService({ language: "de", storage })` consults existing
    Readings through an internal Convex query.
 4. `resolve.reading("de", ...)` reuses or drafts a Reading.
-5. Dumdict plans `addAttestation` or `addNewNote`; the Convex storage adapter
-   commits those planned changes in one mutation.
-6. A separate mutation persists the universal Resolved Segment Context and a
-   Visitor-owned Click reference to it.
+5. Dumdict plans `addNewNote` or `ensureOwnedSurface` through its public
+   host-composable `applyPlan` callback without committing yet.
+6. One Convex mutation preflights exclusive Segment membership, applies or
+   discards that validated plan, persists or reuses the occurrence Attestation,
+   claims every member, and records the Visitor Click.
 
 Knowledge application also composes when the caller supplies a Dumrel
 `KnowledgeChange`: the action validates it with `knowledgeChangeSchema`, applies
@@ -59,19 +60,17 @@ on the global grammatical resolution. Dumdict receives the exactly reconstructed
 Stitched Text as its string encounter evidence. No lossy conversion is presented
 as a Dumling Attestation.
 
-### DUMDICT-2: Reading identity has no public key operation
+### DUMDICT-2: Resolved — Reading identity is public in Dumling
 
-Reproduction path:
+The former integration gap was:
 
-- `battery/dumdict/src/core/identity.ts` defines `readingKey`, but
-  `battery/dumdict/src/index.ts` does not export it.
-- Dumdict's public surface exposes `makeSurfaceId`, but no equivalent Reading
-  identity encoder.
+- Dumdict privately defined `readingKey` without exporting it.
+- tf-demo duplicated its stable JSON algorithm for indexed Convex lookup.
 
-Workaround in tf-demo: `convex/model/linguisticKeys.ts` reproduces Dumdict's
-stable JSON identity algorithm so indexed Convex reads agree with Dumdict's
-equality. This is deliberately visible as host-owned integration code. A public
-Dumdict Reading key/fingerprint would remove this duplicated invariant.
+Resolved by the canonical Dumling `Reading` DTO, `readingSchema`, and
+`readingFingerprint` operation. Dumdict and tf-demo now consume that operation;
+`convex/model/linguisticKeys.ts` no longer contains a Reading identity
+algorithm. The public fingerprint preserves the established indexed key bytes.
 
 ### DUMGEN-2: Knowledge Analysis is present in the catalog but absent publicly
 
@@ -91,25 +90,22 @@ It does not fabricate a definition, translation, relation, or private catalog
 import merely to make the click look enriched. The Reading identity and emoji
 remain presentable when accumulated Knowledge is empty.
 
-### DUMDICT-3: dictionary commit and click-graph commit cannot share a transaction
+### DUMDICT-3 resolved: host-composable plans share the click transaction
 
 Reproduction path:
 
-- `DumdictStoragePort.commitChanges` accepts only `{ baseRevision, changes }` in
-  `battery/dumdict/src/storage/commit.ts`.
-- The Visitor Click and universal Resolved Segment Context are application data
-  outside Dumdict's planned changes.
-- Convex mutations cannot be nested into one transaction from an action.
+- Dumdict exposes each validated immutable `DumdictPlan` to a host-provided
+  `applyPlan` callback.
+- tf-demo captures that plan in the Node action without calling the storage
+  commit port.
+- `persistResolvedClick` invokes the public-plan Convex applier directly inside
+  the same mutation as occurrence membership and Click writes.
 
-Workaround in tf-demo: the action first commits the real Dumdict plan, then calls
-the idempotent `persistResolvedClick` mutation. Each durable write is atomic, but
-the two writes are not jointly atomic. A failure between them can leave a valid
-global Reading without the Visitor Click. Once a Resolved Segment Context is
-stored, every Visitor reuses it before the Dumgen or Dumdict path and only a new
-Click is persisted. This makes the common retry/re-encounter shape safe and
-fast, but it does not make the two first-resolution transactions jointly
-atomic. A future host-composition contract would be needed for exactly-once
-atomic application across dictionary and interaction state.
+Result: free members commit dictionary and host records together. Exact full
+overlap discards the losing plan and records the Click against the committed
+winner. Partial or multi-occurrence overlap returns a Membership Conflict with
+no writes. A validated empty plan for an already-owned Surface remains
+host-composable without advancing the dictionary revision.
 
 ### DUMDICT-4: Dumdict-planned relation cleanup needs a wider Convex slice adapter
 
