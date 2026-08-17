@@ -50,6 +50,8 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"mact is an obvious typo for macht. The objectless final mit still completes that separable verb. Take mact + mit as Lexeme/VERB.",
 		"target-de-demo-predicative-cringe-click-cringe":
 			"cringe describes the subject after wirkt. It is an indeclinable borrowed property word here: ADJ, not NOUN.",
+		"target-de-demo-discourse-herzliche-gruesse-click-herzliche":
+			"Fixed farewell. Herzliche + Grüße. Take both.",
 		"target-de-demo-paired-sowohl-click-robust":
 			"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
 		"target-de-demo-idiom-kragen-click-der":

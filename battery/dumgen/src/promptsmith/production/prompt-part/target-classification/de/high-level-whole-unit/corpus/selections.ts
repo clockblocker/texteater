@@ -31,7 +31,7 @@ if (demonstrationSelection.ids.length > 35) {
 }
 
 /**
- * The 27 selected production cases render as 27 demonstrations: the promoted
+ * The 28 selected production cases render as 28 demonstrations: the promoted
  * Adaptive-5 set plus paired verbal and adjectival contrasts accepted by ADR 0007.
  * Historical profiles may select other cases in the laboratory.
  */
@@ -58,6 +58,7 @@ export const productionDemonstrationSelection = corpus.select([
 	"target-de-diagnostic-repeated-click-final-an",
 	"target-de-demo-typo-mitmachen-click-mit",
 	"target-de-demo-predicative-cringe-click-cringe",
+	"target-de-demo-discourse-herzliche-gruesse-click-herzliche",
 	"target-de-demo-paired-sowohl-click-robust",
 	"target-de-demo-idiom-kragen-click-der",
 	"target-de-demo-symbol-percent",

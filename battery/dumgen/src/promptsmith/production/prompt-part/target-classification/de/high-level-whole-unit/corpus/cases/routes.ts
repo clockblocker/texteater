@@ -245,6 +245,7 @@ const applicationCollocation = sentence([
 	"Antrag",
 ]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
+const demonstrationDiscourseFormula = sentence(["Herzliche", "Grüße"], "!");
 const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
 const demonstrationMatchedPairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "Einerseits" },
@@ -654,6 +655,13 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"The borrowed property word cringe is predicative after wirkt. Dumling's UD-inspired product inventory therefore uses the informative Lexeme/ADJ route rather than residual X or a nominal analysis.",
 			),
 		},
+		"target-de-demo-discourse-herzliche-gruesse-click-herzliche":
+			fixedPhraseme(
+				demonstrationDiscourseFormula,
+				0,
+				[0, 2],
+				"DiscourseFormula",
+			),
 		"target-de-route-phraseme-aphorism-click-wissen": fixedPhraseme(
 			aphorism,
 			0,
