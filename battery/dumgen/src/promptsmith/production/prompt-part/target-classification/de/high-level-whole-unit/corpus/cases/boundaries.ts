@@ -155,6 +155,41 @@ const demonstrationStatePassive = sentence([
 	"sind",
 	"geöffnet",
 ]);
+const demonstrationStatePassiveApproval = sentence([
+	"Nach",
+	"der",
+	"Endkontrolle",
+	"ist",
+	"der",
+	"Bauplan",
+	"vom",
+	"Architekten",
+	"freigegeben",
+]);
+const demonstrationStatePassiveDisplacement = sentence([
+	"Für",
+	"die",
+	"Rettungsübung",
+	"ist",
+	"die",
+	"Absperrung",
+	"von",
+	"den",
+	"Helfern",
+	"zwei",
+	"Meter",
+	"nach",
+	"Osten",
+	"versetzt",
+]);
+const demonstrationParticipialAdjective = sentence([
+	"Der",
+	"Brief",
+	"ist",
+	"ungelesen",
+	"und",
+	"unwichtig",
+]);
 const lexicalizedParticipialAdjective = sentence([
 	"Der",
 	"Mann",
@@ -483,6 +518,34 @@ const cases = {
 		[4, 6],
 		"Lexeme",
 		"VERB",
+	),
+	"target-de-demo-state-passive-bauplan-click-freigegeben": resolved(
+		demonstrationStatePassiveApproval,
+		16,
+		[6, 16],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-state-passive-absperrung-click-versetzt": resolved(
+		demonstrationStatePassiveDisplacement,
+		26,
+		[6, 26],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-participial-adjective-brief-click-ist": resolved(
+		demonstrationParticipialAdjective,
+		4,
+		[4],
+		"Lexeme",
+		"AUX",
+	),
+	"target-de-demo-participial-adjective-brief-click-ungelesen": resolved(
+		demonstrationParticipialAdjective,
+		6,
+		[6],
+		"Lexeme",
+		"ADJ",
 	),
 	"target-de-boundary-lexicalized-participle-click-ist": resolved(
 		lexicalizedParticipialAdjective,
@@ -965,6 +1028,24 @@ function boundaryEvidence(caseId: string): string {
 		return evidence(
 			IDS.participialBoundary,
 			"TIGER keeps productive sein plus Partizip II verbal when the corresponding werden-passive preserves the meaning. Dumgen therefore maps sind and geöffnet to one click-invariant Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("state-passive-bauplan")) {
+		return evidence(
+			IDS.participialBoundary,
+			"The named agent and preserved freigeben event keep this result state verbal under TIGER. Dumgen therefore maps ist and freigegeben to one Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("state-passive-absperrung")) {
+		return evidence(
+			IDS.participialBoundary,
+			"The named agent and directional distance preserve the versetzen event, so TIGER keeps the result state verbal. Dumgen therefore maps ist and versetzt to one Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("participial-adjective-brief")) {
+		return evidence(
+			IDS.participialBoundary,
+			"TIGER assigns an adjectival Partizip II property to ADJD. Dumgen therefore keeps copular ist separate from ungelesen, whose un- form and coordination with unwichtig support the adjective reading.",
 		);
 	}
 	if (caseId.includes("lexicalized-participle")) {

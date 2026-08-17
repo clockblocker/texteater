@@ -1,6 +1,10 @@
 import { defineGoldenCorpus } from "../../../../../../assembly";
 import { adaptiveDevelopmentCases } from "./cases/adaptive-development";
 import { boundaryCases } from "./cases/boundaries";
+import {
+	participleBenchmarkCases,
+	participleBenchmarkPairs,
+} from "./cases/participle-benchmark";
 import { robustnessCases } from "./cases/robustness";
 import { routeCases } from "./cases/routes";
 import { targetStimulusFingerprint } from "./fingerprints";
@@ -14,6 +18,7 @@ export const corpus = defineGoldenCorpus({
 	collections: {
 		routes: routeCases,
 		boundaries: boundaryCases,
+		participleBenchmark: participleBenchmarkCases,
 		robustness: robustnessCases,
 		adaptiveDevelopment: adaptiveDevelopmentCases,
 	},
@@ -23,3 +28,7 @@ export const corpus = defineGoldenCorpus({
 for (const [caseId, goldenCase] of Object.entries(corpus.cases)) {
 	assertCanonicalTargetClassificationCase({ caseId, ...goldenCase });
 }
+
+export const participleBenchmarkSelection =
+	corpus.collections.participleBenchmark;
+export { participleBenchmarkPairs };

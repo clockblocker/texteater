@@ -31,8 +31,8 @@ if (demonstrationSelection.ids.length > 35) {
 }
 
 /**
- * The 25 selected production cases render as 23 demonstrations: the promoted
- * Adaptive-5 set plus the paired state-passive cases accepted by ADR 0007.
+ * The 27 selected production cases render as 27 demonstrations: the promoted
+ * Adaptive-5 set plus paired verbal and adjectival contrasts accepted by ADR 0007.
  * Historical profiles may select other cases in the laboratory.
  */
 export const productionDemonstrationSelection = corpus.select([
@@ -50,6 +50,10 @@ export const productionDemonstrationSelection = corpus.select([
 	"target-de-demo-passive-briefe-click-werden",
 	"target-de-demo-state-passive-banken-click-sind",
 	"target-de-demo-state-passive-banken-click-geoeffnet",
+	"target-de-demo-state-passive-bauplan-click-freigegeben",
+	"target-de-demo-state-passive-absperrung-click-versetzt",
+	"target-de-demo-participial-adjective-brief-click-ist",
+	"target-de-demo-participial-adjective-brief-click-ungelesen",
 	"target-de-demo-repeated-anfangen-click-first-an",
 	"target-de-diagnostic-repeated-click-final-an",
 	"target-de-demo-typo-mitmachen-click-mit",
@@ -174,6 +178,9 @@ if (
 const evaluationSelection = frozenEvaluationCandidates.difference(
 	productionDemonstrationSelection,
 );
+
+/** The default frozen regression suite for the production prompt. */
+export const defaultEvaluationSelection = evaluationSelection;
 
 const diagnosticSelection = corpus.select([
 	"target-de-route-construction-fusion",

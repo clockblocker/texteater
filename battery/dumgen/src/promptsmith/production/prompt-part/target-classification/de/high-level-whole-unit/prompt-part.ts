@@ -97,15 +97,11 @@ Build a separable inherently reflexive verb conjunctively. After excluding every
 </reflexive_separable_membership>`;
 
 const participialBoundary = `<participial_boundary>
-Partizip I and Partizip II are forms, not automatic routes. Classify the occurrence before collecting members.
+Partizip I and Partizip II are forms, not automatic routes. Decide whether the occurrence is verbal or adjectival in context before collecting members.
 
-- An adjectivally used Partizip I is Lexeme/ADJ, including attributive lachende and adverbial lachend. It is not an analytic verb complex.
-- A Partizip II inside a perfect, werden-passive, sein-perfect, or perfect-passive realization is Lexeme/VERB and groups with every fixed realized auxiliary under the verbal-unit rule.
-- For sein + Partizip II, follow the conservative TIGER boundary. If a corresponding werden-passive or active paraphrase preserves the contextual meaning and verbal participants, treat it as a productive state passive: sein and the participle are one Lexeme/VERB target. Die Banken sind geöffnet corresponds to Die Banken werden geöffnet, so either click selects sind + geöffnet.
-- Use copula plus Lexeme/ADJ instead when the participial form has a lexicalized or idiomatized property meaning, or adjective behavior dominates. Evidence includes a meaning not preserved by the active/werden paraphrase, adjective-specific intensification or comparison, un- formation, coordination with an ordinary adjective, or use after bleiben or wirken. The copula and adjective are separate singleton targets.
-- Attributive or adverbial participles used as adjective modifiers remain Lexeme/ADJ. Substantivized participles remain Lexeme/NOUN.
+Adjectivally used participles are Lexeme/ADJ; substantivized participles are Lexeme/NOUN. Productive perfect and passive Partizip II belong to the Lexeme/VERB complex. Under the conservative TIGER boundary, productive sein-state-passives remain verbal, while established property readings are separate ADJ predicates with a separate AUX copula.
 
-Decide the construction once for the occurrence. Never let an auxiliary click produce a verbal complex while a click on that complex's participle produces an adjective; every member click of one productive state passive must return identical membership and route.
+Make this construction decision independently of the click. A click on any member of a verbal complex selects the complete VERB target; in an adjectival predicate, a copula click selects AUX and a participle click selects ADJ.
 </participial_boundary>`;
 
 const finalBoundaryRules = `<final_boundary_rules>

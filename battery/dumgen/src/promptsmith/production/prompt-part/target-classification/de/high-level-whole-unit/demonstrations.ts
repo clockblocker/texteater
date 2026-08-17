@@ -34,6 +34,14 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet. TIGER treats this as a state passive. Take both as one VERB target.",
 		"target-de-demo-state-passive-banken-click-geoeffnet":
 			"The marked participle belongs to the same productive state passive as sind. Take sind + geöffnet as the identical VERB target for either click.",
+		"target-de-demo-state-passive-bauplan-click-freigegeben":
+			"Architekt did freigeben. ist + freigegeben. VERB. Take both.",
+		"target-de-demo-state-passive-absperrung-click-versetzt":
+			"Helfer moved barrier. zwei Meter nach Osten. ist + versetzt. VERB. Take both.",
+		"target-de-demo-participial-adjective-brief-click-ist":
+			"ungelesen is property here. ist only copula. AUX alone.",
+		"target-de-demo-participial-adjective-brief-click-ungelesen":
+			"un- and unwichtig show adjective. ADJ alone. Leave ist out.",
 		"target-de-demo-repeated-anfangen-click-first-an":
 			"This first an introduces and governs der Kreuzung. It is an ADP, not the objectless final verb particle. Return this an alone.",
 		"target-de-diagnostic-repeated-click-final-an":

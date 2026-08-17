@@ -117,11 +117,22 @@ describe("Prompt Assembly", () => {
 				.update(targetPrompt.systemPrompt)
 				.digest("hex"),
 		).toBe(
-			"900764902b06815a081b4edbad7c438d6b8dcbfbe83c1d3e765bed030bc5365b",
+			"c16f03634b051574f076f5a12a775a6ac120b1b76f132bc7e8edc926ffc667d3",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
 		expect(targetPrompt.systemPrompt).toContain("<participial_boundary>");
-		expect(targetPrompt.systemPrompt).toContain("Die Banken sind geöffnet");
+		expect(targetPrompt.systemPrompt).toContain(
+			"Die Banken <target>sind</target> geöffnet",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Der Brief <target>ist</target> ungelesen und unwichtig",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Nach der Endkontrolle ist der Bauplan vom Architekten <target>freigegeben</target>",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Für die Rettungsübung ist die Absperrung von den Helfern zwei Meter nach Osten <target>versetzt</target>",
+		);
 		expect(targetPrompt.systemPrompt).toContain("Examples to follow:");
 	});
 
@@ -147,6 +158,52 @@ describe("Prompt Assembly", () => {
 				family: "Lexeme",
 				kind: "VERB",
 				memberSegmentIndices: [4, 6],
+			},
+		});
+		expect(
+			goldenCase("target-de-demo-state-passive-bauplan-click-freigegeben")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [6, 16],
+			},
+		});
+		expect(
+			goldenCase("target-de-demo-state-passive-absperrung-click-versetzt")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [6, 26],
+			},
+		});
+
+		expect(
+			goldenCase("target-de-demo-participial-adjective-brief-click-ist")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "AUX",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			goldenCase(
+				"target-de-demo-participial-adjective-brief-click-ungelesen",
+			).idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [6],
 			},
 		});
 
