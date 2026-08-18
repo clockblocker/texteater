@@ -12,7 +12,7 @@
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" bun run --cwd app/tf-demo dev",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",
-		"test": "bun test tooling && bun tooling/run-workspaces.ts test",
+		"test": "bun test ./tooling && bun tooling/run-workspaces.ts test",
 		"validate": "bun tooling/validate-repository.ts"
 	},
 	"devDependencies": {
