@@ -7,6 +7,8 @@ import {
 	orthographyValidator,
 	realizationCoverageValidator,
 	segmentKindValidator,
+	surfaceKindValidator,
+	surfaceSpellingValidator,
 } from "./model/validators";
 
 export default defineSchema({
@@ -55,8 +57,8 @@ export default defineSchema({
 		lemmaId: v.id("lemmas"),
 		language: languageValidator,
 		normalizedSurface: v.string(),
-		spelling: v.union(v.literal("Canonical"), v.literal("Variant")),
-		surfaceKind: v.union(v.literal("Citation"), v.literal("Inflection")),
+		spelling: surfaceSpellingValidator,
+		surfaceKind: surfaceKindValidator,
 		surfaceFeatures: v.any(),
 		inflectionalFeatures: v.optional(v.any()),
 	})

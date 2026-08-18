@@ -1,24 +1,32 @@
 import { expect, test } from "bun:test";
 import {
-	enabledSegmentationLanguageSchema,
-	grammaticalResolutionLanguageSchema,
-	segmentKindSchema,
-	segmentSchema,
-} from "dumgen/schema";
-import { semanticRelationSchema } from "dumrel";
+	enabledSegmentationLanguageValues,
+	grammaticalResolutionLanguageValues,
+	segmentKindValues,
+} from "dumgen/vocabulary";
+import {
+	memberOrthographyValues,
+	realizationCoverageValues,
+	surfaceKindValues,
+	surfaceSpellingValues,
+} from "dumling/vocabulary";
+import { semanticRelationValues } from "dumrel/vocabulary";
 
 import {
 	dictionaryPlanValidator,
 	dumdictPlannedChangeValidator,
 	grammaticalLanguageValidator,
 	languageValidator,
+	orthographyValidator,
+	realizationCoverageValidator,
 	recordedClickValidator,
 	reusableAttestationValidator,
 	segmentInputValidator,
 	segmentKindValidator,
 	semanticRelationValidator,
+	surfaceKindValidator,
+	surfaceSpellingValidator,
 } from "../convex/model/validators";
-import { zodOutputToConvex } from "../convex/model/zodConvex.js";
 
 function fieldType(
 	validator: { json: unknown },
@@ -30,6 +38,18 @@ function fieldType(
 	return json.value[field]?.fieldType ?? {};
 }
 
+function literalValues(validator: { json: unknown }): unknown[] {
+	const json = validator.json as {
+		type?: string;
+		value?: unknown | Array<{ type?: string; value?: unknown }>;
+	};
+	if (json.type === "literal") return [json.value];
+	if (json.type !== "union" || !Array.isArray(json.value)) return [];
+	return json.value.flatMap((member) =>
+		member.type === "literal" ? [member.value] : [],
+	);
+}
+
 test("Dumdict plans validate a discriminated change union", () => {
 	const changes = fieldType(dictionaryPlanValidator, "changes") as {
 		value?: { type?: string };
@@ -38,22 +58,49 @@ test("Dumdict plans validate a discriminated change union", () => {
 	expect(changes.value?.type).toBe("union");
 });
 
-test("shared Zod contracts generate the corresponding Convex validators", () => {
-	expect(languageValidator.json).toEqual(
-		zodOutputToConvex(enabledSegmentationLanguageSchema).json,
+test("Convex validators describe compact storage contracts", () => {
+	expect(literalValues(languageValidator)).toEqual(
+		enabledSegmentationLanguageValues,
 	);
-	expect(grammaticalLanguageValidator.json).toEqual(
-		zodOutputToConvex(grammaticalResolutionLanguageSchema).json,
+	expect(literalValues(grammaticalLanguageValidator)).toEqual(
+		grammaticalResolutionLanguageValues,
 	);
-	expect(segmentKindValidator.json).toEqual(
-		zodOutputToConvex(segmentKindSchema).json,
+	expect(literalValues(segmentKindValidator)).toEqual(segmentKindValues);
+	expect(literalValues(orthographyValidator)).toEqual(
+		memberOrthographyValues,
 	);
-	expect(segmentInputValidator.json).toEqual(
-		zodOutputToConvex(segmentSchema).json,
+	expect(literalValues(realizationCoverageValidator)).toEqual(
+		realizationCoverageValues,
 	);
-	expect(semanticRelationValidator.json).toEqual(
-		zodOutputToConvex(semanticRelationSchema).json,
+	expect(literalValues(surfaceSpellingValidator)).toEqual(
+		surfaceSpellingValues,
 	);
+	expect(literalValues(surfaceKindValidator)).toEqual(surfaceKindValues);
+	expect(fieldType(segmentInputValidator, "kind")).toEqual(
+		segmentKindValidator.json,
+	);
+	expect(fieldType(segmentInputValidator, "text")).toEqual({
+		type: "string",
+	});
+	expect(literalValues(semanticRelationValidator)).toEqual(
+		semanticRelationValues,
+	);
+});
+
+test("the persistence adapter does not load exhaustive domain schemas", async () => {
+	const storageSources = await Promise.all(
+		[
+			"../convex/model/validators.ts",
+			"../convex/dumdictStorage.ts",
+			"../convex/persistence.ts",
+		].map((path) => Bun.file(new URL(path, import.meta.url)).text()),
+	);
+	const storageSource = storageSources.join("\n");
+
+	expect(storageSource).not.toContain('from "dumgen/schema"');
+	expect(storageSource).not.toContain('from "dumdict/schema"');
+	expect(storageSource).not.toContain('from "dumdict"');
+	expect(storageSource).not.toContain("zodOutputToConvex");
 });
 
 test("Dumdict's Convex envelope stays compact", () => {

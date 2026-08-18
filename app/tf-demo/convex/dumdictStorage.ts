@@ -1,8 +1,4 @@
 import { v } from "convex/values";
-import {
-	commitChangesResultSchema,
-	getDumdictSchemasFor,
-} from "dumdict/schema";
 import { type Reading, readingFingerprint } from "dumling/reading";
 
 import {
@@ -18,13 +14,11 @@ import {
 	surfaceValue,
 } from "./model/occurrenceAttestations";
 import { dumdictPlannedChangeValidator } from "./model/validators";
-import { zodOutputToConvex } from "./model/zodConvex.js";
 
 const STATE_KEY = "global" as const;
 const MAX_PLANNED_CHANGES = 50;
 const MAX_PATCH_OPS = 50;
 const MAX_READING_CANDIDATES = 40;
-const germanDumdictSchemas = getDumdictSchemasFor("de");
 
 type ServerCtx = QueryCtx | MutationCtx;
 type AnyRecord = Record<string, unknown>;
@@ -820,35 +814,42 @@ async function applyChange(
 	}
 }
 
-const commitResultValidator = zodOutputToConvex(commitChangesResultSchema);
+const commitResultValidator = v.union(
+	v.object({ status: v.literal("committed"), nextRevision: v.string() }),
+	v.object({
+		status: v.literal("conflict"),
+		code: v.union(
+			v.literal("revisionConflict"),
+			v.literal("semanticPreconditionFailed"),
+		),
+		latestRevision: v.optional(v.string()),
+		message: v.optional(v.string()),
+	}),
+);
 
 export async function applyDumdictPlanInTransaction(
 	ctx: MutationCtx,
 	args: { baseRevision: string; changes: readonly unknown[] },
 ) {
-	const request = germanDumdictSchemas.commitChangesRequestSchema.parse(args);
-	if (request.changes.length > MAX_PLANNED_CHANGES) {
+	if (args.changes.length > MAX_PLANNED_CHANGES) {
 		throw new Error(
 			`A commit supports at most ${MAX_PLANNED_CHANGES} planned changes.`,
 		);
 	}
 	const state = await getState(ctx);
 	const revision = revisionString(state?.revision ?? 0);
-	if (request.changes.length === 0) {
-		return commitChangesResultSchema.parse({
-			status: "committed",
-			nextRevision: revision,
-		});
+	if (args.changes.length === 0) {
+		return { status: "committed" as const, nextRevision: revision };
 	}
-	if (request.baseRevision !== revision) {
-		return commitChangesResultSchema.parse({
-			status: "conflict",
+	if (args.baseRevision !== revision) {
+		return {
+			status: "conflict" as const,
 			code: "revisionConflict" as const,
 			latestRevision: revision,
-		});
+		};
 	}
 	const shadow = createPreflightState();
-	for (const changeValue of request.changes) {
+	for (const changeValue of args.changes) {
 		const change = requireRecord(changeValue, "Dumdict planned change");
 		if (!Array.isArray(change.preconditions)) {
 			throw new Error(
@@ -857,16 +858,16 @@ export async function applyDumdictPlanInTransaction(
 		}
 		for (const precondition of change.preconditions) {
 			if (await preconditionFails(ctx, precondition, revision, shadow)) {
-				return commitChangesResultSchema.parse({
-					status: "conflict",
+				return {
+					status: "conflict" as const,
 					code: "semanticPreconditionFailed" as const,
 					latestRevision: revision,
-				});
+				};
 			}
 		}
 		await advancePreflightState(ctx, change, shadow);
 	}
-	for (const change of request.changes) {
+	for (const change of args.changes) {
 		if (!(await applyChange(ctx, change))) {
 			throw new Error(
 				"Dumdict preflight and transactional apply diverged.",
@@ -881,10 +882,10 @@ export async function applyDumdictPlanInTransaction(
 			key: STATE_KEY,
 			revision: nextNumber,
 		});
-	return commitChangesResultSchema.parse({
-		status: "committed",
+	return {
+		status: "committed" as const,
 		nextRevision: revisionString(nextNumber),
-	});
+	};
 }
 
 export const commitDumdictChanges = internalMutation({

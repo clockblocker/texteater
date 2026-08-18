@@ -373,7 +373,7 @@ test("a post-plan host failure rolls back dictionary and occurrence writes", asy
 	expect(db.rows("visitorClicks")).toEqual([]);
 });
 
-test("a same-Lemma wrong surfaceKey is rejected without durable writes", async () => {
+test("an unknown surfaceKey is rejected without durable writes", async () => {
 	const db = new TransactionalDb(sourceSeed());
 	const before = db.snapshot();
 	const args = clickArgs(newReadingPlan());
@@ -383,7 +383,7 @@ test("a same-Lemma wrong surfaceKey is rejected without durable writes", async (
 	});
 
 	await expect(runTransaction(db, args)).rejects.toThrow(
-		"occurrence.surfaceKey does not match Attestation Surface identity.",
+		"Canonical Lemma, Surface, and Reading must be committed first.",
 	);
 	expect(db.snapshot()).toEqual(before);
 });

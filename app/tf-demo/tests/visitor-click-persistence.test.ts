@@ -52,13 +52,24 @@ test("a host-composed empty Dumdict plan does not advance revision", async () =>
 	expect(inserts).toBe(0);
 });
 
-test("canonical Dumdict parsing rejects a malformed compact envelope", async () => {
+test("the storage adapter rejects a malformed internal plan before writes", async () => {
 	let queries = 0;
+	let inserts = 0;
 	const ctx = {
 		db: {
 			query() {
 				queries += 1;
-				throw new Error("storage must not be reached");
+				return {
+					withIndex() {
+						return this;
+					},
+					unique() {
+						return null;
+					},
+				};
+			},
+			insert() {
+				inserts += 1;
 			},
 		},
 	};
@@ -75,7 +86,8 @@ test("canonical Dumdict parsing rejects a malformed compact envelope", async () 
 			],
 		}),
 	).rejects.toThrow();
-	expect(queries).toBe(0);
+	expect(queries).toBe(1);
+	expect(inserts).toBe(0);
 });
 
 test("stores occurrence membership and a minimal resolved Click", async () => {

@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"paths": {
 			"dumgen": ["./src/index.ts"],
-			"dumgen/schema": ["./src/schema.ts"]
+			"dumgen/schema": ["./src/schema.ts"],
+			"dumgen/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

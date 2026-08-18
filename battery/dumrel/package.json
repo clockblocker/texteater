@@ -10,19 +10,24 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"default": "./dist/index.js",
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
 		"./types": {
-			"default": "./dist/types.js",
 			"types": "./dist/types.d.ts",
-			"import": "./dist/types.js"
+			"import": "./dist/types.js",
+			"default": "./dist/types.js"
 		},
 		"./schema": {
-			"default": "./dist/schema.js",
 			"types": "./dist/schema.d.ts",
-			"import": "./dist/schema.js"
+			"import": "./dist/schema.js",
+			"default": "./dist/schema.js"
+		},
+		"./vocabulary": {
+			"types": "./dist/vocabulary.d.ts",
+			"import": "./dist/vocabulary.js",
+			"default": "./dist/vocabulary.js"
 		},
 		"./package.json": "./package.json"
 	},
@@ -39,7 +44,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && bun build src/index.ts src/types.ts src/schema.ts --outdir dist --format esm --target node --packages external",
+		"build:js": "rm -rf dist && bun build src/index.ts src/types.ts src/schema.ts src/vocabulary.ts --outdir dist --format esm --target node --packages external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",

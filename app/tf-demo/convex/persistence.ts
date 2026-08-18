@@ -1,5 +1,4 @@
 import { v } from "convex/values";
-import { makeSurfaceId, type Surface } from "dumdict";
 import { type Reading, readingFingerprint } from "dumling/reading";
 import type { Id } from "./_generated/dataModel";
 import {
@@ -17,12 +16,14 @@ import {
 import {
 	dictionaryPlanValidator,
 	knowledgeOwnerKindValidator,
+	languageValidator,
 	occurrenceAttestationInputValidator,
 	readingValueValidator,
 	recordedClickValidator,
 	resolvedClickCommitValidator,
 	reusableAttestationValidator,
 	reusedResolvedClickCommitValidator,
+	segmentKindValidator,
 	sentenceInputValidator,
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
@@ -401,17 +402,12 @@ export const getSentenceForResolution = internalQuery({
 			sentenceId: v.id("sentences"),
 			textId: v.id("texts"),
 			segmentedSentenceId: v.string(),
-			language: v.union(v.literal("de"), v.literal("he")),
+			language: languageValidator,
 			stitchedText: v.string(),
 			segments: v.array(
 				v.object({
 					index: v.number(),
-					kind: v.union(
-						v.literal("ResolvableText"),
-						v.literal("OpaqueText"),
-						v.literal("Whitespace"),
-						v.literal("Punctuation"),
-					),
+					kind: segmentKindValidator,
 					text: v.string(),
 				}),
 			),
@@ -684,16 +680,6 @@ export const persistResolvedClick = internalMutation({
 				segmentId: clickedSegment._id,
 				attestationId: committedAttestationId,
 			});
-		}
-		if (
-			makeSurfaceId(
-				"de",
-				args.occurrence.attestation.surface as Surface<"de">,
-			) !== args.occurrence.surfaceKey
-		) {
-			throw new Error(
-				"occurrence.surfaceKey does not match Attestation Surface identity.",
-			);
 		}
 		if (
 			readingFingerprint(args.reading as Reading<"de">) !==

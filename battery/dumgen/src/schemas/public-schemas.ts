@@ -2,22 +2,26 @@ import { schemasFor } from "dumling/schema";
 import type { Attestation } from "dumling/types";
 import { type ZodType, z } from "zod";
 import { DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS } from "../schema/de-grammatical-resolution-inventory";
+import {
+	enabledSegmentationLanguageValues,
+	grammaticalResolutionLanguageValues,
+	segmentKindValues,
+} from "../vocabulary";
 
-export const enabledSegmentationLanguageSchema = z.enum(["de", "he"]);
+export const enabledSegmentationLanguageSchema = z.enum(
+	enabledSegmentationLanguageValues,
+);
 
-export const grammaticalResolutionLanguageSchema = z.literal("de");
+export const grammaticalResolutionLanguageSchema = z.literal(
+	grammaticalResolutionLanguageValues[0],
+);
 
 export const segmentedSentenceIdSchema = z
 	.string()
 	.min(1)
 	.brand<"SegmentedSentenceId">();
 
-export const segmentKindSchema = z.enum([
-	"ResolvableText",
-	"OpaqueText",
-	"Whitespace",
-	"Punctuation",
-]);
+export const segmentKindSchema = z.enum(segmentKindValues);
 
 export const segmentSchema = z
 	.strictObject({

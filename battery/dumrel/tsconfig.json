@@ -4,7 +4,8 @@
 		"paths": {
 			"dumrel": ["./src/index.ts"],
 			"dumrel/schema": ["./src/schema.ts"],
-			"dumrel/types": ["./src/types.ts"]
+			"dumrel/types": ["./src/types.ts"],
+			"dumrel/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
 	"include": ["src/**/*.ts", "tests/**/*.ts"]

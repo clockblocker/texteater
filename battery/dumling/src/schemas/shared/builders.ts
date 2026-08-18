@@ -7,6 +7,10 @@ import type {
 } from "dumling/types";
 import { z } from "zod";
 import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
+import {
+	memberOrthographyValues,
+	realizationCoverageValues,
+} from "../../vocabulary.js";
 import { normalizedStringSchema } from "./normalization.js";
 import type { RawLanguageEntitySchemaTree } from "./schema-helper-types.js";
 
@@ -149,12 +153,12 @@ export function buildAttestationSchema<
 }): z.ZodType<AttestationShape<TSurface>> {
 	const memberSchema = z.strictObject({
 		attested: z.string().min(1),
-		orthography: z.enum(["Standard", "Typo"]),
+		orthography: z.enum(memberOrthographyValues),
 	});
 
 	return z.strictObject({
 		members: z.array(memberSchema).min(1),
-		realizationCoverage: z.enum(["Full", "Partial"]),
+		realizationCoverage: z.enum(realizationCoverageValues),
 		surface: options.surfaceSchema,
 	}) as unknown as z.ZodType<AttestationShape<TSurface>>;
 }

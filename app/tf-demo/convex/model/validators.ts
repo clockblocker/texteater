@@ -1,34 +1,48 @@
 import { v } from "convex/values";
 import {
-	enabledSegmentationLanguageSchema,
-	grammaticalResolutionLanguageSchema,
-	segmentKindSchema,
-	segmentSchema,
-} from "dumgen/schema";
-import { semanticRelationSchema } from "dumrel";
-import { zodOutputToConvex } from "./zodConvex.js";
+	enabledSegmentationLanguageValues,
+	grammaticalResolutionLanguageValues,
+	segmentKindValues,
+} from "dumgen/vocabulary";
+import {
+	memberOrthographyValues,
+	realizationCoverageValues,
+	surfaceKindValues,
+	surfaceSpellingValues,
+} from "dumling/vocabulary";
+import { semanticRelationValues } from "dumrel/vocabulary";
 
-export const languageValidator = zodOutputToConvex(
-	enabledSegmentationLanguageSchema,
+function literalUnion<const Value extends string>(
+	values: readonly [Value, ...Value[]],
+) {
+	const [first, ...rest] = values;
+	return v.union(v.literal(first), ...rest.map((value) => v.literal(value)));
+}
+
+export const languageValidator = literalUnion(
+	enabledSegmentationLanguageValues,
 );
 
-export const grammaticalLanguageValidator = zodOutputToConvex(
-	grammaticalResolutionLanguageSchema,
+export const grammaticalLanguageValidator = v.literal(
+	grammaticalResolutionLanguageValues[0],
 );
 
-export const segmentKindValidator = zodOutputToConvex(segmentKindSchema);
+export const segmentKindValidator = literalUnion(segmentKindValues);
 
-export const segmentInputValidator = zodOutputToConvex(segmentSchema);
+export const segmentInputValidator = v.object({
+	kind: segmentKindValidator,
+	text: v.string(),
+});
 
-export const orthographyValidator = v.union(
-	v.literal("Standard"),
-	v.literal("Typo"),
+export const orthographyValidator = literalUnion(memberOrthographyValues);
+
+export const realizationCoverageValidator = literalUnion(
+	realizationCoverageValues,
 );
 
-export const realizationCoverageValidator = v.union(
-	v.literal("Full"),
-	v.literal("Partial"),
-);
+export const surfaceSpellingValidator = literalUnion(surfaceSpellingValues);
+
+export const surfaceKindValidator = literalUnion(surfaceKindValues);
 
 export const lemmaValueValidator = v.object({
 	language: languageValidator,
@@ -41,8 +55,8 @@ export const lemmaValueValidator = v.object({
 export const surfaceValueValidator = v.object({
 	language: languageValidator,
 	normalizedSurface: v.string(),
-	spelling: v.union(v.literal("Canonical"), v.literal("Variant")),
-	surfaceKind: v.union(v.literal("Citation"), v.literal("Inflection")),
+	spelling: surfaceSpellingValidator,
+	surfaceKind: surfaceKindValidator,
 	surfaceFeatures: v.any(),
 	inflectionalFeatures: v.optional(v.any()),
 	lemma: lemmaValueValidator,
@@ -72,9 +86,7 @@ export const knowledgeOwnerKindValidator = v.union(
 	v.literal("Reading"),
 );
 
-export const semanticRelationValidator = zodOutputToConvex(
-	semanticRelationSchema,
-);
+export const semanticRelationValidator = literalUnion(semanticRelationValues);
 
 export const occurrenceAttestationInputValidator = v.object({
 	memberSegmentIndices: v.array(v.number()),
@@ -88,9 +100,8 @@ export const readingValueValidator = v.object({
 	emojiDescription: v.string(),
 });
 
-// Full conversion expands this union into megabytes of Convex function metadata.
-// Keep the transport envelope compact; dumdictStorage parses the canonical,
-// language-scoped Dumdict schema before applying any change.
+// The persistence envelope is intentionally structural. Domain validation happens
+// before this internal plan reaches storage; the transaction enforces DB invariants.
 export const dumdictPlannedChangeValidator = v.union(
 	v.object({
 		type: v.literal("createLemma"),

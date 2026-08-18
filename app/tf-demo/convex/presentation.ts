@@ -1,27 +1,24 @@
 import { v } from "convex/values";
 import { type Reading, readingFingerprint } from "dumling/reading";
 import type { SemanticRelation } from "dumrel";
+import { semanticRelationValues } from "dumrel/vocabulary";
 
 import { type QueryCtx, query } from "./_generated/server";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
+	grammaticalLanguageValidator,
+	languageValidator,
+	orthographyValidator,
+	realizationCoverageValidator,
 	segmentKindValidator,
 	semanticRelationValidator,
+	surfaceKindValidator,
+	surfaceSpellingValidator,
 } from "./model/validators";
 
 const MAX_VISITOR_ID_LENGTH = 200;
 const MAX_READING_HISTORY = 50;
 const MAX_RELATIONS_PER_NOTE = 50;
-
-const semanticRelationValues = [
-	"synonym",
-	"nearSynonym",
-	"antonym",
-	"hypernym",
-	"hyponym",
-	"meronym",
-	"holonym",
-] as const satisfies readonly SemanticRelation[];
 
 const languageBucketValidator = v.object({
 	language: v.string(),
@@ -52,8 +49,8 @@ const readingProjectionValidator = v.object({
 
 const surfaceProjectionValidator = v.object({
 	normalizedSurface: v.string(),
-	spelling: v.union(v.literal("Canonical"), v.literal("Variant")),
-	surfaceKind: v.union(v.literal("Citation"), v.literal("Inflection")),
+	spelling: surfaceSpellingValidator,
+	surfaceKind: surfaceKindValidator,
 	surfaceFeatures: v.array(featureValidator),
 	inflectionalFeatures: v.array(featureValidator),
 });
@@ -62,10 +59,10 @@ const attestationProjectionValidator = v.object({
 	members: v.array(
 		v.object({
 			attested: v.string(),
-			orthography: v.union(v.literal("Standard"), v.literal("Typo")),
+			orthography: orthographyValidator,
 		}),
 	),
-	realizationCoverage: v.union(v.literal("Full"), v.literal("Partial")),
+	realizationCoverage: realizationCoverageValidator,
 	surface: surfaceProjectionValidator,
 });
 
@@ -117,7 +114,7 @@ const presentationValidator = v.object({
 	}),
 	grammaticalResolution: v.object({
 		attestationId: v.id("attestations"),
-		language: v.literal("de"),
+		language: grammaticalLanguageValidator,
 		markedContext: v.string(),
 		memberSegmentIndices: v.array(v.number()),
 		attestation: attestationProjectionValidator,
@@ -129,7 +126,7 @@ const presentationValidator = v.object({
 	sentence: v.object({
 		sentenceId: v.id("sentences"),
 		position: v.number(),
-		language: v.union(v.literal("de"), v.literal("he")),
+		language: languageValidator,
 		stitchedText: v.string(),
 		sourceText: v.string(),
 		segments: v.array(

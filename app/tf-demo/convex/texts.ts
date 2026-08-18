@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { query } from "./_generated/server";
-import { segmentKindValidator } from "./model/validators";
+import { languageValidator, segmentKindValidator } from "./model/validators";
 
 const MAX_LIBRARY_TEXTS = 100;
 const MAX_SENTENCES_PER_TEXT = 9;
@@ -21,7 +21,7 @@ const textDetailValidator = v.object({
 		v.object({
 			sentenceId: v.id("sentences"),
 			position: v.number(),
-			language: v.union(v.literal("de"), v.literal("he")),
+			language: languageValidator,
 			stitchedText: v.string(),
 			segments: v.array(
 				v.object({
