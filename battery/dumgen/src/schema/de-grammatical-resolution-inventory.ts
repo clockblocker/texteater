@@ -57,7 +57,7 @@ export const DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS = {
 		],
 	},
 	Construction: {
-		enabled: ["Fusion", "PairedFrame"],
+		enabled: ["Fusion"],
 		notImplemented: [],
 	},
 } as const satisfies GermanRouteKindInventory;

@@ -87,6 +87,7 @@ export type RecordedClick =
 	| {
 			readonly status: "Resolved";
 			readonly clickId: string;
+			readonly readingId: string;
 			readonly occurrence: ReusableAttestation;
 	  };
 
@@ -251,6 +252,14 @@ export type ResolveSegmentInput = {
 	readonly clickedSegmentIndex: number;
 };
 
+export type ResolutionProgressObserver = {
+	grammarAvailable(input: {
+		readonly grammatical: ResolvedGrammatical;
+	}): Promise<void>;
+	readingAvailable(input: { readonly reading: Reading<"de"> }): Promise<void>;
+	committing(): Promise<void>;
+};
+
 export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
 
 /**
@@ -262,6 +271,7 @@ export function createTfDemoOrchestrator(options: {
 	readonly dumgen: Dumgen;
 	readonly dictionary: DumdictService<"de">;
 	readonly persistence: OrchestrationPersistence;
+	readonly observer?: ResolutionProgressObserver;
 }) {
 	async function submitText(input: SubmitTextInput) {
 		assertNonEmpty(input.submissionKey, "submissionKey");
@@ -308,6 +318,15 @@ export function createTfDemoOrchestrator(options: {
 		}
 		const recorded = await options.persistence.findRecordedClick(input);
 		if (recorded) {
+			if (recorded.status === "Resolved") {
+				await options.observer?.grammarAvailable({
+					grammatical: recorded.occurrence.grammatical,
+				});
+				await options.observer?.readingAvailable({
+					reading: recorded.occurrence.reading,
+				});
+				await options.observer?.committing();
+			}
 			return recorded.status === "Resolved"
 				? {
 						grammatical: recorded.occurrence.grammatical,
@@ -330,6 +349,13 @@ export function createTfDemoOrchestrator(options: {
 			clickedSegmentIndex: input.clickedSegmentIndex,
 		});
 		if (reusable) {
+			await options.observer?.grammarAvailable({
+				grammatical: reusable.grammatical,
+			});
+			await options.observer?.readingAvailable({
+				reading: reusable.reading,
+			});
+			await options.observer?.committing();
 			const persisted =
 				await options.persistence.persistReusedResolvedClick({
 					...input,
@@ -366,6 +392,7 @@ export function createTfDemoOrchestrator(options: {
 			}
 			return { grammatical, persisted };
 		}
+		await options.observer?.grammarAvailable({ grammatical });
 
 		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
 		const lemmaKey = lemmaIdentityKey(lemma);
@@ -383,6 +410,7 @@ export function createTfDemoOrchestrator(options: {
 			lemma,
 			emojiDescription: readingResolution.emojiDescription,
 		}) as Reading<"de">;
+		await options.observer?.readingAvailable({ reading });
 		let dictionaryPlan: DumdictPlan<"de"> | undefined;
 		const applyPlan = async (plan: DumdictPlan<"de">) => {
 			if (dictionaryPlan) {
@@ -433,6 +461,7 @@ export function createTfDemoOrchestrator(options: {
 
 		const surfaceKey = surfaceIdentityKey(grammatical.attestation.surface);
 		const readingKey = readingIdentityKey(reading);
+		await options.observer?.committing();
 		const persisted = await options.persistence.persistResolvedClick({
 			...input,
 			occurrence: {

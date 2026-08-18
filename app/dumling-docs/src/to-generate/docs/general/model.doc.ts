@@ -37,7 +37,7 @@ A citation surface uses \`surfaceKind: "Citation"\`. Every Surface also owns
 
 Marked properties of the resolved surface live in \`surfaceFeatures\`. For example, a historical citation or inflection can carry \`surfaceFeatures: { historicalStatus: "Archaic" }\`.
 
-Construction Lemmas are citation-only today, so \`Construction/Fusion\` and \`Construction/PairedFrame\` only appear under \`Surface<Citation>\` and never under \`Surface<Inflection>\`.
+Construction Lemmas are citation-only today, so \`Construction/Fusion\` only appears under \`Surface<Citation>\` and never under \`Surface<Inflection>\`. Multi-member Lexemes follow the surface policy of their whole-unit POS.
 
 An inflection surface uses \`surfaceKind: "Inflection"\` and adds \`inflectionalFeatures\`:
 

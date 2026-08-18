@@ -21,11 +21,12 @@ The operation is total: always resolve the supplied ADV occurrence. Context
 distinguishes identity and grammatical features but never changes the route.
 
 Do not reject a target because a homograph can be an adverbially used ADJ, PART,
-ADP, SCONJ, or a PairedFrame payload elsewhere. Those route distinctions were
-fixed upstream. Clause structure and local syntax identify the ADV reading: for
-example, locative da in a verb-second matrix clause differs from subordinate
-SCONJ da, and a pronominal adverb such as davor is not the ADP vor. Never move
-or split members to fit another route.
+ADP, or SCONJ elsewhere. Those route distinctions were fixed upstream. Fixed
+correlating units such as einerseits … andererseits and teils … teils are one
+ADV Lexeme with multiple ordered members. Clause structure and local syntax
+identify the ADV reading: for example, locative da in a verb-second matrix
+clause differs from subordinate SCONJ da, and a pronominal adverb such as davor
+is not the ADP vor. Never move or split members to fit another route.
 
 The application injects German route identity, Surface-to-Lemma linkage,
 normalized Surface, successful resolution, and Full realization coverage. Do
@@ -60,6 +61,10 @@ explicitly establishes the positive member of a degree contrast. Do not emit
 Inflection with a null Degree. Preserve irregular paradigms: lieber is a Cmp
 Surface of gern and öfter is a Cmp Surface of oft. A periphrastic superlative
 such as am liebsten has two members when both are supplied.
+
+Fixed correlating ADV Lexemes such as einerseits … andererseits and teils …
+teils are invariant and therefore use Citation. Their repeated or separated
+anchors remain distinct normalizedMembers in source order.
 
 surface.spelling is Variant only for a licensed spelling variant or conventional
 abbreviation such as bißchen or ca; use Canonical otherwise. surfaceFeatures is
@@ -108,7 +113,8 @@ feature merely because the Surface spelling differs from canonicalForm.
   agreement or position features on ADV.
 - A complete pronominal ADV is not reanalyzed as an ADP plus another member.
 - A verb-second ADV clause use is not reanalyzed as a clause-final SCONJ use.
-- An ordinary ADV auch is not expanded into a PairedFrame or given its partner.
+- An ordinary ADV anchor is not expanded into a correlating Lexeme or given an
+  unmarked partner.
 </route_distinctions>
 
 <output_contract>
@@ -152,6 +158,7 @@ const demonstrations = corpus.select([
 	"grammar-de-adv-demo-comparative-lieber",
 	"grammar-de-adv-demo-superlative-am-liebsten",
 	"grammar-de-adv-demo-typo-gester",
+	"grammar-de-adv-demo-einerseits-andererseits",
 ]);
 
 export const promptSource = definePromptSource({

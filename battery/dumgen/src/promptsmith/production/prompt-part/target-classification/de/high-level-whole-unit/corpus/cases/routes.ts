@@ -6,13 +6,13 @@ import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
 import { resolved, type Segment, sentence, unresolved } from "./builders";
 import { evidence, IDS, udPartOfSpeech } from "./sources";
 
-const JE_DESTO_CONTAMINATION_KEY = "target-construction:paired-frame:je-desto";
-const ENTWEDER_ODER_CONTAMINATION_KEY =
-	"target-construction:paired-frame:entweder-oder";
+const JE_DESTO_CONTAMINATION_KEY = "target-lexeme:cconj:je-desto";
+const ENTWEDER_ODER_CONTAMINATION_KEY = "target-lexeme:cconj:entweder-oder";
 const EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY =
-	"target-construction:paired-frame:einerseits-andererseits";
-const SOWOHL_ALS_AUCH_CONTAMINATION_KEY =
-	"target-construction:paired-frame:sowohl-als-auch";
+	"target-lexeme:adv:einerseits-andererseits";
+const SOWOHL_ALS_AUCH_CONTAMINATION_KEY = "target-lexeme:cconj:sowohl-als-auch";
+const UM_ZU_CONTAMINATION_KEY = "target-lexeme:sconj:um-zu";
+const TEILS_TEILS_CONTAMINATION_KEY = "target-lexeme:adv:teils-teils";
 const ZUM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:zum";
 const AM_FUSION_CONTAMINATION_KEY = "target-construction:fusion:am";
 const CRINGE_CONTAMINATION_KEY = "target-lexeme:cringe";
@@ -151,27 +151,27 @@ const formerCollocationMember = (
 	),
 });
 
-const pairedFrameTarget = (
+const jeDestoTarget = (
 	clickedSegmentIndex: number,
 	memberSegmentIndices: readonly number[],
 ) => ({
 	...resolved(
-		pairedFrame,
+		jeDesto,
 		clickedSegmentIndex,
 		memberSegmentIndices,
-		"Construction",
-		"PairedFrame",
+		"Lexeme",
+		"CCONJ",
 	),
 	contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 	explanation: evidence(
-		IDS.pairedFrame,
-		"IDS describes je with obligatory desto or umso as a two-part proportional correlation. Issue #82 product policy maps je and desto to Construction/PairedFrame membership while keeping the comparative fillers separate.",
+		IDS.multiMemberCorrelator,
+		"IDS describes je with obligatory desto or umso as a two-part proportional correlation. ADR 0009 maps the complete fixed correlator to one Lexeme/CCONJ while keeping the comparative fillers separate.",
 	),
 });
 
-const pairedFrameFiller = (clickedSegmentIndex: number) => ({
+const jeDestoFiller = (clickedSegmentIndex: number) => ({
 	...resolved(
-		pairedFrame,
+		jeDesto,
 		clickedSegmentIndex,
 		[clickedSegmentIndex],
 		"Lexeme",
@@ -179,8 +179,8 @@ const pairedFrameFiller = (clickedSegmentIndex: number) => ({
 	),
 	contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 	explanation: evidence(
-		IDS.pairedFrame,
-		"IDS places the comparative expressions after je and desto inside their respective degree phrases. Issue #82 product policy therefore keeps this freely supplied comparative adjective outside Construction/PairedFrame membership.",
+		IDS.multiMemberCorrelator,
+		"IDS places the comparative expressions after je and desto inside their respective degree phrases. ADR 0009 therefore keeps this freely supplied comparative adjective outside the multi-member Lexeme/CCONJ.",
 	),
 });
 
@@ -246,8 +246,8 @@ const applicationCollocation = sentence([
 ]);
 const demonstrationAphorism = sentence(["Zeit", "ist", "Geld"]);
 const demonstrationDiscourseFormula = sentence(["Herzliche", "Grüße"], "!");
-const demonstrationPairedFrame = sentence(["Entweder", "hier", "oder", "dort"]);
-const demonstrationMatchedPairedFrame: Segment[] = [
+const demonstrationEitherOr = sentence(["Entweder", "hier", "oder", "dort"]);
+const demonstrationEitherSide = [
 	{ kind: "ResolvableText", text: "Einerseits" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "lokal" },
@@ -257,8 +257,8 @@ const demonstrationMatchedPairedFrame: Segment[] = [
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "digital" },
 	{ kind: "Punctuation", text: "." },
-];
-const demonstrationSowohlPairedFrame = sentence([
+] satisfies Segment[];
+const demonstrationSowohlAlsAuch = sentence([
 	"Der",
 	"Entwurf",
 	"ist",
@@ -268,7 +268,27 @@ const demonstrationSowohlPairedFrame = sentence([
 	"auch",
 	"robust",
 ]);
-const demonstrationPairedFrameFiller: Segment[] = [
+const multiMemberUmZu = sentence([
+	"Sie",
+	"spart",
+	"um",
+	"im",
+	"Sommer",
+	"zu",
+	"reisen",
+]);
+const multiMemberTeilsTeils = sentence([
+	"Der",
+	"Weg",
+	"führt",
+	"teils",
+	"durch",
+	"Wald",
+	"teils",
+	"über",
+	"Felder",
+]);
+const demonstrationJeDestoFiller: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "länger" },
@@ -302,7 +322,7 @@ const demonstrationPredicativeCringe = sentence([
 	"wirkt",
 	"cringe",
 ]);
-const pairedFrame: Segment[] = [
+const jeDesto: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "früher" },
@@ -313,7 +333,7 @@ const pairedFrame: Segment[] = [
 	{ kind: "ResolvableText", text: "besser" },
 	{ kind: "Punctuation", text: "." },
 ];
-const diagnosticPairedFrame: Segment[] = [
+const diagnosticJeDesto: Segment[] = [
 	{ kind: "ResolvableText", text: "Je" },
 	{ kind: "Whitespace", text: " " },
 	{ kind: "ResolvableText", text: "wärmer" },
@@ -418,6 +438,38 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			0,
 			"SCONJ",
 		),
+		"target-de-route-lexeme-sconj-um-zu-click-um": {
+			...resolved(multiMemberUmZu, 4, [4, 10], "Lexeme", "SCONJ"),
+			contaminationKeys: [UM_ZU_CONTAMINATION_KEY],
+			explanation: evidence(
+				udPartOfSpeech("SCONJ"),
+				"ADR 0009 treats um and zu as the ordered fixed members of one Lexeme/SCONJ; the purpose-clause material between them remains free context.",
+			),
+		},
+		"target-de-route-lexeme-sconj-um-zu-click-zu": {
+			...resolved(multiMemberUmZu, 10, [4, 10], "Lexeme", "SCONJ"),
+			contaminationKeys: [UM_ZU_CONTAMINATION_KEY],
+			explanation: evidence(
+				udPartOfSpeech("SCONJ"),
+				"Clicking either fixed anchor returns the same source-ordered um zu Lexeme/SCONJ membership.",
+			),
+		},
+		"target-de-route-lexeme-adv-teils-teils-click-first": {
+			...resolved(multiMemberTeilsTeils, 6, [6, 12], "Lexeme", "ADV"),
+			contaminationKeys: [TEILS_TEILS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.multiMemberCorrelator,
+				"ADR 0009 treats both teils occurrences as separate ordered members of one multi-member Lexeme/ADV.",
+			),
+		},
+		"target-de-route-lexeme-adv-teils-teils-click-second": {
+			...resolved(multiMemberTeilsTeils, 12, [6, 12], "Lexeme", "ADV"),
+			contaminationKeys: [TEILS_TEILS_CONTAMINATION_KEY],
+			explanation: evidence(
+				IDS.multiMemberCorrelator,
+				"The repeated spelling occupies two source positions; either click returns both fixed ADV members in source order.",
+			),
+		},
 		"target-de-route-lexeme-sym": lexeme(
 			["Der", "Preis", "beträgt", "zehn", "€"],
 			8,
@@ -499,21 +551,15 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 		},
 		"target-de-demo-paired-entweder-click-entweder": {
-			...resolved(
-				demonstrationPairedFrame,
-				0,
-				[0, 4],
-				"Construction",
-				"PairedFrame",
-			),
+			...resolved(demonstrationEitherOr, 0, [0, 4], "Lexeme", "CCONJ"),
 			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
-				"IDS describes entweder ... oder as a correlated pair. Issue #82 includes only the two fixed anchors in Construction/PairedFrame membership.",
+				"IDS describes entweder ... oder as a correlated pair. ADR 0009 includes its two fixed anchors in one Lexeme/CCONJ.",
 			),
 		},
 		"target-de-demo-paired-entweder-click-hier": {
-			...resolved(demonstrationPairedFrame, 2, [2], "Lexeme", "ADV"),
+			...resolved(demonstrationEitherOr, 2, [2], "Lexeme", "ADV"),
 			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
@@ -521,7 +567,7 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 		},
 		"target-de-demo-paired-entweder-click-dort": {
-			...resolved(demonstrationPairedFrame, 6, [6], "Lexeme", "ADV"),
+			...resolved(demonstrationEitherOr, 6, [6], "Lexeme", "ADV"),
 			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
@@ -529,101 +575,59 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 			),
 		},
 		"target-de-demo-paired-einerseits-click-einerseits": {
-			...resolved(
-				demonstrationMatchedPairedFrame,
-				0,
-				[0, 5],
-				"Construction",
-				"PairedFrame",
-			),
+			...resolved(demonstrationEitherSide, 0, [0, 5], "Lexeme", "ADV"),
 			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"Issue #82 treats einerseits and andererseits as the two fixed PairedFrame anchors while the supplied adjectives lokal and digital remain free fillers.",
+				IDS.multiMemberCorrelator,
+				"ADR 0009 treats einerseits and andererseits as one multi-member Lexeme/ADV while the supplied adjectives lokal and digital remain free fillers.",
 			),
 		},
 		"target-de-demo-paired-einerseits-click-lokal": {
-			...resolved(
-				demonstrationMatchedPairedFrame,
-				2,
-				[2],
-				"Lexeme",
-				"ADJ",
-			),
+			...resolved(demonstrationEitherSide, 2, [2], "Lexeme", "ADJ"),
 			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"Issue #82 keeps the freely supplied adjective lokal outside the einerseits ... andererseits PairedFrame.",
+				IDS.multiMemberCorrelator,
+				"ADR 0009 keeps the freely supplied adjective lokal outside the multi-member einerseits ... andererseits Lexeme/ADV.",
 			),
 		},
 		"target-de-demo-paired-einerseits-click-andererseits": {
-			...resolved(
-				demonstrationMatchedPairedFrame,
-				5,
-				[0, 5],
-				"Construction",
-				"PairedFrame",
-			),
+			...resolved(demonstrationEitherSide, 5, [0, 5], "Lexeme", "ADV"),
 			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
+				IDS.multiMemberCorrelator,
 				"Issue #82 pairs the second anchor andererseits with the earlier anchor einerseits, not with either adjacent adjective filler.",
 			),
 		},
 		"target-de-demo-paired-einerseits-click-digital": {
-			...resolved(
-				demonstrationMatchedPairedFrame,
-				7,
-				[7],
-				"Lexeme",
-				"ADJ",
-			),
+			...resolved(demonstrationEitherSide, 7, [7], "Lexeme", "ADJ"),
 			contaminationKeys: [EINERSEITS_ANDERERSEITS_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"Issue #82 keeps the freely supplied adjective digital outside the einerseits ... andererseits PairedFrame.",
+				IDS.multiMemberCorrelator,
+				"ADR 0009 keeps the freely supplied adjective digital outside the multi-member einerseits ... andererseits Lexeme/ADV.",
 			),
 		},
 		"target-de-demo-paired-sowohl-click-robust": {
-			...resolved(
-				demonstrationSowohlPairedFrame,
-				14,
-				[14],
-				"Lexeme",
-				"ADJ",
-			),
+			...resolved(demonstrationSowohlAlsAuch, 14, [14], "Lexeme", "ADJ"),
 			contaminationKeys: [SOWOHL_ALS_AUCH_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
+				IDS.multiMemberCorrelator,
 				"Issue #82 treats sowohl, als, and auch as the correlated anchors while the freely supplied predicate adjective robust remains a standalone Lexeme/ADJ.",
 			),
 		},
 		"target-de-demo-paired-entweder-click-oder": {
-			...resolved(
-				demonstrationPairedFrame,
-				4,
-				[0, 4],
-				"Construction",
-				"PairedFrame",
-			),
+			...resolved(demonstrationEitherOr, 4, [0, 4], "Lexeme", "CCONJ"),
 			contaminationKeys: [ENTWEDER_ODER_CONTAMINATION_KEY],
 			explanation: evidence(
 				IDS.pairedEitherOr,
-				"The locative fillers hier and dort are free context; either fixed anchor selects the same PairedFrame.",
+				"The locative fillers hier and dort are free context; either fixed anchor selects the same Lexeme/CCONJ.",
 			),
 		},
 		"target-de-demo-paired-je-click-laenger": {
-			...resolved(
-				demonstrationPairedFrameFiller,
-				2,
-				[2],
-				"Lexeme",
-				"ADJ",
-			),
+			...resolved(demonstrationJeDestoFiller, 2, [2], "Lexeme", "ADJ"),
 			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"IDS describes je ... desto as a proportional correlation but places the comparative expressions inside the degree phrases organized by its anchors. Issue #82 therefore keeps the freely supplied comparative länger outside Construction/PairedFrame membership and classifies the clicked occurrence as Lexeme/ADJ.",
+				IDS.multiMemberCorrelator,
+				"IDS describes je ... desto as a proportional correlation but places the comparative expressions inside the degree phrases organized by its anchors. ADR 0009 therefore keeps the freely supplied comparative länger outside the Lexeme/CCONJ and classifies the clicked occurrence as Lexeme/ADJ.",
 			),
 		},
 		"target-de-demo-fusion-zum": {
@@ -823,31 +827,24 @@ export const routeCases = defineGoldenCaseCollection(import.meta.url, {
 				"IDS establishes the German preposition-article contraction category. In this locative occurrence, am realizes an plus dem; issue #82 maps exactly the clicked fused source segment to Construction/Fusion and excludes Bahnhof.",
 			),
 		},
-		"target-de-route-construction-paired-click-je": pairedFrameTarget(
-			0,
-			[0, 5],
-		),
-		"target-de-route-construction-paired-click-desto": pairedFrameTarget(
-			5,
-			[0, 5],
-		),
-		"target-de-route-construction-paired-near-frueher":
-			pairedFrameFiller(2),
-		"target-de-route-construction-paired-near-besser": pairedFrameFiller(7),
+		"target-de-route-lexeme-cconj-click-je": jeDestoTarget(0, [0, 5]),
+		"target-de-route-lexeme-cconj-click-desto": jeDestoTarget(5, [0, 5]),
+		"target-de-route-lexeme-cconj-near-frueher": jeDestoFiller(2),
+		"target-de-route-lexeme-cconj-near-besser": jeDestoFiller(7),
 		"target-de-diagnostic-paired-je-near-waermer": {
-			...resolved(diagnosticPairedFrame, 2, [2], "Lexeme", "ADJ"),
+			...resolved(diagnosticJeDesto, 2, [2], "Lexeme", "ADJ"),
 			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"The repeated je ... desto frame changes only its comparative values. wärmer fills the first degree slot and remains a standalone clicked Lexeme/ADJ.",
+				IDS.multiMemberCorrelator,
+				"The repeated je ... desto Lexeme/CCONJ changes only its comparative values. wärmer fills the first degree slot and remains a standalone clicked Lexeme/ADJ.",
 			),
 		},
 		"target-de-diagnostic-paired-je-near-schoener": {
-			...resolved(diagnosticPairedFrame, 7, [7], "Lexeme", "ADJ"),
+			...resolved(diagnosticJeDesto, 7, [7], "Lexeme", "ADJ"),
 			contaminationKeys: [JE_DESTO_CONTAMINATION_KEY],
 			explanation: evidence(
-				IDS.pairedFrame,
-				"The repeated je ... desto frame changes only its comparative values. schöner fills the second degree slot and remains a standalone clicked Lexeme/ADJ.",
+				IDS.multiMemberCorrelator,
+				"The repeated je ... desto Lexeme/CCONJ changes only its comparative values. schöner fills the second degree slot and remains a standalone clicked Lexeme/ADJ.",
 			),
 		},
 		"target-de-diagnostic-paired-entweder-near-kaffee": {

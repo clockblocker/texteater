@@ -55,9 +55,8 @@ const repeatedVor = sentence([
 	"vor",
 ]);
 
-const WEDER_NOCH_KEY = "target-construction:paired-frame:weder-noch";
-const NICHT_NUR_SONDERN_AUCH_KEY =
-	"target-construction:paired-frame:nicht-nur-sondern-auch";
+const WEDER_NOCH_KEY = "target-lexeme:cconj:weder-noch";
+const NICHT_NUR_SONDERN_AUCH_KEY = "target-lexeme:cconj:nicht-nur-sondern-auch";
 const TOOTH_IDIOM_KEY = "target-lexical-unit:jemandem-auf-den-zahn-fuehlen";
 const VORSTELLEN_KEY =
 	"target-lexical-unit:sich-vorstellen:repeated-preposition";
@@ -112,11 +111,11 @@ const cases = {
 	),
 
 	"target-de-adaptive-paired-weder-click-weder": keyed(
-		resolved(wederNoch, 0, [0, 4], "Construction", "PairedFrame"),
+		resolved(wederNoch, 0, [0, 4], "Lexeme", "CCONJ"),
 		WEDER_NOCH_KEY,
 	),
 	"target-de-adaptive-paired-weder-click-noch": keyed(
-		resolved(wederNoch, 4, [0, 4], "Construction", "PairedFrame"),
+		resolved(wederNoch, 4, [0, 4], "Lexeme", "CCONJ"),
 		WEDER_NOCH_KEY,
 	),
 	"target-de-adaptive-paired-weder-near-regen": keyed(
@@ -211,10 +210,10 @@ function adaptiveEvidence(caseId: keyof typeof cases & string): string {
 	}
 	if (caseId.includes("paired")) {
 		return evidence(
-			IDS.pairedFrame,
+			IDS.multiMemberCorrelator,
 			caseId.includes("near")
-				? "IDS establishes correlated multi-part linkages. Issue #82 includes only the closed-class anchors in Construction/PairedFrame, so the clicked lexical payload remains a singleton Lexeme."
-				: "IDS establishes correlated multi-part linkages. Issue #82 maps the closed-class correlating anchors, and no freely supplied payload, to Construction/PairedFrame.",
+				? "IDS establishes correlated multi-part linkages. ADR 0009 includes only the fixed anchors in the multi-member Lexeme, so the clicked lexical payload remains a singleton Lexeme."
+				: "IDS establishes correlated multi-part linkages. ADR 0009 maps the closed-class anchors, and no freely supplied payload, to one Lexeme/CCONJ.",
 		);
 	}
 	if (

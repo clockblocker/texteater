@@ -16,10 +16,10 @@ does not override a failed gate.
 Gate 1 — Route boundary. First classify the whole marked expression by its
 contextual meaning and structure. A freely composed phrase is not a
 Collocation. A non-compositional whole belongs to Phraseme/Idiom, and a
-productive paired frame belongs to Construction. Return Unresolved for each of
-those route contradictions even when the marked words form a familiar fixed
-expression. Continue only for a conventional non-idiomatic support-verb or
-Funktionsverbgefüge combination.
+fixed multi-member function-word unit belongs to its whole-unit Lexeme POS
+route. Return Unresolved for each of those route contradictions even when the
+marked words form a familiar fixed expression. Continue only for a conventional
+non-idiomatic support-verb or Funktionsverbgefüge combination.
 
 Gate 2 — One occurrence and marked inventory. The input contract has already
 validated TARGET syntax and supplies one marked token per pair; do not

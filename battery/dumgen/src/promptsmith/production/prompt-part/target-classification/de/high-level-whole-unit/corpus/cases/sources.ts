@@ -7,7 +7,8 @@ export const IDS = {
 	verbalPeriphrasis: "https://grammis.ids-mannheim.de/progr%40mm/1695",
 	modalVerb: "https://grammis.ids-mannheim.de/terminologie/155",
 	copula: "https://grammis.ids-mannheim.de/terminologie/146",
-	pairedFrame: "https://grammis.ids-mannheim.de/systematische-grammatik/2118",
+	multiMemberCorrelator:
+		"https://grammis.ids-mannheim.de/systematische-grammatik/2118",
 	pairedEitherOr:
 		"https://grammis.ids-mannheim.de/systematische-grammatik/2566",
 	proverbMorgenstund:

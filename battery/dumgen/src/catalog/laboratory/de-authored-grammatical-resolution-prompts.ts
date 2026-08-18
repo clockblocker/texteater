@@ -1,5 +1,4 @@
 import { systemPrompt as fusionSystemPrompt } from "../../promptsmith/production/generated-system-prompt/grammatical-resolution/de/construction/fusion";
-import { systemPrompt as pairedFrameSystemPrompt } from "../../promptsmith/production/generated-system-prompt/grammatical-resolution/de/construction/paired-frame";
 import { systemPrompt as adjectiveSystemPrompt } from "../../promptsmith/production/generated-system-prompt/grammatical-resolution/de/lexeme/adjective";
 import { systemPrompt as adpositionSystemPrompt } from "../../promptsmith/production/generated-system-prompt/grammatical-resolution/de/lexeme/adposition";
 import { systemPrompt as adverbSystemPrompt } from "../../promptsmith/production/generated-system-prompt/grammatical-resolution/de/lexeme/adverb";
@@ -24,10 +23,6 @@ import {
 	inputSchema as fusionInputSchema,
 	outputSchema as fusionOutputSchema,
 } from "../../promptsmith/production/grammatical-resolution/de/construction/fusion/schemas";
-import {
-	inputSchema as pairedFrameInputSchema,
-	outputSchema as pairedFrameOutputSchema,
-} from "../../promptsmith/production/grammatical-resolution/de/construction/paired-frame/schemas";
 import {
 	inputSchema as adjectiveInputSchema,
 	outputSchema as adjectiveOutputSchema,
@@ -265,13 +260,6 @@ export const DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS = {
 			systemPrompt: fusionSystemPrompt,
 			inputSchema: fusionInputSchema,
 			outputSchema: fusionOutputSchema,
-		}),
-		PairedFrame: createDeGrammaticalResolutionPrompt({
-			family: "Construction",
-			kind: "PairedFrame",
-			systemPrompt: pairedFrameSystemPrompt,
-			inputSchema: pairedFrameInputSchema,
-			outputSchema: pairedFrameOutputSchema,
 		}),
 	},
 } as const;

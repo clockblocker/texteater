@@ -1,7 +1,6 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promptSource as grammarFusionPromptSource } from "../production/grammatical-resolution/de/construction/fusion/prompt-source";
-import { promptSource as grammarPairedFramePromptSource } from "../production/grammatical-resolution/de/construction/paired-frame/prompt-source";
 import { promptSource as grammarAdjectivePromptSource } from "../production/grammatical-resolution/de/lexeme/adjective/prompt-source";
 import { promptSource as grammarAdpositionPromptSource } from "../production/grammatical-resolution/de/lexeme/adposition/prompt-source";
 import { promptSource as grammarAdverbPromptSource } from "../production/grammatical-resolution/de/lexeme/adverb/prompt-source";
@@ -68,7 +67,6 @@ const productionCodegen = defineSystemPromptCodegen({
 		lexicalResolutionPromptSource,
 		translationAnalysisPromptSource,
 		grammarFusionPromptSource,
-		grammarPairedFramePromptSource,
 		grammarAdjectivePromptSource,
 		grammarAdpositionPromptSource,
 		grammarAdverbPromptSource,

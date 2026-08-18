@@ -372,7 +372,9 @@ families. Grammatically indistinguishable homonyms share one Lemma; homographs
 with different grammatical analyses are different Lemmas.
 
 ### Lexeme
-A word-like Lemma.
+A lexical Lemma whose fixed realization may contain one or more members. German
+`rechnen … mit` is one `VERB` Lexeme even when the verb and its governed
+preposition are realized separately.
 
 Lexeme is one Lemma family, not a synonym for Lemma. Semantic differences do
 not split a Lexeme when its canonical form, kind, and core features are the

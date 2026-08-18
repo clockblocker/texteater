@@ -2,12 +2,14 @@
 
 import { type Infer, v } from "convex/values";
 import {
+	type CleanupRelationsSlice,
 	createDumdictService,
 	type DumdictPlan,
 	type DumdictStoragePort,
 	makeSurfaceId,
 	type NewNoteSlice,
 	type ReadingPatchSlice,
+	type RelationsCleanupInfoSlice,
 	type StoredReadingsSlice,
 } from "dumdict";
 import { getDumdictSchemasFor } from "dumdict/schema";
@@ -17,6 +19,7 @@ import {
 	resolvedGrammaticalResultSchema,
 	unresolvedGrammaticalResultSchema,
 } from "dumgen/schema";
+import { pendingSemanticRelationSchema } from "dumrel";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
@@ -34,7 +37,12 @@ import {
 } from "../server/linguisticOrchestration";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
-import { type ActionCtx, action } from "./_generated/server";
+import { type ActionCtx, action, internalAction } from "./_generated/server";
+import {
+	projectResolutionGrammar,
+	projectResolutionReading,
+	type ResolutionSessionGuard,
+} from "./model/resolutionSessions";
 import {
 	type dictionaryPlanValidator,
 	type nonResolvedGrammaticalValidator,
@@ -344,6 +352,9 @@ function resolveSegmentActionResult(
 						clickId: convexId<"visitorClicks">(
 							result.persisted.clickId,
 						),
+						readingId: convexId<"readings">(
+							result.persisted.readingId,
+						),
 						occurrence: reusableAttestationResult(
 							result.persisted.occurrence,
 						),
@@ -416,6 +427,77 @@ export const resolveSegment = action({
 				sentenceId: args.sentenceId,
 			}),
 		),
+});
+
+export const runResolutionSession = internalAction({
+	args: {
+		requestId: v.string(),
+		runToken: v.string(),
+		segmentId: v.id("segments"),
+	},
+	returns: v.null(),
+	handler: async (ctx, guard): Promise<null> => {
+		const input = await ctx.runQuery(
+			internal.resolutionSessions.getRunInput,
+			{ guard },
+		);
+		if (!input) return null;
+		try {
+			await ctx.runMutation(internal.resolutionSessions.advance, {
+				guard,
+				stage: "RouteAvailable",
+			});
+			const result = await orchestratorFor(ctx, guard).resolveSegment(
+				input,
+			);
+			if ("deduplicated" in result && result.deduplicated) {
+				if (result.persisted.status === "Resolved") {
+					await ctx.runMutation(
+						internal.resolutionSessions.settleAfterRun,
+						{
+							guard,
+							result: {
+								kind: "Complete",
+								readingId: convexId<"readings">(
+									result.persisted.readingId,
+								),
+								attestationId: convexId<"attestations">(
+									result.persisted.occurrence.attestationId,
+								),
+								grammar: projectResolutionGrammar(
+									result.persisted.occurrence.grammatical,
+								),
+								reading: projectResolutionReading(
+									result.persisted.occurrence.reading,
+								),
+							},
+						},
+					);
+				} else {
+					await ctx.runMutation(
+						internal.resolutionSessions.settleAfterRun,
+						{ guard, result: { kind: "Unresolved" } },
+					);
+				}
+			}
+		} catch {
+			try {
+				await ctx.runMutation(
+					internal.resolutionSessions.settleAfterRun,
+					{
+						guard,
+						result: {
+							kind: "Failed",
+							message: "Resolution could not be completed.",
+						},
+					},
+				);
+			} catch {
+				// The session was invalidated or settled atomically with the Click.
+			}
+		}
+		return null;
+	},
 });
 
 export const contributeKnowledge = action({
@@ -519,18 +601,60 @@ export const contributeRelation = action({
 	},
 });
 
-function orchestratorFor(ctx: ActionCtx) {
+function orchestratorFor(
+	ctx: ActionCtx,
+	sessionGuard?: ResolutionSessionGuard,
+) {
 	return createTfDemoOrchestrator({
 		dumgen,
 		dictionary: createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
 		}),
-		persistence: createConvexPersistence(ctx),
+		persistence: createConvexPersistence(ctx, sessionGuard),
+		...(sessionGuard
+			? {
+					observer: {
+						async grammarAvailable({ grammatical }) {
+							await ctx.runMutation(
+								internal.resolutionSessions.advance,
+								{
+									guard: sessionGuard,
+									stage: "GrammarAvailable",
+									grammar:
+										projectResolutionGrammar(grammatical),
+								},
+							);
+						},
+						async readingAvailable({ reading }) {
+							await ctx.runMutation(
+								internal.resolutionSessions.advance,
+								{
+									guard: sessionGuard,
+									stage: "ReadingAvailable",
+									reading: projectResolutionReading(reading),
+								},
+							);
+						},
+						async committing() {
+							await ctx.runMutation(
+								internal.resolutionSessions.advance,
+								{
+									guard: sessionGuard,
+									stage: "Committing",
+								},
+							);
+						},
+					},
+				}
+			: {}),
 	});
 }
 
-function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
+function createConvexPersistence(
+	ctx: ActionCtx,
+	sessionGuard?: ResolutionSessionGuard,
+): OrchestrationPersistence {
 	return {
 		async persistSubmittedText(input) {
 			return ctx.runMutation(internal.persistence.persistSubmittedText, {
@@ -584,6 +708,7 @@ function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
 						...input.occurrence.memberSegmentIndices,
 					],
 				},
+				...(sessionGuard ? { sessionGuard } : {}),
 			}) as Promise<ResolvedClickCommit>;
 		},
 		async persistReusedResolvedClick(input) {
@@ -593,6 +718,7 @@ function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
 					...input,
 					sentenceId: input.sentenceId as Id<"sentences">,
 					attestationId: input.attestationId as Id<"attestations">,
+					...(sessionGuard ? { sessionGuard } : {}),
 				},
 			) as Promise<ReusedResolvedClickCommit>;
 		},
@@ -602,13 +728,16 @@ function createConvexPersistence(ctx: ActionCtx): OrchestrationPersistence {
 				{
 					...input,
 					sentenceId: input.sentenceId as Id<"sentences">,
+					...(sessionGuard ? { sessionGuard } : {}),
 				},
 			) as Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 		},
 	};
 }
 
-function createConvexDumdictStorage(ctx: ActionCtx): DumdictStoragePort<"de"> {
+export function createConvexDumdictStorage(
+	ctx: ActionCtx,
+): DumdictStoragePort<"de"> {
 	return {
 		async findStoredReadings({ lemma }) {
 			return ctx.runQuery(
@@ -617,15 +746,28 @@ function createConvexDumdictStorage(ctx: ActionCtx): DumdictStoragePort<"de"> {
 			) as unknown as Promise<StoredReadingsSlice<"de">>;
 		},
 		async loadNewNoteContext({ draft }) {
-			const ownedSurface = draft.ownedSurfaces?.[0]?.surface;
+			const readingKey = readingIdentityKey(draft.reading);
 			return ctx.runQuery(
 				internal.dumdictStorage.loadDumdictNewNoteContext,
 				{
 					lemmaKey: lemmaIdentityKey(draft.reading.lemma),
-					readingKey: readingIdentityKey(draft.reading),
-					...(ownedSurface
-						? { surfaceKey: makeSurfaceId("de", ownedSurface) }
-						: {}),
+					readingKey,
+					surfaceKeys:
+						draft.ownedSurfaces?.map(({ surface }) =>
+							makeSurfaceId("de", surface),
+						) ?? [],
+					explicitReadingTargetKeys:
+						draft.relations?.flatMap(({ target }) =>
+							target.kind === "existing"
+								? [readingIdentityKey(target.reading)]
+								: [],
+						) ?? [],
+					pendingProposalKeys:
+						draft.relations?.flatMap(({ target }) =>
+							target.kind === "pending"
+								? [pendingProposalIdentityKey(target.pending)]
+								: [],
+						) ?? [],
 				},
 			) as unknown as Promise<NewNoteSlice<"de">>;
 		},
@@ -642,15 +784,214 @@ function createConvexDumdictStorage(ctx: ActionCtx): DumdictStoragePort<"de"> {
 				plan,
 			);
 		},
-		async getInfoForRelationsCleanup() {
-			throw new Error(
-				"The tf-demo vertical slice does not run relation cleanup.",
-			);
+		async getInfoForRelationsCleanup({ canonicalForm }) {
+			return ctx.runQuery(
+				internal.dumdictStorage.getDumdictRelationsCleanupInfo,
+				{ canonicalForm },
+			) as unknown as Promise<RelationsCleanupInfoSlice<"de">>;
 		},
-		async loadCleanupRelationsContext() {
-			throw new Error(
-				"The tf-demo vertical slice does not run relation cleanup.",
-			);
+		async loadCleanupRelationsContext({ resolutions }) {
+			return ctx.runQuery(
+				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
+				{
+					locatorKeys: resolutions.map(({ locator }) =>
+						pendingLocatorIdentityKey(locator),
+					),
+					targetReadingKeys: resolutions.flatMap(
+						({ targetReading }) =>
+							targetReading
+								? [readingIdentityKey(targetReading)]
+								: [],
+					),
+				},
+			) as unknown as Promise<CleanupRelationsSlice<"de">>;
 		},
 	};
 }
+
+function pendingProposalIdentityKey(input: unknown): string {
+	const pending = pendingSemanticRelationSchema.parse(input);
+	return JSON.stringify([
+		pending.relation,
+		pending.target.language,
+		pending.target.canonicalForm,
+		pending.target.family,
+		pending.target.kind,
+	]);
+}
+
+function pendingLocatorIdentityKey(input: {
+	sourceReadingKey: string;
+	relation: string;
+	targetPendingId: string;
+}): string {
+	return JSON.stringify([
+		input.sourceReadingKey,
+		input.relation,
+		input.targetPendingId,
+	]);
+}
+
+const shadowCleanupResultValidator = v.union(
+	v.object({
+		status: v.literal("applied"),
+		baseRevision: v.string(),
+		nextRevision: v.string(),
+		message: v.string(),
+	}),
+	v.object({
+		status: v.literal("conflict"),
+		code: v.union(
+			v.literal("revisionConflict"),
+			v.literal("semanticPreconditionFailed"),
+		),
+		baseRevision: v.string(),
+		latestRevision: v.string(),
+		message: v.string(),
+	}),
+	v.object({
+		status: v.literal("rejected"),
+		code: v.string(),
+		message: v.string(),
+	}),
+);
+
+type ShadowCleanupActionResult =
+	| {
+			status: "applied";
+			baseRevision: string;
+			nextRevision: string;
+			message: string;
+	  }
+	| {
+			status: "conflict";
+			code: "revisionConflict" | "semanticPreconditionFailed";
+			baseRevision: string;
+			latestRevision: string;
+			message: string;
+	  }
+	| { status: "rejected"; code: string; message: string };
+
+function shadowCleanupConflict(
+	code: "revisionConflict" | "semanticPreconditionFailed",
+	baseRevision: string,
+	latestRevision: string,
+	message: string,
+): ShadowCleanupActionResult {
+	return {
+		status: "conflict",
+		code,
+		baseRevision,
+		latestRevision,
+		message,
+	};
+}
+
+export const cleanupPendingRelation = action({
+	args: {
+		shadowId: v.id("shadows"),
+		locatorKey: v.string(),
+		baseRevision: v.string(),
+		targetReadingId: v.optional(v.id("readings")),
+	},
+	returns: shadowCleanupResultValidator,
+	handler: async (ctx, args): Promise<ShadowCleanupActionResult> => {
+		const selection: {
+			revision: string;
+			pendingRecord: unknown | null;
+			targetReadingEntry: unknown | null;
+		} = await ctx.runQuery(internal.shadowResolution.loadPendingSelection, {
+			shadowId: args.shadowId,
+			locatorKey: args.locatorKey,
+			...(args.targetReadingId
+				? { targetReadingId: args.targetReadingId }
+				: {}),
+		});
+		if (selection.revision !== args.baseRevision) {
+			return shadowCleanupConflict(
+				"revisionConflict",
+				args.baseRevision,
+				selection.revision,
+				"Shadow inspection is stale. Refresh before resolving this reference.",
+			);
+		}
+		if (selection.pendingRecord === null) {
+			return shadowCleanupConflict(
+				"semanticPreconditionFailed",
+				args.baseRevision,
+				selection.revision,
+				"The exact pending Shadow reference no longer exists.",
+			);
+		}
+		if (args.targetReadingId && selection.targetReadingEntry === null) {
+			return shadowCleanupConflict(
+				"semanticPreconditionFailed",
+				args.baseRevision,
+				selection.revision,
+				"The selected Reading candidate no longer exists.",
+			);
+		}
+
+		const pendingResult =
+			germanDumdictSchemas.pendingSemanticRelationRecordSchema.safeParse(
+				selection.pendingRecord,
+			);
+		if (!pendingResult.success) {
+			return shadowCleanupConflict(
+				"semanticPreconditionFailed",
+				args.baseRevision,
+				selection.revision,
+				"The pending Shadow reference is malformed and cannot be changed.",
+			);
+		}
+		const targetResult = selection.targetReadingEntry
+			? germanDumdictSchemas.readingEntrySchema.safeParse(
+					selection.targetReadingEntry,
+				)
+			: null;
+		if (targetResult && !targetResult.success) {
+			return shadowCleanupConflict(
+				"semanticPreconditionFailed",
+				args.baseRevision,
+				selection.revision,
+				"The selected Reading candidate is malformed.",
+			);
+		}
+		const result = await createDumdictService({
+			language: "de",
+			storage: createConvexDumdictStorage(ctx),
+		}).cleanupRelations({
+			baseRevision: args.baseRevision,
+			resolutions: [
+				{
+					locator: pendingResult.data.locator,
+					...(targetResult?.success
+						? { targetReading: targetResult.data.reading }
+						: {}),
+				},
+			],
+		});
+		if (result.status === "applied") {
+			return {
+				status: "applied",
+				baseRevision: result.baseRevision,
+				nextRevision: result.nextRevision,
+				message: result.summary.message,
+			};
+		}
+		if (result.status === "conflict") {
+			return {
+				status: "conflict",
+				code: result.code,
+				baseRevision: result.baseRevision,
+				latestRevision: result.latestRevision ?? selection.revision,
+				message: result.message ?? "Shadow cleanup conflicted.",
+			};
+		}
+		return {
+			status: "rejected",
+			code: result.code,
+			message: result.message ?? "Shadow cleanup was rejected.",
+		};
+	},
+});

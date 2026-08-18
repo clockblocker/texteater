@@ -2,6 +2,7 @@ import { defineGoldenCorpus } from "../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
 import { ambiguityAndAnchorCases } from "./cases/boundaries";
 import { orthographyAndHistoryCases } from "./cases/core-features-and-orthography";
+import { multiMemberCases } from "./cases/multi-member";
 import { resolvedCases } from "./cases/resolved";
 
 export const corpus = defineGoldenCorpus({
@@ -10,6 +11,7 @@ export const corpus = defineGoldenCorpus({
 	outputSchema,
 	collections: {
 		resolved: resolvedCases,
+		multiMember: multiMemberCases,
 		ambiguityAndAnchors: ambiguityAndAnchorCases,
 		orthographyAndHistory: orthographyAndHistoryCases,
 	},

@@ -34,7 +34,7 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 			"als",
 			"Comp",
 		),
-		"grammar-de-sconj-accept-beside-paired-frame":
+		"grammar-de-sconj-accept-beside-correlating-cconj":
 			subordinatingConjunctionCase(
 				"Sowohl Lea als auch Tim kommen, <TARGET>wenn</TARGET> die Probe endet.",
 				["wenn"],

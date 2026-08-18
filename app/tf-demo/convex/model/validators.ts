@@ -100,6 +100,54 @@ export const readingValueValidator = v.object({
 	emojiDescription: v.string(),
 });
 
+export const resolutionStageValidator = v.union(
+	v.literal("Starting"),
+	v.literal("RouteAvailable"),
+	v.literal("GrammarAvailable"),
+	v.literal("ReadingAvailable"),
+	v.literal("Committing"),
+	v.literal("Complete"),
+	v.literal("Unresolved"),
+	v.literal("Failed"),
+);
+
+export const resolutionRouteProjectionValidator = v.object({
+	textId: v.id("texts"),
+	sentenceId: v.id("sentences"),
+	stitchedText: v.string(),
+	clickedSegmentIndex: v.number(),
+	selectedSegment: v.string(),
+});
+
+export const resolutionGrammarProjectionValidator = v.object({
+	members: v.array(
+		v.object({
+			attested: v.string(),
+			orthography: orthographyValidator,
+		}),
+	),
+	realizationCoverage: realizationCoverageValidator,
+	normalizedSurface: v.string(),
+	spelling: surfaceSpellingValidator,
+	surfaceKind: surfaceKindValidator,
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+});
+
+export const resolutionReadingProjectionValidator = v.object({
+	emojiDescription: v.string(),
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+});
+
+export const resolutionSessionGuardValidator = v.object({
+	requestId: v.string(),
+	runToken: v.string(),
+	segmentId: v.id("segments"),
+});
+
 // The persistence envelope is intentionally structural. Domain validation happens
 // before this internal plan reaches storage; the transaction enforces DB invariants.
 export const dumdictPlannedChangeValidator = v.union(
@@ -182,6 +230,7 @@ export const recordedClickValidator = v.union(
 	v.object({
 		status: v.literal("Resolved"),
 		clickId: v.id("visitorClicks"),
+		readingId: v.id("readings"),
 		occurrence: reusableAttestationValidator,
 	}),
 );
@@ -269,6 +318,7 @@ export const resolveSegmentResultValidator = v.union(
 		persisted: v.object({
 			status: v.literal("Resolved"),
 			clickId: v.id("visitorClicks"),
+			readingId: v.id("readings"),
 			occurrence: reusableAttestationValidator,
 		}),
 	}),

@@ -6,6 +6,10 @@ import {
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
+	resolutionGrammarProjectionValidator,
+	resolutionReadingProjectionValidator,
+	resolutionRouteProjectionValidator,
+	resolutionStageValidator,
 	segmentKindValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
@@ -50,7 +54,15 @@ export default defineSchema({
 		kind: v.string(),
 		canonicalForm: v.string(),
 		coreFeatures: v.any(),
-	}).index("by_lemma_key", ["lemmaKey"]),
+	})
+		.index("by_lemma_key", ["lemmaKey"])
+		.index("by_language_and_canonical_form", ["language", "canonicalForm"])
+		.index("by_shadow_descriptor", [
+			"language",
+			"canonicalForm",
+			"family",
+			"kind",
+		]),
 
 	surfaces: defineTable({
 		surfaceKey: v.string(),
@@ -63,7 +75,11 @@ export default defineSchema({
 		inflectionalFeatures: v.optional(v.any()),
 	})
 		.index("by_surface_key", ["surfaceKey"])
-		.index("by_lemma_id", ["lemmaId"]),
+		.index("by_lemma_id", ["lemmaId"])
+		.index("by_language_and_normalized_surface", [
+			"language",
+			"normalizedSurface",
+		]),
 
 	dictionaryLemmas: defineTable({
 		lemmaId: v.id("lemmas"),
@@ -99,11 +115,40 @@ export default defineSchema({
 		locatorKey: v.string(),
 		sourceReadingKey: v.string(),
 		targetCanonicalForm: v.string(),
+		shadowId: v.optional(v.id("shadows")),
 		record: v.any(),
 	})
 		.index("by_locator_key", ["locatorKey"])
 		.index("by_source_reading_key", ["sourceReadingKey"])
-		.index("by_target_canonical_form", ["targetCanonicalForm"]),
+		.index("by_target_canonical_form", ["targetCanonicalForm"])
+		.index("by_shadow_id", ["shadowId"]),
+
+	shadows: defineTable({
+		shadowKey: v.string(),
+		language: languageValidator,
+		canonicalForm: v.string(),
+		family: v.string(),
+		kind: v.string(),
+	}).index("by_shadow_key", ["shadowKey"]),
+
+	structuralShadowReferences: defineTable({
+		shadowId: v.id("shadows"),
+		ownerReadingKey: v.string(),
+		aspect: v.union(
+			v.literal("morphologicalTree"),
+			v.literal("lexicalBreakdown"),
+		),
+		path: v.string(),
+		locatorKey: v.string(),
+	})
+		.index("by_shadow_id", ["shadowId"])
+		.index("by_owner_reading_key", ["ownerReadingKey"])
+		.index("by_locator_key", ["locatorKey"])
+		.index("by_owner_reading_key_and_aspect_and_path", [
+			"ownerReadingKey",
+			"aspect",
+			"path",
+		]),
 
 	knowledgeContributions: defineTable({
 		contributionKey: v.string(),
@@ -134,6 +179,29 @@ export default defineSchema({
 		.index("by_attestation_id", ["attestationId"])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
 		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"]),
+
+	resolutionSessions: defineTable({
+		requestId: v.string(),
+		visitorId: v.string(),
+		sentenceId: v.id("sentences"),
+		segmentId: v.id("segments"),
+		clickedSegmentIndex: v.number(),
+		routeNoteRequested: v.optional(v.boolean()),
+		runToken: v.string(),
+		stage: resolutionStageValidator,
+		route: resolutionRouteProjectionValidator,
+		grammar: v.optional(resolutionGrammarProjectionValidator),
+		reading: v.optional(resolutionReadingProjectionValidator),
+		readingId: v.optional(v.id("readings")),
+		attestationId: v.optional(v.id("attestations")),
+		failureMessage: v.optional(v.string()),
+		createdAt: v.number(),
+		updatedAt: v.number(),
+	})
+		.index("by_request_id", ["requestId"])
+		.index("by_sentence_id", ["sentenceId"])
+		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
+		.index("by_stage_and_updated_at", ["stage", "updatedAt"]),
 
 	dictionaryState: defineTable({
 		key: v.literal("global"),

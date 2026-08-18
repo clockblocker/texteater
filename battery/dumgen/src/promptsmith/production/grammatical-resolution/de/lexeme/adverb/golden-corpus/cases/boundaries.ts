@@ -54,14 +54,14 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 					"The classified lexical ADV gern remains ADV; productive adverbial ADJ forms belong to their fixed ADJ route instead.",
 			},
 		),
-		"grammar-de-adv-dev-route-paired-frame-auch": citationCase(
+		"grammar-de-adv-dev-route-correlating-cconj-auch": citationCase(
 			"Der Jugendchor singt und tanzt <TARGET>auch</TARGET>.",
 			["auch"],
 			"auch",
 			unmarkedCoreFeatures,
 			{
 				explanation:
-					"The supplied target is an ordinary ADV occurrence, not a member of an upstream PairedFrame payload.",
+					"The supplied target is an ordinary ADV occurrence, not a member of an upstream correlating CCONJ payload.",
 			},
 		),
 	} as const satisfies GoldenCaseRegistry<

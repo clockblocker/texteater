@@ -14,12 +14,23 @@ import {
 	readingValue,
 } from "./model/occurrenceAttestations";
 import {
+	projectResolutionGrammar,
+	projectResolutionReading,
+	type ResolutionSessionGuard,
+	requireActiveResolutionSession,
+	settleComplete,
+	settleFailed,
+	settleUnresolved,
+} from "./model/resolutionSessions";
+import { replaceAccumulatedKnowledge } from "./model/shadows";
+import {
 	dictionaryPlanValidator,
 	knowledgeOwnerKindValidator,
 	languageValidator,
 	occurrenceAttestationInputValidator,
 	readingValueValidator,
 	recordedClickValidator,
+	resolutionSessionGuardValidator,
 	resolvedClickCommitValidator,
 	reusableAttestationValidator,
 	reusedResolvedClickCommitValidator,
@@ -99,6 +110,50 @@ async function findClickByRequestId(
 		.unique();
 }
 
+async function requireMatchingActiveSession(
+	ctx: MutationCtx,
+	input: {
+		requestId: string;
+		visitorId: string;
+		sentenceId: Id<"sentences">;
+		clickedSegmentIndex: number;
+	},
+	guard?: ResolutionSessionGuard,
+) {
+	if (!guard) return null;
+	const session = await requireActiveResolutionSession(ctx, guard);
+	if (
+		session.requestId !== input.requestId ||
+		session.visitorId !== input.visitorId ||
+		session.sentenceId !== input.sentenceId ||
+		session.clickedSegmentIndex !== input.clickedSegmentIndex
+	) {
+		throw new Error("Resolution Session does not match the Click commit.");
+	}
+	return session;
+}
+
+async function settleResolvedSession(
+	ctx: MutationCtx,
+	session: Awaited<ReturnType<typeof requireMatchingActiveSession>>,
+	result: {
+		readingId: Id<"readings">;
+		attestationId: Id<"attestations">;
+		occurrence: {
+			grammatical: Parameters<typeof projectResolutionGrammar>[0];
+			reading: Parameters<typeof projectResolutionReading>[0];
+		};
+	},
+): Promise<void> {
+	if (!session) return;
+	await settleComplete(ctx, session, {
+		readingId: result.readingId,
+		attestationId: result.attestationId,
+		grammar: projectResolutionGrammar(result.occurrence.grammatical),
+		reading: projectResolutionReading(result.occurrence.reading),
+	});
+}
+
 async function reconstructReusableAttestation(
 	ctx: MutationCtx | QueryCtx,
 	attestationId: Id<"attestations">,
@@ -110,6 +165,7 @@ async function reconstructReusableAttestation(
 	}
 	return {
 		sentenceId: occurrence.sentence._id,
+		readingId: occurrence.reading._id,
 		value: {
 			attestationId,
 			grammatical: {
@@ -275,6 +331,35 @@ export const persistSubmittedText = internalMutation({
 				),
 			);
 			if (existingSegments.some((segments) => segments.length > 0)) {
+				const completeExactAnalysis =
+					existingSentences.length === submittedSentences.length &&
+					existingSentences.every((existing, sentenceIndex) => {
+						const submitted = submittedSentences[sentenceIndex];
+						const segments = existingSegments[sentenceIndex] ?? [];
+						return (
+							submitted !== undefined &&
+							existing.position === submitted.position &&
+							existing.segmentedSentenceId ===
+								submitted.segmentedSentenceId &&
+							existing.language === submitted.language &&
+							existing.stitchedText === submitted.stitchedText &&
+							segments.length === submitted.segments.length &&
+							segments.every(
+								(segment, segmentIndex) =>
+									segment.index === segmentIndex &&
+									segment.kind ===
+										submitted.segments[segmentIndex]
+											?.kind &&
+									segment.text ===
+										submitted.segments[segmentIndex]?.text,
+							)
+						);
+					});
+				if (!completeExactAnalysis) {
+					throw new Error(
+						"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
+					);
+				}
 				return {
 					textId: existingText._id,
 					sentenceIds: existingSentences.map(({ _id }) => _id),
@@ -488,16 +573,16 @@ export const findClickResultByRequestId = internalQuery({
 			segmentId: segment._id,
 		});
 		if (click.attestationId) {
+			const reusable = await reconstructReusableAttestation(
+				ctx,
+				click.attestationId,
+				args.clickedSegmentIndex,
+			);
 			return {
 				clickId: click._id,
 				status: "Resolved" as const,
-				occurrence: (
-					await reconstructReusableAttestation(
-						ctx,
-						click.attestationId,
-						args.clickedSegmentIndex,
-					)
-				).value,
+				readingId: reusable.readingId,
+				occurrence: reusable.value,
 			};
 		}
 		return { clickId: click._id, status: "Unresolved" as const };
@@ -510,10 +595,16 @@ export const persistUnresolvedClick = internalMutation({
 		visitorId: v.string(),
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
+		sessionGuard: v.optional(resolutionSessionGuardValidator),
 	},
 	returns: unresolvedClickPersistenceResultValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
+		const session = await requireMatchingActiveSession(
+			ctx,
+			args,
+			args.sessionGuard,
+		);
 		const { segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
@@ -528,6 +619,7 @@ export const persistUnresolvedClick = internalMutation({
 			if (existing.attestationId) {
 				throw new Error("requestId already records a resolved click.");
 			}
+			if (session) await settleUnresolved(ctx, session);
 			return {
 				status: "Unresolved" as const,
 				clickId: existing._id,
@@ -537,11 +629,13 @@ export const persistUnresolvedClick = internalMutation({
 		const committedAttestationId =
 			segment.attestationMembership?.attestationId;
 		if (committedAttestationId) {
-			return recordClickAgainstCommittedAttestation(ctx, {
+			const result = await recordClickAgainstCommittedAttestation(ctx, {
 				...args,
 				segmentId: segment._id,
 				attestationId: committedAttestationId,
 			});
+			await settleResolvedSession(ctx, session, result);
+			return result;
 		}
 		const clickId = await ctx.db.insert(
 			"visitorClicks",
@@ -551,6 +645,7 @@ export const persistUnresolvedClick = internalMutation({
 				segmentId: segment._id,
 			}),
 		);
+		if (session) await settleUnresolved(ctx, session);
 		return {
 			status: "Unresolved" as const,
 			clickId,
@@ -566,10 +661,16 @@ export const persistReusedResolvedClick = internalMutation({
 		sentenceId: v.id("sentences"),
 		clickedSegmentIndex: v.number(),
 		attestationId: v.id("attestations"),
+		sessionGuard: v.optional(resolutionSessionGuardValidator),
 	},
 	returns: reusedResolvedClickCommitValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
+		const session = await requireMatchingActiveSession(
+			ctx,
+			args,
+			args.sessionGuard,
+		);
 		const { segment } = await requireClickableSegment(
 			ctx,
 			args.sentenceId,
@@ -595,13 +696,23 @@ export const persistReusedResolvedClick = internalMutation({
 					"requestId already records a different result.",
 				);
 			}
-			return {
+			const result = {
 				status: "Reused" as const,
 				clickId: existing._id,
 				readingId: attestation.readingId,
 				attestationId: args.attestationId,
 				deduplicated: true,
 			};
+			const occurrence = await reconstructReusableAttestation(
+				ctx,
+				args.attestationId,
+				args.clickedSegmentIndex,
+			);
+			await settleResolvedSession(ctx, session, {
+				...result,
+				occurrence: occurrence.value,
+			});
+			return result;
 		}
 		const clickId = await ctx.db.insert(
 			"visitorClicks",
@@ -612,13 +723,23 @@ export const persistReusedResolvedClick = internalMutation({
 				attestationId: args.attestationId,
 			}),
 		);
-		return {
+		const result = {
 			status: "Reused" as const,
 			clickId,
 			readingId: attestation.readingId,
 			attestationId: args.attestationId,
 			deduplicated: false,
 		};
+		const occurrence = await reconstructReusableAttestation(
+			ctx,
+			args.attestationId,
+			args.clickedSegmentIndex,
+		);
+		await settleResolvedSession(ctx, session, {
+			...result,
+			occurrence: occurrence.value,
+		});
+		return result;
 	},
 });
 
@@ -632,10 +753,16 @@ export const persistResolvedClick = internalMutation({
 		reading: readingValueValidator,
 		readingKey: v.string(),
 		dictionaryPlan: dictionaryPlanValidator,
+		sessionGuard: v.optional(resolutionSessionGuardValidator),
 	},
 	returns: resolvedClickCommitValidator,
 	handler: async (ctx, args) => {
 		assertVisitorInput(args.visitorId, args.requestId);
+		const session = await requireMatchingActiveSession(
+			ctx,
+			args,
+			args.sessionGuard,
+		);
 		assertNonEmpty(args.readingKey, "readingKey");
 		const { segment: clickedSegment } = await requireClickableSegment(
 			ctx,
@@ -663,7 +790,7 @@ export const persistResolvedClick = internalMutation({
 			);
 			if (!existingAttestation)
 				throw new Error("Attestation does not exist.");
-			return {
+			const result = {
 				status: "Reused" as const,
 				clickId: existingClick._id,
 				readingId: existingAttestation.readingId,
@@ -671,15 +798,19 @@ export const persistResolvedClick = internalMutation({
 				deduplicated: true,
 				occurrence,
 			};
+			await settleResolvedSession(ctx, session, result);
+			return result;
 		}
 		const committedAttestationId =
 			clickedSegment.attestationMembership?.attestationId;
 		if (committedAttestationId) {
-			return recordClickAgainstCommittedAttestation(ctx, {
+			const result = await recordClickAgainstCommittedAttestation(ctx, {
 				...args,
 				segmentId: clickedSegment._id,
 				attestationId: committedAttestationId,
 			});
+			await settleResolvedSession(ctx, session, result);
+			return result;
 		}
 		if (
 			readingFingerprint(args.reading as Reading<"de">) !==
@@ -754,6 +885,13 @@ export const persistResolvedClick = internalMutation({
 			),
 		];
 		if (conflictingAttestationIds.length > 0) {
+			if (session) {
+				await settleFailed(
+					ctx,
+					session,
+					"This occurrence overlaps a different saved occurrence.",
+				);
+			}
 			return {
 				status: "MembershipConflict" as const,
 				code: "partialOverlap" as const,
@@ -768,6 +906,13 @@ export const persistResolvedClick = internalMutation({
 			args.dictionaryPlan,
 		);
 		if (dictionaryCommit.status === "conflict") {
+			if (session) {
+				await settleFailed(
+					ctx,
+					session,
+					"The shared dictionary changed before this resolution could be saved.",
+				);
+			}
 			return {
 				status: "DictionaryConflict" as const,
 				code: dictionaryCommit.code,
@@ -852,7 +997,7 @@ export const persistResolvedClick = internalMutation({
 			attestationId,
 			args.clickedSegmentIndex,
 		);
-		return {
+		const result = {
 			status: "Committed" as const,
 			clickId,
 			readingId: reading._id,
@@ -860,6 +1005,8 @@ export const persistResolvedClick = internalMutation({
 			deduplicated: false,
 			occurrence,
 		};
+		await settleResolvedSession(ctx, session, result);
+		return result;
 	},
 });
 
@@ -1005,22 +1152,15 @@ export const persistKnowledgeContribution = internalMutation({
 			}
 		}
 		const now = Date.now();
-		let accumulatedKnowledgeId: Id<"accumulatedKnowledge">;
-		if (existingAccumulated) {
-			await ctx.db.patch(existingAccumulated._id, {
-				knowledge: args.knowledge,
-				updatedAt: now,
-			});
-			accumulatedKnowledgeId = existingAccumulated._id;
-		} else {
-			accumulatedKnowledgeId = await ctx.db.insert(
-				"accumulatedKnowledge",
-				{
-					ownerKind: args.ownerKind,
-					ownerKey: args.ownerKey,
-					knowledge: args.knowledge,
-					updatedAt: now,
-				},
+		const accumulatedKnowledgeId = await replaceAccumulatedKnowledge(
+			ctx,
+			args.ownerKind,
+			args.ownerKey,
+			args.knowledge,
+		);
+		if (!accumulatedKnowledgeId) {
+			throw new Error(
+				"A Knowledge contribution must accumulate Knowledge.",
 			);
 		}
 		const contributionId = await ctx.db.insert("knowledgeContributions", {

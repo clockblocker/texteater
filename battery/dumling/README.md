@@ -236,7 +236,7 @@ Attestations are always hydrated:
 - an `Attestation` always contains a `Surface`
 - a `Surface` always contains a `Lemma`
 
-Lemma families also include `Construction` for learner-facing patterned entities such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction Lemmas are citation-only today.
+Lemma families also include `Construction` for learner-facing fused forms like German `zum`, `zur`, or `beim`. Construction Lemmas are citation-only today. Lexemes may have multiple fixed realization members: German `rechnen … mit` is one `Lexeme/VERB` even when its members are realized separately.
 
 Reading remains separate from Attestation because grammatical resolution
 precedes Reading Resolution. Host database document IDs and dictionary note

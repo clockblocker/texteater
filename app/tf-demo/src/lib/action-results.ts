@@ -138,6 +138,30 @@ export function parseResolutionDecision(resultValue: unknown): string {
 	return decision;
 }
 
+export function parseResolvedReadingId(
+	resultValue: unknown,
+): Id<"readings"> | null {
+	const result = requireRecord(resultValue, "Resolution result");
+	const grammatical = requireRecord(
+		result.grammatical,
+		"Grammatical resolution",
+	);
+	if (grammatical.decision !== "Resolved") return null;
+
+	const persisted = requireRecord(result.persisted, "Persisted resolution");
+	if (
+		persisted.status !== "Committed" &&
+		persisted.status !== "Reused" &&
+		persisted.status !== "Resolved"
+	) {
+		return null;
+	}
+	if (typeof persisted.readingId !== "string") {
+		throw new Error("A resolved Segment has no Reading identifier.");
+	}
+	return persisted.readingId as Id<"readings">;
+}
+
 function optionalRecord(value: unknown): UnknownRecord | null {
 	return value !== null && typeof value === "object" && !Array.isArray(value)
 		? (value as UnknownRecord)

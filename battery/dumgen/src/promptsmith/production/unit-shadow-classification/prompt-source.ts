@@ -35,15 +35,17 @@ not permission to guess a category merely because one would be plausible.
 Return Resolved only when both Family and Kind are defensible. Return
 Unresolved when evidence is missing, conflicting, invalid, or supports several
 Kinds; when a multiword string is only a freshly composed free phrase; when a
-fragment is proposed as a whole Phraseme or Construction; or when the proposal
+fragment is proposed as a whole Lexeme, Phraseme, or Construction; or when the proposal
 has plausible semantics but no defensible grammatical unit. Never pick a broad
 or residual Kind to hide uncertainty. X is Resolved only when intendedUse
 explicitly establishes an intentionally unanalyzed lexical item.
 </evidence_policy>
 
 <families>
-- Lexeme: one word-like grammatical unit. Kind is its Universal-Dependencies-
-  style part of speech: ${routeKinds("Lexeme")}.
+- Lexeme: one lexical identity. Its fixed realization may contain one member or
+  several ordered, possibly discontinuous members, as with governed verbs and
+  correlatives. Kind is the whole unit's Universal-Dependencies-style part of
+  speech, never a mixture of member-local analyses: ${routeKinds("Lexeme")}.
 - Phraseme: one conventionalized multiword unit. Aphorism is a concise authored
   maxim; Proverb is a traditional complete saying; DiscourseFormula performs a
   conventional communicative act; Idiom has a conventional non-compositional
@@ -61,9 +63,9 @@ explicitly establishes an intentionally unanalyzed lexical item.
   scandal-forming -gate; explicit evidence of that intermediate status is
   sufficient and must not be downgraded to Unresolved.
 - Construction: a productive grammatical pattern rather than one fixed lexical
-  expression. Fusion is a grammatical combination whose form collapses
-  components; PairedFrame is a linked multi-slot frame such as je … desto … or
-  the more … the more … .
+  identity. Fusion is a grammatical combination whose form collapses
+  components. Fixed correlatives such as je … desto and the more … the more are
+  multi-member Lexemes, not Constructions.
 </families>
 
 <language_and_homographs>

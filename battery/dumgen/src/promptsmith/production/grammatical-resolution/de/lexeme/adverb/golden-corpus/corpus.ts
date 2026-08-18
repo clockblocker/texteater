@@ -1,13 +1,18 @@
 import { defineGoldenCorpus } from "../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
 import { boundaryCases } from "./cases/boundaries";
+import { fixedMultiMemberCases } from "./cases/fixed-multi-member";
 import { resolvedCases } from "./cases/resolved";
 
 export const corpus = defineGoldenCorpus({
 	route: "grammatical-resolution/de/lexeme/adverb",
 	inputSchema,
 	outputSchema,
-	collections: { resolved: resolvedCases, boundaries: boundaryCases },
+	collections: {
+		resolved: resolvedCases,
+		fixedMultiMember: fixedMultiMemberCases,
+		boundaries: boundaryCases,
+	},
 	fingerprintInput(input) {
 		return input.markedContext
 			.normalize("NFC")

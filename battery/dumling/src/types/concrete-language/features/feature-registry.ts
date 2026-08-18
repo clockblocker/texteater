@@ -1,5 +1,4 @@
 import type { DeConstructionFusionFeatures } from "./de/construction/fusion.js";
-import type { DeConstructionPairedFrameFeatures } from "./de/construction/paired-frame.js";
 import type { DeAdjectiveFeatures } from "./de/lexeme/adjective.js";
 import type { DeAdpositionFeatures } from "./de/lexeme/adposition.js";
 import type { DeAdverbFeatures } from "./de/lexeme/adverb.js";
@@ -34,7 +33,6 @@ import type { DeDiscourseFormulaPhrasemeFeatures } from "./de/phraseme/discourse
 import type { DeIdiomPhrasemeFeatures } from "./de/phraseme/idiom.js";
 import type { DeProverbPhrasemeFeatures } from "./de/phraseme/proverb.js";
 import type { EnConstructionFusionFeatures } from "./en/construction/fusion.js";
-import type { EnConstructionPairedFrameFeatures } from "./en/construction/paired-frame.js";
 import type { EnAdjectiveFeatures } from "./en/lexeme/adjective.js";
 import type { EnAdpositionFeatures } from "./en/lexeme/adposition.js";
 import type { EnAdverbFeatures } from "./en/lexeme/adverb.js";
@@ -68,7 +66,6 @@ import type { EnDiscourseFormulaPhrasemeFeatures } from "./en/phraseme/discourse
 import type { EnIdiomPhrasemeFeatures } from "./en/phraseme/idiom.js";
 import type { EnProverbPhrasemeFeatures } from "./en/phraseme/proverb.js";
 import type { HeConstructionFusionFeatures } from "./he/construction/fusion.js";
-import type { HeConstructionPairedFrameFeatures } from "./he/construction/paired-frame.js";
 import type { HeAdjectiveFeatures } from "./he/lexeme/adjective.js";
 import type { HeAdpositionFeatures } from "./he/lexeme/adposition.js";
 import type { HeAdverbFeatures } from "./he/lexeme/adverb.js";
@@ -145,7 +142,6 @@ export type LanguagePackFeatureRegistry = {
 		};
 		Construction: {
 			Fusion: DeConstructionFusionFeatures;
-			PairedFrame: DeConstructionPairedFrameFeatures;
 		};
 	};
 	en: {
@@ -189,7 +185,6 @@ export type LanguagePackFeatureRegistry = {
 		};
 		Construction: {
 			Fusion: EnConstructionFusionFeatures;
-			PairedFrame: EnConstructionPairedFrameFeatures;
 		};
 	};
 	he: {
@@ -233,7 +228,6 @@ export type LanguagePackFeatureRegistry = {
 		};
 		Construction: {
 			Fusion: HeConstructionFusionFeatures;
-			PairedFrame: HeConstructionPairedFrameFeatures;
 		};
 	};
 };

@@ -3,8 +3,22 @@ import { type Reading, readingFingerprint } from "dumling/reading";
 import type { SemanticRelation } from "dumrel";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
+import type { UnitReadingNoteTarget } from "../src/lib/navigation";
+import type { Doc, Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
+import {
+	loadResolutionNote,
+	resolutionNoteValidator,
+} from "./model/resolutionSessions";
+import {
+	collectStructuralShadowReferences,
+	descriptorFromStoredShadow,
+	pendingShadowDescriptor,
+	type ShadowDescriptor,
+	shadowIsCompatible,
+	structuralShadowLocatorKey,
+} from "./model/shadows";
 import {
 	grammaticalLanguageValidator,
 	languageValidator,
@@ -19,6 +33,46 @@ import {
 const MAX_VISITOR_ID_LENGTH = 200;
 const MAX_READING_HISTORY = 50;
 const MAX_RELATIONS_PER_NOTE = 50;
+const MAX_PENDING_RELATIONS_PER_READING_NOTE = 100;
+const MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE = 200;
+const SHADOW_REFERENCE_PAGE_SIZE = 50;
+const MAX_SENTENCES_PER_TEXT = 9;
+const MAX_SEGMENTS_PER_SENTENCE = 512;
+const SOURCE_CONTEXT_PAGE_SIZE = 6;
+const ROUTE_CONNECTION_PAGE_SIZE = 25;
+const MAX_SHADOW_CANDIDATE_LEMMAS = 100;
+const MAX_SHADOW_CANDIDATE_READINGS = 100;
+const unitReadingFamilies = new Set(["Lexeme", "Phraseme", "Morpheme"]);
+
+export function isUnitReadingFamily(family: string): boolean {
+	return unitReadingFamilies.has(family);
+}
+
+const textTargetValidator = v.object({
+	kind: v.literal("Text"),
+	textId: v.string(),
+	focusAttestationId: v.optional(v.string()),
+});
+
+const unitReadingNoteTargetValidator = v.object({
+	kind: v.literal("UnitReadingNote"),
+	readingId: v.string(),
+});
+
+const noteTargetValidator = v.union(
+	unitReadingNoteTargetValidator,
+	v.object({
+		kind: v.literal("RouteNote"),
+		routeKind: v.union(
+			v.literal("Attestation"),
+			v.literal("Surface"),
+			v.literal("Lemma"),
+		),
+		id: v.string(),
+	}),
+	v.object({ kind: v.literal("ShadowNote"), shadowId: v.string() }),
+	v.object({ kind: v.literal("Resolution"), requestId: v.string() }),
+);
 
 const languageBucketValidator = v.object({
 	language: v.string(),
@@ -43,6 +97,7 @@ const lemmaProjectionValidator = v.object({
 const readingProjectionValidator = v.object({
 	ownerKind: v.literal("Reading"),
 	ownerKey: v.string(),
+	readingId: v.id("readings"),
 	canonicalForm: v.string(),
 	emojiDescription: v.string(),
 });
@@ -73,18 +128,46 @@ const unitShadowProjectionValidator = v.object({
 	kind: v.string(),
 });
 
-const relationProjectionValidator = v.object({
+const relationFingerprintProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetReadingKey: v.string(),
 	targetCanonicalForm: v.string(),
 	targetEmojiDescription: v.string(),
 });
 
+const relationProjectionValidator = v.object({
+	relation: semanticRelationValidator,
+	targetCanonicalForm: v.string(),
+	targetEmojiDescription: v.string(),
+	target: v.object({
+		kind: v.literal("UnitReadingNote"),
+		readingId: v.id("readings"),
+	}),
+});
+
 const pendingRelationProjectionValidator = v.object({
+	locatorKey: v.string(),
 	relation: semanticRelationValidator,
 	targetCanonicalForm: v.string(),
 	targetFamily: v.string(),
 	targetKind: v.string(),
+	target: v.object({
+		kind: v.literal("ShadowNote"),
+		shadowId: v.id("shadows"),
+	}),
+});
+
+const structuralShadowProjectionValidator = v.object({
+	aspect: v.union(
+		v.literal("morphologicalTree"),
+		v.literal("lexicalBreakdown"),
+	),
+	path: v.string(),
+	descriptor: unitShadowProjectionValidator,
+	target: v.object({
+		kind: v.literal("ShadowNote"),
+		shadowId: v.id("shadows"),
+	}),
 });
 
 const knowledgeProjectionValidator = v.object({
@@ -98,11 +181,256 @@ const knowledgeProjectionValidator = v.object({
 });
 
 const readingNoteValidator = v.object({
+	kind: v.literal("UnitReadingNote"),
+	target: v.object({
+		kind: v.literal("UnitReadingNote"),
+		readingId: v.id("readings"),
+	}),
 	reading: readingProjectionValidator,
 	lemma: lemmaProjectionValidator,
 	note: knowledgeProjectionValidator,
 	relations: v.array(relationProjectionValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
+	structuralReferences: v.array(structuralShadowProjectionValidator),
+	sourceContexts: v.object({
+		page: v.array(
+			v.object({
+				attestationId: v.id("attestations"),
+				textId: v.id("texts"),
+				sentencePosition: v.number(),
+				sentenceSnippet: v.string(),
+				memberSegmentIndices: v.array(v.number()),
+				target: v.object({
+					kind: v.literal("Text"),
+					textId: v.id("texts"),
+					focusAttestationId: v.id("attestations"),
+				}),
+			}),
+		),
+		continueCursor: v.string(),
+		isDone: v.boolean(),
+	}),
+});
+
+const shadowNoteValidator = v.object({
+	kind: v.literal("ShadowNote"),
+	target: v.object({
+		kind: v.literal("ShadowNote"),
+		shadowId: v.id("shadows"),
+	}),
+	descriptor: unitShadowProjectionValidator,
+	inspection: v.object({
+		revision: v.string(),
+		candidates: v.array(
+			v.object({
+				readingId: v.id("readings"),
+				canonicalForm: v.string(),
+				emojiDescription: v.string(),
+				coreFeatures: v.array(featureValidator),
+				target: v.object({
+					kind: v.literal("UnitReadingNote"),
+					readingId: v.id("readings"),
+				}),
+			}),
+		),
+	}),
+	references: v.object({
+		page: v.array(
+			v.object({
+				reading: v.object({
+					readingId: v.id("readings"),
+					canonicalForm: v.string(),
+					emojiDescription: v.string(),
+					target: v.object({
+						kind: v.literal("UnitReadingNote"),
+						readingId: v.id("readings"),
+					}),
+				}),
+				pendingRelations: v.array(
+					v.object({
+						locatorKey: v.string(),
+						relation: semanticRelationValidator,
+					}),
+				),
+				structuralReferences: v.array(
+					v.object({
+						aspect: v.union(
+							v.literal("morphologicalTree"),
+							v.literal("lexicalBreakdown"),
+						),
+						path: v.string(),
+					}),
+				),
+			}),
+		),
+		continueCursor: v.string(),
+		isDone: v.boolean(),
+	}),
+});
+
+const routeNoteTargetValidator = v.object({
+	kind: v.literal("RouteNote"),
+	routeKind: v.union(
+		v.literal("Attestation"),
+		v.literal("Surface"),
+		v.literal("Lemma"),
+	),
+	id: v.string(),
+});
+
+const attestationRouteNoteValidator = v.object({
+	kind: v.literal("RouteNote"),
+	routeKind: v.literal("Attestation"),
+	target: routeNoteTargetValidator,
+	source: v.object({
+		textId: v.id("texts"),
+		sentencePosition: v.number(),
+		sentenceSnippet: v.string(),
+		memberSegmentIndices: v.array(v.number()),
+		target: v.object({
+			kind: v.literal("Text"),
+			textId: v.id("texts"),
+			focusAttestationId: v.id("attestations"),
+		}),
+	}),
+	members: v.array(
+		v.object({
+			segmentIndex: v.number(),
+			attested: v.string(),
+			orthography: orthographyValidator,
+		}),
+	),
+	realizationCoverage: realizationCoverageValidator,
+	surface: v.object({
+		normalizedSurface: v.string(),
+		target: routeNoteTargetValidator,
+	}),
+	reading: v.object({
+		emojiDescription: v.string(),
+		canonicalForm: v.string(),
+		target: v.object({
+			kind: v.literal("UnitReadingNote"),
+			readingId: v.id("readings"),
+		}),
+	}),
+});
+
+const surfaceRouteConnectionValidator = v.object({
+	surfaceId: v.id("surfaces"),
+	normalizedSurface: v.string(),
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+	target: routeNoteTargetValidator,
+});
+
+const surfaceRouteNoteValidator = v.object({
+	kind: v.literal("RouteNote"),
+	routeKind: v.literal("Surface"),
+	target: routeNoteTargetValidator,
+	language: languageValidator,
+	normalizedSurface: v.string(),
+	spelling: surfaceSpellingValidator,
+	surfaceKind: surfaceKindValidator,
+	surfaceFeatures: v.array(featureValidator),
+	inflectionalFeatures: v.array(featureValidator),
+	lemma: v.object({
+		canonicalForm: v.string(),
+		family: v.string(),
+		kind: v.string(),
+		target: routeNoteTargetValidator,
+	}),
+	connections: v.object({
+		occurrences: v.array(
+			v.object({
+				attestationId: v.id("attestations"),
+				sentenceSnippet: v.string(),
+				members: v.array(v.string()),
+				target: routeNoteTargetValidator,
+			}),
+		),
+		sameWrittenForm: v.array(surfaceRouteConnectionValidator),
+		continueCursor: v.string(),
+		isDone: v.boolean(),
+	}),
+});
+
+const lemmaRouteConnectionValidator = v.object({
+	lemmaId: v.id("lemmas"),
+	canonicalForm: v.string(),
+	family: v.string(),
+	kind: v.string(),
+	coreFeatures: v.array(featureValidator),
+	target: routeNoteTargetValidator,
+});
+
+const lemmaRouteNoteValidator = v.object({
+	kind: v.literal("RouteNote"),
+	routeKind: v.literal("Lemma"),
+	target: routeNoteTargetValidator,
+	language: languageValidator,
+	canonicalForm: v.string(),
+	family: v.string(),
+	lemmaKind: v.string(),
+	coreFeatures: v.array(featureValidator),
+	connections: v.object({
+		surfaces: v.array(surfaceRouteConnectionValidator),
+		readings: v.array(
+			v.object({
+				readingId: v.id("readings"),
+				emojiDescription: v.string(),
+				target: v.object({
+					kind: v.literal("UnitReadingNote"),
+					readingId: v.id("readings"),
+				}),
+			}),
+		),
+		sameWrittenForm: v.array(lemmaRouteConnectionValidator),
+		continueCursor: v.string(),
+		isDone: v.boolean(),
+	}),
+});
+
+const textFocusValidator = v.union(
+	v.object({ kind: v.literal("None") }),
+	v.object({
+		kind: v.literal("Missing"),
+		requestedAttestationId: v.string(),
+	}),
+	v.object({
+		kind: v.literal("Occurrence"),
+		attestationId: v.id("attestations"),
+		sentenceId: v.id("sentences"),
+		memberSegmentIndices: v.array(v.number()),
+	}),
+);
+
+const textViewValidator = v.object({
+	kind: v.literal("Text"),
+	target: v.object({
+		kind: v.literal("Text"),
+		textId: v.id("texts"),
+		focusAttestationId: v.optional(v.string()),
+	}),
+	textId: v.id("texts"),
+	sourceText: v.string(),
+	createdAt: v.number(),
+	focus: textFocusValidator,
+	sentences: v.array(
+		v.object({
+			sentenceId: v.id("sentences"),
+			position: v.number(),
+			language: languageValidator,
+			stitchedText: v.string(),
+			segments: v.array(
+				v.object({
+					index: v.number(),
+					kind: segmentKindValidator,
+					text: v.string(),
+				}),
+			),
+		}),
+	),
 });
 
 const presentationValidator = v.object({
@@ -122,7 +450,7 @@ const presentationValidator = v.object({
 	reading: readingProjectionValidator,
 	lemma: lemmaProjectionValidator,
 	note: knowledgeProjectionValidator,
-	relations: v.array(relationProjectionValidator),
+	relations: v.array(relationFingerprintProjectionValidator),
 	sentence: v.object({
 		sentenceId: v.id("sentences"),
 		position: v.number(),
@@ -160,18 +488,48 @@ export type UnitShadowProjection = {
 	readonly kind: string;
 };
 
-export type RelationProjection = {
+export type RelationFingerprintProjection = {
 	readonly relation: SemanticRelation;
 	readonly targetReadingKey: string;
 	readonly targetCanonicalForm: string;
 	readonly targetEmojiDescription: string;
 };
 
+export type RelationProjection<ReadingId extends string = string> = {
+	readonly relation: SemanticRelation;
+	readonly targetCanonicalForm: string;
+	readonly targetEmojiDescription: string;
+	readonly target: Omit<UnitReadingNoteTarget, "readingId"> & {
+		readonly readingId: ReadingId;
+	};
+};
+
 export type PendingRelationProjection = {
+	readonly locatorKey: string;
 	readonly relation: SemanticRelation;
 	readonly targetCanonicalForm: string;
 	readonly targetFamily: string;
 	readonly targetKind: string;
+	readonly target: {
+		readonly kind: "ShadowNote";
+		readonly shadowId: Id<"shadows">;
+	};
+};
+
+export type SourceContextProjection<
+	AttestationId extends string = string,
+	TextId extends string = string,
+> = {
+	readonly attestationId: AttestationId;
+	readonly textId: TextId;
+	readonly sentencePosition: number;
+	readonly sentenceSnippet: string;
+	readonly memberSegmentIndices: number[];
+	readonly target: {
+		readonly kind: "Text";
+		readonly textId: TextId;
+		readonly focusAttestationId: AttestationId;
+	};
 };
 
 export function projectKnowledge(
@@ -183,7 +541,7 @@ export function projectKnowledge(
 	readonly transcriptions: LanguageBucketProjection[];
 	readonly morphologicalTree: unknown | null;
 	readonly lexicalBreakdown: UnitShadowProjection[];
-	readonly relations: RelationProjection[];
+	readonly relations: RelationFingerprintProjection[];
 } {
 	const readingKnowledge = optionalRecord(readingKnowledgeValue);
 	const lemmaKnowledge = optionalRecord(lemmaKnowledgeValue);
@@ -203,7 +561,7 @@ export function projectKnowledge(
 
 export function flattenDirectSemanticRelations(
 	semanticRelationsValue: unknown,
-): RelationProjection[] {
+): RelationFingerprintProjection[] {
 	const semanticRelations = optionalRecord(semanticRelationsValue);
 	if (!semanticRelations) return [];
 
@@ -211,31 +569,70 @@ export function flattenDirectSemanticRelations(
 		.flatMap((relation) => {
 			const targets = semanticRelations[relation];
 			if (!Array.isArray(targets)) return [];
-			return targets.flatMap((target): RelationProjection[] => {
-				const targetRecord = optionalRecord(target);
-				const lemma = optionalRecord(targetRecord?.lemma);
-				const targetCanonicalForm = optionalNonEmptyString(
-					lemma?.canonicalForm,
-				);
-				const targetEmojiDescription = optionalNonEmptyString(
-					targetRecord?.emojiDescription,
-				);
-				return targetCanonicalForm && targetEmojiDescription && lemma
-					? [
-							{
-								relation,
-								targetReadingKey: readingFingerprint({
-									lemma,
-									emojiDescription: targetEmojiDescription,
-								} as Reading),
-								targetCanonicalForm,
-								targetEmojiDescription,
-							},
-						]
-					: [];
-			});
+			return targets.flatMap(
+				(target): RelationFingerprintProjection[] => {
+					const targetRecord = optionalRecord(target);
+					const lemma = optionalRecord(targetRecord?.lemma);
+					const targetCanonicalForm = optionalNonEmptyString(
+						lemma?.canonicalForm,
+					);
+					const targetEmojiDescription = optionalNonEmptyString(
+						targetRecord?.emojiDescription,
+					);
+					return targetCanonicalForm &&
+						targetEmojiDescription &&
+						lemma
+						? [
+								{
+									relation,
+									targetReadingKey: readingFingerprint({
+										lemma,
+										emojiDescription:
+											targetEmojiDescription,
+									} as Reading),
+									targetCanonicalForm,
+									targetEmojiDescription,
+								},
+							]
+						: [];
+				},
+			);
 		})
 		.slice(0, MAX_RELATIONS_PER_NOTE);
+}
+
+export function projectResolvedRelationTargets<ReadingId extends string>(
+	relations: readonly RelationFingerprintProjection[],
+	targetReadings: readonly {
+		readonly readingKey: string;
+		readonly readingId: ReadingId;
+		readonly lemmaFamily: string;
+	}[],
+): RelationProjection<ReadingId>[] {
+	const readingIdByKey = new Map(
+		targetReadings.flatMap(({ readingKey, readingId, lemmaFamily }) =>
+			isUnitReadingFamily(lemmaFamily) ? [[readingKey, readingId]] : [],
+		),
+	);
+	return relations.flatMap(
+		({
+			targetReadingKey,
+			...relation
+		}): RelationProjection<ReadingId>[] => {
+			const readingId = readingIdByKey.get(targetReadingKey);
+			return readingId
+				? [
+						{
+							...relation,
+							target: {
+								kind: "UnitReadingNote",
+								readingId,
+							},
+						},
+					]
+				: [];
+		},
+	);
 }
 
 export function projectFeatures(value: unknown): FeatureProjection[] {
@@ -349,14 +746,578 @@ export const forVisitor = query({
 	},
 });
 
-export const forReading = query({
-	args: { readingKey: v.string() },
-	returns: v.union(v.null(), readingNoteValidator),
-	handler: async (ctx, { readingKey }) => {
-		assertOwnerKey(readingKey);
-		return loadReadingNote(ctx, readingKey);
+export const getTextView = query({
+	args: { target: textTargetValidator },
+	returns: v.union(v.null(), textViewValidator),
+	handler: async (ctx, { target }) => {
+		const textId = ctx.db.normalizeId("texts", target.textId);
+		if (!textId) return null;
+		const text = await ctx.db.get(textId);
+		if (!text) return null;
+		const focus = await loadTextFocus(
+			ctx,
+			textId,
+			target.focusAttestationId,
+		);
+
+		const sentences = await ctx.db
+			.query("sentences")
+			.withIndex("by_text_id_and_position", (q) => q.eq("textId", textId))
+			.take(MAX_SENTENCES_PER_TEXT);
+		const segmentsBySentence = await Promise.all(
+			sentences.map((sentence) =>
+				ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q.eq("sentenceId", sentence._id),
+					)
+					.take(MAX_SEGMENTS_PER_SENTENCE),
+			),
+		);
+
+		return {
+			kind: "Text" as const,
+			target: {
+				kind: "Text" as const,
+				textId: text._id,
+				...(target.focusAttestationId
+					? { focusAttestationId: target.focusAttestationId }
+					: {}),
+			},
+			textId: text._id,
+			sourceText: text.sourceText,
+			createdAt: text._creationTime,
+			focus,
+			sentences: sentences.map((sentence, index) => ({
+				sentenceId: sentence._id,
+				position: sentence.position,
+				language: sentence.language,
+				stitchedText: sentence.stitchedText,
+				segments: (segmentsBySentence[index] ?? []).map((segment) => ({
+					index: segment.index,
+					kind: segment.kind,
+					text: segment.text,
+				})),
+			})),
+		};
 	},
 });
+
+export const getNote = query({
+	args: {
+		target: noteTargetValidator,
+		contextCursor: v.optional(v.string()),
+	},
+	returns: v.union(
+		v.null(),
+		readingNoteValidator,
+		attestationRouteNoteValidator,
+		surfaceRouteNoteValidator,
+		lemmaRouteNoteValidator,
+		shadowNoteValidator,
+		resolutionNoteValidator,
+	),
+	handler: async (ctx, { target, contextCursor }) => {
+		if (target.kind === "UnitReadingNote") {
+			return loadUnitReadingNote(ctx, target.readingId, contextCursor);
+		}
+		if (target.kind === "Resolution") {
+			return loadResolutionNote(ctx, target.requestId);
+		}
+		if (target.kind === "ShadowNote") {
+			return loadShadowNote(ctx, target.shadowId, contextCursor);
+		}
+		if (target.routeKind === "Attestation") {
+			return loadAttestationRouteNote(ctx, target.id);
+		}
+		if (target.routeKind === "Surface") {
+			return loadSurfaceRouteNote(ctx, target.id, contextCursor);
+		}
+		return loadLemmaRouteNote(ctx, target.id, contextCursor);
+	},
+});
+
+async function loadAttestationRouteNote(
+	ctx: QueryCtx,
+	attestationIdValue: string,
+) {
+	const attestationId = ctx.db.normalizeId(
+		"attestations",
+		attestationIdValue,
+	);
+	if (!attestationId) return null;
+	const occurrence = await loadOccurrenceAttestation(ctx, attestationId);
+	if (
+		!occurrence ||
+		occurrence.surface.language !== occurrence.lemma.language ||
+		!isUnitReadingFamily(occurrence.lemma.family)
+	) {
+		return null;
+	}
+	const text = await ctx.db.get(occurrence.sentence.textId);
+	if (!text) return null;
+	return {
+		kind: "RouteNote" as const,
+		routeKind: "Attestation" as const,
+		target: {
+			kind: "RouteNote" as const,
+			routeKind: "Attestation" as const,
+			id: occurrence.attestation._id,
+		},
+		source: {
+			textId: text._id,
+			sentencePosition: occurrence.sentence.position,
+			sentenceSnippet: occurrence.sentence.stitchedText,
+			memberSegmentIndices: occurrence.memberSegmentIndices,
+			target: {
+				kind: "Text" as const,
+				textId: text._id,
+				focusAttestationId: occurrence.attestation._id,
+			},
+		},
+		members: occurrence.members.map((member) => ({
+			segmentIndex: member.index,
+			attested: member.text,
+			orthography: member.attestationMembership?.orthography as
+				| "Standard"
+				| "Typo",
+		})),
+		realizationCoverage: occurrence.attestation.realizationCoverage,
+		surface: {
+			normalizedSurface: occurrence.surface.normalizedSurface,
+			target: {
+				kind: "RouteNote" as const,
+				routeKind: "Surface" as const,
+				id: occurrence.surface._id,
+			},
+		},
+		reading: {
+			emojiDescription: occurrence.reading.emojiDescription,
+			canonicalForm: occurrence.lemma.canonicalForm,
+			target: {
+				kind: "UnitReadingNote" as const,
+				readingId: occurrence.reading._id,
+			},
+		},
+	};
+}
+
+async function loadSurfaceRouteNote(
+	ctx: QueryCtx,
+	surfaceIdValue: string,
+	contextCursor?: string,
+) {
+	const surfaceId = ctx.db.normalizeId("surfaces", surfaceIdValue);
+	if (!surfaceId) return null;
+	const surface = await ctx.db.get(surfaceId);
+	if (!surface) return null;
+	const lemma = await ctx.db.get(surface.lemmaId);
+	if (
+		!lemma ||
+		surface.language !== lemma.language ||
+		!isUnitReadingFamily(lemma.family)
+	) {
+		return null;
+	}
+
+	const firstOccurrence = await ctx.db
+		.query("attestations")
+		.withIndex("by_surface_id", (q) => q.eq("surfaceId", surface._id))
+		.take(1);
+	const cursor = parseRouteConnectionCursor(
+		contextCursor,
+		"Surface",
+		firstOccurrence.length > 0 ? "occurrences" : "sameWrittenForm",
+	);
+	let occurrences: Awaited<
+		ReturnType<typeof loadSurfaceOccurrenceConnection>
+	>[] = [];
+	let sameWritten: Doc<"surfaces">[] = [];
+	let continueCursor = "";
+	let isDone = false;
+	if (cursor.phase === "occurrences") {
+		const page = await ctx.db
+			.query("attestations")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", surface._id))
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: ROUTE_CONNECTION_PAGE_SIZE,
+			});
+		occurrences = await Promise.all(
+			page.page.map((attestation) =>
+				loadSurfaceOccurrenceConnection(ctx, attestation),
+			),
+		);
+		if (!page.isDone) {
+			continueCursor = routeConnectionCursor(
+				"Surface",
+				"occurrences",
+				page.continueCursor,
+			);
+		} else {
+			continueCursor = routeConnectionCursor(
+				"Surface",
+				"sameWrittenForm",
+				null,
+			);
+		}
+	} else {
+		const page = await ctx.db
+			.query("surfaces")
+			.withIndex("by_language_and_normalized_surface", (q) =>
+				q
+					.eq("language", surface.language)
+					.eq("normalizedSurface", surface.normalizedSurface),
+			)
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: ROUTE_CONNECTION_PAGE_SIZE,
+			});
+		sameWritten = page.page;
+		isDone = page.isDone;
+		continueCursor = page.isDone
+			? ""
+			: routeConnectionCursor(
+					"Surface",
+					"sameWrittenForm",
+					page.continueCursor,
+				);
+	}
+
+	const sameWrittenLemmas = await Promise.all(
+		sameWritten.map((candidate) => ctx.db.get(candidate.lemmaId)),
+	);
+	if (occurrences.some((occurrence) => occurrence === null)) return null;
+
+	return {
+		kind: "RouteNote" as const,
+		routeKind: "Surface" as const,
+		target: {
+			kind: "RouteNote" as const,
+			routeKind: "Surface" as const,
+			id: surface._id,
+		},
+		language: surface.language,
+		normalizedSurface: surface.normalizedSurface,
+		spelling: surface.spelling,
+		surfaceKind: surface.surfaceKind,
+		surfaceFeatures: projectFeatures(surface.surfaceFeatures),
+		inflectionalFeatures: projectFeatures(surface.inflectionalFeatures),
+		lemma: {
+			canonicalForm: lemma.canonicalForm,
+			family: lemma.family,
+			kind: lemma.kind,
+			target: {
+				kind: "RouteNote" as const,
+				routeKind: "Lemma" as const,
+				id: lemma._id,
+			},
+		},
+		connections: {
+			occurrences: occurrences.filter(
+				(value): value is NonNullable<typeof value> => value !== null,
+			),
+			sameWrittenForm: sameWritten.flatMap((candidate, index) => {
+				const candidateLemma = sameWrittenLemmas[index];
+				return candidate._id !== surface._id &&
+					candidateLemma &&
+					candidate.language === candidateLemma.language &&
+					isUnitReadingFamily(candidateLemma.family)
+					? [
+							{
+								surfaceId: candidate._id,
+								normalizedSurface: candidate.normalizedSurface,
+								canonicalForm: candidateLemma.canonicalForm,
+								family: candidateLemma.family,
+								kind: candidateLemma.kind,
+								target: {
+									kind: "RouteNote" as const,
+									routeKind: "Surface" as const,
+									id: candidate._id,
+								},
+							},
+						]
+					: [];
+			}),
+			continueCursor,
+			isDone,
+		},
+	};
+}
+
+async function loadLemmaRouteNote(
+	ctx: QueryCtx,
+	lemmaIdValue: string,
+	contextCursor?: string,
+) {
+	const lemmaId = ctx.db.normalizeId("lemmas", lemmaIdValue);
+	if (!lemmaId) return null;
+	const lemma = await ctx.db.get(lemmaId);
+	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
+
+	const [firstSurfaces, firstReadings] = await Promise.all([
+		ctx.db
+			.query("surfaces")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(1),
+		ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(1),
+	]);
+	const initialPhase =
+		firstSurfaces.length > 0
+			? "surfaces"
+			: firstReadings.length > 0
+				? "readings"
+				: "sameWrittenForm";
+	const cursor = parseRouteConnectionCursor(
+		contextCursor,
+		"Lemma",
+		initialPhase,
+	);
+	let surfaces: typeof firstSurfaces = [];
+	let readings: typeof firstReadings = [];
+	let sameWritten: Doc<"lemmas">[] = [];
+	let continueCursor = "";
+	let isDone = false;
+
+	if (cursor.phase === "surfaces") {
+		const page = await ctx.db
+			.query("surfaces")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: ROUTE_CONNECTION_PAGE_SIZE,
+			});
+		surfaces = page.page;
+		if (!page.isDone) {
+			continueCursor = routeConnectionCursor(
+				"Lemma",
+				"surfaces",
+				page.continueCursor,
+			);
+		} else if (firstReadings.length > 0) {
+			continueCursor = routeConnectionCursor("Lemma", "readings", null);
+		} else {
+			continueCursor = routeConnectionCursor(
+				"Lemma",
+				"sameWrittenForm",
+				null,
+			);
+		}
+	} else if (cursor.phase === "readings") {
+		const page = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: ROUTE_CONNECTION_PAGE_SIZE,
+			});
+		readings = page.page;
+		if (!page.isDone) {
+			continueCursor = routeConnectionCursor(
+				"Lemma",
+				"readings",
+				page.continueCursor,
+			);
+		} else {
+			continueCursor = routeConnectionCursor(
+				"Lemma",
+				"sameWrittenForm",
+				null,
+			);
+		}
+	} else {
+		const page = await ctx.db
+			.query("lemmas")
+			.withIndex("by_language_and_canonical_form", (q) =>
+				q
+					.eq("language", lemma.language)
+					.eq("canonicalForm", lemma.canonicalForm),
+			)
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: ROUTE_CONNECTION_PAGE_SIZE,
+			});
+		sameWritten = page.page;
+		isDone = page.isDone;
+		continueCursor = page.isDone
+			? ""
+			: routeConnectionCursor(
+					"Lemma",
+					"sameWrittenForm",
+					page.continueCursor,
+				);
+	}
+
+	return {
+		kind: "RouteNote" as const,
+		routeKind: "Lemma" as const,
+		target: {
+			kind: "RouteNote" as const,
+			routeKind: "Lemma" as const,
+			id: lemma._id,
+		},
+		language: lemma.language,
+		canonicalForm: lemma.canonicalForm,
+		family: lemma.family,
+		lemmaKind: lemma.kind,
+		coreFeatures: projectFeatures(lemma.coreFeatures),
+		connections: {
+			surfaces: surfaces.flatMap((surface) =>
+				surface.language === lemma.language
+					? [
+							{
+								surfaceId: surface._id,
+								normalizedSurface: surface.normalizedSurface,
+								canonicalForm: lemma.canonicalForm,
+								family: lemma.family,
+								kind: lemma.kind,
+								target: {
+									kind: "RouteNote" as const,
+									routeKind: "Surface" as const,
+									id: surface._id,
+								},
+							},
+						]
+					: [],
+			),
+			readings: readings.map((reading) => ({
+				readingId: reading._id,
+				emojiDescription: reading.emojiDescription,
+				target: {
+					kind: "UnitReadingNote" as const,
+					readingId: reading._id,
+				},
+			})),
+			sameWrittenForm: sameWritten.flatMap((candidate) =>
+				candidate._id !== lemma._id &&
+				isUnitReadingFamily(candidate.family)
+					? [
+							{
+								lemmaId: candidate._id,
+								canonicalForm: candidate.canonicalForm,
+								family: candidate.family,
+								kind: candidate.kind,
+								coreFeatures: projectFeatures(
+									candidate.coreFeatures,
+								),
+								target: {
+									kind: "RouteNote" as const,
+									routeKind: "Lemma" as const,
+									id: candidate._id,
+								},
+							},
+						]
+					: [],
+			),
+			continueCursor,
+			isDone,
+		},
+	};
+}
+
+async function loadSurfaceOccurrenceConnection(
+	ctx: QueryCtx,
+	attestation: {
+		readonly _id: Id<"attestations">;
+		readonly surfaceId: Id<"surfaces">;
+	},
+) {
+	const members = await ctx.db
+		.query("segments")
+		.withIndex("by_attestation_id", (q) =>
+			q.eq("attestationMembership.attestationId", attestation._id),
+		)
+		.take(MAX_SEGMENTS_PER_SENTENCE + 1);
+	assertRouteBound(members, MAX_SEGMENTS_PER_SENTENCE, "Attestation members");
+	if (members.length === 0) return null;
+	const ordered = [...members].sort(
+		(left, right) => left.index - right.index,
+	);
+	const sentenceId = ordered[0]?.sentenceId;
+	if (
+		!sentenceId ||
+		ordered.some(
+			(member) =>
+				member.sentenceId !== sentenceId ||
+				member.kind !== "ResolvableText" ||
+				member.attestationMembership?.attestationId !== attestation._id,
+		)
+	) {
+		return null;
+	}
+	const sentence = await ctx.db.get(sentenceId);
+	if (!sentence) return null;
+	return {
+		attestationId: attestation._id,
+		sentenceSnippet: sentence.stitchedText,
+		members: ordered.map(({ text }) => text),
+		target: {
+			kind: "RouteNote" as const,
+			routeKind: "Attestation" as const,
+			id: attestation._id,
+		},
+	};
+}
+
+type RouteConnectionPhase = {
+	Surface: "occurrences" | "sameWrittenForm";
+	Lemma: "surfaces" | "readings" | "sameWrittenForm";
+};
+
+function parseRouteConnectionCursor<Kind extends keyof RouteConnectionPhase>(
+	value: string | undefined,
+	kind: Kind,
+	initialPhase: RouteConnectionPhase[Kind],
+): {
+	readonly phase: RouteConnectionPhase[Kind];
+	readonly cursor: string | null;
+} {
+	if (!value) return { phase: initialPhase, cursor: null };
+	try {
+		const parsed = JSON.parse(value) as Record<string, unknown>;
+		const validPhase =
+			kind === "Surface"
+				? parsed.phase === "occurrences" ||
+					parsed.phase === "sameWrittenForm"
+				: parsed.phase === "surfaces" ||
+					parsed.phase === "readings" ||
+					parsed.phase === "sameWrittenForm";
+		if (
+			parsed.kind === kind &&
+			validPhase &&
+			(parsed.cursor === null || typeof parsed.cursor === "string")
+		) {
+			return {
+				phase: parsed.phase as RouteConnectionPhase[Kind],
+				cursor: parsed.cursor,
+			};
+		}
+	} catch {
+		// Fall through to one stable invalid-cursor error.
+	}
+	throw new Error("Invalid Route Note connection cursor.");
+}
+
+function routeConnectionCursor<Kind extends keyof RouteConnectionPhase>(
+	kind: Kind,
+	phase: RouteConnectionPhase[Kind],
+	cursor: string | null,
+): string {
+	return JSON.stringify({ kind, phase, cursor });
+}
+
+function assertRouteBound(
+	values: readonly unknown[],
+	maximum: number,
+	name: string,
+): void {
+	if (values.length > maximum) {
+		throw new Error(`A Route Note supports at most ${maximum} ${name}.`);
+	}
+}
 
 export const readingHistoryForVisitor = query({
 	args: { visitorId: v.string() },
@@ -395,43 +1356,96 @@ export const readingHistoryForVisitor = query({
 	},
 });
 
-async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
-	const reading = await ctx.db
-		.query("readings")
-		.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
-		.unique();
+async function loadUnitReadingNote(
+	ctx: QueryCtx,
+	readingIdValue: string,
+	contextCursor?: string,
+) {
+	const readingId = ctx.db.normalizeId("readings", readingIdValue);
+	if (!readingId) return null;
+	const reading = await ctx.db.get(readingId);
 	if (!reading) return null;
 	const lemma = await ctx.db.get(reading.lemmaId);
-	if (!lemma) return null;
-	const [readingKnowledge, lemmaKnowledge, pendingRelations] =
-		await Promise.all([
-			ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q
-						.eq("ownerKind", "Reading")
-						.eq("ownerKey", reading.readingKey),
-				)
-				.unique(),
-			ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
-				)
-				.unique(),
-			ctx.db
-				.query("pendingSemanticRelations")
-				.withIndex("by_source_reading_key", (q) =>
-					q.eq("sourceReadingKey", reading.readingKey),
-				)
-				.take(MAX_RELATIONS_PER_NOTE),
-		]);
+	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
+	const [
+		readingKnowledge,
+		lemmaKnowledge,
+		pendingRelations,
+		structuralReferences,
+		sourceContexts,
+	] = await Promise.all([
+		ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_kind_and_owner_key", (q) =>
+				q.eq("ownerKind", "Reading").eq("ownerKey", reading.readingKey),
+			)
+			.unique(),
+		ctx.db
+			.query("accumulatedKnowledge")
+			.withIndex("by_owner_kind_and_owner_key", (q) =>
+				q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
+			)
+			.unique(),
+		ctx.db
+			.query("pendingSemanticRelations")
+			.withIndex("by_source_reading_key", (q) =>
+				q.eq("sourceReadingKey", reading.readingKey),
+			)
+			.take(MAX_PENDING_RELATIONS_PER_READING_NOTE + 1),
+		loadStructuralReferencesForReading(ctx, reading.readingKey),
+		loadSourceContextPage(ctx, reading._id, contextCursor),
+	]);
+	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
+		throw new Error(
+			`A Unit Reading Note supports at most ${MAX_PENDING_RELATIONS_PER_READING_NOTE} pending Semantic Relations.`,
+		);
+	}
 	const identities = projectReadingIdentities(reading, lemma);
 	const projected = projectKnowledge(
 		readingKnowledge?.knowledge,
 		lemmaKnowledge?.knowledge,
 	);
+	const targetReadingKeys = [
+		...new Set(
+			projected.relations.map(({ targetReadingKey }) => targetReadingKey),
+		),
+	];
+	const targetReadings = await Promise.all(
+		targetReadingKeys.map((targetReadingKey) =>
+			ctx.db
+				.query("readings")
+				.withIndex("by_reading_key", (q) =>
+					q.eq("readingKey", targetReadingKey),
+				)
+				.unique(),
+		),
+	);
+	const targetLemmas = await Promise.all(
+		targetReadings.map((targetReading) =>
+			targetReading ? ctx.db.get(targetReading.lemmaId) : null,
+		),
+	);
+	const relations = projectResolvedRelationTargets(
+		projected.relations,
+		targetReadings.flatMap((targetReading, index) => {
+			const targetLemma = targetLemmas[index];
+			return targetReading && targetLemma
+				? [
+						{
+							readingKey: targetReading.readingKey,
+							readingId: targetReading._id,
+							lemmaFamily: targetLemma.family,
+						},
+					]
+				: [];
+		}),
+	);
 	return {
+		kind: "UnitReadingNote" as const,
+		target: {
+			kind: "UnitReadingNote" as const,
+			readingId: reading._id,
+		},
 		reading: identities.reading,
 		lemma: identities.lemma,
 		note: {
@@ -443,13 +1457,576 @@ async function loadReadingNote(ctx: QueryCtx, readingKey: string) {
 			readingKnowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 			lemmaKnowledgeUpdatedAt: lemmaKnowledge?.updatedAt ?? null,
 		},
-		relations: [...projected.relations],
+		relations,
 		pendingRelations: projectPendingRelations(pendingRelations),
+		structuralReferences,
+		sourceContexts,
+	};
+}
+
+async function loadStructuralReferencesForReading(
+	ctx: QueryCtx,
+	ownerReadingKey: string,
+) {
+	const rows = await ctx.db
+		.query("structuralShadowReferences")
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
+		)
+		.take(MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE + 1);
+	if (rows.length > MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE) {
+		throw new Error(
+			`A Unit Reading Note supports at most ${MAX_STRUCTURAL_REFERENCES_PER_READING_NOTE} structural Shadow references.`,
+		);
+	}
+	const shadows = await Promise.all(
+		rows.map((reference) => ctx.db.get(reference.shadowId)),
+	);
+	return rows.flatMap((reference, index) => {
+		const shadow = shadows[index];
+		if (
+			!shadow ||
+			reference.locatorKey !==
+				structuralShadowLocatorKey(
+					ownerReadingKey,
+					reference.aspect,
+					reference.path,
+				)
+		) {
+			return [];
+		}
+		try {
+			const descriptor = descriptorFromStoredShadow(shadow);
+			if (!shadowIsCompatible(shadow, descriptor)) return [];
+			return [
+				{
+					aspect: reference.aspect,
+					path: reference.path,
+					descriptor,
+					target: {
+						kind: "ShadowNote" as const,
+						shadowId: shadow._id,
+					},
+				},
+			];
+		} catch {
+			return [];
+		}
+	});
+}
+
+type ShadowReferenceCursor = {
+	readonly kind: "pending" | "structural";
+	readonly cursor: string | null;
+};
+
+function parseShadowReferenceCursor(value?: string): ShadowReferenceCursor {
+	if (!value) return { kind: "pending", cursor: null };
+	try {
+		const parsed = JSON.parse(value) as Record<string, unknown>;
+		if (
+			(parsed.kind === "pending" || parsed.kind === "structural") &&
+			(parsed.cursor === null || typeof parsed.cursor === "string")
+		) {
+			return { kind: parsed.kind, cursor: parsed.cursor };
+		}
+	} catch {
+		// Fall through to the stable invalid-cursor error.
+	}
+	throw new Error("Invalid Shadow reference cursor.");
+}
+
+function shadowReferenceCursor(value: ShadowReferenceCursor): string {
+	return JSON.stringify(value);
+}
+
+async function loadShadowInspection(
+	ctx: QueryCtx,
+	descriptor: ShadowDescriptor,
+) {
+	if (!isUnitReadingFamily(descriptor.family)) {
+		const state = await ctx.db
+			.query("dictionaryState")
+			.withIndex("by_key", (q) => q.eq("key", "global"))
+			.unique();
+		return {
+			revision: `convex-${state?.revision ?? 0}`,
+			candidates: [],
+		};
+	}
+	const [state, lemmas] = await Promise.all([
+		ctx.db
+			.query("dictionaryState")
+			.withIndex("by_key", (q) => q.eq("key", "global"))
+			.unique(),
+		ctx.db
+			.query("lemmas")
+			.withIndex("by_shadow_descriptor", (q) =>
+				q
+					.eq("language", descriptor.language)
+					.eq("canonicalForm", descriptor.canonicalForm)
+					.eq("family", descriptor.family)
+					.eq("kind", descriptor.kind),
+			)
+			.take(MAX_SHADOW_CANDIDATE_LEMMAS + 1),
+	]);
+	if (lemmas.length > MAX_SHADOW_CANDIDATE_LEMMAS) {
+		throw new Error(
+			`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_LEMMAS} exactly matching Lemmas.`,
+		);
+	}
+
+	const candidates: {
+		readingId: Id<"readings">;
+		canonicalForm: string;
+		emojiDescription: string;
+		coreFeatures: { name: string; value: string }[];
+		target: {
+			kind: "UnitReadingNote";
+			readingId: Id<"readings">;
+		};
+	}[] = [];
+	for (const lemma of lemmas) {
+		const remaining = MAX_SHADOW_CANDIDATE_READINGS - candidates.length;
+		const readings = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(remaining + 1);
+		if (readings.length > remaining) {
+			throw new Error(
+				`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_READINGS} exactly matching Reading candidates.`,
+			);
+		}
+		const entries = await Promise.all(
+			readings.map((reading) =>
+				ctx.db
+					.query("readingEntries")
+					.withIndex("by_reading_id", (q) =>
+						q.eq("readingId", reading._id),
+					)
+					.unique(),
+			),
+		);
+		for (const [index, reading] of readings.entries()) {
+			if (!entries[index]) continue;
+			candidates.push({
+				readingId: reading._id,
+				canonicalForm: lemma.canonicalForm,
+				emojiDescription: reading.emojiDescription,
+				coreFeatures: projectFeatures(lemma.coreFeatures),
+				target: {
+					kind: "UnitReadingNote",
+					readingId: reading._id,
+				},
+			});
+		}
+	}
+
+	return {
+		revision: `convex-${state?.revision ?? 0}`,
+		candidates: candidates.sort((left, right) =>
+			`${left.canonicalForm}\0${left.emojiDescription}\0${left.readingId}`.localeCompare(
+				`${right.canonicalForm}\0${right.emojiDescription}\0${right.readingId}`,
+			),
+		),
+	};
+}
+
+async function loadShadowNote(
+	ctx: QueryCtx,
+	shadowIdValue: string,
+	contextCursor?: string,
+) {
+	const shadowId = ctx.db.normalizeId("shadows", shadowIdValue);
+	if (!shadowId) return null;
+	const shadow = await ctx.db.get(shadowId);
+	if (!shadow) return null;
+	let descriptor: ShadowDescriptor;
+	try {
+		descriptor = descriptorFromStoredShadow(shadow);
+		if (!shadowIsCompatible(shadow, descriptor)) return null;
+	} catch {
+		return null;
+	}
+
+	const [firstPending, firstStructural] = await Promise.all([
+		ctx.db
+			.query("pendingSemanticRelations")
+			.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
+			.take(1),
+		ctx.db
+			.query("structuralShadowReferences")
+			.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
+			.take(1),
+	]);
+	if (firstPending.length === 0 && firstStructural.length === 0) return null;
+
+	const cursor = contextCursor
+		? parseShadowReferenceCursor(contextCursor)
+		: firstPending.length > 0
+			? { kind: "pending" as const, cursor: null }
+			: { kind: "structural" as const, cursor: null };
+	let pendingRows: typeof firstPending = [];
+	let structuralRows: typeof firstStructural = [];
+	let continueCursor = "";
+	let isDone = false;
+	if (cursor.kind === "pending") {
+		const result = await ctx.db
+			.query("pendingSemanticRelations")
+			.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: SHADOW_REFERENCE_PAGE_SIZE,
+			});
+		pendingRows = result.page;
+		if (!result.isDone) {
+			continueCursor = shadowReferenceCursor({
+				kind: "pending",
+				cursor: result.continueCursor,
+			});
+		} else if (firstStructural.length > 0) {
+			continueCursor = shadowReferenceCursor({
+				kind: "structural",
+				cursor: null,
+			});
+		} else isDone = true;
+	} else {
+		const result = await ctx.db
+			.query("structuralShadowReferences")
+			.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
+			.paginate({
+				cursor: cursor.cursor,
+				numItems: SHADOW_REFERENCE_PAGE_SIZE,
+			});
+		structuralRows = result.page;
+		isDone = result.isDone;
+		continueCursor = result.isDone
+			? ""
+			: shadowReferenceCursor({
+					kind: "structural",
+					cursor: result.continueCursor,
+				});
+	}
+
+	const ownerReadingKeys = [
+		...new Set([
+			...pendingRows.map(({ sourceReadingKey }) => sourceReadingKey),
+			...structuralRows.map(({ ownerReadingKey }) => ownerReadingKey),
+		]),
+	].sort();
+	const readings = await Promise.all(
+		ownerReadingKeys.map((ownerReadingKey) =>
+			ctx.db
+				.query("readings")
+				.withIndex("by_reading_key", (q) =>
+					q.eq("readingKey", ownerReadingKey),
+				)
+				.unique(),
+		),
+	);
+	const [lemmas, accumulated] = await Promise.all([
+		Promise.all(
+			readings.map((reading) =>
+				reading ? ctx.db.get(reading.lemmaId) : null,
+			),
+		),
+		Promise.all(
+			ownerReadingKeys.map((ownerReadingKey) =>
+				ctx.db
+					.query("accumulatedKnowledge")
+					.withIndex("by_owner_kind_and_owner_key", (q) =>
+						q
+							.eq("ownerKind", "Reading")
+							.eq("ownerKey", ownerReadingKey),
+					)
+					.unique(),
+			),
+		),
+	]);
+
+	const ownerIndex = new Map(
+		ownerReadingKeys.map((ownerReadingKey, index) => [
+			ownerReadingKey,
+			index,
+		]),
+	);
+	const groups = new Map<
+		string,
+		{
+			reading: {
+				readingId: Id<"readings">;
+				canonicalForm: string;
+				emojiDescription: string;
+				target: {
+					kind: "UnitReadingNote";
+					readingId: Id<"readings">;
+				};
+			};
+			pendingRelations: {
+				locatorKey: string;
+				relation: SemanticRelation;
+			}[];
+			structuralReferences: {
+				aspect: "morphologicalTree" | "lexicalBreakdown";
+				path: string;
+			}[];
+		}
+	>();
+	for (const [index, ownerReadingKey] of ownerReadingKeys.entries()) {
+		const reading = readings[index];
+		const lemma = lemmas[index];
+		if (!reading || !lemma || !isUnitReadingFamily(lemma.family))
+			return null;
+		groups.set(ownerReadingKey, {
+			reading: {
+				readingId: reading._id,
+				canonicalForm: lemma.canonicalForm,
+				emojiDescription: reading.emojiDescription,
+				target: {
+					kind: "UnitReadingNote",
+					readingId: reading._id,
+				},
+			},
+			pendingRelations: [],
+			structuralReferences: [],
+		});
+	}
+
+	for (const row of pendingRows) {
+		const projected = projectPendingRelations([row]);
+		const pending = projected[0];
+		const group = groups.get(row.sourceReadingKey);
+		let pendingDescriptor: ShadowDescriptor;
+		try {
+			pendingDescriptor = pendingShadowDescriptor(row.record);
+		} catch {
+			return null;
+		}
+		if (
+			projected.length !== 1 ||
+			!pending ||
+			!group ||
+			pending.target.shadowId !== shadowId ||
+			!shadowIsCompatible(shadow, pendingDescriptor)
+		) {
+			return null;
+		}
+		group.pendingRelations.push({
+			locatorKey: pending.locatorKey,
+			relation: pending.relation,
+		});
+	}
+
+	for (const row of structuralRows) {
+		const group = groups.get(row.ownerReadingKey);
+		const index = ownerIndex.get(row.ownerReadingKey);
+		const knowledge = index === undefined ? null : accumulated[index];
+		if (
+			!group ||
+			!knowledge ||
+			row.locatorKey !==
+				structuralShadowLocatorKey(
+					row.ownerReadingKey,
+					row.aspect,
+					row.path,
+				)
+		) {
+			return null;
+		}
+		let matchingReference: ShadowDescriptor | null;
+		try {
+			matchingReference = collectStructuralReferenceAt(
+				knowledge.knowledge,
+				row.aspect,
+				row.path,
+			);
+		} catch {
+			return null;
+		}
+		if (
+			!matchingReference ||
+			!shadowIsCompatible(shadow, matchingReference)
+		) {
+			return null;
+		}
+		group.structuralReferences.push({
+			aspect: row.aspect,
+			path: row.path,
+		});
+	}
+
+	return {
+		kind: "ShadowNote" as const,
+		target: { kind: "ShadowNote" as const, shadowId: shadow._id },
+		descriptor,
+		inspection: await loadShadowInspection(ctx, descriptor),
+		references: {
+			page: [...groups.values()].map((group) => ({
+				...group,
+				pendingRelations: group.pendingRelations.sort((left, right) =>
+					left.locatorKey.localeCompare(right.locatorKey),
+				),
+				structuralReferences: group.structuralReferences.sort(
+					(left, right) =>
+						`${left.aspect}:${left.path}`.localeCompare(
+							`${right.aspect}:${right.path}`,
+						),
+				),
+			})),
+			continueCursor,
+			isDone,
+		},
+	};
+}
+
+function collectStructuralReferenceAt(
+	knowledge: unknown,
+	aspect: "morphologicalTree" | "lexicalBreakdown",
+	path: string,
+) {
+	const references = collectStructuralShadowReferences(knowledge);
+	return (
+		references.find(
+			(reference) =>
+				reference.aspect === aspect && reference.path === path,
+		)?.descriptor ?? null
+	);
+}
+
+export async function loadSourceContextPage(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+	contextCursor?: string,
+) {
+	const result = await ctx.db
+		.query("attestations")
+		.withIndex("by_reading_id", (q) => q.eq("readingId", readingId))
+		.order("desc")
+		.paginate({
+			cursor: contextCursor ?? null,
+			numItems: SOURCE_CONTEXT_PAGE_SIZE,
+		});
+	const projected = await Promise.all(
+		result.page.map((attestation) =>
+			projectSourceContext(ctx, attestation._id),
+		),
+	);
+	const seen = new Set<Id<"attestations">>();
+	return {
+		page: projected.flatMap((context) => {
+			if (!context || seen.has(context.attestationId)) return [];
+			seen.add(context.attestationId);
+			return [context];
+		}),
+		continueCursor: result.continueCursor,
+		isDone: result.isDone,
+	};
+}
+
+async function projectSourceContext(
+	ctx: QueryCtx,
+	attestationId: Id<"attestations">,
+): Promise<SourceContextProjection<Id<"attestations">, Id<"texts">> | null> {
+	const members = await loadCompleteOccurrenceMembers(ctx, attestationId);
+	if (!members) return null;
+	const sentence = await ctx.db.get(members.sentenceId);
+	if (!sentence) return null;
+	const text = await ctx.db.get(sentence.textId);
+	if (!text) return null;
+	return {
+		attestationId,
+		textId: text._id,
+		sentencePosition: sentence.position,
+		sentenceSnippet: sentence.stitchedText,
+		memberSegmentIndices: members.memberSegmentIndices,
+		target: {
+			kind: "Text",
+			textId: text._id,
+			focusAttestationId: attestationId,
+		},
+	};
+}
+
+export async function loadTextFocus(
+	ctx: QueryCtx,
+	textId: Id<"texts">,
+	requestedAttestationId?: string,
+) {
+	if (!requestedAttestationId) return { kind: "None" as const };
+	const attestationId = ctx.db.normalizeId(
+		"attestations",
+		requestedAttestationId,
+	);
+	if (!attestationId) {
+		return {
+			kind: "Missing" as const,
+			requestedAttestationId,
+		};
+	}
+	const attestation = await ctx.db.get(attestationId);
+	if (!attestation) {
+		return {
+			kind: "Missing" as const,
+			requestedAttestationId,
+		};
+	}
+	const members = await loadCompleteOccurrenceMembers(ctx, attestationId);
+	if (!members) {
+		return {
+			kind: "Missing" as const,
+			requestedAttestationId,
+		};
+	}
+	const sentence = await ctx.db.get(members.sentenceId);
+	if (!sentence || sentence.textId !== textId) {
+		return {
+			kind: "Missing" as const,
+			requestedAttestationId,
+		};
+	}
+	return {
+		kind: "Occurrence" as const,
+		attestationId,
+		sentenceId: sentence._id,
+		memberSegmentIndices: members.memberSegmentIndices,
+	};
+}
+
+async function loadCompleteOccurrenceMembers(
+	ctx: QueryCtx,
+	attestationId: Id<"attestations">,
+): Promise<{
+	readonly sentenceId: Id<"sentences">;
+	readonly memberSegmentIndices: number[];
+} | null> {
+	const segments = await ctx.db
+		.query("segments")
+		.withIndex("by_attestation_id", (q) =>
+			q.eq("attestationMembership.attestationId", attestationId),
+		)
+		.take(MAX_SEGMENTS_PER_SENTENCE + 1);
+	if (segments.length === 0) return null;
+	if (segments.length > MAX_SEGMENTS_PER_SENTENCE) {
+		throw new Error("Occurrence Attestation has too many members.");
+	}
+	const sentenceId = segments[0]?.sentenceId;
+	if (
+		!sentenceId ||
+		segments.some((segment) => segment.sentenceId !== sentenceId)
+	) {
+		return null;
+	}
+	return {
+		sentenceId,
+		memberSegmentIndices: segments
+			.map(({ index }) => index)
+			.sort((left, right) => left - right),
 	};
 }
 
 function projectReadingIdentities(
 	reading: {
+		_id: Id<"readings">;
 		readingKey: string;
 		emojiDescription: string;
 	},
@@ -466,6 +2043,7 @@ function projectReadingIdentities(
 		reading: {
 			ownerKind: "Reading" as const,
 			ownerKey: reading.readingKey,
+			readingId: reading._id,
 			canonicalForm: lemma.canonicalForm,
 			emojiDescription: reading.emojiDescription,
 		},
@@ -542,11 +2120,19 @@ function projectAttestation(value: unknown) {
 }
 
 function projectPendingRelations(
-	rows: readonly { record: unknown }[],
+	rows: readonly {
+		locatorKey: string;
+		sourceReadingKey: string;
+		targetCanonicalForm: string;
+		shadowId?: Id<"shadows">;
+		record: unknown;
+	}[],
 ): PendingRelationProjection[] {
-	return rows.flatMap(({ record: recordValue }) => {
+	return rows.flatMap((row) => {
+		const { locatorKey, shadowId, record: recordValue } = row;
 		const record = optionalRecord(recordValue);
 		const pending = optionalRecord(record?.pending);
+		const locator = optionalRecord(record?.locator);
 		const target = optionalRecord(pending?.target);
 		const relation = pending?.relation;
 		const targetCanonicalForm = optionalNonEmptyString(
@@ -555,15 +2141,31 @@ function projectPendingRelations(
 		const targetFamily = optionalNonEmptyString(target?.family);
 		const targetKind = optionalNonEmptyString(target?.kind);
 		return isSemanticRelation(relation) &&
+			shadowId &&
+			locator?.sourceReadingKey === row.sourceReadingKey &&
+			locator.relation === relation &&
+			typeof locator.targetPendingId === "string" &&
+			locatorKey ===
+				JSON.stringify([
+					row.sourceReadingKey,
+					relation,
+					locator.targetPendingId,
+				]) &&
+			row.targetCanonicalForm === targetCanonicalForm &&
 			targetCanonicalForm &&
 			targetFamily &&
 			targetKind
 			? [
 					{
+						locatorKey,
 						relation,
 						targetCanonicalForm,
 						targetFamily,
 						targetKind,
+						target: {
+							kind: "ShadowNote",
+							shadowId,
+						},
 					},
 				]
 			: [];
@@ -647,11 +2249,5 @@ function assertVisitorId(visitorId: string): void {
 		visitorId.length > MAX_VISITOR_ID_LENGTH
 	) {
 		throw new Error("visitorId must contain 1 to 200 characters.");
-	}
-}
-
-function assertOwnerKey(ownerKey: string): void {
-	if (ownerKey.trim().length === 0 || ownerKey.length > 20_000) {
-		throw new Error("readingKey must contain 1 to 20000 characters.");
 	}
 }

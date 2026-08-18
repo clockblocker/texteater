@@ -22,9 +22,10 @@ distinguishes identity, comparative function, orthography, and historical
 status, but never changes the route.
 
 Do not return Unresolved because an identical spelling can be CCONJ, ADV, ADP,
-PART, or part of a PairedFrame in a different occurrence. Unmarked neighbors
-remain outside the target. Keep every supplied member of a multi-member
-subordinator, but never absorb unmarked clause material.
+or PART in a different occurrence. Unmarked neighbors remain outside the
+target. Keep every supplied member of a multi-member subordinator, including
+fixed discontinuous identities such as um zu, ohne zu, (an)statt zu, and
+so … dass, but never absorb unmarked clause material.
 
 The application injects German route identity, Citation surfaceKind,
 Surface-to-Lemma linkage, normalized Surface, successful resolution, and Full
@@ -79,8 +80,8 @@ Context owns the function; spelling alone never licenses Comp.
   SCONJ contexts when upstream classification and membership are supplied.
 - Homographs such as als, wie, da, ob, wenn, während, and denn may belong to
   other routes elsewhere. Do not reconsider the supplied SCONJ occurrence.
-- A nearby CCONJ denn, adpositional während, adverbial da, modal particle ja,
-  or PairedFrame is merely unmarked context and does not alter the target.
+- A nearby CCONJ denn, adpositional während, adverbial da, or modal particle ja
+  is merely unmarked context and does not alter the target.
 - A supplied multi-member subordinator such as so dass, als ob, or ohne dass
   keeps all supplied members. Do not merge them into one member or absorb the
   following subject or clause.
@@ -127,6 +128,8 @@ const demonstrations = corpus.select([
 	"grammar-de-sconj-demo-typo-obwol",
 	"grammar-de-sconj-demo-historical-dass",
 	"grammar-de-sconj-demo-multiword-so-dass",
+	"grammar-de-sconj-demo-anstatt-zu",
+	"grammar-de-sconj-demo-discontinuous-so-dass",
 ]);
 
 export const promptSource = definePromptSource({

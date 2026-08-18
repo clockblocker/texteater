@@ -1,6 +1,7 @@
 import { defineGoldenCorpus } from "../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
 import { boundaryCases } from "./cases/boundaries";
+import { fixedMultiMemberCases } from "./cases/fixed-multi-member";
 import { policyProbeCases } from "./cases/policy-probes";
 import { recoveryCases } from "./cases/recovery";
 import { resolvedCases } from "./cases/resolved";
@@ -11,6 +12,7 @@ export const corpus = defineGoldenCorpus({
 	outputSchema,
 	collections: {
 		resolved: resolvedCases,
+		fixedMultiMember: fixedMultiMemberCases,
 		boundaries: boundaryCases,
 		policyProbes: policyProbeCases,
 		recovery: recoveryCases,

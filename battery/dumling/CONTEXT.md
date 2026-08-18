@@ -13,7 +13,10 @@ are peer Families.
 _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
-A word-like Lemma. A Lexeme is one Lemma Family, not a synonym for Lemma.
+A lexical Lemma whose fixed realization may contain one or more members. German
+`rechnen … mit` is one `VERB` Lexeme even when the verb and its governed
+preposition are realized separately; a Lexeme is one Lemma Family, not a
+synonym for Lemma.
 
 **Verbal Participle**:
 A participial Surface whose contextual use belongs to a `VERB` or `AUX` Lexeme.

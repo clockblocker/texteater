@@ -51,11 +51,11 @@ German uses the four public dumling Lemma families:
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
-| \`Construction\` | \`Fusion\`, \`PairedFrame\` |
+| \`Construction\` | \`Fusion\` |
 
 These families are not interchangeable.
 
-\`Lexeme\` is for ordinary word-level Lemmas.
+\`Lexeme\` is for lexical identities. A fixed realization may have several ordered members, as with \`rechnen … mit\`, \`entweder … oder\`, or \`um zu\`; the whole unit receives one POS Kind.
 
 \`Morpheme\` is for bound pieces such as \`un-\`.
 
@@ -65,7 +65,7 @@ belongs to the larger unit rather than to one token in isolation. A
 expressions such as \`eine Entscheidung treffen\` belong here rather than under
 \`Idiom\`.
 
-\`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\` and paired frames such as \`um zu\`.
+\`Construction\` is for patterned learner-facing Lemmas such as fused forms like \`zum\`.
 
 ## Surface Kinds And Attested Evidence
 
@@ -85,7 +85,7 @@ The current public model also imposes two important constraints:
 
 - verbal \`Phraseme\` Surfaces may be inflected; their Attestations may mark
   \`realizationCoverage: "Partial"\`
-- \`Construction\` Lemmas are citation-only and currently featureless.
+- \`Construction/Fusion\` Lemmas are citation-only and currently featureless.
 
 \`Attestation\` records occurrence evidence:
 

@@ -80,7 +80,7 @@ const morphemeKindValues = [
 export const MorphemeKind = z.enum(morphemeKindValues);
 export type MorphemeKind = z.infer<typeof MorphemeKind>;
 
-const constructionKindValues = ["Fusion", "PairedFrame"] as const;
+const constructionKindValues = ["Fusion"] as const;
 
 export const ConstructionKind = z.enum(constructionKindValues);
 export type ConstructionKind = z.infer<typeof ConstructionKind>;

@@ -117,7 +117,7 @@ describe("Prompt Assembly", () => {
 				.update(targetPrompt.systemPrompt)
 				.digest("hex"),
 		).toBe(
-			"0344589809cd01319cef917867ea65e26e1a7603d217365d1204538db51b3374",
+			"3290f4f76f2117f977aad404e5ceeb1fee7dc6bbcca73647fb644eef0eb76ac7",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
 		expect(targetPrompt.systemPrompt).toContain("<participial_boundary>");

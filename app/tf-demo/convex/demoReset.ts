@@ -11,6 +11,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { replaceAccumulatedKnowledge } from "./model/shadows";
 
 const BATCH_SIZE = 400;
 const MAX_BATCHES = 100;
@@ -21,9 +22,12 @@ const PAGE_SIZE = 100;
 const DESCRIPTOR_PAGE_SIZE = 20;
 
 const sharedTableNames = [
+	"resolutionSessions",
+	"structuralShadowReferences",
 	"knowledgeContributions",
 	"accumulatedKnowledge",
 	"pendingSemanticRelations",
+	"shadows",
 	"attestations",
 	"visitorClicks",
 	"ownedSurfaces",
@@ -63,9 +67,16 @@ export const clearSharedDataBatch = internalMutation({
 	args: {},
 	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
 	handler: async (ctx) => {
+		const sessions = await ctx.db
+			.query("resolutionSessions")
+			.take(BATCH_SIZE);
+		if (sessions.length > 0) {
+			for (const session of sessions) await ctx.db.delete(session._id);
+			return { deleted: sessions.length, hasMore: true };
+		}
 		let deleted = 0;
 		let hasMore = false;
-		for (const tableName of sharedTableNames) {
+		for (const tableName of sharedTableNames.slice(1)) {
 			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
 			for (const document of documents) {
 				await ctx.db.delete(document._id);
@@ -82,16 +93,24 @@ export const clearVisitorDataBatch = internalMutation({
 	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
 	handler: async (ctx, { visitorId }) => {
 		assertVisitorId(visitorId);
+		const sessions = await ctx.db
+			.query("resolutionSessions")
+			.withIndex("by_visitor_id_and_updated_at", (q) =>
+				q.eq("visitorId", visitorId),
+			)
+			.take(BATCH_SIZE);
+		for (const session of sessions) await ctx.db.delete(session._id);
 		const clicks = await ctx.db
 			.query("visitorClicks")
 			.withIndex("by_visitor_id_and_clicked_at", (q) =>
 				q.eq("visitorId", visitorId),
 			)
-			.take(BATCH_SIZE);
+			.take(BATCH_SIZE - sessions.length);
 		for (const click of clicks) await ctx.db.delete(click._id);
+		const deleted = sessions.length + clicks.length;
 		return {
-			deleted: clicks.length,
-			hasMore: clicks.length === BATCH_SIZE,
+			deleted,
+			hasMore: deleted === BATCH_SIZE,
 		};
 	},
 });
@@ -100,9 +119,16 @@ export const resetDemoDataBatch = internalMutation({
 	args: {},
 	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
 	handler: async (ctx) => {
+		const sessions = await ctx.db
+			.query("resolutionSessions")
+			.take(BATCH_SIZE);
+		if (sessions.length > 0) {
+			for (const session of sessions) await ctx.db.delete(session._id);
+			return { deleted: sessions.length, hasMore: true };
+		}
 		let deleted = 0;
 		let hasMore = false;
-		for (const tableName of sharedTableNames) {
+		for (const tableName of sharedTableNames.slice(1)) {
 			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
 			for (const document of documents) {
 				await ctx.db.delete(document._id);
@@ -196,6 +222,18 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 		}
 
 		for (const sentence of sentences) {
+			const sessions = await ctx.db
+				.query("resolutionSessions")
+				.withIndex("by_sentence_id", (q) =>
+					q.eq("sentenceId", sentence._id),
+				)
+				.take(BATCH_SIZE);
+			if (sessions.length > 0) {
+				for (const session of sessions) {
+					await ctx.db.delete(session._id);
+				}
+				return { deleted: sessions.length, hasMore: true };
+			}
 			const segments = await ctx.db
 				.query("segments")
 				.withIndex("by_sentence_id_and_index", (q) =>
@@ -327,7 +365,12 @@ export const pruneAccumulatedKnowledgeRelationsPage = internalMutation({
 			if (doomed.has(knowledge.ownerKey)) continue;
 			const pruned = pruneReadingReferences(knowledge.knowledge, doomed);
 			if (!pruned.changed) continue;
-			await ctx.db.patch(knowledge._id, { knowledge: pruned.value });
+			await replaceAccumulatedKnowledge(
+				ctx,
+				"Reading",
+				knowledge.ownerKey,
+				pruned.value,
+			);
 			patched += 1;
 		}
 		if (patched > 0) await bumpDictionaryRevision(ctx);
@@ -427,10 +470,13 @@ export const clearReadingDataBatch = internalMutation({
 					q.eq("ownerKind", "Reading").eq("ownerKey", readingKey),
 				)
 				.unique();
-			if (accumulated) {
-				await ctx.db.delete(accumulated._id);
-				deleted += 1;
-			}
+			await replaceAccumulatedKnowledge(
+				ctx,
+				"Reading",
+				readingKey,
+				undefined,
+			);
+			if (accumulated) deleted += 1;
 			const reading = await ctx.db
 				.query("readings")
 				.withIndex("by_reading_key", (q) =>

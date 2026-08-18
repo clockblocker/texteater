@@ -27,6 +27,36 @@ tf-demo. The package-level learner scope of a Dumdict Reading is the whole demo,
 not an anonymous Visitor.
 _Avoid_: Visitor Dictionary, personal dictionary
 
+**Unit Reading**:
+A Reading whose Lemma Family is Lexeme, Phraseme, or Morpheme. This tf-demo
+grouping adds no linguistic identity beyond the underlying Reading.
+
+**Unit Reading Note**:
+The primary learner-facing note for one Unit Reading, combining its Knowledge
+and navigable links with its Lemma and source Occurrence Attestations. The three
+Families shape the note's contents without creating three different note kinds.
+_Avoid_: Lexeme Note, Phraseme Note, Morpheme Note
+
+**Source Context**:
+A learner-facing projection of one Occurrence Attestation inside its originating
+Sentence and Text. A Unit Reading Note accumulates one Source Context per source
+occurrence. Each Source Context links back to the Text location and highlights
+all member Segments of that occurrence; its return locator adds no linguistic
+identity.
+_Avoid_: Context, clicked context, Reading identity evidence
+
+**Route Note**:
+An optional learner-facing projection of one Occurrence Attestation, Surface,
+or Lemma used to traverse the resolution route into and around Unit Reading
+Notes. It adds no linguistic identity to the projected value or record.
+_Avoid_: Travel Note
+
+**Shadow Note**:
+A learner-facing frontier projection of one Unit Shadow together with the
+pending relations and structures that refer to it. It neither turns the Unit
+Shadow into a provisional Reading nor owns the aggregated references.
+_Avoid_: unresolved Reading Note, provisional Unit Reading Note
+
 **Visitor**:
 A stable anonymous interaction identity. A Visitor owns only Click history;
 it never participates in Text, Sentence, Segment, Grammatical Resolution,

@@ -1,6 +1,5 @@
 import { buildLanguageSchema } from "../../../shared/builders.js";
 import { deConstructionFusionFeaturesSchema } from "./construction/fusion.js";
-import { deConstructionPairedFrameFeaturesSchema } from "./construction/paired-frame.js";
 import { deAdjectiveFeaturesSchema } from "./lexeme/adjective.js";
 import { deAdpositionFeaturesSchema } from "./lexeme/adposition.js";
 import { deAdverbFeaturesSchema } from "./lexeme/adverb.js";
@@ -77,6 +76,5 @@ export const deSubtree = buildLanguageSchema("de", {
 	},
 	Construction: {
 		Fusion: deConstructionFusionFeaturesSchema,
-		PairedFrame: deConstructionPairedFrameFeaturesSchema,
 	},
 });

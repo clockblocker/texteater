@@ -107,7 +107,7 @@ export const recoveryCases = defineGoldenCaseCollection(import.meta.url, {
 				"als",
 				"Comp",
 			),
-		"grammar-de-sconj-accept-v2-beside-frame-and-abbreviation":
+		"grammar-de-sconj-accept-v2-beside-correlative-and-abbreviation":
 			subordinatingConjunctionCase(
 				"Weder die Abk. noch die Fußnote wird geändert, <TARGET>bevor</TARGET> die Redaktion zustimmt.",
 				["bevor"],
@@ -115,7 +115,7 @@ export const recoveryCases = defineGoldenCaseCollection(import.meta.url, {
 				undefined,
 				{
 					explanation:
-						"An unmarked PairedFrame and abbreviation remain outside the authoritative SCONJ target; the codec has no abbreviation feature.",
+						"An unmarked correlating CCONJ and abbreviation remain outside the authoritative SCONJ target; the codec has no abbreviation feature.",
 				},
 			),
 	} as const satisfies GoldenCaseRegistry<

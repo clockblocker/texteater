@@ -4,7 +4,7 @@ import {
 } from "../../../../../assembly";
 import type { inputSchema, outputSchema } from "../../schemas";
 
-export const constructions = defineGoldenCaseCollection(import.meta.url, {
+export const fusionAndCconj = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
 		"reading-de-construction-fusion-am-temporal": {
 			input: {
@@ -16,7 +16,7 @@ export const constructions = defineGoldenCaseCollection(import.meta.url, {
 			explanation:
 				"The fused form marks a calendar-time relation, not a place. New.",
 		},
-		"reading-de-construction-paired-frame-entweder-oder": {
+		"reading-de-lexeme-cconj-entweder-oder": {
 			input: {
 				markedContext:
 					"Wir reisen <TARGET>entweder</TARGET> am Freitag <TARGET>oder</TARGET> am Samstag.",
@@ -24,7 +24,8 @@ export const constructions = defineGoldenCaseCollection(import.meta.url, {
 				existingEmojiDescriptions: ["🔀"],
 			},
 			idealOutput: { decision: "Reuse", emojiDescription: "🔀" },
-			explanation: "The paired frame presents alternatives. Reuse.",
+			explanation:
+				"The multi-member Lexeme/CCONJ presents alternatives. Reuse.",
 		},
 	} as const satisfies GoldenCaseRegistry<
 		typeof inputSchema,

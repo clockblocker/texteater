@@ -22,7 +22,7 @@ This follows directly from the repository model and the external evidence:
   [`battery/dumrel/CONTEXT.md`](../../../dumrel/CONTEXT.md).
 - The concrete Dumling registry supports `de`, `en`, and `he`. Every language
   has all 17 Universal Dependencies (UD) part-of-speech Kinds, all eleven
-  Morpheme Kinds, and both Construction Kinds; only German additionally has
+  Morpheme Kinds, and the Construction/Fusion Kind; only German additionally has
   `Phraseme/Collocation`. See the
   [German](../../../dumling/src/schemas/concrete-language/features/de/de-subtree.ts),
   [English](../../../dumling/src/schemas/concrete-language/features/en/en-subtree.ts),
@@ -68,7 +68,7 @@ to the corpus author.
 | en `-ness` | bound nominalizer added after an adjective | `Morpheme/Suffix` | Cambridge labels `-ness` a suffix and defines its noun-forming function. [Cambridge Dictionary](https://dictionary.cambridge.org/dictionary/english/ness) | The standalone proper name `Ness` must not be routed by character shape. |
 | he `כ־ת־ב` | the consonantal lexical root underlying forms such as *katav* | `Morpheme/Root` | The UD Hebrew `HebBinyan` specification describes Hebrew templates by interspersing vowels with the root consonants and illustrates the root with *katav*, *niktav*, and related forms. [UD Hebrew `HebBinyan`](https://universaldependencies.org/he/feat/HebBinyan.html) | The same source supports the existence of an interleaved template, but it does not call that template a Dumling `Transfix`; that Kind needs an explicit product definition before it can be an exact oracle. |
 | de `zum` | fused `zu + dem` | `Construction/Fusion` | IDS records the fusion directly; German GSD independently represents `zum` as one orthographic multiword token expanded into `zu` (`ADP`) and `dem` (`DET`). The external facts establish fusion, while the final `Construction/Fusion` projection is Dumling policy. [IDS Grammis](https://grammis.ids-mannheim.de/praepositionen/299700), [GSD token](https://github.com/UniversalDependencies/UD_German-GSD/blob/ce54dbe9c6a5640c93e9952f069f582f6cd1f9fc/de_gsd-ud-train.conllu#L117-L119) | `zu` alone may be `Lexeme/ADP` or `Lexeme/PART`; the fused spelling must not be reduced to one of its components. |
-| de `je … desto/umso` | both arms of the proportional correlation | `Construction/PairedFrame` | IDS describes the construction as an obligatorily two-part proportional correlation. [IDS Grammis](https://grammis.ids-mannheim.de/systematische-grammatik/2118) | `je` or `desto` in isolation is insufficient evidence for the Construction. |
+| de `je … desto/umso` | both fixed arms of the proportional correlation | `Lexeme/CCONJ` | IDS describes the unit as an obligatorily two-part proportional correlation; ADR 0009 assigns one whole-unit POS to multi-member Lexemes. [IDS Grammis](https://grammis.ids-mannheim.de/systematische-grammatik/2118) | `je` or `desto` in isolation is insufficient evidence for the complete multi-member Lexeme. |
 
 UD's `fixed` relation is useful negative evidence rather than a direct Phraseme
 classifier. It is intentionally restricted to highly grammaticalized,

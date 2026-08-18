@@ -986,8 +986,8 @@ test("keeps the complete prompt catalog internal for authoring tests", () => {
 	const grammaticalPrompts = Object.values(grammatical).flatMap((family) =>
 		Object.values(family).map((entry) => entry.prompt),
 	);
-	expect(grammaticalPrompts).toHaveLength(22);
-	expect(new Set(grammaticalPrompts).size).toBe(22);
+	expect(grammaticalPrompts).toHaveLength(21);
+	expect(new Set(grammaticalPrompts).size).toBe(21);
 	expect(GERMAN_HIGH_LEVEL_ROUTES.Lexeme).toContain("NOUN");
 });
 

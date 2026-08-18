@@ -102,9 +102,6 @@ export function createDumgenImplementation(
 			generators.laboratory.grammaticalResolution.de.Phraseme.Proverb,
 		"de/Construction/Fusion":
 			generators.laboratory.grammaticalResolution.de.Construction.Fusion,
-		"de/Construction/PairedFrame":
-			generators.laboratory.grammaticalResolution.de.Construction
-				.PairedFrame,
 	});
 	const readingRoutes = Object.freeze({
 		de: generators.laboratory.readingResolution.de,
