@@ -1,1 +1,4 @@
-export { codecBuilder4 as selectedCodecBuilder } from "../../src";
+import { codecBuilder4 } from "../../src";
+
+export const selectedCodec =
+	codecBuilder4.fieldCodec.nonNullish.numericString.and.number;

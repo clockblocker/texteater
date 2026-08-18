@@ -45,6 +45,7 @@ function add(
 function validateWorkspaceManifest(
 	workspace: Workspace,
 	expectedPackageManager: string,
+	expectedNodeEngine: string,
 ): PolicyIssue[] {
 	const issues: PolicyIssue[] = [];
 	const manifest = workspace.manifest;
@@ -61,6 +62,12 @@ function validateWorkspaceManifest(
 		location,
 		manifest.packageManager === expectedPackageManager,
 		`packageManager must be ${expectedPackageManager}`,
+	);
+	add(
+		issues,
+		location,
+		stringRecord(manifest.engines).node === expectedNodeEngine,
+		`engines.node must be ${expectedNodeEngine}`,
 	);
 	add(issues, location, manifest.type === "module", 'type must be "module"');
 	for (const script of requiredWorkspaceScripts) {
@@ -173,6 +180,46 @@ export async function validateManifestPolicy(options: {
 			},
 		];
 	}
+	const bunVersion = /^bun@(\d+\.\d+\.\d+)$/.exec(
+		expectedPackageManager,
+	)?.[1];
+	if (!bunVersion) {
+		return [
+			{
+				location: "package.json",
+				message: "root packageManager must pin an exact Bun version",
+			},
+		];
+	}
+	const rootDevDependencies = stringRecord(rootManifest.devDependencies);
+	if (rootDevDependencies["bun-types"] !== bunVersion) {
+		return [
+			{
+				location: "package.json",
+				message: `root bun-types must be ${bunVersion}`,
+			},
+		];
+	}
+	const expectedNodeVersion = rootDevDependencies.node;
+	const nodeMajor = /^(\d+)\.\d+\.\d+$/.exec(expectedNodeVersion ?? "")?.[1];
+	if (!expectedNodeVersion || !nodeMajor) {
+		return [
+			{
+				location: "package.json",
+				message:
+					"root devDependencies.node must pin an exact Node.js version",
+			},
+		];
+	}
+	const expectedNodeEngine = `${nodeMajor}.x`;
+	if (stringRecord(rootManifest.engines).node !== expectedNodeEngine) {
+		return [
+			{
+				location: "package.json",
+				message: `root engines.node must be ${expectedNodeEngine}`,
+			},
+		];
+	}
 	if (options.mode === "package") {
 		const relativePath = relative(repositoryRoot, options.cwd);
 		const [kind, name, ...rest] = relativePath.split("/");
@@ -195,7 +242,11 @@ export async function validateManifestPolicy(options: {
 			manifest: await readJson(join(options.cwd, "package.json")),
 			relativePath,
 		};
-		return validateWorkspaceManifest(target, expectedPackageManager);
+		return validateWorkspaceManifest(
+			target,
+			expectedPackageManager,
+			expectedNodeEngine,
+		);
 	}
 
 	const workspaces = await discoverWorkspaces(repositoryRoot);
@@ -229,7 +280,11 @@ export async function validateManifestPolicy(options: {
 
 	for (const workspace of workspaces) {
 		issues.push(
-			...validateWorkspaceManifest(workspace, expectedPackageManager),
+			...validateWorkspaceManifest(
+				workspace,
+				expectedPackageManager,
+				expectedNodeEngine,
+			),
 		);
 	}
 

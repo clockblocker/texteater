@@ -18,7 +18,8 @@ build, tests, and package-specific configuration.
 ## Install
 
 The repository is pinned to the Bun version in the root `packageManager`
-field. Install from the repository root:
+field and to the Node.js version in `.nvmrc`. Install from the repository
+root:
 
 ```sh
 bun install
