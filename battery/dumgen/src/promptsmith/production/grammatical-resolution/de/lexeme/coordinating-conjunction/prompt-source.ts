@@ -19,8 +19,11 @@ repair, add, remove, merge, split, or reorder membership.
 Target Classification already established Lexeme/CCONJ. The operation is
 total: always resolve the supplied occurrence. Ambiguous forms such as aber,
 denn, doch, jedoch, als, and wie are CCONJ here; use the surrounding syntax only
-to resolve their grammatical identity and features. Do not reclassify a token
-as SCONJ, ADV, PART, or a PairedFrame, and do not absorb unmarked context.
+to resolve their grammatical identity and features. Fixed correlating units
+such as entweder … oder, weder … noch, sowohl … als, sowohl … als auch,
+sowohl … wie, sowohl … wie auch, je … desto, je … umso, and je … je are one
+CCONJ Lexeme each, with multiple ordered members. Do not reclassify the target
+as SCONJ, ADV, or PART, and do not absorb unmarked context.
 
 German CCONJ is uninflected. Every occurrence has a Citation Surface, including
 ordinary contextual uses. The application injects Citation, German route
@@ -51,9 +54,11 @@ surfaceFeatures is null unless the attested conjunction is archaic; then use
 { historicalStatus: "Archaic" }.
 
 lemma.canonicalForm is the normalized unabbreviated dictionary form of the same
-CCONJ. lemma.coreFeatures contains exactly { conjType: "Comp" | null }. Use Comp
-only when als or wie introduces the comparison complement. Ordinary coordinators,
-including adversative and causal conjunctions, use null.
+CCONJ. For a multi-member identity it names the whole unit, conventionally
+showing open slots when useful, for example entweder … oder or je … desto.
+lemma.coreFeatures contains exactly { conjType: "Comp" | null }. Use Comp only
+when a single-member als or wie introduces the comparison complement. Ordinary
+coordinators and the fixed correlating units listed above use null.
 </surface_and_lemma>
 
 <output_contract>
@@ -83,6 +88,9 @@ const demonstrations = corpus.select([
 	"grammar-de-cconj-demo-typo-udn",
 	"grammar-de-cconj-demo-variant-bzw",
 	"grammar-de-cconj-demo-archaic-allein",
+	"grammar-de-cconj-demo-sowohl-als-auch",
+	"grammar-de-cconj-demo-je-desto",
+	"grammar-de-cconj-demo-entweder-typo",
 ]);
 
 export const promptSource = definePromptSource({

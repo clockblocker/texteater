@@ -149,6 +149,61 @@ const demonstrationPassive = sentence([
 	"morgen",
 	"verschickt",
 ]);
+const demonstrationStatePassive = sentence([
+	"Die",
+	"Banken",
+	"sind",
+	"geöffnet",
+]);
+const demonstrationStatePassiveApproval = sentence([
+	"Nach",
+	"der",
+	"Endkontrolle",
+	"ist",
+	"der",
+	"Bauplan",
+	"vom",
+	"Architekten",
+	"freigegeben",
+]);
+const demonstrationStatePassiveDisplacement = sentence([
+	"Für",
+	"die",
+	"Rettungsübung",
+	"ist",
+	"die",
+	"Absperrung",
+	"von",
+	"den",
+	"Helfern",
+	"zwei",
+	"Meter",
+	"nach",
+	"Osten",
+	"versetzt",
+]);
+const demonstrationParticipialAdjective = sentence([
+	"Der",
+	"Brief",
+	"ist",
+	"ungelesen",
+	"und",
+	"unwichtig",
+]);
+const lexicalizedParticipialAdjective = sentence([
+	"Der",
+	"Mann",
+	"ist",
+	"völlig",
+	"verrückt",
+]);
+const attributiveParticipleOne = sentence([
+	"Der",
+	"lachende",
+	"Junge",
+	"winkte",
+]);
+const adverbialParticipleOne = sentence(["Er", "kam", "lachend", "herein"]);
 const demonstrationKnowledgeSupportVerb = sentence([
 	"Sie",
 	"nahm",
@@ -449,6 +504,76 @@ const cases = {
 		[2, 8],
 		"Lexeme",
 		"VERB",
+	),
+	"target-de-demo-state-passive-banken-click-sind": resolved(
+		demonstrationStatePassive,
+		4,
+		[4, 6],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-state-passive-banken-click-geoeffnet": resolved(
+		demonstrationStatePassive,
+		6,
+		[4, 6],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-state-passive-bauplan-click-freigegeben": resolved(
+		demonstrationStatePassiveApproval,
+		16,
+		[6, 16],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-state-passive-absperrung-click-versetzt": resolved(
+		demonstrationStatePassiveDisplacement,
+		26,
+		[6, 26],
+		"Lexeme",
+		"VERB",
+	),
+	"target-de-demo-participial-adjective-brief-click-ist": resolved(
+		demonstrationParticipialAdjective,
+		4,
+		[4],
+		"Lexeme",
+		"AUX",
+	),
+	"target-de-demo-participial-adjective-brief-click-ungelesen": resolved(
+		demonstrationParticipialAdjective,
+		6,
+		[6],
+		"Lexeme",
+		"ADJ",
+	),
+	"target-de-boundary-lexicalized-participle-click-ist": resolved(
+		lexicalizedParticipialAdjective,
+		4,
+		[4],
+		"Lexeme",
+		"AUX",
+	),
+	"target-de-boundary-lexicalized-participle-click-verrueckt": resolved(
+		lexicalizedParticipialAdjective,
+		8,
+		[8],
+		"Lexeme",
+		"ADJ",
+	),
+	"target-de-boundary-participle-one-attributive-lachende": resolved(
+		attributiveParticipleOne,
+		2,
+		[2],
+		"Lexeme",
+		"ADJ",
+	),
+	"target-de-boundary-participle-one-adverbial-lachend": resolved(
+		adverbialParticipleOne,
+		4,
+		[4],
+		"Lexeme",
+		"ADJ",
 	),
 
 	"target-de-boundary-modal-click-muss": resolved(
@@ -899,6 +1024,42 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId.includes("state-passive-banken")) {
+		return evidence(
+			IDS.participialBoundary,
+			"TIGER keeps productive sein plus Partizip II verbal when the corresponding werden-passive preserves the meaning. Dumgen therefore maps sind and geöffnet to one click-invariant Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("state-passive-bauplan")) {
+		return evidence(
+			IDS.participialBoundary,
+			"The named agent and preserved freigeben event keep this result state verbal under TIGER. Dumgen therefore maps ist and freigegeben to one Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("state-passive-absperrung")) {
+		return evidence(
+			IDS.participialBoundary,
+			"The named agent and directional distance preserve the versetzen event, so TIGER keeps the result state verbal. Dumgen therefore maps ist and versetzt to one Lexeme/VERB target.",
+		);
+	}
+	if (caseId.includes("participial-adjective-brief")) {
+		return evidence(
+			IDS.participialBoundary,
+			"TIGER assigns an adjectival Partizip II property to ADJD. Dumgen therefore keeps copular ist separate from ungelesen, whose un- form and coordination with unwichtig support the adjective reading.",
+		);
+	}
+	if (caseId.includes("lexicalized-participle")) {
+		return evidence(
+			IDS.participialBoundary,
+			"TIGER assigns lexicalized or idiomatized participial properties to ADJD rather than VVPP. Dumgen therefore keeps copular ist separate from adjective verrückt.",
+		);
+	}
+	if (caseId.includes("participle-one")) {
+		return evidence(
+			IDS.participialBoundary,
+			"TIGER assigns adjectivally used Partizip I forms to ADJA or ADJD. Dumgen therefore routes attributive lachende and adverbial lachend as singleton Lexeme/ADJ targets.",
+		);
+	}
 	if (caseId.includes("diagnostic-idiom-oel")) {
 		return evidence(
 			IDS.phraseolexeme,

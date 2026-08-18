@@ -197,6 +197,30 @@ export type Attestation<
 		>
 	: PlaceholderAttestation<L, SK, LK, LSK>;
 
+/**
+ * A Reading is the semantic identity formed by one Lemma and one normalized
+ * emoji description. Host persistence IDs and learner note content are not
+ * part of this value.
+ */
+export type Reading<
+	L extends SupportedLanguage = SupportedLanguage,
+	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
+> = {
+	lemma: Lemma<L, LK, LSK>;
+	emojiDescription: string;
+};
+
+declare const readingFingerprintBrand: unique symbol;
+
+/**
+ * Stable structural identity for a Reading. The serialized format is a public
+ * compatibility contract suitable for equality and indexed host lookup.
+ */
+export type ReadingFingerprint = string & {
+	readonly [readingFingerprintBrand]: "Reading";
+};
+
 export type FeatureSetKind = "core" | "inflectional";
 
 type PrettifyFeatureSet<T> = T extends object

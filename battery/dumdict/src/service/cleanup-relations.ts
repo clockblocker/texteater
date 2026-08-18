@@ -1,12 +1,16 @@
+import { readingFingerprint } from "dumling";
 import { semanticRelationSchema } from "dumrel";
-import { readingKey } from "../core/identity";
 import { planCleanupRelations } from "../core/plan-mutation";
 import { validateCleanupRelationsSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
-import type { CleanupRelationsRequest, MutationResult } from "../public";
+import type {
+	CleanupRelationsRequest,
+	DumdictMutationOptions,
+	MutationResult,
+} from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
+import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
-import { mutationResultFromCommit } from "./result-mapping";
 
 function locatorKey(
 	value: CleanupRelationsRequest<SupportedLanguage>["resolutions"][number]["locator"],
@@ -17,6 +21,7 @@ function locatorKey(
 export async function cleanupRelations<L extends SupportedLanguage>(
 	options: CreateDumdictServiceOptions<L>,
 	request: CleanupRelationsRequest<L>,
+	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
 	for (const resolution of request.resolutions) {
 		if (resolution.targetReading) {
@@ -65,12 +70,14 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	}
 
 	const targetReadings = new Set(
-		slice.targetReadings.map(({ reading }) => readingKey(reading.reading)),
+		slice.targetReadings.map(({ reading }) =>
+			readingFingerprint(reading.reading),
+		),
 	);
 	for (const resolution of request.resolutions) {
 		if (
 			resolution.targetReading &&
-			!targetReadings.has(readingKey(resolution.targetReading))
+			!targetReadings.has(readingFingerprint(resolution.targetReading))
 		) {
 			return {
 				status: "conflict",
@@ -98,9 +105,5 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 
 	const plan = planCleanupRelations(slice, request);
 	if (plan.status === "rejected") return plan;
-	const commit = await options.storage.commitChanges({
-		baseRevision: plan.baseRevision,
-		changes: plan.changes,
-	});
-	return mutationResultFromCommit(plan, commit);
+	return applyPlan(options, plan, mutationOptions);
 }

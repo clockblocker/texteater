@@ -14,7 +14,7 @@ Hebrew is available at \`dumling.he\`, \`getLanguageApi("he")\`, and \`schemasFo
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
-| \`Construction\` | \`Fusion\`, \`PairedFrame\` |
+| \`Construction\` | \`Fusion\` |
 
 \`Construction\` is part of the shared public ontology even though the Hebrew examples here focus on lexemes, morphemes, and phrasemes. Construction Lemmas are citation-only and currently featureless.
 

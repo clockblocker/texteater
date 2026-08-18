@@ -2,7 +2,9 @@
 	"extends": "../../tooling/typescript/battery.json",
 	"compilerOptions": {
 		"paths": {
-			"dumgen": ["./src/index.ts"]
+			"dumgen": ["./src/index.ts"],
+			"dumgen/schema": ["./src/schema.ts"],
+			"dumgen/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

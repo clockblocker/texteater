@@ -7,19 +7,20 @@ and provides types and Zod schemas for learner-facing meaning-focused segmentati
 
 This package ships working runtime surfaces for `de`, `en`, and `he`.
 
-`dumling` keeps three linked DTOs separate:
+`dumling` keeps the foundational linguistic values separate:
 
 - `Lemma`: the normalized grammatical identity
 - `Surface`: a persistent normalized form that carries licensed spelling and inflection
 - `Attestation`: fleeting, click-independent occurrence evidence linked to one Surface
+- `Reading`: semantic identity formed by one Lemma and one normalized emoji description
 
 ## Entrypoints
 
 | Import path      | Purpose                                                                                         |
 | ---------------- | ----------------------------------------------------------------------------------------------- |
-| `dumling`        | Root runtime API: `dumling.<language>`, `getLanguageApi`, and `supportedLanguages`              |
+| `dumling`        | Root runtime API, language helpers, and the stable `readingFingerprint` identity operation      |
 | `dumling/types`  | Public DTOs, feature helpers, descriptors, and API/result/error types                           |
-| `dumling/schema` | Concrete runtime schema registry: `schemasFor` and `getSchemaTreeFor(language)`                 |
+| `dumling/schema` | Concrete entity schema registry plus the canonical `readingSchema`                             |
 
 ## Runtime API
 
@@ -36,12 +37,14 @@ The root runtime entrypoint also exposes:
 
 - `supportedLanguages`: the curated runtime language inventory
 - `getLanguageApi(language)`: dynamic access to a language-bound workflow API
+- `readingFingerprint(reading)`: stable Reading equality/index identity derived from Lemma identity and normalized `emojiDescription`
 
 ## Public types
 
 `dumling/types` exports:
 
-- DTOs: `Lemma`, `Surface`, `Attestation`
+- DTOs: `Lemma`, `Surface`, `Attestation`, `Reading`
+- Reading identity: `ReadingFingerprint`
 - Entity and ID helpers: `EntityValue`, `EntityForKind`, `DumlingCsv`, `DumlingBase64Url`, `AttestationOptionsFor`
 - Language-aware helper types: `LemmaFamilyFor`, `LemmaKindFor`, `SurfaceKindFor`, `LemmaFamilyForSurfaceKind`
 - Feature typing helpers: `FeatureSet`, `FeatureName`, `FeatureValue`, `CoreFeaturesFor`, `InflectionalFeaturesFor`
@@ -55,6 +58,12 @@ Start with a German noun Lemma, build the linked learner-facing entities explici
 The `Lemma` is the normalized grammatical identity:
 
 <!-- README_BLOCK:core-lemma -->
+
+The `Reading` adds one learner-facing semantic identity without changing its
+Lemma. Its fingerprint is stable across object-key order and trimmed/NFC emoji
+input:
+
+<!-- README_BLOCK:core-reading -->
 
 The `Surface` is the normalized contextual form that the note belongs to:
 
@@ -82,7 +91,7 @@ Minimal end-to-end usage:
 
 <!-- README_BLOCK:quickstart-de -->
 
-`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
+`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. `readingSchema` is the canonical supported-language Reading schema. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
 
 ## Concepts / Search Terms
 
@@ -95,6 +104,7 @@ People often look for this package using adjacent terms:
 - attestation DTOs
 - Zod schema registries
 - stable linguistic IDs
+- semantic Reading fingerprints
 
 ## Model notes
 
@@ -110,10 +120,11 @@ Attestations are always hydrated:
 - an `Attestation` always contains a `Surface`
 - a `Surface` always contains a `Lemma`
 
-Lemma families also include `Construction` for learner-facing patterned entities such as fused forms like German `zum`, `zur`, or `beim`, and paired frames like `um_zu`. Construction Lemmas are citation-only today.
+Lemma families also include `Construction` for learner-facing fused forms like German `zum`, `zur`, or `beim`. Construction Lemmas are citation-only today. Lexemes may have multiple fixed realization members: German `rechnen … mit` is one `Lexeme/VERB` even when its members are realized separately.
 
-Dumling stops at Lemma. Learner-scoped semantic identity is a `Reading`—the
-pair of a Lemma and an emoji description—and belongs outside this package.
+Reading remains separate from Attestation because grammatical resolution
+precedes Reading Resolution. Host database document IDs and dictionary note
+content do not enter the public Reading DTO.
 
 ## Scope
 

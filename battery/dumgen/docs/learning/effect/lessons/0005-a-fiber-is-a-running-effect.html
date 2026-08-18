@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 5: A fiber is a running Effect</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 5</p>
+		<h1>A fiber is a running Effect</h1>
+		<p class="dek">The plan is an Effect. Its live execution is a fiber.</p>
+		<p class="meta">6 minutes · one retrieval check · no low-level fiber API required</p>
+	</header>
+
+	<section>
+		<h2>Plan versus execution</h2>
+		<pre><code>const plan = dumgen.segment(sentences) // Effect: inert plan
+
+Effect.runPromise(plan)               // Runtime starts a fiber</code></pre>
+		<p class="thesis"><strong>Effect</strong> is the recipe. <strong>Fiber</strong> is one running instance of that recipe.</p>
+		<p>Run the same Effect twice and you get two executions—therefore two fibers—with independent outcomes and lifecycles.</p>
+	</section>
+
+	<section>
+		<h2>Not an OS thread</h2>
+		<p>JavaScript still executes ordinary code on its event-loop thread. A fiber is a logical thread managed by Effect. When one Dumgen fiber waits for OpenAI, it suspends; the runtime can advance another ready fiber.</p>
+		<pre><code>main request fiber
+├── upload A fiber  — suspended, waiting for OpenAI
+├── upload B fiber  — running local projection
+└── upload C fiber  — suspended, waiting for a permit</code></pre>
+		<p>This is concurrency, not CPU parallelism. CPU-heavy parsing would still need worker threads or another process to use additional cores.</p>
+	</section>
+
+	<section>
+		<h2>Why not just say Promise?</h2>
+		<div class="grid">
+			<article class="card"><h3>Identity and status</h3><p>A fiber has an identity and can be running, suspended, or done.</p></article>
+			<article class="card"><h3>Typed outcome</h3><p>It completes with the Effect's success or error type.</p></article>
+			<article class="card"><h3>Interruption</h3><p>It can be cancelled while Effect runs finalizers and releases resources.</p></article>
+			<article class="card"><h3>Parentage</h3><p>Child work belongs to a parent lifecycle instead of silently escaping.</p></article>
+		</div>
+	</section>
+
+	<section>
+		<h2>You usually do not create them manually</h2>
+		<pre><code>yield* Effect.forEach(
+  intakeBatches,
+  processIntakeBatch,
+  { concurrency: 16 }
+)</code></pre>
+		<p>The runtime creates and manages concurrent child fibers for you. Start with high-level combinators; explicit forking and joining are low-level tools for cases where you need a handle on independently running work.</p>
+	</section>
+
+	<section>
+		<h2>Dumgen payoff</h2>
+		<p>If a user abandons an upload, the request's parent fiber can be interrupted. Its child provider-work fibers are interrupted too, and guarded calls release their semaphore permits. That is structured concurrency: the tree of work shares a lifecycle.</p>
+		<p class="warning">A fiber exists only inside a live runtime process. It does not survive crashes, restarts, or deploys and is not a durable queue item.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="a" data-correct-message="Correct. The Effect is the lazy description; a fiber is one runtime-managed execution of it." data-incorrect-message="Not quite. Fibers are runtime-managed logical executions, not OS threads or durable queue entries.">
+			<p><strong>Which statement is true?</strong></p>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<ol type="A">
+				<li>A fiber is a running Effect instance.</li>
+				<li>A fiber is an operating system thread.</li>
+				<li>A fiber is a durable queued job.</li>
+			</ol>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>A parent upload fiber is interrupted because the user cancels. What should happen to its child provider fibers?</p>
+		<p>Reply in one sentence. Ask your teacher about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Read only “What Are Virtual Threads?” and “How Fibers Work” in the official <a href="https://www.effect.website/docs/v4/concurrency/fibers">Fibers</a> guide. Use the course <a href="../reference/glossary.html">glossary</a> afterward.</p>
+	</section>
+
+	<nav><a href="0004-one-shared-provider-gate.html">← Lesson 4</a> · <a href="../reference/glossary.html">Glossary</a> · <a href="0006-not-every-bad-outcome-is-an-error.html">Next: typed failures →</a></nav>
+</main>
+</body>
+</html>

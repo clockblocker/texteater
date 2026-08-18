@@ -3,6 +3,10 @@ import type { Attestation } from "dumling/types";
 const occurrenceAttestation = {
 	members: [
 		{
+			attested: "sind",
+			orthography: "Standard",
+		},
+		{
 			attested: "gekocht",
 			orthography: "Standard",
 		},
@@ -10,7 +14,7 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "gekocht",
+		normalizedSurface: "sind gekocht",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -43,6 +47,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Kartoffeln sind bereits [gekocht].",
 	classifierNotes:
-		"Gekocht is a bare predicative Partizip-II form of kochen. Even though the clause describes a resulting state, the current German participle rule keeps non-attributive participles of lexical verbs under VERB rather than shifting them to ADJ.",
+		"Sind plus gekocht preserves the productive kochen event and forms one state-passive VERB target. The participle owns morphology and the Lemma; the auxiliary is a fixed member.",
 	isVerified: true,
 } as const;

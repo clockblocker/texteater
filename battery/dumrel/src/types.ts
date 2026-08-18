@@ -1,5 +1,5 @@
 import type {
-	Lemma,
+	Reading as DumlingReading,
 	LemmaFamilyFor,
 	LemmaKindFor,
 	SupportedLanguage,
@@ -29,10 +29,7 @@ export type ReadingReference<
 	L extends SupportedLanguage = SupportedLanguage,
 	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
 	K extends LemmaKindFor<L, F> = LemmaKindFor<L, F>,
-> = {
-	lemma: Lemma<L, F, K>;
-	emojiDescription: string;
-};
+> = DumlingReading<L, F, K>;
 
 export type MorphemeReadingReference<
 	L extends SupportedLanguage = SupportedLanguage,

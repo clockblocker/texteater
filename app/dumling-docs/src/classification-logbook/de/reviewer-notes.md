@@ -26,9 +26,11 @@
 - State predicates stay `ADJ` when they predicate over an argument rather than
   modifying the event. Examples include `anders`, `tot`, and resultative
   `entzwei`.
-- Participial classification splits by use. Attributive participles carrying
-  adjectival agreement are `ADJ`; bare or predicative Partizip-II forms remain
-  `VERB` unless independently lexicalized as adjectives.
+- Participial classification follows the TIGER boundary. Adjectivally used
+  Partizip I and attributive or adverbial participles are `ADJ`; productive
+  perfect and passive Partizip II forms are `VERB`. For `sein + Partizip II`,
+  a meaning-preserving active or `werden`-passive counterpart keeps the
+  occurrence verbal, while lexicalized property meanings are `ADJ`.
 - Finite German modals are `AUX` with an overt infinitive and `VERB` when they
   stand as the main predicate in an elliptical clause.
 - Finite `werden` is `AUX` when it marks another verbal form and `VERB` when it
@@ -72,9 +74,10 @@
 - Verbal Phraseme Surfaces may be Inflection Surfaces. The attested occurrence
   `verstehe … nur Bahnhof` is finite and resolves to the Lemma
   `nur Bahnhof verstehen`.
-- Citation-only `Construction/PairedFrame` Lemmas use a plain spaced
-  `canonicalForm`, such as `um zu`. A full attested occurrence uses the same
-  spaced `normalizedSurface`.
+- Fixed multi-member Lexemes use a conventional dictionary-form
+  `canonicalForm`; an ellipsis is optional, not required. Thus `um zu` is a
+  `Lexeme/SCONJ` with a spaced `normalizedSurface`, while `entweder … oder` is
+  a `Lexeme/CCONJ` whose attested members normalize to `entweder oder`.
 - Add `gender[psor]` and `number[psor]` only when the form or recoverable context
   actually disambiguates possessor features.
 - Capitalization alone is never a Variant.

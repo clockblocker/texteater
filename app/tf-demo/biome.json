@@ -1,0 +1,17 @@
+{
+	"extends": "//",
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"files": {
+		"includes": [
+			"!!dist",
+			"!!node_modules",
+			"!!.convex",
+			"!!convex/_generated",
+			"!!convex/tsconfig.json"
+		]
+	}
+}

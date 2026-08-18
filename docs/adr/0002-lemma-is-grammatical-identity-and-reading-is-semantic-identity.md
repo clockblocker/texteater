@@ -1,14 +1,19 @@
 ---
 status: accepted
 supersedes: 0001-separate-entry-identity-from-lemma-form.md
-partially-superseded-by: 0003-attestation-supersedes-selection-and-owns-realization-coverage.md
+partially-superseded-by:
+  - 0003-attestation-supersedes-selection-and-owns-realization-coverage.md
+  - 0008-make-reading-a-foundational-dumling-value.md
 ---
 
 # Lemma is grammatical identity and Reading is semantic identity
 
 The Selection topology, Selection identity, and Surface realization-coverage
 clauses in this ADR are superseded by ADR 0003. Its Lemma identity,
-Surface-to-Lemma, and semantic-identity decisions remain accepted.
+Surface-to-Lemma, and semantic-identity decisions remain accepted. ADR 0008
+supersedes only the package-ownership decision that kept the Reading DTO and
+its identity operation outside Dumling; dictionary-scoped Reading equality by
+`(Lemma, emojiDescription)` remains accepted.
 
 The system will use `Lemma` for the normalized, identity-bearing grammatical
 node shared by every Dumling family. Dumling's complete resolution chain is:
@@ -39,8 +44,9 @@ Surface identity includes the Lemma it realizes. Selection identity remains
 
 ## Semantic identity
 
-Semantic identity is intentionally outside Dumling. The cross-context name for
-one learner's semantic unit is `Reading`:
+Semantic identity is intentionally separate from Dumling's grammatical
+topology. The cross-context name for one dictionary-scoped semantic unit is
+`Reading`:
 
 ```text
 Reading {
@@ -63,12 +69,14 @@ without introducing a Dumling `Meaning` or `Sense` DTO.
 ## Consequences
 
 - Dumling exposes `Lemma`, `Surface`, and `Selection`; it does not expose
-  `LinguisticEntry`, `Meaning`, `Sense`, or `Reading` DTOs.
+  `LinguisticEntry`, `Meaning`, or `Sense`. The clause excluding a `Reading`
+  DTO is superseded by ADR 0008.
 - Lemma fields use `canonicalForm`, `family`, `kind`, and `coreFeatures`.
 - Surface points to `lemma`, owns inflectional features, licensed spelling
   variation, and realization coverage.
 - Selection owns only sentence-local click evidence and noisy attestation.
-- Dumdict may model Reading and learner-facing dictionary records, but those
-  concerns do not alter Dumling's grammatical topology.
+- Dumdict owns dictionary scope and learner-facing Reading records, but those
+  concerns do not alter Dumling's grammatical topology. ADR 0008 moves the
+  foundational Reading value and its identity operation to Dumling.
 - Relations are separate from this decision. Grammatical relations may connect
   Lemmas; semantic relations may connect Readings.

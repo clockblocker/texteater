@@ -1,7 +1,6 @@
 import type { SemanticRelation } from "dumrel";
-import type { SupportedLanguage, Surface } from "../dumling";
+import type { Reading, SupportedLanguage, Surface } from "../dumling";
 import type { DumdictPendingSemanticRelation } from "./pending";
-import type { Reading } from "./reading";
 
 export type OwnedSurfaceDraft<L extends SupportedLanguage> = {
 	surface: Surface<L>;

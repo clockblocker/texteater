@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dumgen × Effect glossary</title>
+	<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · reference</p>
+		<h1>Glossary</h1>
+		<p class="dek">Operational definitions used consistently throughout this course.</p>
+	</header>
+
+	<section>
+		<h2>Effect</h2>
+		<p>An immutable, lazy description of a computation that can succeed, fail with an expected error, and require services. An Effect is not running merely because it exists.</p>
+	</section>
+
+	<section>
+		<h2>Runtime</h2>
+		<p>The interpreter that executes an Effect. Running an Effect creates at least one fiber.</p>
+	</section>
+
+	<section>
+		<h2>Fiber</h2>
+		<p>One running execution of an Effect, managed by the Effect runtime. It has identity, status, local state, success or failure, and an interruptible lifecycle. It is a logical thread on JavaScript's event loop—not an OS thread, worker thread, or durable job.</p>
+	</section>
+
+	<section>
+		<h2>Structured concurrency</h2>
+		<p>The rule that concurrent work belongs to a lifecycle tree. Parent completion or interruption governs child fibers so work does not silently escape as an orphan.</p>
+	</section>
+
+	<section>
+		<h2>Expected error</h2>
+		<p>A failure that is part of normal operation and appears in an Effect's typed error channel, such as provider throttling. Callers can recover, retry, or transform it explicitly.</p>
+	</section>
+
+	<section>
+		<h2>Defect</h2>
+		<p>An unexpected bug or broken invariant that does not appear in the typed error channel. The runtime retains it in the fiber's Cause for reporting and diagnosis.</p>
+	</section>
+
+	<section>
+		<h2>Service</h2>
+		<p>A reusable capability required by an Effect, such as Dumgen's model adapter or provider gate. Required services appear in the Effect type's third parameter.</p>
+	</section>
+
+	<section>
+		<h2>Layer</h2>
+		<p>A recipe for constructing and supplying service implementations. A shared live Layer can build one provider client and semaphore for reuse across the application.</p>
+	</section>
+
+	<section>
+		<h2>Semaphore</h2>
+		<p>A shared gate containing a fixed number of permits. A fiber waits when it cannot acquire enough permits; Effect releases borrowed permits when guarded work finishes, fails, or is interrupted.</p>
+	</section>
+
+	<section>
+		<h2>Retry policy</h2>
+		<p>A rule that decides which typed failures deserve another attempt, how many attempts are allowed, and how long to wait between them. In Dumgen, each attempt borrows a provider permit; backoff does not.</p>
+	</section>
+
+	<section>
+		<h2>Intake Batch</h2>
+		<p>A Dumgen domain concept: one bounded, non-empty, ordered list of caller-delimited Source Sentences handled by exactly one Intake model call. Concurrency policy must not accidentally split it into one provider call per sentence.</p>
+	</section>
+
+	<nav><a href="effect-mental-model.html">← Mental model</a> · <a href="../lessons/0006-not-every-bad-outcome-is-an-error.html">Typed failures</a> · <a href="../lessons/0007-dont-sleep-holding-the-permit.html">Retry scope →</a></nav>
+</main>
+</body>
+</html>

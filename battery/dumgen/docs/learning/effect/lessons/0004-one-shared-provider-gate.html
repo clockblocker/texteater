@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 4: One shared provider gate</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 4</p>
+		<h1>One shared provider gate</h1>
+		<p class="dek">Cap OpenAI traffic across every caller, not merely inside one request.</p>
+		<p class="meta">8 minutes · one retrieval check · Effect v4 RC syntax</p>
+	</header>
+
+	<section>
+		<h2>A semaphore is a bucket of tickets</h2>
+		<pre><code>const semaphore = yield* Semaphore.make(16)</code></pre>
+		<p>The semaphore begins with sixteen permits. A provider call must borrow one permit before starting. If all sixteen are borrowed, later fibers wait rather than calling OpenAI.</p>
+		<pre><code>const guardedCall = semaphore.withPermits(1)(
+  callOpenAI(request)
+)</code></pre>
+		<p>When the call succeeds, fails, or is interrupted, Effect releases the permit automatically.</p>
+		<p class="thesis">Twenty callers sharing one sixteen-permit semaphore can still create 320 waiting jobs—but only sixteen provider calls can be active.</p>
+	</section>
+
+	<section>
+		<h2>“Shared” is the entire trick</h2>
+		<div class="grid">
+			<article class="card"><h3>Wrong ownership</h3><p>Create <code>Semaphore.make(16)</code> inside every request handler. Twenty callers receive twenty independent gates: back to 320.</p></article>
+			<article class="card"><h3>Right ownership</h3><p>Create one semaphore in the live provider service at application startup. Every caller reaches the same gate.</p></article>
+		</div>
+		<p>Effect Layers are factories for service implementations. Layer instances are memoized by reference, so build the live Layer once and reuse that value. Calling a function that constructs a fresh Layer for every request also constructs a fresh semaphore.</p>
+	</section>
+
+	<section>
+		<h2>Make capacity a Dumgen requirement</h2>
+		<pre><code>import { Context, Effect, Layer, Semaphore } from "effect"
+
+class ProviderGate extends Context.Service&lt;
+  ProviderGate,
+  {
+    readonly withPermit: &lt;A, E, R&gt;(
+      effect: Effect.Effect&lt;A, E, R&gt;
+    ) =&gt; Effect.Effect&lt;A, E, R&gt;
+  }
+&gt;()("dumgen/ProviderGate") {}
+
+const ProviderGateLive = Layer.effect(
+  ProviderGate,
+  Semaphore.make(16).pipe(
+    Effect.map((semaphore) =&gt; ({
+      withPermit: semaphore.withPermits(1)
+    }))
+  )
+)</code></pre>
+		<p>Any model operation that yields <code>ProviderGate</code> now advertises that requirement in its third Effect type parameter. Tests can provide a different gate; production provides the shared live gate.</p>
+	</section>
+
+	<section>
+		<h2>Guard the actual scarce operation</h2>
+		<pre><code>const generate = (request: OpenAIRequest) =&gt;
+  Effect.gen(function* () {
+    const gate = yield* ProviderGate
+
+    return yield* gate.withPermit(
+      openAiAdapter.generate(request)
+    )
+  })</code></pre>
+		<p>Put the gate around the provider call, not the whole upload workflow. Persistence and local Source Segmentation do not need to hold an expensive provider permit.</p>
+		<p>Your API key fits the same architecture: the caller supplies a live OpenAI service Layer containing credentials, while Dumgen operations merely declare that they require the service.</p>
+	</section>
+
+	<section>
+		<h2>What this still does not solve</h2>
+		<p class="warning">A semaphore limits active calls in one live process. It does not provide durable queueing, fairness between tenants, cross-process coordination, or survival across deploys. Those require an external coordinator or durable workflow system.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="b" data-correct-message="Correct. One shared live Layer gives every caller the same semaphore and therefore one provider-wide in-process limit." data-incorrect-message="Not quite. Constructing the semaphore per request or per Batch recreates the multiplication problem.">
+			<p><strong>Where should Dumgen construct its provider semaphore?</strong></p>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<ol type="A">
+				<li>Inside each incoming application request handler.</li>
+				<li>Inside one shared live provider Layer.</li>
+				<li>Inside every individual Dumgen Intake Batch.</li>
+			</ol>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>Twenty callers share one semaphore containing sixteen permits. What is the maximum number of simultaneously active OpenAI calls?</p>
+		<p>Reply with the number only. Ask your teacher about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Read the official <a href="https://www.effect.website/docs/v4/concurrency/semaphore">Semaphore</a> page through the permit-release guarantee. Then skim <a href="https://www.effect.website/docs/v4/requirements-management/layer-memoization">Layer Memoization</a> for why reusing the same Layer value matters.</p>
+	</section>
+
+	<nav><a href="0003-bound-the-request-flood.html">← Lesson 3</a> · <a href="../reference/effect-mental-model.html">Reference</a> · <a href="0005-a-fiber-is-a-running-effect.html">Next: a fiber is a running Effect →</a></nav>
+</main>
+</body>
+</html>

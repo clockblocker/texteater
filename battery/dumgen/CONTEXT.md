@@ -285,6 +285,12 @@ modifiers remain separate targets. High-level membership does not prevent a
 later drill-down analysis of an individual AUX, preposition, pronoun, or other
 member.
 
+For German participles, ADR 0007 applies the TIGER boundary. A productive
+`sein`-state-passive groups `sein` with Partizip II as one VERB target, while a
+lexicalized or idiomatized participial adjective remains an ADJ predicate
+separate from its copula. Ordinary attributive and adverbial participles are
+ADJ targets; substantivized participles are NOUN targets.
+
 The target level is policy-owned. German High-Level Target Classification does
 not group an ordinary non-idiomatic Collocation merely because its lexical
 choices are conventional. In `eine Entscheidung treffen`, clicks on `eine`,
@@ -366,7 +372,9 @@ families. Grammatically indistinguishable homonyms share one Lemma; homographs
 with different grammatical analyses are different Lemmas.
 
 ### Lexeme
-A word-like Lemma.
+A lexical Lemma whose fixed realization may contain one or more members. German
+`rechnen … mit` is one `VERB` Lexeme even when the verb and its governed
+preposition are realized separately.
 
 Lexeme is one Lemma family, not a synonym for Lemma. Semantic differences do
 not split a Lexeme when its canonical form, kind, and core features are the
@@ -379,8 +387,8 @@ language, Lemma family, and Lemma kind.
 _Avoid_: Grammar Resolution
 
 ### Reading
-The learner-scoped semantic identity formed by one Lemma and one emoji
-description.
+A foundational Dumling semantic value formed by one Lemma and one emoji
+description, interpreted within one learner or hosted dictionary scope.
 
 A Reading is exactly `{ lemma, emojiDescription }`. When a learner encounters
 another use of the same Lemma, classification reuses one of that learner's
@@ -483,8 +491,9 @@ laboratory evidence and paths do not by themselves claim production readiness.
 - A **Surface** realizes exactly one **Lemma** under one grammatical
   analysis.
 - A **Lexeme** is a word-like **Lemma**.
-- A **Reading** combines exactly one **Lemma** and one learner-scoped Emoji
-  Description.
+- A **Reading** combines exactly one **Lemma** and one dictionary-scoped Emoji
+  Description; Dumling owns the value contract and Dumdict owns dictionary
+  scope and records.
 
 ## Example dialogue
 

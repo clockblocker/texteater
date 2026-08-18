@@ -1,9 +1,15 @@
 import { describe, expect, it } from "bun:test";
 import * as runtimeLemma from "../../src";
-import { dumling, getLanguageApi, supportedLanguages } from "../../src";
+import {
+	dumling,
+	getLanguageApi,
+	readingFingerprint,
+	supportedLanguages,
+} from "../../src";
 import {
 	abstractSchemas,
 	getSchemaTreeFor,
+	readingSchema,
 	schemasFor,
 } from "../../src/schema";
 
@@ -13,10 +19,27 @@ describe("public API usage", () => {
 		expect(Object.keys(runtimeLemma).sort()).toEqual([
 			"dumling",
 			"getLanguageApi",
+			"readingFingerprint",
 			"supportedLanguages",
 		]);
 		expect("schema" in runtimeLemma).toBe(false);
 		expect("Language" in runtimeLemma).toBe(false);
+	});
+
+	it("exposes the canonical Reading schema and fingerprint operation", () => {
+		const lemma = dumling.de.create.lemma({
+			canonicalForm: "Haus",
+			family: "Lexeme",
+			kind: "NOUN",
+			coreFeatures: { gender: "Neut", hyph: null },
+		});
+		const reading = readingSchema.parse({
+			lemma,
+			emojiDescription: "  \u{1F3E0} ",
+		});
+
+		expect(reading.emojiDescription).toBe("\u{1F3E0}");
+		expect(readingFingerprint(reading)).toContain("\u{1F3E0}");
 	});
 
 	it("exposes dynamic language helpers and language-scoped identity decoding", () => {

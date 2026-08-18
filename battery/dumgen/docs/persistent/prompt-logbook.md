@@ -256,12 +256,16 @@ is worth revisiting.
 - **Route:** `grammatical-resolution/de/lexeme/adjective`
 - **Golden Case:** `grammar-de-adj-provisional-participial-geschlossen`
 - **Raised by:** Wayfinder issue #32
+- **Status:** Resolved by system ADR 0007.
 - **Question:** German treebanks retain verbal `VerbForm` and `Tense` on many
   ADJ participles, but the current ADJ codec cannot express those features or
   consistently preserve a verbal Lemma. Should these resolve as ADJ, require a
   codec extension, or remain Unresolved?
-- **Current take:** Keep the participial analysis corpus-only pending a domain
-  decision; ordinary perfect-participle VERB uses remain out of route.
+- **Current take:** Follow the TIGER boundary without copying hybrid treebank
+  features into Dumling. Productive perfect/passive/state-passive occurrences
+  resolve under the source `VERB` Lemma and its participial features. Actual
+  adjectival uses resolve under a participial `ADJ` Lemma and carry only the
+  current ADJ codec's contextual agreement and degree features.
 
 ### ADJ Core Feature and route boundaries
 

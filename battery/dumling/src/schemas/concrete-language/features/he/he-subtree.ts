@@ -1,6 +1,5 @@
 import { buildLanguageSchema } from "../../../shared/builders.js";
 import { heConstructionFusionFeaturesSchema } from "./construction/fusion.js";
-import { heConstructionPairedFrameFeaturesSchema } from "./construction/paired-frame.js";
 import { heAdjectiveFeaturesSchema } from "./lexeme/adjective.js";
 import { heAdpositionFeaturesSchema } from "./lexeme/adposition.js";
 import { heAdverbFeaturesSchema } from "./lexeme/adverb.js";
@@ -75,6 +74,5 @@ export const heSubtree = buildLanguageSchema("he", {
 	},
 	Construction: {
 		Fusion: heConstructionFusionFeaturesSchema,
-		PairedFrame: heConstructionPairedFrameFeaturesSchema,
 	},
 });

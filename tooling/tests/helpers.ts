@@ -8,6 +8,7 @@ export async function temporaryRepository(): Promise<string> {
 		name: "fixture",
 		private: true,
 		packageManager: "bun@1.3.14",
+		engines: { node: "24.x" },
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
 			build: "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
@@ -15,6 +16,8 @@ export async function temporaryRepository(): Promise<string> {
 		},
 		devDependencies: {
 			"@biomejs/biome": "2.5.7",
+			"bun-types": "1.3.14",
+			node: "24.19.0",
 		},
 	});
 	return root;
@@ -44,6 +47,7 @@ export async function addWorkspace(
 		private: options.private ?? true,
 		type: "module",
 		packageManager: "bun@1.3.14",
+		engines: { node: "24.x" },
 		license: "MIT",
 		exports: options.exports ?? { ".": "./dist/index.js" },
 		files: ["dist"],

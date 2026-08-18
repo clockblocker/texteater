@@ -11,5 +11,6 @@ export {
 	migrateSerializedDictionaryNotesV0ToV1,
 } from "./migration/v0-to-v1";
 export * from "./public";
+export * from "./schema";
 export { createDumdictService } from "./service/create-dumdict-service";
 export type * from "./storage";

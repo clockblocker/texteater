@@ -14,6 +14,10 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
+		"./schema": {
+			"types": "./dist/schema.d.ts",
+			"import": "./dist/schema.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -22,11 +26,11 @@
 		"LICENSE"
 	],
 	"engines": {
-		"node": ">=24"
+		"node": "24.x"
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && bun build src/index.ts --outfile dist/index.js --format esm --target node --packages external",
+		"build:js": "rm -rf dist && bun build src/index.ts src/schema.ts --outdir dist --format esm --target node --packages external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -41,11 +45,12 @@
 	},
 	"dependencies": {
 		"dumrel": "workspace:^",
-		"dumling": "workspace:^"
+		"dumling": "workspace:^",
+		"zod": "^4.4.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.7",
-		"@types/node": "^24.5.2",
+		"@types/node": "^24.13.3",
 		"bun-types": "1.3.14",
 		"dependency-cruiser": "^18.1.0",
 		"codegen": "workspace:^",

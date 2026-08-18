@@ -106,6 +106,28 @@ describe("owner-associated Knowledge Changes", () => {
 });
 
 describe("serialized note v0 to v1 migration", () => {
+	test("reports legacy Reading descriptions that require an explicit reset or remap", () => {
+		const note = baseV0();
+		const reading = note.readingEntries[0];
+		if (!reading) throw new Error("Expected legacy Reading fixture.");
+		reading.reading = {
+			...reading.reading,
+			emojiDescription: "plain prose",
+		};
+
+		try {
+			migrateSerializedDictionaryNotesV0ToV1([note]);
+			throw new Error("Expected migration failure.");
+		} catch (error) {
+			expect(error).toBeInstanceOf(DumdictV0MigrationError);
+			expect(
+				(error as DumdictV0MigrationError<"en">).incompatibleReadings,
+			).toEqual([
+				expect.objectContaining({ emojiDescription: "plain prose" }),
+			]);
+		}
+	});
+
 	test("moves lexical relations and shared pending refs without copying encounter translations", () => {
 		const note = baseV0();
 		const reading = note.readingEntries[0];

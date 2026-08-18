@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Effect mental model — Dumgen reference</title>
+	<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · reference</p>
+		<h1>The Effect mental model</h1>
+		<p class="dek">A compact translation table for an expert TypeScript programmer entering Effect.</p>
+	</header>
+
+	<section>
+		<h2>The type</h2>
+		<pre><code>Effect&lt;Success, Error, Requirements&gt;</code></pre>
+		<div class="type-line"><strong>Success</strong><span>What the program returns if it succeeds.</span></div>
+		<div class="type-line"><strong>Error</strong><span>Expected failures callers must confront.</span></div>
+		<div class="type-line"><strong>Requirements</strong><span>Services the program still needs before it can run.</span></div>
+	</section>
+
+	<section>
+		<h2>The three moves</h2>
+		<div class="grid">
+			<article class="card"><h3>Describe</h3><p>Construct inert Effect values. No request has started merely because the value exists.</p></article>
+			<article class="card"><h3>Compose</h3><p>Build a larger plan with <code>Effect.gen</code>, pipelines, and concurrency combinators.</p></article>
+			<article class="card"><h3>Interpret</h3><p>Run once at an application edge with a runtime, commonly <code>Effect.runPromise</code> during incremental adoption.</p></article>
+		</div>
+	</section>
+
+	<section>
+		<h2>Promise bridge</h2>
+		<pre><code>const plan = Effect.tryPromise({
+  try: () =&gt; existingPromiseApi(),
+  catch: (cause) =&gt; new ProviderError({ cause })
+})
+
+const value = await Effect.runPromise(plan)</code></pre>
+	</section>
+
+	<section>
+		<h2>Generator translation</h2>
+		<pre><code>// Promise program: already executing
+const value = await promise
+
+// Effect program: still a lazy description
+const value = yield* effect</code></pre>
+		<p>Success resumes the generator with <code>value</code>. A typed failure stops it. Requirements and errors propagate into the parent Effect.</p>
+		<p>Successive <code>yield*</code> expressions are sequential. To introduce concurrency, yield one combined Effect built with <code>Effect.all</code> or <code>Effect.forEach</code>.</p>
+	</section>
+
+	<section>
+		<h2>Dumgen rule of thumb</h2>
+		<p class="thesis">Keep an Effect lazy until the application boundary. If leaf modules repeatedly call <code>runPromise</code>, the runtime cannot govern the whole resolution chain.</p>
+		<p class="warning"><strong>Do not confuse fibers with durable work.</strong> Fibers coordinate work inside one live process. Jobs that must survive restarts still need durable infrastructure.</p>
+	</section>
+
+	<section>
+		<h2>Bounded concurrency</h2>
+		<pre><code>// A collection of similar jobs
+const results = yield* Effect.forEach(
+  batches,
+  processIntakeBatch,
+  { concurrency: 16 }
+)
+
+// A fixed collection of Effects
+const results = yield* Effect.all(effects, {
+  concurrency: 16
+})</code></pre>
+		<p>No concurrency option means sequential execution. A number sets the maximum active children for that combinator. Avoid <code>"unbounded"</code> for provider traffic.</p>
+	</section>
+
+	<section>
+		<h2>Provider-wide capacity</h2>
+		<pre><code>const semaphore = yield* Semaphore.make(16)
+
+const guardedCall = semaphore.withPermits(1)(
+  callOpenAI(request)
+)</code></pre>
+		<p>A combinator limit governs one parent program. A semaphore governs every program that shares that semaphore instance. Build it once in the live provider Layer, then reuse that Layer.</p>
+	</section>
+
+	<nav><a href="../lessons/0001-a-plan-not-a-promise.html">← Lesson 1</a> · <a href="../lessons/0002-yield-star-is-lazy-await.html">Lesson 2</a> · <a href="../lessons/0003-bound-the-request-flood.html">Lesson 3</a> · <a href="../lessons/0004-one-shared-provider-gate.html">Lesson 4</a> · <a href="glossary.html">Glossary →</a></nav>
+</main>
+</body>
+</html>

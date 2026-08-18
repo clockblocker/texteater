@@ -1,5 +1,5 @@
 import { supportedLanguages } from "dumling";
-import { schemasFor } from "dumling/schema";
+import { readingSchema, schemasFor } from "dumling/schema";
 import { type ZodType, z } from "zod";
 
 import type {
@@ -36,57 +36,17 @@ export const nonEmptyStringsSchema = z
 	.array(normalizedNonEmptyStringSchema)
 	.min(1) as unknown as z.ZodType<NonEmptyStrings>;
 
-type LemmaRegistry = Record<string, Record<string, () => ZodType>>;
+/** @deprecated Import `readingSchema` from `dumling/schema`. */
+export const readingReferenceSchema: z.ZodType<ReadingReference> =
+	readingSchema;
 
-function concreteLemmaSchemas(family?: string): [ZodType, ...ZodType[]] {
-	const leaves: ZodType[] = [];
-	for (const language of supportedLanguages) {
-		const registry = schemasFor[language].entity.Lemma as LemmaRegistry;
-		for (const [routeFamily, kinds] of Object.entries(registry)) {
-			if (family !== undefined && routeFamily !== family) continue;
-			for (const schema of Object.values(kinds)) leaves.push(schema());
-		}
-	}
-	const [first, ...rest] = leaves;
-	if (first === undefined) {
-		throw new Error(`Dumling exposes no ${family ?? "Lemma"} routes.`);
-	}
-	return [first, ...rest];
-}
-
-function unionOf(schemas: [ZodType, ...ZodType[]]): ZodType {
-	if (schemas.length === 1) return schemas[0];
-	return z.union(schemas as [ZodType, ZodType, ...ZodType[]]);
-}
-
-function normalizeLemmaCanonicalForm(value: unknown): unknown {
-	if (value === null || typeof value !== "object") return value;
-	const canonicalForm = Reflect.get(value, "canonicalForm");
-	if (typeof canonicalForm !== "string") return value;
-	return {
-		...value,
-		canonicalForm: canonicalForm.trim().normalize("NFC"),
-	};
-}
-
-const concreteLemmaSchema = z.preprocess(
-	normalizeLemmaCanonicalForm,
-	unionOf(concreteLemmaSchemas()),
-);
-const concreteMorphemeLemmaSchema = z.preprocess(
-	normalizeLemmaCanonicalForm,
-	unionOf(concreteLemmaSchemas("Morpheme")),
-);
-
-export const readingReferenceSchema = z.strictObject({
-	lemma: concreteLemmaSchema,
-	emojiDescription: normalizedNonEmptyStringSchema,
-}) as z.ZodType<ReadingReference>;
-
-export const morphemeReadingReferenceSchema = z.strictObject({
-	lemma: concreteMorphemeLemmaSchema,
-	emojiDescription: normalizedNonEmptyStringSchema,
-}) as z.ZodType<MorphemeReadingReference>;
+export const morphemeReadingReferenceSchema = readingSchema.refine(
+	(reading) => reading.lemma.family === "Morpheme",
+	{
+		path: ["lemma", "family"],
+		message: "A Morpheme Reading must use the Morpheme Family.",
+	},
+) as z.ZodType<MorphemeReadingReference>;
 
 const unitShadowObjectSchema = z
 	.strictObject({

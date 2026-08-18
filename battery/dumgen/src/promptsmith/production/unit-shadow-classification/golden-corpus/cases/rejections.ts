@@ -82,7 +82,7 @@ const cases = {
 			language: "de",
 			canonicalForm: "desto",
 			intendedUse:
-				"A fragment extracted from je … desto … and proposed as the whole paired construction.",
+				"A fragment extracted from je … desto … and proposed as the whole multi-member Lexeme/CCONJ.",
 		},
 		idealOutput: { decision: "Unresolved", target: null },
 	},

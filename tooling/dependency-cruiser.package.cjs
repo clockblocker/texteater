@@ -4,8 +4,11 @@ module.exports = {
 			name: "no-circular",
 			comment: "Package modules must not form circular dependencies.",
 			severity: "error",
-			from: {},
-			to: { circular: true },
+			from: { pathNot: "(^|/)convex/_generated/" },
+			to: {
+				circular: true,
+				pathNot: "(^|/)convex/_generated/",
+			},
 		},
 		{
 			name: "no-unresolved",
@@ -42,7 +45,16 @@ module.exports = {
 		enhancedResolveOptions: {
 			conditionNames: ["types", "import", "node", "bun", "default"],
 			exportsFields: ["exports"],
-			extensions: [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"],
+			extensions: [
+				".d.ts",
+				".ts",
+				".tsx",
+				".js",
+				".jsx",
+				".mjs",
+				".cjs",
+				".json",
+			],
 			mainFields: ["types", "module", "main"],
 		},
 		tsPreCompilationDeps: true,

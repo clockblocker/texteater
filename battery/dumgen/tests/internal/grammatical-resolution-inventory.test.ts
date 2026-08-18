@@ -67,9 +67,9 @@ describe("German Grammatical Resolution inventory", () => {
 		const notImplemented =
 			DE_NOT_IMPLEMENTED_GRAMMATICAL_RESOLUTION_ROUTES.map(routeKey);
 
-		expect(enabled).toHaveLength(22);
-		expect(new Set([...enabled, ...notImplemented])).toEqual(
-			new Set(dumlingRoutes),
+		expect(enabled).toHaveLength(21);
+		expect([...new Set([...enabled, ...notImplemented])].sort()).toEqual(
+			[...new Set(dumlingRoutes)].sort(),
 		);
 		expect(enabled).not.toContain("Lexeme/PUNCT");
 		expect(notImplemented).toContain("Lexeme/PUNCT");
@@ -126,7 +126,7 @@ describe("German Grammatical Resolution inventory", () => {
 				({ family, kind }) =>
 					isGermanHighLevelTargetClassificationRoute(family, kind),
 			);
-		expect(targetReachableRoutes).toHaveLength(21);
+		expect(targetReachableRoutes).toHaveLength(20);
 		expect(targetReachableRoutes).not.toContainEqual({
 			family: "Lexeme",
 			kind: "X",
@@ -138,7 +138,9 @@ describe("German Grammatical Resolution inventory", () => {
 
 		for (const route of targetReachableRoutes) {
 			const multipleMembers =
-				route.family === "Phraseme" || route.kind === "PairedFrame";
+				route.family === "Phraseme" ||
+				(route.family === "Lexeme" &&
+					["ADV", "CCONJ", "SCONJ", "VERB"].includes(route.kind));
 			const grammarOutput = {};
 			const { pending, sdk } = queueSdk([
 				{
@@ -228,6 +230,117 @@ describe("German Grammatical Resolution inventory", () => {
 	});
 
 	test("fixed-field codecs reconstruct route identity and linked canonical entities", () => {
+		const cconjPrompt =
+			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.CCONJ;
+		const cconjGenerated = cconjPrompt.outputSchema.parse({
+			memberOrthographies: ["Standard", "Standard"],
+			normalizedMembers: ["entweder", "oder"],
+			surface: {
+				spelling: "Canonical",
+				surfaceFeatures: null,
+			},
+			lemma: {
+				canonicalForm: "entweder … oder",
+				coreFeatures: { conjType: null },
+			},
+		});
+		const cconj = cconjPrompt.projectOutput(
+			{
+				markedContext:
+					"<TARGET>entweder</TARGET> heute <TARGET>oder</TARGET> morgen",
+				members: ["entweder", "oder"],
+			},
+			cconjGenerated,
+		);
+
+		expect(cconj).toMatchObject({
+			memberOrthographies: ["Standard", "Standard"],
+			normalizedMembers: ["entweder", "oder"],
+			surface: {
+				language: "de",
+				normalizedSurface: "entweder oder",
+				lemma: {
+					language: "de",
+					family: "Lexeme",
+					kind: "CCONJ",
+					canonicalForm: "entweder … oder",
+					coreFeatures: { conjType: null },
+				},
+			},
+		});
+
+		const sconjPrompt =
+			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.SCONJ;
+		const sconj = sconjPrompt.projectOutput(
+			{
+				markedContext:
+					"<TARGET>um</TARGET> das <TARGET>zu</TARGET> prüfen",
+				members: ["um", "zu"],
+			},
+			sconjPrompt.outputSchema.parse({
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["um", "zu"],
+				surface: { spelling: "Canonical", surfaceFeatures: null },
+				lemma: {
+					canonicalForm: "um zu",
+					coreFeatures: { conjType: null },
+				},
+			}),
+		);
+
+		expect(sconj).toMatchObject({
+			memberOrthographies: ["Standard", "Standard"],
+			normalizedMembers: ["um", "zu"],
+			surface: {
+				normalizedSurface: "um zu",
+				lemma: {
+					family: "Lexeme",
+					kind: "SCONJ",
+					canonicalForm: "um zu",
+					coreFeatures: { conjType: null },
+				},
+			},
+		});
+
+		const advPrompt = DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Lexeme.ADV;
+		const adv = advPrompt.projectOutput(
+			{
+				markedContext:
+					"<TARGET>einerseits</TARGET> gut, <TARGET>andererseits</TARGET> teuer",
+				members: ["einerseits", "andererseits"],
+			},
+			advPrompt.outputSchema.parse({
+				memberOrthographies: ["Standard", "Standard"],
+				normalizedMembers: ["einerseits", "andererseits"],
+				surface: {
+					spelling: "Canonical",
+					surfaceKind: "Citation",
+					surfaceFeatures: null,
+				},
+				lemma: {
+					canonicalForm: "einerseits … andererseits",
+					coreFeatures: {
+						foreign: null,
+						numType: null,
+						pronType: null,
+					},
+				},
+			}),
+		);
+
+		expect(adv).toMatchObject({
+			memberOrthographies: ["Standard", "Standard"],
+			normalizedMembers: ["einerseits", "andererseits"],
+			surface: {
+				normalizedSurface: "einerseits andererseits",
+				lemma: {
+					family: "Lexeme",
+					kind: "ADV",
+					canonicalForm: "einerseits … andererseits",
+				},
+			},
+		});
+
 		const fusionPrompt =
 			DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS.Construction.Fusion;
 		const fusionGenerated = fusionPrompt.outputSchema.parse({

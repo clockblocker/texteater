@@ -3,6 +3,10 @@ import type { Attestation } from "dumling/types";
 const occurrenceAttestation = {
 	members: [
 		{
+			attested: "ist",
+			orthography: "Standard",
+		},
+		{
 			attested: "geschlossen",
 			orthography: "Standard",
 		},
@@ -10,7 +14,7 @@ const occurrenceAttestation = {
 	realizationCoverage: "Full",
 	surface: {
 		language: "de",
-		normalizedSurface: "geschlossen",
+		normalizedSurface: "ist geschlossen",
 		spelling: "Canonical",
 		surfaceKind: "Inflection",
 		inflectionalFeatures: {
@@ -43,6 +47,6 @@ export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Die Tür ist [geschlossen].",
 	classifierNotes:
-		"Geschlossen is treated here as a bare predicative Partizip-II form of schließen. Under the stricter German participle rule, non-attributive participles of lexical verbs stay VERB even when the clause describes a resulting state.",
+		"Ist plus geschlossen preserves the productive schließen event and matches TIGER's state-passive analysis. Both forms are fixed members of one VERB target under schließen.",
 	isVerified: true,
 } as const;

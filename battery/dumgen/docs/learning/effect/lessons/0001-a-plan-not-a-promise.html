@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lesson 1: A plan, not a Promise</title>
+	<link rel="stylesheet" href="../assets/course.css">
+	<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+<main>
+	<header>
+		<p class="eyebrow">Dumgen × Effect · lesson 1</p>
+		<h1>A plan, not a Promise</h1>
+		<p class="dek">The one distinction that makes Effect's concurrency model worth learning.</p>
+		<p class="meta">8 minutes · one retrieval check · Effect v4 RC syntax</p>
+	</header>
+
+	<section>
+		<h2>Start from Dumgen, not FP</h2>
+		<p>Dumgen currently exposes operations such as:</p>
+		<pre><code>segment(sourceSentences: readonly string[]): Promise&lt;SegmentationResult&gt;</code></pre>
+		<p>Once an async function is called, its work has started. The returned Promise lets you observe that work, but it is usually too late to redesign how the work was scheduled.</p>
+		<p class="thesis"><strong>An Effect value is different:</strong> it is an immutable, lazy description of work. Constructing it starts nothing. A runtime later interprets the description.</p>
+		<p>This is not philosophical decoration. If 1,000 OpenAI requests are inert plans, a parent program can choose to run 16 at a time, cancel the children when their upload is abandoned, retry only typed transient failures, and attach one trace to the whole tree.</p>
+	</section>
+
+	<section>
+		<h2>The type is an honest function signature</h2>
+		<pre><code>Effect.Effect&lt;Success, Error, Requirements&gt;</code></pre>
+		<div class="grid">
+			<article class="card"><h3>Success</h3><p>The value produced. For Dumgen Intake, perhaps an ordered list of decisions.</p></article>
+			<article class="card"><h3>Error</h3><p>Expected failures. Provider throttling should not hide behind <code>unknown</code>.</p></article>
+			<article class="card"><h3>Requirements</h3><p>Services still needed to run, such as a model client, clock, persistence port, or concurrency policy.</p></article>
+		</div>
+		<p>Read this type:</p>
+		<pre><code>Effect.Effect&lt;
+  readonly SegmentationDecision[],
+  IntakeFailure | ProviderRateLimited,
+  AiSdk
+&gt;</code></pre>
+		<p>As: “a plan that can produce ordered segmentation decisions, can fail in these expected ways, and cannot run until an <code>AiSdk</code> is provided.” No monad lore required.</p>
+	</section>
+
+	<section>
+		<h2>Enter Effect without rewriting Dumgen</h2>
+		<p>The existing OpenAI SDK returns Promises. Wrap that edge with <code>Effect.tryPromise</code>; do not call the Promise before the wrapper's <code>try</code> callback runs.</p>
+		<pre><code>import { Data, Effect } from "effect"
+
+class ProviderError extends Data.TaggedError("ProviderError")&lt;{
+  readonly cause: unknown
+}&gt; {}
+
+const parseResponse = (request: OpenAIRequest) =&gt;
+  Effect.tryPromise({
+    try: () =&gt; client.responses.parse(request),
+    catch: (cause) =&gt; new ProviderError({ cause })
+  })</code></pre>
+		<p><code>parseResponse(request)</code> now returns a plan. It does not send the request. During incremental adoption, the application edge can execute it:</p>
+		<pre><code>const response = await Effect.runPromise(parseResponse(request))</code></pre>
+		<p class="good"><strong>Migration rule:</strong> wrap Promises low in the dependency adapter; run Effects high at the application boundary. Calling <code>runPromise</code> in every leaf would throw away most of the composition benefit.</p>
+	</section>
+
+	<section>
+		<h2>Now concurrency becomes policy</h2>
+		<p>Suppose several user uploads are ready. Keep Dumgen's domain decision that one Intake Batch is one bounded, ordered provider call. Govern concurrency <em>across</em> batches rather than exploding every sentence into its own request:</p>
+		<pre><code>const processUploads = (uploads: readonly Upload[]) =&gt;
+  Effect.forEach(uploads, processIntakeBatch, {
+    concurrency: 16
+  })</code></pre>
+		<p>The number <code>16</code> is now visible policy. Later it can come from configuration, a shared semaphore, or adaptive provider-capacity logic without changing each workflow leaf.</p>
+		<p class="warning"><strong>Important limit:</strong> Effect makes in-process concurrency governable; it does not create provider quota, CPU parallelism, or restart durability. A “fuck ton” of requests may still require a durable queue, per-tenant fairness, idempotency, and backpressure.</p>
+	</section>
+
+	<section>
+		<h2>Retrieval check</h2>
+		<div class="quiz" data-quiz data-correct="b" data-correct-message="Correct. Construction produced an inert plan; runPromise asked the runtime to interpret it." data-incorrect-message="Not quite. Follow the exact point where the Effect runtime is invoked.">
+			<p><strong>At which line does the OpenAI request begin?</strong></p>
+			<pre><code>const plan = parseResponse(request)       // A
+const result = Effect.runPromise(plan)   // B
+const copy = plan                        // C</code></pre>
+			<div class="choices">
+				<button type="button" data-answer="a">Choice A</button>
+				<button type="button" data-answer="b">Choice B</button>
+				<button type="button" data-answer="c">Choice C</button>
+			</div>
+			<p class="feedback" data-feedback aria-live="polite">Choose before reading on.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Your turn</h2>
+		<p>Do not code yet. Reply to your teacher with one sentence:</p>
+		<p class="thesis">For an Effect-native Dumgen, where should the main runtime boundary live—and why is putting <code>runPromise</code> inside the OpenAI adapter too low?</p>
+		<p>I will challenge your answer and use it to choose the next lesson. Ask follow-up questions about anything that still feels magical.</p>
+	</section>
+
+	<section>
+		<h2>Primary reading</h2>
+		<p>Read the official <a href="https://www.effect.website/docs/v4/getting-started/the-effect-type">Effect Type</a> page. Then keep the <a href="../reference/effect-mental-model.html">Effect mental-model reference</a> nearby.</p>
+		<p class="meta">Version note: Effect's official site currently presents v4 as a release candidate. This lesson uses APIs documented for v4; choosing v3 stable or v4 RC for Dumgen remains deliberately unresolved.</p>
+	</section>
+
+	<nav>
+		<a href="../reference/effect-mental-model.html">Reference: Effect mental model</a>
+		·
+		<a href="0002-yield-star-is-lazy-await.html">Next: <code>yield*</code> is lazy <code>await</code> →</a>
+	</nav>
+</main>
+</body>
+</html>

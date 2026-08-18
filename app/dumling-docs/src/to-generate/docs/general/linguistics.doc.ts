@@ -25,7 +25,7 @@ Together these fields are Lemma identity. Grammatically indistinguishable
 homonyms share one Lemma. Homographs with different grammatical analyses—for
 example a noun and verb with the same spelling—are different Lemmas.
 
-\`Construction\` is the public branch for learner-relevant patterned Lemmas such as fused forms like German \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and paired frames such as \`um zu\` or \`entweder oder\`.
+\`Construction\` is the public branch for learner-relevant patterned Lemmas such as fused forms like German \`zum\`, \`zur\`, \`beim\`, or \`ins\`. Fixed identities with several realized members remain Lexemes, such as German \`rechnen … mit\` (VERB), \`entweder … oder\` (CCONJ), and \`um zu\` (SCONJ).
 
 ## Surface
 
@@ -70,10 +70,10 @@ IDs, click indices, and marked context belong to the calling application.
 
 | Kind | Use |
 | --- | --- |
-| \`Lexeme\` | words and word-like Lemmas, categorized with Universal Dependencies-style POS tags |
+| \`Lexeme\` | lexical identities, including fixed multi-member realizations, categorized by one whole-unit Universal Dependencies-style POS tag |
 | \`Morpheme\` | roots, prefixes, suffixes, clitics, and related sub-word units |
 | \`Phraseme\` | multi-word or formulaic expressions such as idioms and proverbs |
-| \`Construction\` | learner-relevant patterned Lemmas such as fused forms like \`zum\` and paired frames like \`um zu\` |
+| \`Construction\` | learner-relevant patterned Lemmas such as fused forms like \`zum\` |
 
 \`kind\` is the public subtype field for all four families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
 

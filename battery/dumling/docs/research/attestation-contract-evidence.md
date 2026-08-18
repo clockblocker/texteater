@@ -246,9 +246,9 @@ baseline is green.
 7. **Normalization discipline:** casing/typo repair may change member spelling,
    but normalized Surface never reorders, lemmatizes, or inserts members. A
    partial target that a route does not license remains Unresolved rather than
-   silently repaired; existing aphorism, proverb, and paired-frame prompts make
+   silently repaired; existing aphorism, proverb, and multi-member Lexeme policies make
    this route-policy distinction explicit ([proverb policy][proverb-policy],
-   [paired-frame policy][paired-frame-policy]).
+   [multi-member Lexeme policy][multi-member-lexeme-policy]).
 8. **Click independence:** resolving any member click of the same Analysis
    Target returns the same Attestation value and one per-member orthography set;
    the clicked index remains only in the outer interaction result/cache key.
@@ -332,4 +332,4 @@ contract.
 [coordinate-ellipse]: ../../../dumgen/src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/lexeme/noun/golden-corpus/cases/orthography-and-surface.ts#L222
 [laboratory-loop]: ../../../../app/laboratory/src/classification.ts#L430
 [proverb-policy]: ../../../dumgen/src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/phraseme/proverb/prompt-source.ts#L31
-[paired-frame-policy]: ../../../dumgen/src/promptsmith/laboratory/prompt-source/grammatical-resolution/de/construction/paired-frame/prompt-source.ts#L20
+[multi-member-lexeme-policy]: ../../../../docs/adr/0009-classify-multi-member-lexemes-by-whole-unit-pos.md

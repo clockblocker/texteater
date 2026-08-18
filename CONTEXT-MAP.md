@@ -2,6 +2,7 @@
 
 ## Contexts
 
+- [tf-demo](./app/tf-demo/CONTEXT.md) — presents one shared linguistic graph with occurrence-specific Attestations while Visitors own only Click history
 - [Dumling](./battery/dumling/CONTEXT.md) — names and describes the grammatical entities to which learner text resolves
 - [Dumrel](./battery/dumrel/CONTEXT.md) — names typed Lemma and Reading Knowledge and its relation algebra
 - [Dumdict](./battery/dumdict/CONTEXT.md) — manages learner-owned dictionary records over Dumling entities
@@ -10,8 +11,11 @@
 ## Relationships
 
 - **Dumgen → Dumling**: Dumgen resolves learner text into Dumling grammatical entities and uses Dumling schemas at their boundary.
-- **Dumdict → Dumling**: Dumdict stores learner-owned records whose grammatical identities are Dumling Lemmas and Surfaces.
+- **Dumdict → Dumling**: Dumdict scopes and stores learner-owned records over Dumling Lemmas, Surfaces, and foundational Reading values; Dumling owns Reading DTOs and tuple equality while Dumdict owns Reading Entries and workflows.
 - **Dumrel → Dumling**: Dumrel validates identityless Knowledge values and Unit Shadows with concrete Dumling Lemma DTOs, languages, Canonical Forms, Families, and Kinds.
 - **Dumdict → Dumrel**: Dumdict stores Knowledge and cleans up Pending Semantic Relations using Dumrel's Knowledge vocabulary and relation algebra; structural Unit Shadows remain durable pointers.
 - **Dumgen → Dumrel**: Dumgen projects private model results into Dumrel-validated Knowledge Changes containing pointer-only structures, or Pending Semantic Relations.
 - **Dumgen → Dumdict**: Dumgen resolves an encountered Lemma against learner Reading candidates; Dumdict owns the resulting learner dictionary records and storage changes.
+- **tf-demo → Dumling**: tf-demo persists host-owned canonical Lemma, Surface, and Reading records and reconstructs ID-less Dumling Attestation values from occurrence-specific records and Segment memberships.
+- **tf-demo → Dumdict**: tf-demo supplies one hosted Shared Demo Dictionary scope and atomically applies Dumdict-planned changes with occurrence and Click persistence.
+- **tf-demo → Dumgen**: tf-demo persists Dumgen's immutable Segmented Sentences and resolution results, deriving marked context and Attestation members from ordered Segment memberships.

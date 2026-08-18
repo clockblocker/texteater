@@ -1,0 +1,7327 @@
+{
+  "runnerVersion": "target-classification-high-level-default-v1",
+  "route": "target-classification/de/high-level-whole-unit",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 1
+  },
+  "startedAt": "2026-08-17T05:31:53.469Z",
+  "completedAt": "2026-08-17T05:33:49.850Z",
+  "finalizedAt": null,
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 128,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "35ec733d3e9febd376182d485e6a126891dbc174c78c877eeaaba76c1f3e2828",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "c16f03634b051574f076f5a12a775a6ac120b1b76f132bc7e8edc926ffc667d3",
+  "inputSchemaSha256": "b9d0c086ab5eecaa59dc2bb7585558d861c023ffb07b0e7abab34edd9fc7b56d",
+  "outputSchemaSha256": "c1c19022d28120b084034512e580e6b510334be3d90049941d079ec8a98ae428",
+  "suiteSha256": "98d19e92a9c7eef5a96342b22007313b9bffd17f6cea477ac52fe8fafc5e13f9",
+  "evaluationCaseIds": [
+    "target-de-route-lexeme-adj",
+    "target-de-route-lexeme-adp",
+    "target-de-route-lexeme-adv",
+    "target-de-route-lexeme-aux",
+    "target-de-route-lexeme-cconj",
+    "target-de-route-lexeme-det",
+    "target-de-route-lexeme-intj",
+    "target-de-route-lexeme-noun",
+    "target-de-route-lexeme-num",
+    "target-de-route-lexeme-part",
+    "target-de-route-lexeme-pron",
+    "target-de-route-lexeme-propn",
+    "target-de-route-lexeme-sconj",
+    "target-de-route-lexeme-sym",
+    "target-de-route-lexeme-verb",
+    "target-de-route-phraseme-aphorism-click-wissen",
+    "target-de-route-phraseme-aphorism-click-ist",
+    "target-de-route-phraseme-aphorism-click-macht",
+    "target-de-route-phraseme-discourse-click-herzlichen",
+    "target-de-route-phraseme-discourse-click-dank",
+    "target-de-route-phraseme-proverb-click-morgenstund",
+    "target-de-route-phraseme-proverb-click-hat",
+    "target-de-route-phraseme-proverb-click-gold",
+    "target-de-route-phraseme-proverb-click-im",
+    "target-de-route-phraseme-proverb-click-mund",
+    "target-de-core-entscheidung-click-entscheidung",
+    "target-de-core-entscheidung-click-trifft",
+    "target-de-core-entscheidung-click-eine",
+    "target-de-route-construction-fusion",
+    "target-de-route-construction-paired-click-je",
+    "target-de-route-construction-paired-click-desto",
+    "target-de-route-construction-paired-near-frueher",
+    "target-de-route-construction-paired-near-besser",
+    "target-de-boundary-idiom-click-brach",
+    "target-de-boundary-idiom-click-das",
+    "target-de-boundary-idiom-click-eis",
+    "target-de-boundary-idiom-near-endlich",
+    "target-de-boundary-literal-eis-click-brach",
+    "target-de-boundary-literal-eis-click-eis",
+    "target-de-boundary-governed-click-wartet",
+    "target-de-boundary-governed-click-auf",
+    "target-de-boundary-governed-near-bus",
+    "target-de-boundary-adjunct-click-laeuft",
+    "target-de-boundary-adjunct-click-auf",
+    "target-de-boundary-adjunct-click-wiese",
+    "target-de-boundary-inherent-reflexive-click-schaemt",
+    "target-de-boundary-inherent-reflexive-click-sich",
+    "target-de-boundary-optional-reflexive-click-waescht",
+    "target-de-boundary-optional-reflexive-click-sich",
+    "target-de-boundary-separable-click-steht",
+    "target-de-boundary-separable-click-auf",
+    "target-de-boundary-separable-near-heute",
+    "target-de-boundary-perfect-click-hat",
+    "target-de-boundary-perfect-click-gelacht",
+    "target-de-boundary-perfect-near-laut",
+    "target-de-boundary-future-click-wird",
+    "target-de-boundary-future-click-lachen",
+    "target-de-boundary-passive-click-wird",
+    "target-de-boundary-passive-click-gelobt",
+    "target-de-boundary-lexicalized-participle-click-ist",
+    "target-de-boundary-lexicalized-participle-click-verrueckt",
+    "target-de-boundary-participle-one-attributive-lachende",
+    "target-de-boundary-participle-one-adverbial-lachend",
+    "target-de-boundary-modal-click-muss",
+    "target-de-boundary-modal-click-schlafen",
+    "target-de-boundary-copula-click-ist",
+    "target-de-boundary-copula-click-muede",
+    "target-de-boundary-collocation-click-trifft",
+    "target-de-boundary-collocation-click-eine",
+    "target-de-boundary-collocation-click-entscheidung",
+    "target-de-boundary-collocation-near-heute",
+    "target-de-boundary-free-object-click-bringt",
+    "target-de-boundary-free-object-click-cola",
+    "target-de-boundary-fixed-function-click-heult",
+    "target-de-boundary-fixed-function-click-mit",
+    "target-de-boundary-fixed-function-click-den",
+    "target-de-boundary-fixed-function-click-woelfen",
+    "target-de-boundary-fixed-function-near-hungrigen",
+    "target-de-robust-repeated-click-steht",
+    "target-de-robust-repeated-click-final-auf",
+    "target-de-robust-repeated-near-first-auf",
+    "target-de-robust-overlap-collocation-click-stellt",
+    "target-de-robust-overlap-collocation-click-eine",
+    "target-de-robust-overlap-collocation-click-frage",
+    "target-de-robust-overlap-separable-click-stellt",
+    "target-de-robust-overlap-separable-click-ab",
+    "target-de-robust-overlap-near-vase",
+    "target-de-robust-partial-click-brach",
+    "target-de-robust-partial-click-das",
+    "target-de-robust-typo-click-stet",
+    "target-de-robust-typo-click-auf",
+    "target-de-robust-slang",
+    "target-de-robust-opaque-surroundings",
+    "target-de-robust-punctuation-click-steht",
+    "target-de-robust-punctuation-click-auf",
+    "target-de-robust-long-click-wird",
+    "target-de-robust-long-click-verstanden",
+    "target-de-robust-unresolved"
+  ],
+  "boundedCalls": 98,
+  "maximumEvaluationCases": 98,
+  "retries": 0,
+  "store": false,
+  "contractScore": 92,
+  "scoreRatio": 0.9387755102040817,
+  "minimumEvaluationCases": 98,
+  "minimumScoreRatio": 1,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 6,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "target-de-route-lexeme-adj",
+      "input": {
+        "markedSentence": "Der <target>kluge</target> Hund schläft.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "kluge",
+            "i": 1
+          },
+          {
+            "s": "Hund",
+            "i": 2
+          },
+          {
+            "s": "schläft",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1362,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_04687e7b7db78cc7016a829cc9d3c887d2b719561011081af3",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 6496,
+          "cached_tokens": 0
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-adp",
+      "input": {
+        "markedSentence": "<target>Gegenüber</target> dem Rathaus steht eine Bank.",
+        "segments": [
+          {
+            "s": "Gegenüber",
+            "i": 0
+          },
+          {
+            "s": "dem",
+            "i": 1
+          },
+          {
+            "s": "Rathaus",
+            "i": 2
+          },
+          {
+            "s": "steht",
+            "i": 3
+          },
+          {
+            "s": "eine",
+            "i": 4
+          },
+          {
+            "s": "Bank",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1197,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0da0e1d90f919635016a829ccb01f487d28a7b48b902d44d2b",
+      "usage": {
+        "input_tokens": 6583,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6618
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-adv",
+      "input": {
+        "markedSentence": "Sie kommt <target>heute</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "kommt",
+            "i": 1
+          },
+          {
+            "s": "heute",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1175,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0aa550ec20c563e4016a829ccc30bc81a1bffa1e20f9b58dab",
+      "usage": {
+        "input_tokens": 6552,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6586
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-aux",
+      "input": {
+        "markedSentence": "Sie <target>muss</target> heute arbeiten.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "muss",
+            "i": 1
+          },
+          {
+            "s": "heute",
+            "i": 2
+          },
+          {
+            "s": "arbeiten",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 975,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03f919d8fd1674cb016a829ccd59b8819d9b7bfdbd78a0ff23",
+      "usage": {
+        "input_tokens": 6562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-cconj",
+      "input": {
+        "markedSentence": "Er singt <target>und</target> sie tanzt.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "singt",
+            "i": 1
+          },
+          {
+            "s": "und",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "tanzt",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "CCONJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1118,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"CCONJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fce4aea44efeb04016a829cce56e4819e9aad2ff4d8bd2312",
+      "usage": {
+        "input_tokens": 6572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6608
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-det",
+      "input": {
+        "markedSentence": "<target>Dieser</target> Hund schläft.",
+        "segments": [
+          {
+            "s": "Dieser",
+            "i": 0
+          },
+          {
+            "s": "Hund",
+            "i": 1
+          },
+          {
+            "s": "schläft",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1052,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_083129dbc9a5e596016a829ccf72cc819f850330782e5d8086",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6587
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-intj",
+      "input": {
+        "markedSentence": "<target>Ach</target> das tut weh.",
+        "segments": [
+          {
+            "s": "Ach",
+            "i": 0
+          },
+          {
+            "s": "das",
+            "i": 1
+          },
+          {
+            "s": "tut",
+            "i": 2
+          },
+          {
+            "s": "weh",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "INTJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "INTJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1041,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"INTJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03c9e10a83b10556016a829cd0809887d28029c2f0428838e5",
+      "usage": {
+        "input_tokens": 6560,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6595
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-noun",
+      "input": {
+        "markedSentence": "Das <target>Haus</target> steht leer.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Haus",
+            "i": 1
+          },
+          {
+            "s": "steht",
+            "i": 2
+          },
+          {
+            "s": "leer",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 2141,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02893159a2bfc883016a829cd194b887d2ace652c22f57ff82",
+      "usage": {
+        "input_tokens": 6559,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6594
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-num",
+      "input": {
+        "markedSentence": "Sie kauft <target>drei</target> Äpfel.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "kauft",
+            "i": 1
+          },
+          {
+            "s": "drei",
+            "i": 2
+          },
+          {
+            "s": "Äpfel",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NUM"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NUM"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1119,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NUM\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b4797c6cf2823a1016a829cd3adac87d288d248eb9bbac2e4",
+      "usage": {
+        "input_tokens": 6566,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6600
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-part",
+      "input": {
+        "markedSentence": "Sie schläft <target>nicht</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "schläft",
+            "i": 1
+          },
+          {
+            "s": "nicht",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PART"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PART"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1057,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PART\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a32289144917653016a829cd4ccdc81a1956816cd568e4971",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6587
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-pron",
+      "input": {
+        "markedSentence": "<target>Jemand</target> wartet draußen.",
+        "segments": [
+          {
+            "s": "Jemand",
+            "i": 0
+          },
+          {
+            "s": "wartet",
+            "i": 1
+          },
+          {
+            "s": "draußen",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1016,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PRON\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b97280e39cc0644016a829cd5e15881a2a3558c36516bc7e7",
+      "usage": {
+        "input_tokens": 6555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6590
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-propn",
+      "input": {
+        "markedSentence": "<target>Ada</target> liest leise.",
+        "segments": [
+          {
+            "s": "Ada",
+            "i": 0
+          },
+          {
+            "s": "liest",
+            "i": 1
+          },
+          {
+            "s": "leise",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PROPN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PROPN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1207,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PROPN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06a02c906b65f265016a829cd6e100819c833bbd7472addcc7",
+      "usage": {
+        "input_tokens": 6552,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6587
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-sconj",
+      "input": {
+        "markedSentence": "<target>Weil</target> es regnet, bleibt sie zu Hause.",
+        "segments": [
+          {
+            "s": "Weil",
+            "i": 0
+          },
+          {
+            "s": "es",
+            "i": 1
+          },
+          {
+            "s": "regnet",
+            "i": 2
+          },
+          {
+            "s": "bleibt",
+            "i": 4
+          },
+          {
+            "s": "sie",
+            "i": 5
+          },
+          {
+            "s": "zu",
+            "i": 6
+          },
+          {
+            "s": "Hause",
+            "i": 7
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1227,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"SCONJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0716edfd581c5063016a829cd8178881a1a10cef95fad1c26c",
+      "usage": {
+        "input_tokens": 6593,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6629
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-sym",
+      "input": {
+        "markedSentence": "Der Preis beträgt zehn <target>€</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Preis",
+            "i": 1
+          },
+          {
+            "s": "beträgt",
+            "i": 2
+          },
+          {
+            "s": "zehn",
+            "i": 3
+          },
+          {
+            "s": "€",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SYM"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "SYM"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1890,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"SYM\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_051d8fc280123f8a016a829cd9528081918370d9f65bd5b07d",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6605
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-lexeme-verb",
+      "input": {
+        "markedSentence": "Der Hund <target>schläft</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Hund",
+            "i": 1
+          },
+          {
+            "s": "schläft",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1178,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0974c7bde190e2be016a829cdb31d887d2a5e508381a8e9e02",
+      "usage": {
+        "input_tokens": 6554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6589
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-aphorism-click-wissen",
+      "input": {
+        "markedSentence": "<target>Wissen</target> ist Macht.",
+        "segments": [
+          {
+            "s": "Wissen",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "Macht",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          1,
+          2
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          1,
+          2
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1178,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Aphorism\"},\"additionalMemberIndices\":[1,2]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0885774395960270016a829cdc619c81a2ac616d96b8cbf175",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 42,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6595
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-aphorism-click-ist",
+      "input": {
+        "markedSentence": "Wissen <target>ist</target> Macht.",
+        "segments": [
+          {
+            "s": "Wissen",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "Macht",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          0,
+          2
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          0,
+          2
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1235,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Aphorism\"},\"additionalMemberIndices\":[0,2]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c698b9b39cc296b016a829cdd8ef0819d9083d559bc0746c5",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 42,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6595
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-aphorism-click-macht",
+      "input": {
+        "markedSentence": "Wissen ist <target>Macht</target>.",
+        "segments": [
+          {
+            "s": "Wissen",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "Macht",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          0,
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Aphorism"
+        },
+        "additionalMemberIndices": [
+          0,
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1197,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Aphorism\"},\"additionalMemberIndices\":[0,1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09739f8c83661c1e016a829cdecc6c819c87485fca3cbd782c",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 42,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6595
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-discourse-click-herzlichen",
+      "input": {
+        "markedSentence": "<target>Herzlichen</target> Dank!",
+        "segments": [
+          {
+            "s": "Herzlichen",
+            "i": 0
+          },
+          {
+            "s": "Dank",
+            "i": 1
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 992,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_010e29d43a4dc3db016a829ce0011081a1a0305fa17b073d3f",
+      "usage": {
+        "input_tokens": 6546,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6581
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-discourse-click-dank",
+      "input": {
+        "markedSentence": "Herzlichen <target>Dank</target>!",
+        "segments": [
+          {
+            "s": "Herzlichen",
+            "i": 0
+          },
+          {
+            "s": "Dank",
+            "i": 1
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula"
+        },
+        "additionalMemberIndices": [
+          0
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "DiscourseFormula"
+        },
+        "additionalMemberIndices": [
+          0
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1360,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"DiscourseFormula\"},\"additionalMemberIndices\":[0]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e853331d23061d5016a829ce0fd74819d9c85612a9b527ddb",
+      "usage": {
+        "input_tokens": 6546,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 39,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6585
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-proverb-click-morgenstund",
+      "input": {
+        "markedSentence": "<target>Morgenstund</target> hat Gold im Mund.",
+        "segments": [
+          {
+            "s": "Morgenstund",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "Gold",
+            "i": 2
+          },
+          {
+            "s": "im",
+            "i": 3
+          },
+          {
+            "s": "Mund",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1207,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"},\"additionalMemberIndices\":[1,2,3,4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e64e5af80e0b5ea016a829ce25df881a1b79b6b4b19040c94",
+      "usage": {
+        "input_tokens": 6574,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6618
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-proverb-click-hat",
+      "input": {
+        "markedSentence": "Morgenstund <target>hat</target> Gold im Mund.",
+        "segments": [
+          {
+            "s": "Morgenstund",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "Gold",
+            "i": 2
+          },
+          {
+            "s": "im",
+            "i": 3
+          },
+          {
+            "s": "Mund",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          2,
+          3,
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          2,
+          3,
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1287,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"},\"additionalMemberIndices\":[0,2,3,4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b202f25c09a7234016a829ce38ad08192a0887385b4e1f18d",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6619
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-proverb-click-gold",
+      "input": {
+        "markedSentence": "Morgenstund hat <target>Gold</target> im Mund.",
+        "segments": [
+          {
+            "s": "Morgenstund",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "Gold",
+            "i": 2
+          },
+          {
+            "s": "im",
+            "i": 3
+          },
+          {
+            "s": "Mund",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          3,
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          3,
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1575,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"},\"additionalMemberIndices\":[0,1,3,4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a8aa1911a3ca4bb016a829ce4ef2081a3b79cd7d8648a446b",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6619
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-proverb-click-im",
+      "input": {
+        "markedSentence": "Morgenstund hat Gold <target>im</target> Mund.",
+        "segments": [
+          {
+            "s": "Morgenstund",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "Gold",
+            "i": 2
+          },
+          {
+            "s": "im",
+            "i": 3
+          },
+          {
+            "s": "Mund",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          2,
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          2,
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1160,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"},\"additionalMemberIndices\":[0,1,2,4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_032c2a25d65100a6016a829ce6709c819189cda09b4e68183a",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6619
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-phraseme-proverb-click-mund",
+      "input": {
+        "markedSentence": "Morgenstund hat Gold im <target>Mund</target>.",
+        "segments": [
+          {
+            "s": "Morgenstund",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "Gold",
+            "i": 2
+          },
+          {
+            "s": "im",
+            "i": 3
+          },
+          {
+            "s": "Mund",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Proverb"
+        },
+        "additionalMemberIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1219,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Proverb\"},\"additionalMemberIndices\":[0,1,2,3]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06021e1c6a7b7b6e016a829ce795ac87d2a4b9d9fb994c3bdf",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6619
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-core-entscheidung-click-entscheidung",
+      "input": {
+        "markedSentence": "Der Ausschuss trifft eine <target>Entscheidung</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "eine",
+            "i": 3
+          },
+          {
+            "s": "Entscheidung",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 977,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_008fd54ffe20da30016a829ce8c95487d29fbe9fe3b7dcf5bf",
+      "usage": {
+        "input_tokens": 6576,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6611
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-core-entscheidung-click-trifft",
+      "input": {
+        "markedSentence": "Der Ausschuss <target>trifft</target> eine Entscheidung.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "eine",
+            "i": 3
+          },
+          {
+            "s": "Entscheidung",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 946,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05e65fb9a9d7555b016a829ce9c6188191803f8176ef944370",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6610
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-core-entscheidung-click-eine",
+      "input": {
+        "markedSentence": "Der Ausschuss trifft <target>eine</target> Entscheidung.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "eine",
+            "i": 3
+          },
+          {
+            "s": "Entscheidung",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1377,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0eed28426fc1515e016a829ceabc2081a18f4ec7e1515e1e42",
+      "usage": {
+        "input_tokens": 6574,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6608
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-construction-fusion",
+      "input": {
+        "markedSentence": "Sie geht <target>zum</target> Bahnhof.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "geht",
+            "i": 1
+          },
+          {
+            "s": "zum",
+            "i": 2
+          },
+          {
+            "s": "Bahnhof",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "Fusion"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "Fusion"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1669,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Construction\",\"kind\":\"Fusion\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07131be447a43686016a829cec1d34819cab119c367e3d4e2f",
+      "usage": {
+        "input_tokens": 6560,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 33,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6593
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-construction-paired-click-je",
+      "input": {
+        "markedSentence": "<target>Je</target> früher, desto besser.",
+        "segments": [
+          {
+            "s": "Je",
+            "i": 0
+          },
+          {
+            "s": "früher",
+            "i": 1
+          },
+          {
+            "s": "desto",
+            "i": 3
+          },
+          {
+            "s": "besser",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 0
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1503,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Construction\",\"kind\":\"PairedFrame\"},\"additionalMemberIndices\":[3]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02ac944279aa5d70016a829cedca44819f8cf4b6be2b4d1eba",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6600
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-construction-paired-click-desto",
+      "input": {
+        "markedSentence": "Je früher, <target>desto</target> besser.",
+        "segments": [
+          {
+            "s": "Je",
+            "i": 0
+          },
+          {
+            "s": "früher",
+            "i": 1
+          },
+          {
+            "s": "desto",
+            "i": 3
+          },
+          {
+            "s": "besser",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        },
+        "additionalMemberIndices": [
+          0
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Construction",
+          "kind": "PairedFrame"
+        },
+        "additionalMemberIndices": [
+          0
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1300,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Construction\",\"kind\":\"PairedFrame\"},\"additionalMemberIndices\":[0]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0417cb1bde2923d2016a829cef5578819289e1b58b40ffbaaf",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6600
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-construction-paired-near-frueher",
+      "input": {
+        "markedSentence": "Je <target>früher</target>, desto besser.",
+        "segments": [
+          {
+            "s": "Je",
+            "i": 0
+          },
+          {
+            "s": "früher",
+            "i": 1
+          },
+          {
+            "s": "desto",
+            "i": 3
+          },
+          {
+            "s": "besser",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1165,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ddda13d96f01eb7016a829cf08f8c819dbdb60339e993c4e1",
+      "usage": {
+        "input_tokens": 6565,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6600
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-route-construction-paired-near-besser",
+      "input": {
+        "markedSentence": "Je früher, desto <target>besser</target>.",
+        "segments": [
+          {
+            "s": "Je",
+            "i": 0
+          },
+          {
+            "s": "früher",
+            "i": 1
+          },
+          {
+            "s": "desto",
+            "i": 3
+          },
+          {
+            "s": "besser",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1179,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_040841ebf190ce9b016a829cf1c028819190f90b655e81fb5d",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-idiom-click-brach",
+      "input": {
+        "markedSentence": "Im Workshop schwieg jeder. Mit einem Witz <target>brach</target> sie endlich das Eis.",
+        "segments": [
+          {
+            "s": "Im",
+            "i": 0
+          },
+          {
+            "s": "Workshop",
+            "i": 1
+          },
+          {
+            "s": "schwieg",
+            "i": 2
+          },
+          {
+            "s": "jeder",
+            "i": 3
+          },
+          {
+            "s": "Mit",
+            "i": 5
+          },
+          {
+            "s": "einem",
+            "i": 6
+          },
+          {
+            "s": "Witz",
+            "i": 7
+          },
+          {
+            "s": "brach",
+            "i": 8
+          },
+          {
+            "s": "sie",
+            "i": 9
+          },
+          {
+            "s": "endlich",
+            "i": 10
+          },
+          {
+            "s": "das",
+            "i": 11
+          },
+          {
+            "s": "Eis",
+            "i": 12
+          }
+        ],
+        "clickedIndex": 8
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          11,
+          12
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          11,
+          12
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1167,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"},\"additionalMemberIndices\":[11,12]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a705fec7dade244016a829cf2ee6c819da0916aad78c5b594",
+      "usage": {
+        "input_tokens": 6642,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6682
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-idiom-click-das",
+      "input": {
+        "markedSentence": "Im Workshop schwieg jeder. Mit einem Witz brach sie endlich <target>das</target> Eis.",
+        "segments": [
+          {
+            "s": "Im",
+            "i": 0
+          },
+          {
+            "s": "Workshop",
+            "i": 1
+          },
+          {
+            "s": "schwieg",
+            "i": 2
+          },
+          {
+            "s": "jeder",
+            "i": 3
+          },
+          {
+            "s": "Mit",
+            "i": 5
+          },
+          {
+            "s": "einem",
+            "i": 6
+          },
+          {
+            "s": "Witz",
+            "i": 7
+          },
+          {
+            "s": "brach",
+            "i": 8
+          },
+          {
+            "s": "sie",
+            "i": 9
+          },
+          {
+            "s": "endlich",
+            "i": 10
+          },
+          {
+            "s": "das",
+            "i": 11
+          },
+          {
+            "s": "Eis",
+            "i": 12
+          }
+        ],
+        "clickedIndex": 11
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          8,
+          12
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          8,
+          12
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1146,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"},\"additionalMemberIndices\":[8,12]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c2353adcc986260016a829cf415fc819e89c55630021da64f",
+      "usage": {
+        "input_tokens": 6642,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6682
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-idiom-click-eis",
+      "input": {
+        "markedSentence": "Im Workshop schwieg jeder. Mit einem Witz brach sie endlich das <target>Eis</target>.",
+        "segments": [
+          {
+            "s": "Im",
+            "i": 0
+          },
+          {
+            "s": "Workshop",
+            "i": 1
+          },
+          {
+            "s": "schwieg",
+            "i": 2
+          },
+          {
+            "s": "jeder",
+            "i": 3
+          },
+          {
+            "s": "Mit",
+            "i": 5
+          },
+          {
+            "s": "einem",
+            "i": 6
+          },
+          {
+            "s": "Witz",
+            "i": 7
+          },
+          {
+            "s": "brach",
+            "i": 8
+          },
+          {
+            "s": "sie",
+            "i": 9
+          },
+          {
+            "s": "endlich",
+            "i": 10
+          },
+          {
+            "s": "das",
+            "i": 11
+          },
+          {
+            "s": "Eis",
+            "i": 12
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          8,
+          11
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          8,
+          11
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1238,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"},\"additionalMemberIndices\":[8,11]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06dab570d9446e38016a829cf53abc81a1962daa5c1e843b38",
+      "usage": {
+        "input_tokens": 6642,
+        "input_tokens_details": {
+          "cache_write_tokens": 6496,
+          "cached_tokens": 0
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6682
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-idiom-near-endlich",
+      "input": {
+        "markedSentence": "Im Workshop schwieg jeder. Mit einem Witz brach sie <target>endlich</target> das Eis.",
+        "segments": [
+          {
+            "s": "Im",
+            "i": 0
+          },
+          {
+            "s": "Workshop",
+            "i": 1
+          },
+          {
+            "s": "schwieg",
+            "i": 2
+          },
+          {
+            "s": "jeder",
+            "i": 3
+          },
+          {
+            "s": "Mit",
+            "i": 5
+          },
+          {
+            "s": "einem",
+            "i": 6
+          },
+          {
+            "s": "Witz",
+            "i": 7
+          },
+          {
+            "s": "brach",
+            "i": 8
+          },
+          {
+            "s": "sie",
+            "i": 9
+          },
+          {
+            "s": "endlich",
+            "i": 10
+          },
+          {
+            "s": "das",
+            "i": 11
+          },
+          {
+            "s": "Eis",
+            "i": 12
+          }
+        ],
+        "clickedIndex": 10
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1058,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01a25ad70f2b2243016a829cf677d8819db53ca7a2105ffbcf",
+      "usage": {
+        "input_tokens": 6642,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6676
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-literal-eis-click-brach",
+      "input": {
+        "markedSentence": "Vor ihr lag ein großer Eisblock. Mit einem Hammer <target>brach</target> sie das Eis für die Getränke.",
+        "segments": [
+          {
+            "s": "Vor",
+            "i": 0
+          },
+          {
+            "s": "ihr",
+            "i": 1
+          },
+          {
+            "s": "lag",
+            "i": 2
+          },
+          {
+            "s": "ein",
+            "i": 3
+          },
+          {
+            "s": "großer",
+            "i": 4
+          },
+          {
+            "s": "Eisblock",
+            "i": 5
+          },
+          {
+            "s": "Mit",
+            "i": 7
+          },
+          {
+            "s": "einem",
+            "i": 8
+          },
+          {
+            "s": "Hammer",
+            "i": 9
+          },
+          {
+            "s": "brach",
+            "i": 10
+          },
+          {
+            "s": "sie",
+            "i": 11
+          },
+          {
+            "s": "das",
+            "i": 12
+          },
+          {
+            "s": "Eis",
+            "i": 13
+          },
+          {
+            "s": "für",
+            "i": 14
+          },
+          {
+            "s": "die",
+            "i": 15
+          },
+          {
+            "s": "Getränke",
+            "i": 16
+          }
+        ],
+        "clickedIndex": 10
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 996,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ec999b39acba6e0016a829cf7867c87d2a20f4f0d87e864eb",
+      "usage": {
+        "input_tokens": 6679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6714
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-literal-eis-click-eis",
+      "input": {
+        "markedSentence": "Vor ihr lag ein großer Eisblock. Mit einem Hammer brach sie das <target>Eis</target> für die Getränke.",
+        "segments": [
+          {
+            "s": "Vor",
+            "i": 0
+          },
+          {
+            "s": "ihr",
+            "i": 1
+          },
+          {
+            "s": "lag",
+            "i": 2
+          },
+          {
+            "s": "ein",
+            "i": 3
+          },
+          {
+            "s": "großer",
+            "i": 4
+          },
+          {
+            "s": "Eisblock",
+            "i": 5
+          },
+          {
+            "s": "Mit",
+            "i": 7
+          },
+          {
+            "s": "einem",
+            "i": 8
+          },
+          {
+            "s": "Hammer",
+            "i": 9
+          },
+          {
+            "s": "brach",
+            "i": 10
+          },
+          {
+            "s": "sie",
+            "i": 11
+          },
+          {
+            "s": "das",
+            "i": 12
+          },
+          {
+            "s": "Eis",
+            "i": 13
+          },
+          {
+            "s": "für",
+            "i": 14
+          },
+          {
+            "s": "die",
+            "i": 15
+          },
+          {
+            "s": "Getränke",
+            "i": 16
+          }
+        ],
+        "clickedIndex": 13
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1353,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_091479951d165aec016a829cf8873c819cbbf5f22714212b3b",
+      "usage": {
+        "input_tokens": 6679,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6714
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-governed-click-wartet",
+      "input": {
+        "markedSentence": "Mara <target>wartet</target> auf den Bus.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "wartet",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "den",
+            "i": 3
+          },
+          {
+            "s": "Bus",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1115,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[2]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b5db3d5aa229fea016a829cf9ea0481a09ef8a3ca46b7e5a8",
+      "usage": {
+        "input_tokens": 6572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6608
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-governed-click-auf",
+      "input": {
+        "markedSentence": "Mara wartet <target>auf</target> den Bus.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "wartet",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "den",
+            "i": 3
+          },
+          {
+            "s": "Bus",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1352,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09361bafb749e9a3016a829cfb012881a1881e8bd785bba6ff",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-governed-near-bus",
+      "input": {
+        "markedSentence": "Mara wartet auf den <target>Bus</target>.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "wartet",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "den",
+            "i": 3
+          },
+          {
+            "s": "Bus",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1937,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0abb98c11542096a016a829cfd2630819c8d7db27851ca33eb",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6606
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-adjunct-click-laeuft",
+      "input": {
+        "markedSentence": "Mara <target>läuft</target> auf der Wiese.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "läuft",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "der",
+            "i": 3
+          },
+          {
+            "s": "Wiese",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 975,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0db000eaed96c9b9016a829cfe47a487d2b524848ab1160823",
+      "usage": {
+        "input_tokens": 6572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-adjunct-click-auf",
+      "input": {
+        "markedSentence": "Mara läuft <target>auf</target> der Wiese.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "läuft",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "der",
+            "i": 3
+          },
+          {
+            "s": "Wiese",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1144,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01f4b00edcc99878016a829cff47fc81a2b16d3894dcd20ca4",
+      "usage": {
+        "input_tokens": 6572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-adjunct-click-wiese",
+      "input": {
+        "markedSentence": "Mara läuft auf der <target>Wiese</target>.",
+        "segments": [
+          {
+            "s": "Mara",
+            "i": 0
+          },
+          {
+            "s": "läuft",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "der",
+            "i": 3
+          },
+          {
+            "s": "Wiese",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1055,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00d2432d33fa3518016a829d00677481a0876018acc617e512",
+      "usage": {
+        "input_tokens": 6572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-inherent-reflexive-click-schaemt",
+      "input": {
+        "markedSentence": "Er <target>schämt</target> sich.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "schämt",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1023,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[2]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_091606822992883b016a829d01737081a094e84f2089279fa6",
+      "usage": {
+        "input_tokens": 6555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6591
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-inherent-reflexive-click-sich",
+      "input": {
+        "markedSentence": "Er schämt <target>sich</target>.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "schämt",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1483,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07f81ffe6e7a5c1f016a829d02a55c87d295a8992751a1b888",
+      "usage": {
+        "input_tokens": 6555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6591
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-optional-reflexive-click-waescht",
+      "input": {
+        "markedSentence": "Er <target>wäscht</target> sich.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "wäscht",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1581,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c2c4e562b4ee67b016a829d03f48c81a39ddc958fe02ef1fb",
+      "usage": {
+        "input_tokens": 6554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6589
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-optional-reflexive-click-sich",
+      "input": {
+        "markedSentence": "Er wäscht <target>sich</target>.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "wäscht",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 946,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"PRON\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0928dbc364e1af1e016a829d058afc8192954408e024c591ee",
+      "usage": {
+        "input_tokens": 6555,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6590
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-separable-click-steht",
+      "input": {
+        "markedSentence": "Sie <target>steht</target> heute früh auf.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "heute",
+            "i": 2
+          },
+          {
+            "s": "früh",
+            "i": 3
+          },
+          {
+            "s": "auf",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1157,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07e1a222f3c9f89a016a829d067d3c87d2a30c4e0f312994fb",
+      "usage": {
+        "input_tokens": 6570,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6606
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-separable-click-auf",
+      "input": {
+        "markedSentence": "Sie steht heute früh <target>auf</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "heute",
+            "i": 2
+          },
+          {
+            "s": "früh",
+            "i": 3
+          },
+          {
+            "s": "auf",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 956,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07b56eca566fa00a016a829d07ad248192b36ab32d2ece6bea",
+      "usage": {
+        "input_tokens": 6570,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6606
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-separable-near-heute",
+      "input": {
+        "markedSentence": "Sie steht <target>heute</target> früh auf.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "heute",
+            "i": 2
+          },
+          {
+            "s": "früh",
+            "i": 3
+          },
+          {
+            "s": "auf",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1249,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_045e095fc868df0b016a829d08add087d2827051b9cb7cc7dd",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6605
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-perfect-click-hat",
+      "input": {
+        "markedSentence": "Sie <target>hat</target> laut gelacht.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "laut",
+            "i": 2
+          },
+          {
+            "s": "gelacht",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1243,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[3]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03651069df105b03016a829d09dce08191a194ead84c936909",
+      "usage": {
+        "input_tokens": 6561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-perfect-click-gelacht",
+      "input": {
+        "markedSentence": "Sie hat laut <target>gelacht</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "laut",
+            "i": 2
+          },
+          {
+            "s": "gelacht",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1004,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ff2f19563d15375016a829d0b1eac819ebc51f67a4f6dc41f",
+      "usage": {
+        "input_tokens": 6561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-perfect-near-laut",
+      "input": {
+        "markedSentence": "Sie hat <target>laut</target> gelacht.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "hat",
+            "i": 1
+          },
+          {
+            "s": "laut",
+            "i": 2
+          },
+          {
+            "s": "gelacht",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1049,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02a081aa4fdae4a8016a829d0c1b7c81a2a52d281c76158b51",
+      "usage": {
+        "input_tokens": 6561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6595
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-future-click-wird",
+      "input": {
+        "markedSentence": "Sie <target>wird</target> morgen lachen.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "wird",
+            "i": 1
+          },
+          {
+            "s": "morgen",
+            "i": 2
+          },
+          {
+            "s": "lachen",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1007,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[3]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07932499876a4c61016a829d0d23e4819f9384069b1708292f",
+      "usage": {
+        "input_tokens": 6561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-future-click-lachen",
+      "input": {
+        "markedSentence": "Sie wird morgen <target>lachen</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "wird",
+            "i": 1
+          },
+          {
+            "s": "morgen",
+            "i": 2
+          },
+          {
+            "s": "lachen",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1086,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e2a99a5037a594d016a829d0e3620819f930e1a3ad8bc4056",
+      "usage": {
+        "input_tokens": 6562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6598
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-passive-click-wird",
+      "input": {
+        "markedSentence": "Sie <target>wird</target> von allen gelobt.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "wird",
+            "i": 1
+          },
+          {
+            "s": "von",
+            "i": 2
+          },
+          {
+            "s": "allen",
+            "i": 3
+          },
+          {
+            "s": "gelobt",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 989,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0750609f66df61dc016a829d0f40708191b78f0f09d40c60d8",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-passive-click-gelobt",
+      "input": {
+        "markedSentence": "Sie wird von allen <target>gelobt</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "wird",
+            "i": 1
+          },
+          {
+            "s": "von",
+            "i": 2
+          },
+          {
+            "s": "allen",
+            "i": 3
+          },
+          {
+            "s": "gelobt",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1039,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0010611f3bde3b56016a829d103c088191800ec253df0e3607",
+      "usage": {
+        "input_tokens": 6571,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6607
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-lexicalized-participle-click-ist",
+      "input": {
+        "markedSentence": "Der Mann <target>ist</target> völlig verrückt.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Mann",
+            "i": 1
+          },
+          {
+            "s": "ist",
+            "i": 2
+          },
+          {
+            "s": "völlig",
+            "i": 3
+          },
+          {
+            "s": "verrückt",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1068,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e29516c8e732c3f016a829d11436c819d8507d52cef411c94",
+      "usage": {
+        "input_tokens": 6574,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6609
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-lexicalized-participle-click-verrueckt",
+      "input": {
+        "markedSentence": "Der Mann ist völlig <target>verrückt</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Mann",
+            "i": 1
+          },
+          {
+            "s": "ist",
+            "i": 2
+          },
+          {
+            "s": "völlig",
+            "i": 3
+          },
+          {
+            "s": "verrückt",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1139,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c06fb2dd372c09d016a829d12576887d2b509cf15c0b3c898",
+      "usage": {
+        "input_tokens": 6575,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6610
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-participle-one-attributive-lachende",
+      "input": {
+        "markedSentence": "Der <target>lachende</target> Junge winkte.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "lachende",
+            "i": 1
+          },
+          {
+            "s": "Junge",
+            "i": 2
+          },
+          {
+            "s": "winkte",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1091,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f8b9ca3f6647cea016a829d137aa887d28d4d0197ad699acd",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-participle-one-adverbial-lachend",
+      "input": {
+        "markedSentence": "Er kam <target>lachend</target> herein.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "kam",
+            "i": 1
+          },
+          {
+            "s": "lachend",
+            "i": 2
+          },
+          {
+            "s": "herein",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 961,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_006b404dd06bd7c7016a829d149010819fb209898ddbc17661",
+      "usage": {
+        "input_tokens": 6562,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-modal-click-muss",
+      "input": {
+        "markedSentence": "Sie <target>muss</target> jetzt schlafen.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "muss",
+            "i": 1
+          },
+          {
+            "s": "jetzt",
+            "i": 2
+          },
+          {
+            "s": "schlafen",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1024,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ddb2402e9e35131016a829d1586c887d281bba9366770b284",
+      "usage": {
+        "input_tokens": 6563,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6598
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-modal-click-schlafen",
+      "input": {
+        "markedSentence": "Sie muss jetzt <target>schlafen</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "muss",
+            "i": 1
+          },
+          {
+            "s": "jetzt",
+            "i": 2
+          },
+          {
+            "s": "schlafen",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 947,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f6cce99e2340229016a829d168c50819cb295a51d2d8508ba",
+      "usage": {
+        "input_tokens": 6563,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6598
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-copula-click-ist",
+      "input": {
+        "markedSentence": "Sie <target>ist</target> sehr müde.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "sehr",
+            "i": 2
+          },
+          {
+            "s": "müde",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1297,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0af03f4998297793016a829d17927887d2894c206180a5e11a",
+      "usage": {
+        "input_tokens": 6563,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6598
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-copula-click-muede",
+      "input": {
+        "markedSentence": "Sie ist sehr <target>müde</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "sehr",
+            "i": 2
+          },
+          {
+            "s": "müde",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1027,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05b1ac86b6e45b9c016a829d18cc84819ca490aa5171e5385e",
+      "usage": {
+        "input_tokens": 6564,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6599
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-collocation-click-trifft",
+      "input": {
+        "markedSentence": "Der Ausschuss <target>trifft</target> heute eine Entscheidung.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "heute",
+            "i": 3
+          },
+          {
+            "s": "eine",
+            "i": 4
+          },
+          {
+            "s": "Entscheidung",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1915,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f66bf432d67d12b016a829d1a40ec87d2a43b6aa95111616f",
+      "usage": {
+        "input_tokens": 6585,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6620
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-collocation-click-eine",
+      "input": {
+        "markedSentence": "Der Ausschuss trifft heute <target>eine</target> Entscheidung.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "heute",
+            "i": 3
+          },
+          {
+            "s": "eine",
+            "i": 4
+          },
+          {
+            "s": "Entscheidung",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1086,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ee82963d1a78645016a829d1bc324819194110a54f78be1a1",
+      "usage": {
+        "input_tokens": 6584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6618
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-collocation-click-entscheidung",
+      "input": {
+        "markedSentence": "Der Ausschuss trifft heute eine <target>Entscheidung</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "heute",
+            "i": 3
+          },
+          {
+            "s": "eine",
+            "i": 4
+          },
+          {
+            "s": "Entscheidung",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 5
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 906,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01f063ffe7f73685016a829d1cd29087d28fd67a021e4be44e",
+      "usage": {
+        "input_tokens": 6586,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6621
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-collocation-near-heute",
+      "input": {
+        "markedSentence": "Der Ausschuss trifft <target>heute</target> eine Entscheidung.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Ausschuss",
+            "i": 1
+          },
+          {
+            "s": "trifft",
+            "i": 2
+          },
+          {
+            "s": "heute",
+            "i": 3
+          },
+          {
+            "s": "eine",
+            "i": 4
+          },
+          {
+            "s": "Entscheidung",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADV"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1448,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADV\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0b4f1d573c85427c016a829d1dbcbc819d8616d1e077e3caad",
+      "usage": {
+        "input_tokens": 6585,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6619
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-free-object-click-bringt",
+      "input": {
+        "markedSentence": "Der Kellner <target>bringt</target> eine Cola.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Kellner",
+            "i": 1
+          },
+          {
+            "s": "bringt",
+            "i": 2
+          },
+          {
+            "s": "eine",
+            "i": 3
+          },
+          {
+            "s": "Cola",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1012,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_06f18ae853eb9733016a829d1f2c3881a1ae717439196b4efb",
+      "usage": {
+        "input_tokens": 6574,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6609
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-free-object-click-cola",
+      "input": {
+        "markedSentence": "Der Kellner bringt eine <target>Cola</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Kellner",
+            "i": 1
+          },
+          {
+            "s": "bringt",
+            "i": 2
+          },
+          {
+            "s": "eine",
+            "i": 3
+          },
+          {
+            "s": "Cola",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 911,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0186f70064f52f15016a829d20316c81a2a20ffd926730f2ce",
+      "usage": {
+        "input_tokens": 6574,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6609
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-fixed-function-click-heult",
+      "input": {
+        "markedSentence": "Aus Opportunismus folgt sie immer der Mehrheit. Sie <target>heult</target> mit den hungrigen Wölfen.",
+        "segments": [
+          {
+            "s": "Aus",
+            "i": 0
+          },
+          {
+            "s": "Opportunismus",
+            "i": 1
+          },
+          {
+            "s": "folgt",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "immer",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Mehrheit",
+            "i": 6
+          },
+          {
+            "s": "Sie",
+            "i": 8
+          },
+          {
+            "s": "heult",
+            "i": 9
+          },
+          {
+            "s": "mit",
+            "i": 10
+          },
+          {
+            "s": "den",
+            "i": 11
+          },
+          {
+            "s": "hungrigen",
+            "i": 12
+          },
+          {
+            "s": "Wölfen",
+            "i": 13
+          }
+        ],
+        "clickedIndex": 9
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          10,
+          11,
+          13
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          10,
+          13
+        ]
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": false,
+      "latencyMs": 1223,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"},\"additionalMemberIndices\":[10,13]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f41cd05ef30d2ff016a829d211d8481929583d4fefdba7a4c",
+      "usage": {
+        "input_tokens": 6656,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 40,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6696
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-fixed-function-click-mit",
+      "input": {
+        "markedSentence": "Aus Opportunismus folgt sie immer der Mehrheit. Sie heult <target>mit</target> den hungrigen Wölfen.",
+        "segments": [
+          {
+            "s": "Aus",
+            "i": 0
+          },
+          {
+            "s": "Opportunismus",
+            "i": 1
+          },
+          {
+            "s": "folgt",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "immer",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Mehrheit",
+            "i": 6
+          },
+          {
+            "s": "Sie",
+            "i": 8
+          },
+          {
+            "s": "heult",
+            "i": 9
+          },
+          {
+            "s": "mit",
+            "i": 10
+          },
+          {
+            "s": "den",
+            "i": 11
+          },
+          {
+            "s": "hungrigen",
+            "i": 12
+          },
+          {
+            "s": "Wölfen",
+            "i": 13
+          }
+        ],
+        "clickedIndex": 10
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          9,
+          11,
+          13
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 1007,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09eae7ed159302fa016a829d22534c81929adb360bfea4f474",
+      "usage": {
+        "input_tokens": 6656,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6691
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-fixed-function-click-den",
+      "input": {
+        "markedSentence": "Aus Opportunismus folgt sie immer der Mehrheit. Sie heult mit <target>den</target> hungrigen Wölfen.",
+        "segments": [
+          {
+            "s": "Aus",
+            "i": 0
+          },
+          {
+            "s": "Opportunismus",
+            "i": 1
+          },
+          {
+            "s": "folgt",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "immer",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Mehrheit",
+            "i": 6
+          },
+          {
+            "s": "Sie",
+            "i": 8
+          },
+          {
+            "s": "heult",
+            "i": 9
+          },
+          {
+            "s": "mit",
+            "i": 10
+          },
+          {
+            "s": "den",
+            "i": 11
+          },
+          {
+            "s": "hungrigen",
+            "i": 12
+          },
+          {
+            "s": "Wölfen",
+            "i": 13
+          }
+        ],
+        "clickedIndex": 11
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          9,
+          10,
+          13
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 1058,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0858d4f91f2a6b8f016a829d2358e0819f91d9cb5f7017bb45",
+      "usage": {
+        "input_tokens": 6656,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6690
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-fixed-function-click-woelfen",
+      "input": {
+        "markedSentence": "Aus Opportunismus folgt sie immer der Mehrheit. Sie heult mit den hungrigen <target>Wölfen</target>.",
+        "segments": [
+          {
+            "s": "Aus",
+            "i": 0
+          },
+          {
+            "s": "Opportunismus",
+            "i": 1
+          },
+          {
+            "s": "folgt",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "immer",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Mehrheit",
+            "i": 6
+          },
+          {
+            "s": "Sie",
+            "i": 8
+          },
+          {
+            "s": "heult",
+            "i": 9
+          },
+          {
+            "s": "mit",
+            "i": 10
+          },
+          {
+            "s": "den",
+            "i": 11
+          },
+          {
+            "s": "hungrigen",
+            "i": 12
+          },
+          {
+            "s": "Wölfen",
+            "i": 13
+          }
+        ],
+        "clickedIndex": 13
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          9,
+          10,
+          11
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 999,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0be291edd4884666016a829d2465d4819d917a17206567e441",
+      "usage": {
+        "input_tokens": 6656,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6691
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-boundary-fixed-function-near-hungrigen",
+      "input": {
+        "markedSentence": "Aus Opportunismus folgt sie immer der Mehrheit. Sie heult mit den <target>hungrigen</target> Wölfen.",
+        "segments": [
+          {
+            "s": "Aus",
+            "i": 0
+          },
+          {
+            "s": "Opportunismus",
+            "i": 1
+          },
+          {
+            "s": "folgt",
+            "i": 2
+          },
+          {
+            "s": "sie",
+            "i": 3
+          },
+          {
+            "s": "immer",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Mehrheit",
+            "i": 6
+          },
+          {
+            "s": "Sie",
+            "i": 8
+          },
+          {
+            "s": "heult",
+            "i": 9
+          },
+          {
+            "s": "mit",
+            "i": 10
+          },
+          {
+            "s": "den",
+            "i": 11
+          },
+          {
+            "s": "hungrigen",
+            "i": 12
+          },
+          {
+            "s": "Wölfen",
+            "i": 13
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Phraseme",
+          "kind": "Idiom"
+        },
+        "additionalMemberIndices": [
+          9,
+          10,
+          11,
+          13
+        ]
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 1244,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Phraseme\",\"kind\":\"Idiom\"},\"additionalMemberIndices\":[9,10,11,13]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08100cddd295ca0e016a829d256424819eb25f42eed65f0bda",
+      "usage": {
+        "input_tokens": 6656,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6700
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-repeated-click-steht",
+      "input": {
+        "markedSentence": "Sie <target>steht</target> auf dem Platz auf.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "dem",
+            "i": 3
+          },
+          {
+            "s": "Platz",
+            "i": 4
+          },
+          {
+            "s": "auf",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          5
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          5
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1438,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[5]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ab750a063cbfd3f016a829d26a36887d2940dc4bdeafd09b3",
+      "usage": {
+        "input_tokens": 6578,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6614
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-repeated-click-final-auf",
+      "input": {
+        "markedSentence": "Sie steht auf dem Platz <target>auf</target>.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "dem",
+            "i": 3
+          },
+          {
+            "s": "Platz",
+            "i": 4
+          },
+          {
+            "s": "auf",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 5
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1008,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a0cfe830c22629c016a829d28138087d2a5e771259fefede1",
+      "usage": {
+        "input_tokens": 6578,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6614
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-repeated-near-first-auf",
+      "input": {
+        "markedSentence": "Sie steht <target>auf</target> dem Platz auf.",
+        "segments": [
+          {
+            "s": "Sie",
+            "i": 0
+          },
+          {
+            "s": "steht",
+            "i": 1
+          },
+          {
+            "s": "auf",
+            "i": 2
+          },
+          {
+            "s": "dem",
+            "i": 3
+          },
+          {
+            "s": "Platz",
+            "i": 4
+          },
+          {
+            "s": "auf",
+            "i": 5
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 935,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADP\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_007f2d97d11ac432016a829d29141081a39a63f22dfee11a73",
+      "usage": {
+        "input_tokens": 6578,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6613
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-collocation-click-stellt",
+      "input": {
+        "markedSentence": "Er <target>stellt</target> eine Frage und stellt die Vase ab.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1045,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a0ca09a8ab72942016a829d2a04a887d2b59fad538f8b85e6",
+      "usage": {
+        "input_tokens": 6606,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6641
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-collocation-click-eine",
+      "input": {
+        "markedSentence": "Er stellt <target>eine</target> Frage und stellt die Vase ab.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1004,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0866b8bfadb2d4b9016a829d2b0fd4819f9a92a675490f729f",
+      "usage": {
+        "input_tokens": 6606,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6640
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-collocation-click-frage",
+      "input": {
+        "markedSentence": "Er stellt eine <target>Frage</target> und stellt die Vase ab.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1143,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00b3932844c2e752016a829d2c18a881a28406dab2af3d5d1c",
+      "usage": {
+        "input_tokens": 6607,
+        "input_tokens_details": {
+          "cache_write_tokens": 6496,
+          "cached_tokens": 0
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-separable-click-stellt",
+      "input": {
+        "markedSentence": "Er stellt eine Frage und <target>stellt</target> die Vase ab.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 5
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1681,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[8]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a7575c8142d9846016a829d2d3bcc81a18059aef36a21d1c7",
+      "usage": {
+        "input_tokens": 6606,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-separable-click-ab",
+      "input": {
+        "markedSentence": "Er stellt eine Frage und stellt die Vase <target>ab</target>.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 8
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          5
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          5
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1261,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[5]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_07b90745c1f004cc016a829d2f068c81a19ff34c71780c45a5",
+      "usage": {
+        "input_tokens": 6606,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-overlap-near-vase",
+      "input": {
+        "markedSentence": "Er stellt eine Frage und stellt die <target>Vase</target> ab.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stellt",
+            "i": 1
+          },
+          {
+            "s": "eine",
+            "i": 2
+          },
+          {
+            "s": "Frage",
+            "i": 3
+          },
+          {
+            "s": "und",
+            "i": 4
+          },
+          {
+            "s": "stellt",
+            "i": 5
+          },
+          {
+            "s": "die",
+            "i": 6
+          },
+          {
+            "s": "Vase",
+            "i": 7
+          },
+          {
+            "s": "ab",
+            "i": 8
+          }
+        ],
+        "clickedIndex": 7
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1250,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"NOUN\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fc9068a6346697f016a829d3041cc87d2bfe7c7f4bc42ecdf",
+      "usage": {
+        "input_tokens": 6607,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6642
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-partial-click-brach",
+      "input": {
+        "markedSentence": "Er <target>brach</target> das…",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "brach",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1047,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d800d9d6f4cea9d016a829d316f9087d2b15a62bfc7ce1d48",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6588
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-partial-click-das",
+      "input": {
+        "markedSentence": "Er brach <target>das</target>…",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "brach",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "DET"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1646,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"DET\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f1b672fb8316ff7016a829d327524819f9943ebe45502a2ec",
+      "usage": {
+        "input_tokens": 6553,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 34,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6587
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-typo-click-stet",
+      "input": {
+        "markedSentence": "Er <target>stet</target> morgen auf.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stet",
+            "i": 1
+          },
+          {
+            "s": "morgen",
+            "i": 2
+          },
+          {
+            "s": "auf",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 1
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          3
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1233,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[3]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_042f4b4543b3ffa8016a829d3425ec81a3baeda763359d9b37",
+      "usage": {
+        "input_tokens": 6561,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6597
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-typo-click-auf",
+      "input": {
+        "markedSentence": "Er stet morgen <target>auf</target>.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "stet",
+            "i": 1
+          },
+          {
+            "s": "morgen",
+            "i": 2
+          },
+          {
+            "s": "auf",
+            "i": 3
+          }
+        ],
+        "clickedIndex": 3
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          1
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1059,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[1]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00c9dc91d7d257c6016a829d3555b48191915a8c366e0dbaff",
+      "usage": {
+        "input_tokens": 6560,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6596
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-slang",
+      "input": {
+        "markedSentence": "Das ist <target>sus</target>.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "ist",
+            "i": 1
+          },
+          {
+            "s": "sus",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 933,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05cc37b9baa81d03016a829d3662e0819daaa9395470271b5d",
+      "usage": {
+        "input_tokens": 6550,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6585
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-opaque-surroundings",
+      "input": {
+        "markedSentence": "Er [???] <target>schläft</target> 🜁🜂.",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "schläft",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 911,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0fe5bfdbd2fc0208016a829d37529087d2aa1a47fe2043cf27",
+      "usage": {
+        "input_tokens": 6554,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 35,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6589
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-punctuation-click-steht",
+      "input": {
+        "markedSentence": "Ach er <target>steht</target> wirklich auf?!",
+        "segments": [
+          {
+            "s": "Ach",
+            "i": 0
+          },
+          {
+            "s": "er",
+            "i": 1
+          },
+          {
+            "s": "steht",
+            "i": 2
+          },
+          {
+            "s": "wirklich",
+            "i": 3
+          },
+          {
+            "s": "auf",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          4
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 917,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[4]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01824c821b244bbe016a829d383c0081a1994d2b66ba25871c",
+      "usage": {
+        "input_tokens": 6570,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6606
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-punctuation-click-auf",
+      "input": {
+        "markedSentence": "Ach er steht wirklich <target>auf</target>?!",
+        "segments": [
+          {
+            "s": "Ach",
+            "i": 0
+          },
+          {
+            "s": "er",
+            "i": 1
+          },
+          {
+            "s": "steht",
+            "i": 2
+          },
+          {
+            "s": "wirklich",
+            "i": 3
+          },
+          {
+            "s": "auf",
+            "i": 4
+          }
+        ],
+        "clickedIndex": 4
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          2
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 960,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[2]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00809f3ef4b41957016a829d39259c87d28b863aae147d4f91",
+      "usage": {
+        "input_tokens": 6570,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6606
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-long-click-wird",
+      "input": {
+        "markedSentence": "Obwohl die überraschend ausführliche Einleitung mit vielen freien Zusätzen und mehreren Nebensätzen gestern noch verwirrend wirkte <target>wird</target> der entscheidende Punkt am Ende von allen aufmerksamen Lesern sofort verstanden.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "überraschend",
+            "i": 2
+          },
+          {
+            "s": "ausführliche",
+            "i": 3
+          },
+          {
+            "s": "Einleitung",
+            "i": 4
+          },
+          {
+            "s": "mit",
+            "i": 5
+          },
+          {
+            "s": "vielen",
+            "i": 6
+          },
+          {
+            "s": "freien",
+            "i": 7
+          },
+          {
+            "s": "Zusätzen",
+            "i": 8
+          },
+          {
+            "s": "und",
+            "i": 9
+          },
+          {
+            "s": "mehreren",
+            "i": 10
+          },
+          {
+            "s": "Nebensätzen",
+            "i": 11
+          },
+          {
+            "s": "gestern",
+            "i": 12
+          },
+          {
+            "s": "noch",
+            "i": 13
+          },
+          {
+            "s": "verwirrend",
+            "i": 14
+          },
+          {
+            "s": "wirkte",
+            "i": 15
+          },
+          {
+            "s": "wird",
+            "i": 16
+          },
+          {
+            "s": "der",
+            "i": 17
+          },
+          {
+            "s": "entscheidende",
+            "i": 18
+          },
+          {
+            "s": "Punkt",
+            "i": 19
+          },
+          {
+            "s": "am",
+            "i": 20
+          },
+          {
+            "s": "Ende",
+            "i": 21
+          },
+          {
+            "s": "von",
+            "i": 22
+          },
+          {
+            "s": "allen",
+            "i": 23
+          },
+          {
+            "s": "aufmerksamen",
+            "i": 24
+          },
+          {
+            "s": "Lesern",
+            "i": 25
+          },
+          {
+            "s": "sofort",
+            "i": 26
+          },
+          {
+            "s": "verstanden",
+            "i": 27
+          }
+        ],
+        "clickedIndex": 16
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          27
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          27
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1649,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[27]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a0a2bd891c808cf016a829d3a1d90819faba594f1240c3bf2",
+      "usage": {
+        "input_tokens": 6814,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6850
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-long-click-verstanden",
+      "input": {
+        "markedSentence": "Obwohl die überraschend ausführliche Einleitung mit vielen freien Zusätzen und mehreren Nebensätzen gestern noch verwirrend wirkte wird der entscheidende Punkt am Ende von allen aufmerksamen Lesern sofort <target>verstanden</target>.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "überraschend",
+            "i": 2
+          },
+          {
+            "s": "ausführliche",
+            "i": 3
+          },
+          {
+            "s": "Einleitung",
+            "i": 4
+          },
+          {
+            "s": "mit",
+            "i": 5
+          },
+          {
+            "s": "vielen",
+            "i": 6
+          },
+          {
+            "s": "freien",
+            "i": 7
+          },
+          {
+            "s": "Zusätzen",
+            "i": 8
+          },
+          {
+            "s": "und",
+            "i": 9
+          },
+          {
+            "s": "mehreren",
+            "i": 10
+          },
+          {
+            "s": "Nebensätzen",
+            "i": 11
+          },
+          {
+            "s": "gestern",
+            "i": 12
+          },
+          {
+            "s": "noch",
+            "i": 13
+          },
+          {
+            "s": "verwirrend",
+            "i": 14
+          },
+          {
+            "s": "wirkte",
+            "i": 15
+          },
+          {
+            "s": "wird",
+            "i": 16
+          },
+          {
+            "s": "der",
+            "i": 17
+          },
+          {
+            "s": "entscheidende",
+            "i": 18
+          },
+          {
+            "s": "Punkt",
+            "i": 19
+          },
+          {
+            "s": "am",
+            "i": 20
+          },
+          {
+            "s": "Ende",
+            "i": 21
+          },
+          {
+            "s": "von",
+            "i": 22
+          },
+          {
+            "s": "allen",
+            "i": 23
+          },
+          {
+            "s": "aufmerksamen",
+            "i": 24
+          },
+          {
+            "s": "Lesern",
+            "i": 25
+          },
+          {
+            "s": "sofort",
+            "i": 26
+          },
+          {
+            "s": "verstanden",
+            "i": 27
+          }
+        ],
+        "clickedIndex": 27
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          16
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          16
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 988,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[16]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01c6268650f362aa016a829d3bc2e087d2bed9acb24eab2025",
+      "usage": {
+        "input_tokens": 6814,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 36,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6850
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-robust-unresolved",
+      "input": {
+        "markedSentence": "Er sagt <target>xqzvrrt</target>?",
+        "segments": [
+          {
+            "s": "Er",
+            "i": 0
+          },
+          {
+            "s": "sagt",
+            "i": 1
+          },
+          {
+            "s": "xqzvrrt",
+            "i": 2
+          }
+        ],
+        "clickedIndex": 2
+      },
+      "idealOutput": {
+        "decision": "Unresolved",
+        "target": null,
+        "additionalMemberIndices": null
+      },
+      "output": {
+        "decision": "Unresolved",
+        "target": null,
+        "additionalMemberIndices": null
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1243,
+      "rawOutputText": "{\"decision\":\"Unresolved\",\"target\":null,\"additionalMemberIndices\":null}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0522748d12a4242a016a829d3cc700819c968817602aea0f79",
+      "usage": {
+        "input_tokens": 6560,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 6496
+        },
+        "output_tokens": 28,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6588
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

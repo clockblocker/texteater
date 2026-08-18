@@ -25,7 +25,7 @@ export const GERMAN_REACHABLE_HIGH_LEVEL_ROUTES = {
 		"Idiom",
 		"Proverb",
 	],
-	Construction: ["Fusion", "PairedFrame"],
+	Construction: ["Fusion"],
 } as const satisfies {
 	readonly [Family in Exclude<
 		LemmaFamilyFor<"de">,

@@ -1,3 +1,1 @@
-export type StoreRevision = string & {
-	readonly __storeRevisionBrand?: unique symbol;
-};
+export type { StoreRevision } from "../schema";

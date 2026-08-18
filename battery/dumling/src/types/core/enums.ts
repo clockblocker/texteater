@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { surfaceKindValues } from "../../vocabulary.js";
 
 const supportedLanguageValues = ["en", "de", "he"] as const;
 
@@ -17,8 +18,6 @@ const familyValues = [
 
 export const LemmaFamily = z.enum(familyValues);
 export type LemmaFamily = z.infer<typeof LemmaFamily>;
-
-const surfaceKindValues = ["Citation", "Inflection"] as const;
 
 export const SurfaceKind = z.enum(surfaceKindValues);
 export type SurfaceKind = z.infer<typeof SurfaceKind>;
@@ -81,7 +80,7 @@ const morphemeKindValues = [
 export const MorphemeKind = z.enum(morphemeKindValues);
 export type MorphemeKind = z.infer<typeof MorphemeKind>;
 
-const constructionKindValues = ["Fusion", "PairedFrame"] as const;
+const constructionKindValues = ["Fusion"] as const;
 
 export const ConstructionKind = z.enum(constructionKindValues);
 export type ConstructionKind = z.infer<typeof ConstructionKind>;

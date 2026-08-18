@@ -30,6 +30,18 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"kann means ability. It is not tense or voice glue. AUX only.",
 		"target-de-demo-passive-briefe-click-werden":
 			"werden + verschickt = one passive realization. Whole target is VERB, not AUX. morgen is extra.",
+		"target-de-demo-state-passive-banken-click-sind":
+			"sind + geöffnet keeps the productive öffnen meaning and corresponds to werden geöffnet. TIGER treats this as a state passive. Take both as one VERB target.",
+		"target-de-demo-state-passive-banken-click-geoeffnet":
+			"The marked participle belongs to the same productive state passive as sind. Take sind + geöffnet as the identical VERB target for either click.",
+		"target-de-demo-state-passive-bauplan-click-freigegeben":
+			"Architekt did freigeben. ist + freigegeben. VERB. Take both.",
+		"target-de-demo-state-passive-absperrung-click-versetzt":
+			"Helfer moved barrier. zwei Meter nach Osten. ist + versetzt. VERB. Take both.",
+		"target-de-demo-participial-adjective-brief-click-ist":
+			"ungelesen is property here. ist only copula. AUX alone.",
+		"target-de-demo-participial-adjective-brief-click-ungelesen":
+			"un- and unwichtig show adjective. ADJ alone. Leave ist out.",
 		"target-de-demo-repeated-anfangen-click-first-an":
 			"This first an introduces and governs der Kreuzung. It is an ADP, not the objectless final verb particle. Return this an alone.",
 		"target-de-diagnostic-repeated-click-final-an":
@@ -38,6 +50,8 @@ export const productionDemonstrationGuidance: Readonly<Record<string, string>> =
 			"mact is an obvious typo for macht. The objectless final mit still completes that separable verb. Take mact + mit as Lexeme/VERB.",
 		"target-de-demo-predicative-cringe-click-cringe":
 			"cringe describes the subject after wirkt. It is an indeclinable borrowed property word here: ADJ, not NOUN.",
+		"target-de-demo-discourse-herzliche-gruesse-click-herzliche":
+			"Fixed farewell. Herzliche + Grüße. Take both.",
 		"target-de-demo-paired-sowohl-click-robust":
 			"sowohl + als + auch are anchors. robust is a filler click. Take robust/ADJ only.",
 		"target-de-demo-idiom-kragen-click-der":

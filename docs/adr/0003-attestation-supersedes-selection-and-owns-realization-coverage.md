@@ -8,7 +8,9 @@ partially-supersedes: 0002-lemma-is-grammatical-identity-and-reading-is-semantic
 This decision supersedes only the Selection topology, Selection identity, and
 Surface realization-coverage clauses of ADR 0002. ADR 0002 remains accepted
 for Lemma grammatical identity, Surface-to-Lemma linkage, and the boundary
-between Dumling Lemmas and learner-scoped Readings.
+between grammatical Lemmas and dictionary-scoped Readings. ADR 0008 later
+moves the foundational Reading value and its identity operation into Dumling
+without adding Reading to the Attestation or changing that semantic boundary.
 
 Dumling's grammatical resolution chain is now:
 

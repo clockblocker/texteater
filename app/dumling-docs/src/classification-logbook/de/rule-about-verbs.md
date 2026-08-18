@@ -1,85 +1,96 @@
 # Rule About Verbs
 
-This note sharpens the German boundary between `VERB`, `AUX`, `ADJ`, and `NOUN` for verb-shaped forms.
-
-The main danger zone is participles. German lets the same surface look verbal, adjectival, or nominal depending on use, so the rule has to key off syntactic function and learner-facing lexical identity rather than historical origin alone.
+This note fixes the German boundary between `VERB`, `AUX`, `ADJ`, and `NOUN`
+for verb-shaped forms. It follows the conservative TIGER policy: productive
+verbal identity wins inside perfect and passive constructions, while
+adjectivally used and independently lexicalized participles use `ADJ`.
 
 ## Core Rule
 
-- Attributive participles with adjectival agreement classify as `ADJ`.
-- Non-attributive participles of lexical verbs classify as `VERB`.
-- Participles of auxiliaries classify as `AUX`.
+- Adjectivally used Partizip I classifies as `ADJ`, including attributive,
+  predicative, and adverbial uses.
+- Attributive or adverbial Partizip II classifies as `ADJ` when it functions as
+  an adjective.
+- Partizip II in a productive perfect, `werden`-passive, `sein`-perfect, or
+  perfect-passive construction classifies as `VERB`.
+- `sein + Partizip II` classifies as a productive state passive and therefore
+  `VERB` when a corresponding active or `werden`-passive paraphrase preserves
+  the contextual meaning and verbal participants.
+- Lexicalized or idiomatized participial property meanings classify as `ADJ`.
+- Participles of auxiliary Lemmas classify as `AUX`.
 - Substantivized infinitives and participles classify as `NOUN`.
 
-## Verified Attestation Examples
+## Partizip I -> `ADJ`
 
-### Attributive `P1` -> `ADJ`
+Partizip I never forms an analytic German verb form. When it is used as an
+attribute, predicate, or adverbial modifier, route it to the adjective Lemma.
 
 - `Der [lachende] Junge winkte uns zu.`
-- `Die [schlafenden] Kinder wurden nicht geweckt.`
-
-### Non-attributive `P1` -> `VERB`
-
 - `Sie kam [lachend] herein.`
-- `Er saß [schweigend] am Fenster.`
+- `Das Geräusch ist [störend].`
 
-### Attributive `P2` -> `ADJ`
+The adjective Canonical Forms are `lachend` and `störend`, not `lachen` and
+`stören`.
 
-These are participles, but in Dumling they go to `ADJ` because they are noun-modifying agreement forms.
+## Adjectivally Used Partizip II -> `ADJ`
+
+Attributive agreement and independent property behavior license an adjective
+Lemma whose Canonical Form is the participial adjective.
 
 - `Die [eingezeichneten] Seen sind jetzt besser zu sehen.`
 - `Der [geschriebene] Brief lag auf dem Tisch.`
-- `Die [gekochten] Kartoffeln standen schon bereit.`
-
-### Predicative Or Bare `P2` Of Lexical Verbs -> `VERB`
-
-These remain verbal, even when the clause has a stative or result-state reading.
-
-- `Auf der Karte sind drei Seen [eingezeichnet].`
-- `Der Brief ist schon [geschrieben].`
-- `Die Kartoffeln sind bereits [gekocht].`
-- `Die Tür ist [geschlossen].`
+- `Der Mann ist völlig [verrückt].`
 - `Sie ist [verheiratet].`
 - `Die Aufgabe bleibt [ungelöst].`
 
-### `P2` Of Auxiliaries -> `AUX`
+Evidence for `ADJ` includes lexicalized or idiomatized meaning, adjective-only
+intensification or comparison, `un-` formation, coordination with ordinary
+adjectives, and use with copulas such as `bleiben` or `wirken`.
 
-- `Das wäre schön [gewesen].`
+## Productive Partizip II -> `VERB`
 
-## Nominalized Verb Forms
+Perfect and passive constructions retain the source verb Lemma. Every fixed
+realized auxiliary belongs to the same high-level Analysis Target, while the
+participle remains its morphological head.
 
-### Nominalized Infinitives -> `NOUN`
+- `Die Bank hat [geöffnet].` -> `öffnen/VERB`
+- `Die Bank wird [geöffnet].` -> `öffnen/VERB`
+- `Der Zug ist [angekommen].` -> `ankommen/VERB`
+- `Die Banken sind [geöffnet].` -> `öffnen/VERB`
 
-- `Das [Rennen] hat Spaß gemacht.`
-- `[Schwimmen] ist gesund.`
-- `Sein ständiges [Meckern] nervt.`
+The final example is a productive state passive under the TIGER boundary:
+`Die Banken werden geöffnet` preserves the opening event and its participants.
+Both `sind` and `geöffnet` therefore select the same `[sind, geöffnet]`
+`Lexeme/VERB` Analysis Target. A later drill-down may still analyze `sind` as
+the `sein/AUX` component.
 
-### Nominalized Participles -> `NOUN`
+## Predicative Partizip II Decision Order
 
-These are useful probes because they still look participial on the surface.
+For `sein + Partizip II`:
 
-- `Der [Reisende] wartete draußen.`
-- `Die [Angestellten] streikten gestern.`
-- `Ein [Verletzter] lag am Straßenrand.`
+1. Test whether an active or `werden`-passive counterpart preserves the same
+   meaning and verbal participants. If yes, classify the productive state
+   passive as `VERB` and group `sein` with the participle.
+2. Otherwise test for a lexicalized or idiomatized property meaning and
+   adjective behavior. If present, classify the participle as `ADJ` and keep
+   the copula separate.
+3. Make this decision once for the occurrence. Clicking the auxiliary and the
+   participle may never produce incompatible analyses of the same complex.
 
-## No Predicative Override
+## Auxiliary And Nominal Forms
 
-For this rule set, bare predicative `P2` does not flip to `ADJ` just because the clause feels stative, lexicalized, or resultative. If the form is not attributive and not an auxiliary participle, keep it under `VERB`.
-
-By this policy:
-
-- `Die Tür ist [geschlossen].` -> `VERB`
-- `Sie ist [verheiratet].` -> `VERB`
-- `Die Aufgabe bleibt [ungelöst].` -> `VERB`
-- `Ein [interessierter] Leser fragte nach.` -> still `ADJ`, because the form is attributive and declined as an adjective
+- `Das wäre schön [gewesen].` -> `AUX`
+- `Das [Rennen] hat Spaß gemacht.` -> `NOUN`
+- `[Schwimmen] ist gesund.` -> `NOUN`
+- `Der [Reisende] wartete draußen.` -> `NOUN`
+- `Die [Angestellten] streikten gestern.` -> `NOUN`
 
 ## Practical Summary
 
-Do not use a blanket rule like `P2 -> VERB`.
+- adjectivally used P1 -> `ADJ`
+- adjectivally used or lexicalized P2 -> `ADJ`
+- productive perfect/passive/state-passive P2 -> `VERB`
+- auxiliary participle -> `AUX`
+- substantivized verb form -> `NOUN`
 
-The actual split we want is:
-
-- attributive participles -> `ADJ`
-- non-attributive participles of lexical verbs -> `VERB`
-- participles of auxiliaries -> `AUX`
-- substantivized verb forms -> `NOUN`
+`P1` and `P2` describe participial form; they are not standalone Dumling Kinds.

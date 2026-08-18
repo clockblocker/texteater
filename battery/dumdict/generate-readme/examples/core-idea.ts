@@ -1,9 +1,10 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
+
+import type { Reading } from "dumling/types";
 import {
 	type Lemma,
 	type LemmaRecord,
 	makeSurfaceId,
-	type Reading,
 	type ReadingEntry,
 	type Surface,
 	type SurfaceEntry,

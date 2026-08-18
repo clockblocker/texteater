@@ -18,7 +18,8 @@ build, tests, and package-specific configuration.
 ## Install
 
 The repository is pinned to the Bun version in the root `packageManager`
-field. Install from the repository root:
+field and to the Node.js version in `.nvmrc`. Install from the repository
+root:
 
 ```sh
 bun install
@@ -27,6 +28,21 @@ bun install
 Turborepo and Prettier are intentionally not part of the toolchain. Bun runs
 the workspace commands, TypeScript 7 provides compilation and type checking,
 and Biome 2 provides formatting and linting.
+
+## Reference repositories
+
+Clone library source alongside the monorepo packages so coding agents can
+inspect idiomatic implementations and usage patterns locally:
+
+```sh
+git clone https://github.com/Effect-TS/effect.git repos-for-refrence/effect
+git clone https://github.com/colinhacks/zod.git repos-for-refrence/zod4
+git clone https://github.com/TanStack/query.git repos-for-refrence/tanstack-query
+```
+
+`repos-for-refrence/` is ignored by Git. Treat its contents as read-only
+reference material; application code must continue importing these libraries
+from the normal package dependencies.
 
 ## Package autonomy
 

@@ -80,10 +80,7 @@ describe("configured service", () => {
 					candidates: [
 						{
 							reading: englishWalkReadingEntry(),
-							lemma: {
-								lemma: englishWalkLemma,
-								morphologicalRelations: {},
-							},
+							lemma: { lemma: englishWalkLemma },
 						},
 					],
 				};

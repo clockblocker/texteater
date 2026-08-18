@@ -13,7 +13,23 @@ are peer Families.
 _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
-A word-like Lemma. A Lexeme is one Lemma Family, not a synonym for Lemma.
+A lexical Lemma whose fixed realization may contain one or more members. German
+`rechnen … mit` is one `VERB` Lexeme even when the verb and its governed
+preposition are realized separately; a Lexeme is one Lemma Family, not a
+synonym for Lemma.
+
+**Verbal Participle**:
+A participial Surface whose contextual use belongs to a `VERB` or `AUX` Lexeme.
+Its Canonical Form is the verbal dictionary form rather than the participial
+spelling. Productive perfect, passive, and German state-passive uses are verbal
+participles.
+
+**Participial Adjective**:
+An adjectivally used participial form that resolves to an `ADJ` Lexeme rather
+than to its source verb. Its Canonical Form is the adjective's participial
+citation form. German Partizip I in ordinary adjectival functions, attributive
+or adverbial Partizip II, and lexicalized or idiomatized predicative Partizip II
+are participial adjectives.
 
 **Collocation**:
 A conventional multiword Phraseme whose lexical component choices are
@@ -43,12 +59,14 @@ language, Family, and Kind.
 _Avoid_: Inherent Features
 
 **Reading**:
-The learner-scoped semantic identity formed by one Lemma and one Emoji
-Description. Reading belongs outside Dumling; Dumling ends at Lemma.
+A foundational semantic value formed by exactly one Lemma and one Emoji
+Description. Dumling owns its DTO, schema, value equality, and stable
+tuple-derived identity operation; a dictionary establishes the learner or
+hosted scope in which that equality applies and owns any Reading record.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
-The stable learner-scoped semantic label that distinguishes Readings of the
+The stable dictionary-scoped semantic label that distinguishes Readings of the
 same Lemma. A classifier reuses an existing Reading when it is close enough or
 creates a new Reading; learners do not manually split semantic identity.
 

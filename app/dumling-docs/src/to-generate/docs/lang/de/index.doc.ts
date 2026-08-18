@@ -26,9 +26,9 @@ Start with:
 | \`Lexeme\` | \`ADJ\`, \`ADP\`, \`ADV\`, \`AUX\`, \`CCONJ\`, \`DET\`, \`INTJ\`, \`NOUN\`, \`NUM\`, \`PART\`, \`PRON\`, \`PROPN\`, \`PUNCT\`, \`SCONJ\`, \`SYM\`, \`VERB\`, \`X\` |
 | \`Morpheme\` | \`Circumfix\`, \`Clitic\`, \`Duplifix\`, \`Infix\`, \`Interfix\`, \`Prefix\`, \`Root\`, \`Suffix\`, \`Suffixoid\`, \`ToneMarking\`, \`Transfix\` |
 | \`Phraseme\` | \`Aphorism\`, \`Collocation\`, \`DiscourseFormula\`, \`Idiom\`, \`Proverb\` |
-| \`Construction\` | \`Fusion\`, \`PairedFrame\` |
+| \`Construction\` | \`Fusion\` |
 
-German uses \`Construction/Fusion\` for fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\`, and \`Construction/PairedFrame\` for learner-facing paired frames such as \`um zu\`. These are citation-only Lemmas in the current public DTO.
+German uses \`Construction/Fusion\` for fused forms such as \`zum\`, \`zur\`, \`beim\`, or \`ins\`. Fixed multi-member identities are Lexemes: for example \`um zu\` is \`Lexeme/SCONJ\`, \`entweder … oder\` is \`Lexeme/CCONJ\`, and \`einerseits … andererseits\` is \`Lexeme/ADV\`.
 
 ## Common Feature Areas
 
@@ -42,7 +42,7 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
 
-\`Construction/Fusion\` and \`Construction/PairedFrame\` currently carry no additional core or inflectional features.
+\`Construction/Fusion\` currently carries no additional core or inflectional features.
 
 ## Example
 
@@ -96,14 +96,14 @@ const zumAttestation = dumling.de.create.attestation({
 });
 \`\`\`
 
-German paired-frame example:
+German multi-member Lexeme example:
 
 \`\`\`ts
 const umZuLemma = dumling.de.create.lemma({
 \tcanonicalForm: "um zu",
-\tfamily: "Construction",
-\tkind: "PairedFrame",
-\tcoreFeatures: {},
+\tfamily: "Lexeme",
+\tkind: "SCONJ",
+\tcoreFeatures: { conjType: null },
 });
 
 const umZuAttestation = dumling.de.create.attestation({
@@ -120,12 +120,12 @@ const umZuAttestation = dumling.de.create.attestation({
 
 \`\`\`ts
 schemasFor.de.entity.Lemma.Lexeme.NOUN();
+schemasFor.de.entity.Lemma.Lexeme.SCONJ();
 schemasFor.de.entity.Lemma.Construction.Fusion();
-schemasFor.de.entity.Lemma.Construction.PairedFrame();
 schemasFor.de.entity.Surface.Inflection.Lexeme.NOUN();
 schemasFor.de.entity.Attestation.Inflection.Lexeme.NOUN();
+schemasFor.de.entity.Attestation.Citation.Lexeme.SCONJ();
 schemasFor.de.entity.Attestation.Citation.Construction.Fusion();
-schemasFor.de.entity.Attestation.Citation.Construction.PairedFrame();
 \`\`\`
 `,
 });

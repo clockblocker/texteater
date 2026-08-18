@@ -99,16 +99,16 @@ const cases = {
 			target: { family: "Morpheme", kind: "Root" },
 		},
 	},
-	"unit-shadow-demo-en-paired-frame": {
+	"unit-shadow-demo-en-correlative": {
 		input: {
 			language: "en",
 			canonicalForm: "the more … the more …",
 			intendedUse:
-				"A productive two-slot comparative-correlative frame, not one fixed saying.",
+				"The fixed correlating anchors of the comparative-correlative lexical identity, with open comparative slots.",
 		},
 		idealOutput: {
 			decision: "Resolved",
-			target: { family: "Construction", kind: "PairedFrame" },
+			target: { family: "Lexeme", kind: "CCONJ" },
 		},
 	},
 	"unit-shadow-demo-unresolved-homograph": {

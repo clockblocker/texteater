@@ -173,16 +173,16 @@ const cases = {
 			target: { family: "Construction", kind: "Fusion" },
 		},
 	},
-	"unit-shadow-de-paired-frame": {
+	"unit-shadow-de-correlative-cconj": {
 		input: {
 			language: "de",
 			canonicalForm: "je … desto …",
 			intendedUse:
-				"The productive two-part comparative-correlative frame with open slots.",
+				"The fixed anchors of the two-part comparative-correlative lexical identity, with open comparative slots.",
 		},
 		idealOutput: {
 			decision: "Resolved",
-			target: { family: "Construction", kind: "PairedFrame" },
+			target: { family: "Lexeme", kind: "CCONJ" },
 		},
 	},
 } as const satisfies GoldenCaseRegistry<

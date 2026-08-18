@@ -68,14 +68,15 @@ export const ambiguityAndAnchorCases = defineGoldenCaseCollection(
 						"Finite verb stays second. Coordinator. Not SCONJ.",
 				},
 			),
-			"grammar-de-cconj-dev-oder-without-paired-frame": conjunctionCase(
-				"Du kannst anrufen <TARGET>oder</TARGET> eine Nachricht schreiben.",
-				"oder",
-				{
-					explanation:
-						"Plain oder joins alternatives. No PairedFrame membership.",
-				},
-			),
+			"grammar-de-cconj-dev-ordinary-oder-without-correlate":
+				conjunctionCase(
+					"Du kannst anrufen <TARGET>oder</TARGET> eine Nachricht schreiben.",
+					"oder",
+					{
+						explanation:
+							"Plain oder joins alternatives without an upstream correlating partner.",
+					},
+				),
 			"grammar-de-cconj-accept-comparative-als-tiefer": conjunctionCase(
 				"Der neue Brunnen ist tiefer <TARGET>als</TARGET> der alte.",
 				"als",

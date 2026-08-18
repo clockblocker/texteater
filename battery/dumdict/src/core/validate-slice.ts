@@ -1,3 +1,5 @@
+import { readingFingerprint } from "dumling";
+import { readingSchema } from "dumling/schema";
 import {
 	lemmaKnowledgeSchema,
 	pendingSemanticRelationSchema,
@@ -20,6 +22,7 @@ import {
 	type SupportedLanguage,
 } from "../dumling";
 import { DumdictLanguageMismatchError } from "../public";
+import { getDumdictSchemasFor } from "../schema";
 import type {
 	CleanupRelationsSlice,
 	NewNoteSlice,
@@ -27,7 +30,7 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import { readingKey, sameLemma, sameReading } from "./identity";
+import { sameLemma, sameReading } from "./identity";
 
 function assertLanguage(
 	expected: SupportedLanguage,
@@ -56,6 +59,7 @@ function validateLemmaRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: LemmaRecord<L>,
 ) {
+	getDumdictSchemasFor(expected).lemmaRecordSchema.parse(record);
 	assertLanguage(expected, record.lemma.language);
 	if (record.knowledge !== undefined)
 		lemmaKnowledgeSchema.parse(record.knowledge);
@@ -65,9 +69,8 @@ function validateReading<L extends SupportedLanguage>(
 	expected: L,
 	reading: Reading<L>,
 ) {
+	readingSchema.parse(reading);
 	assertLanguage(expected, reading.lemma.language);
-	if (!reading.emojiDescription.trim())
-		throw new Error("Reading emoji description must not be empty.");
 	if (
 		reading.emojiDescription.trim().normalize("NFC") !==
 		reading.emojiDescription
@@ -81,6 +84,7 @@ function validateReadingEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: ReadingEntry<L>,
 ) {
+	getDumdictSchemasFor(expected).readingEntrySchema.parse(entry);
 	validateReading(expected, entry.reading);
 	if (entry.knowledge !== undefined) {
 		readingKnowledgeSchema.parse(entry.knowledge);
@@ -102,6 +106,7 @@ function validateSurfaceEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: SurfaceEntry<L>,
 ) {
+	getDumdictSchemasFor(expected).surfaceEntrySchema.parse(entry);
 	assertLanguage(expected, entry.surface.language);
 	assertLanguage(expected, entry.surface.lemma.language);
 	const inspected = inspectDumlingId(entry.id);
@@ -120,6 +125,9 @@ function validatePendingRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: PendingSemanticRelationRecord<L>,
 ) {
+	getDumdictSchemasFor(expected).pendingSemanticRelationRecordSchema.parse(
+		record,
+	);
 	validateReading(expected, record.sourceReading);
 	const parsed = pendingSemanticRelationSchema.parse(record.pending);
 	assertLanguage(expected, parsed.target.language);
@@ -128,7 +136,10 @@ function validatePendingRecord<L extends SupportedLanguage>(
 			"Pending Semantic Relation endpoints must use the same language.",
 		);
 	semanticRelationSchema.parse(record.locator.relation);
-	if (record.locator.sourceReadingKey !== readingKey(record.sourceReading))
+	if (
+		record.locator.sourceReadingKey !==
+		readingFingerprint(record.sourceReading)
+	)
 		throw new Error(
 			"Pending Semantic Relation locator has the wrong source Reading key.",
 		);

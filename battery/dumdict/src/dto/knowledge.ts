@@ -1,6 +1,5 @@
 import type { KnowledgeChange } from "dumrel";
-import type { SupportedLanguage } from "../dumling";
-import type { Reading } from "./reading";
+import type { Reading, SupportedLanguage } from "../dumling";
 
 export type LemmaKnowledgeChange<L extends SupportedLanguage> = {
 	owner: { kind: "Lemma"; lemma: Reading<L>["lemma"] };

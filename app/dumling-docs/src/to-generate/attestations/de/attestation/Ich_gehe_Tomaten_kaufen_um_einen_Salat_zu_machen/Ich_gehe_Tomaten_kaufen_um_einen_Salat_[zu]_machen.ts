@@ -20,17 +20,17 @@ const occurrenceAttestation = {
 		lemma: {
 			language: "de",
 			canonicalForm: "um zu",
-			family: "Construction",
-			kind: "PairedFrame",
-			coreFeatures: {},
+			family: "Lexeme",
+			kind: "SCONJ",
+			coreFeatures: { conjType: null },
 		},
 		surfaceFeatures: null,
 	},
-} satisfies Attestation<"de", "Citation", "Construction", "PairedFrame">;
+} satisfies Attestation<"de", "Citation", "Lexeme", "SCONJ">;
 
 export const attestation = {
 	attestation: occurrenceAttestation,
 	sentenceMarkdown: "Ich gehe Tomaten kaufen, um einen Salat [zu] machen.",
 	classifierNotes:
-		"The Full Attestation records both members of the learner-facing Construction/PairedFrame `um zu`; the docs-owned review span remains on `zu`, outside the Dumling DTO.",
+		"The Full Attestation records both ordered members of the multi-member Lexeme/SCONJ `um zu`; the docs-owned review span remains on `zu`, outside the Dumling DTO.",
 } as const;

@@ -31,9 +31,9 @@ if (demonstrationSelection.ids.length > 35) {
 }
 
 /**
- * The exact 21 demonstrations retained by the promoted Adaptive-5 prompt.
- * This is production prompt content; historical adaptive profiles may select
- * other cases from the same corpus inside the laboratory runner.
+ * The 28 selected production cases render as 28 demonstrations: the promoted
+ * Adaptive-5 set plus paired verbal and adjectival contrasts accepted by ADR 0007.
+ * Historical profiles may select other cases in the laboratory.
  */
 export const productionDemonstrationSelection = corpus.select([
 	"target-de-demo-perfect-arbeiten-click-habe",
@@ -48,10 +48,17 @@ export const productionDemonstrationSelection = corpus.select([
 	"target-de-demo-optional-reflexive-click-dich",
 	"target-de-demo-modal-arbeiten-click-kann",
 	"target-de-demo-passive-briefe-click-werden",
+	"target-de-demo-state-passive-banken-click-sind",
+	"target-de-demo-state-passive-banken-click-geoeffnet",
+	"target-de-demo-state-passive-bauplan-click-freigegeben",
+	"target-de-demo-state-passive-absperrung-click-versetzt",
+	"target-de-demo-participial-adjective-brief-click-ist",
+	"target-de-demo-participial-adjective-brief-click-ungelesen",
 	"target-de-demo-repeated-anfangen-click-first-an",
 	"target-de-diagnostic-repeated-click-final-an",
 	"target-de-demo-typo-mitmachen-click-mit",
 	"target-de-demo-predicative-cringe-click-cringe",
+	"target-de-demo-discourse-herzliche-gruesse-click-herzliche",
 	"target-de-demo-paired-sowohl-click-robust",
 	"target-de-demo-idiom-kragen-click-der",
 	"target-de-demo-symbol-percent",
@@ -73,6 +80,10 @@ const frozenEvaluationCandidates = corpus.select([
 	"target-de-route-lexeme-pron",
 	"target-de-route-lexeme-propn",
 	"target-de-route-lexeme-sconj",
+	"target-de-route-lexeme-sconj-um-zu-click-um",
+	"target-de-route-lexeme-sconj-um-zu-click-zu",
+	"target-de-route-lexeme-adv-teils-teils-click-first",
+	"target-de-route-lexeme-adv-teils-teils-click-second",
 	"target-de-route-lexeme-sym",
 	"target-de-route-lexeme-verb",
 	"target-de-route-phraseme-aphorism-click-wissen",
@@ -89,10 +100,10 @@ const frozenEvaluationCandidates = corpus.select([
 	"target-de-core-entscheidung-click-trifft",
 	"target-de-core-entscheidung-click-eine",
 	"target-de-route-construction-fusion",
-	"target-de-route-construction-paired-click-je",
-	"target-de-route-construction-paired-click-desto",
-	"target-de-route-construction-paired-near-frueher",
-	"target-de-route-construction-paired-near-besser",
+	"target-de-route-lexeme-cconj-click-je",
+	"target-de-route-lexeme-cconj-click-desto",
+	"target-de-route-lexeme-cconj-near-frueher",
+	"target-de-route-lexeme-cconj-near-besser",
 	"target-de-boundary-idiom-click-brach",
 	"target-de-boundary-idiom-click-das",
 	"target-de-boundary-idiom-click-eis",
@@ -119,6 +130,10 @@ const frozenEvaluationCandidates = corpus.select([
 	"target-de-boundary-future-click-lachen",
 	"target-de-boundary-passive-click-wird",
 	"target-de-boundary-passive-click-gelobt",
+	"target-de-boundary-lexicalized-participle-click-ist",
+	"target-de-boundary-lexicalized-participle-click-verrueckt",
+	"target-de-boundary-participle-one-attributive-lachende",
+	"target-de-boundary-participle-one-adverbial-lachend",
 	"target-de-boundary-modal-click-muss",
 	"target-de-boundary-modal-click-schlafen",
 	"target-de-boundary-copula-click-ist",
@@ -164,16 +179,19 @@ if (
 	);
 }
 
-/** The historical 94 cases after mechanically omitting demonstrations. */
+/** The historical 94 cases plus four ADR 0007 participle-boundary probes. */
 const evaluationSelection = frozenEvaluationCandidates.difference(
 	productionDemonstrationSelection,
 );
 
+/** The default frozen regression suite for the production prompt. */
+export const defaultEvaluationSelection = evaluationSelection;
+
 const diagnosticSelection = corpus.select([
 	"target-de-route-construction-fusion",
 	"target-de-diagnostic-fusion-am",
-	"target-de-route-construction-paired-near-frueher",
-	"target-de-route-construction-paired-near-besser",
+	"target-de-route-lexeme-cconj-near-frueher",
+	"target-de-route-lexeme-cconj-near-besser",
 	"target-de-diagnostic-paired-je-near-waermer",
 	"target-de-diagnostic-paired-je-near-schoener",
 	"target-de-diagnostic-paired-entweder-near-kaffee",
@@ -209,8 +227,8 @@ const diagnosticSelection = corpus.select([
 /** The seven stable v16 misses, retained as adaptive-development carryovers. */
 const adaptiveCarryoverSelection = corpus.select([
 	"target-de-route-construction-fusion",
-	"target-de-route-construction-paired-near-frueher",
-	"target-de-route-construction-paired-near-besser",
+	"target-de-route-lexeme-cconj-near-frueher",
+	"target-de-route-lexeme-cconj-near-besser",
 	"target-de-boundary-perfect-near-laut",
 	"target-de-boundary-fixed-function-click-mit",
 	"target-de-boundary-fixed-function-click-den",
@@ -246,7 +264,7 @@ const adaptiveNovelSelection = corpus.select([
 
 /**
  * Frozen adaptive prompt-development set: carryovers first, then novel probes.
- * The unchanged 94-case evaluation selection remains the final regression set.
+ * The 98-case evaluation selection remains the final regression set.
  */
 const adaptiveDevelopmentSelection = adaptiveCarryoverSelection.union(
 	adaptiveNovelSelection,

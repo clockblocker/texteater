@@ -29,7 +29,7 @@ im, ins, vom, zum, zur, ans, aufs, fürs, ums, durchs, übers, hinterm, vorm, or
 unterm. The fused member itself is the complete Construction. The operation is
 total even when nearby context mentions a lexicalized lookalike, a separately
 written preposition and article, a dialect form, or another route such as an
-Idiom or PairedFrame.
+Idiom or multi-member Lexeme.
 </route_contract>
 
 <application_projection>

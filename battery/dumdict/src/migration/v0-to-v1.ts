@@ -1,10 +1,11 @@
+import { readingFingerprint } from "dumling";
+import { readingSchema } from "dumling/schema";
 import {
-	readingReferenceSchema,
 	type SemanticRelation,
 	semanticRelationSchema,
 	unitShadowSchema,
 } from "dumrel";
-import { readingKey, sameReading } from "../core/identity";
+import { sameReading } from "../core/identity";
 import type {
 	PendingEntryId,
 	PendingSemanticRelationRecord,
@@ -92,6 +93,7 @@ export class DumdictV0MigrationError<
 	readonly orphanPendingIds: string[];
 	readonly unresolvedMorphology: UnresolvedV0Morphology<L>[];
 	readonly invalidSemanticRelations: InvalidV0SemanticRelation<L>[];
+	readonly incompatibleReadings: Reading<L>[];
 
 	constructor(input: {
 		duplicatePendingIds: string[];
@@ -99,14 +101,18 @@ export class DumdictV0MigrationError<
 		orphanPendingIds: string[];
 		unresolvedMorphology: UnresolvedV0Morphology<L>[];
 		invalidSemanticRelations: InvalidV0SemanticRelation<L>[];
+		incompatibleReadings: Reading<L>[];
 	}) {
-		super("Version 0 dictionary notes cannot be migrated without loss.");
+		super(
+			"Version 0 dictionary notes cannot be migrated without an explicit reset or remap.",
+		);
 		this.name = "DumdictV0MigrationError";
 		this.duplicatePendingIds = input.duplicatePendingIds;
 		this.missingPendingIds = input.missingPendingIds;
 		this.orphanPendingIds = input.orphanPendingIds;
 		this.unresolvedMorphology = input.unresolvedMorphology;
 		this.invalidSemanticRelations = input.invalidSemanticRelations;
+		this.incompatibleReadings = input.incompatibleReadings;
 	}
 }
 
@@ -121,7 +127,7 @@ function hasValues(value: unknown[] | undefined): value is unknown[] {
 function normalizeReading<L extends SupportedLanguage>(
 	reading: Reading<L>,
 ): Reading<L> {
-	return readingReferenceSchema.parse(reading) as unknown as Reading<L>;
+	return readingSchema.parse(reading) as unknown as Reading<L>;
 }
 
 function normalizeUniqueReadings<L extends SupportedLanguage>(
@@ -130,8 +136,8 @@ function normalizeUniqueReadings<L extends SupportedLanguage>(
 	const byKey = new Map<string, Reading<L>>();
 	for (const reading of readings) {
 		const normalized = normalizeReading(reading);
-		if (!byKey.has(readingKey(normalized))) {
-			byKey.set(readingKey(normalized), normalized);
+		if (!byKey.has(readingFingerprint(normalized))) {
+			byKey.set(readingFingerprint(normalized), normalized);
 		}
 	}
 	return Array.from(byKey.values());
@@ -170,6 +176,32 @@ export function migrateSerializedDictionaryNotesV0ToV1<
 	);
 	const unresolvedMorphology: UnresolvedV0Morphology<L>[] = [];
 	const invalidSemanticRelations: InvalidV0SemanticRelation<L>[] = [];
+	const legacyReadings = notes.flatMap((note) => [
+		...note.readingEntries.flatMap((entry) => [
+			entry.reading,
+			...Object.values(entry.lexicalRelations).flatMap(
+				(targets) => targets ?? [],
+			),
+		]),
+		...note.pendingRelations.flatMap((relation) =>
+			relation.relationFamily === "lexical"
+				? [relation.sourceReading]
+				: [],
+		),
+	]);
+	const incompatibleReadings = legacyReadings.filter(
+		(reading) => !readingSchema.safeParse(reading).success,
+	);
+	if (incompatibleReadings.length > 0) {
+		throw new DumdictV0MigrationError<L>({
+			duplicatePendingIds,
+			missingPendingIds,
+			orphanPendingIds,
+			unresolvedMorphology,
+			invalidSemanticRelations,
+			incompatibleReadings,
+		});
+	}
 	for (const note of notes) {
 		for (const [relation, targets] of Object.entries(
 			note.lemmaRecord.morphologicalRelations,
@@ -254,6 +286,7 @@ export function migrateSerializedDictionaryNotesV0ToV1<
 			orphanPendingIds,
 			unresolvedMorphology,
 			invalidSemanticRelations,
+			incompatibleReadings,
 		});
 	}
 
@@ -281,7 +314,7 @@ export function migrateSerializedDictionaryNotesV0ToV1<
 							target,
 						},
 						locator: {
-							sourceReadingKey: readingKey(
+							sourceReadingKey: readingFingerprint(
 								normalizeReading(legacy.sourceReading),
 							),
 							relation,

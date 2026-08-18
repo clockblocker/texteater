@@ -1,0 +1,4885 @@
+{
+  "runnerVersion": "target-classification-partizip-ii-v1",
+  "route": "target-classification/de/high-level-whole-unit",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 1
+  },
+  "startedAt": "2026-08-17T05:06:38.807Z",
+  "completedAt": "2026-08-17T05:07:41.034Z",
+  "finalizedAt": null,
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 128,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "78557ecc90e94b58318a5d9e6c11f6865fda2953cd23b112e22403f05496cde5",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "900764902b06815a081b4edbad7c438d6b8dcbfbe83c1d3e765bed030bc5365b",
+  "inputSchemaSha256": "b9d0c086ab5eecaa59dc2bb7585558d861c023ffb07b0e7abab34edd9fc7b56d",
+  "outputSchemaSha256": "c1c19022d28120b084034512e580e6b510334be3d90049941d079ec8a98ae428",
+  "suiteSha256": "eac9dc21742836a516406b0fe7513dd95eaf615dac3d5eab98b40f01e5f19ad0",
+  "evaluationCaseIds": [
+    "target-de-participle-benchmark-01-repariert-click-hat",
+    "target-de-participle-benchmark-01-repariert-click-repariert",
+    "target-de-participle-benchmark-02-unterschrieben-click-wird",
+    "target-de-participle-benchmark-02-unterschrieben-click-unterschrieben",
+    "target-de-participle-benchmark-03-angekommen-click-ist",
+    "target-de-participle-benchmark-03-angekommen-click-angekommen",
+    "target-de-participle-benchmark-04-bezahlt-click-ist",
+    "target-de-participle-benchmark-04-bezahlt-click-bezahlt",
+    "target-de-participle-benchmark-05-gestrichen-click-ist",
+    "target-de-participle-benchmark-05-gestrichen-click-gestrichen",
+    "target-de-participle-benchmark-06-eingeladen-click-sind",
+    "target-de-participle-benchmark-06-eingeladen-click-eingeladen",
+    "target-de-participle-benchmark-07-genehmigt-click-ist",
+    "target-de-participle-benchmark-07-genehmigt-click-genehmigt",
+    "target-de-participle-benchmark-08-gefuellt-click-ist",
+    "target-de-participle-benchmark-08-gefuellt-click-gefuellt",
+    "target-de-participle-benchmark-09-verrueckt-click-ist",
+    "target-de-participle-benchmark-09-verrueckt-click-verrueckt",
+    "target-de-participle-benchmark-10-geschlossen-click-ist",
+    "target-de-participle-benchmark-10-geschlossen-click-geschlossen",
+    "target-de-participle-benchmark-11-verrueckt-click-ist",
+    "target-de-participle-benchmark-11-verrueckt-click-verrueckt",
+    "target-de-participle-benchmark-12-verheiratet-click-ist",
+    "target-de-participle-benchmark-12-verheiratet-click-verheiratet",
+    "target-de-participle-benchmark-13-bekannt-click-ist",
+    "target-de-participle-benchmark-13-bekannt-click-bekannt",
+    "target-de-participle-benchmark-14-gebildet-click-ist",
+    "target-de-participle-benchmark-14-gebildet-click-gebildet",
+    "target-de-participle-benchmark-15-begabt-click-ist",
+    "target-de-participle-benchmark-15-begabt-click-begabt",
+    "target-de-participle-benchmark-16-ungeoeffnet-click-ist",
+    "target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet",
+    "target-de-participle-benchmark-17-ungeloest-click-bleibt",
+    "target-de-participle-benchmark-17-ungeloest-click-ungeloest",
+    "target-de-participle-benchmark-18-geschlossen-click-ist",
+    "target-de-participle-benchmark-18-geschlossen-click-geschlossen",
+    "target-de-participle-benchmark-19-beleidigt-click-ist",
+    "target-de-participle-benchmark-19-beleidigt-click-beleidigt",
+    "target-de-participle-benchmark-20-uebertrieben-click-ist",
+    "target-de-participle-benchmark-20-uebertrieben-click-uebertrieben"
+  ],
+  "boundedCalls": 40,
+  "maximumEvaluationCases": 40,
+  "retries": 0,
+  "store": false,
+  "contractScore": 37,
+  "scoreRatio": 0.925,
+  "minimumEvaluationCases": 40,
+  "minimumScoreRatio": 1,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 3,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "target-de-participle-benchmark-01-repariert-click-hat",
+      "input": {
+        "markedSentence": "Obwohl der Wagen am Morgen noch liegen geblieben war, <target>hat</target> die Mechanikerin den beschädigten Motor vor der Mittagspause repariert.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "der",
+            "i": 1
+          },
+          {
+            "s": "Wagen",
+            "i": 2
+          },
+          {
+            "s": "am",
+            "i": 3
+          },
+          {
+            "s": "Morgen",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "liegen",
+            "i": 6
+          },
+          {
+            "s": "geblieben",
+            "i": 7
+          },
+          {
+            "s": "war",
+            "i": 8
+          },
+          {
+            "s": "hat",
+            "i": 10
+          },
+          {
+            "s": "die",
+            "i": 11
+          },
+          {
+            "s": "Mechanikerin",
+            "i": 12
+          },
+          {
+            "s": "den",
+            "i": 13
+          },
+          {
+            "s": "beschädigten",
+            "i": 14
+          },
+          {
+            "s": "Motor",
+            "i": 15
+          },
+          {
+            "s": "vor",
+            "i": 16
+          },
+          {
+            "s": "der",
+            "i": 17
+          },
+          {
+            "s": "Mittagspause",
+            "i": 18
+          },
+          {
+            "s": "repariert",
+            "i": 19
+          }
+        ],
+        "clickedIndex": 10
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          19
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          19
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 2009,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[19]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08ee65debe6e75fa016a8296dfa8ec87d2b5c797cf6319e930",
+      "usage": {
+        "input_tokens": 6208,
+        "input_tokens_details": {
+          "cache_write_tokens": 5988,
+          "cached_tokens": 0
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6246
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-01-repariert-click-repariert",
+      "input": {
+        "markedSentence": "Obwohl der Wagen am Morgen noch liegen geblieben war, hat die Mechanikerin den beschädigten Motor vor der Mittagspause <target>repariert</target>.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "der",
+            "i": 1
+          },
+          {
+            "s": "Wagen",
+            "i": 2
+          },
+          {
+            "s": "am",
+            "i": 3
+          },
+          {
+            "s": "Morgen",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "liegen",
+            "i": 6
+          },
+          {
+            "s": "geblieben",
+            "i": 7
+          },
+          {
+            "s": "war",
+            "i": 8
+          },
+          {
+            "s": "hat",
+            "i": 10
+          },
+          {
+            "s": "die",
+            "i": 11
+          },
+          {
+            "s": "Mechanikerin",
+            "i": 12
+          },
+          {
+            "s": "den",
+            "i": 13
+          },
+          {
+            "s": "beschädigten",
+            "i": 14
+          },
+          {
+            "s": "Motor",
+            "i": 15
+          },
+          {
+            "s": "vor",
+            "i": 16
+          },
+          {
+            "s": "der",
+            "i": 17
+          },
+          {
+            "s": "Mittagspause",
+            "i": 18
+          },
+          {
+            "s": "repariert",
+            "i": 19
+          }
+        ],
+        "clickedIndex": 19
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          10
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          10
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1262,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[10]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0840b321bd7a992d016a8296e106f0819cbdd1f5b1dfdcea59",
+      "usage": {
+        "input_tokens": 6209,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6247
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-02-unterschrieben-click-wird",
+      "input": {
+        "markedSentence": "Der Vertrag, den beide Parteien nach langen Verhandlungen akzeptiert haben, <target>wird</target> morgen im Beisein der Anwälte unterschrieben.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Vertrag",
+            "i": 1
+          },
+          {
+            "s": "den",
+            "i": 3
+          },
+          {
+            "s": "beide",
+            "i": 4
+          },
+          {
+            "s": "Parteien",
+            "i": 5
+          },
+          {
+            "s": "nach",
+            "i": 6
+          },
+          {
+            "s": "langen",
+            "i": 7
+          },
+          {
+            "s": "Verhandlungen",
+            "i": 8
+          },
+          {
+            "s": "akzeptiert",
+            "i": 9
+          },
+          {
+            "s": "haben",
+            "i": 10
+          },
+          {
+            "s": "wird",
+            "i": 12
+          },
+          {
+            "s": "morgen",
+            "i": 13
+          },
+          {
+            "s": "im",
+            "i": 14
+          },
+          {
+            "s": "Beisein",
+            "i": 15
+          },
+          {
+            "s": "der",
+            "i": 16
+          },
+          {
+            "s": "Anwälte",
+            "i": 17
+          },
+          {
+            "s": "unterschrieben",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          18
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          18
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 2646,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[18]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_086e5d947b53cc93016a8296e326d887d2a3dfe3690e7d6654",
+      "usage": {
+        "input_tokens": 6189,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6227
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-02-unterschrieben-click-unterschrieben",
+      "input": {
+        "markedSentence": "Der Vertrag, den beide Parteien nach langen Verhandlungen akzeptiert haben, wird morgen im Beisein der Anwälte <target>unterschrieben</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Vertrag",
+            "i": 1
+          },
+          {
+            "s": "den",
+            "i": 3
+          },
+          {
+            "s": "beide",
+            "i": 4
+          },
+          {
+            "s": "Parteien",
+            "i": 5
+          },
+          {
+            "s": "nach",
+            "i": 6
+          },
+          {
+            "s": "langen",
+            "i": 7
+          },
+          {
+            "s": "Verhandlungen",
+            "i": 8
+          },
+          {
+            "s": "akzeptiert",
+            "i": 9
+          },
+          {
+            "s": "haben",
+            "i": 10
+          },
+          {
+            "s": "wird",
+            "i": 12
+          },
+          {
+            "s": "morgen",
+            "i": 13
+          },
+          {
+            "s": "im",
+            "i": 14
+          },
+          {
+            "s": "Beisein",
+            "i": 15
+          },
+          {
+            "s": "der",
+            "i": 16
+          },
+          {
+            "s": "Anwälte",
+            "i": 17
+          },
+          {
+            "s": "unterschrieben",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          12
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          12
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1419,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[12]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0aca7922db54e1c4016a8296e4e94c819f82f92fdcf51e4ca7",
+      "usage": {
+        "input_tokens": 6190,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6228
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-03-angekommen-click-ist",
+      "input": {
+        "markedSentence": "Als die ersten Fahrgäste den Bahnsteig erreichten, <target>ist</target> der verspätete Zug trotz des dichten Nebels endlich angekommen.",
+        "segments": [
+          {
+            "s": "Als",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "ersten",
+            "i": 2
+          },
+          {
+            "s": "Fahrgäste",
+            "i": 3
+          },
+          {
+            "s": "den",
+            "i": 4
+          },
+          {
+            "s": "Bahnsteig",
+            "i": 5
+          },
+          {
+            "s": "erreichten",
+            "i": 6
+          },
+          {
+            "s": "ist",
+            "i": 8
+          },
+          {
+            "s": "der",
+            "i": 9
+          },
+          {
+            "s": "verspätete",
+            "i": 10
+          },
+          {
+            "s": "Zug",
+            "i": 11
+          },
+          {
+            "s": "trotz",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "dichten",
+            "i": 14
+          },
+          {
+            "s": "Nebels",
+            "i": 15
+          },
+          {
+            "s": "endlich",
+            "i": 16
+          },
+          {
+            "s": "angekommen",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 8
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1620,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[17]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_02e8fc0e176281f1016a8296e652d4819fb7d094d0c2ee28b1",
+      "usage": {
+        "input_tokens": 6196,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6234
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-03-angekommen-click-angekommen",
+      "input": {
+        "markedSentence": "Als die ersten Fahrgäste den Bahnsteig erreichten, ist der verspätete Zug trotz des dichten Nebels endlich <target>angekommen</target>.",
+        "segments": [
+          {
+            "s": "Als",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "ersten",
+            "i": 2
+          },
+          {
+            "s": "Fahrgäste",
+            "i": 3
+          },
+          {
+            "s": "den",
+            "i": 4
+          },
+          {
+            "s": "Bahnsteig",
+            "i": 5
+          },
+          {
+            "s": "erreichten",
+            "i": 6
+          },
+          {
+            "s": "ist",
+            "i": 8
+          },
+          {
+            "s": "der",
+            "i": 9
+          },
+          {
+            "s": "verspätete",
+            "i": 10
+          },
+          {
+            "s": "Zug",
+            "i": 11
+          },
+          {
+            "s": "trotz",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "dichten",
+            "i": 14
+          },
+          {
+            "s": "Nebels",
+            "i": 15
+          },
+          {
+            "s": "endlich",
+            "i": 16
+          },
+          {
+            "s": "angekommen",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 17
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1368,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[8]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_000b46c28d9cce7b016a8296e7fba0819c975a7814cb1e3f13",
+      "usage": {
+        "input_tokens": 6198,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6236
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-04-bezahlt-click-ist",
+      "input": {
+        "markedSentence": "Die Rechnung, die gestern noch offen war, <target>ist</target> inzwischen vom Kunden vollständig bezahlt, sodass keine weitere Mahnung nötig ist.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Rechnung",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "gestern",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "offen",
+            "i": 6
+          },
+          {
+            "s": "war",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "inzwischen",
+            "i": 10
+          },
+          {
+            "s": "vom",
+            "i": 11
+          },
+          {
+            "s": "Kunden",
+            "i": 12
+          },
+          {
+            "s": "vollständig",
+            "i": 13
+          },
+          {
+            "s": "bezahlt",
+            "i": 14
+          },
+          {
+            "s": "sodass",
+            "i": 16
+          },
+          {
+            "s": "keine",
+            "i": 17
+          },
+          {
+            "s": "weitere",
+            "i": 18
+          },
+          {
+            "s": "Mahnung",
+            "i": 19
+          },
+          {
+            "s": "nötig",
+            "i": 20
+          },
+          {
+            "s": "ist",
+            "i": 21
+          }
+        ],
+        "clickedIndex": 9
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          14
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          14
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1603,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[14]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0845a8a4936b5c3c016a8296e94b8481a18b92830b8c52c4e1",
+      "usage": {
+        "input_tokens": 6204,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6242
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-04-bezahlt-click-bezahlt",
+      "input": {
+        "markedSentence": "Die Rechnung, die gestern noch offen war, ist inzwischen vom Kunden vollständig <target>bezahlt</target>, sodass keine weitere Mahnung nötig ist.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Rechnung",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "gestern",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "offen",
+            "i": 6
+          },
+          {
+            "s": "war",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "inzwischen",
+            "i": 10
+          },
+          {
+            "s": "vom",
+            "i": 11
+          },
+          {
+            "s": "Kunden",
+            "i": 12
+          },
+          {
+            "s": "vollständig",
+            "i": 13
+          },
+          {
+            "s": "bezahlt",
+            "i": 14
+          },
+          {
+            "s": "sodass",
+            "i": 16
+          },
+          {
+            "s": "keine",
+            "i": 17
+          },
+          {
+            "s": "weitere",
+            "i": 18
+          },
+          {
+            "s": "Mahnung",
+            "i": 19
+          },
+          {
+            "s": "nötig",
+            "i": 20
+          },
+          {
+            "s": "ist",
+            "i": 21
+          }
+        ],
+        "clickedIndex": 14
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1571,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[9]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_016f82e9d4843378016a8296eaf54487d281c07254cc2335af",
+      "usage": {
+        "input_tokens": 6204,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6242
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-05-gestrichen-click-ist",
+      "input": {
+        "markedSentence": "Das Fenster, das gestern noch mehrere tiefe Kratzer zeigte, <target>ist</target> von der Malerin inzwischen sorgfältig gestrichen.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Fenster",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 3
+          },
+          {
+            "s": "gestern",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "mehrere",
+            "i": 6
+          },
+          {
+            "s": "tiefe",
+            "i": 7
+          },
+          {
+            "s": "Kratzer",
+            "i": 8
+          },
+          {
+            "s": "zeigte",
+            "i": 9
+          },
+          {
+            "s": "ist",
+            "i": 11
+          },
+          {
+            "s": "von",
+            "i": 12
+          },
+          {
+            "s": "der",
+            "i": 13
+          },
+          {
+            "s": "Malerin",
+            "i": 14
+          },
+          {
+            "s": "inzwischen",
+            "i": 15
+          },
+          {
+            "s": "sorgfältig",
+            "i": 16
+          },
+          {
+            "s": "gestrichen",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 11
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 906,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[17]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0201f7e2b79f854a016a8296ec7a40819293f3204ba2ac5e61",
+      "usage": {
+        "input_tokens": 6182,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6220
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-05-gestrichen-click-gestrichen",
+      "input": {
+        "markedSentence": "Das Fenster, das gestern noch mehrere tiefe Kratzer zeigte, ist von der Malerin inzwischen sorgfältig <target>gestrichen</target>.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Fenster",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 3
+          },
+          {
+            "s": "gestern",
+            "i": 4
+          },
+          {
+            "s": "noch",
+            "i": 5
+          },
+          {
+            "s": "mehrere",
+            "i": 6
+          },
+          {
+            "s": "tiefe",
+            "i": 7
+          },
+          {
+            "s": "Kratzer",
+            "i": 8
+          },
+          {
+            "s": "zeigte",
+            "i": 9
+          },
+          {
+            "s": "ist",
+            "i": 11
+          },
+          {
+            "s": "von",
+            "i": 12
+          },
+          {
+            "s": "der",
+            "i": 13
+          },
+          {
+            "s": "Malerin",
+            "i": 14
+          },
+          {
+            "s": "inzwischen",
+            "i": 15
+          },
+          {
+            "s": "sorgfältig",
+            "i": 16
+          },
+          {
+            "s": "gestrichen",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 17
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          11
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          11
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1252,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[11]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a88d954319e981f016a8296ed6ec087d2b3f21a230b28a21f",
+      "usage": {
+        "input_tokens": 6183,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6221
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-06-eingeladen-click-sind",
+      "input": {
+        "markedSentence": "Obwohl einige Plätze kurzfristig frei geworden sind, <target>sind</target> die übrigen Gäste vom Gastgeber persönlich eingeladen.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "einige",
+            "i": 1
+          },
+          {
+            "s": "Plätze",
+            "i": 2
+          },
+          {
+            "s": "kurzfristig",
+            "i": 3
+          },
+          {
+            "s": "frei",
+            "i": 4
+          },
+          {
+            "s": "geworden",
+            "i": 5
+          },
+          {
+            "s": "sind",
+            "i": 6
+          },
+          {
+            "s": "sind",
+            "i": 8
+          },
+          {
+            "s": "die",
+            "i": 9
+          },
+          {
+            "s": "übrigen",
+            "i": 10
+          },
+          {
+            "s": "Gäste",
+            "i": 11
+          },
+          {
+            "s": "vom",
+            "i": 12
+          },
+          {
+            "s": "Gastgeber",
+            "i": 13
+          },
+          {
+            "s": "persönlich",
+            "i": 14
+          },
+          {
+            "s": "eingeladen",
+            "i": 15
+          }
+        ],
+        "clickedIndex": 8
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          15
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          15
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1362,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[15]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0704d29a88f73945016a8296eea2e087d2bb39635ec71e3181",
+      "usage": {
+        "input_tokens": 6173,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6211
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-06-eingeladen-click-eingeladen",
+      "input": {
+        "markedSentence": "Obwohl einige Plätze kurzfristig frei geworden sind, sind die übrigen Gäste vom Gastgeber persönlich <target>eingeladen</target>.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "einige",
+            "i": 1
+          },
+          {
+            "s": "Plätze",
+            "i": 2
+          },
+          {
+            "s": "kurzfristig",
+            "i": 3
+          },
+          {
+            "s": "frei",
+            "i": 4
+          },
+          {
+            "s": "geworden",
+            "i": 5
+          },
+          {
+            "s": "sind",
+            "i": 6
+          },
+          {
+            "s": "sind",
+            "i": 8
+          },
+          {
+            "s": "die",
+            "i": 9
+          },
+          {
+            "s": "übrigen",
+            "i": 10
+          },
+          {
+            "s": "Gäste",
+            "i": 11
+          },
+          {
+            "s": "vom",
+            "i": 12
+          },
+          {
+            "s": "Gastgeber",
+            "i": 13
+          },
+          {
+            "s": "persönlich",
+            "i": 14
+          },
+          {
+            "s": "eingeladen",
+            "i": 15
+          }
+        ],
+        "clickedIndex": 15
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          8
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1263,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[8]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_00049aaca22d0048016a8296f00578819f80aa332969394529",
+      "usage": {
+        "input_tokens": 6175,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6213
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-07-genehmigt-click-ist",
+      "input": {
+        "markedSentence": "Der Antrag, über den der Ausschuss fast drei Stunden beraten hat, <target>ist</target> nach mehreren Änderungen schließlich genehmigt.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Antrag",
+            "i": 1
+          },
+          {
+            "s": "über",
+            "i": 3
+          },
+          {
+            "s": "den",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Ausschuss",
+            "i": 6
+          },
+          {
+            "s": "fast",
+            "i": 7
+          },
+          {
+            "s": "drei",
+            "i": 8
+          },
+          {
+            "s": "Stunden",
+            "i": 9
+          },
+          {
+            "s": "beraten",
+            "i": 10
+          },
+          {
+            "s": "hat",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "nach",
+            "i": 14
+          },
+          {
+            "s": "mehreren",
+            "i": 15
+          },
+          {
+            "s": "Änderungen",
+            "i": 16
+          },
+          {
+            "s": "schließlich",
+            "i": 17
+          },
+          {
+            "s": "genehmigt",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 13
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          18
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          18
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1275,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[18]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09ba9e703d09a18b016a8296f145d881919461cbb585e5ee84",
+      "usage": {
+        "input_tokens": 6185,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6223
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-07-genehmigt-click-genehmigt",
+      "input": {
+        "markedSentence": "Der Antrag, über den der Ausschuss fast drei Stunden beraten hat, ist nach mehreren Änderungen schließlich <target>genehmigt</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Antrag",
+            "i": 1
+          },
+          {
+            "s": "über",
+            "i": 3
+          },
+          {
+            "s": "den",
+            "i": 4
+          },
+          {
+            "s": "der",
+            "i": 5
+          },
+          {
+            "s": "Ausschuss",
+            "i": 6
+          },
+          {
+            "s": "fast",
+            "i": 7
+          },
+          {
+            "s": "drei",
+            "i": 8
+          },
+          {
+            "s": "Stunden",
+            "i": 9
+          },
+          {
+            "s": "beraten",
+            "i": 10
+          },
+          {
+            "s": "hat",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "nach",
+            "i": 14
+          },
+          {
+            "s": "mehreren",
+            "i": 15
+          },
+          {
+            "s": "Änderungen",
+            "i": 16
+          },
+          {
+            "s": "schließlich",
+            "i": 17
+          },
+          {
+            "s": "genehmigt",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          13
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          13
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1717,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[13]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03e3a0876d84f099016a8296f2a34081a1bdec9ca47943fa23",
+      "usage": {
+        "input_tokens": 6185,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6223
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-08-gefuellt-click-ist",
+      "input": {
+        "markedSentence": "Bevor die Lieferung am frühen Morgen abgeholt wird, <target>ist</target> jede Flasche bereits bis zum Rand gefüllt, sodass während der Fahrt nichts auslaufen kann.",
+        "segments": [
+          {
+            "s": "Bevor",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "Lieferung",
+            "i": 2
+          },
+          {
+            "s": "am",
+            "i": 3
+          },
+          {
+            "s": "frühen",
+            "i": 4
+          },
+          {
+            "s": "Morgen",
+            "i": 5
+          },
+          {
+            "s": "abgeholt",
+            "i": 6
+          },
+          {
+            "s": "wird",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "jede",
+            "i": 10
+          },
+          {
+            "s": "Flasche",
+            "i": 11
+          },
+          {
+            "s": "bereits",
+            "i": 12
+          },
+          {
+            "s": "bis",
+            "i": 13
+          },
+          {
+            "s": "zum",
+            "i": 14
+          },
+          {
+            "s": "Rand",
+            "i": 15
+          },
+          {
+            "s": "gefüllt",
+            "i": 16
+          },
+          {
+            "s": "sodass",
+            "i": 18
+          },
+          {
+            "s": "während",
+            "i": 19
+          },
+          {
+            "s": "der",
+            "i": 20
+          },
+          {
+            "s": "Fahrt",
+            "i": 21
+          },
+          {
+            "s": "nichts",
+            "i": 22
+          },
+          {
+            "s": "auslaufen",
+            "i": 23
+          },
+          {
+            "s": "kann",
+            "i": 24
+          }
+        ],
+        "clickedIndex": 9
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          16
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          16
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1193,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[16]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_078f39da23a2ce5f016a8296f4442881a29443a54aafde02a2",
+      "usage": {
+        "input_tokens": 6248,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6286
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-08-gefuellt-click-gefuellt",
+      "input": {
+        "markedSentence": "Bevor die Lieferung am frühen Morgen abgeholt wird, ist jede Flasche bereits bis zum Rand <target>gefüllt</target>, sodass während der Fahrt nichts auslaufen kann.",
+        "segments": [
+          {
+            "s": "Bevor",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "Lieferung",
+            "i": 2
+          },
+          {
+            "s": "am",
+            "i": 3
+          },
+          {
+            "s": "frühen",
+            "i": 4
+          },
+          {
+            "s": "Morgen",
+            "i": 5
+          },
+          {
+            "s": "abgeholt",
+            "i": 6
+          },
+          {
+            "s": "wird",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "jede",
+            "i": 10
+          },
+          {
+            "s": "Flasche",
+            "i": 11
+          },
+          {
+            "s": "bereits",
+            "i": 12
+          },
+          {
+            "s": "bis",
+            "i": 13
+          },
+          {
+            "s": "zum",
+            "i": 14
+          },
+          {
+            "s": "Rand",
+            "i": 15
+          },
+          {
+            "s": "gefüllt",
+            "i": 16
+          },
+          {
+            "s": "sodass",
+            "i": 18
+          },
+          {
+            "s": "während",
+            "i": 19
+          },
+          {
+            "s": "der",
+            "i": 20
+          },
+          {
+            "s": "Fahrt",
+            "i": 21
+          },
+          {
+            "s": "nichts",
+            "i": 22
+          },
+          {
+            "s": "auslaufen",
+            "i": 23
+          },
+          {
+            "s": "kann",
+            "i": 24
+          }
+        ],
+        "clickedIndex": 16
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 2069,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[9]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f46abbea5900377016a8296f59fe8819e90777a9b66bb8fca",
+      "usage": {
+        "input_tokens": 6247,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6285
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-09-verrueckt-click-ist",
+      "input": {
+        "markedSentence": "Der schwere Tisch, der zuvor direkt vor dem Fenster stand, <target>ist</target> für die Feier um zwei Meter nach links verrückt.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "schwere",
+            "i": 1
+          },
+          {
+            "s": "Tisch",
+            "i": 2
+          },
+          {
+            "s": "der",
+            "i": 4
+          },
+          {
+            "s": "zuvor",
+            "i": 5
+          },
+          {
+            "s": "direkt",
+            "i": 6
+          },
+          {
+            "s": "vor",
+            "i": 7
+          },
+          {
+            "s": "dem",
+            "i": 8
+          },
+          {
+            "s": "Fenster",
+            "i": 9
+          },
+          {
+            "s": "stand",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "für",
+            "i": 13
+          },
+          {
+            "s": "die",
+            "i": 14
+          },
+          {
+            "s": "Feier",
+            "i": 15
+          },
+          {
+            "s": "um",
+            "i": 16
+          },
+          {
+            "s": "zwei",
+            "i": 17
+          },
+          {
+            "s": "Meter",
+            "i": 18
+          },
+          {
+            "s": "nach",
+            "i": 19
+          },
+          {
+            "s": "links",
+            "i": 20
+          },
+          {
+            "s": "verrückt",
+            "i": 21
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          21
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          21
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1125,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[21]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0f8bded14871ae61016a8296f7847c81a3aa351c2f39c3a084",
+      "usage": {
+        "input_tokens": 6208,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6246
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-09-verrueckt-click-verrueckt",
+      "input": {
+        "markedSentence": "Der schwere Tisch, der zuvor direkt vor dem Fenster stand, ist für die Feier um zwei Meter nach links <target>verrückt</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "schwere",
+            "i": 1
+          },
+          {
+            "s": "Tisch",
+            "i": 2
+          },
+          {
+            "s": "der",
+            "i": 4
+          },
+          {
+            "s": "zuvor",
+            "i": 5
+          },
+          {
+            "s": "direkt",
+            "i": 6
+          },
+          {
+            "s": "vor",
+            "i": 7
+          },
+          {
+            "s": "dem",
+            "i": 8
+          },
+          {
+            "s": "Fenster",
+            "i": 9
+          },
+          {
+            "s": "stand",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "für",
+            "i": 13
+          },
+          {
+            "s": "die",
+            "i": 14
+          },
+          {
+            "s": "Feier",
+            "i": 15
+          },
+          {
+            "s": "um",
+            "i": 16
+          },
+          {
+            "s": "zwei",
+            "i": 17
+          },
+          {
+            "s": "Meter",
+            "i": 18
+          },
+          {
+            "s": "nach",
+            "i": 19
+          },
+          {
+            "s": "links",
+            "i": 20
+          },
+          {
+            "s": "verrückt",
+            "i": 21
+          }
+        ],
+        "clickedIndex": 21
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          12
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          12
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 902,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[12]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cbd4adfacb9e720016a8296f8a30081a2b5ee4224dbd2c63d",
+      "usage": {
+        "input_tokens": 6209,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6247
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-10-geschlossen-click-ist",
+      "input": {
+        "markedSentence": "Nachdem der letzte Besucher das Gebäude verlassen hat, <target>ist</target> die schwere Eingangstür nun von der Hausmeisterin geschlossen, damit niemand unbemerkt zurückkehren kann.",
+        "segments": [
+          {
+            "s": "Nachdem",
+            "i": 0
+          },
+          {
+            "s": "der",
+            "i": 1
+          },
+          {
+            "s": "letzte",
+            "i": 2
+          },
+          {
+            "s": "Besucher",
+            "i": 3
+          },
+          {
+            "s": "das",
+            "i": 4
+          },
+          {
+            "s": "Gebäude",
+            "i": 5
+          },
+          {
+            "s": "verlassen",
+            "i": 6
+          },
+          {
+            "s": "hat",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "die",
+            "i": 10
+          },
+          {
+            "s": "schwere",
+            "i": 11
+          },
+          {
+            "s": "Eingangstür",
+            "i": 12
+          },
+          {
+            "s": "nun",
+            "i": 13
+          },
+          {
+            "s": "von",
+            "i": 14
+          },
+          {
+            "s": "der",
+            "i": 15
+          },
+          {
+            "s": "Hausmeisterin",
+            "i": 16
+          },
+          {
+            "s": "geschlossen",
+            "i": 17
+          },
+          {
+            "s": "damit",
+            "i": 19
+          },
+          {
+            "s": "niemand",
+            "i": 20
+          },
+          {
+            "s": "unbemerkt",
+            "i": 21
+          },
+          {
+            "s": "zurückkehren",
+            "i": 22
+          },
+          {
+            "s": "kann",
+            "i": 23
+          }
+        ],
+        "clickedIndex": 9
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          17
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1021,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[17]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ff05cd266af3ea5016a8296f98e2081a29554668733a7fb59",
+      "usage": {
+        "input_tokens": 6244,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6282
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-10-geschlossen-click-geschlossen",
+      "input": {
+        "markedSentence": "Nachdem der letzte Besucher das Gebäude verlassen hat, ist die schwere Eingangstür nun von der Hausmeisterin <target>geschlossen</target>, damit niemand unbemerkt zurückkehren kann.",
+        "segments": [
+          {
+            "s": "Nachdem",
+            "i": 0
+          },
+          {
+            "s": "der",
+            "i": 1
+          },
+          {
+            "s": "letzte",
+            "i": 2
+          },
+          {
+            "s": "Besucher",
+            "i": 3
+          },
+          {
+            "s": "das",
+            "i": 4
+          },
+          {
+            "s": "Gebäude",
+            "i": 5
+          },
+          {
+            "s": "verlassen",
+            "i": 6
+          },
+          {
+            "s": "hat",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "die",
+            "i": 10
+          },
+          {
+            "s": "schwere",
+            "i": 11
+          },
+          {
+            "s": "Eingangstür",
+            "i": 12
+          },
+          {
+            "s": "nun",
+            "i": 13
+          },
+          {
+            "s": "von",
+            "i": 14
+          },
+          {
+            "s": "der",
+            "i": 15
+          },
+          {
+            "s": "Hausmeisterin",
+            "i": 16
+          },
+          {
+            "s": "geschlossen",
+            "i": 17
+          },
+          {
+            "s": "damit",
+            "i": 19
+          },
+          {
+            "s": "niemand",
+            "i": 20
+          },
+          {
+            "s": "unbemerkt",
+            "i": 21
+          },
+          {
+            "s": "zurückkehren",
+            "i": 22
+          },
+          {
+            "s": "kann",
+            "i": 23
+          }
+        ],
+        "clickedIndex": 17
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          9
+        ]
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1328,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[9]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ac58c00dfb151c1016a8296fac298819e96e33dd0af2c27f5",
+      "usage": {
+        "input_tokens": 6243,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6281
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-11-verrueckt-click-ist",
+      "input": {
+        "markedSentence": "Der Mann, der sich während der Sitzung immer wieder widersprach, <target>ist</target> nach Ansicht seiner Kollegen völlig verrückt.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Mann",
+            "i": 1
+          },
+          {
+            "s": "der",
+            "i": 3
+          },
+          {
+            "s": "sich",
+            "i": 4
+          },
+          {
+            "s": "während",
+            "i": 5
+          },
+          {
+            "s": "der",
+            "i": 6
+          },
+          {
+            "s": "Sitzung",
+            "i": 7
+          },
+          {
+            "s": "immer",
+            "i": 8
+          },
+          {
+            "s": "wieder",
+            "i": 9
+          },
+          {
+            "s": "widersprach",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "nach",
+            "i": 13
+          },
+          {
+            "s": "Ansicht",
+            "i": 14
+          },
+          {
+            "s": "seiner",
+            "i": 15
+          },
+          {
+            "s": "Kollegen",
+            "i": 16
+          },
+          {
+            "s": "völlig",
+            "i": 17
+          },
+          {
+            "s": "verrückt",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1124,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03421e35c8c8bea7016a8296fbe2c081a39b1c09aec19ac5a2",
+      "usage": {
+        "input_tokens": 6189,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6226
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-11-verrueckt-click-verrueckt",
+      "input": {
+        "markedSentence": "Der Mann, der sich während der Sitzung immer wieder widersprach, ist nach Ansicht seiner Kollegen völlig <target>verrückt</target>.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Mann",
+            "i": 1
+          },
+          {
+            "s": "der",
+            "i": 3
+          },
+          {
+            "s": "sich",
+            "i": 4
+          },
+          {
+            "s": "während",
+            "i": 5
+          },
+          {
+            "s": "der",
+            "i": 6
+          },
+          {
+            "s": "Sitzung",
+            "i": 7
+          },
+          {
+            "s": "immer",
+            "i": 8
+          },
+          {
+            "s": "wieder",
+            "i": 9
+          },
+          {
+            "s": "widersprach",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "nach",
+            "i": 13
+          },
+          {
+            "s": "Ansicht",
+            "i": 14
+          },
+          {
+            "s": "seiner",
+            "i": 15
+          },
+          {
+            "s": "Kollegen",
+            "i": 16
+          },
+          {
+            "s": "völlig",
+            "i": 17
+          },
+          {
+            "s": "verrückt",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1031,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cd38b3358b2b462016a8296fd05bc87d2b9190966867ec53c",
+      "usage": {
+        "input_tokens": 6190,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6227
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-12-verheiratet-click-ist",
+      "input": {
+        "markedSentence": "Obwohl sie und ihr Partner seit Jahren in verschiedenen Städten arbeiten, <target>ist</target> sie seit dem vergangenen Frühjahr verheiratet.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "sie",
+            "i": 1
+          },
+          {
+            "s": "und",
+            "i": 2
+          },
+          {
+            "s": "ihr",
+            "i": 3
+          },
+          {
+            "s": "Partner",
+            "i": 4
+          },
+          {
+            "s": "seit",
+            "i": 5
+          },
+          {
+            "s": "Jahren",
+            "i": 6
+          },
+          {
+            "s": "in",
+            "i": 7
+          },
+          {
+            "s": "verschiedenen",
+            "i": 8
+          },
+          {
+            "s": "Städten",
+            "i": 9
+          },
+          {
+            "s": "arbeiten",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "sie",
+            "i": 13
+          },
+          {
+            "s": "seit",
+            "i": 14
+          },
+          {
+            "s": "dem",
+            "i": 15
+          },
+          {
+            "s": "vergangenen",
+            "i": 16
+          },
+          {
+            "s": "Frühjahr",
+            "i": 17
+          },
+          {
+            "s": "verheiratet",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": true,
+      "latencyMs": 1235,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_09c093598b0d0414016a8296fe0e0887d2af7cec9796ebd056",
+      "usage": {
+        "input_tokens": 6195,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6232
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-12-verheiratet-click-verheiratet",
+      "input": {
+        "markedSentence": "Obwohl sie und ihr Partner seit Jahren in verschiedenen Städten arbeiten, ist sie seit dem vergangenen Frühjahr <target>verheiratet</target>.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "sie",
+            "i": 1
+          },
+          {
+            "s": "und",
+            "i": 2
+          },
+          {
+            "s": "ihr",
+            "i": 3
+          },
+          {
+            "s": "Partner",
+            "i": 4
+          },
+          {
+            "s": "seit",
+            "i": 5
+          },
+          {
+            "s": "Jahren",
+            "i": 6
+          },
+          {
+            "s": "in",
+            "i": 7
+          },
+          {
+            "s": "verschiedenen",
+            "i": 8
+          },
+          {
+            "s": "Städten",
+            "i": 9
+          },
+          {
+            "s": "arbeiten",
+            "i": 10
+          },
+          {
+            "s": "ist",
+            "i": 12
+          },
+          {
+            "s": "sie",
+            "i": 13
+          },
+          {
+            "s": "seit",
+            "i": 14
+          },
+          {
+            "s": "dem",
+            "i": 15
+          },
+          {
+            "s": "vergangenen",
+            "i": 16
+          },
+          {
+            "s": "Frühjahr",
+            "i": 17
+          },
+          {
+            "s": "verheiratet",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 981,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0407ab9dbb8cc4e9016a8296ff47ac81a098abb8c1200fdc8d",
+      "usage": {
+        "input_tokens": 6196,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6233
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-13-bekannt-click-ist",
+      "input": {
+        "markedSentence": "Das Ergebnis, das zunächst niemand veröffentlichen wollte, <target>ist</target> inzwischen auch außerhalb des Instituts bekannt.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Ergebnis",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 3
+          },
+          {
+            "s": "zunächst",
+            "i": 4
+          },
+          {
+            "s": "niemand",
+            "i": 5
+          },
+          {
+            "s": "veröffentlichen",
+            "i": 6
+          },
+          {
+            "s": "wollte",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "inzwischen",
+            "i": 10
+          },
+          {
+            "s": "auch",
+            "i": 11
+          },
+          {
+            "s": "außerhalb",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "Instituts",
+            "i": 14
+          },
+          {
+            "s": "bekannt",
+            "i": 15
+          }
+        ],
+        "clickedIndex": 9
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 853,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_074229e8d117886b016a82970043c081a085a380b406201da2",
+      "usage": {
+        "input_tokens": 6157,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6194
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-13-bekannt-click-bekannt",
+      "input": {
+        "markedSentence": "Das Ergebnis, das zunächst niemand veröffentlichen wollte, ist inzwischen auch außerhalb des Instituts <target>bekannt</target>.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Ergebnis",
+            "i": 1
+          },
+          {
+            "s": "das",
+            "i": 3
+          },
+          {
+            "s": "zunächst",
+            "i": 4
+          },
+          {
+            "s": "niemand",
+            "i": 5
+          },
+          {
+            "s": "veröffentlichen",
+            "i": 6
+          },
+          {
+            "s": "wollte",
+            "i": 7
+          },
+          {
+            "s": "ist",
+            "i": 9
+          },
+          {
+            "s": "inzwischen",
+            "i": 10
+          },
+          {
+            "s": "auch",
+            "i": 11
+          },
+          {
+            "s": "außerhalb",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "Instituts",
+            "i": 14
+          },
+          {
+            "s": "bekannt",
+            "i": 15
+          }
+        ],
+        "clickedIndex": 15
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1650,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_071fdf34c60818ac016a8297011bc087d2b9ade0c434bb4e5a",
+      "usage": {
+        "input_tokens": 6158,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6195
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-14-gebildet-click-ist",
+      "input": {
+        "markedSentence": "Die Studentin, die mehrere Sprachen fließend spricht und klassische Literatur liest, <target>ist</target> für ihr Alter ungewöhnlich gebildet.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Studentin",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "mehrere",
+            "i": 4
+          },
+          {
+            "s": "Sprachen",
+            "i": 5
+          },
+          {
+            "s": "fließend",
+            "i": 6
+          },
+          {
+            "s": "spricht",
+            "i": 7
+          },
+          {
+            "s": "und",
+            "i": 8
+          },
+          {
+            "s": "klassische",
+            "i": 9
+          },
+          {
+            "s": "Literatur",
+            "i": 10
+          },
+          {
+            "s": "liest",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "für",
+            "i": 14
+          },
+          {
+            "s": "ihr",
+            "i": 15
+          },
+          {
+            "s": "Alter",
+            "i": 16
+          },
+          {
+            "s": "ungewöhnlich",
+            "i": 17
+          },
+          {
+            "s": "gebildet",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 13
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 12682,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_056aeb5759f3941a016a829705e7c087d298c633f923ddc5ff",
+      "usage": {
+        "input_tokens": 6190,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6227
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-14-gebildet-click-gebildet",
+      "input": {
+        "markedSentence": "Die Studentin, die mehrere Sprachen fließend spricht und klassische Literatur liest, ist für ihr Alter ungewöhnlich <target>gebildet</target>.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Studentin",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "mehrere",
+            "i": 4
+          },
+          {
+            "s": "Sprachen",
+            "i": 5
+          },
+          {
+            "s": "fließend",
+            "i": 6
+          },
+          {
+            "s": "spricht",
+            "i": 7
+          },
+          {
+            "s": "und",
+            "i": 8
+          },
+          {
+            "s": "klassische",
+            "i": 9
+          },
+          {
+            "s": "Literatur",
+            "i": 10
+          },
+          {
+            "s": "liest",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "für",
+            "i": 14
+          },
+          {
+            "s": "ihr",
+            "i": 15
+          },
+          {
+            "s": "Alter",
+            "i": 16
+          },
+          {
+            "s": "ungewöhnlich",
+            "i": 17
+          },
+          {
+            "s": "gebildet",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1169,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0edbe884247e43f1016a82970f757881a3bea76c7a258f784c",
+      "usage": {
+        "input_tokens": 6189,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6226
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-15-begabt-click-ist",
+      "input": {
+        "markedSentence": "Das Kind, dessen Zeichnungen bereits mehrfach ausgezeichnet wurden, <target>ist</target> auch nach Einschätzung seiner Lehrer besonders begabt.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Kind",
+            "i": 1
+          },
+          {
+            "s": "dessen",
+            "i": 3
+          },
+          {
+            "s": "Zeichnungen",
+            "i": 4
+          },
+          {
+            "s": "bereits",
+            "i": 5
+          },
+          {
+            "s": "mehrfach",
+            "i": 6
+          },
+          {
+            "s": "ausgezeichnet",
+            "i": 7
+          },
+          {
+            "s": "wurden",
+            "i": 8
+          },
+          {
+            "s": "ist",
+            "i": 10
+          },
+          {
+            "s": "auch",
+            "i": 11
+          },
+          {
+            "s": "nach",
+            "i": 12
+          },
+          {
+            "s": "Einschätzung",
+            "i": 13
+          },
+          {
+            "s": "seiner",
+            "i": 14
+          },
+          {
+            "s": "Lehrer",
+            "i": 15
+          },
+          {
+            "s": "besonders",
+            "i": 16
+          },
+          {
+            "s": "begabt",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 10
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 947,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03daeeaa03824a3f016a8297109e4c819eb24d6c5fa86ef4b9",
+      "usage": {
+        "input_tokens": 6178,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6215
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-15-begabt-click-begabt",
+      "input": {
+        "markedSentence": "Das Kind, dessen Zeichnungen bereits mehrfach ausgezeichnet wurden, ist auch nach Einschätzung seiner Lehrer besonders <target>begabt</target>.",
+        "segments": [
+          {
+            "s": "Das",
+            "i": 0
+          },
+          {
+            "s": "Kind",
+            "i": 1
+          },
+          {
+            "s": "dessen",
+            "i": 3
+          },
+          {
+            "s": "Zeichnungen",
+            "i": 4
+          },
+          {
+            "s": "bereits",
+            "i": 5
+          },
+          {
+            "s": "mehrfach",
+            "i": 6
+          },
+          {
+            "s": "ausgezeichnet",
+            "i": 7
+          },
+          {
+            "s": "wurden",
+            "i": 8
+          },
+          {
+            "s": "ist",
+            "i": 10
+          },
+          {
+            "s": "auch",
+            "i": 11
+          },
+          {
+            "s": "nach",
+            "i": 12
+          },
+          {
+            "s": "Einschätzung",
+            "i": 13
+          },
+          {
+            "s": "seiner",
+            "i": 14
+          },
+          {
+            "s": "Lehrer",
+            "i": 15
+          },
+          {
+            "s": "besonders",
+            "i": 16
+          },
+          {
+            "s": "begabt",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 17
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1005,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_03eba4f0881e371d016a8297119ec881a39d3c2d3914e59da5",
+      "usage": {
+        "input_tokens": 6178,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6215
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-16-ungeoeffnet-click-ist",
+      "input": {
+        "markedSentence": "Obwohl die Ausstellung bereits morgen beginnt, <target>ist</target> die versiegelte Kiste im hinteren Raum noch immer ungeöffnet.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "Ausstellung",
+            "i": 2
+          },
+          {
+            "s": "bereits",
+            "i": 3
+          },
+          {
+            "s": "morgen",
+            "i": 4
+          },
+          {
+            "s": "beginnt",
+            "i": 5
+          },
+          {
+            "s": "ist",
+            "i": 7
+          },
+          {
+            "s": "die",
+            "i": 8
+          },
+          {
+            "s": "versiegelte",
+            "i": 9
+          },
+          {
+            "s": "Kiste",
+            "i": 10
+          },
+          {
+            "s": "im",
+            "i": 11
+          },
+          {
+            "s": "hinteren",
+            "i": 12
+          },
+          {
+            "s": "Raum",
+            "i": 13
+          },
+          {
+            "s": "noch",
+            "i": 14
+          },
+          {
+            "s": "immer",
+            "i": 15
+          },
+          {
+            "s": "ungeöffnet",
+            "i": 16
+          }
+        ],
+        "clickedIndex": 7
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          16
+        ]
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 1047,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[16]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01c6826b56e6192c016a82971292548191be979eb9beccfca1",
+      "usage": {
+        "input_tokens": 6177,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6215
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet",
+      "input": {
+        "markedSentence": "Obwohl die Ausstellung bereits morgen beginnt, ist die versiegelte Kiste im hinteren Raum noch immer <target>ungeöffnet</target>.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "die",
+            "i": 1
+          },
+          {
+            "s": "Ausstellung",
+            "i": 2
+          },
+          {
+            "s": "bereits",
+            "i": 3
+          },
+          {
+            "s": "morgen",
+            "i": 4
+          },
+          {
+            "s": "beginnt",
+            "i": 5
+          },
+          {
+            "s": "ist",
+            "i": 7
+          },
+          {
+            "s": "die",
+            "i": 8
+          },
+          {
+            "s": "versiegelte",
+            "i": 9
+          },
+          {
+            "s": "Kiste",
+            "i": 10
+          },
+          {
+            "s": "im",
+            "i": 11
+          },
+          {
+            "s": "hinteren",
+            "i": 12
+          },
+          {
+            "s": "Raum",
+            "i": 13
+          },
+          {
+            "s": "noch",
+            "i": 14
+          },
+          {
+            "s": "immer",
+            "i": 15
+          },
+          {
+            "s": "ungeöffnet",
+            "i": 16
+          }
+        ],
+        "clickedIndex": 16
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 873,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_062ce87bd014f5a5016a8297139e24819cb93866214c5e0b2e",
+      "usage": {
+        "input_tokens": 6177,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6214
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-17-ungeloest-click-bleibt",
+      "input": {
+        "markedSentence": "Die Aufgabe, an der bereits zwei erfahrene Teams gearbeitet haben, <target>bleibt</target> trotz der neuen Hinweise weiterhin ungelöst.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Aufgabe",
+            "i": 1
+          },
+          {
+            "s": "an",
+            "i": 3
+          },
+          {
+            "s": "der",
+            "i": 4
+          },
+          {
+            "s": "bereits",
+            "i": 5
+          },
+          {
+            "s": "zwei",
+            "i": 6
+          },
+          {
+            "s": "erfahrene",
+            "i": 7
+          },
+          {
+            "s": "Teams",
+            "i": 8
+          },
+          {
+            "s": "gearbeitet",
+            "i": 9
+          },
+          {
+            "s": "haben",
+            "i": 10
+          },
+          {
+            "s": "bleibt",
+            "i": 12
+          },
+          {
+            "s": "trotz",
+            "i": 13
+          },
+          {
+            "s": "der",
+            "i": 14
+          },
+          {
+            "s": "neuen",
+            "i": 15
+          },
+          {
+            "s": "Hinweise",
+            "i": 16
+          },
+          {
+            "s": "weiterhin",
+            "i": 17
+          },
+          {
+            "s": "ungelöst",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 12
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1309,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05ab67b39d7d22a2016a829714854081a2b1e5bcdfa458f33e",
+      "usage": {
+        "input_tokens": 6186,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6223
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-17-ungeloest-click-ungeloest",
+      "input": {
+        "markedSentence": "Die Aufgabe, an der bereits zwei erfahrene Teams gearbeitet haben, bleibt trotz der neuen Hinweise weiterhin <target>ungelöst</target>.",
+        "segments": [
+          {
+            "s": "Die",
+            "i": 0
+          },
+          {
+            "s": "Aufgabe",
+            "i": 1
+          },
+          {
+            "s": "an",
+            "i": 3
+          },
+          {
+            "s": "der",
+            "i": 4
+          },
+          {
+            "s": "bereits",
+            "i": 5
+          },
+          {
+            "s": "zwei",
+            "i": 6
+          },
+          {
+            "s": "erfahrene",
+            "i": 7
+          },
+          {
+            "s": "Teams",
+            "i": 8
+          },
+          {
+            "s": "gearbeitet",
+            "i": 9
+          },
+          {
+            "s": "haben",
+            "i": 10
+          },
+          {
+            "s": "bleibt",
+            "i": 12
+          },
+          {
+            "s": "trotz",
+            "i": 13
+          },
+          {
+            "s": "der",
+            "i": 14
+          },
+          {
+            "s": "neuen",
+            "i": 15
+          },
+          {
+            "s": "Hinweise",
+            "i": 16
+          },
+          {
+            "s": "weiterhin",
+            "i": 17
+          },
+          {
+            "s": "ungelöst",
+            "i": 18
+          }
+        ],
+        "clickedIndex": 18
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1083,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_056db4eec16cedb4016a829715cff0819288757066012d03df",
+      "usage": {
+        "input_tokens": 6186,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6223
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-18-geschlossen-click-ist",
+      "input": {
+        "markedSentence": "Der Laden, vor dem an Werktagen schon morgens zahlreiche Kunden warten, <target>ist</target> sonntags und an Feiertagen grundsätzlich geschlossen und für Kunden unzugänglich.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Laden",
+            "i": 1
+          },
+          {
+            "s": "vor",
+            "i": 3
+          },
+          {
+            "s": "dem",
+            "i": 4
+          },
+          {
+            "s": "an",
+            "i": 5
+          },
+          {
+            "s": "Werktagen",
+            "i": 6
+          },
+          {
+            "s": "schon",
+            "i": 7
+          },
+          {
+            "s": "morgens",
+            "i": 8
+          },
+          {
+            "s": "zahlreiche",
+            "i": 9
+          },
+          {
+            "s": "Kunden",
+            "i": 10
+          },
+          {
+            "s": "warten",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "sonntags",
+            "i": 14
+          },
+          {
+            "s": "und",
+            "i": 15
+          },
+          {
+            "s": "an",
+            "i": 16
+          },
+          {
+            "s": "Feiertagen",
+            "i": 17
+          },
+          {
+            "s": "grundsätzlich",
+            "i": 18
+          },
+          {
+            "s": "geschlossen",
+            "i": 19
+          },
+          {
+            "s": "und",
+            "i": 20
+          },
+          {
+            "s": "für",
+            "i": 21
+          },
+          {
+            "s": "Kunden",
+            "i": 22
+          },
+          {
+            "s": "unzugänglich",
+            "i": 23
+          }
+        ],
+        "clickedIndex": 13
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 967,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a45f35545d98fe7016a829716e19487d2b14c7e5f9364a9b8",
+      "usage": {
+        "input_tokens": 6239,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6276
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-18-geschlossen-click-geschlossen",
+      "input": {
+        "markedSentence": "Der Laden, vor dem an Werktagen schon morgens zahlreiche Kunden warten, ist sonntags und an Feiertagen grundsätzlich <target>geschlossen</target> und für Kunden unzugänglich.",
+        "segments": [
+          {
+            "s": "Der",
+            "i": 0
+          },
+          {
+            "s": "Laden",
+            "i": 1
+          },
+          {
+            "s": "vor",
+            "i": 3
+          },
+          {
+            "s": "dem",
+            "i": 4
+          },
+          {
+            "s": "an",
+            "i": 5
+          },
+          {
+            "s": "Werktagen",
+            "i": 6
+          },
+          {
+            "s": "schon",
+            "i": 7
+          },
+          {
+            "s": "morgens",
+            "i": 8
+          },
+          {
+            "s": "zahlreiche",
+            "i": 9
+          },
+          {
+            "s": "Kunden",
+            "i": 10
+          },
+          {
+            "s": "warten",
+            "i": 11
+          },
+          {
+            "s": "ist",
+            "i": 13
+          },
+          {
+            "s": "sonntags",
+            "i": 14
+          },
+          {
+            "s": "und",
+            "i": 15
+          },
+          {
+            "s": "an",
+            "i": 16
+          },
+          {
+            "s": "Feiertagen",
+            "i": 17
+          },
+          {
+            "s": "grundsätzlich",
+            "i": 18
+          },
+          {
+            "s": "geschlossen",
+            "i": 19
+          },
+          {
+            "s": "und",
+            "i": 20
+          },
+          {
+            "s": "für",
+            "i": 21
+          },
+          {
+            "s": "Kunden",
+            "i": 22
+          },
+          {
+            "s": "unzugänglich",
+            "i": 23
+          }
+        ],
+        "clickedIndex": 19
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "additionalMemberIndices": [
+          13
+        ]
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "routePass": false,
+      "membershipPass": false,
+      "latencyMs": 872,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"VERB\"},\"additionalMemberIndices\":[13]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0d63fefba67d7007016a829717d97481a2bc030d658cc2707a",
+      "usage": {
+        "input_tokens": 6239,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 38,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6277
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-19-beleidigt-click-ist",
+      "input": {
+        "markedSentence": "Obwohl er sich später entschuldigte, <target>ist</target> er wegen der öffentlichen Kritik noch immer beleidigt und ungewöhnlich abweisend.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "er",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          },
+          {
+            "s": "später",
+            "i": 3
+          },
+          {
+            "s": "entschuldigte",
+            "i": 4
+          },
+          {
+            "s": "ist",
+            "i": 6
+          },
+          {
+            "s": "er",
+            "i": 7
+          },
+          {
+            "s": "wegen",
+            "i": 8
+          },
+          {
+            "s": "der",
+            "i": 9
+          },
+          {
+            "s": "öffentlichen",
+            "i": 10
+          },
+          {
+            "s": "Kritik",
+            "i": 11
+          },
+          {
+            "s": "noch",
+            "i": 12
+          },
+          {
+            "s": "immer",
+            "i": 13
+          },
+          {
+            "s": "beleidigt",
+            "i": 14
+          },
+          {
+            "s": "und",
+            "i": 15
+          },
+          {
+            "s": "ungewöhnlich",
+            "i": 16
+          },
+          {
+            "s": "abweisend",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 6
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1275,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0916fc9bd6b05ac5016a829718ba3081929a13641ba83c6727",
+      "usage": {
+        "input_tokens": 6191,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6228
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-19-beleidigt-click-beleidigt",
+      "input": {
+        "markedSentence": "Obwohl er sich später entschuldigte, ist er wegen der öffentlichen Kritik noch immer <target>beleidigt</target> und ungewöhnlich abweisend.",
+        "segments": [
+          {
+            "s": "Obwohl",
+            "i": 0
+          },
+          {
+            "s": "er",
+            "i": 1
+          },
+          {
+            "s": "sich",
+            "i": 2
+          },
+          {
+            "s": "später",
+            "i": 3
+          },
+          {
+            "s": "entschuldigte",
+            "i": 4
+          },
+          {
+            "s": "ist",
+            "i": 6
+          },
+          {
+            "s": "er",
+            "i": 7
+          },
+          {
+            "s": "wegen",
+            "i": 8
+          },
+          {
+            "s": "der",
+            "i": 9
+          },
+          {
+            "s": "öffentlichen",
+            "i": 10
+          },
+          {
+            "s": "Kritik",
+            "i": 11
+          },
+          {
+            "s": "noch",
+            "i": 12
+          },
+          {
+            "s": "immer",
+            "i": 13
+          },
+          {
+            "s": "beleidigt",
+            "i": 14
+          },
+          {
+            "s": "und",
+            "i": 15
+          },
+          {
+            "s": "ungewöhnlich",
+            "i": 16
+          },
+          {
+            "s": "abweisend",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 14
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1189,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_08284c9bf7b0d85f016a82971a0de8819e9655464ed648e76b",
+      "usage": {
+        "input_tokens": 6191,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6228
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-20-uebertrieben-click-ist",
+      "input": {
+        "markedSentence": "Seine Reaktion, die selbst seine engsten Freunde überrascht hat, <target>ist</target> angesichts des kleinen Fehlers völlig übertrieben.",
+        "segments": [
+          {
+            "s": "Seine",
+            "i": 0
+          },
+          {
+            "s": "Reaktion",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "selbst",
+            "i": 4
+          },
+          {
+            "s": "seine",
+            "i": 5
+          },
+          {
+            "s": "engsten",
+            "i": 6
+          },
+          {
+            "s": "Freunde",
+            "i": 7
+          },
+          {
+            "s": "überrascht",
+            "i": 8
+          },
+          {
+            "s": "hat",
+            "i": 9
+          },
+          {
+            "s": "ist",
+            "i": 11
+          },
+          {
+            "s": "angesichts",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "kleinen",
+            "i": 14
+          },
+          {
+            "s": "Fehlers",
+            "i": 15
+          },
+          {
+            "s": "völlig",
+            "i": 16
+          },
+          {
+            "s": "übertrieben",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 11
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "AUX"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 987,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"AUX\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0104d3b6b10e8d56016a82971b316881a29ed189afccb914a7",
+      "usage": {
+        "input_tokens": 6184,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6221
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "target-de-participle-benchmark-20-uebertrieben-click-uebertrieben",
+      "input": {
+        "markedSentence": "Seine Reaktion, die selbst seine engsten Freunde überrascht hat, ist angesichts des kleinen Fehlers völlig <target>übertrieben</target>.",
+        "segments": [
+          {
+            "s": "Seine",
+            "i": 0
+          },
+          {
+            "s": "Reaktion",
+            "i": 1
+          },
+          {
+            "s": "die",
+            "i": 3
+          },
+          {
+            "s": "selbst",
+            "i": 4
+          },
+          {
+            "s": "seine",
+            "i": 5
+          },
+          {
+            "s": "engsten",
+            "i": 6
+          },
+          {
+            "s": "Freunde",
+            "i": 7
+          },
+          {
+            "s": "überrascht",
+            "i": 8
+          },
+          {
+            "s": "hat",
+            "i": 9
+          },
+          {
+            "s": "ist",
+            "i": 11
+          },
+          {
+            "s": "angesichts",
+            "i": 12
+          },
+          {
+            "s": "des",
+            "i": 13
+          },
+          {
+            "s": "kleinen",
+            "i": 14
+          },
+          {
+            "s": "Fehlers",
+            "i": 15
+          },
+          {
+            "s": "völlig",
+            "i": 16
+          },
+          {
+            "s": "übertrieben",
+            "i": 17
+          }
+        ],
+        "clickedIndex": 17
+      },
+      "idealOutput": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "output": {
+        "decision": "Resolved",
+        "target": {
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "additionalMemberIndices": []
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "routePass": true,
+      "membershipPass": true,
+      "latencyMs": 1009,
+      "rawOutputText": "{\"decision\":\"Resolved\",\"target\":{\"family\":\"Lexeme\",\"kind\":\"ADJ\"},\"additionalMemberIndices\":[]}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_01bbfdc72c07877b016a82971c2c34819d82fe346285d3771a",
+      "usage": {
+        "input_tokens": 6184,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 5988
+        },
+        "output_tokens": 37,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 6221
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

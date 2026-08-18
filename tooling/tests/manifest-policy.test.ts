@@ -58,6 +58,27 @@ test("repository policy allows package-specific governed peer ranges", async () 
 	expect(issues).toEqual([]);
 });
 
+test("repository policy rejects runtime version drift", async () => {
+	const root = await temporaryRepository();
+	const workspace = await addWorkspace(root, {
+		kind: "battery",
+		name: "drifted",
+	});
+	const manifest = await Bun.file(join(workspace, "package.json")).json();
+	manifest.engines = { node: "22.x" };
+	await writeJson(join(workspace, "package.json"), manifest);
+
+	const issues = await validateManifestPolicy({
+		cwd: root,
+		mode: "repository",
+	});
+
+	expect(issues).toContainEqual({
+		location: "battery/drifted/package.json",
+		message: "engines.node must be 24.x",
+	});
+});
+
 test("package policy inspects only the caller workspace", async () => {
 	const root = await temporaryRepository();
 	const healthy = await addWorkspace(root, {

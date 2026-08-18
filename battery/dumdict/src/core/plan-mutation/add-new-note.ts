@@ -1,3 +1,4 @@
+import { readingFingerprint } from "dumling";
 import {
 	inverseRelationFor,
 	pendingSemanticRelationSchema,
@@ -15,7 +16,7 @@ import type { SupportedLanguage } from "../../dumling";
 import { makeSurfaceId } from "../../dumling";
 import type { AddNewNoteRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";
-import { readingKey, sameReading } from "../identity";
+import { sameReading } from "../identity";
 import { derivePendingEntryId } from "../pending/identity";
 import type { PlannedChangeOp } from "../planned-changes";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
@@ -72,7 +73,7 @@ function makePendingRecords<L extends SupportedLanguage>(
 				sourceReading: request.draft.reading,
 				pending,
 				locator: {
-					sourceReadingKey: readingKey(request.draft.reading),
+					sourceReadingKey: readingFingerprint(request.draft.reading),
 					relation: pending.relation,
 					targetPendingId,
 				},
@@ -112,13 +113,13 @@ function explicitTargetsArePresent<L extends SupportedLanguage>(
 ) {
 	const readings = new Set(
 		slice.explicitExistingReadingTargets.map(({ reading }) =>
-			readingKey(reading),
+			readingFingerprint(reading),
 		),
 	);
 	return (request.draft.relations ?? []).every(
 		(relation) =>
 			relation.target.kind === "pending" ||
-			readings.has(readingKey(relation.target.reading)),
+			readings.has(readingFingerprint(relation.target.reading)),
 	);
 }
 

@@ -59,8 +59,9 @@ describe("published package entrypoints", () => {
 		run(process.execPath, ["run", "build"]);
 
 		const runtimeSmokeTest = `
-			import { dumling, getLanguageApi, supportedLanguages } from "dumling";
-			import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";
+			import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";
+			import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";
+			import { abstractSchemas, getSchemaTreeFor, readingSchema, schemasFor } from "dumling/schema";
 			import * as schemaModule from "dumling/schema";
 
 			if (supportedLanguages.join(",") !== "de,en,he") throw new Error("language inventory is missing");
@@ -74,8 +75,12 @@ describe("published package entrypoints", () => {
 				canonicalForm: "see",
 				family: "Lexeme",
 				kind: "NOUN",
-				coreFeatures: { gender: "Masc" },
+				coreFeatures: { gender: "Masc", hyph: null },
 			});
+			const reading = readingSchema.parse({ lemma, emojiDescription: "  \u{1F30A}  " });
+			if (reading.emojiDescription !== "\u{1F30A}") throw new Error("Reading schema did not normalize its identity input");
+			if (!readingFingerprint(reading).includes("\u{1F30A}")) throw new Error("Reading fingerprint is missing");
+			if (leanReadingFingerprint(reading) !== readingFingerprint(reading)) throw new Error("lean Reading entrypoint disagrees with the root entrypoint");
 			const surface = dumling.de.convert.lemma.toSurface(lemma);
 			const attestation = dumling.de.convert.surface.toAttestation(surface, {
 				members: [{ attested: "See", orthography: "Standard" }],
@@ -104,11 +109,13 @@ describe("published package entrypoints", () => {
 			writeFileSync(
 				join(typecheckDir, "fixture.ts"),
 				[
-					'import { dumling, getLanguageApi, supportedLanguages } from "dumling";',
+					'import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";',
 					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
-					'import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";',
+					'import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";',
+					'import type { Reading as LeanReading, ReadingFingerprint as LeanReadingFingerprint } from "dumling/reading";',
+					'import { abstractSchemas, getSchemaTreeFor, readingSchema, schemasFor } from "dumling/schema";',
 					'import type * as z from "zod";',
-					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
+					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',
 					"void languages;",
@@ -123,6 +130,12 @@ describe("published package entrypoints", () => {
 					"});",
 					"",
 					"const surface = dumling.de.convert.lemma.toSurface(lemma);",
+					'const reading = readingSchema.parse({ lemma, emojiDescription: "\u{1F30A}" }) as Reading<"de">;',
+					"const readingIdentity: ReadingFingerprint = readingFingerprint(reading);",
+					'const leanReading: LeanReading<"de"> = reading;',
+					"const leanReadingIdentity: LeanReadingFingerprint = leanReadingFingerprint(leanReading);",
+					"void readingIdentity;",
+					"void leanReadingIdentity;",
 					'const attestation: Attestation<"de"> = dumling.de.convert.surface.toAttestation(surface, {',
 					'\tmembers: [{ attested: "See", orthography: "Standard" }],',
 					'\trealizationCoverage: "Full",',
@@ -220,6 +233,8 @@ describe("published package entrypoints", () => {
 		expect(packedFiles).toContain("dist/types.js");
 		expect(packedFiles).toContain("dist/schema.d.ts");
 		expect(packedFiles).toContain("dist/schema.js");
+		expect(packedFiles).toContain("dist/reading.d.ts");
+		expect(packedFiles).toContain("dist/reading.js");
 		expect(packedFiles).toContain("dist/operations/api-shape.d.ts");
 		expect(packedFiles).toContain("dist/types/public-types.d.ts");
 		expect(packedFiles).toContain("dist/schemas/public-schemas.d.ts");

@@ -83,6 +83,7 @@ const lexicalHeadRepairs = `<lexical_head_repairs>
 - Perfect: the lexical head is normally Part. haben or sein remains a member, but its finite features do not become head features.
 - Future: the lexical head remains Inf. werden remains a member.
 - Passive: the lexical head is normally Part. A passive werden member does not by itself make the head's voice Pass.
+- Productive state passive: sein plus Partizip II can be supplied together after TIGER-style Target Classification. The participle remains the Part head under the base VERB Lemma; finite sein remains a member and contributes no head features.
 - Perfect passive: analyze the lexical participle as Part through stacks such as ist ... aufgefunden worden or war ... verschifft worden.
 - Modal plus passive: a modal such as soll stays unmarked context because it is a separate AUX target; passive werden can still be a supplied VERB member.
 - Lexical haben, werden, or modal-shaped verbs routed here as singleton VERBs are ordinary lexical heads. Analyze their own finite form.

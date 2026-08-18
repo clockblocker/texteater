@@ -16,6 +16,7 @@ import { productionSystemPromptRecipe } from "../../src/promptsmith/assembly/gen
 import { systemPrompt as generatedIntakeSystemPrompt } from "../../src/promptsmith/production/generated-system-prompt/intake";
 import { corpus as intakeCorpus } from "../../src/promptsmith/production/intake/golden-corpus/corpus";
 import { promptSource as intakePromptSource } from "../../src/promptsmith/production/intake/prompt-source";
+import { corpus as germanTargetCorpus } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit/corpus/corpus";
 import { corpus as readingCorpus } from "../../src/promptsmith/production/reading-resolution/de/golden-corpus/corpus";
 import {
 	buildDeNounCitationSurfaceCodec,
@@ -116,10 +117,130 @@ describe("Prompt Assembly", () => {
 				.update(targetPrompt.systemPrompt)
 				.digest("hex"),
 		).toBe(
-			"3c71bc5ded78c53c503f0377cb5af55e2afa6ed03f9c98998126a708e13908bd",
+			"3290f4f76f2117f977aad404e5ceeb1fee7dc6bbcca73647fb644eef0eb76ac7",
 		);
 		expect(targetPrompt.systemPrompt).toContain("markedSentence");
+		expect(targetPrompt.systemPrompt).toContain("<participial_boundary>");
+		expect(targetPrompt.systemPrompt).toContain(
+			"Die Banken <target>sind</target> geöffnet",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Der Brief <target>ist</target> ungelesen und unwichtig",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Nach der Endkontrolle ist der Bauplan vom Architekten <target>freigegeben</target>",
+		);
+		expect(targetPrompt.systemPrompt).toContain(
+			"Für die Rettungsübung ist die Absperrung von den Helfern zwei Meter nach Osten <target>versetzt</target>",
+		);
 		expect(targetPrompt.systemPrompt).toContain("Examples to follow:");
+	});
+
+	test("keeps the TIGER participle boundary click-invariant", () => {
+		function goldenCase(caseId: keyof typeof germanTargetCorpus.cases) {
+			const result = germanTargetCorpus.cases[caseId];
+			if (result === undefined) {
+				throw new Error(`Missing German target case ${caseId}.`);
+			}
+			return result;
+		}
+
+		const stateAux = goldenCase(
+			"target-de-demo-state-passive-banken-click-sind",
+		);
+		const stateParticiple = goldenCase(
+			"target-de-demo-state-passive-banken-click-geoeffnet",
+		);
+		expect(stateAux.idealOutput).toEqual(stateParticiple.idealOutput);
+		expect(stateAux.idealOutput).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [4, 6],
+			},
+		});
+		expect(
+			goldenCase("target-de-demo-state-passive-bauplan-click-freigegeben")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [6, 16],
+			},
+		});
+		expect(
+			goldenCase("target-de-demo-state-passive-absperrung-click-versetzt")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "VERB",
+				memberSegmentIndices: [6, 26],
+			},
+		});
+
+		expect(
+			goldenCase("target-de-demo-participial-adjective-brief-click-ist")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "AUX",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			goldenCase(
+				"target-de-demo-participial-adjective-brief-click-ungelesen",
+			).idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [6],
+			},
+		});
+
+		expect(
+			goldenCase("target-de-boundary-lexicalized-participle-click-ist")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "AUX",
+				memberSegmentIndices: [4],
+			},
+		});
+		expect(
+			goldenCase(
+				"target-de-boundary-lexicalized-participle-click-verrueckt",
+			).idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [8],
+			},
+		});
+		expect(
+			goldenCase("target-de-boundary-participle-one-adverbial-lachend")
+				.idealOutput,
+		).toEqual({
+			decision: "Resolved",
+			target: {
+				family: "Lexeme",
+				kind: "ADJ",
+				memberSegmentIndices: [4],
+			},
+		});
 	});
 
 	test("all four active schemas are accepted by OpenAI Structured Outputs", () => {

@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
-import { dumling } from "../../src";
-import { schemasFor } from "../../src/schema";
-import type { Attestation, Lemma, Surface } from "../../src/types";
+import { dumling, readingFingerprint } from "../../src";
+import { readingSchema, schemasFor } from "../../src/schema";
+import type { Attestation, Lemma, Reading, Surface } from "../../src/types";
 
 // README_BLOCK:core-lemma:start
 const seeLemma = dumling.de.create.lemma({
@@ -14,6 +14,14 @@ const seeLemma = dumling.de.create.lemma({
 	},
 }) satisfies Lemma<"de", "Lexeme", "NOUN">;
 // README_BLOCK:core-lemma:end
+
+// README_BLOCK:core-reading:start
+const seeReading = {
+	lemma: seeLemma,
+	emojiDescription: "\u{1F30A}",
+} satisfies Reading<"de", "Lexeme", "NOUN">;
+const seeReadingFingerprint = readingFingerprint(seeReading);
+// README_BLOCK:core-reading:end
 
 // README_BLOCK:core-surface:start
 const seeSurface = dumling.de.create.surface.citation({
@@ -47,13 +55,20 @@ const seeLemmaReadableCsv =
 void seeAttestation;
 
 // README_BLOCK:quickstart-de:start
-import { dumling as packageDumling } from "dumling";
-import { schemasFor as packageSchemas } from "dumling/schema";
+import {
+	dumling as packageDumling,
+	readingFingerprint as packageReadingFingerprint,
+} from "dumling";
+import {
+	readingSchema as packageReadingSchema,
+	schemasFor as packageSchemas,
+} from "dumling/schema";
 import type {
 	Attestation as PackageAttestation,
 	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
 	FeatureValue as PackageFeatureValue,
 	Lemma as PackageLemma,
+	Reading as PackageReading,
 	Surface as PackageSurface,
 } from "dumling/types";
 
@@ -74,6 +89,11 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 		spelling: "Canonical",
 		surfaceFeatures: null,
 	});
+const reading = packageReadingSchema.parse({
+	lemma,
+	emojiDescription: "\u{1F30A}",
+}) as PackageReading<"de">;
+const readingIdentity = packageReadingFingerprint(reading);
 const attestation: PackageAttestation<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toAttestation(surface, {
 		members: [{ attested: "See", orthography: "Standard" }],
@@ -107,6 +127,7 @@ extractedLemma satisfies PackageLemma<"de">;
 gender satisfies "Masc";
 
 decoded.data.surfaceIdentity.normalizedSurface satisfies string;
+readingIdentity satisfies string;
 packageSchemas.de.entity.Attestation.Citation.Lexeme.NOUN().parse(parsed.data);
 // README_BLOCK:quickstart-de:end
 

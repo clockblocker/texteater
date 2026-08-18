@@ -1,9 +1,10 @@
 /**
  * Production instruction body for German high-level target classification.
  *
- * Promoted from adaptive profile 5 after the frozen 94-case regression retained
- * at docs/prototypes/target-classification-high-level-contracts/runs/
- * 2026-08-13T05-29-01-478Z/results.json.
+ * Originally promoted from adaptive profile 5 after the frozen 94-case
+ * regression retained at docs/prototypes/target-classification-high-level-
+ * contracts/runs/2026-08-13T05-29-01-478Z/results.json. The participial
+ * boundary was subsequently amended by ADR 0007.
  */
 
 const core = `<agent_role>
@@ -26,14 +27,14 @@ Choose exactly one reachable route:
 
 - Lexeme: ADJ | ADP | ADV | AUX | CCONJ | DET | INTJ | NOUN | NUM | PART | PRON | PROPN | SCONJ | SYM | VERB
 - Phraseme: Aphorism | DiscourseFormula | Idiom | Proverb
-- Construction: Fusion | PairedFrame
+- Construction: Fusion
 </classification_model>
 
 <decision_procedure>
 1. Start at the marked occurrence. Reject every unit that does not contain it.
 2. Decide which words are fixed members of that occurrence. Fixed material belongs together; free material stays separate.
 3. Choose the largest available fixed unit containing the mark. Mere syntax, proximity, conventionality, or frequent co-occurrence is insufficient. Ordinary compositional combinations, including conventional verb–noun combinations, have no larger route here: classify the marked word as its standalone Lexeme.
-4. Route the chosen unit. Lexeme is the default for one word and for all realized pieces of one inflected verb. Phraseme requires one of the four available established-expression routes. Fusion is one fused source word. PairedFrame contains only its correlating operators.
+4. Route the chosen unit. Lexeme is the default for one word and for every fixed realization of one lexical identity, including discontinuous verbs and multi-member correlatives. Classify a multi-member Lexeme by the part of speech of the whole unit, not by each anchor in isolation. Phraseme requires one of the available established-expression routes. Fusion is one fused source word.
 5. Copy membership only from segments[].i. The marked word is implicit: never include clickedIndex. additionalMemberIndices contains every other fixed member's i in increasing source order. Use [] for a singleton.
 6. Verify silently: the route contains the exact marked occurrence; every output ID exists in segments; clickedIndex is absent; no free word, punctuation, unreadable text, duplicate, or neighboring unit is included.
 </decision_procedure>
@@ -46,11 +47,13 @@ Keep these separate: meaning-bearing modal AUX plus infinitive; copula AUX plus 
 For a possible governed preposition, first ask whether this verb lexically selects that exact preposition in this meaning. If yes, verb and preposition are one Lexeme/VERB. A click on either fixed member selects the same verb target. Include the other member's i only; the marked member is already implicit. Exclude the preposition's determiner, noun phrase, and every other argument word. If the prepositional phrase merely adds place, time, manner, instrument, or another circumstance, keep verb and preposition separate.
 </verbal_units>
 
-<paired_frames>
-PairedFrame anchors are the small closed-class correlating operators. Fillers are the open-class words and phrases carrying the construction's lexical content. An anchor click selects every anchor and no filler. A filler click returns only that filler as its standalone Lexeme, even when the construction requires a slot there.
+<multi_member_lexemes>
+Fixed correlating operators form one multi-member Lexeme. An anchor click selects every fixed anchor and no filler. A filler click returns only that filler as its standalone Lexeme, even when the lexical unit requires a slot there.
 
-Comparative adjectives, degree words, predicates, noun phrases, and all other content-bearing payload stay outside PairedFrame membership. Before returning PairedFrame, remove every proposed member that supplies lexical content rather than correlation. If the marked occurrence is payload, do not return the nearby frame.
-</paired_frames>
+Route the complete lexical identity under one whole-unit POS. In particular, entweder … oder, weder … noch, sowohl … als/wie (auch), nicht nur … sondern auch, and je … desto/umso/je are Lexeme/CCONJ; um zu, ohne zu, anstatt zu, statt zu, and so … dass are Lexeme/SCONJ; einerseits … andererseits and teils … teils are Lexeme/ADV. Never return a mixed-POS target.
+
+Comparative adjectives, degree words, predicates, noun phrases, and all other content-bearing payload stay outside the multi-member Lexeme. Before returning it, remove every proposed member that supplies lexical content rather than fixed correlation. If the marked occurrence is payload, do not return the nearby correlator.
+</multi_member_lexemes>
 
 <other_fixedness>
 An established non-compositional occurrence is Phraseme/Idiom; the same wording used literally is separate. Include fixed function words inside an Idiom, but exclude freely inserted modifiers. A marked fused source word is Construction/Fusion unless it belongs to a larger available fixed unit. Membership follows occurrence role, never spelling: a preposition introducing its own nominal phrase is not a separable particle merely because an identical form occurs later.
@@ -79,14 +82,14 @@ Final mechanical check: if additionalMemberIndices contains clickedIndex, delete
 const boundaryRepairs = `<boundary_repairs>
 - A fused contraction such as zum, zur, am, or beim is a singleton Construction/Fusion. Its internal article is not a separate segment, and neighboring words never become members merely because they form a familiar phrase.
 - Decide membership before considering the marked word's standalone POS. When the mark is a fixed article or preposition inside an Idiom, select the same complete Idiom as for any other fixed member. When it is an inserted modifier, select that modifier alone.
-- Free payload stays singleton even beside a fixed unit: comparative words around a PairedFrame, adverbs around a perfect or separable verb, and a preposition governing its own noun phrase are not members of the nearby unit.
+- Free payload stays singleton even beside a fixed unit: comparative words around a multi-member correlator, adverbs around a perfect or separable verb, and a preposition governing its own noun phrase are not members of the nearby unit.
 - Assign each repeated surface form its occurrence-level role. A preposition with a nominal complement stays ADP; only the objectless particle occurrence joins its separable verb.
 </boundary_repairs>`;
 
 const membershipDecisionOrder = `<membership_decision_order>
 Resolve these boundaries before collecting indices:
 
-1. PairedFrame: classify the marked word itself as operator or payload. Operators are closed-class correlators; comparative, degree, predicate, and other open-class words are payload. If the mark is payload, stop with its singleton Lexeme. Do not collect nearby operators around a payload click.
+1. Multi-member correlator: classify the marked word itself as a fixed anchor or free payload. Comparative, degree, predicate, and other open-class words are payload. If the mark is payload, stop with its singleton Lexeme. Do not collect nearby anchors around a payload click. If it is an anchor, collect all and only the fixed anchors, then assign the whole-unit Lexeme POS.
 2. Repeated adposition/particle: assign each occurrence by its right-hand complement. An occurrence that introduces a determiner or noun phrase is an ADP: on that click return the ADP alone, and on a verb click exclude it. Only an objectless occurrence can be the separable particle. Never include both same-spelled occurrences in the verb. Decide required reflexivity independently: retain a required reflexive pronoun; do not replace it with a nearby preposition.
 3. Idiom: reconstruct the established wording, then exclude ordinary dependents. A fixed article or preposition click selects the whole Idiom, just like its content-word click. A dative participant, possessor, intensifier, or descriptive modifier stays out unless that exact word is lexicalized in the established expression. All fixed-member clicks must produce identical membership.
 </membership_decision_order>`;
@@ -95,8 +98,16 @@ const reflexiveSeparableMembership = `<reflexive_separable_membership>
 Build a separable inherently reflexive verb conjunctively. After excluding every preposition that heads its own nominal phrase, include all remaining realized verb pieces: finite verb, required reflexive pronoun, and objectless separable particle. None of these three replaces another. A click on the verb, required pronoun, or particle must produce the same complete membership. If the pronoun is merely an optional object, keep it separate as usual.
 </reflexive_separable_membership>`;
 
+const participialBoundary = `<participial_boundary>
+Partizip I and Partizip II are forms, not automatic routes. Decide whether the occurrence is verbal or adjectival in context before collecting members.
+
+Adjectivally used participles are Lexeme/ADJ; substantivized participles are Lexeme/NOUN. Productive perfect and passive Partizip II belong to the Lexeme/VERB complex. Under the conservative TIGER boundary, productive sein-state-passives remain verbal, while established property readings are separate ADJ predicates with a separate AUX copula.
+
+Make this construction decision independently of the click. A click on any member of a verbal complex selects the complete VERB target; in an adjectival predicate, a copula click selects AUX and a participle click selects ADJ.
+</participial_boundary>`;
+
 const finalBoundaryRules = `<final_boundary_rules>
-- A comparative form of an adjective remains Lexeme/ADJ when used adverbially; adverbial grammatical function does not turn that adjectival lexeme into ADV. As PairedFrame payload it remains a singleton; only the closed-class correlating operators are anchors.
+- A comparative form of an adjective remains Lexeme/ADJ when used adverbially; adverbial grammatical function does not turn that adjectival lexeme into ADV. As correlator payload it remains a singleton; only the fixed operators are anchors.
 - In an Idiom whose established wording contains a preposition followed by a fixed article, both function words remain members. A click on either selects the complete Idiom. Exclude freely supplied participants and modifiers.
 - For a final separable-particle click, first delete every earlier same-spelled occurrence that heads a nominal phrase. Then include the finite verb and only the objectless final particle, plus independently required reflexive material. Never include both occurrences.
 </final_boundary_rules>`;
@@ -106,5 +117,6 @@ export const promptPart = [
 	boundaryRepairs,
 	membershipDecisionOrder,
 	reflexiveSeparableMembership,
+	participialBoundary,
 	finalBoundaryRules,
 ].join("\n\n");
