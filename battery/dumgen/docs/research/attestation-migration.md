@@ -231,7 +231,7 @@ the Dumgen and Dumling public interfaces; prompt-schema tests remain internal.
 | Prompt exchanges, raw model DTOs, stage names | Dumgen instrumentation; laboratory diagnostics only | `onModelExchange` is the existing internal observability seam and the laboratory reconstructs targets/stages from it ([laboratory trace adapter](../../../../app/laboratory/src/classification.ts#L49-L145)). |
 | Reading candidates and resolved learner Reading | Application/Dumdict | Reading remains learner-scoped and above Dumling; the laboratory currently owns its in-memory candidate index ([resolver state](../../../../app/laboratory/src/classification.ts#L172-L187), [reading composition](../../../../app/laboratory/src/classification.ts#L314-L374)). |
 
-The laboratory's duplicate “one Selection per member” cache disappears. One
+The laboratory's duplicate "one Selection per member" cache disappears. One
 click-independent Attestation can be reused for any target member; the
 application separately maps each member index to that resolved unit. This
 removes shallow reconstruction work currently spread between Dumgen and the
@@ -336,7 +336,7 @@ A repository-wide direct-reference scan found production/runtime callers in
 only Dumling, Dumgen, Dumdict, `app/laboratory`, and `app/dumling-docs`.
 Most of the remaining references are the 258 docs sources/generated pages,
 Dumling/Dumdict fixtures, and Dumgen Prompt Sources, Golden Cases, experiments,
-and generated prompts. Historical notes may retain “Selection” only when
+and generated prompts. Historical notes may retain "Selection" only when
 clearly labelled historical or superseded.
 
 ## Generated and derived assets
@@ -410,8 +410,8 @@ expressed, omitted, governed, and discontinuous valency evidence belongs. Map
 coverage belong on Attestation, not reusable Surface. That creates the correct
 future home for valency realization without adding any valency field now.
 
-The Attestation migration must preserve #12's examples—especially
-discontinuous separable verbs and partial idiom realization—and must not treat
+The Attestation migration must preserve #12's examples, especially
+discontinuous separable verbs and partial idiom realization. It must not treat
 governed but non-member material as Surface/Attestation members. Exact valency
 relations, omitted constituents, and identity effects remain #12 follow-up
 work; they neither block the structural migration nor license changing current
@@ -419,14 +419,14 @@ DE/HE Segmentation or target-membership policy.
 
 ## Implementation slices and dependency order
 
-### Gate 0 — implementation policies
+### Gate 0: implementation policies
 
 Resolve the three blockers below and record the selected
 policies/supersessions. No bulk rename should precede this gate because
 identity, fixture shape, docs routes, and the public Dumgen result all depend
 on it.
 
-### Slice 1 — Dumling core (depends on Gate 0)
+### Slice 1: Dumling core (depends on Gate 0)
 
 - Introduce the canonical `Attestation` type/schema and its concrete-language
   registry.
@@ -445,7 +445,7 @@ on it.
 
 This slice establishes the canonical seam all other work consumes.
 
-### Slice 2 — Dumgen canonical projection (depends on Slice 1)
+### Slice 2: Dumgen canonical projection (depends on Slice 1)
 
 - Change `GrammaticalResult.Resolved` and exported types.
 - Replace Selection construction/schema dispatch with Attestation construction
@@ -458,7 +458,7 @@ This slice establishes the canonical seam all other work consumes.
   retain member-index lookup only as Dumgen/application state.
 - Add interface tests before migrating callers.
 
-### Slice 3 — private grammar DTOs and prompt assets (depends on Gate 0 and
+### Slice 3: private grammar DTOs and prompt assets (depends on Gate 0 and
 Slice 1; may proceed with Slice 2)
 
 - Move occurrence fields in all 23 route schemas, shared codecs/adapters,
@@ -469,7 +469,7 @@ Slice 1; may proceed with Slice 2)
 - Keep the issue-22 experiment historical; repair or quarantine its pre-existing
   missing imports separately rather than masking them in this migration.
 
-### Slice 4 — runtime callers (depends on Slice 2)
+### Slice 4: runtime callers (depends on Slice 2)
 
 - Migrate the laboratory contract/resolver/client to Attestation plus explicit
   click/member view state; remove per-member Selection synthesis.
@@ -477,7 +477,7 @@ Slice 1; may proceed with Slice 2)
   learner storage semantics.
 - Update Dumgen/Dumdict README example sources.
 
-### Slice 5 — docs source corpus and generator (depends on Slice 1 and the
+### Slice 5: docs source corpus and generator (depends on Slice 1 and the
 historical compatibility policy; can run parallel to Slice 4)
 
 - Rename entity guards/helpers/type expressions/path validation and logbook
@@ -489,7 +489,7 @@ historical compatibility policy; can run parallel to Slice 4)
   stale `/selection/` routes survive except an explicitly selected redirect or
   compatibility manifest.
 
-### Slice 6 — integrated regeneration and verification (depends on 2–5)
+### Slice 6: integrated regeneration and verification (depends on 2–5)
 
 - Regenerate READMEs, prompts, and docs from source.
 - Run the matrix below from leaves to repository root.
@@ -528,7 +528,7 @@ Observed on 2026-08-08 before this note changed any code:
   to Attestation work or silently repair them inside a migration diff.
 - `app/laboratory: bun run check` passes.
 - `app/laboratory: bun test` reports 11 pass / 1 fail. The existing
-  “stops a disabled route before Grammatical Resolution” case unexpectedly
+  "stops a disabled route before Grammatical Resolution" case unexpectedly
   dispatches grammar and fails `invalid-output`; the test's intended gate is
   visible here
   ([test](../../../../app/laboratory/tests/classification.test.ts#L244-L280)).

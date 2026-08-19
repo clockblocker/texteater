@@ -134,7 +134,7 @@ schema-less `CodecPair` or become a different, schema-requiring API.
 The scalar and molecule codecs still need project definitions:
 
 - number -> floored integer;
-- number <-> the project's definition of “numeric string”;
+- number <-> the project's definition of "numeric string";
 - ISO date-or-datetime <-> `Date`;
 - nullish -> nullable normalization and default selection;
 - invalid/empty date -> `null`;
@@ -238,8 +238,8 @@ There are two reasonable floors:
 
 - **4.1:** enough for `z.codec`, top-level encode/decode, nesting, arrays, and
   pipes. Keep a small local inversion helper.
-- **4.4.0:** also provides `z.invertCodec`, allowing
-  `reverseCodecDirections` to disappear. ([4.4.0 release][zod-4-4-0-release])
+- **4.4.0:** also provides `z.invertCodec`, so
+  `reverseCodecDirections` can disappear. ([4.4.0 release][zod-4-4-0-release])
 
 The workspace installation inspected during this research was Zod 3.25.76,
 whose bundled `zod/v4` surface does not expose `z.codec`; tests for the native
@@ -268,9 +268,8 @@ compatibility build.
 Adopt native codecs in v4. They replace the duplicated **representation,
 validation, directionality, and composition infrastructure**. They do not
 replace most of the package's concrete mappings, strict-adapter/reshape DSLs,
-or schema-less adapter. The migration is worthwhile, but it should be treated
-as a behavior/API migration—not a mechanical rename—because native
-decode/encode validates both sides.
+or schema-less adapter. The migration is worthwhile, but it changes behavior
+and API, not just names. Native decode/encode validates both sides.
 
 [zod-codecs]: https://zod.dev/codecs
 [zod-4-1-release]: https://github.com/colinhacks/zod/releases/tag/v4.1.0

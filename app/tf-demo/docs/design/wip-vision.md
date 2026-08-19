@@ -1,6 +1,6 @@
 # tf-demo vision (WIP)
 
-Core wayfinder: [#159 — tf-demo linked Notes and source-context navigation](https://github.com/clockblocker/texteater/issues/159)
+Core wayfinder: [#159: tf-demo linked Notes and source-context navigation](https://github.com/clockblocker/texteater/issues/159)
 
 tf-demo is the proper implementation of an idea first explored in Obsidian:
 
@@ -187,10 +187,10 @@ flow. A learner may enable them in settings or request them with a shortcut
 while selecting a Segment or following a note link.
 
 The Lemma Route Note connects every Unit Reading that shares one grammatical
-identity, enabling travel among polysemous or grammatically indistinguishable
-homonymous Readings. Surface and Lemma Route Notes may also expose derived
-same-form links to distinct grammatical identities; these are navigational
-connections, not Semantic Relations.
+identity. A learner can use it to move among polysemous or grammatically
+indistinguishable homonymous Readings. Surface and Lemma Route Notes may also
+expose same-form links derived from distinct grammatical identities. Those
+links are for navigation; they are not Semantic Relations.
 
 ### Shadow Note
 
@@ -615,7 +615,7 @@ Phraseme Reading pointer.
 
 Each slice ends in a usable vertical path and keeps later choices reversible.
 
-#### Slice 1 — [Routed Note foundation (#160)](https://github.com/clockblocker/texteater/issues/160)
+#### Slice 1: [Routed Note foundation (#160)](https://github.com/clockblocker/texteater/issues/160)
 
 - extract the current Library and Text workspaces into routed view modules;
 - add the Navigation module and canonical Note routes;
@@ -626,7 +626,7 @@ Each slice ends in a usable vertical path and keeps later choices reversible.
 Checkpoint: a stored Reading URL reloads directly, resolved Semantic Relation
 links switch between Unit Reading Notes, and browser Back works.
 
-#### Slice 2 — [Source Context round trip (#161)](https://github.com/clockblocker/texteater/issues/161)
+#### Slice 2: [Source Context round trip (#161)](https://github.com/clockblocker/texteater/issues/161)
 
 - project paginated Source Contexts from `attestations.by_reading_id`;
 - render context snippets in Unit Reading Notes;
@@ -637,7 +637,7 @@ Checkpoint: one Reading encountered in two Texts shows two contexts; either link
 returns to the correct Text and highlights all and only that occurrence's
 members.
 
-#### Slice 3 — [Progressive Resolution Note (#162)](https://github.com/clockblocker/texteater/issues/162)
+#### Slice 3: [Progressive Resolution Note (#162)](https://github.com/clockblocker/texteater/issues/162)
 
 - add `resolutionSessions` and the `/resolve/:requestId` route;
 - replace the public blocking click interaction with immediate
@@ -651,7 +651,7 @@ Checkpoint: an uncached click immediately opens a Note frame, fills sections as
 stages finish, and ends at a reloadable canonical Note. A cached occurrence
 reaches the same destination without model work.
 
-#### Slice 4 — [Indexed Shadow Notes (#163)](https://github.com/clockblocker/texteater/issues/163)
+#### Slice 4: [Indexed Shadow Notes (#163)](https://github.com/clockblocker/texteater/issues/163)
 
 - add and migrate Shadow storage;
 - attach pending Semantic Relations to interned Shadows;
@@ -663,7 +663,7 @@ Checkpoint: one Shadow aggregates all current incoming references; resolving or
 removing one exact reference leaves the others; its row becomes dormant after
 the last reference and is reused when the descriptor appears again.
 
-#### Slice 5 — [Route Notes (#164)](https://github.com/clockblocker/texteater/issues/164)
+#### Slice 5: [Route Notes (#164)](https://github.com/clockblocker/texteater/issues/164)
 
 - add Attestation, Surface, and Lemma branches of `getNote`;
 - add the same-written-form indexes;
@@ -674,7 +674,7 @@ the last reference and is reused when the descriptor appears again.
 Checkpoint: the learner can traverse Attestation → Surface → Lemma → every Unit
 Reading for that Lemma and can cross to distinct same-form grammatical nodes.
 
-#### Slice 6 — [Shadow reference resolution (#165)](https://github.com/clockblocker/texteater/issues/165)
+#### Slice 6: [Shadow reference resolution (#165)](https://github.com/clockblocker/texteater/issues/165)
 
 - wire tf-demo's currently unimplemented Dumdict relation-cleanup storage
   interfaces;

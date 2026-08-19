@@ -38,7 +38,7 @@ golden-corpus/       # omitted when the route has no canonical cases
 `prompt-source.ts` exports one `promptSource` value and is Prompt Assembly's
 only route import. It owns the route, schemas, instruction body, and ordered
 demonstration selection. The body remains private. A corpus-backed Prompt Source
-may additionally export its `demonstrations` Case Selection so experiments can
+may export its `demonstrations` Case Selection so experiments can
 exclude it through set algebra. `schemas.ts` exports `inputSchema` and
 `outputSchema`; runtime catalog code imports model-facing schemas there.
 
@@ -107,7 +107,7 @@ Codegen writes committed deterministic modules under the owning stage's
 Sources compile under `laboratory/generated-system-prompt`; promoted production
 Prompt Sources compile under `production/generated-system-prompt`. Provenance
 is derived from the Prompt Source and always includes `prompt-source.ts` and
-`schemas.ts`. Corpus-backed demonstrations additionally include the corpus
+`schemas.ts`. Corpus-backed demonstrations also include the corpus
 module and only the semantic case modules that contribute selected cases.
 
 Run `bun run check:system-prompts` to detect stale generated output.

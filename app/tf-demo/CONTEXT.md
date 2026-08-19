@@ -90,5 +90,6 @@ never removes the Text or Sentence records.
 
 When stripping leaves a Reading with no surviving Occurrence Attestation, the
 Shared Demo Dictionary also removes that Reading, its Reading Knowledge and
-relations, and—when no other surviving record uses them—its Lemma, Surfaces,
-and Lemma Knowledge. Readings used by another Text remain shared.
+relations. When no other surviving record uses them, it also removes its
+Lemma, Surfaces, and Lemma Knowledge. Readings used by another Text remain
+shared.

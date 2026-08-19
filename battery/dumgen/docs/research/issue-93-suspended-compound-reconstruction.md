@@ -45,7 +45,7 @@ For the motivating click, the exact result is therefore:
 | Lemma Core Features | `{ gender: "Neut", hyph: null }` |
 
 The official rules call this character use an *Ergänzungsstrich*: the Divis
-interrupts a word in order to connect more distant word parts. The rule gives
+interrupts a word to connect more distant word parts. The rule gives
 both trailing and leading examples, including `Apfel- oder Kirschkuchen` and
 `Schulbücher und -hefte`
 ([Amtliches Regelwerk 2024, §81(3), pp. 150–151](https://www.rechtschreibrat.com/DOX/RfdR_Amtliches-Regelwerk_2024.pdf)).

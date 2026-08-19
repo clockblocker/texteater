@@ -28,9 +28,9 @@ such as `401 Bad credentials`.
 
 ## Skill operations
 
-When a skill says “publish to the issue tracker,” create a GitHub issue.
+When a skill says "publish to the issue tracker," create a GitHub issue.
 
-When a skill says “fetch the relevant ticket,” run:
+When a skill says "fetch the relevant ticket," run:
 
 `gh issue view <number> --comments`
 

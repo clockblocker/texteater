@@ -1,11 +1,11 @@
 # Laboratory
 
-> EARLY-WIP LABORATORY — this is a prompt-development surface, not a production
-> prompt namespace or production-readiness claim.
+> EARLY-WIP LABORATORY. This is a prompt-development surface, not a production
+> prompt namespace or a claim that the prompts are ready for production.
 
-Question: does the hands-on settled Dumgen topology feel coherent when every
-prompt stage, resolved-unit member, cache decision, and canonical result stays
-visible?
+This laboratory answers one question: does the current Dumgen topology still
+make sense when every prompt stage, resolved-unit member, cache decision, and
+canonical result is visible?
 
 ```text
 Source Text -> Selected Sentence -> Intake -> Segmentation<de>
@@ -35,22 +35,21 @@ Dumgen laboratory prompts and Dumgen's configured OpenAI Responses API adapter;
 credentials never enter the browser. Segmented sentences live in memory only.
 German is the only supported language.
 
-After a `ResolvableText` click, the result panel exposes the Target,
-Grammatical, and Reading stages, including each stage's minimal prompt input and
-validated model output. The canonical Grammatical result uses the matching
-concrete German Dumling Attestation and Surface contracts. `Unresolved` and
-Reading decision mismatches remain visible as prompt-quality diagnostics. A
-valid non-noun Target stops visibly as `ResolutionRouteNotImplemented` before
-another model call; only German Lexeme/NOUN is enabled through Grammatical and
-Reading Resolution. This application and its prompts are an early WIP
-laboratory bench, not production behavior.
+After a `ResolvableText` click, the result panel shows the Target, Grammatical,
+and Reading stages. For each stage, it includes the minimal prompt input and the
+validated model output. The Grammatical result uses the matching concrete
+German Dumling Attestation and Surface contracts. The panel also shows
+`Unresolved` results and Reading decision mismatches, which are useful when
+debugging prompts. A valid non-noun Target stops at
+`ResolutionRouteNotImplemented` before another model call. Only German
+Lexeme/NOUN currently reaches Grammatical and Reading Resolution.
 
 Target Classification may group several contiguous or discontinuous Segments
 into one Analysis Target. Every member is marked in the segmented sentence.
-After the first complete resolution, clicking another marked member creates a
-the same click-independent Attestation while keeping click state in the
-Dumgen-owned interaction envelope and reusing the shared Surface, Lemma, and Reading;
-the UI reports a **Member cache hit** and zero model calls.
+After the first complete resolution, clicking another marked member reuses the
+same click-independent Attestation, Surface, Lemma, and Reading. Click state
+stays in the Dumgen-owned interaction envelope. The UI reports a **Member cache
+hit** and makes no model calls.
 
 Useful first probes are `Guten Morgen`, a separable verb such as
 `Fritz steht sofort auf`, an ordinary word, and a typo in one member of a

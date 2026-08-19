@@ -22,7 +22,7 @@ This follows directly from the repository model and the external evidence:
   [`battery/dumrel/CONTEXT.md`](../../../dumrel/CONTEXT.md).
 - The concrete Dumling registry supports `de`, `en`, and `he`. Every language
   has all 17 Universal Dependencies (UD) part-of-speech Kinds, all eleven
-  Morpheme Kinds, and the Construction/Fusion Kind; only German additionally has
+  Morpheme Kinds, and the Construction/Fusion Kind; only German also has
   `Phraseme/Collocation`. See the
   [German](../../../dumling/src/schemas/concrete-language/features/de/de-subtree.ts),
   [English](../../../dumling/src/schemas/concrete-language/features/en/en-subtree.ts),
@@ -97,7 +97,7 @@ The ideal output should carry no guessed Family or Kind for each of these:
 5. A Phraseme Kind not admitted by that language's Dumling tree, especially
    `Collocation` for English or Hebrew.
 6. A target whose evidence establishes a broad linguistic phenomenon but not
-   Dumling's exact subtype—for example a Hebrew root-vowel template proposed
+   Dumling's exact subtype. For example, a Hebrew root-vowel template proposed
    as `Transfix`, or a contraction proposed as `Fusion` before the product
    mapping is frozen.
 

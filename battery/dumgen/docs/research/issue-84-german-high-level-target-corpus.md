@@ -85,8 +85,8 @@ the oracle.
   membership: each clicked verb, determiner, preposition or noun receives its
   own route unless another independently fixed rule applies. [IDS grammis:
   Funktionsverbgefüge](https://grammis.ids-mannheim.de/vggf/2202)
-- IDS distinguishes a verb-governed prepositional object—whose preposition is
-  not freely exchangeable—from an adverbial PP, whose relation and preposition
+- IDS distinguishes a verb-governed prepositional object, whose preposition is
+  not freely exchangeable, from an adverbial PP, whose relation and preposition
   are selected more freely. That licenses the *wartet auf* / *läuft auf der
   Wiese* contrast. Grouping only the governed preposition with the verb, while
   leaving its nominal argument separate, is the settled Dumgen target policy,

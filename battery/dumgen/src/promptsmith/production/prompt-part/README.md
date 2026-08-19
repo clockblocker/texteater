@@ -7,7 +7,7 @@ selection, and the guidance rendered with those demonstrations.
 
 Demonstrations, frozen evaluations, diagnostics, and development pools are
 immutable Case Selections over that one corpus. Selection algebra proves ID
-separation; Prompt Assembly's contamination check additionally rejects repeated
+separation; Prompt Assembly's contamination check also rejects repeated
 inputs, semantic stimulus fingerprints, and declared contamination keys.
 
 Production Prompt Parts have no dependency on laboratory experiments, runners,
