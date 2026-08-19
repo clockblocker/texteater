@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { applyKnowledgeChange, knowledgeChangeSchema } from "dumrel";
 
-import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
+import { LEGACY_KNOWLEDGE_PROMPT_CATALOG } from "../../src/catalog/legacy-knowledge-prompt-catalog";
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
 import {
 	lexicalResolutionCorpus,
@@ -48,7 +48,7 @@ describe("Knowledge analysis Prompt Sources", () => {
 	});
 
 	test("registers all generated prompt variants in the runtime catalog", () => {
-		const catalog = PROMPT_CATALOG.laboratory.knowledge;
+		const catalog = LEGACY_KNOWLEDGE_PROMPT_CATALOG;
 		const pairs = [
 			[
 				catalog.morphologicalTree.segmentation.prompt,
@@ -318,7 +318,7 @@ describe("Knowledge analysis Prompt Sources", () => {
 				?.input;
 		if (input === undefined) throw new Error("Missing Translation case.");
 		expect(() =>
-			PROMPT_CATALOG.laboratory.knowledge.translation.prompt.outputPostcondition.assert(
+			LEGACY_KNOWLEDGE_PROMPT_CATALOG.translation.prompt.outputPostcondition.assert(
 				input,
 				{ decision: "Covered", existingIndex: 2 },
 			),

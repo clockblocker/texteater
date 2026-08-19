@@ -21,13 +21,14 @@ A `dumdict` service is bound to one language and one storage adapter:
 const dict = createDumdictService({ language: "en", storage });
 ```
 
-The runtime service has five UI-facing operations:
+The runtime service has six UI-facing operations:
 
 - `findStoredReadings`: return learner Readings for an exact structural Lemma
 - `addAttestation`: append evidence to an existing Reading
 - `addNewNote`: store a Lemma and a new learner Reading
+- `applyGeneratedKnowledge`: atomically plan generated Knowledge Changes and pending relations for an existing Reading
 - `getInfoForRelationsCleanup`: inspect unresolved relation targets
-- `cleanupRelations`: link or discard unresolved relation targets
+- `cleanupRelations`: retry unresolved targets through deterministic Lemma resolution
 
 The surrounding application owns the workflow around those calls. In the normal
 flow, the user clicks a text segment, the UI resolves its Surface and Lemma
@@ -41,21 +42,23 @@ collects a full note draft and calls `addNewNote`.
 - keeping Lemma, Surface, and learner Reading identities distinct
 - loading only the storage slice required for the operation
 - planning semantic changes and preconditions
-- applying owner-associated Knowledge Changes
-- maintaining inverse-paired Semantic Relations and explicit pending work
+- applying Reading Knowledge Changes
+- resolving Unit Shadows and maintaining Lemma-targeted relation algebra,
+  inverse fan-out, later-Reading backfill, and explicit pending work
 
 Knowledge DTOs, schemas, and inverse rules come from `dumrel`; Dumdict
 owns the dictionary workflows that apply those rules to stored records.
 
 Host storage owns the actual writes. Obsidian can translate planned changes into
 markdown edits, SQLite into a transaction, and Electron into server/cache writes.
-Normal app flows do not load the full dictionary.
+Non-relation flows load only their operation slice. Relation planning receives
+the dictionary relation inventory needed for closure, fan-out, and backfill.
 
 ## Reading model
 
 `dumdict` keeps three data concerns separate:
 
-- `LemmaRecord`: a grammatical Lemma plus optional Lemma Knowledge
+- `LemmaRecord`: a grammatical Lemma with no Knowledge
 - `ReadingEntry`: learner-facing notes plus optional Reading Knowledge
 - `SurfaceEntry`: an owned normalized Surface tied to a Lemma
 - `PendingSemanticRelationRecord`: a source Reading, a pending Unit Shadow, and
@@ -79,6 +82,12 @@ Service reads return learner Reading candidates:
 
 <!-- README_BLOCK:service-lookup -->
 
+Semantic Relation buckets live in Reading Knowledge but contain Lemma values.
+Dumdict resolves generated Unit Shadows by exact descriptor, materializes
+inverse edges across Readings of matching Lemmas, and backfills a new Reading
+from existing edges targeting its Lemma. Materialized derived edges are
+ordinary Knowledge with no provenance or reference count.
+
 ## Quickstart
 
 Install the packages:
@@ -99,12 +108,14 @@ The root export is intentionally focused:
 
 - `createDumdictService`: creates a language-bound service over a storage port
 - DTO types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictReadingDraft`
-- `applyDumdictKnowledgeChange`: validates an exact owner and applies one
-  owner-compatible Dumrel Knowledge Change
-- explicit version-0-to-version-1 serialized-note migration with typed loss
-  failures
+- `applyDumdictKnowledgeChange`: validates an exact Reading identity and applies
+  one Dumrel Knowledge Change
 - storage port types for host adapters
 - dumling helpers such as `dumling`, `makeSurfaceId`, and `inspectDumlingId`
+
+The version-1 serialized shape is a hard break. Old unversioned,
+Reading-targeted relation data must be reset or rewritten by the host; Dumdict
+does not expose a compatibility migration.
 
 ## Scope
 

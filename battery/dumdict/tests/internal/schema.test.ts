@@ -10,7 +10,7 @@ import {
 } from "../../src";
 import { germanHausLemma } from "../attested-entities/de/lemmas";
 import { germanHausCitationSurface } from "../attested-entities/de/surfaces";
-import { germanGehenReading } from "../fixtures/de-notes";
+import { germanGehenLemma, germanGehenReading } from "../fixtures/de-notes";
 import { englishRunReading } from "../fixtures/en-notes";
 
 const revision = "schema-test-1" as StoreRevision;
@@ -20,6 +20,12 @@ describe("public storage-facing schemas", () => {
 		expect(lemmaRecordSchema.parse({ lemma: germanHausLemma })).toEqual({
 			lemma: germanHausLemma,
 		});
+		expect(
+			lemmaRecordSchema.safeParse({
+				lemma: germanHausLemma,
+				knowledge: { transcription: "haʊs" },
+			}).success,
+		).toBe(false);
 		expect(
 			getDumdictSchemasFor("de").lemmaRecordSchema.safeParse({
 				lemma: { ...germanHausLemma, language: "en" },
@@ -43,6 +49,40 @@ describe("public storage-facing schemas", () => {
 		).toBe(false);
 	});
 
+	test("Reading relation buckets target Lemmas and reject same-Lemma edges", () => {
+		const schema = getDumdictSchemasFor("de").readingEntrySchema;
+		const note = {
+			reading: germanGehenReading,
+			attestedTranslations: [],
+			attestations: [],
+			notes: "",
+		};
+		expect(
+			schema.safeParse({
+				...note,
+				knowledge: {
+					semanticRelations: { nearSynonym: [germanHausLemma] },
+				},
+			}).success,
+		).toBe(true);
+		expect(
+			schema.safeParse({
+				...note,
+				knowledge: {
+					semanticRelations: { nearSynonym: [germanGehenReading] },
+				},
+			}).success,
+		).toBe(false);
+		expect(
+			schema.safeParse({
+				...note,
+				knowledge: {
+					semanticRelations: { nearSynonym: [germanGehenLemma] },
+				},
+			}).success,
+		).toBe(false);
+	});
+
 	test("Surface Entries compose Dumling's concrete Surface schemas", () => {
 		const schema = getDumdictSchemasFor("de").surfaceEntrySchema;
 		const entry = {
@@ -63,8 +103,8 @@ describe("public storage-facing schemas", () => {
 		).toBe(false);
 	});
 
-	test("plans reject Reading-only transcription changes", () => {
-		const invalidPlan = {
+	test("plans accept singular Reading transcription changes", () => {
+		const plan = {
 			baseRevision: revision,
 			changes: [
 				{
@@ -74,14 +114,11 @@ describe("public storage-facing schemas", () => {
 						{
 							kind: "applyKnowledgeChange",
 							envelope: {
-								owner: {
-									kind: "Reading",
-									reading: germanGehenReading,
-								},
+								reading: germanGehenReading,
 								change: {
-									kind: "Retract",
-									aspect: "transcriptions",
-									language: "de",
+									kind: "Correct",
+									aspect: "transcription",
+									value: "ɡeːən",
 								},
 							},
 						},
@@ -91,7 +128,16 @@ describe("public storage-facing schemas", () => {
 			],
 		};
 
-		expect(dumdictPlanSchema.safeParse(invalidPlan).success).toBe(false);
+		expect(dumdictPlanSchema.safeParse(plan).success).toBe(true);
+		const legacyPlan = structuredClone(plan);
+		const operation = legacyPlan.changes[0]?.ops[0];
+		if (!operation) throw new Error("Expected Knowledge Change operation.");
+		operation.envelope.change = {
+			kind: "Retract",
+			aspect: "transcriptions",
+			language: "de",
+		} as never;
+		expect(dumdictPlanSchema.safeParse(legacyPlan).success).toBe(false);
 	});
 
 	test("schema-inferred plan branches remain strict at runtime", () => {

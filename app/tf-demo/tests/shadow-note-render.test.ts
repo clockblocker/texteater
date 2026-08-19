@@ -25,23 +25,27 @@ function noteFixture(): ShadowNote {
 			revision: "convex-4",
 			candidates: [
 				{
-					readingId: "reading-source" as never,
+					lemmaId: "lemma-bank-a" as never,
 					canonicalForm: "Bank",
-					emojiDescription: "🪑",
+					family: "Lexeme",
+					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "place" }],
 					target: {
-						kind: "UnitReadingNote",
-						readingId: "reading-source" as never,
+						kind: "RouteNote",
+						routeKind: "Lemma",
+						id: "lemma-bank-a" as never,
 					},
 				},
 				{
-					readingId: "reading-bank" as never,
+					lemmaId: "lemma-bank-b" as never,
 					canonicalForm: "Bank",
-					emojiDescription: "🏦",
+					family: "Lexeme",
+					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "institution" }],
 					target: {
-						kind: "UnitReadingNote",
-						readingId: "reading-bank" as never,
+						kind: "RouteNote",
+						routeKind: "Lemma",
+						id: "lemma-bank-b" as never,
 					},
 				},
 			],
@@ -86,30 +90,26 @@ function render(note: ShadowNote) {
 				referrers: note.references.page,
 				activeLocator: null,
 				onResolve() {},
-				onDiscard() {},
 			}),
 		),
 	);
 }
 
-test("renders independent controls for exact equal-looking locators and filters a self candidate", () => {
+test("renders one deterministic resolve control per exact equal-looking locator", () => {
 	const markup = render(noteFixture());
 	expect(markup).toContain("locator-one");
 	expect(markup).toContain("locator-two");
-	expect(markup.match(/Discard reference/g)).toHaveLength(2);
-	expect(markup.match(/Resolve to 🏦 Bank/g)).toHaveLength(2);
-	expect(markup).not.toContain("Resolve to 🪑 Bank");
-	expect(markup).toContain('href="/note/reading/reading-bank"');
+	expect(markup).not.toContain("Discard reference");
+	expect(markup.match(/Resolve exact Lemma match/g)).toHaveLength(2);
+	expect(markup).toContain('href="/note/route/lemma/lemma-bank-b"');
 	expect(markup).toContain("nounClass: institution");
 });
 
 test("renders zero-candidate and structural-resolution gates without inventing a structural action", () => {
 	const note = noteFixture();
-	const selfCandidate = note.inspection.candidates[0];
-	if (!selfCandidate) throw new Error("Expected self candidate fixture.");
-	note.inspection.candidates = [selfCandidate];
+	note.inspection.candidates = [];
 	const markup = render(note);
-	expect(markup).toContain("No exact Unit Reading candidate is available.");
+	expect(markup).toContain("No exact Lemma candidate is available.");
 	expect(markup).toContain("Structural Shadow resolution is unavailable");
 	expect(markup).toContain(
 		"Dumrel defines the resolved lexical replacement DTO.",

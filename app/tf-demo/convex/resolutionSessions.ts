@@ -6,6 +6,7 @@ import {
 	mutation,
 	query,
 } from "./_generated/server";
+import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import {
 	assertResolutionStageTransition,
 	loadResolutionNote,
@@ -100,6 +101,18 @@ export const selectSegment = mutation({
 					"requestId was already used for a different click.",
 				);
 			}
+			if (
+				existing.stage === "Complete" &&
+				existing.readingId &&
+				existing.attestationId
+			) {
+				await scheduleKnowledgeGeneration(ctx, {
+					attemptKey: existing.requestId,
+					visitorId: existing.visitorId,
+					readingId: existing.readingId,
+					attestationId: existing.attestationId,
+				});
+			}
 			return {
 				kind: "Resolving" as const,
 				requestId: existing.requestId,
@@ -118,6 +131,12 @@ export const selectSegment = mutation({
 				requestId: args.requestId,
 				visitorId: args.visitorId,
 				segmentId: segment._id,
+				attestationId,
+			});
+			await scheduleKnowledgeGeneration(ctx, {
+				attemptKey: args.requestId,
+				visitorId: args.visitorId,
+				readingId: reading._id,
 				attestationId,
 			});
 			return {
@@ -363,6 +382,12 @@ export const settleAfterRun = internalMutation({
 				);
 			}
 			await settleComplete(ctx, session, result);
+			await scheduleKnowledgeGeneration(ctx, {
+				attemptKey: session.requestId,
+				visitorId: session.visitorId,
+				readingId: result.readingId,
+				attestationId: result.attestationId,
+			});
 			return true;
 		}
 		if (result.kind === "Unresolved") {

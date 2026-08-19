@@ -10,6 +10,8 @@ supersedes:
 source: "texteater#151"
 refined-by:
   - "0002-persist-one-visitor-encounter-per-segment"
+partially-superseded-by:
+  - "system ADR 0010"
 ---
 
 # Persist occurrence Attestations by exclusive Segment membership
@@ -142,8 +144,8 @@ execution policy remain outside this decision.
 
 Analysis Stripping for a Text preserves the Text and its Sentences, and removes
 their Segments, memberships, occurrence Attestations, and Clicks. It then
-removes Readings with no surviving occurrence and prunes their Knowledge and
-relations; unreferenced Surfaces, Lemmas, and Lemma Knowledge may likewise be
+removes Readings with no surviving occurrence and prunes their Reading-owned
+Knowledge and relations; unreferenced Surfaces and Lemmas may likewise be
 removed. Canonical records still referenced by another Text survive. Full demo
 reset remains the explicit operation that removes all shared and Visitor data.
 

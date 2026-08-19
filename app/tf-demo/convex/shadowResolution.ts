@@ -1,8 +1,6 @@
 import { v } from "convex/values";
 
-import type { Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
-import { readingValue } from "./model/occurrenceAttestations";
 import {
 	descriptorFromStoredShadow,
 	pendingShadowDescriptor,
@@ -47,13 +45,11 @@ async function currentRevision(ctx: QueryCtx) {
 async function loadSelectionHandler(
 	ctx: QueryCtx,
 	args: {
-		shadowId: Id<"shadows">;
+		shadowId: import("./_generated/dataModel").Id<"shadows">;
 		locatorKey: string;
-		targetReadingId?: Id<"readings">;
 	},
 ) {
-	const targetReadingId = args.targetReadingId;
-	const [revision, pending, shadow, targetReading] = await Promise.all([
+	const [revision, pending, shadow] = await Promise.all([
 		currentRevision(ctx),
 		ctx.db
 			.query("pendingSemanticRelations")
@@ -62,25 +58,7 @@ async function loadSelectionHandler(
 			)
 			.unique(),
 		ctx.db.get(args.shadowId),
-		targetReadingId ? ctx.db.get(targetReadingId) : null,
 	]);
-	const [targetEntry, targetLemma] = targetReading
-		? await Promise.all([
-				ctx.db
-					.query("readingEntries")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", targetReading._id),
-					)
-					.unique(),
-				ctx.db.get(targetReading.lemmaId),
-			])
-		: [null, null];
-	const compactTargetEntry =
-		targetEntry?.record !== null &&
-		typeof targetEntry?.record === "object" &&
-		!Array.isArray(targetEntry.record)
-			? targetEntry.record
-			: null;
 	let compatiblePending = false;
 	try {
 		compatiblePending =
@@ -99,14 +77,6 @@ async function loadSelectionHandler(
 	return {
 		revision,
 		pendingRecord: compatiblePending ? (pending?.record ?? null) : null,
-		targetReadingEntry:
-			targetReading && targetLemma && compactTargetEntry
-				? {
-						...compactTargetEntry,
-						reading: readingValue(targetReading, targetLemma),
-						attestations: [],
-					}
-				: null,
 	};
 }
 
@@ -114,12 +84,10 @@ export const loadPendingSelection = internalQuery({
 	args: {
 		shadowId: v.id("shadows"),
 		locatorKey: v.string(),
-		targetReadingId: v.optional(v.id("readings")),
 	},
 	returns: v.object({
 		revision: v.string(),
 		pendingRecord: v.union(v.null(), v.any()),
-		targetReadingEntry: v.union(v.null(), v.any()),
 	}),
 	handler: loadSelectionHandler,
 });

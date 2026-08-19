@@ -2,6 +2,13 @@
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
 		"src/index.ts",
+		"src/knowledge.ts",
+		"src/knowledge-runtime.ts",
+		"src/openai-fetch.ts",
+		"src/projection.ts",
+		"src/runtime.ts",
+		"src/schema.ts",
+		"src/vocabulary.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],

@@ -27,6 +27,12 @@ tf-demo. The package-level learner scope of a Dumdict Reading is the whole demo,
 not an anonymous Visitor.
 _Avoid_: Visitor Dictionary, personal dictionary
 
+**Semantic Relation Edge**:
+One normalized piece of Reading-owned Knowledge whose endpoint is a Lemma.
+Resolved edges navigate to Lemma Route Notes. A missing exact Lemma is retained
+as a pending Unit Shadow; it is not replaced by a manually selected Reading.
+_Avoid_: Reading-to-Reading relation, target Reading
+
 **Unit Reading**:
 A Reading whose Lemma Family is Lexeme, Phraseme, or Morpheme. This tf-demo
 grouping adds no linguistic identity beyond the underlying Reading.
@@ -93,7 +99,9 @@ Attestations, and every Visitor Encounter on those Segments or occurrences. It
 never removes the Text or Sentence records.
 
 When stripping leaves a Reading with no surviving Occurrence Attestation, the
-Shared Demo Dictionary also removes that Reading, its Reading Knowledge and
-relations. When no other surviving record uses them, it also removes its
-Lemma, Surfaces, and Lemma Knowledge. Readings used by another Text remain
-shared.
+Shared Demo Dictionary also removes that Reading, its Reading Knowledge, and
+its source-owned relation edges. Incoming relation edges remain valid when a
+target Reading disappears because their endpoint is its Lemma; they are removed
+only when that Lemma itself is removed. When no other surviving record uses
+them, stripping also removes the Lemma and Surfaces. Readings used by another
+Text remain shared.

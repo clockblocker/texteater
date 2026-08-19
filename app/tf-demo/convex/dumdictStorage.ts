@@ -1,7 +1,9 @@
 import { v } from "convex/values";
 import { type Reading, readingFingerprint } from "dumling/reading";
+import type { SemanticRelation } from "dumrel";
+import { semanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
-
+import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
@@ -15,10 +17,14 @@ import {
 } from "./model/occurrenceAttestations";
 import {
 	attachPendingShadowReference,
+	ensureAccumulatedKnowledgeStatus,
 	pendingShadowDescriptor,
 	replaceAccumulatedKnowledge,
 } from "./model/shadows";
-import { dumdictPlannedChangeValidator } from "./model/validators";
+import {
+	dumdictPlannedChangeValidator,
+	lemmaValueValidator,
+} from "./model/validators";
 
 const STATE_KEY = "global" as const;
 const MAX_PLANNED_CHANGES = 50;
@@ -27,6 +33,10 @@ const MAX_READING_CANDIDATES = 40;
 const MAX_CONTEXT_KEYS = 50;
 const MAX_PENDING_RELATIONS_PER_SLICE = 100;
 const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
+const MAX_RELATION_INVENTORY_LEMMAS = 100;
+const MAX_RELATION_INVENTORY_READINGS = 200;
+const MAX_RELATIONS_PER_READING = 200;
+const semanticRelations = new Set<string>(semanticRelationValues);
 
 type ServerCtx = QueryCtx | MutationCtx;
 type AnyRecord = Record<string, unknown>;
@@ -57,6 +67,12 @@ function requireRecord(value: unknown, context: string): AnyRecord {
 	return value as AnyRecord;
 }
 
+function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
+	if (record.knowledge !== undefined) {
+		throw new Error("Lemma Records cannot contain Knowledge.");
+	}
+}
+
 function requireString(value: unknown, context: string): string {
 	if (typeof value !== "string" || value.length === 0) {
 		throw new Error(`${context} must be a non-empty string.`);
@@ -64,10 +80,28 @@ function requireString(value: unknown, context: string): string {
 	return value;
 }
 
+function requireSemanticRelation(value: unknown): SemanticRelation {
+	const relation = requireString(value, "Semantic Relation");
+	if (!semanticRelations.has(relation)) {
+		throw new Error(`Unsupported Semantic Relation: ${relation}`);
+	}
+	return relation as SemanticRelation;
+}
+
 function withoutKeys(record: AnyRecord, keys: readonly string[]): AnyRecord {
 	const result = { ...record };
 	for (const key of keys) delete result[key];
 	return result;
+}
+
+function withoutSemanticRelations(value: unknown): unknown {
+	const knowledge =
+		value === undefined
+			? undefined
+			: requireRecord(value, "Reading Knowledge");
+	if (!knowledge) return undefined;
+	const result = withoutKeys(knowledge, ["semanticRelations"]);
+	return Object.keys(result).length === 0 ? undefined : result;
 }
 
 function stableFingerprint(value: unknown): string {
@@ -90,11 +124,11 @@ function sortValue(value: unknown): unknown {
 
 function appendUnique(
 	existing: readonly unknown[],
-	contribution: readonly unknown[],
+	additions: readonly unknown[],
 ): unknown[] {
 	const result = existing.map((value) => structuredClone(value));
 	const fingerprints = new Set(result.map(stableFingerprint));
-	for (const value of contribution) {
+	for (const value of additions) {
 		const fingerprint = stableFingerprint(value);
 		if (fingerprints.has(fingerprint)) continue;
 		result.push(structuredClone(value));
@@ -121,7 +155,8 @@ function requireArray(value: unknown, context: string): unknown[] {
 	return value;
 }
 
-function applyCompactReadingKnowledgeChange(
+/** Apply a Knowledge Change that was validated before entering this transaction. */
+export function applyTrustedReadingKnowledgeChange(
 	existingValue: unknown,
 	change: AnyRecord,
 ): AnyRecord {
@@ -133,11 +168,6 @@ function applyCompactReadingKnowledgeChange(
 				);
 	const kind = requireChangeKind(change.kind);
 	const aspect = requireString(change.aspect, "Knowledge Change aspect");
-	if (aspect === "transcriptions") {
-		throw new Error(
-			"Reading Knowledge does not accept transcription Changes.",
-		);
-	}
 	if (aspect === "translations") {
 		const language = requireString(
 			change.language,
@@ -206,6 +236,7 @@ function applyCompactReadingKnowledgeChange(
 		return result;
 	}
 	if (
+		aspect !== "transcription" &&
 		aspect !== "definition" &&
 		aspect !== "morphologicalTree" &&
 		aspect !== "lexicalBreakdown"
@@ -240,23 +271,19 @@ function applyReadingKnowledgeChange(
 		envelopeValue,
 		"Reading Knowledge Change envelope",
 	);
-	const owner = requireRecord(
-		envelope.owner,
-		"Reading Knowledge Change owner",
-	);
 	if (
-		owner.kind !== "Reading" ||
-		readingIdentityKey(owner.reading) !== readingIdentityKey(entry.reading)
+		readingIdentityKey(envelope.reading) !==
+		readingIdentityKey(entry.reading)
 	) {
 		throw new Error(
-			"Knowledge Change owner does not match the patched Reading Entry.",
+			"Knowledge Change Reading does not match the patched Reading Entry.",
 		);
 	}
 	const change = requireRecord(
 		envelope.change,
 		"Reading Knowledge Change value",
 	);
-	const knowledge = applyCompactReadingKnowledgeChange(
+	const knowledge = applyTrustedReadingKnowledgeChange(
 		entry.knowledge,
 		change,
 	);
@@ -338,6 +365,19 @@ async function findLemma(ctx: ServerCtx, lemma: unknown) {
 	return dictionary ? { canonical, dictionary } : null;
 }
 
+async function findLemmaByKey(ctx: ServerCtx, lemmaKey: string) {
+	const canonical = await ctx.db
+		.query("lemmas")
+		.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+		.unique();
+	if (!canonical) return null;
+	const dictionary = await ctx.db
+		.query("dictionaryLemmas")
+		.withIndex("by_lemma_id", (q) => q.eq("lemmaId", canonical._id))
+		.unique();
+	return dictionary ? { canonical, dictionary } : null;
+}
+
 async function findCanonicalReading(ctx: ServerCtx, readingInput: unknown) {
 	const reading = requireRecord(readingInput, "Reading");
 	const emojiDescription = requireString(
@@ -384,14 +424,98 @@ async function loadReading(
 		ctx.db.get(canonical.lemmaId),
 	]);
 	if (!entry || !lemma) return null;
+	const record = requireRecord(entry.record, "Reading Entry record");
+	const knowledge = await loadCanonicalReadingKnowledge(
+		ctx,
+		canonical._id,
+		record.knowledge,
+	);
 	return {
 		...canonical,
 		entry: {
-			...requireRecord(entry.record, "Reading Entry record"),
+			...withoutKeys(record, ["knowledge"]),
+			...(knowledge === undefined ? {} : { knowledge }),
 			reading: readingValue(canonical, lemma),
 			attestations: [],
 		},
 		entryId: entry._id,
+	};
+}
+
+async function loadCanonicalReadingKnowledge(
+	ctx: ServerCtx,
+	readingId: Id<"readings">,
+	storedKnowledge: unknown,
+): Promise<AnyRecord | undefined> {
+	const edges = await ctx.db
+		.query("semanticRelationEdges")
+		.withIndex("by_source_reading_id", (q) =>
+			q.eq("sourceReadingId", readingId),
+		)
+		.take(MAX_RELATIONS_PER_READING + 1);
+	if (edges.length > MAX_RELATIONS_PER_READING) {
+		throw new Error(
+			`A Reading supports at most ${MAX_RELATIONS_PER_READING} Semantic Relation edges.`,
+		);
+	}
+	const targets = await Promise.all(
+		edges.map((edge) => ctx.db.get(edge.targetLemmaId)),
+	);
+	const semanticRelations: AnyRecord = {};
+	for (const [index, edge] of edges.entries()) {
+		const target = targets[index];
+		if (!target) continue;
+		const bucket = (semanticRelations[edge.relation] ?? []) as unknown[];
+		bucket.push(lemmaValue(target));
+		semanticRelations[edge.relation] = bucket;
+	}
+	const base = withoutSemanticRelations(storedKnowledge);
+	const knowledge =
+		base === undefined ? {} : requireRecord(base, "Reading Knowledge");
+	if (Object.keys(semanticRelations).length > 0) {
+		knowledge.semanticRelations = semanticRelations;
+	}
+	return Object.keys(knowledge).length === 0 ? undefined : knowledge;
+}
+
+async function loadRelationInventory(ctx: ServerCtx) {
+	const dictionaryRows = await ctx.db
+		.query("dictionaryLemmas")
+		.take(MAX_RELATION_INVENTORY_LEMMAS + 1);
+	if (dictionaryRows.length > MAX_RELATION_INVENTORY_LEMMAS) {
+		throw new Error(
+			`Relation planning supports at most ${MAX_RELATION_INVENTORY_LEMMAS} dictionary Lemmas.`,
+		);
+	}
+	const lemmas = await Promise.all(
+		dictionaryRows.map(({ lemmaId }) => ctx.db.get(lemmaId)),
+	);
+	const canonicalReadings = [];
+	for (const lemma of lemmas) {
+		if (!lemma) continue;
+		const remaining =
+			MAX_RELATION_INVENTORY_READINGS - canonicalReadings.length;
+		const readings = await ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(remaining + 1);
+		if (readings.length > remaining) {
+			throw new Error(
+				`Relation planning supports at most ${MAX_RELATION_INVENTORY_READINGS} dictionary Readings.`,
+			);
+		}
+		canonicalReadings.push(...readings);
+	}
+	const readings = await Promise.all(
+		canonicalReadings.map((reading) => loadReading(ctx, reading)),
+	);
+	return {
+		lemmas: lemmas.flatMap((lemma) =>
+			lemma ? [{ lemma: lemmaValue(lemma) }] : [],
+		),
+		readings: readings.flatMap((reading) =>
+			reading ? [reading.entry] : [],
+		),
 	};
 }
 
@@ -479,34 +603,25 @@ export const findDumdictStoredReadings = internalQuery({
 			ctx.db
 				.query("readings")
 				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-				.take(MAX_READING_CANDIDATES),
+				.take(MAX_READING_CANDIDATES + 1),
 		]);
 		if (!dictionaryLemma) return { revision, candidates: [] };
+		if (readings.length > MAX_READING_CANDIDATES) {
+			throw new Error(
+				`Stored Reading lookup supports at most ${MAX_READING_CANDIDATES} candidates.`,
+			);
+		}
 		const entries = await Promise.all(
-			readings.map((reading) =>
-				ctx.db
-					.query("readingEntries")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", reading._id),
-					)
-					.unique(),
-			),
+			readings.map((reading) => loadReading(ctx, reading)),
 		);
 		return {
 			revision,
-			candidates: readings.flatMap((reading, index) => {
+			candidates: readings.flatMap((_reading, index) => {
 				const entry = entries[index];
 				return entry
 					? [
 							{
-								reading: {
-									...requireRecord(
-										entry.record,
-										"Reading Entry record",
-									),
-									reading: readingValue(reading, lemma),
-									attestations: [],
-								},
+								reading: entry.entry,
 								lemma: { lemma: lemmaValue(lemma) },
 							},
 						]
@@ -519,9 +634,10 @@ export const findDumdictStoredReadings = internalQuery({
 export const loadDumdictNewNoteContext = internalQuery({
 	args: {
 		lemmaKey: v.string(),
+		proposedLemma: lemmaValueValidator,
 		readingKey: v.string(),
 		surfaceKeys: v.array(v.string()),
-		explicitReadingTargetKeys: v.array(v.string()),
+		explicitLemmaTargetKeys: v.array(v.string()),
 		pendingProposalKeys: v.array(v.string()),
 	},
 	returns: v.any(),
@@ -529,7 +645,7 @@ export const loadDumdictNewNoteContext = internalQuery({
 		assertPlanBudget(
 			2 +
 				args.surfaceKeys.length +
-				args.explicitReadingTargetKeys.length +
+				args.explicitLemmaTargetKeys.length +
 				args.pendingProposalKeys.length,
 			"New-note context",
 		);
@@ -537,9 +653,9 @@ export const loadDumdictNewNoteContext = internalQuery({
 			args.surfaceKeys,
 			"New-note owned Surface loading",
 		);
-		const explicitReadingTargetKeys = uniqueBoundedKeys(
-			args.explicitReadingTargetKeys,
-			"New-note explicit Reading target loading",
+		const explicitLemmaTargetKeys = uniqueBoundedKeys(
+			args.explicitLemmaTargetKeys,
+			"New-note explicit Lemma target loading",
 		);
 		const pendingProposalKeys = new Set(
 			uniqueBoundedKeys(
@@ -547,71 +663,64 @@ export const loadDumdictNewNoteContext = internalQuery({
 				"New-note pending target loading",
 			),
 		);
-		const [revision, lemma, reading, surfaces, explicitTargets, pending] =
-			await Promise.all([
-				currentRevision(ctx),
-				ctx.db
-					.query("lemmas")
-					.withIndex("by_lemma_key", (q) =>
-						q.eq("lemmaKey", args.lemmaKey),
-					)
-					.unique(),
-				ctx.db
-					.query("readings")
-					.withIndex("by_reading_key", (q) =>
-						q.eq("readingKey", args.readingKey),
-					)
-					.unique(),
-				Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
-				Promise.all(
-					explicitReadingTargetKeys.map((key) =>
-						findReadingByKey(ctx, key),
+		const [
+			revision,
+			lemma,
+			reading,
+			surfaces,
+			explicitTargets,
+			pending,
+			matchingPending,
+			inventory,
+		] = await Promise.all([
+			currentRevision(ctx),
+			ctx.db
+				.query("lemmas")
+				.withIndex("by_lemma_key", (q) =>
+					q.eq("lemmaKey", args.lemmaKey),
+				)
+				.unique(),
+			findReadingByKey(ctx, args.readingKey),
+			Promise.all(surfaceKeys.map((key) => findSurface(ctx, key))),
+			Promise.all(
+				explicitLemmaTargetKeys.map((key) => findLemmaByKey(ctx, key)),
+			),
+			pendingProposalKeys.size === 0
+				? []
+				: loadPendingRelationsForSource(ctx, args.readingKey),
+			ctx.db
+				.query("pendingSemanticRelations")
+				.withIndex("by_target_canonical_form", (q) =>
+					q.eq(
+						"targetCanonicalForm",
+						args.proposedLemma.canonicalForm,
 					),
-				),
-				pendingProposalKeys.size === 0
-					? []
-					: loadPendingRelationsForSource(ctx, args.readingKey),
-			]);
-		const [dictionaryLemma, readingEntry] = await Promise.all([
-			lemma
-				? ctx.db
-						.query("dictionaryLemmas")
-						.withIndex("by_lemma_id", (q) =>
-							q.eq("lemmaId", lemma._id),
-						)
-						.unique()
-				: null,
-			reading
-				? ctx.db
-						.query("readingEntries")
-						.withIndex("by_reading_id", (q) =>
-							q.eq("readingId", reading._id),
-						)
-						.unique()
-				: null,
+				)
+				.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
+			loadRelationInventory(ctx),
 		]);
+		if (matchingPending.length > MAX_PENDING_RELATIONS_PER_SLICE) {
+			throw new Error(
+				`A pending-relation slice supports at most ${MAX_PENDING_RELATIONS_PER_SLICE} matching records.`,
+			);
+		}
+		const dictionaryLemma = await (lemma
+			? ctx.db
+					.query("dictionaryLemmas")
+					.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+					.unique()
+			: Promise.resolve(null));
 		return {
 			revision,
 			...(lemma && dictionaryLemma
 				? { existingLemma: { lemma: lemmaValue(lemma) } }
 				: {}),
-			...(reading && readingEntry && lemma
-				? {
-						existingReading: {
-							...requireRecord(
-								readingEntry.record,
-								"Reading Entry record",
-							),
-							reading: readingValue(reading, lemma),
-							attestations: [],
-						},
-					}
-				: {}),
+			...(reading ? { existingReading: reading.entry } : {}),
 			existingOwnedSurfaces: surfaces.flatMap((surface) =>
 				surface ? [surface.entry] : [],
 			),
-			explicitExistingReadingTargets: explicitTargets.flatMap((target) =>
-				target ? [target.entry] : [],
+			explicitExistingLemmaTargets: explicitTargets.flatMap((target) =>
+				target ? [{ lemma: lemmaValue(target.canonical) }] : [],
 			),
 			existingPendingRelationsForProposedPendingTargets: pending.flatMap(
 				(record) => {
@@ -624,6 +733,32 @@ export const loadDumdictNewNoteContext = internalQuery({
 						: [];
 				},
 			),
+			pendingRelationsMatchingProposedLemma: matchingPending.flatMap(
+				(record) => {
+					try {
+						const descriptor = pendingShadowDescriptor(
+							record.record,
+						);
+						return descriptor.language ===
+							args.proposedLemma.language &&
+							descriptor.canonicalForm ===
+								args.proposedLemma.canonicalForm &&
+							descriptor.family === args.proposedLemma.family &&
+							descriptor.kind === args.proposedLemma.kind
+							? [
+									requireRecord(
+										record.record,
+										"Pending Semantic Relation record",
+									),
+								]
+							: [];
+					} catch {
+						return [];
+					}
+				},
+			),
+			relationLemmas: inventory.lemmas,
+			relationReadings: inventory.readings,
 		};
 	},
 });
@@ -684,23 +819,15 @@ export const getDumdictRelationsCleanupInfo = internalQuery({
 export const loadDumdictCleanupRelationsContext = internalQuery({
 	args: {
 		locatorKeys: v.array(v.string()),
-		targetReadingKeys: v.array(v.string()),
 	},
 	returns: v.any(),
 	handler: async (ctx, args) => {
-		assertPlanBudget(
-			args.locatorKeys.length + 2 * args.targetReadingKeys.length,
-			"Relations-cleanup context",
-		);
+		assertPlanBudget(args.locatorKeys.length, "Relations-cleanup context");
 		const locatorKeys = uniqueBoundedKeys(
 			args.locatorKeys,
 			"Relations-cleanup locator loading",
 		);
-		const targetReadingKeys = uniqueBoundedKeys(
-			args.targetReadingKeys,
-			"Relations-cleanup target Reading loading",
-		);
-		const [revision, pending, readings] = await Promise.all([
+		const [revision, pending, inventory] = await Promise.all([
 			currentRevision(ctx),
 			Promise.all(
 				locatorKeys.map((locatorKey) =>
@@ -712,9 +839,7 @@ export const loadDumdictCleanupRelationsContext = internalQuery({
 						.unique(),
 				),
 			),
-			Promise.all(
-				targetReadingKeys.map((key) => findReadingByKey(ctx, key)),
-			),
+			loadRelationInventory(ctx),
 		]);
 		return {
 			revision,
@@ -728,16 +853,8 @@ export const loadDumdictCleanupRelationsContext = internalQuery({
 						]
 					: [],
 			),
-			targetReadings: readings.flatMap((reading) =>
-				reading
-					? [
-							{
-								reading: reading.entry,
-								lemma: { lemma: reading.entry.reading.lemma },
-							},
-						]
-					: [],
-			),
+			relationLemmas: inventory.lemmas,
+			relationReadings: inventory.readings,
 		};
 	},
 });
@@ -748,38 +865,11 @@ export const loadDumdictReadingForPatch = internalQuery({
 	handler: async (ctx, { readingKey }) => {
 		const [revision, reading] = await Promise.all([
 			currentRevision(ctx),
-			ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", readingKey),
-				)
-				.unique(),
+			findReadingByKey(ctx, readingKey),
 		]);
-		const [entry, lemma] = reading
-			? await Promise.all([
-					ctx.db
-						.query("readingEntries")
-						.withIndex("by_reading_id", (q) =>
-							q.eq("readingId", reading._id),
-						)
-						.unique(),
-					ctx.db.get(reading.lemmaId),
-				])
-			: [null, null];
 		return {
 			revision,
-			...(reading && entry && lemma
-				? {
-						reading: {
-							...requireRecord(
-								entry.record,
-								"Reading Entry record",
-							),
-							reading: readingValue(reading, lemma),
-							attestations: [],
-						},
-					}
-				: {}),
+			...(reading ? { reading: reading.entry } : {}),
 		};
 	},
 });
@@ -925,6 +1015,7 @@ async function advancePreflightState(
 	switch (change.type) {
 		case "createLemma": {
 			const record = requireRecord(change.record, "Lemma Record");
+			assertLemmaRecordHasNoKnowledge(record);
 			shadow.lemmas.set(lemmaIdentityKey(record.lemma), true);
 			return;
 		}
@@ -1005,6 +1096,101 @@ async function advancePreflightState(
 	}
 }
 
+async function syncSemanticRelationChange(
+	ctx: MutationCtx,
+	sourceReadingId: Id<"readings">,
+	sourceLemmaId: Id<"lemmas">,
+	changeValue: unknown,
+): Promise<void> {
+	const change = requireRecord(
+		changeValue,
+		"Semantic Relation Knowledge Change",
+	);
+	const relation = requireSemanticRelation(change.relation);
+	const kind = requireChangeKind(change.kind);
+	const existing = await ctx.db
+		.query("semanticRelationEdges")
+		.withIndex("by_source_reading_id_and_relation", (q) =>
+			q.eq("sourceReadingId", sourceReadingId).eq("relation", relation),
+		)
+		.take(MAX_RELATIONS_PER_READING + 1);
+	if (existing.length > MAX_RELATIONS_PER_READING) {
+		throw new Error(
+			`A Reading supports at most ${MAX_RELATIONS_PER_READING} Semantic Relation edges.`,
+		);
+	}
+	if (kind === "Retract") {
+		for (const edge of existing) await ctx.db.delete(edge._id);
+		return;
+	}
+	const targets = requireArray(change.value, "Semantic Relation values");
+	const resolvedTargets = await Promise.all(
+		targets.map((target) => findLemma(ctx, target)),
+	);
+	if (resolvedTargets.some((target) => target === null)) {
+		throw new Error("A Semantic Relation target Lemma is missing.");
+	}
+	const targetIds = new Set(
+		resolvedTargets.flatMap((target) =>
+			target ? [target.canonical._id] : [],
+		),
+	);
+	if (targetIds.has(sourceLemmaId)) {
+		throw new Error("A Reading cannot relate directly to its own Lemma.");
+	}
+	if (kind === "Correct") {
+		for (const edge of existing) {
+			if (!targetIds.has(edge.targetLemmaId))
+				await ctx.db.delete(edge._id);
+		}
+	}
+	for (const targetLemmaId of targetIds) {
+		const edge = await ctx.db
+			.query("semanticRelationEdges")
+			.withIndex(
+				"by_source_reading_id_and_relation_and_target_lemma_id",
+				(q) =>
+					q
+						.eq("sourceReadingId", sourceReadingId)
+						.eq("relation", relation)
+						.eq("targetLemmaId", targetLemmaId),
+			)
+			.unique();
+		if (!edge) {
+			await ctx.db.insert("semanticRelationEdges", {
+				sourceReadingId,
+				targetLemmaId,
+				relation,
+			});
+		}
+	}
+}
+
+async function syncSemanticRelationsFromKnowledge(
+	ctx: MutationCtx,
+	sourceReadingId: Id<"readings">,
+	sourceLemmaId: Id<"lemmas">,
+	knowledgeValue: unknown,
+): Promise<void> {
+	const knowledge = optionalRecord(knowledgeValue);
+	const relations = optionalRecord(knowledge?.semanticRelations);
+	if (!relations) return;
+	for (const [relation, value] of Object.entries(relations)) {
+		await syncSemanticRelationChange(ctx, sourceReadingId, sourceLemmaId, {
+			kind: "Contribute",
+			aspect: "semanticRelations",
+			relation,
+			value,
+		});
+	}
+}
+
+function optionalRecord(value: unknown): AnyRecord | null {
+	return value !== null && typeof value === "object" && !Array.isArray(value)
+		? (value as AnyRecord)
+		: null;
+}
+
 async function applyChange(
 	ctx: MutationCtx,
 	changeValue: unknown,
@@ -1013,6 +1199,7 @@ async function applyChange(
 	switch (change.type) {
 		case "createLemma": {
 			const record = requireRecord(change.record, "Lemma Record");
+			assertLemmaRecordHasNoKnowledge(record);
 			const lemma = requireRecord(record.lemma, "Lemma");
 			const lemmaKey = lemmaIdentityKey(lemma);
 			if (await findLemma(ctx, record.lemma)) return false;
@@ -1035,12 +1222,6 @@ async function applyChange(
 					coreFeatures: lemma.coreFeatures,
 				}));
 			await ctx.db.insert("dictionaryLemmas", { lemmaId });
-			await replaceAccumulatedKnowledge(
-				ctx,
-				"Lemma",
-				lemmaKey,
-				record.knowledge,
-			);
 			return true;
 		}
 		case "createReading": {
@@ -1077,14 +1258,37 @@ async function applyChange(
 				}));
 			await ctx.db.insert("readingEntries", {
 				readingId,
-				record: withoutKeys(entry, ["reading", "attestations"]),
+				record: {
+					...withoutKeys(entry, [
+						"reading",
+						"attestations",
+						"knowledge",
+					]),
+					...(withoutSemanticRelations(entry.knowledge) === undefined
+						? {}
+						: {
+								knowledge: withoutSemanticRelations(
+									entry.knowledge,
+								),
+							}),
+				},
 			});
-			await replaceAccumulatedKnowledge(
+			await syncSemanticRelationsFromKnowledge(
 				ctx,
-				"Reading",
-				readingKey,
+				readingId,
+				storedLemma.canonical._id,
 				entry.knowledge,
 			);
+			const baseKnowledge = withoutSemanticRelations(entry.knowledge);
+			if (baseKnowledge !== undefined) {
+				await replaceAccumulatedKnowledge(
+					ctx,
+					readingKey,
+					baseKnowledge,
+				);
+			} else if (entry.knowledge !== undefined) {
+				await ensureAccumulatedKnowledgeStatus(ctx, readingKey);
+			}
 			return true;
 		}
 		case "createOwnedSurface": {
@@ -1175,6 +1379,22 @@ async function applyChange(
 						"tf-demo stores occurrence Attestations in its host graph, not in Dumdict Reading Entries.",
 					);
 				} else if (operation.kind === "applyKnowledgeChange") {
+					const envelope = requireRecord(
+						operation.envelope,
+						"Reading Knowledge Change envelope",
+					);
+					const knowledgeChange = requireRecord(
+						envelope.change,
+						"Reading Knowledge Change value",
+					);
+					if (knowledgeChange.aspect === "semanticRelations") {
+						await syncSemanticRelationChange(
+							ctx,
+							stored._id,
+							stored.lemmaId,
+							knowledgeChange,
+						);
+					}
 					entry = applyReadingKnowledgeChange(
 						entry,
 						operation.envelope,
@@ -1186,17 +1406,65 @@ async function applyChange(
 				}
 			}
 			await ctx.db.patch(stored.entryId, {
-				record: withoutKeys(entry as unknown as AnyRecord, [
-					"reading",
-					"attestations",
-				]),
+				record: {
+					...withoutKeys(entry as unknown as AnyRecord, [
+						"reading",
+						"attestations",
+						"knowledge",
+					]),
+					...(withoutSemanticRelations(entry.knowledge) === undefined
+						? {}
+						: {
+								knowledge: withoutSemanticRelations(
+									entry.knowledge,
+								),
+							}),
+				},
 			});
-			await replaceAccumulatedKnowledge(
-				ctx,
-				"Reading",
-				stored.readingKey,
-				entry.knowledge,
-			);
+			const knowledgeChanges = change.ops.flatMap((operationValue) => {
+				const operation = requireRecord(
+					operationValue,
+					"Reading patch operation",
+				);
+				if (operation.kind !== "applyKnowledgeChange") return [];
+				const envelope = requireRecord(
+					operation.envelope,
+					"Reading Knowledge Change envelope",
+				);
+				return [
+					requireRecord(
+						envelope.change,
+						"Reading Knowledge Change value",
+					),
+				];
+			});
+			const baseKnowledge = withoutSemanticRelations(entry.knowledge);
+			if (baseKnowledge !== undefined) {
+				await replaceAccumulatedKnowledge(
+					ctx,
+					stored.readingKey,
+					baseKnowledge,
+				);
+			} else if (
+				knowledgeChanges.some(
+					(knowledgeChange) =>
+						knowledgeChange.aspect !== "semanticRelations",
+				)
+			) {
+				const replaced = await replaceAccumulatedKnowledge(
+					ctx,
+					stored.readingKey,
+					undefined,
+				);
+				if (!replaced) {
+					await ensureAccumulatedKnowledgeStatus(
+						ctx,
+						stored.readingKey,
+					);
+				}
+			} else if (knowledgeChanges.length > 0) {
+				await ensureAccumulatedKnowledgeStatus(ctx, stored.readingKey);
+			}
 			return true;
 		}
 		case "createPendingSemanticRelation": {
@@ -1224,6 +1492,10 @@ async function applyChange(
 				shadowId,
 				record,
 			});
+			await ensureAccumulatedKnowledgeStatus(
+				ctx,
+				requireString(locator.sourceReadingKey, "sourceReadingKey"),
+			);
 			return true;
 		}
 		case "deletePendingSemanticRelation": {

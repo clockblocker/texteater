@@ -1,4 +1,5 @@
 import type {
+	Lemma as DumlingLemma,
 	Reading as DumlingReading,
 	LemmaFamilyFor,
 	LemmaKindFor,
@@ -30,6 +31,12 @@ export type ReadingReference<
 	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
 	K extends LemmaKindFor<L, F> = LemmaKindFor<L, F>,
 > = DumlingReading<L, F, K>;
+
+export type LemmaReference<
+	L extends SupportedLanguage = SupportedLanguage,
+	F extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+	K extends LemmaKindFor<L, F> = LemmaKindFor<L, F>,
+> = DumlingLemma<L, F, K>;
 
 export type MorphemeReadingReference<
 	L extends SupportedLanguage = SupportedLanguage,
@@ -71,28 +78,49 @@ export type LexicalBreakdown<
 
 export type SemanticRelation = (typeof semanticRelationValues)[number];
 
-export type SemanticRelations<
-	Reading extends ReadingReference = ReadingReference,
-> = Partial<Record<SemanticRelation, Reading[]>>;
+/**
+ * One application-wide user choice for every Knowledge leaf that Dumrel can
+ * select. Applicability remains language/Family/Kind-specific; settings do
+ * not.
+ */
+export type KnowledgeSettings = Readonly<{
+	transcription: boolean;
+	definition: boolean;
+	translations: Readonly<{ en: boolean }>;
+	morphologicalTree: boolean;
+	lexicalBreakdown: boolean;
+	semanticRelations: Readonly<Record<SemanticRelation, boolean>>;
+}>;
 
-export type LemmaKnowledge<TargetLang extends string = string> = {
-	transcriptions?: [TargetLang] extends [never]
-		? never
-		: Record<TargetLang, NonEmptyStrings>;
-};
+/**
+ * A sparse Knowledge selection. A present null leaf is requested; an absent
+ * leaf is not requested. The empty mask is valid.
+ */
+export type KnowledgeRequestMask = Readonly<{
+	transcription?: null;
+	definition?: null;
+	translations?: Readonly<{ en?: null }>;
+	morphologicalTree?: null;
+	lexicalBreakdown?: null;
+	semanticRelations?: Readonly<Partial<Record<SemanticRelation, null>>>;
+}>;
+
+export type SemanticRelations<Lemma extends LemmaReference = LemmaReference> =
+	Partial<Record<SemanticRelation, Lemma[]>>;
 
 export type ReadingKnowledge<
 	TargetLang extends string = string,
-	Reading extends ReadingReference = ReadingReference,
+	Lemma extends LemmaReference = LemmaReference,
 	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
 > = {
+	transcription?: string;
 	definition?: string;
 	translations?: [TargetLang] extends [never]
 		? never
 		: Record<TargetLang, NonEmptyStrings>;
 	morphologicalTree?: MorphologicalTree;
 	lexicalBreakdown?: LexicalBreakdown<LexicalShadow>;
-	semanticRelations?: SemanticRelations<Reading>;
+	semanticRelations?: SemanticRelations<Lemma>;
 };
 
 export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
@@ -100,24 +128,33 @@ export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
 	target: Shadow;
 };
 
+export type SemanticRelationGraphReading = {
+	reading: string;
+	lemma: string;
+};
+
 export type SemanticRelationGraphEdge = {
-	source: string;
+	sourceReading: string;
 	relation: SemanticRelation;
-	target: string;
+	targetLemma: string;
+};
+
+export type SemanticRelationGraph = {
+	readings: SemanticRelationGraphReading[];
+	edges: SemanticRelationGraphEdge[];
 };
 
 export type KnowledgeChange<
 	TargetLang extends string = string,
-	Reading extends ReadingReference = ReadingReference,
+	Lemma extends LemmaReference = LemmaReference,
 	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
 > =
 	| {
 			kind: "Contribute" | "Correct";
-			aspect: "transcriptions";
-			language: TargetLang;
-			value: NonEmptyStrings;
+			aspect: "transcription";
+			value: string;
 	  }
-	| { kind: "Retract"; aspect: "transcriptions"; language: TargetLang }
+	| { kind: "Retract"; aspect: "transcription" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "translations";
@@ -129,7 +166,7 @@ export type KnowledgeChange<
 			kind: "Contribute" | "Correct";
 			aspect: "semanticRelations";
 			relation: SemanticRelation;
-			value: Reading[];
+			value: Lemma[];
 	  }
 	| {
 			kind: "Retract";

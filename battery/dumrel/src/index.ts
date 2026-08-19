@@ -1,8 +1,15 @@
+export {
+	DEFAULT_KNOWLEDGE_SETTINGS,
+	defaultKnowledgeRequestMask,
+	intersectKnowledgeRequestMask,
+} from "./applicability.js";
 export { applyKnowledgeChange } from "./knowledge.js";
 export { inverseRelationFor, propagateRelations } from "./rules.js";
 export {
 	knowledgeChangeSchema,
-	lemmaKnowledgeSchema,
+	knowledgeRequestMaskSchema,
+	knowledgeSettingsSchema,
+	lemmaReferenceSchema,
 	lexemeUnitShadowSchema,
 	lexicalBreakdownSchema,
 	lexicalUnitShadowSchema,
@@ -15,13 +22,17 @@ export {
 	readingKnowledgeSchema,
 	readingReferenceSchema,
 	semanticRelationGraphEdgeSchema,
+	semanticRelationGraphReadingSchema,
+	semanticRelationGraphSchema,
 	semanticRelationSchema,
 	semanticRelationsSchema,
 	unitShadowSchema,
 } from "./schema.js";
 export type {
 	KnowledgeChange,
-	LemmaKnowledge,
+	KnowledgeRequestMask,
+	KnowledgeSettings,
+	LemmaReference,
 	LexemeUnitShadow,
 	LexicalBreakdown,
 	LexicalUnitShadow,
@@ -34,7 +45,9 @@ export type {
 	ReadingKnowledge,
 	ReadingReference,
 	SemanticRelation,
+	SemanticRelationGraph,
 	SemanticRelationGraphEdge,
+	SemanticRelationGraphReading,
 	SemanticRelations,
 	UnitShadow,
 } from "./types.js";

@@ -1,7 +1,9 @@
 import { applyKnowledgeChange } from "../../src";
 import type * as PublicTypes from "../../src/types";
 import type {
-	LemmaKnowledge,
+	KnowledgeRequestMask,
+	KnowledgeSettings,
+	LemmaReference,
 	LexicalBreakdown,
 	MorphemeReadingReference,
 	MorphologicalTree,
@@ -22,18 +24,18 @@ type RemovedKnowledge = PublicTypes.Knowledge;
 type RemovedLexicalRelation = PublicTypes.LexicalRelation;
 // @ts-expect-error Flat morphological relations are intentionally absent.
 type RemovedMorphologicalRelation = PublicTypes.MorphologicalRelation;
-// @ts-expect-error Contribution aggregates were replaced by KnowledgeChange.
-type RemovedContribution = PublicTypes.ReadingKnowledgeContribution;
 // @ts-expect-error Translation objects were replaced by language buckets.
 type RemovedTranslation = PublicTypes.Translation;
 
-const lemmaKnowledge: LemmaKnowledge<"de" | "en"> = {
-	transcriptions: { de: ["Haus"], en: ["house"] },
-};
 const readingKnowledge: ReadingKnowledge<"en"> = {
+	transcription: "haʊs",
 	definition: "building",
 	translations: { en: ["house"] },
 };
+const targetLemma: LemmaReference = nounReading.lemma;
+readingKnowledge.semanticRelations = { synonym: [targetLemma] };
+// @ts-expect-error Semantic Relation targets are Lemmas, not Readings.
+readingKnowledge.semanticRelations = { synonym: [nounReading] };
 const morphemeReference: MorphemeReadingReference = morphemeReading;
 const tree: MorphologicalTree = {
 	root: {
@@ -46,13 +48,58 @@ const tree: MorphologicalTree = {
 };
 const breakdown: LexicalBreakdown = [nounShadow, verbShadow];
 
-void [lemmaKnowledge, readingKnowledge, tree, breakdown];
-
-const missingLanguageBucket: LemmaKnowledge<"de" | "en"> = {
-	// @ts-expect-error A union Target Language requires every named bucket.
-	transcriptions: { de: ["Haus"] },
+const settings: KnowledgeSettings = {
+	transcription: true,
+	definition: true,
+	translations: { en: true },
+	morphologicalTree: true,
+	lexicalBreakdown: true,
+	semanticRelations: {
+		synonym: true,
+		nearSynonym: true,
+		antonym: true,
+		hypernym: true,
+		hyponym: true,
+		meronym: true,
+		holonym: true,
+	},
 };
-void missingLanguageBucket;
+const requestMask: KnowledgeRequestMask = {
+	transcription: null,
+	translations: { en: null },
+	semanticRelations: { synonym: null },
+};
+
+// @ts-expect-error Settings are global, not Family/Kind-specific.
+const familySpecificSettings: KnowledgeSettings = { Lexeme: {} };
+const invalidRequestLeaf: KnowledgeRequestMask = {
+	// @ts-expect-error Selected request leaves are null, not booleans.
+	transcription: true,
+};
+const invalidTranslationRequest: KnowledgeRequestMask = {
+	translations: {
+		// @ts-expect-error English is the only configured Translation leaf.
+		de: null,
+	},
+};
+const incompleteSettings: KnowledgeSettings = {
+	...settings,
+	// @ts-expect-error Every Semantic Relation setting is required.
+	semanticRelations: { synonym: true },
+};
+
+void [
+	readingKnowledge,
+	targetLemma,
+	tree,
+	breakdown,
+	settings,
+	requestMask,
+	familySpecificSettings,
+	invalidRequestLeaf,
+	invalidTranslationRequest,
+	incompleteSettings,
+];
 
 const invalidTree: MorphologicalTree = {
 	root: {
@@ -87,34 +134,8 @@ const invalidConstructionTree: MorphologicalTree = {
 };
 void invalidConstructionTree;
 
-const germanLemmaKnowledge: LemmaKnowledge<"de"> = {
-	transcriptions: { de: ["Haus"] },
-};
-const bilingualLemmaKnowledge = applyKnowledgeChange(germanLemmaKnowledge, {
-	kind: "Contribute",
-	aspect: "transcriptions",
-	language: "en",
-	value: ["house"],
-});
-bilingualLemmaKnowledge.transcriptions?.de satisfies
-	| [string, ...string[]]
-	| undefined;
-bilingualLemmaKnowledge.transcriptions?.en satisfies
-	| [string, ...string[]]
-	| undefined;
-// @ts-expect-error No unaddressed Target Language key was introduced.
-bilingualLemmaKnowledge.transcriptions?.fr;
-
-const englishLemmaKnowledge = applyKnowledgeChange(bilingualLemmaKnowledge, {
-	kind: "Retract",
-	aspect: "transcriptions",
-	language: "de",
-});
-englishLemmaKnowledge.transcriptions?.en satisfies
-	| [string, ...string[]]
-	| undefined;
-// @ts-expect-error Retract removes the addressed Target Language key.
-englishLemmaKnowledge.transcriptions?.de;
+// @ts-expect-error Lemma Knowledge was removed; Knowledge is Reading-only.
+type RemovedLemmaKnowledge = PublicTypes.LemmaKnowledge;
 
 const germanReadingKnowledge: ReadingKnowledge<"de"> = {
 	translations: { de: ["Haus"] },
@@ -150,6 +171,6 @@ void [
 	undefined as unknown as RemovedKnowledge,
 	undefined as unknown as RemovedLexicalRelation,
 	undefined as unknown as RemovedMorphologicalRelation,
-	undefined as unknown as RemovedContribution,
 	undefined as unknown as RemovedTranslation,
+	undefined as unknown as RemovedLemmaKnowledge,
 ];

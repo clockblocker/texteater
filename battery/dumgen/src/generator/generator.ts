@@ -151,6 +151,20 @@ function makeGenerator<Definition extends AnyPrompt>(
 			...prompt.generationParams,
 			systemPrompt: prompt.systemPrompt,
 		};
+		let modelOutputSchema: ZodType | null;
+		try {
+			modelOutputSchema =
+				prompt.outputSchema === null
+					? null
+					: (prompt.modelOutputSchemaFor?.(parsedInput) ??
+						prompt.outputSchema);
+		} catch (cause) {
+			throw new DumgenError(
+				"invalid-input",
+				"The generator input cannot produce a valid model output schema.",
+				{ cause },
+			);
+		}
 		notifyModelExchange(options, {
 			phase: "attempted",
 			promptPath: path.join("."),
@@ -160,11 +174,11 @@ function makeGenerator<Definition extends AnyPrompt>(
 		let generated: unknown;
 		try {
 			generated =
-				prompt.outputSchema === null
+				modelOutputSchema === null
 					? await sdk.unstructuredGeneration(serializedInput, params)
 					: await sdk.structuredGeneration(
 							serializedInput,
-							prompt.outputSchema,
+							modelOutputSchema,
 							params,
 						);
 		} catch (cause) {
@@ -183,7 +197,7 @@ function makeGenerator<Definition extends AnyPrompt>(
 			modelOutput: generated,
 		});
 
-		if (prompt.outputSchema === null) {
+		if (modelOutputSchema === null || prompt.outputSchema === null) {
 			try {
 				const result = prompt.projectOutput
 					? prompt.projectOutput(parsedInput, generated as string)
@@ -216,6 +230,7 @@ function makeGenerator<Definition extends AnyPrompt>(
 
 		let parsedOutput: unknown;
 		try {
+			modelOutputSchema.parse(generated);
 			parsedOutput = prompt.outputSchema.parse(generated);
 			prompt.outputPostcondition?.assert(parsedInput, parsedOutput);
 			const result = prompt.projectOutput

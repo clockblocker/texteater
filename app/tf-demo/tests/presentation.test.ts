@@ -1,6 +1,4 @@
 import { expect, test } from "bun:test";
-import { readingFingerprint } from "dumling";
-
 import {
 	getNote,
 	getTextView,
@@ -29,31 +27,25 @@ test("projects learner Knowledge and direct relations without storing a view", (
 	} as const;
 
 	expect(
-		projectKnowledge(
-			{
-				definition: "Ein Geldinstitut.",
-				translations: { en: ["bank"] },
-				semanticRelations: {
-					hypernym: [{ lemma: targetLemma, emojiDescription: "🏛️" }],
-				},
+		projectKnowledge({
+			transcription: " baŋk ",
+			definition: "Ein Geldinstitut.",
+			translations: { en: ["bank"] },
+			semanticRelations: {
+				hypernym: [targetLemma],
 			},
-			{ transcriptions: { de: ["baŋk"] } },
-		),
+		}),
 	).toEqual({
+		transcription: "baŋk",
 		definition: "Ein Geldinstitut.",
 		translations: [{ language: "en", values: ["bank"] }],
-		transcriptions: [{ language: "de", values: ["baŋk"] }],
 		morphologicalTree: null,
 		lexicalBreakdown: [],
 		relations: [
 			{
 				relation: "hypernym",
-				targetReadingKey: readingFingerprint({
-					lemma: targetLemma,
-					emojiDescription: "🏛️",
-				}),
+				targetLemmaKey: expect.any(String),
 				targetCanonicalForm: "Institut",
-				targetEmojiDescription: "🏛️",
 			},
 		],
 	});
@@ -66,49 +58,53 @@ test("projects Dumling feature values for learner inspection", () => {
 	]);
 });
 
-test("projects only stored semantic endpoints as Unit Reading Note targets", () => {
+test("projects stored semantic endpoints as Lemma Route Note targets", () => {
 	const relations = [
 		{
 			relation: "hypernym" as const,
-			targetReadingKey: "stored-reading-key",
+			targetLemmaKey: "stored-lemma-key",
 			targetCanonicalForm: "Institut",
-			targetEmojiDescription: "🏛️",
 		},
 		{
 			relation: "antonym" as const,
-			targetReadingKey: "construction-reading-key",
+			targetLemmaKey: "construction-lemma-key",
 			targetCanonicalForm: "Sparkasse",
-			targetEmojiDescription: "🏦",
 		},
 		{
 			relation: "synonym" as const,
-			targetReadingKey: "dangling-reading-key",
+			targetLemmaKey: "dangling-lemma-key",
 			targetCanonicalForm: "Geldinstitut",
-			targetEmojiDescription: "💶",
 		},
 	];
 
 	expect(
 		projectResolvedRelationTargets(relations, [
 			{
-				readingKey: "stored-reading-key",
-				readingId: "reading_123",
-				lemmaFamily: "Lexeme",
+				lemmaKey: "stored-lemma-key",
+				lemmaId: "lemma_123",
 			},
 			{
-				readingKey: "construction-reading-key",
-				readingId: "reading_456",
-				lemmaFamily: "Construction",
+				lemmaKey: "construction-lemma-key",
+				lemmaId: "lemma_456",
 			},
 		]),
 	).toEqual([
 		{
 			relation: "hypernym",
 			targetCanonicalForm: "Institut",
-			targetEmojiDescription: "🏛️",
 			target: {
-				kind: "UnitReadingNote",
-				readingId: "reading_123",
+				kind: "RouteNote",
+				routeKind: "Lemma",
+				id: "lemma_123",
+			},
+		},
+		{
+			relation: "antonym",
+			targetCanonicalForm: "Sparkasse",
+			target: {
+				kind: "RouteNote",
+				routeKind: "Lemma",
+				id: "lemma_456",
 			},
 		},
 	]);
@@ -130,6 +126,7 @@ test("routed presentation queries accept targets and return app-owned IDs", () =
 	expect(noteReturns).toContain('"tableName":"attestations"');
 	expect(noteReturns).toContain('"sentenceSnippet"');
 	expect(noteReturns).not.toContain("targetReadingKey");
+	expect(noteReturns).toContain('"value":"Lemma"');
 	expect(textReturns).toContain('"value":"None"');
 	expect(textReturns).toContain('"value":"Missing"');
 	expect(textReturns).toContain('"value":"Occurrence"');

@@ -1,6 +1,16 @@
-import { schemasFor } from "dumling/schema";
-import type { Attestation } from "dumling/types";
+import { readingSchema, schemasFor } from "dumling/schema";
+import type { Attestation, Reading } from "dumling/types";
+import {
+	knowledgeChangeSchema,
+	pendingSemanticRelationSchema,
+	semanticRelationValues,
+} from "dumrel";
 import { type ZodType, z } from "zod";
+import type {
+	KnowledgeGenerationInput,
+	KnowledgeGenerationRequest,
+	KnowledgeGenerationResult,
+} from "../knowledge-generation/contracts";
 import { DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS } from "../schema/de-grammatical-resolution-inventory";
 import {
 	enabledSegmentationLanguageValues,
@@ -15,6 +25,91 @@ export const enabledSegmentationLanguageSchema = z.enum(
 export const grammaticalResolutionLanguageSchema = z.literal(
 	grammaticalResolutionLanguageValues[0],
 );
+
+export const knowledgeGenerationLanguageSchema = z.literal("de");
+
+const knowledgeTranslationRequestSchema = z
+	.strictObject({ en: z.null().optional() })
+	.refine((translations) => Object.keys(translations).length > 0, {
+		message: "A Translation request must select English.",
+	})
+	.readonly();
+
+const knowledgeSemanticRelationRequestSchema = z
+	.partialRecord(z.enum(semanticRelationValues), z.null())
+	.refine((relations) => Object.keys(relations).length > 0, {
+		message:
+			"A Semantic Relation request must select at least one relation.",
+	})
+	.readonly();
+
+export const knowledgeGenerationRequestSchema = z
+	.strictObject({
+		transcription: z.null().optional(),
+		definition: z.null().optional(),
+		translations: knowledgeTranslationRequestSchema.optional(),
+		semanticRelations: knowledgeSemanticRelationRequestSchema.optional(),
+	})
+	.readonly() as ZodType<KnowledgeGenerationRequest>;
+
+const germanKnowledgeReadingSchema = readingSchema
+	.refine((reading) => reading.lemma.language === "de", {
+		path: ["lemma", "language"],
+		message: "Knowledge generation requires a German Reading.",
+	})
+	.readonly() as ZodType<Reading<"de">>;
+
+export const knowledgeGenerationInputSchema = z
+	.strictObject({
+		markedContext: z.string().min(1),
+		reading: germanKnowledgeReadingSchema,
+		request: knowledgeGenerationRequestSchema,
+	})
+	.readonly() as ZodType<KnowledgeGenerationInput<"de">>;
+
+export const knowledgeGenerationResultSchema = z
+	.strictObject({
+		changes: z.array(knowledgeChangeSchema).readonly(),
+		pendingRelations: z.array(pendingSemanticRelationSchema).readonly(),
+	})
+	.superRefine((result, context) => {
+		for (const [index, change] of result.changes.entries()) {
+			if (
+				change.kind !== "Contribute" ||
+				(change.aspect !== "transcription" &&
+					change.aspect !== "definition" &&
+					change.aspect !== "translations")
+			) {
+				context.addIssue({
+					code: "custom",
+					path: ["changes", index],
+					message:
+						"Generated Knowledge contains only base-aspect Contributions.",
+				});
+			}
+			if (change.aspect === "translations" && change.language !== "en") {
+				context.addIssue({
+					code: "custom",
+					path: ["changes", index, "language"],
+					message:
+						"German Knowledge generation contributes only English Translations.",
+				});
+			}
+		}
+		for (const [index, pending] of result.pendingRelations.entries()) {
+			if (pending.target.language !== "de") {
+				context.addIssue({
+					code: "custom",
+					path: ["pendingRelations", index, "target", "language"],
+					message:
+						"German Knowledge relations require German Unit Shadows.",
+				});
+			}
+		}
+	})
+	.transform((result) =>
+		deepFreeze(result),
+	) as ZodType<KnowledgeGenerationResult>;
 
 export const segmentedSentenceIdSchema = z
 	.string()
@@ -255,6 +350,12 @@ export const grammaticalResultSchema = z.union([
 	notImplementedGrammaticalResultSchema,
 	unresolvedGrammaticalResultSchema,
 ]);
+
+function deepFreeze<Value>(value: Value): Value {
+	if (typeof value !== "object" || value === null) return value;
+	for (const child of Object.values(value)) deepFreeze(child);
+	return Object.isFrozen(value) ? value : Object.freeze(value);
+}
 
 function segmentedSentenceSchemaFor<const L extends "de" | "he">(language: L) {
 	return z

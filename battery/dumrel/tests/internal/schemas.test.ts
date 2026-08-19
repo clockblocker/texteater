@@ -3,6 +3,7 @@ import { readingSchema } from "dumling/schema";
 
 import {
 	knowledgeChangeSchema,
+	lemmaReferenceSchema,
 	lexemeUnitShadowSchema,
 	lexicalBreakdownSchema,
 	lexicalUnitShadowSchema,
@@ -11,6 +12,7 @@ import {
 	pendingSemanticRelationSchema,
 	readingReferenceSchema,
 	semanticRelationGraphEdgeSchema,
+	semanticRelationGraphSchema,
 	unitShadowSchema,
 } from "../../src";
 import {
@@ -60,6 +62,27 @@ describe("concrete Dumling-backed schemas", () => {
 			readingReferenceSchema.safeParse({
 				...nounReading,
 				lemma: { ...nounReading.lemma, kind: "NOT_A_ROUTE" },
+			}).success,
+		).toBe(false);
+	});
+
+	test("validates Lemma relation targets and rejects Reading values", () => {
+		expect(lemmaReferenceSchema.parse(nounReading.lemma)).toEqual(
+			nounReading.lemma,
+		);
+		expect(
+			lemmaReferenceSchema.parse({
+				...nounReading.lemma,
+				canonicalForm: " Haus ",
+			}).canonicalForm,
+		).toBe("Haus");
+		expect(lemmaReferenceSchema.safeParse(nounReading).success).toBe(false);
+		expect(
+			knowledgeChangeSchema.safeParse({
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				value: [nounReading],
 			}).success,
 		).toBe(false);
 	});
@@ -167,11 +190,36 @@ describe("boundary DTO schemas", () => {
 	test("normalizes graph keys and strict Knowledge Changes", () => {
 		expect(
 			semanticRelationGraphEdgeSchema.parse({
-				source: " cafe\u0301 ",
+				sourceReading: " cafe\u0301 ",
 				relation: "synonym",
-				target: " b ",
+				targetLemma: " b ",
 			}),
-		).toEqual({ source: "café", relation: "synonym", target: "b" });
+		).toEqual({
+			sourceReading: "café",
+			relation: "synonym",
+			targetLemma: "b",
+		});
+		expect(
+			semanticRelationGraphSchema.parse({
+				readings: [{ reading: " a ", lemma: " la " }],
+				edges: [
+					{
+						sourceReading: " a ",
+						relation: "synonym",
+						targetLemma: " lb ",
+					},
+				],
+			}),
+		).toEqual({
+			readings: [{ reading: "a", lemma: "la" }],
+			edges: [
+				{
+					sourceReading: "a",
+					relation: "synonym",
+					targetLemma: "lb",
+				},
+			],
+		});
 		expect(
 			knowledgeChangeSchema.safeParse({
 				kind: "Correct",

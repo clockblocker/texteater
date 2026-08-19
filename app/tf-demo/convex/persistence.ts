@@ -9,6 +9,7 @@ import {
 	type QueryCtx,
 } from "./_generated/server";
 import { applyDumdictPlanInTransaction } from "./dumdictStorage";
+import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	projectResolutionGrammar,
@@ -21,7 +22,6 @@ import {
 } from "./model/resolutionSessions";
 import {
 	dictionaryPlanValidator,
-	knowledgeOwnerKindValidator,
 	languageValidator,
 	occurrenceAttestationInputValidator,
 	readingValueValidator,
@@ -35,10 +35,7 @@ import {
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
-import {
-	getKnowledgeOwner as getKnowledgeOwnerImplementation,
-	persistKnowledgeContribution as persistKnowledgeContributionImplementation,
-} from "./modules/knowledge/contributions";
+import { persistKnowledgeChange as persistKnowledgeChangeImplementation } from "./modules/knowledge/changes";
 import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
@@ -187,6 +184,12 @@ async function recordClickAgainstCommittedAttestation(
 	const attestation = await ctx.db.get(input.attestationId);
 	if (!attestation) throw new Error("Attestation does not exist.");
 	const { clickId } = await ensureVisitorEncounter(ctx, input);
+	await scheduleKnowledgeGeneration(ctx, {
+		attemptKey: input.requestId,
+		visitorId: input.visitorId,
+		readingId: attestation.readingId,
+		attestationId: input.attestationId,
+	});
 	return {
 		status: "Reused" as const,
 		clickId,
@@ -458,6 +461,12 @@ export const persistReusedResolvedClick = internalMutation({
 				...result,
 				occurrence: occurrence.value,
 			});
+			await scheduleKnowledgeGeneration(ctx, {
+				attemptKey: args.requestId,
+				visitorId: args.visitorId,
+				readingId: result.readingId,
+				attestationId: result.attestationId,
+			});
 			return result;
 		}
 		const { clickId } = await ensureVisitorEncounter(ctx, {
@@ -481,6 +490,12 @@ export const persistReusedResolvedClick = internalMutation({
 		await settleResolvedSession(ctx, session, {
 			...result,
 			occurrence: occurrence.value,
+		});
+		await scheduleKnowledgeGeneration(ctx, {
+			attemptKey: args.requestId,
+			visitorId: args.visitorId,
+			readingId: result.readingId,
+			attestationId: result.attestationId,
 		});
 		return result;
 	},
@@ -542,6 +557,12 @@ export const persistResolvedClick = internalMutation({
 				occurrence,
 			};
 			await settleResolvedSession(ctx, session, result);
+			await scheduleKnowledgeGeneration(ctx, {
+				attemptKey: args.requestId,
+				visitorId: args.visitorId,
+				readingId: result.readingId,
+				attestationId: result.attestationId,
+			});
 			return result;
 		}
 		const committedAttestationId =
@@ -746,37 +767,28 @@ export const persistResolvedClick = internalMutation({
 			occurrence,
 		};
 		await settleResolvedSession(ctx, session, result);
+		await scheduleKnowledgeGeneration(ctx, {
+			attemptKey: args.requestId,
+			visitorId: args.visitorId,
+			readingId: result.readingId,
+			attestationId: result.attestationId,
+		});
 		return result;
 	},
 });
 
-export const getKnowledgeOwner = internalQuery({
+export const persistKnowledgeChange = internalMutation({
 	args: {
-		ownerKind: knowledgeOwnerKindValidator,
-		ownerKey: v.string(),
-	},
-	returns: v.union(
-		v.null(),
-		v.object({
-			owner: v.any(),
-			knowledge: v.optional(v.any()),
-		}),
-	),
-	handler: getKnowledgeOwnerImplementation,
-});
-
-export const persistKnowledgeContribution = internalMutation({
-	args: {
-		contributionKey: v.string(),
-		ownerKind: knowledgeOwnerKindValidator,
-		ownerKey: v.string(),
+		knowledgeChangeKey: v.string(),
+		ownerReadingKey: v.string(),
 		change: v.any(),
-		knowledge: v.any(),
 	},
 	returns: v.object({
-		contributionId: v.id("knowledgeContributions"),
+		knowledgeChangeId: v.id("knowledgeChanges"),
 		accumulatedKnowledgeId: v.id("accumulatedKnowledge"),
 		deduplicated: v.boolean(),
+		change: v.any(),
+		knowledge: v.any(),
 	}),
-	handler: persistKnowledgeContributionImplementation,
+	handler: persistKnowledgeChangeImplementation,
 });

@@ -2,8 +2,10 @@
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
 		"src/index.ts",
+		"src/reading.ts",
 		"src/schema.ts",
 		"src/types.ts",
+		"src/vocabulary.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],

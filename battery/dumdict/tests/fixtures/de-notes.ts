@@ -1,4 +1,4 @@
-import type { Lemma, Reading, SerializedDictionaryNoteV0 } from "../../src";
+import type { Lemma, Reading, SerializedDictionaryNote } from "../../src";
 
 export const germanGehenLemma = {
 	canonicalForm: "gehen",
@@ -20,14 +20,11 @@ export const germanGehenReading = {
 
 export const deSerializedNotes = [
 	{
-		lemmaRecord: {
-			lemma: germanGehenLemma,
-			morphologicalRelations: {},
-		},
+		schemaVersion: 1,
+		lemmaRecord: { lemma: germanGehenLemma },
 		readingEntries: [
 			{
 				reading: germanGehenReading,
-				lexicalRelations: {},
 				attestedTranslations: ["go", "walk"],
 				attestations: ["Wir gehen nach Hause."],
 				notes: "Core motion reading.",
@@ -36,4 +33,4 @@ export const deSerializedNotes = [
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
-] satisfies SerializedDictionaryNoteV0<"de">[];
+] satisfies SerializedDictionaryNote<"de">[];

@@ -1,227 +1,149 @@
-import {
-	knowledgeChangeSchema,
-	lemmaKnowledgeSchema,
-	readingKnowledgeSchema,
-} from "./schema.js";
+import { knowledgeChangeSchema, readingKnowledgeSchema } from "./schema.js";
 import type {
 	KnowledgeChange,
-	LemmaKnowledge,
+	LemmaReference,
 	LexemeUnitShadow,
 	ReadingKnowledge,
-	ReadingReference,
 } from "./types.js";
-
-type SetTranscriptions<Language extends string> = Extract<
-	KnowledgeChange<Language>,
-	{ aspect: "transcriptions"; kind: "Contribute" | "Correct" }
->;
-
-type RetractTranscriptions<Language extends string> = Extract<
-	KnowledgeChange<Language>,
-	{ aspect: "transcriptions"; kind: "Retract" }
->;
 
 type SetTranslations<
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 > = Extract<
-	KnowledgeChange<Language, Reading, LexicalShadow>,
+	KnowledgeChange<Language, Lemma, LexicalShadow>,
 	{ aspect: "translations"; kind: "Contribute" | "Correct" }
 >;
 
 type RetractTranslations<
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 > = Extract<
-	KnowledgeChange<Language, Reading, LexicalShadow>,
+	KnowledgeChange<Language, Lemma, LexicalShadow>,
 	{ aspect: "translations"; kind: "Retract" }
 >;
 
 type NonLanguageReadingChange<
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 > = Exclude<
-	KnowledgeChange<string, Reading, LexicalShadow>,
-	{ aspect: "transcriptions" | "translations" }
+	KnowledgeChange<string, Lemma, LexicalShadow>,
+	{ aspect: "translations" }
 >;
 
 export function applyKnowledgeChange<Language extends string>(
 	existing: undefined,
-	change: SetTranscriptions<Language>,
-): LemmaKnowledge<Language>;
-export function applyKnowledgeChange<
-	ExistingLanguage extends string,
-	Language extends string,
->(
-	existing: LemmaKnowledge<ExistingLanguage>,
-	change: SetTranscriptions<Language>,
-): LemmaKnowledge<ExistingLanguage | Language>;
-export function applyKnowledgeChange<
-	ExistingLanguage extends string,
-	Language extends string,
->(
-	existing: LemmaKnowledge<ExistingLanguage> | undefined,
-	change: SetTranscriptions<Language>,
-): LemmaKnowledge<ExistingLanguage | Language> | LemmaKnowledge<Language>;
-
-export function applyKnowledgeChange<Language extends string>(
-	existing: undefined,
-	change: RetractTranscriptions<Language>,
-): LemmaKnowledge<never>;
-export function applyKnowledgeChange<
-	ExistingLanguage extends string,
-	Language extends string,
->(
-	existing: LemmaKnowledge<ExistingLanguage>,
-	change: RetractTranscriptions<Language>,
-): LemmaKnowledge<Exclude<ExistingLanguage, Language>>;
-export function applyKnowledgeChange<
-	ExistingLanguage extends string,
-	Language extends string,
->(
-	existing: LemmaKnowledge<ExistingLanguage> | undefined,
-	change: RetractTranscriptions<Language>,
-): LemmaKnowledge<Exclude<ExistingLanguage, Language>> | LemmaKnowledge<never>;
-
-export function applyKnowledgeChange<Language extends string>(
-	existing: undefined,
-	change: SetTranslations<Language, ReadingReference, LexemeUnitShadow>,
+	change: SetTranslations<Language, LemmaReference, LexemeUnitShadow>,
 ): ReadingKnowledge<Language>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
-	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
-	change: SetTranslations<Language, Reading, LexicalShadow>,
-): ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>;
+	existing: ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>,
+	change: SetTranslations<Language, Lemma, LexicalShadow>,
+): ReadingKnowledge<ExistingLanguage | Language, Lemma, LexicalShadow>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
 	existing:
-		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
 		| undefined,
-	change: SetTranslations<Language, Reading, LexicalShadow>,
+	change: SetTranslations<Language, Lemma, LexicalShadow>,
 ):
-	| ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>
-	| ReadingKnowledge<Language, Reading, LexicalShadow>;
+	| ReadingKnowledge<ExistingLanguage | Language, Lemma, LexicalShadow>
+	| ReadingKnowledge<Language, Lemma, LexicalShadow>;
 
 export function applyKnowledgeChange<Language extends string>(
 	existing: undefined,
-	change: RetractTranslations<Language, ReadingReference, LexemeUnitShadow>,
+	change: RetractTranslations<Language, LemmaReference, LexemeUnitShadow>,
 ): ReadingKnowledge<never>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
-	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
-	change: RetractTranslations<Language, Reading, LexicalShadow>,
-): ReadingKnowledge<
-	Exclude<ExistingLanguage, Language>,
-	Reading,
-	LexicalShadow
->;
+	existing: ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>,
+	change: RetractTranslations<Language, Lemma, LexicalShadow>,
+): ReadingKnowledge<Exclude<ExistingLanguage, Language>, Lemma, LexicalShadow>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
 	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
 	existing:
-		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
 		| undefined,
-	change: RetractTranslations<Language, Reading, LexicalShadow>,
+	change: RetractTranslations<Language, Lemma, LexicalShadow>,
 ):
 	| ReadingKnowledge<
 			Exclude<ExistingLanguage, Language>,
-			Reading,
+			Lemma,
 			LexicalShadow
 	  >
-	| ReadingKnowledge<never, Reading, LexicalShadow>;
+	| ReadingKnowledge<never, Lemma, LexicalShadow>;
 
 export function applyKnowledgeChange<
-	Reading extends ReadingReference = ReadingReference,
+	Lemma extends LemmaReference = LemmaReference,
 	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
 >(
 	existing: undefined,
-	change: NonLanguageReadingChange<Reading, LexicalShadow>,
-): ReadingKnowledge<never, Reading, LexicalShadow>;
+	change: NonLanguageReadingChange<Lemma, LexicalShadow>,
+): ReadingKnowledge<never, Lemma, LexicalShadow>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
-	existing: ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>,
-	change: NonLanguageReadingChange<Reading, LexicalShadow>,
-): ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>;
+	existing: ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>,
+	change: NonLanguageReadingChange<Lemma, LexicalShadow>,
+): ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>;
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
 	existing:
-		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
 		| undefined,
-	change: NonLanguageReadingChange<Reading, LexicalShadow>,
+	change: NonLanguageReadingChange<Lemma, LexicalShadow>,
 ):
-	| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
-	| ReadingKnowledge<never, Reading, LexicalShadow>;
+	| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
+	| ReadingKnowledge<never, Lemma, LexicalShadow>;
 
 export function applyKnowledgeChange<
 	ExistingLanguage extends string,
 	Language extends string,
->(
-	existing: LemmaKnowledge<ExistingLanguage> | undefined,
-	change: Extract<KnowledgeChange<Language>, { aspect: "transcriptions" }>,
-):
-	| LemmaKnowledge<ExistingLanguage | Language>
-	| LemmaKnowledge<Exclude<ExistingLanguage, Language>>
-	| LemmaKnowledge<Language>
-	| LemmaKnowledge<never>;
-
-export function applyKnowledgeChange<
-	ExistingLanguage extends string,
-	Language extends string,
-	Reading extends ReadingReference,
+	Lemma extends LemmaReference,
 	LexicalShadow extends LexemeUnitShadow,
 >(
 	existing:
-		| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
+		| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
 		| undefined,
-	change: Exclude<
-		KnowledgeChange<Language, Reading, LexicalShadow>,
-		{ aspect: "transcriptions" }
-	>,
+	change: KnowledgeChange<Language, Lemma, LexicalShadow>,
 ):
-	| ReadingKnowledge<ExistingLanguage | Language, Reading, LexicalShadow>
+	| ReadingKnowledge<ExistingLanguage | Language, Lemma, LexicalShadow>
 	| ReadingKnowledge<
 			Exclude<ExistingLanguage, Language>,
-			Reading,
+			Lemma,
 			LexicalShadow
 	  >
-	| ReadingKnowledge<ExistingLanguage, Reading, LexicalShadow>
-	| ReadingKnowledge<Language, Reading, LexicalShadow>
-	| ReadingKnowledge<never, Reading, LexicalShadow>;
+	| ReadingKnowledge<ExistingLanguage, Lemma, LexicalShadow>
+	| ReadingKnowledge<Language, Lemma, LexicalShadow>
+	| ReadingKnowledge<never, Lemma, LexicalShadow>;
 
 export function applyKnowledgeChange(
-	existing: LemmaKnowledge | ReadingKnowledge | undefined,
+	existing: ReadingKnowledge | undefined,
 	change: KnowledgeChange,
-): LemmaKnowledge | ReadingKnowledge {
+): ReadingKnowledge {
 	const parsedChange = knowledgeChangeSchema.parse(change);
-	if (parsedChange.aspect === "transcriptions") {
-		const result = lemmaKnowledgeSchema.parse(existing ?? {});
-		applyLanguageBucket(result, parsedChange);
-		return lemmaKnowledgeSchema.parse(result);
-	}
-
 	const result = readingKnowledgeSchema.parse(existing ?? {});
 	switch (parsedChange.aspect) {
 		case "translations":
@@ -231,6 +153,7 @@ export function applyKnowledgeChange(
 			applyRelationBucket(result, parsedChange);
 			break;
 		case "definition":
+		case "transcription":
 		case "morphologicalTree":
 		case "lexicalBreakdown":
 			applyAtomicAspect(result, parsedChange);
@@ -241,11 +164,11 @@ export function applyKnowledgeChange(
 
 type LanguageBucketChange = Extract<
 	KnowledgeChange,
-	{ aspect: "transcriptions" | "translations" }
+	{ aspect: "translations" }
 >;
 
 function applyLanguageBucket(
-	knowledge: LemmaKnowledge | ReadingKnowledge,
+	knowledge: ReadingKnowledge,
 	change: LanguageBucketChange,
 ): void {
 	const aspect = change.aspect;
@@ -297,7 +220,13 @@ function applyRelationBucket(
 
 type AtomicChange = Extract<
 	KnowledgeChange,
-	{ aspect: "definition" | "morphologicalTree" | "lexicalBreakdown" }
+	{
+		aspect:
+			| "transcription"
+			| "definition"
+			| "morphologicalTree"
+			| "lexicalBreakdown";
+	}
 >;
 
 function applyAtomicAspect(
@@ -324,11 +253,11 @@ function applyAtomicAspect(
 
 function appendUnique<Value>(
 	existing: readonly Value[],
-	contribution: readonly Value[],
+	additions: readonly Value[],
 ): Value[] {
 	const result = existing.map((value) => structuredClone(value));
 	const fingerprints = new Set(result.map(stableFingerprint));
-	for (const value of contribution) {
+	for (const value of additions) {
 		const fingerprint = stableFingerprint(value);
 		if (fingerprints.has(fingerprint)) continue;
 		result.push(structuredClone(value));

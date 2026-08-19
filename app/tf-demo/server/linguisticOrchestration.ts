@@ -1,16 +1,16 @@
+import type {
+	DumdictPlan,
+	DumdictService,
+	Lemma,
+	ReadingEntry,
+	ReadingKnowledgeChange,
+	StoreRevision,
+	Surface,
+} from "dumdict";
 import {
 	applyDumdictKnowledgeChange,
-	type DumdictPlan,
-	type DumdictService,
-	dumling,
-	type Lemma,
-	type LemmaRecord,
 	makeSurfaceId,
-	type ReadingEntry,
-	type ReadingKnowledgeChange,
-	type StoreRevision,
-	type Surface,
-} from "dumdict";
+} from "dumdict/trusted-storage-runtime";
 import type {
 	Dumgen,
 	GrammaticalResult,
@@ -18,13 +18,12 @@ import type {
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "dumgen";
-import { readingFingerprint } from "dumling";
+import { dumling, readingFingerprint } from "dumling";
 import { readingSchema } from "dumling/schema";
 import type { Reading } from "dumling/types";
 import {
 	type KnowledgeChange,
 	knowledgeChangeSchema,
-	type LemmaKnowledge,
 	type ReadingKnowledge,
 } from "dumrel";
 
@@ -485,53 +484,24 @@ export function createTfDemoOrchestrator(options: {
 	return Object.freeze({ submitText, resolveSegment });
 }
 
-export function applyValidatedKnowledgeContribution(input: {
-	readonly owner:
-		| {
-				readonly kind: "Lemma";
-				readonly lemma: unknown;
-				readonly knowledge?: unknown;
-		  }
-		| {
-				readonly kind: "Reading";
-				readonly reading: unknown;
-				readonly knowledge?: unknown;
-		  };
+export function applyValidatedReadingKnowledgeChange(input: {
+	readonly reading: unknown;
+	readonly knowledge?: unknown;
 	readonly change: unknown;
 }): {
 	readonly change: KnowledgeChange;
-	readonly knowledge: LemmaKnowledge | ReadingKnowledge;
+	readonly knowledge: ReadingKnowledge;
 } {
 	const change = knowledgeChangeSchema.parse(input.change);
-	if (input.owner.kind === "Lemma") {
-		const lemma = parseGermanLemma(input.owner.lemma);
-		const updated = applyDumdictKnowledgeChange(
-			{
-				lemma,
-				...(input.owner.knowledge === undefined
-					? {}
-					: { knowledge: input.owner.knowledge as LemmaKnowledge }),
-			} satisfies LemmaRecord<"de">,
-			{
-				owner: { kind: "Lemma", lemma },
-				change: change as Extract<
-					KnowledgeChange,
-					{ aspect: "transcriptions" }
-				>,
-			},
-		);
-		return { change, knowledge: updated.knowledge ?? {} };
-	}
-
-	const reading = readingSchema.parse(input.owner.reading) as Reading<"de">;
+	const reading = readingSchema.parse(input.reading) as Reading<"de">;
 	const record = {
 		reading,
-		...(input.owner.knowledge === undefined
+		...(input.knowledge === undefined
 			? {}
 			: {
-					knowledge: input.owner.knowledge as ReadingKnowledge<
+					knowledge: input.knowledge as ReadingKnowledge<
 						string,
-						Reading<"de">
+						Lemma<"de">
 					>,
 				}),
 		attestedTranslations: [],
@@ -539,7 +509,7 @@ export function applyValidatedKnowledgeContribution(input: {
 		notes: "",
 	} satisfies ReadingEntry<"de">;
 	const envelope = {
-		owner: { kind: "Reading", reading },
+		reading,
 		change: change as ReadingKnowledgeChange<"de">["change"],
 	} satisfies ReadingKnowledgeChange<"de">;
 	const updated = applyDumdictKnowledgeChange(record, envelope);

@@ -2,7 +2,9 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 import {
-	knowledgeOwnerKindValidator,
+	knowledgeGenerationAttemptStateValidator,
+	knowledgeSettingsValidator,
+	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
@@ -11,6 +13,7 @@ import {
 	resolutionRouteProjectionValidator,
 	resolutionStageValidator,
 	segmentKindValidator,
+	semanticRelationValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "./model/validators";
@@ -98,6 +101,23 @@ export default defineSchema({
 		record: v.any(),
 	}).index("by_reading_id", ["readingId"]),
 
+	semanticRelationEdges: defineTable({
+		sourceReadingId: v.id("readings"),
+		targetLemmaId: v.id("lemmas"),
+		relation: semanticRelationValidator,
+	})
+		.index("by_source_reading_id", ["sourceReadingId"])
+		.index("by_target_lemma_id", ["targetLemmaId"])
+		.index("by_source_reading_id_and_relation", [
+			"sourceReadingId",
+			"relation",
+		])
+		.index("by_source_reading_id_and_relation_and_target_lemma_id", [
+			"sourceReadingId",
+			"relation",
+			"targetLemmaId",
+		]),
+
 	ownedSurfaces: defineTable({
 		surfaceId: v.id("surfaces"),
 		record: v.any(),
@@ -150,22 +170,46 @@ export default defineSchema({
 			"path",
 		]),
 
-	knowledgeContributions: defineTable({
-		contributionKey: v.string(),
-		ownerKind: knowledgeOwnerKindValidator,
-		ownerKey: v.string(),
+	knowledgeChanges: defineTable({
+		knowledgeChangeKey: v.string(),
+		ownerReadingKey: v.string(),
 		change: v.any(),
 		createdAt: v.number(),
 	})
-		.index("by_contribution_key", ["contributionKey"])
-		.index("by_owner_kind_and_owner_key", ["ownerKind", "ownerKey"]),
+		.index("by_knowledge_change_key", ["knowledgeChangeKey"])
+		.index("by_owner_reading_key", ["ownerReadingKey"]),
 
 	accumulatedKnowledge: defineTable({
-		ownerKind: knowledgeOwnerKindValidator,
-		ownerKey: v.string(),
+		ownerReadingKey: v.string(),
 		knowledge: v.any(),
+		status: knowledgeStatusValidator,
 		updatedAt: v.number(),
-	}).index("by_owner_kind_and_owner_key", ["ownerKind", "ownerKey"]),
+	}).index("by_owner_reading_key", ["ownerReadingKey"]),
+
+	knowledgeGenerationAttempts: defineTable({
+		attemptKey: v.string(),
+		visitorId: v.string(),
+		ownerReadingKey: v.string(),
+		readingId: v.id("readings"),
+		attestationId: v.id("attestations"),
+		state: knowledgeGenerationAttemptStateValidator,
+		failureCode: v.optional(v.string()),
+		failureMessage: v.optional(v.string()),
+		createdAt: v.number(),
+		updatedAt: v.number(),
+	})
+		.index("by_attempt_key", ["attemptKey"])
+		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
+		.index("by_owner_reading_key_and_updated_at", [
+			"ownerReadingKey",
+			"updatedAt",
+		]),
+
+	knowledgeSettings: defineTable({
+		visitorId: v.string(),
+		settings: knowledgeSettingsValidator,
+		updatedAt: v.number(),
+	}).index("by_visitor_id", ["visitorId"]),
 
 	visitorClicks: defineTable({
 		requestId: v.string(),
@@ -177,6 +221,10 @@ export default defineSchema({
 		.index("by_request_id", ["requestId"])
 		.index("by_segment_id", ["segmentId"])
 		.index("by_attestation_id", ["attestationId"])
+		.index("by_visitor_id_and_attestation_id", [
+			"visitorId",
+			"attestationId",
+		])
 		.index("by_visitor_id_and_clicked_at", ["visitorId", "clickedAt"])
 		.index("by_visitor_id_and_segment_id", ["visitorId", "segmentId"]),
 

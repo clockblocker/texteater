@@ -1,7 +1,8 @@
+import { readingFingerprint } from "dumling";
 import type {
 	Lemma,
 	Reading,
-	SerializedDictionaryNoteV0,
+	SerializedDictionaryNote,
 	Surface,
 } from "../../src";
 import { derivePendingEntryId } from "../../src/core/pending/identity";
@@ -80,7 +81,6 @@ export const englishRunDraft = {
 
 const walkReading = {
 	reading: englishWalkReading,
-	lexicalRelations: {},
 	attestedTranslations: ["walk"],
 	attestations: ["They walk home together."],
 	notes: "Core motion reading.",
@@ -88,15 +88,13 @@ const walkReading = {
 
 export const enSerializedNotes = [
 	{
-		lemmaRecord: {
-			lemma: englishWalkLemma,
-			morphologicalRelations: {},
-		},
+		schemaVersion: 1,
+		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],
 		pendingRelations: [],
 	},
-] satisfies SerializedDictionaryNoteV0<"en">[];
+] satisfies SerializedDictionaryNote<"en">[];
 
 export const pendingSwimEntryId = derivePendingEntryId({
 	language: "en",
@@ -107,28 +105,28 @@ export const pendingSwimEntryId = derivePendingEntryId({
 
 export const enSerializedNotesWithPendingSwimRelation = [
 	{
-		lemmaRecord: {
-			lemma: englishWalkLemma,
-			morphologicalRelations: {},
-		},
+		schemaVersion: 1,
+		lemmaRecord: { lemma: englishWalkLemma },
 		readingEntries: [walkReading],
 		ownedSurfaceEntries: [],
-		pendingRefs: [
-			{
-				pendingId: pendingSwimEntryId,
-				language: "en",
-				canonicalForm: "swim",
-				family: "Lexeme",
-				kind: "VERB",
-			},
-		],
 		pendingRelations: [
 			{
 				sourceReading: englishWalkReading,
-				relationFamily: "lexical",
-				relation: "nearSynonym",
-				targetPendingId: pendingSwimEntryId,
+				pending: {
+					relation: "nearSynonym",
+					target: {
+						language: "en",
+						canonicalForm: "swim",
+						family: "Lexeme",
+						kind: "VERB",
+					},
+				},
+				locator: {
+					sourceReadingKey: readingFingerprint(englishWalkReading),
+					relation: "nearSynonym",
+					targetPendingId: pendingSwimEntryId,
+				},
 			},
 		],
 	},
-] satisfies SerializedDictionaryNoteV0<"en">[];
+] satisfies SerializedDictionaryNote<"en">[];

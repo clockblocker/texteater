@@ -1,4 +1,9 @@
 import type {
+	KnowledgeChange,
+	PendingSemanticRelation,
+	UnitShadow,
+} from "dumrel";
+import type {
 	DumdictReadingDraft,
 	OwnedSurfaceDraft,
 	PendingSemanticRelationLocator,
@@ -31,13 +36,20 @@ export type EnsureOwnedSurfaceRequest<L extends SupportedLanguage> = {
 	ownedSurface: OwnedSurfaceDraft<L>;
 };
 
+export type ApplyGeneratedKnowledgeRequest<L extends SupportedLanguage> = {
+	reading: Reading<L>;
+	changes: readonly KnowledgeChange<string, Lemma<L>>[];
+	pendingRelations: readonly (Omit<PendingSemanticRelation, "target"> & {
+		target: UnitShadow<L>;
+	})[];
+};
+
 export type GetInfoForRelationsCleanupRequest<_L extends SupportedLanguage> = {
 	canonicalForm: string;
 };
 
 export type CleanupRelationResolution<L extends SupportedLanguage> = {
 	locator: PendingSemanticRelationLocator<L>;
-	targetReading?: Reading<L>;
 };
 
 export type CleanupRelationsRequest<L extends SupportedLanguage> = {
@@ -74,6 +86,11 @@ export type DumdictService<L extends SupportedLanguage> = {
 
 	ensureOwnedSurface(
 		request: EnsureOwnedSurfaceRequest<L>,
+		options?: DumdictMutationOptions<L>,
+	): Promise<MutationResult<L>>;
+
+	applyGeneratedKnowledge(
+		request: ApplyGeneratedKnowledgeRequest<L>,
 		options?: DumdictMutationOptions<L>,
 	): Promise<MutationResult<L>>;
 

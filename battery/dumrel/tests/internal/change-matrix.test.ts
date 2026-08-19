@@ -3,7 +3,6 @@ import { describe, expect, test } from "bun:test";
 import { applyKnowledgeChange, knowledgeChangeSchema } from "../../src";
 import type {
 	KnowledgeChange,
-	LemmaKnowledge,
 	LexicalBreakdown,
 	MorphologicalTree,
 	ReadingKnowledge,
@@ -16,7 +15,7 @@ import {
 	verbShadow,
 } from "./fixtures";
 
-type OwnerKnowledge = LemmaKnowledge | ReadingKnowledge;
+type OwnerKnowledge = ReadingKnowledge;
 
 type ChangeCase = {
 	aspect: KnowledgeChange["aspect"];
@@ -37,37 +36,34 @@ const replacementBreakdown: LexicalBreakdown = [verbShadow, nounShadow];
 
 const cases = [
 	{
-		aspect: "transcriptions",
+		aspect: "transcription",
 		kind: "Contribute",
-		existing: { transcriptions: { en: ["old"] } },
+		existing: { transcription: "old" },
 		change: {
 			kind: "Contribute",
-			aspect: "transcriptions",
-			language: "en",
-			value: ["new"],
+			aspect: "transcription",
+			value: "old",
 		},
-		expected: { transcriptions: { en: ["old", "new"] } },
+		expected: { transcription: "old" },
 	},
 	{
-		aspect: "transcriptions",
+		aspect: "transcription",
 		kind: "Correct",
-		existing: { transcriptions: { en: ["old"] } },
+		existing: { transcription: "old" },
 		change: {
 			kind: "Correct",
-			aspect: "transcriptions",
-			language: "en",
-			value: ["new"],
+			aspect: "transcription",
+			value: "new",
 		},
-		expected: { transcriptions: { en: ["new"] } },
+		expected: { transcription: "new" },
 	},
 	{
-		aspect: "transcriptions",
+		aspect: "transcription",
 		kind: "Retract",
-		existing: { transcriptions: { en: ["old"] } },
+		existing: { transcription: "old" },
 		change: {
 			kind: "Retract",
-			aspect: "transcriptions",
-			language: "en",
+			aspect: "transcription",
 		},
 		expected: {},
 	},
@@ -109,33 +105,37 @@ const cases = [
 	{
 		aspect: "semanticRelations",
 		kind: "Contribute",
-		existing: { semanticRelations: { synonym: [nounReading] } },
+		existing: { semanticRelations: { synonym: [nounReading.lemma] } },
 		change: {
 			kind: "Contribute",
 			aspect: "semanticRelations",
 			relation: "synonym",
-			value: [secondNounReading],
+			value: [secondNounReading.lemma],
 		},
 		expected: {
-			semanticRelations: { synonym: [nounReading, secondNounReading] },
+			semanticRelations: {
+				synonym: [nounReading.lemma, secondNounReading.lemma],
+			},
 		},
 	},
 	{
 		aspect: "semanticRelations",
 		kind: "Correct",
-		existing: { semanticRelations: { synonym: [nounReading] } },
+		existing: { semanticRelations: { synonym: [nounReading.lemma] } },
 		change: {
 			kind: "Correct",
 			aspect: "semanticRelations",
 			relation: "synonym",
-			value: [secondNounReading],
+			value: [secondNounReading.lemma],
 		},
-		expected: { semanticRelations: { synonym: [secondNounReading] } },
+		expected: {
+			semanticRelations: { synonym: [secondNounReading.lemma] },
+		},
 	},
 	{
 		aspect: "semanticRelations",
 		kind: "Retract",
-		existing: { semanticRelations: { synonym: [nounReading] } },
+		existing: { semanticRelations: { synonym: [nounReading.lemma] } },
 		change: {
 			kind: "Retract",
 			aspect: "semanticRelations",

@@ -20,6 +20,10 @@ declare const serializedNote: Dumdict.SerializedDictionaryNote<"en">;
 const schemaVersion: 1 = serializedNote.schemaVersion;
 void schemaVersion;
 
+// @ts-expect-error The hard-break package exposes no version-0 wire contract.
+type LegacySerializedNote = Dumdict.SerializedDictionaryNoteV0<"en">;
+void (undefined as unknown as LegacySerializedNote);
+
 declare const plan: Dumdict.DumdictPlan<"en">;
 // @ts-expect-error Public Dumdict plans are readonly at the host seam.
 plan.baseRevision = "changed" as Dumdict.StoreRevision;

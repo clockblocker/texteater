@@ -18,6 +18,12 @@ export type Prompt<
 	readonly inputSchema: InputSchema;
 	readonly modelInputSchema?: ModelInputSchema;
 	readonly outputSchema: OutputSchema;
+	/**
+	 * Builds the strict schema sent to the model provider after the canonical
+	 * input has been parsed. This supports sparse request-shaped outputs without
+	 * weakening the canonical Prompt Source schema used by corpora and tests.
+	 */
+	modelOutputSchemaFor?(input: output<InputSchema>): ZodType;
 	readonly outputPostcondition?: {
 		assert(
 			input: output<InputSchema>,

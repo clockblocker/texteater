@@ -1,0 +1,878 @@
+{
+  "runnerVersion": "combined-german-knowledge-v2",
+  "route": "knowledge-analysis/de/combined",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 3
+  },
+  "startedAt": "2026-08-19T09:29:45.328Z",
+  "completedAt": "2026-08-19T09:30:00.737Z",
+  "finalizedAt": "2026-08-19T09:30:10.895Z",
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 4096,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "51e604b572f0fc499b5d88123c27a273ade019b3df239157ae6efc6d3bd4e432",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "f8f13c7abf8c0f8d821fc3885e546da2c6a014ff876da8eecf76b5591e828bb9",
+  "inputSchemaSha256": "1f6ba0d5a69eebbca0366c7d4373a9f08125f1a5227b6a01738ee1508e5b6fae",
+  "outputSchemaSha256": "5fcb32adabdaeac290566a5d818cbf7adf734da33504e236fc9b32f05ebf1e63",
+  "suiteSha256": "15eb1003083421e79a23e4e404fea7b66e15584d0ab1429418f7ef3b2153170f",
+  "evaluationCaseIds": [
+    "combined-dev-bank-finance",
+    "combined-dev-bank-bench",
+    "combined-dev-adjective",
+    "combined-dev-proper-noun",
+    "combined-dev-numeral",
+    "combined-dev-phraseme",
+    "combined-dev-nfc-translation-only",
+    "combined-dev-multi-member-context",
+    "combined-dev-defensive-null"
+  ],
+  "boundedCalls": 9,
+  "maximumEvaluationCases": 9,
+  "retries": 0,
+  "store": false,
+  "contractScore": 9,
+  "scoreRatio": 1,
+  "minimumEvaluationCases": 4,
+  "minimumScoreRatio": 0.85,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": true,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 0,
+  "evidenceThresholdMet": true,
+  "attempts": [
+    {
+      "caseId": "combined-dev-bank-finance",
+      "input": {
+        "markedContext": "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "Bank",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          },
+          "emojiDescription": "🏦"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null,
+            "nearSynonym": null,
+            "antonym": null,
+            "hypernym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "baŋk",
+        "definition": "Institut, das Geldgeschäfte und Kredite anbietet",
+        "translations": {
+          "en": "bank"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Kreditinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Geldinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Finanzinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Finanzinstitut, das Geldgeschäfte tätigt und Kredite vergibt",
+        "translations": {
+          "en": "bank"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Kreditinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Finanzinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": false,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 2576,
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Finanzinstitut, das Geldgeschäfte tätigt und Kredite vergibt\",\"translations\":{\"en\":\"bank\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Kreditinstitut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Finanzinstitut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_088e37007142eca1016a857789a5ac87d2b12d037f65b9af30",
+      "usage": {
+        "input_tokens": 1647,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1538
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1761
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-bank-bench",
+      "input": {
+        "markedContext": "Wir sitzen auf einer <TARGET>Bank</TARGET> im Park.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "Bank",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "coreFeatures": {
+              "gender": "Fem",
+              "hyph": null
+            }
+          },
+          "emojiDescription": "🪑"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null,
+            "nearSynonym": null,
+            "antonym": null,
+            "hypernym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "baŋk",
+        "definition": "lange Sitzgelegenheit für mehrere Personen",
+        "translations": {
+          "en": "bench"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzbank",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzmöbel",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Sitzmöbel mit einer länglichen Sitzfläche für mehrere Personen",
+        "translations": {
+          "en": "bench"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzbank",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzmöbel",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": true,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 1629,
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Sitzmöbel mit einer länglichen Sitzfläche für mehrere Personen\",\"translations\":{\"en\":\"bench\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Sitzbank\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Sitzmöbel\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0e9ba9d50cb4add0016a85778c15a4819c997190b3f367a377",
+      "usage": {
+        "input_tokens": 1648,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1538
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1758
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-adjective",
+      "input": {
+        "markedContext": "Das Zimmer ist sehr <TARGET>hell</TARGET>.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "hell",
+            "family": "Lexeme",
+            "kind": "ADJ",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": null,
+              "variant": null
+            }
+          },
+          "emojiDescription": "💡"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null,
+            "nearSynonym": null,
+            "antonym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "hɛl",
+        "definition": "mit viel Licht erfüllt oder beleuchtet",
+        "translations": {
+          "en": "bright"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "licht",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "leuchtend",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "dunkel",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "hɛl",
+        "definition": "viel Licht ausstrahlend oder von viel Licht erfüllt",
+        "translations": {
+          "en": "bright"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "licht",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "dunkel",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ]
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": false,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 2182,
+      "rawOutputText": "{\"transcription\":\"hɛl\",\"definition\":\"viel Licht ausstrahlend oder von viel Licht erfüllt\",\"translations\":{\"en\":\"bright\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"licht\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"dunkel\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}]}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0c071b4d59c7119d016a85778dd00c87d2b0ffc1553bf72f98",
+      "usage": {
+        "input_tokens": 1585,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1475
+        },
+        "output_tokens": 100,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1685
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-proper-noun",
+      "input": {
+        "markedContext": "<TARGET>Berlin</TARGET> liegt an der Spree.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "Berlin",
+            "family": "Lexeme",
+            "kind": "PROPN",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "gender": "Neut"
+            }
+          },
+          "emojiDescription": "🏙️"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null,
+            "meronym": null,
+            "holonym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "bɛʁˈliːn",
+        "definition": "Hauptstadt und Bundesland der Bundesrepublik Deutschland",
+        "translations": {
+          "en": "Berlin"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "meronym": [
+            {
+              "language": "de",
+              "canonicalForm": "Mitte",
+              "family": "Lexeme",
+              "kind": "PROPN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Deutschland",
+              "family": "Lexeme",
+              "kind": "PROPN"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "bɛʁˈliːn",
+        "definition": "Hauptstadt und größtes politisches Zentrum Deutschlands",
+        "translations": {
+          "en": "Berlin"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "meronym": null,
+          "holonym": null
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": false,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 1359,
+      "rawOutputText": "{\"transcription\":\"bɛʁˈliːn\",\"definition\":\"Hauptstadt und größtes politisches Zentrum Deutschlands\",\"translations\":{\"en\":\"Berlin\"},\"semanticRelations\":{\"synonym\":null,\"meronym\":null,\"holonym\":null}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0400fa7ac910a979016a857790007881a0bafc87289475afd6",
+      "usage": {
+        "input_tokens": 1582,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1474
+        },
+        "output_tokens": 64,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1646
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-numeral",
+      "input": {
+        "markedContext": "Es fehlt noch <TARGET>eins</TARGET>.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "eins",
+            "family": "Lexeme",
+            "kind": "NUM",
+            "coreFeatures": {
+              "abbr": null,
+              "foreign": null,
+              "numType": "Card"
+            }
+          },
+          "emojiDescription": "1️⃣"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "aɪ̯ns",
+        "definition": "Kardinalzahl mit dem Wert 1",
+        "translations": {
+          "en": "one"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "ein",
+              "family": "Lexeme",
+              "kind": "NUM"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "aɪ̯ns",
+        "definition": "die Zahl 1",
+        "translations": {
+          "en": "one"
+        },
+        "semanticRelations": {
+          "synonym": null
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": false,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 1334,
+      "rawOutputText": "{\"transcription\":\"aɪ̯ns\",\"definition\":\"die Zahl 1\",\"translations\":{\"en\":\"one\"},\"semanticRelations\":{\"synonym\":null}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_046d510f690acc52016a85779144c887d2b018f3fd84ccc115",
+      "usage": {
+        "input_tokens": 1442,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1348
+        },
+        "output_tokens": 44,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1486
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-phraseme",
+      "input": {
+        "markedContext": "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "auf jeden Fall",
+            "family": "Phraseme",
+            "kind": "DiscourseFormula",
+            "coreFeatures": {
+              "discourseFormulaRole": "Reaction"
+            }
+          },
+          "emojiDescription": "✅"
+        },
+        "request": {
+          "transcription": null,
+          "definition": null,
+          "translations": {
+            "en": null
+          },
+          "semanticRelations": {
+            "synonym": null,
+            "nearSynonym": null,
+            "antonym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "transcription": "aʊ̯f ˈjeːdn̩ fal",
+        "definition": "Formel zur nachdrücklichen Bestätigung",
+        "translations": {
+          "en": "definitely"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "definitiv",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "jedenfalls",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "auf keinen Fall",
+              "family": "Phraseme",
+              "kind": "DiscourseFormula"
+            }
+          ]
+        }
+      },
+      "output": {
+        "transcription": "aʊ̯f ˈjeːdn̩ fal",
+        "definition": "drückt eine sichere Zustimmung oder Gewissheit aus",
+        "translations": {
+          "en": "definitely"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "definitiv",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "sicherlich",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "antonym": null
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": false,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 1780,
+      "rawOutputText": "{\"transcription\":\"aʊ̯f ˈjeːdn̩ fal\",\"definition\":\"drückt eine sichere Zustimmung oder Gewissheit aus\",\"translations\":{\"en\":\"definitely\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"definitiv\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"sicherlich\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"antonym\":null}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_05fd60da981cc069016a8577929a6481a3bf4ba24852ef772c",
+      "usage": {
+        "input_tokens": 1581,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1475
+        },
+        "output_tokens": 111,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1692
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-nfc-translation-only",
+      "input": {
+        "markedContext": "Das <TARGET>Café</TARGET> öffnet früh.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "Café",
+            "family": "Lexeme",
+            "kind": "NOUN",
+            "coreFeatures": {
+              "gender": "Neut",
+              "hyph": null
+            }
+          },
+          "emojiDescription": "☕"
+        },
+        "request": {
+          "translations": {
+            "en": null
+          }
+        }
+      },
+      "idealOutput": {
+        "translations": {
+          "en": "café"
+        }
+      },
+      "output": {
+        "translations": {
+          "en": "café"
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": true,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 807,
+      "rawOutputText": "{\"translations\":{\"en\":\"café\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0851a61db4c828cd016a8577945bc081a39217d110bd2a8586",
+      "usage": {
+        "input_tokens": 1318,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1242
+        },
+        "output_tokens": 19,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1337
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-multi-member-context",
+      "input": {
+        "markedContext": "Die Mannschaft <TARGET>gab</TARGET> den Vorsprung <TARGET>auf</TARGET>.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "aufgeben",
+            "family": "Lexeme",
+            "kind": "VERB",
+            "coreFeatures": {
+              "hasGovPrep": null,
+              "hasSepPrefix": "auf",
+              "lexicallyReflexive": null,
+              "verbType": null
+            }
+          },
+          "emojiDescription": "🏳️"
+        },
+        "request": {
+          "definition": null,
+          "translations": {
+            "en": null
+          }
+        }
+      },
+      "idealOutput": {
+        "definition": "den Versuch oder Widerstand beenden",
+        "translations": {
+          "en": "gave up"
+        }
+      },
+      "output": {
+        "definition": "etwas nicht weiter verteidigen oder verfolgen",
+        "translations": {
+          "en": "gave up"
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": true,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 2287,
+      "rawOutputText": "{\"definition\":\"etwas nicht weiter verteidigen oder verfolgen\",\"translations\":{\"en\":\"gave up\"}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0970affedc1d42aa016a857795738087d2af5ff40eb4539eaa",
+      "usage": {
+        "input_tokens": 1362,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1258
+        },
+        "output_tokens": 31,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1393
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "combined-dev-defensive-null",
+      "input": {
+        "markedContext": "Das Symbol <TARGET>§</TARGET> markiert einen Paragrafen.",
+        "reading": {
+          "lemma": {
+            "language": "de",
+            "canonicalForm": "§",
+            "family": "Lexeme",
+            "kind": "SYM",
+            "coreFeatures": {
+              "foreign": null,
+              "numType": null
+            }
+          },
+          "emojiDescription": "📜"
+        },
+        "request": {
+          "semanticRelations": {
+            "antonym": null
+          }
+        }
+      },
+      "idealOutput": {
+        "semanticRelations": {
+          "antonym": null
+        }
+      },
+      "output": {
+        "semanticRelations": {
+          "antonym": null
+        }
+      },
+      "contractPass": true,
+      "requestShapePass": true,
+      "transcriptionPass": true,
+      "definitionPass": true,
+      "translationPass": true,
+      "relationKindsPass": true,
+      "relationTargetsPass": true,
+      "crossAspectConsistencyPass": true,
+      "latencyMs": 1431,
+      "rawOutputText": "{\"semanticRelations\":{\"antonym\":null}}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_046d4b0e3e18281d016a8577977f7087d2a30db9aeb57a32e2",
+      "usage": {
+        "input_tokens": 1370,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1290
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1390
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

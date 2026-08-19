@@ -1,6 +1,5 @@
 import { readingFingerprint } from "dumling";
 import {
-	inverseRelationFor,
 	pendingSemanticRelationSchema,
 	type ReadingKnowledge,
 	type SemanticRelation,
@@ -8,17 +7,21 @@ import {
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingEntry,
 	SurfaceEntry,
 } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
+import type { Lemma, SupportedLanguage } from "../../dumling";
 import { makeSurfaceId } from "../../dumling";
 import type { AddNewNoteRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";
-import { sameReading } from "../identity";
+import { lemmaFingerprint, sameLemma, sameReading } from "../identity";
 import { derivePendingEntryId } from "../pending/identity";
+import {
+	planRelationMaintenance,
+	type RelationRequest,
+} from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
+import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
@@ -32,15 +35,14 @@ function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 }
 
 function appendRelation<L extends SupportedLanguage>(
-	knowledge: ReadingKnowledge<string, Reading<L>>,
+	knowledge: ReadingKnowledge<string, Lemma<L>>,
 	relation: SemanticRelation,
-	target: Reading<L>,
+	target: Lemma<L>,
 ) {
 	const semanticRelations = knowledge.semanticRelations ?? {};
 	const existing = semanticRelations[relation] ?? [];
-	if (!existing.some((value) => sameReading(value, target))) {
+	if (!existing.some((value) => sameLemma(value, target)))
 		semanticRelations[relation] = [...existing, target];
-	}
 	knowledge.semanticRelations = semanticRelations;
 }
 
@@ -84,24 +86,13 @@ function makePendingRecords<L extends SupportedLanguage>(
 	);
 }
 
-function selfRelationExists<L extends SupportedLanguage>(
-	request: AddNewNoteRequest<L>,
-) {
-	const source = request.draft.reading;
-	return (request.draft.relations ?? []).some(
-		(relation) =>
-			relation.target.kind === "existing" &&
-			sameReading(relation.target.reading, source),
-	);
-}
-
 function relationLanguagesMatch<L extends SupportedLanguage>(
 	request: AddNewNoteRequest<L>,
 ) {
 	const language = request.draft.reading.lemma.language;
 	return (request.draft.relations ?? []).every((relation) =>
 		relation.target.kind === "existing"
-			? relation.target.reading.lemma.language === language
+			? relation.target.lemma.language === language
 			: pendingSemanticRelationSchema.parse(relation.target.pending)
 					.target.language === language,
 	);
@@ -111,15 +102,15 @@ function explicitTargetsArePresent<L extends SupportedLanguage>(
 	slice: NewNoteSlice<L>,
 	request: AddNewNoteRequest<L>,
 ) {
-	const readings = new Set(
-		slice.explicitExistingReadingTargets.map(({ reading }) =>
-			readingFingerprint(reading),
+	const lemmas = new Set(
+		slice.explicitExistingLemmaTargets.map(({ lemma }) =>
+			lemmaFingerprint(lemma),
 		),
 	);
 	return (request.draft.relations ?? []).every(
 		(relation) =>
 			relation.target.kind === "pending" ||
-			readings.has(readingFingerprint(relation.target.reading)),
+			lemmas.has(lemmaFingerprint(relation.target.lemma)),
 	);
 }
 
@@ -129,81 +120,45 @@ export function planAddNewNote<L extends SupportedLanguage>(
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { reading, note } = request.draft;
 	const { lemma } = reading;
-	if (!relationLanguagesMatch(request)) {
+	if (!relationLanguagesMatch(request))
 		return {
 			status: "rejected",
 			code: "invalidDraft",
 			message:
 				"Semantic Relation endpoints must use the source Reading language.",
 		};
-	}
-	if (selfRelationExists(request)) {
+	if (
+		(request.draft.relations ?? []).some(
+			(relation) =>
+				relation.target.kind === "existing" &&
+				sameLemma(relation.target.lemma, lemma),
+		)
+	)
 		return {
 			status: "rejected",
 			code: "selfRelation",
-			message: "A Reading cannot relate directly to itself.",
+			message: "A Reading cannot relate directly to its own Lemma.",
 		};
-	}
-	if (slice.existingReading) {
+	if (slice.existingReading)
 		return {
 			status: "rejected",
 			code: "readingAlreadyExists",
 			message: "Reading already exists.",
 		};
-	}
-	if (slice.existingOwnedSurfaces.length > 0) {
+	if (slice.existingOwnedSurfaces.length > 0)
 		return {
 			status: "rejected",
 			code: "ownedSurfaceAlreadyExists",
 			message: "An owned surface already exists.",
 		};
-	}
-	if (!explicitTargetsArePresent(slice, request)) {
+	if (!explicitTargetsArePresent(slice, request))
 		return {
 			status: "rejected",
 			code: "relationTargetMissing",
-			message: "An explicit relation target is missing.",
+			message: "An explicit relation target Lemma is missing.",
 		};
-	}
 
-	const knowledge: ReadingKnowledge<string, Reading<L>> = {};
-	const patches: PlannedChangeOp<L>[] = [];
-	for (const relation of request.draft.relations ?? []) {
-		if (!("relation" in relation) || relation.target.kind !== "existing")
-			continue;
-		appendRelation(knowledge, relation.relation, relation.target.reading);
-		patches.push({
-			type: "patchReading",
-			reading: relation.target.reading,
-			ops: [
-				{
-					kind: "applyKnowledgeChange",
-					envelope: {
-						owner: {
-							kind: "Reading",
-							reading: relation.target.reading,
-						},
-						change: {
-							kind: "Contribute",
-							aspect: "semanticRelations",
-							relation: inverseRelationFor(relation.relation),
-							value: [reading],
-						},
-					},
-				},
-			],
-			preconditions: [
-				{ kind: "revisionMatches", revision: slice.revision },
-				{ kind: "readingExists", reading: relation.target.reading },
-			],
-		});
-	}
-
-	const storedReading: ReadingEntry<L> = {
-		reading,
-		...(Object.keys(knowledge).length === 0 ? {} : { knowledge }),
-		...note,
-	};
+	const baseReading: ReadingEntry<L> = { reading, ...note };
 	const lemmaRecord: LemmaRecord<L> = { lemma };
 	const ownedSurfaceEntries: SurfaceEntry<L>[] = uniqueBy(
 		(request.draft.ownedSurfaces ?? []).map(
@@ -216,10 +171,71 @@ export function planAddNewNote<L extends SupportedLanguage>(
 		),
 		({ id }) => id,
 	);
-	const pending = makePendingRecords(slice, request);
+	const newPending = makePendingRecords(slice, request);
+	const pending = uniqueBy(
+		[...newPending, ...slice.pendingRelationsMatchingProposedLemma],
+		pendingRecordKey,
+	);
+	const requests: RelationRequest<L>[] = [
+		...(request.draft.relations ?? []).flatMap((relation) =>
+			relation.target.kind === "existing" && "relation" in relation
+				? [
+						{
+							sourceReading: reading,
+							relation: relation.relation,
+							target: {
+								kind: "lemma" as const,
+								lemma: relation.target.lemma,
+							},
+						},
+					]
+				: [],
+		),
+		...pending.map((record) => ({
+			sourceReading: record.sourceReading,
+			relation: record.pending.relation,
+			target: {
+				kind: "shadow" as const,
+				shadow: record.pending.target,
+				pendingRecord: record,
+			},
+		})),
+	];
+	const relationPlan = planRelationMaintenance({
+		lemmas: [
+			...slice.relationLemmas,
+			...(slice.existingLemma ? [] : [lemmaRecord]),
+		],
+		readings: [...slice.relationReadings, baseReading],
+		requests,
+	});
+	if (relationPlan.status === "rejected") return relationPlan;
+
+	const knowledge: ReadingKnowledge<string, Lemma<L>> = {};
+	for (const addition of relationPlan.additions) {
+		if (sameReading(addition.reading, reading))
+			appendRelation(knowledge, addition.relation, addition.targetLemma);
+	}
+	const storedReading: ReadingEntry<L> = {
+		...baseReading,
+		...(Object.keys(knowledge).length === 0 ? {} : { knowledge }),
+	};
+	const patches = relationAdditionsToPatches(
+		relationPlan.additions.filter(
+			(addition) => !sameReading(addition.reading, reading),
+		),
+		slice.revision,
+	);
+	const newPendingKeys = new Set(newPending.map(pendingRecordKey));
+	const pendingToCreate = relationPlan.unresolvedPending.filter((record) =>
+		newPendingKeys.has(pendingRecordKey(record)),
+	);
+	const pendingToDelete = relationPlan.resolvedPending.filter(
+		(record) => !newPendingKeys.has(pendingRecordKey(record)),
+	);
 
 	const changes: PlannedChangeOp<L>[] = [];
-	if (!slice.existingLemma) {
+	if (!slice.existingLemma)
 		changes.push({
 			type: "createLemma",
 			record: lemmaRecord,
@@ -228,7 +244,6 @@ export function planAddNewNote<L extends SupportedLanguage>(
 				{ kind: "lemmaMissing", lemma },
 			],
 		});
-	}
 	changes.push(
 		{
 			type: "createReading",
@@ -240,7 +255,17 @@ export function planAddNewNote<L extends SupportedLanguage>(
 			],
 		},
 		...patches,
-		...pending.map(
+		...pendingToDelete.map(
+			(record): PlannedChangeOp<L> => ({
+				type: "deletePendingSemanticRelation",
+				record,
+				preconditions: [
+					{ kind: "revisionMatches", revision: slice.revision },
+					{ kind: "pendingRelationExists", record },
+				],
+			}),
+		),
+		...pendingToCreate.map(
 			(record): PlannedChangeOp<L> => ({
 				type: "createPendingSemanticRelation",
 				record,
@@ -269,9 +294,17 @@ export function planAddNewNote<L extends SupportedLanguage>(
 		changes,
 		affected: {
 			lemmas: [lemma],
-			readings: [reading],
+			readings: uniqueBy(
+				[
+					reading,
+					...relationPlan.additions.map(({ reading }) => reading),
+				],
+				readingFingerprint,
+			),
 			surfaceIds: ownedSurfaceEntries.map(({ id }) => id),
-			pendingIds: pending.map(({ locator }) => locator.targetPendingId),
+			pendingIds: [...pendingToCreate, ...pendingToDelete].map(
+				({ locator }) => locator.targetPendingId,
+			),
 		},
 		summary: { message: "Added new learner reading." },
 	};

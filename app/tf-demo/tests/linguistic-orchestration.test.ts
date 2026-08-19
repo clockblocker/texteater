@@ -9,7 +9,7 @@ import { type AiSdk, buildDumgen, type Dumgen } from "dumgen";
 import { readingFingerprint } from "dumling";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
-	applyValidatedKnowledgeContribution,
+	applyValidatedReadingKnowledgeChange,
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 	type PersistedSentence,
@@ -42,8 +42,11 @@ function createPlanningStorage() {
 			return {
 				revision,
 				existingOwnedSurfaces: [],
-				explicitExistingReadingTargets: [],
+				explicitExistingLemmaTargets: [],
 				existingPendingRelationsForProposedPendingTargets: [],
+				pendingRelationsMatchingProposedLemma: [],
+				relationLemmas: [],
+				relationReadings: [],
 			};
 		},
 		async commitChanges(request) {
@@ -838,7 +841,7 @@ test("an unresolved model result yields to membership committed during model wor
 	});
 });
 
-describe("Dumrel Knowledge Contribution seam", () => {
+describe("Dumrel Knowledge Change seam", () => {
 	test("validates a Reading Change and applies it through Dumdict", () => {
 		const reading = {
 			lemma: {
@@ -852,8 +855,8 @@ describe("Dumrel Knowledge Contribution seam", () => {
 		};
 
 		expect(
-			applyValidatedKnowledgeContribution({
-				owner: { kind: "Reading", reading },
+			applyValidatedReadingKnowledgeChange({
+				reading,
 				change: {
 					kind: "Contribute",
 					aspect: "definition",
@@ -870,7 +873,7 @@ describe("Dumrel Knowledge Contribution seam", () => {
 		});
 	});
 
-	test("connects one stored Reading reference to another", () => {
+	test("connects Reading Knowledge to a Lemma target", () => {
 		const bank = {
 			lemma: {
 				language: "de",
@@ -893,13 +896,13 @@ describe("Dumrel Knowledge Contribution seam", () => {
 		} as const;
 
 		expect(
-			applyValidatedKnowledgeContribution({
-				owner: { kind: "Reading", reading: institute },
+			applyValidatedReadingKnowledgeChange({
+				reading: institute,
 				change: {
 					kind: "Contribute",
 					aspect: "semanticRelations",
 					relation: "hypernym",
-					value: [bank],
+					value: [bank.lemma],
 				},
 			}),
 		).toEqual({
@@ -907,10 +910,10 @@ describe("Dumrel Knowledge Contribution seam", () => {
 				kind: "Contribute",
 				aspect: "semanticRelations",
 				relation: "hypernym",
-				value: [bank],
+				value: [bank.lemma],
 			},
 			knowledge: {
-				semanticRelations: { hypernym: [bank] },
+				semanticRelations: { hypernym: [bank.lemma] },
 			},
 		});
 	});

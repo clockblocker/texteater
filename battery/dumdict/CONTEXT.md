@@ -7,8 +7,8 @@ transactions, or synchronization.
 ## Language
 
 **Lemma Record**:
-A stored structural Lemma with optional Lemma Knowledge. The embedded Lemma is
-grammatical identity; there is no separate opaque Lemma ID.
+A stored structural Lemma. The embedded Lemma is grammatical identity; there
+is no separate opaque Lemma ID and Lemmas do not own Knowledge.
 _Avoid_: Linguistic Entry record, Lemma entry
 
 **Reading**:
@@ -35,3 +35,8 @@ the Lemma realized by that Surface.
 **Reading Candidate**:
 An existing learner Reading returned for an exact resolved Lemma so the
 classifier can reuse it or propose a new Reading.
+
+**Semantic Relation Edge**:
+A Reading-owned relation whose target is a structural Lemma. Dumdict resolves
+generated Unit Shadows, materializes inverse edges across the target Lemma's
+Readings, and backfills those inverses when later Readings appear.

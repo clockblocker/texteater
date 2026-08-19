@@ -108,9 +108,6 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 		}
 		const result = await ctx.db
 			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", "Reading"),
-			)
 			.paginate(paginationOpts);
 		let changed = 0;
 		let malformed = 0;
@@ -127,12 +124,12 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 			const before = await ctx.db
 				.query("structuralShadowReferences")
 				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", knowledge.ownerKey),
+					q.eq("ownerReadingKey", knowledge.ownerReadingKey),
 				)
 				.take(201);
 			await syncStructuralShadowReferences(
 				ctx,
-				knowledge.ownerKey,
+				knowledge.ownerReadingKey,
 				knowledge.knowledge,
 			);
 			const beforeFingerprint = before
@@ -142,7 +139,7 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 			const after = await ctx.db
 				.query("structuralShadowReferences")
 				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", knowledge.ownerKey),
+					q.eq("ownerReadingKey", knowledge.ownerReadingKey),
 				)
 				.take(201);
 			const afterFingerprint = after
@@ -174,8 +171,8 @@ async function loadExpectedStructuralReference(
 ) {
 	const accumulated = await ctx.db
 		.query("accumulatedKnowledge")
-		.withIndex("by_owner_kind_and_owner_key", (q) =>
-			q.eq("ownerKind", "Reading").eq("ownerKey", ownerReadingKey),
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
 		)
 		.unique();
 	if (!accumulated) return null;

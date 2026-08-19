@@ -21,6 +21,9 @@ import type {
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
 	GrammaticalRoute,
+	KnowledgeGenerationInput,
+	KnowledgeGenerationLanguage,
+	KnowledgeGenerationResult,
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
@@ -35,6 +38,10 @@ type DumgenGenerators = GeneratorCatalog<typeof PROMPT_CATALOG>;
 export type DumgenSection1Trace = IntakeTrace | SourceSegmentationTrace;
 type DumgenImplementationOptions = Readonly<{
 	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
+	readonly generateKnowledge: (
+		language: KnowledgeGenerationLanguage,
+		input: KnowledgeGenerationInput<"de">,
+	) => Promise<KnowledgeGenerationResult>;
 }>;
 type GrammaticalGenerator = (input: {
 	readonly markedContext: string;
@@ -52,7 +59,7 @@ type GrammaticalRouteKey<
 
 export function createDumgenImplementation(
 	generators: DumgenGenerators,
-	options: DumgenImplementationOptions = {},
+	options: DumgenImplementationOptions,
 ) {
 	const targetClassificationRoutes = Object.freeze({
 		de: generators.laboratory.targetClassification.de.highLevelWholeUnit,
@@ -357,9 +364,17 @@ export function createDumgenImplementation(
 		});
 	}
 
+	async function knowledge(
+		language: KnowledgeGenerationLanguage,
+		input: KnowledgeGenerationInput<"de">,
+	): Promise<KnowledgeGenerationResult> {
+		return options.generateKnowledge(language, input);
+	}
+
 	return Object.freeze({
 		segment,
 		resolve: Object.freeze({ grammatical, reading }),
+		generate: Object.freeze({ knowledge }),
 	});
 }
 

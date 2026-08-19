@@ -4,6 +4,7 @@ supersedes: 0001-separate-entry-identity-from-lemma-form.md
 partially-superseded-by:
   - 0003-attestation-supersedes-selection-and-owns-realization-coverage.md
   - 0008-make-reading-a-foundational-dumling-value.md
+  - 0011-use-reading-owned-lemma-targeted-semantic-relations.md
 ---
 
 # Lemma is grammatical identity and Reading is semantic identity

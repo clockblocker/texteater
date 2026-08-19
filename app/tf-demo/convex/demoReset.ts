@@ -1,7 +1,5 @@
-import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 
-import { pruneReadingReferences } from "../server/textDeletion";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
@@ -11,20 +9,20 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { replaceAccumulatedKnowledge } from "./model/shadows";
+import { deleteAccumulatedKnowledge } from "./model/shadows";
 
 const BATCH_SIZE = 400;
 const MAX_BATCHES = 100;
-const MAX_PAGES = 1_000;
 const MAX_SENTENCES_PER_TEXT = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
-const PAGE_SIZE = 100;
 const DESCRIPTOR_PAGE_SIZE = 20;
 
 const sharedTableNames = [
 	"resolutionSessions",
+	"knowledgeGenerationAttempts",
+	"knowledgeSettings",
 	"structuralShadowReferences",
-	"knowledgeContributions",
+	"knowledgeChanges",
 	"accumulatedKnowledge",
 	"pendingSemanticRelations",
 	"shadows",
@@ -32,6 +30,7 @@ const sharedTableNames = [
 	"visitorClicks",
 	"ownedSurfaces",
 	"readingEntries",
+	"semanticRelationEdges",
 	"readings",
 	"dictionaryLemmas",
 	"surfaces",
@@ -46,12 +45,6 @@ function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {
 		throw new Error("visitorId must contain 1 to 200 characters.");
 	}
-}
-
-function optionalRecord(value: unknown): Record<string, unknown> | null {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as Record<string, unknown>)
-		: null;
 }
 
 async function bumpDictionaryRevision(ctx: MutationCtx): Promise<void> {
@@ -100,14 +93,30 @@ export const clearVisitorDataBatch = internalMutation({
 			)
 			.take(BATCH_SIZE);
 		for (const session of sessions) await ctx.db.delete(session._id);
+		const attempts = await ctx.db
+			.query("knowledgeGenerationAttempts")
+			.withIndex("by_visitor_id_and_updated_at", (q) =>
+				q.eq("visitorId", visitorId),
+			)
+			.take(BATCH_SIZE - sessions.length);
+		for (const attempt of attempts) await ctx.db.delete(attempt._id);
+		const settings = await ctx.db
+			.query("knowledgeSettings")
+			.withIndex("by_visitor_id", (q) => q.eq("visitorId", visitorId))
+			.unique();
+		if (settings) await ctx.db.delete(settings._id);
 		const clicks = await ctx.db
 			.query("visitorClicks")
 			.withIndex("by_visitor_id_and_clicked_at", (q) =>
 				q.eq("visitorId", visitorId),
 			)
-			.take(BATCH_SIZE - sessions.length);
+			.take(BATCH_SIZE - sessions.length - attempts.length);
 		for (const click of clicks) await ctx.db.delete(click._id);
-		const deleted = sessions.length + clicks.length;
+		const deleted =
+			sessions.length +
+			attempts.length +
+			clicks.length +
+			(settings ? 1 : 0);
 		return {
 			deleted,
 			hasMore: deleted === BATCH_SIZE,
@@ -150,12 +159,6 @@ const readingDescriptorValidator = v.object({
 	lemmaId: v.id("lemmas"),
 	lemmaKey: v.string(),
 	hasRemainingSource: v.boolean(),
-});
-
-const mutationPageValidator = v.object({
-	continueCursor: v.string(),
-	isDone: v.boolean(),
-	patched: v.number(),
 });
 
 export const getTextAnalysisCandidates = internalQuery({
@@ -313,129 +316,6 @@ export const describeReadingCleanupCandidates = internalQuery({
 	},
 });
 
-export const pruneReadingEntryRelationsPage = internalMutation({
-	args: {
-		doomedReadingKeys: v.array(v.string()),
-		paginationOpts: paginationOptsValidator,
-	},
-	returns: mutationPageValidator,
-	handler: async (ctx, { doomedReadingKeys, paginationOpts }) => {
-		const doomed = new Set(doomedReadingKeys);
-		const result = await ctx.db
-			.query("readingEntries")
-			.paginate(paginationOpts);
-		let patched = 0;
-		for (const entry of result.page) {
-			const reading = await ctx.db.get(entry.readingId);
-			if (!reading || doomed.has(reading.readingKey)) continue;
-			const record = optionalRecord(entry.record);
-			if (!record) continue;
-			const pruned = pruneReadingReferences(record.knowledge, doomed);
-			if (!pruned.changed) continue;
-			await ctx.db.patch(entry._id, {
-				record: { ...record, knowledge: pruned.value },
-			});
-			patched += 1;
-		}
-		if (patched > 0) await bumpDictionaryRevision(ctx);
-		return {
-			continueCursor: result.continueCursor,
-			isDone: result.isDone,
-			patched,
-		};
-	},
-});
-
-export const pruneAccumulatedKnowledgeRelationsPage = internalMutation({
-	args: {
-		doomedReadingKeys: v.array(v.string()),
-		paginationOpts: paginationOptsValidator,
-	},
-	returns: mutationPageValidator,
-	handler: async (ctx, { doomedReadingKeys, paginationOpts }) => {
-		const doomed = new Set(doomedReadingKeys);
-		const result = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", "Reading"),
-			)
-			.paginate(paginationOpts);
-		let patched = 0;
-		for (const knowledge of result.page) {
-			if (doomed.has(knowledge.ownerKey)) continue;
-			const pruned = pruneReadingReferences(knowledge.knowledge, doomed);
-			if (!pruned.changed) continue;
-			await replaceAccumulatedKnowledge(
-				ctx,
-				"Reading",
-				knowledge.ownerKey,
-				pruned.value,
-			);
-			patched += 1;
-		}
-		if (patched > 0) await bumpDictionaryRevision(ctx);
-		return {
-			continueCursor: result.continueCursor,
-			isDone: result.isDone,
-			patched,
-		};
-	},
-});
-
-export const pruneKnowledgeContributionRelationsPage = internalMutation({
-	args: {
-		doomedReadingKeys: v.array(v.string()),
-		paginationOpts: paginationOptsValidator,
-	},
-	returns: mutationPageValidator,
-	handler: async (ctx, { doomedReadingKeys, paginationOpts }) => {
-		const doomed = new Set(doomedReadingKeys);
-		const result = await ctx.db
-			.query("knowledgeContributions")
-			.paginate(paginationOpts);
-		let patched = 0;
-		for (const contribution of result.page) {
-			if (
-				contribution.ownerKind !== "Reading" ||
-				doomed.has(contribution.ownerKey)
-			) {
-				continue;
-			}
-			const change = optionalRecord(contribution.change);
-			if (
-				change?.aspect !== "semanticRelations" ||
-				typeof change.relation !== "string" ||
-				!Array.isArray(change.value)
-			) {
-				continue;
-			}
-			const relation = change.relation;
-			const pruned = pruneReadingReferences(
-				{ semanticRelations: { [relation]: change.value } },
-				doomed,
-			);
-			if (!pruned.changed) continue;
-			const knowledge = optionalRecord(pruned.value);
-			const relations = optionalRecord(knowledge?.semanticRelations);
-			const targets = relations?.[relation];
-			if (!Array.isArray(targets) || targets.length === 0) {
-				await ctx.db.delete(contribution._id);
-			} else {
-				await ctx.db.patch(contribution._id, {
-					change: { ...change, value: targets },
-				});
-			}
-			patched += 1;
-		}
-		if (patched > 0) await bumpDictionaryRevision(ctx);
-		return {
-			continueCursor: result.continueCursor,
-			isDone: result.isDone,
-			patched,
-		};
-	},
-});
-
 export const clearReadingDataBatch = internalMutation({
 	args: { readingKeys: v.array(v.string()) },
 	returns: v.object({ deleted: v.number(), deletedReadings: v.number() }),
@@ -454,28 +334,23 @@ export const clearReadingDataBatch = internalMutation({
 				await ctx.db.delete(relation._id);
 				deleted += 1;
 			}
-			const contributions = await ctx.db
-				.query("knowledgeContributions")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Reading").eq("ownerKey", readingKey),
+			const knowledgeChanges = await ctx.db
+				.query("knowledgeChanges")
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", readingKey),
 				)
 				.take(BATCH_SIZE - deleted);
-			for (const contribution of contributions) {
-				await ctx.db.delete(contribution._id);
+			for (const storedChange of knowledgeChanges) {
+				await ctx.db.delete(storedChange._id);
 				deleted += 1;
 			}
 			const accumulated = await ctx.db
 				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Reading").eq("ownerKey", readingKey),
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", readingKey),
 				)
 				.unique();
-			await replaceAccumulatedKnowledge(
-				ctx,
-				"Reading",
-				readingKey,
-				undefined,
-			);
+			await deleteAccumulatedKnowledge(ctx, readingKey);
 			if (accumulated) deleted += 1;
 			const reading = await ctx.db
 				.query("readings")
@@ -484,6 +359,23 @@ export const clearReadingDataBatch = internalMutation({
 				)
 				.unique();
 			if (!reading) continue;
+			const outgoingEdges = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", reading._id),
+				)
+				.take(BATCH_SIZE - deleted);
+			for (const edge of outgoingEdges) {
+				await ctx.db.delete(edge._id);
+				deleted += 1;
+			}
+			const remainingOutgoingEdge = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", reading._id),
+				)
+				.first();
+			if (remainingOutgoingEdge) continue;
 			const entry = await ctx.db
 				.query("readingEntries")
 				.withIndex("by_reading_id", (q) =>
@@ -550,26 +442,24 @@ export const clearLemmaDataBatch = internalMutation({
 				.first();
 			if (survivingSurface) continue;
 
-			const contributions = await ctx.db
-				.query("knowledgeContributions")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
+			const incomingEdges = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_target_lemma_id", (q) =>
+					q.eq("targetLemmaId", lemmaId),
 				)
 				.take(BATCH_SIZE - deleted);
-			for (const contribution of contributions) {
-				await ctx.db.delete(contribution._id);
+			for (const edge of incomingEdges) {
+				await ctx.db.delete(edge._id);
 				deleted += 1;
 			}
-			const accumulated = await ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
+			const remainingIncomingEdge = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_target_lemma_id", (q) =>
+					q.eq("targetLemmaId", lemmaId),
 				)
-				.unique();
-			if (accumulated) {
-				await ctx.db.delete(accumulated._id);
-				deleted += 1;
-			}
+				.first();
+			if (remainingIncomingEdge) continue;
+
 			const dictionaryLemma = await ctx.db
 				.query("dictionaryLemmas")
 				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
@@ -673,31 +563,6 @@ export const stripTextAnalysis = action({
 			Boolean(!hasRemainingSource),
 		);
 		const doomedReadingKeys = doomed.map(({ readingKey }) => readingKey);
-		for (const functionReference of [
-			internal.demoReset.pruneReadingEntryRelationsPage,
-			internal.demoReset.pruneAccumulatedKnowledgeRelationsPage,
-			internal.demoReset.pruneKnowledgeContributionRelationsPage,
-		]) {
-			let cursor: string | null = null;
-			for (let page = 0; page < MAX_PAGES; page += 1) {
-				const result: {
-					continueCursor: string;
-					isDone: boolean;
-					patched: number;
-				} = await ctx.runMutation(functionReference, {
-					doomedReadingKeys,
-					paginationOpts: { cursor, numItems: PAGE_SIZE },
-				});
-				if (result.isDone) break;
-				cursor = result.continueCursor;
-				if (page === MAX_PAGES - 1) {
-					throw new Error(
-						"Relation pruning exceeded its page limit.",
-					);
-				}
-			}
-		}
-
 		let deletedReadings = 0;
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(

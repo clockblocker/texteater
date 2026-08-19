@@ -13,7 +13,6 @@ import type {
 } from "dumrel";
 import {
 	knowledgeChangeSchema,
-	lemmaKnowledgeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 	semanticRelationSchema,
@@ -59,6 +58,13 @@ function readingUsesLanguage<L extends SupportedLanguage>(
 	return reading.lemma.language === language;
 }
 
+function lemmaUsesLanguage<L extends SupportedLanguage>(
+	lemma: Lemma,
+	language: L,
+): boolean {
+	return lemma.language === language;
+}
+
 function sameLemma<L extends SupportedLanguage>(
 	left: Lemma<L>,
 	right: Lemma<L>,
@@ -81,7 +87,7 @@ function knowledgeUsesLanguage<L extends SupportedLanguage>(
 	for (const targets of Object.values(knowledge.semanticRelations ?? {})) {
 		if (
 			(targets ?? []).some(
-				(target) => !readingUsesLanguage(target, language),
+				(target) => !lemmaUsesLanguage(target, language),
 			)
 		)
 			return false;
@@ -110,8 +116,8 @@ function knowledgeChangeUsesLanguage<L extends SupportedLanguage>(
 	language: L,
 ): boolean {
 	if (change.aspect === "semanticRelations" && "value" in change)
-		return change.value.every((reading) =>
-			readingUsesLanguage(reading, language),
+		return change.value.every((lemma) =>
+			lemmaUsesLanguage(lemma, language),
 		);
 	if (change.aspect === "morphologicalTree" && "value" in change)
 		return knowledgeUsesLanguage(
@@ -141,7 +147,7 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 	);
 	const languageReadingKnowledgeSchema = (
 		readingKnowledgeSchema as unknown as ZodType<
-			ReadingKnowledge<string, Reading<L>>
+			ReadingKnowledge<string, Lemma<L>>
 		>
 	).refine(
 		(knowledge) =>
@@ -171,7 +177,6 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 
 	const lemmaRecordSchema = z.strictObject({
 		lemma: lemmaSchema,
-		knowledge: lemmaKnowledgeSchema.optional(),
 	});
 	const readingEntrySchema = z
 		.strictObject({
@@ -186,10 +191,10 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 				Object.values(entry.knowledge?.semanticRelations ?? {}).every(
 					(targets) =>
 						(targets ?? []).every(
-							(target) => !sameReading(entry.reading, target),
+							(target) => !sameLemma(entry.reading.lemma, target),
 						),
 				),
-			"Reading Knowledge cannot contain a direct self relation.",
+			"Reading Knowledge cannot contain a direct same-Lemma relation.",
 		);
 	const surfaceEntrySchema = z
 		.strictObject({
@@ -272,25 +277,13 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 		}),
 	]);
 
-	const languageReadingKnowledgeChangeValueSchema = knowledgeChangeSchema
-		.refine(
-			(change) => change.aspect !== "transcriptions",
-			"Reading Knowledge Changes cannot change transcriptions.",
-		)
-		.refine(
+	const languageReadingKnowledgeChangeValueSchema =
+		knowledgeChangeSchema.refine(
 			(change) => knowledgeChangeUsesLanguage(change, language),
 			`Reading Knowledge Change references must use ${language}.`,
-		) as unknown as ZodType<
-		Exclude<
-			KnowledgeChange<string, Reading<L>>,
-			{ aspect: "transcriptions" }
-		>
-	>;
+		) as unknown as ZodType<KnowledgeChange<string, Lemma<L>>>;
 	const readingKnowledgeChangeSchema = z.strictObject({
-		owner: z.strictObject({
-			kind: z.literal("Reading"),
-			reading: languageReadingSchema,
-		}),
+		reading: languageReadingSchema,
 		change: languageReadingKnowledgeChangeValueSchema,
 	});
 	const readingPatchOpSchema = z.discriminatedUnion("kind", [
@@ -344,9 +337,9 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 				change.ops.every(
 					(op) =>
 						op.kind !== "applyKnowledgeChange" ||
-						sameReading(change.reading, op.envelope.owner.reading),
+						sameReading(change.reading, op.envelope.reading),
 				),
-			"Reading patch owner must match the patched Reading.",
+			"Knowledge Change Reading must match the patched Reading.",
 		);
 	const commitChangesRequestSchema = z.strictObject({
 		baseRevision: storeRevisionSchema,

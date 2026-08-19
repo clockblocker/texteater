@@ -1,14 +1,13 @@
 import { lookupRelationsCleanupInfo } from "../core/lookup";
-import { validateRelationsCleanupInfoSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type {
 	GetInfoForRelationsCleanupRequest,
 	GetInfoForRelationsCleanupResult,
 } from "../public";
-import type { CreateDumdictServiceOptions } from "../storage";
+import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
-	options: CreateDumdictServiceOptions<L>,
+	options: DumdictServiceRuntimeOptions<L>,
 	request: GetInfoForRelationsCleanupRequest<L>,
 ): Promise<GetInfoForRelationsCleanupResult<L>> {
 	const canonicalForm = request.canonicalForm.trim().normalize("NFC");
@@ -19,6 +18,6 @@ export async function getInfoForRelationsCleanup<L extends SupportedLanguage>(
 	const slice = await options.storage.getInfoForRelationsCleanup({
 		canonicalForm,
 	});
-	validateRelationsCleanupInfoSlice(options.language, slice, canonicalForm);
+	options.sliceValidation.relationsCleanupInfo(slice, canonicalForm);
 	return lookupRelationsCleanupInfo(slice);
 }

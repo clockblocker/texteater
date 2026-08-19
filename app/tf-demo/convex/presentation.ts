@@ -1,11 +1,14 @@
 import { v } from "convex/values";
-import { type Reading, readingFingerprint } from "dumling/reading";
 import type { SemanticRelation } from "dumrel";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
-import type { UnitReadingNoteTarget } from "../shared/navigation";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
+import {
+	defaultKnowledgeSettings,
+	loadKnowledgeSettings,
+} from "./knowledgeSettings";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	loadResolutionNote,
@@ -21,6 +24,7 @@ import {
 } from "./model/shadows";
 import {
 	grammaticalLanguageValidator,
+	knowledgeSettingsValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
@@ -53,7 +57,6 @@ const MAX_SENTENCES_PER_TEXT = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const SOURCE_CONTEXT_PAGE_SIZE = 6;
 const MAX_SHADOW_CANDIDATE_LEMMAS = 100;
-const MAX_SHADOW_CANDIDATE_READINGS = 100;
 
 const textTargetValidator = v.object({
 	kind: v.literal("Text"),
@@ -124,18 +127,17 @@ const unitShadowProjectionValidator = v.object({
 
 const relationFingerprintProjectionValidator = v.object({
 	relation: semanticRelationValidator,
-	targetReadingKey: v.string(),
+	targetLemmaKey: v.string(),
 	targetCanonicalForm: v.string(),
-	targetEmojiDescription: v.string(),
 });
 
 const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetCanonicalForm: v.string(),
-	targetEmojiDescription: v.string(),
 	target: v.object({
-		kind: v.literal("UnitReadingNote"),
-		readingId: v.id("readings"),
+		kind: v.literal("RouteNote"),
+		routeKind: v.literal("Lemma"),
+		id: v.id("lemmas"),
 	}),
 });
 
@@ -165,13 +167,12 @@ const structuralShadowProjectionValidator = v.object({
 });
 
 const knowledgeProjectionValidator = v.object({
+	transcription: v.union(v.null(), v.string()),
 	definition: v.union(v.null(), v.string()),
 	translations: v.array(languageBucketValidator),
-	transcriptions: v.array(languageBucketValidator),
 	morphologicalTree: v.union(v.null(), v.any()),
 	lexicalBreakdown: v.array(unitShadowProjectionValidator),
-	readingKnowledgeUpdatedAt: v.union(v.null(), v.number()),
-	lemmaKnowledgeUpdatedAt: v.union(v.null(), v.number()),
+	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 });
 
 const readingNoteValidator = v.object({
@@ -182,6 +183,20 @@ const readingNoteValidator = v.object({
 	}),
 	reading: readingProjectionValidator,
 	lemma: lemmaProjectionValidator,
+	knowledgeState: v.object({
+		status: v.union(
+			v.literal("Absent"),
+			v.literal("Partial"),
+			v.literal("Full"),
+		),
+		activity: v.union(
+			v.literal("Idle"),
+			v.literal("Loading"),
+			v.literal("Failed"),
+		),
+		failureMessage: v.optional(v.string()),
+	}),
+	settings: knowledgeSettingsValidator,
 	note: knowledgeProjectionValidator,
 	relations: v.array(relationProjectionValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
@@ -217,13 +232,15 @@ const shadowNoteValidator = v.object({
 		revision: v.string(),
 		candidates: v.array(
 			v.object({
-				readingId: v.id("readings"),
+				lemmaId: v.id("lemmas"),
 				canonicalForm: v.string(),
-				emojiDescription: v.string(),
+				family: v.string(),
+				kind: v.string(),
 				coreFeatures: v.array(featureValidator),
 				target: v.object({
-					kind: v.literal("UnitReadingNote"),
-					readingId: v.id("readings"),
+					kind: v.literal("RouteNote"),
+					routeKind: v.literal("Lemma"),
+					id: v.id("lemmas"),
 				}),
 			}),
 		),
@@ -356,17 +373,17 @@ export type UnitShadowProjection = {
 
 export type RelationFingerprintProjection = {
 	readonly relation: SemanticRelation;
-	readonly targetReadingKey: string;
+	readonly targetLemmaKey: string;
 	readonly targetCanonicalForm: string;
-	readonly targetEmojiDescription: string;
 };
 
-export type RelationProjection<ReadingId extends string = string> = {
+export type RelationProjection<LemmaId extends string = string> = {
 	readonly relation: SemanticRelation;
 	readonly targetCanonicalForm: string;
-	readonly targetEmojiDescription: string;
-	readonly target: Omit<UnitReadingNoteTarget, "readingId"> & {
-		readonly readingId: ReadingId;
+	readonly target: {
+		readonly kind: "RouteNote";
+		readonly routeKind: "Lemma";
+		readonly id: LemmaId;
 	};
 };
 
@@ -398,23 +415,19 @@ export type SourceContextProjection<
 	};
 };
 
-export function projectKnowledge(
-	readingKnowledgeValue: unknown,
-	lemmaKnowledgeValue: unknown,
-): {
+export function projectKnowledge(readingKnowledgeValue: unknown): {
+	readonly transcription: string | null;
 	readonly definition: string | null;
 	readonly translations: LanguageBucketProjection[];
-	readonly transcriptions: LanguageBucketProjection[];
 	readonly morphologicalTree: unknown | null;
 	readonly lexicalBreakdown: UnitShadowProjection[];
 	readonly relations: RelationFingerprintProjection[];
 } {
 	const readingKnowledge = optionalRecord(readingKnowledgeValue);
-	const lemmaKnowledge = optionalRecord(lemmaKnowledgeValue);
 	return {
+		transcription: optionalNonEmptyString(readingKnowledge?.transcription),
 		definition: optionalNonEmptyString(readingKnowledge?.definition),
 		translations: flattenLanguageBuckets(readingKnowledge?.translations),
-		transcriptions: flattenLanguageBuckets(lemmaKnowledge?.transcriptions),
 		morphologicalTree: readingKnowledge?.morphologicalTree ?? null,
 		lexicalBreakdown: projectUnitShadows(
 			readingKnowledge?.lexicalBreakdown,
@@ -437,27 +450,16 @@ export function flattenDirectSemanticRelations(
 			if (!Array.isArray(targets)) return [];
 			return targets.flatMap(
 				(target): RelationFingerprintProjection[] => {
-					const targetRecord = optionalRecord(target);
-					const lemma = optionalRecord(targetRecord?.lemma);
+					const lemma = optionalRecord(target);
 					const targetCanonicalForm = optionalNonEmptyString(
 						lemma?.canonicalForm,
 					);
-					const targetEmojiDescription = optionalNonEmptyString(
-						targetRecord?.emojiDescription,
-					);
-					return targetCanonicalForm &&
-						targetEmojiDescription &&
-						lemma
+					return targetCanonicalForm && lemma
 						? [
 								{
 									relation,
-									targetReadingKey: readingFingerprint({
-										lemma,
-										emojiDescription:
-											targetEmojiDescription,
-									} as Reading),
+									targetLemmaKey: lemmaIdentityKey(lemma),
 									targetCanonicalForm,
-									targetEmojiDescription,
 								},
 							]
 						: [];
@@ -467,38 +469,74 @@ export function flattenDirectSemanticRelations(
 		.slice(0, MAX_RELATIONS_PER_NOTE);
 }
 
-export function projectResolvedRelationTargets<ReadingId extends string>(
+export function projectResolvedRelationTargets<LemmaId extends string>(
 	relations: readonly RelationFingerprintProjection[],
-	targetReadings: readonly {
-		readonly readingKey: string;
-		readonly readingId: ReadingId;
-		readonly lemmaFamily: string;
+	targetLemmas: readonly {
+		readonly lemmaKey: string;
+		readonly lemmaId: LemmaId;
 	}[],
-): RelationProjection<ReadingId>[] {
-	const readingIdByKey = new Map(
-		targetReadings.flatMap(({ readingKey, readingId, lemmaFamily }) =>
-			isUnitReadingFamily(lemmaFamily) ? [[readingKey, readingId]] : [],
-		),
+): RelationProjection<LemmaId>[] {
+	const lemmaIdByKey = new Map(
+		targetLemmas.map(({ lemmaKey, lemmaId }) => [lemmaKey, lemmaId]),
 	);
 	return relations.flatMap(
-		({
-			targetReadingKey,
-			...relation
-		}): RelationProjection<ReadingId>[] => {
-			const readingId = readingIdByKey.get(targetReadingKey);
-			return readingId
+		({ targetLemmaKey, ...relation }): RelationProjection<LemmaId>[] => {
+			const lemmaId = lemmaIdByKey.get(targetLemmaKey);
+			return lemmaId
 				? [
 						{
 							...relation,
 							target: {
-								kind: "UnitReadingNote",
-								readingId,
+								kind: "RouteNote",
+								routeKind: "Lemma",
+								id: lemmaId,
 							},
 						},
 					]
 				: [];
 		},
 	);
+}
+
+async function loadRelationProjections(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+) {
+	const edges = await ctx.db
+		.query("semanticRelationEdges")
+		.withIndex("by_source_reading_id", (q) =>
+			q.eq("sourceReadingId", readingId),
+		)
+		.take(MAX_RELATIONS_PER_NOTE + 1);
+	if (edges.length > MAX_RELATIONS_PER_NOTE) {
+		throw new Error(
+			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Semantic Relations.`,
+		);
+	}
+	const lemmas = await Promise.all(
+		edges.map(({ targetLemmaId }) => ctx.db.get(targetLemmaId)),
+	);
+	const fingerprints = edges.flatMap((edge, index) => {
+		const lemma = lemmas[index];
+		return lemma
+			? [
+					{
+						relation: edge.relation,
+						targetLemmaKey: lemma.lemmaKey,
+						targetCanonicalForm: lemma.canonicalForm,
+					},
+				]
+			: [];
+	});
+	return {
+		fingerprints,
+		resolved: projectResolvedRelationTargets(
+			fingerprints,
+			lemmas.flatMap((lemma) =>
+				lemma ? [{ lemmaKey: lemma.lemmaKey, lemmaId: lemma._id }] : [],
+			),
+		),
+	};
 }
 
 export const forVisitor = query({
@@ -530,24 +568,15 @@ export const forVisitor = query({
 			return null;
 		}
 
-		const [text, readingKnowledge, lemmaKnowledge] = await Promise.all([
+		const [text, readingKnowledge, relations] = await Promise.all([
 			ctx.db.get(occurrence.sentence.textId),
 			ctx.db
 				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q
-						.eq("ownerKind", "Reading")
-						.eq("ownerKey", occurrence.reading.readingKey),
+				.withIndex("by_owner_reading_key", (q) =>
+					q.eq("ownerReadingKey", occurrence.reading.readingKey),
 				)
 				.unique(),
-			ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_kind_and_owner_key", (q) =>
-					q
-						.eq("ownerKind", "Lemma")
-						.eq("ownerKey", occurrence.lemma.lemmaKey),
-				)
-				.unique(),
+			loadRelationProjections(ctx, occurrence.reading._id),
 		]);
 		if (!text) return null;
 
@@ -555,10 +584,7 @@ export const forVisitor = query({
 			occurrence.reading,
 			occurrence.lemma,
 		);
-		const projected = projectKnowledge(
-			readingKnowledge?.knowledge,
-			lemmaKnowledge?.knowledge,
-		);
+		const projected = projectKnowledge(readingKnowledge?.knowledge);
 		const memberIndices = new Set(occurrence.memberSegmentIndices);
 
 		return {
@@ -575,15 +601,14 @@ export const forVisitor = query({
 			reading: identities.reading,
 			lemma: identities.lemma,
 			note: {
+				transcription: projected.transcription,
 				definition: projected.definition,
 				translations: [...projected.translations],
-				transcriptions: [...projected.transcriptions],
 				morphologicalTree: projected.morphologicalTree,
 				lexicalBreakdown: [...projected.lexicalBreakdown],
-				readingKnowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
-				lemmaKnowledgeUpdatedAt: lemmaKnowledge?.updatedAt ?? null,
+				knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 			},
-			relations: [...projected.relations],
+			relations: relations.fingerprints,
 			sentence: {
 				sentenceId: occurrence.sentence._id,
 				position: occurrence.sentence.position,
@@ -665,6 +690,7 @@ export const getNote = query({
 	args: {
 		target: noteTargetValidator,
 		contextCursor: v.optional(v.string()),
+		visitorId: v.optional(v.string()),
 	},
 	returns: v.union(
 		v.null(),
@@ -673,9 +699,14 @@ export const getNote = query({
 		shadowNoteValidator,
 		resolutionNoteValidator,
 	),
-	handler: async (ctx, { target, contextCursor }) => {
+	handler: async (ctx, { target, contextCursor, visitorId }) => {
 		if (target.kind === "UnitReadingNote") {
-			return loadUnitReadingNote(ctx, target.readingId, contextCursor);
+			return loadUnitReadingNote(
+				ctx,
+				target.readingId,
+				contextCursor,
+				visitorId,
+			);
 		}
 		if (target.kind === "Resolution") {
 			return loadResolutionNote(ctx, target.requestId);
@@ -728,6 +759,7 @@ async function loadUnitReadingNote(
 	ctx: QueryCtx,
 	readingIdValue: string,
 	contextCursor?: string,
+	visitorId?: string,
 ) {
 	const readingId = ctx.db.normalizeId("readings", readingIdValue);
 	if (!readingId) return null;
@@ -737,23 +769,20 @@ async function loadUnitReadingNote(
 	if (!lemma || !isUnitReadingFamily(lemma.family)) return null;
 	const [
 		readingKnowledge,
-		lemmaKnowledge,
+		relationProjections,
 		pendingRelations,
 		structuralReferences,
 		sourceContexts,
+		attempts,
+		settings,
 	] = await Promise.all([
 		ctx.db
 			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", "Reading").eq("ownerKey", reading.readingKey),
+			.withIndex("by_owner_reading_key", (q) =>
+				q.eq("ownerReadingKey", reading.readingKey),
 			)
 			.unique(),
-		ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", "Lemma").eq("ownerKey", lemma.lemmaKey),
-			)
-			.unique(),
+		loadRelationProjections(ctx, reading._id),
 		ctx.db
 			.query("pendingSemanticRelations")
 			.withIndex("by_source_reading_key", (q) =>
@@ -762,6 +791,16 @@ async function loadUnitReadingNote(
 			.take(MAX_PENDING_RELATIONS_PER_READING_NOTE + 1),
 		loadStructuralReferencesForReading(ctx, reading.readingKey),
 		loadSourceContextPage(ctx, reading._id, contextCursor),
+		ctx.db
+			.query("knowledgeGenerationAttempts")
+			.withIndex("by_owner_reading_key_and_updated_at", (q) =>
+				q.eq("ownerReadingKey", reading.readingKey),
+			)
+			.order("desc")
+			.take(20),
+		visitorId
+			? loadKnowledgeSettings(ctx, visitorId)
+			: Promise.resolve(defaultKnowledgeSettings()),
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
@@ -769,45 +808,27 @@ async function loadUnitReadingNote(
 		);
 	}
 	const identities = projectReadingIdentities(reading, lemma);
-	const projected = projectKnowledge(
-		readingKnowledge?.knowledge,
-		lemmaKnowledge?.knowledge,
+	const projected = projectKnowledge(readingKnowledge?.knowledge);
+	const activeAttempt = attempts.find(
+		({ state }) => state === "Scheduled" || state === "Running",
 	);
-	const targetReadingKeys = [
-		...new Set(
-			projected.relations.map(({ targetReadingKey }) => targetReadingKey),
-		),
-	];
-	const targetReadings = await Promise.all(
-		targetReadingKeys.map((targetReadingKey) =>
-			ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", targetReadingKey),
-				)
-				.unique(),
-		),
+	const failedAttempt = attempts.find(({ state }) => state === "Failed");
+	const status: "Absent" | "Partial" | "Full" =
+		readingKnowledge?.status ?? "Absent";
+	const activity: "Idle" | "Loading" | "Failed" =
+		status === "Full"
+			? "Idle"
+			: activeAttempt
+				? "Loading"
+				: failedAttempt
+					? "Failed"
+					: "Idle";
+	const filteredRelations = relationProjections.resolved.filter(
+		({ relation }) => settings.semanticRelations[relation],
 	);
-	const targetLemmas = await Promise.all(
-		targetReadings.map((targetReading) =>
-			targetReading ? ctx.db.get(targetReading.lemmaId) : null,
-		),
-	);
-	const relations = projectResolvedRelationTargets(
-		projected.relations,
-		targetReadings.flatMap((targetReading, index) => {
-			const targetLemma = targetLemmas[index];
-			return targetReading && targetLemma
-				? [
-						{
-							readingKey: targetReading.readingKey,
-							readingId: targetReading._id,
-							lemmaFamily: targetLemma.family,
-						},
-					]
-				: [];
-		}),
-	);
+	const filteredPendingRelations = projectPendingRelations(
+		pendingRelations,
+	).filter(({ relation }) => settings.semanticRelations[relation]);
 	return {
 		kind: "UnitReadingNote" as const,
 		target: {
@@ -816,18 +837,37 @@ async function loadUnitReadingNote(
 		},
 		reading: identities.reading,
 		lemma: identities.lemma,
-		note: {
-			definition: projected.definition,
-			translations: [...projected.translations],
-			transcriptions: [...projected.transcriptions],
-			morphologicalTree: projected.morphologicalTree,
-			lexicalBreakdown: [...projected.lexicalBreakdown],
-			readingKnowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
-			lemmaKnowledgeUpdatedAt: lemmaKnowledge?.updatedAt ?? null,
+		knowledgeState: {
+			status,
+			activity,
+			...(activity === "Failed" && failedAttempt?.failureMessage
+				? { failureMessage: failedAttempt.failureMessage }
+				: {}),
 		},
-		relations,
-		pendingRelations: projectPendingRelations(pendingRelations),
-		structuralReferences,
+		settings,
+		note: {
+			transcription: settings.transcription
+				? projected.transcription
+				: null,
+			definition: settings.definition ? projected.definition : null,
+			translations: settings.translations.en
+				? [...projected.translations]
+				: [],
+			morphologicalTree: settings.morphologicalTree
+				? projected.morphologicalTree
+				: null,
+			lexicalBreakdown: settings.lexicalBreakdown
+				? [...projected.lexicalBreakdown]
+				: [],
+			knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
+		},
+		relations: filteredRelations,
+		pendingRelations: filteredPendingRelations,
+		structuralReferences: structuralReferences.filter(({ aspect }) =>
+			aspect === "morphologicalTree"
+				? settings.morphologicalTree
+				: settings.lexicalBreakdown,
+		),
 		sourceContexts,
 	};
 }
@@ -945,56 +985,42 @@ async function loadShadowInspection(
 	}
 
 	const candidates: {
-		readingId: Id<"readings">;
+		lemmaId: Id<"lemmas">;
 		canonicalForm: string;
-		emojiDescription: string;
+		family: string;
+		kind: string;
 		coreFeatures: { name: string; value: string }[];
 		target: {
-			kind: "UnitReadingNote";
-			readingId: Id<"readings">;
+			kind: "RouteNote";
+			routeKind: "Lemma";
+			id: Id<"lemmas">;
 		};
 	}[] = [];
 	for (const lemma of lemmas) {
-		const remaining = MAX_SHADOW_CANDIDATE_READINGS - candidates.length;
-		const readings = await ctx.db
-			.query("readings")
+		const dictionaryLemma = await ctx.db
+			.query("dictionaryLemmas")
 			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-			.take(remaining + 1);
-		if (readings.length > remaining) {
-			throw new Error(
-				`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_READINGS} exactly matching Reading candidates.`,
-			);
-		}
-		const entries = await Promise.all(
-			readings.map((reading) =>
-				ctx.db
-					.query("readingEntries")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", reading._id),
-					)
-					.unique(),
-			),
-		);
-		for (const [index, reading] of readings.entries()) {
-			if (!entries[index]) continue;
-			candidates.push({
-				readingId: reading._id,
-				canonicalForm: lemma.canonicalForm,
-				emojiDescription: reading.emojiDescription,
-				coreFeatures: projectFeatures(lemma.coreFeatures),
-				target: {
-					kind: "UnitReadingNote",
-					readingId: reading._id,
-				},
-			});
-		}
+			.unique();
+		if (!dictionaryLemma) continue;
+		candidates.push({
+			lemmaId: lemma._id,
+			canonicalForm: lemma.canonicalForm,
+			family: lemma.family,
+			kind: lemma.kind,
+			coreFeatures: projectFeatures(lemma.coreFeatures),
+			target: {
+				kind: "RouteNote",
+				routeKind: "Lemma",
+				id: lemma._id,
+			},
+		});
 	}
 
 	return {
 		revision: `convex-${state?.revision ?? 0}`,
 		candidates: candidates.sort((left, right) =>
-			`${left.canonicalForm}\0${left.emojiDescription}\0${left.readingId}`.localeCompare(
-				`${right.canonicalForm}\0${right.emojiDescription}\0${right.readingId}`,
+			`${left.canonicalForm}\0${left.family}\0${left.kind}\0${left.lemmaId}`.localeCompare(
+				`${right.canonicalForm}\0${right.family}\0${right.kind}\0${right.lemmaId}`,
 			),
 		),
 	};
@@ -1102,10 +1128,8 @@ async function loadShadowNote(
 			ownerReadingKeys.map((ownerReadingKey) =>
 				ctx.db
 					.query("accumulatedKnowledge")
-					.withIndex("by_owner_kind_and_owner_key", (q) =>
-						q
-							.eq("ownerKind", "Reading")
-							.eq("ownerKey", ownerReadingKey),
+					.withIndex("by_owner_reading_key", (q) =>
+						q.eq("ownerReadingKey", ownerReadingKey),
 					)
 					.unique(),
 			),

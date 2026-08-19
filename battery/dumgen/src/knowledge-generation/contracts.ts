@@ -1,0 +1,49 @@
+import type { Reading } from "dumling/types";
+import type {
+	KnowledgeChange,
+	KnowledgeRequestMask,
+	PendingSemanticRelation,
+	UnitShadow,
+} from "dumrel";
+
+export type KnowledgeGenerationLanguage = "de";
+
+export type KnowledgeGenerationRequest = Omit<
+	KnowledgeRequestMask,
+	"morphologicalTree" | "lexicalBreakdown"
+> & {
+	readonly morphologicalTree?: never;
+	readonly lexicalBreakdown?: never;
+};
+
+export type KnowledgeGenerationInput<
+	L extends KnowledgeGenerationLanguage = KnowledgeGenerationLanguage,
+> = Readonly<{
+	readonly markedContext: string;
+	readonly reading: Reading<L>;
+	readonly request: KnowledgeGenerationRequest;
+}>;
+
+type DeepReadonly<Value> = Value extends
+	| string
+	| number
+	| boolean
+	| bigint
+	| symbol
+	| null
+	| undefined
+	? Value
+	: Value extends (...args: never[]) => unknown
+		? Value
+		: Value extends readonly unknown[]
+			? { readonly [Key in keyof Value]: DeepReadonly<Value[Key]> }
+			: Value extends object
+				? { readonly [Key in keyof Value]: DeepReadonly<Value[Key]> }
+				: Value;
+
+export type KnowledgeGenerationResult = DeepReadonly<{
+	changes: KnowledgeChange<"en">[];
+	pendingRelations: Array<
+		Omit<PendingSemanticRelation, "target"> & { target: UnitShadow<"de"> }
+	>;
+}>;

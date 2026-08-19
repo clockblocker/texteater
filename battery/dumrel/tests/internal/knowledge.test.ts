@@ -1,12 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
-import {
-	applyKnowledgeChange,
-	lemmaKnowledgeSchema,
-	readingKnowledgeSchema,
-} from "../../src";
+import { applyKnowledgeChange, readingKnowledgeSchema } from "../../src";
 import type {
-	LemmaKnowledge,
 	LexicalBreakdown,
 	MorphologicalTree,
 	ReadingKnowledge,
@@ -20,27 +15,22 @@ import {
 } from "./fixtures";
 
 describe("Knowledge schemas", () => {
-	test("accept owner-specific values and each empty owner value", () => {
-		expect(lemmaKnowledgeSchema.parse({})).toEqual({});
+	test("accepts normalized Reading Knowledge and its empty value", () => {
 		expect(readingKnowledgeSchema.parse({})).toEqual({});
 		expect(
-			lemmaKnowledgeSchema.parse({ transcriptions: { en: [" house "] } }),
-		).toEqual({ transcriptions: { en: ["house"] } });
-		expect(
 			readingKnowledgeSchema.parse({
+				transcription: " haʊs ",
 				definition: " building ",
 				translations: { de: [" Haus "] },
 			}),
-		).toEqual({ definition: "building", translations: { de: ["Haus"] } });
+		).toEqual({
+			transcription: "haʊs",
+			definition: "building",
+			translations: { de: ["Haus"] },
+		});
 	});
 
-	test("strict owner schemas reject aspects from the other owner", () => {
-		expect(
-			lemmaKnowledgeSchema.safeParse({
-				transcriptions: { en: ["house"] },
-				definition: "building",
-			}).success,
-		).toBe(false);
+	test("strict schema rejects the removed transcription shape", () => {
 		expect(
 			readingKnowledgeSchema.safeParse({
 				transcriptions: { en: ["house"] },
@@ -61,6 +51,21 @@ describe("Knowledge schemas", () => {
 			readingKnowledgeSchema.safeParse({
 				owner: nounReading,
 				definition: "x",
+			}).success,
+		).toBe(false);
+	});
+
+	test("accepts Lemma targets and rejects Reading targets", () => {
+		expect(
+			readingKnowledgeSchema.parse({
+				semanticRelations: { synonym: [nounReading.lemma] },
+			}),
+		).toEqual({
+			semanticRelations: { synonym: [nounReading.lemma] },
+		});
+		expect(
+			readingKnowledgeSchema.safeParse({
+				semanticRelations: { synonym: [nounReading] },
 			}).success,
 		).toBe(false);
 	});
@@ -87,39 +92,32 @@ describe("applyKnowledgeChange", () => {
 		expect(Object.isFrozen(result)).toBe(false);
 	});
 
-	test("corrects and retracts complete language buckets", () => {
-		const existing: LemmaKnowledge<"en" | "de"> = {
-			transcriptions: { en: ["house"], de: ["Haus"] },
-		};
+	test("corrects and retracts the singular transcription", () => {
+		const existing: ReadingKnowledge = { transcription: "house" };
 		const corrected = applyKnowledgeChange(existing, {
 			kind: "Correct",
-			aspect: "transcriptions",
-			language: "en",
-			value: ["haʊs", "haʊs"],
+			aspect: "transcription",
+			value: " haʊs ",
 		});
-		expect(corrected).toEqual({
-			transcriptions: { en: ["haʊs"], de: ["Haus"] },
-		});
+		expect(corrected).toEqual({ transcription: "haʊs" });
 		expect(
 			applyKnowledgeChange(corrected, {
 				kind: "Retract",
-				aspect: "transcriptions",
-				language: "en",
+				aspect: "transcription",
 			}),
-		).toEqual({ transcriptions: { de: ["Haus"] } });
+		).toEqual({});
 		expect(
 			applyKnowledgeChange(
-				{ transcriptions: { en: ["haʊs"] } },
+				{},
 				{
 					kind: "Retract",
-					aspect: "transcriptions",
-					language: "en",
+					aspect: "transcription",
 				},
 			),
 		).toEqual({});
 	});
 
-	test("requires Correct for a conflicting atomic contribution", () => {
+	test("requires Correct for a conflicting atomic Contribute change", () => {
 		const original: MorphologicalTree = morphologicalTree;
 		const alternative: MorphologicalTree = {
 			root: {
@@ -193,21 +191,33 @@ describe("applyKnowledgeChange", () => {
 	});
 
 	test("deduplicates Semantic Relation buckets by normalized concrete values", () => {
+		const sameDescriptorDifferentIdentity = {
+			...nounReading.lemma,
+			coreFeatures: { gender: "Masc", hyph: null },
+		} as const;
 		const contributed = applyKnowledgeChange(undefined, {
 			kind: "Contribute",
 			aspect: "semanticRelations",
 			relation: "synonym",
-			value: [nounReading, { ...nounReading }, secondNounReading],
+			value: [
+				nounReading.lemma,
+				{ ...nounReading.lemma, canonicalForm: " Haus " },
+				sameDescriptorDifferentIdentity,
+				secondNounReading.lemma,
+			],
 		});
-		expect(contributed.semanticRelations?.synonym).toHaveLength(2);
+		expect(contributed.semanticRelations?.synonym).toHaveLength(3);
+		expect(contributed.semanticRelations?.synonym).toContainEqual(
+			sameDescriptorDifferentIdentity,
+		);
 		const corrected = applyKnowledgeChange(contributed, {
 			kind: "Correct",
 			aspect: "semanticRelations",
 			relation: "synonym",
-			value: [secondNounReading, secondNounReading],
+			value: [secondNounReading.lemma, secondNounReading.lemma],
 		});
 		expect(corrected.semanticRelations?.synonym).toEqual([
-			secondNounReading,
+			secondNounReading.lemma,
 		]);
 		expect(
 			applyKnowledgeChange(corrected, {

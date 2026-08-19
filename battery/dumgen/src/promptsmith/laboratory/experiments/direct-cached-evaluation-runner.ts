@@ -79,6 +79,7 @@ export type DirectCachedEvaluationRunnerConfig<
 	readonly runnerVersion: string;
 	readonly route: string;
 	readonly structuredOutputName: string;
+	readonly modelOutputSchemaFor?: (input: z.output<InputSchema>) => z.ZodType;
 	readonly experiments: {
 		readonly development: RunnerExperiment<
 			InputSchema,
@@ -540,7 +541,8 @@ export function createDirectCachedEvaluationRunner<
 			store: false,
 			text: {
 				format: zodTextFormat(
-					promptSource.outputSchema,
+					config.modelOutputSchemaFor?.(input) ??
+						promptSource.outputSchema,
 					config.structuredOutputName,
 				),
 				verbosity: TEXT_VERBOSITY,

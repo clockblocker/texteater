@@ -372,27 +372,83 @@ export async function syncStructuralShadowReferences(
  */
 export async function replaceAccumulatedKnowledge(
 	ctx: MutationCtx,
-	ownerKind: "Lemma" | "Reading",
-	ownerKey: string,
+	ownerReadingKey: string,
 	knowledge: unknown,
+	options: { readonly status?: "Partial" | "Full" } = {},
 ): Promise<Id<"accumulatedKnowledge"> | null> {
-	if (ownerKind === "Reading") {
-		await syncStructuralShadowReferences(ctx, ownerKey, knowledge);
-	}
 	const existing = await ctx.db
 		.query("accumulatedKnowledge")
-		.withIndex("by_owner_kind_and_owner_key", (q) =>
-			q.eq("ownerKind", ownerKind).eq("ownerKey", ownerKey),
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
 		)
 		.unique();
+	const requestedStatus = options.status ?? "Partial";
+	const status: "Partial" | "Full" =
+		existing?.status === "Full" || requestedStatus === "Full"
+			? "Full"
+			: "Partial";
 	if (knowledge === undefined) {
-		if (existing) await ctx.db.delete(existing._id);
-		return null;
+		if (!existing) return null;
+		await syncStructuralShadowReferences(ctx, ownerReadingKey, {});
+		await ctx.db.replace(existing._id, {
+			ownerReadingKey,
+			knowledge: {},
+			status,
+			updatedAt: Date.now(),
+		});
+		return existing._id;
 	}
-	const value = { ownerKind, ownerKey, knowledge, updatedAt: Date.now() };
+	await syncStructuralShadowReferences(ctx, ownerReadingKey, knowledge);
+	const value = { ownerReadingKey, knowledge, status, updatedAt: Date.now() };
 	if (existing) {
 		await ctx.db.replace(existing._id, value);
 		return existing._id;
 	}
 	return ctx.db.insert("accumulatedKnowledge", value);
+}
+
+/** Create a status row for Knowledge stored outside the base-Knowledge column. */
+export async function ensureAccumulatedKnowledgeStatus(
+	ctx: MutationCtx,
+	ownerReadingKey: string,
+	requestedStatus: "Partial" | "Full" = "Partial",
+): Promise<Id<"accumulatedKnowledge">> {
+	const existing = await ctx.db
+		.query("accumulatedKnowledge")
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
+		)
+		.unique();
+	if (existing) {
+		if (existing.status !== "Full" && requestedStatus === "Full") {
+			await ctx.db.patch(existing._id, {
+				status: "Full",
+				updatedAt: Date.now(),
+			});
+		}
+		return existing._id;
+	}
+	return ctx.db.insert("accumulatedKnowledge", {
+		ownerReadingKey,
+		knowledge: {},
+		status: requestedStatus,
+		updatedAt: Date.now(),
+	});
+}
+
+/** Destructive reset-only seam; ordinary Knowledge writes are monotonic. */
+export async function deleteAccumulatedKnowledge(
+	ctx: MutationCtx,
+	ownerReadingKey: string,
+): Promise<boolean> {
+	await syncStructuralShadowReferences(ctx, ownerReadingKey, {});
+	const existing = await ctx.db
+		.query("accumulatedKnowledge")
+		.withIndex("by_owner_reading_key", (q) =>
+			q.eq("ownerReadingKey", ownerReadingKey),
+		)
+		.unique();
+	if (!existing) return false;
+	await ctx.db.delete(existing._id);
+	return true;
 }

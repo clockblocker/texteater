@@ -9,7 +9,7 @@ import {
 } from "../attested-entities";
 
 describe("Dumdict ↔ Dumling attested fixture boundary", () => {
-	test("parses every migrated English occurrence through Dumling", () => {
+	test("parses every stored English occurrence through Dumling", () => {
 		expect(
 			englishAttestations.map(
 				(attestation) =>

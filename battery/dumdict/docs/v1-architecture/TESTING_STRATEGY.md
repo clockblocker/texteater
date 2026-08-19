@@ -6,14 +6,15 @@ planned-change protocol expected of production hosts. Tests cover:
 - exact Lemma Reading lookup and multiple Readings per Lemma;
 - Reading attestation patches and transactional Lemma, Reading, and Surface
   creation;
-- owner/aspect validation and empty-Knowledge omission;
-- forward/inverse Reading Knowledge writes and direct-self rejection;
-- pending creation, exact matching, zero-match retention, explicit selection,
-  discard, and no automatic fan-out;
-- version 0 lexical and shared-ref migration;
-- normalized/deduplicated direct target migration and typed duplicate,
-  missing, orphan, cross-language, self-edge, and unrepresentable-morphology
-  failures;
+- Reading identity/aspect validation and empty-Knowledge omission;
+- Reading-owned/Lemma-targeted forward and inverse Knowledge writes plus
+  direct same-Lemma rejection;
+- pending creation, exact matching, zero-match retention, deterministic
+  ambiguous forward selection, all-match inverse fan-out, and atomic cleanup;
+- exact-Synonym closure and both-endpoint substitution without hierarchy
+  transitivity;
+- later-Reading inverse backfill from existing incoming Lemma edges;
+- hard-break rejection by absence of a version-0 compatibility interface;
 - preservation of encounter translations;
 - slice validation, revision conflicts, and rollback after a late operation
   fails with forward, inverse, and delete changes already staged;

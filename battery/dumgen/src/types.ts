@@ -81,6 +81,13 @@ export type ReadingResolution = {
 	readonly emojiDescription: string;
 };
 
+export type {
+	KnowledgeGenerationInput,
+	KnowledgeGenerationLanguage,
+	KnowledgeGenerationRequest,
+	KnowledgeGenerationResult,
+} from "./knowledge-generation/contracts";
+
 export type Unresolved = { readonly decision: "Unresolved" };
 
 /** Internal result of Target Classification. */

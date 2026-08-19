@@ -1,13 +1,13 @@
 # `dumgen`
 
 Typed, language-routed learner-text resolution. The Section 1 German/Hebrew
-segmentation path is production-ready; post-click prompt routes remain
-incremental laboratory-backed features.
+segmentation path and combined German Knowledge generation have public
+interfaces; the remaining post-click prompt routes are incremental.
 
 ## Core idea
 
-`dumgen` exposes a typed, language-routed module for sentence segmentation and
-click resolution:
+`dumgen` exposes a typed, language-routed module for sentence segmentation,
+click resolution, and German Reading enrichment:
 
 - the OpenAI Responses API
 - automatic prompt caching for repeated prompt prefixes
@@ -35,7 +35,12 @@ The module owns each stage behind one batch-only operation:
    target, Attestation, and normalized Surface.
 4. Resolve the selected Lemma against learner Reading candidates through the
    language-routed Reading operation.
-5. Validate projected grammatical results with Dumling's concrete schemas.
+5. Generate one sparse Knowledge update for an exact German Reading and the
+   current marked context. The result contains atomic Dumrel changes and
+   pending relation Unit Shadows. An empty request returns an empty update
+   without a model call.
+6. Validate projected grammatical and Knowledge results with concrete Dumling
+   and Dumrel schemas.
 
 The prompt catalog and language-specific segmenters remain internal; consumers
 do not coordinate prompt leaves or depend on their topology. Section 1 failures

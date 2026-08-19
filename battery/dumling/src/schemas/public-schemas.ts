@@ -106,10 +106,12 @@ function normalizeLemmaCanonicalForm(value: unknown): unknown {
 }
 
 /** Canonical runtime schema for supported-language Reading values. */
-export const readingSchema = z.strictObject({
-	lemma: z.preprocess(
-		normalizeLemmaCanonicalForm,
-		buildUnionSchema(concreteLemmaSchemas()),
-	),
-	emojiDescription: normalizedEmojiDescriptionSchema,
-}) as z.ZodType<Reading>;
+export const readingSchema = z.lazy(() =>
+	z.strictObject({
+		lemma: z.preprocess(
+			normalizeLemmaCanonicalForm,
+			buildUnionSchema(concreteLemmaSchemas()),
+		),
+		emojiDescription: normalizedEmojiDescriptionSchema,
+	}),
+) as z.ZodType<Reading>;

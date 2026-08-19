@@ -81,12 +81,37 @@ export const sentenceInputValidator = v.object({
 	segments: v.array(segmentInputValidator),
 });
 
-export const knowledgeOwnerKindValidator = v.union(
-	v.literal("Lemma"),
-	v.literal("Reading"),
+export const semanticRelationValidator = literalUnion(semanticRelationValues);
+
+export const knowledgeStatusValidator = v.union(
+	v.literal("Partial"),
+	v.literal("Full"),
 );
 
-export const semanticRelationValidator = literalUnion(semanticRelationValues);
+export const knowledgeGenerationAttemptStateValidator = v.union(
+	v.literal("Scheduled"),
+	v.literal("Running"),
+	v.literal("Failed"),
+	v.literal("Committed"),
+	v.literal("LostRace"),
+);
+
+export const knowledgeSettingsValidator = v.object({
+	transcription: v.boolean(),
+	definition: v.boolean(),
+	translations: v.object({ en: v.boolean() }),
+	morphologicalTree: v.boolean(),
+	lexicalBreakdown: v.boolean(),
+	semanticRelations: v.object({
+		synonym: v.boolean(),
+		nearSynonym: v.boolean(),
+		antonym: v.boolean(),
+		hypernym: v.boolean(),
+		hyponym: v.boolean(),
+		meronym: v.boolean(),
+		holonym: v.boolean(),
+	}),
+});
 
 export const occurrenceAttestationInputValidator = v.object({
 	memberSegmentIndices: v.array(v.number()),

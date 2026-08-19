@@ -1,18 +1,17 @@
 import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
-import { validateNewNoteSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type {
 	AddNewNoteRequest,
 	DumdictMutationOptions,
 	MutationResult,
 } from "../public";
-import type { CreateDumdictServiceOptions } from "../storage";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 export async function addNewNote<L extends SupportedLanguage>(
-	options: CreateDumdictServiceOptions<L>,
+	options: DumdictServiceRuntimeOptions<L>,
 	request: AddNewNoteRequest<L>,
 	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
@@ -39,7 +38,7 @@ export async function addNewNote<L extends SupportedLanguage>(
 	}
 
 	const slice = await options.storage.loadNewNoteContext(request);
-	validateNewNoteSlice(options.language, slice, request.draft);
+	options.sliceValidation.newNote(slice, request.draft);
 
 	const plan = planAddNewNote(slice, request);
 	if (plan.status === "rejected") {

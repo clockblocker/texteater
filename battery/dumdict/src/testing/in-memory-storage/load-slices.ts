@@ -24,6 +24,19 @@ function locatorKey(value: {
 	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
 }
 
+function pendingMatchesLemma<L extends SupportedLanguage>(
+	record: InMemoryStorageState<L>["storedNotes"][number]["pendingRelations"][number],
+	lemma: InMemoryStorageState<L>["storedNotes"][number]["lemmaRecord"]["lemma"],
+) {
+	const target = record.pending.target;
+	return (
+		target.language === lemma.language &&
+		target.canonicalForm === lemma.canonicalForm &&
+		target.family === lemma.family &&
+		target.kind === lemma.kind
+	);
+}
+
 export function findStoredReadings<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
 	request: FindStoredReadingsStorageRequest<L>,
@@ -61,11 +74,9 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 		request.draft.ownedSurfaces?.map(({ surface }) =>
 			makeSurfaceId(state.language, surface),
 		) ?? [];
-	const explicitReadings =
+	const explicitLemmas =
 		request.draft.relations?.flatMap((relation) =>
-			relation.target.kind === "existing"
-				? [relation.target.reading]
-				: [],
+			relation.target.kind === "existing" ? [relation.target.lemma] : [],
 		) ?? [];
 	const proposedPendingKeys = new Set(
 		request.draft.relations?.flatMap((relation) => {
@@ -87,14 +98,21 @@ export function loadNewNoteContext<L extends SupportedLanguage>(
 		existingOwnedSurfaces: draftSurfaceIds
 			.map((id) => state.findStoredSurfaceById(id))
 			.filter((value) => value !== undefined),
-		explicitExistingReadingTargets: explicitReadings
-			.map((value) => state.findStoredReading(value))
+		explicitExistingLemmaTargets: explicitLemmas
+			.map((value) => state.findStoredBundleByLemma(value)?.lemmaRecord)
 			.filter((value) => value !== undefined),
 		existingPendingRelationsForProposedPendingTargets: state
 			.allPendingRelations()
 			.filter(({ locator }) =>
 				proposedPendingKeys.has(locatorKey(locator)),
 			),
+		pendingRelationsMatchingProposedLemma: state
+			.allPendingRelations()
+			.filter((record) => pendingMatchesLemma(record, reading.lemma)),
+		relationLemmas: state.storedNotes.map(({ lemmaRecord }) => lemmaRecord),
+		relationReadings: state.storedNotes.flatMap(
+			({ readingEntries }) => readingEntries,
+		),
 	};
 }
 
@@ -126,19 +144,14 @@ export function loadCleanupRelationsContext<L extends SupportedLanguage>(
 	const locatorKeys = new Set(
 		request.resolutions.map(({ locator }) => locatorKey(locator)),
 	);
-	const targetReadings = request.resolutions.flatMap(({ targetReading }) => {
-		if (!targetReading) return [];
-		const reading = state.findStoredReading(targetReading);
-		const lemma =
-			reading &&
-			state.findStoredBundleByLemma(reading.reading.lemma)?.lemmaRecord;
-		return reading && lemma ? [{ reading, lemma }] : [];
-	});
 	return {
 		revision: state.currentRevision(),
 		pendingRelations: state
 			.allPendingRelations()
 			.filter(({ locator }) => locatorKeys.has(locatorKey(locator))),
-		targetReadings,
+		relationLemmas: state.storedNotes.map(({ lemmaRecord }) => lemmaRecord),
+		relationReadings: state.storedNotes.flatMap(
+			({ readingEntries }) => readingEntries,
+		),
 	};
 }

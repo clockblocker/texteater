@@ -1,5 +1,8 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+	useQuery,
+	useMutation as useReactQueryMutation,
+} from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { LibraryIcon, LoaderCircleIcon, LockIcon } from "lucide-react";
@@ -11,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { hrefFor, type UnitReadingNoteTarget } from "@/lib/navigation";
 import {
 	normalizeReadingDefinition,
@@ -18,8 +22,23 @@ import {
 } from "@/lib/reading-definition";
 import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
+import {
+	KnowledgeActivity,
+	KnowledgeActivityPresentation,
+} from "./unit-reading-knowledge-activity";
+import {
+	KnowledgeSettingsChecklist,
+	KnowledgeSettingsPanel,
+	withKnowledgeSetting,
+} from "./unit-reading-knowledge-settings";
 
-type UnitReadingNote = Extract<
+export {
+	KnowledgeActivityPresentation,
+	KnowledgeSettingsChecklist,
+	withKnowledgeSetting,
+};
+
+export type UnitReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.presentation.getNote>>,
 	{ kind: "UnitReadingNote" }
 >;
@@ -31,8 +50,9 @@ export function UnitReadingNoteView({
 }: {
 	target: UnitReadingNoteTarget;
 }) {
+	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target }),
+		...convexQuery(api.presentation.getNote, { target, visitorId }),
 		gcTime: 10_000,
 	});
 
@@ -50,11 +70,18 @@ export function UnitReadingNoteView({
 		<ReadingNote
 			key={noteQuery.data.target.readingId}
 			note={noteQuery.data}
+			visitorId={visitorId}
 		/>
 	);
 }
 
-function ReadingNote({ note }: { note: UnitReadingNote }) {
+export function ReadingNote({
+	note,
+	visitorId,
+}: {
+	note: UnitReadingNote;
+	visitorId: string;
+}) {
 	return (
 		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
@@ -68,6 +95,11 @@ function ReadingNote({ note }: { note: UnitReadingNote }) {
 								{note.reading.emojiDescription}{" "}
 								{note.reading.canonicalForm}
 							</h1>
+							{note.note.transcription ? (
+								<span className="text-lg text-muted-foreground">
+									/{note.note.transcription}/
+								</span>
+							) : null}
 							<Badge variant="secondary">
 								{note.lemma.language}
 							</Badge>
@@ -84,6 +116,12 @@ function ReadingNote({ note }: { note: UnitReadingNote }) {
 					</Link>
 				</header>
 
+				<KnowledgeActivity note={note} visitorId={visitorId} />
+				<KnowledgeSettingsPanel
+					visitorId={visitorId}
+					initialSettings={note.settings}
+				/>
+
 				<article
 					className="flex flex-col gap-5"
 					aria-label="Reading note"
@@ -98,22 +136,20 @@ function ReadingNote({ note }: { note: UnitReadingNote }) {
 						</div>
 					) : null}
 
-					<DefinitionEditor
-						readingKey={note.reading.ownerKey}
-						storedDefinition={note.note.definition}
-					/>
+					{note.settings.definition ? (
+						<DefinitionEditor
+							readingKey={note.reading.ownerKey}
+							storedDefinition={note.note.definition}
+						/>
+					) : null}
 
 					<KnowledgeBuckets
 						title="Translations"
 						buckets={note.note.translations}
 					/>
-					<KnowledgeBuckets
-						title="Transcriptions"
-						buckets={note.note.transcriptions}
-					/>
 					<RelationList note={note} />
 					<StructuralReferenceList note={note} />
-					<SourceContextList note={note} />
+					<SourceContextList note={note} visitorId={visitorId} />
 				</article>
 
 				<DataControls />
@@ -122,7 +158,13 @@ function ReadingNote({ note }: { note: UnitReadingNote }) {
 	);
 }
 
-function SourceContextList({ note }: { note: UnitReadingNote }) {
+function SourceContextList({
+	note,
+	visitorId,
+}: {
+	note: UnitReadingNote;
+	visitorId: string;
+}) {
 	const convex = useConvex();
 	const [additionalContexts, setAdditionalContexts] = useState<
 		UnitReadingNote["sourceContexts"]["page"]
@@ -143,6 +185,7 @@ function SourceContextList({ note }: { note: UnitReadingNote }) {
 		try {
 			const nextNote = await convex.query(api.presentation.getNote, {
 				target: note.target,
+				visitorId,
 				contextCursor: cursor,
 			});
 			if (nextNote?.kind !== "UnitReadingNote") {
@@ -243,11 +286,13 @@ function DefinitionEditor({
 		normalizeReadingDefinition(storedDefinition),
 	);
 	const failedDefinitionRef = useRef<string | null>(null);
-	const contributeKnowledgeAction = useAction(
-		api.orchestration.contributeKnowledge,
+	const applyKnowledgeChangeAction = useAction(
+		api.orchestration.applyReadingKnowledgeChange,
 	);
-	const contribution = useMutation({ mutationFn: contributeKnowledgeAction });
-	const { error, isError, isPending, mutateAsync, reset } = contribution;
+	const changeMutation = useReactQueryMutation({
+		mutationFn: applyKnowledgeChangeAction,
+	});
+	const { error, isError, isPending, mutateAsync, reset } = changeMutation;
 
 	useEffect(() => {
 		const previousSavedDefinition = savedDefinitionRef.current;
@@ -280,9 +325,8 @@ function DefinitionEditor({
 			);
 			if (!change) return;
 			void mutateAsync({
-				contributionKey: crypto.randomUUID(),
-				ownerKind: "Reading",
-				ownerKey: readingKey,
+				knowledgeChangeKey: crypto.randomUUID(),
+				ownerReadingKey: readingKey,
 				change,
 			})
 				.then(() => {
@@ -360,15 +404,13 @@ function RelationList({ note }: { note: UnitReadingNote }) {
 	return (
 		<ul className="flex flex-wrap gap-2" aria-label="Semantic relations">
 			{note.relations.map((relation) => (
-				<li key={`${relation.relation}:${relation.target.readingId}`}>
+				<li key={`${relation.relation}:${relation.target.id}`}>
 					<Link
 						to={hrefFor(relation.target)}
 						className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 					>
 						<Badge variant="outline">
-							{relation.relation}:{" "}
-							{relation.targetEmojiDescription}{" "}
-							{relation.targetCanonicalForm}
+							{relation.relation}: {relation.targetCanonicalForm}
 						</Badge>
 					</Link>
 				</li>

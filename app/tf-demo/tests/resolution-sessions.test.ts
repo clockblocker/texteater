@@ -166,13 +166,29 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 	const seed = sourceSeed();
 	return {
 		...seed,
-		segments: (seed.segments ?? []).map((segment) => ({
-			...segment,
-			attestationMembership: {
-				attestationId: "attestation-1",
-				orthography: "Standard",
+		segments: [
+			{
+				_id: "segment-0",
+				sentenceId: "sentence-1",
+				index: 0,
+				kind: "ResolvableText",
+				text: "Die",
 			},
-		})),
+			{
+				_id: "segment-space",
+				sentenceId: "sentence-1",
+				index: 1,
+				kind: "Whitespace",
+				text: " ",
+			},
+			...(seed.segments ?? []).map((segment) => ({
+				...segment,
+				attestationMembership: {
+					attestationId: "attestation-1",
+					orthography: "Standard",
+				},
+			})),
+		],
 		attestations: [
 			{
 				_id: "attestation-1",
@@ -181,7 +197,36 @@ function resolvedSourceSeed(): Record<string, readonly Row[]> {
 				realizationCoverage: "Full",
 			},
 		],
-		readings: [{ _id: "reading-1" }],
+		readings: [
+			{
+				_id: "reading-1",
+				readingKey: "reading-1-key",
+				lemmaId: "lemma-1",
+				emojiDescription: "🏦",
+			},
+		],
+		lemmas: [
+			{
+				_id: "lemma-1",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Bank",
+				coreFeatures: { gender: "Fem", hyph: null },
+			},
+		],
+		surfaces: [
+			{
+				_id: "surface-1",
+				lemmaId: "lemma-1",
+				language: "de",
+				normalizedSurface: "Banken",
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: {},
+				inflectionalFeatures: {},
+			},
+		],
 	};
 }
 
@@ -229,8 +274,9 @@ describe("Resolution Session", () => {
 			},
 		});
 		expect(db.rows("visitorClicks")).toHaveLength(1);
+		expect(db.rows("knowledgeGenerationAttempts")).toHaveLength(2);
 		expect(db.rows("resolutionSessions")).toEqual([]);
-		expect(scheduled).toEqual([]);
+		expect(scheduled).toHaveLength(2);
 	});
 
 	test("begin captures one exact Segment and schedules orchestration once", async () => {

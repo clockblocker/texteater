@@ -6,7 +6,9 @@ import * as types from "../../src/types";
 
 const schemaExports = [
 	"knowledgeChangeSchema",
-	"lemmaKnowledgeSchema",
+	"knowledgeRequestMaskSchema",
+	"knowledgeSettingsSchema",
+	"lemmaReferenceSchema",
 	"lexemeUnitShadowSchema",
 	"lexicalBreakdownSchema",
 	"lexicalUnitShadowSchema",
@@ -19,6 +21,8 @@ const schemaExports = [
 	"readingKnowledgeSchema",
 	"readingReferenceSchema",
 	"semanticRelationGraphEdgeSchema",
+	"semanticRelationGraphReadingSchema",
+	"semanticRelationGraphSchema",
 	"semanticRelationsSchema",
 	"semanticRelationSchema",
 	"semanticRelationValues",
@@ -26,10 +30,13 @@ const schemaExports = [
 ].sort();
 
 describe("public API allowlists", () => {
-	test("the root exposes exactly three functions plus frozen schemas/values", () => {
+	test("the root exposes exactly five functions plus frozen schemas/values", () => {
 		expect(Object.keys(root).sort()).toEqual(
 			[
+				"DEFAULT_KNOWLEDGE_SETTINGS",
 				"applyKnowledgeChange",
+				"defaultKnowledgeRequestMask",
+				"intersectKnowledgeRequestMask",
 				"inverseRelationFor",
 				"propagateRelations",
 				...schemaExports,
@@ -37,7 +44,7 @@ describe("public API allowlists", () => {
 		);
 		expect(
 			Object.values(root).filter((value) => typeof value === "function"),
-		).toHaveLength(3);
+		).toHaveLength(5);
 	});
 
 	test("schema and types subpaths cannot widen the public surface", () => {

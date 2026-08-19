@@ -86,7 +86,28 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 			],
 		}),
 	).rejects.toThrow();
-	expect(queries).toBe(1);
+	await expect(
+		applyDumdictPlanInTransaction(ctx as never, {
+			baseRevision: "convex-0",
+			changes: [
+				{
+					type: "createLemma",
+					record: {
+						lemma: {
+							language: "de",
+							family: "Lexeme",
+							kind: "NOUN",
+							canonicalForm: "Haus",
+							coreFeatures: {},
+						},
+						knowledge: { transcription: "haʊs" },
+					},
+					preconditions: [],
+				},
+			],
+		}),
+	).rejects.toThrow("cannot contain Knowledge");
+	expect(queries).toBe(2);
 	expect(inserts).toBe(0);
 });
 

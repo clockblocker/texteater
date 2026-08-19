@@ -15,12 +15,15 @@ maps commit outcomes to public results.
 
 ## Semantic core
 
-- `applyDumdictKnowledgeChange` checks the exact owner and applies one
-  owner-compatible Dumrel Knowledge Change.
+- `applyDumdictKnowledgeChange` checks the exact Reading identity and applies one
+  Reading-compatible Dumrel Knowledge Change.
 - `planAddNewNote` plans Lemma, Reading, Surface, direct Semantic Relation, and
   pending-work mutations.
 - `planAppendReadingAttestation` plans learner evidence updates.
-- `planCleanupRelations` accepts or discards exact pending records.
+- `planRelationMaintenance` is the deep module that owns exact Shadow matching,
+  deterministic forward choice, inverse fan-out, Dumrel propagation, and
+  later-Reading backfill.
+- `planCleanupRelations` retries exact pending records through that module.
 
 The core is pure: it receives DTOs and returns results or planned changes.
 

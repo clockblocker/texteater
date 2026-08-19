@@ -23,12 +23,18 @@ function stableValue(value: unknown): unknown {
 	return value;
 }
 
-function lemmaKey(lemma: LemmaLike): string {
+export function lemmaFingerprint(lemma: LemmaLike): string {
 	return JSON.stringify(stableValue(lemma));
 }
 
+export function compareLemmas(left: LemmaLike, right: LemmaLike): number {
+	const leftKey = lemmaFingerprint(left);
+	const rightKey = lemmaFingerprint(right);
+	return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+}
+
 export function sameLemma(left: LemmaLike, right: LemmaLike): boolean {
-	return lemmaKey(left) === lemmaKey(right);
+	return lemmaFingerprint(left) === lemmaFingerprint(right);
 }
 
 export function sameReading<L extends SupportedLanguage>(

@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import type {
+	Dumgen,
 	GrammaticalInput,
 	GrammaticalResult,
+	KnowledgeGenerationInput,
+	KnowledgeGenerationRequest,
+	KnowledgeGenerationResult,
 	Segment,
 	SegmentedSentence,
 	SegmentedSentenceId,
@@ -11,6 +15,10 @@ import {
 	grammaticalInteractionSchema,
 	grammaticalResultSchema,
 	grammaticalRouteSchema,
+	knowledgeGenerationInputSchema,
+	knowledgeGenerationLanguageSchema,
+	knowledgeGenerationRequestSchema,
+	knowledgeGenerationResultSchema,
 	resolvedGrammaticalResultSchema,
 	segmentationDecisionSchema,
 	segmentationResultSchema,
@@ -49,8 +57,151 @@ type _GermanResultKeepsLanguage = Expect<
 type _PlainStringIsNotSegmentedSentenceId = Expect<
 	Equal<string extends SegmentedSentenceId ? true : false, false>
 >;
+type _KnowledgeInputComesFromSchema = Expect<
+	Equal<
+		KnowledgeGenerationInput<"de">,
+		z.output<typeof knowledgeGenerationInputSchema>
+	>
+>;
+type _KnowledgeResultComesFromSchema = Expect<
+	Equal<
+		KnowledgeGenerationResult,
+		z.output<typeof knowledgeGenerationResultSchema>
+	>
+>;
+// @ts-expect-error English has no configured Dumgen Knowledge generation route.
+type _EnglishKnowledgeInputIsRejected = KnowledgeGenerationInput<"en">;
+
+function assertKnowledgeLanguageIsTyped(
+	dumgen: Dumgen,
+	input: KnowledgeGenerationInput<"de">,
+) {
+	void dumgen.generate.knowledge("de", input);
+	// @ts-expect-error Only German Knowledge generation is public.
+	void dumgen.generate.knowledge("en", input);
+}
+void assertKnowledgeLanguageIsTyped;
+
+const germanKnowledgeRequest = {
+	transcription: null,
+	semanticRelations: { synonym: null },
+} satisfies KnowledgeGenerationRequest;
+void germanKnowledgeRequest;
+
+const structuredKnowledgeRequest: KnowledgeGenerationRequest = {
+	// @ts-expect-error Structured Knowledge leaves use separate future workflows.
+	morphologicalTree: null,
+};
+void structuredKnowledgeRequest;
+
+function assertGeneratedKnowledgeIsImmutable(
+	generatedKnowledge: KnowledgeGenerationResult,
+) {
+	// @ts-expect-error Generated Knowledge results are immutable at the public seam.
+	generatedKnowledge.changes.push();
+	const firstPending = generatedKnowledge.pendingRelations[0];
+	if (firstPending !== undefined) {
+		// @ts-expect-error Generated relation targets are immutable at the public seam.
+		firstPending.target.canonicalForm = "changed";
+	}
+}
+void assertGeneratedKnowledgeIsImmutable;
 
 describe("public Dumgen runtime schemas", () => {
+	test("validates the concrete German Knowledge request and result contracts", () => {
+		expect(knowledgeGenerationLanguageSchema.safeParse("de").success).toBe(
+			true,
+		);
+		expect(knowledgeGenerationLanguageSchema.safeParse("en").success).toBe(
+			false,
+		);
+		expect(knowledgeGenerationRequestSchema.safeParse({}).success).toBe(
+			true,
+		);
+		expect(
+			knowledgeGenerationRequestSchema.safeParse({
+				definition: null,
+				translations: { en: null },
+				semanticRelations: { synonym: null, antonym: null },
+			}).success,
+		).toBe(true);
+		for (const request of [
+			{ morphologicalTree: null },
+			{ lexicalBreakdown: null },
+			{ translations: {} },
+			{ semanticRelations: {} },
+		]) {
+			expect(
+				knowledgeGenerationRequestSchema.safeParse(request).success,
+			).toBe(false);
+		}
+
+		const reading = {
+			lemma: {
+				language: "de",
+				canonicalForm: "Bank",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: { gender: "Fem", hyph: null },
+			},
+			emojiDescription: "🏦",
+		};
+		expect(
+			knowledgeGenerationInputSchema.safeParse({
+				markedContext: "Die <TARGET>Bank</TARGET> öffnet.",
+				reading,
+				request: {},
+			}).success,
+		).toBe(true);
+		expect(
+			knowledgeGenerationInputSchema.safeParse({
+				markedContext: "The <TARGET>bank</TARGET> opens.",
+				reading: {
+					...reading,
+					lemma: { ...reading.lemma, language: "en" },
+				},
+				request: {},
+			}).success,
+		).toBe(false);
+
+		const result = knowledgeGenerationResultSchema.parse({
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "Geldinstitut",
+				},
+			],
+			pendingRelations: [
+				{
+					relation: "hypernym",
+					target: {
+						language: "de",
+						canonicalForm: "Finanzinstitut",
+						family: "Lexeme",
+						kind: "NOUN",
+					},
+				},
+			],
+		});
+		expect(Object.isFrozen(result)).toBe(true);
+		expect(Object.isFrozen(result.changes[0])).toBe(true);
+		expect(Object.isFrozen(result.pendingRelations[0]?.target)).toBe(true);
+		expect(
+			knowledgeGenerationResultSchema.safeParse({
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "translations",
+						language: "de",
+						value: ["Bank"],
+					},
+				],
+				pendingRelations: [],
+			}).success,
+		).toBe(false);
+	});
+
 	test("validates Segment invariants without widening the inferred contract", () => {
 		expect(
 			segmentSchema.safeParse({

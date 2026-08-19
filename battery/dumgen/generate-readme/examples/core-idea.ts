@@ -19,7 +19,20 @@ if (decision?.decision === "Accepted" && decision.language === "de") {
 			lemma: grammatical.attestation.surface.lemma.canonicalForm,
 			existingEmojiDescriptions: [],
 		});
-		console.log(reading);
+
+		const generated = await dumgen.generate.knowledge("de", {
+			markedContext: grammatical.markedContext,
+			reading: {
+				lemma: grammatical.attestation.surface.lemma,
+				emojiDescription: reading.emojiDescription,
+			},
+			request: {
+				transcription: null,
+				definition: null,
+				translations: { en: null },
+			},
+		});
+		console.log(generated.changes, generated.pendingRelations);
 	}
 }
 // README_BLOCK:basic-usage:end

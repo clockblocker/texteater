@@ -1,13 +1,11 @@
 import { type AiSdk, buildAiSdk } from "../ai-sdk/ai-sdk";
-import { PROMPT_CATALOG } from "../catalog/prompt-catalog";
+import type { ModelExchange } from "../generator/generator";
 import {
-	buildGeneratorCatalog,
-	type ModelExchange,
-} from "../generator/generator";
-import {
-	createDumgenImplementation,
-	type DumgenSection1Trace,
-} from "./implementation";
+	createKnowledgeDumgen,
+	type KnowledgeDumgen,
+} from "../knowledge-generation/build";
+import { buildDumgenRuntime } from "../runtime";
+import type { DumgenSection1Trace } from "./implementation";
 
 type BuildDumgenOptions = {
 	readonly apiKey?: string;
@@ -18,10 +16,17 @@ type BuildDumgenOptions = {
 
 export function createDumgen(options: BuildDumgenOptions) {
 	const sdk = options.sdk ?? buildAiSdk({ apiKey: options.apiKey });
-	const generators = buildGeneratorCatalog(PROMPT_CATALOG, sdk, {
+	let knowledgeDumgen: KnowledgeDumgen | undefined;
+	return buildDumgenRuntime({
+		async generateKnowledge(language, input) {
+			knowledgeDumgen ??= createKnowledgeDumgen({
+				sdk,
+				onModelExchange: options.onModelExchange,
+			});
+			return knowledgeDumgen.generate.knowledge(language, input);
+		},
+		sdk,
 		onModelExchange: options.onModelExchange,
-	});
-	return createDumgenImplementation(generators, {
 		onSection1Trace: options.onSection1Trace,
 	});
 }

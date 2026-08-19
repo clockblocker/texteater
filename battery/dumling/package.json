@@ -64,7 +64,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && bun build src/index.ts src/types.ts src/schema.ts src/reading.ts src/vocabulary.ts --outdir dist --format esm --target node --packages external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schema.ts src/reading.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
@@ -87,8 +87,9 @@
 		"@biomejs/biome": "2.5.7",
 		"@types/node": "^24.13.3",
 		"bun-types": "1.3.14",
-		"dependency-cruiser": "^18.1.0",
 		"codegen": "workspace:^",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",
 		"typescript": "^7.0.2"
 	}

@@ -6,6 +6,9 @@ import type {
 	GrammaticalInput,
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
+	KnowledgeGenerationInput,
+	KnowledgeGenerationLanguage,
+	KnowledgeGenerationResult,
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
@@ -23,6 +26,10 @@ export {
 	grammaticalResolutionLanguageSchema,
 	grammaticalResultSchema,
 	grammaticalRouteSchema,
+	knowledgeGenerationInputSchema,
+	knowledgeGenerationLanguageSchema,
+	knowledgeGenerationRequestSchema,
+	knowledgeGenerationResultSchema,
 	notImplementedGrammaticalResultSchema,
 	resolvedGrammaticalResultSchema,
 	section1ErrorSchema,
@@ -41,6 +48,10 @@ export type {
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
 	GrammaticalRoute,
+	KnowledgeGenerationInput,
+	KnowledgeGenerationLanguage,
+	KnowledgeGenerationRequest,
+	KnowledgeGenerationResult,
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
@@ -81,6 +92,12 @@ export type Dumgen = {
 			language: L,
 			input: ReadingInput,
 		): Promise<ReadingResolution>;
+	};
+	readonly generate: {
+		knowledge(
+			language: KnowledgeGenerationLanguage,
+			input: KnowledgeGenerationInput<"de">,
+		): Promise<KnowledgeGenerationResult>;
 	};
 };
 

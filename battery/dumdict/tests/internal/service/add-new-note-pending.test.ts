@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
 	englishRunDraft,
 	englishSwimDraft,
+	englishSwimLemma,
+	englishWalkLemma,
 	englishWalkReading,
 	enSerializedNotesWithPendingSwimRelation,
 	getBootedUpDumdict,
@@ -42,7 +44,7 @@ describe("pending lifecycle", () => {
 		).toHaveLength(2);
 	});
 
-	test("does not auto-resolve when one matching Reading appears", async () => {
+	test("resolves when one matching Lemma appears and fans out its inverse", async () => {
 		const { dict, storage } = getBootedUpDumdict(
 			"en",
 			enSerializedNotesWithPendingSwimRelation,
@@ -53,7 +55,7 @@ describe("pending lifecycle", () => {
 		const notes = storage.loadAll();
 		expect(
 			notes.flatMap(({ pendingRelations }) => pendingRelations),
-		).toHaveLength(1);
+		).toHaveLength(0);
 		expect(
 			notes
 				.flatMap(({ readingEntries }) => readingEntries)
@@ -61,7 +63,13 @@ describe("pending lifecycle", () => {
 					({ reading }) =>
 						reading.emojiDescription ===
 						englishWalkReading.emojiDescription,
-				)?.knowledge?.semanticRelations,
-		).toBeUndefined();
+				)?.knowledge?.semanticRelations?.nearSynonym,
+		).toEqual([englishSwimLemma]);
+		expect(
+			notes
+				.flatMap(({ readingEntries }) => readingEntries)
+				.find(({ reading }) => reading.emojiDescription === "🏊")
+				?.knowledge?.semanticRelations?.nearSynonym,
+		).toEqual([englishWalkLemma]);
 	});
 });

@@ -1,15 +1,14 @@
 import { sameLemma } from "../core/identity";
 import { planEnsureOwnedSurface } from "../core/plan-mutation";
-import { validateNewNoteSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type {
 	DumdictMutationOptions,
 	EnsureOwnedSurfaceRequest,
 	MutationResult,
 } from "../public";
-import type { CreateDumdictServiceOptions } from "../storage";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 const emptyNote = {
 	attestedTranslations: [] as string[],
@@ -18,7 +17,7 @@ const emptyNote = {
 };
 
 export async function ensureOwnedSurface<L extends SupportedLanguage>(
-	options: CreateDumdictServiceOptions<L>,
+	options: DumdictServiceRuntimeOptions<L>,
 	request: EnsureOwnedSurfaceRequest<L>,
 	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
@@ -45,7 +44,7 @@ export async function ensureOwnedSurface<L extends SupportedLanguage>(
 		ownedSurfaces: [request.ownedSurface],
 	};
 	const slice = await options.storage.loadNewNoteContext({ draft });
-	validateNewNoteSlice(options.language, slice, draft);
+	options.sliceValidation.newNote(slice, draft);
 	const plan = planEnsureOwnedSurface(slice, request);
 	if (plan.status === "rejected") return plan;
 	return applyPlan(options, plan, mutationOptions);

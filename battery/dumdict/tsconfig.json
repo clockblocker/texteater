@@ -2,7 +2,10 @@
 	"extends": "../../tooling/typescript/battery.json",
 	"compilerOptions": {
 		"paths": {
-			"dumdict": ["./src/index.ts"]
+			"dumdict": ["./src/index.ts"],
+			"dumdict/trusted-storage-runtime": [
+				"./src/trusted-storage-runtime.ts"
+			]
 		}
 	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

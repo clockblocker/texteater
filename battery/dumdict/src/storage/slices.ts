@@ -40,8 +40,11 @@ export type NewNoteSlice<L extends SupportedLanguage> = {
 	existingLemma?: LemmaRecord<L>;
 	existingReading?: ReadingEntry<L>;
 	existingOwnedSurfaces: SurfaceEntry<L>[];
-	explicitExistingReadingTargets: ReadingEntry<L>[];
+	explicitExistingLemmaTargets: LemmaRecord<L>[];
 	existingPendingRelationsForProposedPendingTargets: PendingSemanticRelationRecord<L>[];
+	pendingRelationsMatchingProposedLemma: PendingSemanticRelationRecord<L>[];
+	relationLemmas: LemmaRecord<L>[];
+	relationReadings: ReadingEntry<L>[];
 };
 
 export type GetInfoForRelationsCleanupStorageRequest<
@@ -64,8 +67,6 @@ export type LoadCleanupRelationsContextRequest<L extends SupportedLanguage> = {
 export type CleanupRelationsSlice<L extends SupportedLanguage> = {
 	revision: StoreRevision;
 	pendingRelations: PendingSemanticRelationRecord<L>[];
-	targetReadings: Array<{
-		reading: ReadingEntry<L>;
-		lemma: LemmaRecord<L>;
-	}>;
+	relationLemmas: LemmaRecord<L>[];
+	relationReadings: ReadingEntry<L>[];
 };

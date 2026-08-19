@@ -25,7 +25,7 @@ The real German click chain composes for the first vertical slice:
 Knowledge application also composes when the caller supplies a Dumrel
 `KnowledgeChange`: the action validates it with `knowledgeChangeSchema`, applies
 it through `applyDumdictKnowledgeChange`, and persists the append-only
-contribution plus accumulated Knowledge in a mutation.
+Knowledge Change plus accumulated Knowledge in a mutation.
 
 ## Integration gaps
 
@@ -83,9 +83,10 @@ Reproduction path:
 - `battery/dumgen/src/index.ts` does not export Knowledge Analysis or Knowledge
   Projection operations.
 
-Consequence: a click cannot legitimately generate a Dumrel Knowledge
-Contribution through Dumgen's public API. tf-demo therefore exposes a separate
-`contributeKnowledge` action for caller-supplied, fully validated Dumrel changes.
+Consequence: a click cannot legitimately generate a Dumrel Knowledge Change
+through Dumgen's public API. tf-demo therefore exposes a separate
+`applyReadingKnowledgeChange` action for caller-supplied, fully validated Dumrel
+changes.
 It does not fabricate a definition, translation, relation, or private catalog
 import merely to make the click look enriched. The Reading identity and emoji
 remain presentable when accumulated Knowledge is empty.
@@ -107,23 +108,26 @@ winner. Partial or multi-occurrence overlap returns a Membership Conflict with
 no writes. A validated empty plan for an already-owned Surface remains
 host-composable without advancing the dictionary revision.
 
-### DUMDICT-4: Dumdict-planned relation cleanup needs a wider Convex slice adapter
+### DUMDICT-4: Relation planning requires complete indexed Lemma inventories
 
 Reproduction path:
 
-- Dumdict `loadNewNoteContext` can require explicit existing relation targets
-  and pending target matches.
-- The tf-demo first slice creates Readings without relations and its query
-  returns empty relation arrays.
+- Dumdict `loadNewNoteContext` requires explicit existing Lemma targets, exact
+  pending-Shadow matches, and the complete relation-bearing dictionary slice.
+- Ambiguous exact Lemmas require one deterministic forward endpoint plus inverse
+  fan-out across every Reading of every exact match.
+- A Reading added later to a target Lemma requires inverse backfill in the same
+  atomic commit.
 
-The Convex commit mutation understands Dumdict pending-relation change variants.
-tf-demo now projects resolved and pending relations, lets a visitor contribute a
-validated Dumrel semantic relation between two already stored Dumdict Readings,
-and follows resolved relations from note to note. It still does not claim
-Dumdict-planned pending-target resolution or cleanup through this narrow
-adapter. Those operations require extending the query arguments and indexed
-slice loading used by `getInfoForRelationsCleanup` and
-`loadCleanupRelationsContext`.
+tf-demo now stores normalized Reading-owned, Lemma-targeted edges as the single
+source of truth. Indexed source and target reads reconstruct Dumdict Knowledge
+and learner projections. The new-note and cleanup adapters provide complete,
+explicitly bounded inventories: exceeding a bound fails instead of treating a
+truncated slice as complete. Dumdict therefore owns deterministic resolution,
+inverse fan-out, synonym propagation, pending lifecycle, and future-Reading
+backfill, while one Convex mutation preflights and commits every planned change
+atomically. Resolved targets open Lemma Route Notes; pending targets remain Unit
+Shadows until an exact Lemma exists.
 
 ## Evidence commands
 
@@ -155,5 +159,5 @@ range. Convex push passed. The real calls then produced:
 - universal Resolved Segment Context reuse on a second Click without invoking
   Dumgen or duplicating the exact string attestation;
 - request-ID deduplication on an exact retry; and
-- a validated Reading Definition contribution accumulated as
+- a validated Reading Definition change accumulated as
   `Ein Geldinstitut.`.

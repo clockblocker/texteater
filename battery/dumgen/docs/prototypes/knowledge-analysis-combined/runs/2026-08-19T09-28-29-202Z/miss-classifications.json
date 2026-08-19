@@ -1,0 +1,6 @@
+{
+  "combined-dev-multi-member-context": {
+    "classification": "corpus-or-evaluator-defect",
+    "explanation": "The model returned the Reading-level English literal `give up`; the canonical case used the encounter-inflected `gave up`. Both are defensible under the original wording, so exact equality exposes an intentionally retained evaluator limitation rather than cross-aspect interference."
+  }
+}

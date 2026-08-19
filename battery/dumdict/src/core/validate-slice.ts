@@ -1,7 +1,6 @@
 import { readingFingerprint } from "dumling";
 import { readingSchema } from "dumling/schema";
 import {
-	lemmaKnowledgeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 	semanticRelationSchema,
@@ -30,7 +29,7 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import { sameLemma, sameReading } from "./identity";
+import { lemmaFingerprint, sameLemma, sameReading } from "./identity";
 
 function assertLanguage(
 	expected: SupportedLanguage,
@@ -61,8 +60,6 @@ function validateLemmaRecord<L extends SupportedLanguage>(
 ) {
 	getDumdictSchemasFor(expected).lemmaRecordSchema.parse(record);
 	assertLanguage(expected, record.lemma.language);
-	if (record.knowledge !== undefined)
-		lemmaKnowledgeSchema.parse(record.knowledge);
 }
 
 function validateReading<L extends SupportedLanguage>(
@@ -92,10 +89,10 @@ function validateReadingEntry<L extends SupportedLanguage>(
 			entry.knowledge.semanticRelations ?? {},
 		)) {
 			for (const target of targets ?? []) {
-				validateReading(expected, target as Reading<L>);
-				if (sameReading(entry.reading, target as Reading<L>))
+				validateLemmaRecord(expected, { lemma: target });
+				if (sameLemma(entry.reading.lemma, target))
 					throw new Error(
-						"Reading Knowledge contains a direct self relation.",
+						"Reading Knowledge contains a direct same-Lemma relation.",
 					);
 			}
 		}
@@ -147,6 +144,42 @@ function validatePendingRecord<L extends SupportedLanguage>(
 		throw new Error(
 			"Pending Semantic Relation locator has the wrong relation.",
 		);
+}
+
+function validateRelationInventory<L extends SupportedLanguage>(
+	expected: L,
+	lemmas: LemmaRecord<L>[],
+	readings: ReadingEntry<L>[],
+) {
+	for (const record of lemmas) validateLemmaRecord(expected, record);
+	for (const entry of readings) validateReadingEntry(expected, entry);
+	assertNoDuplicates(
+		lemmas.map(({ lemma }) => lemmaFingerprint(lemma)),
+		"relation Lemma inventory",
+	);
+	assertNoDuplicates(
+		readings.map(({ reading }) => readingFingerprint(reading)),
+		"relation Reading inventory",
+	);
+	const lemmaKeys = new Set(
+		lemmas.map(({ lemma }) => lemmaFingerprint(lemma)),
+	);
+	for (const entry of readings) {
+		if (!lemmaKeys.has(lemmaFingerprint(entry.reading.lemma)))
+			throw new Error(
+				"relation Reading inventory references an unstored owner Lemma.",
+			);
+		for (const targets of Object.values(
+			entry.knowledge?.semanticRelations ?? {},
+		)) {
+			for (const target of targets ?? []) {
+				if (!lemmaKeys.has(lemmaFingerprint(target)))
+					throw new Error(
+						"relation Reading inventory references an unstored target Lemma.",
+					);
+			}
+		}
+	}
 }
 
 export function validateStoredReadingsSlice<L extends SupportedLanguage>(
@@ -211,10 +244,17 @@ export function validateNewNoteSlice<L extends SupportedLanguage>(
 	}
 	for (const entry of slice.existingOwnedSurfaces)
 		validateSurfaceEntry(expected, entry);
-	for (const entry of slice.explicitExistingReadingTargets)
-		validateReadingEntry(expected, entry);
+	for (const entry of slice.explicitExistingLemmaTargets)
+		validateLemmaRecord(expected, entry);
 	for (const record of slice.existingPendingRelationsForProposedPendingTargets)
 		validatePendingRecord(expected, record);
+	for (const record of slice.pendingRelationsMatchingProposedLemma)
+		validatePendingRecord(expected, record);
+	validateRelationInventory(
+		expected,
+		slice.relationLemmas,
+		slice.relationReadings,
+	);
 }
 
 export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
@@ -265,12 +305,9 @@ export function validateCleanupRelationsSlice<L extends SupportedLanguage>(
 		slice.pendingRelations.map(locatorKey),
 		"pending Semantic Relations",
 	);
-	for (const target of slice.targetReadings) {
-		validateReadingEntry(expected, target.reading);
-		validateLemmaRecord(expected, target.lemma);
-		if (!sameLemma(target.reading.reading.lemma, target.lemma.lemma))
-			throw new Error(
-				"cleanup target Reading does not reference its target Lemma.",
-			);
-	}
+	validateRelationInventory(
+		expected,
+		slice.relationLemmas,
+		slice.relationReadings,
+	);
 }

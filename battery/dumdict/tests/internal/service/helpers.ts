@@ -73,8 +73,7 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 	if (!reading) {
 		throw new Error("Expected English walk fixture.");
 	}
-	const { lexicalRelations: _legacyRelations, ...entry } = reading;
-	return entry;
+	return structuredClone(reading);
 };
 
 export function withUnusedCleanupStorageMethods<
@@ -110,8 +109,11 @@ export const storageRejectingNewNoteContext = () => {
 			return {
 				revision: "never" as StoreRevision,
 				existingOwnedSurfaces: [],
-				explicitExistingReadingTargets: [],
+				explicitExistingLemmaTargets: [],
 				existingPendingRelationsForProposedPendingTargets: [],
+				pendingRelationsMatchingProposedLemma: [],
+				relationLemmas: [],
+				relationReadings: [],
 			};
 		},
 		async commitChanges() {

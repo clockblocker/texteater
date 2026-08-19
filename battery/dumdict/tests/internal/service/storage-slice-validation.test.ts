@@ -60,8 +60,11 @@ describe("storage slice validation", () => {
 				lemma: englishWalkLemma,
 			},
 			existingOwnedSurfaces: [],
-			explicitExistingReadingTargets: [],
+			explicitExistingLemmaTargets: [],
 			existingPendingRelationsForProposedPendingTargets: [],
+			pendingRelationsMatchingProposedLemma: [],
+			relationLemmas: [],
+			relationReadings: [],
 		} satisfies NewNoteSlice<"en">;
 
 		expect(() =>
@@ -73,8 +76,11 @@ describe("storage slice validation", () => {
 		const slice = {
 			revision,
 			existingOwnedSurfaces: [],
-			explicitExistingReadingTargets: [],
+			explicitExistingLemmaTargets: [],
 			existingPendingRelationsForProposedPendingTargets: [],
+			pendingRelationsMatchingProposedLemma: [],
+			relationLemmas: [],
+			relationReadings: [],
 		} satisfies NewNoteSlice<"en">;
 
 		expect(() =>

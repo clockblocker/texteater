@@ -1,28 +1,30 @@
 "use node";
 
 import { type Infer, v } from "convex/values";
-import {
-	type CleanupRelationsSlice,
-	createDumdictService,
-	type DumdictPlan,
-	type DumdictStoragePort,
-	makeSurfaceId,
-	type NewNoteSlice,
-	type ReadingPatchSlice,
-	type RelationsCleanupInfoSlice,
-	type StoredReadingsSlice,
+import type {
+	ApplyGeneratedKnowledgeRequest,
+	CleanupRelationsSlice,
+	DumdictPlan,
+	DumdictStoragePort,
+	NewNoteSlice,
+	ReadingPatchSlice,
+	RelationsCleanupInfoSlice,
+	StoredReadingsSlice,
 } from "dumdict";
-import { getDumdictSchemasFor } from "dumdict/schema";
-import { buildDumgen } from "dumgen";
+import {
+	createDumdictServiceForTrustedStorage,
+	makeSurfaceId,
+} from "dumdict/trusted-storage-runtime";
+import type { Dumgen } from "dumgen";
 import {
 	notImplementedGrammaticalResultSchema,
 	resolvedGrammaticalResultSchema,
 	unresolvedGrammaticalResultSchema,
 } from "dumgen/schema";
-import { pendingSemanticRelationSchema } from "dumrel";
+import { knowledgeChangeSchema, pendingSemanticRelationSchema } from "dumrel";
+import { semanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
-	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
 	type OrchestrationPersistence,
@@ -49,11 +51,45 @@ import {
 	type resolvedGrammaticalValidator,
 	resolveSegmentResultValidator,
 	type reusableAttestationValidator,
-	semanticRelationValidator,
 } from "./model/validators";
 
-const dumgen = buildDumgen();
-const germanDumdictSchemas = getDumdictSchemasFor("de");
+const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
+
+let dumgenPromise: Promise<Dumgen> | undefined;
+
+function getDumgen(): Promise<Dumgen> {
+	dumgenPromise ??= Promise.all([
+		import("dumgen/openai-fetch"),
+		import("dumgen/runtime"),
+	]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
+		buildDumgenRuntime({
+			sdk: buildOpenAiFetchSdk(),
+			async generateKnowledge() {
+				throw new Error(
+					"Knowledge generation runs in its dedicated Convex action.",
+				);
+			},
+		}),
+	);
+	return dumgenPromise;
+}
+
+const lazyDumgen: Dumgen = {
+	segment: async (sentences) => (await getDumgen()).segment(sentences),
+	resolve: {
+		grammatical: async (language, input) =>
+			(await getDumgen()).resolve.grammatical(language, input),
+		reading: async (language, input) =>
+			(await getDumgen()).resolve.reading(language, input),
+	},
+	generate: {
+		knowledge: async () => {
+			throw new Error(
+				"Knowledge generation runs in its dedicated Convex action.",
+			);
+		},
+	},
+};
 
 type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
 type ResolvedGrammaticalActionResult = Infer<
@@ -177,8 +213,10 @@ function mutablePreconditions(
 	});
 }
 
-function dictionaryPlanResult(input: DumdictPlan<"de">): DictionaryPlanResult {
-	const parsed = germanDumdictSchemas.dumdictPlanSchema.parse(input);
+export function dictionaryPlanResult(
+	input: DumdictPlan<"de">,
+): DictionaryPlanResult {
+	const parsed = input;
 	return {
 		baseRevision: parsed.baseRevision,
 		changes: parsed.changes.map((change) => {
@@ -217,13 +255,9 @@ function dictionaryPlanResult(input: DumdictPlan<"de">): DictionaryPlanResult {
 										...operation,
 										envelope: {
 											...operation.envelope,
-											owner: {
-												...operation.envelope.owner,
-												reading: mutableReading(
-													operation.envelope.owner
-														.reading,
-												),
-											},
+											reading: mutableReading(
+												operation.envelope.reading,
+											),
 										},
 									},
 						),
@@ -500,104 +534,20 @@ export const runResolutionSession = internalAction({
 	},
 });
 
-export const contributeKnowledge = action({
+export const applyReadingKnowledgeChange = action({
 	args: {
-		contributionKey: v.string(),
-		ownerKind: v.union(v.literal("Lemma"), v.literal("Reading")),
-		ownerKey: v.string(),
+		knowledgeChangeKey: v.string(),
+		ownerReadingKey: v.string(),
 		change: v.any(),
 	},
 	returns: v.any(),
 	handler: async (ctx, args): Promise<unknown> => {
-		const stored = await ctx.runQuery(
-			internal.persistence.getKnowledgeOwner,
-			{ ownerKind: args.ownerKind, ownerKey: args.ownerKey },
-		);
-		if (!stored) throw new Error("Knowledge owner does not exist.");
-		const applied = applyValidatedKnowledgeContribution({
-			owner:
-				args.ownerKind === "Lemma"
-					? {
-							kind: "Lemma",
-							lemma: stored.owner,
-							...(stored.knowledge === undefined
-								? {}
-								: { knowledge: stored.knowledge }),
-						}
-					: {
-							kind: "Reading",
-							reading: stored.owner,
-							...(stored.knowledge === undefined
-								? {}
-								: { knowledge: stored.knowledge }),
-						},
-			change: args.change,
-		});
+		const change = knowledgeChangeSchema.parse(args.change);
 		const persisted: unknown = await ctx.runMutation(
-			internal.persistence.persistKnowledgeContribution,
-			{
-				...args,
-				change: applied.change,
-				knowledge: applied.knowledge,
-			},
+			internal.persistence.persistKnowledgeChange,
+			{ ...args, change },
 		);
-		return { ...applied, persisted };
-	},
-});
-
-export const contributeRelation = action({
-	args: {
-		contributionKey: v.string(),
-		sourceReadingKey: v.string(),
-		relation: semanticRelationValidator,
-		targetReadingKey: v.string(),
-	},
-	returns: v.any(),
-	handler: async (ctx, args): Promise<unknown> => {
-		if (args.sourceReadingKey === args.targetReadingKey) {
-			throw new Error("A Reading cannot relate to itself in tf-demo.");
-		}
-		const [source, target] = await Promise.all([
-			ctx.runQuery(internal.persistence.getKnowledgeOwner, {
-				ownerKind: "Reading",
-				ownerKey: args.sourceReadingKey,
-			}),
-			ctx.runQuery(internal.persistence.getKnowledgeOwner, {
-				ownerKind: "Reading",
-				ownerKey: args.targetReadingKey,
-			}),
-		]);
-		if (!source || !target) {
-			throw new Error(
-				"Both relation endpoints must be stored Dumdict Readings.",
-			);
-		}
-		const applied = applyValidatedKnowledgeContribution({
-			owner: {
-				kind: "Reading",
-				reading: source.owner,
-				...(source.knowledge === undefined
-					? {}
-					: { knowledge: source.knowledge }),
-			},
-			change: {
-				kind: "Contribute",
-				aspect: "semanticRelations",
-				relation: args.relation,
-				value: [target.owner],
-			},
-		});
-		const persisted: unknown = await ctx.runMutation(
-			internal.persistence.persistKnowledgeContribution,
-			{
-				contributionKey: args.contributionKey,
-				ownerKind: "Reading",
-				ownerKey: args.sourceReadingKey,
-				change: applied.change,
-				knowledge: applied.knowledge,
-			},
-		);
-		return { ...applied, persisted };
+		return persisted;
 	},
 });
 
@@ -606,8 +556,8 @@ function orchestratorFor(
 	sessionGuard?: ResolutionSessionGuard,
 ) {
 	return createTfDemoOrchestrator({
-		dumgen,
-		dictionary: createDumdictService({
+		dumgen: lazyDumgen,
+		dictionary: createDumdictServiceForTrustedStorage({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
 		}),
@@ -751,15 +701,16 @@ export function createConvexDumdictStorage(
 				internal.dumdictStorage.loadDumdictNewNoteContext,
 				{
 					lemmaKey: lemmaIdentityKey(draft.reading.lemma),
+					proposedLemma: draft.reading.lemma,
 					readingKey,
 					surfaceKeys:
 						draft.ownedSurfaces?.map(({ surface }) =>
 							makeSurfaceId("de", surface),
 						) ?? [],
-					explicitReadingTargetKeys:
+					explicitLemmaTargetKeys:
 						draft.relations?.flatMap(({ target }) =>
 							target.kind === "existing"
-								? [readingIdentityKey(target.reading)]
+								? [lemmaIdentityKey(target.lemma)]
 								: [],
 						) ?? [],
 					pendingProposalKeys:
@@ -797,17 +748,74 @@ export function createConvexDumdictStorage(
 					locatorKeys: resolutions.map(({ locator }) =>
 						pendingLocatorIdentityKey(locator),
 					),
-					targetReadingKeys: resolutions.flatMap(
-						({ targetReading }) =>
-							targetReading
-								? [readingIdentityKey(targetReading)]
-								: [],
-					),
 				},
 			) as unknown as Promise<CleanupRelationsSlice<"de">>;
 		},
 	};
 }
+
+export const applyGeneratedKnowledgePlan = internalAction({
+	args: {
+		attemptKey: v.string(),
+		reading: v.any(),
+		changes: v.array(v.any()),
+		pendingRelations: v.array(v.any()),
+	},
+	returns: v.null(),
+	handler: async (ctx, args) => {
+		try {
+			const request = JSON.parse(
+				JSON.stringify({
+					reading: args.reading,
+					changes: args.changes,
+					pendingRelations: args.pendingRelations,
+				}),
+			) as ApplyGeneratedKnowledgeRequest<"de">;
+			for (
+				let index = 0;
+				index < MAX_KNOWLEDGE_PLAN_ATTEMPTS;
+				index += 1
+			) {
+				let capturedPlan: DumdictPlan<"de"> | undefined;
+				const planned = await createDumdictServiceForTrustedStorage({
+					language: "de",
+					storage: createConvexDumdictStorage(ctx),
+				}).applyGeneratedKnowledge(request, {
+					applyPlan: async (plan) => {
+						capturedPlan = plan;
+						return {
+							status: "committed",
+							nextRevision: plan.baseRevision,
+						};
+					},
+				});
+				if (planned.status === "rejected") {
+					throw new Error("Generated Knowledge was rejected.");
+				}
+				if (!capturedPlan)
+					throw new Error("Dumdict did not produce a plan.");
+				const committed = await ctx.runMutation(
+					internal.knowledgeGeneration.commitGenerated,
+					{
+						attemptKey: args.attemptKey,
+						plan: dictionaryPlanResult(capturedPlan),
+						generatedChanges: args.changes,
+					},
+				);
+				if (committed.status !== "DictionaryConflict") return null;
+			}
+			throw new Error("Knowledge save conflict.");
+		} catch (error) {
+			console.error("Generated Knowledge planning failed", error);
+			await ctx.runMutation(internal.knowledgeGeneration.fail, {
+				attemptKey: args.attemptKey,
+				failureCode: "generationFailed",
+				failureMessage: "Knowledge generation failed. Please retry.",
+			});
+			return null;
+		}
+	},
+});
 
 function pendingProposalIdentityKey(input: unknown): string {
 	const pending = pendingSemanticRelationSchema.parse(input);
@@ -830,6 +838,34 @@ function pendingLocatorIdentityKey(input: {
 		input.relation,
 		input.targetPendingId,
 	]);
+}
+
+function pendingLocatorFromRecord(value: unknown): {
+	sourceReadingKey: string;
+	relation: (typeof semanticRelationValues)[number];
+	targetPendingId: string;
+} | null {
+	if (!value || typeof value !== "object") return null;
+	const locator = Reflect.get(value, "locator");
+	if (!locator || typeof locator !== "object") return null;
+	const sourceReadingKey = Reflect.get(locator, "sourceReadingKey");
+	const relation = Reflect.get(locator, "relation");
+	const targetPendingId = Reflect.get(locator, "targetPendingId");
+	if (
+		typeof sourceReadingKey !== "string" ||
+		typeof relation !== "string" ||
+		!semanticRelationValues.includes(
+			relation as (typeof semanticRelationValues)[number],
+		) ||
+		typeof targetPendingId !== "string"
+	) {
+		return null;
+	}
+	return {
+		sourceReadingKey,
+		relation: relation as (typeof semanticRelationValues)[number],
+		targetPendingId,
+	};
 }
 
 const shadowCleanupResultValidator = v.union(
@@ -892,20 +928,15 @@ export const cleanupPendingRelation = action({
 		shadowId: v.id("shadows"),
 		locatorKey: v.string(),
 		baseRevision: v.string(),
-		targetReadingId: v.optional(v.id("readings")),
 	},
 	returns: shadowCleanupResultValidator,
 	handler: async (ctx, args): Promise<ShadowCleanupActionResult> => {
 		const selection: {
 			revision: string;
 			pendingRecord: unknown | null;
-			targetReadingEntry: unknown | null;
 		} = await ctx.runQuery(internal.shadowResolution.loadPendingSelection, {
 			shadowId: args.shadowId,
 			locatorKey: args.locatorKey,
-			...(args.targetReadingId
-				? { targetReadingId: args.targetReadingId }
-				: {}),
 		});
 		if (selection.revision !== args.baseRevision) {
 			return shadowCleanupConflict(
@@ -923,20 +954,10 @@ export const cleanupPendingRelation = action({
 				"The exact pending Shadow reference no longer exists.",
 			);
 		}
-		if (args.targetReadingId && selection.targetReadingEntry === null) {
-			return shadowCleanupConflict(
-				"semanticPreconditionFailed",
-				args.baseRevision,
-				selection.revision,
-				"The selected Reading candidate no longer exists.",
-			);
-		}
-
-		const pendingResult =
-			germanDumdictSchemas.pendingSemanticRelationRecordSchema.safeParse(
-				selection.pendingRecord,
-			);
-		if (!pendingResult.success) {
+		const pendingLocator = pendingLocatorFromRecord(
+			selection.pendingRecord,
+		);
+		if (!pendingLocator) {
 			return shadowCleanupConflict(
 				"semanticPreconditionFailed",
 				args.baseRevision,
@@ -944,30 +965,14 @@ export const cleanupPendingRelation = action({
 				"The pending Shadow reference is malformed and cannot be changed.",
 			);
 		}
-		const targetResult = selection.targetReadingEntry
-			? germanDumdictSchemas.readingEntrySchema.safeParse(
-					selection.targetReadingEntry,
-				)
-			: null;
-		if (targetResult && !targetResult.success) {
-			return shadowCleanupConflict(
-				"semanticPreconditionFailed",
-				args.baseRevision,
-				selection.revision,
-				"The selected Reading candidate is malformed.",
-			);
-		}
-		const result = await createDumdictService({
+		const result = await createDumdictServiceForTrustedStorage({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
 		}).cleanupRelations({
 			baseRevision: args.baseRevision,
 			resolutions: [
 				{
-					locator: pendingResult.data.locator,
-					...(targetResult?.success
-						? { targetReading: targetResult.data.reading }
-						: {}),
+					locator: pendingLocator,
 				},
 			],
 		});

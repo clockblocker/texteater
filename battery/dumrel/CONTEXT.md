@@ -1,6 +1,6 @@
 # Dumrel Context
 
-Dumrel names identityless linguistic Knowledge values applied to Lemmas and
+Dumrel names identityless linguistic Knowledge values applied to exact
 Readings by their caller. It defines Knowledge changes and relation algebra
 without owning identity, generation, persistence, synchronization, or
 user-interface projections.
@@ -9,14 +9,14 @@ user-interface projections.
 
 **Knowledge**:
 Identityless linguistic content that a caller applies one-to-one to one exact
-Lemma or Reading. Knowledge has no owner reference or separate ID, every aspect
+Reading. Knowledge has no owner reference or separate ID, every aspect
 is optional, and the empty value is valid.
 _Avoid_: Note, dictionary entry
 
 **Knowledge Change**:
 One owner-agnostic change to one atomic Knowledge aspect or bucket. A Change is
 exactly a Contribute, Correct, or Retract; omission never deletes Knowledge.
-_Avoid_: Knowledge Contribution, Knowledge patch
+_Avoid_: Knowledge patch
 
 **Contribute**:
 An additive Knowledge Change that sets an absent singular or structured aspect,
@@ -29,22 +29,19 @@ A Knowledge Change that replaces one complete atomic aspect or bucket.
 **Retract**:
 A Knowledge Change that removes one complete atomic aspect or bucket.
 
-**Lemma Knowledge**:
-Knowledge applied to one Lemma. It may contain non-empty literal Transcription
-lists keyed by Target Language.
-
 **Reading Knowledge**:
-Knowledge applied to one Reading. It may contain Definition, Translations,
-Morphological Tree, Lexical Breakdown, and direct Semantic Relations.
+Knowledge applied to one exact Reading. It may contain Transcription,
+Definition, Translations, Morphological Tree, Lexical Breakdown, and direct
+Semantic Relations.
 
 **Target Language**:
-A caller-chosen language label for one bucket of learner-facing literal
-Knowledge. It does not identify a Reading or create a cross-language relation.
+A caller-chosen language label for one Translation bucket. It does not identify
+a Reading or create a cross-language relation.
 
 **Transcription**:
-A literal pronunciation string in one Target Language bucket of Lemma
-Knowledge. Pronunciation discovery and external pronunciation links are not
-Knowledge.
+One normalized literal pronunciation string stored in Reading Knowledge. It
+has no Target Language bucket or list; pronunciation discovery and external
+pronunciation links are not Knowledge.
 
 **Translation**:
 A literal string in one Target Language stored in Reading Knowledge. A
@@ -68,12 +65,38 @@ Family, and Kind. Its containing structure or Pending Semantic Relation owns
 the contextual connection in which the Unit Shadow appears.
 _Avoid_: Pending Target, provisional Reading
 
+## Applicability and selection
+
+**Knowledge Applicability**:
+The pure linguistic policy that determines which Knowledge leaves are useful
+for one source-language, Family, and Kind route. German is configured;
+English and Hebrew are explicitly unconfigured. Applicability does not decide
+whether a caller fetches, generates, stores, or presents Knowledge.
+
+**Knowledge Settings**:
+One caller-stored global boolean choice for every Knowledge leaf and Semantic
+Relation kind. Settings are not repeated by language, Family, or Kind, and all
+choices are enabled by default. Dumrel validates Settings but does not persist
+them.
+
+**Knowledge Request Mask**:
+A sparse recursively shaped Knowledge selection whose present leaves are
+`null`. Absence means not requested. The empty mask is valid. A default mask
+contains every leaf applicable to one exact Reading; intersection with
+Knowledge Settings may only remove leaves and prunes empty nested branches.
+
+**German Knowledge Applicability**:
+Every configured German route selects Transcription, German Definition, and
+English Translation. Family/Kind policy may additionally select Semantic
+Relation kinds. Morphological Tree and Lexical Breakdown are not currently
+selected for generation.
+
 ## Relations
 
 **Semantic Relation**:
-A direct typed connection from one Reading to another Reading. Semantic
-Relations are owned by the source Reading Knowledge; Translations and
-component structure are not Semantic Relations.
+A direct typed connection from one Reading to one Lemma. Semantic Relations
+are owned by the source Reading Knowledge; the target Lemma owns no Knowledge.
+Translations and component structure are not Semantic Relations.
 _Avoid_: Lexical Relation
 
 **Pending Semantic Relation**:
@@ -89,40 +112,42 @@ Relation has the same properties.
 
 **Relation Propagation**:
 The derivation of new edges by applying Relation Algebra to a caller-selected
-finite graph. Propagation never mutates direct Knowledge or merges Knowledge
-applied to different owners.
+finite Reading-to-Lemma graph and its caller-supplied Reading ownership
+inventory. Propagation never mutates direct Knowledge or merges Knowledge
+applied to different Readings.
 
 **Inverse Relation**:
-The Semantic Relation that points back from a target Reading to its source. It
-may be the same Relation, as with Synonym, or a paired counterpart, as with
-Hypernym and Hyponym.
+The Semantic Relation materialized on every current Reading of a target Lemma,
+pointing to the original source Reading's Lemma. It may be the same Relation,
+as with Synonym, or a paired counterpart, as with Hypernym and Hyponym.
 
 **Synonym**:
-An exact semantic equivalence between Readings. Synonym is symmetric and
-transitive, and members of a Synonym cluster substitute for one another during
-Relation Propagation without sharing owned Knowledge.
+An exact semantic equivalence from a Reading to a Lemma. Synonym is symmetric
+across current target-Lemma Readings and transitive, and members of a Synonym
+cluster substitute at both endpoints during Relation Propagation without
+sharing owned Knowledge.
 
 **Near Synonym**:
-A symmetric similarity between Readings that is not itself transitive and does
-not create an equivalence cluster.
+A symmetric similarity from a Reading to a Lemma that is not itself transitive
+and does not create an equivalence cluster.
 
 **Antonym**:
-A direct symmetric opposition between Readings. Antonym is not transitive.
+A direct symmetric opposition from a Reading to a Lemma. Antonym is not
+transitive.
 
 **Hypernym**:
-A transitive Semantic Relation from a narrower Reading to a broader Reading.
-Its Inverse Relation is Hyponym.
+A direct Semantic Relation from a narrower Reading to a broader Lemma. Its
+Inverse Relation is Hyponym. Hypernym is not transitive.
 
 **Hyponym**:
-A transitive Semantic Relation from a broader Reading to a narrower Reading.
-Its Inverse Relation is Hypernym.
+A direct Semantic Relation from a broader Reading to a narrower Lemma. Its
+Inverse Relation is Hypernym. Hyponym is not transitive.
 
 **Meronym**:
-A direct Semantic Relation from a Reading to a Reading for one of its parts,
-members, or substances. Its Inverse Relation is Holonym and it is not treated
-as generically transitive.
+A direct Semantic Relation from a Reading to a Lemma for one of its parts,
+members, or substances. Its Inverse Relation is Holonym and it is not
+transitive.
 
 **Holonym**:
 A direct Semantic Relation from a part, member, or substance Reading to its
-whole Reading. Its Inverse Relation is Meronym and it is not treated as
-generically transitive.
+whole Lemma. Its Inverse Relation is Meronym and it is not transitive.

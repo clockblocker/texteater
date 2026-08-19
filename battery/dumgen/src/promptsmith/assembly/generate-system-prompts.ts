@@ -23,6 +23,7 @@ import { promptSource as grammarDiscourseFormulaPromptSource } from "../producti
 import { promptSource as grammarIdiomPromptSource } from "../production/grammatical-resolution/de/phraseme/idiom/prompt-source";
 import { promptSource as grammarProverbPromptSource } from "../production/grammatical-resolution/de/phraseme/proverb/prompt-source";
 import { promptSource as intakePromptSource } from "../production/intake/prompt-source";
+import { promptSource as combinedGermanKnowledgePromptSource } from "../production/knowledge-analysis/de/combined/prompt-source";
 import { promptSource as lexicalResolutionPromptSource } from "../production/knowledge-analysis/lexical-breakdown/resolution/prompt-source";
 import { promptSource as lexicalSegmentationPromptSource } from "../production/knowledge-analysis/lexical-breakdown/segmentation/prompt-source";
 import { promptSource as morphologicalResolutionPromptSource } from "../production/knowledge-analysis/morphological-tree/resolution/prompt-source";
@@ -49,6 +50,7 @@ const productionRouteRoot = join(
 	productionTargetPromptSource.route,
 );
 const knowledgePromptSources = [
+	combinedGermanKnowledgePromptSource,
 	morphologicalSegmentationPromptSource,
 	morphologicalResolutionPromptSource,
 	lexicalSegmentationPromptSource,
@@ -61,6 +63,7 @@ const productionCodegen = defineSystemPromptCodegen({
 		intakePromptSource,
 		readingPromptSource,
 		unitShadowClassificationPromptSource,
+		combinedGermanKnowledgePromptSource,
 		morphologicalSegmentationPromptSource,
 		morphologicalResolutionPromptSource,
 		lexicalSegmentationPromptSource,
@@ -114,9 +117,13 @@ const productionCodegen = defineSystemPromptCodegen({
 					"representation.ts",
 					"schemas.ts",
 				]
-			: knowledgePromptSources.some((candidate) => candidate === source)
-				? ["prompt-source.ts"]
-				: undefined,
+			: source === combinedGermanKnowledgePromptSource
+				? ["golden-corpus", "prompt-source.ts"]
+				: knowledgePromptSources.some(
+							(candidate) => candidate === source,
+						)
+					? ["prompt-source.ts"]
+					: undefined,
 	provenancePaths: (source) =>
 		source === productionTargetPromptSource
 			? [
@@ -132,7 +139,7 @@ const productionCodegen = defineSystemPromptCodegen({
 						productionDemonstrationSelection,
 					),
 				]
-			: knowledgePromptSources.some((candidate) => candidate === source)
+			: source === combinedGermanKnowledgePromptSource
 				? [
 						join(
 							promptsmithRoot,
@@ -143,17 +150,35 @@ const productionCodegen = defineSystemPromptCodegen({
 						join(
 							promptsmithRoot,
 							"production",
-							"knowledge-analysis",
-							"schemas.ts",
-						),
-						join(
-							promptsmithRoot,
-							"production",
-							"knowledge-analysis",
-							"corpora.ts",
+							source.route,
+							"golden-corpus",
+							"corpus.ts",
 						),
 					]
-				: undefined,
+				: knowledgePromptSources.some(
+							(candidate) => candidate === source,
+						)
+					? [
+							join(
+								promptsmithRoot,
+								"production",
+								source.route,
+								"prompt-source.ts",
+							),
+							join(
+								promptsmithRoot,
+								"production",
+								"knowledge-analysis",
+								"schemas.ts",
+							),
+							join(
+								promptsmithRoot,
+								"production",
+								"knowledge-analysis",
+								"corpora.ts",
+							),
+						]
+					: undefined,
 });
 
 export const productionSystemPromptRecipe: SystemPromptRecipe =

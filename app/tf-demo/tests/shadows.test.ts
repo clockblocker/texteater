@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
+	clearLemmaDataBatch,
 	clearReadingDataBatch,
 	clearSharedDataBatch,
 	clearVisitorDataBatch,
@@ -86,6 +87,9 @@ class ShadowDb {
 				),
 			);
 		const terminal = {
+			async first() {
+				return matches()[0] ?? null;
+			},
 			async unique() {
 				const rows = matches();
 				if (rows.length > 1) throw new Error("Expected a unique row.");
@@ -267,7 +271,6 @@ describe("Shadow descriptor and storage seam", () => {
 		const ctx = { db } as never;
 		await replaceAccumulatedKnowledge(
 			ctx,
-			"Reading",
 			"reading-source",
 			structuralKnowledge(),
 		);
@@ -280,7 +283,6 @@ describe("Shadow descriptor and storage seam", () => {
 
 		await replaceAccumulatedKnowledge(
 			ctx,
-			"Reading",
 			"reading-source",
 			structuralKnowledge(),
 		);
@@ -288,16 +290,11 @@ describe("Shadow descriptor and storage seam", () => {
 			db.rows("structuralShadowReferences").map(({ _id }) => _id),
 		).toEqual(referenceIds);
 
-		await replaceAccumulatedKnowledge(
-			ctx,
-			"Reading",
-			"reading-source",
-			undefined,
-		);
+		await replaceAccumulatedKnowledge(ctx, "reading-source", undefined);
 		expect(db.rows("structuralShadowReferences")).toEqual([]);
 		expect(db.rows("shadows").map(({ _id }) => _id)).toEqual([shadowId]);
 
-		await replaceAccumulatedKnowledge(ctx, "Reading", "reading-source", {
+		await replaceAccumulatedKnowledge(ctx, "reading-source", {
 			lexicalBreakdown: [nounShadow, verbShadow],
 		});
 		expect(
@@ -311,12 +308,12 @@ describe("Shadow descriptor and storage seam", () => {
 	test("rejects a malformed replacement before changing authoritative or projected state", async () => {
 		const db = new ShadowDb();
 		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "Reading", "reading-source", {
+		await replaceAccumulatedKnowledge(ctx, "reading-source", {
 			lexicalBreakdown: [nounShadow, verbShadow],
 		});
 		const before = db.snapshot();
 		await expect(
-			replaceAccumulatedKnowledge(ctx, "Reading", "reading-source", {
+			replaceAccumulatedKnowledge(ctx, "reading-source", {
 				lexicalBreakdown: [nounShadow, { family: "Lexeme" }],
 			}),
 		).rejects.toThrow("exactly language");
@@ -355,8 +352,7 @@ describe("Shadow backfills and presentation", () => {
 			accumulatedKnowledge: [
 				{
 					_id: "knowledge_legacy",
-					ownerKind: "Reading",
-					ownerKey: "reading-source",
+					ownerReadingKey: "reading-source",
 					knowledge: structuralKnowledge(),
 					updatedAt: 1,
 				},
@@ -449,7 +445,7 @@ describe("Shadow backfills and presentation", () => {
 			],
 		});
 		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "Reading", "reading-source", {
+		await replaceAccumulatedKnowledge(ctx, "reading-source", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
 		const record = pendingRecord();
@@ -492,12 +488,7 @@ describe("Shadow backfills and presentation", () => {
 		for (const row of db.rows("pendingSemanticRelations")) {
 			await db.delete(row._id);
 		}
-		await replaceAccumulatedKnowledge(
-			ctx,
-			"Reading",
-			"reading-source",
-			undefined,
-		);
+		await replaceAccumulatedKnowledge(ctx, "reading-source", undefined);
 		expect(
 			await handler(getNote)(
 				{ db },
@@ -627,6 +618,10 @@ describe("Shadow backfills and presentation", () => {
 				readingId: `reading-${id}`,
 				record: {},
 			})),
+			dictionaryLemmas: lemmaRows.map(([id]) => ({
+				_id: `dictionary-${id}`,
+				lemmaId: `lemma-${id}`,
+			})),
 		});
 		const ctx = { db } as never;
 		const record = pendingRecord();
@@ -646,21 +641,15 @@ describe("Shadow backfills and presentation", () => {
 			inspection: {
 				revision: string;
 				candidates: Array<{
-					readingId: string;
-					emojiDescription: string;
+					lemmaId: string;
 					coreFeatures: Array<{ name: string; value: string }>;
 				}>;
 			};
 		};
 		expect(note.inspection.revision).toBe("convex-7");
 		expect(
-			note.inspection.candidates.map(({ readingId }) => readingId),
-		).toEqual(["reading-candidate-1", "reading-candidate-2"]);
-		expect(
-			note.inspection.candidates.map(
-				({ emojiDescription }) => emojiDescription,
-			),
-		).toEqual(["🏦", "🏦"]);
+			note.inspection.candidates.map(({ lemmaId }) => lemmaId),
+		).toEqual(["lemma-candidate-1", "lemma-candidate-2"]);
 		expect(
 			note.inspection.candidates.map(({ coreFeatures }) => coreFeatures),
 		).toEqual([
@@ -668,13 +657,13 @@ describe("Shadow backfills and presentation", () => {
 			[{ name: "sense", value: "candidate-2" }],
 		]);
 
-		await db.delete("entry-candidate-2");
+		await db.delete("dictionary-candidate-2");
 		const one = (await handler(getNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as typeof note;
 		expect(one.inspection.candidates).toHaveLength(1);
-		await db.delete("entry-candidate-1");
+		await db.delete("dictionary-candidate-1");
 		const zero = (await handler(getNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
@@ -754,10 +743,10 @@ describe("Shadow reset lifecycle", () => {
 	async function lifecycleDb() {
 		const db = new ShadowDb();
 		const ctx = { db } as never;
-		await replaceAccumulatedKnowledge(ctx, "Reading", "reading-doomed", {
+		await replaceAccumulatedKnowledge(ctx, "reading-doomed", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
-		await replaceAccumulatedKnowledge(ctx, "Reading", "reading-survivor", {
+		await replaceAccumulatedKnowledge(ctx, "reading-survivor", {
 			lexicalBreakdown: [nounShadow, nounShadow],
 		});
 		const pending = pendingRecord("reading-doomed");
@@ -827,4 +816,88 @@ describe("Shadow reset lifecycle", () => {
 			expect(db.rows("shadows")).toEqual([]);
 		});
 	}
+});
+
+test("Reading deletion removes outgoing edges and preserves incoming edges until the target Lemma dies", async () => {
+	const db = new ShadowDb({
+		lemmas: [
+			{
+				_id: "lemma-doomed",
+				lemmaKey: "doomed",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Ziel",
+				coreFeatures: {},
+			},
+			{
+				_id: "lemma-survivor",
+				lemmaKey: "survivor",
+				language: "de",
+				family: "Lexeme",
+				kind: "NOUN",
+				canonicalForm: "Quelle",
+				coreFeatures: {},
+			},
+		],
+		dictionaryLemmas: [
+			{ _id: "dictionary-doomed", lemmaId: "lemma-doomed" },
+			{ _id: "dictionary-survivor", lemmaId: "lemma-survivor" },
+		],
+		readings: [
+			{
+				_id: "reading-doomed-id",
+				readingKey: "reading-doomed",
+				lemmaId: "lemma-doomed",
+				emojiDescription: "🎯",
+			},
+			{
+				_id: "reading-survivor-id",
+				readingKey: "reading-survivor",
+				lemmaId: "lemma-survivor",
+				emojiDescription: "➡️",
+			},
+		],
+		readingEntries: [
+			{ _id: "entry-doomed", readingId: "reading-doomed-id", record: {} },
+			{
+				_id: "entry-survivor",
+				readingId: "reading-survivor-id",
+				record: {},
+			},
+		],
+		semanticRelationEdges: [
+			{
+				_id: "edge-outgoing",
+				sourceReadingId: "reading-doomed-id",
+				relation: "hypernym",
+				targetLemmaId: "lemma-survivor",
+			},
+			{
+				_id: "edge-incoming",
+				sourceReadingId: "reading-survivor-id",
+				relation: "hyponym",
+				targetLemmaId: "lemma-doomed",
+			},
+		],
+	});
+	for (let attempt = 0; attempt < 3; attempt += 1) {
+		await handler(clearReadingDataBatch)(
+			{ db },
+			{ readingKeys: ["reading-doomed"] },
+		);
+	}
+	expect(db.rows("semanticRelationEdges").map(({ _id }) => _id)).toEqual([
+		"edge-incoming",
+	]);
+	expect(db.rows("readings").map(({ _id }) => _id)).not.toContain(
+		"reading-doomed-id",
+	);
+
+	await handler(clearLemmaDataBatch)({ db }, { lemmaIds: ["lemma-doomed"] });
+	expect(db.rows("semanticRelationEdges")).toEqual([]);
+	await handler(clearLemmaDataBatch)({ db }, { lemmaIds: ["lemma-doomed"] });
+	expect(db.rows("lemmas").map(({ _id }) => _id)).not.toContain(
+		"lemma-doomed",
+	);
 });

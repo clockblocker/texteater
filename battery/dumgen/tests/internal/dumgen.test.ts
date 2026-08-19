@@ -60,17 +60,19 @@ function queueSdk(outputs: unknown[]) {
 }
 
 describe("Dumgen module interface", () => {
-	test("exposes exactly the three high-level operations", () => {
+	test("exposes exactly the deep public operations", () => {
 		const { sdk } = queueSdk([]);
 		const dumgen = buildDumgen({ sdk });
 
-		expect(Object.keys(dumgen)).toEqual(["segment", "resolve"]);
+		expect(Object.keys(dumgen)).toEqual(["segment", "resolve", "generate"]);
 		expect(Object.keys(dumgen.resolve)).toEqual(["grammatical", "reading"]);
+		expect(Object.keys(dumgen.generate)).toEqual(["knowledge"]);
 		expect("laboratory" in dumgen).toBe(false);
 		expect("promptCatalog" in dumgen).toBe(false);
 		expect("de" in dumgen.resolve).toBe(false);
 		expect(Object.isFrozen(dumgen)).toBe(true);
 		expect(Object.isFrozen(dumgen.resolve)).toBe(true);
+		expect(Object.isFrozen(dumgen.generate)).toBe(true);
 	});
 
 	test("segments an ordered German/Hebrew batch after one Intake call", async () => {

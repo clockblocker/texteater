@@ -1,10 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import {
 	derivePendingEntryId,
+	englishRunDraft,
+	englishRunLemma,
 	englishSwimCitationSurface,
 	englishSwimDraft,
+	englishSwimLemma,
 	englishSwimReading,
-	englishWalkReading,
+	englishWalkLemma,
 	enSerializedNotes,
 	germanGehenReading,
 	getBootedUpDumdict,
@@ -26,7 +29,7 @@ const pendingWalkFast = {
 };
 
 describe("configured service relation writes", () => {
-	test("rejects only a concrete Reading self relation", async () => {
+	test("rejects a direct same-Lemma relation", async () => {
 		const direct = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
 			await direct.dict.addNewNote({
@@ -37,7 +40,7 @@ describe("configured service relation writes", () => {
 							relation: "nearSynonym",
 							target: {
 								kind: "existing",
-								reading: englishSwimReading,
+								lemma: englishSwimLemma,
 							},
 						},
 					],
@@ -46,7 +49,7 @@ describe("configured service relation writes", () => {
 		).toMatchObject({ status: "rejected", code: "selfRelation" });
 	});
 
-	test("keeps a same-Lemma Unit Shadow pending because it does not identify a Reading", async () => {
+	test("rejects a same-Lemma Unit Shadow once it resolves", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		expect(
 			await dict.addNewNote({
@@ -70,25 +73,12 @@ describe("configured service relation writes", () => {
 					],
 				},
 			}),
-		).toMatchObject({ status: "applied" });
+		).toMatchObject({ status: "rejected", code: "selfRelation" });
 		expect(
 			storage
 				.loadAll()
 				.flatMap(({ pendingRelations }) => pendingRelations),
-		).toMatchObject([
-			{
-				sourceReading: englishSwimReading,
-				pending: {
-					relation: "nearSynonym",
-					target: {
-						language: "en",
-						canonicalForm: "swim",
-						family: "Lexeme",
-						kind: "VERB",
-					},
-				},
-			},
-		]);
+		).toEqual([]);
 	});
 
 	test("materializes forward and inverse Reading Knowledge", async () => {
@@ -101,7 +91,7 @@ describe("configured service relation writes", () => {
 						relation: "nearSynonym",
 						target: {
 							kind: "existing",
-							reading: englishWalkReading,
+							lemma: englishWalkLemma,
 						},
 					},
 				],
@@ -114,11 +104,53 @@ describe("configured service relation writes", () => {
 		expect(
 			readings.find(({ reading }) => reading.emojiDescription === "🏊")
 				?.knowledge?.semanticRelations?.nearSynonym,
-		).toEqual([englishWalkReading]);
+		).toEqual([englishWalkLemma]);
 		expect(
 			readings.find(({ reading }) => reading.emojiDescription === "🚶")
 				?.knowledge?.semanticRelations?.nearSynonym,
-		).toEqual([englishSwimReading]);
+		).toEqual([englishSwimLemma]);
+	});
+
+	test("resolves a generated Unit Shadow when an exact Lemma already exists", async () => {
+		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
+		expect(
+			(
+				await dict.addNewNote({
+					draft: {
+						...englishRunDraft,
+						relations: [
+							{
+								target: {
+									kind: "pending",
+									pending: {
+										relation: "antonym",
+										target: {
+											language: "en",
+											canonicalForm: "walk",
+											family: "Lexeme",
+											kind: "VERB",
+										},
+									},
+								},
+							},
+						],
+					},
+				})
+			).status,
+		).toBe("applied");
+		const notes = storage.loadAll();
+		expect(
+			notes.flatMap(({ pendingRelations }) => pendingRelations),
+		).toEqual([]);
+		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
+		expect(
+			readings.find(({ reading }) => reading.emojiDescription === "🏃")
+				?.knowledge?.semanticRelations?.antonym,
+		).toEqual([englishWalkLemma]);
+		expect(
+			readings.find(({ reading }) => reading.emojiDescription === "🚶")
+				?.knowledge?.semanticRelations?.antonym,
+		).toEqual([englishRunLemma]);
 	});
 
 	test("rejects cross-language direct and pending endpoints", async () => {
@@ -132,7 +164,7 @@ describe("configured service relation writes", () => {
 							relation: "synonym",
 							target: {
 								kind: "existing",
-								reading: germanGehenReading,
+								lemma: germanGehenReading.lemma,
 							},
 						},
 					] as never,

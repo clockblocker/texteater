@@ -20,9 +20,9 @@ type PendingEntryIdentity<L> = {
 and cleanup bookkeeping. The resulting ID is a pending-work identity only. It
 must never be used as a `LinguisticEntryId`.
 
-Several real Entries may match one pending description. The application or
-curation workflow must select the intended opaque Entry identity. Dumdict can
-then materialize the resolved relation.
+Several real Lemmas may match one pending description. Current Dumdict code
+chooses one deterministically for the forward edge and fans the inverse across
+Readings of every exact match. Contextual refinement is deferred.
 
 Lexical pending relations originate at a Meaning ID. Morphological pending
 relations originate at a Linguistic Entry ID. This preserves the same ownership

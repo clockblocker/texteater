@@ -2,12 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import {
-	LibraryIcon,
-	LoaderCircleIcon,
-	LockIcon,
-	UnlinkIcon,
-} from "lucide-react";
+import { LibraryIcon, LoaderCircleIcon, LockIcon } from "lucide-react";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -191,10 +186,7 @@ export function ShadowNoteContent({
 		}
 	}
 
-	async function cleanUp(
-		locatorKey: string,
-		targetReadingId?: ShadowNote["inspection"]["candidates"][number]["readingId"],
-	) {
+	async function cleanUp(locatorKey: string) {
 		if (activeLocator) return;
 		const attempt = ++actionEpoch.current;
 		setActiveLocator(locatorKey);
@@ -205,7 +197,6 @@ export function ShadowNoteContent({
 				shadowId: note.target.shadowId,
 				locatorKey,
 				baseRevision: note.inspection.revision,
-				...(targetReadingId ? { targetReadingId } : {}),
 			});
 			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
 			await onRefresh();
@@ -271,10 +262,7 @@ export function ShadowNoteContent({
 						note={note}
 						referrers={referrers}
 						activeLocator={activeLocator}
-						onResolve={(locatorKey, readingId) =>
-							void cleanUp(locatorKey, readingId)
-						}
-						onDiscard={(locatorKey) => void cleanUp(locatorKey)}
+						onResolve={(locatorKey) => void cleanUp(locatorKey)}
 					/>
 					{!isDone ? (
 						<button
@@ -313,24 +301,16 @@ export function ShadowReferenceList({
 	referrers,
 	activeLocator,
 	onResolve,
-	onDiscard,
 }: {
 	note: ShadowNote;
 	referrers: ShadowNote["references"]["page"];
 	activeLocator: string | null;
-	onResolve: (
-		locatorKey: string,
-		readingId: ShadowNote["inspection"]["candidates"][number]["readingId"],
-	) => void;
-	onDiscard: (locatorKey: string) => void;
+	onResolve: (locatorKey: string) => void;
 }) {
 	return (
 		<ul className="grid gap-3">
 			{referrers.map((referrer) => {
-				const candidates = note.inspection.candidates.filter(
-					(candidate) =>
-						candidate.readingId !== referrer.reading.readingId,
-				);
+				const candidates = note.inspection.candidates;
 				return (
 					<li
 						key={referrer.reading.readingId}
@@ -353,65 +333,43 @@ export function ShadowReferenceList({
 									<Badge variant="outline">
 										{reference.relation}
 									</Badge>
-									<button
-										type="button"
-										className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
-										disabled={activeLocator !== null}
-										onClick={() =>
-											onDiscard(reference.locatorKey)
-										}
-									>
-										<UnlinkIcon className="size-3.5" />
-										Discard reference
-									</button>
 								</div>
 								<p className="mt-2 break-all font-mono text-[10px] text-muted-foreground">
 									{reference.locatorKey}
 								</p>
 								{candidates.length === 0 ? (
 									<p className="mt-3 text-xs text-muted-foreground">
-										No exact Unit Reading candidate is
-										available.
+										No exact Lemma candidate is available.
 									</p>
 								) : (
 									<div className="mt-3 flex flex-wrap gap-2">
-										{candidates.map((candidate) => (
-											<button
-												key={candidate.readingId}
-												type="button"
-												className="rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
-												disabled={
-													activeLocator !== null
-												}
-												onClick={() =>
-													onResolve(
-														reference.locatorKey,
-														candidate.readingId,
-													)
-												}
-											>
-												{activeLocator ===
-												reference.locatorKey ? (
-													<LoaderCircleIcon className="mr-1 inline size-3 animate-spin" />
-												) : null}
-												Resolve to{" "}
-												{candidate.emojiDescription}{" "}
-												{candidate.canonicalForm}
-											</button>
-										))}
+										<button
+											type="button"
+											className="rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+											disabled={activeLocator !== null}
+											onClick={() =>
+												onResolve(reference.locatorKey)
+											}
+										>
+											{activeLocator ===
+											reference.locatorKey ? (
+												<LoaderCircleIcon className="mr-1 inline size-3 animate-spin" />
+											) : null}
+											Resolve exact Lemma match
+										</button>
 									</div>
 								)}
 								{candidates.map((candidate) => (
 									<div
-										key={`details:${candidate.readingId}`}
+										key={`details:${candidate.lemmaId}`}
 										className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
 									>
 										<Link
 											to={hrefFor(candidate.target)}
 											className="font-medium hover:text-foreground hover:underline"
 										>
-											Inspect {candidate.emojiDescription}{" "}
-											{candidate.canonicalForm}
+											Inspect {candidate.canonicalForm} ·{" "}
+											{candidate.family}/{candidate.kind}
 										</Link>
 										{candidate.coreFeatures.map(
 											(feature) => (

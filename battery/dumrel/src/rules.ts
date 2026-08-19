@@ -1,28 +1,30 @@
-import { semanticRelationGraphEdgeSchema } from "./schema.js";
-import type { SemanticRelation, SemanticRelationGraphEdge } from "./types.js";
+import { semanticRelationGraphSchema } from "./schema.js";
+import type {
+	SemanticRelation,
+	SemanticRelationGraph,
+	SemanticRelationGraphEdge,
+	SemanticRelationGraphReading,
+} from "./types.js";
 import { semanticRelationValues } from "./vocabulary.js";
 
-const inverseRelations = {
-	synonym: "synonym",
-	nearSynonym: "nearSynonym",
-	antonym: "antonym",
-	hypernym: "hyponym",
-	hyponym: "hypernym",
-	meronym: "holonym",
-	holonym: "meronym",
-} as const satisfies Record<SemanticRelation, SemanticRelation>;
-
-const symmetricRelations = new Set<SemanticRelation>([
-	"synonym",
-	"nearSynonym",
-	"antonym",
-]);
-
-const transitiveRelations = new Set<SemanticRelation>([
-	"synonym",
-	"hypernym",
-	"hyponym",
-]);
+const relationAlgebra = {
+	synonym: { inverse: "synonym", substitutesThroughSynonyms: true },
+	nearSynonym: {
+		inverse: "nearSynonym",
+		substitutesThroughSynonyms: true,
+	},
+	antonym: { inverse: "antonym", substitutesThroughSynonyms: true },
+	hypernym: { inverse: "hyponym", substitutesThroughSynonyms: true },
+	hyponym: { inverse: "hypernym", substitutesThroughSynonyms: true },
+	meronym: { inverse: "holonym", substitutesThroughSynonyms: true },
+	holonym: { inverse: "meronym", substitutesThroughSynonyms: true },
+} as const satisfies Record<
+	SemanticRelation,
+	{
+		inverse: SemanticRelation;
+		substitutesThroughSynonyms: boolean;
+	}
+>;
 
 const relationOrder = new Map(
 	semanticRelationValues.map((relation, index) => [relation, index]),
@@ -31,64 +33,72 @@ const relationOrder = new Map(
 export function inverseRelationFor(
 	relation: SemanticRelation,
 ): SemanticRelation {
-	return inverseRelations[relation];
+	return relationAlgebra[relation].inverse;
 }
 
+/**
+ * Derives one-level inverses plus exact-Synonym closure and substitution.
+ *
+ * The Reading inventory is intentionally caller-supplied: Dumrel understands
+ * only the pure graph algebra, while a dictionary-owning caller decides which
+ * Readings currently belong to each Lemma and whether inferred edges are
+ * materialized.
+ */
 export function propagateRelations(
-	graph: readonly SemanticRelationGraphEdge[],
+	graph: SemanticRelationGraph,
 ): SemanticRelationGraphEdge[] {
-	const direct = deduplicate(
-		graph.map((edge) => semanticRelationGraphEdgeSchema.parse(edge)),
+	const parsed = semanticRelationGraphSchema.parse(graph);
+	const readingLemma = new Map(
+		parsed.readings.map(({ reading, lemma }) => [reading, lemma]),
 	);
+	const readingsByLemma = groupReadingsByLemma(parsed.readings);
+	const direct = deduplicate(parsed.edges);
 	const directKeys = new Set(direct.map(edgeKey));
-	const closure = new Map(direct.map((edge) => [edgeKey(edge), edge]));
-	const nodes = new Set(direct.flatMap((edge) => [edge.source, edge.target]));
+	const base = new Map(direct.map((edge) => [edgeKey(edge), edge]));
 
-	let changed = true;
-	while (changed) {
-		changed = false;
-		const edges = [...closure.values()];
-		const synonymComponents = buildSynonymComponents(nodes, edges);
-
-		for (const edge of edges) {
-			const sources = synonymComponents.get(edge.source) ?? [edge.source];
-			const targets = synonymComponents.get(edge.target) ?? [edge.target];
-			for (const source of sources) {
-				for (const target of targets) {
-					changed =
-						addEdge(closure, {
-							source,
-							relation: edge.relation,
-							target,
-						}) || changed;
-				}
-			}
-			if (symmetricRelations.has(edge.relation)) {
-				changed =
-					addEdge(closure, {
-						source: edge.target,
-						relation: edge.relation,
-						target: edge.source,
-					}) || changed;
-			}
+	// Every kind has exactly one inverse. This is intentionally one level: an
+	// inverse inferred here is not fed back into inverse materialization.
+	for (const edge of direct) {
+		const sourceLemma = readingLemma.get(edge.sourceReading);
+		if (sourceLemma === undefined) continue;
+		for (const targetReading of readingsByLemma.get(edge.targetLemma) ??
+			[]) {
+			addEdge(base, {
+				sourceReading: targetReading,
+				relation: inverseRelationFor(edge.relation),
+				targetLemma: sourceLemma,
+			});
 		}
+	}
 
-		const current = [...closure.values()];
-		for (const left of current) {
-			if (!transitiveRelations.has(left.relation)) continue;
-			for (const right of current) {
-				if (
-					left.relation !== right.relation ||
-					left.target !== right.source
-				) {
-					continue;
-				}
-				changed =
-					addEdge(closure, {
-						source: left.source,
-						relation: left.relation,
-						target: right.target,
-					}) || changed;
+	const baseEdges = [...base.values()];
+	const synonymComponents = buildSynonymComponents(
+		parsed.readings,
+		baseEdges,
+		readingsByLemma,
+	);
+	const closure = new Map(base);
+
+	for (const edge of baseEdges) {
+		if (!relationAlgebra[edge.relation].substitutesThroughSynonyms) {
+			continue;
+		}
+		const sourceReadings =
+			synonymComponents.get(edge.sourceReading) ??
+			new Set([edge.sourceReading]);
+		const targetLemmas = equivalentTargetLemmas(
+			edge.targetLemma,
+			readingsByLemma,
+			synonymComponents,
+			readingLemma,
+		);
+		for (const sourceReading of sourceReadings) {
+			for (const targetLemma of targetLemmas) {
+				addEdge(closure, {
+					sourceReading,
+					relation: edge.relation,
+					targetLemma,
+				});
 			}
 		}
 	}
@@ -96,35 +106,52 @@ export function propagateRelations(
 	return [...closure.values()]
 		.filter(
 			(edge) =>
-				edge.source !== edge.target && !directKeys.has(edgeKey(edge)),
+				readingLemma.get(edge.sourceReading) !== edge.targetLemma &&
+				!directKeys.has(edgeKey(edge)),
 		)
 		.sort(compareEdges);
 }
 
-function buildSynonymComponents(
-	nodes: ReadonlySet<string>,
-	edges: readonly SemanticRelationGraphEdge[],
+function groupReadingsByLemma(
+	readings: readonly SemanticRelationGraphReading[],
 ): Map<string, string[]> {
+	const result = new Map<string, string[]>();
+	for (const { reading, lemma } of readings) {
+		const members = result.get(lemma);
+		if (members === undefined) result.set(lemma, [reading]);
+		else members.push(reading);
+	}
+	return result;
+}
+
+function buildSynonymComponents(
+	readings: readonly SemanticRelationGraphReading[],
+	edges: readonly SemanticRelationGraphEdge[],
+	readingsByLemma: ReadonlyMap<string, readonly string[]>,
+): Map<string, ReadonlySet<string>> {
 	const neighbors = new Map<string, Set<string>>(
-		[...nodes].map((node) => [node, new Set([node])]),
+		readings.map(({ reading }) => [reading, new Set([reading])]),
 	);
 	for (const edge of edges) {
 		if (edge.relation !== "synonym") continue;
-		neighbors.get(edge.source)?.add(edge.target);
-		neighbors.get(edge.target)?.add(edge.source);
+		for (const targetReading of readingsByLemma.get(edge.targetLemma) ??
+			[]) {
+			neighbors.get(edge.sourceReading)?.add(targetReading);
+			neighbors.get(targetReading)?.add(edge.sourceReading);
+		}
 	}
 
-	const components = new Map<string, string[]>();
+	const components = new Map<string, ReadonlySet<string>>();
 	const visited = new Set<string>();
-	for (const node of nodes) {
-		if (visited.has(node)) continue;
-		const members: string[] = [];
-		const pending = [node];
+	for (const { reading } of readings) {
+		if (visited.has(reading)) continue;
+		const members = new Set<string>();
+		const pending = [reading];
 		while (pending.length > 0) {
 			const member = pending.pop();
 			if (member === undefined || visited.has(member)) continue;
 			visited.add(member);
-			members.push(member);
+			members.add(member);
 			for (const neighbor of neighbors.get(member) ?? []) {
 				if (!visited.has(neighbor)) pending.push(neighbor);
 			}
@@ -132,6 +159,24 @@ function buildSynonymComponents(
 		for (const member of members) components.set(member, members);
 	}
 	return components;
+}
+
+function equivalentTargetLemmas(
+	targetLemma: string,
+	readingsByLemma: ReadonlyMap<string, readonly string[]>,
+	synonymComponents: ReadonlyMap<string, ReadonlySet<string>>,
+	readingLemma: ReadonlyMap<string, string>,
+): Set<string> {
+	const result = new Set([targetLemma]);
+	for (const targetReading of readingsByLemma.get(targetLemma) ?? []) {
+		for (const equivalentReading of synonymComponents.get(
+			targetReading,
+		) ?? [targetReading]) {
+			const lemma = readingLemma.get(equivalentReading);
+			if (lemma !== undefined) result.add(lemma);
+		}
+	}
+	return result;
 }
 
 function deduplicate(
@@ -151,7 +196,11 @@ function addEdge(
 }
 
 function edgeKey(edge: SemanticRelationGraphEdge): string {
-	return JSON.stringify([edge.source, edge.relation, edge.target]);
+	return JSON.stringify([
+		edge.sourceReading,
+		edge.relation,
+		edge.targetLemma,
+	]);
 }
 
 function compareEdges(
@@ -159,10 +208,10 @@ function compareEdges(
 	right: SemanticRelationGraphEdge,
 ): number {
 	return (
-		compareStrings(left.source, right.source) ||
+		compareStrings(left.sourceReading, right.sourceReading) ||
 		(relationOrder.get(left.relation) ?? 0) -
 			(relationOrder.get(right.relation) ?? 0) ||
-		compareStrings(left.target, right.target)
+		compareStrings(left.targetLemma, right.targetLemma)
 	);
 }
 

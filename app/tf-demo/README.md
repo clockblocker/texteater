@@ -22,10 +22,10 @@ process restarts.
 
 After resolving a Segment, the workspace exposes the persisted Text, Sentence,
 Segment, grammatical Attestation and Surface, Lemma features, and Reading as a
-clickable resolution path. Reading notes combine Reading Knowledge with Lemma
-Knowledge. Resolve more than one Reading to create validated semantic relations
-between them and follow those relations from note to note; unresolved Dumdict
-relations remain visible as pending targets.
+clickable resolution path. Reading notes present the exact Reading's Knowledge
+beside its Lemma. Dumdict stores semantic relations as Reading-owned edges to
+target Lemmas and presents resolved targets as Lemma Route Notes. A target that
+does not yet have an exact Lemma remains visible as a pending Shadow.
 
 Occurrence Attestations, Readings, relations, and Knowledge belong to one
 Shared Demo Dictionary. Selecting any member Segment of a committed occurrence
@@ -52,8 +52,9 @@ replaces it with **Analyze text** after stripping. Stripping preserves the Text
 and its Sentences while removing their Segments, Attestation memberships,
 occurrence Attestations, and Visitor Encounters.
 A Reading remains when another Text still sources it; otherwise its Reading
-Knowledge, relations, and any now-unshared Lemma, Surfaces, and Lemma Knowledge
-are removed with it.
+Knowledge and source-owned relation edges are removed with it. Incoming edges
+survive the loss of any target Reading and are removed only when the target
+Lemma itself is removed. Any now-unshared Lemma and Surfaces are also removed.
 Attestation identity is one occurrence-specific database ID. Equal reconstructed
 Attestation values at different source occurrences remain distinct records.
 

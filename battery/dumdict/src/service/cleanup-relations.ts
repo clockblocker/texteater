@@ -1,16 +1,13 @@
-import { readingFingerprint } from "dumling";
 import { semanticRelationSchema } from "dumrel";
 import { planCleanupRelations } from "../core/plan-mutation";
-import { validateCleanupRelationsSlice } from "../core/validate-slice";
 import type { SupportedLanguage } from "../dumling";
 import type {
 	CleanupRelationsRequest,
 	DumdictMutationOptions,
 	MutationResult,
 } from "../public";
-import type { CreateDumdictServiceOptions } from "../storage";
 import { applyPlan } from "./apply-plan";
-import { assertLanguageMatches } from "./language-guard";
+import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 function locatorKey(
 	value: CleanupRelationsRequest<SupportedLanguage>["resolutions"][number]["locator"],
@@ -19,18 +16,10 @@ function locatorKey(
 }
 
 export async function cleanupRelations<L extends SupportedLanguage>(
-	options: CreateDumdictServiceOptions<L>,
+	options: DumdictServiceRuntimeOptions<L>,
 	request: CleanupRelationsRequest<L>,
 	mutationOptions?: DumdictMutationOptions<L>,
 ): Promise<MutationResult<L>> {
-	for (const resolution of request.resolutions) {
-		if (resolution.targetReading) {
-			assertLanguageMatches(
-				options.language,
-				resolution.targetReading.lemma.language,
-			);
-		}
-	}
 	if (request.resolutions.length === 0) {
 		return {
 			status: "applied",
@@ -58,7 +47,7 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	const slice = await options.storage.loadCleanupRelationsContext({
 		resolutions: request.resolutions,
 	});
-	validateCleanupRelationsSlice(options.language, slice);
+	options.sliceValidation.cleanupRelations(slice);
 	if (slice.revision !== request.baseRevision) {
 		return {
 			status: "conflict",
@@ -69,25 +58,6 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 		};
 	}
 
-	const targetReadings = new Set(
-		slice.targetReadings.map(({ reading }) =>
-			readingFingerprint(reading.reading),
-		),
-	);
-	for (const resolution of request.resolutions) {
-		if (
-			resolution.targetReading &&
-			!targetReadings.has(readingFingerprint(resolution.targetReading))
-		) {
-			return {
-				status: "conflict",
-				code: "semanticPreconditionFailed",
-				baseRevision: request.baseRevision,
-				latestRevision: slice.revision,
-				message: "Cleanup target no longer exists.",
-			};
-		}
-	}
 	const pendingKeys = new Set(
 		slice.pendingRelations.map(({ locator }) => locatorKey(locator)),
 	);

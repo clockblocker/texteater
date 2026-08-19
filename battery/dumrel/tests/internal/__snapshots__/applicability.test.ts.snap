@@ -1,0 +1,355 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`German Knowledge applicability snapshots the complete resolved Family/Kind tree 1`] = `
+{
+  "Construction": {
+    "Fusion": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+  },
+  "Lexeme": {
+    "ADJ": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "ADP": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "ADV": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "AUX": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "CCONJ": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "DET": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "INTJ": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "NOUN": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "holonym": null,
+        "hypernym": null,
+        "hyponym": null,
+        "meronym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "NUM": {
+      "definition": null,
+      "semanticRelations": {
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "PART": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "PRON": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "PROPN": {
+      "definition": null,
+      "semanticRelations": {
+        "holonym": null,
+        "meronym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "PUNCT": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "SCONJ": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "SYM": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "VERB": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "holonym": null,
+        "meronym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "X": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+  },
+  "Morpheme": {
+    "Circumfix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Clitic": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Duplifix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Infix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Interfix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Prefix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Root": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Suffix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Suffixoid": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "ToneMarking": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Transfix": {
+      "definition": null,
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+  },
+  "Phraseme": {
+    "Aphorism": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Collocation": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "DiscourseFormula": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Idiom": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+    "Proverb": {
+      "definition": null,
+      "semanticRelations": {
+        "antonym": null,
+        "nearSynonym": null,
+        "synonym": null,
+      },
+      "transcription": null,
+      "translations": {
+        "en": null,
+      },
+    },
+  },
+}
+`;
