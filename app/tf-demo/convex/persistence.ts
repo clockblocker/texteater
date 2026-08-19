@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { type Reading, readingFingerprint } from "dumling/reading";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import {
 	internalMutation,
@@ -8,11 +9,7 @@ import {
 	type QueryCtx,
 } from "./_generated/server";
 import { applyDumdictPlanInTransaction } from "./dumdictStorage";
-import { lemmaKeyFor } from "./model/linguisticKeys";
-import {
-	loadOccurrenceAttestation,
-	readingValue,
-} from "./model/occurrenceAttestations";
+import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
@@ -22,7 +19,6 @@ import {
 	settleFailed,
 	settleUnresolved,
 } from "./model/resolutionSessions";
-import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
 	dictionaryPlanValidator,
 	knowledgeOwnerKindValidator,
@@ -39,8 +35,12 @@ import {
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
+import {
+	getKnowledgeOwner as getKnowledgeOwnerImplementation,
+	persistKnowledgeContribution as persistKnowledgeContributionImplementation,
+} from "./modules/knowledge/contributions";
+import { persistSubmittedText as persistSubmittedTextImplementation } from "./modules/text/submission";
 
-const MAX_SENTENCES_PER_SUBMISSION = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 
 function assertNonEmpty(value: string, name: string): void {
@@ -226,235 +226,8 @@ export const persistSubmittedText = internalMutation({
 		sentenceIds: v.array(v.id("sentences")),
 		deduplicated: v.boolean(),
 	}),
-	handler: async (ctx, args) => {
-		assertNonEmpty(args.submissionKey, "submissionKey");
-		if (args.sentences.length > MAX_SENTENCES_PER_SUBMISSION) {
-			throw new Error(
-				`At most ${MAX_SENTENCES_PER_SUBMISSION} sentences are allowed.`,
-			);
-		}
-		const positions = new Set<number>();
-		const sentenceKeys = new Set<string>();
-		for (const sentence of args.sentences) {
-			assertIndex(sentence.position, "sentence.position");
-			assertNonEmpty(sentence.segmentedSentenceId, "segmentedSentenceId");
-			assertNonEmpty(sentence.stitchedText, "stitchedText");
-			if (positions.has(sentence.position)) {
-				throw new Error("Sentence positions must be unique.");
-			}
-			if (sentenceKeys.has(sentence.segmentedSentenceId)) {
-				throw new Error("Segmented Sentence IDs must be unique.");
-			}
-			positions.add(sentence.position);
-			sentenceKeys.add(sentence.segmentedSentenceId);
-			if (
-				sentence.segments.length === 0 ||
-				sentence.segments.length > MAX_SEGMENTS_PER_SENTENCE
-			) {
-				throw new Error(
-					`A sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
-				);
-			}
-			if (
-				sentence.segments.map(({ text }) => text).join("") !==
-				sentence.stitchedText
-			) {
-				throw new Error(
-					"Segments must reconstruct stitchedText exactly.",
-				);
-			}
-			for (const segment of sentence.segments) {
-				if (segment.text.length === 0) {
-					throw new Error("segment.text must not be empty.");
-				}
-				if (segment.kind === "Whitespace" && segment.text !== " ") {
-					throw new Error(
-						"Whitespace Segments must contain one ASCII space.",
-					);
-				}
-			}
-		}
-
-		const existingText = await ctx.db
-			.query("texts")
-			.withIndex("by_submission_key", (q) =>
-				q.eq("submissionKey", args.submissionKey),
-			)
-			.unique();
-		if (existingText) {
-			if (existingText.sourceText !== args.sourceText) {
-				throw new Error(
-					"submissionKey was already used for different text.",
-				);
-			}
-			const existingSentences = await ctx.db
-				.query("sentences")
-				.withIndex("by_text_id_and_position", (q) =>
-					q.eq("textId", existingText._id),
-				)
-				.take(MAX_SENTENCES_PER_SUBMISSION);
-			const submittedSentences = [...args.sentences].sort(
-				(left, right) => left.position - right.position,
-			);
-			const existingSegments = await Promise.all(
-				existingSentences.map((sentence) =>
-					ctx.db
-						.query("segments")
-						.withIndex("by_sentence_id_and_index", (q) =>
-							q.eq("sentenceId", sentence._id),
-						)
-						.take(MAX_SEGMENTS_PER_SENTENCE),
-				),
-			);
-			if (existingSegments.some((segments) => segments.length > 0)) {
-				const completeExactAnalysis =
-					existingSentences.length === submittedSentences.length &&
-					existingSentences.every((existing, sentenceIndex) => {
-						const submitted = submittedSentences[sentenceIndex];
-						const segments = existingSegments[sentenceIndex] ?? [];
-						return (
-							submitted !== undefined &&
-							existing.position === submitted.position &&
-							existing.segmentedSentenceId ===
-								submitted.segmentedSentenceId &&
-							existing.language === submitted.language &&
-							existing.stitchedText === submitted.stitchedText &&
-							segments.length === submitted.segments.length &&
-							segments.every(
-								(segment, segmentIndex) =>
-									segment.index === segmentIndex &&
-									segment.kind ===
-										submitted.segments[segmentIndex]
-											?.kind &&
-									segment.text ===
-										submitted.segments[segmentIndex]?.text,
-							)
-						);
-					});
-				if (!completeExactAnalysis) {
-					throw new Error(
-						"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
-					);
-				}
-				return {
-					textId: existingText._id,
-					sentenceIds: existingSentences.map(({ _id }) => _id),
-					deduplicated: true,
-				};
-			}
-			if (submittedSentences.length === 0) {
-				return {
-					textId: existingText._id,
-					sentenceIds: existingSentences.map(({ _id }) => _id),
-					deduplicated: true,
-				};
-			}
-
-			const existingByPosition = new Map(
-				existingSentences.map((sentence) => [
-					sentence.position,
-					sentence,
-				]),
-			);
-			if (
-				existingSentences.some(
-					(sentence) => !positions.has(sentence.position),
-				)
-			) {
-				throw new Error(
-					"Existing Sentences do not match the submitted analysis.",
-				);
-			}
-			for (const submitted of submittedSentences) {
-				const existing = existingByPosition.get(submitted.position);
-				const collision = await ctx.db
-					.query("sentences")
-					.withIndex("by_segmented_sentence_id", (q) =>
-						q.eq(
-							"segmentedSentenceId",
-							submitted.segmentedSentenceId,
-						),
-					)
-					.unique();
-				if (collision && collision._id !== existing?._id) {
-					throw new Error(
-						"Segmented Sentence ID already belongs to another submission.",
-					);
-				}
-			}
-
-			const sentenceIds: Id<"sentences">[] = [];
-			for (const submitted of submittedSentences) {
-				const existing = existingByPosition.get(submitted.position);
-				const sentenceValue = {
-					segmentedSentenceId: submitted.segmentedSentenceId,
-					textId: existingText._id,
-					position: submitted.position,
-					language: submitted.language,
-					stitchedText: submitted.stitchedText,
-				};
-				const sentenceId =
-					existing?._id ??
-					(await ctx.db.insert("sentences", sentenceValue));
-				if (existing) await ctx.db.replace(existing._id, sentenceValue);
-				sentenceIds.push(sentenceId);
-				for (const [index, segment] of submitted.segments.entries()) {
-					await ctx.db.insert("segments", {
-						sentenceId,
-						index,
-						...segment,
-					});
-				}
-			}
-			return {
-				textId: existingText._id,
-				sentenceIds,
-				deduplicated: true,
-			};
-		}
-
-		for (const sentence of args.sentences) {
-			const collision = await ctx.db
-				.query("sentences")
-				.withIndex("by_segmented_sentence_id", (q) =>
-					q.eq("segmentedSentenceId", sentence.segmentedSentenceId),
-				)
-				.unique();
-			if (collision) {
-				throw new Error(
-					"Segmented Sentence ID already belongs to another submission.",
-				);
-			}
-		}
-
-		const textId = await ctx.db.insert("texts", {
-			submissionKey: args.submissionKey,
-			sourceText: args.sourceText,
-		});
-		const sentenceIds: Id<"sentences">[] = [];
-		for (const sentence of [...args.sentences].sort(
-			(left, right) => left.position - right.position,
-		)) {
-			const sentenceId = await ctx.db.insert("sentences", {
-				segmentedSentenceId: sentence.segmentedSentenceId,
-				textId,
-				position: sentence.position,
-				language: sentence.language,
-				stitchedText: sentence.stitchedText,
-			});
-			sentenceIds.push(sentenceId);
-			for (const [index, segment] of sentence.segments.entries()) {
-				await ctx.db.insert("segments", {
-					sentenceId,
-					index,
-					...segment,
-				});
-			}
-		}
-		return { textId, sentenceIds, deduplicated: false };
-	},
+	handler: persistSubmittedTextImplementation,
 });
-
 export const getSentenceForResolution = internalQuery({
 	args: { sentenceId: v.id("sentences") },
 	returns: v.union(
@@ -791,8 +564,8 @@ export const persistResolvedClick = internalMutation({
 			);
 		}
 		if (
-			lemmaKeyFor(args.reading.lemma) !== args.occurrence.lemmaKey ||
-			lemmaKeyFor(args.occurrence.attestation.surface.lemma) !==
+			lemmaIdentityKey(args.reading.lemma) !== args.occurrence.lemmaKey ||
+			lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
 				args.occurrence.lemmaKey
 		) {
 			throw new Error(
@@ -928,7 +701,7 @@ export const persistResolvedClick = internalMutation({
 			);
 		}
 		if (
-			lemmaKeyFor(args.occurrence.attestation.surface.lemma) !==
+			lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
 			lemma.lemmaKey
 		) {
 			throw new Error(
@@ -989,52 +762,7 @@ export const getKnowledgeOwner = internalQuery({
 			knowledge: v.optional(v.any()),
 		}),
 	),
-	handler: async (ctx, args) => {
-		const accumulated = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", args.ownerKind).eq("ownerKey", args.ownerKey),
-			)
-			.unique();
-		if (args.ownerKind === "Lemma") {
-			const lemma = await ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", args.ownerKey),
-				)
-				.unique();
-			return lemma
-				? {
-						owner: {
-							language: lemma.language,
-							family: lemma.family,
-							kind: lemma.kind,
-							canonicalForm: lemma.canonicalForm,
-							coreFeatures: lemma.coreFeatures,
-						},
-						...(accumulated
-							? { knowledge: accumulated.knowledge }
-							: {}),
-					}
-				: null;
-		}
-		const reading = await ctx.db
-			.query("readings")
-			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", args.ownerKey),
-			)
-			.unique();
-		if (!reading) return null;
-		const lemma = await ctx.db.get(reading.lemmaId);
-		return lemma
-			? {
-					owner: readingValue(reading, lemma),
-					...(accumulated
-						? { knowledge: accumulated.knowledge }
-						: {}),
-				}
-			: null;
-	},
+	handler: getKnowledgeOwnerImplementation,
 });
 
 export const persistKnowledgeContribution = internalMutation({
@@ -1050,93 +778,5 @@ export const persistKnowledgeContribution = internalMutation({
 		accumulatedKnowledgeId: v.id("accumulatedKnowledge"),
 		deduplicated: v.boolean(),
 	}),
-	handler: async (ctx, args) => {
-		assertNonEmpty(args.contributionKey, "contributionKey");
-		assertNonEmpty(args.ownerKey, "ownerKey");
-		const existingContribution = await ctx.db
-			.query("knowledgeContributions")
-			.withIndex("by_contribution_key", (q) =>
-				q.eq("contributionKey", args.contributionKey),
-			)
-			.unique();
-		const existingAccumulated = await ctx.db
-			.query("accumulatedKnowledge")
-			.withIndex("by_owner_kind_and_owner_key", (q) =>
-				q.eq("ownerKind", args.ownerKind).eq("ownerKey", args.ownerKey),
-			)
-			.unique();
-		if (existingContribution) {
-			if (
-				existingContribution.ownerKind !== args.ownerKind ||
-				existingContribution.ownerKey !== args.ownerKey ||
-				!existingAccumulated
-			) {
-				throw new Error(
-					"contributionKey collides with a different contribution.",
-				);
-			}
-			return {
-				contributionId: existingContribution._id,
-				accumulatedKnowledgeId: existingAccumulated._id,
-				deduplicated: true,
-			};
-		}
-
-		if (args.ownerKind === "Lemma") {
-			const lemma = await ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", args.ownerKey),
-				)
-				.unique();
-			if (!lemma)
-				throw new Error("Knowledge owner Lemma does not exist.");
-		} else {
-			const reading = await ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", args.ownerKey),
-				)
-				.unique();
-			if (!reading)
-				throw new Error("Knowledge owner Reading does not exist.");
-			const entry = await ctx.db
-				.query("readingEntries")
-				.withIndex("by_reading_id", (q) =>
-					q.eq("readingId", reading._id),
-				)
-				.unique();
-			if (entry) {
-				const record =
-					entry.record !== null &&
-					typeof entry.record === "object" &&
-					!Array.isArray(entry.record)
-						? entry.record
-						: {};
-				await ctx.db.patch(entry._id, {
-					record: { ...record, knowledge: args.knowledge },
-				});
-			}
-		}
-		const now = Date.now();
-		const accumulatedKnowledgeId = await replaceAccumulatedKnowledge(
-			ctx,
-			args.ownerKind,
-			args.ownerKey,
-			args.knowledge,
-		);
-		if (!accumulatedKnowledgeId) {
-			throw new Error(
-				"A Knowledge contribution must accumulate Knowledge.",
-			);
-		}
-		const contributionId = await ctx.db.insert("knowledgeContributions", {
-			contributionKey: args.contributionKey,
-			ownerKind: args.ownerKind,
-			ownerKey: args.ownerKey,
-			change: args.change,
-			createdAt: now,
-		});
-		return { contributionId, accumulatedKnowledgeId, deduplicated: false };
-	},
+	handler: persistKnowledgeContributionImplementation,
 });

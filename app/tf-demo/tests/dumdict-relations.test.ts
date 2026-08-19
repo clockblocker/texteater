@@ -20,12 +20,12 @@ import {
 	loadDumdictNewNoteContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 import {
 	cleanupPendingRelation,
 	createConvexDumdictStorage,
 } from "../convex/orchestration";
 import { loadPendingSelection } from "../convex/shadowResolution";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
@@ -220,7 +220,7 @@ function initialSeed(): Record<string, readonly Row[]> {
 		lemmas: [
 			{
 				_id: "lemma-gehen",
-				lemmaKey: lemmaKeyFor(gehenLemma),
+				lemmaKey: lemmaIdentityKey(gehenLemma),
 				...gehenLemma,
 			},
 		],
@@ -298,12 +298,12 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 	return {
 		async findStoredReadings({ lemma }) {
 			return (await runQuery(db, findDumdictStoredReadings, {
-				lemmaKey: lemmaKeyFor(lemma),
+				lemmaKey: lemmaIdentityKey(lemma),
 			})) as never;
 		},
 		async loadNewNoteContext({ draft }) {
 			return (await runQuery(db, loadDumdictNewNoteContext, {
-				lemmaKey: lemmaKeyFor(draft.reading.lemma),
+				lemmaKey: lemmaIdentityKey(draft.reading.lemma),
 				readingKey: readingFingerprint(draft.reading),
 				surfaceKeys:
 					draft.ownedSurfaces?.map(({ surface: value }) =>
@@ -427,7 +427,7 @@ describe("tf-demo Dumdict relation storage", () => {
 	test("rejects over-budget and duplicate-heavy slices before planning while admitting the exact transaction boundary", async () => {
 		const db = new IndexedDb(initialSeed());
 		const newNoteArgs = {
-			lemmaKey: lemmaKeyFor(gehenLemma),
+			lemmaKey: lemmaIdentityKey(gehenLemma),
 			readingKey: readingFingerprint(gehenReading),
 			surfaceKeys: Array.from(
 				{ length: 16 },
@@ -458,7 +458,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 		await expect(
 			runQuery(db, loadDumdictNewNoteContext, {
-				lemmaKey: lemmaKeyFor(gehenLemma),
+				lemmaKey: lemmaIdentityKey(gehenLemma),
 				readingKey: readingFingerprint(gehenReading),
 				surfaceKeys: [],
 				explicitReadingTargetKeys: Array.from({ length: 49 }, () =>
@@ -528,7 +528,7 @@ describe("tf-demo Dumdict relation storage", () => {
 	test("loads every requested owned Surface and explicit existing Reading target", async () => {
 		const db = new IndexedDb(initialSeed());
 		const result = (await runQuery(db, loadDumdictNewNoteContext, {
-			lemmaKey: lemmaKeyFor(gehenLemma),
+			lemmaKey: lemmaIdentityKey(gehenLemma),
 			readingKey: readingFingerprint({
 				lemma: gehenLemma,
 				emojiDescription: "🥾",

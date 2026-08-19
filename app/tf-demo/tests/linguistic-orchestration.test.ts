@@ -7,7 +7,7 @@ import {
 } from "dumdict";
 import { type AiSdk, buildDumgen, type Dumgen } from "dumgen";
 import { readingFingerprint } from "dumling";
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
@@ -229,7 +229,7 @@ test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", a
 		requestId: "request-1",
 		visitorId: "visitor-1",
 		occurrence: {
-			lemmaKey: lemmaKeyFor(lemma),
+			lemmaKey: lemmaIdentityKey(lemma),
 			memberSegmentIndices: [2],
 			attestation: resolution.grammatical.attestation,
 		},

@@ -28,7 +28,7 @@ import {
 	type ReadingKnowledge,
 } from "dumrel";
 
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
+import { lemmaIdentityKey } from "./linguisticIdentity";
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -544,10 +544,6 @@ export function applyValidatedKnowledgeContribution(input: {
 	} satisfies ReadingKnowledgeChange<"de">;
 	const updated = applyDumdictKnowledgeChange(record, envelope);
 	return { change, knowledge: updated.knowledge ?? {} };
-}
-
-export function lemmaIdentityKey(lemma: Lemma<"de">): string {
-	return lemmaKeyFor(lemma);
 }
 
 export function surfaceIdentityKey(surface: Surface<"de">): string {

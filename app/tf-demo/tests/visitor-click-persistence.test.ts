@@ -2,11 +2,11 @@ import { expect, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { readingFingerprint } from "dumling";
 import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage";
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 import {
 	persistResolvedClick,
 	persistUnresolvedClick,
 } from "../convex/persistence";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 
 test("a host-composed empty Dumdict plan does not advance revision", async () => {
 	let patches = 0;
@@ -131,7 +131,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			emojiDescription: readingValue.emojiDescription,
 		},
 		surfaces: { _id: surfaceId, lemmaId, surfaceKey },
-		lemmas: { _id: lemmaId, lemmaKey: lemmaKeyFor(lemma) },
+		lemmas: { _id: lemmaId, lemmaKey: lemmaIdentityKey(lemma) },
 	};
 	const documents: Record<string, unknown> = {
 		[sentenceId]: { _id: sentenceId, segmentedSentenceId: "segmented-1" },
@@ -234,7 +234,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 				surface,
 			},
 			surfaceKey,
-			lemmaKey: lemmaKeyFor(lemma),
+			lemmaKey: lemmaIdentityKey(lemma),
 		},
 	});
 
@@ -271,7 +271,7 @@ function existingOccurrenceHarness(
 	} as const;
 	const lemma = {
 		_id: "lemma-1",
-		lemmaKey: lemmaKeyFor(lemmaValue),
+		lemmaKey: lemmaIdentityKey(lemmaValue),
 		...lemmaValue,
 	};
 	const surfaceValue = {
@@ -484,7 +484,7 @@ test("clicked membership reuses the winner even when the losing proposal has few
 				surface: surfaceValue,
 			},
 			surfaceKey: makeSurfaceId("de", surfaceValue),
-			lemmaKey: lemmaKeyFor(lemmaValue),
+			lemmaKey: lemmaIdentityKey(lemmaValue),
 		},
 	});
 
@@ -598,7 +598,7 @@ test("partial overlap reports the committed membership and writes nothing", asyn
 				surface: surfaceValue,
 			},
 			surfaceKey: makeSurfaceId("de", surfaceValue),
-			lemmaKey: lemmaKeyFor(lemmaValue),
+			lemmaKey: lemmaIdentityKey(lemmaValue),
 		},
 	});
 
