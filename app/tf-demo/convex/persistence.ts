@@ -38,26 +38,10 @@ import {
 	sentenceInputValidator,
 	unresolvedClickPersistenceResultValidator,
 } from "./model/validators";
+import { ensureVisitorEncounter } from "./model/visitorClicks";
 
 const MAX_SENTENCES_PER_SUBMISSION = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
-
-function visitorClickDocument(request: {
-	requestId: string;
-	visitorId: string;
-	segmentId: Id<"segments">;
-	attestationId?: Id<"attestations">;
-}) {
-	return {
-		requestId: request.requestId,
-		visitorId: request.visitorId,
-		segmentId: request.segmentId,
-		...(request.attestationId
-			? { attestationId: request.attestationId }
-			: {}),
-		clickedAt: Date.now(),
-	};
-}
 
 function assertNonEmpty(value: string, name: string): void {
 	if (value.trim().length === 0)
@@ -202,15 +186,7 @@ async function recordClickAgainstCommittedAttestation(
 	);
 	const attestation = await ctx.db.get(input.attestationId);
 	if (!attestation) throw new Error("Attestation does not exist.");
-	const clickId = await ctx.db.insert(
-		"visitorClicks",
-		visitorClickDocument({
-			requestId: input.requestId,
-			visitorId: input.visitorId,
-			segmentId: input.segmentId,
-			attestationId: input.attestationId,
-		}),
-	);
+	const { clickId } = await ensureVisitorEncounter(ctx, input);
 	return {
 		status: "Reused" as const,
 		clickId,
@@ -637,14 +613,11 @@ export const persistUnresolvedClick = internalMutation({
 			await settleResolvedSession(ctx, session, result);
 			return result;
 		}
-		const clickId = await ctx.db.insert(
-			"visitorClicks",
-			visitorClickDocument({
-				requestId: args.requestId,
-				visitorId: args.visitorId,
-				segmentId: segment._id,
-			}),
-		);
+		const { clickId } = await ensureVisitorEncounter(ctx, {
+			requestId: args.requestId,
+			visitorId: args.visitorId,
+			segmentId: segment._id,
+		});
 		if (session) await settleUnresolved(ctx, session);
 		return {
 			status: "Unresolved" as const,
@@ -714,15 +687,12 @@ export const persistReusedResolvedClick = internalMutation({
 			});
 			return result;
 		}
-		const clickId = await ctx.db.insert(
-			"visitorClicks",
-			visitorClickDocument({
-				requestId: args.requestId,
-				visitorId: args.visitorId,
-				segmentId: segment._id,
-				attestationId: args.attestationId,
-			}),
-		);
+		const { clickId } = await ensureVisitorEncounter(ctx, {
+			requestId: args.requestId,
+			visitorId: args.visitorId,
+			segmentId: segment._id,
+			attestationId: args.attestationId,
+		});
 		const result = {
 			status: "Reused" as const,
 			clickId,
@@ -983,15 +953,12 @@ export const persistResolvedClick = internalMutation({
 				},
 			});
 		}
-		const clickId = await ctx.db.insert(
-			"visitorClicks",
-			visitorClickDocument({
-				requestId: args.requestId,
-				visitorId: args.visitorId,
-				segmentId: clickedSegment._id,
-				attestationId,
-			}),
-		);
+		const { clickId } = await ensureVisitorEncounter(ctx, {
+			requestId: args.requestId,
+			visitorId: args.visitorId,
+			segmentId: clickedSegment._id,
+			attestationId,
+		});
 		const { value: occurrence } = await reconstructReusableAttestation(
 			ctx,
 			attestationId,

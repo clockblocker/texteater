@@ -24,12 +24,16 @@ import {
 	resolutionSessionGuardValidator,
 	resolutionStageValidator,
 } from "./model/validators";
+import {
+	ensureVisitorEncounter,
+	findVisitorEncounter,
+} from "./model/visitorClicks";
 
 const MAX_IDENTIFIER_LENGTH = 200;
 const CLEANUP_BATCH_SIZE = 200;
 export const STALE_RUN_AFTER_MS = 11 * 60 * 1_000;
 
-export const beginResolution = mutation({
+export const selectSegment = mutation({
 	args: {
 		requestId: v.string(),
 		visitorId: v.string(),
@@ -37,11 +41,28 @@ export const beginResolution = mutation({
 		clickedSegmentIndex: v.number(),
 		routeNoteRequested: v.boolean(),
 	},
-	returns: v.object({
-		requestId: v.string(),
-		stage: resolutionStageValidator,
-		deduplicated: v.boolean(),
-	}),
+	returns: v.union(
+		v.object({
+			kind: v.literal("Available"),
+			target: v.union(
+				v.object({
+					kind: v.literal("UnitReadingNote"),
+					readingId: v.id("readings"),
+				}),
+				v.object({
+					kind: v.literal("RouteNote"),
+					routeKind: v.literal("Attestation"),
+					id: v.id("attestations"),
+				}),
+			),
+		}),
+		v.object({
+			kind: v.literal("Resolving"),
+			requestId: v.string(),
+			stage: resolutionStageValidator,
+			deduplicated: v.boolean(),
+		}),
+	),
 	handler: async (ctx, args) => {
 		assertIdentifier(args.requestId, "requestId");
 		assertIdentifier(args.visitorId, "visitorId");
@@ -80,9 +101,37 @@ export const beginResolution = mutation({
 				);
 			}
 			return {
+				kind: "Resolving" as const,
 				requestId: existing.requestId,
 				stage: existing.stage,
 				deduplicated: true,
+			};
+		}
+
+		const attestationId = segment.attestationMembership?.attestationId;
+		if (attestationId) {
+			const attestation = await ctx.db.get(attestationId);
+			if (!attestation) throw new Error("Attestation does not exist.");
+			const reading = await ctx.db.get(attestation.readingId);
+			if (!reading) throw new Error("Reading does not exist.");
+			await ensureVisitorEncounter(ctx, {
+				requestId: args.requestId,
+				visitorId: args.visitorId,
+				segmentId: segment._id,
+				attestationId,
+			});
+			return {
+				kind: "Available" as const,
+				target: args.routeNoteRequested
+					? {
+							kind: "RouteNote" as const,
+							routeKind: "Attestation" as const,
+							id: attestationId,
+						}
+					: {
+							kind: "UnitReadingNote" as const,
+							readingId: reading._id,
+						},
 			};
 		}
 
@@ -122,6 +171,7 @@ export const beginResolution = mutation({
 			{ requestId: args.requestId, runToken },
 		);
 		return {
+			kind: "Resolving" as const,
 			requestId: args.requestId,
 			stage: "Starting" as const,
 			deduplicated: false,
@@ -294,25 +344,22 @@ export const settleAfterRun = internalMutation({
 		const session = await requireActiveResolutionSession(ctx, guard);
 		if (terminalStages.has(session.stage)) return false;
 		if (result.kind === "Complete") {
-			const [reading, attestation, click] = await Promise.all([
+			const [reading, attestation, encounter] = await Promise.all([
 				ctx.db.get(result.readingId),
 				ctx.db.get(result.attestationId),
-				ctx.db
-					.query("visitorClicks")
-					.withIndex("by_request_id", (q) =>
-						q.eq("requestId", guard.requestId),
-					)
-					.unique(),
+				findVisitorEncounter(ctx, {
+					visitorId: session.visitorId,
+					segmentId: session.segmentId,
+				}),
 			]);
 			if (
 				!reading ||
 				!attestation ||
 				attestation.readingId !== reading._id ||
-				click?.segmentId !== session.segmentId ||
-				click.attestationId !== attestation._id
+				encounter?.attestationId !== attestation._id
 			) {
 				throw new Error(
-					"The completed Resolution Session has no matching canonical Click.",
+					"The completed Resolution Session has no matching Visitor Encounter.",
 				);
 			}
 			await settleComplete(ctx, session, result);

@@ -38,11 +38,11 @@ export function TextView({ target }: { target: TextTarget }) {
 		...convexQuery(api.presentation.getTextView, { target }),
 		gcTime: 10_000,
 	});
-	const beginResolutionMutation = useConvexMutation(
-		api.resolutionSessions.beginResolution,
+	const selectSegmentMutation = useConvexMutation(
+		api.resolutionSessions.selectSegment,
 	);
-	const beginResolution = useMutation({
-		mutationFn: beginResolutionMutation,
+	const selectSegment = useMutation({
+		mutationFn: selectSegmentMutation,
 	});
 
 	const textDetail = textQuery.data;
@@ -58,10 +58,10 @@ export function TextView({ target }: { target: TextTarget }) {
 		})) ?? [];
 	const error =
 		interactionError ??
-		mutationMessage(beginResolution.error) ??
+		mutationMessage(selectSegment.error) ??
 		mutationMessage(textQuery.error);
 
-	async function handleSegmentClick(
+	async function handleSegmentSelection(
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 		altKey: boolean,
@@ -73,7 +73,7 @@ export function TextView({ target }: { target: TextTarget }) {
 		);
 		try {
 			const requestId = crypto.randomUUID();
-			await beginResolution.mutateAsync({
+			const result = await selectSegment.mutateAsync({
 				requestId,
 				visitorId,
 				sentenceId: sentence.sentenceId,
@@ -83,7 +83,13 @@ export function TextView({ target }: { target: TextTarget }) {
 					altKey,
 				),
 			});
-			navigate(hrefFor({ kind: "Resolution", requestId }));
+			navigate(
+				hrefFor(
+					result.kind === "Available"
+						? result.target
+						: { kind: "Resolution", requestId: result.requestId },
+				),
+			);
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Segment resolution failed.",
@@ -120,9 +126,9 @@ export function TextView({ target }: { target: TextTarget }) {
 				<SentenceList
 					sentences={sentences}
 					focus={textDetail.focus}
-					isResolving={beginResolution.isPending}
+					isResolving={selectSegment.isPending}
 					selectedSegmentKey={selectedSegmentKey}
-					onSegmentClick={handleSegmentClick}
+					onSegmentClick={handleSegmentSelection}
 				/>
 
 				{textDetail.focus.kind === "Missing" ? (

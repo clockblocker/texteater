@@ -58,7 +58,7 @@ export function DataControls({
 	async function handleClearVisitorData() {
 		if (
 			!window.confirm(
-				"Clear this visitor's data? This removes only your Click history; shared resolutions and Knowledge stay available.",
+				"Clear this visitor's data? This removes only your Encounter history; shared resolutions and Knowledge stay available.",
 			)
 		) {
 			return;

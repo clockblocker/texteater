@@ -353,6 +353,7 @@ function existingOccurrenceHarness(
 		[attestation._id]: attestation,
 	};
 	const inserted: Array<{ table: string; value: unknown }> = [];
+	let storedClick: (Record<string, unknown> & { _id: string }) | null = null;
 	const ctx = {
 		db: {
 			async get(id: string) {
@@ -392,13 +393,31 @@ function existingOccurrenceHarness(
 							async unique() {
 								if (table === "segments")
 									return matchingSegments()[0] ?? null;
-								if (table === "visitorClicks") return null;
+								if (table === "visitorClicks") {
+									return storedClick &&
+										Object.entries(conditions).every(
+											([field, value]) =>
+												storedClick?.[field] === value,
+										)
+										? storedClick
+										: null;
+								}
 								return null;
 							},
 							async take() {
-								return table === "segments"
-									? matchingSegments()
-									: [];
+								if (table === "segments")
+									return matchingSegments();
+								if (
+									table === "visitorClicks" &&
+									storedClick &&
+									Object.entries(conditions).every(
+										([field, value]) =>
+											storedClick?.[field] === value,
+									)
+								) {
+									return [storedClick];
+								}
+								return [];
 							},
 						};
 					},
@@ -406,9 +425,22 @@ function existingOccurrenceHarness(
 			},
 			async insert(table: string, value: unknown) {
 				inserted.push({ table, value });
+				if (table === "visitorClicks") {
+					storedClick = {
+						_id: "click-1",
+						...(value as Record<string, unknown>),
+					};
+				}
 				return table === "visitorClicks" ? "click-1" : `${table}-new`;
 			},
-			async patch() {
+			async patch(id: string, value: unknown) {
+				if (storedClick?._id === id) {
+					storedClick = {
+						...storedClick,
+						...(value as Record<string, unknown>),
+					};
+					return;
+				}
 				throw new Error("Existing memberships must remain immutable.");
 			},
 		},
@@ -497,6 +529,34 @@ test("an unresolved model loser records and returns the committed winner", async
 			}),
 		}),
 	]);
+});
+
+test("a later selection by the same Visitor and Segment reuses the first Visitor Encounter row", async () => {
+	const { ctx, inserted } = existingOccurrenceHarness([0, 2]);
+	const handler = (
+		persistUnresolvedClick as unknown as {
+			_handler: (ctx: unknown, args: unknown) => Promise<unknown>;
+		}
+	)._handler;
+
+	const first = await handler(ctx, {
+		requestId: "request-first",
+		visitorId: "visitor-3",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 2,
+	});
+	const second = await handler(ctx, {
+		requestId: "request-second",
+		visitorId: "visitor-3",
+		sentenceId: "sentence-1",
+		clickedSegmentIndex: 2,
+	});
+
+	expect(first).toMatchObject({ status: "Reused", clickId: "click-1" });
+	expect(second).toMatchObject({ status: "Reused", clickId: "click-1" });
+	expect(
+		inserted.filter(({ table }) => table === "visitorClicks"),
+	).toHaveLength(1);
 });
 
 test("partial overlap reports the committed membership and writes nothing", async () => {

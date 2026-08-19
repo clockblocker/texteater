@@ -318,15 +318,6 @@ export function createTfDemoOrchestrator(options: {
 		}
 		const recorded = await options.persistence.findRecordedClick(input);
 		if (recorded) {
-			if (recorded.status === "Resolved") {
-				await options.observer?.grammarAvailable({
-					grammatical: recorded.occurrence.grammatical,
-				});
-				await options.observer?.readingAvailable({
-					reading: recorded.occurrence.reading,
-				});
-				await options.observer?.committing();
-			}
 			return recorded.status === "Resolved"
 				? {
 						grammatical: recorded.occurrence.grammatical,
@@ -349,13 +340,6 @@ export function createTfDemoOrchestrator(options: {
 			clickedSegmentIndex: input.clickedSegmentIndex,
 		});
 		if (reusable) {
-			await options.observer?.grammarAvailable({
-				grammatical: reusable.grammatical,
-			});
-			await options.observer?.readingAvailable({
-				reading: reusable.reading,
-			});
-			await options.observer?.committing();
 			const persisted =
 				await options.persistence.persistReusedResolvedClick({
 					...input,

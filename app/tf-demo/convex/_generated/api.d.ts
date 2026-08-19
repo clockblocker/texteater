@@ -15,6 +15,7 @@ import type * as model_occurrenceAttestations from "../model/occurrenceAttestati
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_validators from "../model/validators.js";
+import type * as model_visitorClicks from "../model/visitorClicks.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
 import type * as presentation from "../presentation.js";
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/shadows": typeof model_shadows;
   "model/validators": typeof model_validators;
+  "model/visitorClicks": typeof model_visitorClicks;
   orchestration: typeof orchestration;
   persistence: typeof persistence;
   presentation: typeof presentation;
