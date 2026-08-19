@@ -23,7 +23,7 @@ morphogrammatical tuple. Learner-owned Meaning content never participates in
 Linguistic Entry identity.
 
 Global Surface identity continues to include the identity it realizes. The
-identity-bearing component formerly called “Lemma identity” is therefore the
+identity-bearing component formerly called "Lemma identity" is therefore the
 Linguistic Entry ID, not the Lemma Form text or a tuple derived from it.
 
 ## Required boundary cases

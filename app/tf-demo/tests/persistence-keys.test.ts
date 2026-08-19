@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readingFingerprint } from "dumling";
 
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 
 describe("global linguistic and visitor-scoped identities", () => {
 	test("global linguistic keys do not contain a visitor identity", () => {
@@ -12,7 +12,7 @@ describe("global linguistic and visitor-scoped identities", () => {
 			kind: "NOUN",
 			coreFeatures: { gender: "Neut", hyph: null },
 		} as const;
-		const lemmaKey = lemmaKeyFor(lemma);
+		const lemmaKey = lemmaIdentityKey(lemma);
 		const readingKey = readingFingerprint({
 			lemma,
 			emojiDescription: "🏠",
@@ -20,7 +20,10 @@ describe("global linguistic and visitor-scoped identities", () => {
 
 		expect(lemmaKey).not.toContain("visitor-a");
 		expect(readingKey).not.toContain("visitor-a");
-		expect(lemmaKeyFor({ ...lemma })).toBe(lemmaKey);
+		expect(lemmaKey).toBe(
+			'{"canonicalForm":"Haus","coreFeatures":{"gender":"Neut","hyph":null},"family":"Lexeme","kind":"NOUN","language":"de"}',
+		);
+		expect(lemmaIdentityKey({ ...lemma })).toBe(lemmaKey);
 	});
 
 	test("Reading identity follows Dumling normalization", () => {

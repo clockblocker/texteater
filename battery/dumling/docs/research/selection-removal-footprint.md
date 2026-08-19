@@ -258,7 +258,8 @@ The checked-in corpus contains exactly 258 full Selection source fixtures:
 161 German, 50 English, and 47 Hebrew under
 `src/to-generate/attestations/<language>/selection/`. There are matching
 language CSV logbooks with 258 rows whose `sectionId` is a readable Selection
-ID. These are persisted repository data, not merely tests. The generator uses a
+ID. The fixtures and logbooks are persisted repository data. The generator
+uses a
 reversible base64url Selection ID as the route slug, while Lemma and Surface
 routes use hashes
 ([slug:7-18](../../../../app/dumling-docs/scripts/generate-content/attestations/entity/attestation-slug.ts#L7-L18),
@@ -290,8 +291,9 @@ footprint is copied multilingual attestation fixtures, an indexing test, and
 legacy architecture/docs examples; the indexing test specifically asserts
 clicked and member indices
 ([indexing test:1-23](../../../dumdict/tests/internal/attested-selection-indexing.test.ts#L1-L23)).
-Its serialized dictionary fixtures persist Lemmas, Readings, and Surfaces—not
-Selections—so no Dumdict storage migration is evidenced
+Its serialized dictionary fixtures persist Lemmas, Readings, and Surfaces, but
+not Selections. The repository contains no evidence that Dumdict needs a
+storage migration
 ([serialized notes:86-103](../../../dumdict/tests/fixtures/en-notes.ts#L86-L103)).
 
 System-wide ADR 0002 and Dumling/Dumgen context plus README documentation form

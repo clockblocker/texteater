@@ -8,9 +8,15 @@ supersedes:
   - "texteater#137"
   - "texteater#138"
 source: "texteater#151"
+refined-by:
+  - "0002-persist-one-visitor-encounter-per-segment"
 ---
 
 # Persist occurrence Attestations by exclusive Segment membership
+
+The Visitor interaction portions of this decision are refined by ADR 0002:
+physical Segment Selections are ephemeral and reuse one durable Visitor
+Encounter per Visitor and Segment.
 
 tf-demo stores one occurrence-specific Attestation for one resolved high-level
 unit in one Sentence. Every member Segment links to that record, and a Segment

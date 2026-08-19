@@ -2,8 +2,8 @@ import { expect, test } from "bun:test";
 import type { DumdictPlan } from "dumdict";
 import { makeSurfaceId } from "dumdict";
 import { readingFingerprint } from "dumling";
-import { lemmaKeyFor } from "../convex/model/linguisticKeys";
 import { persistResolvedClick } from "../convex/persistence";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 
 type Row = Record<string, unknown> & { _id: string };
 
@@ -143,7 +143,7 @@ const surface = {
 	inflectionalFeatures: { case: "Nom", number: "Plur" },
 	lemma,
 } as const;
-const lemmaKey = lemmaKeyFor(lemma);
+const lemmaKey = lemmaIdentityKey(lemma);
 const readingKey = readingFingerprint(reading);
 const surfaceKey = makeSurfaceId("de", surface);
 const note = { attestedTranslations: [], attestations: [], notes: "" };

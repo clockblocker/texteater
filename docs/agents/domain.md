@@ -12,12 +12,13 @@ This repository uses a multi-context documentation layout.
 
 ## Layout
 
-- `CONTEXT-MAP.md` — index of repository contexts.
-- `docs/adr/` — system-wide architectural decisions.
-- `app/<context>/CONTEXT.md` — app-specific vocabulary and boundaries.
-- `app/<context>/docs/adr/` — app-specific decisions.
-- `battery/<context>/CONTEXT.md` — battery-specific vocabulary and boundaries.
-- `battery/<context>/docs/adr/` — battery-specific decisions.
+- `CONTEXT-MAP.md` indexes repository contexts.
+- `docs/adr/` holds system-wide architectural decisions.
+- `app/<context>/CONTEXT.md` defines app-specific vocabulary and boundaries.
+- `app/<context>/docs/adr/` holds app-specific decisions.
+- `battery/<context>/CONTEXT.md` defines battery-specific vocabulary and
+  boundaries.
+- `battery/<context>/docs/adr/` holds battery-specific decisions.
 
 ## Vocabulary
 

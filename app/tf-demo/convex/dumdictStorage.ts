@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { type Reading, readingFingerprint } from "dumling/reading";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 
 import {
 	internalMutation,
@@ -7,7 +8,6 @@ import {
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
-import { lemmaKeyFor } from "./model/linguisticKeys";
 import {
 	lemmaValue,
 	readingValue,
@@ -322,7 +322,9 @@ function assertPlanBudget(estimatedChanges: number, context: string): void {
 async function findCanonicalLemma(ctx: ServerCtx, lemma: unknown) {
 	return ctx.db
 		.query("lemmas")
-		.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKeyFor(lemma)))
+		.withIndex("by_lemma_key", (q) =>
+			q.eq("lemmaKey", lemmaIdentityKey(lemma)),
+		)
 		.unique();
 }
 
@@ -855,13 +857,13 @@ async function preconditionFails(
 		case "revisionMatches":
 			return precondition.revision !== transactionRevision;
 		case "lemmaExists": {
-			const key = lemmaKeyFor(precondition.lemma);
+			const key = lemmaIdentityKey(precondition.lemma);
 			return !(await cachedPresence(shadow.lemmas, key, () =>
 				findLemma(ctx, precondition.lemma),
 			));
 		}
 		case "lemmaMissing": {
-			const key = lemmaKeyFor(precondition.lemma);
+			const key = lemmaIdentityKey(precondition.lemma);
 			return cachedPresence(shadow.lemmas, key, () =>
 				findLemma(ctx, precondition.lemma),
 			);
@@ -923,7 +925,7 @@ async function advancePreflightState(
 	switch (change.type) {
 		case "createLemma": {
 			const record = requireRecord(change.record, "Lemma Record");
-			shadow.lemmas.set(lemmaKeyFor(record.lemma), true);
+			shadow.lemmas.set(lemmaIdentityKey(record.lemma), true);
 			return;
 		}
 		case "createReading": {
@@ -1012,7 +1014,7 @@ async function applyChange(
 		case "createLemma": {
 			const record = requireRecord(change.record, "Lemma Record");
 			const lemma = requireRecord(record.lemma, "Lemma");
-			const lemmaKey = lemmaKeyFor(lemma);
+			const lemmaKey = lemmaIdentityKey(lemma);
 			if (await findLemma(ctx, record.lemma)) return false;
 			const language = requireString(lemma.language, "Lemma language");
 			if (language !== "de" && language !== "he") {

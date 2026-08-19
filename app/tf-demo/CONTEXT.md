@@ -2,7 +2,7 @@
 
 tf-demo is one shared product probe over the Texteater packages. It has one
 universal linguistic graph and demo dictionary; anonymous Visitors contribute
-interaction history but do not partition linguistic identity or Knowledge.
+encounter history but do not partition linguistic identity or Knowledge.
 
 ## Language
 
@@ -58,17 +58,21 @@ Shadow into a provisional Reading nor owns the aggregated references.
 _Avoid_: unresolved Reading Note, provisional Unit Reading Note
 
 **Visitor**:
-A stable anonymous interaction identity. A Visitor owns only Click history;
-it never participates in Text, Sentence, Segment, Grammatical Resolution,
-Lemma, Reading, relation, or Knowledge identity.
+A stable anonymous interaction identity. A Visitor owns only Visitor Encounter
+history; it never participates in Text, Sentence, Segment, Grammatical
+Resolution, Lemma, Reading, relation, or Knowledge identity.
 _Avoid_: Learner, User, account
 
-**Click**:
-One Visitor interaction with a Segment. Its result is either no Occurrence
-Attestation or one committed Occurrence Attestation, and that optional result
-remains stable for request retries. Its request identifier provides delivery
-idempotency, never linguistic identity or resolution reuse.
-_Avoid_: Resolution, Occurrence Attestation
+**Segment Selection**:
+One ephemeral Visitor interaction with a Segment. It either opens an already
+available Note or starts one operational Resolution Session.
+_Avoid_: Click record, Resolution, Occurrence Attestation
+
+**Visitor Encounter**:
+The single durable association of one Visitor with one Segment after its first
+selection. Later selections reuse it; a committed Occurrence Attestation may
+replace its initially absent result.
+_Avoid_: Click, interaction event, Visitor Resolution
 
 **Membership Conflict**:
 A proposed occurrence whose member Segments overlap a committed Occurrence
@@ -85,10 +89,11 @@ their memberships.
 
 A Text and its Sentences are preserved source material. Stripping analysis
 removes the Sentences' Segments, their Attestation Memberships and Occurrence
-Attestations, and every Visitor Click on those Segments or occurrences. It
+Attestations, and every Visitor Encounter on those Segments or occurrences. It
 never removes the Text or Sentence records.
 
 When stripping leaves a Reading with no surviving Occurrence Attestation, the
 Shared Demo Dictionary also removes that Reading, its Reading Knowledge and
-relations, and—when no other surviving record uses them—its Lemma, Surfaces,
-and Lemma Knowledge. Readings used by another Text remain shared.
+relations. When no other surviving record uses them, it also removes its
+Lemma, Surfaces, and Lemma Knowledge. Readings used by another Text remain
+shared.

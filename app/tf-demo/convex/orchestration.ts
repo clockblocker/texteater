@@ -20,11 +20,11 @@ import {
 	unresolvedGrammaticalResultSchema,
 } from "dumgen/schema";
 import { pendingSemanticRelationSchema } from "dumrel";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	applyValidatedKnowledgeContribution,
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
-	lemmaIdentityKey,
 	type OrchestrationPersistence,
 	type PersistedSentence,
 	type RecordedClick,

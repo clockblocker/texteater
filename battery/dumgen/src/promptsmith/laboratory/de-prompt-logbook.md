@@ -4,7 +4,7 @@ This file is the permanent, append-only notebook for German Dumgen prompt work.
 Session-level model inputs, validated outputs, latency, and errors live in the
 ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 
-## 2026-08-01 — split classification chain installed as early WIP
+## 2026-08-01: split classification chain installed as early WIP
 
 - Status: laboratory-only; no production prompt or production-readiness claim.
 - Supported language: German (`de`) only.
@@ -19,7 +19,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
   German Dumling schemas.
 - No evaluation result is recorded yet.
 
-## 2026-08-01 — settled topology and first noun vertical slice
+## 2026-08-01: settled topology and first noun vertical slice
 
 - Supersedes the runtime topology in the earlier entry. The laboratory now
   executes Intake -> Segmentation<de> and Target Classification -> route-fixed
@@ -51,7 +51,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - These observed cases have influenced the authored prompt and are regression
   evidence, not an unbiased evaluation corpus or a production-readiness claim.
 
-## 2026-08-01 — low-noise, high-signal rewrite of the initial five prompts
+## 2026-08-01: low-noise, high-signal rewrite of the initial five prompts
 
 - Each body now opens with its owned judgment and states the default path
   before exceptions. Laboratory persona, production-status language, repeated
@@ -83,7 +83,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
   deterministic assembly, generated freshness, codecs, catalog behavior, and
   package gates only.
 
-## 2026-08-02 — Emoji Descriptions corrected to emoji-only labels
+## 2026-08-02: Emoji Descriptions corrected to emoji-only labels
 
 - An Emoji Description is one emoji or a compact emoji sequence. It never
   includes the Lemma, a gloss, or explanatory prose.
@@ -95,7 +95,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - No model was called for this correction. Verification covered deterministic
   generation, schemas, catalog behavior, and package tests.
 
-## 2026-08-02 — adposition examples distinguish relations without semantic over-splitting
+## 2026-08-02: adposition examples distinguish relations without semantic over-splitting
 
 - Spatial and temporal uses of `vor` reuse one broad precedence Reading rather
   than splitting the same relational shape by domain. A contrastive use example
@@ -106,7 +106,7 @@ ignored `.laboratory/sessions/` JSONL logs; durable conclusions belong here.
 - These examples encode learner-facing relation identity without copying the
   complement's content into the adposition's Emoji Description.
 
-## 2026-08-13 — first complete production Prompt Part promoted
+## 2026-08-13: first complete production Prompt Part promoted
 
 - German high-level Target Classification is the first complete route promoted
   to `production/prompt-part`: instruction body, canonical 221-case Golden

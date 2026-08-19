@@ -45,7 +45,7 @@ throw.
 Prompt Sources live under
 `src/promptsmith/laboratory/prompt-source` in stage-first routes. Each leaf owns
 its combined model schemas, instructions, and validated demonstrations. Routes
-with canonical semantic cases additionally own a route-local Golden Corpus.
+with canonical semantic cases also own a route-local Golden Corpus.
 `bun run generate:system-prompts` deterministically rebuilds the committed
 system-prompt modules; `bun run check:system-prompts` checks them without
 modifying the workspace.

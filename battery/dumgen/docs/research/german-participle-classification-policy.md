@@ -61,7 +61,7 @@ The TIGER/STTS manual says the state passive and the copular sentence are often 
 
 The later official STTS workshop record turns this into an ordered decision aid: check dictionary lexicalization; test an active paraphrase with the same semantics; test a *von*-PP or similar preservation of verb semantics; test whether a semantically similar adjective is available; otherwise use `ADJD`. This is explicitly presented as a response to the hard `VVPP`/`ADJD` boundary, not as a perfect linguistic test. [STTS workshop record, p. 9](https://www.ims.uni-stuttgart.de/events/STTS-Workshop/pdfs/stts_zinsmeister_120924.pdf#page=10)
 
-STTS is itself version-sensitive. The 2017 **STTS 2.0** guidelines for spoken-language transcripts use a more distributional policy: attributive P1/P2 receive `ADJA`, adverbial P1/P2 receive `ADJD`, substantivized forms receive `NN`, and perfect/passive forms receive `VVPP`; their predicative diagnostics allow `Die Tür ist geöffnet` to reach `ADJD`. This is the opposite result from the older TIGER manual on the exact phrase, so “follow STTS” is not yet a complete project policy—the edition must be named. [STTS 2.0 guidelines, §§3.2, 3.12.3, 4.8](https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/6063/file/Westpfahl_Schmidt_Jonietz_Borlinghaus_STTS_2_0_2017.pdf)
+STTS is version-sensitive. The 2017 **STTS 2.0** guidelines for spoken-language transcripts use a more distributional policy: attributive P1/P2 receive `ADJA`, adverbial P1/P2 receive `ADJD`, substantivized forms receive `NN`, and perfect/passive forms receive `VVPP`; their predicative diagnostics allow `Die Tür ist geöffnet` to reach `ADJD`. The older TIGER manual reaches the opposite result for the same phrase. A project policy therefore needs to name the STTS edition, not simply say "follow STTS." [STTS 2.0 guidelines, §§3.2, 3.12.3, 4.8](https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/6063/file/Westpfahl_Schmidt_Jonietz_Borlinghaus_STTS_2_0_2017.pdf)
 
 IDS's systematic grammar explains why both outcomes persist. Evidence for an adjectival analysis includes lexicalized meaning, compatibility with other copulas such as `bleiben`/`wirken`, adjective-specific intensifiers, and `un-`; evidence for a verbal analysis includes lack of ordinary comparison, verb-group modifiers, coordination behavior, and retained verbal valency. IDS concludes that *sein*-state constructions with verbal behavior contain the participle before conversion, while those with adjectival behavior contain a converted adjective. [IDS, *Sind die Zustandsformen mit sein überhaupt Verbformen?*](https://grammis.ids-mannheim.de/systematische-grammatik/1125)
 
@@ -71,7 +71,7 @@ These diagnostics mean that “all bare or predicative P2 → `VERB`” is repro
 
 The universal UD specification says participles may be classified as `ADJ`, `NOUN`, or `VERB` depending on language and context. It defines the lemma as the dictionary/base form, but says derivational morphology is not removed. [UD `ADJ`](https://universaldependencies.org/u/pos/ADJ.html), [UD `VERB`](https://universaldependencies.org/u/pos/VERB.html), [UD morphology and lemmas](https://universaldependencies.org/u/overview/morphology.html)
 
-The German UD overview states a narrower headline rule—`VerbForm=Part` is tagged `VERB` or `AUX`—yet the official German treebanks expose both outcomes. German HDT has the near-exact `Erstmals sind alle zehn Filialen ... parallel geöffnet`, with `sind/sein/AUX` and `geöffnet/öffnen/VERB`; German GSD annotates `Die Schule blieb ... geöffnet` as `UPOS=ADJ`, `XPOS=VVPP`, `Lemma=öffnen`, `Degree=Pos`, and `VerbForm=Part`, but passive `wurde ... geöffnet` as `VERB`, lemma `öffnen`, `VerbForm=Part`. [UD German overview](https://universaldependencies.org/de/), [German HDT `sind ... geöffnet`](https://github.com/UniversalDependencies/UD_German-HDT/blob/8359ac9bdf5e96fdc64c519d28d74882d8c01bad/de_hdt-ud-dev.conllu#L215269), [German GSD `blieb ... geöffnet`](https://github.com/UniversalDependencies/UD_German-GSD/blob/ce54dbe9c6a5640c93e9952f069f582f6cd1f9fc/de_gsd-ud-train.conllu#L49555-L49570), [German GSD passive `wurde ... geöffnet`](https://github.com/UniversalDependencies/UD_German-GSD/blob/ce54dbe9c6a5640c93e9952f069f582f6cd1f9fc/de_gsd-ud-train.conllu#L123036-L123050)
+The German UD overview gives a narrower headline rule: `VerbForm=Part` is tagged `VERB` or `AUX`. The official German treebanks nevertheless contain both outcomes. German HDT has the near-exact `Erstmals sind alle zehn Filialen ... parallel geöffnet`, with `sind/sein/AUX` and `geöffnet/öffnen/VERB`; German GSD annotates `Die Schule blieb ... geöffnet` as `UPOS=ADJ`, `XPOS=VVPP`, `Lemma=öffnen`, `Degree=Pos`, and `VerbForm=Part`, but passive `wurde ... geöffnet` as `VERB`, lemma `öffnen`, `VerbForm=Part`. [UD German overview](https://universaldependencies.org/de/), [German HDT `sind ... geöffnet`](https://github.com/UniversalDependencies/UD_German-HDT/blob/8359ac9bdf5e96fdc64c519d28d74882d8c01bad/de_hdt-ud-dev.conllu#L215269), [German GSD `blieb ... geöffnet`](https://github.com/UniversalDependencies/UD_German-GSD/blob/ce54dbe9c6a5640c93e9952f069f582f6cd1f9fc/de_gsd-ud-train.conllu#L49555-L49570), [German GSD passive `wurde ... geöffnet`](https://github.com/UniversalDependencies/UD_German-GSD/blob/ce54dbe9c6a5640c93e9952f069f582f6cd1f9fc/de_gsd-ud-train.conllu#L123036-L123050)
 
 GSD is evidence of ecosystem representation, not a clean normative lemma oracle: its own documentation says lemmas, XPOS, and features were assigned by programs without manual checking, while UPOS was converted automatically from non-UD manual annotation. [German GSD documentation](https://universaldependencies.org/treebanks/de_gsd/index.html)
 
@@ -79,7 +79,7 @@ That hybrid is valuable evidence, but not a Dumling-ready identity rule. In GSD,
 
 ## Policy options
 
-### Policy A — inflection-first: transparent P1/P2 always realize the verb
+### Policy A: inflection-first, transparent P1/P2 always realize the verb
 
 Rule: classify every synchronically transparent participle as `Lexeme/VERB` (`AUX` for auxiliary participles); create `ADJ` or `NOUN` only after independent lexicalization.
 
@@ -92,7 +92,7 @@ Implications:
 
 This is the simplest “forms of the verb” answer, but it intentionally models lexical ancestry rather than contextual part of speech.
 
-### Policy B — contextual STTS-style POS
+### Policy B: contextual STTS-style POS
 
 Rule: classify the occurrence by its syntactic use. P2 inside perfect/passive complexes is `VERB`; adjectivally used P1/P2 is `ADJ`; substantivized forms are `NOUN`; lexicalized adjective meanings are `ADJ`. Resolve `sein + P2` with documented diagnostics.
 
@@ -105,7 +105,7 @@ Implications:
 
 This is the best option if Dumling's `Kind` is intended to mean contextual POS.
 
-### Policy C — lexicalized-only adjective boundary for predicative P2
+### Policy C: lexicalized-only adjective boundary for predicative P2
 
 Rule: use Policy B for clear analytic, attributive/adverbial, and nominal contexts, but keep bare predicative P2 under `VERB` whenever a same-meaning active/*werden*-passive paraphrase is productive. Use `ADJ` only for a dictionary-established or semantically diverged adjective.
 
@@ -117,7 +117,7 @@ Implications:
 
 This is a viable conservative policy when the project wants few adjective Lemmas, but it still requires a real ambiguity strategy.
 
-### Policy D — introduce a dedicated `Participle` Kind
+### Policy D: introduce a dedicated `Participle` Kind
 
 Rule: P1/P2 become their own lexical Kind, neither `VERB` nor `ADJ`; contextual role and P1/P2 subtype live on Surface or analysis metadata.
 
@@ -130,7 +130,7 @@ Implications:
 
 This adds a category without resolving the target-membership question, so it has the highest implementation cost and the weakest payoff.
 
-### Policy E — model lexical identity and contextual POS as separate axes
+### Policy E: model lexical identity and contextual POS as separate axes
 
 Rule: retain one lexical/source analysis and separately annotate contextual syntactic category/use. Two practical variants are possible:
 
@@ -163,7 +163,7 @@ For substantivized items, German STTS/GSD practice supports a nominal Lemma rath
 ## Recommended near-term decision shape
 
 1. **Make the sentence-level analysis authoritative.** Target Classification must decide between *sein*-passive and copula-plus-adjective once, then reuse that result for every click. The present `sind → öffnen/VERB` plus `geöffnet → geöffnet/ADJ` pair should be rejected as click-inconsistent.
-2. **Separate P1 from P2 in the written policy.** A single P1/P2 rule hides the crucial fact that P1 never forms an analytic German verb complex. If no schema change is desired, use contextual `ADJ` for ordinary attributive, predicative, and adverbial P1; reserve `VERB` for an explicitly chosen rare verbal/supplement analysis.
+2. **Write separate policies for P1 and P2.** P1 never forms an analytic German verb complex, and a combined rule hides that difference. If no schema change is desired, use contextual `ADJ` for ordinary attributive, predicative, and adverbial P1; reserve `VERB` for an explicitly chosen rare verbal/supplement analysis.
 3. **Keep unambiguous P2 complexes verbal.** Perfect, *werden*-passive, *sein*-perfect, and perfect-passive P2 occurrences resolve to the base VERB Lemma and group their fixed auxiliaries under ADR 0004.
 4. **Choose and document a predicative P2 default.** A defensible conservative default is Policy C: productive passive paraphrase → `VERB`; established/semantically diverged property adjective → `ADJ`; unresolved genuine ambiguity becomes an explicit classification limitation rather than two incompatible click results.
 5. **Use participial adjective citation forms for actual ADJ Lemmas.** Prefer `geöffnet/ADJ`, not `öffnen/ADJ`; preserve the source relation explicitly when the domain gains that relation. Do not copy GSD's hybrid lemma convention into Dumling accidentally, because Dumling's identity semantics differ.
@@ -185,7 +185,7 @@ The policy should be tested on paired cases where only the decisive evidence cha
 - lexicalized versus productive pairs: `gebildet`, `bekannt`, `verheiratet`, `geschlossen`;
 - every ambiguous sentence clicked once on the auxiliary/copula and once on the participle, asserting identical target membership.
 
-The corpus oracle must record not only `Kind`, but also the chosen analysis label and the reason: `Perfect`, `WerdenPassive`, `SeinPassive`, `CopularAdjective`, `AttributiveConversion`, `AdverbialConversion`, `LexicalizedAdjective`, or `Nominalized`. Those labels can remain corpus metadata; they need not become durable Dumrel Knowledge.
+The corpus oracle must record `Kind`, the chosen analysis label, and the reason. Labels include `Perfect`, `WerdenPassive`, `SeinPassive`, `CopularAdjective`, `AttributiveConversion`, `AdverbialConversion`, `LexicalizedAdjective`, and `Nominalized`. They can remain corpus metadata; they need not become durable Dumrel Knowledge.
 
 ## Repository impact
 

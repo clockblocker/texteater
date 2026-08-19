@@ -28,9 +28,10 @@ between them and follow those relations from note to note; unresolved Dumdict
 relations remain visible as pending targets.
 
 Occurrence Attestations, Readings, relations, and Knowledge belong to one
-Shared Demo Dictionary. Clicking any member Segment of a committed occurrence
-reuses its universal Attestation and Reading without invoking Dumgen again. The
-anonymous Visitor owns only Click history.
+Shared Demo Dictionary. Selecting any member Segment of a committed occurrence
+opens its universal Attestation and Reading without invoking Dumgen or creating
+a Resolution Session. The anonymous Visitor owns at most one Visitor Encounter
+per Segment.
 
 The Dumgen actions read `OPENAI_API_KEY` from the Convex deployment. Set it once
 without putting the secret in application code:
@@ -42,14 +43,14 @@ bun x convex env set OPENAI_API_KEY "$OPENAI_API_KEY"
 ## Reset demo data
 
 Every page exposes the demo data controls. **Clear my data** removes only the
-current Visitor's Click history, while **Clear shared data** removes the
+current Visitor's Encounter history, while **Clear shared data** removes the
 universal linguistic graph and Shared Demo Dictionary. Both require
 confirmation.
 
 A stored Text page exposes **Strip analysis** while analysis exists, then
 replaces it with **Analyze text** after stripping. Stripping preserves the Text
 and its Sentences while removing their Segments, Attestation memberships,
-occurrence Attestations, and Clicks.
+occurrence Attestations, and Visitor Encounters.
 A Reading remains when another Text still sources it; otherwise its Reading
 Knowledge, relations, and any now-unshared Lemma, Surfaces, and Lemma Knowledge
 are removed with it.
@@ -62,8 +63,8 @@ The CLI also exposes the bounded full reset:
 bun run reset
 ```
 
-The bounded reset removes all tf-demo linguistic, Knowledge, click, and visitor
-context rows. The local deployment itself remains selected and reusable.
+The bounded reset removes all tf-demo linguistic, Knowledge, Encounter, and
+visitor context rows. The local deployment itself remains selected and reusable.
 
 ## Validation
 

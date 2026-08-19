@@ -60,7 +60,7 @@ on the global grammatical resolution. Dumdict receives the exactly reconstructed
 Stitched Text as its string encounter evidence. No lossy conversion is presented
 as a Dumling Attestation.
 
-### DUMDICT-2: Resolved — Reading identity is public in Dumling
+### DUMDICT-2: resolved, Reading identity is public in Dumling
 
 The former integration gap was:
 

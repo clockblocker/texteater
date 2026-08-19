@@ -1,4 +1,4 @@
-# Doc-Cite `u` Route Overhaul
+# Doc-Cite `u` route overhaul
 
 ## Outcome
 
@@ -22,7 +22,7 @@ This also completes the migration to one rule for docs content:
 - all doc sources live under `docs-site/src/to-generate/docs/**`
 - `docs-site/src/hand-written` goes away
 
-## Fixed Rules
+## Fixed rules
 
 ### Public routes
 
@@ -150,7 +150,7 @@ Allowed shape:
 - `lang/{lang}/classification-instructions/index.doc.ts`
 - `lang/{lang}/classification-instructions/how-to-*.doc.ts`
 
-## Generator Model
+## Generator model
 
 ### 1. Universal concept pages
 
@@ -325,7 +325,7 @@ Generation must guarantee:
   plus optional local index prose and the generated local how-to list
 - sparse language subtrees remain navigable through auto-emitted ancestors
 
-## Code Areas To Change
+## Code areas to change
 
 Main generator work:
 

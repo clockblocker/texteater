@@ -18,10 +18,11 @@ import {
 } from "../convex/persistence";
 import {
 	advance,
-	beginResolution,
 	cleanup,
 	recoverStaleRun,
 	STALE_RUN_AFTER_MS,
+	selectSegment,
+	settleAfterRun,
 } from "../convex/resolutionSessions";
 
 type Row = Record<string, unknown> & { _id: string };
@@ -161,6 +162,29 @@ function sourceSeed(): Record<string, readonly Row[]> {
 	};
 }
 
+function resolvedSourceSeed(): Record<string, readonly Row[]> {
+	const seed = sourceSeed();
+	return {
+		...seed,
+		segments: (seed.segments ?? []).map((segment) => ({
+			...segment,
+			attestationMembership: {
+				attestationId: "attestation-1",
+				orthography: "Standard",
+			},
+		})),
+		attestations: [
+			{
+				_id: "attestation-1",
+				readingId: "reading-1",
+				surfaceId: "surface-1",
+				realizationCoverage: "Full",
+			},
+		],
+		readings: [{ _id: "reading-1" }],
+	};
+}
+
 const beginArgs = {
 	requestId: "request-1",
 	visitorId: "visitor-1",
@@ -170,6 +194,45 @@ const beginArgs = {
 };
 
 describe("Resolution Session", () => {
+	test("a committed occurrence opens its canonical Note directly and records only the first Visitor Encounter", async () => {
+		const db = new SessionDb(resolvedSourceSeed());
+		const scheduled: unknown[] = [];
+		const ctx = {
+			db,
+			scheduler: {
+				async runAfter(...args: unknown[]) {
+					scheduled.push(args);
+				},
+			},
+		};
+		const run = handler<typeof beginArgs, unknown>(selectSegment);
+
+		expect(await run(ctx, beginArgs)).toEqual({
+			kind: "Available",
+			target: {
+				kind: "UnitReadingNote",
+				readingId: "reading-1",
+			},
+		});
+		expect(
+			await run(ctx, {
+				...beginArgs,
+				requestId: "request-2",
+				routeNoteRequested: true,
+			}),
+		).toEqual({
+			kind: "Available",
+			target: {
+				kind: "RouteNote",
+				routeKind: "Attestation",
+				id: "attestation-1",
+			},
+		});
+		expect(db.rows("visitorClicks")).toHaveLength(1);
+		expect(db.rows("resolutionSessions")).toEqual([]);
+		expect(scheduled).toEqual([]);
+	});
+
 	test("begin captures one exact Segment and schedules orchestration once", async () => {
 		const db = new SessionDb(sourceSeed());
 		const scheduled: unknown[] = [];
@@ -181,13 +244,15 @@ describe("Resolution Session", () => {
 				},
 			},
 		};
-		const run = handler<typeof beginArgs, unknown>(beginResolution);
+		const run = handler<typeof beginArgs, unknown>(selectSegment);
 
 		expect(await run(ctx, beginArgs)).toMatchObject({
+			kind: "Resolving",
 			stage: "Starting",
 			deduplicated: false,
 		});
 		expect(await run(ctx, beginArgs)).toMatchObject({
+			kind: "Resolving",
 			stage: "Starting",
 			deduplicated: true,
 		});
@@ -208,7 +273,7 @@ describe("Resolution Session", () => {
 			db,
 			scheduler: { async runAfter() {} },
 		};
-		const run = handler<typeof beginArgs, unknown>(beginResolution);
+		const run = handler<typeof beginArgs, unknown>(selectSegment);
 		await run(ctx, beginArgs);
 
 		await expect(
@@ -283,10 +348,7 @@ describe("Resolution Session", () => {
 				},
 			},
 		};
-		await handler<typeof beginArgs, unknown>(beginResolution)(
-			ctx,
-			beginArgs,
-		);
+		await handler<typeof beginArgs, unknown>(selectSegment)(ctx, beginArgs);
 		const session = db.rows("resolutionSessions")[0];
 		if (!session) throw new Error("Expected a Resolution Session.");
 		const guard = {
@@ -330,6 +392,77 @@ describe("Resolution Session", () => {
 				stage: "Committing",
 			}),
 		).rejects.toThrow("no longer active");
+	});
+
+	test("completion accepts an Encounter first recorded by an earlier request", async () => {
+		const db = new SessionDb({
+			...resolvedSourceSeed(),
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-later",
+					runToken: "run-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					stage: "RouteAvailable",
+					createdAt: 1,
+					updatedAt: 1,
+				},
+			],
+			visitorClicks: [
+				{
+					_id: "click-1",
+					requestId: "request-earlier",
+					visitorId: "visitor-1",
+					segmentId: "segment-1",
+					attestationId: "attestation-1",
+					clickedAt: 1,
+				},
+			],
+		});
+
+		expect(
+			await handler<
+				{
+					guard: {
+						requestId: string;
+						runToken: string;
+						segmentId: string;
+					};
+					result: {
+						kind: "Complete";
+						readingId: string;
+						attestationId: string;
+						grammar: ReturnType<typeof grammarProjection>;
+						reading: ReturnType<typeof readingProjection>;
+					};
+				},
+				boolean
+			>(settleAfterRun)(
+				{ db },
+				{
+					guard: {
+						requestId: "request-later",
+						runToken: "run-1",
+						segmentId: "segment-1",
+					},
+					result: {
+						kind: "Complete",
+						readingId: "reading-1",
+						attestationId: "attestation-1",
+						grammar: grammarProjection("Bank"),
+						reading: readingProjection("🏦", "Bank"),
+					},
+				},
+			),
+		).toBe(true);
+		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+			stage: "Complete",
+			readingId: "reading-1",
+			attestationId: "attestation-1",
+		});
 	});
 
 	test("terminal convergence replaces provisional projections with the canonical winner", async () => {
@@ -641,14 +774,12 @@ describe("Resolution Session", () => {
 			});
 			if (recorded.status === "Resolved") {
 				expect(
-					mutationArgs
-						.slice(1, 4)
-						.map((args) => (args as { stage: string }).stage),
-				).toEqual([
-					"GrammarAvailable",
-					"ReadingAvailable",
-					"Committing",
-				]);
+					mutationArgs.flatMap((args) =>
+						"stage" in (args as object)
+							? [(args as { stage: string }).stage]
+							: [],
+					),
+				).toEqual(["RouteAvailable"]);
 				expect(mutationArgs.at(-1)).toMatchObject({
 					result: {
 						kind: "Complete",
