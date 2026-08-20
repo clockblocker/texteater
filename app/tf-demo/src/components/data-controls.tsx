@@ -11,6 +11,19 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import {
+	Field,
+	FieldContent,
+	FieldDescription,
+	FieldLabel,
+} from "@/components/ui/field";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { parseSubmittedTextId } from "@/lib/action-results";
 import { hrefFor } from "@/lib/navigation";
@@ -145,31 +158,48 @@ export function DataControls({
 	}
 
 	return (
-		<footer className="flex flex-col gap-3 border-t pt-4">
-			<label className="flex items-start gap-3 rounded-lg border bg-card px-4 py-3 text-sm">
-				<input
-					type="checkbox"
-					className="mt-0.5 size-4 accent-primary"
-					checked={routeNotesEnabled}
-					onChange={(event) =>
-						setRouteNotesEnabled(event.currentTarget.checked)
-					}
-				/>
-				<span>
-					<span className="block font-medium">Open Route Notes</span>
-					<span className="block text-xs leading-relaxed text-muted-foreground">
-						Start Segment selections at the Attestation Route Note.
-						Hold Alt/Option for one selection without changing this
-						setting.
-					</span>
-				</span>
-			</label>
-			<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-				<p className="text-xs leading-relaxed text-muted-foreground">
-					Demo data controls. Destructive actions require
-					confirmation.
-				</p>
-				<div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+		<div className="flex flex-col gap-6">
+			<Card>
+				<CardHeader>
+					<CardTitle>Reading behavior</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<Field orientation="horizontal">
+						<input
+							id="open-route-notes"
+							type="checkbox"
+							className="mt-0.5 size-4 shrink-0 accent-primary"
+							checked={routeNotesEnabled}
+							onChange={(event) =>
+								setRouteNotesEnabled(
+									event.currentTarget.checked,
+								)
+							}
+						/>
+						<FieldContent>
+							<FieldLabel htmlFor="open-route-notes">
+								Open Route Notes
+							</FieldLabel>
+							<FieldDescription>
+								Start Segment selections at the Attestation
+								Route Note. Hold Alt/Option for one selection
+								without changing this setting.
+							</FieldDescription>
+						</FieldContent>
+					</Field>
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Demo data</CardTitle>
+					{text ? (
+						<CardDescription className="truncate">
+							{text.sourceText}
+						</CardDescription>
+					) : null}
+				</CardHeader>
+				<CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
 					<Button
 						type="button"
 						variant="outline"
@@ -216,19 +246,26 @@ export function DataControls({
 							? "Clearing shared data…"
 							: "Clear shared data"}
 					</Button>
-				</div>
-			</div>
-			{notice ? (
-				<p className="text-sm text-muted-foreground" aria-live="polite">
-					{notice}
-				</p>
-			) : null}
-			{error ? (
-				<p className="text-sm text-destructive" role="alert">
-					{error}
-				</p>
-			) : null}
-		</footer>
+				</CardContent>
+				{notice ? (
+					<CardContent>
+						<p
+							className="text-sm text-muted-foreground"
+							aria-live="polite"
+						>
+							{notice}
+						</p>
+					</CardContent>
+				) : null}
+				{error ? (
+					<CardContent>
+						<p className="text-sm text-destructive" role="alert">
+							{error}
+						</p>
+					</CardContent>
+				) : null}
+			</Card>
+		</div>
 	);
 }
 

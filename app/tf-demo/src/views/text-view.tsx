@@ -1,11 +1,10 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
-import { LibraryIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { DataControls } from "@/components/data-controls";
+import { PageNavigation } from "@/components/page-navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SentenceView } from "@/lib/action-results";
@@ -114,13 +113,7 @@ export function TextView({ target }: { target: TextTarget }) {
 					<h1 className="text-sm font-medium text-muted-foreground">
 						Text
 					</h1>
-					<Link
-						to={hrefFor({ kind: "Library" })}
-						className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<LibraryIcon className="size-4" />
-						Library
-					</Link>
+					<PageNavigation settingsTextId={textDetail.textId} />
 				</header>
 
 				<SentenceList
@@ -151,21 +144,6 @@ export function TextView({ target }: { target: TextTarget }) {
 						{error}
 					</p>
 				) : null}
-
-				<DataControls
-					text={
-						textDetail
-							? {
-									textId: textDetail.textId,
-									sourceText: textDetail.sourceText,
-									isAnalyzed: textDetail.sentences.some(
-										(sentence) =>
-											sentence.segments.length > 0,
-									),
-								}
-							: undefined
-					}
-				/>
 			</div>
 		</main>
 	);

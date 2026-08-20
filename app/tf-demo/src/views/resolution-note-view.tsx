@@ -1,9 +1,10 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
-import { LibraryIcon, LoaderCircleIcon } from "lucide-react";
+import { LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hrefFor, type ResolutionTarget } from "@/lib/navigation";
@@ -91,13 +92,7 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 							) : null}
 						</div>
 					</div>
-					<Link
-						to={hrefFor({ kind: "Library" })}
-						className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<LibraryIcon className="size-4" />
-						Library
-					</Link>
+					<PageNavigation />
 				</header>
 
 				<article

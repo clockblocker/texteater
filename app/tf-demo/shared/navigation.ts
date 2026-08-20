@@ -2,6 +2,11 @@ export type LibraryTarget = {
 	readonly kind: "Library";
 };
 
+export type SettingsTarget = {
+	readonly kind: "Settings";
+	readonly textId?: string;
+};
+
 export type TextTarget = {
 	readonly kind: "Text";
 	readonly textId: string;
@@ -33,6 +38,7 @@ export type ResolutionTarget = {
 
 export type NavigationTarget =
 	| LibraryTarget
+	| SettingsTarget
 	| TextTarget
 	| UnitReadingNoteTarget
 	| RouteNoteTarget

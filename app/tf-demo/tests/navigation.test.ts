@@ -8,6 +8,8 @@ import {
 
 const targets = [
 	{ kind: "Library" },
+	{ kind: "Settings" },
+	{ kind: "Settings", textId: "text_123" },
 	{ kind: "Text", textId: "text_123" },
 	{
 		kind: "Text",
@@ -65,6 +67,12 @@ describe("Navigation", () => {
 			targetFromLocation({
 				pathname: "/note/reading/reading_123",
 				search: "?from=text",
+			}),
+		).toBeNull();
+		expect(
+			targetFromLocation({
+				pathname: "/settings",
+				search: "?text=text_123&text=text_456",
 			}),
 		).toBeNull();
 	});

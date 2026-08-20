@@ -6,6 +6,7 @@ export type {
 	ResolutionTarget,
 	RouteNoteKind,
 	RouteNoteTarget,
+	SettingsTarget,
 	ShadowNoteTarget,
 	TextTarget,
 	UnitReadingNoteTarget,
@@ -27,6 +28,10 @@ export function hrefFor(target: NavigationTarget): string {
 	switch (target.kind) {
 		case "Library":
 			return "/library";
+		case "Settings":
+			return target.textId
+				? `/settings?text=${encodeNavigationId(target.textId)}`
+				: "/settings";
 		case "Text": {
 			const href = `/text/${encodeNavigationId(target.textId)}`;
 			return target.focusAttestationId
@@ -57,6 +62,16 @@ export function targetFromLocation(
 
 	if (matchesPath(segments, "library") && location.search === "") {
 		return { kind: "Library" };
+	}
+
+	if (matchesPath(segments, "settings")) {
+		const search = new URLSearchParams(location.search);
+		if ([...search.keys()].some((key) => key !== "text")) return null;
+		const textValues = search.getAll("text");
+		if (textValues.length === 0) return { kind: "Settings" };
+		if (textValues.length > 1) return null;
+		const textId = decodeNavigationId(textValues[0]);
+		return textId ? { kind: "Settings", textId } : null;
 	}
 
 	if (matchesPath(segments, "text", undefined)) {

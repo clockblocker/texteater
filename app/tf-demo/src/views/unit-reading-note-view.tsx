@@ -5,11 +5,11 @@ import {
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { LibraryIcon, LoaderCircleIcon, LockIcon } from "lucide-react";
+import { LoaderCircleIcon, LockIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { DataControls } from "@/components/data-controls";
+import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,20 +23,11 @@ import {
 import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
 import {
-	KnowledgeActivity,
-	KnowledgeActivityPresentation,
-} from "./unit-reading-knowledge-activity";
-import {
 	KnowledgeSettingsChecklist,
-	KnowledgeSettingsPanel,
 	withKnowledgeSetting,
 } from "./unit-reading-knowledge-settings";
 
-export {
-	KnowledgeActivityPresentation,
-	KnowledgeSettingsChecklist,
-	withKnowledgeSetting,
-};
+export { KnowledgeSettingsChecklist, withKnowledgeSetting };
 
 export type UnitReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.presentation.getNote>>,
@@ -86,10 +77,7 @@ export function ReadingNote({
 		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
 				<header className="flex flex-wrap items-start justify-between gap-4">
-					<div className="flex flex-col gap-3">
-						<p className="text-sm font-medium text-muted-foreground">
-							Unit Reading Note
-						</p>
+					<div>
 						<div className="flex flex-wrap items-center gap-2">
 							<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
 								{note.reading.emojiDescription}{" "}
@@ -107,20 +95,8 @@ export function ReadingNote({
 							<Badge variant="outline">{note.lemma.kind}</Badge>
 						</div>
 					</div>
-					<Link
-						to={hrefFor({ kind: "Library" })}
-						className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<LibraryIcon className="size-4" />
-						Library
-					</Link>
+					<PageNavigation />
 				</header>
-
-				<KnowledgeActivity note={note} visitorId={visitorId} />
-				<KnowledgeSettingsPanel
-					visitorId={visitorId}
-					initialSettings={note.settings}
-				/>
 
 				<article
 					className="flex flex-col gap-5"
@@ -151,8 +127,6 @@ export function ReadingNote({
 					<StructuralReferenceList note={note} />
 					<SourceContextList note={note} visitorId={visitorId} />
 				</article>
-
-				<DataControls />
 			</div>
 		</main>
 	);
@@ -229,13 +203,6 @@ function SourceContextList({
 						>
 							<p className="text-sm leading-relaxed">
 								{context.sentenceSnippet}
-							</p>
-							<p className="mt-1 text-xs text-muted-foreground">
-								Sentence {context.sentencePosition + 1} ·{" "}
-								{context.memberSegmentIndices.length}{" "}
-								{context.memberSegmentIndices.length === 1
-									? "member"
-									: "members"}
 							</p>
 						</Link>
 					</li>

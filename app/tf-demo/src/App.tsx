@@ -5,6 +5,7 @@ import { LibraryView } from "@/views/library-view";
 import { NotFoundView } from "@/views/not-found-view";
 import { ResolutionNoteView } from "@/views/resolution-note-view";
 import { RouteNoteView } from "@/views/route-note-view";
+import { SettingsView } from "@/views/settings-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
 import { TextView } from "@/views/text-view";
 import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
@@ -29,6 +30,8 @@ function RoutedView() {
 	switch (target.kind) {
 		case "Library":
 			return <LibraryView />;
+		case "Settings":
+			return <SettingsView target={target} />;
 		case "Text":
 			return <TextView key={target.textId} target={target} />;
 		case "UnitReadingNote":

@@ -1,5 +1,3 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
 import {
 	type KnowledgeSettings,
@@ -8,27 +6,30 @@ import {
 } from "dumrel";
 import { useEffect, useState } from "react";
 
+import {
+	Field,
+	FieldGroup,
+	FieldLabel,
+	FieldLegend,
+	FieldSet,
+} from "@/components/ui/field";
 import { api } from "../../convex/_generated/api";
 
-export function KnowledgeSettingsPanel({
+export function KnowledgeSettingsForm({
 	visitorId,
 	initialSettings,
 }: {
 	visitorId: string;
 	initialSettings: KnowledgeSettings;
 }) {
-	const settingsQuery = useQuery({
-		...convexQuery(api.knowledgeSettings.get, { visitorId }),
-		gcTime: 10_000,
-	});
 	const updateSettings = useMutation(api.knowledgeSettings.update);
 	const [settings, setSettings] = useState(initialSettings);
 	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (settingsQuery.data) setSettings(settingsQuery.data);
-	}, [settingsQuery.data]);
+		setSettings(initialSettings);
+	}, [initialSettings]);
 
 	async function change(next: KnowledgeSettings) {
 		setSettings(next);
@@ -37,7 +38,7 @@ export function KnowledgeSettingsPanel({
 		try {
 			await updateSettings({ visitorId, settings: next });
 		} catch (cause) {
-			setSettings(settingsQuery.data ?? initialSettings);
+			setSettings(initialSettings);
 			setError(
 				cause instanceof Error
 					? cause.message
@@ -49,29 +50,21 @@ export function KnowledgeSettingsPanel({
 	}
 
 	return (
-		<section className="rounded-lg border bg-card px-4 py-3">
-			<details>
-				<summary className="cursor-pointer text-sm font-medium">
-					Knowledge settings
-				</summary>
-				<p className="mt-2 text-xs text-muted-foreground">
-					These choices apply to every Reading for this visitor.
+		<div className="flex flex-col gap-3">
+			<KnowledgeSettingsChecklist
+				settings={settings}
+				disabled={isSaving}
+				onChange={(next) => void change(next)}
+			/>
+			<p className="sr-only" aria-live="polite">
+				{isSaving ? "Saving Knowledge settings" : ""}
+			</p>
+			{error ? (
+				<p className="text-sm text-destructive" role="alert">
+					{error}
 				</p>
-				<KnowledgeSettingsChecklist
-					settings={settings}
-					disabled={isSaving || settingsQuery.isPending}
-					onChange={(next) => void change(next)}
-				/>
-				<p className="sr-only" aria-live="polite">
-					{isSaving ? "Saving Knowledge settings" : ""}
-				</p>
-				{error ? (
-					<p className="mt-2 text-sm text-destructive" role="alert">
-						{error}
-					</p>
-				) : null}
-			</details>
-		</section>
+			) : null}
+		</div>
 	);
 }
 
@@ -108,30 +101,33 @@ export function KnowledgeSettingsChecklist({
 	onChange?: (settings: KnowledgeSettings) => void;
 }) {
 	return (
-		<fieldset
-			className="mt-3 grid gap-2 sm:grid-cols-2"
-			disabled={disabled}
-		>
-			<legend className="sr-only">Visible Knowledge</legend>
-			{KNOWLEDGE_SETTING_LABELS.map(({ path, label }) => (
-				<label key={path} className="flex items-center gap-2 text-sm">
-					<input
-						type="checkbox"
-						checked={knowledgeSettingValue(settings, path)}
-						onChange={(event) =>
-							onChange?.(
-								withKnowledgeSetting(
-									settings,
-									path,
-									event.currentTarget.checked,
-								),
-							)
-						}
-					/>
-					{label}
-				</label>
-			))}
-		</fieldset>
+		<FieldSet disabled={disabled}>
+			<FieldLegend className="sr-only">Visible Knowledge</FieldLegend>
+			<FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+				{KNOWLEDGE_SETTING_LABELS.map(({ path, label }) => (
+					<Field key={path} orientation="horizontal">
+						<input
+							id={`knowledge-setting-${path}`}
+							type="checkbox"
+							className="size-4 shrink-0 accent-primary"
+							checked={knowledgeSettingValue(settings, path)}
+							onChange={(event) =>
+								onChange?.(
+									withKnowledgeSetting(
+										settings,
+										path,
+										event.currentTarget.checked,
+									),
+								)
+							}
+						/>
+						<FieldLabel htmlFor={`knowledge-setting-${path}`}>
+							{label}
+						</FieldLabel>
+					</Field>
+				))}
+			</FieldGroup>
+		</FieldSet>
 	);
 }
 

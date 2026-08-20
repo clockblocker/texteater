@@ -5,7 +5,7 @@ import { ArrowRightIcon, BookOpenIcon, LibraryIcon } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { DataControls } from "@/components/data-controls";
+import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,17 +70,20 @@ export function LibraryView() {
 	return (
 		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-				<header className="flex flex-col gap-2">
-					<p className="text-sm font-medium text-muted-foreground">
-						tf-demo
-					</p>
-					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-						Library
-					</h1>
-					<p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-						Open a stored text to inspect its sentences and resolve
-						German segments.
-					</p>
+				<header className="flex flex-wrap items-start justify-between gap-4">
+					<div className="flex flex-col gap-2">
+						<p className="text-sm font-medium text-muted-foreground">
+							tf-demo
+						</p>
+						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+							Library
+						</h1>
+						<p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+							Open a stored text to inspect its sentences and
+							resolve German segments.
+						</p>
+					</div>
+					<PageNavigation showLibrary={false} />
 				</header>
 
 				<Card>
@@ -196,8 +199,6 @@ export function LibraryView() {
 						</Card>
 					)}
 				</section>
-
-				<DataControls />
 			</div>
 		</main>
 	);
