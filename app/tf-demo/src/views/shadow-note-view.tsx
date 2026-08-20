@@ -2,21 +2,20 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { LoaderCircleIcon, LockIcon } from "lucide-react";
 import { useEffect, useReducer, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 
-import { PageNavigation } from "@/components/page-navigation";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hrefFor, type ShadowNoteTarget } from "@/lib/navigation";
+import { renderNote } from "@/notes";
+import type {
+	ShadowNoteData,
+	ShadowNotePresentationCapabilities,
+	ShadowNoteReferrer,
+} from "@/notes/shadow";
 import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
 
-export type ShadowNote = Extract<
-	NonNullable<FunctionReturnType<typeof api.presentation.getNote>>,
-	{ kind: "ShadowNote" }
->;
+export type ShadowNote = ShadowNoteData;
 type ShadowCleanupResult = FunctionReturnType<
 	typeof api.orchestration.cleanupPendingRelation
 >;
@@ -95,14 +94,14 @@ export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
 		);
 	}
 	return (
-		<ShadowNoteContent
+		<ShadowNoteContainer
 			note={noteQuery.data}
 			onRefresh={() => noteQuery.refetch().then(() => undefined)}
 		/>
 	);
 }
 
-export function ShadowNoteContent({
+function ShadowNoteContainer({
 	note,
 	onRefresh,
 }: {
@@ -219,194 +218,29 @@ export function ShadowNoteContent({
 		}
 	}
 
-	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-4xl flex-col gap-8">
-				<header className="flex flex-wrap items-start justify-between gap-4">
-					<div className="flex flex-col gap-3">
-						<p className="text-sm font-medium text-muted-foreground">
-							Shadow Note
-						</p>
-						<h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-							<LockIcon className="size-5" aria-hidden="true" />
-							{note.descriptor.canonicalForm}
-						</h1>
-						<div className="flex flex-wrap gap-2">
-							<Badge variant="secondary">
-								{note.descriptor.language}
-							</Badge>
-							<Badge variant="outline">
-								{note.descriptor.family}
-							</Badge>
-							<Badge variant="outline">
-								{note.descriptor.kind}
-							</Badge>
-						</div>
-					</div>
-					<PageNavigation />
-				</header>
-
-				<section
-					className="flex flex-col gap-3"
-					aria-labelledby="referrers"
-				>
-					<h2 id="referrers" className="text-sm font-medium">
-						Referring Unit Reading Notes
-					</h2>
-					<ShadowReferenceList
-						note={note}
-						referrers={referrers}
-						activeLocator={activeLocator}
-						onResolve={(locatorKey) => void cleanUp(locatorKey)}
-					/>
-					{!isDone ? (
-						<button
-							type="button"
-							className="inline-flex w-fit items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
-							disabled={isLoading}
-							onClick={() => void loadMore()}
-						>
-							{isLoading ? (
-								<LoaderCircleIcon className="size-4 animate-spin" />
-							) : null}
-							{isLoading ? "Loading…" : "Load more references"}
-						</button>
-					) : null}
-					{error || controls.actionError ? (
-						<p className="text-sm text-destructive" role="alert">
-							{error ?? controls.actionError}
-						</p>
-					) : null}
-					{controls.outcome ? (
-						<p
-							className="text-sm text-muted-foreground"
-							role="status"
-						>
-							{controls.outcome}
-						</p>
-					) : null}
-				</section>
-			</div>
-		</main>
-	);
-}
-
-export function ShadowReferenceList({
-	note,
-	referrers,
-	activeLocator,
-	onResolve,
-}: {
-	note: ShadowNote;
-	referrers: ShadowNote["references"]["page"];
-	activeLocator: string | null;
-	onResolve: (locatorKey: string) => void;
-}) {
-	return (
-		<ul className="grid gap-3">
-			{referrers.map((referrer) => {
-				const candidates = note.inspection.candidates;
-				return (
-					<li
-						key={referrer.reading.readingId}
-						className="rounded-lg border bg-card p-4"
-					>
-						<Link
-							to={hrefFor(referrer.reading.target)}
-							className="font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-						>
-							{referrer.reading.emojiDescription}{" "}
-							{referrer.reading.canonicalForm}
-						</Link>
-						{referrer.pendingRelations.map((reference) => (
-							<section
-								key={reference.locatorKey}
-								className="mt-3 rounded-md border p-3"
-								aria-label={`Pending ${reference.relation} reference`}
-							>
-								<div className="flex flex-wrap items-center justify-between gap-2">
-									<Badge variant="outline">
-										{reference.relation}
-									</Badge>
-								</div>
-								<p className="mt-2 break-all font-mono text-[10px] text-muted-foreground">
-									{reference.locatorKey}
-								</p>
-								{candidates.length === 0 ? (
-									<p className="mt-3 text-xs text-muted-foreground">
-										No exact Lemma candidate is available.
-									</p>
-								) : (
-									<div className="mt-3 flex flex-wrap gap-2">
-										<button
-											type="button"
-											className="rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
-											disabled={activeLocator !== null}
-											onClick={() =>
-												onResolve(reference.locatorKey)
-											}
-										>
-											{activeLocator ===
-											reference.locatorKey ? (
-												<LoaderCircleIcon className="mr-1 inline size-3 animate-spin" />
-											) : null}
-											Resolve exact Lemma match
-										</button>
-									</div>
-								)}
-								{candidates.map((candidate) => (
-									<div
-										key={`details:${candidate.lemmaId}`}
-										className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
-									>
-										<Link
-											to={hrefFor(candidate.target)}
-											className="font-medium hover:text-foreground hover:underline"
-										>
-											Inspect {candidate.canonicalForm} ·{" "}
-											{candidate.family}/{candidate.kind}
-										</Link>
-										{candidate.coreFeatures.map(
-											(feature) => (
-												<Badge
-													key={`${feature.name}:${feature.value}`}
-													variant="secondary"
-												>
-													{feature.name}:{" "}
-													{feature.value}
-												</Badge>
-											),
-										)}
-									</div>
-								))}
-							</section>
-						))}
-						{referrer.structuralReferences.map((reference) => (
-							<section
-								key={`${reference.aspect}:${reference.path}`}
-								className="mt-3 rounded-md border border-dashed p-3"
-							>
-								<Badge variant="outline">
-									{reference.aspect} · {reference.path}
-								</Badge>
-								<p className="mt-2 text-xs text-muted-foreground">
-									Structural Shadow resolution is unavailable
-									until Dumrel defines the resolved lexical
-									replacement DTO.
-								</p>
-							</section>
-						))}
-					</li>
-				);
-			})}
-		</ul>
-	);
+	const capabilities: ShadowNotePresentationCapabilities = {
+		references: {
+			items: referrers,
+			hasMore: !isDone,
+			isLoading,
+			error,
+			loadMore: isDone ? null : loadMore,
+		},
+		cleanup: {
+			activeLocator,
+			actionError: controls.actionError,
+			outcome: controls.outcome,
+			resolve: cleanUp,
+		},
+		hrefFor,
+	};
+	return renderNote(note, capabilities);
 }
 
 function mergeReferrers(
-	referrers: readonly ShadowNote["references"]["page"][number][],
-): ShadowNote["references"]["page"] {
-	const merged = new Map<string, ShadowNote["references"]["page"][number]>();
+	referrers: readonly ShadowNoteReferrer[],
+): ShadowNoteReferrer[] {
+	const merged = new Map<string, ShadowNoteReferrer>();
 	for (const referrer of referrers) {
 		const current = merged.get(referrer.reading.readingId);
 		if (!current) {

@@ -1,38 +1,50 @@
-import { v } from "convex/values";
+import { readingSchema } from "dumling/schema";
+import type { Reading } from "dumling/types";
+import { type ReadingKnowledge, readingKnowledgeSchema } from "dumrel";
 
 const unitReadingFamilies = new Set(["Lexeme", "Phraseme", "Morpheme"]);
-
-export const featureProjectionValidator = v.object({
-	name: v.string(),
-	value: v.string(),
-});
-
-export type FeatureProjection = {
-	readonly name: string;
-	readonly value: string;
-};
 
 export function isUnitReadingFamily(family: string): boolean {
 	return unitReadingFamilies.has(family);
 }
 
-export function projectFeatures(value: unknown): FeatureProjection[] {
-	if (value === null || typeof value !== "object" || Array.isArray(value)) {
-		return [];
-	}
-	return Object.entries(value)
-		.sort(([left], [right]) => left.localeCompare(right))
-		.map(([name, member]) => ({ name, value: formatFeatureValue(member) }));
+/** Reconstructs and validates the foundational Reading value at the database seam. */
+export function projectReadingValue(
+	reading: { readonly emojiDescription: string },
+	lemma: {
+		readonly language: string;
+		readonly family: string;
+		readonly kind: string;
+		readonly canonicalForm: string;
+		readonly coreFeatures: unknown;
+	},
+): Reading {
+	return readingSchema.parse({
+		lemma: {
+			language: lemma.language,
+			family: lemma.family,
+			kind: lemma.kind,
+			canonicalForm: lemma.canonicalForm,
+			coreFeatures: lemma.coreFeatures,
+		},
+		emojiDescription: reading.emojiDescription,
+	});
 }
 
-function formatFeatureValue(value: unknown): string {
-	if (value === null) return "—";
+/** Validates stored identityless Knowledge without applying presentation policy. */
+export function projectReadingKnowledge(
+	value: unknown,
+): ReadingKnowledge<"en"> {
+	const knowledge = readingKnowledgeSchema.parse(value ?? {});
 	if (
-		typeof value === "string" ||
-		typeof value === "number" ||
-		typeof value === "boolean"
+		knowledge.translations &&
+		Object.keys(knowledge.translations).some(
+			(language) => language !== "en",
+		)
 	) {
-		return String(value);
+		throw new Error(
+			"tf-demo Reading Knowledge only supports English translations.",
+		);
 	}
-	return JSON.stringify(value);
+	return knowledge as ReadingKnowledge<"en">;
 }

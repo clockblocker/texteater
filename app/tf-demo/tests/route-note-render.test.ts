@@ -3,13 +3,16 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 
+import { hrefFor } from "../src/lib/navigation";
+import { renderNote } from "../src/notes";
+import type { RouteNoteData } from "../src/notes/route";
 import {
 	mergeRouteNotePages,
-	type RouteNote,
-	RouteNoteBody,
 	resetRouteNotePagination,
 	routePageFailureMessage,
 } from "../src/views/route-note-view";
+
+type RouteNote = RouteNoteData;
 
 test("renders the complete Attestation route with typed link targets", () => {
 	const note = {
@@ -66,8 +69,8 @@ test("renders Surface and Lemma traversal links, including polysemy and same-for
 		normalizedSurface: "Bank",
 		spelling: "Canonical",
 		surfaceKind: "Citation",
-		surfaceFeatures: [],
-		inflectionalFeatures: [],
+		surfaceFeatures: {},
+		inflectionalFeatures: null,
 		lemma: {
 			canonicalForm: "Bank",
 			family: "Lexeme",
@@ -113,7 +116,7 @@ test("renders Surface and Lemma traversal links, including polysemy and same-for
 		canonicalForm: "Bank",
 		family: "Lexeme",
 		lemmaKind: "NOUN",
-		coreFeatures: [],
+		coreFeatures: {},
 		connections: {
 			surfaces: [
 				{
@@ -140,7 +143,7 @@ test("renders Surface and Lemma traversal links, including polysemy and same-for
 					canonicalForm: "Bank",
 					family: "Lexeme",
 					kind: "VERB",
-					coreFeatures: [],
+					coreFeatures: {},
 					target: {
 						kind: "RouteNote",
 						routeKind: "Lemma",
@@ -208,6 +211,28 @@ test("a rejected old page cannot report an error after a reactive reset", async 
 	expect(isLoading).toBe(false);
 });
 
+test("the root renderer consumes injected route pagination state", () => {
+	const note = lemmaPage("cursor-next", false, ["reading-1"]);
+	const markup = renderToStaticMarkup(
+		createElement(
+			MemoryRouter,
+			{},
+			renderNote(note, {
+				pagination: {
+					hasMore: true,
+					isLoading: false,
+					error: "Continuation failed.",
+					async loadMore() {},
+				},
+				hrefFor,
+			}),
+		),
+	);
+	expect(markup).toContain("Load more route connections");
+	expect(markup).toContain('role="alert"');
+	expect(markup).toContain("Continuation failed.");
+});
+
 function lemmaPage(
 	continueCursor: string,
 	isDone: boolean,
@@ -221,7 +246,7 @@ function lemmaPage(
 		canonicalForm: "Bank",
 		family: "Lexeme",
 		lemmaKind: "NOUN",
-		coreFeatures: [],
+		coreFeatures: {},
 		connections: {
 			surfaces: [],
 			readings: readingIds.map((readingId) => ({
@@ -238,6 +263,6 @@ function lemmaPage(
 
 function renderBody(note: RouteNote) {
 	return renderToStaticMarkup(
-		createElement(MemoryRouter, {}, createElement(RouteNoteBody, { note })),
+		createElement(MemoryRouter, {}, renderNote(note)),
 	);
 }

@@ -1,0 +1,55 @@
+import { LockIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import { Badge } from "@/components/ui/badge";
+import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
+
+export const renderDefaultReadingRelations = (({ note, capabilities }) => {
+	const relations = note.relations.filter(
+		({ relation }) =>
+			capabilities.knowledgeSettings.semanticRelations[relation],
+	);
+	const pendingRelations = note.pendingRelations.filter(
+		({ relation }) =>
+			capabilities.knowledgeSettings.semanticRelations[relation],
+	);
+	if (relations.length === 0 && pendingRelations.length === 0) {
+		return null;
+	}
+
+	return (
+		<ul className="flex flex-wrap gap-2" aria-label="Semantic relations">
+			{relations.map((relation) => (
+				<li key={`${relation.relation}:${relation.target.id}`}>
+					<Link
+						to={capabilities.hrefFor(relation.target)}
+						className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+					>
+						<Badge variant="outline">
+							{relation.relation}: {relation.targetCanonicalForm}
+						</Badge>
+					</Link>
+				</li>
+			))}
+			{pendingRelations.map((relation) => (
+				<li key={relation.locatorKey}>
+					<Link
+						to={capabilities.hrefFor(relation.target)}
+						className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+					>
+						<Badge
+							variant="outline"
+							aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
+						>
+							<LockIcon
+								data-icon="inline-start"
+								aria-hidden="true"
+							/>
+							{relation.relation}: {relation.targetCanonicalForm}
+						</Badge>
+					</Link>
+				</li>
+			))}
+		</ul>
+	);
+}) satisfies ReadingNoteDefaultRenderer;

@@ -1,0 +1,94 @@
+import type { Lemma, Reading } from "dumling/types";
+import { DEFAULT_KNOWLEDGE_SETTINGS, type KnowledgeSettings } from "dumrel";
+import type { ReactElement } from "react";
+
+import { hrefFor, type NavigationTarget } from "@/lib/navigation";
+import type { NoteDataFor } from "../note-data";
+import type { TargetLanguage } from "../target-language";
+import type {
+	ReadingNoteRouteKey,
+	UnitReadingFamilyFor,
+	UnitReadingKindFor,
+} from "./reading-note-route";
+
+type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
+type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
+
+type ConcreteReadingNoteData<
+	L extends TargetLanguage,
+	F extends UnitReadingFamilyFor<L>,
+	K extends UnitReadingKindFor<L, F>,
+> = Omit<ReadingNoteData, "reading"> & {
+	readonly reading: Reading<L, F, K> &
+		Omit<ReadingNoteData["reading"], keyof Reading> & {
+			readonly lemma: Reading<L, F, K>["lemma"] &
+				Omit<ReadingNoteData["reading"]["lemma"], keyof Lemma>;
+		};
+};
+
+export type ReadingNotePresentationCapabilities = {
+	readonly knowledgeSettings: KnowledgeSettings;
+	readonly sourceContexts: {
+		readonly items: readonly SourceContext[];
+		readonly hasMore: boolean;
+		readonly isLoading: boolean;
+		readonly error: string | null;
+		readonly loadMore: (() => Promise<void>) | null;
+	};
+	readonly definition: {
+		readonly isSaving: boolean;
+		readonly error: string | null;
+		readonly save: ((definition: string | null) => Promise<void>) | null;
+	};
+	readonly hrefFor: (target: NavigationTarget) => string;
+};
+
+export type ReadingNoteRenderContext<
+	L extends TargetLanguage,
+	F extends UnitReadingFamilyFor<L>,
+	K extends UnitReadingKindFor<L, F>,
+> =
+	F extends UnitReadingFamilyFor<L>
+		? K extends UnitReadingKindFor<L, F>
+			? {
+					readonly note: ConcreteReadingNoteData<L, F, K>;
+					readonly route: ReadingNoteRouteKey<L, F, K>;
+					readonly capabilities: ReadingNotePresentationCapabilities;
+				}
+			: never
+		: never;
+
+export type ReadingNoteBlockRenderer<
+	L extends TargetLanguage,
+	F extends UnitReadingFamilyFor<L>,
+	K extends UnitReadingKindFor<L, F>,
+> = (context: ReadingNoteRenderContext<L, F, K>) => ReactElement | null;
+
+export type ReadingNoteDefaultRenderer = <
+	L extends TargetLanguage,
+	F extends UnitReadingFamilyFor<L>,
+	K extends UnitReadingKindFor<L, F>,
+>(
+	context: ReadingNoteRenderContext<L, F, K>,
+) => ReactElement | null;
+
+export function createDefaultReadingNoteCapabilities(
+	note: ReadingNoteData,
+): ReadingNotePresentationCapabilities {
+	return {
+		knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
+		sourceContexts: {
+			items: note.sourceContexts.page,
+			hasMore: !note.sourceContexts.isDone,
+			isLoading: false,
+			error: null,
+			loadMore: null,
+		},
+		definition: {
+			isSaving: false,
+			error: null,
+			save: null,
+		},
+		hrefFor,
+	};
+}

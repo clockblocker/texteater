@@ -4,37 +4,35 @@ import {
 	useMutation as useReactQueryMutation,
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
-import type { FunctionReturnType } from "convex/server";
-import { LoaderCircleIcon, LockIcon } from "lucide-react";
+import type { KnowledgeSettings } from "dumrel";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 
-import { PageNavigation } from "@/components/page-navigation";
-import { Badge } from "@/components/ui/badge";
-import { Field, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { hrefFor, type UnitReadingNoteTarget } from "@/lib/navigation";
 import {
 	normalizeReadingDefinition,
 	readingDefinitionChange,
 } from "@/lib/reading-definition";
+import { renderNote } from "@/notes";
+import type {
+	ReadingNoteData,
+	ReadingNotePresentationCapabilities,
+} from "@/notes/reading";
 import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
-import {
-	KnowledgeSettingsChecklist,
-	withKnowledgeSetting,
-} from "./unit-reading-knowledge-settings";
 
-export { KnowledgeSettingsChecklist, withKnowledgeSetting };
+export type UnitReadingNote = ReadingNoteData;
 
-export type UnitReadingNote = Extract<
-	NonNullable<FunctionReturnType<typeof api.presentation.getNote>>,
-	{ kind: "UnitReadingNote" }
->;
+type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
 
-const DEFINITION_AUTOSAVE_DELAY_MS = 600;
+export type SourceContextPaginationState = {
+	readonly firstPageKey: string;
+	readonly additionalSourceContexts: readonly SourceContext[];
+	readonly cursor: string;
+	readonly isDone: boolean;
+	readonly isLoading: boolean;
+};
 
 export function UnitReadingNoteView({
 	target,
@@ -43,12 +41,18 @@ export function UnitReadingNoteView({
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target, visitorId }),
+		...convexQuery(api.presentation.getNote, { target }),
+		gcTime: 10_000,
+	});
+	const settingsQuery = useQuery({
+		...convexQuery(api.knowledgeSettings.get, { visitorId }),
 		gcTime: 10_000,
 	});
 
-	if (noteQuery.isPending) return <ReadingNoteSkeleton />;
-	if (noteQuery.data?.kind !== "UnitReadingNote") {
+	if (noteQuery.isPending || settingsQuery.isPending) {
+		return <ReadingNoteSkeleton />;
+	}
+	if (noteQuery.data?.kind !== "UnitReadingNote" || !settingsQuery.data) {
 		return (
 			<NotFoundView
 				title="Reading note not found"
@@ -58,381 +62,207 @@ export function UnitReadingNoteView({
 	}
 
 	return (
-		<ReadingNote
+		<ReadingNoteContainer
 			key={noteQuery.data.target.readingId}
 			note={noteQuery.data}
-			visitorId={visitorId}
+			knowledgeSettings={settingsQuery.data}
 		/>
 	);
 }
 
-export function ReadingNote({
+function ReadingNoteContainer({
 	note,
-	visitorId,
+	knowledgeSettings,
 }: {
-	note: UnitReadingNote;
-	visitorId: string;
-}) {
-	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-				<header className="flex flex-wrap items-start justify-between gap-4">
-					<div>
-						<div className="flex flex-wrap items-center gap-2">
-							<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-								{note.reading.emojiDescription}{" "}
-								{note.reading.canonicalForm}
-							</h1>
-							{note.note.transcription ? (
-								<span className="text-lg text-muted-foreground">
-									/{note.note.transcription}/
-								</span>
-							) : null}
-							<Badge variant="secondary">
-								{note.lemma.language}
-							</Badge>
-							<Badge variant="outline">{note.lemma.family}</Badge>
-							<Badge variant="outline">{note.lemma.kind}</Badge>
-						</div>
-					</div>
-					<PageNavigation />
-				</header>
-
-				<article
-					className="flex flex-col gap-5"
-					aria-label="Reading note"
-				>
-					{note.lemma.coreFeatures.length > 0 ? (
-						<div className="flex flex-wrap gap-2">
-							{note.lemma.coreFeatures.map((feature) => (
-								<Badge key={feature.name} variant="outline">
-									{feature.name}: {feature.value}
-								</Badge>
-							))}
-						</div>
-					) : null}
-
-					{note.settings.definition ? (
-						<DefinitionEditor
-							readingKey={note.reading.ownerKey}
-							storedDefinition={note.note.definition}
-						/>
-					) : null}
-
-					<KnowledgeBuckets
-						title="Translations"
-						buckets={note.note.translations}
-					/>
-					<RelationList note={note} />
-					<StructuralReferenceList note={note} />
-					<SourceContextList note={note} visitorId={visitorId} />
-				</article>
-			</div>
-		</main>
-	);
-}
-
-function SourceContextList({
-	note,
-	visitorId,
-}: {
-	note: UnitReadingNote;
-	visitorId: string;
+	note: ReadingNoteData;
+	knowledgeSettings: KnowledgeSettings;
 }) {
 	const convex = useConvex();
-	const [additionalContexts, setAdditionalContexts] = useState<
-		UnitReadingNote["sourceContexts"]["page"]
-	>([]);
-	const [cursor, setCursor] = useState(note.sourceContexts.continueCursor);
-	const [isDone, setIsDone] = useState(note.sourceContexts.isDone);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const contexts = deduplicateSourceContexts([
-		...note.sourceContexts.page,
-		...additionalContexts,
-	]);
+	const applyKnowledgeChangeAction = useAction(
+		api.orchestration.applyReadingKnowledgeChange,
+	);
+	const definitionMutation = useReactQueryMutation({
+		mutationFn: applyKnowledgeChangeAction,
+	});
+	const firstPageKey = sourceContextFirstPageKey(note);
+	const firstPageCursor = note.sourceContexts.continueCursor;
+	const firstPageIsDone = note.sourceContexts.isDone;
+	const [pagination, setPagination] = useState(() =>
+		resetSourceContextPagination(note),
+	);
+	const [sourceContextError, setSourceContextError] = useState<string | null>(
+		null,
+	);
+	const paginationRevision = useRef(0);
+	const currentPagination =
+		pagination.firstPageKey === firstPageKey
+			? pagination
+			: resetSourceContextPagination(note);
 
-	async function loadMore() {
-		if (isDone || isLoading) return;
-		setIsLoading(true);
-		setError(null);
+	useEffect(() => {
+		paginationRevision.current += 1;
+		setPagination({
+			firstPageKey,
+			additionalSourceContexts: [],
+			cursor: firstPageCursor,
+			isDone: firstPageIsDone,
+			isLoading: false,
+		});
+		setSourceContextError(null);
+	}, [firstPageCursor, firstPageIsDone, firstPageKey]);
+
+	async function loadMoreSourceContexts() {
+		if (currentPagination.isDone || currentPagination.isLoading) return;
+		setPagination((current) => ({ ...current, isLoading: true }));
+		setSourceContextError(null);
+		const requestedRevision = paginationRevision.current;
 		try {
 			const nextNote = await convex.query(api.presentation.getNote, {
 				target: note.target,
-				visitorId,
-				contextCursor: cursor,
+				contextCursor: currentPagination.cursor,
 			});
-			if (nextNote?.kind !== "UnitReadingNote") {
-				setIsDone(true);
+			if (
+				requestedRevision !== paginationRevision.current ||
+				nextNote?.kind !== "UnitReadingNote" ||
+				nextNote.target.readingId !== note.target.readingId
+			) {
+				if (requestedRevision === paginationRevision.current) {
+					setPagination((current) => ({
+						...current,
+						isDone: true,
+						isLoading: false,
+					}));
+				}
 				return;
 			}
-			setAdditionalContexts((current) =>
-				deduplicateSourceContexts([
-					...current,
-					...nextNote.sourceContexts.page,
-				]),
+			setPagination((current) =>
+				mergeSourceContextPage(current, nextNote),
 			);
-			setCursor(nextNote.sourceContexts.continueCursor);
-			setIsDone(nextNote.sourceContexts.isDone);
 		} catch (cause) {
-			setError(
-				cause instanceof Error
-					? cause.message
-					: "Source Contexts could not be loaded.",
+			const message = sourceContextPageFailureMessage(
+				cause,
+				requestedRevision,
+				paginationRevision.current,
 			);
+			if (message) setSourceContextError(message);
 		} finally {
-			setIsLoading(false);
+			if (requestedRevision === paginationRevision.current) {
+				setPagination((current) => ({
+					...current,
+					isLoading: false,
+				}));
+			}
 		}
 	}
 
-	if (contexts.length === 0) return null;
-	return (
-		<section
-			className="flex flex-col gap-3"
-			aria-labelledby="source-contexts"
-		>
-			<h2 id="source-contexts" className="text-sm font-medium">
-				Source Contexts
-			</h2>
-			<ul className="grid gap-2">
-				{contexts.map((context) => (
-					<li key={context.attestationId}>
-						<Link
-							to={hrefFor(context.target)}
-							className="block rounded-lg border bg-card px-4 py-3 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-						>
-							<p className="text-sm leading-relaxed">
-								{context.sentenceSnippet}
-							</p>
-						</Link>
-					</li>
-				))}
-			</ul>
-			{!isDone ? (
-				<button
-					type="button"
-					className="inline-flex w-fit items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
-					disabled={isLoading}
-					onClick={() => void loadMore()}
-				>
-					{isLoading ? (
-						<LoaderCircleIcon className="size-4 animate-spin" />
-					) : null}
-					{isLoading ? "Loading…" : "Load more contexts"}
-				</button>
-			) : null}
-			{error ? (
-				<p className="text-sm text-destructive" role="alert">
-					{error}
-				</p>
-			) : null}
-		</section>
-	);
+	async function saveDefinition(definition: string | null) {
+		const args = readingDefinitionMutationArgs(
+			note,
+			definition,
+			crypto.randomUUID(),
+		);
+		if (args) await definitionMutation.mutateAsync(args);
+	}
+
+	const sourceContexts = deduplicateSourceContexts([
+		...note.sourceContexts.page,
+		...currentPagination.additionalSourceContexts,
+	]);
+	const capabilities: ReadingNotePresentationCapabilities = {
+		knowledgeSettings,
+		sourceContexts: {
+			items: sourceContexts,
+			hasMore: !currentPagination.isDone,
+			isLoading: currentPagination.isLoading,
+			error: sourceContextError,
+			loadMore: currentPagination.isDone ? null : loadMoreSourceContexts,
+		},
+		definition: {
+			isSaving: definitionMutation.isPending,
+			error: definitionMutation.error
+				? mutationMessage(definitionMutation.error)
+				: null,
+			save: saveDefinition,
+		},
+		hrefFor,
+	};
+
+	return renderNote(note, capabilities);
+}
+
+export function resetSourceContextPagination(
+	note: ReadingNoteData,
+): SourceContextPaginationState {
+	return {
+		firstPageKey: sourceContextFirstPageKey(note),
+		additionalSourceContexts: [],
+		cursor: note.sourceContexts.continueCursor,
+		isDone: note.sourceContexts.isDone,
+		isLoading: false,
+	};
+}
+
+export function mergeSourceContextPage(
+	current: SourceContextPaginationState,
+	nextNote: ReadingNoteData,
+): SourceContextPaginationState {
+	return {
+		...current,
+		additionalSourceContexts: deduplicateSourceContexts([
+			...current.additionalSourceContexts,
+			...nextNote.sourceContexts.page,
+		]),
+		cursor: nextNote.sourceContexts.continueCursor,
+		isDone: nextNote.sourceContexts.isDone,
+	};
 }
 
 export function deduplicateSourceContexts<
-	Context extends { readonly attestationId: string },
->(contexts: readonly Context[]): Context[] {
+	SourceContextValue extends { readonly attestationId: string },
+>(sourceContexts: readonly SourceContextValue[]): SourceContextValue[] {
 	const seen = new Set<string>();
-	return contexts.filter(({ attestationId }) => {
+	return sourceContexts.filter(({ attestationId }) => {
 		if (seen.has(attestationId)) return false;
 		seen.add(attestationId);
 		return true;
 	});
 }
 
-function DefinitionEditor({
-	readingKey,
-	storedDefinition,
-}: {
-	readingKey: string;
-	storedDefinition: string | null;
-}) {
-	const [definition, setDefinition] = useState(storedDefinition ?? "");
-	const savedDefinitionRef = useRef(
-		normalizeReadingDefinition(storedDefinition),
-	);
-	const failedDefinitionRef = useRef<string | null>(null);
-	const applyKnowledgeChangeAction = useAction(
-		api.orchestration.applyReadingKnowledgeChange,
-	);
-	const changeMutation = useReactQueryMutation({
-		mutationFn: applyKnowledgeChangeAction,
-	});
-	const { error, isError, isPending, mutateAsync, reset } = changeMutation;
-
-	useEffect(() => {
-		const previousSavedDefinition = savedDefinitionRef.current;
-		const nextSavedDefinition =
-			normalizeReadingDefinition(storedDefinition);
-		setDefinition((currentDefinition) =>
-			normalizeReadingDefinition(currentDefinition) ===
-			previousSavedDefinition
-				? (storedDefinition ?? "")
-				: currentDefinition,
-		);
-		savedDefinitionRef.current = nextSavedDefinition;
-		failedDefinitionRef.current = null;
-	}, [storedDefinition]);
-
-	useEffect(() => {
-		const normalized = normalizeReadingDefinition(definition);
-		if (
-			normalized === savedDefinitionRef.current ||
-			normalized === failedDefinitionRef.current ||
-			isPending
-		) {
-			return;
-		}
-
-		const timeout = window.setTimeout(() => {
-			const change = readingDefinitionChange(
-				savedDefinitionRef.current,
-				normalized,
-			);
-			if (!change) return;
-			void mutateAsync({
-				knowledgeChangeKey: crypto.randomUUID(),
-				ownerReadingKey: readingKey,
-				change,
-			})
-				.then(() => {
-					savedDefinitionRef.current = normalized;
-					failedDefinitionRef.current = null;
-				})
-				.catch(() => {
-					failedDefinitionRef.current = normalized;
-				});
-		}, DEFINITION_AUTOSAVE_DELAY_MS);
-
-		return () => window.clearTimeout(timeout);
-	}, [definition, isPending, mutateAsync, readingKey]);
-
-	return (
-		<Field>
-			<FieldLabel className="sr-only" htmlFor="reading-definition">
-				Reading definition
-			</FieldLabel>
-			<Textarea
-				id="reading-definition"
-				value={definition}
-				aria-busy={isPending}
-				placeholder="A short learner-facing definition"
-				onChange={(event) => {
-					failedDefinitionRef.current = null;
-					if (isError) reset();
-					setDefinition(event.target.value);
-				}}
-			/>
-			<p className="sr-only" aria-live="polite">
-				{isPending ? "Saving definition" : ""}
-			</p>
-			{error ? (
-				<p className="text-sm text-destructive" role="alert">
-					{mutationMessage(error)}
-				</p>
-			) : null}
-		</Field>
-	);
+export function sourceContextPageFailureMessage(
+	cause: unknown,
+	requestedRevision: number,
+	currentRevision: number,
+): string | null {
+	if (requestedRevision !== currentRevision) return null;
+	return cause instanceof Error
+		? cause.message
+		: "Source Contexts could not be loaded.";
 }
 
-function KnowledgeBuckets({
-	title,
-	buckets,
-}: {
-	title: string;
-	buckets: UnitReadingNote["note"]["translations"];
-}) {
-	if (buckets.length === 0) return null;
-	return (
-		<section className="flex flex-col gap-2">
-			<h2 className="text-sm font-medium">{title}</h2>
-			<div className="flex flex-wrap gap-2">
-				{buckets.flatMap((bucket) =>
-					bucket.values.map((value) => (
-						<Badge
-							key={`${bucket.language}:${value}`}
-							variant="secondary"
-						>
-							{bucket.language}: {value}
-						</Badge>
-					)),
-				)}
-			</div>
-		</section>
+export function readingDefinitionMutationArgs(
+	note: ReadingNoteData,
+	definition: string | null,
+	knowledgeChangeKey: string,
+) {
+	const normalized = normalizeReadingDefinition(definition);
+	const change = readingDefinitionChange(
+		normalizeReadingDefinition(note.knowledge.definition ?? null),
+		normalized,
 	);
+	if (!change) return null;
+	return {
+		knowledgeChangeKey,
+		ownerReadingKey: note.reading.ownerKey,
+		change,
+	};
 }
 
-function RelationList({ note }: { note: UnitReadingNote }) {
-	if (note.relations.length === 0 && note.pendingRelations.length === 0) {
-		return null;
-	}
-
-	return (
-		<ul className="flex flex-wrap gap-2" aria-label="Semantic relations">
-			{note.relations.map((relation) => (
-				<li key={`${relation.relation}:${relation.target.id}`}>
-					<Link
-						to={hrefFor(relation.target)}
-						className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<Badge variant="outline">
-							{relation.relation}: {relation.targetCanonicalForm}
-						</Badge>
-					</Link>
-				</li>
-			))}
-			{note.pendingRelations.map((relation) => (
-				<li key={relation.locatorKey}>
-					<Link
-						to={hrefFor(relation.target)}
-						className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<Badge
-							variant="outline"
-							aria-label={`${relation.relation} relation to unresolved Reading ${relation.targetCanonicalForm}`}
-						>
-							<LockIcon
-								data-icon="inline-start"
-								aria-hidden="true"
-							/>
-							{relation.relation}: {relation.targetCanonicalForm}
-						</Badge>
-					</Link>
-				</li>
-			))}
-		</ul>
-	);
-}
-
-function StructuralReferenceList({ note }: { note: UnitReadingNote }) {
-	if (note.structuralReferences.length === 0) return null;
-	return (
-		<section className="flex flex-col gap-2" aria-labelledby="structures">
-			<h2 id="structures" className="text-sm font-medium">
-				Structure
-			</h2>
-			<ul className="flex flex-wrap gap-2">
-				{note.structuralReferences.map((reference) => (
-					<li key={`${reference.aspect}:${reference.path}`}>
-						<Link
-							to={hrefFor(reference.target)}
-							className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-						>
-							<Badge variant="outline">
-								<LockIcon
-									data-icon="inline-start"
-									aria-hidden="true"
-								/>
-								{reference.descriptor.canonicalForm} ·{" "}
-								{reference.path}
-							</Badge>
-						</Link>
-					</li>
-				))}
-			</ul>
-		</section>
-	);
+function sourceContextFirstPageKey(note: ReadingNoteData): string {
+	return JSON.stringify([
+		note.sourceContexts.page.map(({ attestationId }) => attestationId),
+		note.sourceContexts.continueCursor,
+		note.sourceContexts.isDone,
+	]);
 }
 
 function ReadingNoteSkeleton() {

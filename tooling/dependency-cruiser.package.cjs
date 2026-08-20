@@ -40,6 +40,10 @@ module.exports = {
 		},
 	],
 	options: {
+		parser: "acorn",
+		babelConfig: {
+			fileName: "../../tooling/dependency-cruiser.babel.json",
+		},
 		doNotFollow: { path: "node_modules" },
 		exclude: "(^|/)(dist|node_modules|\\.astro)(/|$)",
 		enhancedResolveOptions: {
@@ -57,6 +61,6 @@ module.exports = {
 			],
 			mainFields: ["types", "module", "main"],
 		},
-		tsPreCompilationDeps: true,
+		tsPreCompilationDeps: false,
 	},
 };

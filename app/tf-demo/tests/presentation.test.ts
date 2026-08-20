@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { structuralShadowLocatorKey } from "../convex/model/shadows";
 import {
 	getNote,
 	getTextView,
@@ -7,11 +8,15 @@ import {
 	loadTextFocus,
 	projectFeatures,
 	projectKnowledge,
+	projectReadingKnowledge,
+	projectReadingValue,
 	projectResolvedRelationTargets,
 } from "../convex/presentation";
 
 const getNoteHandler = queryHandler<{
 	target: { kind: "UnitReadingNote"; readingId: string };
+	contextCursor?: string;
+	visitorId?: string;
 }>(getNote);
 const getTextViewHandler = queryHandler<{
 	target: { kind: "Text"; textId: string };
@@ -56,6 +61,192 @@ test("projects Dumling feature values for learner inspection", () => {
 		{ name: "gender", value: "Fem" },
 		{ name: "hyph", value: "—" },
 	]);
+});
+
+test("projects foundational Reading and unfiltered Knowledge without display sentinels", () => {
+	const reading = projectReadingValue(
+		{ emojiDescription: "🏃" },
+		{
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm: "aufpassen",
+			coreFeatures: {
+				hasGovPrep: null,
+				hasSepPrefix: "auf",
+				lexicallyReflexive: null,
+				verbType: null,
+			},
+		},
+	);
+	const knowledge = projectReadingKnowledge({
+		transcription: "  aʊ̯fˌpasn̩  ",
+		definition: "  aufmerksam sein  ",
+		translations: { en: ["pay attention"] },
+	});
+
+	expect(reading.lemma.coreFeatures).toEqual({
+		hasGovPrep: null,
+		hasSepPrefix: "auf",
+		lexicallyReflexive: null,
+		verbType: null,
+	});
+	expect(knowledge).toEqual({
+		transcription: "aʊ̯fˌpasn̩",
+		definition: "aufmerksam sein",
+		translations: { en: ["pay attention"] },
+	});
+});
+
+test("Unit Reading NoteData ignores visitor settings and keeps all pure data", async () => {
+	const readingKey = "reading-key";
+	const sourceLemma = {
+		_id: "lemma-source",
+		lemmaKey: "lemma-source-key",
+		language: "de",
+		family: "Lexeme",
+		kind: "VERB",
+		canonicalForm: "aufpassen",
+		coreFeatures: {
+			hasGovPrep: null,
+			hasSepPrefix: "auf",
+			lexicallyReflexive: null,
+			verbType: null,
+		},
+	};
+	const targetLemma = {
+		_id: "lemma-target",
+		lemmaKey: "lemma-target-key",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Aufmerksamkeit",
+		coreFeatures: { gender: "Fem", hyph: null },
+	};
+	const structuralShadow = {
+		_id: "shadow-1",
+		shadowKey: JSON.stringify(["de", "Merkmal", "Lexeme", "NOUN"]),
+		language: "de",
+		canonicalForm: "Merkmal",
+		family: "Lexeme",
+		kind: "NOUN",
+	};
+	const rows = {
+		accumulatedKnowledge: {
+			ownerReadingKey: readingKey,
+			knowledge: {
+				transcription: "aʊ̯fˌpasn̩",
+				definition: "aufmerksam sein",
+				translations: { en: ["pay attention"] },
+			},
+			status: "Full",
+			updatedAt: 42,
+		},
+		semanticRelationEdges: [
+			{
+				sourceReadingId: "reading-1",
+				targetLemmaId: targetLemma._id,
+				relation: "synonym",
+			},
+		],
+		structuralShadowReferences: [
+			{
+				shadowId: structuralShadow._id,
+				ownerReadingKey: readingKey,
+				aspect: "morphologicalTree",
+				path: "root.0",
+				locatorKey: structuralShadowLocatorKey(
+					readingKey,
+					"morphologicalTree",
+					"root.0",
+				),
+			},
+		],
+	};
+	const documents: Record<string, unknown> = {
+		"reading-1": {
+			_id: "reading-1",
+			lemmaId: sourceLemma._id,
+			readingKey,
+			emojiDescription: "🏃",
+		},
+		[sourceLemma._id]: sourceLemma,
+		[targetLemma._id]: targetLemma,
+		[structuralShadow._id]: structuralShadow,
+	};
+	const queriedTables: string[] = [];
+	const ctx = {
+		db: {
+			normalizeId(_table: string, id: string) {
+				return id;
+			},
+			async get(id: string) {
+				return documents[id] ?? null;
+			},
+			query(table: keyof typeof rows | string) {
+				queriedTables.push(table);
+				const builder = {
+					withIndex() {
+						return builder;
+					},
+					order() {
+						return builder;
+					},
+					async unique() {
+						return table === "accumulatedKnowledge"
+							? rows.accumulatedKnowledge
+							: null;
+					},
+					async take() {
+						if (table === "semanticRelationEdges") {
+							return rows.semanticRelationEdges;
+						}
+						if (table === "structuralShadowReferences") {
+							return rows.structuralShadowReferences;
+						}
+						return [];
+					},
+					async paginate() {
+						return { page: [], continueCursor: "", isDone: true };
+					},
+				};
+				return builder;
+			},
+		},
+	};
+
+	const note = (await getNoteHandler(ctx, {
+		target: { kind: "UnitReadingNote", readingId: "reading-1" },
+		visitorId: "visitor-with-everything-disabled",
+	})) as {
+		kind: string;
+		reading: { lemma: { coreFeatures: unknown } };
+		knowledge: Record<string, unknown>;
+		relations: unknown[];
+		structuralReferences: unknown[];
+	};
+
+	expect(queriedTables).not.toContain("knowledgeSettings");
+	expect(note.kind).toBe("UnitReadingNote");
+	expect(note.reading.lemma.coreFeatures).toEqual(sourceLemma.coreFeatures);
+	expect(note.knowledge).toMatchObject({
+		transcription: "aʊ̯fˌpasn̩",
+		definition: "aufmerksam sein",
+		translations: { en: ["pay attention"] },
+		semanticRelations: {
+			synonym: [
+				{
+					language: targetLemma.language,
+					family: targetLemma.family,
+					kind: targetLemma.kind,
+					canonicalForm: targetLemma.canonicalForm,
+					coreFeatures: targetLemma.coreFeatures,
+				},
+			],
+		},
+	});
+	expect(note.relations).toHaveLength(1);
+	expect(note.structuralReferences).toHaveLength(1);
 });
 
 test("projects stored semantic endpoints as Lemma Route Note targets", () => {

@@ -32,6 +32,19 @@ module.exports = {
 			to: { path: "^app/tf-demo/src/" },
 		},
 		{
+			name: "tf-demo-german-reading-renderer-overrides-are-private",
+			comment:
+				"Private German Reading renderer leaves may only be imported by the auditable German override index.",
+			severity: "error",
+			from: {
+				pathNot:
+					"^app/tf-demo/src/notes/reading/de/de-renderer-overrides\\.tsx$",
+			},
+			to: {
+				path: "^app/tf-demo/src/notes/reading/de/renderer-overrides/",
+			},
+		},
+		{
 			name: "no-unresolved",
 			comment: "Every repository import must resolve.",
 			severity: "error",
@@ -40,12 +53,14 @@ module.exports = {
 		},
 	],
 	options: {
+		parser: "acorn",
+		babelConfig: { fileName: "tooling/dependency-cruiser.babel.json" },
 		doNotFollow: { path: "node_modules" },
 		exclude: "(^|/)(dist|node_modules|\\.astro)(/|$)",
 		includeOnly: "^(app|battery)/",
 		webpackConfig: {
 			fileName: "tooling/dependency-cruiser.webpack.cjs",
 		},
-		tsPreCompilationDeps: true,
+		tsPreCompilationDeps: false,
 	},
 };

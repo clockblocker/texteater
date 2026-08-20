@@ -10,14 +10,15 @@ import {
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "../../model/validators";
-import {
-	featureProjectionValidator,
-	isUnitReadingFamily,
-	projectFeatures,
-} from "./projections";
+import { isUnitReadingFamily } from "./projections";
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
+
+const featureSetValidator = v.record(
+	v.string(),
+	v.union(v.null(), v.string(), v.array(v.string())),
+);
 
 export const routeNoteTargetValidator = v.object({
 	kind: v.literal("RouteNote"),
@@ -83,8 +84,8 @@ const surfaceRouteNoteValidator = v.object({
 	normalizedSurface: v.string(),
 	spelling: surfaceSpellingValidator,
 	surfaceKind: surfaceKindValidator,
-	surfaceFeatures: v.array(featureProjectionValidator),
-	inflectionalFeatures: v.array(featureProjectionValidator),
+	surfaceFeatures: featureSetValidator,
+	inflectionalFeatures: v.union(v.null(), featureSetValidator),
 	lemma: v.object({
 		canonicalForm: v.string(),
 		family: v.string(),
@@ -111,7 +112,7 @@ const lemmaRouteConnectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
-	coreFeatures: v.array(featureProjectionValidator),
+	coreFeatures: featureSetValidator,
 	target: routeNoteTargetValidator,
 });
 
@@ -123,7 +124,7 @@ const lemmaRouteNoteValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	lemmaKind: v.string(),
-	coreFeatures: v.array(featureProjectionValidator),
+	coreFeatures: featureSetValidator,
 	connections: v.object({
 		surfaces: v.array(surfaceRouteConnectionValidator),
 		readings: v.array(
@@ -332,8 +333,8 @@ async function loadSurfaceRouteNote(
 		normalizedSurface: surface.normalizedSurface,
 		spelling: surface.spelling,
 		surfaceKind: surface.surfaceKind,
-		surfaceFeatures: projectFeatures(surface.surfaceFeatures),
-		inflectionalFeatures: projectFeatures(surface.inflectionalFeatures),
+		surfaceFeatures: surface.surfaceFeatures,
+		inflectionalFeatures: surface.inflectionalFeatures ?? null,
 		lemma: {
 			canonicalForm: lemma.canonicalForm,
 			family: lemma.family,
@@ -494,7 +495,7 @@ async function loadLemmaRouteNote(
 		canonicalForm: lemma.canonicalForm,
 		family: lemma.family,
 		lemmaKind: lemma.kind,
-		coreFeatures: projectFeatures(lemma.coreFeatures),
+		coreFeatures: lemma.coreFeatures,
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
 				surface.language === lemma.language
@@ -531,9 +532,7 @@ async function loadLemmaRouteNote(
 								canonicalForm: candidate.canonicalForm,
 								family: candidate.family,
 								kind: candidate.kind,
-								coreFeatures: projectFeatures(
-									candidate.coreFeatures,
-								),
+								coreFeatures: candidate.coreFeatures,
 								target: {
 									kind: "RouteNote" as const,
 									routeKind: "Lemma" as const,

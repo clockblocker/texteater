@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import {
 	KnowledgeSettingsChecklist,
 	withKnowledgeSetting,
-} from "../src/views/unit-reading-note-view";
+} from "../src/views/unit-reading-knowledge-settings";
 
 test("renders every global setting and reflects disabled leaves", () => {
 	const settings = withKnowledgeSetting(

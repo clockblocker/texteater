@@ -3,13 +3,16 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 
+import { hrefFor } from "../src/lib/navigation";
+import { renderNote } from "../src/notes";
+import type { ShadowNoteData } from "../src/notes/shadow";
 import {
 	isCurrentShadowAction,
 	reduceShadowControls,
-	type ShadowNote,
-	ShadowReferenceList,
 	shadowCleanupFeedback,
 } from "../src/views/shadow-note-view";
+
+type ShadowNote = ShadowNoteData;
 
 function noteFixture(): ShadowNote {
 	return {
@@ -85,11 +88,21 @@ function render(note: ShadowNote) {
 		createElement(
 			MemoryRouter,
 			{},
-			createElement(ShadowReferenceList, {
-				note,
-				referrers: note.references.page,
-				activeLocator: null,
-				onResolve() {},
+			renderNote(note, {
+				references: {
+					items: note.references.page,
+					hasMore: false,
+					isLoading: false,
+					error: null,
+					loadMore: null,
+				},
+				cleanup: {
+					activeLocator: null,
+					actionError: null,
+					outcome: null,
+					async resolve() {},
+				},
+				hrefFor,
 			}),
 		),
 	);

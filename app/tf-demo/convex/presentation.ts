@@ -1,14 +1,15 @@
 import { v } from "convex/values";
-import type { SemanticRelation } from "dumrel";
+import {
+	type LemmaReference,
+	lemmaReferenceSchema,
+	type ReadingKnowledge,
+	type SemanticRelation,
+} from "dumrel";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
-import {
-	defaultKnowledgeSettings,
-	loadKnowledgeSettings,
-} from "./knowledgeSettings";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	loadResolutionNote,
@@ -24,7 +25,6 @@ import {
 } from "./model/shadows";
 import {
 	grammaticalLanguageValidator,
-	knowledgeSettingsValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
@@ -35,8 +35,12 @@ import {
 } from "./model/validators";
 import {
 	featureProjectionValidator as featureValidator,
+	projectFeaturesForPresentation,
+} from "./modules/notes/feature-presentation";
+import {
 	isUnitReadingFamily,
-	projectFeatures,
+	projectReadingKnowledge,
+	projectReadingValue,
 } from "./modules/notes/projections";
 import {
 	loadRouteNote,
@@ -44,8 +48,9 @@ import {
 	routeNoteValidator,
 } from "./modules/notes/routeNotes";
 
-export type { FeatureProjection } from "./modules/notes/projections";
-export { isUnitReadingFamily, projectFeatures };
+export type { FeatureProjection } from "./modules/notes/feature-presentation";
+export { projectFeaturesForPresentation as projectFeatures } from "./modules/notes/feature-presentation";
+export { isUnitReadingFamily, projectReadingKnowledge, projectReadingValue };
 
 const MAX_VISITOR_ID_LENGTH = 200;
 const MAX_READING_HISTORY = 50;
@@ -96,6 +101,32 @@ const readingProjectionValidator = v.object({
 	ownerKey: v.string(),
 	readingId: v.id("readings"),
 	canonicalForm: v.string(),
+	emojiDescription: v.string(),
+});
+
+const readingValueLemmaValidator = v.object({
+	language: v.string(),
+	family: v.string(),
+	kind: v.string(),
+	canonicalForm: v.string(),
+	coreFeatures: v.any(),
+});
+
+const readingNoteLemmaValidator = v.object({
+	ownerKind: v.literal("Lemma"),
+	ownerKey: v.string(),
+	language: v.string(),
+	family: v.string(),
+	kind: v.string(),
+	canonicalForm: v.string(),
+	coreFeatures: v.any(),
+});
+
+const readingNoteReadingValidator = v.object({
+	ownerKind: v.literal("Reading"),
+	ownerKey: v.string(),
+	readingId: v.id("readings"),
+	lemma: readingNoteLemmaValidator,
 	emojiDescription: v.string(),
 });
 
@@ -175,14 +206,32 @@ const knowledgeProjectionValidator = v.object({
 	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 });
 
+const readingKnowledgeValidator = v.object({
+	transcription: v.optional(v.string()),
+	definition: v.optional(v.string()),
+	translations: v.optional(v.object({ en: v.array(v.string()) })),
+	morphologicalTree: v.optional(v.any()),
+	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
+	semanticRelations: v.optional(
+		v.object({
+			synonym: v.optional(v.array(readingValueLemmaValidator)),
+			nearSynonym: v.optional(v.array(readingValueLemmaValidator)),
+			antonym: v.optional(v.array(readingValueLemmaValidator)),
+			hypernym: v.optional(v.array(readingValueLemmaValidator)),
+			hyponym: v.optional(v.array(readingValueLemmaValidator)),
+			meronym: v.optional(v.array(readingValueLemmaValidator)),
+			holonym: v.optional(v.array(readingValueLemmaValidator)),
+		}),
+	),
+});
+
 const readingNoteValidator = v.object({
 	kind: v.literal("UnitReadingNote"),
 	target: v.object({
 		kind: v.literal("UnitReadingNote"),
 		readingId: v.id("readings"),
 	}),
-	reading: readingProjectionValidator,
-	lemma: lemmaProjectionValidator,
+	reading: readingNoteReadingValidator,
 	knowledgeState: v.object({
 		status: v.union(
 			v.literal("Absent"),
@@ -196,8 +245,8 @@ const readingNoteValidator = v.object({
 		),
 		failureMessage: v.optional(v.string()),
 	}),
-	settings: knowledgeSettingsValidator,
-	note: knowledgeProjectionValidator,
+	knowledge: readingKnowledgeValidator,
+	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 	relations: v.array(relationProjectionValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
@@ -528,8 +577,24 @@ async function loadRelationProjections(
 				]
 			: [];
 	});
+	const knowledge: Partial<Record<SemanticRelation, LemmaReference[]>> = {};
+	for (const [index, edge] of edges.entries()) {
+		const lemma = lemmas[index];
+		if (!lemma) continue;
+		const target = lemmaReferenceSchema.parse({
+			language: lemma.language,
+			family: lemma.family,
+			kind: lemma.kind,
+			canonicalForm: lemma.canonicalForm,
+			coreFeatures: lemma.coreFeatures,
+		});
+		const existingTargets = knowledge[edge.relation];
+		if (existingTargets) existingTargets.push(target);
+		else knowledge[edge.relation] = [target];
+	}
 	return {
 		fingerprints,
+		knowledge,
 		resolved: projectResolvedRelationTargets(
 			fingerprints,
 			lemmas.flatMap((lemma) =>
@@ -537,6 +602,15 @@ async function loadRelationProjections(
 			),
 		),
 	};
+}
+
+function withResolvedSemanticRelations(
+	knowledge: ReadingKnowledge<"en">,
+	semanticRelations: NonNullable<ReadingKnowledge<"en">["semanticRelations"]>,
+): ReadingKnowledge<"en"> {
+	return Object.keys(semanticRelations).length === 0
+		? knowledge
+		: { ...knowledge, semanticRelations };
 }
 
 export const forVisitor = query({
@@ -699,14 +773,9 @@ export const getNote = query({
 		shadowNoteValidator,
 		resolutionNoteValidator,
 	),
-	handler: async (ctx, { target, contextCursor, visitorId }) => {
+	handler: async (ctx, { target, contextCursor }) => {
 		if (target.kind === "UnitReadingNote") {
-			return loadUnitReadingNote(
-				ctx,
-				target.readingId,
-				contextCursor,
-				visitorId,
-			);
+			return loadUnitReadingNote(ctx, target.readingId, contextCursor);
 		}
 		if (target.kind === "Resolution") {
 			return loadResolutionNote(ctx, target.requestId);
@@ -759,7 +828,6 @@ async function loadUnitReadingNote(
 	ctx: QueryCtx,
 	readingIdValue: string,
 	contextCursor?: string,
-	visitorId?: string,
 ) {
 	const readingId = ctx.db.normalizeId("readings", readingIdValue);
 	if (!readingId) return null;
@@ -774,7 +842,6 @@ async function loadUnitReadingNote(
 		structuralReferences,
 		sourceContexts,
 		attempts,
-		settings,
 	] = await Promise.all([
 		ctx.db
 			.query("accumulatedKnowledge")
@@ -798,17 +865,14 @@ async function loadUnitReadingNote(
 			)
 			.order("desc")
 			.take(20),
-		visitorId
-			? loadKnowledgeSettings(ctx, visitorId)
-			: Promise.resolve(defaultKnowledgeSettings()),
 	]);
 	if (pendingRelations.length > MAX_PENDING_RELATIONS_PER_READING_NOTE) {
 		throw new Error(
 			`A Unit Reading Note supports at most ${MAX_PENDING_RELATIONS_PER_READING_NOTE} pending Semantic Relations.`,
 		);
 	}
-	const identities = projectReadingIdentities(reading, lemma);
-	const projected = projectKnowledge(readingKnowledge?.knowledge);
+	const readingValue = projectReadingValue(reading, lemma);
+	const knowledge = projectReadingKnowledge(readingKnowledge?.knowledge);
 	const activeAttempt = attempts.find(
 		({ state }) => state === "Scheduled" || state === "Running",
 	);
@@ -823,20 +887,23 @@ async function loadUnitReadingNote(
 				: failedAttempt
 					? "Failed"
 					: "Idle";
-	const filteredRelations = relationProjections.resolved.filter(
-		({ relation }) => settings.semanticRelations[relation],
-	);
-	const filteredPendingRelations = projectPendingRelations(
-		pendingRelations,
-	).filter(({ relation }) => settings.semanticRelations[relation]);
 	return {
 		kind: "UnitReadingNote" as const,
 		target: {
 			kind: "UnitReadingNote" as const,
 			readingId: reading._id,
 		},
-		reading: identities.reading,
-		lemma: identities.lemma,
+		reading: {
+			ownerKind: "Reading" as const,
+			ownerKey: reading.readingKey,
+			readingId: reading._id,
+			...readingValue,
+			lemma: {
+				ownerKind: "Lemma" as const,
+				ownerKey: lemma.lemmaKey,
+				...readingValue.lemma,
+			},
+		},
 		knowledgeState: {
 			status,
 			activity,
@@ -844,30 +911,14 @@ async function loadUnitReadingNote(
 				? { failureMessage: failedAttempt.failureMessage }
 				: {}),
 		},
-		settings,
-		note: {
-			transcription: settings.transcription
-				? projected.transcription
-				: null,
-			definition: settings.definition ? projected.definition : null,
-			translations: settings.translations.en
-				? [...projected.translations]
-				: [],
-			morphologicalTree: settings.morphologicalTree
-				? projected.morphologicalTree
-				: null,
-			lexicalBreakdown: settings.lexicalBreakdown
-				? [...projected.lexicalBreakdown]
-				: [],
-			knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
-		},
-		relations: filteredRelations,
-		pendingRelations: filteredPendingRelations,
-		structuralReferences: structuralReferences.filter(({ aspect }) =>
-			aspect === "morphologicalTree"
-				? settings.morphologicalTree
-				: settings.lexicalBreakdown,
+		knowledge: withResolvedSemanticRelations(
+			knowledge,
+			relationProjections.knowledge,
 		),
+		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
+		relations: relationProjections.resolved,
+		pendingRelations: projectPendingRelations(pendingRelations),
+		structuralReferences,
 		sourceContexts,
 	};
 }
@@ -1007,7 +1058,7 @@ async function loadShadowInspection(
 			canonicalForm: lemma.canonicalForm,
 			family: lemma.family,
 			kind: lemma.kind,
-			coreFeatures: projectFeatures(lemma.coreFeatures),
+			coreFeatures: projectFeaturesForPresentation(lemma.coreFeatures),
 			target: {
 				kind: "RouteNote",
 				routeKind: "Lemma",
@@ -1446,7 +1497,7 @@ function projectReadingIdentities(
 			family: lemma.family,
 			kind: lemma.kind,
 			canonicalForm: lemma.canonicalForm,
-			coreFeatures: projectFeatures(lemma.coreFeatures),
+			coreFeatures: projectFeaturesForPresentation(lemma.coreFeatures),
 		},
 	};
 }
@@ -1505,8 +1556,12 @@ function projectAttestation(value: unknown) {
 			),
 			spelling: spelling as "Canonical" | "Variant",
 			surfaceKind: surfaceKind as "Citation" | "Inflection",
-			surfaceFeatures: projectFeatures(surface.surfaceFeatures),
-			inflectionalFeatures: projectFeatures(surface.inflectionalFeatures),
+			surfaceFeatures: projectFeaturesForPresentation(
+				surface.surfaceFeatures,
+			),
+			inflectionalFeatures: projectFeaturesForPresentation(
+				surface.inflectionalFeatures,
+			),
 		},
 	};
 }
