@@ -19,6 +19,10 @@ Read -> encounter -> resolve -> create or reuse a Reading Note
 
 ## Core experience
 
+The current visual reference for the German `Lexeme/VERB` Header renderer is:
+
+![German Lexeme/VERB Header renderer reference](images/de-lexeme-verb-header-renderer-reference.png)
+
 Texts remain continuous reading material rather than becoming worksheets.
 Resolvable language is interactive in place, as in the original prototype:
 
