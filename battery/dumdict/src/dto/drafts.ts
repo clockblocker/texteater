@@ -1,4 +1,4 @@
-import type { SemanticRelation } from "dumrel";
+import type { DirectSemanticRelation } from "dumrel";
 import type { Lemma, Reading, SupportedLanguage, Surface } from "../dumling";
 import type { DumdictPendingSemanticRelation } from "./pending";
 
@@ -24,7 +24,7 @@ export type DumdictReadingDraft<L extends SupportedLanguage> = {
 
 export type DumdictSemanticRelationDraft<L extends SupportedLanguage> =
 	| {
-			relation: SemanticRelation;
+			relation: DirectSemanticRelation;
 			target: { kind: "existing"; lemma: Lemma<L> };
 	  }
 	| {

@@ -1,5 +1,5 @@
-import type { SemanticRelation, UnitShadow } from "dumrel";
-import { semanticRelationValues, unitShadowSchema } from "dumrel";
+import type { LexicalUnitShadow } from "dumrel";
+import { lexicalUnitShadowSchema } from "dumrel";
 import { type ZodType, z } from "zod";
 
 import { knowledgeGenerationInputSchema } from "../../schemas/public-schemas";
@@ -7,6 +7,10 @@ import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationRequest,
 } from "../contracts";
+import {
+	type RequestableRelation,
+	requestableRelationSchema,
+} from "../relations";
 
 const normalizedCandidateSchema = z
 	.string()
@@ -14,13 +18,13 @@ const normalizedCandidateSchema = z
 	.min(1)
 	.overwrite((value) => value.normalize("NFC"));
 
-const germanUnitShadowSchema = unitShadowSchema.refine(
+const germanLexicalUnitShadowSchema = lexicalUnitShadowSchema.refine(
 	(shadow) => shadow.language === "de",
 	{
 		path: ["language"],
 		message: "German Knowledge relations must target German Unit Shadows.",
 	},
-) as ZodType<UnitShadow<"de">>;
+) as ZodType<LexicalUnitShadow<"de">>;
 
 export type GermanKnowledgeGenerationRequest = KnowledgeGenerationRequest;
 
@@ -31,7 +35,12 @@ export type GermanKnowledgeAnalysis = Readonly<{
 	readonly definition?: string | null;
 	readonly translations?: Readonly<{ readonly en?: string | null }>;
 	readonly semanticRelations?: Readonly<
-		Partial<Record<SemanticRelation, readonly UnitShadow<"de">[] | null>>
+		Partial<
+			Record<
+				RequestableRelation,
+				readonly LexicalUnitShadow<"de">[] | null
+			>
+		>
 	>;
 }>;
 
@@ -46,8 +55,8 @@ export const germanKnowledgeAnalysisSchema = z.strictObject({
 		.optional(),
 	semanticRelations: z
 		.partialRecord(
-			z.enum(semanticRelationValues),
-			z.array(germanUnitShadowSchema).min(1).nullable(),
+			requestableRelationSchema,
+			z.array(germanLexicalUnitShadowSchema).min(1).max(5).nullable(),
 		)
 		.optional(),
 }) as ZodType<GermanKnowledgeAnalysis>;
@@ -76,11 +85,12 @@ export function modelOutputSchemaForGermanKnowledge(
 	}
 	if (request.semanticRelations !== undefined) {
 		const relationShape: Record<string, ZodType> = {};
-		for (const relation of semanticRelationValues) {
+		for (const relation of requestableRelationSchema.options) {
 			if (relation in request.semanticRelations) {
 				relationShape[relation] = z
-					.array(germanUnitShadowSchema)
+					.array(germanLexicalUnitShadowSchema)
 					.min(1)
+					.max(5)
 					.nullable();
 			}
 		}

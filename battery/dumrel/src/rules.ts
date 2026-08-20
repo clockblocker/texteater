@@ -3,6 +3,7 @@ import type {
 	SemanticRelation,
 	SemanticRelationGraph,
 	SemanticRelationGraphEdge,
+	SemanticRelationGraphProjection,
 	SemanticRelationGraphReading,
 } from "./types.js";
 import { semanticRelationValues } from "./vocabulary.js";
@@ -14,6 +15,10 @@ const relationAlgebra = {
 		substitutesThroughSynonyms: true,
 	},
 	antonym: { inverse: "antonym", substitutesThroughSynonyms: true },
+	nearAntonym: {
+		inverse: "nearAntonym",
+		substitutesThroughSynonyms: false,
+	},
 	hypernym: { inverse: "hyponym", substitutesThroughSynonyms: true },
 	hyponym: { inverse: "hypernym", substitutesThroughSynonyms: true },
 	meronym: { inverse: "holonym", substitutesThroughSynonyms: true },
@@ -41,8 +46,7 @@ export function inverseRelationFor(
  *
  * The Reading inventory is intentionally caller-supplied: Dumrel understands
  * only the pure graph algebra, while a dictionary-owning caller decides which
- * Readings currently belong to each Lemma and whether inferred edges are
- * materialized.
+ * Readings currently belong to each Lemma. Inferred edges are read views only.
  */
 export function propagateRelations(
 	graph: SemanticRelationGraph,
@@ -54,10 +58,12 @@ export function propagateRelations(
 	const readingsByLemma = groupReadingsByLemma(parsed.readings);
 	const direct = deduplicate(parsed.edges);
 	const directKeys = new Set(direct.map(edgeKey));
-	const base = new Map(direct.map((edge) => [edgeKey(edge), edge]));
+	const base = new Map<string, SemanticRelationGraphEdge>(
+		direct.map((edge) => [edgeKey(edge), edge]),
+	);
 
 	// Every kind has exactly one inverse. This is intentionally one level: an
-	// inverse inferred here is not fed back into inverse materialization.
+	// inverse inferred here is not fed back into recursive inference.
 	for (const edge of direct) {
 		const sourceLemma = readingLemma.get(edge.sourceReading);
 		if (sourceLemma === undefined) continue;
@@ -110,6 +116,26 @@ export function propagateRelations(
 				!directKeys.has(edgeKey(edge)),
 		)
 		.sort(compareEdges);
+}
+
+/**
+ * Projects direct claims together with every deterministic inferred view.
+ * Direct claims win provenance when an inference reaches the same edge.
+ */
+export function projectRelations(
+	graph: SemanticRelationGraph,
+): SemanticRelationGraphProjection[] {
+	const parsed = semanticRelationGraphSchema.parse(graph);
+	const projections = new Map<string, SemanticRelationGraphProjection>();
+	for (const edge of deduplicate(parsed.edges).sort(compareEdges)) {
+		projections.set(edgeKey(edge), { ...edge, provenance: "direct" });
+	}
+	for (const edge of propagateRelations(parsed)) {
+		if (!projections.has(edgeKey(edge))) {
+			projections.set(edgeKey(edge), { ...edge, provenance: "inferred" });
+		}
+	}
+	return [...projections.values()].sort(compareEdges);
 }
 
 function groupReadingsByLemma(

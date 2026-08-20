@@ -15,7 +15,17 @@ function assertVisitorId(visitorId: string): void {
 }
 
 export function defaultKnowledgeSettings(): KnowledgeSettings {
-	return structuredClone(DEFAULT_KNOWLEDGE_SETTINGS);
+	return cloneKnowledgeSettings(DEFAULT_KNOWLEDGE_SETTINGS);
+}
+
+function cloneKnowledgeSettings(
+	settings: KnowledgeSettings,
+): KnowledgeSettings {
+	return {
+		...settings,
+		translations: { ...settings.translations },
+		semanticRelations: { ...settings.semanticRelations },
+	};
 }
 
 export async function loadKnowledgeSettings(
@@ -27,7 +37,9 @@ export async function loadKnowledgeSettings(
 		.query("knowledgeSettings")
 		.withIndex("by_visitor_id", (q) => q.eq("visitorId", visitorId))
 		.unique();
-	return stored ? stored.settings : defaultKnowledgeSettings();
+	return stored
+		? cloneKnowledgeSettings(stored.settings)
+		: defaultKnowledgeSettings();
 }
 
 export const get = query({
@@ -49,6 +61,6 @@ export const update = mutation({
 		const value = { visitorId, settings: parsed, updatedAt: Date.now() };
 		if (existing) await ctx.db.replace(existing._id, value);
 		else await ctx.db.insert("knowledgeSettings", value);
-		return parsed;
+		return cloneKnowledgeSettings(parsed);
 	},
 });

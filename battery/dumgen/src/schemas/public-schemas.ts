@@ -1,16 +1,13 @@
 import { readingSchema, schemasFor } from "dumling/schema";
 import type { Attestation, Reading } from "dumling/types";
-import {
-	knowledgeChangeSchema,
-	pendingSemanticRelationSchema,
-	semanticRelationValues,
-} from "dumrel";
+import { knowledgeChangeSchema, lexicalUnitShadowSchema } from "dumrel";
 import { type ZodType, z } from "zod";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationRequest,
 	KnowledgeGenerationResult,
 } from "../knowledge-generation/contracts";
+import { requestableRelationSchema } from "../knowledge-generation/relations";
 import { DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS } from "../schema/de-grammatical-resolution-inventory";
 import {
 	enabledSegmentationLanguageValues,
@@ -36,7 +33,7 @@ const knowledgeTranslationRequestSchema = z
 	.readonly();
 
 const knowledgeSemanticRelationRequestSchema = z
-	.partialRecord(z.enum(semanticRelationValues), z.null())
+	.partialRecord(requestableRelationSchema, z.null())
 	.refine((relations) => Object.keys(relations).length > 0, {
 		message:
 			"A Semantic Relation request must select at least one relation.",
@@ -67,10 +64,25 @@ export const knowledgeGenerationInputSchema = z
 	})
 	.readonly() as ZodType<KnowledgeGenerationInput<"de">>;
 
+const generatedGermanRelationTargetSchema = lexicalUnitShadowSchema.refine(
+	(target) => target.language === "de",
+	{
+		path: ["language"],
+		message: "German Knowledge relations require German Unit Shadows.",
+	},
+);
+
+const generatedPendingSemanticRelationSchema = z.strictObject({
+	relation: requestableRelationSchema,
+	target: generatedGermanRelationTargetSchema,
+});
+
 export const knowledgeGenerationResultSchema = z
 	.strictObject({
 		changes: z.array(knowledgeChangeSchema).readonly(),
-		pendingRelations: z.array(pendingSemanticRelationSchema).readonly(),
+		pendingRelations: z
+			.array(generatedPendingSemanticRelationSchema)
+			.readonly(),
 	})
 	.superRefine((result, context) => {
 		for (const [index, change] of result.changes.entries()) {
@@ -93,16 +105,6 @@ export const knowledgeGenerationResultSchema = z
 					path: ["changes", index, "language"],
 					message:
 						"German Knowledge generation contributes only English Translations.",
-				});
-			}
-		}
-		for (const [index, pending] of result.pendingRelations.entries()) {
-			if (pending.target.language !== "de") {
-				context.addIssue({
-					code: "custom",
-					path: ["pendingRelations", index, "target", "language"],
-					message:
-						"German Knowledge relations require German Unit Shadows.",
 				});
 			}
 		}

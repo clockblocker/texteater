@@ -11,6 +11,7 @@
 			"!!node_modules",
 			"!!.convex",
 			"!!convex/_generated",
+			"!!convex/model/compiledRelationVerdict.ts",
 			"!!convex/tsconfig.json"
 		]
 	}

@@ -46,8 +46,8 @@ collects a full note draft and calls `addNewNote`.
 - loading only the storage slice required for the operation
 - planning semantic changes and preconditions
 - applying Reading Knowledge Changes
-- resolving Unit Shadows and maintaining Lemma-targeted relation algebra,
-  inverse fan-out, later-Reading backfill, and explicit pending work
+- resolving unambiguous Unit Shadows, enforcing direct target conflicts, and
+  projecting Lemma-targeted relation algebra without inferred writes
 
 Knowledge DTOs, schemas, and inverse rules come from `dumrel`; Dumdict
 owns the dictionary workflows that apply those rules to stored records.
@@ -55,7 +55,7 @@ owns the dictionary workflows that apply those rules to stored records.
 Host storage owns the actual writes. Obsidian can translate planned changes into
 markdown edits, SQLite into a transaction, and Electron into server/cache writes.
 Non-relation flows load only their operation slice. Relation planning receives
-the dictionary relation inventory needed for closure, fan-out, and backfill.
+the dictionary relation inventory needed for deterministic inferred views.
 
 ## Reading model
 
@@ -114,10 +114,10 @@ const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
 ```
 
 Semantic Relation buckets live in Reading Knowledge but contain Lemma values.
-Dumdict resolves generated Unit Shadows by exact descriptor, materializes
-inverse edges across Readings of matching Lemmas, and backfills a new Reading
-from existing edges targeting its Lemma. Materialized derived edges are
-ordinary Knowledge with no provenance or reference count.
+Dumdict resolves generated Unit Shadows only when one exact Lemma descriptor
+matches and stores only the direct claim. Zero-match and ambiguous shadows
+remain pending and inert. Inverse, closure, substitution, and later-Reading
+consequences are deterministic read projections with provenance.
 
 ## Quickstart
 

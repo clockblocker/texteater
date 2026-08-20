@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import type { Reading, SerializedDictionaryNote } from "../../../src";
+import {
+	projectSemanticRelations,
+	type Reading,
+	type SerializedDictionaryNote,
+} from "../../../src";
 import {
 	englishSwimDraft,
 	englishSwimLemma,
@@ -58,7 +62,7 @@ describe("relations cleanup", () => {
 		).toBeUndefined();
 	});
 
-	test("automatically resolves one Lemma, writes inverse fan-out, and deletes pending atomically", async () => {
+	test("automatically resolves one Lemma, stores only the direct claim, and deletes pending atomically", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", [
 			...enSerializedNotesWithPendingSwimRelation,
 			swimNote(englishSwimReading),
@@ -75,7 +79,7 @@ describe("relations cleanup", () => {
 		expect(
 			readings.find(({ reading }) => reading.emojiDescription === "🏊")
 				?.knowledge?.semanticRelations?.nearSynonym,
-		).toEqual([englishWalkLemma]);
+		).toBeUndefined();
 		expect(
 			storage
 				.loadAll()
@@ -83,7 +87,7 @@ describe("relations cleanup", () => {
 		).toEqual([]);
 	});
 
-	test("chooses an ambiguous forward Lemma deterministically while inverses cover every matching Lemma", async () => {
+	test("keeps an ambiguous multi-Lemma shadow pending and inert", async () => {
 		const alternateLemma = {
 			...englishSwimLemma,
 			coreFeatures: {
@@ -105,29 +109,30 @@ describe("relations cleanup", () => {
 				...(reverse ? matches.reverse() : matches),
 			]);
 			await cleanupFirstPending(dict);
-			return storage
-				.loadAll()
-				.flatMap(({ readingEntries }) => readingEntries);
+			return storage.loadAll();
 		};
-		const forwardTargets = [];
-		for (const readings of [await run(false), await run(true)]) {
-			forwardTargets.push(
+		for (const notes of [await run(false), await run(true)]) {
+			const readings = notes.flatMap(
+				({ readingEntries }) => readingEntries,
+			);
+			expect(
 				readings.find(
 					({ reading }) => reading.emojiDescription === "🚶",
 				)?.knowledge?.semanticRelations?.nearSynonym,
-			);
+			).toBeUndefined();
 			for (const emoji of ["🏊", "🌊"])
 				expect(
 					readings.find(
 						({ reading }) => reading.emojiDescription === emoji,
 					)?.knowledge?.semanticRelations?.nearSynonym,
-				).toEqual([englishWalkLemma]);
+				).toBeUndefined();
+			expect(
+				notes.flatMap(({ pendingRelations }) => pendingRelations),
+			).toHaveLength(1);
 		}
-		expect(forwardTargets[0]).toHaveLength(1);
-		expect(forwardTargets[1]).toEqual(forwardTargets[0]);
 	});
 
-	test("a later Reading receives every inverse implied by existing target edges", async () => {
+	test("a later Reading receives inferred inverse views without a backfill write", async () => {
 		const sourceFixture = enSerializedNotesWithPendingSwimRelation[0];
 		if (!sourceFixture) throw new Error("Expected source fixture.");
 		const sourceWithEdge: SerializedDictionaryNote<"en"> =
@@ -139,11 +144,6 @@ describe("relations cleanup", () => {
 			semanticRelations: { hypernym: [englishSwimLemma] },
 		};
 		const firstSwim = swimNote(englishSwimReading);
-		const firstSwimReading = firstSwim.readingEntries[0];
-		if (!firstSwimReading) throw new Error("Expected first swim Reading.");
-		firstSwimReading.knowledge = {
-			semanticRelations: { hyponym: [englishWalkLemma] },
-		};
 		const { dict, storage } = getBootedUpDumdict("en", [
 			sourceWithEdge,
 			firstSwim,
@@ -155,12 +155,26 @@ describe("relations cleanup", () => {
 		expect((await dict.addNewNote({ draft: sibling })).status).toBe(
 			"applied",
 		);
+		const notes = storage.loadAll();
+		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
 		expect(
-			storage
-				.loadAll()
-				.flatMap(({ readingEntries }) => readingEntries)
-				.find(({ reading }) => reading.emojiDescription === "🌊")
-				?.knowledge?.semanticRelations?.hyponym,
-		).toEqual([englishWalkLemma]);
+			readings.find(({ reading }) => reading.emojiDescription === "🌊")
+				?.knowledge,
+		).toBeUndefined();
+		expect(
+			projectSemanticRelations({
+				lemmas: notes.map(({ lemmaRecord }) => lemmaRecord),
+				readings,
+			}).filter(
+				(projection) =>
+					projection.sourceReading.emojiDescription === "🌊" &&
+					projection.relation === "hyponym",
+			),
+		).toEqual([
+			expect.objectContaining({
+				targetLemma: englishWalkLemma,
+				provenance: "inferred",
+			}),
+		]);
 	});
 });

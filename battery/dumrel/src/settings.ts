@@ -12,6 +12,7 @@ export const DEFAULT_KNOWLEDGE_SETTINGS: KnowledgeSettings = deepFreeze({
 		synonym: true,
 		nearSynonym: true,
 		antonym: true,
+		nearAntonym: true,
 		hypernym: true,
 		hyponym: true,
 		meronym: true,

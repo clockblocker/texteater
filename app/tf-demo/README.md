@@ -20,6 +20,11 @@ data locally and writes the generated `VITE_CONVEX_URL` to `.env.local` before
 starting Vite. Later runs select the same local deployment, so data survives
 process restarts.
 
+The demo launcher gives the local Convex isolate a 128 MB heap. Several legacy
+Reading-presentation modules initialize the full Dumling validation graph and
+exceed Convex's local backend default while functions are loaded. This setting
+is local-only; it does not change a cloud deployment's function limits.
+
 After resolving a Segment, the workspace exposes the persisted Text, Sentence,
 Segment, grammatical Attestation and Surface, Lemma features, and Reading as a
 clickable resolution path. Reading notes present the exact Reading's Knowledge
@@ -66,6 +71,9 @@ bun run reset
 
 The bounded reset removes all tf-demo linguistic, Knowledge, Encounter, and
 visitor context rows. The local deployment itself remains selected and reusable.
+The direct-only reset record, automated inventory coverage, and post-reset smoke
+procedure are documented in
+[`docs/post-reset-verification.md`](./docs/post-reset-verification.md).
 
 ## Validation
 

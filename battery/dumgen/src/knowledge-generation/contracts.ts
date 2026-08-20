@@ -5,15 +5,19 @@ import type {
 	PendingSemanticRelation,
 	UnitShadow,
 } from "dumrel";
+import type { RequestableRelation } from "./relations";
 
 export type KnowledgeGenerationLanguage = "de";
 
 export type KnowledgeGenerationRequest = Omit<
 	KnowledgeRequestMask,
-	"morphologicalTree" | "lexicalBreakdown"
+	"morphologicalTree" | "lexicalBreakdown" | "semanticRelations"
 > & {
 	readonly morphologicalTree?: never;
 	readonly lexicalBreakdown?: never;
+	readonly semanticRelations?: Readonly<
+		Partial<Record<RequestableRelation, null>>
+	>;
 };
 
 export type KnowledgeGenerationInput<
@@ -44,6 +48,11 @@ type DeepReadonly<Value> = Value extends
 export type KnowledgeGenerationResult = DeepReadonly<{
 	changes: KnowledgeChange<"en">[];
 	pendingRelations: Array<
-		Omit<PendingSemanticRelation, "target"> & { target: UnitShadow<"de"> }
+		Omit<PendingSemanticRelation, "relation" | "target"> & {
+			relation: RequestableRelation;
+			target: UnitShadow<"de", "Lexeme" | "Phraseme">;
+		}
 	>;
 }>;
+
+export type { RequestableRelation } from "./relations";

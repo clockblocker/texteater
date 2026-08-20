@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { readingSchema } from "dumling/schema";
 
 import {
+	directSemanticRelationGraphEdgeSchema,
+	directSemanticRelationSchema,
 	knowledgeChangeSchema,
 	lemmaReferenceSchema,
 	lexemeUnitShadowSchema,
@@ -11,8 +13,8 @@ import {
 	morphologicalTreeSchema,
 	pendingSemanticRelationSchema,
 	readingReferenceSchema,
-	semanticRelationGraphEdgeSchema,
 	semanticRelationGraphSchema,
+	semanticRelationSchema,
 	unitShadowSchema,
 } from "../../src";
 import {
@@ -178,6 +180,46 @@ describe("pointer-only structured Knowledge", () => {
 });
 
 describe("boundary DTO schemas", () => {
+	test("exposes the complete ordered Semantic Relation vocabulary", () => {
+		expect(semanticRelationSchema.options).toEqual([
+			"synonym",
+			"nearSynonym",
+			"antonym",
+			"nearAntonym",
+			"hypernym",
+			"hyponym",
+			"meronym",
+			"holonym",
+		]);
+	});
+
+	test("restricts durable direct claims to canonical direct orientations", () => {
+		expect(directSemanticRelationSchema.options).toEqual([
+			"synonym",
+			"nearSynonym",
+			"antonym",
+			"nearAntonym",
+			"hypernym",
+			"holonym",
+		]);
+		for (const inferredOnly of ["hyponym", "meronym"]) {
+			expect(
+				pendingSemanticRelationSchema.safeParse({
+					relation: inferredOnly,
+					target: nounShadow,
+				}).success,
+			).toBe(false);
+			expect(
+				knowledgeChangeSchema.safeParse({
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: inferredOnly,
+					value: [nounReading.lemma],
+				}).success,
+			).toBe(false);
+		}
+	});
+
 	test("validates Pending Semantic Relations separately", () => {
 		expect(
 			pendingSemanticRelationSchema.parse({
@@ -189,7 +231,7 @@ describe("boundary DTO schemas", () => {
 
 	test("normalizes graph keys and strict Knowledge Changes", () => {
 		expect(
-			semanticRelationGraphEdgeSchema.parse({
+			directSemanticRelationGraphEdgeSchema.parse({
 				sourceReading: " cafe\u0301 ",
 				relation: "synonym",
 				targetLemma: " b ",

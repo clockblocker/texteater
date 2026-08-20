@@ -1,7 +1,10 @@
 import { v } from "convex/values";
+import { projectSemanticRelations } from "dumdict";
+import { readingFingerprint } from "dumling/reading";
 import {
 	type LemmaReference,
 	lemmaReferenceSchema,
+	type ProjectedSemanticRelations,
 	type ReadingKnowledge,
 	type SemanticRelation,
 } from "dumrel";
@@ -10,6 +13,7 @@ import { semanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
+import { loadRelationInventory } from "./dumdictStorage";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
 	loadResolutionNote,
@@ -36,7 +40,7 @@ import {
 import {
 	featureProjectionValidator as featureValidator,
 	projectFeaturesForPresentation,
-} from "./modules/notes/feature-presentation";
+} from "./modules/notes/featurePresentation";
 import {
 	isUnitReadingFamily,
 	projectReadingKnowledge,
@@ -48,8 +52,8 @@ import {
 	routeNoteValidator,
 } from "./modules/notes/routeNotes";
 
-export type { FeatureProjection } from "./modules/notes/feature-presentation";
-export { projectFeaturesForPresentation as projectFeatures } from "./modules/notes/feature-presentation";
+export type { FeatureProjection } from "./modules/notes/featurePresentation";
+export { projectFeaturesForPresentation as projectFeatures } from "./modules/notes/featurePresentation";
 export { isUnitReadingFamily, projectReadingKnowledge, projectReadingValue };
 
 const MAX_VISITOR_ID_LENGTH = 200;
@@ -160,11 +164,13 @@ const relationFingerprintProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetLemmaKey: v.string(),
 	targetCanonicalForm: v.string(),
+	provenance: v.union(v.literal("direct"), v.literal("inferred")),
 });
 
 const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetCanonicalForm: v.string(),
+	provenance: v.union(v.literal("direct"), v.literal("inferred")),
 	target: v.object({
 		kind: v.literal("RouteNote"),
 		routeKind: v.literal("Lemma"),
@@ -217,6 +223,7 @@ const readingKnowledgeValidator = v.object({
 			synonym: v.optional(v.array(readingValueLemmaValidator)),
 			nearSynonym: v.optional(v.array(readingValueLemmaValidator)),
 			antonym: v.optional(v.array(readingValueLemmaValidator)),
+			nearAntonym: v.optional(v.array(readingValueLemmaValidator)),
 			hypernym: v.optional(v.array(readingValueLemmaValidator)),
 			hyponym: v.optional(v.array(readingValueLemmaValidator)),
 			meronym: v.optional(v.array(readingValueLemmaValidator)),
@@ -424,11 +431,13 @@ export type RelationFingerprintProjection = {
 	readonly relation: SemanticRelation;
 	readonly targetLemmaKey: string;
 	readonly targetCanonicalForm: string;
+	readonly provenance: "direct" | "inferred";
 };
 
 export type RelationProjection<LemmaId extends string = string> = {
 	readonly relation: SemanticRelation;
 	readonly targetCanonicalForm: string;
+	readonly provenance: "direct" | "inferred";
 	readonly target: {
 		readonly kind: "RouteNote";
 		readonly routeKind: "Lemma";
@@ -509,6 +518,7 @@ export function flattenDirectSemanticRelations(
 									relation,
 									targetLemmaKey: lemmaIdentityKey(lemma),
 									targetCanonicalForm,
+									provenance: "direct",
 								},
 							]
 						: [];
@@ -547,38 +557,51 @@ export function projectResolvedRelationTargets<LemmaId extends string>(
 	);
 }
 
-async function loadRelationProjections(
+export async function loadRelationProjections(
 	ctx: QueryCtx,
 	readingId: Id<"readings">,
 ) {
-	const edges = await ctx.db
-		.query("semanticRelationEdges")
-		.withIndex("by_source_reading_id", (q) =>
-			q.eq("sourceReadingId", readingId),
-		)
-		.take(MAX_RELATIONS_PER_NOTE + 1);
-	if (edges.length > MAX_RELATIONS_PER_NOTE) {
+	const source = await ctx.db.get(readingId);
+	if (!source) return { fingerprints: [], knowledge: {}, resolved: [] };
+	const inventory = await loadRelationInventory(ctx);
+	const projections = projectSemanticRelations<"de">(
+		inventory as unknown as Parameters<
+			typeof projectSemanticRelations<"de">
+		>[0],
+	).filter(
+		(projection) =>
+			readingFingerprint(projection.sourceReading) === source.readingKey,
+	);
+	if (projections.length > MAX_RELATIONS_PER_NOTE) {
 		throw new Error(
 			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Semantic Relations.`,
 		);
 	}
 	const lemmas = await Promise.all(
-		edges.map(({ targetLemmaId }) => ctx.db.get(targetLemmaId)),
+		projections.map(({ targetLemma }) =>
+			ctx.db
+				.query("lemmas")
+				.withIndex("by_lemma_key", (q) =>
+					q.eq("lemmaKey", lemmaIdentityKey(targetLemma)),
+				)
+				.unique(),
+		),
 	);
-	const fingerprints = edges.flatMap((edge, index) => {
+	const fingerprints = projections.flatMap((projection, index) => {
 		const lemma = lemmas[index];
 		return lemma
 			? [
 					{
-						relation: edge.relation,
+						relation: projection.relation,
 						targetLemmaKey: lemma.lemmaKey,
 						targetCanonicalForm: lemma.canonicalForm,
+						provenance: projection.provenance,
 					},
 				]
 			: [];
 	});
-	const knowledge: Partial<Record<SemanticRelation, LemmaReference[]>> = {};
-	for (const [index, edge] of edges.entries()) {
+	const knowledge: ProjectedSemanticRelations<LemmaReference> = {};
+	for (const [index, projection] of projections.entries()) {
 		const lemma = lemmas[index];
 		if (!lemma) continue;
 		const target = lemmaReferenceSchema.parse({
@@ -588,9 +611,9 @@ async function loadRelationProjections(
 			canonicalForm: lemma.canonicalForm,
 			coreFeatures: lemma.coreFeatures,
 		});
-		const existingTargets = knowledge[edge.relation];
+		const existingTargets = knowledge[projection.relation];
 		if (existingTargets) existingTargets.push(target);
-		else knowledge[edge.relation] = [target];
+		else knowledge[projection.relation] = [target];
 	}
 	return {
 		fingerprints,
@@ -606,8 +629,10 @@ async function loadRelationProjections(
 
 function withResolvedSemanticRelations(
 	knowledge: ReadingKnowledge<"en">,
-	semanticRelations: NonNullable<ReadingKnowledge<"en">["semanticRelations"]>,
-): ReadingKnowledge<"en"> {
+	semanticRelations: ProjectedSemanticRelations<LemmaReference>,
+): Omit<ReadingKnowledge<"en">, "semanticRelations"> & {
+	semanticRelations?: ProjectedSemanticRelations<LemmaReference>;
+} {
 	return Object.keys(semanticRelations).length === 0
 		? knowledge
 		: { ...knowledge, semanticRelations };

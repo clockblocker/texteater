@@ -2,18 +2,22 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 import {
+	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeSettingsValidator,
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
 	realizationCoverageValidator,
+	relationProposalOutcomeValidator,
+	relationPublicationFingerprintsValidator,
+	relationReviewStatusValidator,
+	relationTargetShadowValidator,
 	resolutionGrammarProjectionValidator,
 	resolutionReadingProjectionValidator,
 	resolutionRouteProjectionValidator,
 	resolutionStageValidator,
 	segmentKindValidator,
-	semanticRelationValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "./model/validators";
@@ -104,7 +108,7 @@ export default defineSchema({
 	semanticRelationEdges: defineTable({
 		sourceReadingId: v.id("readings"),
 		targetLemmaId: v.id("lemmas"),
-		relation: semanticRelationValidator,
+		relation: directSemanticRelationValidator,
 	})
 		.index("by_source_reading_id", ["sourceReadingId"])
 		.index("by_target_lemma_id", ["targetLemmaId"])
@@ -193,6 +197,7 @@ export default defineSchema({
 		readingId: v.id("readings"),
 		attestationId: v.id("attestations"),
 		state: knowledgeGenerationAttemptStateValidator,
+		runNumber: v.optional(v.number()),
 		failureCode: v.optional(v.string()),
 		failureMessage: v.optional(v.string()),
 		createdAt: v.number(),
@@ -202,6 +207,63 @@ export default defineSchema({
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
 		.index("by_owner_reading_key_and_updated_at", [
 			"ownerReadingKey",
+			"updatedAt",
+		]),
+
+	relationPublicationControls: defineTable({
+		key: v.literal("global"),
+		rollbackStopped: v.boolean(),
+		reason: v.string(),
+		updatedAt: v.number(),
+	}).index("by_key", ["key"]),
+
+	generatedRelationRuns: defineTable({
+		runKey: v.string(),
+		attemptKey: v.string(),
+		runNumber: v.number(),
+		relation: directSemanticRelationValidator,
+		sourceReadingId: v.id("readings"),
+		sourceReadingKey: v.string(),
+		contextAttestationId: v.id("attestations"),
+		verdictArtifactPath: v.union(v.string(), v.null()),
+		fingerprints: relationPublicationFingerprintsValidator,
+		generatedTargets: v.number(),
+		nulls: v.number(),
+		pendingShadows: v.number(),
+		directMatches: v.number(),
+		rejectedOutputs: v.number(),
+		publicationFailures: v.number(),
+		createdAt: v.number(),
+		updatedAt: v.number(),
+	})
+		.index("by_run_key", ["runKey"])
+		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
+		.index("by_relation_and_created_at", ["relation", "createdAt"]),
+
+	generatedRelationProposals: defineTable({
+		proposalKey: v.string(),
+		attemptKey: v.string(),
+		runNumber: v.number(),
+		relation: directSemanticRelationValidator,
+		sourceReadingId: v.id("readings"),
+		sourceReadingKey: v.string(),
+		contextAttestationId: v.id("attestations"),
+		targetShadow: relationTargetShadowValidator,
+		verdictArtifactPath: v.string(),
+		fingerprints: relationPublicationFingerprintsValidator,
+		outcome: relationProposalOutcomeValidator,
+		reviewStatus: relationReviewStatusValidator,
+		reviewedBy: v.optional(v.string()),
+		reviewNote: v.optional(v.string()),
+		reviewedAt: v.optional(v.number()),
+		createdAt: v.number(),
+		updatedAt: v.number(),
+	})
+		.index("by_proposal_key", ["proposalKey"])
+		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
+		.index("by_relation_and_created_at", ["relation", "createdAt"])
+		.index("by_review_status_and_updated_at", [
+			"reviewStatus",
 			"updatedAt",
 		]),
 

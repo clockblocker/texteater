@@ -10,7 +10,7 @@ export type FeatureProjection = {
 	readonly value: string;
 };
 
-/** Legacy learner-inspection projection for Route Notes and the old history view. */
+/** Learner-inspection projection for Route Notes and the old history view. */
 export function projectFeaturesForPresentation(
 	value: unknown,
 ): FeatureProjection[] {

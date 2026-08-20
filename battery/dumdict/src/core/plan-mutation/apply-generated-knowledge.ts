@@ -15,6 +15,7 @@ import {
 } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
+import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function locatorKey<L extends SupportedLanguage>(
@@ -105,6 +106,19 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 	}
 	for (const relationPatch of relationAdditionsToPatches(
 		relationPlan.additions,
+		slice.revision,
+	)) {
+		const readingKey = readingFingerprint(relationPatch.reading);
+		const patch = operations.get(readingKey) ?? {
+			reading: relationPatch.reading,
+			ops: [],
+		};
+		patch.ops.push(...relationPatch.ops);
+		operations.set(readingKey, patch);
+	}
+	for (const relationPatch of relationRemovalsToPatches(
+		relationPlan.removals,
+		slice.relationReadings,
 		slice.revision,
 	)) {
 		const readingKey = readingFingerprint(relationPatch.reading);

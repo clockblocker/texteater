@@ -9,8 +9,10 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run check && vite build",
-		"check": "bun ../../node_modules/typescript/bin/tsc -b && bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
-		"dev": "CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",
+		"check": "bun run check:relation-policy && bun ../../node_modules/typescript/bin/tsc -b && bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",
+		"check:relation-policy": "bun tooling/compile-relation-verdict.ts --check",
+		"compile:relation-policy": "bun tooling/compile-relation-verdict.ts",
+		"dev": "ISOLATE_MAX_USER_HEAP_SIZE=134217728 CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"preview": "vite preview",

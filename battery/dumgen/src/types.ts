@@ -86,6 +86,7 @@ export type {
 	KnowledgeGenerationLanguage,
 	KnowledgeGenerationRequest,
 	KnowledgeGenerationResult,
+	RequestableRelation,
 } from "./knowledge-generation/contracts";
 
 export type Unresolved = { readonly decision: "Unresolved" };

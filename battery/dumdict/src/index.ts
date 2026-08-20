@@ -1,4 +1,8 @@
 export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-change";
+export {
+	projectSemanticRelations,
+	type SemanticRelationProjection,
+} from "./core/project-semantic-relations";
 export * from "./dto";
 export * from "./dumling";
 export * from "./public";

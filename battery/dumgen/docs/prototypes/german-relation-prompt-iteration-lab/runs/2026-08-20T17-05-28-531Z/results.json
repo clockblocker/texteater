@@ -1,0 +1,3514 @@
+{
+  "kind": "THROWAWAY-german-relation-prompt-iteration-lab",
+  "startedAt": "2026-08-20T17:05:28.531Z",
+  "completedAt": null,
+  "plan": {
+    "question": "Which bounded revisions of the existing combined atomic German Knowledge prompt produce the most conservative relation proposals under the frozen semantic gate?",
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "none",
+    "developmentCaseIds": [
+      "relation-basic-01-hubschrauber",
+      "relation-basic-02-sichtbar",
+      "relation-basic-03-pudel",
+      "relation-basic-04-berlin-city",
+      "relation-basic-05-sprinten",
+      "relation-adv-01-bank-finance",
+      "relation-adv-02-bank-bench",
+      "relation-adv-03-schloss-building",
+      "relation-adv-04-schloss-lock",
+      "relation-adv-05-klug-decision",
+      "relation-adv-06-stark-physical",
+      "relation-adv-07-ins-gras-beissen",
+      "relation-adv-08-foehre",
+      "relation-adv-09-kaufen-converse",
+      "relation-adv-10-oeffnen",
+      "relation-adv-11-warm",
+      "relation-adv-12-hund-katze",
+      "relation-adv-13-auto-taxonomy",
+      "relation-adv-14-rad-wheel",
+      "relation-adv-15-blutplasma",
+      "relation-adv-16-berlin-land",
+      "relation-adv-17-kreuzberg",
+      "relation-adv-18-johann-trivial",
+      "relation-adv-19-mannschaft-inverse",
+      "relation-adv-20-koerperteil-inverse",
+      "relation-adv-21-innerhalb",
+      "relation-adv-22-trotz",
+      "relation-adv-23-immer",
+      "relation-adv-24-manchmal",
+      "relation-adv-25-muessen",
+      "relation-adv-26-und",
+      "relation-adv-27-jeder",
+      "relation-adv-28-ja",
+      "relation-adv-29-zwei",
+      "relation-adv-30-nicht",
+      "relation-adv-31-niemand",
+      "relation-adv-32-obwohl",
+      "relation-adv-33-plus-symbol",
+      "relation-adv-34-aphorism-null",
+      "relation-adv-35-in-betracht-ziehen",
+      "relation-adv-36-auf-jeden-fall",
+      "relation-adv-37-proverb-null",
+      "relation-adv-38-vereinigte-staaten",
+      "relation-adv-39-eilen-multiword-target",
+      "relation-adv-40-gluecklich-family",
+      "relation-adv-41-schnell-kind",
+      "relation-adv-42-beginnen-alternative",
+      "relation-adv-43-selbstbezug",
+      "relation-adv-44-rose-association",
+      "relation-adv-45-fahrrad-granularity"
+    ],
+    "revisions": [
+      {
+        "number": 1,
+        "id": "production-baseline",
+        "title": "Production baseline",
+        "hypothesis": "The reviewed production prompt establishes the baseline without experimental additions.",
+        "repetitions": 1,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.",
+        "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba"
+      },
+      {
+        "number": 2,
+        "id": "reading-general-null-test",
+        "title": "Reading-general null test",
+        "hypothesis": "An explicit context-independence test reduces encounter-specific associations and contextual foils.",
+        "repetitions": 1,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.\n\nExperimental revision: before returning any relation target, complete this\ntest: “Outside this sentence, the target is conventionally this relation of\nthe fixed Reading in ordinary German.” If the claim needs the encounter,\nworld knowledge about this event, or a merely plausible association, return\nnull. Context selects the Reading; it never creates the lexical relation.",
+        "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313"
+      },
+      {
+        "number": 3,
+        "id": "exact-versus-near-equivalence",
+        "title": "Exact versus near equivalence",
+        "hypothesis": "A substitution boundary reduces Synonym/Near Synonym confusion without turning Near Synonym into a related-word bucket.",
+        "repetitions": 1,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.\n\nExperimental revision: before returning any relation target, complete this\ntest: “Outside this sentence, the target is conventionally this relation of\nthe fixed Reading in ordinary German.” If the claim needs the encounter,\nworld knowledge about this event, or a merely plausible association, return\nnull. Context selects the Reading; it never creates the lexical relation.\n\nExperimental revision: classify equivalence before emitting it. Synonym must\npreserve denotation, ordinary entailments, register, region, stance,\nconnotation, intensity, participant structure, and presupposition. Near\nSynonym must preserve the central denotation while having one stable named\nrestriction that blocks exact substitution. If neither test is satisfied,\nreturn null; shared topic, morphology, or taxonomy is insufficient.",
+        "promptFingerprint": "e62a0ad383943a986aa5e1b8a3f081585ff2d4fdd9b5fea94ea122356ae88e6d"
+      },
+      {
+        "number": 4,
+        "id": "established-opposition-boundary",
+        "title": "Established opposition boundary",
+        "hypothesis": "A conventionality test separates Antonym and converse Near Antonym from contextual contrasts and co-members.",
+        "repetitions": 1,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.\n\nExperimental revision: before returning any relation target, complete this\ntest: “Outside this sentence, the target is conventionally this relation of\nthe fixed Reading in ordinary German.” If the claim needs the encounter,\nworld knowledge about this event, or a merely plausible association, return\nnull. Context selects the Reading; it never creates the lexical relation.\n\nExperimental revision: classify equivalence before emitting it. Synonym must\npreserve denotation, ordinary entailments, register, region, stance,\nconnotation, intensity, participant structure, and presupposition. Near\nSynonym must preserve the central denotation while having one stable named\nrestriction that blocks exact substitution. If neither test is satisfied,\nreturn null; shared topic, morphology, or taxonomy is insufficient.\n\nExperimental revision: Antonym requires a conventional complementary,\nscalar-pole, or reversive opposition of the fixed Reading. Near Antonym\nrequires a conventional lexical pairing that profiles opposite viewpoints on\none event, such as an established converse. It is not weaker sentence-level\nopposition. A foil, co-member, cultural pairing, or contrast invented by this\nencounter requires null.",
+        "promptFingerprint": "ce6a68f656696d46c947f8eec555e62667b70efbdde2aa1be318d7f6beb4f0e1"
+      },
+      {
+        "number": 5,
+        "id": "taxonomy-versus-whole-boundary",
+        "title": "Taxonomy versus whole boundary",
+        "hypothesis": "Explicit is-a and constitutive-whole tests reduce Hypernym/Holonym swaps and remote targets.",
+        "repetitions": 1,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.\n\nExperimental revision: before returning any relation target, complete this\ntest: “Outside this sentence, the target is conventionally this relation of\nthe fixed Reading in ordinary German.” If the claim needs the encounter,\nworld knowledge about this event, or a merely plausible association, return\nnull. Context selects the Reading; it never creates the lexical relation.\n\nExperimental revision: classify equivalence before emitting it. Synonym must\npreserve denotation, ordinary entailments, register, region, stance,\nconnotation, intensity, participant structure, and presupposition. Near\nSynonym must preserve the central denotation while having one stable named\nrestriction that blocks exact substitution. If neither test is satisfied,\nreturn null; shared topic, morphology, or taxonomy is insufficient.\n\nExperimental revision: Antonym requires a conventional complementary,\nscalar-pole, or reversive opposition of the fixed Reading. Near Antonym\nrequires a conventional lexical pairing that profiles opposite viewpoints on\none event, such as an established converse. It is not weaker sentence-level\nopposition. A foil, co-member, cultural pairing, or contrast invented by this\nencounter requires null.\n\nExperimental revision: for Hypernym, require “this Reading is a kind of the\ntarget” and choose the nearest useful conventional category. For Holonym,\nrequire “this Reading is a constitutive part, member, or substance of the\ntarget” and choose the nearest useful conventional whole. A location,\ncontainer, purpose, owner, association, temporary host, distant ancestor, or\nwhole/category swap requires null.",
+        "promptFingerprint": "acafe6cce1de0f70a7d9a9937ba0c472c87c1d4f0ec0870f392f920d2aa6db5a"
+      },
+      {
+        "number": 6,
+        "id": "consolidated-null-first-checklist",
+        "title": "Consolidated null-first checklist",
+        "hypothesis": "An ordered final decision procedure makes the preceding boundaries stable without adding another demonstration.",
+        "repetitions": 3,
+        "systemPrompt": "Generate one coherent learner-facing Knowledge update for the supplied exact\nGerman Reading in its marked encounter context.\n\nThe Reading is fixed. Never reconsider its Lemma, Family, Kind, Core Features,\nor emoji description. The marked context is evidence for this encounter only.\n\nThe request is a sparse tree. Return exactly the same tree shape: include every\nrequested leaf, omit every unrequested leaf, and put either one defensible\ncandidate or null at each requested leaf. Do not return empty relation arrays;\nuse null when no defensible target exists.\n\n- transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;\n- definition: a concise German definition of this Reading;\n- translations.en: one concise contextual English literal;\n- semanticRelations: an unordered array of one to five German lexical Unit\n  Shadows, or null, for each requested relation kind.\n\nA relation target contains only language, canonicalForm, family, and kind. It\nnever contains Core Features, a Reading, an emoji description, an ID, or\npersistence instructions. Relation targets describe the related concept, not a\nsurface inflection from the sentence. Keep exact Synonym distinct from Near\nSynonym. Antonym is opposition; Hypernym is broader; Hyponym is narrower;\nMeronym is a part/member/substance; Holonym is the containing whole.\nUse only exact Dumling Kind tokens already demonstrated by the schema. In\nparticular, a German adverb Lexeme has Kind ADV, never ADVERB.\n\nKeep all aspects semantically consistent with the fixed Reading. In particular,\ndo not let a familiar spelling pull the definition, Translation, or relations\ntoward another Reading. Preserve useful context distinctions, multi-member\ntargets, register, punctuation, and proper casing. A relation target must be a\nLexeme or Phraseme, never a Morpheme or Construction. Never target the fixed\nReading itself. Do not repeat a target within a relation or across relation\nkinds; when a target is an exact Synonym, do not also return it as a Near\nSynonym. Every Semantic Relation must hold for the fixed Reading generally,\nindependent of this encounter context. Near Antonym requires an established\nconventional lexical contrast, such as opposite viewpoints on one event; a\nsentence-specific foil, loose association, or arbitrary co-member is not a Near\nAntonym. Generate Hypernym and Holonym directly when requested; Hyponym and\nMeronym are inverse-only and never appear in this request or response. Return\nno structured Morphological Tree or Lexical Breakdown.\n\nExamples to follow:\n\nExample 1\nInput:\n{\"markedContext\":\"Der Hund hob die <TARGET>Pfote</TARGET>.\",\"reading\":{\"emojiDescription\":\"🐾\",\"lemma\":{\"canonicalForm\":\"Pfote\",\"coreFeatures\":{\"gender\":\"Fem\",\"hyph\":null},\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"holonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"holonym\":[{\"canonicalForm\":\"Tier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"hypernym\":[{\"canonicalForm\":\"Körperteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"nearAntonym\":null,\"nearSynonym\":[{\"canonicalForm\":\"Tatze\",\"family\":\"Lexeme\",\"kind\":\"NOUN\",\"language\":\"de\"}],\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nThe approved anchor uses Tatze only as a larger-predator-restricted Near Synonym, separates category Körperteil from bearer whole Tier, and requires conservative nulls elsewhere.\n\nExample 2\nInput:\n{\"markedContext\":\"Wir <TARGET>mieten</TARGET> die Wohnung von Frau Roth.\",\"reading\":{\"emojiDescription\":\"🔑\",\"lemma\":{\"canonicalForm\":\"mieten\",\"coreFeatures\":{\"hasGovPrep\":null,\"hasSepPrefix\":null,\"lexicallyReflexive\":null,\"verbType\":null},\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}},\"request\":{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":null,\"nearSynonym\":null,\"synonym\":null}}}\nIdeal output:\n{\"semanticRelations\":{\"antonym\":null,\"hypernym\":null,\"nearAntonym\":[{\"canonicalForm\":\"vermieten\",\"family\":\"Lexeme\",\"kind\":\"VERB\",\"language\":\"de\"}],\"nearSynonym\":null,\"synonym\":null}}\nExplanation (guidance only; not part of the output):\nMieten and vermieten describe one transaction from exchanged participant viewpoints, so the project maps the supported converse analysis to Near Antonym rather than strict Antonym.\n\nExperimental revision: before returning any relation target, complete this\ntest: “Outside this sentence, the target is conventionally this relation of\nthe fixed Reading in ordinary German.” If the claim needs the encounter,\nworld knowledge about this event, or a merely plausible association, return\nnull. Context selects the Reading; it never creates the lexical relation.\n\nExperimental revision: classify equivalence before emitting it. Synonym must\npreserve denotation, ordinary entailments, register, region, stance,\nconnotation, intensity, participant structure, and presupposition. Near\nSynonym must preserve the central denotation while having one stable named\nrestriction that blocks exact substitution. If neither test is satisfied,\nreturn null; shared topic, morphology, or taxonomy is insufficient.\n\nExperimental revision: Antonym requires a conventional complementary,\nscalar-pole, or reversive opposition of the fixed Reading. Near Antonym\nrequires a conventional lexical pairing that profiles opposite viewpoints on\none event, such as an established converse. It is not weaker sentence-level\nopposition. A foil, co-member, cultural pairing, or contrast invented by this\nencounter requires null.\n\nExperimental revision: for Hypernym, require “this Reading is a kind of the\ntarget” and choose the nearest useful conventional category. For Holonym,\nrequire “this Reading is a constitutive part, member, or substance of the\ntarget” and choose the nearest useful conventional whole. A location,\ncontainer, purpose, owner, association, temporary host, distant ancestor, or\nwhole/category swap requires null.\n\nExperimental revision: use this order for every requested relation leaf:\n1. Fix the exact source Reading from the marked context.\n2. Reject candidates that do not hold for that Reading generally.\n3. Apply only the requested relation's complete conventional lexical test.\n4. Reject self, duplicate, cross-kind, wrong-Family, wrong-Kind, inflected,\n   distant, or merely associated targets.\n5. Emit one to five targets only when every remaining target passes; otherwise\n   emit null.\nDo not compensate for uncertainty with a related but weaker relation kind.",
+        "promptFingerprint": "cb66b56f4d472bdce6689969ecf9b600e45f58b0486d373fbbd13964c6f9eb7b"
+      }
+    ],
+    "maximumSpendUsd": "1.635821500",
+    "budgetUsd": "5.000000000",
+    "guards": {
+      "modelPolicyPass": true,
+      "promptRevisionCountPass": true,
+      "promptFingerprintsDistinctPass": true,
+      "developmentSelectionOnlyPass": true,
+      "acceptanceSelectionExcludedPass": true,
+      "combinedAtomicCallPass": true,
+      "allDirectKindsCoveredPass": true,
+      "finalStabilityPlanPass": true,
+      "exactThresholdsPass": true,
+      "requestShapePass": true,
+      "longContextPriceTierAvoidedPass": true,
+      "budgetPass": true
+    },
+    "byRevision": {
+      "production-baseline": {
+        "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+        "repetitions": 1,
+        "caseCount": 50,
+        "callCount": 50,
+        "maximumSpendUsd": "0.187641750"
+      },
+      "reading-general-null-test": {
+        "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+        "repetitions": 1,
+        "caseCount": 50,
+        "callCount": 50,
+        "maximumSpendUsd": "0.192454250"
+      },
+      "exact-versus-near-equivalence": {
+        "promptFingerprint": "e62a0ad383943a986aa5e1b8a3f081585ff2d4fdd9b5fea94ea122356ae88e6d",
+        "repetitions": 1,
+        "caseCount": 50,
+        "callCount": 50,
+        "maximumSpendUsd": "0.197991750"
+      },
+      "established-opposition-boundary": {
+        "promptFingerprint": "ce6a68f656696d46c947f8eec555e62667b70efbdde2aa1be318d7f6beb4f0e1",
+        "repetitions": 1,
+        "caseCount": 50,
+        "callCount": 50,
+        "maximumSpendUsd": "0.203066750"
+      },
+      "taxonomy-versus-whole-boundary": {
+        "promptFingerprint": "acafe6cce1de0f70a7d9a9937ba0c472c87c1d4f0ec0870f392f920d2aa6db5a",
+        "repetitions": 1,
+        "caseCount": 50,
+        "callCount": 50,
+        "maximumSpendUsd": "0.208341750"
+      },
+      "consolidated-null-first-checklist": {
+        "promptFingerprint": "cb66b56f4d472bdce6689969ecf9b600e45f58b0486d373fbbd13964c6f9eb7b",
+        "repetitions": 3,
+        "caseCount": 50,
+        "callCount": 150,
+        "maximumSpendUsd": "0.646325250"
+      }
+    },
+    "plannedCalls": 400
+  },
+  "state": {
+    "status": "running",
+    "apiKeyAvailable": true,
+    "lastAction": "Completed revision-02-reading-general-null-test/repetition-1/relation-adv-05-klug-decision",
+    "plannedCalls": 400,
+    "completedCalls": 60,
+    "skippedCalls": 0,
+    "maximumSpendUsd": "1.635821500",
+    "actualSpendUsd": "0.013827090",
+    "artifactPath": "/Users/annagorelova/work/textfresser-batteries/battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json",
+    "report": null
+  },
+  "attempts": [
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-basic-01-hubschrauber",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-basic-01-hubschrauber",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3900800,
+      "actualCostNanoUsd": 534800,
+      "latencyMs": 3237,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1588,
+        "input_tokens_details": {
+          "cache_write_tokens": 1464,
+          "cached_tokens": 0
+        },
+        "output_tokens": 120,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1708
+      },
+      "inputTokens": 1588,
+      "outputTokens": 120,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1464,
+      "responseId": "resp_03779d7c51848a3c016a8733d9dee08192ba9924577d4ed3f3",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈhʊpʃʁaʊ̯bɐ\",\"definition\":\"Luftfahrzeug mit Rotoren, das senkrecht starten und landen kann.\",\"translations\":{\"en\":\"helicopter\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Luftfahrzeug\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈhʊpʃʁaʊ̯bɐ",
+        "definition": "Luftfahrzeug mit Rotoren, das senkrecht starten und landen kann.",
+        "translations": {
+          "en": "helicopter"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Luftfahrzeug",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-basic-02-sichtbar",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-basic-02-sichtbar",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3699800,
+      "actualCostNanoUsd": 496500,
+      "latencyMs": 2497,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1458,
+        "input_tokens_details": {
+          "cache_write_tokens": 1338,
+          "cached_tokens": 0
+        },
+        "output_tokens": 115,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1573
+      },
+      "inputTokens": 1458,
+      "outputTokens": 115,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1338,
+      "responseId": "resp_05e9b0602f031538016a8733dc17b081a2906b30f0d682d85f",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈzɪçtbaːɐ̯\",\"definition\":\"so, dass man etwas sehen kann\",\"translations\":{\"en\":\"visible\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"erkennbar\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"unsichtbar\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈzɪçtbaːɐ̯",
+        "definition": "so, dass man etwas sehen kann",
+        "translations": {
+          "en": "visible"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "erkennbar",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "unsichtbar",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-basic-03-pudel",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-basic-03-pudel",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3898550,
+      "actualCostNanoUsd": 175680,
+      "latencyMs": 2057,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1686
+      },
+      "inputTokens": 1584,
+      "outputTokens": 102,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0ddbcccd35d64891016a8733de965087d29e03182751bf8cd0",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈpuːdl̩\",\"definition\":\"Hunderasse mit dichtem, meist gelocktem Fell.\",\"translations\":{\"en\":\"poodle\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Hund\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈpuːdl̩",
+        "definition": "Hunderasse mit dichtem, meist gelocktem Fell.",
+        "translations": {
+          "en": "poodle"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Hund",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-basic-04-berlin-city",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-basic-04-berlin-city",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3589050,
+      "actualCostNanoUsd": 442850,
+      "latencyMs": 2028,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1380,
+        "input_tokens_details": {
+          "cache_write_tokens": 1273,
+          "cached_tokens": 0
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1466
+      },
+      "inputTokens": 1380,
+      "outputTokens": 86,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1273,
+      "responseId": "resp_0c9bedeb0b7a5a22016a8733e09ccc87d290f59146f794fb25",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"bɛʁˈliːn\",\"definition\":\"Hauptstadt und größtes städtisches Zentrum Deutschlands.\",\"translations\":{\"en\":\"Berlin\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Stadt\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "bɛʁˈliːn",
+        "definition": "Hauptstadt und größtes städtisches Zentrum Deutschlands.",
+        "translations": {
+          "en": "Berlin"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Stadt",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-basic-05-sprinten",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-basic-05-sprinten",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3811800,
+      "actualCostNanoUsd": 488850,
+      "latencyMs": 1795,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1536,
+        "input_tokens_details": {
+          "cache_write_tokens": 1401,
+          "cached_tokens": 0
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1629
+      },
+      "inputTokens": 1536,
+      "outputTokens": 93,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1401,
+      "responseId": "resp_0d4559eb981b5a9f016a8733e2a59887d299e3ad965938c995",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈʃprɪntn̩\",\"definition\":\"sehr schnell laufen\",\"translations\":{\"en\":\"sprint\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"eilen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":null}}",
+      "output": {
+        "transcription": "ˈʃprɪntn̩",
+        "definition": "sehr schnell laufen",
+        "translations": {
+          "en": "sprint"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "eilen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-01-bank-finance",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-01-bank-finance",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3898300,
+      "actualCostNanoUsd": 176880,
+      "latencyMs": 2209,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 103,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1687
+      },
+      "inputTokens": 1584,
+      "outputTokens": 103,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_05278efa485f6f32016a8733e4784c87d2b74f2ee385b4e4e9",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Finanzinstitut, das Geldgeschäfte tätigt und Kredite vergibt.\",\"translations\":{\"en\":\"bank\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Finanzinstitut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Finanzinstitut, das Geldgeschäfte tätigt und Kredite vergibt.",
+        "translations": {
+          "en": "bank"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Finanzinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-02-bank-bench",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-02-bank-bench",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3899050,
+      "actualCostNanoUsd": 197480,
+      "latencyMs": 1887,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1585,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 120,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1705
+      },
+      "inputTokens": 1585,
+      "outputTokens": 120,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0eb76a1de2fe3972016a8733e6a9e087d2a5b5a9b3fc0c8dc3",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Sitzgelegenheit für mehrere Personen, meist aus Holz oder Metall.\",\"translations\":{\"en\":\"bench\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Sitzmöbel\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Park\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Sitzgelegenheit für mehrere Personen, meist aus Holz oder Metall.",
+        "translations": {
+          "en": "bench"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzmöbel",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Park",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-03-schloss-building",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-03-schloss-building",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3900300,
+      "actualCostNanoUsd": 190680,
+      "latencyMs": 1910,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1587,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1701
+      },
+      "inputTokens": 1587,
+      "outputTokens": 114,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0252032da691f529016a8733e88c2c81a0807aae7d2751d21f",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃlɔs\",\"definition\":\"Großes, repräsentatives Gebäude, meist aus früherer Zeit, das als Wohn- oder Herrschaftssitz diente.\",\"translations\":{\"en\":\"castle\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Bauwerk\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ʃlɔs",
+        "definition": "Großes, repräsentatives Gebäude, meist aus früherer Zeit, das als Wohn- oder Herrschaftssitz diente.",
+        "translations": {
+          "en": "castle"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Bauwerk",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-04-schloss-lock",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-04-schloss-lock",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3899800,
+      "actualCostNanoUsd": 174680,
+      "latencyMs": 2712,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1585,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 101,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1686
+      },
+      "inputTokens": 1585,
+      "outputTokens": 101,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_01ea5d0a3f413e40016a8733eaf2d487d2b0e6a8c47d03ebe0",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃlɔs\",\"definition\":\"Vorrichtung zum Verschließen einer Tür oder eines Behälters.\",\"translations\":{\"en\":\"lock\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Verschluss\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ʃlɔs",
+        "definition": "Vorrichtung zum Verschließen einer Tür oder eines Behälters.",
+        "translations": {
+          "en": "lock"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Verschluss",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-05-klug-decision",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-05-klug-decision",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3698050,
+      "actualCostNanoUsd": 181360,
+      "latencyMs": 1836,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1457,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1566
+      },
+      "inputTokens": 1457,
+      "outputTokens": 109,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_09b4047941ca8734016a8733ed2fac819cae07ff7cb89055dd",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"kluːk\",\"definition\":\"über gute Einsicht und ein gutes Urteilsvermögen verfügend\",\"translations\":{\"en\":\"wise\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"weise\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"dumm\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "kluːk",
+        "definition": "über gute Einsicht und ein gutes Urteilsvermögen verfügend",
+        "translations": {
+          "en": "wise"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "weise",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "dumm",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-06-stark-physical",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-06-stark-physical",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3698050,
+      "actualCostNanoUsd": 176560,
+      "latencyMs": 2655,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1457,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1562
+      },
+      "inputTokens": 1457,
+      "outputTokens": 105,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_014e47de58ea82c8016a8733ef28dc87d2b5d66329cf656af1",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃtaʁk\",\"definition\":\"über große körperliche Kraft verfügend\",\"translations\":{\"en\":\"strong\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"kräftig\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"schwach\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ʃtaʁk",
+        "definition": "über große körperliche Kraft verfügend",
+        "translations": {
+          "en": "strong"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "kräftig",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "schwach",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-07-ins-gras-beissen",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-07-ins-gras-beissen",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3686800,
+      "actualCostNanoUsd": 196160,
+      "latencyMs": 1931,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1447,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 123,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1570
+      },
+      "inputTokens": 1447,
+      "outputTokens": 123,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_05aebbe2b8ddc6d8016a8733f1fa0481a3bebde95f003e7c4a",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ɪns ɡʁaːs ˈbaɪ̯sn̩\",\"definition\":\"sterben\",\"translations\":{\"en\":\"to die\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"sterben\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"den Löffel abgeben\",\"family\":\"Phraseme\",\"kind\":\"Idiom\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ɪns ɡʁaːs ˈbaɪ̯sn̩",
+        "definition": "sterben",
+        "translations": {
+          "en": "to die"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "sterben",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "den Löffel abgeben",
+              "family": "Phraseme",
+              "kind": "Idiom"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-08-foehre",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-08-foehre",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3897550,
+      "actualCostNanoUsd": 215880,
+      "latencyMs": 5990,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1587,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 135,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1722
+      },
+      "inputTokens": 1587,
+      "outputTokens": 135,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_009b7ece2b1b3466016a8733f55bac87d2842fd47515e54f0f",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈføːʁə\",\"definition\":\"Kiefernart mit langen, nadelförmig angeordneten Nadeln, die immergrün ist.\",\"translations\":{\"en\":\"Scots pine\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Kiefer\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Nadelbaum\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈføːʁə",
+        "definition": "Kiefernart mit langen, nadelförmig angeordneten Nadeln, die immergrün ist.",
+        "translations": {
+          "en": "Scots pine"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Kiefer",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Nadelbaum",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-09-kaufen-converse",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-09-kaufen-converse",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3808550,
+      "actualCostNanoUsd": 191420,
+      "latencyMs": 2885,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1534,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1401
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1648
+      },
+      "inputTokens": 1534,
+      "outputTokens": 114,
+      "cachedInputTokens": 1401,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_026aadb078fb842a016a8733fa114487d2b63fdbf64a9ce7b6",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈkaʊ̯fn̩\",\"definition\":\"etwas gegen Geld erwerben\",\"translations\":{\"en\":\"buys\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":[{\"language\":\"de\",\"canonicalForm\":\"verkaufen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"erwerben\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}]}}",
+      "output": {
+        "transcription": "ˈkaʊ̯fn̩",
+        "definition": "etwas gegen Geld erwerben",
+        "translations": {
+          "en": "buys"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": [
+            {
+              "language": "de",
+              "canonicalForm": "verkaufen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "erwerben",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-10-oeffnen",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-10-oeffnen",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3807550,
+      "actualCostNanoUsd": 215020,
+      "latencyMs": 2596,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1532,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1401
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1666
+      },
+      "inputTokens": 1532,
+      "outputTokens": 134,
+      "cachedInputTokens": 1401,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0a5ab30bf2b9cb30016a8733fce68887d2a94ddc05b9ad6ee5",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈœfnən\",\"definition\":\"etwas zugänglich machen oder in einen offenen Zustand bringen\",\"translations\":{\"en\":\"open\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"aufmachen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"schließen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"verändern\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}]}}",
+      "output": {
+        "transcription": "ˈœfnən",
+        "definition": "etwas zugänglich machen oder in einen offenen Zustand bringen",
+        "translations": {
+          "en": "open"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "aufmachen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "schließen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "verändern",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-11-warm",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-11-warm",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3696800,
+      "actualCostNanoUsd": 176360,
+      "latencyMs": 2235,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1456,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1561
+      },
+      "inputTokens": 1456,
+      "outputTokens": 105,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_02ba6cc087769100016a8733ff815c87d280e588c7ec10af54",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"vaʁm\",\"definition\":\"eine angenehm oder deutlich erhöhte Temperatur habend\",\"translations\":{\"en\":\"warm\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"heiß\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"kalt\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "vaʁm",
+        "definition": "eine angenehm oder deutlich erhöhte Temperatur habend",
+        "translations": {
+          "en": "warm"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "heiß",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "kalt",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-12-hund-katze",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-12-hund-katze",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3899300,
+      "actualCostNanoUsd": 175680,
+      "latencyMs": 1994,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1686
+      },
+      "inputTokens": 1584,
+      "outputTokens": 102,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0ae0b353fedf1e79016a873401bc2087d2b68045ffa1e79cc3",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"hʊnt\",\"definition\":\"domestiziertes Säugetier aus der Familie der Hunde\",\"translations\":{\"en\":\"dog\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Säugetier\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "hʊnt",
+        "definition": "domestiziertes Säugetier aus der Familie der Hunde",
+        "translations": {
+          "en": "dog"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Säugetier",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-13-auto-taxonomy",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-13-auto-taxonomy",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3897800,
+      "actualCostNanoUsd": 208080,
+      "latencyMs": 1589,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 129,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1713
+      },
+      "inputTokens": 1584,
+      "outputTokens": 129,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0fc4c234fd732b38016a873403b42481a394e6ce4480a2f9e4",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈaʊ̯to\",\"definition\":\"Kraftfahrzeug mit vier Rädern, das der Beförderung von Personen dient.\",\"translations\":{\"en\":\"car\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Kraftwagen\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Fahrzeug\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈaʊ̯to",
+        "definition": "Kraftfahrzeug mit vier Rädern, das der Beförderung von Personen dient.",
+        "translations": {
+          "en": "car"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Kraftwagen",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Fahrzeug",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-14-rad-wheel",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-14-rad-wheel",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3899050,
+      "actualCostNanoUsd": 211080,
+      "latencyMs": 5357,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1587,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 131,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1718
+      },
+      "inputTokens": 1587,
+      "outputTokens": 131,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0989f188c996a835016a8734054ea887d295ec5d728a618126",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʁaːt\",\"definition\":\"kreisförmiges Teil eines Fahrzeugs, das sich um eine Achse dreht\",\"translations\":{\"en\":\"wheel\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Fahrzeugteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Fahrrad\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "ʁaːt",
+        "definition": "kreisförmiges Teil eines Fahrzeugs, das sich um eine Achse dreht",
+        "translations": {
+          "en": "wheel"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Fahrzeugteil",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Fahrrad",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-15-blutplasma",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-15-blutplasma",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3900300,
+      "actualCostNanoUsd": 215080,
+      "latencyMs": 2234,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1589,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 134,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1723
+      },
+      "inputTokens": 1589,
+      "outputTokens": 134,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0ad1b91172e5cba6016a87340aab308192ac023fd7b2a2bdda",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈbluːtplaˌzma\",\"definition\":\"Flüssiger Bestandteil des Blutes, in dem die Blutzellen enthalten sind.\",\"translations\":{\"en\":\"blood plasma\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Körperflüssigkeit\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Blut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "ˈbluːtplaˌzma",
+        "definition": "Flüssiger Bestandteil des Blutes, in dem die Blutzellen enthalten sind.",
+        "translations": {
+          "en": "blood plasma"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Körperflüssigkeit",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Blut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-16-berlin-land",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-16-berlin-land",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3589050,
+      "actualCostNanoUsd": 178260,
+      "latencyMs": 2545,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1383,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1273
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1492
+      },
+      "inputTokens": 1383,
+      "outputTokens": 109,
+      "cachedInputTokens": 1273,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_00415dae8509ff94016a87340ce41087d287f3a957f8e36e5e",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"bɛʁˈliːn\",\"definition\":\"Hauptstadt und Bundesland Deutschlands.\",\"translations\":{\"en\":\"Berlin\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Bundesland\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Bundesrepublik Deutschland\",\"family\":\"Phraseme\",\"kind\":\"NOUN\"}]}}",
+      "error": {
+        "name": "ZodError",
+        "message": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [\n      \"semanticRelations\",\n      \"holonym\",\n      0,\n      \"kind\"\n    ],\n    \"message\": \"de/Phraseme/NOUN is not a supported Dumling Lemma route.\"\n  }\n]"
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-17-kreuzberg",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-17-kreuzberg",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3588800,
+      "actualCostNanoUsd": 184860,
+      "latencyMs": 5865,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1386,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1273
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1500
+      },
+      "inputTokens": 1386,
+      "outputTokens": 114,
+      "cachedInputTokens": 1273,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_07282622fe554ab6016a87340fe34c87d29f70a284487b547b",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈkrɔʏtsbɛʁk\",\"definition\":\"Ein Ortsteil im Berliner Bezirk Friedrichshain-Kreuzberg.\",\"translations\":{\"en\":\"Kreuzberg\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Ortsteil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Berlin\",\"family\":\"Lexeme\",\"kind\":\"PROPN\"}]}}",
+      "output": {
+        "transcription": "ˈkrɔʏtsbɛʁk",
+        "definition": "Ein Ortsteil im Berliner Bezirk Friedrichshain-Kreuzberg.",
+        "translations": {
+          "en": "Kreuzberg"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Ortsteil",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Berlin",
+              "family": "Lexeme",
+              "kind": "PROPN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-18-johann-trivial",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-18-johann-trivial",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3584300,
+      "actualCostNanoUsd": 114860,
+      "latencyMs": 3512,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1378,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1273
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1435
+      },
+      "inputTokens": 1378,
+      "outputTokens": 57,
+      "cachedInputTokens": 1273,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0c4ea3421d37ade5016a8734156c6087d298218be756bf946e",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈjoːhan\",\"definition\":\"männlicher Vorname\",\"translations\":{\"en\":\"Johann\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":null,\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈjoːhan",
+        "definition": "männlicher Vorname",
+        "translations": {
+          "en": "Johann"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "hypernym": null,
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-19-mannschaft-inverse",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-19-mannschaft-inverse",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3897800,
+      "actualCostNanoUsd": 198480,
+      "latencyMs": 2214,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 121,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1705
+      },
+      "inputTokens": 1584,
+      "outputTokens": 121,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0055ea7a2b2a0d1c016a873418e9f081a28f9f9076014412a7",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈmanʃaft\",\"definition\":\"Gruppe von Personen, die gemeinsam eine Aufgabe oder ein Ziel verfolgt.\",\"translations\":{\"en\":\"team\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"Team\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Gruppe\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈmanʃaft",
+        "definition": "Gruppe von Personen, die gemeinsam eine Aufgabe oder ein Ziel verfolgt.",
+        "translations": {
+          "en": "team"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Team",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Gruppe",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-20-koerperteil-inverse",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-20-koerperteil-inverse",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3903300,
+      "actualCostNanoUsd": 238880,
+      "latencyMs": 2246,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1588,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 154,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1742
+      },
+      "inputTokens": 1588,
+      "outputTokens": 154,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_042e4c7082a0abd8016a87341b151487d2b527e35aed5051eb",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈkœʁpɐˌtaɪ̯l\",\"definition\":\"ein abgegrenzter Teil des menschlichen oder tierischen Körpers\",\"translations\":{\"en\":\"body part\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Leibesglied\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Teil\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Körper\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "ˈkœʁpɐˌtaɪ̯l",
+        "definition": "ein abgegrenzter Teil des menschlichen oder tierischen Körpers",
+        "translations": {
+          "en": "body part"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Leibesglied",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Teil",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Körper",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-21-innerhalb",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-21-innerhalb",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3710050,
+      "actualCostNanoUsd": 185360,
+      "latencyMs": 1886,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1471,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1581
+      },
+      "inputTokens": 1471,
+      "outputTokens": 110,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0832be989078ab4f016a87341d5724819d86babba2f2a79fb2",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ɪnɐˈhalt\",\"definition\":\"im Inneren eines begrenzten Bereichs\",\"translations\":{\"en\":\"within\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"in\",\"family\":\"Lexeme\",\"kind\":\"ADP\"}],\"antonym\":null,\"nearAntonym\":[{\"language\":\"de\",\"canonicalForm\":\"außerhalb\",\"family\":\"Lexeme\",\"kind\":\"ADP\"}]}}",
+      "output": {
+        "transcription": "ɪnɐˈhalt",
+        "definition": "im Inneren eines begrenzten Bereichs",
+        "translations": {
+          "en": "within"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "in",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": [
+            {
+              "language": "de",
+              "canonicalForm": "außerhalb",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-22-trotz",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-22-trotz",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3709300,
+      "actualCostNanoUsd": 157960,
+      "latencyMs": 2172,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1472,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1559
+      },
+      "inputTokens": 1472,
+      "outputTokens": 87,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0f7d667a27b9d5bf016a87341f2f9087d2a1282dd9acaec711",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"troːts\",\"definition\":\"entgegen einem hindernden Umstand; trotz etwas\",\"translations\":{\"en\":\"despite\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"ungeachtet\",\"family\":\"Lexeme\",\"kind\":\"ADP\"}],\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "troːts",
+        "definition": "entgegen einem hindernden Umstand; trotz etwas",
+        "translations": {
+          "en": "despite"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "ungeachtet",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          ],
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-23-immer",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-23-immer",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3694300,
+      "actualCostNanoUsd": 175760,
+      "latencyMs": 2168,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1453,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1558
+      },
+      "inputTokens": 1453,
+      "outputTokens": 105,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_00228b56903b4692016a8734215df487d282bb7867d8ddaade",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈɪmɐ\",\"definition\":\"zu jeder Zeit oder bei jeder Gelegenheit; stets\",\"translations\":{\"en\":\"always\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"stets\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"nearSynonym\":null,\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"nie\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈɪmɐ",
+        "definition": "zu jeder Zeit oder bei jeder Gelegenheit; stets",
+        "translations": {
+          "en": "always"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "stets",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "nearSynonym": null,
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "nie",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-24-manchmal",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-24-manchmal",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3696550,
+      "actualCostNanoUsd": 158160,
+      "latencyMs": 1771,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1455,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 90,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1545
+      },
+      "inputTokens": 1455,
+      "outputTokens": 90,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0fef65b37c4eb52c016a8734238c14819cbc73a948d1c5294e",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈmançmaːl\",\"definition\":\"zu manchen, nicht allen Zeitpunkten; gelegentlich\",\"translations\":{\"en\":\"sometimes\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"gelegentlich\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈmançmaːl",
+        "definition": "zu manchen, nicht allen Zeitpunkten; gelegentlich",
+        "translations": {
+          "en": "sometimes"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "gelegentlich",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-25-muessen",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-25-muessen",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3685550,
+      "actualCostNanoUsd": 152760,
+      "latencyMs": 1942,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1446,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1533
+      },
+      "inputTokens": 1446,
+      "outputTokens": 87,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0d480fe8685b7933016a873425513c819fb84102ecc5fabe2c",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈmʏsn̩\",\"definition\":\"als notwendig oder unvermeidlich gelten\",\"translations\":{\"en\":\"must\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"sollen\",\"family\":\"Lexeme\",\"kind\":\"AUX\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈmʏsn̩",
+        "definition": "als notwendig oder unvermeidlich gelten",
+        "translations": {
+          "en": "must"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "sollen",
+              "family": "Lexeme",
+              "kind": "AUX"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-26-und",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-26-und",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3576550,
+      "actualCostNanoUsd": 413900,
+      "latencyMs": 3463,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1373,
+        "input_tokens_details": {
+          "cache_write_tokens": 1274,
+          "cached_tokens": 0
+        },
+        "output_tokens": 63,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1436
+      },
+      "inputTokens": 1373,
+      "outputTokens": 63,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1274,
+      "responseId": "resp_0e82c96549d73600016a8734276cb087d29e4fc77c0bb1e236",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʊnt\",\"definition\":\"verbindet gleichrangige Wörter, Satzteile oder Sätze miteinander\",\"translations\":{\"en\":\"and\"},\"semanticRelations\":{\"synonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ʊnt",
+        "definition": "verbindet gleichrangige Wörter, Satzteile oder Sätze miteinander",
+        "translations": {
+          "en": "and"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-27-jeder",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-27-jeder",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3714800,
+      "actualCostNanoUsd": 162360,
+      "latencyMs": 1710,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1476,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 90,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1566
+      },
+      "inputTokens": 1476,
+      "outputTokens": 90,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0d597498392f6484016a87342abb3887d2bf1a44143b40afe7",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈjeːdɐ\",\"definition\":\"bezeichnet jedes einzelne Mitglied einer Gruppe ohne Ausnahme\",\"translations\":{\"en\":\"each\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"ein jeder\",\"family\":\"Phraseme\",\"kind\":\"DET\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "error": {
+        "name": "ZodError",
+        "message": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [\n      \"semanticRelations\",\n      \"nearSynonym\",\n      0,\n      \"kind\"\n    ],\n    \"message\": \"de/Phraseme/DET is not a supported Dumling Lemma route.\"\n  }\n]"
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-28-ja",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-28-ja",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3682300,
+      "actualCostNanoUsd": 120360,
+      "latencyMs": 1469,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1440,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 61,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1501
+      },
+      "inputTokens": 1440,
+      "outputTokens": 61,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0e010efa1288acb9016a87342c72e48192a1551a69d14e9b9d",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ja\",\"definition\":\"Ausdruck der Zustimmung oder Bejahung.\",\"translations\":{\"en\":\"yes\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ja",
+        "definition": "Ausdruck der Zustimmung oder Bejahung.",
+        "translations": {
+          "en": "yes"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-29-zwei",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-29-zwei",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3376800,
+      "actualCostNanoUsd": 362350,
+      "latencyMs": 1302,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1243,
+        "input_tokens_details": {
+          "cache_write_tokens": 1147,
+          "cached_tokens": 0
+        },
+        "output_tokens": 47,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1290
+      },
+      "inputTokens": 1243,
+      "outputTokens": 47,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1147,
+      "responseId": "resp_08af3e47e50e6ac1016a87342dec7087d2b1139eb55ff8f62f",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"tsvaɪ\",\"definition\":\"die Zahl 2 bezeichnend\",\"translations\":{\"en\":\"two\"},\"semanticRelations\":{\"synonym\":null}}",
+      "output": {
+        "transcription": "tsvaɪ",
+        "definition": "die Zahl 2 bezeichnend",
+        "translations": {
+          "en": "two"
+        },
+        "semanticRelations": {
+          "synonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-30-nicht",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-30-nicht",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3696550,
+      "actualCostNanoUsd": 154360,
+      "latencyMs": 2158,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1454,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 87,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1541
+      },
+      "inputTokens": 1454,
+      "outputTokens": 87,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0781ddffc24fb394016a87342f381087d2ae62f224818b9082",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"nɪçt\",\"definition\":\"verneint die Aussage, dass etwas wahr ist\",\"translations\":{\"en\":\"not\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"keineswegs\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "nɪçt",
+        "definition": "verneint die Aussage, dass etwas wahr ist",
+        "translations": {
+          "en": "not"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "keineswegs",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-31-niemand",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-31-niemand",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3704550,
+      "actualCostNanoUsd": 126560,
+      "latencyMs": 1452,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1465,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 62,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1527
+      },
+      "inputTokens": 1465,
+      "outputTokens": 62,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0e477dbb1d02f356016a873431618887d2afdb7a2019bff35d",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈniːmant\",\"definition\":\"keine Person\",\"translations\":{\"en\":\"nobody\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈniːmant",
+        "definition": "keine Person",
+        "translations": {
+          "en": "nobody"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-32-obwohl",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-32-obwohl",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3689050,
+      "actualCostNanoUsd": 143960,
+      "latencyMs": 2128,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1450,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 79,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1529
+      },
+      "inputTokens": 1450,
+      "outputTokens": 79,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0b3b7d912cfbab97016a873432ecfc81a2a8a390a9f1a280c6",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"oːpˈvoːl\",\"definition\":\"leitet einen Nebensatz ein, der einen entgegenstehenden Grund oder Umstand ausdrückt\",\"translations\":{\"en\":\"although\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "oːpˈvoːl",
+        "definition": "leitet einen Nebensatz ein, der einen entgegenstehenden Grund oder Umstand ausdrückt",
+        "translations": {
+          "en": "although"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-33-plus-symbol",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-33-plus-symbol",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3686050,
+      "actualCostNanoUsd": 124760,
+      "latencyMs": 2643,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1444,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 64,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1508
+      },
+      "inputTokens": 1444,
+      "outputTokens": 64,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0978cfa73e6ed8b2016a873435b6d487d2b0ccefe94565966a",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"plʊs\",\"definition\":\"Zeichen für die Addition zweier Zahlen.\",\"translations\":{\"en\":\"plus\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "plʊs",
+        "definition": "Zeichen für die Addition zweier Zahlen.",
+        "translations": {
+          "en": "plus"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-34-aphorism-null",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-34-aphorism-null",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3688050,
+      "actualCostNanoUsd": 161160,
+      "latencyMs": 2881,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1452,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 93,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1545
+      },
+      "inputTokens": 1452,
+      "outputTokens": 93,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0a5e744e7c715bc6016a873437a29887d2806fa605e5ffe946",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"deːɐ̯ veːk ɪst das tsiːl\",\"definition\":\"Der Weg oder Prozess zu einem Ziel ist ebenso wichtig wie das Erreichen des Ziels.\",\"translations\":{\"en\":\"The journey is the destination.\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "deːɐ̯ veːk ɪst das tsiːl",
+        "definition": "Der Weg oder Prozess zu einem Ziel ist ebenso wichtig wie das Erreichen des Ziels.",
+        "translations": {
+          "en": "The journey is the destination."
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-35-in-betracht-ziehen",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-35-in-betracht-ziehen",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3690800,
+      "actualCostNanoUsd": 200760,
+      "latencyMs": 2107,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1446,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 127,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1573
+      },
+      "inputTokens": 1446,
+      "outputTokens": 127,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_014ad578dea75327016a87343a813887d2a737eadc7086b97e",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ɪn bəˈtʁaxt ˈtsiːən\",\"definition\":\"etwas berücksichtigen oder bei einer Entscheidung mitbedenken\",\"translations\":{\"en\":\"to take into consideration\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"berücksichtigen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"mitbedenken\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ɪn bəˈtʁaxt ˈtsiːən",
+        "definition": "etwas berücksichtigen oder bei einer Entscheidung mitbedenken",
+        "translations": {
+          "en": "to take into consideration"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "berücksichtigen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "mitbedenken",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-36-auf-jeden-fall",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-36-auf-jeden-fall",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3695050,
+      "actualCostNanoUsd": 162960,
+      "latencyMs": 2264,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1449,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 95,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1544
+      },
+      "inputTokens": 1449,
+      "outputTokens": 95,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0b89f6c90f651f06016a87343ca15887d2a7e3e7ba1c90d31b",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"aʊ̯f jeːdən fal\",\"definition\":\"drückt aus, dass etwas ohne Zweifel oder Ausnahme gilt\",\"translations\":{\"en\":\"definitely\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"jedenfalls\",\"family\":\"Lexeme\",\"kind\":\"ADV\"}],\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "aʊ̯f jeːdən fal",
+        "definition": "drückt aus, dass etwas ohne Zweifel oder Ausnahme gilt",
+        "translations": {
+          "en": "definitely"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "jedenfalls",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-37-proverb-null",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-37-proverb-null",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3691300,
+      "actualCostNanoUsd": 169760,
+      "latencyMs": 5297,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1453,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 100,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1553
+      },
+      "inputTokens": 1453,
+      "outputTokens": 100,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_05e3e53cf079a732016a87343ee13c819fafe20b082592ffec",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈmɔʁɡn̩ʃtʊnt haːt ɡɔlt ɪm mʊnt\",\"definition\":\"Wer früh beginnt, hat bessere Chancen auf Erfolg.\",\"translations\":{\"en\":\"The early bird catches the worm.\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈmɔʁɡn̩ʃtʊnt haːt ɡɔlt ɪm mʊnt",
+        "definition": "Wer früh beginnt, hat bessere Chancen auf Erfolg.",
+        "translations": {
+          "en": "The early bird catches the worm."
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-38-vereinigte-staaten",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-38-vereinigte-staaten",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3593050,
+      "actualCostNanoUsd": 139660,
+      "latencyMs": 1871,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1388,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1273
+        },
+        "output_tokens": 76,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1464
+      },
+      "inputTokens": 1388,
+      "outputTokens": 76,
+      "cachedInputTokens": 1273,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_05c7d4950d024551016a873444335087d2b8fd5585964777bb",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"fɛɐ̯ˈʔaɪ̯nɪçtə ˈʃtaːtən\",\"definition\":\"null\",\"translations\":{\"en\":\"United States\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":null,\"holonym\":null}}",
+      "output": {
+        "transcription": "fɛɐ̯ˈʔaɪ̯nɪçtə ˈʃtaːtən",
+        "definition": "null",
+        "translations": {
+          "en": "United States"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "hypernym": null,
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-39-eilen-multiword-target",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-39-eilen-multiword-target",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3806800,
+      "actualCostNanoUsd": 204420,
+      "latencyMs": 1859,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1533,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1401
+        },
+        "output_tokens": 125,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1658
+      },
+      "inputTokens": 1533,
+      "outputTokens": 125,
+      "cachedInputTokens": 1401,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_07e60a8ba10f70eb016a8734460bc887d28857094780b45b64",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈaɪ̯lən\",\"definition\":\"sich schnell fortbewegen oder etwas schnell tun\",\"translations\":{\"en\":\"hurry\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"sich beeilen\",\"family\":\"Phraseme\",\"kind\":\"VERB\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"sich fortbewegen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}]}}",
+      "error": {
+        "name": "ZodError",
+        "message": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [\n      \"semanticRelations\",\n      \"nearSynonym\",\n      0,\n      \"kind\"\n    ],\n    \"message\": \"de/Phraseme/VERB is not a supported Dumling Lemma route.\"\n  }\n]"
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-40-gluecklich-family",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-40-gluecklich-family",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3699050,
+      "actualCostNanoUsd": 185760,
+      "latencyMs": 2063,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1455,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 113,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1568
+      },
+      "inputTokens": 1455,
+      "outputTokens": 113,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0b38648fdf53c7a1016a873447ed5087d2b834bc47c4b56bdc",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈɡlʏklɪç\",\"definition\":\"von Freude und innerem Wohlbefinden erfüllt\",\"translations\":{\"en\":\"happy\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"froh\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"unglücklich\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈɡlʏklɪç",
+        "definition": "von Freude und innerem Wohlbefinden erfüllt",
+        "translations": {
+          "en": "happy"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "froh",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "unglücklich",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-41-schnell-kind",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-41-schnell-kind",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3698050,
+      "actualCostNanoUsd": 172960,
+      "latencyMs": 6145,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1457,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1338
+        },
+        "output_tokens": 102,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1559
+      },
+      "inputTokens": 1457,
+      "outputTokens": 102,
+      "cachedInputTokens": 1338,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0bcc3384c67652a2016a87344d588c81a2a9f1b4ced0a2f8b9",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃnɛl\",\"definition\":\"eine hohe Geschwindigkeit habend\",\"translations\":{\"en\":\"fast\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"flott\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"langsam\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ʃnɛl",
+        "definition": "eine hohe Geschwindigkeit habend",
+        "translations": {
+          "en": "fast"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "flott",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "langsam",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-42-beginnen-alternative",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-42-beginnen-alternative",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3809050,
+      "actualCostNanoUsd": 185020,
+      "latencyMs": 2335,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1532,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1401
+        },
+        "output_tokens": 109,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1641
+      },
+      "inputTokens": 1532,
+      "outputTokens": 109,
+      "cachedInputTokens": 1401,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0e734aff46e083e1016a873450239887d2a0c4dfc765a78aca",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"bəˈɡɪnən\",\"definition\":\"anfangen oder einsetzen\",\"translations\":{\"en\":\"begin\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"anfangen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"enden\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"nearAntonym\":null,\"hypernym\":null}}",
+      "output": {
+        "transcription": "bəˈɡɪnən",
+        "definition": "anfangen oder einsetzen",
+        "translations": {
+          "en": "begin"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "anfangen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "enden",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "nearAntonym": null,
+          "hypernym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-43-selbstbezug",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-43-selbstbezug",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3902800,
+      "actualCostNanoUsd": 229480,
+      "latencyMs": 2108,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1589,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 146,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1735
+      },
+      "inputTokens": 1589,
+      "outputTokens": 146,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_077dbaf4f137d835016a8734527cb887d2bc9835da6349a5fe",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈkʁeːdiːtʔɪnstiˌtuːt\",\"definition\":\"Ein Institut, das Kredite vergibt und damit verbundene Bankgeschäfte betreibt.\",\"translations\":{\"en\":\"credit institution\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Bank\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Finanzinstitut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈkʁeːdiːtʔɪnstiˌtuːt",
+        "definition": "Ein Institut, das Kredite vergibt und damit verbundene Bankgeschäfte betreibt.",
+        "translations": {
+          "en": "credit institution"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Bank",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Finanzinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-44-rose-association",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-44-rose-association",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3897050,
+      "actualCostNanoUsd": 209280,
+      "latencyMs": 2055,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1584,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 130,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1714
+      },
+      "inputTokens": 1584,
+      "outputTokens": 130,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0bb8a874f9bece47016a87345498e087d2b39308354be2702d",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈʁoːzə\",\"definition\":\"Blühende Pflanze mit meist duftenden, vielblättrigen Blüten.\",\"translations\":{\"en\":\"rose\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Blume\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Garten\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "ˈʁoːzə",
+        "definition": "Blühende Pflanze mit meist duftenden, vielblättrigen Blüten.",
+        "translations": {
+          "en": "rose"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Blume",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Garten",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-01-production-baseline/repetition-1/relation-adv-45-fahrrad-granularity",
+      "revisionNumber": 1,
+      "revisionId": "production-baseline",
+      "repetition": 1,
+      "caseId": "relation-adv-45-fahrrad-granularity",
+      "promptFingerprint": "57ebabdab6187b46410756756c62ed3c6f46ce788b2d1fdf82fe77c8a2a705ba",
+      "maximumCostNanoUsd": 3897800,
+      "actualCostNanoUsd": 218680,
+      "latencyMs": 1953,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1589,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1464
+        },
+        "output_tokens": 137,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1726
+      },
+      "inputTokens": 1589,
+      "outputTokens": 137,
+      "cachedInputTokens": 1464,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_08598b060adc5ae1016a873456a7e487d299d25ba2284a8994",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈfaːɐ̯ʁaːt\",\"definition\":\"zweirädriges Fahrzeug, das durch Treten von Pedalen angetrieben wird\",\"translations\":{\"en\":\"bicycle\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Velo\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Fahrzeug\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈfaːɐ̯ʁaːt",
+        "definition": "zweirädriges Fahrzeug, das durch Treten von Pedalen angetrieben wird",
+        "translations": {
+          "en": "bicycle"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Velo",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Fahrzeug",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-basic-01-hubschrauber",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-basic-01-hubschrauber",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3997050,
+      "actualCostNanoUsd": 525900,
+      "latencyMs": 2351,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1658,
+        "input_tokens_details": {
+          "cache_write_tokens": 1534,
+          "cached_tokens": 0
+        },
+        "output_tokens": 98,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1756
+      },
+      "inputTokens": 1658,
+      "outputTokens": 98,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1534,
+      "responseId": "resp_032c4cba822a7844016a873458a1b487d2b9142efeb2306121",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈhʊpʃʁaʊ̯bɐ\",\"definition\":\"Luftfahrzeug mit Rotoren, das senkrecht starten und landen kann.\",\"translations\":{\"en\":\"helicopter\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":null,\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈhʊpʃʁaʊ̯bɐ",
+        "definition": "Luftfahrzeug mit Rotoren, das senkrecht starten und landen kann.",
+        "translations": {
+          "en": "helicopter"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": null,
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-basic-02-sichtbar",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-basic-02-sichtbar",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3796050,
+      "actualCostNanoUsd": 512800,
+      "latencyMs": 3891,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1528,
+        "input_tokens_details": {
+          "cache_write_tokens": 1408,
+          "cached_tokens": 0
+        },
+        "output_tokens": 114,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1642
+      },
+      "inputTokens": 1528,
+      "outputTokens": 114,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1408,
+      "responseId": "resp_04b684b63b5130a1016a87345af79487d2bcb62f6168d721e8",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈzɪçtbaːɐ̯\",\"definition\":\"mit den Augen wahrnehmbar\",\"translations\":{\"en\":\"visible\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"erkennbar\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"unsichtbar\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "ˈzɪçtbaːɐ̯",
+        "definition": "mit den Augen wahrnehmbar",
+        "translations": {
+          "en": "visible"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "erkennbar",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "unsichtbar",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-basic-03-pudel",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-basic-03-pudel",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3994800,
+      "actualCostNanoUsd": 181880,
+      "latencyMs": 1862,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1654,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1534
+        },
+        "output_tokens": 106,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1760
+      },
+      "inputTokens": 1654,
+      "outputTokens": 106,
+      "cachedInputTokens": 1534,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_027230d5ed362d23016a87345edc2c81a298d62bb38aab1d91",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈpuːdl̩\",\"definition\":\"Hunderasse mit lockigem Fell, die in verschiedenen Größen gezüchtet wird.\",\"translations\":{\"en\":\"poodle\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Hund\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ˈpuːdl̩",
+        "definition": "Hunderasse mit lockigem Fell, die in verschiedenen Größen gezüchtet wird.",
+        "translations": {
+          "en": "poodle"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Hund",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-basic-04-berlin-city",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-basic-04-berlin-city",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3685300,
+      "actualCostNanoUsd": 431550,
+      "latencyMs": 1564,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1450,
+        "input_tokens_details": {
+          "cache_write_tokens": 1343,
+          "cached_tokens": 0
+        },
+        "output_tokens": 62,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1512
+      },
+      "inputTokens": 1450,
+      "outputTokens": 62,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1343,
+      "responseId": "resp_0e2b7a4f8328990d016a873460bcdc87d2b695ad73eab8f31b",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"bɛʁˈliːn\",\"definition\":\"Hauptstadt und Bundesland Deutschlands.\",\"translations\":{\"en\":\"Berlin\"},\"semanticRelations\":{\"synonym\":null,\"hypernym\":null,\"holonym\":null}}",
+      "output": {
+        "transcription": "bɛʁˈliːn",
+        "definition": "Hauptstadt und Bundesland Deutschlands.",
+        "translations": {
+          "en": "Berlin"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "hypernym": null,
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-basic-05-sprinten",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-basic-05-sprinten",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3908050,
+      "actualCostNanoUsd": 539950,
+      "latencyMs": 1621,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1606,
+        "input_tokens_details": {
+          "cache_write_tokens": 1471,
+          "cached_tokens": 0
+        },
+        "output_tokens": 121,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1727
+      },
+      "inputTokens": 1606,
+      "outputTokens": 121,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 1471,
+      "responseId": "resp_0e53587e2cff4fce016a8734624c9087d2bf06fd2aa224426a",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ˈʃpʁɪntn̩\",\"definition\":\"sich mit höchster Geschwindigkeit laufend fortbewegen\",\"translations\":{\"en\":\"sprinted\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"rennen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"laufen\",\"family\":\"Lexeme\",\"kind\":\"VERB\"}]}}",
+      "output": {
+        "transcription": "ˈʃpʁɪntn̩",
+        "definition": "sich mit höchster Geschwindigkeit laufend fortbewegen",
+        "translations": {
+          "en": "sprinted"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "rennen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "laufen",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-adv-01-bank-finance",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-adv-01-bank-finance",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3994550,
+      "actualCostNanoUsd": 179480,
+      "latencyMs": 1642,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1654,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1534
+        },
+        "output_tokens": 104,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1758
+      },
+      "inputTokens": 1654,
+      "outputTokens": 104,
+      "cachedInputTokens": 1534,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0ab1ed06c0bd7b46016a873463ef3087d2ae633c331e1ec8f8",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Finanzinstitut, das Geldgeschäfte abwickelt und Kredite vergibt.\",\"translations\":{\"en\":\"bank\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Finanzinstitut\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Finanzinstitut, das Geldgeschäfte abwickelt und Kredite vergibt.",
+        "translations": {
+          "en": "bank"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Finanzinstitut",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-adv-02-bank-bench",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-adv-02-bank-bench",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3995300,
+      "actualCostNanoUsd": 200080,
+      "latencyMs": 1697,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1655,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1534
+        },
+        "output_tokens": 121,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1776
+      },
+      "inputTokens": 1655,
+      "outputTokens": 121,
+      "cachedInputTokens": 1534,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_0b715270bd9020fe016a873465931087d2b86f44ed65834b4b",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"baŋk\",\"definition\":\"Sitzmöbel mit einer länglichen Sitzfläche für mehrere Personen.\",\"translations\":{\"en\":\"bench\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Sitzbank\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Sitzmöbel\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "baŋk",
+        "definition": "Sitzmöbel mit einer länglichen Sitzfläche für mehrere Personen.",
+        "translations": {
+          "en": "bench"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzbank",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sitzmöbel",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-adv-03-schloss-building",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-adv-03-schloss-building",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3996550,
+      "actualCostNanoUsd": 206480,
+      "latencyMs": 1930,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1657,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1534
+        },
+        "output_tokens": 126,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1783
+      },
+      "inputTokens": 1657,
+      "outputTokens": 126,
+      "cachedInputTokens": 1534,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_093a0a8eaefa2aa7016a8734674a2c81a3beb81e8c190d8c66",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃlɔs\",\"definition\":\"Großes, repräsentatives Gebäude, meist mit Türmen und Befestigungsanlagen.\",\"translations\":{\"en\":\"castle\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"Burg\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Bauwerk\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":null}}",
+      "output": {
+        "transcription": "ʃlɔs",
+        "definition": "Großes, repräsentatives Gebäude, meist mit Türmen und Befestigungsanlagen.",
+        "translations": {
+          "en": "castle"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Burg",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Bauwerk",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": null
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-adv-04-schloss-lock",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-adv-04-schloss-lock",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3996050,
+      "actualCostNanoUsd": 208480,
+      "latencyMs": 1893,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1655,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1534
+        },
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1783
+      },
+      "inputTokens": 1655,
+      "outputTokens": 128,
+      "cachedInputTokens": 1534,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_02b8cbe6b8573326016a87346935d087d2adba02ead9994304",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"ʃlɔs\",\"definition\":\"Vorrichtung an einer Tür, die mit einem Schlüssel verriegelt oder entriegelt wird.\",\"translations\":{\"en\":\"lock\"},\"semanticRelations\":{\"synonym\":null,\"nearSynonym\":null,\"antonym\":null,\"nearAntonym\":null,\"hypernym\":[{\"language\":\"de\",\"canonicalForm\":\"Sicherheitsvorrichtung\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}],\"holonym\":[{\"language\":\"de\",\"canonicalForm\":\"Tür\",\"family\":\"Lexeme\",\"kind\":\"NOUN\"}]}}",
+      "output": {
+        "transcription": "ʃlɔs",
+        "definition": "Vorrichtung an einer Tür, die mit einem Schlüssel verriegelt oder entriegelt wird.",
+        "translations": {
+          "en": "lock"
+        },
+        "semanticRelations": {
+          "synonym": null,
+          "nearSynonym": null,
+          "antonym": null,
+          "nearAntonym": null,
+          "hypernym": [
+            {
+              "language": "de",
+              "canonicalForm": "Sicherheitsvorrichtung",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ],
+          "holonym": [
+            {
+              "language": "de",
+              "canonicalForm": "Tür",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "callId": "revision-02-reading-general-null-test/repetition-1/relation-adv-05-klug-decision",
+      "revisionNumber": 2,
+      "revisionId": "reading-general-null-test",
+      "repetition": 1,
+      "caseId": "relation-adv-05-klug-decision",
+      "promptFingerprint": "501d819a171942d2ac1c2f50d37093045e271dd92c755bce1e846480761c3313",
+      "maximumCostNanoUsd": 3794300,
+      "actualCostNanoUsd": 205560,
+      "latencyMs": 1769,
+      "status": "completed",
+      "incompleteReason": null,
+      "refusal": false,
+      "usage": {
+        "input_tokens": 1527,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1408
+        },
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1655
+      },
+      "inputTokens": 1527,
+      "outputTokens": 128,
+      "cachedInputTokens": 1408,
+      "cacheWriteInputTokens": 0,
+      "responseId": "resp_01e35baaa7c1c79d016a87346b1b0487d293d9626c400dc65f",
+      "resolvedModel": "gpt-5.6-luna",
+      "rawOutputText": "{\"transcription\":\"kluːk\",\"definition\":\"mit Verstand und gutem Urteilsvermögen\",\"translations\":{\"en\":\"wise\"},\"semanticRelations\":{\"synonym\":[{\"language\":\"de\",\"canonicalForm\":\"gescheit\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearSynonym\":[{\"language\":\"de\",\"canonicalForm\":\"vernünftig\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"antonym\":[{\"language\":\"de\",\"canonicalForm\":\"dumm\",\"family\":\"Lexeme\",\"kind\":\"ADJ\"}],\"nearAntonym\":null}}",
+      "output": {
+        "transcription": "kluːk",
+        "definition": "mit Verstand und gutem Urteilsvermögen",
+        "translations": {
+          "en": "wise"
+        },
+        "semanticRelations": {
+          "synonym": [
+            {
+              "language": "de",
+              "canonicalForm": "gescheit",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearSynonym": [
+            {
+              "language": "de",
+              "canonicalForm": "vernünftig",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "antonym": [
+            {
+              "language": "de",
+              "canonicalForm": "dumm",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          ],
+          "nearAntonym": null
+        }
+      }
+    }
+  ],
+  "stoppedRevisions": {},
+  "report": null
+}

@@ -6,6 +6,7 @@ import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationRequest,
 	KnowledgeGenerationResult,
+	RequestableRelation,
 	Segment,
 	SegmentedSentence,
 	SegmentedSentenceId,
@@ -19,6 +20,7 @@ import {
 	knowledgeGenerationLanguageSchema,
 	knowledgeGenerationRequestSchema,
 	knowledgeGenerationResultSchema,
+	requestableRelationSchema,
 	resolvedGrammaticalResultSchema,
 	segmentationDecisionSchema,
 	segmentationResultSchema,
@@ -69,6 +71,9 @@ type _KnowledgeResultComesFromSchema = Expect<
 		z.output<typeof knowledgeGenerationResultSchema>
 	>
 >;
+type _RequestableRelationComesFromSchema = Expect<
+	Equal<RequestableRelation, z.infer<typeof requestableRelationSchema>>
+>;
 // @ts-expect-error English has no configured Dumgen Knowledge generation route.
 type _EnglishKnowledgeInputIsRejected = KnowledgeGenerationInput<"en">;
 
@@ -87,6 +92,14 @@ const germanKnowledgeRequest = {
 	semanticRelations: { synonym: null },
 } satisfies KnowledgeGenerationRequest;
 void germanKnowledgeRequest;
+
+const inverseOnlyKnowledgeRequest: KnowledgeGenerationRequest = {
+	semanticRelations: {
+		// @ts-expect-error Hyponym is inverse-only and cannot be requested.
+		hyponym: null,
+	},
+};
+void inverseOnlyKnowledgeRequest;
 
 const structuredKnowledgeRequest: KnowledgeGenerationRequest = {
 	// @ts-expect-error Structured Knowledge leaves use separate future workflows.
@@ -125,11 +138,21 @@ describe("public Dumgen runtime schemas", () => {
 				semanticRelations: { synonym: null, antonym: null },
 			}).success,
 		).toBe(true);
+		expect(requestableRelationSchema.options).toEqual([
+			"synonym",
+			"nearSynonym",
+			"antonym",
+			"nearAntonym",
+			"hypernym",
+			"holonym",
+		]);
 		for (const request of [
 			{ morphologicalTree: null },
 			{ lexicalBreakdown: null },
 			{ translations: {} },
 			{ semanticRelations: {} },
+			{ semanticRelations: { hyponym: null } },
+			{ semanticRelations: { meronym: null } },
 		]) {
 			expect(
 				knowledgeGenerationRequestSchema.safeParse(request).success,
@@ -200,6 +223,48 @@ describe("public Dumgen runtime schemas", () => {
 				pendingRelations: [],
 			}).success,
 		).toBe(false);
+		for (const pendingRelations of [
+			[
+				{
+					relation: "hyponym",
+					target: {
+						language: "de",
+						canonicalForm: "Bank",
+						family: "Lexeme",
+						kind: "NOUN",
+					},
+				},
+			],
+			[
+				{
+					relation: "hypernym",
+					target: {
+						language: "de",
+						canonicalForm: "un-",
+						family: "Morpheme",
+						kind: "Prefix",
+					},
+				},
+			],
+			[
+				{
+					relation: "hypernym",
+					target: {
+						language: "de",
+						canonicalForm: "im",
+						family: "Construction",
+						kind: "Fusion",
+					},
+				},
+			],
+		]) {
+			expect(
+				knowledgeGenerationResultSchema.safeParse({
+					changes: [],
+					pendingRelations,
+				}).success,
+			).toBe(false);
+		}
 	});
 
 	test("validates Segment invariants without widening the inferred contract", () => {

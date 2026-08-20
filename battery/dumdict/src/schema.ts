@@ -12,10 +12,10 @@ import type {
 	UnitShadow,
 } from "dumrel";
 import {
+	directSemanticRelationSchema,
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
-	semanticRelationSchema,
 } from "dumrel";
 import { type ZodType, z } from "zod/v4";
 import { makeSurfaceId, type SurfaceId } from "./dumling";
@@ -156,7 +156,7 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 	);
 	const languagePendingSemanticRelationSchema = (
 		pendingSemanticRelationSchema as unknown as ZodType<{
-			relation: z.output<typeof semanticRelationSchema>;
+			relation: z.output<typeof directSemanticRelationSchema>;
 			target: UnitShadow<L>;
 		}>
 	).refine(
@@ -219,7 +219,7 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 		);
 	const pendingSemanticRelationLocatorSchema = z.strictObject({
 		sourceReadingKey: z.string().min(1),
-		relation: semanticRelationSchema,
+		relation: directSemanticRelationSchema,
 		targetPendingId: pendingEntryIdSchema,
 	});
 	const pendingSemanticRelationRecordSchema = z

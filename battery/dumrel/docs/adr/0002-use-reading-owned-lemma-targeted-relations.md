@@ -2,9 +2,13 @@
 status: accepted
 source: "texteater#177"
 supersedes: relation clauses of 0001-keep-dumrel-ownerless-and-pure.md
+partially-superseded-by: 0004-project-inferences-from-direct-relation-claims.md
 ---
 
 # Use Reading-owned, Lemma-targeted relations
+
+Local ADR 0004 supersedes this ADR's storage-choice and materialization
+language. The graph shape and pure inference boundary remain accepted.
 
 Dumrel represents canonical Semantic Relation targets as concrete Dumling
 Lemmas inside Reading Knowledge. Pending Semantic Relations remain separate

@@ -9,6 +9,7 @@ import {
 } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
+import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function locatorKey<L extends SupportedLanguage>(
@@ -63,6 +64,11 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		resolvedKeys.has(locatorKey(record.locator)),
 	);
 	const changes: PlannedChangeOp<L>[] = [
+		...relationRemovalsToPatches(
+			relationPlan.removals,
+			slice.relationReadings,
+			slice.revision,
+		),
 		...relationAdditionsToPatches(relationPlan.additions, slice.revision),
 		...resolved.map(
 			(record): PlannedChangeOp<L> => ({
@@ -80,6 +86,11 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 		affectedReadings.set(
 			readingFingerprint(addition.reading),
 			addition.reading,
+		);
+	for (const removal of relationPlan.removals)
+		affectedReadings.set(
+			readingFingerprint(removal.reading),
+			removal.reading,
 		);
 
 	return {

@@ -19,6 +19,7 @@ export {
 	DumgenError,
 	type DumgenErrorCode,
 } from "./generator/generator-error";
+export { requestableRelationSchema } from "./knowledge-generation/relations";
 export {
 	enabledSegmentationLanguageSchema,
 	grammaticalInputSchema,
@@ -55,6 +56,7 @@ export type {
 	ReadingInput,
 	ReadingResolution,
 	ReadingResolutionLanguage,
+	RequestableRelation,
 	Section1Error,
 	Segment,
 	SegmentationDecision,

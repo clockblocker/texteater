@@ -6,9 +6,13 @@ partially-superseded-by:
   - local ADR 0002
   - system ADR 0011
   - local ADR 0003
+  - local ADR 0004
 ---
 
 # Keep Dumrel ownerless and pure
+
+Local ADR 0004 supersedes the assignment of inverse materialization and
+lifecycle backfill to Dumdict. The ownerless, pure boundary remains accepted.
 
 Dumrel is an identityless DTO and runtime-schema kernel with exactly three
 public operations: applying one Knowledge Change, looking up a Semantic

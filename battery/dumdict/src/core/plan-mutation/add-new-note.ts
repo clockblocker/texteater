@@ -1,8 +1,8 @@
 import { readingFingerprint } from "dumling";
 import {
+	type DirectSemanticRelation,
 	pendingSemanticRelationSchema,
 	type ReadingKnowledge,
-	type SemanticRelation,
 } from "dumrel";
 import type {
 	LemmaRecord,
@@ -22,6 +22,7 @@ import {
 } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";
 import { relationAdditionsToPatches } from "./relation-additions-to-patches";
+import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
@@ -36,7 +37,7 @@ function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 
 function appendRelation<L extends SupportedLanguage>(
 	knowledge: ReadingKnowledge<string, Lemma<L>>,
-	relation: SemanticRelation,
+	relation: DirectSemanticRelation,
 	target: Lemma<L>,
 ) {
 	const semanticRelations = knowledge.semanticRelations ?? {};
@@ -220,12 +221,19 @@ export function planAddNewNote<L extends SupportedLanguage>(
 		...baseReading,
 		...(Object.keys(knowledge).length === 0 ? {} : { knowledge }),
 	};
-	const patches = relationAdditionsToPatches(
-		relationPlan.additions.filter(
-			(addition) => !sameReading(addition.reading, reading),
+	const patches = [
+		...relationRemovalsToPatches(
+			relationPlan.removals,
+			slice.relationReadings,
+			slice.revision,
 		),
-		slice.revision,
-	);
+		...relationAdditionsToPatches(
+			relationPlan.additions.filter(
+				(addition) => !sameReading(addition.reading, reading),
+			),
+			slice.revision,
+		),
+	];
 	const newPendingKeys = new Set(newPending.map(pendingRecordKey));
 	const pendingToCreate = relationPlan.unresolvedPending.filter((record) =>
 		newPendingKeys.has(pendingRecordKey(record)),

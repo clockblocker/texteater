@@ -17,6 +17,7 @@ const schemaExports = [
 	"knowledgeGenerationLanguageSchema",
 	"knowledgeGenerationRequestSchema",
 	"knowledgeGenerationResultSchema",
+	"requestableRelationSchema",
 	"notImplementedGrammaticalResultSchema",
 	"resolvedGrammaticalResultSchema",
 	"section1ErrorSchema",

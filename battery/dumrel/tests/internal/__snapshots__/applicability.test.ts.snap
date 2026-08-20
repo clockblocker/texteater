@@ -16,6 +16,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -28,6 +29,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -40,6 +42,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -52,6 +55,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -64,6 +68,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "synonym": null,
       },
       "transcription": null,
@@ -75,6 +80,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -87,6 +93,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -101,8 +108,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
         "antonym": null,
         "holonym": null,
         "hypernym": null,
-        "hyponym": null,
-        "meronym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -125,6 +131,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -137,6 +144,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -149,7 +157,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "holonym": null,
-        "meronym": null,
+        "hypernym": null,
         "synonym": null,
       },
       "transcription": null,
@@ -168,6 +176,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -180,6 +189,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -192,8 +202,8 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
-        "holonym": null,
-        "meronym": null,
+        "hypernym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -294,6 +304,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -306,6 +317,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -318,6 +330,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -330,6 +343,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },
@@ -342,6 +356,7 @@ exports[`German Knowledge applicability snapshots the complete resolved Family/K
       "definition": null,
       "semanticRelations": {
         "antonym": null,
+        "nearAntonym": null,
         "nearSynonym": null,
         "synonym": null,
       },

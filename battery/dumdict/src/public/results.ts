@@ -75,4 +75,5 @@ export type MutationRejectedCode =
 	| "invalidDraft"
 	| "invalidRequest"
 	| "selfRelation"
+	| "relationConflict"
 	| "relationTargetMissing";

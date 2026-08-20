@@ -21,8 +21,9 @@ maps commit outcomes to public results.
   pending-work mutations.
 - `planAppendReadingAttestation` plans learner evidence updates.
 - `planRelationMaintenance` is the deep module that owns exact Shadow matching,
-  deterministic forward choice, inverse fan-out, Dumrel propagation, and
-  later-Reading backfill.
+  direct target conflicts, and pending resolution without inferred writes.
+- `projectSemanticRelations` supplies deterministic direct/inferred views with
+  provenance over a caller-supplied dictionary inventory.
 - `planCleanupRelations` retries exact pending records through that module.
 
 The core is pure: it receives DTOs and returns results or planned changes.

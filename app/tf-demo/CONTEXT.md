@@ -28,9 +28,11 @@ not an anonymous Visitor.
 _Avoid_: Visitor Dictionary, personal dictionary
 
 **Semantic Relation Edge**:
-One normalized piece of Reading-owned Knowledge whose endpoint is a Lemma.
-Resolved edges navigate to Lemma Route Notes. A missing exact Lemma is retained
-as a pending Unit Shadow; it is not replaced by a manually selected Reading.
+One normalized direct Reading-owned claim whose endpoint is a Lemma. Resolved
+direct and inferred views navigate to Lemma Route Notes with provenance. Only
+direct claims are durable. A missing or ambiguous exact Lemma is retained as a
+pending Unit Shadow and produces no inferred view; it is not replaced by a
+manually selected Reading.
 _Avoid_: Reading-to-Reading relation, target Reading
 
 **Unit Reading**:
@@ -90,6 +92,19 @@ The explicit removal of derived linguistic analysis for one Text while
 preserving that Text and its Sentences as source material. It is the only
 operation, apart from full demo reset, that ends Occurrence Attestations and
 their memberships.
+
+## Generated Semantic Relation containment
+
+tf-demo production Knowledge generation deliberately requests only the
+applicable transcription, German definition, and English translation leaves.
+It omits Semantic Relations, and its server publication boundary discards any
+unexpected model-generated Semantic Relation change or Pending Semantic
+Relation before Dumdict can plan canonical edges or relation propagation.
+
+This containment does not change Dumrel applicability, Dumgen's development
+and laboratory relation routes, existing relation data, or manual relation
+authoring. It may be removed only by the explicit promotion ticket
+`texteater#194` under the relation-quality map `texteater#187`.
 
 ## Text-scoped analysis stripping
 

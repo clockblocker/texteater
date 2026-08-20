@@ -10,7 +10,10 @@ import {
 	surfaceKindValues,
 	surfaceSpellingValues,
 } from "dumling/vocabulary";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import {
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "dumrel/vocabulary";
 
 function literalUnion<const Value extends string>(
 	values: readonly [Value, ...Value[]],
@@ -82,6 +85,50 @@ export const sentenceInputValidator = v.object({
 });
 
 export const semanticRelationValidator = literalUnion(semanticRelationValues);
+export const directSemanticRelationValidator = literalUnion(
+	directSemanticRelationValues,
+);
+
+export const relationPublicationFingerprintsValidator = v.object({
+	prompt: v.string(),
+	schema: v.string(),
+	evaluator: v.string(),
+	model: v.string(),
+	policy: v.string(),
+});
+
+export const relationTargetShadowValidator = v.object({
+	language: v.literal("de"),
+	canonicalForm: v.string(),
+	family: v.union(v.literal("Lexeme"), v.literal("Phraseme")),
+	kind: v.string(),
+});
+
+export const relationProposalOutcomeValidator = v.union(
+	v.literal("PendingShadow"),
+	v.literal("DirectMatch"),
+	v.literal("PublicationFailed"),
+);
+
+export const relationReviewStatusValidator = v.union(
+	v.literal("NotSampled"),
+	v.literal("Pending"),
+	v.literal("Accepted"),
+	v.literal("Rejected"),
+);
+
+export const relationPublicationRunValidator = v.object({
+	runNumber: v.number(),
+	requestedKinds: v.array(directSemanticRelationValidator),
+	artifactPath: v.union(v.string(), v.null()),
+	fingerprints: relationPublicationFingerprintsValidator,
+	proposals: v.array(
+		v.object({
+			relation: directSemanticRelationValidator,
+			targetShadow: relationTargetShadowValidator,
+		}),
+	),
+});
 
 export const knowledgeStatusValidator = v.union(
 	v.literal("Partial"),
@@ -106,6 +153,7 @@ export const knowledgeSettingsValidator = v.object({
 		synonym: v.boolean(),
 		nearSynonym: v.boolean(),
 		antonym: v.boolean(),
+		nearAntonym: v.boolean(),
 		hypernym: v.boolean(),
 		hyponym: v.boolean(),
 		meronym: v.boolean(),

@@ -1,0 +1,127 @@
+{
+	"formatVersion": "german-relation-human-gate-candidate-v1",
+	"candidateId": "95f5256494b5495f2ddee493f18187215bc2bfbb59f6f9076b4510b1fde34403",
+	"state": "awaiting-human-gate",
+	"artifacts": [
+		{
+			"issue": 189,
+			"role": "judgment-contract",
+			"path": "battery/dumrel/docs/german-semantic-relation-judgment-contract.md",
+			"sha256": "7b7174d8f187b44d79eb7d9b575bee11c8e7d03fb303a50737c9fa6e60de429b"
+		},
+		{
+			"issue": 190,
+			"role": "corpus-reservation",
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus.ts",
+			"sha256": "204a1dfc7f27c78ddca3bf3984e69360b21ee796d960a5e5079d9214e90a37e8"
+		},
+		{
+			"issue": 190,
+			"role": "adjudicated-development-corpus",
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts",
+			"sha256": "a1e32a68ffdacb43b5cf1a858c12e03e028cc35ca429d2170e4693679461fd99"
+		},
+		{
+			"issue": 190,
+			"role": "acceptance-primary-source-reservation",
+			"path": "battery/dumgen/docs/german-semantic-relation-acceptance-primary-sources.md",
+			"sha256": "40793f7aad8578e962d3cc693a25f1a1436755d6d2ca7628ef8877f00f00cee6"
+		},
+		{
+			"issue": 191,
+			"role": "semantic-evaluator",
+			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator.ts",
+			"sha256": "d5c95861ab17b90a7975a220d3483eefe0af850d708dbd3c92b59400d9825533"
+		},
+		{
+			"issue": 191,
+			"role": "thresholds-and-report",
+			"path": "battery/dumgen/src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/relation-report.ts",
+			"sha256": "18fafb6505d76e213b58881e07f52141f2d7b650f2062e1c2565a63a59daa20b"
+		},
+		{
+			"issue": 192,
+			"role": "candidate-policy",
+			"path": "battery/dumgen/docs/prototypes/german-relation-topology-lab/logic.ts",
+			"sha256": "0090e9673b77d9800eb7484b8ac6f7d3de48b5c051305011f1d9708ca03742ea"
+		},
+		{
+			"issue": 192,
+			"role": "prompt-source",
+			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/prompt-source.ts",
+			"sha256": "1ed13b84d53899c8443665cce4d029357ec545ff13313d372595f8d060e4794f"
+		},
+		{
+			"issue": 192,
+			"role": "generated-system-prompt",
+			"path": "battery/dumgen/src/promptsmith/production/generated-system-prompt/knowledge-analysis/de/combined.ts",
+			"sha256": "7ac478ad13d638faefb57a24736878b6af2fd082421c99d6c4f3dfe4bf7337ec"
+		},
+		{
+			"issue": 192,
+			"role": "model-facing-schema",
+			"path": "battery/dumgen/src/knowledge-generation/de/schemas.ts",
+			"sha256": "ca39468119fa36df9165b4206cd5ad0c6ce6f1a2acc657732b21b4ac1b0d376e"
+		},
+		{
+			"issue": 192,
+			"role": "model-policy",
+			"path": "battery/dumgen/src/ai-sdk/model-policy.ts",
+			"sha256": "b8de968b038ede28ac0892743a7e2e76b4899eb4fce0e85e5c1c471cf82ea627"
+		},
+		{
+			"issue": 192,
+			"role": "retained-result",
+			"path": "battery/dumgen/docs/prototypes/german-relation-topology-lab/runs/2026-08-20T08-32-05-075Z/results.json",
+			"sha256": "c48de90d7f6f301d48bf126b849735280f8e530bd3491a01ffab36eaba42788d"
+		},
+		{
+			"issue": 193,
+			"role": "one-shot-acceptance-runner",
+			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/acceptance.ts",
+			"sha256": "77cabbd2c0a61e38662e1fd6e0fd403ebd44174e9b9d52dcd3cc88eed721a1ee"
+		},
+		{
+			"issue": 193,
+			"role": "human-review-and-verdict-writer",
+			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/review.ts",
+			"sha256": "d79f727a04896df98e2b0af5a38b515a550fc129114bf44c670db2aef3a06e8b"
+		}
+	],
+	"candidate": {
+		"topology": "current-combined-narrow-groups",
+		"model": "gpt-5.6-luna",
+		"reasoningEffort": "none",
+		"promptPolicy": "current combined prompt; Synonym/Near Synonym, Antonym/Near Antonym, and Hypernym/Holonym requested as three narrow groups; only requested nullable leaves; no retries",
+		"developmentRecommendation": "no-topology-clears-the-frozen-gate"
+	},
+	"acceptanceReservation": {
+		"status": "sealed-pending-human-approval",
+		"approvedByHuman": false,
+		"revealedCaseCount": 0,
+		"reservedCaseCount": 12,
+		"selectionCommitmentSha256": "56fd828f15f74f45a481e34597e6d752c6652056e5679fa794e07a05c6da2d93"
+	},
+	"executionFailurePolicy": {
+		"retries": 0,
+		"failedCallTreatment": "Transport, rate-limit, refusal, incomplete, empty, JSON-parse, or schema failures are execution failures for every relation requested by that call; they are never scored as nulls.",
+		"consumptionPoint": "The reservation is consumed when its selection is revealed, even if no provider response completes.",
+		"preRevealFailureTreatment": "Fingerprint, approval, configuration, or budget failures abort before reveal and do not consume the reservation.",
+		"partialRunTreatment": "Retain every attempt. Every relation affected by an execution failure receives revise; unaffected relations remain eligible only when all of their reserved observations completed and their independent gates pass. Never rerun, substitute, or waive a consumed reservation."
+	},
+	"verdictContract": {
+		"formatVersion": "german-relation-human-verdict-v1",
+		"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json",
+		"relationKinds": [
+			"synonym",
+			"nearSynonym",
+			"antonym",
+			"nearAntonym",
+			"hypernym",
+			"holonym"
+		],
+		"decisions": ["promote", "revise", "do-not-generate"],
+		"promotionRequiresUntouchedAcceptancePass": true,
+		"requiredAcceptanceStatus": "retained-untouched"
+	}
+}

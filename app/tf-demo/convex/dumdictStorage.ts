@@ -1,9 +1,9 @@
 import { v } from "convex/values";
 import { type Reading, readingFingerprint } from "dumling/reading";
-import type { SemanticRelation } from "dumrel";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import type { DirectSemanticRelation } from "dumrel";
+import { directSemanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
@@ -36,7 +36,7 @@ const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
 const MAX_RELATION_INVENTORY_LEMMAS = 100;
 const MAX_RELATION_INVENTORY_READINGS = 200;
 const MAX_RELATIONS_PER_READING = 200;
-const semanticRelations = new Set<string>(semanticRelationValues);
+const directSemanticRelations = new Set<string>(directSemanticRelationValues);
 
 type ServerCtx = QueryCtx | MutationCtx;
 type AnyRecord = Record<string, unknown>;
@@ -80,12 +80,12 @@ function requireString(value: unknown, context: string): string {
 	return value;
 }
 
-function requireSemanticRelation(value: unknown): SemanticRelation {
+function requireDirectSemanticRelation(value: unknown): DirectSemanticRelation {
 	const relation = requireString(value, "Semantic Relation");
-	if (!semanticRelations.has(relation)) {
-		throw new Error(`Unsupported Semantic Relation: ${relation}`);
+	if (!directSemanticRelations.has(relation)) {
+		throw new Error(`Unsupported direct Semantic Relation: ${relation}`);
 	}
-	return relation as SemanticRelation;
+	return relation as DirectSemanticRelation;
 }
 
 function withoutKeys(record: AnyRecord, keys: readonly string[]): AnyRecord {
@@ -478,7 +478,7 @@ async function loadCanonicalReadingKnowledge(
 	return Object.keys(knowledge).length === 0 ? undefined : knowledge;
 }
 
-async function loadRelationInventory(ctx: ServerCtx) {
+export async function loadRelationInventory(ctx: ServerCtx) {
 	const dictionaryRows = await ctx.db
 		.query("dictionaryLemmas")
 		.take(MAX_RELATION_INVENTORY_LEMMAS + 1);
@@ -490,7 +490,7 @@ async function loadRelationInventory(ctx: ServerCtx) {
 	const lemmas = await Promise.all(
 		dictionaryRows.map(({ lemmaId }) => ctx.db.get(lemmaId)),
 	);
-	const canonicalReadings = [];
+	const canonicalReadings: Doc<"readings">[] = [];
 	for (const lemma of lemmas) {
 		if (!lemma) continue;
 		const remaining =
@@ -504,7 +504,15 @@ async function loadRelationInventory(ctx: ServerCtx) {
 				`Relation planning supports at most ${MAX_RELATION_INVENTORY_READINGS} dictionary Readings.`,
 			);
 		}
-		canonicalReadings.push(...readings);
+		for (const reading of readings) {
+			if (
+				!canonicalReadings.some(
+					(existing) => existing._id === reading._id,
+				)
+			) {
+				canonicalReadings.push(reading);
+			}
+		}
 	}
 	const readings = await Promise.all(
 		canonicalReadings.map((reading) => loadReading(ctx, reading)),
@@ -1106,7 +1114,7 @@ async function syncSemanticRelationChange(
 		changeValue,
 		"Semantic Relation Knowledge Change",
 	);
-	const relation = requireSemanticRelation(change.relation);
+	const relation = requireDirectSemanticRelation(change.relation);
 	const kind = requireChangeKind(change.kind);
 	const existing = await ctx.db
 		.query("semanticRelationEdges")

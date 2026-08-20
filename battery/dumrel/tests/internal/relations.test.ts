@@ -1,7 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+	directSemanticRelationValues,
 	inverseRelationFor,
+	projectRelations,
 	propagateRelations,
 	semanticRelationValues,
 } from "../../src";
@@ -16,11 +18,12 @@ const readings = [
 ] satisfies SemanticRelationGraph["readings"];
 
 describe("inverseRelationFor", () => {
-	test("covers all seven Semantic Relations", () => {
+	test("covers all eight Semantic Relations", () => {
 		const expected = {
 			synonym: "synonym",
 			nearSynonym: "nearSynonym",
 			antonym: "antonym",
+			nearAntonym: "nearAntonym",
 			hypernym: "hyponym",
 			hyponym: "hypernym",
 			meronym: "holonym",
@@ -33,6 +36,35 @@ describe("inverseRelationFor", () => {
 });
 
 describe("propagateRelations", () => {
+	test("projects stable deduplicated direct and inferred provenance", () => {
+		const graph = {
+			readings: [
+				{ reading: "a", lemma: "la" },
+				{ reading: "b", lemma: "lb" },
+			],
+			edges: [
+				{ sourceReading: "a", relation: "hypernym", targetLemma: "lb" },
+				{ sourceReading: "a", relation: "hypernym", targetLemma: "lb" },
+			],
+		} satisfies SemanticRelationGraph;
+		expect(projectRelations(graph)).toEqual([
+			{
+				sourceReading: "a",
+				relation: "hypernym",
+				targetLemma: "lb",
+				provenance: "direct",
+			},
+			{
+				sourceReading: "b",
+				relation: "hyponym",
+				targetLemma: "la",
+				provenance: "inferred",
+			},
+		]);
+		expect(projectRelations(graph)).toEqual(projectRelations(graph));
+		expect(projectRelations({ ...graph, edges: [] })).toEqual([]);
+	});
+
 	test("fans each direct edge out to current target-Lemma Readings with its inverse kind", () => {
 		expect(
 			propagateRelations({
@@ -75,8 +107,10 @@ describe("propagateRelations", () => {
 		});
 	});
 
-	test("substitutes exact Synonyms at both endpoints for every relation kind", () => {
-		for (const relation of semanticRelationValues) {
+	test("substitutes exact Synonyms at both endpoints for substitutive relation kinds", () => {
+		for (const relation of directSemanticRelationValues.filter(
+			(relation) => relation !== "nearAntonym",
+		)) {
 			const inferred = propagateRelations({
 				readings,
 				edges: [
@@ -101,13 +135,46 @@ describe("propagateRelations", () => {
 		}
 	});
 
+	test("keeps Near Antonym symmetric, non-transitive, and non-substitutive", () => {
+		const inferred = propagateRelations({
+			readings,
+			edges: [
+				{ sourceReading: "a", relation: "synonym", targetLemma: "la2" },
+				{
+					sourceReading: "a",
+					relation: "nearAntonym",
+					targetLemma: "lb",
+				},
+				{
+					sourceReading: "b",
+					relation: "nearAntonym",
+					targetLemma: "lc",
+				},
+			],
+		});
+		expect(inferred).toContainEqual({
+			sourceReading: "b",
+			relation: "nearAntonym",
+			targetLemma: "la",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "a2",
+			relation: "nearAntonym",
+			targetLemma: "lb",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "a",
+			relation: "nearAntonym",
+			targetLemma: "lc",
+		});
+	});
+
 	test("does not make hierarchy or other non-Synonym kinds transitive", () => {
 		for (const relation of [
 			"nearSynonym",
 			"antonym",
+			"nearAntonym",
 			"hypernym",
-			"hyponym",
-			"meronym",
 			"holonym",
 		] as const) {
 			const inferred = propagateRelations({
@@ -125,7 +192,7 @@ describe("propagateRelations", () => {
 		}
 	});
 
-	test("materializes only one inverse level for non-Synonym kinds", () => {
+	test("infers only one inverse level for non-Synonym kinds", () => {
 		const inferred = propagateRelations({
 			readings: [
 				{ reading: "a1", lemma: "la" },

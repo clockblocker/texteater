@@ -37,6 +37,8 @@ export {
 	type ReadingInput,
 	type ReadingResolution,
 	type ReadingResolutionLanguage,
+	type RequestableRelation,
+	requestableRelationSchema,
 	resolvedGrammaticalResultSchema,
 	type Section1Error,
 	type Segment,

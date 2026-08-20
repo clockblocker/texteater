@@ -114,18 +114,17 @@ Reproduction path:
 
 - Dumdict `loadNewNoteContext` requires explicit existing Lemma targets, exact
   pending-Shadow matches, and the complete relation-bearing dictionary slice.
-- Ambiguous exact Lemmas require one deterministic forward endpoint plus inverse
-  fan-out across every Reading of every exact match.
-- A Reading added later to a target Lemma requires inverse backfill in the same
-  atomic commit.
+- Ambiguous exact Lemmas keep their Unit Shadow pending and inert.
+- A Reading added later to a target Lemma acquires inverse views without a
+  backfill write.
 
 tf-demo now stores normalized Reading-owned, Lemma-targeted edges as the single
 source of truth. Indexed source and target reads reconstruct Dumdict Knowledge
 and learner projections. The new-note and cleanup adapters provide complete,
 explicitly bounded inventories: exceeding a bound fails instead of treating a
-truncated slice as complete. Dumdict therefore owns deterministic resolution,
-inverse fan-out, synonym propagation, pending lifecycle, and future-Reading
-backfill, while one Convex mutation preflights and commits every planned change
+truncated slice as complete. Dumdict therefore owns unambiguous resolution,
+direct target conflicts, inferred graph projection, and pending lifecycle,
+while one Convex mutation preflights and commits every planned change
 atomically. Resolved targets open Lemma Route Notes; pending targets remain Unit
 Shadows until an exact Lemma exists.
 

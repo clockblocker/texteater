@@ -1,14 +1,6 @@
 import type { KnowledgeRequestMask, SemanticRelation } from "../types.js";
-import { semanticRelationValues } from "../vocabulary.js";
 import { deepFreeze } from "./deep-freeze.js";
 import type { RelMap } from "./types.js";
-
-const allRelations = (): readonly SemanticRelation[] => semanticRelationValues;
-
-const excluding = (
-	...excluded: readonly SemanticRelation[]
-): readonly SemanticRelation[] =>
-	semanticRelationValues.filter((relation) => !excluded.includes(relation));
 
 const select = (
 	...relations: readonly SemanticRelation[]
@@ -32,32 +24,77 @@ function request(relations: readonly SemanticRelation[]): KnowledgeRequestMask {
 const makeDeRelMap = () =>
 	({
 		Lexeme: {
-			ADJ: request(select("synonym", "nearSynonym", "antonym")),
-			ADP: request(select("synonym", "nearSynonym", "antonym")),
-			ADV: request(select("synonym", "nearSynonym", "antonym")),
-			AUX: request(select("synonym", "nearSynonym", "antonym")),
-			CCONJ: request(select("synonym", "antonym")),
-			DET: request(select("synonym", "nearSynonym", "antonym")),
-			INTJ: request(select("synonym", "nearSynonym", "antonym")),
-			NOUN: request(allRelations()),
+			ADJ: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			ADP: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			ADV: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			AUX: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			CCONJ: request(select("synonym", "antonym", "nearAntonym")),
+			DET: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			INTJ: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			NOUN: request(
+				select(
+					"synonym",
+					"nearSynonym",
+					"antonym",
+					"nearAntonym",
+					"hypernym",
+					"holonym",
+				),
+			),
 			NUM: request(select("synonym")),
-			PART: request(select("synonym", "nearSynonym", "antonym")),
-			PRON: request(select("synonym", "nearSynonym", "antonym")),
-			PROPN: request(select("synonym", "meronym", "holonym")),
+			PART: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			PRON: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			PROPN: request(select("synonym", "hypernym", "holonym")),
 			PUNCT: request(select()),
-			SCONJ: request(select("synonym", "nearSynonym", "antonym")),
-			SYM: request(select("synonym", "nearSynonym", "antonym")),
-			VERB: request(excluding("hypernym", "hyponym")),
+			SCONJ: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			SYM: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			VERB: request(
+				select(
+					"synonym",
+					"nearSynonym",
+					"antonym",
+					"nearAntonym",
+					"hypernym",
+				),
+			),
 			X: request(select()),
 		},
 		Phraseme: {
-			Aphorism: request(select("synonym", "nearSynonym", "antonym")),
-			Collocation: request(select("synonym", "nearSynonym", "antonym")),
-			DiscourseFormula: request(
-				select("synonym", "nearSynonym", "antonym"),
+			Aphorism: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
 			),
-			Idiom: request(select("synonym", "nearSynonym", "antonym")),
-			Proverb: request(select("synonym", "nearSynonym", "antonym")),
+			Collocation: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			DiscourseFormula: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			Idiom: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
+			Proverb: request(
+				select("synonym", "nearSynonym", "antonym", "nearAntonym"),
+			),
 		},
 		Morpheme: {
 			Circumfix: request(select()),

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
+import type { Id, TableNames } from "./_generated/dataModel";
 import {
 	action,
 	internalAction,
@@ -17,9 +17,13 @@ const MAX_SENTENCES_PER_TEXT = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const DESCRIPTOR_PAGE_SIZE = 20;
 
-const sharedTableNames = [
+/** Every application-owned tf-demo table removed by the bounded full reset. */
+export const resetDemoTableNames = [
 	"resolutionSessions",
+	"generatedRelationProposals",
+	"generatedRelationRuns",
 	"knowledgeGenerationAttempts",
+	"relationPublicationControls",
 	"knowledgeSettings",
 	"structuralShadowReferences",
 	"knowledgeChanges",
@@ -39,7 +43,7 @@ const sharedTableNames = [
 	"sentences",
 	"texts",
 	"dictionaryState",
-] as const;
+] as const satisfies readonly TableNames[];
 
 function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {
@@ -69,7 +73,7 @@ export const clearSharedDataBatch = internalMutation({
 		}
 		let deleted = 0;
 		let hasMore = false;
-		for (const tableName of sharedTableNames.slice(1)) {
+		for (const tableName of resetDemoTableNames.slice(1)) {
 			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
 			for (const document of documents) {
 				await ctx.db.delete(document._id);
@@ -137,7 +141,7 @@ export const resetDemoDataBatch = internalMutation({
 		}
 		let deleted = 0;
 		let hasMore = false;
-		for (const tableName of sharedTableNames.slice(1)) {
+		for (const tableName of resetDemoTableNames.slice(1)) {
 			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
 			for (const document of documents) {
 				await ctx.db.delete(document._id);

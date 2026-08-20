@@ -1,5 +1,6 @@
 "use node";
 
+import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { type Infer, v } from "convex/values";
 import type {
 	ApplyGeneratedKnowledgeRequest,
@@ -19,7 +20,7 @@ import {
 	unresolvedGrammaticalResultSchema,
 } from "dumgen/schema";
 import { knowledgeChangeSchema, pendingSemanticRelationSchema } from "dumrel";
-import { semanticRelationValues } from "dumrel/vocabulary";
+import { directSemanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
@@ -37,6 +38,7 @@ import {
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
+import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
@@ -45,12 +47,27 @@ import {
 import {
 	type dictionaryPlanValidator,
 	type nonResolvedGrammaticalValidator,
+	relationPublicationRunValidator,
 	type resolvedGrammaticalValidator,
 	resolveSegmentResultValidator,
 	type reusableAttestationValidator,
 } from "./model/validators";
+import type { RelationPublicationRun } from "./relationPublication";
 
 const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
+
+const recordRelationPublicationFailure = makeFunctionReference<
+	"mutation",
+	{ attemptKey: string; run: RelationPublicationRun },
+	null
+>(
+	"relationPublication:recordPublicationFailure",
+) as unknown as FunctionReference<
+	"mutation",
+	"internal",
+	{ attemptKey: string; run: RelationPublicationRun },
+	null
+>;
 
 let dumgenPromise: Promise<Dumgen> | undefined;
 
@@ -292,6 +309,51 @@ export function dictionaryPlanResult(
 				}
 			}
 		}),
+	};
+}
+
+/**
+ * The commit-time rollback fallback. It removes only generated relation plan
+ * operations so base Knowledge from the same model response can still commit.
+ */
+export function withoutGeneratedRelationPlan(
+	plan: DictionaryPlanResult,
+): DictionaryPlanResult {
+	const changes: DictionaryPlanResult["changes"] = [];
+	for (const change of plan.changes) {
+		if (
+			change.type === "createPendingSemanticRelation" ||
+			change.type === "deletePendingSemanticRelation"
+		) {
+			continue;
+		}
+		if (change.type !== "patchReading") {
+			changes.push(change);
+			continue;
+		}
+		const ops = change.ops.filter((operation) => {
+			if (
+				typeof operation !== "object" ||
+				operation === null ||
+				!("kind" in operation) ||
+				operation.kind !== "applyKnowledgeChange" ||
+				!("envelope" in operation) ||
+				typeof operation.envelope !== "object" ||
+				operation.envelope === null ||
+				!("change" in operation.envelope) ||
+				typeof operation.envelope.change !== "object" ||
+				operation.envelope.change === null ||
+				!("aspect" in operation.envelope.change)
+			) {
+				return true;
+			}
+			return operation.envelope.change.aspect !== "semanticRelations";
+		});
+		if (ops.length > 0) changes.push({ ...change, ops });
+	}
+	return {
+		...plan,
+		changes,
 	};
 }
 
@@ -757,15 +819,20 @@ export const applyGeneratedKnowledgePlan = internalAction({
 		reading: v.any(),
 		changes: v.array(v.any()),
 		pendingRelations: v.array(v.any()),
+		relationPublication: relationPublicationRunValidator,
 	},
 	returns: v.null(),
 	handler: async (ctx, args) => {
 		try {
+			const publishable = generatedKnowledgeAllowedForPublication(
+				args,
+				args.relationPublication.requestedKinds,
+			);
 			const request = JSON.parse(
 				JSON.stringify({
 					reading: args.reading,
-					changes: args.changes,
-					pendingRelations: args.pendingRelations,
+					changes: publishable.changes,
+					pendingRelations: publishable.pendingRelations,
 				}),
 			) as ApplyGeneratedKnowledgeRequest<"de">;
 			for (
@@ -791,12 +858,16 @@ export const applyGeneratedKnowledgePlan = internalAction({
 				}
 				if (!capturedPlan)
 					throw new Error("Dumdict did not produce a plan.");
+				const fullPlan = dictionaryPlanResult(capturedPlan);
 				const committed = await ctx.runMutation(
 					internal.knowledgeGeneration.commitGenerated,
 					{
 						attemptKey: args.attemptKey,
-						plan: dictionaryPlanResult(capturedPlan),
-						generatedChanges: args.changes,
+						plan: fullPlan,
+						baseKnowledgePlan:
+							withoutGeneratedRelationPlan(fullPlan),
+						generatedChanges: publishable.changes,
+						relationPublication: args.relationPublication,
 					},
 				);
 				if (committed.status !== "DictionaryConflict") return null;
@@ -804,6 +875,12 @@ export const applyGeneratedKnowledgePlan = internalAction({
 			throw new Error("Knowledge save conflict.");
 		} catch (error) {
 			console.error("Generated Knowledge planning failed", error);
+			if (args.relationPublication.requestedKinds.length > 0) {
+				await ctx.runMutation(recordRelationPublicationFailure, {
+					attemptKey: args.attemptKey,
+					run: args.relationPublication,
+				});
+			}
 			await ctx.runMutation(internal.knowledgeGeneration.fail, {
 				attemptKey: args.attemptKey,
 				failureCode: "generationFailed",
@@ -839,7 +916,7 @@ function pendingLocatorIdentityKey(input: {
 
 function pendingLocatorFromRecord(value: unknown): {
 	sourceReadingKey: string;
-	relation: (typeof semanticRelationValues)[number];
+	relation: (typeof directSemanticRelationValues)[number];
 	targetPendingId: string;
 } | null {
 	if (!value || typeof value !== "object") return null;
@@ -851,8 +928,8 @@ function pendingLocatorFromRecord(value: unknown): {
 	if (
 		typeof sourceReadingKey !== "string" ||
 		typeof relation !== "string" ||
-		!semanticRelationValues.includes(
-			relation as (typeof semanticRelationValues)[number],
+		!directSemanticRelationValues.includes(
+			relation as (typeof directSemanticRelationValues)[number],
 		) ||
 		typeof targetPendingId !== "string"
 	) {
@@ -860,7 +937,7 @@ function pendingLocatorFromRecord(value: unknown): {
 	}
 	return {
 		sourceReadingKey,
-		relation: relation as (typeof semanticRelationValues)[number],
+		relation: relation as (typeof directSemanticRelationValues)[number],
 		targetPendingId,
 	};
 }

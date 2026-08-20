@@ -3,7 +3,6 @@ import {
 	englishRunDraft,
 	englishSwimDraft,
 	englishSwimLemma,
-	englishWalkLemma,
 	englishWalkReading,
 	enSerializedNotesWithPendingSwimRelation,
 	getBootedUpDumdict,
@@ -44,7 +43,7 @@ describe("pending lifecycle", () => {
 		).toHaveLength(2);
 	});
 
-	test("resolves when one matching Lemma appears and fans out its inverse", async () => {
+	test("resolves when one matching Lemma appears without persisting its inverse", async () => {
 		const { dict, storage } = getBootedUpDumdict(
 			"en",
 			enSerializedNotesWithPendingSwimRelation,
@@ -70,6 +69,6 @@ describe("pending lifecycle", () => {
 				.flatMap(({ readingEntries }) => readingEntries)
 				.find(({ reading }) => reading.emojiDescription === "🏊")
 				?.knowledge?.semanticRelations?.nearSynonym,
-		).toEqual([englishWalkLemma]);
+		).toBeUndefined();
 	});
 });

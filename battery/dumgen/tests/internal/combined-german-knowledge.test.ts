@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { type AiSdk, buildDumgen } from "dumgen";
 import type { Reading } from "dumling/types";
-import { semanticRelationValues } from "dumrel";
 import type { z } from "zod";
 
 import { combinedGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
@@ -15,9 +14,16 @@ import {
 	germanKnowledgeAnalysisSchema,
 	modelOutputSchemaForGermanKnowledge,
 } from "../../src/knowledge-generation/de/schemas";
-import { assembleSystemPrompt } from "../../src/promptsmith/assembly";
-import { evaluateCombinedGermanKnowledge } from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
-import { corpus } from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
+import { requestableRelationSchema } from "../../src/knowledge-generation/relations";
+import {
+	assembleSystemPrompt,
+	assertCaseSelectionsUncontaminated,
+} from "../../src/promptsmith/assembly";
+import {
+	corpus,
+	relationCorpusAdjudications,
+	untouchedAcceptanceReservation,
+} from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
 import { promptSource } from "../../src/promptsmith/production/knowledge-analysis/de/combined/prompt-source";
 
 const bankReading: Reading<"de"> = {
@@ -91,6 +97,24 @@ describe("combined German Knowledge generation", () => {
 				request: { morphologicalTree: null },
 			} as never),
 		).rejects.toMatchObject({ name: "DumgenError", code: "invalid-input" });
+		expect(calls).toHaveLength(0);
+	});
+
+	test("rejects inverse-only relation requests before an adapter call", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const generateKnowledge = knowledgeRuntime(sdk);
+
+		for (const relation of ["hyponym", "meronym"] as const) {
+			expect(
+				generateKnowledge({
+					...baseInput,
+					request: { semanticRelations: { [relation]: null } },
+				} as never),
+			).rejects.toMatchObject({
+				name: "DumgenError",
+				code: "invalid-input",
+			});
+		}
 		expect(calls).toHaveLength(0);
 	});
 
@@ -276,6 +300,37 @@ describe("combined German Knowledge generation", () => {
 				},
 			}).success,
 		).toBe(false);
+		expect(
+			schema.safeParse({
+				definition: null,
+				semanticRelations: {
+					antonym: Array.from({ length: 6 }, (_, index) =>
+						shadow(`Gegensatz ${index}`),
+					),
+				},
+			}).success,
+		).toBe(false);
+		for (const target of [
+			{
+				language: "de",
+				canonicalForm: "un-",
+				family: "Morpheme",
+				kind: "Prefix",
+			},
+			{
+				language: "de",
+				canonicalForm: "im",
+				family: "Construction",
+				kind: "Fusion",
+			},
+		]) {
+			expect(
+				schema.safeParse({
+					definition: null,
+					semanticRelations: { antonym: [target] },
+				}).success,
+			).toBe(false);
+		}
 	});
 
 	test("uses the same dynamic sparse schema in the retained direct evaluator", () => {
@@ -332,6 +387,80 @@ describe("combined German Knowledge generation", () => {
 			{ relation: "antonym", target: shadow("Sparkasse") },
 		]);
 	});
+
+	test("rejects self-targets and non-Synonym cross-kind duplicates", () => {
+		expect(() =>
+			projectGermanKnowledgeUpdate(
+				{
+					...baseInput,
+					request: { semanticRelations: { synonym: null } },
+				},
+				{ semanticRelations: { synonym: [shadow("Bank")] } },
+			),
+		).toThrow("cannot target its source Reading");
+
+		expect(() =>
+			projectGermanKnowledgeUpdate(
+				{
+					...baseInput,
+					request: {
+						semanticRelations: { synonym: null, antonym: null },
+					},
+				},
+				{
+					semanticRelations: {
+						synonym: [shadow("Geldinstitut")],
+						antonym: [shadow("Geldinstitut")],
+					},
+				},
+			),
+		).toThrow("cannot appear under both synonym and antonym");
+	});
+
+	test("promotes Synonym over Near Synonym without guessing other precedence", () => {
+		const target = shadow("Geldinstitut");
+		const result = projectGermanKnowledgeUpdate(
+			{
+				...baseInput,
+				request: {
+					semanticRelations: { synonym: null, nearSynonym: null },
+				},
+			},
+			{
+				semanticRelations: {
+					synonym: [target],
+					nearSynonym: [target],
+				},
+			},
+		);
+
+		expect(result.pendingRelations).toEqual([
+			{ relation: "synonym", target },
+		]);
+	});
+
+	test("rejects an invalid relation result atomically with its base aspects", async () => {
+		const { sdk } = queueSdk([
+			{
+				definition: "Institut für Geldgeschäfte",
+				semanticRelations: { synonym: [shadow("Bank")] },
+			},
+		]);
+		const generateKnowledge = knowledgeRuntime(sdk);
+
+		expect(
+			generateKnowledge({
+				...baseInput,
+				request: {
+					definition: null,
+					semanticRelations: { synonym: null },
+				},
+			}),
+		).rejects.toMatchObject({
+			name: "DumgenError",
+			code: "invalid-output",
+		});
+	});
 });
 
 describe("combined German Knowledge evaluation corpus", () => {
@@ -343,12 +472,27 @@ describe("combined German Knowledge evaluation corpus", () => {
 
 	test("keeps demonstrations, development, and acceptance disjoint and bounded", () => {
 		const { demonstrations, development, acceptance } = corpus.collections;
-		expect(demonstrations.ids).toHaveLength(4);
-		expect(development.ids).toHaveLength(9);
-		expect(acceptance.ids).toHaveLength(4);
+		expect(demonstrations.ids).toHaveLength(2);
+		expect(development.ids).toHaveLength(50);
+		expect(corpus.groups.development.basic.ids).toHaveLength(5);
+		expect(corpus.groups.development.adversarial.ids).toHaveLength(45);
+		expect(acceptance.ids).toHaveLength(12);
 		expect(demonstrations.isDisjointFrom(development)).toBe(true);
 		expect(demonstrations.isDisjointFrom(acceptance)).toBe(true);
 		expect(development.isDisjointFrom(acceptance)).toBe(true);
+		expect(() =>
+			assertCaseSelectionsUncontaminated({
+				route: corpus.route,
+				demonstrations,
+				evaluation: development,
+			}),
+		).not.toThrow();
+		expect(untouchedAcceptanceReservation).toMatchObject({
+			status: "sealed-pending-human-approval",
+			approvedByHuman: false,
+			revealedCaseCount: 0,
+		});
+		expect(untouchedAcceptanceReservation.selection).toBe(acceptance);
 	});
 
 	test("covers the complete semantic relation matrix", () => {
@@ -360,7 +504,9 @@ describe("combined German Knowledge evaluation corpus", () => {
 				covered.add(relation);
 			}
 		}
-		expect([...covered].sort()).toEqual([...semanticRelationValues].sort());
+		expect([...covered].sort()).toEqual(
+			[...requestableRelationSchema.options].sort(),
+		);
 	});
 
 	test("accepts every canonical ideal output", () => {
@@ -377,34 +523,137 @@ describe("combined German Knowledge evaluation corpus", () => {
 		}
 	});
 
-	test("scores exact outputs and isolates cross-aspect interference", () => {
-		const entry = corpus.cases["combined-dev-bank-bench"];
-		if (entry === undefined)
-			throw new Error("Missing canonical polysemy case.");
+	test("retains rationales, contamination keys, failure modes, and the complete route matrix", () => {
+		const routeKeys = new Set<string>();
+		const failureModes = new Set<string>();
+		for (const [caseId, entry] of Object.entries(corpus.cases)) {
+			expect(entry.explanation?.length).toBeGreaterThan(0);
+			expect(entry.contaminationKeys?.length).toBeGreaterThan(0);
+			const adjudication = relationCorpusAdjudications.byCaseId[caseId];
+			expect(adjudication).toBeDefined();
+			for (const mode of adjudication?.failureModes ?? [])
+				failureModes.add(mode);
+			const { family, kind } = entry.input.reading.lemma;
+			if (
+				Object.keys(entry.input.request.semanticRelations ?? {})
+					.length > 0
+			)
+				routeKeys.add(`${family}/${kind}`);
+			for (const relation of ["hyponym", "meronym"])
+				expect(
+					relation in (entry.input.request.semanticRelations ?? {}),
+				).toBe(false);
+		}
+		expect(routeKeys).toEqual(
+			new Set([
+				"Lexeme/ADJ",
+				"Lexeme/ADP",
+				"Lexeme/ADV",
+				"Lexeme/AUX",
+				"Lexeme/CCONJ",
+				"Lexeme/DET",
+				"Lexeme/INTJ",
+				"Lexeme/NOUN",
+				"Lexeme/NUM",
+				"Lexeme/PART",
+				"Lexeme/PRON",
+				"Lexeme/PROPN",
+				"Lexeme/SCONJ",
+				"Lexeme/SYM",
+				"Lexeme/VERB",
+				"Phraseme/Aphorism",
+				"Phraseme/Collocation",
+				"Phraseme/DiscourseFormula",
+				"Phraseme/Idiom",
+				"Phraseme/Proverb",
+			]),
+		);
+		expect(failureModes).toEqual(
+			new Set([
+				"positive",
+				"negative",
+				"null",
+				"omission",
+				"wrong-kind",
+				"wrong-family",
+				"polysemy",
+				"register",
+				"multi-member",
+				"self-relation",
+			]),
+		);
+		const inverseKinds = new Set(
+			Object.values(relationCorpusAdjudications.byCaseId).flatMap(
+				({ inverseJudgments }) =>
+					inverseJudgments.map(({ relation }) => relation),
+			),
+		);
+		expect(inverseKinds).toEqual(new Set(["hyponym", "meronym"]));
 
+		const developmentAdjudications = corpus.collections.development.ids.map(
+			(caseId) => relationCorpusAdjudications.byCaseId[caseId],
+		);
 		expect(
-			evaluateCombinedGermanKnowledge({
-				caseId: "combined-dev-bank-bench",
-				input: entry.input,
-				idealOutput: entry.idealOutput,
-				output: entry.idealOutput,
-			}),
-		).toMatchObject({
-			contractPass: true,
-			crossAspectConsistencyPass: true,
-		});
+			developmentAdjudications.filter(
+				(adjudication) => adjudication?.authority === "primary-source",
+			),
+		).toHaveLength(14);
 		expect(
-			evaluateCombinedGermanKnowledge({
-				caseId: "combined-dev-bank-bench",
-				input: entry.input,
-				idealOutput: entry.idealOutput,
-				output: { ...entry.idealOutput, translations: { en: "bank" } },
-			}),
-		).toMatchObject({
-			contractPass: false,
-			definitionPass: true,
-			translationPass: false,
-			crossAspectConsistencyPass: false,
+			developmentAdjudications.filter(
+				(adjudication) =>
+					adjudication?.authority === "contract-reviewer",
+			),
+		).toHaveLength(36);
+		expect(
+			developmentAdjudications.reduce(
+				(count, adjudication) =>
+					count + (adjudication?.harmfulTargets.length ?? 0),
+				0,
+			),
+		).toBe(34);
+		expect(
+			developmentAdjudications.reduce(
+				(count, adjudication) =>
+					count +
+					Object.values(
+						adjudication?.acceptableTargetSets ?? {},
+					).flat().length,
+				0,
+			),
+		).toBe(1);
+		expect(
+			developmentAdjudications.reduce(
+				(count, adjudication) =>
+					count + (adjudication?.inverseJudgments.length ?? 0),
+				0,
+			),
+		).toBe(7);
+	});
+
+	test("records bounded alternatives and explicitly harmful targets", () => {
+		const alternative =
+			relationCorpusAdjudications.byCaseId[
+				"relation-adv-42-beginnen-alternative"
+			];
+		expect(alternative?.acceptableTargetSets?.synonym).toEqual([
+			[
+				{
+					language: "de",
+					canonicalForm: "einsetzen",
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			],
+		]);
+
+		const bank =
+			relationCorpusAdjudications.byCaseId[
+				"relation-adv-01-bank-finance"
+			];
+		expect(bank?.harmfulTargets).toContainEqual({
+			relation: "hypernym",
+			target: shadow("Kreditinstitut"),
+			reason: "Primary lexicography treats the pair as synonyms, making taxonomy contested.",
 		});
 	});
 });

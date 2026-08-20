@@ -5,7 +5,10 @@ import type {
 	LemmaKindFor,
 	SupportedLanguage,
 } from "dumling/types";
-import type { semanticRelationValues } from "./vocabulary.js";
+import type {
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "./vocabulary.js";
 
 export type NonEmptyStrings = [string, ...string[]];
 
@@ -77,6 +80,8 @@ export type LexicalBreakdown<
 > = [LexicalShadow, LexicalShadow, ...LexicalShadow[]];
 
 export type SemanticRelation = (typeof semanticRelationValues)[number];
+export type DirectSemanticRelation =
+	(typeof directSemanticRelationValues)[number];
 
 /**
  * One application-wide user choice for every Knowledge leaf that Dumrel can
@@ -106,7 +111,12 @@ export type KnowledgeRequestMask = Readonly<{
 }>;
 
 export type SemanticRelations<Lemma extends LemmaReference = LemmaReference> =
-	Partial<Record<SemanticRelation, Lemma[]>>;
+	Partial<Record<DirectSemanticRelation, Lemma[]>>;
+
+/** Read-only relation buckets after graph inference. Never a persistence DTO. */
+export type ProjectedSemanticRelations<
+	Lemma extends LemmaReference = LemmaReference,
+> = Partial<Record<SemanticRelation, Lemma[]>>;
 
 export type ReadingKnowledge<
 	TargetLang extends string = string,
@@ -124,7 +134,7 @@ export type ReadingKnowledge<
 };
 
 export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
-	relation: SemanticRelation;
+	relation: DirectSemanticRelation;
 	target: Shadow;
 };
 
@@ -139,9 +149,20 @@ export type SemanticRelationGraphEdge = {
 	targetLemma: string;
 };
 
+export type DirectSemanticRelationGraphEdge = Omit<
+	SemanticRelationGraphEdge,
+	"relation"
+> & {
+	relation: DirectSemanticRelation;
+};
+
+export type SemanticRelationGraphProjection = SemanticRelationGraphEdge & {
+	provenance: "direct" | "inferred";
+};
+
 export type SemanticRelationGraph = {
 	readings: SemanticRelationGraphReading[];
-	edges: SemanticRelationGraphEdge[];
+	edges: DirectSemanticRelationGraphEdge[];
 };
 
 export type KnowledgeChange<
@@ -165,13 +186,13 @@ export type KnowledgeChange<
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "semanticRelations";
-			relation: SemanticRelation;
+			relation: DirectSemanticRelation;
 			value: Lemma[];
 	  }
 	| {
 			kind: "Retract";
 			aspect: "semanticRelations";
-			relation: SemanticRelation;
+			relation: DirectSemanticRelation;
 	  }
 	| {
 			kind: "Contribute" | "Correct";

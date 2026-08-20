@@ -4,8 +4,14 @@ export {
 	intersectKnowledgeRequestMask,
 } from "./applicability.js";
 export { applyKnowledgeChange } from "./knowledge.js";
-export { inverseRelationFor, propagateRelations } from "./rules.js";
 export {
+	inverseRelationFor,
+	projectRelations,
+	propagateRelations,
+} from "./rules.js";
+export {
+	directSemanticRelationGraphEdgeSchema,
+	directSemanticRelationSchema,
 	knowledgeChangeSchema,
 	knowledgeRequestMaskSchema,
 	knowledgeSettingsSchema,
@@ -21,7 +27,6 @@ export {
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 	readingReferenceSchema,
-	semanticRelationGraphEdgeSchema,
 	semanticRelationGraphReadingSchema,
 	semanticRelationGraphSchema,
 	semanticRelationSchema,
@@ -29,6 +34,8 @@ export {
 	unitShadowSchema,
 } from "./schema.js";
 export type {
+	DirectSemanticRelation,
+	DirectSemanticRelationGraphEdge,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSettings,
@@ -42,13 +49,18 @@ export type {
 	MorphologicalTreeStructure,
 	NonEmptyStrings,
 	PendingSemanticRelation,
+	ProjectedSemanticRelations,
 	ReadingKnowledge,
 	ReadingReference,
 	SemanticRelation,
 	SemanticRelationGraph,
 	SemanticRelationGraphEdge,
+	SemanticRelationGraphProjection,
 	SemanticRelationGraphReading,
 	SemanticRelations,
 	UnitShadow,
 } from "./types.js";
-export { semanticRelationValues } from "./vocabulary.js";
+export {
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "./vocabulary.js";

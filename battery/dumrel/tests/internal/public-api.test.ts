@@ -6,6 +6,9 @@ import * as settings from "../../src/settings";
 import * as types from "../../src/types";
 
 const schemaExports = [
+	"directSemanticRelationSchema",
+	"directSemanticRelationGraphEdgeSchema",
+	"directSemanticRelationValues",
 	"knowledgeChangeSchema",
 	"knowledgeRequestMaskSchema",
 	"knowledgeSettingsSchema",
@@ -21,7 +24,6 @@ const schemaExports = [
 	"pendingSemanticRelationSchema",
 	"readingKnowledgeSchema",
 	"readingReferenceSchema",
-	"semanticRelationGraphEdgeSchema",
 	"semanticRelationGraphReadingSchema",
 	"semanticRelationGraphSchema",
 	"semanticRelationsSchema",
@@ -31,7 +33,7 @@ const schemaExports = [
 ].sort();
 
 describe("public API allowlists", () => {
-	test("the root exposes exactly five functions plus frozen schemas/values", () => {
+	test("the root exposes exactly six functions plus frozen schemas/values", () => {
 		expect(Object.keys(root).sort()).toEqual(
 			[
 				"DEFAULT_KNOWLEDGE_SETTINGS",
@@ -39,13 +41,14 @@ describe("public API allowlists", () => {
 				"defaultKnowledgeRequestMask",
 				"intersectKnowledgeRequestMask",
 				"inverseRelationFor",
+				"projectRelations",
 				"propagateRelations",
 				...schemaExports,
 			].sort(),
 		);
 		expect(
 			Object.values(root).filter((value) => typeof value === "function"),
-		).toHaveLength(5);
+		).toHaveLength(6);
 	});
 
 	test("dedicated subpaths expose only their owned contracts", () => {

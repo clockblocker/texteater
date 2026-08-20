@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
+import { projectSemanticRelations } from "../../../src";
 import {
 	derivePendingEntryId,
 	englishRunDraft,
-	englishRunLemma,
 	englishSwimCitationSurface,
 	englishSwimDraft,
 	englishSwimLemma,
@@ -81,7 +81,7 @@ describe("configured service relation writes", () => {
 		).toEqual([]);
 	});
 
-	test("materializes forward and inverse Reading Knowledge", async () => {
+	test("stores only forward Reading Knowledge and infers the symmetric view", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		const result = await dict.addNewNote({
 			draft: {
@@ -108,7 +108,18 @@ describe("configured service relation writes", () => {
 		expect(
 			readings.find(({ reading }) => reading.emojiDescription === "🚶")
 				?.knowledge?.semanticRelations?.nearSynonym,
-		).toEqual([englishSwimLemma]);
+		).toBeUndefined();
+		expect(
+			projectSemanticRelations({
+				lemmas: storage.loadAll().map(({ lemmaRecord }) => lemmaRecord),
+				readings,
+			}),
+		).toContainEqual({
+			sourceReading: expect.objectContaining({ emojiDescription: "🚶" }),
+			relation: "nearSynonym",
+			targetLemma: englishSwimLemma,
+			provenance: "inferred",
+		});
 	});
 
 	test("resolves a generated Unit Shadow when an exact Lemma already exists", async () => {
@@ -150,7 +161,7 @@ describe("configured service relation writes", () => {
 		expect(
 			readings.find(({ reading }) => reading.emojiDescription === "🚶")
 				?.knowledge?.semanticRelations?.antonym,
-		).toEqual([englishRunLemma]);
+		).toBeUndefined();
 	});
 
 	test("rejects cross-language direct and pending endpoints", async () => {

@@ -102,7 +102,12 @@ _Avoid_: Lexical Relation
 **Pending Semantic Relation**:
 A transitional DTO containing a Semantic Relation and target Unit Shadow. It is
 not canonical Reading Knowledge; Dumdict supplies the source Reading and owns
-matching, resolution, removal, and the forward/inverse writes.
+matching, resolution, removal, and the direct write.
+
+**Direct Semantic Relation Claim**:
+A durable Reading-owned relation in canonical orientation. The direct kinds are
+Synonym, Near Synonym, Antonym, Near Antonym, Hypernym, and Holonym. Hyponym
+and Meronym are inferred view vocabulary and cannot enter direct Knowledge.
 
 **Relation Algebra**:
 The relation-specific properties used to derive Semantic Relations, including
@@ -117,9 +122,10 @@ inventory. Propagation never mutates direct Knowledge or merges Knowledge
 applied to different Readings.
 
 **Inverse Relation**:
-The Semantic Relation materialized on every current Reading of a target Lemma,
-pointing to the original source Reading's Lemma. It may be the same Relation,
-as with Synonym, or a paired counterpart, as with Hypernym and Hyponym.
+The inferred Semantic Relation projected on every current Reading of a target
+Lemma, pointing to the original source Reading's Lemma. It may be the same
+Relation, as with Synonym, or a paired counterpart, as with Hypernym and
+Hyponym. It is never durable Knowledge.
 
 **Synonym**:
 An exact semantic equivalence from a Reading to a Lemma. Synonym is symmetric
@@ -135,18 +141,24 @@ and does not create an equivalence cluster.
 A direct symmetric opposition from a Reading to a Lemma. Antonym is not
 transitive.
 
+**Near Antonym**:
+A direct symmetric conventional lexical contrast that holds for the Reading
+generally, often by profiling opposite viewpoints on one event. It is neither
+transitive nor substitutive, and an encounter-specific foil is not sufficient.
+
 **Hypernym**:
 A direct Semantic Relation from a narrower Reading to a broader Lemma. Its
 Inverse Relation is Hyponym. Hypernym is not transitive.
 
 **Hyponym**:
-A direct Semantic Relation from a broader Reading to a narrower Lemma. Its
-Inverse Relation is Hypernym. Hyponym is not transitive.
+The inferred view from a broader Reading to a narrower Lemma produced by a
+direct Hypernym claim in the opposite orientation. Hyponym is not transitive
+and is never a durable direct kind.
 
 **Meronym**:
-A direct Semantic Relation from a Reading to a Lemma for one of its parts,
-members, or substances. Its Inverse Relation is Holonym and it is not
-transitive.
+The inferred view from a whole Reading to a Lemma for one of its parts,
+members, or substances, produced by a direct Holonym claim in the opposite
+orientation. Meronym is not transitive and is never a durable direct kind.
 
 **Holonym**:
 A direct Semantic Relation from a part, member, or substance Reading to its

@@ -22,25 +22,18 @@ applied by Dumdict. Dumdict rejects owner mismatches and omits empty Knowledge
 as storage housekeeping.
 
 Semantic Relation buckets are Reading-owned and Lemma-targeted. Generated Unit
-Shadows resolve by exact descriptor. Zero matches remain pending; one match
-becomes a forward edge plus inverse Reading fan-out; two or more choose one
-stable forward Lemma and fan inverse edges across Readings of every match.
-Adding a Reading also backfills every inverse implied by existing edges that
-target its Lemma.
-
-Materialized inverse, closure, and substitution edges are ordinary Reading
-Knowledge. Dumdict records no provenance or reference count, so later
-retraction removes only the explicitly changed stored bucket and does not
-cascade-delete other materialized edges.
+Shadows resolve only when one exact descriptor match exists. Zero or multiple
+matches remain pending and inert. Only direct claims are durable; inverse,
+closure, substitution, and later-Reading consequences are provenance-bearing
+read projections.
 
 ## Commitments
 
 1. Hosts own persistence and transaction mechanics.
 2. Dumling owns the foundational Reading value and stable identity operation;
    Dumdict owns dictionary scope, owner applicability, exact matching,
-   direct same-Lemma and same-language validation, inverse materialization,
-   synonym closure/substitution, later-Reading backfill, and
-   pending lifecycle.
+   direct same-Lemma and same-language validation, graph-wide target
+   conflicts, inferred projection, and pending lifecycle.
 3. Normal operations load only their required slice.
 4. Lemma, Reading, and Surface identities remain distinct.
 5. Version 1 wire values carry `schemaVersion: 1`; older shapes require a reset

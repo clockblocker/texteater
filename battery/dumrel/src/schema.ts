@@ -3,6 +3,7 @@ import { readingSchema, schemasFor } from "dumling/schema";
 import { type ZodType, z } from "zod";
 
 import type {
+	DirectSemanticRelationGraphEdge,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSettings,
@@ -19,14 +20,19 @@ import type {
 	ReadingKnowledge,
 	ReadingReference,
 	SemanticRelationGraph,
-	SemanticRelationGraphEdge,
 	SemanticRelationGraphReading,
 	SemanticRelations,
 	UnitShadow,
 } from "./types.js";
-import { semanticRelationValues } from "./vocabulary.js";
+import {
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "./vocabulary.js";
 
-export { semanticRelationValues } from "./vocabulary.js";
+export {
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "./vocabulary.js";
 
 const normalizedNonEmptyStringSchema = z
 	.string()
@@ -35,11 +41,15 @@ const normalizedNonEmptyStringSchema = z
 	.overwrite((value) => value.normalize("NFC"));
 
 export const semanticRelationSchema = z.enum(semanticRelationValues);
+export const directSemanticRelationSchema = z.enum(
+	directSemanticRelationValues,
+);
 
 const semanticRelationSettingsSchema = z.strictObject({
 	synonym: z.boolean(),
 	nearSynonym: z.boolean(),
 	antonym: z.boolean(),
+	nearAntonym: z.boolean(),
 	hypernym: z.boolean(),
 	hyponym: z.boolean(),
 	meronym: z.boolean(),
@@ -51,6 +61,7 @@ const semanticRelationRequestSchema = z
 		synonym: z.null().optional(),
 		nearSynonym: z.null().optional(),
 		antonym: z.null().optional(),
+		nearAntonym: z.null().optional(),
 		hypernym: z.null().optional(),
 		hyponym: z.null().optional(),
 		meronym: z.null().optional(),
@@ -213,15 +224,15 @@ export const lexicalBreakdownSchema = z
 	.min(2) as unknown as z.ZodType<LexicalBreakdown>;
 
 export const semanticRelationsSchema = z.partialRecord(
-	semanticRelationSchema,
+	directSemanticRelationSchema,
 	z.array(lemmaReferenceSchema),
 ) as z.ZodType<SemanticRelations>;
 
-export const semanticRelationGraphEdgeSchema = z.strictObject({
+export const directSemanticRelationGraphEdgeSchema = z.strictObject({
 	sourceReading: normalizedNonEmptyStringSchema,
-	relation: semanticRelationSchema,
+	relation: directSemanticRelationSchema,
 	targetLemma: normalizedNonEmptyStringSchema,
-}) as z.ZodType<SemanticRelationGraphEdge>;
+}) as z.ZodType<DirectSemanticRelationGraphEdge>;
 
 export const semanticRelationGraphReadingSchema = z.strictObject({
 	reading: normalizedNonEmptyStringSchema,
@@ -231,7 +242,7 @@ export const semanticRelationGraphReadingSchema = z.strictObject({
 export const semanticRelationGraphSchema = z
 	.strictObject({
 		readings: z.array(semanticRelationGraphReadingSchema),
-		edges: z.array(semanticRelationGraphEdgeSchema),
+		edges: z.array(directSemanticRelationGraphEdgeSchema),
 	})
 	.superRefine((graph, context) => {
 		const readingOwners = new Map<string, string>();
@@ -262,7 +273,7 @@ export const semanticRelationGraphSchema = z
 	}) as z.ZodType<SemanticRelationGraph>;
 
 export const pendingSemanticRelationSchema = z.strictObject({
-	relation: semanticRelationSchema,
+	relation: directSemanticRelationSchema,
 	target: unitShadowSchema,
 }) as z.ZodType<PendingSemanticRelation>;
 
@@ -306,13 +317,13 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: bucketKinds,
 		aspect: z.literal("semanticRelations"),
-		relation: semanticRelationSchema,
+		relation: directSemanticRelationSchema,
 		value: z.array(lemmaReferenceSchema),
 	}),
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.literal("semanticRelations"),
-		relation: semanticRelationSchema,
+		relation: directSemanticRelationSchema,
 	}),
 	z.strictObject({
 		kind: bucketKinds,

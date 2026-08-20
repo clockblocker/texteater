@@ -61,15 +61,14 @@ const relationGroups: ReadonlyArray<
 			"synonym",
 			"nearSynonym",
 			"antonym",
+			"nearAntonym",
 			"hypernym",
-			"hyponym",
-			"meronym",
 			"holonym",
 		],
 	],
 	[
 		[["Lexeme", "VERB"]],
-		["synonym", "nearSynonym", "antonym", "meronym", "holonym"],
+		["synonym", "nearSynonym", "antonym", "nearAntonym", "hypernym"],
 	],
 	[
 		[
@@ -89,10 +88,10 @@ const relationGroups: ReadonlyArray<
 			["Phraseme", "Idiom"],
 			["Phraseme", "Proverb"],
 		],
-		["synonym", "nearSynonym", "antonym"],
+		["synonym", "nearSynonym", "antonym", "nearAntonym"],
 	],
-	[[["Lexeme", "PROPN"]], ["synonym", "meronym", "holonym"]],
-	[[["Lexeme", "CCONJ"]], ["synonym", "antonym"]],
+	[[["Lexeme", "PROPN"]], ["synonym", "hypernym", "holonym"]],
+	[[["Lexeme", "CCONJ"]], ["synonym", "antonym", "nearAntonym"]],
 	[[["Lexeme", "NUM"]], ["synonym"]],
 	[
 		[
@@ -164,6 +163,21 @@ describe("German Knowledge applicability", () => {
 				expect(relationKeys(maskFor(family, kind))).toEqual([
 					...expected,
 				]);
+			}
+		}
+	});
+
+	test("never requests inverse-only relations and pairs Near Antonym with Antonym", () => {
+		for (const [family, kinds] of Object.entries(familyKinds)) {
+			for (const kind of kinds) {
+				const relations = relationKeys(
+					maskFor(family as keyof typeof DE_REL_MAP, kind),
+				);
+				expect(relations).not.toContain("hyponym");
+				expect(relations).not.toContain("meronym");
+				expect(relations.includes("nearAntonym")).toBe(
+					relations.includes("antonym"),
+				);
 			}
 		}
 	});

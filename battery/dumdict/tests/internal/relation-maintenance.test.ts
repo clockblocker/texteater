@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { ReadingEntry } from "../../src";
+import { projectSemanticRelations, type ReadingEntry } from "../../src";
 import { sameLemma } from "../../src/core/identity";
 import { planRelationMaintenance } from "../../src/core/plan-relation-maintenance";
 import {
@@ -33,8 +33,71 @@ function entry(
 }
 
 describe("relation maintenance planner", () => {
-	test("preserves exact-Synonym substitution through both endpoints", () => {
+	test("replaces an existing Near Synonym direct claim when Synonym is accepted", () => {
 		const plan = planRelationMaintenance({
+			lemmas: [{ lemma: englishWalkLemma }, { lemma: englishRunLemma }],
+			readings: [
+				entry(englishWalkReading, { nearSynonym: [englishRunLemma] }),
+				entry(englishRunReading, {}),
+			],
+			requests: [
+				{
+					sourceReading: englishWalkReading,
+					relation: "synonym",
+					target: { kind: "lemma", lemma: englishRunLemma },
+				},
+			],
+		});
+		expect(plan).toMatchObject({ status: "planned" });
+		if (plan.status !== "planned") return;
+		expect(plan.additions).toEqual([
+			{
+				reading: englishWalkReading,
+				relation: "synonym",
+				targetLemma: englishRunLemma,
+			},
+		]);
+		expect(plan.removals).toEqual([
+			{
+				reading: englishWalkReading,
+				relation: "nearSynonym",
+				targetLemma: englishRunLemma,
+			},
+		]);
+	});
+
+	test("rejects every other direct cross-kind target collision atomically", () => {
+		const base = {
+			lemmas: [{ lemma: englishWalkLemma }, { lemma: englishRunLemma }],
+			readings: [
+				entry(englishWalkReading, { synonym: [englishRunLemma] }),
+				entry(englishRunReading, {}),
+			],
+		};
+		for (const requests of [
+			[
+				{
+					sourceReading: englishWalkReading,
+					relation: "nearSynonym" as const,
+					target: { kind: "lemma" as const, lemma: englishRunLemma },
+				},
+			],
+			[
+				{
+					sourceReading: englishWalkReading,
+					relation: "antonym" as const,
+					target: { kind: "lemma" as const, lemma: englishRunLemma },
+				},
+			],
+		]) {
+			expect(
+				planRelationMaintenance({ ...base, requests }),
+			).toMatchObject({ status: "rejected", code: "relationConflict" });
+		}
+	});
+
+	test("keeps exact-Synonym substitution out of the write plan and in the read projection", () => {
+		const inventory = {
 			lemmas: [
 				{ lemma: englishWalkLemma },
 				{ lemma: englishRunLemma },
@@ -50,16 +113,18 @@ describe("relation maintenance planner", () => {
 				entry(englishSwimReading, { synonym: [jogLemma] }),
 				entry(jogReading, { synonym: [englishSwimLemma] }),
 			],
-			requests: [],
-		});
+		};
+		const plan = planRelationMaintenance({ ...inventory, requests: [] });
 		expect(plan.status).toBe("planned");
 		if (plan.status !== "planned") return;
+		expect(plan.additions).toEqual([]);
 		expect(
-			plan.additions.some(
-				(addition) =>
-					addition.reading === englishWalkReading &&
-					addition.relation === "antonym" &&
-					sameLemma(addition.targetLemma, jogLemma),
+			projectSemanticRelations(inventory).some(
+				(projection) =>
+					projection.sourceReading === englishWalkReading &&
+					projection.relation === "antonym" &&
+					projection.provenance === "inferred" &&
+					sameLemma(projection.targetLemma, jogLemma),
 			),
 		).toBe(true);
 	});

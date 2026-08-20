@@ -21,6 +21,7 @@ import {
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
 import { createConvexDumdictStorage } from "../convex/orchestration";
+import { loadRelationProjections } from "../convex/presentation";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
@@ -510,7 +511,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			readingKnowledge(boundaryDb, readingFingerprint(gehenReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([laufenLemma]);
+		).toBeUndefined();
 	});
 
 	test("loads every requested owned Surface and explicit existing Lemma target", async () => {
@@ -539,7 +540,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		]);
 	});
 
-	test("authors inverse direct Knowledge, deduplicates pending proposals, and survives a repeated encounter", async () => {
+	test("authors only direct Knowledge, deduplicates pending proposals, and survives a repeated encounter", async () => {
 		const db = new IndexedDb(initialSeed());
 		const dict = createDumdictService({
 			language: "de",
@@ -567,7 +568,27 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			readingKnowledge(db, readingFingerprint(gehenReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([laufenLemma]);
+		).toBeUndefined();
+		const gehenReadingId = db
+			.rows("readings")
+			.find(
+				(row) => row.readingKey === readingFingerprint(gehenReading),
+			)?._id;
+		if (!gehenReadingId) throw new Error("Expected gehen Reading.");
+		expect(
+			await loadRelationProjections(
+				{ db } as never,
+				gehenReadingId as never,
+			),
+		).toMatchObject({
+			fingerprints: [
+				{
+					relation: "nearSynonym",
+					targetCanonicalForm: "laufen",
+					provenance: "inferred",
+				},
+			],
+		});
 		expect(
 			db
 				.rows("accumulatedKnowledge")
@@ -585,10 +606,6 @@ describe("tf-demo Dumdict relation storage", () => {
 			expect.arrayContaining([
 				{
 					ownerReadingKey: readingFingerprint(laufenReading),
-					status: "Partial",
-				},
-				{
-					ownerReadingKey: readingFingerprint(gehenReading),
 					status: "Partial",
 				},
 			]),
@@ -637,6 +654,87 @@ describe("tf-demo Dumdict relation storage", () => {
 		).toMatchObject({ status: "rejected", code: "readingAlreadyExists" });
 		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
 		expect(db.rows("dictionaryState")[0]?.revision).toBe(2);
+	});
+
+	test("applies graph-wide direct target conflicts atomically at the Convex seam", async () => {
+		const db = new IndexedDb(initialSeed());
+		const dict = createDumdictService({
+			language: "de",
+			storage: storageFor(db),
+		});
+		await dict.addNewNote({
+			draft: {
+				reading: laufenReading,
+				note,
+				relations: [
+					{
+						relation: "nearSynonym",
+						target: { kind: "existing", lemma: gehenLemma },
+					},
+				],
+			},
+		});
+		expect(
+			await dict.applyGeneratedKnowledge({
+				reading: laufenReading,
+				changes: [],
+				pendingRelations: [
+					{
+						relation: "synonym",
+						target: {
+							language: "de",
+							canonicalForm: "gehen",
+							family: "Lexeme",
+							kind: "VERB",
+						},
+					},
+				],
+			}),
+		).toMatchObject({ status: "applied" });
+		const sourceId = db
+			.rows("readings")
+			.find(
+				(row) => row.readingKey === readingFingerprint(laufenReading),
+			)?._id;
+		expect(
+			db
+				.rows("semanticRelationEdges")
+				.filter((edge) => edge.sourceReadingId === sourceId)
+				.map(({ relation }) => relation),
+		).toEqual(["synonym"]);
+
+		expect(
+			await dict.applyGeneratedKnowledge({
+				reading: laufenReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "definition",
+						value: "sich gehend fortbewegen",
+					},
+				],
+				pendingRelations: [
+					{
+						relation: "antonym",
+						target: {
+							language: "de",
+							canonicalForm: "gehen",
+							family: "Lexeme",
+							kind: "VERB",
+						},
+					},
+				],
+			}),
+		).toMatchObject({ status: "rejected", code: "relationConflict" });
+		expect(
+			db
+				.rows("accumulatedKnowledge")
+				.find(
+					(row) =>
+						row.ownerReadingKey ===
+						readingFingerprint(laufenReading),
+				)?.knowledge,
+		).not.toMatchObject({ definition: "sich gehend fortbewegen" });
 	});
 
 	test("loads cleanup context and atomically resolves only the exact pending locator", async () => {
@@ -727,7 +825,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			readingKnowledge(db, readingFingerprint(laufenReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([springenLemma]);
+		).toBeUndefined();
 
 		expect(
 			await dict.cleanupRelations({
@@ -786,10 +884,10 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			readingKnowledge(db, readingFingerprint(laufenReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([springenLemma]);
+		).toBeUndefined();
 	});
 
-	test("chooses one ambiguous forward Lemma and fans the inverse out to every exact match", async () => {
+	test("keeps an ambiguous multi-Lemma Shadow pending and inert", async () => {
 		const db = new IndexedDb(initialSeed());
 		const dict = createDumdictService({
 			language: "de",
@@ -829,24 +927,23 @@ describe("tf-demo Dumdict relation storage", () => {
 			},
 		});
 		expect(result).toMatchObject({ status: "applied" });
-		expect(db.rows("pendingSemanticRelations")).toEqual([]);
+		expect(db.rows("pendingSemanticRelations")).toHaveLength(1);
 		const forward = readingKnowledge(
 			db,
 			readingFingerprint(springenReading),
 		)?.semanticRelations?.nearSynonym as unknown[];
-		expect(forward).toHaveLength(1);
-		expect([laufenLemma, alternativeLemma]).toContainEqual(forward[0]);
+		expect(forward).toBeUndefined();
 		expect(
 			readingKnowledge(db, readingFingerprint(laufenReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([springenLemma]);
+		).toBeUndefined();
 		expect(
 			readingKnowledge(db, readingFingerprint(alternativeReading))
 				?.semanticRelations?.nearSynonym,
-		).toEqual([springenLemma]);
+		).toBeUndefined();
 	});
 
-	test("backfills inverse edges when a later Reading joins the target Lemma", async () => {
+	test("does not backfill an inverse edge when a later Reading joins the target Lemma", async () => {
 		const db = new IndexedDb(initialSeed());
 		const dict = createDumdictService({
 			language: "de",
@@ -877,7 +974,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(
 			readingKnowledge(db, readingFingerprint(laterReading))
 				?.semanticRelations?.hyponym,
-		).toEqual([springenLemma]);
+		).toBeUndefined();
 	});
 
 	test("rolls relation-edge writes back when a later planned change fails", async () => {

@@ -10,9 +10,17 @@ import {
 	type QueryCtx,
 } from "./_generated/server";
 import { applyDumdictPlanInTransaction } from "./dumdictStorage";
+import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
-import { dictionaryPlanValidator } from "./model/validators";
+import {
+	dictionaryPlanValidator,
+	relationPublicationRunValidator,
+} from "./model/validators";
+import {
+	recordCommittedRelationRun,
+	relationPublicationAllowedAtCommit,
+} from "./relationPublication";
 
 const attemptInputValidator = v.object({
 	attemptKey: v.string(),
@@ -169,6 +177,7 @@ export const loadInput = internalQuery({
 			kind: "Generate" as const,
 			reading: occurrence.publicReading,
 			markedContext: occurrence.markedContext,
+			runNumber: attempt.runNumber ?? 1,
 		};
 	},
 });
@@ -193,6 +202,7 @@ export const markRunning = internalMutation({
 		if (attempt.state === "Scheduled" || attempt.state === "Failed") {
 			await ctx.db.patch(attempt._id, {
 				state: "Running",
+				runNumber: (attempt.runNumber ?? 0) + 1,
 				failureCode: undefined,
 				failureMessage: undefined,
 				updatedAt: Date.now(),
@@ -231,7 +241,9 @@ export const commitGenerated = internalMutation({
 	args: {
 		attemptKey: v.string(),
 		plan: dictionaryPlanValidator,
+		baseKnowledgePlan: dictionaryPlanValidator,
 		generatedChanges: v.array(v.any()),
+		relationPublication: relationPublicationRunValidator,
 	},
 	returns: v.union(
 		v.object({ status: v.literal("Committed") }),
@@ -254,9 +266,13 @@ export const commitGenerated = internalMutation({
 			return { status: "AlreadyFull" as const };
 		}
 
+		const publishRelations = await relationPublicationAllowedAtCommit(
+			ctx,
+			args.relationPublication,
+		);
 		const dictionaryCommit = await applyDumdictPlanInTransaction(
 			ctx,
-			args.plan,
+			publishRelations ? args.plan : args.baseKnowledgePlan,
 		);
 		if (dictionaryCommit.status === "conflict") {
 			return { status: "DictionaryConflict" as const };
@@ -286,7 +302,13 @@ export const commitGenerated = internalMutation({
 				status: "Full",
 			},
 		);
-		for (const [index, change] of args.generatedChanges.entries()) {
+		const committedGeneratedChanges = publishRelations
+			? args.generatedChanges
+			: generatedKnowledgeAllowedForPublication(
+					{ changes: args.generatedChanges, pendingRelations: [] },
+					[],
+				).changes;
+		for (const [index, change] of committedGeneratedChanges.entries()) {
 			await ctx.db.insert("knowledgeChanges", {
 				knowledgeChangeKey: `${attempt.attemptKey}:${index}`,
 				ownerReadingKey: attempt.ownerReadingKey,
@@ -294,6 +316,12 @@ export const commitGenerated = internalMutation({
 				createdAt: Date.now(),
 			});
 		}
+		await recordCommittedRelationRun(
+			ctx,
+			attempt,
+			args.relationPublication,
+			!publishRelations,
+		);
 		await ctx.db.patch(attempt._id, {
 			state: "Committed",
 			updatedAt: Date.now(),

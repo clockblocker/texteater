@@ -58,6 +58,7 @@ const settings: KnowledgeSettings = {
 		synonym: true,
 		nearSynonym: true,
 		antonym: true,
+		nearAntonym: true,
 		hypernym: true,
 		hyponym: true,
 		meronym: true,
@@ -69,6 +70,12 @@ const requestMask: KnowledgeRequestMask = {
 	translations: { en: null },
 	semanticRelations: { synonym: null },
 };
+const nearAntonymRelation: PublicTypes.SemanticRelation = "nearAntonym";
+const directRelation: PublicTypes.DirectSemanticRelation = "holonym";
+// @ts-expect-error Hyponym is an inferred view, not a durable direct kind.
+const invalidDirectRelation: PublicTypes.DirectSemanticRelation = "hyponym";
+// @ts-expect-error Unknown relation kinds remain outside the public vocabulary.
+const invalidSemanticRelation: PublicTypes.SemanticRelation = "related";
 
 // @ts-expect-error Settings are global, not Family/Kind-specific.
 const familySpecificSettings: KnowledgeSettings = { Lexeme: {} };
@@ -95,6 +102,10 @@ void [
 	breakdown,
 	settings,
 	requestMask,
+	nearAntonymRelation,
+	directRelation,
+	invalidDirectRelation,
+	invalidSemanticRelation,
 	familySpecificSettings,
 	invalidRequestLeaf,
 	invalidTranslationRequest,

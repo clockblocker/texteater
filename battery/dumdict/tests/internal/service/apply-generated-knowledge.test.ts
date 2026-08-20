@@ -71,7 +71,7 @@ describe("applyGeneratedKnowledge", () => {
 		);
 	});
 
-	test("resolves a generated Unit Shadow and materializes its inverse", async () => {
+	test("resolves a generated Unit Shadow without persisting its inverse", async () => {
 		const notes = structuredClone(deSerializedNotes);
 		notes.push({
 			schemaVersion: 1,
@@ -111,7 +111,7 @@ describe("applyGeneratedKnowledge", () => {
 		).toEqual({ synonym: [germanRennenLemma] });
 		expect(
 			stored[1]?.readingEntries[0]?.knowledge?.semanticRelations,
-		).toEqual({ synonym: [germanGehenLemma] });
+		).toBeUndefined();
 		expect(
 			stored.flatMap(({ pendingRelations }) => pendingRelations),
 		).toEqual([]);

@@ -5,8 +5,8 @@ for exact Reading lookup, Reading patches, new-note planning, and pending
 cleanup. Every slice includes a `StoreRevision` and Dumdict validates its
 owners, languages, Knowledge schemas, and pending locators before planning.
 New-note and cleanup slices include the complete Lemma/Reading relation
-inventory needed for synonym closure, inverse fan-out, and later-Reading
-backfill; adapters must not rely on row order for ambiguous resolution.
+inventory needed for target conflicts and deterministic inferred projection;
+adapters must not resolve ambiguous shadows by row order.
 
 `commitChanges` receives one base revision and ordered semantic changes:
 
@@ -16,8 +16,8 @@ backfill; adapters must not rely on row order for ambiguous resolution.
 - create or delete one exact Pending Semantic Relation record.
 
 The adapter must apply every planned change atomically or return a conflict.
-It must not infer inverse edges or resolve Unit Shadows; Dumdict includes all
-materialized relation and exact pending-record operations in the atomic plan.
+It must not infer relation views or resolve Unit Shadows; Dumdict includes only
+direct relation and exact pending-record operations in the atomic plan.
 
 Every mutating service operation also accepts an optional `applyPlan` callback.
 Dumdict invokes it only after the usual language checks, storage-slice

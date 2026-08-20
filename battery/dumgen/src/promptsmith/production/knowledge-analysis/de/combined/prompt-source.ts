@@ -20,7 +20,8 @@ use null when no defensible target exists.
 - transcription: broad standard-German IPA, normalized, with no slash or bracket delimiters;
 - definition: a concise German definition of this Reading;
 - translations.en: one concise contextual English literal;
-- semanticRelations: one or more German Unit Shadows, or null, for each requested relation kind.
+- semanticRelations: an unordered array of one to five German lexical Unit
+  Shadows, or null, for each requested relation kind.
 
 A relation target contains only language, canonicalForm, family, and kind. It
 never contains Core Features, a Reading, an emoji description, an ID, or
@@ -34,8 +35,17 @@ particular, a German adverb Lexeme has Kind ADV, never ADVERB.
 Keep all aspects semantically consistent with the fixed Reading. In particular,
 do not let a familiar spelling pull the definition, Translation, or relations
 toward another Reading. Preserve useful context distinctions, multi-member
-targets, register, punctuation, and proper casing. Return no structured
-Morphological Tree or Lexical Breakdown.
+targets, register, punctuation, and proper casing. A relation target must be a
+Lexeme or Phraseme, never a Morpheme or Construction. Never target the fixed
+Reading itself. Do not repeat a target within a relation or across relation
+kinds; when a target is an exact Synonym, do not also return it as a Near
+Synonym. Every Semantic Relation must hold for the fixed Reading generally,
+independent of this encounter context. Near Antonym requires an established
+conventional lexical contrast, such as opposite viewpoints on one event; a
+sentence-specific foil, loose association, or arbitrary co-member is not a Near
+Antonym. Generate Hypernym and Holonym directly when requested; Hyponym and
+Meronym are inverse-only and never appear in this request or response. Return
+no structured Morphological Tree or Lexical Breakdown.
 `;
 
 export const promptSource = definePromptSource({

@@ -17,6 +17,7 @@ import {
 	defaultKnowledgeRequestMask,
 	intersectKnowledgeRequestMask,
 	inverseRelationFor,
+	projectRelations,
 	propagateRelations,
 	type ReadingKnowledge,
 	type ReadingReference,
@@ -45,6 +46,20 @@ propagateRelations({
 	],
 }); // reading-b --synonym--> lemma-a
 
+projectRelations({
+	readings: [
+		{ reading: "reading-a", lemma: "lemma-a" },
+		{ reading: "reading-b", lemma: "lemma-b" },
+	],
+	edges: [
+		{
+			sourceReading: "reading-a",
+			relation: "hypernym",
+			targetLemma: "lemma-b",
+		},
+	],
+}); // direct Hypernym plus inferred Hyponym, each with provenance
+
 declare const reading: ReadingReference;
 const applicable = defaultKnowledgeRequestMask(reading);
 const selected =
@@ -58,8 +73,10 @@ const selected =
 
 Knowledge values contain no owner identity. Callers choose the exact Reading,
 own persistence, supply the current Reading-to-Lemma inventory, perform
-pending-relation resolution and lifecycle backfill, and decide whether
-to store an empty Knowledge value. `applyKnowledgeChange` never mutates its
+pending-relation resolution, and decide whether to store an empty Knowledge
+value. Durable Knowledge accepts only the six direct relation kinds; Hyponym,
+Meronym, inverses, closure, and substitution are projection-only.
+`applyKnowledgeChange` never mutates its
 inputs and returns ordinary mutable DTOs. Its return type tracks Target
 Language bucket changes for Translations: Contribute and Correct add the
 addressed key, while Retract removes it. Transcription is one optional

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { readingFingerprint } from "dumling/reading";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
 import {
 	getNote,
@@ -51,6 +52,7 @@ test("projects learner Knowledge and direct relations without storing a view", (
 				relation: "hypernym",
 				targetLemmaKey: expect.any(String),
 				targetCanonicalForm: "Institut",
+				provenance: "direct",
 			},
 		],
 	});
@@ -99,7 +101,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 });
 
 test("Unit Reading NoteData ignores visitor settings and keeps all pure data", async () => {
-	const readingKey = "reading-key";
 	const sourceLemma = {
 		_id: "lemma-source",
 		lemmaKey: "lemma-source-key",
@@ -114,6 +115,16 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 			verbType: null,
 		},
 	};
+	const readingKey = readingFingerprint({
+		lemma: {
+			language: sourceLemma.language,
+			family: sourceLemma.family,
+			kind: sourceLemma.kind,
+			canonicalForm: sourceLemma.canonicalForm,
+			coreFeatures: sourceLemma.coreFeatures,
+		},
+		emojiDescription: "🏃",
+	});
 	const targetLemma = {
 		_id: "lemma-target",
 		lemmaKey: "lemma-target-key",
@@ -132,6 +143,25 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		kind: "NOUN",
 	};
 	const rows = {
+		dictionaryLemmas: [
+			{ lemmaId: sourceLemma._id },
+			{ lemmaId: targetLemma._id },
+		],
+		readings: [
+			{
+				_id: "reading-1",
+				lemmaId: sourceLemma._id,
+				readingKey,
+				emojiDescription: "🏃",
+			},
+		],
+		readingEntries: {
+			readingId: "reading-1",
+			record: {
+				attestedTranslations: [],
+				notes: "",
+			},
+		},
 		accumulatedKnowledge: {
 			ownerReadingKey: readingKey,
 			knowledge: {
@@ -195,9 +225,17 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 					async unique() {
 						return table === "accumulatedKnowledge"
 							? rows.accumulatedKnowledge
-							: null;
+							: table === "readingEntries"
+								? rows.readingEntries
+								: table === "lemmas"
+									? targetLemma
+									: null;
 					},
 					async take() {
+						if (table === "dictionaryLemmas") {
+							return rows.dictionaryLemmas;
+						}
+						if (table === "readings") return rows.readings;
 						if (table === "semanticRelationEdges") {
 							return rows.semanticRelationEdges;
 						}

@@ -1,3 +1,4 @@
+export { requestableRelationSchema } from "./knowledge-generation/relations";
 export {
 	enabledSegmentationLanguageSchema,
 	grammaticalInputSchema,

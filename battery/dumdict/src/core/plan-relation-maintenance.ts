@@ -1,8 +1,7 @@
 import { readingFingerprint } from "dumling";
 import {
-	inverseRelationFor,
-	propagateRelations,
-	type SemanticRelation,
+	type DirectSemanticRelation,
+	directSemanticRelationSchema,
 	type UnitShadow,
 } from "dumrel";
 import type {
@@ -16,7 +15,7 @@ import { compareLemmas, lemmaFingerprint, sameLemma } from "./identity";
 
 export type RelationRequest<L extends SupportedLanguage> = {
 	sourceReading: Reading<L>;
-	relation: SemanticRelation;
+	relation: DirectSemanticRelation;
 	target:
 		| { kind: "lemma"; lemma: Lemma<L> }
 		| {
@@ -28,20 +27,28 @@ export type RelationRequest<L extends SupportedLanguage> = {
 
 export type PlannedRelationAddition<L extends SupportedLanguage> = {
 	reading: Reading<L>;
-	relation: SemanticRelation;
+	relation: DirectSemanticRelation;
 	targetLemma: Lemma<L>;
 };
+
+export type PlannedRelationRemoval<L extends SupportedLanguage> =
+	PlannedRelationAddition<L>;
 
 export type RelationMaintenancePlan<L extends SupportedLanguage> =
 	| {
 			status: "planned";
 			additions: PlannedRelationAddition<L>[];
+			removals: PlannedRelationRemoval<L>[];
 			resolvedPending: PendingSemanticRelationRecord<L>[];
 			unresolvedPending: PendingSemanticRelationRecord<L>[];
 	  }
 	| {
 			status: "rejected";
-			code: "relationTargetMissing" | "selfRelation" | "invalidDraft";
+			code:
+				| "relationTargetMissing"
+				| "relationConflict"
+				| "selfRelation"
+				| "invalidDraft";
 			message: string;
 	  };
 
@@ -75,7 +82,7 @@ function existingEdges<L extends SupportedLanguage>(
 			([relation, targets]) =>
 				(targets ?? []).map((targetLemma) => ({
 					reading: entry.reading,
-					relation: relation as SemanticRelation,
+					relation: directSemanticRelationSchema.parse(relation),
 					targetLemma,
 				})),
 		),
@@ -86,10 +93,9 @@ function existingEdges<L extends SupportedLanguage>(
  * Plans all dictionary-owned relation work through one seam.
  *
  * Callers provide the complete relation inventory required by the operation.
- * The implementation resolves Unit Shadows, chooses ambiguous forward Lemmas,
- * fans out inverses, asks Dumrel for synonym closure/substitution, and derives
- * later-Reading backfill. Returned additions are idempotent against the input
- * inventory and can be committed atomically with the caller's other changes.
+ * The implementation resolves only unambiguous Unit Shadows and enforces the
+ * direct-claim collision rules. It never plans inverses, closure, substitution,
+ * or later-Reading backfill; those are read-time graph projections.
  */
 export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 	lemmas: readonly LemmaRecord<L>[];
@@ -109,11 +115,18 @@ export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 		]),
 	);
 	const proposed: Edge<L>[] = [];
-	const ambiguousInverseFanout: Edge<L>[] = [];
 	const resolvedPending: PendingSemanticRelationRecord<L>[] = [];
 	const unresolvedPending: PendingSemanticRelationRecord<L>[] = [];
 
 	for (const request of input.requests) {
+		if (!directSemanticRelationSchema.safeParse(request.relation).success) {
+			return {
+				status: "rejected",
+				code: "invalidDraft",
+				message:
+					"Hyponym and Meronym are inferred views and cannot be stored as direct claims.",
+			};
+		}
 		const target = request.target;
 		const sourceLemma = lemmaByKey.get(
 			lemmaFingerprint(request.sourceReading.lemma),
@@ -145,7 +158,7 @@ export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 			targets = lemmas.filter((lemma) =>
 				shadowMatchesLemma(target.shadow, lemma),
 			);
-			if (targets.length === 0) {
+			if (targets.length !== 1) {
 				unresolvedPending.push(target.pendingRecord);
 				continue;
 			}
@@ -167,55 +180,80 @@ export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 			relation: request.relation,
 			targetLemma: chosen,
 		});
-
-		// Dumrel will derive the chosen target's inverse. Ambiguous Shadows also
-		// require inverses for every non-chosen exact match without adding those
-		// Lemmas to the forward bucket.
-		for (const target of targets.slice(1)) {
-			for (const targetReading of input.readings) {
-				if (!sameLemma(targetReading.reading.lemma, target)) continue;
-				ambiguousInverseFanout.push({
-					reading: targetReading.reading,
-					relation: inverseRelationFor(request.relation),
-					targetLemma: sourceLemma,
-				});
-			}
-		}
 	}
 
 	const stored = existingEdges(input.readings);
-	const direct = [...stored, ...proposed];
-	const derived = propagateRelations({
-		readings: input.readings.map(({ reading }) => ({
-			reading: readingFingerprint(reading),
-			lemma: lemmaFingerprint(reading.lemma),
-		})),
-		edges: direct.map((edge) => ({
-			sourceReading: readingFingerprint(edge.reading),
-			relation: edge.relation,
-			targetLemma: lemmaFingerprint(edge.targetLemma),
-		})),
-	}).flatMap((edge): Edge<L>[] => {
-		const reading = readingByKey.get(edge.sourceReading);
-		const targetLemma = lemmaByKey.get(edge.targetLemma);
-		return reading && targetLemma
-			? [{ reading, relation: edge.relation, targetLemma }]
-			: [];
-	});
-
 	const existingKeys = new Set(stored.map(edgeKey));
+	const storedByTarget = groupEdgesByTarget(stored);
+	const proposedByTarget = groupEdgesByTarget(proposed);
 	const additions = new Map<string, Edge<L>>();
-	for (const edge of [...proposed, ...derived, ...ambiguousInverseFanout]) {
-		const key = edgeKey(edge);
-		if (existingKeys.has(key) || additions.has(key)) continue;
-		if (sameLemma(edge.reading.lemma, edge.targetLemma)) continue;
-		additions.set(key, edge);
+	const removals = new Map<string, Edge<L>>();
+	for (const [targetKey, incoming] of proposedByTarget) {
+		const existing = storedByTarget.get(targetKey) ?? [];
+		const incomingRelations = new Set(
+			incoming.map(({ relation }) => relation),
+		);
+		const existingRelations = new Set(
+			existing.map(({ relation }) => relation),
+		);
+		const combinedRelations = new Set([
+			...incomingRelations,
+			...existingRelations,
+		]);
+		if (combinedRelations.size > 1) {
+			const synonymDominatesNearSynonym =
+				combinedRelations.size === 2 &&
+				combinedRelations.has("synonym") &&
+				combinedRelations.has("nearSynonym") &&
+				incomingRelations.has("synonym");
+			if (!synonymDominatesNearSynonym) {
+				return {
+					status: "rejected",
+					code: "relationConflict",
+					message:
+						"One source Reading and target Lemma cannot carry multiple direct relation kinds.",
+				};
+			}
+			for (const edge of existing) {
+				if (edge.relation === "nearSynonym") {
+					removals.set(edgeKey(edge), edge);
+				}
+			}
+		}
+
+		for (const edge of incoming) {
+			if (
+				edge.relation === "nearSynonym" &&
+				incomingRelations.has("synonym")
+			) {
+				continue;
+			}
+			const key = edgeKey(edge);
+			if (!existingKeys.has(key)) additions.set(key, edge);
+		}
 	}
 
 	return {
 		status: "planned",
 		additions: [...additions.values()],
+		removals: [...removals.values()],
 		resolvedPending,
 		unresolvedPending,
 	};
+}
+
+function groupEdgesByTarget<L extends SupportedLanguage>(
+	edges: readonly Edge<L>[],
+): Map<string, Edge<L>[]> {
+	const grouped = new Map<string, Edge<L>[]>();
+	for (const edge of edges) {
+		const key = JSON.stringify([
+			readingFingerprint(edge.reading),
+			lemmaFingerprint(edge.targetLemma),
+		]);
+		const bucket = grouped.get(key);
+		if (bucket) bucket.push(edge);
+		else grouped.set(key, [edge]);
+	}
+	return grouped;
 }

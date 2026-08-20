@@ -1,5 +1,5 @@
 import { readingFingerprint } from "dumling";
-import type { SemanticRelation } from "dumrel";
+import type { DirectSemanticRelation } from "dumrel";
 import type { Reading } from "../../dto";
 import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { StoreRevision } from "../../schema";
@@ -19,7 +19,7 @@ export function relationAdditionsToPatches<L extends SupportedLanguage>(
 		string,
 		{
 			reading: Reading<L>;
-			relation: SemanticRelation;
+			relation: DirectSemanticRelation;
 			targets: Lemma<L>[];
 		}
 	>();
