@@ -1,10 +1,11 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,
 	ReadingNoteForDisambiguation,
 	StoreRevision,
 } from "../dto";
-import type { Lemma, SupportedLanguage, SurfaceId } from "../dumling";
+import type { SurfaceId } from "../dumling";
 import type { DumdictDiagnostic } from "./diagnostics";
 
 export type AffectedDictionaryEntities<L extends SupportedLanguage> = {

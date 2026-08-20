@@ -8,7 +8,7 @@ export {
 	inverseRelationFor,
 	projectRelations,
 	propagateRelations,
-} from "./rules.js";
+} from "./root-relations.js";
 export {
 	directSemanticRelationGraphEdgeSchema,
 	directSemanticRelationSchema,

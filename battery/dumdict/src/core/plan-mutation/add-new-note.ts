@@ -1,16 +1,13 @@
-import { readingFingerprint } from "dumling";
-import {
-	type DirectSemanticRelation,
-	pendingSemanticRelationSchema,
-	type ReadingKnowledge,
-} from "dumrel";
+import { readingFingerprint } from "dumling/reading";
+import type { Lemma, SupportedLanguage } from "dumling/types";
+import { pendingSemanticRelationSchema } from "dumrel/schema";
+import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 	SurfaceEntry,
 } from "../../dto";
-import type { Lemma, SupportedLanguage } from "../../dumling";
 import { makeSurfaceId } from "../../dumling";
 import type { AddNewNoteRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";

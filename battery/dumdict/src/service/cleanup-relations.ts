@@ -1,6 +1,6 @@
-import { semanticRelationSchema } from "dumrel";
+import type { SupportedLanguage } from "dumling/types";
+import { semanticRelationSchema } from "dumrel/schema";
 import { planCleanupRelations } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	CleanupRelationsRequest,
 	DumdictMutationOptions,

@@ -1,6 +1,7 @@
-import { applyKnowledgeChange, type ReadingKnowledge } from "dumrel";
+import type { Lemma, SupportedLanguage } from "dumling/types";
+import { applyKnowledgeChange } from "dumrel";
+import type { ReadingKnowledge } from "dumrel/types";
 import type { ReadingEntry, ReadingKnowledgeChange } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
 import { sameLemma, sameReading } from "./identity";
 
 export function applyDumdictKnowledgeChange<L extends SupportedLanguage>(

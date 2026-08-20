@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import type { PlanMutationResult } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type { MutationResult } from "../public";
 import type { CommitChangesResult } from "../storage";
 

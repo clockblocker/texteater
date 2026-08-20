@@ -1,4 +1,4 @@
-import { semanticRelationGraphSchema } from "./schema.js";
+import { parseSemanticRelationGraph } from "./relations/graph-contract.js";
 import type {
 	SemanticRelation,
 	SemanticRelationGraph,
@@ -51,7 +51,7 @@ export function inverseRelationFor(
 export function propagateRelations(
 	graph: SemanticRelationGraph,
 ): SemanticRelationGraphEdge[] {
-	const parsed = semanticRelationGraphSchema.parse(graph);
+	const parsed = parseSemanticRelationGraph(graph);
 	const readingLemma = new Map(
 		parsed.readings.map(({ reading, lemma }) => [reading, lemma]),
 	);
@@ -125,7 +125,7 @@ export function propagateRelations(
 export function projectRelations(
 	graph: SemanticRelationGraph,
 ): SemanticRelationGraphProjection[] {
-	const parsed = semanticRelationGraphSchema.parse(graph);
+	const parsed = parseSemanticRelationGraph(graph);
 	const projections = new Map<string, SemanticRelationGraphProjection>();
 	for (const edge of deduplicate(parsed.edges).sort(compareEdges)) {
 		projections.set(edgeKey(edge), { ...edge, provenance: "direct" });

@@ -1,3 +1,4 @@
+import type { SupportedLanguage } from "dumling/types";
 import {
 	validateCleanupRelationsSlice,
 	validateNewNoteSlice,
@@ -5,7 +6,6 @@ import {
 	validateRelationsCleanupInfoSlice,
 	validateStoredReadingsSlice,
 } from "../core/validate-slice";
-import type { SupportedLanguage } from "../dumling";
 import { commitChangesResultSchema, getDumdictSchemasFor } from "../schema";
 import type { DumdictSliceValidation } from "./runtime-options";
 

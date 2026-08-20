@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type { AddAttestationRequest } from "../../public";
 import type { ReadingPatchSlice } from "../../storage";
 import { sameReading } from "../identity";

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import * as root from "../../src";
+import * as relations from "../../src/relations";
 import * as schema from "../../src/schema";
 import * as settings from "../../src/settings";
 import * as types from "../../src/types";
@@ -52,6 +53,15 @@ describe("public API allowlists", () => {
 	});
 
 	test("dedicated subpaths expose only their owned contracts", () => {
+		expect(Object.keys(relations).sort()).toEqual(
+			[
+				"directSemanticRelationValues",
+				"inverseRelationFor",
+				"projectRelations",
+				"propagateRelations",
+				"semanticRelationValues",
+			].sort(),
+		);
 		expect(Object.keys(schema).sort()).toEqual(schemaExports);
 		expect(Object.keys(settings)).toEqual(["DEFAULT_KNOWLEDGE_SETTINGS"]);
 		expect(Object.keys(types)).toEqual([]);

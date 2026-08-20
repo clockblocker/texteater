@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"paths": {
 			"dumrel": ["./src/index.ts"],
+			"dumrel/relations": ["./src/relations.ts"],
 			"dumrel/schema": ["./src/schema.ts"],
 			"dumrel/types": ["./src/types.ts"],
 			"dumrel/vocabulary": ["./src/vocabulary.ts"]

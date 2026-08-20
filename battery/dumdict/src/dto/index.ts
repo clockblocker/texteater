@@ -1,4 +1,4 @@
-export type { Reading } from "../dumling";
+export type { Reading } from "dumling/types";
 export * from "./drafts";
 export * from "./entries";
 export * from "./knowledge";

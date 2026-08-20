@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import { makeSurfaceId } from "../../dumling";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";

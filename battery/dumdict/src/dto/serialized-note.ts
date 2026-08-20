@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type { LemmaRecord, ReadingEntry, SurfaceEntry } from "./entries";
 import type { PendingSemanticRelationRecord } from "./pending";
 

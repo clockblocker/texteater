@@ -1,6 +1,9 @@
-import { knowledgeChangeSchema, pendingSemanticRelationSchema } from "dumrel";
+import type { SupportedLanguage } from "dumling/types";
+import {
+	knowledgeChangeSchema,
+	pendingSemanticRelationSchema,
+} from "dumrel/schema";
 import { planApplyGeneratedKnowledge } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	ApplyGeneratedKnowledgeRequest,
 	DumdictMutationOptions,

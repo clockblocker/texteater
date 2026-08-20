@@ -19,6 +19,11 @@
 			"import": "./dist/types.js",
 			"default": "./dist/types.js"
 		},
+		"./relations": {
+			"types": "./dist/relations.d.ts",
+			"import": "./dist/relations.js",
+			"default": "./dist/relations.js"
+		},
 		"./schema": {
 			"types": "./dist/schema.d.ts",
 			"import": "./dist/schema.js",
@@ -49,7 +54,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schema.ts src/settings.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/relations.ts src/schema.ts src/settings.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",

@@ -1,5 +1,5 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import type { DumdictReadingDraft, Reading } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,

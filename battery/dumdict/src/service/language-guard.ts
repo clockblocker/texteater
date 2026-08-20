@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import { DumdictLanguageMismatchError } from "../public";
 
 export function assertLanguageMatches<L extends SupportedLanguage>(

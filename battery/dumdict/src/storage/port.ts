@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type { CommitChangesRequest, CommitChangesResult } from "./commit";
 import type {
 	CleanupRelationsSlice,

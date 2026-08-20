@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import type { StoreRevision } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
 import type {
 	AffectedDictionaryEntities,
 	MutationRejectedCode,

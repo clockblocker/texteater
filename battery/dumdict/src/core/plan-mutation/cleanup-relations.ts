@@ -1,6 +1,6 @@
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling/reading";
+import type { SupportedLanguage } from "dumling/types";
 import type { PendingSemanticRelationLocator, Reading } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
 import {

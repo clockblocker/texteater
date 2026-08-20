@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import type { PlanMutationResult } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type { DumdictMutationOptions, MutationResult } from "../public";
 import { mutationResultFromCommit } from "./result-mapping";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";

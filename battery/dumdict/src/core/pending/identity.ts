@@ -1,9 +1,9 @@
-import type { PendingEntryId } from "../../dto";
 import type {
 	LemmaFamilyFor,
 	LemmaKindFor,
 	SupportedLanguage,
-} from "../../dumling";
+} from "dumling/types";
+import type { PendingEntryId } from "../../dto";
 
 type PendingEntryIdentity<L extends SupportedLanguage> = {
 	language: L;

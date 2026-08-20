@@ -1,5 +1,5 @@
-import type { KnowledgeChange } from "dumrel";
-import type { Lemma, Reading, SupportedLanguage } from "../dumling";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import type { KnowledgeChange } from "dumrel/types";
 
 export type ReadingKnowledgeChange<L extends SupportedLanguage> = {
 	reading: Reading<L>;

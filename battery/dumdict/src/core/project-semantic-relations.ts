@@ -1,12 +1,15 @@
-import { readingFingerprint } from "dumling";
-import {
-	type DirectSemanticRelation,
-	projectRelations,
-	type SemanticRelation,
-} from "dumrel";
-import type { LemmaRecord, Reading, ReadingEntry } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
+import { readingFingerprint } from "dumling/reading";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import { projectRelations } from "dumrel/relations";
+import type { DirectSemanticRelation, SemanticRelation } from "dumrel/types";
+import type { LemmaRecord, ReadingEntry } from "../dto";
 import { lemmaFingerprint } from "./identity";
+
+export type ProjectSemanticRelationsInput<L extends SupportedLanguage> =
+	Readonly<{
+		lemmas: readonly LemmaRecord<L>[];
+		readings: readonly ReadingEntry<L>[];
+	}>;
 
 export type SemanticRelationProjection<L extends SupportedLanguage> = {
 	sourceReading: Reading<L>;
@@ -19,10 +22,9 @@ export type SemanticRelationProjection<L extends SupportedLanguage> = {
  * Computes the complete deterministic read view from direct Reading Knowledge.
  * The returned projection is deliberately not accepted by Dumdict persistence.
  */
-export function projectSemanticRelations<L extends SupportedLanguage>(input: {
-	lemmas: readonly LemmaRecord<L>[];
-	readings: readonly ReadingEntry<L>[];
-}): SemanticRelationProjection<L>[] {
+export function projectSemanticRelations<L extends SupportedLanguage>(
+	input: ProjectSemanticRelationsInput<L>,
+): SemanticRelationProjection<L>[] {
 	const readingByKey = new Map<string, Reading<L>>(
 		input.readings.map(({ reading }) => [
 			readingFingerprint(reading),

@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type {
 	FindStoredReadingsResult,
 	GetInfoForRelationsCleanupResult,

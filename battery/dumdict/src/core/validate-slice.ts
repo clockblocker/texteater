@@ -1,10 +1,11 @@
-import { readingFingerprint } from "dumling";
+import { readingFingerprint } from "dumling/reading";
 import { readingSchema } from "dumling/schema";
+import type { EntityKind, Lemma, SupportedLanguage } from "dumling/types";
 import {
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
 	semanticRelationSchema,
-} from "dumrel";
+} from "dumrel/schema";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
@@ -13,13 +14,7 @@ import type {
 	ReadingEntry,
 	SurfaceEntry,
 } from "../dto";
-import {
-	type EntityKind,
-	inspectDumlingId,
-	type Lemma,
-	makeSurfaceId,
-	type SupportedLanguage,
-} from "../dumling";
+import { inspectDumlingId, makeSurfaceId } from "../dumling";
 import { DumdictLanguageMismatchError } from "../public";
 import { getDumdictSchemasFor } from "../schema";
 import type {

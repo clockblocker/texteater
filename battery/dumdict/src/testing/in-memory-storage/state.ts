@@ -1,3 +1,4 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import { sameLemma, sameReading } from "../../core/identity";
 import type {
 	PendingSemanticRelationRecord,
@@ -6,7 +7,6 @@ import type {
 	SerializedDictionaryNote,
 	StoreRevision,
 } from "../../dto";
-import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { DumdictStoragePort } from "../../storage";
 
 export type InMemoryTestStorage<L extends SupportedLanguage> =

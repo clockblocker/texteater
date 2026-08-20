@@ -1,3 +1,4 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
@@ -7,7 +8,6 @@ import type {
 	StoreRevision,
 	SurfaceEntry,
 } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
 import type { CleanupRelationResolution } from "../public";
 
 export type FindStoredReadingsStorageRequest<L extends SupportedLanguage> = {

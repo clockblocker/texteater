@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type { DumdictService } from "../public";
 import { addAttestation } from "./add-attestation";
 import { addNewNote } from "./add-new-note";

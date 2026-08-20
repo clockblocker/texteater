@@ -1,8 +1,8 @@
+import type { SupportedLanguage } from "dumling/types";
 import { applyDumdictKnowledgeChange } from "../../core/apply-reading-knowledge-change";
 import { sameReading } from "../../core/identity";
 import type { PlannedChangeOp } from "../../core/planned-changes";
 import type { PendingSemanticRelationRecord } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
 import type { DraftStorageState } from "./preconditions";
 import {
 	findDraftBundleByLemma,

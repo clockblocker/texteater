@@ -1,11 +1,11 @@
-import { readingFingerprint } from "dumling";
-import { pendingSemanticRelationSchema } from "dumrel";
+import { readingFingerprint } from "dumling/reading";
+import type { SupportedLanguage } from "dumling/types";
+import { pendingSemanticRelationSchema } from "dumrel/schema";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,
 	ReadingKnowledgeChange,
 } from "../../dto";
-import type { SupportedLanguage } from "../../dumling";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { NewNoteSlice, ReadingPatchOp } from "../../storage";
 import { derivePendingEntryId } from "../pending/identity";

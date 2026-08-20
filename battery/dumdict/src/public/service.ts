@@ -1,8 +1,9 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import type {
 	KnowledgeChange,
 	PendingSemanticRelation,
 	UnitShadow,
-} from "dumrel";
+} from "dumrel/types";
 import type {
 	DumdictReadingDraft,
 	OwnedSurfaceDraft,
@@ -10,7 +11,6 @@ import type {
 	Reading,
 	StoreRevision,
 } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
 import type { CommitChangesResult, DumdictPlan } from "../storage/commit";
 import type {
 	FindStoredReadingsResult,

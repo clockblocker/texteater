@@ -1,5 +1,5 @@
-import type { DirectSemanticRelation } from "dumrel";
-import type { Lemma, Reading, SupportedLanguage, Surface } from "../dumling";
+import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
+import type { DirectSemanticRelation } from "dumrel/types";
 import type { DumdictPendingSemanticRelation } from "./pending";
 
 export type OwnedSurfaceDraft<L extends SupportedLanguage> = {

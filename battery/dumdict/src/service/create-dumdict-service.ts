@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "../dumling";
+import type { SupportedLanguage } from "dumling/types";
 import type { DumdictService } from "../public";
 import type { CreateDumdictServiceOptions } from "../storage";
 import { createDumdictServiceImplementation } from "./create-dumdict-service-implementation";

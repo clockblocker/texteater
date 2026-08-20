@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import { planAppendReadingAttestation } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	AddAttestationRequest,
 	DumdictMutationOptions,

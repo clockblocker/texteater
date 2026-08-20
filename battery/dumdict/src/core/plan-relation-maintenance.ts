@@ -1,16 +1,13 @@
-import { readingFingerprint } from "dumling";
-import {
-	type DirectSemanticRelation,
-	directSemanticRelationSchema,
-	type UnitShadow,
-} from "dumrel";
+import { readingFingerprint } from "dumling/reading";
+import type { Lemma, SupportedLanguage } from "dumling/types";
+import { directSemanticRelationSchema } from "dumrel/schema";
+import type { DirectSemanticRelation, UnitShadow } from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
 	Reading,
 	ReadingEntry,
 } from "../dto";
-import type { Lemma, SupportedLanguage } from "../dumling";
 import { compareLemmas, lemmaFingerprint, sameLemma } from "./identity";
 
 export type RelationRequest<L extends SupportedLanguage> = {

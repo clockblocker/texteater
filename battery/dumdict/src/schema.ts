@@ -1,22 +1,19 @@
-import {
-	getLanguageApi,
-	readingFingerprint,
-	supportedLanguages,
-} from "dumling";
+import { getLanguageApi, supportedLanguages } from "dumling";
+import { readingFingerprint } from "dumling/reading";
 import { getSchemaTreeFor, readingSchema } from "dumling/schema";
 import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
-import type {
-	KnowledgeChange,
-	MorphologicalTreeNode,
-	ReadingKnowledge,
-	UnitShadow,
-} from "dumrel";
 import {
 	directSemanticRelationSchema,
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
-} from "dumrel";
+} from "dumrel/schema";
+import type {
+	KnowledgeChange,
+	MorphologicalTreeNode,
+	ReadingKnowledge,
+	UnitShadow,
+} from "dumrel/types";
 import { type ZodType, z } from "zod/v4";
 import { makeSurfaceId, type SurfaceId } from "./dumling";
 

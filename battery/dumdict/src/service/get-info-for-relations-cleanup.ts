@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import { lookupRelationsCleanupInfo } from "../core/lookup";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	GetInfoForRelationsCleanupRequest,
 	GetInfoForRelationsCleanupResult,

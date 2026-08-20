@@ -1,6 +1,6 @@
+import type { SupportedLanguage } from "dumling/types";
 import { sameLemma } from "../core/identity";
 import { planAddNewNote } from "../core/plan-mutation";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	AddNewNoteRequest,
 	DumdictMutationOptions,

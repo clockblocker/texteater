@@ -1,10 +1,10 @@
+import type { Lemma, SupportedLanguage } from "dumling/types";
 import { sameLemma, sameReading } from "../../core/identity";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,
 	SerializedDictionaryNote,
 } from "../../dto";
-import type { Lemma, SupportedLanguage } from "../../dumling";
 import type { ChangePrecondition } from "../../storage";
 
 export type DraftStorageState<L extends SupportedLanguage> = {

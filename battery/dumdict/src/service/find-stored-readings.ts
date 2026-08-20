@@ -1,5 +1,5 @@
+import type { SupportedLanguage } from "dumling/types";
 import { lookupStoredReadings } from "../core/lookup";
-import type { SupportedLanguage } from "../dumling";
 import type {
 	FindStoredReadingsRequest,
 	FindStoredReadingsResult,
