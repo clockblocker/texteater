@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import * as root from "../../src";
 import * as schema from "../../src/schema";
+import * as settings from "../../src/settings";
 import * as types from "../../src/types";
 
 const schemaExports = [
@@ -47,8 +48,9 @@ describe("public API allowlists", () => {
 		).toHaveLength(5);
 	});
 
-	test("schema and types subpaths cannot widen the public surface", () => {
+	test("dedicated subpaths expose only their owned contracts", () => {
 		expect(Object.keys(schema).sort()).toEqual(schemaExports);
+		expect(Object.keys(settings)).toEqual(["DEFAULT_KNOWLEDGE_SETTINGS"]);
 		expect(Object.keys(types)).toEqual([]);
 	});
 });

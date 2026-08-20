@@ -1,26 +1,12 @@
 import { v } from "convex/values";
-import type { KnowledgeSettings } from "dumrel";
+import {
+	DEFAULT_KNOWLEDGE_SETTINGS,
+	type KnowledgeSettings,
+} from "dumrel/settings";
 
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import { knowledgeSettingsValidator } from "./model/validators";
-
-const DEFAULT_KNOWLEDGE_SETTINGS = Object.freeze({
-	transcription: true,
-	definition: true,
-	translations: Object.freeze({ en: true }),
-	morphologicalTree: true,
-	lexicalBreakdown: true,
-	semanticRelations: Object.freeze({
-		synonym: true,
-		nearSynonym: true,
-		antonym: true,
-		hypernym: true,
-		hyponym: true,
-		meronym: true,
-		holonym: true,
-	}),
-}) satisfies KnowledgeSettings;
 
 function assertVisitorId(visitorId: string): void {
 	if (visitorId.trim().length === 0 || visitorId.length > 200) {

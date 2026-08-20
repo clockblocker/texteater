@@ -23,12 +23,13 @@ A `dumdict` service is bound to one language and one storage adapter:
 const dict = createDumdictService({ language: "en", storage });
 ```
 
-The runtime service has six UI-facing operations:
+The runtime service has seven UI-facing operations:
 
 - `findStoredReadings`: return learner Readings for an exact structural Lemma
 - `addAttestation`: append evidence to an existing Reading
 - `addNewNote`: store a Lemma and a new learner Reading
 - `applyGeneratedKnowledge`: atomically plan generated Knowledge Changes and pending relations for an existing Reading
+- `ensureOwnedSurface`: attach a newly encountered Surface to an existing Reading's Lemma
 - `getInfoForRelationsCleanup`: inspect unresolved relation targets
 - `cleanupRelations`: retry unresolved targets through deterministic Lemma resolution
 

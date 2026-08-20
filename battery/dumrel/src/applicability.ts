@@ -1,6 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
 import { DE_REL_MAP } from "./applicability/de.js";
-import { deepFreeze } from "./applicability/deep-freeze.js";
 import type { RelMap } from "./applicability/types.js";
 import {
 	knowledgeRequestMaskSchema,
@@ -14,6 +13,8 @@ import type {
 } from "./types.js";
 import { semanticRelationValues } from "./vocabulary.js";
 
+export { DEFAULT_KNOWLEDGE_SETTINGS } from "./settings.js";
+
 const relationMaps = {
 	de: DE_REL_MAP,
 	en: undefined,
@@ -21,25 +22,6 @@ const relationMaps = {
 } satisfies {
 	[Language in SupportedLanguage]: RelMap<Language> | undefined;
 };
-
-export const DEFAULT_KNOWLEDGE_SETTINGS: KnowledgeSettings = deepFreeze(
-	knowledgeSettingsSchema.parse({
-		transcription: true,
-		definition: true,
-		translations: { en: true },
-		morphologicalTree: true,
-		lexicalBreakdown: true,
-		semanticRelations: {
-			synonym: true,
-			nearSynonym: true,
-			antonym: true,
-			hypernym: true,
-			hyponym: true,
-			meronym: true,
-			holonym: true,
-		},
-	}),
-);
 
 type RuntimeRelMap = Record<string, Record<string, KnowledgeRequestMask>>;
 

@@ -77,4 +77,5 @@ use settings intersection for fetching and presentation, but settings do not
 silently narrow server generation.
 
 Schemas are also available from `dumrel/schema`; DTO types are available from
-`dumrel/types`. Both subpaths use explicit export allowlists.
+`dumrel/types`; schema-free default settings are available from
+`dumrel/settings`. All subpaths use explicit export allowlists.
