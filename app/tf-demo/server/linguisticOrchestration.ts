@@ -7,10 +7,7 @@ import type {
 	StoreRevision,
 	Surface,
 } from "dumdict";
-import {
-	applyDumdictKnowledgeChange,
-	makeSurfaceId,
-} from "dumdict/trusted-storage-runtime";
+import { applyDumdictKnowledgeChange, makeSurfaceId } from "dumdict/runtime";
 import type {
 	Dumgen,
 	GrammaticalResult,

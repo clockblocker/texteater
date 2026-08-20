@@ -11,10 +11,7 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "dumdict";
-import {
-	createDumdictServiceForTrustedStorage,
-	makeSurfaceId,
-} from "dumdict/trusted-storage-runtime";
+import { createDumdictService, makeSurfaceId } from "dumdict/runtime";
 import type { Dumgen } from "dumgen";
 import {
 	notImplementedGrammaticalResultSchema,
@@ -557,7 +554,7 @@ function orchestratorFor(
 ) {
 	return createTfDemoOrchestrator({
 		dumgen: lazyDumgen,
-		dictionary: createDumdictServiceForTrustedStorage({
+		dictionary: createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
 		}),
@@ -777,7 +774,7 @@ export const applyGeneratedKnowledgePlan = internalAction({
 				index += 1
 			) {
 				let capturedPlan: DumdictPlan<"de"> | undefined;
-				const planned = await createDumdictServiceForTrustedStorage({
+				const planned = await createDumdictService({
 					language: "de",
 					storage: createConvexDumdictStorage(ctx),
 				}).applyGeneratedKnowledge(request, {
@@ -965,7 +962,7 @@ export const cleanupPendingRelation = action({
 				"The pending Shadow reference is malformed and cannot be changed.",
 			);
 		}
-		const result = await createDumdictServiceForTrustedStorage({
+		const result = await createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
 		}).cleanupRelations({

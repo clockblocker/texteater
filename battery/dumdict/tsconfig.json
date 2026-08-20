@@ -3,9 +3,7 @@
 	"compilerOptions": {
 		"paths": {
 			"dumdict": ["./src/index.ts"],
-			"dumdict/trusted-storage-runtime": [
-				"./src/trusted-storage-runtime.ts"
-			]
+			"dumdict/runtime": ["./src/runtime.ts"]
 		}
 	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]

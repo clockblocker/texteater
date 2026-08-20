@@ -3,8 +3,8 @@ import {
 	validateNewNoteSlice,
 	validateStoredReadingsSlice,
 } from "../../../src/core/validate-slice";
+import { createDumdictService } from "../../../src/runtime";
 import type { NewNoteSlice, StoredReadingsSlice } from "../../../src/storage";
-import { createDumdictServiceForTrustedStorage } from "../../../src/trusted-storage-runtime";
 import {
 	englishRunLemma,
 	englishSwimDraft,
@@ -59,7 +59,7 @@ describe("storage slice validation", () => {
 				throw new Error("Unexpected storage call");
 			},
 		});
-		const service = createDumdictServiceForTrustedStorage({
+		const service = createDumdictService({
 			language: "en",
 			storage,
 		});
@@ -89,7 +89,7 @@ describe("storage slice validation", () => {
 				return { status: "committed" } as never;
 			},
 		});
-		const service = createDumdictServiceForTrustedStorage({
+		const service = createDumdictService({
 			language: "en",
 			storage,
 		});

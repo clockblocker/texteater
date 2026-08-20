@@ -3,7 +3,7 @@
 	"entry": [
 		"src/index.ts",
 		"src/schema.ts",
-		"src/trusted-storage-runtime.ts",
+		"src/runtime.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],
