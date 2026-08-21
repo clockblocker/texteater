@@ -1,0 +1,12 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"paths": {
+			"dumling": ["./src/index.ts"],
+			"dumling/schema": ["./src/schema.ts"],
+			"dumling/types": ["./src/types.ts"],
+			"dumling/vocabulary": ["./src/vocabulary.ts"]
+		}
+	},
+	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}
