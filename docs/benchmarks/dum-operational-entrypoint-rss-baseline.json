@@ -1,0 +1,685 @@
+{
+	"baseline": {
+		"medianBytes": 31162368,
+		"samplesBytes": [31145984, 31162368, 31162368, 31260672, 31178752]
+	},
+	"contract": {
+		"baseline": "empty imported Bun module",
+		"importBudgetMiB": 5,
+		"operationBudgetMiB": 5.3,
+		"processesPerMeasurement": 5,
+		"statistic": "median max RSS delta"
+	},
+	"entrypoints": [
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Parse a valid German NOUN Lemma through the language API.",
+				"id": "dumling.parse-lemma"
+			},
+			"rationale": "Package root exposes Dumling runtime operations.",
+			"specifier": "dumling",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 3735552,
+				"deltaMiB": 3.563,
+				"medianBytes": 34897920,
+				"samplesBytes": [
+					34816000, 34930688, 34897920, 34881536, 34897920
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4194304,
+				"deltaMiB": 4,
+				"medianBytes": 35356672,
+				"samplesBytes": [
+					35389440, 35323904, 35323904, 35356672, 35438592
+				]
+			},
+			"reachability": {
+				"externalPackages": ["emoji-regex"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling"]
+			}
+		},
+		{
+			"classification": "type-only",
+			"rationale": "Published JavaScript is empty; the subpath is a type surface.",
+			"specifier": "dumling/types"
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately Zod-bearing public schema composition surface.",
+			"specifier": "dumling/schema"
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately dangerous route-specific schema tree costing roughly 100 MiB RSS.",
+			"specifier": "dumling/dangerously-heavy-schema-tree"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Encode and decode a canonical Lemma ID through the lean codec facade.",
+				"id": "dumling.id-round-trip"
+			},
+			"rationale": "Lean canonical ID codecs operate without a schema or parser-artifact import.",
+			"specifier": "dumling/id",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1998848,
+				"deltaMiB": 1.906,
+				"medianBytes": 33161216,
+				"samplesBytes": [
+					33177600, 33161216, 33128448, 33144832, 33177600
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 3227648,
+				"deltaMiB": 3.078,
+				"medianBytes": 34390016,
+				"samplesBytes": [
+					34406400, 34390016, 34324480, 34406400, 34390016
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling/id"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Compute the stable fingerprint of a Reading.",
+				"id": "dumling.reading-fingerprint"
+			},
+			"rationale": "Runtime Reading identity operation.",
+			"specifier": "dumling/reading",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 950272,
+				"deltaMiB": 0.906,
+				"medianBytes": 32112640,
+				"samplesBytes": [
+					32112640, 32129024, 32194560, 32079872, 32079872
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1359872,
+				"deltaMiB": 1.297,
+				"medianBytes": 32522240,
+				"samplesBytes": [
+					32751616, 32456704, 32587776, 32473088, 32522240
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling/reading"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Read and verify the public Dumling runtime vocabulary.",
+				"id": "dumling.read-vocabulary"
+			},
+			"rationale": "Runtime constants consumed without a schema import.",
+			"specifier": "dumling/vocabulary",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 786432,
+				"deltaMiB": 0.75,
+				"medianBytes": 31948800,
+				"samplesBytes": [
+					31948800, 32014336, 32014336, 31916032, 31883264
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 851968,
+				"deltaMiB": 0.813,
+				"medianBytes": 32014336,
+				"samplesBytes": [
+					31916032, 32014336, 32014336, 31932416, 32047104
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling/vocabulary"]
+			}
+		},
+		{
+			"classification": "metadata",
+			"rationale": "Package metadata, not executable application code.",
+			"specifier": "dumling/package.json"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Apply a normalized Definition Knowledge Change.",
+				"id": "dumrel.apply-knowledge-change"
+			},
+			"rationale": "Package root exposes Knowledge and relation operations.",
+			"specifier": "dumrel",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4128768,
+				"deltaMiB": 3.938,
+				"medianBytes": 35291136,
+				"samplesBytes": [
+					35323904, 35291136, 35323904, 35274752, 35291136
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 5210112,
+				"deltaMiB": 4.969,
+				"medianBytes": 36372480,
+				"samplesBytes": [
+					36421632, 36388864, 36372480, 36372480, 36356096
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils", "emoji-regex"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumrel"]
+			}
+		},
+		{
+			"classification": "type-only",
+			"rationale": "Published JavaScript is empty; the subpath is a type surface.",
+			"specifier": "dumrel/types"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Project a minimal direct Semantic Relation graph.",
+				"id": "dumrel.project-relations"
+			},
+			"rationale": "Lean relation-algebra runtime surface.",
+			"specifier": "dumrel/relations",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1425408,
+				"deltaMiB": 1.359,
+				"medianBytes": 32587776,
+				"samplesBytes": [
+					32505856, 32555008, 32604160, 32587776, 32587776
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1638400,
+				"deltaMiB": 1.563,
+				"medianBytes": 32800768,
+				"samplesBytes": [
+					32866304, 32817152, 32800768, 32800768, 32751616
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumrel/relations"]
+			}
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately Zod-bearing public schema composition surface.",
+			"specifier": "dumrel/schema"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Read and verify the frozen default Knowledge Settings.",
+				"id": "dumrel.read-default-settings"
+			},
+			"rationale": "Runtime settings data consumed without a schema import.",
+			"specifier": "dumrel/settings",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 966656,
+				"deltaMiB": 0.922,
+				"medianBytes": 32129024,
+				"samplesBytes": [
+					32145408, 32112640, 32129024, 32161792, 32129024
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 983040,
+				"deltaMiB": 0.938,
+				"medianBytes": 32145408,
+				"samplesBytes": [
+					32210944, 32194560, 32145408, 32079872, 32145408
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumrel/settings"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Read and verify the public relation vocabulary.",
+				"id": "dumrel.read-vocabulary"
+			},
+			"rationale": "Runtime constants consumed without a schema import.",
+			"specifier": "dumrel/vocabulary",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 851968,
+				"deltaMiB": 0.813,
+				"medianBytes": 32014336,
+				"samplesBytes": [
+					32030720, 31981568, 31981568, 32014336, 32112640
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 901120,
+				"deltaMiB": 0.859,
+				"medianBytes": 32063488,
+				"samplesBytes": [
+					32063488, 32096256, 32063488, 31981568, 32063488
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumrel/vocabulary"]
+			}
+		},
+		{
+			"classification": "metadata",
+			"rationale": "Package metadata, not executable application code.",
+			"specifier": "dumrel/package.json"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Apply a Definition Knowledge Change to a Reading Entry.",
+				"id": "dumdict.apply-knowledge-change"
+			},
+			"rationale": "Package root exposes dictionary workflows and runtime schemas.",
+			"specifier": "dumdict",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 3866624,
+				"deltaMiB": 3.688,
+				"medianBytes": 35028992,
+				"samplesBytes": [
+					35078144, 35028992, 35012608, 35012608, 35143680
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 5013504,
+				"deltaMiB": 4.781,
+				"medianBytes": 36175872,
+				"samplesBytes": [
+					36388864, 36061184, 36175872, 36192256, 36077568
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils", "emoji-regex"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumdict", "dumrel/relations"]
+			}
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately Zod-bearing public schema composition surface.",
+			"specifier": "dumdict/schema"
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately dangerous language-specific schema tree costing roughly 100 MiB RSS.",
+			"specifier": "dumdict/dangerously-heavy-schema-tree"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Apply a Definition Knowledge Change to a Reading Entry.",
+				"id": "dumdict.apply-knowledge-change"
+			},
+			"rationale": "Schema-free-named dictionary runtime facade.",
+			"specifier": "dumdict/runtime",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4014080,
+				"deltaMiB": 3.828,
+				"medianBytes": 35176448,
+				"samplesBytes": [
+					34930688, 34979840, 35225600, 35192832, 35176448
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4947968,
+				"deltaMiB": 4.719,
+				"medianBytes": 36110336,
+				"samplesBytes": [
+					35930112, 36110336, 36110336, 35930112, 36274176
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils", "emoji-regex"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumdict/runtime", "dumrel/relations"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Project an empty learner Semantic Relation inventory.",
+				"id": "dumdict.project-relations"
+			},
+			"rationale": "Dictionary relation projection runtime surface.",
+			"specifier": "dumdict/relations",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1425408,
+				"deltaMiB": 1.359,
+				"medianBytes": 32587776,
+				"samplesBytes": [
+					32571392, 32604160, 32669696, 32538624, 32587776
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1720320,
+				"deltaMiB": 1.641,
+				"medianBytes": 32882688,
+				"samplesBytes": [
+					32899072, 32866304, 32882688, 32899072, 32817152
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": [
+					"dumdict/relations",
+					"dumrel/relations"
+				]
+			}
+		},
+		{
+			"classification": "metadata",
+			"rationale": "Package metadata, not executable application code.",
+			"specifier": "dumdict/package.json"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Build Dumgen with an injected no-network model SDK.",
+				"id": "dumgen.build"
+			},
+			"rationale": "Package root exposes the generation runtime.",
+			"specifier": "dumgen",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4849664,
+				"deltaMiB": 4.625,
+				"medianBytes": 36012032,
+				"samplesBytes": [
+					35962880, 35995648, 36077568, 36093952, 36012032
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 5111808,
+				"deltaMiB": 4.875,
+				"medianBytes": 36274176,
+				"samplesBytes": [
+					36208640, 36274176, 36323328, 36290560, 36257792
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Project a grammatical target from Segments.",
+				"id": "dumgen.project-grammatical-input"
+			},
+			"rationale": "Deterministic grammatical projection runtime.",
+			"specifier": "dumgen/projection",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 999424,
+				"deltaMiB": 0.953,
+				"medianBytes": 32161792,
+				"samplesBytes": [
+					32210944, 32161792, 32227328, 32129024, 32096256
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1032192,
+				"deltaMiB": 0.984,
+				"medianBytes": 32194560,
+				"samplesBytes": [
+					32276480, 32227328, 32194560, 32194560, 32178176
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/projection"]
+			}
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately Zod-bearing public model and DTO schema composition surface.",
+			"specifier": "dumgen/schema"
+		},
+		{
+			"classification": "schema-authoring-exempt",
+			"rationale": "Deliberately Zod-bearing prompt and structured-output authoring surface.",
+			"specifier": "dumgen/model-authoring"
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Build Knowledge generation with an injected no-network SDK.",
+				"id": "dumgen.build-knowledge"
+			},
+			"rationale": "Convenience Knowledge generation runtime.",
+			"specifier": "dumgen/knowledge",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4341760,
+				"deltaMiB": 4.141,
+				"medianBytes": 35504128,
+				"samplesBytes": [
+					35471360, 35520512, 35373056, 35684352, 35504128
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4456448,
+				"deltaMiB": 4.25,
+				"medianBytes": 35618816,
+				"samplesBytes": [
+					35520512, 35635200, 35618816, 35536896, 35766272
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/knowledge"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Build Knowledge generation with an injected no-network SDK.",
+				"id": "dumgen.build-knowledge-runtime"
+			},
+			"rationale": "Injected-provider Knowledge generation runtime.",
+			"specifier": "dumgen/knowledge-runtime",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4259840,
+				"deltaMiB": 4.063,
+				"medianBytes": 35422208,
+				"samplesBytes": [
+					35389440, 35389440, 35504128, 35422208, 35422208
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4374528,
+				"deltaMiB": 4.172,
+				"medianBytes": 35536896,
+				"samplesBytes": [
+					35667968, 35536896, 35602432, 35536896, 35504128
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/knowledge-runtime"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Perform a no-network unstructured Responses operation.",
+				"id": "dumgen.openai-fetch"
+			},
+			"rationale": "Fetch-only OpenAI runtime adapter.",
+			"specifier": "dumgen/openai-fetch",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 1261568,
+				"deltaMiB": 1.203,
+				"medianBytes": 32423936,
+				"samplesBytes": [
+					32440320, 32423936, 32391168, 32440320, 32423936
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 2048000,
+				"deltaMiB": 1.953,
+				"medianBytes": 33210368,
+				"samplesBytes": [
+					33357824, 33161216, 33210368, 33226752, 33144832
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/openai-fetch"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Build Dumgen runtime with injected no-network dependencies.",
+				"id": "dumgen.build-runtime"
+			},
+			"rationale": "Injected-provider main generation runtime.",
+			"specifier": "dumgen/runtime",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 4816896,
+				"deltaMiB": 4.594,
+				"medianBytes": 35979264,
+				"samplesBytes": [
+					35979264, 36093952, 35979264, 35913728, 35897344
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 5029888,
+				"deltaMiB": 4.797,
+				"medianBytes": 36192256,
+				"samplesBytes": [
+					36241408, 36405248, 36192256, 36175872, 36192256
+				]
+			},
+			"reachability": {
+				"externalPackages": ["common-utils"],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/runtime"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Read and verify the public Dumgen runtime vocabulary.",
+				"id": "dumgen.read-vocabulary"
+			},
+			"rationale": "Runtime constants consumed without a schema import.",
+			"specifier": "dumgen/vocabulary",
+			"importOnly": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 917504,
+				"deltaMiB": 0.875,
+				"medianBytes": 32079872,
+				"samplesBytes": [
+					32079872, 32178176, 32079872, 32096256, 32047104
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31162368,
+				"deltaBytes": 884736,
+				"deltaMiB": 0.844,
+				"medianBytes": 32047104,
+				"samplesBytes": [
+					32079872, 32030720, 32030720, 32047104, 32047104
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumgen/vocabulary"]
+			}
+		},
+		{
+			"classification": "metadata",
+			"rationale": "Package metadata, not executable application code.",
+			"specifier": "dumgen/package.json"
+		}
+	],
+	"environment": {
+		"arch": "arm64",
+		"bunVersion": "1.3.14",
+		"capturedAt": "2026-08-21T18:55:12.554Z",
+		"packageSourcesDirty": true,
+		"platform": "darwin",
+		"sourceCommit": "8d8f7853d45b07917e57395dce1befad710e90bf"
+	}
+}

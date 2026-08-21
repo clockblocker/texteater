@@ -1,0 +1,819 @@
+import { createHash } from "node:crypto";
+import { resolve } from "node:path";
+import {
+	compileZodValidationArtifacts,
+	defineCodegen,
+	type ZodValidationOperationRegistration,
+} from "codegen";
+import {
+	bindLexicalUnitShadow,
+	bindSupportedUnitShadow,
+	lexicalUnitShadowSchema,
+} from "dumrel/schema";
+import { z } from "zod";
+import { combinedGermanKnowledgePrompt } from "../src/catalog/combined-german-knowledge-prompt.js";
+import { PROMPT_CATALOG } from "../src/catalog/prompt-catalog.js";
+
+type AuthoringPrompt = Readonly<{
+	generationParams: Readonly<{ maxOutputTokens: number; model: string }>;
+	inputSchema: z.ZodType;
+	modelInputSchema?: z.ZodType;
+	modelOutputSchemaFor?: (input: never) => z.ZodType;
+	outputPostcondition?: { assert(input: never, output: never): void };
+	outputSchema: z.ZodType | null;
+	projectInput?: (input: never) => unknown;
+	projectOutput?: (input: never, output: never) => unknown;
+	systemPrompt: string;
+}>;
+
+type AuthoringPromptEntry = Readonly<{
+	meta: Readonly<{ kind: "prompt" }>;
+	prompt: AuthoringPrompt;
+}>;
+
+type PromptArtifactRecord = Readonly<{
+	dispatch: Readonly<{
+		modelOutputSchemaFor?: string;
+		outputPostcondition?: string;
+		projectInput?: string;
+		projectOutput?: string;
+	}>;
+	generationParams: Readonly<{ maxOutputTokens: number; model: string }>;
+	jsonSchemaPayloads: Readonly<{
+		input: string;
+		modelInput: string;
+		output: string | null;
+	}>;
+	path: string;
+	systemPrompt: string;
+	validationRoots: Readonly<{
+		input: string;
+		modelInput: string;
+		output: string | null;
+	}>;
+}>;
+
+type Operation = (...args: never[]) => unknown;
+type CheckInternals = Readonly<{
+	_zod: Readonly<{
+		check?: Operation;
+		def: Readonly<{
+			check?: string;
+			error?: Operation;
+			format?: string;
+			fn?: Operation;
+			pattern?: RegExp;
+			tx?: Operation;
+		}>;
+	}>;
+}>;
+type SchemaDefinition = Readonly<{
+	checks?: readonly unknown[];
+	discriminator?: string;
+	element?: unknown;
+	getter?: () => unknown;
+	in?: unknown;
+	innerType?: unknown;
+	items?: readonly unknown[];
+	keyType?: unknown;
+	options?: readonly unknown[];
+	out?: unknown;
+	rest?: unknown;
+	shape?:
+		| Readonly<Record<string, unknown>>
+		| (() => Readonly<Record<string, unknown>>);
+	transform?: Operation;
+	type?: string;
+	values?: readonly unknown[];
+	valueType?: unknown;
+}>;
+type SchemaInternals = Readonly<{ _zod: Readonly<{ def: SchemaDefinition }> }>;
+
+const packageRoot = resolve(import.meta.dir, "..");
+
+export const runtimePromptArtifactRecipe = defineCodegen({
+	inputs: {
+		authoring: {
+			kind: "text-set",
+			root: resolve(packageRoot, "src"),
+			include: [
+				"catalog/**/*.ts",
+				"intake/**/*.ts",
+				"knowledge-generation/**/*.ts",
+				"promptsmith/production/generated-system-prompt/**/*.ts",
+				"promptsmith/production/grammatical-resolution/**/schemas.ts",
+				"promptsmith/production/intake/schemas.ts",
+				"promptsmith/production/prompt-part/target-classification/**/schemas.ts",
+				"promptsmith/production/reading-resolution/**/schemas.ts",
+				"promptsmith/production/unit-shadow-classification/schemas.ts",
+			],
+			recursive: true,
+		},
+		dumrelIdentityBindings: {
+			kind: "text-set",
+			root: resolve(packageRoot, "../dumrel/src"),
+			include: ["validation-semantics.ts"],
+			recursive: false,
+		},
+	},
+	outputs: {
+		generated: {
+			root: resolve(packageRoot, "src/generated"),
+			ownership: { manifest: ".runtime-prompt-artifacts.json" },
+		},
+	},
+	build: ({ authoring }) => {
+		const records = collectRuntimePromptArtifacts();
+		if (records.length !== 26)
+			throw new Error(
+				`Expected 26 canonical Dumgen prompts, received ${String(records.length)}.`,
+			);
+		const schemas = collectRuntimePromptSchemas();
+		const operations = collectPromptValidationOperations(schemas);
+		const compiled = compileZodValidationArtifacts({
+			operations,
+			schemas,
+		});
+		const operationBindings = Object.fromEntries(
+			operations
+				.filter((operation) =>
+					compiled.requiredOperations.includes(operation.name),
+				)
+				.map((operation) => [
+					operation.name,
+					operationBinding(operation),
+				]),
+		);
+		const definitionPayloads: string[] = [];
+		for (const [reference, constraint] of Object.entries(
+			compiled.definitions,
+		))
+			definitionPayloads[definitionIndex(reference)] =
+				JSON.stringify(constraint);
+		const packedDefinitions = packIndexedPayloads(definitionPayloads);
+		const encodedValidation = {
+			definitionOffsetPayload: packedDefinitions.offsetPayload,
+			definitionPayloadBlob: packedDefinitions.payloadBlob,
+			offsetWidth: 6,
+			operationSignatures: compiled.operationSignatures,
+			operationBindings,
+			requiredOperations: compiled.requiredOperations,
+			roots: compiled.roots,
+			version: compiled.version,
+		};
+		const packedRecords = packPromptRecords(records);
+		const validationPayload = JSON.stringify(encodedValidation);
+		const dataContent = `${fixedWidthHex(packedRecords.payloadBlob.length)}${packedRecords.payloadBlob}${validationPayload}`;
+		const content = [
+			"// Generated by codegen/generate-runtime-prompt-artifacts.ts. Do not edit.",
+			"// biome-ignore format: generated exact runtime prompt route index",
+			`export const encodedRuntimePromptArtifacts = ${JSON.stringify({ offsetWidth: packedRecords.offsetWidth, routeIndexPayload: packedRecords.routeIndexPayload })} as const;`,
+			"let encodedData: Readonly<{ promptPayloadBlob: string; validationPayload: string }> | undefined;",
+			"export function loadEncodedRuntimePromptData(): Readonly<{ promptPayloadBlob: string; validationPayload: string }> {",
+			"\tif (encodedData !== undefined) return encodedData;",
+			'\tconst { readFileSync } = process.getBuiltinModule("node:fs");',
+			"\tlet raw: string;",
+			"\ttry {",
+			'\t\traw = readFileSync(new URL("./.runtime-prompt-artifacts.data", import.meta.url), "utf8");',
+			"\t} catch (cause) {",
+			'\t\tthrow new Error("The Dumgen runtime prompt data asset is missing or unreadable.", { cause });',
+			"\t}",
+			'\tif (raw.length < 6 || !/^[0-9a-f]{6}$/u.test(raw.slice(0, 6))) throw new SyntaxError("Corrupt runtime prompt data header.");',
+			"\tconst promptLength = Number.parseInt(raw.slice(0, 6), 16);",
+			'\tif (promptLength > raw.length - 6) throw new RangeError("Corrupt runtime prompt data length.");',
+			"\tencodedData = Object.freeze({ promptPayloadBlob: raw.slice(6, 6 + promptLength), validationPayload: raw.slice(6 + promptLength) });",
+			"\treturn encodedData;",
+			"}",
+			`export type RuntimePromptPath = ${records.map(({ path }) => JSON.stringify(path)).join(" | ")};`,
+			"",
+		].join("\n");
+		return [
+			{
+				id: "dumgen-runtime-prompt-artifacts",
+				to: {
+					target: "generated",
+					path: "runtime-prompt-artifacts.ts",
+				},
+				content,
+				provenance: authoring.map((source) => source.source),
+				meta: { kind: "runtime-prompt-artifact" },
+			},
+			{
+				id: "dumgen-runtime-prompt-artifact-data",
+				to: {
+					target: "generated",
+					path: ".runtime-prompt-artifacts.data",
+				},
+				content: dataContent,
+				provenance: authoring.map((source) => source.source),
+				meta: { kind: "runtime-prompt-artifact-data" },
+			},
+		];
+	},
+});
+
+function authoringPromptEntries(): Array<
+	readonly [string, AuthoringPromptEntry]
+> {
+	return [
+		...promptEntries(
+			PROMPT_CATALOG as unknown as Readonly<Record<string, unknown>>,
+		),
+		[
+			"knowledge.de.combined",
+			combinedGermanKnowledgePrompt as unknown as AuthoringPromptEntry,
+		] as const,
+	];
+}
+
+const PROMPT_DISPATCH_BITS = {
+	modelOutputSchemaFor: 1,
+	outputPostcondition: 2,
+	projectInput: 4,
+	projectOutput: 8,
+} as const;
+
+function packPromptRecords(records: readonly PromptArtifactRecord[]): {
+	offsetWidth: 6;
+	payloadBlob: string;
+	routeIndexPayload: string;
+} {
+	let payloadBlob = "";
+	let routeIndexPayload = "";
+	const paths = new Set<string>();
+	for (const record of records) {
+		if (paths.has(record.path))
+			throw new Error(`Duplicate runtime prompt path: ${record.path}.`);
+		paths.add(record.path);
+		const payload = JSON.stringify(record);
+		let dispatchMask = 0;
+		for (const [key, bit] of Object.entries(PROMPT_DISPATCH_BITS)) {
+			if (key in record.dispatch) dispatchMask |= bit;
+		}
+		routeIndexPayload += `\n${record.path}\0${fixedWidthHex(payloadBlob.length)}${fixedWidthHex(payloadBlob.length + payload.length)}${dispatchMask.toString(16).padStart(2, "0")}`;
+		payloadBlob += payload;
+	}
+	return { offsetWidth: 6, payloadBlob, routeIndexPayload };
+}
+
+function operationBinding(
+	operation: ZodValidationOperationRegistration,
+): Readonly<Record<string, unknown>> {
+	const semantic = "implementation" in operation;
+	return {
+		construct: operation.construct,
+		fingerprint: createHash("sha256")
+			.update(
+				semantic
+					? String(operation.implementation)
+					: JSON.stringify(
+							operation.construct === "regex"
+								? {
+										flags: operation.flags,
+										message: operation.message,
+										source: operation.source,
+									}
+								: operation.construct === "discriminator"
+									? {
+											key: operation.discriminator,
+											options: operation.options,
+										}
+									: { construct: "readonly" },
+						),
+			)
+			.digest("hex"),
+		...(semantic
+			? { functionName: operation.implementation.name || "anonymous" }
+			: {}),
+		version: operation.version,
+	};
+}
+
+function collectRuntimePromptArtifacts(): PromptArtifactRecord[] {
+	return authoringPromptEntries().map(([path, entry]) => {
+		const prompt = entry.prompt;
+		return {
+			dispatch: dispatchFor(path, prompt),
+			generationParams: prompt.generationParams,
+			jsonSchemaPayloads: {
+				input: JSON.stringify(
+					jsonSchemaForRuntimePrompt(prompt.inputSchema),
+				),
+				modelInput: JSON.stringify(
+					jsonSchemaForRuntimePrompt(
+						prompt.modelInputSchema ?? prompt.inputSchema,
+					),
+				),
+				output:
+					prompt.outputSchema === null
+						? null
+						: JSON.stringify(
+								jsonSchemaForRuntimePrompt(prompt.outputSchema),
+							),
+			},
+			path,
+			systemPrompt: prompt.systemPrompt,
+			validationRoots: {
+				input: `${path}#input`,
+				modelInput: `${path}#model-input`,
+				output: prompt.outputSchema === null ? null : `${path}#output`,
+			},
+		};
+	});
+}
+
+function packIndexedPayloads(payloads: readonly string[]): {
+	offsetPayload: string;
+	payloadBlob: string;
+} {
+	let offsetPayload = "";
+	let payloadBlob = "";
+	for (const payload of payloads) {
+		if (payload === undefined)
+			throw new Error("Runtime prompt validation indexes are not dense.");
+		offsetPayload += fixedWidthHex(payloadBlob.length);
+		payloadBlob += payload;
+		offsetPayload += fixedWidthHex(payloadBlob.length);
+	}
+	return { offsetPayload, payloadBlob };
+}
+
+function fixedWidthHex(value: number): string {
+	const encoded = value.toString(16).padStart(6, "0");
+	if (encoded.length !== 6)
+		throw new RangeError(
+			"Runtime prompt validation payload exceeds six hex digits.",
+		);
+	return encoded;
+}
+
+function definitionIndex(reference: string): number {
+	if (!/^n\d+$/u.test(reference))
+		throw new TypeError(`Invalid runtime prompt reference: ${reference}.`);
+	return Number.parseInt(reference.slice(1), 10);
+}
+
+function collectRuntimePromptSchemas(): Readonly<Record<string, z.ZodType>> {
+	const schemas: Record<string, z.ZodType> = {};
+	for (const [path, entry] of authoringPromptEntries()) {
+		const prompt = entry.prompt;
+		schemas[`${path}#input`] = prompt.inputSchema;
+		schemas[`${path}#model-input`] =
+			prompt.modelInputSchema ?? prompt.inputSchema;
+		if (prompt.outputSchema !== null)
+			schemas[`${path}#output`] = prompt.outputSchema;
+	}
+	return schemas;
+}
+
+function collectPromptValidationOperations(
+	schemas: Readonly<Record<string, z.ZodType>>,
+): ZodValidationOperationRegistration[] {
+	const registrations: ZodValidationOperationRegistration[] = [];
+	const seenOperations = new Set<Operation>();
+	const counts = new Map<string, number>();
+	const register = (
+		construct: "contextual" | "custom" | "overwrite" | "transform",
+		implementation: Operation,
+		scope: string,
+		error?: Operation,
+	): void => {
+		if (seenOperations.has(implementation)) return;
+		seenOperations.add(implementation);
+		const base = `dumgen.prompt.${construct}.${implementation.name || scope}`;
+		const count = (counts.get(base) ?? 0) + 1;
+		counts.set(base, count);
+		registrations.push({
+			construct,
+			...(error === undefined ? {} : { error }),
+			implementation,
+			name: count === 1 ? base : `${base}.${String(count)}`,
+			version: 1,
+		});
+	};
+	const seenSemantic = new WeakSet<object>();
+	const walkSemantic = (
+		unchecked: unknown,
+		scope: string,
+		nodePath: string,
+	): void => {
+		if (!isUnseenSchema(unchecked, seenSemantic)) return;
+		const definition = (unchecked as SchemaInternals)._zod.def;
+		for (const candidate of definition.checks ?? []) {
+			const check = candidate as CheckInternals;
+			const checkDefinition = check._zod.def;
+			if (
+				checkDefinition.check === "string_format" &&
+				checkDefinition.format === "regex" &&
+				checkDefinition.pattern instanceof RegExp &&
+				checkDefinition.error !== undefined
+			) {
+				const uncheckedMessage = checkDefinition.error({} as never);
+				if (typeof uncheckedMessage !== "string")
+					throw new TypeError(
+						"A customized prompt regex must expose one constant string message.",
+					);
+				const base = "dumgen.prompt.regex.customized";
+				const count = (counts.get(base) ?? 0) + 1;
+				counts.set(base, count);
+				registrations.push({
+					check: candidate as object,
+					construct: "regex",
+					flags: checkDefinition.pattern.flags,
+					message: uncheckedMessage,
+					name: `${base}.${String(count)}`,
+					schema: unchecked as z.ZodType,
+					source: checkDefinition.pattern.source,
+					version: 1,
+				});
+				continue;
+			}
+			const implementation = checkDefinition.fn ?? checkDefinition.tx;
+			if (
+				implementation !== undefined &&
+				(checkDefinition.check === "custom" ||
+					checkDefinition.check === "overwrite")
+			) {
+				register(
+					checkDefinition.check,
+					implementation,
+					`${scope}@${nodePath}`,
+					checkDefinition.error,
+				);
+			} else if (
+				checkDefinition.check === "custom" &&
+				typeof check._zod.check === "function"
+			) {
+				register(
+					"contextual",
+					check._zod.check,
+					`${scope}@${nodePath}`,
+				);
+			}
+		}
+		if (definition.type === "pipe") {
+			for (const child of [definition.in, definition.out]) {
+				const childDefinition = (child as SchemaInternals | undefined)
+					?._zod.def;
+				if (
+					childDefinition?.type === "transform" &&
+					childDefinition.transform !== undefined
+				)
+					register(
+						"transform",
+						childDefinition.transform,
+						`${scope}@${nodePath}`,
+					);
+			}
+		}
+		walkChildren(definition, (child, childPath) =>
+			walkSemantic(child, scope, `${nodePath}${childPath}`),
+		);
+	};
+	for (const key of Object.keys(schemas).toSorted())
+		walkSemantic(schemas[key], key, "$");
+
+	let readonlyIndex = 0;
+	const discriminatorCounts = new Map<string, number>();
+	const seenStructural = new WeakSet<object>();
+	const walkStructural = (unchecked: unknown): void => {
+		if (!isUnseenSchema(unchecked, seenStructural)) return;
+		const schema = unchecked as SchemaInternals;
+		const definition = schema._zod.def;
+		if (definition.type === "readonly") {
+			readonlyIndex += 1;
+			registrations.push({
+				construct: "readonly",
+				name: `dumgen.prompt.readonly.${String(readonlyIndex)}`,
+				schema: schema as unknown as z.ZodType,
+				version: 1,
+			});
+		}
+		if (
+			definition.type === "union" &&
+			definition.discriminator !== undefined
+		) {
+			const options = (definition.options ?? []).map((option) => {
+				const shape = shapeFor((option as SchemaInternals)._zod.def);
+				const literal = shape[
+					definition.discriminator as string
+				] as SchemaInternals;
+				const values = literal._zod.def.values;
+				if (values?.length !== 1 || typeof values[0] !== "string")
+					throw new TypeError(
+						`Unsupported prompt discriminator option for ${definition.discriminator}.`,
+					);
+				return values[0];
+			});
+			const base = `dumgen.prompt.discriminator.${definition.discriminator}`;
+			const count = (discriminatorCounts.get(base) ?? 0) + 1;
+			discriminatorCounts.set(base, count);
+			registrations.push({
+				construct: "discriminator",
+				discriminator: definition.discriminator,
+				name: `${base}.${String(count)}`,
+				options,
+				schema: schema as unknown as z.ZodType,
+				version: 1,
+			});
+		}
+		walkChildren(definition, (child) => walkStructural(child));
+	};
+	for (const key of Object.keys(schemas).toSorted())
+		walkStructural(schemas[key]);
+	return registrations;
+}
+
+function isUnseenSchema(value: unknown, seen: WeakSet<object>): boolean {
+	if (
+		value === null ||
+		typeof value !== "object" ||
+		seen.has(value) ||
+		(value as Partial<SchemaInternals>)._zod?.def === undefined
+	)
+		return false;
+	seen.add(value);
+	return true;
+}
+
+function walkChildren(
+	definition: SchemaDefinition,
+	walk: (value: unknown, path: string) => void,
+): void {
+	const shape = shapeFor(definition);
+	for (const key of Object.keys(shape).toSorted())
+		walk(shape[key], `.${key}`);
+	walk(definition.element, "[]");
+	walk(definition.in, "<in>");
+	walk(definition.innerType, "<inner>");
+	walk(definition.keyType, "<key>");
+	walk(definition.valueType, "<value>");
+	walk(definition.out, "<out>");
+	for (const [index, option] of (definition.options ?? []).entries())
+		walk(option, `<option:${String(index)}>`);
+	if (definition.getter !== undefined) walk(definition.getter(), "<lazy>");
+}
+
+function shapeFor(
+	definition: SchemaDefinition,
+): Readonly<Record<string, unknown>> {
+	return typeof definition.shape === "function"
+		? definition.shape()
+		: (definition.shape ?? {});
+}
+
+function promptEntries(
+	node: Readonly<Record<string, unknown>>,
+	path: readonly string[] = [],
+): Array<readonly [string, AuthoringPromptEntry]> {
+	if (isPromptEntry(node)) return [[path.join("."), node]];
+	return Object.entries(node).flatMap(([key, child]) =>
+		child !== null && typeof child === "object"
+			? promptEntries(child as Readonly<Record<string, unknown>>, [
+					...path,
+					key,
+				])
+			: [],
+	);
+}
+
+function isPromptEntry(
+	value: Readonly<Record<string, unknown>>,
+): value is AuthoringPromptEntry & Readonly<Record<string, unknown>> {
+	return (
+		(value as { readonly meta?: { readonly kind?: unknown } }).meta
+			?.kind === "prompt" &&
+		typeof value.prompt === "object" &&
+		value.prompt !== null
+	);
+}
+
+function canonicalDumrelIdentityTransform(
+	schema: z.ZodType,
+	expected: Operation,
+	name: string,
+): Operation {
+	const definition = (schema as unknown as SchemaInternals)._zod.def;
+	const output = definition.out as SchemaInternals | undefined;
+	const transform = output?._zod.def.transform;
+	if (
+		definition.type !== "pipe" ||
+		output?._zod.def.type !== "transform" ||
+		transform === undefined ||
+		transform.name !== name ||
+		String(transform) !== String(expected)
+	)
+		throw new TypeError(
+			`Canonical Dumrel identity binding drifted: ${name}.`,
+		);
+	return transform;
+}
+
+const canonicalLexicalUnitShadowDefinition = (
+	lexicalUnitShadowSchema as unknown as SchemaInternals
+)._zod.def;
+const canonicalBindLexicalUnitShadow = canonicalDumrelIdentityTransform(
+	lexicalUnitShadowSchema,
+	bindLexicalUnitShadow as Operation,
+	"bindLexicalUnitShadow",
+);
+const canonicalBindSupportedUnitShadow = canonicalDumrelIdentityTransform(
+	canonicalLexicalUnitShadowDefinition.in as z.ZodType,
+	bindSupportedUnitShadow as Operation,
+	"bindSupportedUnitShadow",
+);
+
+const dumrelJsonIdentityBindings = new Map<
+	Operation,
+	Readonly<{ fingerprint: string; name: string; version: 1 }>
+>([
+	[
+		canonicalBindSupportedUnitShadow,
+		{
+			fingerprint:
+				"6db10bbb770dfa5af2b3fef9209496c3906d01c53a63db424747f1498643bf37",
+			name: "bindSupportedUnitShadow",
+			version: 1,
+		},
+	],
+	[
+		canonicalBindLexicalUnitShadow,
+		{
+			fingerprint:
+				"3e049fe1f7f12c89a24fd88e7b823c3f5068464e358da183dd9d8e8b9050c7f5",
+			name: "bindLexicalUnitShadow",
+			version: 1,
+		},
+	],
+]);
+
+export function jsonSchemaForRuntimePrompt(schema: z.ZodType): unknown {
+	return z.toJSONSchema(jsonSchemaProjectionView(schema), {
+		io: "input",
+		target: "draft-7",
+		override({ zodSchema, jsonSchema }) {
+			const definition = (
+				zodSchema as unknown as {
+					readonly _zod: {
+						readonly def: {
+							readonly discriminator?: unknown;
+							readonly type?: string;
+						};
+					};
+				}
+			)._zod.def;
+			if (
+				definition.type === "union" &&
+				definition.discriminator !== undefined &&
+				Array.isArray(jsonSchema.oneOf)
+			) {
+				jsonSchema.anyOf = jsonSchema.oneOf;
+				delete jsonSchema.oneOf;
+			}
+		},
+	});
+}
+
+function jsonSchemaProjectionView(
+	schema: z.ZodType,
+	seen = new Map<z.ZodType, z.ZodType>(),
+): z.ZodType {
+	const existing = seen.get(schema);
+	if (existing !== undefined) return existing;
+	const definition = (schema as unknown as SchemaInternals)._zod.def;
+	if (definition.type === "pipe") {
+		const output = definition.out as SchemaInternals | undefined;
+		const transform = output?._zod.def.transform;
+		if (output?._zod.def.type === "transform" && transform !== undefined) {
+			const binding = dumrelJsonIdentityBindings.get(transform);
+			if (binding !== undefined) {
+				if (
+					transform.name !== binding.name ||
+					binding.version !== 1 ||
+					createHash("sha256")
+						.update(String(transform))
+						.digest("hex") !== binding.fingerprint
+				)
+					throw new TypeError(
+						`Dumrel JSON identity binding drifted: ${binding.name}.`,
+					);
+				return jsonSchemaProjectionView(
+					definition.in as z.ZodType,
+					seen,
+				);
+			}
+			if (
+				[...dumrelJsonIdentityBindings.values()].some(
+					(candidate) => candidate.name === transform.name,
+				)
+			)
+				throw new TypeError(
+					`Unregistered Dumrel JSON identity binding: ${transform.name}.`,
+				);
+		}
+	}
+	seen.set(schema, schema);
+	const clone = (replacement: Partial<SchemaDefinition>): z.ZodType => {
+		const projected = schema.clone({
+			...definition,
+			...replacement,
+		} as never);
+		seen.set(schema, projected);
+		return projected;
+	};
+	switch (definition.type) {
+		case "array":
+			return clone({
+				element: jsonSchemaProjectionView(
+					definition.element as z.ZodType,
+					seen,
+				),
+			});
+		case "lazy":
+			return clone({
+				getter: () =>
+					jsonSchemaProjectionView(
+						(definition.getter as () => z.ZodType)(),
+						seen,
+					),
+			});
+		case "nullable":
+		case "optional":
+		case "readonly":
+			return clone({
+				innerType: jsonSchemaProjectionView(
+					definition.innerType as z.ZodType,
+					seen,
+				),
+			});
+		case "object":
+			return clone({
+				shape: Object.fromEntries(
+					Object.entries(shapeFor(definition)).map(([key, value]) => [
+						key,
+						jsonSchemaProjectionView(value as z.ZodType, seen),
+					]),
+				),
+			});
+		case "pipe":
+			return clone({
+				in: jsonSchemaProjectionView(definition.in as z.ZodType, seen),
+				out: jsonSchemaProjectionView(
+					definition.out as z.ZodType,
+					seen,
+				),
+			});
+		case "record":
+			return clone({
+				keyType: jsonSchemaProjectionView(
+					definition.keyType as z.ZodType,
+					seen,
+				),
+				valueType: jsonSchemaProjectionView(
+					definition.valueType as z.ZodType,
+					seen,
+				),
+			});
+		case "tuple":
+			return clone({
+				items: (definition.items as z.ZodType[]).map((item) =>
+					jsonSchemaProjectionView(item, seen),
+				),
+				rest:
+					definition.rest === undefined
+						? undefined
+						: jsonSchemaProjectionView(
+								definition.rest as z.ZodType,
+								seen,
+							),
+			});
+		case "union":
+			return clone({
+				options: (definition.options as z.ZodType[]).map((option) =>
+					jsonSchemaProjectionView(option, seen),
+				),
+			});
+		default:
+			return schema;
+	}
+}
+
+function dispatchFor(
+	path: string,
+	prompt: AuthoringPrompt,
+): PromptArtifactRecord["dispatch"] {
+	return {
+		...(prompt.modelOutputSchemaFor === undefined
+			? {}
+			: { modelOutputSchemaFor: `${path}:model-output-schema` }),
+		...(prompt.outputPostcondition === undefined
+			? {}
+			: { outputPostcondition: `${path}:output-postcondition` }),
+		...(prompt.projectInput === undefined
+			? {}
+			: { projectInput: `${path}:project-input` }),
+		...(prompt.projectOutput === undefined
+			? {}
+			: { projectOutput: `${path}:project-output` }),
+	};
+}

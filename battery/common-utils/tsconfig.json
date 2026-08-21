@@ -1,0 +1,9 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"compilerOptions": {
+		"paths": {
+			"common-utils": ["./src/index.ts"]
+		}
+	},
+	"include": ["src/**/*.ts", "tests/**/*.ts"]
+}
