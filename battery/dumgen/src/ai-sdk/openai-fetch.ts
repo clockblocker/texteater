@@ -1,6 +1,8 @@
-import { type output, type ZodType, z } from "zod";
-
-import type { AiSdk } from "./ai-sdk";
+import type {
+	AiSdk,
+	StructuredOutputSchema,
+	StructuredSchemaOutput,
+} from "./ai-sdk";
 import { AiSdkGenerationError } from "./ai-sdk-generation-error";
 import {
 	assertResponseCompleted,
@@ -23,6 +25,13 @@ type Fetch = (
 
 type OpenAiResponse = ResponseFailureMetadata & {
 	readonly output?: readonly unknown[];
+};
+
+type JsonSchemaOverrideContext = {
+	readonly jsonSchema: Record<string, unknown>;
+	readonly zodSchema: {
+		readonly _zod: { readonly def: { readonly type?: string } };
+	};
 };
 
 export type BuildOpenAiFetchSdkOptions = {
@@ -74,11 +83,11 @@ export function buildOpenAiFetchSdk(
 	}
 
 	return Object.freeze({
-		async structuredGeneration<OutputSchema extends ZodType>(
+		async structuredGeneration<OutputSchema extends StructuredOutputSchema>(
 			input: string,
 			outputSchema: OutputSchema,
 			params: GenerationParams = {},
-		): Promise<output<OutputSchema>> {
+		): Promise<StructuredSchemaOutput<OutputSchema>> {
 			let maxOutputTokens =
 				params.maxOutputTokens ?? defaultMaxOutputTokens;
 			for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -92,9 +101,12 @@ export function buildOpenAiFetchSdk(
 					text: {
 						format: {
 							name: RESPONSE_SCHEMA_NAME,
-							schema: z.toJSONSchema(outputSchema, {
+							schema: outputSchema.toJSONSchema({
 								target: "draft-7",
-								override: ({ zodSchema, jsonSchema }) => {
+								override: ({
+									zodSchema,
+									jsonSchema,
+								}: JsonSchemaOverrideContext) => {
 									const definition = zodSchema._zod.def;
 									if (
 										definition.type === "union" &&
@@ -124,7 +136,9 @@ export function buildOpenAiFetchSdk(
 				assertResponseCompleted(response);
 				const text = extractOutputText(response.output);
 				if (!text) throw createResponseError(response);
-				return outputSchema.parse(JSON.parse(text));
+				return outputSchema.parse(
+					JSON.parse(text),
+				) as StructuredSchemaOutput<OutputSchema>;
 			}
 			throw new Error("Structured generation retry loop exhausted.");
 		},

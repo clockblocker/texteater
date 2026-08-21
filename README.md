@@ -107,7 +107,7 @@ package specifiers and declared exports:
 
 ```ts
 import { dumling } from "dumling";
-import { schemasFor } from "dumling/schema";
+import type { Reading } from "dumling/types";
 ```
 
 Relative imports into sibling workspaces and package-internal subpaths that

@@ -2,11 +2,19 @@
 	"extends": "../../tooling/typescript/battery.json",
 	"compilerOptions": {
 		"paths": {
+			"common-utils": ["../common-utils/src/index.ts"],
 			"dumling": ["./src/index.ts"],
+			"dumling/id": ["./src/id.ts"],
+			"dumling/reading": ["./src/reading.ts"],
 			"dumling/schema": ["./src/schema.ts"],
 			"dumling/types": ["./src/types.ts"],
 			"dumling/vocabulary": ["./src/vocabulary.ts"]
 		}
 	},
-	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+	"include": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	]
 }

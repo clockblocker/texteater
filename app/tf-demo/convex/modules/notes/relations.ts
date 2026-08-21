@@ -1,15 +1,15 @@
 import { v } from "convex/values";
 import { projectSemanticRelations } from "dumdict";
 import { readingFingerprint } from "dumling/reading";
-import {
-	type LemmaReference,
-	lemmaReferenceSchema,
-	type ProjectedSemanticRelations,
-	type SemanticRelation,
+import type {
+	LemmaReference,
+	ProjectedSemanticRelations,
+	SemanticRelation,
 } from "dumrel";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
 import { lemmaIdentityKey } from "../../../server/linguisticIdentity";
+import { parseGermanLemma } from "../../../server/operationalParsing";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadRelationInventory } from "../../dumdictStorage";
@@ -163,7 +163,7 @@ export async function loadRelationProjections(
 	for (const [index, projection] of projections.entries()) {
 		const lemma = lemmas[index];
 		if (!lemma) continue;
-		const target = lemmaReferenceSchema.parse({
+		const target = parseGermanLemma({
 			language: lemma.language,
 			family: lemma.family,
 			kind: lemma.kind,

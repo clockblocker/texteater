@@ -1,11 +1,10 @@
 import type { AiSdk } from "../ai-sdk/ai-sdk";
-import { combinedGermanKnowledgePrompt } from "../catalog/combined-german-knowledge-prompt";
+import { runtimeCombinedGermanKnowledgePrompt } from "../catalog/runtime-prompt-catalog";
 import {
 	buildGeneratorCatalog,
 	type ModelExchange,
 } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
-import { knowledgeGenerationLanguageSchema } from "../schemas/public-schemas";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationLanguage,
@@ -15,7 +14,7 @@ import { createGermanKnowledgeGeneration } from "./de/runtime";
 
 const KNOWLEDGE_PROMPT_CATALOG = {
 	laboratory: {
-		knowledge: { de: { combined: combinedGermanKnowledgePrompt } },
+		knowledge: { de: { combined: runtimeCombinedGermanKnowledgePrompt } },
 	},
 } as const;
 
@@ -45,13 +44,15 @@ export function createKnowledgeDumgen(options: {
 		language: KnowledgeGenerationLanguage,
 		input: KnowledgeGenerationInput<"de">,
 	): Promise<KnowledgeGenerationResult> {
-		try {
-			knowledgeGenerationLanguageSchema.parse(language);
-		} catch (cause) {
+		if (language !== "de") {
 			throw new DumgenError(
 				"invalid-input",
 				"Knowledge generation is not configured for this language.",
-				{ cause },
+				{
+					cause: new TypeError(
+						`Unsupported Knowledge language: ${String(language)}.`,
+					),
+				},
 			);
 		}
 		return generateGermanKnowledge(input);

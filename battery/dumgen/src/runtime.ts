@@ -1,5 +1,5 @@
 import type { AiSdk } from "./ai-sdk/ai-sdk";
-import { PROMPT_CATALOG } from "./catalog/prompt-catalog";
+import { RUNTIME_PROMPT_CATALOG } from "./catalog/runtime-prompt-catalog";
 import type { Dumgen } from "./dumgen";
 import {
 	createDumgenImplementation,
@@ -27,9 +27,13 @@ export type DumgenRuntimeOptions = {
 
 /** Builds Dumgen around an injected provider without loading a default SDK. */
 export function buildDumgenRuntime(options: DumgenRuntimeOptions): Dumgen {
-	const generators = buildGeneratorCatalog(PROMPT_CATALOG, options.sdk, {
-		onModelExchange: options.onModelExchange,
-	});
+	const generators = buildGeneratorCatalog(
+		RUNTIME_PROMPT_CATALOG,
+		options.sdk,
+		{
+			onModelExchange: options.onModelExchange,
+		},
+	);
 	return createDumgenImplementation(generators, {
 		onSection1Trace: options.onSection1Trace,
 		generateKnowledge: options.generateKnowledge,

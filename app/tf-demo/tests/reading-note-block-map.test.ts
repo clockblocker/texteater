@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { defaultKnowledgeRequestMask } from "dumrel";
 
 import { DE_READING_NOTE_BLOCK_MAP } from "../src/notes/reading/de/block-map";

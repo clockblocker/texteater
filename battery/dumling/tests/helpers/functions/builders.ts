@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import { canonicalizeNullableProperties } from "../../../src/operations/shared/parse/canonicalize-nullable";
+import { dumling } from "../../../src";
 import { schemasFor } from "../../../src/schema";
 import type {
 	CoreFeaturesFor,
@@ -43,9 +43,11 @@ function makeLemma<
 	const entrySchemas = Reflect.get(languageSchemas.entity.Lemma, family);
 	const getSchema = Reflect.get(entrySchemas, kind) as () => ZodType;
 	const schema = getSchema();
-	return schema.parse(
-		canonicalizeNullableProperties(schema, rawLemma),
-	) as Lemma<L, LK, LSK>;
+	const parsed = dumling[language].parse.lemma(rawLemma);
+	if (!parsed.success) {
+		throw new Error(parsed.error.message);
+	}
+	return schema.parse(parsed.data) as Lemma<L, LK, LSK>;
 }
 
 export function makeLexemeSurfaceReference<
@@ -82,27 +84,6 @@ export function makeMorphemeSurfaceReference<
 		lemma: makeLemma(
 			language,
 			"Morpheme" as "Morpheme" & LemmaFamilyFor<L>,
-			kind,
-			canonicalForm,
-			options,
-		),
-		surfaceFeatures: null,
-	};
-}
-
-export function makePhrasemeSurfaceReference<
-	L extends SupportedLanguage,
-	LSK extends LemmaKindFor<L, "Phraseme" & LemmaFamilyFor<L>>,
->(
-	language: L,
-	kind: LSK,
-	canonicalForm: string,
-	options: BuilderOptions<L, "Phraseme" & LemmaFamilyFor<L>, LSK> = {},
-) {
-	return {
-		lemma: makeLemma(
-			language,
-			"Phraseme" as "Phraseme" & LemmaFamilyFor<L>,
 			kind,
 			canonicalForm,
 			options,

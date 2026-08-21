@@ -1,11 +1,9 @@
-import { readingFingerprint } from "dumling/reading";
-import { readingSchema } from "dumling/schema";
+import { readingFingerprint } from "dumling/id";
 import type { EntityKind, Lemma, SupportedLanguage } from "dumling/types";
 import {
-	pendingSemanticRelationSchema,
-	readingKnowledgeSchema,
-	semanticRelationSchema,
-} from "dumrel/schema";
+	directSemanticRelationValues,
+	semanticRelationValues,
+} from "dumrel/relations";
 import type {
 	DumdictReadingDraft,
 	LemmaRecord,
@@ -14,9 +12,18 @@ import type {
 	ReadingEntry,
 	SurfaceEntry,
 } from "../dto";
-import { inspectDumlingId, makeSurfaceId } from "../dumling";
+import { inspectDumlingId, makeSurfaceId } from "../dumling-id";
+import {
+	parseAsLemmaRecord,
+	parseAsPendingSemanticRelationRecord,
+	parseAsReadingEntry,
+	parseAsSurfaceEntry,
+	parsePendingSemanticRelationForDumdictRuntime,
+	parseReadingForDumdictRuntime,
+	parseReadingKnowledgeForDumdictRuntime,
+	unwrapDumdictParse,
+} from "../parsing/lightweight-parsers";
 import { DumdictLanguageMismatchError } from "../public";
-import { getDumdictSchemasFor } from "../schema";
 import type {
 	CleanupRelationsSlice,
 	NewNoteSlice,
@@ -53,7 +60,7 @@ function validateLemmaRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: LemmaRecord<L>,
 ) {
-	getDumdictSchemasFor(expected).lemmaRecordSchema.parse(record);
+	unwrapDumdictParse(parseAsLemmaRecord(record, expected));
 	assertLanguage(expected, record.lemma.language);
 }
 
@@ -61,7 +68,7 @@ function validateReading<L extends SupportedLanguage>(
 	expected: L,
 	reading: Reading<L>,
 ) {
-	readingSchema.parse(reading);
+	unwrapDumdictParse(parseReadingForDumdictRuntime(reading, expected));
 	assertLanguage(expected, reading.lemma.language);
 	if (
 		reading.emojiDescription.trim().normalize("NFC") !==
@@ -76,10 +83,12 @@ function validateReadingEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: ReadingEntry<L>,
 ) {
-	getDumdictSchemasFor(expected).readingEntrySchema.parse(entry);
+	unwrapDumdictParse(parseAsReadingEntry(entry, expected));
 	validateReading(expected, entry.reading);
 	if (entry.knowledge !== undefined) {
-		readingKnowledgeSchema.parse(entry.knowledge);
+		unwrapDumdictParse(
+			parseReadingKnowledgeForDumdictRuntime(entry.knowledge),
+		);
 		for (const targets of Object.values(
 			entry.knowledge.semanticRelations ?? {},
 		)) {
@@ -98,7 +107,7 @@ function validateSurfaceEntry<L extends SupportedLanguage>(
 	expected: L,
 	entry: SurfaceEntry<L>,
 ) {
-	getDumdictSchemasFor(expected).surfaceEntrySchema.parse(entry);
+	unwrapDumdictParse(parseAsSurfaceEntry(entry, expected));
 	assertLanguage(expected, entry.surface.language);
 	assertLanguage(expected, entry.surface.lemma.language);
 	const inspected = inspectDumlingId(entry.id);
@@ -117,17 +126,18 @@ function validatePendingRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: PendingSemanticRelationRecord<L>,
 ) {
-	getDumdictSchemasFor(expected).pendingSemanticRelationRecordSchema.parse(
-		record,
-	);
+	unwrapDumdictParse(parseAsPendingSemanticRelationRecord(record, expected));
 	validateReading(expected, record.sourceReading);
-	const parsed = pendingSemanticRelationSchema.parse(record.pending);
+	const parsed = unwrapDumdictParse(
+		parsePendingSemanticRelationForDumdictRuntime(record.pending),
+	);
 	assertLanguage(expected, parsed.target.language);
 	if (parsed.target.language !== record.sourceReading.lemma.language)
 		throw new Error(
 			"Pending Semantic Relation endpoints must use the same language.",
 		);
-	semanticRelationSchema.parse(record.locator.relation);
+	if (!semanticRelationValues.includes(record.locator.relation))
+		throw new Error("Invalid Semantic Relation.");
 	if (
 		record.locator.sourceReadingKey !==
 		readingFingerprint(record.sourceReading)
@@ -218,9 +228,14 @@ export function validateNewNoteSlice<L extends SupportedLanguage>(
 		validateReading(expected, draft.reading);
 		for (const relation of draft.relations ?? []) {
 			if (relation.target.kind === "pending")
-				pendingSemanticRelationSchema.parse(relation.target.pending);
+				unwrapDumdictParse(
+					parsePendingSemanticRelationForDumdictRuntime(
+						relation.target.pending,
+					),
+				);
 			else if ("relation" in relation)
-				semanticRelationSchema.parse(relation.relation);
+				if (!directSemanticRelationValues.includes(relation.relation))
+					throw new Error("Invalid direct Semantic Relation.");
 		}
 	}
 	if (slice.existingLemma) {

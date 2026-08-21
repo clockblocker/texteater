@@ -15,7 +15,7 @@ test("declared package root and export subpath imports are accepted", async () =
 	await addWorkspace(root, {
 		exports: {
 			".": "./dist/index.js",
-			"./schema": "./dist/schema.js",
+			"./reading": "./dist/reading.js",
 		},
 		kind: "battery",
 		name: "dumling",
@@ -29,7 +29,7 @@ test("declared package root and export subpath imports are accepted", async () =
 		consumer,
 		"src/index.ts",
 		'import { x } from "dumling";\n' +
-			'import { y } from "dumling/schema";\n' +
+			'import { y } from "dumling/reading";\n' +
 			"const example = 'import { hidden } from \"dumling/internal\"';\n",
 	);
 
@@ -92,4 +92,122 @@ test("battery to app imports and cross-workspace cycles are rejected", async () 
 	expect(
 		issues.some((issue) => issue.message.includes("cross-workspace cycle")),
 	).toBe(true);
+});
+
+test("operational source cannot import Dum schema-authoring surfaces through any TypeScript import form", async () => {
+	const root = await temporaryRepository();
+	const dumgen = await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./dangerously-heavy-schema-tree": "./dist/danger.js",
+			"./model-authoring": "./dist/model-authoring.js",
+			"./schema": "./dist/schema.js",
+		},
+		kind: "battery",
+		name: "dumgen",
+	});
+	const consumer = await addWorkspace(root, {
+		dependencies: { dumgen: "workspace:^" },
+		kind: "app",
+		name: "product",
+	});
+	await writeSource(
+		consumer,
+		"src/index.ts",
+		'import "dumgen/schema";\n' +
+			'import "dumgen/dangerously-heavy-schema-tree";\n' +
+			'import "dumgen/model-authoring";\n' +
+			'import type { Model } from "dumgen/schema";\n' +
+			'export { schema } from "dumgen/schema";\n' +
+			'export type { Model } from "dumgen/model-authoring";\n' +
+			'type Schema = import("dumgen/dangerously-heavy-schema-tree").Schema;\n' +
+			'void import("dumgen/schema");\n' +
+			'require("dumgen/model-authoring");\n' +
+			'import heavy = require("dumgen/dangerously-heavy-schema-tree");\n' +
+			'export import authoring = require("dumgen/model-authoring");\n',
+	);
+	await writeSource(
+		dumgen,
+		"src/runtime.ts",
+		'import type { Model } from "dumgen/schema";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(issues).toHaveLength(12);
+	for (const issue of issues) {
+		expect(issue.message).toContain(
+			"operational source cannot import schema-authoring surfaces",
+		);
+	}
+});
+
+test("ordinary app tests and nested runtime docs cannot hide schema imports", async () => {
+	const root = await temporaryRepository();
+	await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./dangerously-heavy-schema-tree": "./dist/danger.js",
+			"./schema": "./dist/schema.js",
+		},
+		kind: "battery",
+		name: "dumrel",
+	});
+	const consumer = await addWorkspace(root, {
+		dependencies: { dumrel: "workspace:^" },
+		kind: "app",
+		name: "product",
+	});
+	await writeSource(
+		consumer,
+		"tests/runtime.test.ts",
+		'import "dumrel/schema";\n',
+	);
+	await writeSource(
+		consumer,
+		"src/docs/runtime.ts",
+		'import "dumrel/dangerously-heavy-schema-tree";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(issues).toHaveLength(2);
+	expect(
+		issues.every((issue) => issue.message.includes("operational source")),
+	).toBe(true);
+});
+
+test("tests and package code generators may import explicit schema-authoring surfaces", async () => {
+	const root = await temporaryRepository();
+	await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./dangerously-heavy-schema-tree": "./dist/danger.js",
+			"./schema": "./dist/schema.js",
+		},
+		kind: "battery",
+		name: "dumling",
+	});
+	const app = await addWorkspace(root, {
+		dependencies: { dumling: "workspace:^" },
+		kind: "app",
+		name: "docs",
+	});
+	const battery = await addWorkspace(root, {
+		dependencies: { dumling: "workspace:^" },
+		kind: "battery",
+		name: "consumer",
+	});
+	await writeSource(
+		app,
+		"tests/schema.test.ts",
+		'import "dumling/dangerously-heavy-schema-tree";\n',
+	);
+	await writeSource(
+		battery,
+		"codegen/artifacts.ts",
+		'import "dumling/schema";\n',
+	);
+
+	expect(await issuesFor(root)).toEqual([]);
 });

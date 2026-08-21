@@ -1,6 +1,6 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "d9b3872bdb50ba6429f141d7410d8ad7a49059e1d60f33e335df5dfe5823425e",
+	"candidateId": "09e18df9462b6f11e52c75fe4e903c2fcf3dc3c0d6ee472a6093f3017e120036",
 	"state": "development-gate-failed",
 	"artifacts": [
 		{
@@ -67,7 +67,7 @@
 			"issue": 192,
 			"role": "model-facing-schema",
 			"path": "battery/dumgen/src/knowledge-generation/de/schemas.ts",
-			"sha256": "ca39468119fa36df9165b4206cd5ad0c6ce6f1a2acc657732b21b4ac1b0d376e"
+			"sha256": "6c776f496dcf13b69fcb7ecba8fb496b35f75bb15e0a0f79a032afb07f8a59c1"
 		},
 		{
 			"issue": 192,

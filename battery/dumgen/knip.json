@@ -1,9 +1,11 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
+		"codegen/generate-validation-artifacts.ts",
 		"src/index.ts",
 		"src/knowledge.ts",
 		"src/knowledge-runtime.ts",
+		"src/model-authoring.ts",
 		"src/openai-fetch.ts",
 		"src/projection.ts",
 		"src/runtime.ts",
@@ -15,5 +17,10 @@
 	"ignore": [
 		"src/promptsmith/production/generated-system-prompt/grammatical-resolution/de/phraseme/collocation.ts"
 	],
-	"project": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+	"project": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	]
 }

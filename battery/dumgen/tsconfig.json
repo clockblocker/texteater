@@ -4,6 +4,7 @@
 		"paths": {
 			"dumgen": ["./src/index.ts"],
 			"dumgen/knowledge-runtime": ["./src/knowledge-runtime.ts"],
+			"dumgen/model-authoring": ["./src/model-authoring.ts"],
 			"dumgen/openai-fetch": ["./src/openai-fetch.ts"],
 			"dumgen/runtime": ["./src/runtime.ts"],
 			"dumgen/schema": ["./src/schema.ts"],

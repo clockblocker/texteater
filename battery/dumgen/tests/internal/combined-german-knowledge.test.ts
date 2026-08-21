@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { type AiSdk, buildDumgen } from "dumgen";
 import type { Reading } from "dumling/types";
-import type { z } from "zod";
 
 import { combinedGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
+import type { StructuredOutputSchema } from "../../src/ai-sdk/ai-sdk";
 import { combinedGermanKnowledgePrompt } from "../../src/catalog/combined-german-knowledge-prompt";
 import type { ModelExchange } from "../../src/generator/generator";
 import {
@@ -42,11 +42,27 @@ const baseInput = {
 	reading: bankReading,
 } as const;
 
+function isStructuredOutputSchema(
+	value: unknown,
+): value is StructuredOutputSchema {
+	return (
+		value !== null &&
+		typeof value === "object" &&
+		"parse" in value &&
+		"toJSONSchema" in value
+	);
+}
+
 function queueSdk(outputs: unknown[]) {
-	const calls: Array<{ input: string; schema: z.ZodType; params: unknown }> =
-		[];
+	const calls: Array<{
+		input: string;
+		schema: StructuredOutputSchema;
+		params: unknown;
+	}> = [];
 	const sdk: AiSdk = {
 		async structuredGeneration(input, schema, params) {
+			if (!isStructuredOutputSchema(schema))
+				throw new Error("Expected a structural output schema fixture.");
 			calls.push({ input, schema, params });
 			return outputs.shift() as never;
 		},
@@ -70,6 +86,18 @@ function knowledgeRuntime(
 }
 
 describe("combined German Knowledge generation", () => {
+	test("keeps the operational projection below the generated parser seam", async () => {
+		const source = await Bun.file(
+			new URL(
+				"../../src/knowledge-generation/de/projection.ts",
+				import.meta.url,
+			),
+		).text();
+		expect(source).not.toContain('from "dumrel/schema"');
+		expect(source).not.toContain('from "../../schemas/public-schemas"');
+		expect(source).not.toContain('from "./schemas"');
+	});
+
 	test("returns the canonical empty update without an adapter call or exchange", async () => {
 		const { calls, sdk } = queueSdk([]);
 		const exchanges: unknown[] = [];
@@ -196,23 +224,23 @@ describe("combined German Knowledge generation", () => {
 			"laboratory.knowledge.de.combined",
 			"laboratory.knowledge.de.combined",
 		]);
-		expect(
-			calls[0]?.schema.safeParse({
+		expect(() =>
+			calls[0]?.schema.parse({
 				transcription: null,
 				definition: null,
 				translations: { en: null },
 				semanticRelations: { synonym: null, hypernym: null },
-			}).success,
-		).toBe(true);
-		expect(
-			calls[0]?.schema.safeParse({
+			}),
+		).not.toThrow();
+		expect(() =>
+			calls[0]?.schema.parse({
 				transcription: null,
 				definition: null,
 				translations: { en: null },
 				semanticRelations: { synonym: null, hypernym: null },
 				extra: null,
-			}).success,
-		).toBe(false);
+			}),
+		).toThrow();
 		expect(result).toEqual({
 			changes: [
 				{ kind: "Contribute", aspect: "transcription", value: "baŋk" },

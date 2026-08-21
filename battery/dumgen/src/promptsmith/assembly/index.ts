@@ -1,6 +1,6 @@
 export { stableJson } from "../../lib/stable-json";
 export { asObjectSchema } from "../../schema/as-object-schema";
-export { normalizedMembersSchema } from "../../schema/normalized-surface-projection";
+export { normalizedMembersSchema } from "../../schema/normalized-members-schema";
 export { assembleSystemPrompt } from "./assemble-system-prompt";
 export type {
 	ExperimentEvaluation,

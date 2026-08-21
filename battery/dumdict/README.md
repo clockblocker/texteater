@@ -52,6 +52,14 @@ collects a full note draft and calls `addNewNote`.
 Knowledge DTOs, schemas, and inverse rules come from `dumrel`; Dumdict
 owns the dictionary workflows that apply those rules to stored records.
 
+`dumdict/schema` is the explicit Zod composition surface for broad aggregate
+DTO schemas. It is never re-exported from `dumdict` or `dumdict/runtime`.
+Language-specific schema precision is available only from
+`dumdict/dangerously-heavy-schema-tree` as
+`getDangerouslyHeavyDumdictSchemaTreeForAbout100MiBRss`; importing it reaches
+the concrete Dumling route tree and adds roughly 100 MiB max RSS. Application
+validation should use Dumdict's lightweight parser interfaces instead.
+
 Host storage owns the actual writes. Obsidian can translate planned changes into
 markdown edits, SQLite into a transaction, and Electron into server/cache writes.
 Non-relation flows load only their operation slice. Relation planning receives

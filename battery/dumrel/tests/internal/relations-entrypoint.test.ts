@@ -2,11 +2,54 @@ import { describe, expect, test } from "bun:test";
 import { resolve } from "node:path";
 import { build } from "esbuild";
 
-import { projectRelations } from "../../src/relations";
+import {
+	directSemanticRelationValues,
+	projectRelations,
+	semanticRelationValues,
+} from "../../src/relations";
+import {
+	directSemanticRelationValues as vocabularyDirectSemanticRelationValues,
+	semanticRelationValues as vocabularySemanticRelationValues,
+} from "../../src/vocabulary";
 
 const packageRoot = resolve(import.meta.dir, "../..");
 
 describe("dumrel/relations topology", () => {
+	test("re-exports the exact canonical relation vocabularies in frozen order", () => {
+		expect(directSemanticRelationValues).toBe(
+			vocabularyDirectSemanticRelationValues,
+		);
+		expect(semanticRelationValues).toBe(vocabularySemanticRelationValues);
+		expect([...directSemanticRelationValues]).toEqual([
+			...vocabularyDirectSemanticRelationValues,
+		]);
+		expect([...semanticRelationValues]).toEqual([
+			...vocabularySemanticRelationValues,
+		]);
+	});
+
+	test("the package root does not retain Dumling's generated parser registry", async () => {
+		const result = await build({
+			bundle: true,
+			entryPoints: [resolve(packageRoot, "src/index.ts")],
+			format: "esm",
+			metafile: true,
+			platform: "node",
+			write: false,
+		});
+		const inputs = Object.keys(result.metafile.inputs).map((input) =>
+			input.replaceAll("\\", "/"),
+		);
+
+		expect(
+			inputs.some(
+				(input) =>
+					input.includes("/battery/dumling/") ||
+					input.includes("/node_modules/dumling/"),
+			),
+		).toBe(false);
+	});
+
 	test("bundles without Dumling, the broad schema module, or Zod locales", async () => {
 		const result = await build({
 			bundle: true,

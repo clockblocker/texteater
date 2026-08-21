@@ -1,8 +1,10 @@
 import { describe, expect, it } from "bun:test";
+import { ParsingError as SharedParsingError } from "common-utils";
 import * as runtimeLemma from "../../src";
 import {
 	dumling,
 	getLanguageApi,
+	ParsingError,
 	readingFingerprint,
 	supportedLanguages,
 } from "../../src";
@@ -16,9 +18,15 @@ import {
 describe("public API usage", () => {
 	it("exposes the curated root runtime surface", () => {
 		expect(runtimeLemma.dumling).toBe(dumling);
+		expect(ParsingError).toBe(SharedParsingError);
 		expect(Object.keys(runtimeLemma).sort()).toEqual([
+			"ParsingError",
 			"dumling",
 			"getLanguageApi",
+			"parseAsAttestation",
+			"parseAsLemma",
+			"parseAsReading",
+			"parseAsSurface",
 			"readingFingerprint",
 			"supportedLanguages",
 		]);

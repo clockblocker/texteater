@@ -23,8 +23,9 @@ The real German click chain composes for the first vertical slice:
    claims every member, and records the Visitor Click.
 
 Knowledge application also composes when the caller supplies a Dumrel
-`KnowledgeChange`: the action validates it with `knowledgeChangeSchema`, applies
-it through `applyDumdictKnowledgeChange`, and persists the append-only
+`KnowledgeChange`: the action validates it through the lightweight
+`parseAsKnowledgeChange` interface, applies it through
+`applyDumdictKnowledgeChange`, and persists the append-only
 Knowledge Change plus accumulated Knowledge in a mutation.
 
 ## Integration gaps
@@ -67,8 +68,9 @@ The former integration gap was:
 - Dumdict privately defined `readingKey` without exporting it.
 - tf-demo duplicated its stable JSON algorithm for indexed Convex lookup.
 
-Resolved by the canonical Dumling `Reading` DTO, `readingSchema`, and
-`readingFingerprint` operation. Dumdict and tf-demo now consume that operation;
+Resolved by the canonical Dumling `Reading` DTO, lightweight `parseAsReading`
+interface, and `readingFingerprint` operation. Dumdict and tf-demo now consume
+that operation;
 `convex/model/linguisticKeys.ts` no longer contains a Reading identity
 algorithm. The public fingerprint preserves the established indexed key bytes.
 

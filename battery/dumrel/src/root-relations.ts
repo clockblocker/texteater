@@ -1,9 +1,12 @@
 import {
+	parseAsSemanticRelationGraph,
+	unwrapDumrelParse,
+} from "./parsing/lightweight-parsers.js";
+import {
 	inverseRelationFor,
 	projectRelations as projectLeanRelations,
 	propagateRelations as propagateLeanRelations,
 } from "./rules.js";
-import { semanticRelationGraphSchema } from "./schema.js";
 import type {
 	SemanticRelationGraph,
 	SemanticRelationGraphEdge,
@@ -12,16 +15,20 @@ import type {
 
 export { inverseRelationFor };
 
-/** Compatibility facade retaining the root entrypoint's Zod validation. */
+/** Compatibility facade retaining root-entrypoint validation. */
 export function propagateRelations(
 	graph: SemanticRelationGraph,
 ): SemanticRelationGraphEdge[] {
-	return propagateLeanRelations(semanticRelationGraphSchema.parse(graph));
+	return propagateLeanRelations(
+		unwrapDumrelParse(parseAsSemanticRelationGraph(graph)),
+	);
 }
 
-/** Compatibility facade retaining the root entrypoint's Zod validation. */
+/** Compatibility facade retaining root-entrypoint validation. */
 export function projectRelations(
 	graph: SemanticRelationGraph,
 ): SemanticRelationGraphProjection[] {
-	return projectLeanRelations(semanticRelationGraphSchema.parse(graph));
+	return projectLeanRelations(
+		unwrapDumrelParse(parseAsSemanticRelationGraph(graph)),
+	);
 }

@@ -5,7 +5,15 @@
 		"emitDeclarationOnly": true,
 		"noEmit": false,
 		"outDir": "./dist",
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"paths": {
+			"common-utils": ["../common-utils/dist/index.d.ts"],
+			"dumling": ["./src/index.ts"],
+			"dumling/schema": ["./src/schema.ts"],
+			"dumling/types": ["./src/types.ts"],
+			"dumling/vocabulary": ["./src/vocabulary.ts"]
+		}
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/operations/parsing/validation-route-proofs.ts"]
 }

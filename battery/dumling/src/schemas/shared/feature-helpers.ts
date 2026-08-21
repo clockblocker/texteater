@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+	hasMarkedInflectionFeature,
+	inflectionalFeaturesNonEmptyError,
+} from "../../validation-semantics.js";
 
 type NonEmptyFeatureValueSet<T> = readonly [T, ...T[]];
 
@@ -61,14 +65,13 @@ export function requireNonEmptyFeatureObject<T extends object>(
 	schema: z.ZodType<T>,
 	fieldName = "inflectionalFeatures",
 ): z.ZodType<T> {
+	const error =
+		fieldName === "inflectionalFeatures"
+			? inflectionalFeaturesNonEmptyError
+			: () => `${fieldName} must not be empty`;
 	return markInflectionSurface(
-		schema.superRefine((value, ctx) => {
-			if (!Object.values(value).some((lemma) => lemma !== null)) {
-				ctx.addIssue({
-					code: "custom",
-					message: `${fieldName} must not be empty`,
-				});
-			}
+		schema.refine(hasMarkedInflectionFeature, {
+			error,
 		}),
 	) as z.ZodType<T>;
 }

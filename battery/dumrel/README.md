@@ -93,6 +93,9 @@ Server generation uses the complete applicable German mask. Applications may
 use settings intersection for fetching and presentation, but settings do not
 silently narrow server generation.
 
-Schemas are also available from `dumrel/schema`; DTO types are available from
+Broad Knowledge, relation, and settings Zod composition schemas are available
+only from `dumrel/schema`; the `dumrel` root does not re-export them and they
+should not be used as application validators. Application validation belongs at
+Dumrel's lightweight parser interfaces. DTO types are available from
 `dumrel/types`; schema-free default settings are available from
 `dumrel/settings`. All subpaths use explicit export allowlists.

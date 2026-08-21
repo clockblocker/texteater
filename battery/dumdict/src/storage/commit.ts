@@ -6,4 +6,4 @@ export type {
 	DumdictPlan,
 	PlannedChangeOp,
 	ReadingPatchOp,
-} from "../schema";
+} from "../domain-types";

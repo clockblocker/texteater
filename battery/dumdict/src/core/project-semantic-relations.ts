@@ -1,4 +1,4 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
 import { projectRelations } from "dumrel/relations";
 import type { DirectSemanticRelation, SemanticRelation } from "dumrel/types";

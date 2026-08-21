@@ -16,6 +16,11 @@ click resolution, and German Reading enrichment:
 - Zod-backed input and output validation
 - validated Dumgen and Dumling domain results
 
+The `dumgen` root and operational subpaths do not export Zod schemas.
+Schema-authoring and model-integration callers may explicitly import the broad
+DTO schemas from `dumgen/schema`; application validation should use Dumgen's
+lightweight parser interfaces instead.
+
 Example usage:
 
 ```ts

@@ -1,1 +1,1 @@
-export type { StoreRevision } from "../schema";
+export type { StoreRevision } from "../domain-types";

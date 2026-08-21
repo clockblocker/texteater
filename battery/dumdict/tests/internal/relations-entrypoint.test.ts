@@ -15,7 +15,7 @@ type RelationProbe = {
 
 function workspaceSourcePlugin(): Plugin {
 	const entries = new Map([
-		["dumling/reading", resolve(batteryRoot, "dumling/src/reading.ts")],
+		["dumling/id", resolve(batteryRoot, "dumling/src/id.ts")],
 		["dumling/types", resolve(batteryRoot, "dumling/src/types.ts")],
 		["dumrel/relations", resolve(batteryRoot, "dumrel/src/relations.ts")],
 		["dumrel/types", resolve(batteryRoot, "dumrel/src/types.ts")],
@@ -139,9 +139,7 @@ describe("relations package entrypoint", () => {
 			),
 		).toBe(false);
 		expect(
-			probe.inputs.some((path) =>
-				path.endsWith("dumling/src/reading.ts"),
-			),
+			probe.inputs.some((path) => path.endsWith("dumling/src/id.ts")),
 		).toBe(true);
 		expect(
 			probe.inputs.some((path) =>

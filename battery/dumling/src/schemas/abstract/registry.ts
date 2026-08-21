@@ -1,10 +1,9 @@
-import type { z } from "zod";
+import { type z, z as zod } from "zod";
 import {
-	AbstractLanguageTag,
-	ConstructionKind,
-	MorphemeKind,
-	PhrasemeKind,
-	Pos,
+	constructionKindValues,
+	morphemeKindValues,
+	phrasemeKindValues,
+	posValues,
 } from "../../types/core/enums.js";
 import type {
 	AbstractAttestation,
@@ -38,17 +37,17 @@ function buildAbstractLeafBundle(
 	kind: string,
 ): AbstractLeafBundle {
 	const lemmaSchema = buildLemmaSchema({
-		languageSchema: AbstractLanguageTag,
+		languageSchema: zod.string().min(1),
 		family,
 		kind,
 		coreFeaturesSchema: abstractCoreFeaturesSchema,
 	}) as z.ZodType<AbstractLemma<string>>;
 	const citationSurfaceSchema = buildCitationSurfaceSchema({
-		languageSchema: AbstractLanguageTag,
+		languageSchema: zod.string().min(1),
 		lemmaSchema,
 	}) as z.ZodType<AbstractSurface<string, "Citation">>;
 	const inflectionSurfaceSchema = buildInflectionSurfaceSchema({
-		languageSchema: AbstractLanguageTag,
+		languageSchema: zod.string().min(1),
 		lemmaSchema,
 		inflectionalFeaturesSchema: abstractInflectionalFeaturesSchema,
 	}) as z.ZodType<AbstractSurface<string, "Inflection">>;
@@ -75,10 +74,10 @@ const abstractSurfaceSchemas: z.ZodType[] = [];
 const abstractAttestationSchemas: z.ZodType[] = [];
 
 for (const [family, subKinds] of [
-	["Lexeme", Pos.options],
-	["Morpheme", MorphemeKind.options],
-	["Phraseme", PhrasemeKind.options],
-	["Construction", ConstructionKind.options],
+	["Lexeme", posValues],
+	["Morpheme", morphemeKindValues],
+	["Phraseme", phrasemeKindValues],
+	["Construction", constructionKindValues],
 ] as const) {
 	for (const kind of subKinds) {
 		const bundle = buildAbstractLeafBundle(family, kind);

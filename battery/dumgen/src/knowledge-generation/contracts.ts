@@ -5,7 +5,7 @@ import type {
 	PendingSemanticRelation,
 	UnitShadow,
 } from "dumrel";
-import type { RequestableRelation } from "./relations";
+import type { RequestableRelation } from "../vocabulary";
 
 export type KnowledgeGenerationLanguage = "de";
 
@@ -55,4 +55,4 @@ export type KnowledgeGenerationResult = DeepReadonly<{
 	>;
 }>;
 
-export type { RequestableRelation } from "./relations";
+export type { RequestableRelation } from "../vocabulary";

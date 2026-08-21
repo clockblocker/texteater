@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const nounClassValues = [
 	"Bantu1", // singular; persons
 	"Bantu2", // plural; persons
@@ -39,5 +37,5 @@ const nounClassValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/NounClass.html
-export const NounClass = z.enum(nounClassValues);
-export type NounClass = z.infer<typeof NounClass>;
+export const NounClass = nounClassValues;
+export type NounClass = (typeof NounClass)[number];

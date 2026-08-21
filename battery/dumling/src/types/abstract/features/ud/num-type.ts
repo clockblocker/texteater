@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const numTypeValues = [
 	"Card", // cardinal number; or corresponding interrogative / relative / indefinite / demonstrative word
 	"Dist", // distributive numeral
@@ -11,5 +9,5 @@ const numTypeValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/NumType.html
-export const NumType = z.enum(numTypeValues);
-export type NumType = z.infer<typeof NumType>;
+export const NumType = numTypeValues;
+export type NumType = (typeof NumType)[number];

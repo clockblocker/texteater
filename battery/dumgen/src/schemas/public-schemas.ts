@@ -1,19 +1,31 @@
-import { readingSchema, schemasFor } from "dumling/schema";
-import type { Attestation, Reading } from "dumling/types";
-import { knowledgeChangeSchema, lexicalUnitShadowSchema } from "dumrel";
-import { type ZodType, z } from "zod";
-import type {
-	KnowledgeGenerationInput,
-	KnowledgeGenerationRequest,
-	KnowledgeGenerationResult,
-} from "../knowledge-generation/contracts";
+import { readingSchema } from "dumling/schema";
+import { knowledgeChangeSchema, lexicalUnitShadowSchema } from "dumrel/schema";
+import { z } from "zod";
+import type { KnowledgeGenerationResult } from "../knowledge-generation/contracts";
 import { requestableRelationSchema } from "../knowledge-generation/relations";
 import { DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS } from "../schema/de-grammatical-resolution-inventory";
+import {
+	bindGermanKnowledgeInput,
+	bindGermanKnowledgeReading,
+	bindGermanRelationTarget,
+	bindKnowledgeGenerationResult,
+	bindSegmentedSentenceId,
+	deepFreeze,
+	grammaticalInputIssues,
+	grammaticalInteractionIssues,
+	hasEnglishTranslationSelection,
+	hasSemanticRelationSelection,
+	isGermanKnowledgeReading,
+	isGermanRelationTarget,
+	isValidWhitespaceSegment,
+	knowledgeGenerationResultIssues,
+} from "../validation-semantics";
 import {
 	enabledSegmentationLanguageValues,
 	grammaticalResolutionLanguageValues,
 	segmentKindValues,
 } from "../vocabulary";
+import { germanAttestationSchema } from "./german-attestation-schema";
 
 export const enabledSegmentationLanguageSchema = z.enum(
 	enabledSegmentationLanguageValues,
@@ -27,14 +39,14 @@ export const knowledgeGenerationLanguageSchema = z.literal("de");
 
 const knowledgeTranslationRequestSchema = z
 	.strictObject({ en: z.null().optional() })
-	.refine((translations) => Object.keys(translations).length > 0, {
+	.refine(hasEnglishTranslationSelection, {
 		message: "A Translation request must select English.",
 	})
 	.readonly();
 
 const knowledgeSemanticRelationRequestSchema = z
 	.partialRecord(requestableRelationSchema, z.null())
-	.refine((relations) => Object.keys(relations).length > 0, {
+	.refine(hasSemanticRelationSelection, {
 		message:
 			"A Semantic Relation request must select at least one relation.",
 	})
@@ -47,14 +59,15 @@ export const knowledgeGenerationRequestSchema = z
 		translations: knowledgeTranslationRequestSchema.optional(),
 		semanticRelations: knowledgeSemanticRelationRequestSchema.optional(),
 	})
-	.readonly() as ZodType<KnowledgeGenerationRequest>;
+	.readonly();
 
 const germanKnowledgeReadingSchema = readingSchema
-	.refine((reading) => reading.lemma.language === "de", {
+	.refine(isGermanKnowledgeReading, {
 		path: ["lemma", "language"],
 		message: "Knowledge generation requires a German Reading.",
 	})
-	.readonly() as ZodType<Reading<"de">>;
+	.readonly()
+	.transform(bindGermanKnowledgeReading);
 
 export const knowledgeGenerationInputSchema = z
 	.strictObject({
@@ -62,61 +75,40 @@ export const knowledgeGenerationInputSchema = z
 		reading: germanKnowledgeReadingSchema,
 		request: knowledgeGenerationRequestSchema,
 	})
-	.readonly() as ZodType<KnowledgeGenerationInput<"de">>;
+	.readonly()
+	.transform(bindGermanKnowledgeInput);
 
-const generatedGermanRelationTargetSchema = lexicalUnitShadowSchema.refine(
-	(target) => target.language === "de",
-	{
+const generatedGermanRelationTargetSchema = lexicalUnitShadowSchema
+	.refine(isGermanRelationTarget, {
 		path: ["language"],
 		message: "German Knowledge relations require German Unit Shadows.",
-	},
-);
+	})
+	.transform(bindGermanRelationTarget);
 
 const generatedPendingSemanticRelationSchema = z.strictObject({
 	relation: requestableRelationSchema,
 	target: generatedGermanRelationTargetSchema,
 });
 
-export const knowledgeGenerationResultSchema = z
-	.strictObject({
-		changes: z.array(knowledgeChangeSchema).readonly(),
-		pendingRelations: z
-			.array(generatedPendingSemanticRelationSchema)
-			.readonly(),
-	})
-	.superRefine((result, context) => {
-		for (const [index, change] of result.changes.entries()) {
-			if (
-				change.kind !== "Contribute" ||
-				(change.aspect !== "transcription" &&
-					change.aspect !== "definition" &&
-					change.aspect !== "translations")
-			) {
-				context.addIssue({
-					code: "custom",
-					path: ["changes", index],
-					message:
-						"Generated Knowledge contains only base-aspect Contributions.",
-				});
-			}
-			if (change.aspect === "translations" && change.language !== "en") {
-				context.addIssue({
-					code: "custom",
-					path: ["changes", index, "language"],
-					message:
-						"German Knowledge generation contributes only English Translations.",
-				});
-			}
-		}
-	})
-	.transform((result) =>
-		deepFreeze(result),
-	) as ZodType<KnowledgeGenerationResult>;
+export const knowledgeGenerationResultSchema: z.ZodType<KnowledgeGenerationResult> =
+	z
+		.strictObject({
+			changes: z.array(knowledgeChangeSchema).readonly(),
+			pendingRelations: z
+				.array(generatedPendingSemanticRelationSchema)
+				.readonly(),
+		})
+		.superRefine((result, context) => {
+			for (const issue of knowledgeGenerationResultIssues(result))
+				context.addIssue(issue as never);
+		})
+		.transform(bindKnowledgeGenerationResult)
+		.transform(deepFreeze);
 
 export const segmentedSentenceIdSchema = z
 	.string()
 	.min(1)
-	.brand<"SegmentedSentenceId">();
+	.transform(bindSegmentedSentenceId);
 
 export const segmentKindSchema = z.enum(segmentKindValues);
 
@@ -125,15 +117,9 @@ export const segmentSchema = z
 		text: z.string().min(1),
 		kind: segmentKindSchema,
 	})
-	.superRefine((segment, context) => {
-		if (segment.kind === "Whitespace" && segment.text !== " ") {
-			context.addIssue({
-				code: "custom",
-				message:
-					"Whitespace Segments must contain exactly one ASCII space.",
-				path: ["text"],
-			});
-		}
+	.refine(isValidWhitespaceSegment, {
+		message: "Whitespace Segments must contain exactly one ASCII space.",
+		path: ["text"],
 	})
 	.readonly();
 
@@ -272,31 +258,8 @@ export const grammaticalInteractionSchema = z
 			.readonly(),
 	})
 	.superRefine((interaction, context) => {
-		if (
-			!interaction.memberSegmentIndices.includes(
-				interaction.clickedSegmentIndex,
-			)
-		) {
-			context.addIssue({
-				code: "custom",
-				message:
-					"Interaction membership must include the clicked Segment.",
-				path: ["memberSegmentIndices"],
-			});
-		}
-		if (
-			interaction.memberSegmentIndices.some(
-				(index, position, indices) =>
-					position > 0 && index <= (indices[position - 1] ?? -1),
-			)
-		) {
-			context.addIssue({
-				code: "custom",
-				message:
-					"Interaction membership must be ordered and contain no duplicates.",
-				path: ["memberSegmentIndices"],
-			});
-		}
+		for (const issue of grammaticalInteractionIssues(interaction))
+			context.addIssue(issue as never);
 	})
 	.readonly();
 
@@ -306,21 +269,10 @@ export const grammaticalInputSchema = z
 		clickedSegmentIndex: segmentIndexSchema,
 	})
 	.superRefine((input, context) => {
-		if (
-			input.sentence.segments[input.clickedSegmentIndex]?.kind !==
-			"ResolvableText"
-		) {
-			context.addIssue({
-				code: "custom",
-				message:
-					"The clicked index must reference a ResolvableText Segment.",
-				path: ["clickedSegmentIndex"],
-			});
-		}
+		for (const issue of grammaticalInputIssues(input))
+			context.addIssue(issue as never);
 	})
 	.readonly();
-
-const germanAttestationSchema = buildGermanAttestationSchema();
 
 export const resolvedGrammaticalResultSchema = z
 	.strictObject({
@@ -353,12 +305,6 @@ export const grammaticalResultSchema = z.union([
 	unresolvedGrammaticalResultSchema,
 ]);
 
-function deepFreeze<Value>(value: Value): Value {
-	if (typeof value !== "object" || value === null) return value;
-	for (const child of Object.values(value)) deepFreeze(child);
-	return Object.isFrozen(value) ? value : Object.freeze(value);
-}
-
 function segmentedSentenceSchemaFor<const L extends "de" | "he">(language: L) {
 	return z
 		.strictObject({
@@ -367,24 +313,4 @@ function segmentedSentenceSchemaFor<const L extends "de" | "he">(language: L) {
 			segments: segmentArraySchema,
 		})
 		.readonly();
-}
-
-function buildGermanAttestationSchema(): ZodType<Attestation<"de">> {
-	type AttestationSchemaGetter = () => ZodType<Attestation<"de">>;
-	const registry = schemasFor.de.entity.Attestation as unknown as Record<
-		string,
-		Record<string, Record<string, AttestationSchemaGetter>>
-	>;
-	const schemas = Object.values(registry).flatMap((families) =>
-		Object.values(families).flatMap((kinds) =>
-			Object.values(kinds).map((getSchema) => getSchema()),
-		),
-	);
-	const [first, ...rest] = schemas;
-	if (!first) {
-		throw new Error(
-			"Dumling exposes no German Attestation schemas for Grammatical Results.",
-		);
-	}
-	return z.union([first, ...rest]);
 }

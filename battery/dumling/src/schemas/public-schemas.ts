@@ -1,6 +1,12 @@
-import type { Reading, SupportedLanguage } from "dumling/types";
-import emojiRegex from "emoji-regex";
 import { type ZodType, z } from "zod";
+import type { Reading, SupportedLanguage } from "../types.js";
+import {
+	compactEmojiSequencePattern,
+	isCompactEmojiSequence,
+	normalizeNfc,
+	normalizeReadingLemma,
+	trimString,
+} from "../validation-semantics.js";
 import { deSubtree } from "./concrete-language/features/de/de-subtree.js";
 import { enSubtree } from "./concrete-language/features/en/en-subtree.js";
 import { heSubtree } from "./concrete-language/features/he/he-subtree.js";
@@ -64,54 +70,33 @@ function concreteLemmaSchemas(): [ZodType, ...ZodType[]] {
 	return [first, ...rest];
 }
 
-const MAX_EMOJI_GRAPHEMES = 4;
-const emojiPatternSource = emojiRegex().source;
-const compactEmojiSequencePattern = new RegExp(
-	`^(?:${emojiPatternSource}){1,${MAX_EMOJI_GRAPHEMES}}$`,
-);
-const singleEmojiPattern = new RegExp(`^(?:${emojiPatternSource})$`);
-const standaloneEmojiModifierPattern = /^\p{Emoji_Modifier}$/u;
-const graphemeSegmenter = new Intl.Segmenter(undefined, {
-	granularity: "grapheme",
-});
-
-function isCompactEmojiSequence(value: string): boolean {
-	const graphemes = [...graphemeSegmenter.segment(value)];
-	return (
-		graphemes.length <= MAX_EMOJI_GRAPHEMES &&
-		graphemes.every(
-			({ segment }) =>
-				singleEmojiPattern.test(segment) &&
-				!standaloneEmojiModifierPattern.test(segment),
-		)
-	);
-}
+/** Broad supported-language Lemma schema for Zod composition. */
+export const anyLemmaSchema = z.preprocess(
+	normalizeReadingLemma,
+	z.lazy(() => buildUnionSchema(concreteLemmaSchemas())),
+) as z.ZodType<Reading["lemma"]>;
 
 const normalizedEmojiDescriptionSchema = z
 	.string()
-	.trim()
+	.overwrite(trimString)
 	.min(1)
-	.overwrite((value) => value.normalize("NFC"))
+	.overwrite(normalizeNfc)
 	.regex(compactEmojiSequencePattern)
 	.refine(isCompactEmojiSequence);
 
-function normalizeLemmaCanonicalForm(value: unknown): unknown {
-	if (value === null || typeof value !== "object") return value;
-	const canonicalForm = Reflect.get(value, "canonicalForm");
-	if (typeof canonicalForm !== "string") return value;
-	return {
-		...value,
-		canonicalForm: canonicalForm.trim().normalize("NFC"),
-	};
+export function buildReadingSchemaFor<TLemma>(
+	lemmaSchema: z.ZodType<TLemma>,
+): z.ZodType<{ emojiDescription: string; lemma: TLemma }> {
+	return z.strictObject({
+		lemma: z.preprocess(normalizeReadingLemma, lemmaSchema),
+		emojiDescription: normalizedEmojiDescriptionSchema,
+	});
 }
 
 /** Canonical runtime schema for supported-language Reading values. */
 export const readingSchema = z.lazy(() =>
 	z.strictObject({
-		lemma: z.preprocess(
-			normalizeLemmaCanonicalForm,
-			buildUnionSchema(concreteLemmaSchemas()),
-		),
+		lemma: anyLemmaSchema,
 		emojiDescription: normalizedEmojiDescriptionSchema,
 	}),
 ) as z.ZodType<Reading>;

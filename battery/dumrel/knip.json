@@ -1,11 +1,12 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
+		"codegen/generate-validation-artifacts.ts",
 		"src/index.ts",
 		"src/schema.ts",
 		"src/settings.ts",
 		"src/types.ts",
 		"tests/**/*.ts"
 	],
-	"project": ["src/**/*.ts", "tests/**/*.ts"]
+	"project": ["codegen/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }

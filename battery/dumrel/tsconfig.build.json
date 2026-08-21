@@ -5,7 +5,16 @@
 		"emitDeclarationOnly": true,
 		"noEmit": false,
 		"outDir": "./dist",
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"paths": {
+			"common-utils": ["../common-utils/dist/index.d.ts"],
+			"dumrel": ["./src/index.ts"],
+			"dumrel/relations": ["./src/relations.ts"],
+			"dumrel/schema": ["./src/schema.ts"],
+			"dumrel/types": ["./src/types.ts"],
+			"dumrel/vocabulary": ["./src/vocabulary.ts"]
+		}
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/parsing/validation-route-proofs.ts"]
 }

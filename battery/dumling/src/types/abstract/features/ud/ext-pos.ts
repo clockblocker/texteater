@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const extPosValues = [
 	"ADJ",
 	"ADP",
@@ -14,5 +12,5 @@ const extPosValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/ExtPos.html
-export const ExtPos = z.enum(extPosValues);
-export type ExtPos = z.infer<typeof ExtPos>;
+export const ExtPos = extPosValues;
+export type ExtPos = (typeof ExtPos)[number];

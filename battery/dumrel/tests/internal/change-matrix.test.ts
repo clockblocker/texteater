@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
-import { applyKnowledgeChange, knowledgeChangeSchema } from "../../src";
+import { applyKnowledgeChange } from "../../src";
+import { knowledgeChangeSchema } from "../../src/schema";
 import type {
 	KnowledgeChange,
 	LexicalBreakdown,

@@ -8,10 +8,32 @@ import {
 	loadFrozenReview,
 	validateVerdict,
 } from "../../docs/prototypes/german-relation-human-gate/review";
+import {
+	type GermanKnowledgeGenerationRequest,
+	isEmptyGermanKnowledgeRequest,
+} from "../../src/knowledge-generation/de/schemas";
 import { stableJson } from "../../src/promptsmith/assembly";
+import { combinedGermanKnowledgeAcceptanceExperiment } from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluation-suite";
+import type {
+	RelationKindConfusion,
+	RelationLeafEvaluation,
+} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
 import { untouchedAcceptanceReservation } from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
 
 describe("German Relation Semantics human gate", () => {
+	test("keeps the frozen evaluation seam explicitly consumed", () => {
+		const emptyRequest = {} satisfies GermanKnowledgeGenerationRequest;
+		expect(isEmptyGermanKnowledgeRequest(emptyRequest)).toBe(true);
+		expect(
+			combinedGermanKnowledgeAcceptanceExperiment.evaluation.ids,
+		).toHaveLength(12);
+		function preserveFrozenEvaluationTypes(
+			_confusion: RelationKindConfusion,
+			_leaf: RelationLeafEvaluation,
+		): void {}
+		void preserveFrozenEvaluationTypes;
+	});
+
 	test("verifies and loads the exact frozen candidate", async () => {
 		const review = await loadFrozenReview();
 		expect(review.manifest.candidate.topology).toBe(

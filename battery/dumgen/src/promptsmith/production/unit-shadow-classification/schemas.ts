@@ -1,5 +1,5 @@
 import { supportedLanguages } from "dumling";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import type { SupportedLanguage } from "dumling/types";
 import { type ZodType, z } from "zod";
 
@@ -53,7 +53,7 @@ const allKinds = nonEmptyUnique(
 	"Lemma Kinds",
 );
 
-export function isSupportedUnitShadowClassificationRoute(
+function isSupportedUnitShadowClassificationRoute(
 	language: SupportedLanguage,
 	family: string,
 	kind: string,

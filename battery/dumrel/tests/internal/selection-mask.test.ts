@@ -3,9 +3,11 @@ import { describe, expect, test } from "bun:test";
 import {
 	DEFAULT_KNOWLEDGE_SETTINGS,
 	intersectKnowledgeRequestMask,
+} from "../../src";
+import {
 	knowledgeRequestMaskSchema,
 	knowledgeSettingsSchema,
-} from "../../src";
+} from "../../src/schema";
 import type { KnowledgeRequestMask, KnowledgeSettings } from "../../src/types";
 
 function expectDeepFrozen(value: unknown): void {

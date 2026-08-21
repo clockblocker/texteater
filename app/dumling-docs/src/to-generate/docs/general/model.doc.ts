@@ -102,10 +102,11 @@ if (!parsed.success) {
 }
 \`\`\`
 
-The schema entrypoint exposes concrete Zod schemas when a caller needs direct validator access:
+Route-specific Zod schema access is an expensive schema-authoring escape hatch,
+not the application-validation interface:
 
 \`\`\`ts
-schemasFor.de.entity.Attestation.Citation.Lexeme.NOUN().parse(value);
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Attestation.Citation.Lexeme.NOUN().parse(value);
 \`\`\`
 `,
 });

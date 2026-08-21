@@ -1,34 +1,47 @@
 import { supportedLanguages } from "dumling";
-import { readingSchema, schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
+import { readingSchema } from "dumling/schema";
 import { type ZodType, z } from "zod";
 
 import type {
-	DirectSemanticRelationGraphEdge,
-	KnowledgeChange,
-	KnowledgeRequestMask,
-	KnowledgeSettings,
-	LemmaReference,
 	LexemeUnitShadow,
-	LexicalBreakdown,
 	LexicalUnitShadow,
 	MorphemeReadingReference,
-	MorphologicalTree,
 	MorphologicalTreeNode,
 	MorphologicalTreeStructure,
-	NonEmptyStrings,
-	PendingSemanticRelation,
-	ReadingKnowledge,
-	ReadingReference,
-	SemanticRelationGraph,
-	SemanticRelationGraphReading,
-	SemanticRelations,
 	UnitShadow,
 } from "./types.js";
+import {
+	bindLemmaReference,
+	bindLexemeUnitShadow,
+	bindLexicalUnitShadow,
+	bindMorphemeReadingReference,
+	bindSupportedUnitShadow,
+	dumrelNormalizeNfc,
+	dumrelTrimString,
+	hasSemanticRelationSelection,
+	hasTranslationSelection,
+	isLexemeUnitShadow,
+	isLexicalUnitShadow,
+	isMorphemeReading,
+	normalizeLemmaCanonicalForm,
+	retainAtLeastTwo,
+	retainNonEmptyArray,
+	semanticRelationGraphIssues,
+} from "./validation-semantics.js";
 import {
 	directSemanticRelationValues,
 	semanticRelationValues,
 } from "./vocabulary.js";
 
+export {
+	/**
+	 * Schema-authoring identity hooks consumed by Dumgen's provider-schema and
+	 * runtime-prompt codegen. They intentionally live only on `dumrel/schema`.
+	 */
+	bindLexicalUnitShadow,
+	bindSupportedUnitShadow,
+} from "./validation-semantics.js";
 export {
 	directSemanticRelationValues,
 	semanticRelationValues,
@@ -36,9 +49,9 @@ export {
 
 const normalizedNonEmptyStringSchema = z
 	.string()
-	.trim()
+	.overwrite(dumrelTrimString)
 	.min(1)
-	.overwrite((value) => value.normalize("NFC"));
+	.overwrite(dumrelNormalizeNfc);
 
 export const semanticRelationSchema = z.enum(semanticRelationValues);
 export const directSemanticRelationSchema = z.enum(
@@ -67,14 +80,14 @@ const semanticRelationRequestSchema = z
 		meronym: z.null().optional(),
 		holonym: z.null().optional(),
 	})
-	.refine((relations) => Object.keys(relations).length > 0, {
+	.refine(hasSemanticRelationSelection, {
 		message:
 			"A Semantic Relation request must select at least one relation.",
 	});
 
 const translationRequestSchema = z
 	.strictObject({ en: z.null().optional() })
-	.refine((translations) => Object.keys(translations).length > 0, {
+	.refine(hasTranslationSelection, {
 		message: "A Translation request must select at least one language.",
 	});
 
@@ -86,7 +99,7 @@ export const knowledgeSettingsSchema = z.strictObject({
 	morphologicalTree: z.boolean(),
 	lexicalBreakdown: z.boolean(),
 	semanticRelations: semanticRelationSettingsSchema,
-}) as z.ZodType<KnowledgeSettings>;
+});
 
 /** Sparse recursive request mask whose selected leaves are null. */
 export const knowledgeRequestMaskSchema = z.strictObject({
@@ -96,27 +109,17 @@ export const knowledgeRequestMaskSchema = z.strictObject({
 	morphologicalTree: z.null().optional(),
 	lexicalBreakdown: z.null().optional(),
 	semanticRelations: semanticRelationRequestSchema.optional(),
-}) as z.ZodType<KnowledgeRequestMask>;
+});
 
 export const nonEmptyStringsSchema = z
 	.array(normalizedNonEmptyStringSchema)
-	.min(1) as unknown as z.ZodType<NonEmptyStrings>;
+	.min(1)
+	.transform(retainNonEmptyArray);
 
 /** @deprecated Import `readingSchema` from `dumling/schema`. */
-export const readingReferenceSchema: z.ZodType<ReadingReference> =
-	readingSchema;
+export const readingReferenceSchema = readingSchema;
 
 type LemmaSchemaRegistry = Record<string, Record<string, () => ZodType>>;
-
-function normalizeLemmaCanonicalForm(value: unknown): unknown {
-	if (value === null || typeof value !== "object") return value;
-	const canonicalForm = Reflect.get(value, "canonicalForm");
-	if (typeof canonicalForm !== "string") return value;
-	return {
-		...value,
-		canonicalForm: canonicalForm.trim().normalize("NFC"),
-	};
-}
 
 function concreteLemmaSchemas(): [ZodType, ...ZodType[]] {
 	const schemas: ZodType[] = [];
@@ -135,18 +138,19 @@ function concreteLemmaSchemas(): [ZodType, ...ZodType[]] {
 }
 
 /** Canonical runtime schema for supported-language Lemma relation targets. */
-export const lemmaReferenceSchema = z.preprocess(
-	normalizeLemmaCanonicalForm,
-	z.lazy(() => z.union(concreteLemmaSchemas())),
-) as z.ZodType<LemmaReference>;
+export const lemmaReferenceSchema = z
+	.preprocess(
+		normalizeLemmaCanonicalForm,
+		z.lazy(() => z.union(concreteLemmaSchemas())),
+	)
+	.transform(bindLemmaReference);
 
-export const morphemeReadingReferenceSchema = readingSchema.refine(
-	(reading) => reading.lemma.family === "Morpheme",
-	{
+export const morphemeReadingReferenceSchema = readingSchema
+	.refine(isMorphemeReading, {
 		path: ["lemma", "family"],
 		message: "A Morpheme Reading must use the Morpheme Family.",
-	},
-) as z.ZodType<MorphemeReadingReference>;
+	})
+	.transform(bindMorphemeReadingReference);
 
 const unitShadowObjectSchema = z
 	.strictObject({
@@ -174,33 +178,40 @@ const unitShadowObjectSchema = z
 		}
 	});
 
-export const unitShadowSchema = unitShadowObjectSchema as z.ZodType<UnitShadow>;
+export const unitShadowSchema: z.ZodType<UnitShadow> =
+	unitShadowObjectSchema.transform(bindSupportedUnitShadow);
 
-export const lexicalUnitShadowSchema = unitShadowObjectSchema.refine(
-	(shadow) => shadow.family === "Lexeme" || shadow.family === "Phraseme",
-	{
-		path: ["family"],
-		message: "A lexical Unit Shadow must be a Lexeme or Phraseme.",
-	},
-) as z.ZodType<LexicalUnitShadow>;
+export const lexicalUnitShadowSchema: z.ZodType<LexicalUnitShadow> =
+	unitShadowObjectSchema
+		.refine(isLexicalUnitShadow, {
+			path: ["family"],
+			message: "A lexical Unit Shadow must be a Lexeme or Phraseme.",
+		})
+		.transform(bindSupportedUnitShadow)
+		.transform(bindLexicalUnitShadow);
 
-export const lexemeUnitShadowSchema = unitShadowObjectSchema.refine(
-	(shadow) => shadow.family === "Lexeme",
-	{
-		path: ["family"],
-		message: "A Lexeme Unit Shadow must use the Lexeme Family.",
-	},
-) as z.ZodType<LexemeUnitShadow>;
+export const lexemeUnitShadowSchema: z.ZodType<LexemeUnitShadow> =
+	unitShadowObjectSchema
+		.refine(isLexemeUnitShadow, {
+			path: ["family"],
+			message: "A Lexeme Unit Shadow must use the Lexeme Family.",
+		})
+		.transform(bindSupportedUnitShadow)
+		.transform(bindLexemeUnitShadow);
 
-export const morphologicalTreeStructureSchema: z.ZodType<MorphologicalTreeStructure> =
-	z.lazy(() =>
-		z.strictObject({
-			nodeKind: z.literal("structure"),
-			children: z.array(morphologicalTreeNodeSchema).min(1),
-		}),
-	) as unknown as z.ZodType<MorphologicalTreeStructure>;
+type RecursiveMorphologicalTreeNode =
+	| { nodeKind: "morphemeReading"; reading: MorphemeReadingReference }
+	| { nodeKind: "unitShadow"; unitShadow: LexicalUnitShadow }
+	| RecursiveMorphologicalTreeStructure;
+export type RecursiveMorphologicalTreeStructure = {
+	nodeKind: "structure";
+	children: [
+		RecursiveMorphologicalTreeNode,
+		...RecursiveMorphologicalTreeNode[],
+	];
+};
 
-export const morphologicalTreeNodeSchema: z.ZodType<MorphologicalTreeNode> =
+export const morphologicalTreeNodeSchema: z.ZodType<RecursiveMorphologicalTreeNode> =
 	z.lazy(() =>
 		z.union([
 			z.strictObject({
@@ -215,29 +226,41 @@ export const morphologicalTreeNodeSchema: z.ZodType<MorphologicalTreeNode> =
 		]),
 	);
 
+export const morphologicalTreeStructureSchema: z.ZodType<RecursiveMorphologicalTreeStructure> =
+	z.lazy(() =>
+		z.strictObject({
+			nodeKind: z.literal("structure"),
+			children: z
+				.array(morphologicalTreeNodeSchema)
+				.min(1)
+				.transform(retainNonEmptyArray),
+		}),
+	);
+
 export const morphologicalTreeSchema = z.strictObject({
 	root: morphologicalTreeStructureSchema,
-}) as z.ZodType<MorphologicalTree>;
+});
 
 export const lexicalBreakdownSchema = z
 	.array(lexemeUnitShadowSchema)
-	.min(2) as unknown as z.ZodType<LexicalBreakdown>;
+	.min(2)
+	.transform(retainAtLeastTwo);
 
 export const semanticRelationsSchema = z.partialRecord(
 	directSemanticRelationSchema,
 	z.array(lemmaReferenceSchema),
-) as z.ZodType<SemanticRelations>;
+);
 
 export const directSemanticRelationGraphEdgeSchema = z.strictObject({
 	sourceReading: normalizedNonEmptyStringSchema,
 	relation: directSemanticRelationSchema,
 	targetLemma: normalizedNonEmptyStringSchema,
-}) as z.ZodType<DirectSemanticRelationGraphEdge>;
+});
 
 export const semanticRelationGraphReadingSchema = z.strictObject({
 	reading: normalizedNonEmptyStringSchema,
 	lemma: normalizedNonEmptyStringSchema,
-}) as z.ZodType<SemanticRelationGraphReading>;
+});
 
 export const semanticRelationGraphSchema = z
 	.strictObject({
@@ -245,37 +268,15 @@ export const semanticRelationGraphSchema = z
 		edges: z.array(directSemanticRelationGraphEdgeSchema),
 	})
 	.superRefine((graph, context) => {
-		const readingOwners = new Map<string, string>();
-		for (const [index, node] of graph.readings.entries()) {
-			const existing = readingOwners.get(node.reading);
-			if (existing !== undefined) {
-				context.addIssue({
-					code: "custom",
-					path: ["readings", index, "reading"],
-					message:
-						existing === node.lemma
-							? "Relation graph Reading identities must be unique."
-							: "A relation graph Reading cannot belong to two Lemmas.",
-				});
-			}
-			readingOwners.set(node.reading, node.lemma);
+		for (const issue of semanticRelationGraphIssues(graph)) {
+			context.addIssue(issue);
 		}
-		for (const [index, edge] of graph.edges.entries()) {
-			if (!readingOwners.has(edge.sourceReading)) {
-				context.addIssue({
-					code: "custom",
-					path: ["edges", index, "sourceReading"],
-					message:
-						"A relation edge source must be a declared Reading.",
-				});
-			}
-		}
-	}) as z.ZodType<SemanticRelationGraph>;
+	});
 
 export const pendingSemanticRelationSchema = z.strictObject({
 	relation: directSemanticRelationSchema,
 	target: unitShadowSchema,
-}) as z.ZodType<PendingSemanticRelation>;
+});
 
 const languageBucketsSchema = z.record(
 	normalizedNonEmptyStringSchema,
@@ -289,7 +290,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	morphologicalTree: morphologicalTreeSchema.optional(),
 	lexicalBreakdown: lexicalBreakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
-}) as z.ZodType<ReadingKnowledge>;
+});
 
 const bucketKinds = z.enum(["Contribute", "Correct"]);
 
@@ -352,4 +353,22 @@ export const knowledgeChangeSchema = z.union([
 		kind: z.literal("Retract"),
 		aspect: z.literal("lexicalBreakdown"),
 	}),
-]) as z.ZodType<KnowledgeChange>;
+]);
+
+type Assert<Value extends true> = Value;
+type _RecursiveNodeMatchesDomain = Assert<
+	RecursiveMorphologicalTreeNode extends MorphologicalTreeNode ? true : false
+>;
+type _DomainNodeMatchesRecursiveSchema = Assert<
+	MorphologicalTreeNode extends RecursiveMorphologicalTreeNode ? true : false
+>;
+type _RecursiveStructureMatchesDomain = Assert<
+	RecursiveMorphologicalTreeStructure extends MorphologicalTreeStructure
+		? true
+		: false
+>;
+type _DomainStructureMatchesRecursiveSchema = Assert<
+	MorphologicalTreeStructure extends RecursiveMorphologicalTreeStructure
+		? true
+		: false
+>;

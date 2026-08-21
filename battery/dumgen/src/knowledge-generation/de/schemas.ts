@@ -1,16 +1,20 @@
+import { createHash } from "node:crypto";
 import type { LexicalUnitShadow } from "dumrel";
-import { lexicalUnitShadowSchema } from "dumrel";
+import { lexicalUnitShadowSchema } from "dumrel/schema";
 import { type ZodType, z } from "zod";
 
 import { knowledgeGenerationInputSchema } from "../../schemas/public-schemas";
+import { requestableRelationSchema } from "../relations";
 import type {
-	KnowledgeGenerationInput,
-	KnowledgeGenerationRequest,
-} from "../contracts";
-import {
-	type RequestableRelation,
-	requestableRelationSchema,
-} from "../relations";
+	GermanKnowledgeAnalysis,
+	GermanKnowledgeGenerationInput,
+} from "./runtime-schema";
+
+export type {
+	GermanKnowledgeAnalysis,
+	GermanKnowledgeGenerationInput,
+	GermanKnowledgeGenerationRequest,
+} from "./runtime-schema";
 
 const normalizedCandidateSchema = z
 	.string()
@@ -26,23 +30,67 @@ const germanLexicalUnitShadowSchema = lexicalUnitShadowSchema.refine(
 	},
 ) as ZodType<LexicalUnitShadow<"de">>;
 
-export type GermanKnowledgeGenerationRequest = KnowledgeGenerationRequest;
+type SchemaInternals = ZodType & {
+	readonly _zod: {
+		readonly def: {
+			readonly in?: ZodType;
+			readonly out?: SchemaInternals;
+			readonly transform?: (value: unknown) => unknown;
+			readonly type: string;
+		};
+	};
+};
 
-export type GermanKnowledgeGenerationInput = KnowledgeGenerationInput<"de">;
+function stripExactDumrelIdentityBinding<Output>(
+	schema: ZodType<Output>,
+	binding: Readonly<{
+		fingerprint: string;
+		name: string;
+		version: 1;
+	}>,
+): ZodType<Output> {
+	const definition = (schema as SchemaInternals)._zod.def;
+	const transform = definition.out?._zod.def.transform;
+	if (
+		definition.type !== "pipe" ||
+		definition.out?._zod.def.type !== "transform" ||
+		definition.in === undefined ||
+		transform === undefined ||
+		transform.name !== binding.name ||
+		binding.version !== 1 ||
+		createHash("sha256").update(String(transform)).digest("hex") !==
+			binding.fingerprint
+	)
+		throw new TypeError(
+			`Dumrel provider identity binding drifted: ${binding.name}.`,
+		);
+	return definition.in as ZodType<Output>;
+}
 
-export type GermanKnowledgeAnalysis = Readonly<{
-	readonly transcription?: string | null;
-	readonly definition?: string | null;
-	readonly translations?: Readonly<{ readonly en?: string | null }>;
-	readonly semanticRelations?: Readonly<
-		Partial<
-			Record<
-				RequestableRelation,
-				readonly LexicalUnitShadow<"de">[] | null
-			>
-		>
-	>;
-}>;
+const providerLexicalUnitShadowBaseSchema = stripExactDumrelIdentityBinding(
+	stripExactDumrelIdentityBinding(lexicalUnitShadowSchema, {
+		fingerprint:
+			"3e049fe1f7f12c89a24fd88e7b823c3f5068464e358da183dd9d8e8b9050c7f5",
+		name: "bindLexicalUnitShadow",
+		version: 1,
+	}),
+	{
+		fingerprint:
+			"6db10bbb770dfa5af2b3fef9209496c3906d01c53a63db424747f1498643bf37",
+		name: "bindSupportedUnitShadow",
+		version: 1,
+	},
+);
+
+const providerLexicalUnitShadowSchema =
+	providerLexicalUnitShadowBaseSchema.refine(
+		(shadow) => shadow.language === "de",
+		{
+			path: ["language"],
+			message:
+				"German Knowledge relations must target German Unit Shadows.",
+		},
+	);
 
 export const germanKnowledgeGenerationInputSchema =
 	knowledgeGenerationInputSchema;
@@ -88,7 +136,7 @@ export function modelOutputSchemaForGermanKnowledge(
 		for (const relation of requestableRelationSchema.options) {
 			if (relation in request.semanticRelations) {
 				relationShape[relation] = z
-					.array(germanLexicalUnitShadowSchema)
+					.array(providerLexicalUnitShadowSchema)
 					.min(1)
 					.max(5)
 					.nullable();
@@ -108,8 +156,4 @@ export function assertGermanKnowledgeAnalysisMirrorsRequest(
 	modelOutputSchemaForGermanKnowledge(input).parse(rawAnalysis);
 }
 
-export function isEmptyGermanKnowledgeRequest(
-	request: GermanKnowledgeGenerationRequest,
-): boolean {
-	return Object.keys(request).length === 0;
-}
+export { isEmptyGermanKnowledgeRequest } from "./runtime-schema";

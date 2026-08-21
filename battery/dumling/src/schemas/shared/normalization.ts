@@ -1,8 +1,5 @@
 import { z } from "zod";
-
-function normalizeNfc(value: string) {
-	return value.normalize("NFC");
-}
+import { normalizeNfc } from "../../validation-semantics.js";
 
 export function normalizedStringSchema() {
 	return z.string().min(1).overwrite(normalizeNfc);

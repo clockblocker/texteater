@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
 import { dumling, readingFingerprint } from "../../src";
-import { readingSchema, schemasFor } from "../../src/schema";
 import type { Attestation, Lemma, Reading, Surface } from "../../src/types";
 
 // README_BLOCK:core-lemma:start
@@ -56,13 +55,11 @@ void seeAttestation;
 
 // README_BLOCK:quickstart-de:start
 import {
+	ParsingError as PackageParsingError,
 	dumling as packageDumling,
+	parseAsReading as packageParseAsReading,
 	readingFingerprint as packageReadingFingerprint,
 } from "dumling";
-import {
-	readingSchema as packageReadingSchema,
-	schemasFor as packageSchemas,
-} from "dumling/schema";
 import type {
 	Attestation as PackageAttestation,
 	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
@@ -89,11 +86,17 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 		spelling: "Canonical",
 		surfaceFeatures: null,
 	});
-const reading = packageReadingSchema.parse({
+const reading = packageParseAsReading({
 	lemma,
 	emojiDescription: "\u{1F30A}",
-}) as PackageReading<"de">;
-const readingIdentity = packageReadingFingerprint(reading);
+}, "de", "Lexeme", "NOUN");
+if (reading instanceof PackageParsingError) {
+	throw reading;
+}
+reading satisfies PackageReading<"de", "Lexeme", "NOUN">;
+const readingIdentity = packageReadingFingerprint(
+	reading as PackageReading<"de">,
+);
 const attestation: PackageAttestation<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toAttestation(surface, {
 		members: [{ attested: "See", orthography: "Standard" }],
@@ -128,7 +131,4 @@ gender satisfies "Masc";
 
 decoded.data.surfaceIdentity.normalizedSurface satisfies string;
 readingIdentity satisfies string;
-packageSchemas.de.entity.Attestation.Citation.Lexeme.NOUN().parse(parsed.data);
 // README_BLOCK:quickstart-de:end
-
-void schemasFor.de.entity.Lemma.Lexeme.VERB();

@@ -9,7 +9,10 @@ import {
 } from "dumdict";
 import type { Dumgen } from "dumgen";
 import { readingFingerprint } from "dumling";
-import { pendingSemanticRelationSchema } from "dumrel";
+import {
+	type PendingSemanticRelation,
+	parseAsPendingSemanticRelation,
+} from "dumrel";
 
 import {
 	applyDumdictPlanInTransaction,
@@ -27,6 +30,7 @@ import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 } from "../server/linguisticOrchestration";
+import { unwrapOperationalParse } from "../server/operationalParsing";
 
 type Row = Record<string, unknown> & { _id: string };
 
@@ -272,7 +276,9 @@ function initialSeed(): Record<string, readonly Row[]> {
 }
 
 function pendingProposalKey(input: unknown): string {
-	const pending = pendingSemanticRelationSchema.parse(input);
+	const pending = unwrapOperationalParse<PendingSemanticRelation>(
+		parseAsPendingSemanticRelation(input),
+	);
 	return JSON.stringify([
 		pending.relation,
 		pending.target.language,

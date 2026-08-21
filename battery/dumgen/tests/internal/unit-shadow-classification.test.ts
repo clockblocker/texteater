@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { supportedLanguages } from "dumling";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { zodTextFormat } from "openai/helpers/zod";
 
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";

@@ -103,6 +103,22 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 	expect(storageSource).not.toContain("zodOutputToConvex");
 });
 
+test("operational application modules use package-owned lightweight parsers", async () => {
+	const operationalSources = await Promise.all(
+		[
+			"../convex/modules/notes/projections.ts",
+			"../convex/modules/notes/relations.ts",
+			"../convex/orchestration.ts",
+			"../server/linguisticOrchestration.ts",
+		].map((path) => Bun.file(new URL(path, import.meta.url)).text()),
+	);
+	const operationalSource = operationalSources.join("\n");
+
+	expect(operationalSource).not.toMatch(
+		/from ["'](?:dumdict|dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
+	);
+});
+
 test("Dumdict's Convex envelope stays compact", () => {
 	expect(
 		JSON.stringify(dumdictPlannedChangeValidator.json).length,

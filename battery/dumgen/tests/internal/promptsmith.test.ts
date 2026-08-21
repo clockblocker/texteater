@@ -26,7 +26,7 @@ import {
 	deNounModelInflectionSurfaceSchema,
 	deNounModelLemmaSchema,
 } from "../../src/schema/de-noun-codecs";
-import { normalizedMembersSchema } from "../../src/schema/normalized-surface-projection";
+import { normalizedMembersSchema } from "../../src/schema/normalized-members-schema";
 
 describe("Prompt Assembly", () => {
 	test("renders the stable batch-only Intake contract", () => {

@@ -2,7 +2,7 @@ import {
 	lexemeUnitShadowSchema,
 	lexicalUnitShadowSchema,
 	unitShadowSchema,
-} from "dumrel";
+} from "dumrel/schema";
 import { z } from "zod";
 
 import type { PromptInputSchema, PromptOutputSchema } from "../../assembly";

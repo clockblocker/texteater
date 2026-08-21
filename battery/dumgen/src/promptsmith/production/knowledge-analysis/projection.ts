@@ -12,7 +12,7 @@ import {
 	morphemeReadingReferenceSchema,
 	morphologicalTreeSchema,
 	pendingSemanticRelationSchema,
-} from "dumrel";
+} from "dumrel/schema";
 import type { output } from "zod";
 
 import {

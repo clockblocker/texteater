@@ -20,7 +20,8 @@ This package ships working runtime surfaces for `de`, `en`, and `he`.
 | ---------------- | ----------------------------------------------------------------------------------------------- |
 | `dumling`        | Root runtime API, language helpers, and the stable `readingFingerprint` identity operation      |
 | `dumling/types`  | Public DTOs, feature helpers, descriptors, and API/result/error types                           |
-| `dumling/schema` | Concrete entity schema registry plus the canonical `readingSchema`                             |
+| `dumling/schema` | Broad Zod composition primitives: `abstractSchemas`, `anyLemmaSchema`, and `readingSchema`     |
+| `dumling/dangerously-heavy-schema-tree` | Route-specific Zod trees; importing costs roughly 100 MiB max RSS                    |
 
 ## Runtime API
 
@@ -91,7 +92,17 @@ Minimal end-to-end usage:
 
 <!-- README_BLOCK:quickstart-de -->
 
-`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. `readingSchema` is the canonical supported-language Reading schema. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
+`dumling/schema` is deliberately broad: it supports Zod composition without advertising route-specific validation precision. Application validation belongs at the lightweight `parseAsLemma`, `parseAsSurface`, `parseAsAttestation`, and `parseAsReading` interfaces.
+
+The supported route-specific trees remain available only as an explicit danger-zone escape hatch for schema-authoring integrations that genuinely require an exact leaf:
+
+```ts
+import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling/dangerously-heavy-schema-tree";
+
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
+```
+
+Importing that entrypoint adds roughly 100 MiB max RSS. Do not use it as an application validator or import it through a package root.
 
 ## Concepts / Search Terms
 

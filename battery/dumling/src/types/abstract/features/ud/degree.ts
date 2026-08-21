@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const degreeValues = [
 	"Abs", // absolute superlative
 	"Aug", // augmentative
@@ -11,5 +9,5 @@ const degreeValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Degree.html
-export const Degree = z.enum(degreeValues);
-export type Degree = z.infer<typeof Degree>;
+export const Degree = degreeValues;
+export type Degree = (typeof Degree)[number];

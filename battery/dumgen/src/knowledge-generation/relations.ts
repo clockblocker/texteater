@@ -1,10 +1,10 @@
-import { semanticRelationSchema } from "dumrel";
-import type { z } from "zod";
+import { z } from "zod";
+import {
+	type RequestableRelation,
+	requestableRelationValues,
+} from "../vocabulary";
 
 /** Semantic Relation kinds that a model may generate directly. */
-export const requestableRelationSchema = semanticRelationSchema.exclude([
-	"hyponym",
-	"meronym",
-]);
+export const requestableRelationSchema = z.enum(requestableRelationValues);
 
-export type RequestableRelation = z.infer<typeof requestableRelationSchema>;
+export type { RequestableRelation };

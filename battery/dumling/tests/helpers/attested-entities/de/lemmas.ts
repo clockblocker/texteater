@@ -39,20 +39,6 @@ export const germanHausLemma = {
 	kind: "NOUN",
 } satisfies Lemma<"de", "Lexeme", "NOUN">;
 
-// Attestation: "Wir [gehen] nach Hause."
-export const germanGehenLemma = {
-	canonicalForm: "gehen",
-	coreFeatures: {
-		verbType: null,
-		lexicallyReflexive: null,
-		hasSepPrefix: null,
-		hasGovPrep: null,
-	},
-	language: "de",
-	family: "Lexeme",
-	kind: "VERB",
-} satisfies Lemma<"de", "Lexeme", "VERB">;
-
 // Attestation: "In Berlin ... betreibt die [BVG] die U-Bahn Berlin ..."
 export const germanBVGLemma = {
 	canonicalForm: "BVG",

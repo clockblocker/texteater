@@ -1,6 +1,7 @@
 import type { Reading as DumlingReading } from "dumling/types";
 import type { z } from "zod/v4";
 import type * as Dumdict from "../../src";
+import type * as DumdictSchema from "../../src/public-schema";
 
 declare const canonicalReading: DumlingReading<"en">;
 canonicalReading satisfies Dumdict.Reading<"en">;
@@ -32,7 +33,7 @@ plan.changes.push();
 // @ts-expect-error Hosts cannot alter a planned change after validation.
 plan.changes[0]?.preconditions.push();
 
-declare const germanSchemas: Dumdict.DumdictSchemasFor<"de">;
+declare const germanSchemas: DumdictSchema.DumdictSchemasFor<"de">;
 type Equal<Left, Right> =
 	(<Value>() => Value extends Left ? 1 : 2) extends <
 		Value,
@@ -96,7 +97,7 @@ type _PlannedChangeComesFromSchema = Expect<
 type _CommitResultComesFromSchema = Expect<
 	Equal<
 		Dumdict.CommitChangesResult,
-		z.output<typeof Dumdict.commitChangesResultSchema>
+		z.output<typeof DumdictSchema.commitChangesResultSchema>
 	>
 >;
 type ParsedCommitRequest = SchemaOutput<"commitChangesRequestSchema">;
@@ -117,12 +118,12 @@ type _PlanComesFromSchema = Expect<
 type _ConflictCodeComesFromSchema = Expect<
 	Equal<
 		Dumdict.CommitConflictCode,
-		z.output<typeof Dumdict.commitConflictCodeSchema>
+		z.output<typeof DumdictSchema.commitConflictCodeSchema>
 	>
 >;
 type _AggregateTracksEverySupportedLanguage = Expect<
 	Equal<
-		z.output<typeof Dumdict.lemmaRecordSchema>["lemma"]["language"],
+		z.output<typeof DumdictSchema.lemmaRecordSchema>["lemma"]["language"],
 		Dumdict.SupportedLanguage
 	>
 >;

@@ -1,4 +1,3 @@
-import type { z } from "zod";
 import { DiscourseFormulaRole } from "./custom/discourse-formula-role.js";
 import { GovernedCase } from "./custom/governed-case.js";
 import { HasGovPrep } from "./custom/governed-preposition.js";
@@ -45,7 +44,7 @@ import { VerbType } from "./ud/verb-type.js";
 import { Voice } from "./ud/voice.js";
 
 type FeatureValueSet<T> = T | readonly [T, ...T[]];
-type SchemaOutput<TSchema extends z.ZodType> = z.output<TSchema>;
+export type AbstractFeatureAtomDefinition = readonly string[] | null;
 
 export const abstractFeatureCatalog = {
 	abbr: Abbr,
@@ -97,9 +96,10 @@ export const abstractFeatureCatalog = {
 } as const;
 
 type AbstractFeatureAtoms = {
-	[TName in keyof typeof abstractFeatureCatalog]: SchemaOutput<
-		(typeof abstractFeatureCatalog)[TName]
-	>;
+	[TName in keyof typeof abstractFeatureCatalog]: (typeof abstractFeatureCatalog)[TName] extends readonly (infer Value extends
+		string)[]
+		? Value
+		: string;
 };
 
 export type AbstractCoreFeatures = {

@@ -15,8 +15,12 @@
 			"import": "./dist/index.js"
 		},
 		"./schema": {
-			"types": "./dist/schema.d.ts",
-			"import": "./dist/schema.js"
+			"types": "./dist/public-schema.d.ts",
+			"import": "./dist/public-schema.js"
+		},
+		"./dangerously-heavy-schema-tree": {
+			"types": "./dist/dangerously-heavy-schema-tree.d.ts",
+			"import": "./dist/dangerously-heavy-schema-tree.js"
 		},
 		"./runtime": {
 			"types": "./dist/runtime.d.ts",
@@ -38,10 +42,12 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/runtime.ts src/relations.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/runtime.ts src/relations.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --alias:dumling/id=../dumling/src/id.ts",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
+		"generate:validation": "bun run codegen/generate-validation-artifacts.ts",
+		"generate:validation:check": "bun run codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
@@ -52,8 +58,10 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
+		"common-utils": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumling": "workspace:^",
+		"emoji-regex": "^10.6.0",
 		"zod": "^4.4.0"
 	},
 	"devDependencies": {

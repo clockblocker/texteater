@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const moodValues = [
 	"Adm", // admirative
 	"Cnd", // conditional
@@ -18,5 +16,5 @@ const moodValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Mood.html
-export const Mood = z.enum(moodValues);
-export type Mood = z.infer<typeof Mood>;
+export const Mood = moodValues;
+export type Mood = (typeof Mood)[number];

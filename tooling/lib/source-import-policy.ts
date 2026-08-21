@@ -8,6 +8,7 @@ import {
 	relative,
 	resolve,
 } from "node:path";
+import { parseSync, Visitor } from "oxc-parser";
 import { stringRecord, type Workspace } from "./workspaces";
 
 export interface ImportPolicyIssue {
@@ -45,11 +46,108 @@ function importSpecifiers(contents: string, file: string): string[] {
 		extname(file) === ".astro"
 			? (contents.match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? "")
 			: contents;
-	const loader =
-		file.endsWith(".tsx") || file.endsWith(".jsx") ? "tsx" : "ts";
-	return new Bun.Transpiler({ loader })
-		.scanImports(script)
-		.map(({ path }) => path);
+	const specifiers: string[] = [];
+	const addLiteral = (node: unknown): void => {
+		if (
+			node &&
+			typeof node === "object" &&
+			"value" in node &&
+			typeof node.value === "string"
+		)
+			specifiers.push(node.value);
+	};
+	const parsed = parseSync(file, script, {
+		lang:
+			file.endsWith(".tsx") ||
+			file.endsWith(".jsx") ||
+			file.endsWith(".astro")
+				? "tsx"
+				: "ts",
+		sourceType: "unambiguous",
+	});
+	new Visitor({
+		CallExpression(node) {
+			if (
+				node.callee.type === "Identifier" &&
+				node.callee.name === "require"
+			)
+				addLiteral(node.arguments[0]);
+		},
+		ExportAllDeclaration(node) {
+			addLiteral(node.source);
+		},
+		ExportNamedDeclaration(node) {
+			addLiteral(node.source);
+		},
+		ImportDeclaration(node) {
+			addLiteral(node.source);
+		},
+		ImportExpression(node) {
+			addLiteral(node.source);
+		},
+		TSImportType(node) {
+			addLiteral(node.source);
+		},
+		TSExternalModuleReference(node) {
+			addLiteral(node.expression);
+		},
+	}).visit(parsed.program);
+	return specifiers;
+}
+
+const dumSchemaAuthoringSubpaths = new Set([
+	"dangerously-heavy-schema-tree",
+	"model-authoring",
+	"schema",
+]);
+const dumPackages = new Set(["dumdict", "dumgen", "dumling", "dumrel"]);
+
+function isDumSchemaAuthoringSpecifier(specifier: string): boolean {
+	const [packageName, subpath, ...rest] = specifier.split("/");
+	return (
+		dumPackages.has(packageName ?? "") &&
+		rest.length === 0 &&
+		dumSchemaAuthoringSubpaths.has(subpath ?? "")
+	);
+}
+
+function isExplicitAuthoringSource(
+	workspace: Workspace,
+	file: string,
+	specifier: string,
+): boolean {
+	const path = relative(workspace.dir, file).replaceAll("\\", "/");
+	const segments = path.split("/");
+	const topLevel = segments[0];
+	if (
+		workspace.kind === "app" &&
+		(topLevel === "test" || topLevel === "tests")
+	) {
+		return (
+			specifier.endsWith("/dangerously-heavy-schema-tree") ||
+			specifier.endsWith("/model-authoring")
+		);
+	}
+	if (path.startsWith("src/to-generate/docs/")) return true;
+	if (
+		workspace.kind === "battery" &&
+		["codegen", "docs", "generate-readme", "test", "tests"].includes(
+			topLevel ?? "",
+		)
+	) {
+		return true;
+	}
+	if (workspace.kind !== "battery") return false;
+	return (
+		segments.some(
+			(segment) => segment === "schema" || segment === "schemas",
+		) ||
+		/(?:^|\/)(?:dangerously-heavy-schema-tree|model-authoring|public-schema|schema|schemas)\.[cm]?[jt]sx?$/u.test(
+			path,
+		) ||
+		path.startsWith("src/promptsmith/") ||
+		path.startsWith("src/catalog/laboratory/")
+	);
 }
 
 function workspaceForPath(
@@ -169,7 +267,19 @@ export async function validateSourceImports(options: {
 				}
 
 				const target = importedWorkspace(specifier, options.workspaces);
-				if (!target || target.dir === workspace.dir) continue;
+				if (!target) continue;
+				if (
+					isDumSchemaAuthoringSpecifier(specifier) &&
+					!isExplicitAuthoringSource(workspace, file, specifier)
+				) {
+					issues.push({
+						file: relative(options.repositoryRoot, file),
+						message:
+							"operational source cannot import schema-authoring surfaces",
+						specifier,
+					});
+				}
+				if (target.dir === workspace.dir) continue;
 				graph.get(workspace.relativePath)?.add(target.relativePath);
 				const targetName = target.manifest.name as string;
 				if (workspace.kind === "battery" && target.kind === "app") {

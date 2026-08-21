@@ -5,7 +5,9 @@ const document = defineGeneratedDocPage({
 	order: 110,
 	title: "German",
 	body: `
-German is available at \`dumling.de\`, \`getLanguageApi("de")\`, and \`schemasFor.de\`.
+German is available operationally at \`dumling.de\` and \`getLanguageApi("de")\`.
+The route-specific Zod tree is the roughly-100-MiB danger-zone
+\`dangerouslyHeavySchemasForAbout100MiBRss.de\`.
 
 ## Public Classification Tree
 
@@ -119,13 +121,9 @@ const umZuAttestation = dumling.de.create.attestation({
 ## Schema Access
 
 \`\`\`ts
-schemasFor.de.entity.Lemma.Lexeme.NOUN();
-schemasFor.de.entity.Lemma.Lexeme.SCONJ();
-schemasFor.de.entity.Lemma.Construction.Fusion();
-schemasFor.de.entity.Surface.Inflection.Lexeme.NOUN();
-schemasFor.de.entity.Attestation.Inflection.Lexeme.NOUN();
-schemasFor.de.entity.Attestation.Citation.Lexeme.SCONJ();
-schemasFor.de.entity.Attestation.Citation.Construction.Fusion();
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.SCONJ();
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Construction.Fusion();
 \`\`\`
 `,
 });

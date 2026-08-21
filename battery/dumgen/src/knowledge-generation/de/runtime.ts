@@ -1,14 +1,17 @@
 import { DumgenError } from "../../generator/generator-error";
 import {
+	parseAsKnowledgeGenerationInput,
+	parseAsKnowledgeGenerationResult,
+	unwrapDumgenParse,
+} from "../../parsing/lightweight-parsers";
+import {
 	EMPTY_GENERATED_KNOWLEDGE_UPDATE,
 	type GeneratedKnowledgeUpdate,
-	generatedKnowledgeUpdateSchema,
 } from "./projection";
 import {
 	type GermanKnowledgeGenerationInput,
-	germanKnowledgeGenerationInputSchema,
 	isEmptyGermanKnowledgeRequest,
-} from "./schemas";
+} from "./runtime-schema";
 
 export type CombinedGermanKnowledgeGenerator = (
 	input: GermanKnowledgeGenerationInput,
@@ -23,7 +26,9 @@ export function createGermanKnowledgeGeneration(
 	): Promise<GeneratedKnowledgeUpdate> {
 		let input: GermanKnowledgeGenerationInput;
 		try {
-			input = germanKnowledgeGenerationInputSchema.parse(rawInput);
+			input = unwrapDumgenParse(
+				parseAsKnowledgeGenerationInput(rawInput, "de"),
+			);
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-input",
@@ -38,7 +43,9 @@ export function createGermanKnowledgeGeneration(
 
 		const generated = await generateCombined(input);
 		try {
-			return generatedKnowledgeUpdateSchema.parse(generated);
+			return unwrapDumgenParse(
+				parseAsKnowledgeGenerationResult(generated),
+			);
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-output",

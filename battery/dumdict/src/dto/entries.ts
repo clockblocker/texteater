@@ -1,1 +1,1 @@
-export type { LemmaRecord, ReadingEntry, SurfaceEntry } from "../schema";
+export type { LemmaRecord, ReadingEntry, SurfaceEntry } from "../domain-types";

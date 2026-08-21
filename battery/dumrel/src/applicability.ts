@@ -2,10 +2,12 @@ import type { SupportedLanguage } from "dumling/types";
 import { DE_REL_MAP } from "./applicability/de.js";
 import type { RelMap } from "./applicability/types.js";
 import {
-	knowledgeRequestMaskSchema,
-	knowledgeSettingsSchema,
-	readingReferenceSchema,
-} from "./schema.js";
+	ParsingError,
+	parseAsKnowledgeRequestMask,
+	parseAsKnowledgeSettings,
+	parseReadingReferenceForApplicability,
+	unwrapDumrelParse,
+} from "./parsing/lightweight-parsers.js";
 import type {
 	KnowledgeRequestMask,
 	KnowledgeSettings,
@@ -28,7 +30,7 @@ type RuntimeRelMap = Record<string, Record<string, KnowledgeRequestMask>>;
 export function defaultKnowledgeRequestMask(
 	reading: ReadingReference,
 ): KnowledgeRequestMask | undefined {
-	const parsed = readingReferenceSchema.parse(reading);
+	const parsed = parseReadingReference(reading);
 	const language = parsed.lemma.language;
 	const configured = relationMaps[language];
 	if (configured === undefined) return undefined;
@@ -40,15 +42,19 @@ export function defaultKnowledgeRequestMask(
 			`No Knowledge applicability for ${language}/${parsed.lemma.family}/${parsed.lemma.kind}.`,
 		);
 	}
-	return knowledgeRequestMaskSchema.parse(mask);
+	return unwrapDumrelParse(parseAsKnowledgeRequestMask(mask));
 }
 
 export function intersectKnowledgeRequestMask(
 	applicable: KnowledgeRequestMask,
 	settings: KnowledgeSettings,
 ): KnowledgeRequestMask {
-	const parsedMask = knowledgeRequestMaskSchema.parse(applicable);
-	const parsedSettings = knowledgeSettingsSchema.parse(settings);
+	const parsedMask = unwrapDumrelParse(
+		parseAsKnowledgeRequestMask(applicable),
+	);
+	const parsedSettings = unwrapDumrelParse(
+		parseAsKnowledgeSettings(settings),
+	);
 	const result: {
 		transcription?: null;
 		definition?: null;
@@ -98,5 +104,11 @@ export function intersectKnowledgeRequestMask(
 	}
 	if (Object.keys(relations).length > 0) result.semanticRelations = relations;
 
-	return knowledgeRequestMaskSchema.parse(result);
+	return unwrapDumrelParse(parseAsKnowledgeRequestMask(result));
+}
+
+function parseReadingReference(reading: ReadingReference): ReadingReference {
+	const parsed = parseReadingReferenceForApplicability(reading);
+	if (parsed instanceof ParsingError) throw parsed;
+	return parsed;
 }

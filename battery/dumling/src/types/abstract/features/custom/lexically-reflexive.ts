@@ -1,4 +1,2 @@
-import { z } from "zod";
-
-export const LexicallyReflexive = z.literal("Yes");
-export type LexicallyReflexive = z.infer<typeof LexicallyReflexive>;
+export const LexicallyReflexive = ["Yes"] as const;
+export type LexicallyReflexive = (typeof LexicallyReflexive)[number];

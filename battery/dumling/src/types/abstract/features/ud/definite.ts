@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const definiteValues = [
 	"Com", // complex
 	"Cons", // construct state; reduced definiteness
@@ -9,5 +7,5 @@ const definiteValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Definite.html
-export const Definite = z.enum(definiteValues);
-export type Definite = z.infer<typeof Definite>;
+export const Definite = definiteValues;
+export type Definite = (typeof Definite)[number];

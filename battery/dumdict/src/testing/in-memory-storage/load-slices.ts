@@ -1,8 +1,8 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { SupportedLanguage } from "dumling/types";
 import { sameLemma } from "../../core/identity";
 import { derivePendingEntryId } from "../../core/pending/identity";
-import { makeSurfaceId } from "../../dumling";
+import { makeSurfaceId } from "../../dumling-id";
 import type {
 	CleanupRelationsSlice,
 	FindStoredReadingsStorageRequest,

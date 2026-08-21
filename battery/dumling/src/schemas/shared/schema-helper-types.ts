@@ -1,3 +1,5 @@
+import type { z } from "zod";
+import type { Descriptor } from "../../types/descriptor.js";
 import type {
 	Attestation,
 	Lemma,
@@ -7,9 +9,7 @@ import type {
 	SupportedLanguage,
 	Surface,
 	SurfaceKindFor,
-} from "dumling/types";
-import type { z } from "zod";
-import type { Descriptor } from "../../types/descriptor.js";
+} from "../../types.js";
 
 type SchemaGetter<T> = () => z.ZodType<T>;
 

@@ -1,6 +1,5 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { Lemma, SupportedLanguage } from "dumling/types";
-import { pendingSemanticRelationSchema } from "dumrel/schema";
 import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
 import type {
 	LemmaRecord,
@@ -8,7 +7,11 @@ import type {
 	ReadingEntry,
 	SurfaceEntry,
 } from "../../dto";
-import { makeSurfaceId } from "../../dumling";
+import { makeSurfaceId } from "../../dumling-id";
+import {
+	parsePendingSemanticRelationForDumdictRuntime,
+	unwrapDumdictParse,
+} from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";
 import { lemmaFingerprint, sameLemma, sameReading } from "../identity";
@@ -63,8 +66,10 @@ function makePendingRecords<L extends SupportedLanguage>(
 	return uniqueBy(
 		(request.draft.relations ?? []).flatMap((relation) => {
 			if (relation.target.kind !== "pending") return [];
-			const pending = pendingSemanticRelationSchema.parse(
-				relation.target.pending,
+			const pending = unwrapDumdictParse(
+				parsePendingSemanticRelationForDumdictRuntime(
+					relation.target.pending,
+				),
 			) as unknown as PendingSemanticRelationRecord<L>["pending"];
 			const targetPendingId = derivePendingEntryId(
 				pending.target as Parameters<typeof derivePendingEntryId<L>>[0],
@@ -91,8 +96,11 @@ function relationLanguagesMatch<L extends SupportedLanguage>(
 	return (request.draft.relations ?? []).every((relation) =>
 		relation.target.kind === "existing"
 			? relation.target.lemma.language === language
-			: pendingSemanticRelationSchema.parse(relation.target.pending)
-					.target.language === language,
+			: unwrapDumdictParse(
+					parsePendingSemanticRelationForDumdictRuntime(
+						relation.target.pending,
+					),
+				).target.language === language,
 	);
 }
 
