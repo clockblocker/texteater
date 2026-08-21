@@ -315,6 +315,15 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"Dumgen representative injected runtime must expose resolution.",
 		);
 	},
+	"dumgen.read-runtime-prompt-data"(publicModule) {
+		const payload = publicModule.encodedRuntimePromptData;
+		assert(
+			typeof payload === "string" &&
+				payload.length > 100 &&
+				/^[A-Za-z0-9+/]+={0,2}$/u.test(payload),
+			"Dumgen runtime prompt data must be a compressed Base64 payload.",
+		);
+	},
 	"dumgen.read-vocabulary"(publicModule) {
 		assert(
 			Array.isArray(publicModule.segmentKindValues) &&

@@ -5,6 +5,7 @@ import {
 	createDumgenImplementation,
 	type DumgenSection1Trace,
 } from "./dumgen/implementation";
+import { installEncodedRuntimePromptData } from "./generated/runtime-prompt-artifacts.js";
 import {
 	buildGeneratorCatalog,
 	type ModelExchange,
@@ -17,6 +18,8 @@ import type {
 
 export type DumgenRuntimeOptions = {
 	readonly sdk: AiSdk;
+	/** Generated compressed prompt bytes for bundlers without package sidecars. */
+	readonly runtimePromptData?: string;
 	readonly generateKnowledge: (
 		language: KnowledgeGenerationLanguage,
 		input: KnowledgeGenerationInput<"de">,
@@ -27,6 +30,9 @@ export type DumgenRuntimeOptions = {
 
 /** Builds Dumgen around an injected provider without loading a default SDK. */
 export function buildDumgenRuntime(options: DumgenRuntimeOptions): Dumgen {
+	if (options.runtimePromptData !== undefined) {
+		installEncodedRuntimePromptData(options.runtimePromptData);
+	}
 	const generators = buildGeneratorCatalog(
 		RUNTIME_PROMPT_CATALOG,
 		options.sdk,

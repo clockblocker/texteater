@@ -3,6 +3,7 @@
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
 import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
+import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
 import type { Reading } from "dumling/types";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
@@ -54,7 +55,10 @@ function getKnowledgeDumgen(): Promise<KnowledgeDumgen> {
 		import("dumgen/knowledge-runtime"),
 		import("dumgen/openai-fetch"),
 	]).then(([{ buildKnowledgeDumgenRuntime }, { buildOpenAiFetchSdk }]) =>
-		buildKnowledgeDumgenRuntime({ sdk: buildOpenAiFetchSdk() }),
+		buildKnowledgeDumgenRuntime({
+			runtimePromptData: encodedRuntimePromptData,
+			sdk: buildOpenAiFetchSdk(),
+		}),
 	);
 	return dumgenPromise;
 }

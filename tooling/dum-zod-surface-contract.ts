@@ -95,5 +95,6 @@ export const DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES = [
 	"dumgen/knowledge-runtime",
 	"dumgen/openai-fetch",
 	"dumgen/runtime",
+	"dumgen/runtime-prompt-data",
 	"dumgen/vocabulary",
 ] as const;

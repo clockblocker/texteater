@@ -265,6 +265,17 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		classification: "operational",
 		operation: {
 			description:
+				"Read the generated compressed prompt payload for sidecar-free runtime bundlers.",
+			id: "dumgen.read-runtime-prompt-data",
+		},
+		rationale:
+			"Compressed generated runtime data injected only by bundlers that cannot deploy package sidecars.",
+		specifier: "dumgen/runtime-prompt-data",
+	},
+	{
+		classification: "operational",
+		operation: {
+			description:
 				"Read and verify the public Dumgen runtime vocabulary.",
 			id: "dumgen.read-vocabulary",
 		},

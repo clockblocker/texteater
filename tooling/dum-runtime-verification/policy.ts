@@ -235,6 +235,7 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	"dumgen/knowledge-runtime": strict,
 	"dumgen/openai-fetch": strict,
 	"dumgen/runtime": strict,
+	"dumgen/runtime-prompt-data": strict,
 	"dumgen/vocabulary": strict,
 } as const satisfies Record<string, RssPolicy>;
 

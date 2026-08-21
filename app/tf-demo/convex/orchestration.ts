@@ -18,6 +18,7 @@ import {
 	type GrammaticalResult,
 	parseAsGrammaticalResult,
 } from "dumgen";
+import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
 import {
 	type KnowledgeChange,
 	type PendingSemanticRelation,
@@ -82,6 +83,7 @@ function getDumgen(): Promise<Dumgen> {
 		import("dumgen/runtime"),
 	]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
 		buildDumgenRuntime({
+			runtimePromptData: encodedRuntimePromptData,
 			sdk: buildOpenAiFetchSdk(),
 			async generateKnowledge() {
 				throw new Error(

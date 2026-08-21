@@ -42,6 +42,10 @@
 			"types": "./dist/runtime.d.ts",
 			"import": "./dist/runtime.js"
 		},
+		"./runtime-prompt-data": {
+			"types": "./dist/runtime-prompt-data.d.ts",
+			"import": "./dist/runtime-prompt-data.js"
+		},
 		"./vocabulary": {
 			"types": "./dist/vocabulary.d.ts",
 			"import": "./dist/vocabulary.js"
@@ -58,7 +62,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/knowledge.ts src/knowledge-runtime.ts src/model-authoring.ts src/openai-fetch.ts src/projection.ts src/runtime.ts src/schema.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace && cp src/generated/.runtime-prompt-artifacts.data dist/",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/knowledge.ts src/knowledge-runtime.ts src/model-authoring.ts src/openai-fetch.ts src/projection.ts src/runtime.ts src/runtime-prompt-data.ts src/schema.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace && cp src/generated/.runtime-prompt-artifacts.data dist/",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
