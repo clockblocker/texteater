@@ -81,7 +81,9 @@ export function reduceShadowControls(
 
 export function ShadowNoteView({ target }: { target: ShadowNoteTarget }) {
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target }),
+		...convexQuery(api.shadowNotes.get, {
+			shadowId: target.shadowId,
+		}),
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending) return <ShadowNoteSkeleton />;
@@ -159,8 +161,8 @@ function ShadowNoteContainer({
 		setIsLoading(true);
 		setError(null);
 		try {
-			const nextNote = await convex.query(api.presentation.getNote, {
-				target: note.target,
+			const nextNote = await convex.query(api.shadowNotes.get, {
+				shadowId: note.target.shadowId,
 				contextCursor: cursor,
 			});
 			if (nextNote?.kind !== "ShadowNote") {

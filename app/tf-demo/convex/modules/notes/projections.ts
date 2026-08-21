@@ -2,11 +2,7 @@ import { readingSchema } from "dumling/schema";
 import type { Reading } from "dumling/types";
 import { type ReadingKnowledge, readingKnowledgeSchema } from "dumrel";
 
-const unitReadingFamilies = new Set(["Lexeme", "Phraseme", "Morpheme"]);
-
-export function isUnitReadingFamily(family: string): boolean {
-	return unitReadingFamilies.has(family);
-}
+export { isUnitReadingFamily } from "./unitReadingFamilies";
 
 /** Reconstructs and validates the foundational Reading value at the database seam. */
 export function projectReadingValue(

@@ -28,7 +28,10 @@ type RouteNotePaginationState = {
 
 export function RouteNoteView({ target }: { target: RouteNoteTarget }) {
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target }),
+		...convexQuery(api.routeNotes.get, {
+			routeKind: target.routeKind,
+			id: target.id,
+		}),
 		gcTime: 10_000,
 	});
 	if (noteQuery.isPending) return <RouteNoteSkeleton />;
@@ -86,8 +89,9 @@ function PaginatedRouteNote({
 		setError(null);
 		const requestedRevision = revision.current;
 		try {
-			const next = await convex.query(api.presentation.getNote, {
-				target: note.target,
+			const next = await convex.query(api.routeNotes.get, {
+				routeKind: note.target.routeKind,
+				id: note.target.id,
 				contextCursor: cursor,
 			});
 			if (

@@ -10,7 +10,7 @@ import {
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "../../model/validators";
-import { isUnitReadingFamily } from "./projections";
+import { isUnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const ROUTE_CONNECTION_PAGE_SIZE = 25;

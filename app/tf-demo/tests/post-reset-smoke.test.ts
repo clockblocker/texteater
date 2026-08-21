@@ -15,7 +15,7 @@ import {
 	loadDumdictNewNoteContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
-import { loadRelationProjections } from "../convex/presentation";
+import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {

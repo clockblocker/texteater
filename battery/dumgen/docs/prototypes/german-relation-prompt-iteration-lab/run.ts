@@ -10,7 +10,7 @@ import {
 	rm,
 	writeFile,
 } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 
@@ -125,6 +125,57 @@ export async function runPaidLab(args: {
 	}
 }
 
+export async function rebuildRetainedReport(artifactPathInput: string) {
+	const artifactPath = resolve(artifactPathInput);
+	if (
+		!artifactPath.startsWith(`${RUNS_DIRECTORY}/`) ||
+		!artifactPath.endsWith("/results.json")
+	)
+		throw new Error(
+			"Report artifact must be one retained prompt-iteration result.",
+		);
+	const retained: unknown = JSON.parse(await readFile(artifactPath, "utf8"));
+	if (typeof retained !== "object" || retained === null)
+		throw new Error("Report artifact is not an object.");
+	const record = retained as Record<string, unknown>;
+	if (!Array.isArray(record.attempts))
+		throw new Error("Report artifact has no retained attempts.");
+	const attempts = record.attempts as Attempt[];
+	const actualSpendNanoUsd = sum(
+		attempts,
+		({ actualCostNanoUsd }) => actualCostNanoUsd,
+	);
+	const retainedSpend = await retainedIssueSpendNanoUsd();
+	const stoppedRevisions = new Map(
+		Object.entries(
+			typeof record.stoppedRevisions === "object" &&
+				record.stoppedRevisions !== null
+				? (record.stoppedRevisions as Record<string, string>)
+				: {},
+		),
+	);
+	const report = buildFinalReport({
+		plan: createLabPlan(),
+		attempts,
+		stoppedRevisions,
+		actualSpendNanoUsd,
+		historicalSpendNanoUsd: Math.max(0, retainedSpend - actualSpendNanoUsd),
+	});
+	const state =
+		typeof record.state === "object" && record.state !== null
+			? {
+					...(record.state as Record<string, unknown>),
+					status: "complete",
+					lastAction:
+						"Retained semantic report rebuilt without provider calls.",
+					report,
+				}
+			: { status: "complete", report };
+	const updated = { ...record, state, report };
+	await retainArtifact(artifactPath, updated);
+	return Object.freeze({ artifactPath, report });
+}
+
 async function executePaidLab(context: {
 	args: {
 		readonly authorizedMaximumSpendUsd: string;
@@ -180,11 +231,10 @@ async function executePaidLab(context: {
 		state.lastAction = `Completed ${call.id}`;
 
 		if (isLastCallOfRepetition(plan, call)) {
-			const harmfulCount = harmfulCountForRepetition(
+			const harmfulCount = cumulativeHarmfulCountForRevision(
 				plan,
 				attempts,
 				call.revisionId,
-				call.repetition,
 			);
 			if (harmfulCount >= 2) {
 				stoppedRevisions.set(
@@ -320,10 +370,37 @@ function buildFinalReport(args: {
 				(attempt) => attempt.revisionId === revision.id,
 			);
 			const runs = evaluationRunsFor(args.plan, attempts, revision.id);
+			const harmfulByRepetition = runs.map((run) => ({
+				repetition: repetitionForRun(run.runId),
+				harmfulFalsePositiveCount: harmfulCountForRun(run),
+			}));
+			let cumulativeHarmful = 0;
+			const stopRuleTriggeredAfterRepetition =
+				harmfulByRepetition.find((item) => {
+					cumulativeHarmful += item.harmfulFalsePositiveCount;
+					return cumulativeHarmful >= 2;
+				})?.repetition ?? null;
+			const decisionRuns =
+				stopRuleTriggeredAfterRepetition === null
+					? runs
+					: runs.filter(
+							(run) =>
+								repetitionForRun(run.runId) <=
+								stopRuleTriggeredAfterRepetition,
+						);
+			const postStopAttemptCount =
+				stopRuleTriggeredAfterRepetition === null
+					? 0
+					: attempts.filter(
+							({ repetition }) =>
+								repetition > stopRuleTriggeredAfterRepetition,
+						).length;
 			const semanticReport =
-				runs.length === 0
+				decisionRuns.length === 0
 					? null
-					: createGermanRelationEvaluationReport({ runs });
+					: createGermanRelationEvaluationReport({
+							runs: decisionRuns,
+						});
 			const misses = runs.flatMap((run) =>
 				run.cases.flatMap((item) => {
 					const analysis = analyzeCombinedGermanKnowledgeCase(item);
@@ -333,6 +410,11 @@ function buildFinalReport(args: {
 								{
 									runId: run.runId,
 									caseId: item.caseId,
+									decisionEligible:
+										stopRuleTriggeredAfterRepetition ===
+											null ||
+										repetitionForRun(run.runId) <=
+											stopRuleTriggeredAfterRepetition,
 									classifications: classifyMiss(analysis),
 									analysis,
 								},
@@ -342,6 +424,19 @@ function buildFinalReport(args: {
 			const errors = attempts.filter(
 				(attempt) => attempt.error !== undefined,
 			).length;
+			const executionErrors = attempts.flatMap((attempt) =>
+				attempt.error === undefined
+					? []
+					: [
+							{
+								callId: attempt.callId,
+								caseId: attempt.caseId,
+								repetition: attempt.repetition,
+								classifications: ["execution-error"],
+								error: attempt.error,
+							},
+						],
+			);
 			const refusals = attempts.filter(({ refusal }) => refusal).length;
 			const incomplete = attempts.filter(
 				({ incompleteReason }) => incompleteReason !== null,
@@ -359,11 +454,21 @@ function buildFinalReport(args: {
 					promptFingerprint: revision.promptFingerprint,
 					plannedRepetitions: revision.repetitions,
 					completedRepetitions: runs.length,
+					decisionRepetitions: decisionRuns.length,
 					callCount: attempts.length,
 					errorCount: errors,
+					executionErrors,
 					refusalCount: refusals,
 					incompleteCount: incomplete,
-					stopReason: args.stoppedRevisions.get(revision.id) ?? null,
+					harmfulByRepetition,
+					stopRuleTriggeredAfterRepetition,
+					postStopAttemptCount,
+					stopEnforcementPass: postStopAttemptCount === 0,
+					stopReason:
+						args.stoppedRevisions.get(revision.id) ??
+						(stopRuleTriggeredAfterRepetition === null
+							? null
+							: "repeated-harmful-false-positives"),
 					latencyMs: {
 						median: percentile(latencies, 0.5),
 						p95: percentile(latencies, 0.95),
@@ -405,6 +510,7 @@ function buildFinalReport(args: {
 						errors === 0 &&
 						refusals === 0 &&
 						incomplete === 0 &&
+						postStopAttemptCount === 0 &&
 						semanticReport?.overallGatePass === true,
 				},
 			];
@@ -431,42 +537,49 @@ function evaluationRunsFor(
 	const repetitionNumbers = [
 		...new Set(attempts.map(({ repetition }) => repetition)),
 	].sort((left, right) => left - right);
-	return repetitionNumbers.flatMap((repetition) => {
+	const completedRepetitions = repetitionNumbers.filter(
+		(repetition) =>
+			attempts.filter((attempt) => attempt.repetition === repetition)
+				.length === plan.developmentCaseIds.length,
+	);
+	const evaluatedCaseIds = plan.developmentCaseIds.filter((caseId) =>
+		completedRepetitions.every((repetition) =>
+			attempts.some(
+				(attempt) =>
+					attempt.repetition === repetition &&
+					attempt.caseId === caseId &&
+					attempt.output !== undefined,
+			),
+		),
+	);
+	if (evaluatedCaseIds.length === 0) return [];
+	return completedRepetitions.map((repetition) => {
 		const repetitionAttempts = attempts.filter(
 			(attempt) => attempt.repetition === repetition,
 		);
-		if (
-			repetitionAttempts.length !== plan.developmentCaseIds.length ||
-			repetitionAttempts.some(({ output }) => output === undefined)
-		)
-			return [];
 		const byCaseId = new Map(
 			repetitionAttempts.map((attempt) => [attempt.caseId, attempt]),
 		);
-		return [
-			{
-				runId: `${revisionId}/repetition-${repetition}`,
-				cases: plan.developmentCaseIds.map((caseId) => {
-					const call = plan.calls.find(
-						(item) =>
-							item.revisionId === revisionId &&
-							item.repetition === repetition &&
-							item.caseId === caseId,
-					);
-					const attempt = byCaseId.get(caseId);
-					if (call === undefined || attempt?.output === undefined)
-						throw new Error(
-							`Incomplete evaluation case ${caseId}.`,
-						);
-					return {
-						caseId,
-						input: call.evaluationInput,
-						idealOutput: call.idealOutput,
-						output: relationEvaluationOutput(attempt.output),
-					};
-				}),
-			},
-		];
+		return {
+			runId: `${revisionId}/repetition-${repetition}`,
+			cases: evaluatedCaseIds.map((caseId) => {
+				const call = plan.calls.find(
+					(item) =>
+						item.revisionId === revisionId &&
+						item.repetition === repetition &&
+						item.caseId === caseId,
+				);
+				const attempt = byCaseId.get(caseId);
+				if (call === undefined || attempt?.output === undefined)
+					throw new Error(`Incomplete evaluation case ${caseId}.`);
+				return {
+					caseId,
+					input: call.evaluationInput,
+					idealOutput: call.idealOutput,
+					output: relationEvaluationOutput(attempt.output),
+				};
+			}),
+		};
 	});
 }
 
@@ -495,37 +608,37 @@ function classifyMiss(
 	return [...classifications].sort();
 }
 
-function harmfulCountForRepetition(
+function cumulativeHarmfulCountForRevision(
 	plan: LabPlan,
 	attempts: readonly Attempt[],
 	revisionId: string,
-	repetition: number,
 ): number {
 	const runs = evaluationRunsFor(
 		plan,
-		attempts.filter(
-			(attempt) =>
-				attempt.revisionId === revisionId &&
-				attempt.repetition === repetition,
-		),
+		attempts.filter((attempt) => attempt.revisionId === revisionId),
 		revisionId,
 	);
-	return runs.reduce(
-		(total, run) =>
-			total +
-			run.cases.reduce((caseTotal, item) => {
-				const analysis = analyzeCombinedGermanKnowledgeCase(item);
-				return (
-					caseTotal +
-					Object.values(analysis.relations).reduce(
-						(relationTotal, relation) =>
-							relationTotal + relation.harmfulFalsePositiveCount,
-						0,
-					)
-				);
-			}, 0),
-		0,
-	);
+	return sum(runs, harmfulCountForRun);
+}
+
+function harmfulCountForRun(run: GermanRelationEvaluationRun): number {
+	return run.cases.reduce((caseTotal, item) => {
+		const analysis = analyzeCombinedGermanKnowledgeCase(item);
+		return (
+			caseTotal +
+			Object.values(analysis.relations).reduce(
+				(relationTotal, relation) =>
+					relationTotal + relation.harmfulFalsePositiveCount,
+				0,
+			)
+		);
+	}, 0);
+}
+
+function repetitionForRun(runId: string): number {
+	const match = /\/repetition-(\d+)$/u.exec(runId);
+	if (match === null) throw new Error(`Run ID has no repetition: ${runId}.`);
+	return Number(match[1]);
 }
 
 function isLastCallOfRepetition(plan: LabPlan, call: LabCallPlan): boolean {
@@ -770,8 +883,16 @@ async function runCli(args: readonly string[]): Promise<void> {
 		console.log(`Retained ${result.artifactPath}`);
 		return;
 	}
+	if (command === "report" && option?.startsWith("--artifact=")) {
+		const result = await rebuildRetainedReport(
+			option.slice("--artifact=".length),
+		);
+		console.log(JSON.stringify(result.report, null, 2));
+		console.log(`Updated ${result.artifactPath}`);
+		return;
+	}
 	throw new Error(
-		"Usage: run.ts [preflight | run --authorize-max-spend-usd=<exact-ceiling>]",
+		"Usage: run.ts [preflight | run --authorize-max-spend-usd=<exact-ceiling> | report --artifact=<results.json>]",
 	);
 }
 

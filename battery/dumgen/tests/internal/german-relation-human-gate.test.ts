@@ -15,11 +15,16 @@ describe("German Relation Semantics human gate", () => {
 	test("verifies and loads the exact frozen candidate", async () => {
 		const review = await loadFrozenReview();
 		expect(review.manifest.candidate.topology).toBe(
-			"current-combined-narrow-groups",
+			"combined-atomic-prompt-iterations",
 		);
 		expect(review.candidateReport.gatePass).toBe(false);
-		expect(review.state).toBe("awaiting-reservation-approval");
+		expect(review.state).toBe("development-gate-failed");
 		expect(review.acceptanceResult).toBeNull();
+		expect(review.acceptancePreflight).toMatchObject({
+			blocked: true,
+			callCount: 0,
+			maximumSpendUsd: "0.000000000",
+		});
 		expect(stableJson(review)).not.toContain(
 			"relation-acceptance-syn-01-streichholz",
 		);
@@ -100,12 +105,17 @@ describe("German Relation Semantics human gate", () => {
 		).toBe(true);
 	});
 
-	test("keeps Antonym's isolated signal visible without promoting it", async () => {
+	test("keeps every final-revision kind disabled and retains the stop regression", async () => {
 		const review = await loadFrozenReview();
-		expect(review.antonymIsolatedSignal?.gate.pass).toBe(true);
 		expect(
-			review.candidateReport.semanticReport.byRelation.antonym?.gate.pass,
-		).toBe(false);
+			Object.values(
+				review.candidateReport.semanticReport.byRelation,
+			).every((item) => item?.gate.pass === false),
+		).toBe(true);
+		expect(review.candidateReport.stopRuleTriggeredAfterRepetition).toBe(2);
+		expect(review.candidateReport.postStopAttemptCount).toBe(50);
+		expect(review.candidateReport.stopEnforcementPass).toBe(false);
+		expect(review.productionOutcome.qualifiedKinds).toEqual([]);
 	});
 
 	test("rejects a human verdict before untouched acceptance exists", async () => {
@@ -121,6 +131,6 @@ describe("German Relation Semantics human gate", () => {
 				},
 				{},
 			),
-		).toThrow("untouched acceptance must exist first");
+		).toThrow("development must clear every proposed per-kind threshold");
 	});
 });

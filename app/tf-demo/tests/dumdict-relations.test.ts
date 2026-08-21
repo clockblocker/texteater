@@ -20,8 +20,8 @@ import {
 	loadDumdictNewNoteContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
+import { loadRelationProjections } from "../convex/modules/notes/relations";
 import { createConvexDumdictStorage } from "../convex/orchestration";
-import { loadRelationProjections } from "../convex/presentation";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,

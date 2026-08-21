@@ -34,7 +34,12 @@ export function TextView({ target }: { target: TextTarget }) {
 	);
 
 	const textQuery = useQuery({
-		...convexQuery(api.presentation.getTextView, { target }),
+		...convexQuery(api.textViews.get, {
+			textId: target.textId,
+			...(target.focusAttestationId
+				? { focusAttestationId: target.focusAttestationId }
+				: {}),
+		}),
 		gcTime: 10_000,
 	});
 	const selectSegmentMutation = useConvexMutation(

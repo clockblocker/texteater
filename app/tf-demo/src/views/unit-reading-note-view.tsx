@@ -41,7 +41,9 @@ export function UnitReadingNoteView({
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target }),
+		...convexQuery(api.readingNotes.get, {
+			readingId: target.readingId,
+		}),
 		gcTime: 10_000,
 	});
 	const settingsQuery = useQuery({
@@ -117,8 +119,8 @@ function ReadingNoteContainer({
 		setSourceContextError(null);
 		const requestedRevision = paginationRevision.current;
 		try {
-			const nextNote = await convex.query(api.presentation.getNote, {
-				target: note.target,
+			const nextNote = await convex.query(api.readingNotes.get, {
+				readingId: note.target.readingId,
 				contextCursor: currentPagination.cursor,
 			});
 			if (

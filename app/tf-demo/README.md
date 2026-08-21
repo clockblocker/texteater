@@ -20,10 +20,11 @@ data locally and writes the generated `VITE_CONVEX_URL` to `.env.local` before
 starting Vite. Later runs select the same local deployment, so data survives
 process restarts.
 
-The demo launcher gives the local Convex isolate a 128 MB heap. Several legacy
-Reading-presentation modules initialize the full Dumling validation graph and
-exceed Convex's local backend default while functions are loaded. This setting
-is local-only; it does not change a cloud deployment's function limits.
+The demo launcher gives the local Convex isolate a 128 MB heap. The Reading Note
+relation read model initializes the full Dumling validation graph and exceeds
+Convex's local backend default while that function is loaded. Other Text and
+Note queries are isolated from that dependency graph. This setting is local-only;
+it does not change a cloud deployment's function limits.
 
 After resolving a Segment, the workspace exposes the persisted Text, Sentence,
 Segment, grammatical Attestation and Surface, Lemma features, and Reading as a

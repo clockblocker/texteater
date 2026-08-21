@@ -26,13 +26,12 @@ const stagePosition = {
 export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 	const navigate = useNavigate();
 	const noteQuery = useQuery({
-		...convexQuery(api.presentation.getNote, { target }),
+		...convexQuery(api.resolutionSessions.getResolutionNote, {
+			requestId: target.requestId,
+		}),
 		gcTime: 10_000,
 	});
-	const note: ResolutionNote | null =
-		noteQuery.data?.kind === "ResolutionNote"
-			? (noteQuery.data as ResolutionNote)
-			: null;
+	const note: ResolutionNote | null = noteQuery.data ?? null;
 
 	useEffect(() => {
 		const command = completionNavigation(note);
