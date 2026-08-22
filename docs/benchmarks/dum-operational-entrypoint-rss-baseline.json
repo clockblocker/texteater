@@ -1,7 +1,7 @@
 {
 	"baseline": {
-		"medianBytes": 31178752,
-		"samplesBytes": [31244288, 31227904, 31178752, 30998528, 31162368]
+		"medianBytes": 31195136,
+		"samplesBytes": [31178752, 31145984, 31195136, 31326208, 31244288]
 	},
 	"contract": {
 		"baseline": "empty imported Bun module",
@@ -20,21 +20,21 @@
 			"rationale": "Package root exposes Dumling runtime operations.",
 			"specifier": "dumling",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 3686400,
-				"deltaMiB": 3.516,
-				"medianBytes": 34865152,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 3833856,
+				"deltaMiB": 3.656,
+				"medianBytes": 35028992,
 				"samplesBytes": [
-					34865152, 34832384, 34881536, 34865152, 34848768
+					35241984, 35028992, 35061760, 35028992, 35028992
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4161536,
-				"deltaMiB": 3.969,
-				"medianBytes": 35340288,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4341760,
+				"deltaMiB": 4.141,
+				"medianBytes": 35536896,
 				"samplesBytes": [
-					35389440, 35323904, 35340288, 35405824, 35291136
+					35536896, 35569664, 35471360, 35536896, 35536896
 				]
 			},
 			"reachability": {
@@ -68,21 +68,21 @@
 			"rationale": "Lean canonical ID codecs operate without a schema or parser-artifact import.",
 			"specifier": "dumling/id",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1933312,
-				"deltaMiB": 1.844,
-				"medianBytes": 33112064,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1998848,
+				"deltaMiB": 1.906,
+				"medianBytes": 33193984,
 				"samplesBytes": [
-					33112064, 33079296, 33095680, 33112064, 33177600
+					33259520, 33161216, 33226752, 33112064, 33193984
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 3260416,
-				"deltaMiB": 3.109,
-				"medianBytes": 34439168,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 3276800,
+				"deltaMiB": 3.125,
+				"medianBytes": 34471936,
 				"samplesBytes": [
-					34406400, 34390016, 34455552, 34471936, 34439168
+					34422784, 34471936, 34471936, 34521088, 34439168
 				]
 			},
 			"reachability": {
@@ -101,21 +101,21 @@
 			"rationale": "Runtime Reading identity operation.",
 			"specifier": "dumling/reading",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 868352,
-				"deltaMiB": 0.828,
-				"medianBytes": 32047104,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 950272,
+				"deltaMiB": 0.906,
+				"medianBytes": 32145408,
 				"samplesBytes": [
-					32047104, 32194560, 32079872, 32047104, 31997952
+					32178176, 32178176, 32112640, 32030720, 32145408
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1327104,
-				"deltaMiB": 1.266,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1310720,
+				"deltaMiB": 1.25,
 				"medianBytes": 32505856,
 				"samplesBytes": [
-					32587776, 32505856, 32620544, 32456704, 32489472
+					32505856, 32505856, 32538624, 32522240, 32423936
 				]
 			},
 			"reachability": {
@@ -134,21 +134,21 @@
 			"rationale": "Runtime constants consumed without a schema import.",
 			"specifier": "dumling/vocabulary",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 770048,
-				"deltaMiB": 0.734,
-				"medianBytes": 31948800,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 737280,
+				"deltaMiB": 0.703,
+				"medianBytes": 31932416,
 				"samplesBytes": [
-					31981568, 31932416, 31948800, 31932416, 31997952
+					31899648, 32063488, 31965184, 31916032, 31932416
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
+				"baselineMedianBytes": 31195136,
 				"deltaBytes": 819200,
 				"deltaMiB": 0.781,
-				"medianBytes": 31997952,
+				"medianBytes": 32014336,
 				"samplesBytes": [
-					31932416, 31981568, 32030720, 31997952, 32014336
+					32030720, 31981568, 32014336, 31981568, 32030720
 				]
 			},
 			"reachability": {
@@ -156,6 +156,39 @@
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": ["dumling/vocabulary"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Read and verify the fixed German determiner catalog.",
+				"id": "dumling.read-fixed-catalog"
+			},
+			"rationale": "Runtime fixed-member catalog and lookup surface.",
+			"specifier": "dumling/fixed",
+			"importOnly": {
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4112384,
+				"deltaMiB": 3.922,
+				"medianBytes": 35307520,
+				"samplesBytes": [
+					35323904, 35340288, 35291136, 35307520, 35192832
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4096000,
+				"deltaMiB": 3.906,
+				"medianBytes": 35291136,
+				"samplesBytes": [
+					35323904, 35340288, 35291136, 35258368, 35258368
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling/fixed"]
 			}
 		},
 		{
@@ -172,21 +205,21 @@
 			"rationale": "Package root exposes Knowledge and relation operations.",
 			"specifier": "dumrel",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4096000,
-				"deltaMiB": 3.906,
-				"medianBytes": 35274752,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4046848,
+				"deltaMiB": 3.859,
+				"medianBytes": 35241984,
 				"samplesBytes": [
-					35274752, 35258368, 35258368, 35291136, 35291136
+					35258368, 35241984, 35209216, 35241984, 35209216
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 5095424,
-				"deltaMiB": 4.859,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 5079040,
+				"deltaMiB": 4.844,
 				"medianBytes": 36274176,
 				"samplesBytes": [
-					35880960, 36274176, 36356096, 36323328, 36208640
+					36356096, 36241408, 36241408, 36274176, 36274176
 				]
 			},
 			"reachability": {
@@ -210,21 +243,21 @@
 			"rationale": "Lean relation-algebra runtime surface.",
 			"specifier": "dumrel/relations",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1392640,
-				"deltaMiB": 1.328,
-				"medianBytes": 32571392,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1409024,
+				"deltaMiB": 1.344,
+				"medianBytes": 32604160,
 				"samplesBytes": [
-					32571392, 32571392, 32555008, 32735232, 32538624
+					32604160, 32538624, 32620544, 32489472, 32604160
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1622016,
-				"deltaMiB": 1.547,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1605632,
+				"deltaMiB": 1.531,
 				"medianBytes": 32800768,
 				"samplesBytes": [
-					32784384, 32817152, 32751616, 32800768, 32866304
+					32751616, 32833536, 32849920, 32800768, 32784384
 				]
 			},
 			"reachability": {
@@ -248,21 +281,21 @@
 			"rationale": "Runtime settings data consumed without a schema import.",
 			"specifier": "dumrel/settings",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1032192,
-				"deltaMiB": 0.984,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1015808,
+				"deltaMiB": 0.969,
 				"medianBytes": 32210944,
 				"samplesBytes": [
-					32243712, 32276480, 32210944, 32096256, 32178176
+					32178176, 32194560, 32227328, 32210944, 32243712
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1064960,
-				"deltaMiB": 1.016,
-				"medianBytes": 32243712,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 966656,
+				"deltaMiB": 0.922,
+				"medianBytes": 32161792,
 				"samplesBytes": [
-					32243712, 32260096, 32210944, 32260096, 32227328
+					32145408, 32161792, 32210944, 32194560, 32161792
 				]
 			},
 			"reachability": {
@@ -281,21 +314,21 @@
 			"rationale": "Runtime constants consumed without a schema import.",
 			"specifier": "dumrel/vocabulary",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
+				"baselineMedianBytes": 31195136,
 				"deltaBytes": 819200,
 				"deltaMiB": 0.781,
-				"medianBytes": 31997952,
+				"medianBytes": 32014336,
 				"samplesBytes": [
-					32063488, 31981568, 31981568, 31997952, 32014336
+					31981568, 32014336, 32030720, 32030720, 31997952
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 901120,
-				"deltaMiB": 0.859,
-				"medianBytes": 32079872,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 868352,
+				"deltaMiB": 0.828,
+				"medianBytes": 32063488,
 				"samplesBytes": [
-					32063488, 32047104, 32096256, 32079872, 32096256
+					32129024, 32063488, 32047104, 32112640, 32063488
 				]
 			},
 			"reachability": {
@@ -303,6 +336,39 @@
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": ["dumrel/vocabulary"]
+			}
+		},
+		{
+			"classification": "operational",
+			"operation": {
+				"description": "Resolve fixed Knowledge for a catalogued German determiner Reading.",
+				"id": "dumrel.resolve-fixed-knowledge"
+			},
+			"rationale": "Runtime fixed-Knowledge lookup surface.",
+			"specifier": "dumrel/fixed",
+			"importOnly": {
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4538368,
+				"deltaMiB": 4.328,
+				"medianBytes": 35733504,
+				"samplesBytes": [
+					35766272, 35733504, 35733504, 35766272, 35700736
+				]
+			},
+			"importPlusOperation": {
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 5439488,
+				"deltaMiB": 5.188,
+				"medianBytes": 36634624,
+				"samplesBytes": [
+					36683776, 36634624, 36634624, 36618240, 36667392
+				]
+			},
+			"reachability": {
+				"externalPackages": [],
+				"heavyweightDependencies": [],
+				"schemaEntrypoints": [],
+				"workspaceEntrypoints": ["dumling/fixed", "dumrel/fixed"]
 			}
 		},
 		{
@@ -319,21 +385,21 @@
 			"rationale": "Package root exposes dictionary workflows and runtime schemas.",
 			"specifier": "dumdict",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 3850240,
-				"deltaMiB": 3.672,
-				"medianBytes": 35028992,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4128768,
+				"deltaMiB": 3.938,
+				"medianBytes": 35323904,
 				"samplesBytes": [
-					35078144, 35028992, 34947072, 34996224, 35323904
+					35471360, 35225600, 35405824, 35323904, 35323904
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4964352,
-				"deltaMiB": 4.734,
-				"medianBytes": 36143104,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 5210112,
+				"deltaMiB": 4.969,
+				"medianBytes": 36405248,
 				"samplesBytes": [
-					36143104, 36225024, 36339712, 36077568, 36061184
+					36405248, 36962304, 36405248, 36388864, 36421632
 				]
 			},
 			"reachability": {
@@ -362,21 +428,21 @@
 			"rationale": "Schema-free-named dictionary runtime facade.",
 			"specifier": "dumdict/runtime",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 3833856,
-				"deltaMiB": 3.656,
-				"medianBytes": 35012608,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 4079616,
+				"deltaMiB": 3.891,
+				"medianBytes": 35274752,
 				"samplesBytes": [
-					34848768, 35045376, 35012608, 35094528, 34865152
+					35258368, 35274752, 35274752, 35274752, 35241984
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4784128,
-				"deltaMiB": 4.563,
-				"medianBytes": 35962880,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 5242880,
+				"deltaMiB": 5,
+				"medianBytes": 36438016,
 				"samplesBytes": [
-					35979264, 35962880, 35913728, 35962880, 35930112
+					36487168, 37011456, 36356096, 36438016, 36257792
 				]
 			},
 			"reachability": {
@@ -395,21 +461,21 @@
 			"rationale": "Dictionary relation projection runtime surface.",
 			"specifier": "dumdict/relations",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1425408,
-				"deltaMiB": 1.359,
-				"medianBytes": 32604160,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1638400,
+				"deltaMiB": 1.563,
+				"medianBytes": 32833536,
 				"samplesBytes": [
-					32587776, 32653312, 32571392, 32604160, 32669696
+					32833536, 32800768, 32833536, 32833536, 32817152
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1671168,
-				"deltaMiB": 1.594,
-				"medianBytes": 32849920,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1785856,
+				"deltaMiB": 1.703,
+				"medianBytes": 32980992,
 				"samplesBytes": [
-					32866304, 32849920, 32866304, 32800768, 32768000
+					33046528, 32964608, 32980992, 32899072, 33046528
 				]
 			},
 			"reachability": {
@@ -436,28 +502,33 @@
 			"rationale": "Package root exposes the generation runtime.",
 			"specifier": "dumgen",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4866048,
-				"deltaMiB": 4.641,
-				"medianBytes": 36044800,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 11763712,
+				"deltaMiB": 11.219,
+				"medianBytes": 42958848,
 				"samplesBytes": [
-					40353792, 36012032, 36012032, 36044800, 36093952
+					42958848, 42975232, 42926080, 42958848, 42975232
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 5095424,
-				"deltaMiB": 4.859,
-				"medianBytes": 36274176,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 11993088,
+				"deltaMiB": 11.438,
+				"medianBytes": 43188224,
 				"samplesBytes": [
-					36405248, 36192256, 36274176, 36274176, 36241408
+					43237376, 43122688, 43237376, 43188224, 43122688
 				]
 			},
 			"reachability": {
-				"externalPackages": ["common-utils"],
+				"externalPackages": ["common-utils", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumgen"]
+				"workspaceEntrypoints": [
+					"dumgen",
+					"dumling",
+					"dumling/fixed",
+					"dumrel/fixed"
+				]
 			}
 		},
 		{
@@ -469,21 +540,21 @@
 			"rationale": "Deterministic grammatical projection runtime.",
 			"specifier": "dumgen/projection",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 999424,
-				"deltaMiB": 0.953,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 983040,
+				"deltaMiB": 0.938,
 				"medianBytes": 32178176,
 				"samplesBytes": [
-					32178176, 32145408, 32194560, 32210944, 32145408
+					32178176, 32161792, 32227328, 32178176, 32145408
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1114112,
-				"deltaMiB": 1.063,
-				"medianBytes": 32292864,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1064960,
+				"deltaMiB": 1.016,
+				"medianBytes": 32260096,
 				"samplesBytes": [
-					32260096, 32292864, 32243712, 32292864, 32292864
+					32260096, 32325632, 32243712, 32276480, 32227328
 				]
 			},
 			"reachability": {
@@ -512,28 +583,33 @@
 			"rationale": "Convenience Knowledge generation runtime.",
 			"specifier": "dumgen/knowledge",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4292608,
-				"deltaMiB": 4.094,
-				"medianBytes": 35471360,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 10977280,
+				"deltaMiB": 10.469,
+				"medianBytes": 42172416,
 				"samplesBytes": [
-					35536896, 35438592, 35504128, 35471360, 35405824
+					42172416, 42270720, 42172416, 42156032, 42074112
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4390912,
-				"deltaMiB": 4.188,
-				"medianBytes": 35569664,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 10960896,
+				"deltaMiB": 10.453,
+				"medianBytes": 42156032,
 				"samplesBytes": [
-					35553280, 35782656, 35586048, 35569664, 35487744
+					42123264, 42254336, 42156032, 42074112, 42156032
 				]
 			},
 			"reachability": {
-				"externalPackages": ["common-utils"],
+				"externalPackages": ["common-utils", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumgen/knowledge"]
+				"workspaceEntrypoints": [
+					"dumgen/knowledge",
+					"dumling",
+					"dumling/fixed",
+					"dumrel/fixed"
+				]
 			}
 		},
 		{
@@ -545,28 +621,33 @@
 			"rationale": "Injected-provider Knowledge generation runtime.",
 			"specifier": "dumgen/knowledge-runtime",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4259840,
-				"deltaMiB": 4.063,
-				"medianBytes": 35438592,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 10633216,
+				"deltaMiB": 10.141,
+				"medianBytes": 41828352,
 				"samplesBytes": [
-					35454976, 35323904, 35373056, 35454976, 35438592
+					41811968, 41828352, 41795584, 41893888, 41844736
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4341760,
-				"deltaMiB": 4.141,
-				"medianBytes": 35520512,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 10682368,
+				"deltaMiB": 10.188,
+				"medianBytes": 41877504,
 				"samplesBytes": [
-					35454976, 35487744, 35569664, 35536896, 35520512
+					41910272, 41893888, 41844736, 41877504, 41811968
 				]
 			},
 			"reachability": {
-				"externalPackages": ["common-utils"],
+				"externalPackages": ["common-utils", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumgen/knowledge-runtime"]
+				"workspaceEntrypoints": [
+					"dumgen/knowledge-runtime",
+					"dumling",
+					"dumling/fixed",
+					"dumrel/fixed"
+				]
 			}
 		},
 		{
@@ -578,21 +659,21 @@
 			"rationale": "Fetch-only OpenAI runtime adapter.",
 			"specifier": "dumgen/openai-fetch",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 1261568,
-				"deltaMiB": 1.203,
-				"medianBytes": 32440320,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1196032,
+				"deltaMiB": 1.141,
+				"medianBytes": 32391168,
 				"samplesBytes": [
-					32505856, 32440320, 32423936, 32440320, 32423936
+					32407552, 32407552, 32391168, 32342016, 32358400
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
+				"baselineMedianBytes": 31195136,
 				"deltaBytes": 1949696,
 				"deltaMiB": 1.859,
-				"medianBytes": 33128448,
+				"medianBytes": 33144832,
 				"samplesBytes": [
-					33062912, 33128448, 33161216, 33095680, 33144832
+					33095680, 33128448, 33144832, 33177600, 33193984
 				]
 			},
 			"reachability": {
@@ -611,28 +692,32 @@
 			"rationale": "Injected-provider main generation runtime.",
 			"specifier": "dumgen/runtime",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 4816896,
-				"deltaMiB": 4.594,
-				"medianBytes": 35995648,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 11010048,
+				"deltaMiB": 10.5,
+				"medianBytes": 42205184,
 				"samplesBytes": [
-					35913728, 35962880, 35995648, 36012032, 35995648
+					42205184, 42205184, 42188800, 42303488, 42221568
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 5046272,
-				"deltaMiB": 4.813,
-				"medianBytes": 36225024,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 11141120,
+				"deltaMiB": 10.625,
+				"medianBytes": 42336256,
 				"samplesBytes": [
-					36290560, 36225024, 36208640, 36175872, 36274176
+					42270720, 42336256, 42336256, 42401792, 42254336
 				]
 			},
 			"reachability": {
-				"externalPackages": ["common-utils"],
+				"externalPackages": ["common-utils", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
-				"workspaceEntrypoints": ["dumgen/runtime"]
+				"workspaceEntrypoints": [
+					"dumgen/runtime",
+					"dumling",
+					"dumling/fixed"
+				]
 			}
 		},
 		{
@@ -644,21 +729,21 @@
 			"rationale": "Compressed generated runtime data injected only by bundlers that cannot deploy package sidecars.",
 			"specifier": "dumgen/runtime-prompt-data",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 802816,
-				"deltaMiB": 0.766,
-				"medianBytes": 31981568,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 851968,
+				"deltaMiB": 0.813,
+				"medianBytes": 32047104,
 				"samplesBytes": [
-					31997952, 31932416, 31965184, 32063488, 31981568
+					32063488, 31965184, 32047104, 31932416, 32063488
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 983040,
-				"deltaMiB": 0.938,
-				"medianBytes": 32161792,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 1015808,
+				"deltaMiB": 0.969,
+				"medianBytes": 32210944,
 				"samplesBytes": [
-					32161792, 32178176, 32194560, 32145408, 32145408
+					32161792, 32161792, 32210944, 32210944, 32243712
 				]
 			},
 			"reachability": {
@@ -677,21 +762,21 @@
 			"rationale": "Runtime constants consumed without a schema import.",
 			"specifier": "dumgen/vocabulary",
 			"importOnly": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 884736,
-				"deltaMiB": 0.844,
-				"medianBytes": 32063488,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 901120,
+				"deltaMiB": 0.859,
+				"medianBytes": 32096256,
 				"samplesBytes": [
-					32178176, 32079872, 32047104, 32063488, 31997952
+					32145408, 32096256, 32112640, 32096256, 32047104
 				]
 			},
 			"importPlusOperation": {
-				"baselineMedianBytes": 31178752,
-				"deltaBytes": 950272,
-				"deltaMiB": 0.906,
-				"medianBytes": 32129024,
+				"baselineMedianBytes": 31195136,
+				"deltaBytes": 966656,
+				"deltaMiB": 0.922,
+				"medianBytes": 32161792,
 				"samplesBytes": [
-					32079872, 32145408, 32129024, 32145408, 32112640
+					32161792, 32129024, 32178176, 32243712, 32129024
 				]
 			},
 			"reachability": {
@@ -710,9 +795,9 @@
 	"environment": {
 		"arch": "arm64",
 		"bunVersion": "1.3.14",
-		"capturedAt": "2026-08-21T19:25:08.202Z",
+		"capturedAt": "2026-08-22T10:30:37.356Z",
 		"packageSourcesDirty": true,
 		"platform": "darwin",
-		"sourceCommit": "14c944cfd39a8687a46b2b61b0c985c679dd695f"
+		"sourceCommit": "5940af61cb1d13b3ff335d2c525bbbc44f42fd5b"
 	}
 }

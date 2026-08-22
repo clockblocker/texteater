@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import * as root from "../../src";
+import * as fixed from "../../src/fixed";
 import * as relations from "../../src/relations";
 import * as schema from "../../src/schema";
 import * as settings from "../../src/settings";
@@ -85,6 +86,10 @@ describe("public API allowlists", () => {
 		);
 		expect(Object.keys(schema).sort()).toEqual(schemaExports);
 		expect(Object.keys(settings)).toEqual(["DEFAULT_KNOWLEDGE_SETTINGS"]);
+		expect(Object.keys(fixed).sort()).toEqual([
+			"DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE",
+			"fixedKnowledgeFor",
+		]);
 		expect(Object.keys(types)).toEqual([]);
 	});
 });

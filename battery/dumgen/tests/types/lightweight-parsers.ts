@@ -135,7 +135,6 @@ type _NarrowedGrammaticalResultSchemaMustFail = Assert<
 	// @ts-expect-error The outer parser route cannot be rebound to a narrower schema.
 	ProveCanonicalDumgenValidationSchemaRoute<
 		"parseAsGrammaticalResult:de",
-		// @ts-expect-error The outer parser route cannot be rebound to a narrower schema.
 		typeof narrowedGermanGrammaticalResultSchema
 	>
 >;

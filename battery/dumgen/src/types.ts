@@ -1,4 +1,8 @@
-import type { Attestation } from "dumling/types";
+import type { Attestation, Lemma } from "dumling/types";
+import type {
+	LemmaCatalogMiss,
+	ReadingCatalogMiss,
+} from "./production/contracts";
 import type { GermanGrammaticalRoute } from "./schema/de-grammatical-resolution-inventory";
 import type {
 	GermanReachableHighLevelFamily,
@@ -87,6 +91,7 @@ export type GrammaticalResult<
 			language: L;
 			route: GrammaticalRoute<L>;
 	  }>
+	| LemmaCatalogMiss
 	| Readonly<{ decision: "Unresolved"; language: L }>;
 
 export type GrammaticalInteraction = Readonly<{
@@ -101,24 +106,36 @@ export type GrammaticalInput<L extends GrammaticalResolutionLanguage> =
 		clickedSegmentIndex: number;
 	}>;
 
-export type ReadingInput = {
+export type ReadingInput<
+	L extends ReadingResolutionLanguage = ReadingResolutionLanguage,
+> = {
 	readonly markedContext: string;
-	readonly lemma: string;
+	readonly lemma: Lemma<L>;
 	readonly existingEmojiDescriptions: readonly string[];
 };
 
-export type ReadingResolution = {
+export type ReadingResolutionSuccess = {
 	readonly decision: "Reuse" | "New";
 	readonly emojiDescription: string;
 };
+
+export type ReadingResolution = ReadingResolutionSuccess | ReadingCatalogMiss;
 
 export type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationLanguage,
 	KnowledgeGenerationRequest,
 	KnowledgeGenerationResult,
+	KnowledgeGenerationSuccess,
+	ReadingKnowledgeCatalogMiss,
 	RequestableRelation,
 } from "./knowledge-generation/contracts";
+export type {
+	CatalogMissBase,
+	CatalogMissReason,
+	LemmaCatalogMiss,
+	ReadingCatalogMiss,
+} from "./production/contracts";
 
 export type Unresolved = { readonly decision: "Unresolved" };
 

@@ -1,24 +1,27 @@
-import { readingSchema } from "dumling/schema";
+import { anyLemmaSchema, readingSchema } from "dumling/schema";
 import { knowledgeChangeSchema, lexicalUnitShadowSchema } from "dumrel/schema";
 import { z } from "zod";
 import type { KnowledgeGenerationResult } from "../knowledge-generation/contracts";
 import { requestableRelationSchema } from "../knowledge-generation/relations";
 import { DE_GRAMMATICAL_RESOLUTION_ROUTE_KINDS } from "../schema/de-grammatical-resolution-inventory";
+import type { GrammaticalResult, LemmaCatalogMiss } from "../types";
 import {
 	bindGermanKnowledgeInput,
 	bindGermanKnowledgeReading,
 	bindGermanRelationTarget,
-	bindKnowledgeGenerationResult,
 	bindSegmentedSentenceId,
-	deepFreeze,
+	finalizeKnowledgeGenerationResult,
 	grammaticalInputIssues,
 	grammaticalInteractionIssues,
 	hasEnglishTranslationSelection,
 	hasSemanticRelationSelection,
+	isGermanKnowledgeLemma,
 	isGermanKnowledgeReading,
 	isGermanRelationTarget,
 	isValidWhitespaceSegment,
 	knowledgeGenerationResultIssues,
+	lemmaCatalogMissRouteMatches,
+	readingKnowledgeCatalogMissRouteMatches,
 } from "../validation-semantics";
 import {
 	enabledSegmentationLanguageValues,
@@ -90,20 +93,50 @@ const generatedPendingSemanticRelationSchema = z.strictObject({
 	target: generatedGermanRelationTargetSchema,
 });
 
+const catalogMissReasonSchema = z.enum([
+	"MemberNotCatalogued",
+	"InventoryNotLoaded",
+]);
+
+const catalogMissBaseShape = {
+	decision: z.literal("CatalogMiss"),
+	reason: catalogMissReasonSchema,
+	language: z.literal("de"),
+	route: z.lazy(() => grammaticalRouteSchema),
+} as const;
+
+const knowledgeGenerationSuccessSchema = z
+	.strictObject({
+		changes: z.array(knowledgeChangeSchema).readonly(),
+		pendingRelations: z
+			.array(generatedPendingSemanticRelationSchema)
+			.readonly(),
+	})
+	.superRefine((result, context) => {
+		for (const issue of knowledgeGenerationResultIssues(result))
+			context.addIssue(issue as never);
+	});
+
+const readingKnowledgeCatalogMissSchema = z
+	.strictObject({
+		...catalogMissBaseShape,
+		stage: z.literal("ReadingKnowledge"),
+		reading: germanKnowledgeReadingSchema,
+		missingRequest: knowledgeGenerationRequestSchema,
+	})
+	.refine(readingKnowledgeCatalogMissRouteMatches, {
+		message: "Catalog Miss route must match its candidate Lemma.",
+		path: ["route"],
+	})
+	.readonly();
+
 export const knowledgeGenerationResultSchema: z.ZodType<KnowledgeGenerationResult> =
 	z
-		.strictObject({
-			changes: z.array(knowledgeChangeSchema).readonly(),
-			pendingRelations: z
-				.array(generatedPendingSemanticRelationSchema)
-				.readonly(),
-		})
-		.superRefine((result, context) => {
-			for (const issue of knowledgeGenerationResultIssues(result))
-				context.addIssue(issue as never);
-		})
-		.transform(bindKnowledgeGenerationResult)
-		.transform(deepFreeze);
+		.union([
+			knowledgeGenerationSuccessSchema,
+			readingKnowledgeCatalogMissSchema,
+		])
+		.transform(finalizeKnowledgeGenerationResult);
 
 export const segmentedSentenceIdSchema = z
 	.string()
@@ -299,11 +332,28 @@ export const unresolvedGrammaticalResultSchema = z
 	})
 	.readonly();
 
-export const grammaticalResultSchema = z.union([
-	resolvedGrammaticalResultSchema,
-	notImplementedGrammaticalResultSchema,
-	unresolvedGrammaticalResultSchema,
-]);
+const lemmaCatalogMissSchema: z.ZodType<LemmaCatalogMiss> = z
+	.strictObject({
+		...catalogMissBaseShape,
+		stage: z.literal("Lemma"),
+		candidate: anyLemmaSchema.refine(isGermanKnowledgeLemma, {
+			path: ["language"],
+			message: "A Lemma Catalog miss requires a German Lemma.",
+		}),
+	})
+	.refine(lemmaCatalogMissRouteMatches, {
+		message: "Catalog Miss route must match its candidate Lemma.",
+		path: ["route"],
+	})
+	.readonly();
+
+export const grammaticalResultSchema: z.ZodType<GrammaticalResult<"de">> =
+	z.union([
+		resolvedGrammaticalResultSchema,
+		notImplementedGrammaticalResultSchema,
+		unresolvedGrammaticalResultSchema,
+		lemmaCatalogMissSchema,
+	]);
 
 function segmentedSentenceSchemaFor<const L extends "de" | "he">(language: L) {
 	return z

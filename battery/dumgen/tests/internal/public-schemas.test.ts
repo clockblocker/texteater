@@ -110,6 +110,7 @@ void structuredKnowledgeRequest;
 function assertGeneratedKnowledgeIsImmutable(
 	generatedKnowledge: KnowledgeGenerationResult,
 ) {
+	if ("decision" in generatedKnowledge) return;
 	// @ts-expect-error Generated Knowledge results are immutable at the public seam.
 	generatedKnowledge.changes.push();
 	const firstPending = generatedKnowledge.pendingRelations[0];
@@ -207,6 +208,8 @@ describe("public Dumgen runtime schemas", () => {
 				},
 			],
 		});
+		if ("decision" in result)
+			throw new Error("Expected Knowledge success.");
 		expect(Object.isFrozen(result)).toBe(true);
 		expect(Object.isFrozen(result.changes[0])).toBe(true);
 		expect(Object.isFrozen(result.pendingRelations[0]?.target)).toBe(true);
@@ -453,6 +456,49 @@ describe("public Dumgen runtime schemas", () => {
 						language: "he",
 					},
 				},
+			}).success,
+		).toBe(false);
+	});
+
+	test("correlates Catalog Miss routes with their candidate Lemma", () => {
+		const lemmaMiss = {
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "NOUN" },
+			stage: "Lemma",
+			candidate: {
+				language: "de",
+				canonicalForm: "Bank",
+				family: "Lexeme",
+				kind: "NOUN",
+				coreFeatures: { gender: "Fem", hyph: null },
+			},
+		} as const;
+		const knowledgeMiss = {
+			...lemmaMiss,
+			stage: "ReadingKnowledge",
+			reading: { lemma: lemmaMiss.candidate, emojiDescription: "🏦" },
+			missingRequest: { definition: null },
+		} as const;
+		const { candidate: _candidate, ...readingKnowledgeMiss } =
+			knowledgeMiss;
+
+		expect(grammaticalResultSchema.safeParse(lemmaMiss).success).toBe(true);
+		expect(
+			grammaticalResultSchema.safeParse({
+				...lemmaMiss,
+				route: { family: "Lexeme", kind: "VERB" },
+			}).success,
+		).toBe(false);
+		expect(
+			knowledgeGenerationResultSchema.safeParse(readingKnowledgeMiss)
+				.success,
+		).toBe(true);
+		expect(
+			knowledgeGenerationResultSchema.safeParse({
+				...readingKnowledgeMiss,
+				route: { family: "Morpheme", kind: "Prefix" },
 			}).success,
 		).toBe(false);
 	});

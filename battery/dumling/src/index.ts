@@ -12,6 +12,7 @@ export {
 	parseAsReading,
 	parseAsSurface,
 } from "./operations/parsing/lightweight-parsers.js";
+export { isClosedRouteFor } from "./route-closure.js";
 
 export type * from "./types.js";
 

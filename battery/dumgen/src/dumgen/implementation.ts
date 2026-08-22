@@ -1,4 +1,4 @@
-import type { Attestation } from "dumling/types";
+import type { Attestation, Lemma, Reading } from "dumling/types";
 
 import type { RUNTIME_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
@@ -12,6 +12,8 @@ import {
 	parseAsSegmentationResult,
 	unwrapDumgenParse,
 } from "../parsing/lightweight-parsers";
+import { lemmaRouteFor, routeFor } from "../production/contracts";
+import { dispatchProduction } from "../production/dispatcher";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import { projectGrammaticalResolutionInput } from "../schema/normalized-surface-projection";
 import { segmentSource } from "../source-segmentation";
@@ -20,6 +22,7 @@ import type {
 	AnalysisTarget,
 	GrammaticalInput,
 	GrammaticalResolution,
+	GrammaticalResolutionInput,
 	GrammaticalResolutionLanguage,
 	GrammaticalResult,
 	GrammaticalRoute,
@@ -291,11 +294,61 @@ export function createDumgenImplementation(
 				...number[],
 			],
 		});
-		const resolution = await grammar({
-			markedContext: grammarInput.markedContext,
-			members: [...grammarInput.members],
+		const route = lemmaRouteFor(target);
+		const { isClosedRouteFor } = await import("dumling");
+		const resolutionOrMiss = await dispatchProduction<
+			| GrammaticalResolution
+			| Extract<GrammaticalResult<"de">, { decision: "CatalogMiss" }>
+		>({
+			closed: isClosedRouteFor.lemma(route),
+			runOpen: async () =>
+				generateGrammaticalCandidate(grammar, grammarInput, target),
+			runClosed: async () => {
+				const { fixedMembersFor } = await import("dumling/fixed");
+				const candidate = await generateGrammaticalCandidate(
+					grammar,
+					grammarInput,
+					target,
+				);
+				const catalog = fixedMembersFor.lemma(route);
+				if (!catalog) {
+					return Object.freeze({
+						decision: "CatalogMiss",
+						reason: "InventoryNotLoaded",
+						language: "de",
+						route: routeFor(target),
+						stage: "Lemma",
+						candidate: candidate.surface.lemma,
+					});
+				}
+				const fixedLemma = catalog.members.find((member) =>
+					sameLemma(member, candidate.surface.lemma),
+				);
+				if (!fixedLemma) {
+					return Object.freeze({
+						decision: "CatalogMiss",
+						reason: "MemberNotCatalogued",
+						language: "de",
+						route: routeFor(target),
+						stage: "Lemma",
+						candidate: candidate.surface.lemma,
+					});
+				}
+				return Object.freeze({
+					...candidate,
+					surface: Object.freeze({
+						...candidate.surface,
+						lemma: fixedLemma,
+					}),
+				}) as unknown as GrammaticalResolution;
+			},
 		});
-		assertGrammaticalResolution(target, resolution);
+		if ("decision" in resolutionOrMiss) {
+			return parseGrammaticalResult(
+				resolutionOrMiss,
+			) as GrammaticalResult<L>;
+		}
+		const resolution = resolutionOrMiss;
 
 		const attestation = constructAttestation(
 			germanSentence,
@@ -337,7 +390,7 @@ export function createDumgenImplementation(
 
 	async function reading<L extends ReadingResolutionLanguage>(
 		language: L,
-		input: ReadingInput,
+		input: ReadingInput<L>,
 	): Promise<ReadingResolution> {
 		if (language !== "de" || !readingRoutes[language]) {
 			throw invalidInput(
@@ -349,26 +402,67 @@ export function createDumgenImplementation(
 			input === null ||
 			typeof input.markedContext !== "string" ||
 			input.markedContext.length === 0 ||
-			typeof input.lemma !== "string" ||
-			input.lemma.length === 0 ||
+			typeof input.lemma !== "object" ||
+			input.lemma === null ||
+			input.lemma.language !== "de" ||
+			typeof input.lemma.canonicalForm !== "string" ||
+			input.lemma.canonicalForm.length === 0 ||
 			!Array.isArray(input.existingEmojiDescriptions)
 		) {
 			throw invalidInput("Reading Resolution input is invalid.");
 		}
 
-		const generated = await readingRoutes[language]({
-			markedContext: input.markedContext,
-			lemma: input.lemma,
-			existingEmojiDescriptions: [...input.existingEmojiDescriptions],
-		});
-		const decision = input.existingEmojiDescriptions.includes(
-			generated.emojiDescription,
-		)
-			? "Reuse"
-			: "New";
-		return Object.freeze({
-			decision,
-			emojiDescription: generated.emojiDescription,
+		const germanInput = input as unknown as ReadingInput<"de">;
+		const route = lemmaRouteFor(germanInput.lemma);
+		const { isClosedRouteFor } = await import("dumling");
+		const runOpen = async (): Promise<ReadingResolution> => {
+			const candidate = await generateReadingCandidate(
+				readingRoutes.de,
+				germanInput,
+			);
+			return readingSuccess(
+				candidate,
+				germanInput.existingEmojiDescriptions,
+			);
+		};
+		return dispatchProduction<ReadingResolution>({
+			closed: isClosedRouteFor.reading(route),
+			runOpen,
+			runClosed: async () => {
+				const { fixedMembersFor } = await import("dumling/fixed");
+				const catalog = fixedMembersFor.reading(germanInput.lemma);
+				if (catalog?.members.length === 1) {
+					return readingSuccess(
+						catalog.members[0] as Reading<"de">,
+						germanInput.existingEmojiDescriptions,
+					);
+				}
+				const candidate = await generateReadingCandidate(
+					readingRoutes.de,
+					germanInput,
+				);
+				if (!catalog) {
+					return catalogMissForReading(
+						"InventoryNotLoaded",
+						germanInput.lemma,
+						candidate,
+					);
+				}
+				const fixedReading = catalog.members.find(
+					(member) =>
+						member.emojiDescription === candidate.emojiDescription,
+				);
+				return fixedReading
+					? readingSuccess(
+							fixedReading as Reading<"de">,
+							germanInput.existingEmojiDescriptions,
+						)
+					: catalogMissForReading(
+							"MemberNotCatalogued",
+							germanInput.lemma,
+							candidate,
+						);
+			},
 		});
 	}
 
@@ -391,6 +485,92 @@ type CachedGrammaticalResolution = {
 	readonly attestation: Attestation<"de">;
 	readonly markedContext: string;
 };
+
+async function generateGrammaticalCandidate(
+	grammar: GrammaticalGenerator,
+	input: GrammaticalResolutionInput,
+	target: AnalysisTarget,
+): Promise<GrammaticalResolution> {
+	const resolution = await grammar({
+		markedContext: input.markedContext,
+		members: [...input.members],
+	});
+	assertGrammaticalResolution(target, resolution);
+	return resolution;
+}
+
+async function generateReadingCandidate(
+	generate: (input: {
+		readonly markedContext: string;
+		readonly lemma: string;
+		readonly existingEmojiDescriptions: readonly string[];
+	}) => Promise<Readonly<{ emojiDescription: string }>>,
+	input: ReadingInput<"de">,
+): Promise<Reading<"de">> {
+	const generated = await generate({
+		markedContext: input.markedContext,
+		lemma: input.lemma.canonicalForm,
+		existingEmojiDescriptions: [...input.existingEmojiDescriptions],
+	});
+	return Object.freeze({
+		lemma: input.lemma,
+		emojiDescription: generated.emojiDescription,
+	});
+}
+
+function readingSuccess(
+	reading: Reading<"de">,
+	existingEmojiDescriptions: readonly string[],
+): ReadingResolution {
+	return Object.freeze({
+		decision: existingEmojiDescriptions.includes(reading.emojiDescription)
+			? "Reuse"
+			: "New",
+		emojiDescription: reading.emojiDescription,
+	});
+}
+
+function catalogMissForReading(
+	reason: "MemberNotCatalogued" | "InventoryNotLoaded",
+	lemma: Lemma<"de">,
+	candidate: Reading<"de">,
+): ReadingResolution {
+	return Object.freeze({
+		decision: "CatalogMiss",
+		reason,
+		language: "de",
+		route: routeFor(lemma),
+		stage: "Reading",
+		candidate,
+	});
+}
+
+function sameLemma(left: Lemma, right: Lemma): boolean {
+	if (
+		left.language !== right.language ||
+		left.family !== right.family ||
+		left.kind !== right.kind ||
+		left.canonicalForm !== right.canonicalForm
+	) {
+		return false;
+	}
+	const leftFeatures = left.coreFeatures as Readonly<Record<string, unknown>>;
+	const rightFeatures = right.coreFeatures as Readonly<
+		Record<string, unknown>
+	>;
+	const keys = Object.keys(leftFeatures);
+	if (keys.length !== Object.keys(rightFeatures).length) return false;
+	return keys.every((key) => {
+		const leftValue = leftFeatures[key];
+		const rightValue = rightFeatures[key];
+		return Array.isArray(leftValue) && Array.isArray(rightValue)
+			? leftValue.length === rightValue.length &&
+					leftValue.every(
+						(value, index) => value === rightValue[index],
+					)
+			: leftValue === rightValue;
+	});
+}
 
 function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 	language: L,

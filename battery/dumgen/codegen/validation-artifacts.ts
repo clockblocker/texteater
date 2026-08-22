@@ -34,14 +34,16 @@ import {
 	bindGermanKnowledgeInput,
 	bindGermanKnowledgeReading,
 	bindGermanRelationTarget,
-	bindKnowledgeGenerationResult,
 	bindSegmentedSentenceId,
-	deepFreeze,
+	finalizeKnowledgeGenerationResult,
 	hasEnglishTranslationSelection,
 	hasSemanticRelationSelection,
+	isGermanKnowledgeLemma,
 	isGermanKnowledgeReading,
 	isGermanRelationTarget,
 	isValidWhitespaceSegment,
+	lemmaCatalogMissRouteMatches,
+	readingKnowledgeCatalogMissRouteMatches,
 } from "../src/validation-semantics.js";
 
 export const canonicalDumgenValidationSchemas = {
@@ -207,10 +209,17 @@ const localOperationNames = new Map<Operation, string>([
 	],
 	[bindGermanRelationTarget as Operation, "dumgen.bind-relation-target.de"],
 	[
-		bindKnowledgeGenerationResult as Operation,
-		"dumgen.bind-knowledge-result",
+		finalizeKnowledgeGenerationResult as Operation,
+		"dumgen.finalize-knowledge-result",
 	],
-	[deepFreeze as Operation, "dumgen.deep-freeze"],
+	[
+		lemmaCatalogMissRouteMatches as Operation,
+		"dumgen.catalog-miss.lemma-route-correlation",
+	],
+	[
+		readingKnowledgeCatalogMissRouteMatches as Operation,
+		"dumgen.catalog-miss.reading-knowledge-route-correlation",
+	],
 	[
 		hasEnglishTranslationSelection as Operation,
 		"dumgen.translation-request.english",
@@ -220,6 +229,7 @@ const localOperationNames = new Map<Operation, string>([
 		"dumgen.semantic-relation-request.non-empty",
 	],
 	[isGermanKnowledgeReading as Operation, "dumgen.knowledge-reading.de"],
+	[isGermanKnowledgeLemma as Operation, "dumgen.knowledge-lemma.de"],
 	[isGermanRelationTarget as Operation, "dumgen.relation-target.de"],
 	[isValidWhitespaceSegment as Operation, "dumgen.segment.whitespace"],
 	[

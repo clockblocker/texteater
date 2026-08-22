@@ -62,6 +62,24 @@ import type { RelationPublicationRun } from "./relationPublication";
 
 const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
 
+type ResolutionCatalogMiss = Extract<
+	ResolveSegmentResult,
+	{ catalogMiss: unknown }
+>["catalogMiss"];
+
+const recordAndSettleCatalogMiss = makeFunctionReference<
+	"mutation",
+	{ guard: ResolutionSessionGuard; miss: ResolutionCatalogMiss },
+	null
+>(
+	"catalogGrowthSignals:recordAndSettleCatalogMiss",
+) as unknown as FunctionReference<
+	"mutation",
+	"internal",
+	{ guard: ResolutionSessionGuard; miss: ResolutionCatalogMiss },
+	null
+>;
+
 const recordRelationPublicationFailure = makeFunctionReference<
 	"mutation",
 	{ attemptKey: string; run: RelationPublicationRun },
@@ -121,6 +139,10 @@ type NonResolvedGrammaticalActionResult = Infer<
 >;
 type ReusableAttestationResult = Infer<typeof reusableAttestationValidator>;
 type DictionaryPlanResult = Infer<typeof dictionaryPlanValidator>;
+type GrammaticalResolveSegmentResult = Extract<
+	ResolveSegmentResult,
+	{ grammatical: unknown }
+>["grammatical"];
 
 function convexId<TableName extends TableNames>(value: string): Id<TableName> {
 	return value as Id<TableName>;
@@ -128,7 +150,7 @@ function convexId<TableName extends TableNames>(value: string): Id<TableName> {
 
 function nonResolvedGrammaticalActionResult(
 	input: Extract<
-		ResolveSegmentResult["grammatical"],
+		GrammaticalResolveSegmentResult,
 		{ decision: "Unresolved" | "NotImplemented" }
 	>,
 ): NonResolvedGrammaticalActionResult {
@@ -155,10 +177,7 @@ function nonResolvedGrammaticalActionResult(
 }
 
 function resolvedGrammaticalActionResult(
-	input: Extract<
-		ResolveSegmentResult["grammatical"],
-		{ decision: "Resolved" }
-	>,
+	input: Extract<GrammaticalResolveSegmentResult, { decision: "Resolved" }>,
 ): ResolvedGrammaticalActionResult {
 	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
 		parseAsGrammaticalResult(input, "de"),
@@ -416,6 +435,9 @@ function lateResolvedClickResult(input: LateResolvedClickCommit) {
 function resolveSegmentActionResult(
 	result: ResolveSegmentResult,
 ): ResolveSegmentActionResult {
+	if ("catalogMiss" in result) {
+		return { catalogMiss: result.catalogMiss };
+	}
 	if ("readingResolution" in result) {
 		const grammatical = resolvedGrammaticalActionResult(result.grammatical);
 		const reading = {
@@ -565,6 +587,13 @@ export const runResolutionSession = internalAction({
 			const result = await orchestratorFor(ctx, guard).resolveSegment(
 				input,
 			);
+			if ("catalogMiss" in result) {
+				await ctx.runMutation(recordAndSettleCatalogMiss, {
+					guard,
+					miss: result.catalogMiss,
+				});
+				return null;
+			}
 			if ("deduplicated" in result && result.deduplicated) {
 				if (result.persisted.status === "Resolved") {
 					await ctx.runMutation(

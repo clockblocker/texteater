@@ -83,6 +83,9 @@ type RuntimeCombinedGermanKnowledgePrompt = Omit<
 	): RuntimePromptSchema<GermanKnowledgeAnalysis>;
 };
 
+type OpenReadingModelInput = Omit<ReadingInput, "lemma"> &
+	Readonly<{ lemma: string }>;
+
 type RuntimePromptForPath<Path extends RuntimePromptPath> =
 	Path extends "laboratory.intake"
 		? RuntimeProjectedPrompt<IntakeInput, unknown, IntakeBatch>
@@ -100,7 +103,7 @@ type RuntimePromptForPath<Path extends RuntimePromptPath> =
 					>
 				: Path extends "laboratory.readingResolution.de"
 					? RuntimeDirectPrompt<
-							ReadingInput,
+							OpenReadingModelInput,
 							Readonly<{ emojiDescription: string }>
 						>
 					: Path extends "knowledge.de.combined"

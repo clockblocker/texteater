@@ -2,6 +2,7 @@
 
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { v } from "convex/values";
+import type { ReadingKnowledgeCatalogMiss } from "dumgen";
 import type { KnowledgeDumgen } from "dumgen/knowledge-runtime";
 import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
 import type { Reading } from "dumling/types";
@@ -45,6 +46,19 @@ const recordRejectedRelationOutput = makeFunctionReference<
 		artifactPath: string | null;
 		fingerprints: RelationPublicationAuthorization["fingerprints"];
 	},
+	null
+>;
+
+const recordKnowledgeCatalogMiss = makeFunctionReference<
+	"mutation",
+	{ attemptKey: string; miss: ReadingKnowledgeCatalogMiss },
+	null
+>(
+	"catalogGrowthSignals:recordKnowledgeCatalogMiss",
+) as unknown as FunctionReference<
+	"mutation",
+	"internal",
+	{ attemptKey: string; miss: ReadingKnowledgeCatalogMiss },
 	null
 >;
 
@@ -122,6 +136,14 @@ export const runKnowledgeGeneration = internalAction({
 				reading,
 				request,
 			});
+			if ("decision" in generated) {
+				generationCompleted = true;
+				await ctx.runMutation(recordKnowledgeCatalogMiss, {
+					attemptKey,
+					miss: generated,
+				});
+				return null;
+			}
 			generationCompleted = true;
 			const publishable = generatedKnowledgeAllowedForPublication(
 				generated,

@@ -71,6 +71,7 @@ export type MutationConflictCode =
 
 export type MutationRejectedCode =
 	| "readingAlreadyExists"
+	| "readingEntryConflict"
 	| "ownedSurfaceAlreadyExists"
 	| "readingMissing"
 	| "invalidDraft"

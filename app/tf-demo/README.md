@@ -1,5 +1,15 @@
 # tf-demo
 
+Load the package-owned fixed inventory through the same ordinary dictionary
+tables used at runtime:
+
+```sh
+bun run load:fixed-members
+```
+
+The operation is idempotent. Exact members are left unchanged; incompatible
+ordinary Reading Entry content is reported as a conflict instead of overwritten.
+
 `tf-demo` is the smallest end-to-end product probe for the Texteater packages.
 It runs React and Vite against a persistent anonymous Convex deployment on the
 local machine. Convex is the backend and orchestrator; there is no separate

@@ -5,7 +5,7 @@ import type {
 } from "common-utils";
 import { encodedDumgenValidationArtifacts } from "../generated/validation-artifacts.js";
 import {
-	deepFreeze,
+	finalizeKnowledgeGenerationResult,
 	grammaticalInputIssues,
 	grammaticalInteractionIssues,
 	hasEnglishTranslationSelection,
@@ -14,7 +14,9 @@ import {
 	isGermanRelationTarget,
 	isValidWhitespaceSegment,
 	knowledgeGenerationResultIssues,
+	lemmaCatalogMissRouteMatches,
 	normalizeReadingLemma,
+	readingKnowledgeCatalogMissRouteMatches,
 	shallowFreeze,
 } from "../validation-semantics.js";
 
@@ -170,13 +172,31 @@ function constructDumgenValidationOperation(
 		return (value) => ({ value: shallowFreeze(value) });
 	const semanticName = name as RequiredSemanticOperation;
 	switch (semanticName) {
-		case "dumgen.deep-freeze":
-			return (value) => ({ value: deepFreeze(value) });
+		case "dumgen.finalize-knowledge-result":
+			return (value) => ({
+				value: finalizeKnowledgeGenerationResult(value as never),
+			});
+		case "dumgen.catalog-miss.lemma-route-correlation":
+			return customCheck(name, lemmaCatalogMissRouteMatches as never, [
+				"route",
+			]);
+		case "dumgen.catalog-miss.reading-knowledge-route-correlation":
+			return customCheck(
+				name,
+				readingKnowledgeCatalogMissRouteMatches as never,
+				["route"],
+			);
 		case "dumgen.knowledge-reading.de":
 			return customCheck(name, isGermanKnowledgeReading as never, [
 				"lemma",
 				"language",
 			]);
+		case "dumgen.knowledge-lemma.de":
+			return customCheck(
+				name,
+				(value: { language: string }) => value.language === "de",
+				["language"],
+			);
 		case "dumgen.relation-target.de":
 			return customCheck(name, isGermanRelationTarget as never, [
 				"language",
@@ -262,7 +282,6 @@ function constructDumgenValidationOperation(
 			return (value) => ({ value: normalizeReadingLemma(value) });
 		case "dumgen.bind-knowledge-input.de":
 		case "dumgen.bind-knowledge-reading.de":
-		case "dumgen.bind-knowledge-result":
 		case "dumgen.bind-relation-target.de":
 		case "dumgen.bind-segmented-sentence-id":
 		case "dumgen.transitive.transform.bindLemmaReference":

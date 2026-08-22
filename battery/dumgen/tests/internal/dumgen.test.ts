@@ -8,6 +8,7 @@ import {
 	type DumgenOptions,
 	type SegmentedSentence,
 } from "dumgen";
+import { fixedMembersFor } from "dumling/fixed";
 import { z } from "zod";
 
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
@@ -30,6 +31,24 @@ const modelGrammar = {
 		coreFeatures: { gender: "Fem", hyph: null },
 	},
 } as const;
+
+const bankLemma = {
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	...modelGrammar.lemma,
+} as const;
+
+const detCatalog = fixedMembersFor.lemma({
+	language: "de",
+	family: "Lexeme",
+	kind: "DET",
+});
+if (!detCatalog) throw new Error("Expected fixed DET catalog.");
+const derLemma = detCatalog.members.find(
+	(lemma) => lemma.canonicalForm === "der",
+);
+if (!derLemma) throw new Error("Expected fixed der Lemma.");
 
 function sentence(
 	parts: Array<{
@@ -904,7 +923,82 @@ describe("grammatical resolution", () => {
 	});
 });
 
+test("Closed grammar returns a terminal safe miss for an uncatalogued Lemma", async () => {
+	const source = sentence([{ kind: "ResolvableText", text: "le" }]);
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "DET" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["le"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
+			},
+			lemma: {
+				canonicalForm: "le",
+				coreFeatures: derLemma.coreFeatures,
+			},
+		},
+	]);
+
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "CatalogMiss",
+		reason: "MemberNotCatalogued",
+		language: "de",
+		route: { family: "Lexeme", kind: "DET" },
+		stage: "Lemma",
+		candidate: { canonicalForm: "le" },
+	});
+	expect(calls).toHaveLength(2);
+	expect(JSON.stringify(result)).not.toContain("markedContext");
+});
+
 describe("reading resolution", () => {
+	test("selects the fixed Reading deterministically without an Open call", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const result = await buildDumgen({ sdk }).resolve.reading("de", {
+			markedContext: "<TARGET>der</TARGET> Mann",
+			lemma: derLemma,
+			existingEmojiDescriptions: [],
+		});
+
+		expect(result).toEqual({ decision: "New", emojiDescription: "👉" });
+		expect(calls).toHaveLength(0);
+	});
+
+	test("returns a terminal safe miss for an uncatalogued Closed Lemma", async () => {
+		const { calls, sdk } = queueSdk([
+			{ decision: "New", emojiDescription: "🇫🇷" },
+		]);
+		const foreignLemma = { ...derLemma, canonicalForm: "le" };
+		const result = await buildDumgen({ sdk }).resolve.reading("de", {
+			markedContext: "<TARGET>le</TARGET> code",
+			lemma: foreignLemma,
+			existingEmojiDescriptions: [],
+		});
+
+		expect(result).toEqual({
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "DET" },
+			stage: "Reading",
+			candidate: { lemma: foreignLemma, emojiDescription: "🇫🇷" },
+		});
+		expect(calls).toHaveLength(1);
+		expect(JSON.stringify(result)).not.toContain("markedContext");
+	});
+
 	test("passes only the minimal input and makes membership authoritative", async () => {
 		const { calls, sdk } = queueSdk([
 			{ decision: "New", emojiDescription: "🏦" },
@@ -914,14 +1008,14 @@ describe("reading resolution", () => {
 		await expect(
 			dumgen.resolve.reading("de", {
 				markedContext: "Die <TARGET>Bank</TARGET>.",
-				lemma: "Bank",
+				lemma: bankLemma,
 				existingEmojiDescriptions: ["🏦"],
 			}),
 		).resolves.toEqual({ decision: "Reuse", emojiDescription: "🏦" });
 		await expect(
 			dumgen.resolve.reading("de", {
 				markedContext: "Die <TARGET>Bibliothek</TARGET>.",
-				lemma: "Bibliothek",
+				lemma: { ...bankLemma, canonicalForm: "Bibliothek" },
 				existingEmojiDescriptions: [],
 			}),
 		).resolves.toEqual({ decision: "New", emojiDescription: "📚" });
@@ -939,10 +1033,14 @@ describe("reading resolution", () => {
 		const { calls, sdk } = queueSdk([]);
 		const dumgen = buildDumgen({ sdk });
 		for (const input of [
-			{ markedContext: "", lemma: "Bank", existingEmojiDescriptions: [] },
+			{
+				markedContext: "",
+				lemma: bankLemma,
+				existingEmojiDescriptions: [],
+			},
 			{
 				markedContext: "<TARGET>Bank</TARGET>",
-				lemma: "",
+				lemma: { ...bankLemma, canonicalForm: "" },
 				existingEmojiDescriptions: [],
 			},
 		]) {

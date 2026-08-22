@@ -35,7 +35,10 @@ Definition, Translations, Morphological Tree, Lexical Breakdown, and direct
 Semantic Relations. For a Closed Route, Dumrel owns the corresponding
 hand-authored ordinary Knowledge values. They use the same DTO and persistence
 plumbing as generated Knowledge. Knowledge has no independent route closure:
-its production follows the closure of its exact Reading one-to-one.
+its production follows the closure of its exact Reading one-to-one. Dumrel's
+fixed lookup associates authored coverage and an ordinary Knowledge value with
+that exact Reading without adding owner, identity, or closure fields to either
+DTO.
 
 **Target Language**:
 A caller-chosen language label for one Translation bucket. It does not identify

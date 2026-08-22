@@ -410,6 +410,13 @@ Whether either branch uses model calls is implementation detail; a Closed Route
 never falls through to its corresponding Open Route.
 _Avoid_: Closed Class
 
+### Catalog Miss
+A structured non-success result from a promoted Closed Route when its fixed
+catalog lacks the required Lemma, Reading, or Reading Knowledge. It preserves
+bounded linguistic evidence for catalog growth and never becomes Unresolved or
+falls through to Open production.
+_Avoid_: Closed failure, model failure
+
 ### Reading
 A foundational Dumling semantic value formed by one Lemma and one emoji
 description, interpreted within one learner or hosted dictionary scope.

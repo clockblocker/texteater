@@ -157,7 +157,7 @@ describe("differential validation CI contract", () => {
 			[
 				"parseAsSegmentationDecision",
 				{ decision: "Unintelligible" },
-				"dumgen.readonly.27",
+				"dumgen.readonly.29",
 			],
 		] as const) {
 			const artifact = decodeDumgenValidationArtifact(route);

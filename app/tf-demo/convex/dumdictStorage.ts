@@ -56,6 +56,11 @@ async function getState(ctx: ServerCtx) {
 		.unique();
 }
 
+/** Current revision for app-owned composition of an ordinary Dumdict plan. */
+export async function loadDumdictRevision(ctx: ServerCtx): Promise<string> {
+	return revisionString((await getState(ctx))?.revision ?? 0);
+}
+
 async function currentRevision(ctx: ServerCtx): Promise<string> {
 	return revisionString((await getState(ctx))?.revision ?? 0);
 }
@@ -365,6 +370,14 @@ async function findLemma(ctx: ServerCtx, lemma: unknown) {
 	return dictionary ? { canonical, dictionary } : null;
 }
 
+/** True when the exact ordinary Lemma is already part of the dictionary. */
+export async function hasDumdictLemma(
+	ctx: ServerCtx,
+	lemma: unknown,
+): Promise<boolean> {
+	return (await findLemma(ctx, lemma)) !== null;
+}
+
 async function findLemmaByKey(ctx: ServerCtx, lemmaKey: string) {
 	const canonical = await ctx.db
 		.query("lemmas")
@@ -409,6 +422,14 @@ async function findReadingByKey(ctx: ServerCtx, readingKey: string) {
 		.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
 		.unique();
 	return canonical ? loadReading(ctx, canonical) : null;
+}
+
+/** Internal app seam for composing ordinary Dumdict writes atomically. */
+export async function loadDumdictReadingEntryByKey(
+	ctx: ServerCtx,
+	readingKey: string,
+) {
+	return (await findReadingByKey(ctx, readingKey))?.entry ?? null;
 }
 
 async function loadReading(

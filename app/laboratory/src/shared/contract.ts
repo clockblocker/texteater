@@ -78,7 +78,11 @@ export type ClassificationStageResult = {
 
 export type ResolutionDiagnostic = {
 	stage: ClassificationStageName;
-	kind: "Unresolved" | "DecisionMismatch" | "ResolutionRouteNotImplemented";
+	kind:
+		| "Unresolved"
+		| "CatalogMiss"
+		| "DecisionMismatch"
+		| "ResolutionRouteNotImplemented";
 	message: string;
 };
 
@@ -117,6 +121,21 @@ export type ClickResolutionResponse =
 	| {
 			decision: "Unresolved";
 			target?: AnalysisTarget;
+			stages: Partial<
+				Record<ClassificationStageName, ClassificationStageResult>
+			>;
+			diagnostics: ResolutionDiagnostic[];
+			generation: ClassificationGeneration;
+	  }
+	| {
+			decision: "CatalogMiss";
+			stage: "Lemma" | "Reading";
+			reason: "MemberNotCatalogued" | "InventoryNotLoaded";
+			language: "de";
+			family: AnalysisTarget["family"];
+			kind: AnalysisTarget["kind"];
+			target: AnalysisTarget;
+			candidate: Lemma | Reading;
 			stages: Partial<
 				Record<ClassificationStageName, ClassificationStageResult>
 			>;

@@ -2,6 +2,8 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 import {
+	catalogMissReasonValidator,
+	catalogMissStageValidator,
 	directSemanticRelationValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeSettingsValidator,
@@ -312,6 +314,29 @@ export default defineSchema({
 		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
 		.index("by_stage_and_updated_at", ["stage", "updatedAt"]),
+
+	catalogGrowthSignals: defineTable({
+		signalKey: v.string(),
+		language: v.literal("de"),
+		family: v.string(),
+		kind: v.string(),
+		stage: catalogMissStageValidator,
+		reason: catalogMissReasonValidator,
+		catalogMissJson: v.string(),
+		occurrences: v.number(),
+		firstSeenAt: v.number(),
+		lastSeenAt: v.number(),
+		lastRequestId: v.string(),
+	})
+		.index("by_signal_key", ["signalKey"])
+		.index("by_route_stage_reason_and_last_seen_at", [
+			"language",
+			"family",
+			"kind",
+			"stage",
+			"reason",
+			"lastSeenAt",
+		]),
 
 	dictionaryState: defineTable({
 		key: v.literal("global"),

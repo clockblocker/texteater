@@ -11,6 +11,8 @@ import { applyDumdictKnowledgeChange, makeSurfaceId } from "dumdict/runtime";
 import type {
 	Dumgen,
 	GrammaticalResult,
+	LemmaCatalogMiss,
+	ReadingCatalogMiss,
 	Segment,
 	SegmentedSentence,
 	SegmentedSentenceId,
@@ -144,7 +146,7 @@ type ResolvedGrammatical = Extract<
 
 type NonResolvedGrammatical = Exclude<
 	GrammaticalResult<"de">,
-	{ decision: "Resolved" }
+	{ decision: "Resolved" | "CatalogMiss" }
 >;
 
 type ReadingResolution = {
@@ -153,6 +155,9 @@ type ReadingResolution = {
 };
 
 export type ResolveSegmentResult =
+	| {
+			readonly catalogMiss: LemmaCatalogMiss | ReadingCatalogMiss;
+	  }
 	| {
 			readonly grammatical: ResolvedGrammatical;
 			readonly reading: Reading<"de">;
@@ -363,6 +368,9 @@ export function createTfDemoOrchestrator(options: {
 			clickedSegmentIndex: input.clickedSegmentIndex,
 		});
 
+		if (grammatical.decision === "CatalogMiss") {
+			return { catalogMiss: grammatical };
+		}
 		if (grammatical.decision !== "Resolved") {
 			const persisted =
 				await options.persistence.persistUnresolvedClick(input);
@@ -385,11 +393,14 @@ export function createTfDemoOrchestrator(options: {
 		});
 		const readingResolution = await options.dumgen.resolve.reading("de", {
 			markedContext: grammatical.markedContext,
-			lemma: lemma.canonicalForm,
+			lemma,
 			existingEmojiDescriptions: storedReadings.candidates.map(
 				({ reading }) => reading.emojiDescription,
 			),
 		});
+		if (readingResolution.decision === "CatalogMiss") {
+			return { catalogMiss: readingResolution };
+		}
 		const reading = parseGermanReading({
 			lemma,
 			emojiDescription: readingResolution.emojiDescription,

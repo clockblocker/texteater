@@ -8,11 +8,15 @@
  * @module
  */
 
+import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as demoReset from "../demoReset.js";
 import type * as dumdictStorage from "../dumdictStorage.js";
+import type * as fixedMemberPersistence from "../fixedMemberPersistence.js";
+import type * as fixedMembers from "../fixedMembers.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
+import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
@@ -49,11 +53,15 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  catalogGrowthSignals: typeof catalogGrowthSignals;
   demoReset: typeof demoReset;
   dumdictStorage: typeof dumdictStorage;
+  fixedMemberPersistence: typeof fixedMemberPersistence;
+  fixedMembers: typeof fixedMembers;
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
+  "model/canonicalJson": typeof model_canonicalJson;
   "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;

@@ -27,6 +27,16 @@ tf-demo. The package-level learner scope of a Dumdict Reading is the whole demo,
 not an anonymous Visitor.
 _Avoid_: Visitor Dictionary, personal dictionary
 
+**Fixed Member Loading**:
+The idempotent application setup operation that reconciles package-owned fixed
+Lemmas, Readings, and Reading Knowledge into the Shared Demo Dictionary through
+their ordinary records and identities.
+
+**Catalog Growth Signal**:
+A durable application-owned aggregate of equivalent Catalog Misses used to
+prioritize additions to package-owned Fixed Catalogs. It is operational
+diagnostic evidence, not linguistic identity or Visitor history.
+
 **Semantic Relation Edge**:
 One normalized direct Reading-owned claim whose endpoint is a Lemma. Resolved
 direct and inferred views navigate to Lemma Route Notes with provenance. Only

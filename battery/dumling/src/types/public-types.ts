@@ -95,6 +95,21 @@ export type LemmaKindFor<
 		? AbstractLemmaKindFor<LK>
 		: never;
 
+/**
+ * One language, Family, and Kind coordinate used by linguistic production
+ * policy. The mapped union preserves the Family-to-Kind correlation.
+ */
+export type LemmaRoute<L extends SupportedLanguage = SupportedLanguage> =
+	L extends SupportedLanguage
+		? {
+				[F in LemmaFamilyFor<L>]: Readonly<{
+					language: L;
+					family: F;
+					kind: LemmaKindFor<L, F>;
+				}>;
+			}[LemmaFamilyFor<L>]
+		: never;
+
 export type SurfaceKindFor<L extends SupportedLanguage> =
 	L extends ConcreteLanguage
 		? Extract<keyof SurfaceByKindForLanguage<L>, SurfaceKind>
@@ -139,6 +154,22 @@ export type Lemma<
 				>
 		>
 	: PlaceholderLemma<L, LK, LSK>;
+
+/** The exact ordinary Lemma value selected by a production route. */
+export type LemmaForRoute<R extends LemmaRoute> =
+	R extends Readonly<{
+		language: infer L;
+		family: infer F;
+		kind: infer K;
+	}>
+		? L extends SupportedLanguage
+			? F extends LemmaFamilyFor<L>
+				? K extends LemmaKindFor<L, F>
+					? Lemma<L, F, K>
+					: never
+				: never
+			: never
+		: never;
 
 /**
  * A Surface is the persistent normalized learner-facing grammatical form.

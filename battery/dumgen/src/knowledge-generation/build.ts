@@ -1,3 +1,4 @@
+import type { LemmaRoute } from "dumling/types";
 import type { AiSdk } from "../ai-sdk/ai-sdk";
 import { runtimeCombinedGermanKnowledgePrompt } from "../catalog/runtime-prompt-catalog";
 import {
@@ -5,6 +6,12 @@ import {
 	type ModelExchange,
 } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
+import {
+	parseAsKnowledgeGenerationInput,
+	unwrapDumgenParse,
+} from "../parsing/lightweight-parsers";
+import { dispatchProduction } from "../production/dispatcher";
+import { generateFixedKnowledge } from "../production/fixed-knowledge";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationLanguage,
@@ -55,7 +62,29 @@ export function createKnowledgeDumgen(options: {
 				},
 			);
 		}
-		return generateGermanKnowledge(input);
+		let validated: KnowledgeGenerationInput<"de">;
+		try {
+			validated = unwrapDumgenParse(
+				parseAsKnowledgeGenerationInput(input, "de"),
+			);
+		} catch (cause) {
+			throw new DumgenError(
+				"invalid-input",
+				"German Knowledge generation input is invalid.",
+				{ cause },
+			);
+		}
+		const route = {
+			language: validated.reading.lemma.language,
+			family: validated.reading.lemma.family,
+			kind: validated.reading.lemma.kind,
+		} as LemmaRoute;
+		const { isClosedRouteFor } = await import("dumling");
+		return dispatchProduction({
+			closed: isClosedRouteFor.reading(route),
+			runClosed: async () => generateFixedKnowledge(validated),
+			runOpen: async () => generateGermanKnowledge(validated),
+		});
 	}
 
 	return Object.freeze({

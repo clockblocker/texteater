@@ -6,6 +6,8 @@ export {
 } from "./ai-sdk/ai-sdk";
 export {
 	buildDumgen,
+	type CatalogMissBase,
+	type CatalogMissReason,
 	type Dumgen,
 	DumgenError,
 	type DumgenErrorCode,
@@ -23,9 +25,14 @@ export {
 	type KnowledgeGenerationLanguage,
 	type KnowledgeGenerationRequest,
 	type KnowledgeGenerationResult,
+	type KnowledgeGenerationSuccess,
+	type LemmaCatalogMiss,
+	type ReadingCatalogMiss,
 	type ReadingInput,
+	type ReadingKnowledgeCatalogMiss,
 	type ReadingResolution,
 	type ReadingResolutionLanguage,
+	type ReadingResolutionSuccess,
 	type RequestableRelation,
 	type Section1Error,
 	type Segment,

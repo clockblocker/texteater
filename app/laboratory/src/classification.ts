@@ -295,6 +295,48 @@ export class GermanClassificationResolver {
 				};
 			}
 
+			if (grammatical.decision === "CatalogMiss") {
+				if (!target) {
+					throw new Error(
+						"A Lemma CatalogMiss requires an observable Analysis Target.",
+					);
+				}
+				stages.grammatical = stage(
+					grammaticalResolutionPrompt(target),
+					modelExchanges,
+					exchangeStart,
+				);
+				const prompts = promptsFromExchanges(
+					modelExchanges,
+					exchangeStart,
+				);
+				attemptedPrompts.push(...prompts);
+				return {
+					decision: "CatalogMiss",
+					stage: grammatical.stage,
+					reason: grammatical.reason,
+					language: grammatical.language,
+					family: grammatical.route.family,
+					kind: grammatical.route.kind,
+					target,
+					candidate: grammatical.candidate,
+					stages,
+					diagnostics: [
+						{
+							stage: "grammatical",
+							kind: "CatalogMiss",
+							message: `The promoted de/${grammatical.route.family}/${grammatical.route.kind} route has no fixed Lemma for this candidate.`,
+						},
+					],
+					generation: {
+						model: "gpt-5.6-luna",
+						prompts,
+						cache: "miss",
+						modelCalls: prompts.length,
+					},
+				};
+			}
+
 			if (grammatical.decision === "Unresolved") {
 				const grammaticalPrompt = target
 					? grammaticalResolutionPrompt(target)
@@ -367,7 +409,7 @@ export class GermanClassificationResolver {
 		try {
 			reading = await this.#dumgen.resolve.reading("de", {
 				markedContext: grammaticalUnit.markedContext,
-				lemma: lemma.canonicalForm,
+				lemma,
 				existingEmojiDescriptions,
 			});
 		} catch (error) {
@@ -381,6 +423,34 @@ export class GermanClassificationResolver {
 			modelExchanges,
 			exchangeStart,
 		);
+		if (reading.decision === "CatalogMiss") {
+			const prompts = promptsFromExchanges(modelExchanges, exchangeStart);
+			attemptedPrompts.push(...prompts);
+			return {
+				decision: "CatalogMiss",
+				stage: reading.stage,
+				reason: reading.reason,
+				language: reading.language,
+				family: reading.route.family,
+				kind: reading.route.kind,
+				target,
+				candidate: reading.candidate,
+				stages,
+				diagnostics: [
+					{
+						stage: "reading",
+						kind: "CatalogMiss",
+						message: `The promoted de/${reading.route.family}/${reading.route.kind} route has no fixed Reading for this candidate.`,
+					},
+				],
+				generation: {
+					model: "gpt-5.6-luna",
+					prompts,
+					cache: "miss",
+					modelCalls: prompts.length,
+				},
+			};
+		}
 
 		const diagnostics: ResolutionDiagnostic[] = [];
 		const readingExchange = acceptedExchange(

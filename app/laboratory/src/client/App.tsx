@@ -755,7 +755,9 @@ function ResolutionInspector({ state }: { state: LaboratoryState }) {
 											"GrammaticalResolution"
 											? `${resolution.stage} is not enabled for de/${resolution.family}/${resolution.kind}.`
 											: "Reading Resolution is not enabled, so the complete canonical result was not constructed."
-										: "Grammatical Resolution returned Unresolved."
+										: resolution.decision === "CatalogMiss"
+											? "The Closed Route returned a Catalog Miss."
+											: "Grammatical Resolution returned Unresolved."
 								}
 							/>
 						</TabsContent>
@@ -887,9 +889,9 @@ function Diagnostics({
 				</Alert>
 			))}
 			<p className="text-xs text-muted-foreground">
-				Unresolved is a prompt-quality failure;
-				ResolutionRouteNotImplemented is an intentional incremental
-				rollout boundary.
+				Unresolved is a prompt-quality failure; CatalogMiss is a
+				catalog-growth signal; ResolutionRouteNotImplemented is an
+				intentional incremental rollout boundary.
 			</p>
 		</div>
 	);

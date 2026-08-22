@@ -68,9 +68,11 @@ describe("lazy Dumgen validation operations", () => {
 		expect(operations["dumgen.readonly.1"](shallow).value).toBe(shallow);
 		expect(Object.isFrozen(shallow)).toBe(true);
 		expect(Object.isFrozen(shallow.nested)).toBe(false);
-		const deep = { nested: {} };
-		expect(operations["dumgen.deep-freeze"](deep).value).toBe(deep);
-		expect(Object.isFrozen(deep.nested)).toBe(true);
+		const knowledge = { changes: [], pendingRelations: [] };
+		expect(
+			operations["dumgen.finalize-knowledge-result"](knowledge).value,
+		).toBe(knowledge);
+		expect(Object.isFrozen(knowledge.changes)).toBe(true);
 		expect(
 			operations["dumgen.knowledge-reading.de"]({
 				lemma: { language: "en" },
@@ -130,6 +132,17 @@ function operationWitness(name: string): unknown {
 		return { language: "de", family: "Unknown", kind: "Unknown" };
 	if (name === "dumgen.knowledge-reading.de")
 		return { lemma: { language: "en" } };
+	if (name === "dumgen.knowledge-lemma.de") return { language: "en" };
+	if (name === "dumgen.catalog-miss.lemma-route-correlation")
+		return {
+			route: { family: "Lexeme", kind: "VERB" },
+			candidate: { family: "Lexeme", kind: "NOUN" },
+		};
+	if (name === "dumgen.catalog-miss.reading-knowledge-route-correlation")
+		return {
+			route: { family: "Lexeme", kind: "VERB" },
+			reading: { lemma: { family: "Lexeme", kind: "NOUN" } },
+		};
 	if (name === "dumgen.relation-target.de") return { language: "en" };
 	if (name === "dumgen.segment.whitespace")
 		return { kind: "Whitespace", text: "  " };
@@ -149,7 +162,8 @@ function operationWitness(name: string): unknown {
 		return {
 			changes: [{ aspect: "definition", kind: "Retract" }],
 		};
-	if (name === "dumgen.deep-freeze") return { nested: {} };
+	if (name === "dumgen.finalize-knowledge-result")
+		return { changes: [], pendingRelations: [] };
 	return {};
 }
 
@@ -167,10 +181,12 @@ function expectOperationMutationKilled(
 		).toBe(false);
 		return;
 	}
-	if (name === "dumgen.deep-freeze") {
+	if (name === "dumgen.finalize-knowledge-result") {
 		expect(Object.isFrozen(result.value), name).toBe(true);
 		expect(
-			Object.isFrozen((result.value as { nested: object }).nested),
+			Object.isFrozen(
+				(result.value as { changes: readonly unknown[] }).changes,
+			),
 			name,
 		).toBe(true);
 		return;
@@ -189,7 +205,9 @@ function expectOperationMutationKilled(
 	if (
 		name.includes(".custom.") ||
 		name.includes("supported-route") ||
+		name.startsWith("dumgen.catalog-miss.") ||
 		name === "dumgen.knowledge-reading.de" ||
+		name === "dumgen.knowledge-lemma.de" ||
 		name === "dumgen.relation-target.de" ||
 		name === "dumgen.segment.whitespace" ||
 		name === "dumgen.translation-request.english" ||

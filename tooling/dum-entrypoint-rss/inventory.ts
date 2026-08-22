@@ -85,6 +85,15 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumling/vocabulary",
 	},
 	{
+		classification: "operational",
+		operation: {
+			description: "Read and verify the fixed German determiner catalog.",
+			id: "dumling.read-fixed-catalog",
+		},
+		rationale: "Runtime fixed-member catalog and lookup surface.",
+		specifier: "dumling/fixed",
+	},
+	{
 		classification: "metadata",
 		rationale: "Package metadata, not executable application code.",
 		specifier: "dumling/package.json",
@@ -137,6 +146,16 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 		rationale: "Runtime constants consumed without a schema import.",
 		specifier: "dumrel/vocabulary",
+	},
+	{
+		classification: "operational",
+		operation: {
+			description:
+				"Resolve fixed Knowledge for a catalogued German determiner Reading.",
+			id: "dumrel.resolve-fixed-knowledge",
+		},
+		rationale: "Runtime fixed-Knowledge lookup surface.",
+		specifier: "dumrel/fixed",
 	},
 	{
 		classification: "metadata",

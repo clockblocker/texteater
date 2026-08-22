@@ -281,6 +281,42 @@ function frozenShape(value: unknown): unknown {
 }
 
 describe("Dumgen lightweight parsers", () => {
+	test("rejects Catalog Miss routes that disagree with candidate evidence", () => {
+		const lemmaMiss = {
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "VERB" },
+			stage: "Lemma",
+			candidate: germanReading.lemma,
+		} as const;
+		const knowledgeMiss = {
+			decision: "CatalogMiss",
+			reason: "InventoryNotLoaded",
+			language: "de",
+			route: { family: "Morpheme", kind: "Prefix" },
+			stage: "ReadingKnowledge",
+			reading: germanReading,
+			missingRequest: { definition: null },
+		} as const;
+
+		for (const parsed of [
+			parseAsGrammaticalResult(lemmaMiss, "de"),
+			parseAsKnowledgeGenerationResult(knowledgeMiss),
+		]) {
+			expect(parsed).toBeInstanceOf(ParsingError);
+			if (!(parsed instanceof ParsingError)) continue;
+			expect(parsed.issues).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						code: "custom",
+						path: ["route"],
+					}),
+				]),
+			);
+		}
+	});
+
 	test("perform no module or file I/O on first and repeated parser calls", () => {
 		const originalGetBuiltinModule = process.getBuiltinModule;
 		const loadedModules: string[] = [];

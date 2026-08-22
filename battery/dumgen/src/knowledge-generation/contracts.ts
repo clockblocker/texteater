@@ -5,6 +5,7 @@ import type {
 	PendingSemanticRelation,
 	UnitShadow,
 } from "dumrel";
+import type { CatalogMissBase } from "../production/contracts";
 import type { RequestableRelation } from "../vocabulary";
 
 export type KnowledgeGenerationLanguage = "de";
@@ -45,7 +46,7 @@ type DeepReadonly<Value> = Value extends
 				? { readonly [Key in keyof Value]: DeepReadonly<Value[Key]> }
 				: Value;
 
-export type KnowledgeGenerationResult = DeepReadonly<{
+export type KnowledgeGenerationSuccess = DeepReadonly<{
 	changes: KnowledgeChange<"en">[];
 	pendingRelations: Array<
 		Omit<PendingSemanticRelation, "relation" | "target"> & {
@@ -54,5 +55,16 @@ export type KnowledgeGenerationResult = DeepReadonly<{
 		}
 	>;
 }>;
+
+export type ReadingKnowledgeCatalogMiss = CatalogMissBase &
+	Readonly<{
+		stage: "ReadingKnowledge";
+		reading: Reading<"de">;
+		missingRequest: KnowledgeGenerationRequest;
+	}>;
+
+export type KnowledgeGenerationResult =
+	| KnowledgeGenerationSuccess
+	| ReadingKnowledgeCatalogMiss;
 
 export type { RequestableRelation } from "../vocabulary";

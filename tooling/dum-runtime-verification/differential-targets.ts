@@ -1490,6 +1490,15 @@ const DUMGEN_VALUES_BY_ROUTE = {
 	parseAsKnowledgeGenerationResult: [
 		{ changes: [], pendingRelations: [] },
 		{
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "NOUN" },
+			stage: "ReadingKnowledge",
+			reading: dumgenGermanReading,
+			missingRequest: { definition: null },
+		},
+		{
 			changes: [
 				{
 					aspect: "definition",
@@ -1637,6 +1646,14 @@ const DUMGEN_VALUES_BY_ROUTE = {
 	],
 	"parseAsGrammaticalResult:de": [
 		dumgenResolvedResult,
+		{
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "NOUN" },
+			stage: "Lemma",
+			candidate: dumgenGermanReading.lemma,
+		},
 		{
 			attestation: {
 				members: [{ attested: "Banken", orthography: "Standard" }],

@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { type Infer, v } from "convex/values";
 import {
 	enabledSegmentationLanguageValues,
 	grammaticalResolutionLanguageValues,
@@ -172,6 +172,91 @@ export const readingValueValidator = v.object({
 	lemma: lemmaValueValidator,
 	emojiDescription: v.string(),
 });
+
+const catalogCoreFeaturesValidator = v.record(
+	v.string(),
+	v.union(v.null(), v.string(), v.array(v.string())),
+);
+
+const catalogLemmaValidator = v.object({
+	language: v.literal("de"),
+	family: v.string(),
+	kind: v.string(),
+	canonicalForm: v.string(),
+	coreFeatures: catalogCoreFeaturesValidator,
+});
+
+const catalogReadingValidator = v.object({
+	lemma: catalogLemmaValidator,
+	emojiDescription: v.string(),
+});
+
+export const catalogMissReasonValidator = v.union(
+	v.literal("MemberNotCatalogued"),
+	v.literal("InventoryNotLoaded"),
+);
+
+export const catalogMissStageValidator = v.union(
+	v.literal("Lemma"),
+	v.literal("Reading"),
+	v.literal("ReadingKnowledge"),
+);
+
+const catalogMissBase = {
+	decision: v.literal("CatalogMiss"),
+	reason: catalogMissReasonValidator,
+	language: v.literal("de"),
+	route: v.object({ family: v.string(), kind: v.string() }),
+};
+
+const missingKnowledgeRequestValidator = v.object({
+	transcription: v.optional(v.null()),
+	definition: v.optional(v.null()),
+	translations: v.optional(v.object({ en: v.optional(v.null()) })),
+	semanticRelations: v.optional(
+		v.object({
+			synonym: v.optional(v.null()),
+			nearSynonym: v.optional(v.null()),
+			antonym: v.optional(v.null()),
+			nearAntonym: v.optional(v.null()),
+			hypernym: v.optional(v.null()),
+			hyponym: v.optional(v.null()),
+			meronym: v.optional(v.null()),
+			holonym: v.optional(v.null()),
+		}),
+	),
+});
+
+export const catalogMissValidator = v.union(
+	v.object({
+		...catalogMissBase,
+		stage: v.literal("Lemma"),
+		candidate: catalogLemmaValidator,
+	}),
+	v.object({
+		...catalogMissBase,
+		stage: v.literal("Reading"),
+		candidate: catalogReadingValidator,
+	}),
+	v.object({
+		...catalogMissBase,
+		stage: v.literal("ReadingKnowledge"),
+		reading: catalogReadingValidator,
+		missingRequest: missingKnowledgeRequestValidator,
+	}),
+);
+
+export function catalogMissRouteMatches(
+	miss: Infer<typeof catalogMissValidator>,
+): boolean {
+	const lemma =
+		miss.stage === "Lemma"
+			? miss.candidate
+			: miss.stage === "Reading"
+				? miss.candidate.lemma
+				: miss.reading.lemma;
+	return miss.route.family === lemma.family && miss.route.kind === lemma.kind;
+}
 
 export const resolutionStageValidator = v.union(
 	v.literal("Starting"),
@@ -383,6 +468,7 @@ const readingResolutionValidator = v.object({
 });
 
 export const resolveSegmentResultValidator = v.union(
+	v.object({ catalogMiss: catalogMissValidator }),
 	v.object({
 		grammatical: resolvedGrammaticalValidator,
 		reading: readingValueValidator,

@@ -5,6 +5,7 @@ import { addNewNote } from "./add-new-note";
 import { applyGeneratedKnowledge } from "./apply-generated-knowledge";
 import { cleanupRelations } from "./cleanup-relations";
 import { ensureOwnedSurface } from "./ensure-owned-surface";
+import { ensureReadingEntry } from "./ensure-reading-entry";
 import { findStoredReadings } from "./find-stored-readings";
 import { getInfoForRelationsCleanup } from "./get-info-for-relations-cleanup";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
@@ -22,6 +23,8 @@ export function createDumdictServiceImplementation<L extends SupportedLanguage>(
 			applyGeneratedKnowledge(options, request, mutationOptions),
 		ensureOwnedSurface: (request, mutationOptions) =>
 			ensureOwnedSurface(options, request, mutationOptions),
+		ensureReadingEntry: (request, mutationOptions) =>
+			ensureReadingEntry(options, request, mutationOptions),
 		getInfoForRelationsCleanup: (request) =>
 			getInfoForRelationsCleanup(options, request),
 		cleanupRelations: (request, mutationOptions) =>

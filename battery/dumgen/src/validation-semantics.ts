@@ -1,9 +1,10 @@
 import type { ParsingIssue } from "common-utils";
-import type { Reading } from "dumling/types";
+import type { Lemma, Reading } from "dumling/types";
 import type { KnowledgeChange, UnitShadow } from "dumrel/types";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationResult,
+	KnowledgeGenerationSuccess,
 } from "./knowledge-generation/contracts.js";
 import type { SegmentedSentenceId } from "./types.js";
 
@@ -25,6 +26,14 @@ export function isGermanKnowledgeReading(reading: unknown): boolean {
 		typeof reading === "object" &&
 		Reflect.get(Reflect.get(reading, "lemma") as object, "language") ===
 			"de"
+	);
+}
+
+export function isGermanKnowledgeLemma(lemma: unknown): lemma is Lemma<"de"> {
+	return (
+		lemma !== null &&
+		typeof lemma === "object" &&
+		Reflect.get(lemma, "language") === "de"
 	);
 }
 
@@ -88,8 +97,40 @@ export function knowledgeGenerationResultIssues(result: {
 
 export function bindKnowledgeGenerationResult(
 	result: unknown,
+): KnowledgeGenerationSuccess {
+	return result as KnowledgeGenerationSuccess;
+}
+
+export function finalizeKnowledgeGenerationResult(
+	result: unknown,
 ): KnowledgeGenerationResult {
-	return result as KnowledgeGenerationResult;
+	const typed = result as KnowledgeGenerationResult;
+	return "decision" in typed && typed.decision === "CatalogMiss"
+		? typed
+		: deepFreeze(bindKnowledgeGenerationResult(typed));
+}
+
+function routeMatchesLemma(
+	route: { readonly family: string; readonly kind: string },
+	lemma: { readonly family: string; readonly kind: string },
+): boolean {
+	return route.family === lemma.family && route.kind === lemma.kind;
+}
+
+export function lemmaCatalogMissRouteMatches(value: {
+	readonly route: { readonly family: string; readonly kind: string };
+	readonly candidate: { readonly family: string; readonly kind: string };
+}): boolean {
+	return routeMatchesLemma(value.route, value.candidate);
+}
+
+export function readingKnowledgeCatalogMissRouteMatches(value: {
+	readonly route: { readonly family: string; readonly kind: string };
+	readonly reading: {
+		readonly lemma: { readonly family: string; readonly kind: string };
+	};
+}): boolean {
+	return routeMatchesLemma(value.route, value.reading.lemma);
 }
 
 export function shallowFreeze<Value>(value: Value): Value {

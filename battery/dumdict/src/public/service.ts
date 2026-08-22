@@ -9,6 +9,7 @@ import type {
 	OwnedSurfaceDraft,
 	PendingSemanticRelationLocator,
 	Reading,
+	ReadingEntry,
 	StoreRevision,
 } from "../dto";
 import type { CommitChangesResult, DumdictPlan } from "../storage/commit";
@@ -34,6 +35,14 @@ export type AddNewNoteRequest<L extends SupportedLanguage> = {
 export type EnsureOwnedSurfaceRequest<L extends SupportedLanguage> = {
 	reading: Reading<L>;
 	ownedSurface: OwnedSurfaceDraft<L>;
+};
+
+export type EnsureReadingEntryRequest<L extends SupportedLanguage> = {
+	/**
+	 * Exact ordinary entry to create or verify. Semantic Relations are excluded
+	 * because their graph invariants require Dumdict's relation-aware workflows.
+	 */
+	entry: ReadingEntry<L>;
 };
 
 export type ApplyGeneratedKnowledgeRequest<L extends SupportedLanguage> = {
@@ -86,6 +95,11 @@ export type DumdictService<L extends SupportedLanguage> = {
 
 	ensureOwnedSurface(
 		request: EnsureOwnedSurfaceRequest<L>,
+		options?: DumdictMutationOptions<L>,
+	): Promise<MutationResult<L>>;
+
+	ensureReadingEntry(
+		request: EnsureReadingEntryRequest<L>,
 		options?: DumdictMutationOptions<L>,
 	): Promise<MutationResult<L>>;
 

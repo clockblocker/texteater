@@ -31,6 +31,26 @@ const englishReading = {
 	lemma: englishVerbLemma,
 } as const;
 
+const germanDeterminerReading = {
+	emojiDescription: "👉",
+	lemma: {
+		canonicalForm: "der",
+		coreFeatures: {
+			definite: "Def",
+			extPos: null,
+			foreign: null,
+			numType: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Art",
+		},
+		family: "Lexeme",
+		kind: "DET",
+		language: "de",
+	},
+} as const;
+
 function exportedFunction(
 	publicModule: PublicModule,
 	name: string,
@@ -129,6 +149,25 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"Dumling runtime vocabulary must contain Standard orthography.",
 		);
 	},
+	"dumling.read-fixed-catalog"(publicModule) {
+		const allFixedLemmaCatalogs = exportedFunction(
+			publicModule,
+			"allFixedLemmaCatalogs",
+		);
+		const catalogs = allFixedLemmaCatalogs() as readonly {
+			coverage?: string;
+			members?: readonly unknown[];
+			scope?: string;
+		}[];
+		const detCatalog = catalogs.find(
+			({ scope }) => scope === "de-Lexeme-DET-v1",
+		);
+		assert(
+			detCatalog?.coverage === "Complete" &&
+				(detCatalog.members?.length ?? 0) > 0,
+			"Dumling fixed DET catalog must expose its complete named perimeter.",
+		);
+	},
 	"dumrel.apply-knowledge-change"(publicModule) {
 		const applyKnowledgeChange = exportedFunction(
 			publicModule,
@@ -175,6 +214,22 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			Array.isArray(publicModule.semanticRelationValues) &&
 				publicModule.semanticRelationValues.includes("synonym"),
 			"Dumrel runtime vocabulary must contain synonym.",
+		);
+	},
+	"dumrel.resolve-fixed-knowledge"(publicModule) {
+		const fixedKnowledgeFor = exportedFunction(
+			publicModule,
+			"fixedKnowledgeFor",
+		);
+		const result = fixedKnowledgeFor(germanDeterminerReading as never) as {
+			decision?: string;
+			knowledge?: { definition?: string; transcription?: string };
+		};
+		assert(
+			result.decision === "Found" &&
+				typeof result.knowledge?.definition === "string" &&
+				result.knowledge.transcription === undefined,
+			"Dumrel fixed DET lookup must return authored Knowledge without an unauthored transcription.",
 		);
 	},
 	"dumdict.apply-knowledge-change"(publicModule) {

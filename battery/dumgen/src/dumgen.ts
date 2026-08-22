@@ -20,6 +20,8 @@ export {
 	type DumgenErrorCode,
 } from "./generator/generator-error";
 export type {
+	CatalogMissBase,
+	CatalogMissReason,
 	EnabledSegmentationLanguage,
 	GrammaticalInput,
 	GrammaticalInteraction,
@@ -30,9 +32,14 @@ export type {
 	KnowledgeGenerationLanguage,
 	KnowledgeGenerationRequest,
 	KnowledgeGenerationResult,
+	KnowledgeGenerationSuccess,
+	LemmaCatalogMiss,
+	ReadingCatalogMiss,
 	ReadingInput,
+	ReadingKnowledgeCatalogMiss,
 	ReadingResolution,
 	ReadingResolutionLanguage,
+	ReadingResolutionSuccess,
 	RequestableRelation,
 	Section1Error,
 	Segment,
@@ -69,7 +76,7 @@ export type Dumgen = {
 		): Promise<GrammaticalResult<L>>;
 		reading<L extends ReadingResolutionLanguage>(
 			language: L,
-			input: ReadingInput,
+			input: ReadingInput<L>,
 		): Promise<ReadingResolution>;
 	};
 	readonly generate: {

@@ -16,11 +16,12 @@ if (decision?.decision === "Accepted" && decision.language === "de") {
 	if (grammatical.decision === "Resolved") {
 		const reading = await dumgen.resolve.reading("de", {
 			markedContext: grammatical.markedContext,
-			lemma: grammatical.attestation.surface.lemma.canonicalForm,
+			lemma: grammatical.attestation.surface.lemma,
 			existingEmojiDescriptions: [],
 		});
 
-		const generated = await dumgen.generate.knowledge("de", {
+		if (reading.decision !== "CatalogMiss") {
+			const generated = await dumgen.generate.knowledge("de", {
 			markedContext: grammatical.markedContext,
 			reading: {
 				lemma: grammatical.attestation.surface.lemma,
@@ -31,8 +32,10 @@ if (decision?.decision === "Accepted" && decision.language === "de") {
 				definition: null,
 				translations: { en: null },
 			},
-		});
-		console.log(generated.changes, generated.pendingRelations);
+			});
+			if (!("decision" in generated))
+				console.log(generated.changes, generated.pendingRelations);
+		}
 	}
 }
 // README_BLOCK:basic-usage:end

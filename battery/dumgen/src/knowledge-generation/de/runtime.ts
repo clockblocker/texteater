@@ -43,9 +43,12 @@ export function createGermanKnowledgeGeneration(
 
 		const generated = await generateCombined(input);
 		try {
-			return unwrapDumgenParse(
+			const parsed = unwrapDumgenParse(
 				parseAsKnowledgeGenerationResult(generated),
 			);
+			if ("decision" in parsed)
+				throw new TypeError("Open Knowledge produced a CatalogMiss.");
+			return parsed;
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-output",

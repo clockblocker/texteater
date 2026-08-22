@@ -49,6 +49,11 @@
 			"import": "./dist/reading.js",
 			"default": "./dist/reading.js"
 		},
+		"./fixed": {
+			"types": "./dist/fixed.d.ts",
+			"import": "./dist/fixed.js",
+			"default": "./dist/fixed.js"
+		},
 		"./id": {
 			"types": "./dist/id.d.ts",
 			"import": "./dist/id.js",
@@ -74,7 +79,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/id.ts src/reading.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/id.ts src/reading.ts src/fixed.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"check:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.type-tests.json --noEmit",

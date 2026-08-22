@@ -4,16 +4,16 @@ import {
 } from "../../parsing/lightweight-parsers";
 import { parseRuntimePromptSchema } from "../../parsing/runtime-prompt-schemas";
 import { requestableRelationValues } from "../../vocabulary";
-import type { KnowledgeGenerationResult } from "../contracts";
+import type { KnowledgeGenerationSuccess } from "../contracts";
 import type {
 	GermanKnowledgeAnalysis,
 	GermanKnowledgeGenerationInput,
 } from "./runtime-schema";
 
-export type GeneratedKnowledgeUpdate = KnowledgeGenerationResult;
+export type GeneratedKnowledgeUpdate = KnowledgeGenerationSuccess;
 
 export const EMPTY_GENERATED_KNOWLEDGE_UPDATE: GeneratedKnowledgeUpdate =
-	unwrapDumgenParse(
+	parseGeneratedKnowledgeUpdate(
 		parseAsKnowledgeGenerationResult({
 			changes: [],
 			pendingRelations: [],
@@ -137,9 +137,20 @@ export function projectGermanKnowledgeUpdate(
 		}
 	}
 
-	return unwrapDumgenParse(
+	return parseGeneratedKnowledgeUpdate(
 		parseAsKnowledgeGenerationResult({ changes, pendingRelations }),
 	);
+}
+
+function parseGeneratedKnowledgeUpdate(
+	parsed: ReturnType<typeof parseAsKnowledgeGenerationResult>,
+): GeneratedKnowledgeUpdate {
+	const value = unwrapDumgenParse(parsed);
+	if ("decision" in value)
+		throw new TypeError(
+			"Open Knowledge projection produced a CatalogMiss.",
+		);
+	return value;
 }
 
 function assertAnalysisMirrorsRequest(

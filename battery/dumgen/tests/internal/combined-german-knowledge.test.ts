@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { type AiSdk, buildDumgen } from "dumgen";
+import { fixedMembersFor } from "dumling/fixed";
 import type { Reading } from "dumling/types";
 
 import { combinedGermanKnowledgeRunner } from "../../docs/prototypes/knowledge-analysis-combined/run";
@@ -86,6 +87,101 @@ function knowledgeRuntime(
 }
 
 describe("combined German Knowledge generation", () => {
+	test("routes fixed DET Knowledge independently without calling Open", async () => {
+		const lemmaCatalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "DET",
+		});
+		const lemma = lemmaCatalog?.members.find(
+			(member) => member.canonicalForm === "der",
+		);
+		const reading = lemma && fixedMembersFor.reading(lemma)?.members[0];
+		if (!reading) throw new Error("Expected fixed der Reading.");
+		const { calls, sdk } = queueSdk([]);
+
+		const result = await knowledgeRuntime(sdk)({
+			markedContext: "<TARGET>der</TARGET> Mann",
+			reading: reading as unknown as Reading<"de">,
+			request: {
+				definition: null,
+				translations: { en: null },
+				semanticRelations: { synonym: null },
+			},
+		});
+
+		expect(result).toMatchObject({
+			changes: [
+				{ aspect: "definition" },
+				{ aspect: "translations", language: "en", value: ["the"] },
+			],
+			pendingRelations: [],
+		});
+		expect(calls).toHaveLength(0);
+	});
+
+	test("returns a CatalogMiss for requested Knowledge outside authored coverage", async () => {
+		const lemmaCatalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "DET",
+		});
+		const lemma = lemmaCatalog?.members.find(
+			(member) => member.canonicalForm === "der",
+		);
+		const reading = lemma && fixedMembersFor.reading(lemma)?.members[0];
+		if (!reading) throw new Error("Expected fixed der Reading.");
+		const { calls, sdk } = queueSdk([]);
+
+		const result = await knowledgeRuntime(sdk)({
+			markedContext: "<TARGET>der</TARGET> Mann",
+			reading: reading as unknown as Reading<"de">,
+			request: { semanticRelations: { hypernym: null } },
+		});
+
+		expect(result).toMatchObject({
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			stage: "ReadingKnowledge",
+			missingRequest: { semanticRelations: { hypernym: null } },
+		});
+		expect(calls).toHaveLength(0);
+	});
+
+	test("returns exact Reading and sparse request on a fixed Knowledge miss", async () => {
+		const lemmaCatalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "DET",
+		});
+		const fixedLemma = lemmaCatalog?.members[0];
+		if (!fixedLemma) throw new Error("Expected fixed DET Lemma.");
+		const reading = {
+			lemma: { ...fixedLemma, canonicalForm: "le" },
+			emojiDescription: "🇫🇷",
+		};
+		const request = { definition: null } as const;
+		const { calls, sdk } = queueSdk([]);
+
+		const result = await knowledgeRuntime(sdk)({
+			markedContext: "<TARGET>le</TARGET> code",
+			reading,
+			request,
+		});
+
+		expect(result).toEqual({
+			decision: "CatalogMiss",
+			reason: "MemberNotCatalogued",
+			language: "de",
+			route: { family: "Lexeme", kind: "DET" },
+			stage: "ReadingKnowledge",
+			reading,
+			missingRequest: request,
+		});
+		expect(calls).toHaveLength(0);
+		expect(JSON.stringify(result)).not.toContain("markedContext");
+	});
+
 	test("keeps the operational projection below the generated parser seam", async () => {
 		const source = await Bun.file(
 			new URL(
@@ -212,6 +308,7 @@ describe("combined German Knowledge generation", () => {
 			...baseInput,
 			request,
 		});
+		if ("decision" in result) throw new Error("Expected Open success.");
 
 		expect(calls).toHaveLength(1);
 		expect(exchanges.map(({ phase }) => phase)).toEqual([
@@ -286,6 +383,7 @@ describe("combined German Knowledge generation", () => {
 			...baseInput,
 			request: { definition: null, semanticRelations: { antonym: null } },
 		});
+		if ("decision" in result) throw new Error("Expected Open success.");
 
 		expect(calls).toHaveLength(1);
 		expect(result).toEqual(EMPTY_GENERATED_KNOWLEDGE_UPDATE);

@@ -15,6 +15,7 @@
 		"dev": "ISOLATE_MAX_USER_HEAP_SIZE=134217728 CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
+		"load:fixed-members": "CONVEX_AGENT_MODE=anonymous convex run fixedMembers:load",
 		"preview": "vite preview",
 		"reset": "CONVEX_AGENT_MODE=anonymous convex run demoReset:resetDemoData",
 		"test": "bun ../../tooling/run-package-tests.ts",

@@ -68,22 +68,34 @@ production; German `Lexeme/ADP`, whose Lemmas are closed but whose contextual
 Readings include distinctions such as `🤝`, `🛠️`, and `🔗`, is the motivating
 example. Reading closure also governs production of the Reading's Knowledge
 because Knowledge maps one-to-one to an exact Reading. Unspecified route leaves
-default to Open. The initial configured closure policy is German-only; every
-English and Hebrew route remains Open by default. A Closed leaf is a capability
-guarantee that the route's corresponding Closed implementation and hand-authored
-inventory are complete; linguistic closedness alone does not justify enabling
-the leaf. Closed members use the same entity DTOs, identity operations, and
-persistence plumbing as every other member; only their internal production
-route differs.
+default to Open. A Closed leaf is an explicit promotion asserting that the
+route's separate Closed implementation is operational and its fixed catalog
+has been reviewed to its declared coverage; linguistic closedness alone does
+not justify promotion. A missing catalog member is an observable Catalog Miss
+and never falls through to Open production. Closed members use the same entity
+DTOs, identity operations, and persistence plumbing as every other member;
+only their internal production route differs.
 _Avoid_: DTO closure flag, Knowledge closure
+
+**Fixed Catalog**:
+A package-owned, hand-authored collection of ordinary linguistic values for a
+route, published with either `Complete` or intentionally non-exhaustive
+`Curated` coverage for a named scope.
+_Avoid_: Seed table, Closed DTO collection
+
+**Catalog Miss**:
+A structured production result stating that an explicitly promoted route has
+no fixed member for the supplied linguistic candidate. It is catalog-growth
+evidence, not `Unresolved` and not permission to invoke Open production.
 
 **Reading**:
 A foundational semantic value formed by exactly one Lemma and one Emoji
 Description. Dumling owns its DTO, schema, value equality, and stable
 tuple-derived identity operation; a dictionary establishes the learner or
 hosted scope in which that equality applies and owns any Reading record. For a
-Closed Route, Dumling also owns the corresponding hand-authored ordinary
-Reading values; they do not form a specialized DTO class.
+Closed Route, Dumling also owns the corresponding `Complete` or `Curated`
+Fixed Catalog of ordinary Reading values; they do not form a specialized DTO
+class.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:

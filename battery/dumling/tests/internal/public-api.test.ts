@@ -23,6 +23,7 @@ describe("public API usage", () => {
 			"ParsingError",
 			"dumling",
 			"getLanguageApi",
+			"isClosedRouteFor",
 			"parseAsAttestation",
 			"parseAsLemma",
 			"parseAsReading",
