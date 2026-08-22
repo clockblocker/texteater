@@ -104,10 +104,15 @@ export function NativeCardDemoInteraction({
 
 		const deltaX = event.clientX - session.originX;
 		const deltaY = event.clientY - session.originY;
+		const distance = Math.hypot(deltaX, deltaY);
 		const active =
-			session.active || isNativeCardDemoDragActive(deltaX, deltaY);
+			session.active ||
+			distance >= CARD_DEMO_GEOMETRY.dragActivationDistance;
 		session.active = active;
-		session.moved = session.moved || active;
+		if (distance > 0) {
+			session.moved = true;
+			lastTouchTap.current = null;
+		}
 		if (!active) return;
 
 		event.preventDefault();
@@ -165,7 +170,8 @@ export function NativeCardDemoInteraction({
 		event: ReactKeyboardEvent<HTMLButtonElement>,
 		kind: CardDemoNoteKind,
 	) => {
-		if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
+		if (event.repeat || (event.key !== "Enter" && event.key !== " "))
+			return;
 		event.preventDefault();
 		resetPointerSession();
 		onOpenNote(kind);
