@@ -1,0 +1,219 @@
+.card-demo-page {
+	min-height: 100dvh;
+	padding: clamp(1.5rem, 4vw, 4rem);
+	background:
+		radial-gradient(
+			circle at 90% 5%,
+			color-mix(in oklch, var(--muted) 80%, transparent),
+			transparent 35%
+		),
+		var(--background);
+}
+
+.card-demo-header,
+.card-demo-text,
+.card-demo-note {
+	width: min(100%, 54rem);
+	margin-inline: auto;
+}
+
+.card-demo-header {
+	margin-bottom: 2.5rem;
+}
+
+.card-demo-header h1,
+.card-demo-page > h1 {
+	font-size: clamp(2rem, 5vw, 4.5rem);
+	font-weight: 650;
+	letter-spacing: -0.055em;
+	line-height: 0.95;
+}
+
+.card-demo-header > p:last-child,
+.card-demo-page > p {
+	max-width: 42rem;
+	margin-top: 1rem;
+	color: var(--muted-foreground);
+}
+
+.card-demo-kicker,
+.card-demo-fixture-label {
+	margin-bottom: 0.75rem;
+	color: var(--muted-foreground);
+	font-size: 0.75rem;
+	font-weight: 650;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.card-demo-text {
+	padding: clamp(1.25rem, 4vw, 3rem);
+	border: 1px solid var(--border);
+	border-radius: 1.5rem;
+	background: color-mix(in oklch, var(--card) 94%, transparent);
+	box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 6%);
+}
+
+.card-demo-segments {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.45rem;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(1.4rem, 3vw, 2.1rem);
+	line-height: 1.55;
+}
+
+.card-demo-segment {
+	border-radius: 0.3rem;
+	cursor: pointer;
+	transition:
+		background-color 120ms ease,
+		box-shadow 120ms ease;
+}
+
+.card-demo-segment:hover {
+	background: var(--accent);
+}
+
+.card-demo-segment:focus-visible,
+.card-demo-card:focus-visible,
+.card-demo-link:focus-visible {
+	outline: 3px solid color-mix(in oklch, var(--ring) 60%, transparent);
+	outline-offset: 3px;
+}
+
+.card-demo-overlay {
+	position: fixed;
+	z-index: 50;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+}
+
+.card-demo-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgb(0 0 0 / 6%);
+	cursor: default;
+}
+
+.card-demo-dialog {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	width: min(100%, 28rem);
+	min-height: 20rem;
+}
+
+.card-demo-stack {
+	position: relative;
+	width: min(20rem, calc(100vw - 2rem));
+	height: 13.625rem;
+}
+
+.card-demo-card {
+	position: absolute;
+	inset: 0 auto auto 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	height: 11rem;
+	padding: 1.25rem;
+	border: 1px solid color-mix(in oklch, var(--foreground) 12%, var(--border));
+	border-radius: 1.25rem;
+	background: color-mix(in oklch, var(--card) 96%, var(--muted));
+	box-shadow: 0 1.1rem 2.8rem rgb(0 0 0 / 14%);
+	color: var(--card-foreground);
+	cursor: grab;
+	overflow: hidden;
+	text-align: left;
+	touch-action: none;
+	transform-origin: center;
+	transition:
+		box-shadow 160ms ease,
+		scale 160ms ease;
+	user-select: none;
+}
+
+.card-demo-card:active {
+	cursor: grabbing;
+}
+
+.card-demo-card[data-outside-cancel-zone="true"] {
+	scale: 1.025;
+	box-shadow: 0 1.6rem 4rem rgb(0 0 0 / 20%);
+}
+
+.card-demo-card__eyebrow {
+	color: var(--muted-foreground);
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.card-demo-card__title {
+	margin-top: 0.45rem;
+	font-size: 1.55rem;
+	font-weight: 650;
+	letter-spacing: -0.03em;
+}
+
+.card-demo-card__detail,
+.card-demo-card__summary {
+	color: var(--muted-foreground);
+	font-size: 0.8rem;
+}
+
+.card-demo-card__summary {
+	margin-top: auto;
+}
+
+.card-demo-pending {
+	display: grid;
+	place-items: center;
+}
+
+.card-demo-pending > p {
+	margin-top: 1rem;
+	color: var(--muted-foreground);
+	font-size: 0.75rem;
+}
+
+.card-demo-note {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.75rem;
+	padding: clamp(1.5rem, 4vw, 3rem);
+	border: 1px solid var(--border);
+	border-radius: 1.5rem;
+	background: var(--card);
+	box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 8%);
+}
+
+.card-demo-note .card-demo-card__title {
+	font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.card-demo-note__disclaimer {
+	margin-top: 2rem;
+	color: var(--muted-foreground);
+}
+
+.card-demo-link {
+	display: inline-flex;
+	margin-top: 1rem;
+	border-bottom: 1px solid currentColor;
+	font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.card-demo-card,
+	.card-demo-segment {
+		transition-duration: 0.01ms;
+	}
+}

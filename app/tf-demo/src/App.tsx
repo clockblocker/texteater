@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
+import { CardDemoRouteShell } from "@/playground/card-demo/card-demo-route-shell";
 import { LibraryView } from "@/views/library-view";
 import { NotFoundView } from "@/views/not-found-view";
 import { ResolutionNoteView } from "@/views/resolution-note-view";
@@ -16,6 +17,10 @@ export function App() {
 			<Route
 				path="/"
 				element={<Navigate to={hrefFor({ kind: "Library" })} replace />}
+			/>
+			<Route
+				path="/playground/card-demo/*"
+				element={<CardDemoRouteShell />}
 			/>
 			<Route path="*" element={<RoutedView />} />
 		</Routes>
