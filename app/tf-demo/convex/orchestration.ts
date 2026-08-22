@@ -15,6 +15,7 @@ import type {
 import { createDumdictService, makeSurfaceId } from "dumdict/runtime";
 import {
 	type Dumgen,
+	type GenerationEvent,
 	type GrammaticalResult,
 	parseAsGrammaticalResult,
 } from "dumgen";
@@ -40,7 +41,16 @@ import {
 	readingIdentityKey,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
-import { unwrapOperationalParse } from "../server/operationalParsing";
+import {
+	parseGermanReading,
+	unwrapOperationalParse,
+} from "../server/operationalParsing";
+import {
+	classifyResolutionFailure,
+	projectResolutionGenerationEvent,
+	type ResolutionGenerationEvent,
+	type ResolutionRunPhase,
+} from "../server/resolutionFailure";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
@@ -93,42 +103,46 @@ const recordRelationPublicationFailure = makeFunctionReference<
 	null
 >;
 
-let dumgenPromise: Promise<Dumgen> | undefined;
-
-function getDumgen(): Promise<Dumgen> {
-	dumgenPromise ??= Promise.all([
-		import("dumgen/openai-fetch"),
-		import("dumgen/runtime"),
-	]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
-		buildDumgenRuntime({
-			runtimePromptData: encodedRuntimePromptData,
-			sdk: buildOpenAiFetchSdk(),
-			async generateKnowledge() {
+function createLazyDumgen(
+	onGenerationEvent?: (event: GenerationEvent) => void,
+): Dumgen {
+	let dumgenPromise: Promise<Dumgen> | undefined;
+	const getDumgen = () => {
+		dumgenPromise ??= Promise.all([
+			import("dumgen/openai-fetch"),
+			import("dumgen/runtime"),
+		]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
+			buildDumgenRuntime({
+				runtimePromptData: encodedRuntimePromptData,
+				sdk: buildOpenAiFetchSdk({ onGenerationEvent }),
+				async generateKnowledge() {
+					throw new Error(
+						"Knowledge generation runs in its dedicated Convex action.",
+					);
+				},
+			}),
+		);
+		return dumgenPromise;
+	};
+	return {
+		segment: async (sentences) => (await getDumgen()).segment(sentences),
+		resolve: {
+			grammatical: async (language, input) =>
+				(await getDumgen()).resolve.grammatical(language, input),
+			reading: async (language, input) =>
+				(await getDumgen()).resolve.reading(language, input),
+		},
+		generate: {
+			knowledge: async () => {
 				throw new Error(
 					"Knowledge generation runs in its dedicated Convex action.",
 				);
 			},
-		}),
-	);
-	return dumgenPromise;
+		},
+	};
 }
 
-const lazyDumgen: Dumgen = {
-	segment: async (sentences) => (await getDumgen()).segment(sentences),
-	resolve: {
-		grammatical: async (language, input) =>
-			(await getDumgen()).resolve.grammatical(language, input),
-		reading: async (language, input) =>
-			(await getDumgen()).resolve.reading(language, input),
-	},
-	generate: {
-		knowledge: async () => {
-			throw new Error(
-				"Knowledge generation runs in its dedicated Convex action.",
-			);
-		},
-	},
-};
+const lazyDumgen = createLazyDumgen();
 
 type ResolveSegmentActionResult = Infer<typeof resolveSegmentResultValidator>;
 type ResolvedGrammaticalActionResult = Infer<
@@ -202,6 +216,18 @@ function resolvedGrammaticalActionResult(
 			memberSegmentIndices: [...parsed.interaction.memberSegmentIndices],
 		},
 	};
+}
+
+function resolvedGrammaticalCheckpoint(
+	input: ResolvedGrammaticalActionResult,
+): Extract<GrammaticalResult<"de">, { decision: "Resolved" }> {
+	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
+		parseAsGrammaticalResult(input, "de"),
+	);
+	if (parsed.decision !== "Resolved") {
+		throw new Error("Expected a resolved Grammar checkpoint.");
+	}
+	return parsed;
 }
 
 function reusableAttestationResult(
@@ -579,19 +605,72 @@ export const runResolutionSession = internalAction({
 			{ guard },
 		);
 		if (!input) return null;
+		const started = await ctx.runMutation(
+			internal.resolutionSessions.markRunStarted,
+			{ guard },
+		);
+		if (!started) return null;
+		let phase: ResolutionRunPhase = "Route";
+		const generationEvents: ResolutionGenerationEvent[] = [];
+		const onGenerationEvent = (event: GenerationEvent) => {
+			const projected = projectResolutionGenerationEvent(event, {
+				requestId: guard.requestId,
+				runToken: guard.runToken,
+				phase,
+			});
+			if (generationEvents.length < 64) generationEvents.push(projected);
+			console.info(
+				JSON.stringify({
+					event: "ResolutionGeneration",
+					generation: projected,
+				}),
+			);
+		};
 		try {
 			await ctx.runMutation(internal.resolutionSessions.advance, {
 				guard,
 				stage: "RouteAvailable",
 			});
-			const result = await orchestratorFor(ctx, guard).resolveSegment(
-				input,
-			);
+			phase = input.readingCheckpoint
+				? "Commit"
+				: input.grammaticalCheckpoint
+					? "Reading"
+					: "Grammar";
+			const result = await orchestratorFor(
+				ctx,
+				guard,
+				(nextPhase) => {
+					phase = nextPhase;
+				},
+				onGenerationEvent,
+			).resolveSegment(input, {
+				...(input.grammaticalCheckpoint
+					? {
+							grammatical: resolvedGrammaticalCheckpoint(
+								input.grammaticalCheckpoint,
+							),
+						}
+					: {}),
+				...(input.readingCheckpoint
+					? {
+							reading: {
+								resolution: input.readingCheckpoint.resolution,
+								reading: parseGermanReading(
+									input.readingCheckpoint.reading,
+								),
+							},
+						}
+					: {}),
+			});
 			if ("catalogMiss" in result) {
 				await ctx.runMutation(recordAndSettleCatalogMiss, {
 					guard,
 					miss: result.catalogMiss,
 				});
+				await ctx.runMutation(
+					internal.resolutionSessions.recordRunSuccess,
+					{ guard, phase, generationEvents },
+				);
 				return null;
 			}
 			if ("deduplicated" in result && result.deduplicated) {
@@ -624,20 +703,61 @@ export const runResolutionSession = internalAction({
 					);
 				}
 			}
-		} catch {
+			await ctx.runMutation(
+				internal.resolutionSessions.recordRunSuccess,
+				{ guard, phase, generationEvents },
+			);
+		} catch (error) {
+			const classified = classifyResolutionFailure(error);
+			const diagnosticId = crypto.randomUUID();
 			try {
-				await ctx.runMutation(
-					internal.resolutionSessions.settleAfterRun,
-					{
-						guard,
-						result: {
-							kind: "Failed",
-							message: "Resolution could not be completed.",
+				if (classified.kind === "Generation") {
+					await ctx.runMutation(
+						internal.resolutionSessions.recordRunFailure,
+						{
+							guard,
+							phase,
+							failure: classified.failure,
+							generationEvents,
 						},
-					},
+					);
+				} else {
+					console.error(
+						JSON.stringify({
+							event: "ResolutionRunInternalFailure",
+							requestId: guard.requestId,
+							runToken: guard.runToken,
+							phase,
+							diagnosticId,
+							errorName: classified.errorName,
+							errorFingerprint: classified.errorFingerprint,
+						}),
+					);
+					await ctx.runMutation(
+						internal.resolutionSessions.recordInternalRunFailure,
+						{
+							guard,
+							phase,
+							diagnosticId,
+							errorName: classified.errorName,
+							errorFingerprint: classified.errorFingerprint,
+							generationEvents,
+						},
+					);
+				}
+			} catch (recordingError) {
+				const recordingFailure =
+					classifyResolutionFailure(recordingError);
+				console.error(
+					JSON.stringify({
+						event: "ResolutionFailureRecordingFailed",
+						requestId: guard.requestId,
+						runToken: guard.runToken,
+						phase,
+						diagnosticId,
+						recordingFailure,
+					}),
 				);
-			} catch {
-				// The session was invalidated or settled atomically with the Click.
 			}
 		}
 		return null;
@@ -666,9 +786,13 @@ export const applyReadingKnowledgeChange = action({
 function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard?: ResolutionSessionGuard,
+	onPhase?: (phase: ResolutionRunPhase) => void,
+	onGenerationEvent?: (event: GenerationEvent) => void,
 ) {
 	return createTfDemoOrchestrator({
-		dumgen: lazyDumgen,
+		dumgen: onGenerationEvent
+			? createLazyDumgen(onGenerationEvent)
+			: lazyDumgen,
 		dictionary: createDumdictService({
 			language: "de",
 			storage: createConvexDumdictStorage(ctx),
@@ -685,20 +809,31 @@ function orchestratorFor(
 									stage: "GrammarAvailable",
 									grammar:
 										projectResolutionGrammar(grammatical),
+									grammaticalCheckpoint:
+										resolvedGrammaticalActionResult(
+											grammatical,
+										),
 								},
 							);
+							onPhase?.("Reading");
 						},
-						async readingAvailable({ reading }) {
+						async readingAvailable({ reading, readingResolution }) {
 							await ctx.runMutation(
 								internal.resolutionSessions.advance,
 								{
 									guard: sessionGuard,
 									stage: "ReadingAvailable",
 									reading: projectResolutionReading(reading),
+									readingCheckpoint: {
+										resolution: readingResolution,
+										reading,
+									},
 								},
 							);
+							onPhase?.("Commit");
 						},
 						async committing() {
+							onPhase?.("Commit");
 							await ctx.runMutation(
 								internal.resolutionSessions.advance,
 								{

@@ -1121,3 +1121,48 @@ test("null output schemas create unstructured string generators", async () => {
 	expect(result).toBe("raw model text");
 	expect(DumgenError).toBeFunction();
 });
+
+test("the generator preserves classified provider failure metadata", async () => {
+	const failure = {
+		attempts: 3,
+		category: "ProviderUnavailable",
+		providerCode: "server_error",
+		providerRequestId: "provider-request-1",
+		retryable: true,
+		status: 500,
+	} as const;
+	const sdk: AiSdk = {
+		async structuredGeneration() {
+			throw new Error("not used");
+		},
+		async unstructuredGeneration() {
+			throw new AiSdkGenerationError(
+				"provider-error",
+				"provider unavailable",
+				{ failure },
+			);
+		},
+	};
+	const rawPrompt = {
+		systemPrompt: "Return raw text.",
+		inputSchema: z.string(),
+		outputSchema: null,
+		generationParams: { model: "test-model", maxOutputTokens: 32 },
+	} as const;
+	const catalog = {
+		laboratory: {
+			raw: {
+				meta: { kind: "prompt" },
+				prompt: rawPrompt,
+			},
+		},
+	} as const satisfies PromptTree;
+
+	await expect(
+		buildGeneratorCatalog(catalog, sdk).laboratory.raw("input"),
+	).rejects.toMatchObject({
+		name: "DumgenError",
+		code: "provider-error",
+		generationFailure: failure,
+	});
+});

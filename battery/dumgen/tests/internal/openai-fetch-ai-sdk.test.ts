@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { z } from "zod";
+import { AiSdkGenerationError } from "../../src/ai-sdk/ai-sdk-generation-error";
 import {
 	DUMGEN_GENERATION_MODEL,
 	DUMGEN_REASONING_EFFORT,
@@ -153,6 +154,187 @@ test("the fetch adapter reports HTTP errors without exposing credentials", async
 		}).unstructuredGeneration("input"),
 	).rejects.toMatchObject({
 		name: "AiSdkGenerationError",
-		reason: "provider-error",
+		failure: {
+			attempts: 1,
+			category: "RequestRejected",
+			retryable: false,
+			status: 401,
+		},
 	});
+});
+
+test("the fetch adapter retries transient provider failures and then succeeds", async () => {
+	const statuses = [500, 500, 200];
+	const delays: number[] = [];
+	const fetch = async () => {
+		const status = statuses.shift();
+		if (status === 200) {
+			return Response.json({
+				output: [
+					{
+						content: [{ text: "recovered", type: "output_text" }],
+						type: "message",
+					},
+				],
+				status: "completed",
+			});
+		}
+		return Response.json(
+			{ error: { code: "server_error", message: "temporary" } },
+			{
+				headers: { "x-request-id": `provider-${statuses.length}` },
+				status,
+			},
+		);
+	};
+
+	await expect(
+		buildOpenAiFetchSdk({
+			apiKey: "test-key",
+			fetch,
+			random: () => 0,
+			sleep: async (delayMs) => {
+				delays.push(delayMs);
+			},
+		}).unstructuredGeneration("input"),
+	).resolves.toBe("recovered");
+	expect(statuses).toEqual([]);
+	expect(delays).toEqual([250, 500]);
+});
+
+test("the fetch adapter does not retry rejected requests and keeps only safe metadata", async () => {
+	let attempts = 0;
+	const fetch = async () => {
+		attempts += 1;
+		return Response.json(
+			{
+				error: {
+					code: "invalid_json_schema",
+					message: "raw provider body with should-not-leak",
+				},
+			},
+			{
+				headers: { "x-request-id": "provider-request-1" },
+				status: 400,
+				statusText: "Bad Request",
+			},
+		);
+	};
+
+	let caught: unknown;
+	try {
+		await buildOpenAiFetchSdk({
+			apiKey: "test-key",
+			fetch,
+			sleep: async () => {
+				throw new Error("a rejected request must not sleep");
+			},
+		}).unstructuredGeneration("input");
+	} catch (error) {
+		caught = error;
+	}
+
+	expect(attempts).toBe(1);
+	expect(caught).toMatchObject({
+		name: "AiSdkGenerationError",
+		failure: {
+			attempts: 1,
+			category: "RequestRejected",
+			providerCode: "invalid_json_schema",
+			providerRequestId: "provider-request-1",
+			retryable: false,
+			status: 400,
+		},
+	});
+	expect(JSON.stringify(caught)).not.toContain("should-not-leak");
+});
+
+test("the fetch adapter honors Retry-After for rate limits", async () => {
+	let attempt = 0;
+	const delays: number[] = [];
+	const fetch = async () => {
+		attempt += 1;
+		return attempt === 1
+			? Response.json(
+					{ error: { code: "rate_limit_exceeded" } },
+					{ headers: { "Retry-After": "2" }, status: 429 },
+				)
+			: Response.json({
+					output: [
+						{
+							content: [
+								{ text: "recovered", type: "output_text" },
+							],
+							type: "message",
+						},
+					],
+					status: "completed",
+				});
+	};
+
+	await expect(
+		buildOpenAiFetchSdk({
+			apiKey: "test-key",
+			fetch,
+			sleep: async (delayMs) => {
+				delays.push(delayMs);
+			},
+		}).unstructuredGeneration("input"),
+	).resolves.toBe("recovered");
+	expect(delays).toEqual([2_000]);
+});
+
+test("a long Retry-After yields immediately to the durable retry tier", async () => {
+	let attempts = 0;
+	const delays: number[] = [];
+	const fetch = async () => {
+		attempts += 1;
+		return Response.json(
+			{ error: { code: "rate_limit_exceeded" } },
+			{ headers: { "Retry-After": "120" }, status: 429 },
+		);
+	};
+
+	await expect(
+		buildOpenAiFetchSdk({
+			apiKey: "test-key",
+			fetch,
+			sleep: async (delayMs) => {
+				delays.push(delayMs);
+			},
+		}).unstructuredGeneration("input"),
+	).rejects.toMatchObject({
+		failure: {
+			attempts: 1,
+			category: "RateLimited",
+			retryAfterMs: 120_000,
+			retryable: true,
+			status: 429,
+		},
+	});
+	expect(attempts).toBe(1);
+	expect(delays).toEqual([]);
+});
+
+test("generation failure policy rejects contradictory reason and retryability", () => {
+	expect(
+		() =>
+			new AiSdkGenerationError("refusal", "refused", {
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
+					retryable: true,
+				},
+			}),
+	).toThrow("incompatible");
+	expect(
+		() =>
+			new AiSdkGenerationError("provider-error", "failed", {
+				failure: {
+					attempts: 1,
+					category: "ProviderUnavailable",
+					retryable: false,
+				} as never,
+			}),
+	).toThrow("cannot have retryable=false");
 });

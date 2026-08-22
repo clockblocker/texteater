@@ -193,7 +193,12 @@ function makeGenerator<Definition extends AnyPrompt>(
 					? cause.reason
 					: "provider-error",
 				"The language-model provider could not complete the generation.",
-				{ cause },
+				{
+					cause,
+					...(cause instanceof AiSdkGenerationError
+						? { generationFailure: cause.failure }
+						: {}),
+				},
 			);
 		}
 		notifyModelExchange(options, {

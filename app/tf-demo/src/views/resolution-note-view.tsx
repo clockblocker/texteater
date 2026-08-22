@@ -1,11 +1,14 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation as useConvexMutation } from "convex/react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { hrefFor, type ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
@@ -24,6 +27,10 @@ const stagePosition = {
 
 export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 	const navigate = useNavigate();
+	const visitorId = useAnonymousVisitorId();
+	const retryResolution = useConvexMutation(
+		api.resolutionSessions.retryResolution,
+	);
 	const noteQuery = useQuery({
 		...convexQuery(api.resolutionSessions.getResolutionNote, {
 			requestId: target.requestId,
@@ -47,7 +54,14 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 			/>
 		);
 	}
-	return <ResolutionNoteFrame note={note} />;
+	return (
+		<ResolutionNoteFrame
+			note={note}
+			onRetry={() =>
+				retryResolution({ requestId: target.requestId, visitorId })
+			}
+		/>
+	);
 }
 
 export function completionTarget(note: ResolutionNote | null) {
@@ -61,9 +75,15 @@ export function completionNavigation(note: ResolutionNote | null) {
 		: null;
 }
 
-export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
+export function ResolutionNoteFrame({
+	note,
+	onRetry,
+}: {
+	note: ResolutionNote;
+	onRetry?: () => Promise<unknown>;
+}) {
 	const position = stagePosition[note.stage];
-	const isWorking = position < stagePosition.Complete;
+	const isWorking = note.activity !== "Terminal";
 	return (
 		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
@@ -77,7 +97,9 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 						</h1>
 						<div className="flex flex-wrap items-center gap-2">
 							<Badge variant="secondary">
-								{stageLabel(note.stage)}
+								{note.activity === "WaitingForRetry"
+									? "Waiting for retry"
+									: stageLabel(note.stage)}
 							</Badge>
 							{isWorking ? (
 								<LoaderCircleIcon
@@ -124,6 +146,16 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 						) : null}
 					</ResolutionSection>
 
+					{note.progress === "GrammarAvailable" &&
+					note.activity === "WaitingForRetry" ? (
+						<p
+							className="text-sm text-muted-foreground"
+							role="status"
+						>
+							Reading is temporarily unavailable; retrying.
+						</p>
+					) : null}
+
 					<ResolutionSection
 						title="Reading"
 						available={Boolean(note.reading)}
@@ -144,10 +176,27 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 							This Segment could not be resolved. This Resolution
 							URL remains available.
 						</p>
-					) : note.terminal?.kind === "Failed" ? (
-						<p className="text-sm text-destructive" role="alert">
-							{note.terminal.message}
-						</p>
+					) : note.terminal?.kind === "PermanentFailure" ? (
+						<div className="flex flex-col items-start gap-3">
+							<p
+								className="text-sm text-destructive"
+								role="alert"
+							>
+								{note.terminal.message}
+							</p>
+							<p className="text-xs text-muted-foreground">
+								Diagnostic reference:{" "}
+								{note.terminal.diagnosticId}
+							</p>
+							{onRetry ? (
+								<Button
+									type="button"
+									onClick={() => void onRetry()}
+								>
+									Retry resolution
+								</Button>
+							) : null}
+						</div>
 					) : null}
 				</article>
 			</div>

@@ -19,6 +19,8 @@ test("renders learner-safe Resolution sections in stage order", () => {
 					kind: "ResolutionNote",
 					target: { kind: "Resolution", requestId: "request-1" },
 					stage: "ReadingAvailable",
+					progress: "ReadingAvailable",
+					activity: "Running",
 					route: {
 						textId: "text-1" as never,
 						sentenceId: "sentence-1" as never,
@@ -67,6 +69,9 @@ test("completion navigation preserves its canonical Route Note destination", () 
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
 		stage: "Complete",
+		progress: "Committing",
+		activity: "Terminal",
+		outcome: "Complete",
 		route: {
 			textId: "text-1" as never,
 			sentenceId: "sentence-1" as never,

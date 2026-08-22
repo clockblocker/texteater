@@ -3,7 +3,10 @@ import { type Infer, v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import {
+	resolutionActivityValidator,
 	resolutionGrammarProjectionValidator,
+	resolutionOutcomeValidator,
+	resolutionProgressValidator,
 	resolutionReadingProjectionValidator,
 	type resolutionSessionGuardValidator,
 	resolutionStageValidator,
@@ -12,6 +15,9 @@ import {
 const MAX_IDENTIFIER_LENGTH = 200;
 
 export type ResolutionStage = Infer<typeof resolutionStageValidator>;
+export type ResolutionProgress = Infer<typeof resolutionProgressValidator>;
+export type ResolutionActivity = Infer<typeof resolutionActivityValidator>;
+export type ResolutionOutcome = Infer<typeof resolutionOutcomeValidator>;
 export type ResolutionSessionGuard = Infer<
 	typeof resolutionSessionGuardValidator
 >;
@@ -68,6 +74,55 @@ export const terminalStages = new Set<ResolutionStage>([
 	"Failed",
 ]);
 
+type ResolutionLifecycleSource = {
+	readonly stage?: ResolutionStage;
+	readonly progress?: ResolutionProgress;
+	readonly activity?: ResolutionActivity;
+	readonly outcome?: ResolutionOutcome;
+	readonly grammar?: ResolutionGrammarProjection;
+	readonly reading?: ResolutionReadingProjection;
+};
+
+export function resolutionLifecycle(session: ResolutionLifecycleSource): {
+	readonly progress: ResolutionProgress;
+	readonly activity: ResolutionActivity;
+	readonly outcome?: ResolutionOutcome;
+} {
+	if (session.progress && session.activity) {
+		return {
+			progress: session.progress,
+			activity: session.activity,
+			...(session.outcome ? { outcome: session.outcome } : {}),
+		};
+	}
+	const stage = session.stage ?? "Starting";
+	if (stage === "Complete") {
+		return {
+			progress: "Committing",
+			activity: "Terminal",
+			outcome: "Complete",
+		};
+	}
+	if (stage === "Unresolved") {
+		return {
+			progress: projectedProgress(session),
+			activity: "Terminal",
+			outcome: "Unresolved",
+		};
+	}
+	if (stage === "Failed") {
+		return {
+			progress: projectedProgress(session),
+			activity: "Terminal",
+			outcome: "PermanentFailure",
+		};
+	}
+	return {
+		progress: stage,
+		activity: stage === "Starting" ? "Scheduled" : "Running",
+	};
+}
+
 export const resolutionNoteValidator = v.object({
 	kind: v.literal("ResolutionNote"),
 	target: v.object({
@@ -75,6 +130,9 @@ export const resolutionNoteValidator = v.object({
 		requestId: v.string(),
 	}),
 	stage: resolutionStageValidator,
+	progress: resolutionProgressValidator,
+	activity: resolutionActivityValidator,
+	outcome: v.optional(resolutionOutcomeValidator),
 	route: v.object({
 		textId: v.id("texts"),
 		sentenceId: v.id("sentences"),
@@ -103,7 +161,9 @@ export const resolutionNoteValidator = v.object({
 			}),
 			v.object({ kind: v.literal("Unresolved") }),
 			v.object({
-				kind: v.literal("Failed"),
+				kind: v.literal("PermanentFailure"),
+				failureCode: v.string(),
+				diagnosticId: v.string(),
 				message: v.string(),
 			}),
 		),
@@ -171,14 +231,18 @@ export async function loadResolutionNote(
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 	if (!session) return null;
+	const lifecycle = resolutionLifecycle(session);
 	return {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId },
-		stage: session.stage,
+		stage: legacyStage(lifecycle),
+		progress: lifecycle.progress,
+		activity: lifecycle.activity,
+		...(lifecycle.outcome ? { outcome: lifecycle.outcome } : {}),
 		route: session.route,
 		...(session.grammar ? { grammar: session.grammar } : {}),
 		...(session.reading ? { reading: session.reading } : {}),
-		...(session.stage === "Complete" &&
+		...(lifecycle.outcome === "Complete" &&
 		session.readingId &&
 		session.attestationId
 			? {
@@ -197,12 +261,15 @@ export async function loadResolutionNote(
 								},
 					},
 				}
-			: session.stage === "Unresolved"
+			: lifecycle.outcome === "Unresolved"
 				? { terminal: { kind: "Unresolved" as const } }
-				: session.stage === "Failed"
+				: lifecycle.outcome === "PermanentFailure"
 					? {
 							terminal: {
-								kind: "Failed" as const,
+								kind: "PermanentFailure" as const,
+								failureCode: session.failureCode ?? "Internal",
+								diagnosticId:
+									session.diagnosticId ?? session.requestId,
 								message:
 									session.failureMessage ??
 									"Resolution could not be completed.",
@@ -225,7 +292,7 @@ export async function requireActiveResolutionSession(
 		!session ||
 		session.runToken !== guard.runToken ||
 		session.segmentId !== guard.segmentId ||
-		terminalStages.has(session.stage)
+		resolutionLifecycle(session).activity === "Terminal"
 	) {
 		throw new Error("Resolution Session is no longer active.");
 	}
@@ -245,7 +312,10 @@ export async function requireActiveResolutionSession(
 
 export async function settleComplete(
 	ctx: MutationCtx,
-	session: { _id: Id<"resolutionSessions"> },
+	session: {
+		_id: Id<"resolutionSessions">;
+		stage?: ResolutionStage;
+	},
 	result: {
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
@@ -255,21 +325,34 @@ export async function settleComplete(
 ): Promise<void> {
 	await ctx.db.patch(session._id, {
 		stage: "Complete",
+		progress: "Committing",
+		activity: "Terminal",
+		outcome: "Complete",
 		grammar: result.grammar,
 		reading: result.reading,
 		readingId: result.readingId,
 		attestationId: result.attestationId,
 		failureMessage: undefined,
+		failureCode: undefined,
+		diagnosticId: undefined,
+		nextRetryAt: undefined,
 		updatedAt: Date.now(),
 	});
 }
 
 export async function settleUnresolved(
 	ctx: MutationCtx,
-	session: { _id: Id<"resolutionSessions"> },
+	session: {
+		_id: Id<"resolutionSessions">;
+		stage?: ResolutionStage;
+		progress?: ResolutionProgress;
+	},
 ): Promise<void> {
 	await ctx.db.patch(session._id, {
 		stage: "Unresolved",
+		progress: session.progress ?? "Starting",
+		activity: "Terminal",
+		outcome: "Unresolved",
 		failureMessage: undefined,
 		updatedAt: Date.now(),
 	});
@@ -277,14 +360,49 @@ export async function settleUnresolved(
 
 export async function settleFailed(
 	ctx: MutationCtx,
-	session: { _id: Id<"resolutionSessions"> },
+	session: {
+		_id: Id<"resolutionSessions">;
+		stage?: ResolutionStage;
+		progress?: ResolutionProgress;
+	},
 	message: string,
-): Promise<void> {
+	failureCode: "CatalogMiss" | "Internal" = "Internal",
+	diagnosticId: string = crypto.randomUUID(),
+): Promise<string> {
 	await ctx.db.patch(session._id, {
 		stage: "Failed",
+		progress: session.progress ?? "Starting",
+		activity: "Terminal",
+		outcome: "PermanentFailure",
+		failureCode,
+		diagnosticId,
 		failureMessage: safeFailureMessage(message),
 		updatedAt: Date.now(),
 	});
+	return diagnosticId;
+}
+
+function projectedProgress(
+	session: Pick<ResolutionLifecycleSource, "grammar" | "reading">,
+): ResolutionProgress {
+	return session.reading
+		? "ReadingAvailable"
+		: session.grammar
+			? "GrammarAvailable"
+			: "Starting";
+}
+
+function legacyStage(lifecycle: {
+	readonly progress: ResolutionProgress;
+	readonly outcome?: ResolutionOutcome;
+}): ResolutionStage {
+	return lifecycle.outcome === "Complete"
+		? "Complete"
+		: lifecycle.outcome === "Unresolved"
+			? "Unresolved"
+			: lifecycle.outcome === "PermanentFailure"
+				? "Failed"
+				: lifecycle.progress;
 }
 
 function safeFailureMessage(message: string): string {

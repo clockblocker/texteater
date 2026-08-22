@@ -1,5 +1,9 @@
 import { AiSdkGenerationError } from "./ai-sdk-generation-error";
 import {
+	createGenerationFailure,
+	type GenerationFailure,
+} from "./model-generation";
+import {
 	DUMGEN_GENERATION_MODEL,
 	DUMGEN_REASONING_EFFORT,
 } from "./model-policy";
@@ -79,12 +83,19 @@ export function assertResponseCompleted(
 
 export function createResponseError(
 	response: ResponseFailureMetadata,
+	metadata: {
+		readonly attempts?: number;
+		readonly providerRequestId?: string;
+	} = {},
 ): AiSdkGenerationError {
 	const refusal = findRefusal(response.output);
 	if (refusal) {
 		return new AiSdkGenerationError(
 			"refusal",
-			`OpenAI refused the request: ${refusal}`,
+			"OpenAI refused the request.",
+			{
+				failure: generationFailure("Refusal", metadata),
+			},
 		);
 	}
 
@@ -100,7 +111,33 @@ export function createResponseError(
 		detail
 			? `OpenAI returned no usable output (${detail}).`
 			: "OpenAI returned no usable output.",
+		{
+			failure: generationFailure(
+				reason === "max-output-tokens"
+					? "BudgetExhausted"
+					: reason === "content-filter"
+						? "RequestRejected"
+						: "InvalidOutput",
+				metadata,
+			),
+		},
 	);
+}
+
+function generationFailure(
+	category: GenerationFailure["category"],
+	metadata: {
+		readonly attempts?: number;
+		readonly providerRequestId?: string;
+	},
+): GenerationFailure {
+	return createGenerationFailure({
+		attempts: metadata.attempts ?? 1,
+		category,
+		...(metadata.providerRequestId
+			? { providerRequestId: metadata.providerRequestId }
+			: {}),
+	});
 }
 
 export function extractOutputText(

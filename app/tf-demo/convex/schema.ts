@@ -10,15 +10,25 @@ import {
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
+	readingValueValidator,
 	realizationCoverageValidator,
 	relationProposalOutcomeValidator,
 	relationPublicationFingerprintsValidator,
 	relationReviewStatusValidator,
 	relationTargetShadowValidator,
+	resolutionActivityValidator,
+	resolutionFailureCodeValidator,
+	resolutionGenerationEventValidator,
 	resolutionGrammarProjectionValidator,
+	resolutionOutcomeValidator,
+	resolutionPhaseValidator,
+	resolutionProgressValidator,
 	resolutionReadingProjectionValidator,
 	resolutionRouteProjectionValidator,
+	resolutionRunStateValidator,
 	resolutionStageValidator,
+	resolvedGrammaticalValidator,
+	safeGenerationFailureValidator,
 	segmentKindValidator,
 	surfaceKindValidator,
 	surfaceSpellingValidator,
@@ -300,12 +310,30 @@ export default defineSchema({
 		clickedSegmentIndex: v.number(),
 		routeNoteRequested: v.optional(v.boolean()),
 		runToken: v.string(),
-		stage: resolutionStageValidator,
+		stage: v.optional(resolutionStageValidator),
+		progress: v.optional(resolutionProgressValidator),
+		activity: v.optional(resolutionActivityValidator),
+		outcome: v.optional(resolutionOutcomeValidator),
+		runNumber: v.optional(v.number()),
+		retryDeadlineAt: v.optional(v.number()),
+		nextRetryAt: v.optional(v.number()),
 		route: resolutionRouteProjectionValidator,
 		grammar: v.optional(resolutionGrammarProjectionValidator),
 		reading: v.optional(resolutionReadingProjectionValidator),
+		grammaticalCheckpoint: v.optional(resolvedGrammaticalValidator),
+		readingCheckpoint: v.optional(
+			v.object({
+				resolution: v.object({
+					decision: v.union(v.literal("Reuse"), v.literal("New")),
+					emojiDescription: v.string(),
+				}),
+				reading: readingValueValidator,
+			}),
+		),
 		readingId: v.optional(v.id("readings")),
 		attestationId: v.optional(v.id("attestations")),
+		failureCode: v.optional(resolutionFailureCodeValidator),
+		diagnosticId: v.optional(v.string()),
 		failureMessage: v.optional(v.string()),
 		createdAt: v.number(),
 		updatedAt: v.number(),
@@ -313,7 +341,32 @@ export default defineSchema({
 		.index("by_request_id", ["requestId"])
 		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
-		.index("by_stage_and_updated_at", ["stage", "updatedAt"]),
+		.index("by_stage_and_updated_at", ["stage", "updatedAt"])
+		.index("by_activity_and_updated_at", ["activity", "updatedAt"])
+		.index("by_outcome_and_updated_at", ["outcome", "updatedAt"]),
+
+	resolutionRuns: defineTable({
+		requestId: v.string(),
+		runToken: v.string(),
+		runNumber: v.number(),
+		phase: resolutionPhaseValidator,
+		state: resolutionRunStateValidator,
+		failure: v.optional(safeGenerationFailureValidator),
+		failureCode: v.optional(resolutionFailureCodeValidator),
+		diagnosticId: v.optional(v.string()),
+		errorName: v.optional(v.string()),
+		errorFingerprint: v.optional(v.string()),
+		generationEvents: v.optional(
+			v.array(resolutionGenerationEventValidator),
+		),
+		delayMs: v.optional(v.number()),
+		startedAt: v.number(),
+		finishedAt: v.optional(v.number()),
+		expiresAt: v.number(),
+	})
+		.index("by_request_id_and_run_number", ["requestId", "runNumber"])
+		.index("by_request_id_and_run_token", ["requestId", "runToken"])
+		.index("by_expires_at", ["expiresAt"]),
 
 	catalogGrowthSignals: defineTable({
 		signalKey: v.string(),

@@ -19,7 +19,10 @@ import {
 import {
 	advance,
 	cleanup,
+	MAX_RESOLUTION_RUNS,
+	recordRunFailure,
 	recoverStaleRun,
+	retryResolution,
 	STALE_RUN_AFTER_MS,
 	selectSegment,
 	settleAfterRun,
@@ -576,8 +579,425 @@ describe("Resolution Session", () => {
 			"old-token",
 		);
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			stage: "Starting",
+			activity: "Scheduled",
+			progress: "ReadingAvailable",
+			stage: "ReadingAvailable",
 		});
+		expect(scheduled).toHaveLength(2);
+	});
+
+	for (const budgetCase of ["run limit", "deadline"] as const) {
+		test(`a stale run becomes permanent when its ${budgetCase} is exhausted`, async () => {
+			const now = Date.now();
+			const runNumber =
+				budgetCase === "run limit" ? MAX_RESOLUTION_RUNS : 1;
+			const db = new SessionDb({
+				resolutionSessions: [
+					{
+						_id: "session-1",
+						requestId: "request-1",
+						runToken: "stale-token",
+						runNumber,
+						retryDeadlineAt:
+							budgetCase === "deadline" ? now - 1 : now + 60_000,
+						segmentId: "segment-1",
+						stage: "GrammarAvailable",
+						progress: "GrammarAvailable",
+						activity: "Running",
+						updatedAt: now - STALE_RUN_AFTER_MS - 1,
+					},
+				],
+				resolutionRuns: [
+					{
+						_id: "run-1",
+						requestId: "request-1",
+						runToken: "stale-token",
+						runNumber,
+						phase: "Reading",
+						state: "Running",
+						startedAt: 1,
+						expiresAt: now + 60_000,
+					},
+				],
+			});
+			const scheduled: unknown[] = [];
+
+			expect(
+				await handler<{ requestId: string; runToken: string }, boolean>(
+					recoverStaleRun,
+				)(
+					{
+						db,
+						scheduler: {
+							async runAfter(...args: unknown[]) {
+								scheduled.push(args);
+							},
+						},
+					},
+					{ requestId: "request-1", runToken: "stale-token" },
+				),
+			).toBe(true);
+			expect(scheduled).toEqual([]);
+			expect(db.rows("resolutionSessions")[0]).toMatchObject({
+				activity: "Terminal",
+				failureCode: "Internal",
+				outcome: "PermanentFailure",
+				progress: "GrammarAvailable",
+				stage: "Failed",
+			});
+			expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
+			expect(db.rows("resolutionRuns")[0]).toMatchObject({
+				failureCode: "Internal",
+				state: "Failed",
+			});
+			expect(db.rows("resolutionRuns")[0]?.diagnosticId).toBe(
+				db.rows("resolutionSessions")[0]?.diagnosticId,
+			);
+		});
+	}
+
+	test("a retryable Reading failure preserves Grammar and schedules a durable retry", async () => {
+		const db = new SessionDb({
+			...sourceSeed(),
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					runToken: "run-1",
+					runNumber: 1,
+					progress: "GrammarAvailable",
+					activity: "Running",
+					grammar: grammarProjection(),
+					grammaticalCheckpoint: grammaticalInput(),
+					retryDeadlineAt: Date.now() + 60_000,
+					createdAt: 1,
+					updatedAt: 1,
+				},
+			],
+			resolutionRuns: [
+				{
+					_id: "resolution-run-1",
+					requestId: "request-1",
+					runToken: "run-1",
+					runNumber: 1,
+					phase: "Reading",
+					state: "Running",
+					startedAt: 1,
+				},
+			],
+		});
+		const scheduled: unknown[] = [];
+
+		const result = await handler<
+			{
+				guard: {
+					requestId: string;
+					runToken: string;
+					segmentId: string;
+				};
+				failure: {
+					attempts: number;
+					category: "ProviderUnavailable";
+					providerRequestId: string;
+					retryable: true;
+					status: number;
+				};
+				generationEvents?: readonly Record<string, unknown>[];
+				phase: "Reading";
+			},
+			{ scheduled: boolean }
+		>(recordRunFailure)(
+			{
+				db,
+				scheduler: {
+					async runAfter(...args: unknown[]) {
+						scheduled.push(args);
+					},
+				},
+			},
+			{
+				guard: {
+					requestId: "request-1",
+					runToken: "run-1",
+					segmentId: "segment-1",
+				},
+				failure: {
+					attempts: 3,
+					category: "ProviderUnavailable",
+					providerRequestId: "provider-request-1",
+					retryable: true,
+					status: 500,
+				},
+				generationEvents: [
+					{
+						kind: "AttemptFailed",
+						requestId: "request-1",
+						runToken: "run-1",
+						phase: "Reading",
+						failure: {
+							attempts: 3,
+							category: "ProviderUnavailable",
+							providerRequestId: "provider-request-1",
+							retryable: true,
+							status: 500,
+						},
+					},
+				],
+				phase: "Reading",
+			},
+		);
+
+		expect(result).toMatchObject({ scheduled: true });
+		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+			activity: "WaitingForRetry",
+			failureCode: "ProviderUnavailable",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: grammaticalInput(),
+			progress: "GrammarAvailable",
+			runNumber: 2,
+		});
+		expect(db.rows("resolutionSessions")[0]?.runToken).not.toBe("run-1");
+		expect(db.rows("resolutionRuns")[0]).toMatchObject({
+			failure: {
+				category: "ProviderUnavailable",
+				providerRequestId: "provider-request-1",
+				status: 500,
+			},
+			generationEvents: [
+				{
+					kind: "AttemptFailed",
+					requestId: "request-1",
+					runToken: "run-1",
+				},
+			],
+			state: "Failed",
+		});
+		expect(scheduled).toHaveLength(2);
+	});
+
+	test("durable retry preserves a provider Retry-After beyond the local window", async () => {
+		const db = new SessionDb({
+			...sourceSeed(),
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					runToken: "run-1",
+					runNumber: 1,
+					progress: "GrammarAvailable",
+					activity: "Running",
+					retryDeadlineAt: Date.now() + 5 * 60_000,
+					createdAt: 1,
+					updatedAt: 1,
+				},
+			],
+		});
+		const scheduled: unknown[][] = [];
+
+		expect(
+			await handler<Record<string, unknown>, { scheduled: boolean }>(
+				recordRunFailure,
+			)(
+				{
+					db,
+					scheduler: {
+						async runAfter(...args: unknown[]) {
+							scheduled.push(args);
+						},
+					},
+				},
+				{
+					guard: {
+						requestId: "request-1",
+						runToken: "run-1",
+						segmentId: "segment-1",
+					},
+					failure: {
+						attempts: 1,
+						category: "RateLimited",
+						retryAfterMs: 120_000,
+						retryable: true,
+						status: 429,
+					},
+					phase: "Reading",
+				},
+			),
+		).toEqual({ scheduled: true });
+		expect(scheduled[0]?.[0]).toBe(120_000);
+		expect(db.rows("resolutionRuns")[0]).toMatchObject({
+			delayMs: 120_000,
+			failure: { retryAfterMs: 120_000 },
+		});
+	});
+
+	test("an exhausted retryable failure becomes a safe PermanentFailure", async () => {
+		const db = new SessionDb({
+			...sourceSeed(),
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					runToken: "run-3",
+					runNumber: 3,
+					progress: "GrammarAvailable",
+					activity: "Running",
+					retryDeadlineAt: Date.now() + 60_000,
+					createdAt: 1,
+					updatedAt: 1,
+				},
+			],
+		});
+
+		const result = await handler<
+			Record<string, unknown>,
+			{ scheduled: boolean }
+		>(recordRunFailure)(
+			{ db, scheduler: { async runAfter() {} } },
+			{
+				guard: {
+					requestId: "request-1",
+					runToken: "run-3",
+					segmentId: "segment-1",
+				},
+				failure: {
+					attempts: 3,
+					category: "ProviderUnavailable",
+					retryable: true,
+					status: 500,
+				},
+				phase: "Reading",
+			},
+		);
+
+		expect(result).toEqual({ scheduled: false });
+		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+			activity: "Terminal",
+			failureCode: "ProviderUnavailable",
+			failureMessage: "Reading generation is temporarily unavailable.",
+			outcome: "PermanentFailure",
+			progress: "GrammarAvailable",
+		});
+		expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
+	});
+
+	test("public failure projection omits operational provider diagnostics", async () => {
+		const db = new SessionDb({
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					runToken: "run-3",
+					stage: "Failed",
+					progress: "GrammarAvailable",
+					activity: "Terminal",
+					outcome: "PermanentFailure",
+					failureCode: "ProviderUnavailable",
+					diagnosticId: "diagnostic-1",
+					failureMessage:
+						"Reading generation is temporarily unavailable.",
+					route: {
+						textId: "text-1",
+						sentenceId: "sentence-1",
+						stitchedText: "Die Banken.",
+						clickedSegmentIndex: 2,
+						selectedSegment: "Banken",
+					},
+					createdAt: 1,
+					updatedAt: 2,
+				},
+			],
+			resolutionRuns: [
+				{
+					_id: "resolution-run-1",
+					requestId: "request-1",
+					providerRequestId: "provider-secret-reference",
+				},
+			],
+		});
+
+		const note = await loadResolutionNote(
+			ordinaryDbContext(db),
+			"request-1",
+		);
+		expect(note?.terminal).toEqual({
+			kind: "PermanentFailure",
+			failureCode: "ProviderUnavailable",
+			diagnosticId: "diagnostic-1",
+			message: "Reading generation is temporarily unavailable.",
+		});
+		expect(JSON.stringify(note)).not.toContain("provider-secret-reference");
+	});
+
+	test("an explicit retry reactivates an exhausted session without losing Grammar", async () => {
+		const db = new SessionDb({
+			...sourceSeed(),
+			resolutionSessions: [
+				{
+					_id: "session-1",
+					requestId: "request-1",
+					visitorId: "visitor-1",
+					sentenceId: "sentence-1",
+					segmentId: "segment-1",
+					clickedSegmentIndex: 2,
+					runToken: "run-3",
+					stage: "Failed",
+					progress: "GrammarAvailable",
+					activity: "Terminal",
+					outcome: "PermanentFailure",
+					grammar: grammarProjection(),
+					grammaticalCheckpoint: grammaticalInput(),
+					failureCode: "ProviderUnavailable",
+					diagnosticId: "diagnostic-1",
+					failureMessage:
+						"Reading generation is temporarily unavailable.",
+					createdAt: 1,
+					updatedAt: 2,
+				},
+			],
+		});
+		const scheduled: unknown[] = [];
+
+		expect(
+			await handler<
+				{ requestId: string; visitorId: string },
+				{ retried: boolean }
+			>(retryResolution)(
+				{
+					db,
+					scheduler: {
+						async runAfter(...args: unknown[]) {
+							scheduled.push(args);
+						},
+					},
+				},
+				{ requestId: "request-1", visitorId: "visitor-1" },
+			),
+		).toEqual({ retried: true });
+		expect(db.rows("resolutionSessions")[0]).toMatchObject({
+			activity: "Scheduled",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: grammaticalInput(),
+			progress: "GrammarAvailable",
+			runNumber: 1,
+			stage: "GrammarAvailable",
+		});
+		expect(db.rows("resolutionSessions")[0]).not.toHaveProperty("outcome");
 		expect(scheduled).toHaveLength(2);
 	});
 
@@ -815,7 +1235,7 @@ describe("Resolution Session", () => {
 			);
 
 			expect(queryCount).toBe(2);
-			expect(mutationArgs[0]).toMatchObject({
+			expect(mutationArgs[1]).toMatchObject({
 				stage: "RouteAvailable",
 			});
 			if (recorded.status === "Resolved") {
@@ -826,7 +1246,11 @@ describe("Resolution Session", () => {
 							: [],
 					),
 				).toEqual(["RouteAvailable"]);
-				expect(mutationArgs.at(-1)).toMatchObject({
+				expect(
+					mutationArgs.find(
+						(args) => "result" in (args as Record<string, unknown>),
+					),
+				).toMatchObject({
 					result: {
 						kind: "Complete",
 						readingId: "reading-1",
@@ -834,12 +1258,72 @@ describe("Resolution Session", () => {
 					},
 				});
 			} else {
-				expect(mutationArgs).toHaveLength(2);
-				expect(mutationArgs.at(-1)).toMatchObject({
+				expect(mutationArgs).toHaveLength(4);
+				expect(
+					mutationArgs.find(
+						(args) => "result" in (args as Record<string, unknown>),
+					),
+				).toMatchObject({
 					result: { kind: "Unresolved" },
 				});
 			}
 		}
+	});
+
+	test("the scheduled action records unexpected failures without leaking their message", async () => {
+		let queryCount = 0;
+		const mutationArgs: unknown[] = [];
+		const errorLogs: string[] = [];
+		const originalConsoleError = console.error;
+		console.error = (...values: unknown[]) => {
+			errorLogs.push(values.map(String).join(" "));
+		};
+		try {
+			await handler<
+				{ requestId: string; runToken: string; segmentId: string },
+				null
+			>(runResolutionSession)(
+				{
+					async runQuery() {
+						queryCount += 1;
+						if (queryCount === 1) {
+							return {
+								requestId: "request-1",
+								visitorId: "visitor-1",
+								sentenceId: "sentence-1",
+								clickedSegmentIndex: 2,
+							};
+						}
+						throw new TypeError("secret checkpoint payload");
+					},
+					async runMutation(_reference: unknown, args: unknown) {
+						mutationArgs.push(args);
+						return true;
+					},
+				},
+				{
+					requestId: "request-1",
+					runToken: "run-1",
+					segmentId: "segment-1",
+				},
+			);
+		} finally {
+			console.error = originalConsoleError;
+		}
+
+		expect(mutationArgs.at(-1)).toMatchObject({
+			diagnosticId: expect.any(String),
+			errorFingerprint: expect.stringContaining("fnv1a-"),
+			errorName: "TypeError",
+			generationEvents: [],
+			guard: {
+				requestId: "request-1",
+				runToken: "run-1",
+			},
+			phase: "Grammar",
+		});
+		expect(errorLogs.join("\n")).toContain("ResolutionRunInternalFailure");
+		expect(errorLogs.join("\n")).not.toContain("secret checkpoint payload");
 	});
 });
 

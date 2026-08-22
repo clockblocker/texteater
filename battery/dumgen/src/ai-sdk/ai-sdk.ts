@@ -4,6 +4,14 @@ export {
 	AiSdkGenerationError,
 	type GenerationFailureReason,
 } from "./ai-sdk-generation-error";
+export type {
+	GenerationEvent,
+	GenerationFailure,
+	GenerationFailureCategory,
+	GenerationFailureInput,
+	RetryableGenerationFailureCategory,
+	TerminalGenerationFailureCategory,
+} from "./model-generation";
 
 type GenerationParams = {
 	readonly maxOutputTokens?: number;

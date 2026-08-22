@@ -2,7 +2,13 @@ export {
 	type AiSdk,
 	AiSdkGenerationError,
 	buildAiSdk,
+	type GenerationEvent,
+	type GenerationFailure,
+	type GenerationFailureCategory,
+	type GenerationFailureInput,
 	type GenerationFailureReason,
+	type RetryableGenerationFailureCategory,
+	type TerminalGenerationFailureCategory,
 } from "./ai-sdk/ai-sdk";
 export {
 	buildDumgen,

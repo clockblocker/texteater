@@ -69,6 +69,118 @@ function createPlanningStorage() {
 	return { commits, storage };
 }
 
+test("a durable retry resumes Reading from its Grammar checkpoint", async () => {
+	const { storage } = createPlanningStorage();
+	let grammaticalCalls = 0;
+	let readingCalls = 0;
+	const lemma = {
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Bank",
+		coreFeatures: { gender: "Fem", hyph: null },
+	} as const;
+	const grammatical = {
+		decision: "Resolved",
+		language: "de",
+		markedContext: "Die <TARGET>Banken</TARGET>.",
+		attestation: {
+			members: [{ attested: "Banken", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: {
+				language: "de",
+				normalizedSurface: "Banken",
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: { case: "Nom", number: "Plur" },
+				lemma,
+			},
+		},
+		interaction: {
+			segmentedSentenceId: "segmented-1",
+			clickedSegmentIndex: 2,
+			memberSegmentIndices: [2],
+		},
+	} as const;
+	const orchestrator = createTfDemoOrchestrator({
+		dumgen: {
+			async segment() {
+				throw new Error("Unexpected segmentation.");
+			},
+			resolve: {
+				async grammatical() {
+					grammaticalCalls += 1;
+					throw new Error(
+						"Grammar must be restored from the checkpoint.",
+					);
+				},
+				async reading() {
+					readingCalls += 1;
+					return { decision: "New", emojiDescription: "🏦" } as const;
+				},
+			},
+		} as Dumgen,
+		dictionary: createDumdictService({ language: "de", storage }),
+		persistence: {
+			async persistSubmittedText() {
+				throw new Error("Unexpected submission.");
+			},
+			async getSentenceForResolution() {
+				throw new Error(
+					"A Grammar checkpoint must skip Sentence loading.",
+				);
+			},
+			async findRecordedClick() {
+				return null;
+			},
+			async findAttestation() {
+				return null;
+			},
+			async persistResolvedClick(_input) {
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical,
+						reading: {
+							lemma,
+							emojiDescription: "🏦",
+						},
+					},
+				};
+			},
+			async persistReusedResolvedClick() {
+				throw new Error("Unexpected reuse.");
+			},
+			async persistUnresolvedClick() {
+				throw new Error("Unexpected unresolved result.");
+			},
+		},
+	});
+
+	const result = await orchestrator.resolveSegment(
+		{
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId: "sentence-1",
+			clickedSegmentIndex: 2,
+		},
+		{ grammatical },
+	);
+
+	expect(grammaticalCalls).toBe(0);
+	expect(readingCalls).toBe(1);
+	expect(result).toMatchObject({
+		reading: { emojiDescription: "🏦" },
+		persisted: { status: "Committed" },
+	});
+});
+
 test("runs the real German Dumgen chain and the Dumdict new-Reading workflow", async () => {
 	const { commits, storage } = createPlanningStorage();
 	let submitted:

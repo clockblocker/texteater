@@ -20,6 +20,7 @@ const DESCRIPTOR_PAGE_SIZE = 20;
 /** Every application-owned tf-demo table removed by the bounded full reset. */
 export const resetDemoTableNames = [
 	"resolutionSessions",
+	"resolutionRuns",
 	"catalogGrowthSignals",
 	"generatedRelationProposals",
 	"generatedRelationRuns",

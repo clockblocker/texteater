@@ -161,6 +161,7 @@ export const recordAndSettleCatalogMiss = internalMutation({
 			ctx,
 			session,
 			"Required fixed catalog inventory is unavailable.",
+			"CatalogMiss",
 		);
 		return null;
 	},

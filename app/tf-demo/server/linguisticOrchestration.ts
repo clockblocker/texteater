@@ -262,8 +262,19 @@ export type ResolutionProgressObserver = {
 	grammarAvailable(input: {
 		readonly grammatical: ResolvedGrammatical;
 	}): Promise<void>;
-	readingAvailable(input: { readonly reading: Reading<"de"> }): Promise<void>;
+	readingAvailable(input: {
+		readonly reading: Reading<"de">;
+		readonly readingResolution: ReadingResolution;
+	}): Promise<void>;
 	committing(): Promise<void>;
+};
+
+export type ResolutionCheckpoints = {
+	readonly grammatical?: ResolvedGrammatical;
+	readonly reading?: {
+		readonly resolution: ReadingResolution;
+		readonly reading: Reading<"de">;
+	};
 };
 
 export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
@@ -314,6 +325,7 @@ export function createTfDemoOrchestrator(options: {
 
 	async function resolveSegment(
 		input: ResolveSegmentInput,
+		checkpoints: ResolutionCheckpoints = {},
 	): Promise<ResolveSegmentResult> {
 		assertNonEmpty(input.requestId, "requestId");
 		assertNonEmpty(input.visitorId, "visitorId");
@@ -358,15 +370,9 @@ export function createTfDemoOrchestrator(options: {
 			};
 		}
 
-		const stored = await options.persistence.getSentenceForResolution({
-			sentenceId: input.sentenceId,
-		});
-		if (!stored) throw new Error("The requested sentence does not exist.");
-		const sentence = parseGermanSentence(stored);
-		const grammatical = await options.dumgen.resolve.grammatical("de", {
-			sentence,
-			clickedSegmentIndex: input.clickedSegmentIndex,
-		});
+		const grammatical = checkpoints.grammatical
+			? checkpoints.grammatical
+			: await resolveGrammatical(input);
 
 		if (grammatical.decision === "CatalogMiss") {
 			return { catalogMiss: grammatical };
@@ -384,28 +390,36 @@ export function createTfDemoOrchestrator(options: {
 			}
 			return { grammatical, persisted };
 		}
-		await options.observer?.grammarAvailable({ grammatical });
+		if (!checkpoints.grammatical) {
+			await options.observer?.grammarAvailable({ grammatical });
+		}
 
 		const lemma = parseGermanLemma(grammatical.attestation.surface.lemma);
 		const lemmaKey = lemmaIdentityKey(lemma);
-		const storedReadings = await options.dictionary.findStoredReadings({
-			lemma,
-		});
-		const readingResolution = await options.dumgen.resolve.reading("de", {
-			markedContext: grammatical.markedContext,
-			lemma,
-			existingEmojiDescriptions: storedReadings.candidates.map(
-				({ reading }) => reading.emojiDescription,
-			),
-		});
+		const readingResolution = checkpoints.reading
+			? checkpoints.reading.resolution
+			: await resolveReading(grammatical, lemma);
 		if (readingResolution.decision === "CatalogMiss") {
 			return { catalogMiss: readingResolution };
 		}
-		const reading = parseGermanReading({
-			lemma,
-			emojiDescription: readingResolution.emojiDescription,
-		});
-		await options.observer?.readingAvailable({ reading });
+		const reading = checkpoints.reading
+			? parseGermanReading(checkpoints.reading.reading)
+			: parseGermanReading({
+					lemma,
+					emojiDescription: readingResolution.emojiDescription,
+				});
+		if (
+			lemmaIdentityKey(reading.lemma) !== lemmaKey ||
+			reading.emojiDescription !== readingResolution.emojiDescription
+		) {
+			throw new Error("The Reading checkpoint does not match Grammar.");
+		}
+		if (!checkpoints.reading) {
+			await options.observer?.readingAvailable({
+				reading,
+				readingResolution,
+			});
+		}
 		let dictionaryPlan: DumdictPlan<"de"> | undefined;
 		const applyPlan = async (plan: DumdictPlan<"de">) => {
 			if (dictionaryPlan) {
@@ -491,6 +505,38 @@ export function createTfDemoOrchestrator(options: {
 			reused: persisted.status === "Reused",
 			persisted,
 		};
+
+		async function resolveGrammatical(
+			request: ResolveSegmentInput,
+		): Promise<GrammaticalResult<"de">> {
+			const stored = await options.persistence.getSentenceForResolution({
+				sentenceId: request.sentenceId,
+			});
+			if (!stored) {
+				throw new Error("The requested sentence does not exist.");
+			}
+			const sentence = parseGermanSentence(stored);
+			return options.dumgen.resolve.grammatical("de", {
+				sentence,
+				clickedSegmentIndex: request.clickedSegmentIndex,
+			});
+		}
+
+		async function resolveReading(
+			resolved: ResolvedGrammatical,
+			resolvedLemma: Lemma<"de">,
+		) {
+			const storedReadings = await options.dictionary.findStoredReadings({
+				lemma: resolvedLemma,
+			});
+			return options.dumgen.resolve.reading("de", {
+				markedContext: resolved.markedContext,
+				lemma: resolvedLemma,
+				existingEmojiDescriptions: storedReadings.candidates.map(
+					({ reading }) => reading.emojiDescription,
+				),
+			});
+		}
 	}
 
 	return Object.freeze({ submitText, resolveSegment });
