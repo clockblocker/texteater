@@ -246,4 +246,3 @@ Knowledge values are authored and accepted where Reading closure is proposed.
    entries as independently authored facts. Keep Reading Open.
 5. Correct the current Route Closure glossary before implementation: ADP is an
    Open/Open counterexample, not a Closed-Lemma/Open-Reading exemplar.
-
