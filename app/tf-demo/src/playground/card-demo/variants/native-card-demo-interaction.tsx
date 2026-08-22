@@ -165,7 +165,7 @@ export function NativeCardDemoInteraction({
 		event: ReactKeyboardEvent<HTMLButtonElement>,
 		kind: CardDemoNoteKind,
 	) => {
-		if (event.key !== "Enter" && event.key !== " ") return;
+		if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
 		event.preventDefault();
 		resetPointerSession();
 		onOpenNote(kind);
