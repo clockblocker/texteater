@@ -4,38 +4,42 @@ import type {
 	CardDemoResolutionCard,
 } from "./card-demo-contract";
 
-const loremWords = [
-	"Lorem",
-	"ipsum",
-	"dolor",
-	"sit",
-	"amet",
-	"consectetur",
-	"adipiscing",
-	"elit",
-	"sed",
-	"do",
-	"eiusmod",
-	"tempor",
-	"incididunt",
-	"ut",
-	"labore",
-	"et",
-	"dolore",
-	"magna",
-	"aliqua",
+const loremParagraphs = [
+	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer mollis neque vel sem interdum, vitae facilisis urna ullamcorper. Donec luctus nisi sed augue consequat, id feugiat sapien tincidunt.",
+	"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.",
+	"Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit. Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt, neque porro quisquam est qui dolorem ipsum.",
+	"Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam. Nisi ut aliquid ex ea commodi consequatur, quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.",
+	"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium. Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+	"Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio, nam libero tempore cum soluta nobis eligendi optio.",
+	"Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet. Ut et voluptates repudiandae sint et molestiae non recusandae, itaque earum rerum hic tenetur a sapiente delectus.",
+	"Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur. Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur, at vero eos et accusamus.",
 ] as const;
 
-export const CARD_DEMO_FAKE_SENTENCE = {
-	id: "playground-lorem-sentence",
+const loremParagraphWords = loremParagraphs.map((paragraph) =>
+	paragraph.split(/\s+/),
+);
+
+const loremParagraphSegments = loremParagraphWords.map(
+	(paragraph, paragraphIndex) => {
+		const startOrdinal = loremParagraphWords
+			.slice(0, paragraphIndex)
+			.reduce((total, words) => total + words.length, 0);
+		return paragraph.map((text, index): CardDemoFakeSegment => {
+			const ordinal = startOrdinal + index;
+			return {
+				id: `playground-segment-${String(ordinal + 1).padStart(2, "0")}`,
+				ordinal,
+				text,
+			};
+		});
+	},
+);
+
+export const CARD_DEMO_FAKE_TEXT = {
+	id: "playground-lorem-text",
 	disclaimer: "Fake playground data; it carries no linguistic identity.",
-	segments: loremWords.map(
-		(text, ordinal): CardDemoFakeSegment => ({
-			id: `playground-segment-${String(ordinal + 1).padStart(2, "0")}`,
-			ordinal,
-			text,
-		}),
-	),
+	paragraphs: loremParagraphSegments,
+	segments: loremParagraphSegments.flat(),
 } as const;
 
 export function cardDemoFakeSegmentById(
@@ -43,7 +47,7 @@ export function cardDemoFakeSegmentById(
 ): CardDemoFakeSegment | null {
 	if (!segmentId) return null;
 	return (
-		CARD_DEMO_FAKE_SENTENCE.segments.find(
+		CARD_DEMO_FAKE_TEXT.segments.find(
 			(segment) => segment.id === segmentId,
 		) ?? null
 	);
@@ -58,7 +62,7 @@ export const CARD_DEMO_RESOLUTION_CHAIN = [
 		kind: "attestation",
 		label: "Attestation",
 		presentationLayer: 0,
-		summary: "The fake occurrence selected in the playground sentence.",
+		summary: "The fake occurrence selected in the playground text.",
 	},
 	{
 		kind: "surface",

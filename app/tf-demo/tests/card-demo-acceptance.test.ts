@@ -10,7 +10,7 @@ import {
 	CARD_DEMO_VARIANTS,
 	type CardDemoNoteKind,
 } from "../src/playground/card-demo/card-demo-contract";
-import { CARD_DEMO_FAKE_SENTENCE } from "../src/playground/card-demo/card-demo-fixtures";
+import { CARD_DEMO_FAKE_TEXT } from "../src/playground/card-demo/card-demo-fixtures";
 import { cardDemoHref } from "../src/playground/card-demo/card-demo-navigation";
 
 class RecordingDriver implements CardDemoAcceptanceDriver {
@@ -23,8 +23,7 @@ class RecordingDriver implements CardDemoAcceptanceDriver {
 	selectSegment = (id: string) => this.record(`select:${id}`);
 	expectSelectedSegmentContent = (id: string, text: string) =>
 		this.record(`content:${id}:${text}`);
-	expectBackdropVisible = () => this.record("backdrop:visible");
-	expectTextInteractionBlocked = () => this.record("text:blocked");
+	expectTextInteractionAvailable = () => this.record("text:interactive");
 	expectResolutionChain = (kinds: readonly CardDemoNoteKind[]) =>
 		this.record(`chain:${kinds.join(",")}`);
 	startCardPointer = (kind: CardDemoNoteKind, pointer: "mouse" | "touch") =>
@@ -54,7 +53,6 @@ class RecordingDriver implements CardDemoAcceptanceDriver {
 		this.record(`name:${kind}:${name}`);
 	focusCard = (kind: CardDemoNoteKind) => this.record(`focus:${kind}`);
 	pressCardKey = (key: "Enter" | "Space") => this.record(`key:${key}`);
-	clickBackdrop = () => this.record("backdrop:click");
 	pressEscape = () => this.record("key:Escape");
 	expectCardsDismissed = () => this.record("cards:dismissed");
 	expectFocusOnSegment = (id: string) => this.record(`focus-segment:${id}`);
@@ -72,8 +70,9 @@ class RecordingDriver implements CardDemoAcceptanceDriver {
 test("encodes every non-compensable gate for all four variants", async () => {
 	const driver = new RecordingDriver();
 	await runCardDemoAcceptanceSuite(driver);
-	for (const segment of CARD_DEMO_FAKE_SENTENCE.segments)
+	for (const segment of CARD_DEMO_FAKE_TEXT.segments)
 		expect(driver.events).toContain(`select:${segment.id}`);
+	expect(driver.events).toContain("text:interactive");
 	expect(driver.events).toContain(
 		`move:${CARD_DEMO_GEOMETRY.dragActivationDistance - 1}`,
 	);

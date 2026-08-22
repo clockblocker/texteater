@@ -392,6 +392,24 @@ language, Lemma family, and Lemma kind.
 
 _Avoid_: Grammar Resolution
 
+### Resolution Branch
+The route-specific continuation selected for Lemma or Reading production after
+Target Classification fixes the language, Family, and Kind. Every Resolution
+Branch presents the same interface and contributes to the same resolution chain
+and applicable Knowledge contract; branch selection is not observable to its
+caller. Reading branch selection also governs Knowledge production.
+
+### Open Route
+A language, Family, and Kind route whose Lemma or Reading Resolution Branch is
+the established Dumgen resolution pipeline.
+
+### Closed Route
+A language, Family, and Kind route whose separate Lemma or Reading Resolution
+Branch encapsulates its route-specific behavior behind the common interface.
+Whether either branch uses model calls is implementation detail; a Closed Route
+never falls through to its corresponding Open Route.
+_Avoid_: Closed Class
+
 ### Reading
 A foundational Dumling semantic value formed by one Lemma and one emoji
 description, interpreted within one learner or hosted dictionary scope.

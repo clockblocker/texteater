@@ -19,6 +19,7 @@ import {
 	CARD_DEMO_KEYBOARD_ORDER,
 	type CardDemoNoteKind,
 	type CardDemoResolutionCard,
+	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
 import type { CardDemoInteractionProps } from "../card-demo-interaction";
@@ -154,7 +155,7 @@ function MotionResolutionCard({
 	readonly onTouchTap: (kind: CardDemoNoteKind) => void;
 	readonly onOpenNote: (kind: CardDemoNoteKind) => void;
 }) {
-	const restingY = card.presentationLayer * CARD_DEMO_GEOMETRY.layerOffset;
+	const restingY = cardDemoRestingOffset(card.presentationLayer);
 	const x = useMotionValue(0);
 	const y = useMotionValue(restingY);
 	const shouldReduceMotion = useReducedMotion();

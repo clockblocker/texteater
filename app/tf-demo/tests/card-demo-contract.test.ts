@@ -3,13 +3,13 @@ import { describe, expect, test } from "bun:test";
 import {
 	CARD_DEMO_NOTE_KINDS,
 	CARD_DEMO_VARIANTS,
+	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../src/playground/card-demo/card-demo-contract";
 import {
-	CARD_DEMO_FAKE_SENTENCE,
+	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
 } from "../src/playground/card-demo/card-demo-fixtures";
-import { nextCardDemoFocusIndex } from "../src/playground/card-demo/card-demo-focus";
 import {
 	cardDemoHref,
 	cardDemoNoteNavigation,
@@ -19,15 +19,15 @@ import {
 
 describe("card-demo shared contract", () => {
 	test("keeps the lorem fixture explicit, stable, and Segment-shaped", () => {
-		expect(CARD_DEMO_FAKE_SENTENCE.disclaimer).toContain("Fake playground");
-		expect(CARD_DEMO_FAKE_SENTENCE.segments.length).toBeGreaterThan(10);
+		expect(CARD_DEMO_FAKE_TEXT.disclaimer).toContain("Fake playground");
+		expect(CARD_DEMO_FAKE_TEXT.paragraphs.length).toBeGreaterThan(5);
+		expect(CARD_DEMO_FAKE_TEXT.segments.length).toBeGreaterThan(150);
 		expect(
-			new Set(
-				CARD_DEMO_FAKE_SENTENCE.segments.map((segment) => segment.id),
-			).size,
-		).toBe(CARD_DEMO_FAKE_SENTENCE.segments.length);
+			new Set(CARD_DEMO_FAKE_TEXT.segments.map((segment) => segment.id))
+				.size,
+		).toBe(CARD_DEMO_FAKE_TEXT.segments.length);
 		expect(
-			CARD_DEMO_FAKE_SENTENCE.segments.every(
+			CARD_DEMO_FAKE_TEXT.segments.every(
 				(segment, ordinal) =>
 					segment.ordinal === ordinal &&
 					segment.text.trim().split(/\s+/).length === 1,
@@ -42,6 +42,11 @@ describe("card-demo shared contract", () => {
 		expect(
 			CARD_DEMO_RESOLUTION_CHAIN.map((card) => card.presentationLayer),
 		).toEqual([0, 1, 2, 3]);
+		expect(
+			CARD_DEMO_RESOLUTION_CHAIN.map((card) =>
+				cardDemoRestingOffset(card.presentationLayer),
+			),
+		).toEqual([42, 28, 14, 0]);
 	});
 
 	test("round trips every Text and matching Note route without production targets", () => {
@@ -98,11 +103,5 @@ describe("card-demo shared contract", () => {
 		expect(cardDemoSelectedSegmentIdFromState(navigation.state)).toBe(
 			"playground-segment-03",
 		);
-	});
-
-	test("wraps modal focus in both directions", () => {
-		expect(nextCardDemoFocusIndex(3, 4, false)).toBe(0);
-		expect(nextCardDemoFocusIndex(0, 4, true)).toBe(3);
-		expect(nextCardDemoFocusIndex(-1, 4, false)).toBe(0);
 	});
 });

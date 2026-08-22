@@ -34,7 +34,7 @@ import { parseSubmittedTextId } from "@/lib/action-results";
 import { hrefFor } from "@/lib/navigation";
 import { api } from "../../convex/_generated/api";
 
-const exampleText = "Die Banken sind geöffnet.";
+const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
 	dateStyle: "medium",
 });
@@ -163,8 +163,8 @@ export function LibraryView() {
 					<DialogHeader>
 						<DialogTitle>Add a text</DialogTitle>
 						<DialogDescription>
-							Analyze a short German sentence and save it to the
-							library.
+							Add German prose, lyrics, or a book excerpt. The
+							text will be split into sentences before analysis.
 						</DialogDescription>
 					</DialogHeader>
 					<form
@@ -180,7 +180,7 @@ export function LibraryView() {
 								}
 							>
 								<FieldLabel htmlFor="library-source-text">
-									German sentence
+									German text
 								</FieldLabel>
 								<Textarea
 									id="library-source-text"

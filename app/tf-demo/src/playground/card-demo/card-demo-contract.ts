@@ -58,8 +58,12 @@ export const CARD_DEMO_GEOMETRY = {
 	stackHeight: 218,
 	dragActivationDistance: 6,
 	outsideScale: 1.025,
-	backdropOpacity: 0.06,
 } as const;
+
+export function cardDemoRestingOffset(presentationLayer: number): number {
+	const frontLayer = CARD_DEMO_NOTE_KINDS.length - 1;
+	return (frontLayer - presentationLayer) * CARD_DEMO_GEOMETRY.layerOffset;
+}
 
 export function isInsideCardDemoCancelZone(
 	point: CardDemoPoint,

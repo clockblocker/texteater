@@ -9,6 +9,7 @@ import {
 	CARD_DEMO_GEOMETRY,
 	CARD_DEMO_KEYBOARD_ORDER,
 	type CardDemoNoteKind,
+	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
 import type { CardDemoInteractionProps } from "../card-demo-interaction";
@@ -204,7 +205,7 @@ export function NativeCardDemoInteraction({
 						onPointerUp={(event) => finishPointer(event, false)}
 						segment={selectedSegment}
 						style={{
-							transform: `translate3d(${activeDrag?.deltaX ?? 0}px, ${(activeDrag?.deltaY ?? 0) + card.presentationLayer * CARD_DEMO_GEOMETRY.layerOffset}px, 0)`,
+							transform: `translate3d(${activeDrag?.deltaX ?? 0}px, ${(activeDrag?.deltaY ?? 0) + cardDemoRestingOffset(card.presentationLayer)}px, 0)`,
 							zIndex: activeDrag
 								? cards.length + 1
 								: card.presentationLayer + 1,

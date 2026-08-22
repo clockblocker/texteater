@@ -32,6 +32,7 @@ import {
 	type CardDemoPoint,
 	type CardDemoRect,
 	type CardDemoResolutionCard,
+	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
 import type { CardDemoInteractionProps } from "../card-demo-interaction";
@@ -556,7 +557,7 @@ function DndKitCard({
 			segment={segment}
 			style={{
 				opacity: isDragging ? 0 : 1,
-				transform: `translateY(${card.presentationLayer * CARD_DEMO_GEOMETRY.layerOffset}px)`,
+				transform: `translateY(${cardDemoRestingOffset(card.presentationLayer)}px)`,
 				transition: reducedMotion ? "none" : undefined,
 				zIndex: card.presentationLayer + 1,
 			}}

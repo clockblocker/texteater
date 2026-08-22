@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 
-import { CARD_DEMO_FAKE_SENTENCE } from "../src/playground/card-demo/card-demo-fixtures";
+import { CARD_DEMO_FAKE_TEXT } from "../src/playground/card-demo/card-demo-fixtures";
 import { cardDemoNoteNavigation } from "../src/playground/card-demo/card-demo-navigation";
 import {
 	CardDemoRouteShell,
@@ -67,7 +67,7 @@ test("preserves selected Segment content through Note navigation state", () => {
 	expect(markup).toContain("Segment 3 in the lorem-ipsum fixture");
 });
 
-test("makes Text inert and removes the backdrop from tab order while modal", () => {
+test("keeps Text interactive while the nonmodal cards are open", () => {
 	const markup = renderToStaticMarkup(
 		createElement(
 			MemoryRouter,
@@ -75,13 +75,14 @@ test("makes Text inert and removes the backdrop from tab order while modal", () 
 			createElement(CardDemoTextPage, {
 				Interaction: PendingCardDemoInteraction,
 				variant: "native",
-				selectedSegment: CARD_DEMO_FAKE_SENTENCE.segments[2],
+				selectedSegment: CARD_DEMO_FAKE_TEXT.segments[2],
 				onSelectedSegmentChange() {},
 				onOpenNote() {},
 			}),
 		),
 	);
-	expect(markup).toContain('inert=""');
-	expect(markup).toContain('aria-hidden="true"');
-	expect(markup).toContain('data-card-demo-backdrop="" tabindex="-1"');
+	expect(markup).not.toContain('inert=""');
+	expect(markup).not.toContain('aria-hidden="true"');
+	expect(markup).not.toContain("data-card-demo-backdrop");
+	expect(markup).not.toContain('aria-modal="true"');
 });

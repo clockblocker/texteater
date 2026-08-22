@@ -32,7 +32,10 @@ A Knowledge Change that removes one complete atomic aspect or bucket.
 **Reading Knowledge**:
 Knowledge applied to one exact Reading. It may contain Transcription,
 Definition, Translations, Morphological Tree, Lexical Breakdown, and direct
-Semantic Relations.
+Semantic Relations. For a Closed Route, Dumrel owns the corresponding
+hand-authored ordinary Knowledge values. They use the same DTO and persistence
+plumbing as generated Knowledge. Knowledge has no independent route closure:
+its production follows the closure of its exact Reading one-to-one.
 
 **Target Language**:
 A caller-chosen language label for one Translation bucket. It does not identify

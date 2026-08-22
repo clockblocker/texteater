@@ -4,6 +4,14 @@ Dumdict manages learner-owned dictionary records over Dumling's grammatical
 entities. It plans storage changes but does not own a host's persistence,
 transactions, or synchronization.
 
+Closed-route Lemmas, Readings, and Knowledge use the same records, identity,
+and persistence workflows as Open-route values. Application setup may preload
+the contextless fixed inventory through ordinary storage plumbing; outside demo
+operation, the application assumes that inventory is already present. Setup
+exposes one idempotent loading operation that aggregates the ordinary values
+owned by each contributing dum* package; its caller does not coordinate
+package-specific loaders.
+
 ## Language
 
 **Lemma Record**:

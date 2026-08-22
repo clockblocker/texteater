@@ -1,6 +1,6 @@
 import {
-	CARD_DEMO_GEOMETRY,
 	CARD_DEMO_KEYBOARD_ORDER,
+	cardDemoRestingOffset,
 } from "../card-demo-contract";
 import type { CardDemoInteractionProps } from "../card-demo-interaction";
 import {
@@ -24,7 +24,7 @@ export function PendingCardDemoInteraction({
 							key={card.kind}
 							segment={selectedSegment}
 							style={{
-								transform: `translateY(${card.presentationLayer * CARD_DEMO_GEOMETRY.layerOffset}px)`,
+								transform: `translateY(${cardDemoRestingOffset(card.presentationLayer)}px)`,
 								zIndex: card.presentationLayer + 1,
 							}}
 						/>

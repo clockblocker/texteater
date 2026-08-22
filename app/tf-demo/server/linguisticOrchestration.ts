@@ -29,6 +29,7 @@ import {
 	parseGermanReading,
 	unwrapOperationalParse,
 } from "./operationalParsing";
+import { splitInSentences } from "./sentenceSplitting";
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -277,9 +278,8 @@ export function createTfDemoOrchestrator(options: {
 		assertNonEmpty(input.submissionKey, "submissionKey");
 		assertNonEmpty(input.sourceText, "sourceText");
 
-		// Dumgen intentionally accepts caller-delimited Source Sentences, not an
-		// arbitrary document. The first slice therefore submits one source sentence.
-		const segmentation = await options.dumgen.segment([input.sourceText]);
+		const sourceSentences = splitInSentences(input.sourceText);
+		const segmentation = await options.dumgen.segment(sourceSentences);
 		if (!segmentation.ok) return segmentation;
 
 		const sentences = segmentation.value.flatMap(

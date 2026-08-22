@@ -13,6 +13,7 @@ import {
 	CARD_DEMO_KEYBOARD_ORDER,
 	type CardDemoNoteKind,
 	type CardDemoResolutionCard,
+	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
 import type { CardDemoInteractionProps } from "../card-demo-interaction";
@@ -92,10 +93,7 @@ export function GestureSpringCardDemoInteraction({
 			data-card-demo-engine="gesture-spring"
 			data-reduced-motion={reducedMotion ? "true" : "false"}
 		>
-			<CardDemoStackFrame
-				aria-describedby="card-demo-gesture-spring-instructions"
-				ref={stackRef}
-			>
+			<CardDemoStackFrame ref={stackRef}>
 				{CARD_DEMO_KEYBOARD_ORDER.map((kind) =>
 					cards.find((card) => card.kind === kind),
 				).map((card) =>
@@ -114,10 +112,6 @@ export function GestureSpringCardDemoInteraction({
 					) : null,
 				)}
 			</CardDemoStackFrame>
-			<p id="card-demo-gesture-spring-instructions">
-				Drag a card beyond the stack, double-tap it, or press Enter or
-				Space to open its matching fake Note.
-			</p>
 		</div>
 	);
 }
@@ -132,7 +126,7 @@ function GestureSpringCard({
 	claimOpen,
 	onOpenNote,
 }: GestureSpringCardProps) {
-	const baseY = card.presentationLayer * CARD_DEMO_GEOMETRY.layerOffset;
+	const baseY = cardDemoRestingOffset(card.presentationLayer);
 	const dragIntentionalRef = useRef(false);
 	const movedRef = useRef(false);
 	const outsideRef = useRef(false);

@@ -30,7 +30,7 @@ Knowledge Change plus accumulated Knowledge in a mutation.
 
 ## Integration gaps
 
-### DUMGEN-1: text submission has no sentence-delimiting operation
+### DUMGEN-1 resolved: tf-demo owns Text-to-Sentence splitting
 
 Reproduction path:
 
@@ -40,10 +40,12 @@ Reproduction path:
   caller-delimited Source Sentence.
 - There is no public Text-to-Sentences operation in `battery/dumgen/src/index.ts`.
 
-Workaround in tf-demo: the first slice treats the submitted text as exactly one
-Source Sentence and calls `segment([sourceText])`. Multi-sentence document
-submission needs a real sentence-boundary owner; tf-demo does not hide one in a
-demo tokenizer.
+Resolution in tf-demo: `server/sentenceSplitting.ts` owns one small
+`splitInSentences(text)` interface that returns ordered Source Sentences. Its
+initial implementation uses the platform sentence segmenter and deliberately
+keeps that heuristic private so it can become more capable without changing
+the orchestration caller. Dumgen continues to own Intake and deterministic
+Source Segmentation for the resulting caller-delimited Source Sentences.
 
 ### DUMDICT-1: Dumdict loses structured Attestation evidence
 

@@ -8,11 +8,10 @@ import type {
 } from "./card-demo-contract";
 import { CARD_DEMO_VARIANTS } from "./card-demo-contract";
 import {
-	CARD_DEMO_FAKE_SENTENCE,
+	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
 	cardDemoFakeSegmentById,
 } from "./card-demo-fixtures";
-import { nextCardDemoFocusIndex } from "./card-demo-focus";
 import type { CardDemoInteraction } from "./card-demo-interaction";
 import {
 	CARD_DEMO_BASE_PATH,
@@ -50,7 +49,7 @@ export function CardDemoRouteShell() {
 				cardDemoSelectedSegmentIdFromState(location.state),
 			) ??
 			selectedSegment ??
-			CARD_DEMO_FAKE_SENTENCE.segments[0];
+			CARD_DEMO_FAKE_TEXT.segments[0];
 		return (
 			<CardDemoPageFrame variant={target.variant}>
 				<section
@@ -146,33 +145,42 @@ export function CardDemoTextPage({
 
 	return (
 		<CardDemoPageFrame variant={variant}>
-			<section
-				aria-hidden={selectedSegment ? true : undefined}
-				aria-label="Fake Text"
-				className="card-demo-text"
-				inert={selectedSegment ? true : undefined}
-			>
-				<p className="card-demo-segments">
-					{CARD_DEMO_FAKE_SENTENCE.segments.map((segment) => (
-						<button
-							className="card-demo-segment"
-							data-card-demo-segment={segment.id}
-							key={segment.id}
-							onClick={() => onSelectedSegmentChange(segment)}
-							ref={(node) => {
-								if (node)
-									segmentButtons.current.set(
-										segment.id,
-										node,
-									);
-								else segmentButtons.current.delete(segment.id);
-							}}
-							type="button"
-						>
-							{segment.text}
-						</button>
-					))}
-				</p>
+			<section aria-label="Fake Text" className="card-demo-text">
+				<div className="card-demo-copy">
+					{CARD_DEMO_FAKE_TEXT.paragraphs.map(
+						(paragraph, paragraphIndex) => (
+							<p
+								className="card-demo-segments"
+								key={`paragraph-${paragraphIndex}`}
+							>
+								{paragraph.map((segment) => (
+									<button
+										className="card-demo-segment"
+										data-card-demo-segment={segment.id}
+										key={segment.id}
+										onClick={() =>
+											onSelectedSegmentChange(segment)
+										}
+										ref={(node) => {
+											if (node)
+												segmentButtons.current.set(
+													segment.id,
+													node,
+												);
+											else
+												segmentButtons.current.delete(
+													segment.id,
+												);
+										}}
+										type="button"
+									>
+										{segment.text}
+									</button>
+								))}
+							</p>
+						),
+					)}
+				</div>
 			</section>
 			{selectedSegment ? (
 				<CardDemoOverlay
@@ -211,21 +219,7 @@ export function CardDemoOverlay({
 			if (event.key === "Escape") {
 				event.preventDefault();
 				onDismiss();
-				return;
 			}
-			if (event.key !== "Tab") return;
-			const cards = focusableCards();
-			const currentIndex = cards.indexOf(
-				document.activeElement as HTMLButtonElement,
-			);
-			const nextIndex = nextCardDemoFocusIndex(
-				currentIndex,
-				cards.length,
-				event.shiftKey,
-			);
-			if (nextIndex === null) return;
-			event.preventDefault();
-			cards[nextIndex]?.focus();
 		};
 		window.addEventListener("keydown", onKeyDown);
 		focusableCards()[0]?.focus();
@@ -234,17 +228,8 @@ export function CardDemoOverlay({
 
 	return (
 		<div className="card-demo-overlay" data-card-demo-overlay="">
-			<button
-				aria-label="Dismiss Resolution Chain"
-				className="card-demo-backdrop"
-				data-card-demo-backdrop=""
-				onClick={onDismiss}
-				tabIndex={-1}
-				type="button"
-			/>
 			<div
 				aria-label={`Resolution Chain for ${selectedSegment.text}`}
-				aria-modal="true"
 				className="card-demo-dialog"
 				ref={dialogRef}
 				role="dialog"

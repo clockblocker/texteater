@@ -58,11 +58,32 @@ The stable grammatical features that complete a Lemma's identity within its
 language, Family, and Kind.
 _Avoid_: Inherent Features
 
+**Route Closure**:
+The language-specific policy that classifies a language, Family, and Kind route
+for Lemma and Reading production as `Open` or `Closed`. Dumling owns the
+exhaustive policy outside the entity DTOs and exposes route queries; closure is
+not part of Lemma or Reading identity. Every Closed Reading route is also a
+Closed Lemma route, while a Closed Lemma route may remain Open for Reading
+production; German `Lexeme/ADP`, whose Lemmas are closed but whose contextual
+Readings include distinctions such as `🤝`, `🛠️`, and `🔗`, is the motivating
+example. Reading closure also governs production of the Reading's Knowledge
+because Knowledge maps one-to-one to an exact Reading. Unspecified route leaves
+default to Open. The initial configured closure policy is German-only; every
+English and Hebrew route remains Open by default. A Closed leaf is a capability
+guarantee that the route's corresponding Closed implementation and hand-authored
+inventory are complete; linguistic closedness alone does not justify enabling
+the leaf. Closed members use the same entity DTOs, identity operations, and
+persistence plumbing as every other member; only their internal production
+route differs.
+_Avoid_: DTO closure flag, Knowledge closure
+
 **Reading**:
 A foundational semantic value formed by exactly one Lemma and one Emoji
 Description. Dumling owns its DTO, schema, value equality, and stable
 tuple-derived identity operation; a dictionary establishes the learner or
-hosted scope in which that equality applies and owns any Reading record.
+hosted scope in which that equality applies and owns any Reading record. For a
+Closed Route, Dumling also owns the corresponding hand-authored ordinary
+Reading values; they do not form a specialized DTO class.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:

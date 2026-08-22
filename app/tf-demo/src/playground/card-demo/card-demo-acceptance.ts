@@ -7,7 +7,7 @@ import {
 	type CardDemoVariant,
 } from "./card-demo-contract";
 import {
-	CARD_DEMO_FAKE_SENTENCE,
+	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
 } from "./card-demo-fixtures";
 import { cardDemoHref } from "./card-demo-navigation";
@@ -29,8 +29,7 @@ export interface CardDemoAcceptanceDriver {
 		segmentId: string,
 		text: string,
 	): Promise<void>;
-	expectBackdropVisible(): Promise<void>;
-	expectTextInteractionBlocked(): Promise<void>;
+	expectTextInteractionAvailable(): Promise<void>;
 	expectResolutionChain(kinds: readonly CardDemoNoteKind[]): Promise<void>;
 	startCardPointer(
 		kind: CardDemoNoteKind,
@@ -56,7 +55,6 @@ export interface CardDemoAcceptanceDriver {
 	): Promise<void>;
 	focusCard(kind: CardDemoNoteKind): Promise<void>;
 	pressCardKey(key: CardDemoActivationKey): Promise<void>;
-	clickBackdrop(): Promise<void>;
 	pressEscape(): Promise<void>;
 	expectCardsDismissed(): Promise<void>;
 	expectFocusOnSegment(segmentId: string): Promise<void>;
@@ -76,7 +74,7 @@ export type CardDemoAcceptanceScenario = {
 	): Promise<void>;
 };
 
-const selectedSegment = CARD_DEMO_FAKE_SENTENCE.segments[2];
+const selectedSegment = CARD_DEMO_FAKE_TEXT.segments[2];
 async function openCards(
 	driver: CardDemoAcceptanceDriver,
 	variant: CardDemoVariant,
@@ -88,21 +86,23 @@ async function openCards(
 export const CARD_DEMO_ACCEPTANCE_SCENARIOS = [
 	{
 		id: "all-fake-segments-share-one-contract",
-		description: "Every fake Segment reveals the identical shared chain.",
+		description:
+			"Every fake Segment updates the open shared chain in one click.",
 		async run(driver, variant) {
-			for (const segment of CARD_DEMO_FAKE_SENTENCE.segments) {
-				await driver.visit(cardDemoHref({ page: "text", variant }));
+			await driver.visit(cardDemoHref({ page: "text", variant }));
+			for (const segment of CARD_DEMO_FAKE_TEXT.segments) {
 				await driver.selectSegment(segment.id);
 				await driver.expectSelectedSegmentContent(
 					segment.id,
 					segment.text,
 				);
 				await driver.expectResolutionChain(CARD_DEMO_NOTE_KINDS);
-				await driver.expectBackdropVisible();
-				await driver.expectTextInteractionBlocked();
-				await driver.pressEscape();
-				await driver.expectFocusOnSegment(segment.id);
+				await driver.expectTextInteractionAvailable();
 			}
+			const lastSegment = CARD_DEMO_FAKE_TEXT.segments.at(-1);
+			if (!lastSegment) return;
+			await driver.pressEscape();
+			await driver.expectFocusOnSegment(lastSegment.id);
 		},
 	},
 	{
@@ -194,7 +194,7 @@ export const CARD_DEMO_ACCEPTANCE_SCENARIOS = [
 	{
 		id: "keyboard-order-names-activation-and-focus-restoration",
 		description:
-			"Keyboard order, names, activation, containment, and focus restoration are shared.",
+			"Keyboard order, names, activation, and focus restoration are shared.",
 		async run(driver, variant) {
 			await openCards(driver, variant);
 			await driver.expectCardFocusOrder(CARD_DEMO_KEYBOARD_ORDER);
@@ -204,7 +204,7 @@ export const CARD_DEMO_ACCEPTANCE_SCENARIOS = [
 					`Open ${card.label} Note for ${selectedSegment.text}`,
 				);
 			}
-			await driver.clickBackdrop();
+			await driver.pressEscape();
 			await driver.expectCardsDismissed();
 			await driver.expectFocusOnSegment(selectedSegment.id);
 			for (const kind of CARD_DEMO_NOTE_KINDS) {
