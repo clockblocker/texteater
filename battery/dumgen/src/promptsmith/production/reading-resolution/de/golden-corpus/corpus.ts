@@ -5,6 +5,7 @@ import { adpositions } from "./cases/adp";
 import { functionWords } from "./cases/function-words";
 import { fusionAndCconj } from "./cases/fusion-and-cconj";
 import { labelsAndNames } from "./cases/labels-and-names";
+import { morphemes } from "./cases/morpheme";
 import { nouns } from "./cases/noun";
 import { phrasemes } from "./cases/phraseme";
 import { verbs } from "./cases/verb";
@@ -20,6 +21,7 @@ export const corpus = defineGoldenCorpus({
 		fusionAndCconj,
 		functionWords,
 		labelsAndNames,
+		morphemes,
 		phrasemes,
 		verbs,
 	},

@@ -1,0 +1,236 @@
+{
+  "runnerVersion": "reading-meaning-isolation-v1",
+  "route": "reading-resolution/de",
+  "transport": "openai-responses-direct-serial",
+  "phase": {
+    "kind": "development",
+    "round": 1
+  },
+  "startedAt": "2026-08-22T06:06:42.740Z",
+  "completedAt": "2026-08-22T06:06:48.078Z",
+  "finalizedAt": null,
+  "model": "gpt-5.6-luna",
+  "maxOutputTokens": 64,
+  "reasoningEffort": "none",
+  "textVerbosity": "low",
+  "promptCacheKey": "c737f84ba83852f79b0c7eb72cac96973996823192725be5c5e651bfd698b2a9",
+  "promptCacheMode": "explicit",
+  "promptCacheTtl": "30m",
+  "promptCacheBreakpoint": "end-of-stable-system-prompt",
+  "promptSha256": "8f12e924c920cea886cf54b6f89c08ac34bea6f400db37f2443e7d75312e84f8",
+  "inputSchemaSha256": "4c84cb73b38cbad460a4ae5cbd2913a3db3e16328e21474c5a9dc64dd0b68e51",
+  "outputSchemaSha256": "0bad5b8b2e93076eb54ab3a219e687608657cef5011b594c67c389ddfb860121",
+  "suiteSha256": "385aae2f23666c45c7d75fa4044abf2543cec010ef26db676e4b172c3f44f520",
+  "evaluationCaseIds": [
+    "reading-de-lexeme-det-der-neighbor-house-isolation",
+    "reading-de-lexeme-det-der-neighbor-car-isolation",
+    "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+    "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+    "reading-de-morpheme-suffix-chen-neighbor-house-isolation"
+  ],
+  "boundedCalls": 5,
+  "maximumEvaluationCases": 5,
+  "retries": 0,
+  "store": false,
+  "contractScore": 1,
+  "scoreRatio": 0.2,
+  "minimumEvaluationCases": 5,
+  "minimumScoreRatio": 1,
+  "meetsMinimumEvaluationCases": true,
+  "meetsMinimumScoreRatio": false,
+  "executionErrorCount": 0,
+  "unclassifiedMissCount": 4,
+  "evidenceThresholdMet": false,
+  "attempts": [
+    {
+      "caseId": "reading-de-lexeme-det-der-neighbor-house-isolation",
+      "input": {
+        "markedContext": "<TARGET>Die</TARGET> Häuser sind groß.",
+        "lemma": "der",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "👉"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏠"
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "noveltyPass": true,
+      "neighborMeaningPass": false,
+      "latencyMs": 1179,
+      "rawOutputText": "{\"decision\":\"New\",\"emojiDescription\":\"🏠\"}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0628883949e1f2a6016a893c7328f087d19f5efee010406e6c",
+      "usage": {
+        "input_tokens": 838,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 15,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 853
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-det-der-neighbor-car-isolation",
+      "input": {
+        "markedContext": "<TARGET>Das</TARGET> Auto ist neu.",
+        "lemma": "der",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "👉"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "👉"
+      },
+      "contractPass": true,
+      "decisionPass": true,
+      "noveltyPass": true,
+      "neighborMeaningPass": true,
+      "latencyMs": 991,
+      "rawOutputText": "{\"decision\":\"New\",\"emojiDescription\":\"👉\"}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0a0210cc4c710369016a893c74273887d192fb37af750f8024",
+      "usage": {
+        "input_tokens": 838,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 21,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 859
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-pron-das-relative-neighbor-house-isolation",
+      "input": {
+        "markedContext": "Das Haus, <TARGET>das</TARGET> dort steht, ist alt.",
+        "lemma": "der",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🔗"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏠"
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "noveltyPass": true,
+      "neighborMeaningPass": false,
+      "latencyMs": 941,
+      "rawOutputText": "{\"decision\":\"New\",\"emojiDescription\":\"🏠\"}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0cc60e2ef8dc29a8016a893c75242887d1b70410558c664a76",
+      "usage": {
+        "input_tokens": 843,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 15,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 858
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-lexeme-pron-die-relative-neighbor-cat-isolation",
+      "input": {
+        "markedContext": "Die Katze, <TARGET>die</TARGET> schläft, ist alt.",
+        "lemma": "der",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🔗"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🐱"
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "noveltyPass": true,
+      "neighborMeaningPass": false,
+      "latencyMs": 1237,
+      "rawOutputText": "{\"decision\":\"New\",\"emojiDescription\":\"🐱\"}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0746f7fc84299e58016a893c76148087d1abf37a584d0cd418",
+      "usage": {
+        "input_tokens": 843,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 15,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 858
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    },
+    {
+      "caseId": "reading-de-morpheme-suffix-chen-neighbor-house-isolation",
+      "input": {
+        "markedContext": "Das Häus<TARGET>chen</TARGET> ist alt.",
+        "lemma": "-chen",
+        "existingEmojiDescriptions": []
+      },
+      "idealOutput": {
+        "decision": "New",
+        "emojiDescription": "🤏"
+      },
+      "output": {
+        "decision": "New",
+        "emojiDescription": "🏠🔹"
+      },
+      "contractPass": false,
+      "decisionPass": true,
+      "noveltyPass": true,
+      "neighborMeaningPass": false,
+      "latencyMs": 982,
+      "rawOutputText": "{\"decision\":\"New\",\"emojiDescription\":\"🏠🔹\"}",
+      "resolvedModel": "gpt-5.6-luna",
+      "responseId": "resp_0ce761544c7e6fd5016a893c7756c087d1acdc3699ddcdce8c",
+      "usage": {
+        "input_tokens": 841,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 17,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 858
+      },
+      "missClassification": null,
+      "missClassificationExplanation": null
+    }
+  ]
+}

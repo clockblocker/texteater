@@ -6,6 +6,48 @@ import type { inputSchema, outputSchema } from "../../schemas";
 
 export const functionWords = defineGoldenCaseCollection(import.meta.url, {
 	cases: {
+		"reading-de-lexeme-det-der-neighbor-house-isolation": {
+			input: {
+				markedContext: "<TARGET>Die</TARGET> Häuser sind groß.",
+				lemma: "der",
+				existingEmojiDescriptions: [],
+			},
+			idealOutput: { decision: "New", emojiDescription: "👉" },
+			explanation:
+				"Definite article. The houses are the referent, not the determiner's meaning.",
+		},
+		"reading-de-lexeme-pron-das-relative-neighbor-house-isolation": {
+			input: {
+				markedContext:
+					"Das Haus, <TARGET>das</TARGET> dort steht, ist alt.",
+				lemma: "der",
+				existingEmojiDescriptions: [],
+			},
+			idealOutput: { decision: "New", emojiDescription: "🔗" },
+			explanation:
+				"Relative pronoun. The house is its antecedent, not the pronoun's meaning.",
+		},
+		"reading-de-lexeme-det-der-neighbor-car-isolation": {
+			input: {
+				markedContext: "<TARGET>Das</TARGET> Auto ist neu.",
+				lemma: "der",
+				existingEmojiDescriptions: [],
+			},
+			idealOutput: { decision: "New", emojiDescription: "👉" },
+			explanation:
+				"Definite article. The car is the referent, not the determiner's meaning.",
+		},
+		"reading-de-lexeme-pron-die-relative-neighbor-cat-isolation": {
+			input: {
+				markedContext:
+					"Die Katze, <TARGET>die</TARGET> schläft, ist alt.",
+				lemma: "der",
+				existingEmojiDescriptions: [],
+			},
+			idealOutput: { decision: "New", emojiDescription: "🔗" },
+			explanation:
+				"Relative pronoun. The cat and feminine agreement belong to its antecedent, not the pronoun's meaning.",
+		},
 		"reading-de-lexeme-adv-sonst-usual": {
 			input: {
 				markedContext:

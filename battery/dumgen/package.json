@@ -77,6 +77,7 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run generate:readme && bun run build",
 		"prototype:knowledge-analysis-combined": "bun --env-file ../../.env.local docs/prototypes/knowledge-analysis-combined/run.ts",
+		"prototype:reading-resolution-meaning-isolation": "bun --env-file ../../.env.local docs/prototypes/reading-resolution-meaning-isolation/run.ts",
 		"prototype:german-relation-topology-lab": "bun --env-file ../../.env.local docs/prototypes/german-relation-topology-lab/run.ts",
 		"prototype:german-relation-prompt-iteration-lab": "bun --env-file ../../.env.local docs/prototypes/german-relation-prompt-iteration-lab/run.ts",
 		"review:german-relation-human-gate": "bun --env-file ../../.env.local docs/prototypes/german-relation-human-gate/review.ts",
