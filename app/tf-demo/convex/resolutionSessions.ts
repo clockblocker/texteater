@@ -294,21 +294,27 @@ export const getRunInput = internalQuery({
 	returns: v.union(
 		v.null(),
 		v.object({
-			requestId: v.string(),
-			visitorId: v.string(),
-			sentenceId: v.id("sentences"),
-			clickedSegmentIndex: v.number(),
-			runNumber: v.number(),
-			grammaticalCheckpoint: v.optional(resolvedGrammaticalValidator),
-			readingCheckpoint: v.optional(
-				v.object({
-					resolution: v.object({
-						decision: v.union(v.literal("Reuse"), v.literal("New")),
-						emojiDescription: v.string(),
+			selection: v.object({
+				requestId: v.string(),
+				visitorId: v.string(),
+				sentenceId: v.id("sentences"),
+				clickedSegmentIndex: v.number(),
+			}),
+			checkpoints: v.object({
+				grammatical: v.optional(resolvedGrammaticalValidator),
+				reading: v.optional(
+					v.object({
+						resolution: v.object({
+							decision: v.union(
+								v.literal("Reuse"),
+								v.literal("New"),
+							),
+							emojiDescription: v.string(),
+						}),
+						reading: readingValueValidator,
 					}),
-					reading: readingValueValidator,
-				}),
-			),
+				),
+			}),
 		}),
 	),
 	handler: async (ctx, { guard }) => {
@@ -336,17 +342,20 @@ export const getRunInput = internalQuery({
 			return null;
 		}
 		return {
-			requestId: session.requestId,
-			visitorId: session.visitorId,
-			sentenceId: session.sentenceId,
-			clickedSegmentIndex: session.clickedSegmentIndex,
-			runNumber: session.runNumber ?? 1,
-			...(session.grammaticalCheckpoint
-				? { grammaticalCheckpoint: session.grammaticalCheckpoint }
-				: {}),
-			...(session.readingCheckpoint
-				? { readingCheckpoint: session.readingCheckpoint }
-				: {}),
+			selection: {
+				requestId: session.requestId,
+				visitorId: session.visitorId,
+				sentenceId: session.sentenceId,
+				clickedSegmentIndex: session.clickedSegmentIndex,
+			},
+			checkpoints: {
+				...(session.grammaticalCheckpoint
+					? { grammatical: session.grammaticalCheckpoint }
+					: {}),
+				...(session.readingCheckpoint
+					? { reading: session.readingCheckpoint }
+					: {}),
+			},
 		};
 	},
 });

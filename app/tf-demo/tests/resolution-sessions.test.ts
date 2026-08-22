@@ -1292,20 +1292,26 @@ describe("Resolution Session", () => {
 			{ status: "Unresolved", clickId: "click-2" },
 		] as const) {
 			let queryCount = 0;
+			const queryArgs: unknown[] = [];
 			const mutationArgs: unknown[] = [];
 			await handler<
 				{ requestId: string; runToken: string; segmentId: string },
 				null
 			>(runResolutionSession)(
 				{
-					async runQuery() {
+					async runQuery(_reference: unknown, args: unknown) {
 						queryCount += 1;
+						queryArgs.push(args);
 						return queryCount === 1
 							? {
-									requestId: "request-1",
-									visitorId: "visitor-1",
-									sentenceId: "sentence-1",
-									clickedSegmentIndex: 2,
+									selection: {
+										requestId: "request-1",
+										visitorId: "visitor-1",
+										sentenceId: "sentence-1",
+										clickedSegmentIndex: 2,
+									},
+									checkpoints: {},
+									runNumber: 2,
 								}
 							: recorded;
 					},
@@ -1322,6 +1328,12 @@ describe("Resolution Session", () => {
 			);
 
 			expect(queryCount).toBe(2);
+			expect(queryArgs[1]).toEqual({
+				requestId: "request-1",
+				visitorId: "visitor-1",
+				sentenceId: "sentence-1",
+				clickedSegmentIndex: 2,
+			});
 			expect(mutationArgs[1]).toMatchObject({
 				progress: "RouteAvailable",
 			});
@@ -1375,10 +1387,13 @@ describe("Resolution Session", () => {
 						queryCount += 1;
 						if (queryCount === 1) {
 							return {
-								requestId: "request-1",
-								visitorId: "visitor-1",
-								sentenceId: "sentence-1",
-								clickedSegmentIndex: 2,
+								selection: {
+									requestId: "request-1",
+									visitorId: "visitor-1",
+									sentenceId: "sentence-1",
+									clickedSegmentIndex: 2,
+								},
+								checkpoints: {},
 							};
 						}
 						throw new TypeError("secret checkpoint payload");

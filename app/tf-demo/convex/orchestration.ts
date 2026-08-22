@@ -35,6 +35,7 @@ import {
 	type PersistedSentence,
 	type RecordedClick,
 	type ResolvedClickCommit,
+	type ResolveSegmentInput,
 	type ResolveSegmentResult,
 	type ReusableAttestation,
 	type ReusedResolvedClickCommit,
@@ -631,9 +632,9 @@ export const runResolutionSession = internalAction({
 				guard,
 				progress: "RouteAvailable",
 			});
-			phase = input.readingCheckpoint
+			phase = input.checkpoints.reading
 				? "Commit"
-				: input.grammaticalCheckpoint
+				: input.checkpoints.grammatical
 					? "Reading"
 					: "Grammar";
 			const result = await orchestratorFor(
@@ -643,20 +644,21 @@ export const runResolutionSession = internalAction({
 					phase = nextPhase;
 				},
 				onGenerationEvent,
-			).resolveSegment(input, {
-				...(input.grammaticalCheckpoint
+			).resolveSegment(input.selection, {
+				...(input.checkpoints.grammatical
 					? {
 							grammatical: resolvedGrammaticalCheckpoint(
-								input.grammaticalCheckpoint,
+								input.checkpoints.grammatical,
 							),
 						}
 					: {}),
-				...(input.readingCheckpoint
+				...(input.checkpoints.reading
 					? {
 							reading: {
-								resolution: input.readingCheckpoint.resolution,
+								resolution:
+									input.checkpoints.reading.resolution,
 								reading: parseGermanReading(
-									input.readingCheckpoint.reading,
+									input.checkpoints.reading.reading,
 								),
 							},
 						}
@@ -872,10 +874,7 @@ function createConvexPersistence(
 		async findRecordedClick(input) {
 			return ctx.runQuery(
 				internal.persistence.findClickResultByRequestId,
-				{
-					...input,
-					sentenceId: input.sentenceId as Id<"sentences">,
-				},
+				convexSegmentSelectionArgs(input),
 			) as Promise<RecordedClick | null>;
 		},
 		async findAttestation({ sentenceId, clickedSegmentIndex }) {
@@ -890,9 +889,10 @@ function createConvexPersistence(
 		async persistResolvedClick(input) {
 			const dictionaryPlan = dictionaryPlanResult(input.dictionaryPlan);
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
-				...input,
-				sentenceId: input.sentenceId as Id<"sentences">,
+				...convexSegmentSelectionArgs(input),
 				dictionaryPlan,
+				reading: input.reading,
+				readingKey: input.readingKey,
 				occurrence: {
 					...input.occurrence,
 					attestation: {
@@ -912,8 +912,7 @@ function createConvexPersistence(
 			return ctx.runMutation(
 				internal.persistence.persistReusedResolvedClick,
 				{
-					...input,
-					sentenceId: input.sentenceId as Id<"sentences">,
+					...convexSegmentSelectionArgs(input),
 					attestationId: input.attestationId as Id<"attestations">,
 					...(sessionGuard ? { sessionGuard } : {}),
 				},
@@ -923,12 +922,20 @@ function createConvexPersistence(
 			return ctx.runMutation(
 				internal.persistence.persistUnresolvedClick,
 				{
-					...input,
-					sentenceId: input.sentenceId as Id<"sentences">,
+					...convexSegmentSelectionArgs(input),
 					...(sessionGuard ? { sessionGuard } : {}),
 				},
 			) as Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 		},
+	};
+}
+
+function convexSegmentSelectionArgs(input: ResolveSegmentInput) {
+	return {
+		requestId: input.requestId,
+		visitorId: input.visitorId,
+		sentenceId: input.sentenceId as Id<"sentences">,
+		clickedSegmentIndex: input.clickedSegmentIndex,
 	};
 }
 
