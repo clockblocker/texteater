@@ -14,15 +14,12 @@ import { NotFoundView } from "@/views/not-found-view";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 
-const stagePosition = {
+const progressPosition = {
 	Starting: 0,
 	RouteAvailable: 1,
 	GrammarAvailable: 2,
 	ReadingAvailable: 3,
 	Committing: 4,
-	Complete: 5,
-	Unresolved: 5,
-	Failed: 5,
 } as const;
 
 export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
@@ -82,7 +79,7 @@ export function ResolutionNoteFrame({
 	note: ResolutionNote;
 	onRetry?: () => Promise<unknown>;
 }) {
-	const position = stagePosition[note.stage];
+	const position = progressPosition[note.progress];
 	const isWorking = note.activity !== "Terminal";
 	return (
 		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
@@ -99,7 +96,7 @@ export function ResolutionNoteFrame({
 							<Badge variant="secondary">
 								{note.activity === "WaitingForRetry"
 									? "Waiting for retry"
-									: stageLabel(note.stage)}
+									: lifecycleLabel(note)}
 							</Badge>
 							{isWorking ? (
 								<LoaderCircleIcon
@@ -235,6 +232,10 @@ function ResolutionNoteSkeleton() {
 	);
 }
 
-function stageLabel(stage: ResolutionNote["stage"]): string {
-	return stage.replace(/([a-z])([A-Z])/g, "$1 $2");
+function lifecycleLabel(note: ResolutionNote): string {
+	const label =
+		note.outcome === "PermanentFailure"
+			? "Failed"
+			: (note.outcome ?? note.progress);
+	return label.replace(/([a-z])([A-Z])/g, "$1 $2");
 }

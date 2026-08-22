@@ -629,7 +629,7 @@ export const runResolutionSession = internalAction({
 		try {
 			await ctx.runMutation(internal.resolutionSessions.advance, {
 				guard,
-				stage: "RouteAvailable",
+				progress: "RouteAvailable",
 			});
 			phase = input.readingCheckpoint
 				? "Commit"
@@ -806,7 +806,7 @@ function orchestratorFor(
 								internal.resolutionSessions.advance,
 								{
 									guard: sessionGuard,
-									stage: "GrammarAvailable",
+									progress: "GrammarAvailable",
 									grammar:
 										projectResolutionGrammar(grammatical),
 									grammaticalCheckpoint:
@@ -822,7 +822,7 @@ function orchestratorFor(
 								internal.resolutionSessions.advance,
 								{
 									guard: sessionGuard,
-									stage: "ReadingAvailable",
+									progress: "ReadingAvailable",
 									reading: projectResolutionReading(reading),
 									readingCheckpoint: {
 										resolution: readingResolution,
@@ -838,7 +838,7 @@ function orchestratorFor(
 								internal.resolutionSessions.advance,
 								{
 									guard: sessionGuard,
-									stage: "Committing",
+									progress: "Committing",
 								},
 							);
 						},

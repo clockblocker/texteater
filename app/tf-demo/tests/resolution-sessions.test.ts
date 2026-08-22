@@ -5,7 +5,8 @@ import {
 	stripTextAnalysisGraphBatch,
 } from "../convex/demoReset";
 import {
-	assertResolutionStageTransition,
+	assertResolutionLifecycle,
+	assertResolutionProgressTransition,
 	loadResolutionNote,
 	projectResolutionGrammar,
 	projectResolutionReading,
@@ -33,6 +34,7 @@ type Row = Record<string, unknown> & { _id: string };
 class SessionDb {
 	private readonly tables = new Map<string, Map<string, Row>>();
 	private nextId = 1;
+	readonly queriedIndexes: string[] = [];
 
 	constructor(seed: Record<string, readonly Row[]> = {}) {
 		for (const [table, rows] of Object.entries(seed)) {
@@ -56,6 +58,7 @@ class SessionDb {
 	}
 
 	query(table: string) {
+		const queriedIndexes = this.queriedIndexes;
 		const predicates: Array<(row: Row) => boolean> = [];
 		const range = {
 			eq(field: string, value: unknown) {
@@ -74,7 +77,8 @@ class SessionDb {
 				predicates.every((predicate) => predicate(row)),
 			);
 		return {
-			withIndex(_name: string, build: (range: typeof range) => unknown) {
+			withIndex(name: string, build: (range: typeof range) => unknown) {
+				queriedIndexes.push(name);
 				build(range);
 				return queryResult(matches);
 			},
@@ -297,12 +301,12 @@ describe("Resolution Session", () => {
 
 		expect(await run(ctx, beginArgs)).toMatchObject({
 			kind: "Resolving",
-			stage: "Starting",
+			progress: "Starting",
 			deduplicated: false,
 		});
 		expect(await run(ctx, beginArgs)).toMatchObject({
 			kind: "Resolving",
-			stage: "Starting",
+			progress: "Starting",
 			deduplicated: true,
 		});
 		expect(db.rows("resolutionSessions")).toHaveLength(1);
@@ -341,7 +345,11 @@ describe("Resolution Session", () => {
 			segmentId: "segment-1",
 			clickedSegmentIndex: 2,
 			runToken: "run-1",
-			stage: "Complete",
+			lifecycle: {
+				state: "Terminal",
+				progress: "Committing",
+				outcome: "Complete",
+			},
 			route: {
 				textId: "text-1",
 				sentenceId: "sentence-1",
@@ -386,7 +394,7 @@ describe("Resolution Session", () => {
 		});
 	});
 
-	test("stages are ordered and duplicate or regressive runner updates are harmless", async () => {
+	test("progress is ordered and duplicate or regressive runner updates are harmless", async () => {
 		const db = new SessionDb(sourceSeed());
 		const scheduled: unknown[] = [];
 		const ctx = {
@@ -408,7 +416,7 @@ describe("Resolution Session", () => {
 		const run = handler<
 			{
 				guard: typeof guard;
-				stage:
+				progress:
 					| "RouteAvailable"
 					| "GrammarAvailable"
 					| "ReadingAvailable"
@@ -419,26 +427,30 @@ describe("Resolution Session", () => {
 			boolean
 		>(advance);
 
-		expect(await run(ctx, { guard, stage: "RouteAvailable" })).toBe(true);
+		expect(await run(ctx, { guard, progress: "RouteAvailable" })).toBe(
+			true,
+		);
 		expect(
 			await run(ctx, {
 				guard,
-				stage: "GrammarAvailable",
+				progress: "GrammarAvailable",
 				grammar: grammarProjection(),
 			}),
 		).toBe(true);
-		expect(await run(ctx, { guard, stage: "RouteAvailable" })).toBe(false);
+		expect(await run(ctx, { guard, progress: "RouteAvailable" })).toBe(
+			false,
+		);
 		expect(
 			await run(ctx, {
 				guard,
-				stage: "GrammarAvailable",
+				progress: "GrammarAvailable",
 				grammar: grammarProjection(),
 			}),
 		).toBe(false);
 		expect(
 			run(ctx, {
 				guard: { ...guard, runToken: "old" },
-				stage: "Committing",
+				progress: "Committing",
 			}),
 		).rejects.toThrow("no longer active");
 	});
@@ -455,7 +467,11 @@ describe("Resolution Session", () => {
 					sentenceId: "sentence-1",
 					segmentId: "segment-1",
 					clickedSegmentIndex: 2,
-					stage: "RouteAvailable",
+					lifecycle: {
+						state: "Active",
+						progress: "RouteAvailable",
+						activity: "Running",
+					},
 					createdAt: 1,
 					updatedAt: 1,
 				},
@@ -508,7 +524,11 @@ describe("Resolution Session", () => {
 			),
 		).toBe(true);
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			stage: "Complete",
+			lifecycle: {
+				state: "Terminal",
+				progress: "Committing",
+				outcome: "Complete",
+			},
 			readingId: "reading-1",
 			attestationId: "attestation-1",
 		});
@@ -519,7 +539,11 @@ describe("Resolution Session", () => {
 			resolutionSessions: [
 				{
 					_id: "session-1",
-					stage: "Committing",
+					lifecycle: {
+						state: "Active",
+						progress: "Committing",
+						activity: "Running",
+					},
 					grammar: grammarProjection("loser"),
 					reading: readingProjection("🧪", "loser"),
 				},
@@ -537,7 +561,11 @@ describe("Resolution Session", () => {
 		);
 
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			stage: "Complete",
+			lifecycle: {
+				state: "Terminal",
+				progress: "Committing",
+				outcome: "Complete",
+			},
 			readingId: "reading-winner",
 			attestationId: "attestation-winner",
 			grammar: { canonicalForm: "Bank" },
@@ -553,7 +581,11 @@ describe("Resolution Session", () => {
 					requestId: "request-1",
 					runToken: "old-token",
 					segmentId: "segment-1",
-					stage: "ReadingAvailable",
+					lifecycle: {
+						state: "Active",
+						progress: "ReadingAvailable",
+						activity: "Running",
+					},
 					updatedAt: Date.now() - STALE_RUN_AFTER_MS - 1,
 				},
 			],
@@ -579,9 +611,11 @@ describe("Resolution Session", () => {
 			"old-token",
 		);
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			activity: "Scheduled",
-			progress: "ReadingAvailable",
-			stage: "ReadingAvailable",
+			lifecycle: {
+				state: "Active",
+				activity: "Scheduled",
+				progress: "ReadingAvailable",
+			},
 		});
 		expect(scheduled).toHaveLength(2);
 	});
@@ -601,9 +635,11 @@ describe("Resolution Session", () => {
 						retryDeadlineAt:
 							budgetCase === "deadline" ? now - 1 : now + 60_000,
 						segmentId: "segment-1",
-						stage: "GrammarAvailable",
-						progress: "GrammarAvailable",
-						activity: "Running",
+						lifecycle: {
+							state: "Active",
+							progress: "GrammarAvailable",
+							activity: "Running",
+						},
 						updatedAt: now - STALE_RUN_AFTER_MS - 1,
 					},
 				],
@@ -639,11 +675,12 @@ describe("Resolution Session", () => {
 			).toBe(true);
 			expect(scheduled).toEqual([]);
 			expect(db.rows("resolutionSessions")[0]).toMatchObject({
-				activity: "Terminal",
+				lifecycle: {
+					state: "Terminal",
+					outcome: "PermanentFailure",
+					progress: "GrammarAvailable",
+				},
 				failureCode: "Internal",
-				outcome: "PermanentFailure",
-				progress: "GrammarAvailable",
-				stage: "Failed",
 			});
 			expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
 			expect(db.rows("resolutionRuns")[0]).toMatchObject({
@@ -669,10 +706,14 @@ describe("Resolution Session", () => {
 					clickedSegmentIndex: 2,
 					runToken: "run-1",
 					runNumber: 1,
-					progress: "GrammarAvailable",
-					activity: "Running",
+					lifecycle: {
+						state: "Active",
+						progress: "GrammarAvailable",
+						activity: "Running",
+					},
 					grammar: grammarProjection(),
 					grammaticalCheckpoint: grammaticalInput(),
+					readingCheckpoint: readingCheckpoint(),
 					retryDeadlineAt: Date.now() + 60_000,
 					createdAt: 1,
 					updatedAt: 1,
@@ -753,11 +794,15 @@ describe("Resolution Session", () => {
 
 		expect(result).toMatchObject({ scheduled: true });
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			activity: "WaitingForRetry",
+			lifecycle: {
+				state: "Active",
+				activity: "WaitingForRetry",
+				progress: "GrammarAvailable",
+			},
 			failureCode: "ProviderUnavailable",
 			grammar: grammarProjection(),
 			grammaticalCheckpoint: grammaticalInput(),
-			progress: "GrammarAvailable",
+			readingCheckpoint: readingCheckpoint(),
 			runNumber: 2,
 		});
 		expect(db.rows("resolutionSessions")[0]?.runToken).not.toBe("run-1");
@@ -792,8 +837,11 @@ describe("Resolution Session", () => {
 					clickedSegmentIndex: 2,
 					runToken: "run-1",
 					runNumber: 1,
-					progress: "GrammarAvailable",
-					activity: "Running",
+					lifecycle: {
+						state: "Active",
+						progress: "GrammarAvailable",
+						activity: "Running",
+					},
 					retryDeadlineAt: Date.now() + 5 * 60_000,
 					createdAt: 1,
 					updatedAt: 1,
@@ -851,8 +899,11 @@ describe("Resolution Session", () => {
 					clickedSegmentIndex: 2,
 					runToken: "run-3",
 					runNumber: 3,
-					progress: "GrammarAvailable",
-					activity: "Running",
+					lifecycle: {
+						state: "Active",
+						progress: "GrammarAvailable",
+						activity: "Running",
+					},
 					retryDeadlineAt: Date.now() + 60_000,
 					createdAt: 1,
 					updatedAt: 1,
@@ -883,11 +934,13 @@ describe("Resolution Session", () => {
 
 		expect(result).toEqual({ scheduled: false });
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			activity: "Terminal",
+			lifecycle: {
+				state: "Terminal",
+				outcome: "PermanentFailure",
+				progress: "GrammarAvailable",
+			},
 			failureCode: "ProviderUnavailable",
 			failureMessage: "Reading generation is temporarily unavailable.",
-			outcome: "PermanentFailure",
-			progress: "GrammarAvailable",
 		});
 		expect(db.rows("resolutionSessions")[0]?.diagnosticId).toBeString();
 	});
@@ -903,10 +956,11 @@ describe("Resolution Session", () => {
 					segmentId: "segment-1",
 					clickedSegmentIndex: 2,
 					runToken: "run-3",
-					stage: "Failed",
-					progress: "GrammarAvailable",
-					activity: "Terminal",
-					outcome: "PermanentFailure",
+					lifecycle: {
+						state: "Terminal",
+						progress: "GrammarAvailable",
+						outcome: "PermanentFailure",
+					},
 					failureCode: "ProviderUnavailable",
 					diagnosticId: "diagnostic-1",
 					failureMessage:
@@ -956,10 +1010,11 @@ describe("Resolution Session", () => {
 					segmentId: "segment-1",
 					clickedSegmentIndex: 2,
 					runToken: "run-3",
-					stage: "Failed",
-					progress: "GrammarAvailable",
-					activity: "Terminal",
-					outcome: "PermanentFailure",
+					lifecycle: {
+						state: "Terminal",
+						progress: "GrammarAvailable",
+						outcome: "PermanentFailure",
+					},
 					grammar: grammarProjection(),
 					grammaticalCheckpoint: grammaticalInput(),
 					failureCode: "ProviderUnavailable",
@@ -990,14 +1045,18 @@ describe("Resolution Session", () => {
 			),
 		).toEqual({ retried: true });
 		expect(db.rows("resolutionSessions")[0]).toMatchObject({
-			activity: "Scheduled",
+			lifecycle: {
+				state: "Active",
+				activity: "Scheduled",
+				progress: "GrammarAvailable",
+			},
 			grammar: grammarProjection(),
 			grammaticalCheckpoint: grammaticalInput(),
-			progress: "GrammarAvailable",
 			runNumber: 1,
-			stage: "GrammarAvailable",
 		});
-		expect(db.rows("resolutionSessions")[0]).not.toHaveProperty("outcome");
+		expect(db.rows("resolutionSessions")[0]?.lifecycle).not.toHaveProperty(
+			"outcome",
+		);
 		expect(scheduled).toHaveLength(2);
 	});
 
@@ -1005,11 +1064,31 @@ describe("Resolution Session", () => {
 		const old = Date.now() - 10_000;
 		const db = new SessionDb({
 			resolutionSessions: [
-				{ _id: "stale", stage: "Starting", updatedAt: old },
-				{ _id: "failed", stage: "Failed", updatedAt: old },
+				{
+					_id: "stale",
+					lifecycle: {
+						state: "Active",
+						progress: "Starting",
+						activity: "Scheduled",
+					},
+					updatedAt: old,
+				},
+				{
+					_id: "failed",
+					lifecycle: {
+						state: "Terminal",
+						progress: "Starting",
+						outcome: "PermanentFailure",
+					},
+					updatedAt: old,
+				},
 				{
 					_id: "complete-missing",
-					stage: "Complete",
+					lifecycle: {
+						state: "Terminal",
+						progress: "Committing",
+						outcome: "Complete",
+					},
 					updatedAt: old,
 					readingId: "reading-missing",
 				},
@@ -1027,6 +1106,10 @@ describe("Resolution Session", () => {
 		expect(db.rows("resolutionSessions").map(({ _id }) => _id)).toEqual([
 			"complete-missing",
 		]);
+		expect(db.queriedIndexes).toContain(
+			"by_lifecycle_state_and_updated_at",
+		);
+		expect(db.queriedIndexes).not.toContain("by_stage_and_updated_at");
 	});
 
 	test("projection exposes learner-safe fields only", () => {
@@ -1072,7 +1155,11 @@ describe("Resolution Session", () => {
 			visitorId: "visitor-1",
 			sentenceId: "sentence-1",
 			segmentId: "segment-1",
-			stage: "Starting",
+			lifecycle: {
+				state: "Active",
+				progress: "Starting",
+				activity: "Scheduled",
+			},
 			updatedAt: 1,
 		};
 		const stripDb = new SessionDb({
@@ -1236,13 +1323,13 @@ describe("Resolution Session", () => {
 
 			expect(queryCount).toBe(2);
 			expect(mutationArgs[1]).toMatchObject({
-				stage: "RouteAvailable",
+				progress: "RouteAvailable",
 			});
 			if (recorded.status === "Resolved") {
 				expect(
 					mutationArgs.flatMap((args) =>
-						"stage" in (args as object)
-							? [(args as { stage: string }).stage]
+						"progress" in (args as object)
+							? [(args as { progress: string }).progress]
 							: [],
 					),
 				).toEqual(["RouteAvailable"]);
@@ -1327,13 +1414,80 @@ describe("Resolution Session", () => {
 	});
 });
 
-test("terminal transitions may branch, while nonterminal stages cannot skip", () => {
+test("progress cannot skip", () => {
 	expect(() =>
-		assertResolutionStageTransition("RouteAvailable", "Unresolved"),
+		assertResolutionProgressTransition(
+			"RouteAvailable",
+			"GrammarAvailable",
+		),
 	).not.toThrow();
 	expect(() =>
-		assertResolutionStageTransition("RouteAvailable", "ReadingAvailable"),
+		assertResolutionProgressTransition(
+			"RouteAvailable",
+			"ReadingAvailable",
+		),
 	).toThrow("cannot follow");
+});
+
+test("every legal Resolution lifecycle variant is accepted", () => {
+	const progresses = [
+		"Starting",
+		"RouteAvailable",
+		"GrammarAvailable",
+		"ReadingAvailable",
+		"Committing",
+	] as const;
+	for (const progress of progresses) {
+		for (const activity of [
+			"Scheduled",
+			"Running",
+			"WaitingForRetry",
+		] as const) {
+			expect(() =>
+				assertResolutionLifecycle({
+					state: "Active",
+					progress,
+					activity,
+				}),
+			).not.toThrow();
+		}
+		for (const outcome of ["Unresolved", "PermanentFailure"] as const) {
+			expect(() =>
+				assertResolutionLifecycle({
+					state: "Terminal",
+					progress,
+					outcome,
+				}),
+			).not.toThrow();
+		}
+	}
+	expect(() =>
+		assertResolutionLifecycle({
+			state: "Terminal",
+			progress: "Committing",
+			outcome: "Complete",
+		}),
+	).not.toThrow();
+});
+
+test("impossible active and terminal lifecycle combinations are rejected", () => {
+	for (const impossible of [
+		{
+			state: "Active",
+			progress: "Starting",
+			activity: "Scheduled",
+			outcome: "Complete",
+		},
+		{
+			state: "Terminal",
+			progress: "Starting",
+			activity: "Running",
+			outcome: "Unresolved",
+		},
+		{ state: "Terminal", progress: "Starting", outcome: "Complete" },
+	] as const) {
+		expect(() => assertResolutionLifecycle(impossible)).toThrow();
+	}
 });
 
 function grammaticalInput(canonicalForm = "Bank") {
@@ -1358,6 +1512,13 @@ function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 		emojiDescription,
 		lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 		plan: { raw: "must not leak" },
+	};
+}
+
+function readingCheckpoint() {
+	return {
+		resolution: { decision: "New" as const, emojiDescription: "🏦" },
+		reading: readingInput(),
 	};
 }
 

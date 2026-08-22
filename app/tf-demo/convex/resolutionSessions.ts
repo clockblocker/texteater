@@ -8,18 +8,16 @@ import {
 } from "./_generated/server";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import {
-	assertResolutionStageTransition,
+	assertResolutionProgressTransition,
 	loadResolutionNote,
+	type ResolutionLifecycleSource,
 	type ResolutionProgress,
-	type ResolutionStage,
 	requireActiveResolutionSession,
-	resolutionLifecycle,
 	resolutionNoteValidator,
+	resolutionProgressHasReached,
 	settleComplete,
 	settleFailed,
 	settleUnresolved,
-	stagePosition,
-	terminalStages,
 } from "./model/resolutionSessions";
 import {
 	readingValueValidator,
@@ -30,7 +28,6 @@ import {
 	resolutionProgressValidator,
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
-	resolutionStageValidator,
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
 } from "./model/validators";
@@ -73,7 +70,6 @@ export const selectSegment = mutation({
 		v.object({
 			kind: v.literal("Resolving"),
 			requestId: v.string(),
-			stage: resolutionStageValidator,
 			progress: resolutionProgressValidator,
 			activity: resolutionActivityValidator,
 			deduplicated: v.boolean(),
@@ -116,8 +112,10 @@ export const selectSegment = mutation({
 					"requestId was already used for a different click.",
 				);
 			}
+			const { lifecycle } = existing;
 			if (
-				resolutionLifecycle(existing).outcome === "Complete" &&
+				lifecycle.state === "Terminal" &&
+				lifecycle.outcome === "Complete" &&
 				existing.readingId &&
 				existing.attestationId
 			) {
@@ -131,9 +129,11 @@ export const selectSegment = mutation({
 			return {
 				kind: "Resolving" as const,
 				requestId: existing.requestId,
-				stage: legacyStageForSession(existing),
-				progress: resolutionLifecycle(existing).progress,
-				activity: resolutionLifecycle(existing).activity,
+				progress: lifecycle.progress,
+				activity:
+					lifecycle.state === "Active"
+						? lifecycle.activity
+						: ("Terminal" as const),
 				deduplicated: true,
 			};
 		}
@@ -181,9 +181,11 @@ export const selectSegment = mutation({
 			clickedSegmentIndex: args.clickedSegmentIndex,
 			routeNoteRequested: args.routeNoteRequested,
 			runToken,
-			stage: "Starting",
-			progress: "Starting",
-			activity: "Scheduled",
+			lifecycle: {
+				state: "Active",
+				progress: "Starting",
+				activity: "Scheduled",
+			},
 			runNumber: 1,
 			retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
 			route: {
@@ -213,7 +215,6 @@ export const selectSegment = mutation({
 		return {
 			kind: "Resolving" as const,
 			requestId: args.requestId,
-			stage: "Starting" as const,
 			progress: "Starting" as const,
 			activity: "Scheduled" as const,
 			deduplicated: false,
@@ -242,9 +243,9 @@ export const retryResolution = mutation({
 		if (!session || session.visitorId !== args.visitorId) {
 			return { retried: false };
 		}
-		const lifecycle = resolutionLifecycle(session);
+		const { lifecycle } = session;
 		if (
-			lifecycle.activity !== "Terminal" ||
+			lifecycle.state !== "Terminal" ||
 			lifecycle.outcome !== "PermanentFailure"
 		) {
 			return { retried: false };
@@ -258,10 +259,11 @@ export const retryResolution = mutation({
 		await ctx.db.patch(session._id, {
 			runToken,
 			runNumber: 1,
-			stage: lifecycle.progress,
-			progress: lifecycle.progress,
-			activity: "Scheduled",
-			outcome: undefined,
+			lifecycle: {
+				state: "Active",
+				progress: lifecycle.progress,
+				activity: "Scheduled",
+			},
 			retryDeadlineAt: now + DURABLE_RETRY_DEADLINE_MS,
 			nextRetryAt: undefined,
 			failureCode: undefined,
@@ -320,7 +322,7 @@ export const getRunInput = internalQuery({
 			!session ||
 			session.runToken !== guard.runToken ||
 			session.segmentId !== guard.segmentId ||
-			resolutionLifecycle(session).activity === "Terminal"
+			session.lifecycle.state === "Terminal"
 		) {
 			return null;
 		}
@@ -352,7 +354,7 @@ export const getRunInput = internalQuery({
 export const advance = internalMutation({
 	args: {
 		guard: resolutionSessionGuardValidator,
-		stage: v.union(
+		progress: v.union(
 			v.literal("RouteAvailable"),
 			v.literal("GrammarAvailable"),
 			v.literal("ReadingAvailable"),
@@ -374,21 +376,24 @@ export const advance = internalMutation({
 	returns: v.boolean(),
 	handler: async (ctx, args) => {
 		const session = await requireActiveResolutionSession(ctx, args.guard);
-		const lifecycle = resolutionLifecycle(session);
-		if (lifecycle.progress === args.stage) return false;
-		if (stagePosition[lifecycle.progress] > stagePosition[args.stage])
+		const { lifecycle } = session;
+		if (lifecycle.progress === args.progress) return false;
+		if (resolutionProgressHasReached(lifecycle.progress, args.progress)) {
 			return false;
-		assertResolutionStageTransition(lifecycle.progress, args.stage);
-		if (args.stage === "GrammarAvailable" && !args.grammar) {
+		}
+		assertResolutionProgressTransition(lifecycle.progress, args.progress);
+		if (args.progress === "GrammarAvailable" && !args.grammar) {
 			throw new Error("GrammarAvailable requires a Grammar projection.");
 		}
-		if (args.stage === "ReadingAvailable" && !args.reading) {
+		if (args.progress === "ReadingAvailable" && !args.reading) {
 			throw new Error("ReadingAvailable requires a Reading projection.");
 		}
 		await ctx.db.patch(session._id, {
-			stage: args.stage,
-			progress: args.stage,
-			activity: "Running",
+			lifecycle: {
+				state: "Active",
+				progress: args.progress,
+				activity: "Running",
+			},
 			...(args.grammar ? { grammar: args.grammar } : {}),
 			...(args.reading ? { reading: args.reading } : {}),
 			...(args.grammaticalCheckpoint
@@ -416,7 +421,7 @@ export const recoverStaleRun = internalMutation({
 		if (
 			!session ||
 			session.runToken !== args.runToken ||
-			resolutionLifecycle(session).activity === "Terminal"
+			session.lifecycle.state === "Terminal"
 		) {
 			return false;
 		}
@@ -434,7 +439,7 @@ export const recoverStaleRun = internalMutation({
 
 		const runNumber = session.runNumber ?? 1;
 		const diagnosticId = crypto.randomUUID();
-		const progress = resolutionLifecycle(session).progress;
+		const progress = session.lifecycle.progress;
 		await upsertResolutionRun(ctx, session, {
 			phase: phaseForProgress(progress),
 			state: "Failed",
@@ -461,10 +466,11 @@ export const recoverStaleRun = internalMutation({
 		await ctx.db.patch(session._id, {
 			runToken,
 			runNumber: runNumber + 1,
-			stage: progress,
-			progress,
-			activity: "Scheduled",
-			outcome: undefined,
+			lifecycle: {
+				state: "Active",
+				progress,
+				activity: "Scheduled",
+			},
 			readingId: undefined,
 			attestationId: undefined,
 			failureCode: undefined,
@@ -496,13 +502,20 @@ export const markRunStarted = internalMutation({
 	returns: v.boolean(),
 	handler: async (ctx, { guard }) => {
 		const session = await requireActiveResolutionSession(ctx, guard);
-		if (resolutionLifecycle(session).activity === "Running") return false;
+		const { lifecycle } = session;
+		if (lifecycle.state === "Active" && lifecycle.activity === "Running") {
+			return false;
+		}
 		await upsertResolutionRun(ctx, session, {
-			phase: phaseForProgress(resolutionLifecycle(session).progress),
+			phase: phaseForProgress(lifecycle.progress),
 			state: "Running",
 		});
 		await ctx.db.patch(session._id, {
-			activity: "Running",
+			lifecycle: {
+				state: "Active",
+				progress: lifecycle.progress,
+				activity: "Running",
+			},
 			updatedAt: Date.now(),
 		});
 		return true;
@@ -522,6 +535,7 @@ export const recordRunFailure = internalMutation({
 	handler: async (ctx, { guard, phase, failure, generationEvents }) => {
 		assertSafeGenerationFailure(failure);
 		const session = await requireActiveResolutionSession(ctx, guard);
+		const { lifecycle } = session;
 		const now = Date.now();
 		const runNumber = session.runNumber ?? 1;
 		const diagnosticId = crypto.randomUUID();
@@ -549,10 +563,11 @@ export const recordRunFailure = internalMutation({
 		});
 		if (!canRetry) {
 			await ctx.db.patch(session._id, {
-				stage: "Failed",
-				progress: resolutionLifecycle(session).progress,
-				activity: "Terminal",
-				outcome: "PermanentFailure",
+				lifecycle: {
+					state: "Terminal",
+					progress: lifecycle.progress,
+					outcome: "PermanentFailure",
+				},
 				failureCode: failure.category,
 				diagnosticId,
 				failureMessage: publicFailureMessage(phase, failure.category),
@@ -566,10 +581,11 @@ export const recordRunFailure = internalMutation({
 		await ctx.db.patch(session._id, {
 			runToken,
 			runNumber: runNumber + 1,
-			stage: resolutionLifecycle(session).progress,
-			progress: resolutionLifecycle(session).progress,
-			activity: "WaitingForRetry",
-			outcome: undefined,
+			lifecycle: {
+				state: "Active",
+				progress: lifecycle.progress,
+				activity: "WaitingForRetry",
+			},
 			failureCode: failure.category,
 			diagnosticId,
 			failureMessage: publicFailureMessage(phase, failure.category),
@@ -686,7 +702,7 @@ export const settleAfterRun = internalMutation({
 	returns: v.boolean(),
 	handler: async (ctx, { guard, result }) => {
 		const session = await requireActiveResolutionSession(ctx, guard);
-		if (resolutionLifecycle(session).activity === "Terminal") return false;
+		if (session.lifecycle.state === "Terminal") return false;
 		if (result.kind === "Complete") {
 			const [reading, attestation, encounter] = await Promise.all([
 				ctx.db.get(result.readingId),
@@ -748,18 +764,20 @@ export const cleanup = mutation({
 			};
 		}
 		let deleted = 0;
-		for (const stage of Object.keys(stagePosition) as ResolutionStage[]) {
-			const cutoff = terminalStages.has(stage)
-				? args.terminalBefore
-				: args.staleBefore;
+		for (const state of ["Active", "Terminal"] as const) {
+			const cutoff =
+				state === "Terminal" ? args.terminalBefore : args.staleBefore;
 			const rows = await ctx.db
 				.query("resolutionSessions")
-				.withIndex("by_stage_and_updated_at", (q) =>
-					q.eq("stage", stage).lte("updatedAt", cutoff),
+				.withIndex("by_lifecycle_state_and_updated_at", (q) =>
+					q.eq("lifecycle.state", state).lte("updatedAt", cutoff),
 				)
 				.take(CLEANUP_BATCH_SIZE - deleted);
 			for (const row of rows) {
-				if (row.stage === "Complete") {
+				if (
+					row.lifecycle.state === "Terminal" &&
+					row.lifecycle.outcome === "Complete"
+				) {
 					if (!row.readingId || !(await ctx.db.get(row.readingId))) {
 						continue;
 					}
@@ -818,7 +836,7 @@ async function markRunFailed(
 	diagnosticId: string,
 ): Promise<void> {
 	await upsertResolutionRun(ctx, session, {
-		phase: phaseForProgress(resolutionLifecycle(session).progress),
+		phase: phaseForProgress(session.lifecycle.progress),
 		state: "Failed",
 		failureCode: "Internal",
 		diagnosticId,
@@ -830,12 +848,10 @@ type ResolutionGenerationEvent = Infer<
 	typeof resolutionGenerationEventValidator
 >;
 
-type ResolutionRunIdentity = {
+type ResolutionRunIdentity = ResolutionLifecycleSource & {
 	readonly requestId: string;
 	readonly runToken: string;
 	readonly runNumber?: number;
-	readonly progress?: ResolutionProgress;
-	readonly stage?: ResolutionStage;
 };
 
 type ResolutionRunUpdate = {
@@ -895,19 +911,6 @@ async function upsertResolutionRun(
 		startedAt: now,
 		...values,
 	});
-}
-
-function legacyStageForSession(
-	session: Parameters<typeof resolutionLifecycle>[0],
-) {
-	const lifecycle = resolutionLifecycle(session);
-	return lifecycle.outcome === "Complete"
-		? ("Complete" as const)
-		: lifecycle.outcome === "Unresolved"
-			? ("Unresolved" as const)
-			: lifecycle.outcome === "PermanentFailure"
-				? ("Failed" as const)
-				: lifecycle.progress;
 }
 
 function phaseForProgress(

@@ -45,7 +45,11 @@ function seedSession(requestId: string, runToken: string, suffix: string) {
 				sentenceId: `sentence-${suffix}`,
 				segmentId: `segment-${suffix}`,
 				clickedSegmentIndex: 0,
-				stage: "RouteAvailable",
+				lifecycle: {
+					state: "Active",
+					progress: "RouteAvailable",
+					activity: "Running",
+				},
 				createdAt: 1,
 				updatedAt: 1,
 			},
@@ -85,9 +89,20 @@ describe("Catalog Growth Signals", () => {
 			occurrences: 2,
 			lastRequestId: "request-2",
 		});
-		expect(db.rows("resolutionSessions").map(({ stage }) => stage)).toEqual(
-			["Failed", "Failed"],
-		);
+		expect(
+			db.rows("resolutionSessions").map(({ lifecycle }) => lifecycle),
+		).toEqual([
+			{
+				state: "Terminal",
+				progress: "RouteAvailable",
+				outcome: "PermanentFailure",
+			},
+			{
+				state: "Terminal",
+				progress: "RouteAvailable",
+				outcome: "PermanentFailure",
+			},
+		]);
 	});
 
 	test("a retry against the terminal session cannot double count", async () => {
@@ -148,9 +163,11 @@ describe("Catalog Growth Signals", () => {
 				}),
 			).rejects.toThrow("route must match");
 			expect(db.rows("catalogGrowthSignals")).toHaveLength(0);
-			expect(db.rows("resolutionSessions")[0]?.stage).toBe(
-				"RouteAvailable",
-			);
+			expect(db.rows("resolutionSessions")[0]?.lifecycle).toEqual({
+				state: "Active",
+				progress: "RouteAvailable",
+				activity: "Running",
+			});
 		}
 	});
 

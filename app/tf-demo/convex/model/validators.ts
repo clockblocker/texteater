@@ -258,17 +258,6 @@ export function catalogMissRouteMatches(
 	return miss.route.family === lemma.family && miss.route.kind === lemma.kind;
 }
 
-export const resolutionStageValidator = v.union(
-	v.literal("Starting"),
-	v.literal("RouteAvailable"),
-	v.literal("GrammarAvailable"),
-	v.literal("ReadingAvailable"),
-	v.literal("Committing"),
-	v.literal("Complete"),
-	v.literal("Unresolved"),
-	v.literal("Failed"),
-);
-
 export const resolutionProgressValidator = v.union(
 	v.literal("Starting"),
 	v.literal("RouteAvailable"),
@@ -288,6 +277,35 @@ export const resolutionOutcomeValidator = v.union(
 	v.literal("Complete"),
 	v.literal("Unresolved"),
 	v.literal("PermanentFailure"),
+);
+
+const activeResolutionActivityValidator = v.union(
+	v.literal("Scheduled"),
+	v.literal("Running"),
+	v.literal("WaitingForRetry"),
+);
+
+export const resolutionLifecycleValidator = v.union(
+	v.object({
+		state: v.literal("Active"),
+		progress: resolutionProgressValidator,
+		activity: activeResolutionActivityValidator,
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: v.literal("Committing"),
+		outcome: v.literal("Complete"),
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: resolutionProgressValidator,
+		outcome: v.literal("Unresolved"),
+	}),
+	v.object({
+		state: v.literal("Terminal"),
+		progress: resolutionProgressValidator,
+		outcome: v.literal("PermanentFailure"),
+	}),
 );
 
 export const generationFailureCategoryValidator = v.union(

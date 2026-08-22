@@ -9,7 +9,7 @@ import {
 	ResolutionNoteFrame,
 } from "../src/views/resolution-note-view";
 
-test("renders learner-safe Resolution sections in stage order", () => {
+test("renders learner-safe Resolution sections in lifecycle order", () => {
 	const markup = renderToStaticMarkup(
 		createElement(
 			MemoryRouter,
@@ -18,7 +18,6 @@ test("renders learner-safe Resolution sections in stage order", () => {
 				note: {
 					kind: "ResolutionNote",
 					target: { kind: "Resolution", requestId: "request-1" },
-					stage: "ReadingAvailable",
 					progress: "ReadingAvailable",
 					activity: "Running",
 					route: {
@@ -68,7 +67,6 @@ test("completion navigation preserves its canonical Route Note destination", () 
 	const note = {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
-		stage: "Complete",
 		progress: "Committing",
 		activity: "Terminal",
 		outcome: "Complete",
