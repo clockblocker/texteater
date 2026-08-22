@@ -6,13 +6,17 @@ import {
 	validateRelationsCleanupInfoSlice,
 	validateStoredReadingsSlice,
 } from "../core/validate-slice";
-import { commitChangesResultSchema, getDumdictSchemasFor } from "../schema";
+import {
+	parseAsCommitChangesRequest,
+	parseAsCommitChangesResult,
+	parseAsDumdictPlan,
+	unwrapDumdictParse,
+} from "../parsing/lightweight-parsers";
 import type { DumdictSliceValidation } from "./runtime-options";
 
 export function createFullSliceValidation<L extends SupportedLanguage>(
 	language: L,
 ): DumdictSliceValidation<L> {
-	const schemas = getDumdictSchemasFor(language);
 	return {
 		storedReadings: (slice, requestedLemma) =>
 			validateStoredReadingsSlice(language, slice, requestedLemma),
@@ -28,11 +32,10 @@ export function createFullSliceValidation<L extends SupportedLanguage>(
 		cleanupRelations: (slice) =>
 			validateCleanupRelationsSlice(language, slice),
 		plan: (value) =>
-			schemas.dumdictPlanSchema.parse(value) as unknown as ReturnType<
-				DumdictSliceValidation<L>["plan"]
-			>,
+			unwrapDumdictParse(parseAsDumdictPlan(value, language)),
 		commitRequest: (value) =>
-			schemas.commitChangesRequestSchema.parse(value),
-		commitResult: (value) => commitChangesResultSchema.parse(value),
+			unwrapDumdictParse(parseAsCommitChangesRequest(value, language)),
+		commitResult: (value) =>
+			unwrapDumdictParse(parseAsCommitChangesResult(value)),
 	};
 }

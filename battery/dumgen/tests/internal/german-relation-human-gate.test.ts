@@ -8,18 +8,45 @@ import {
 	loadFrozenReview,
 	validateVerdict,
 } from "../../docs/prototypes/german-relation-human-gate/review";
+import {
+	type GermanKnowledgeGenerationRequest,
+	isEmptyGermanKnowledgeRequest,
+} from "../../src/knowledge-generation/de/schemas";
 import { stableJson } from "../../src/promptsmith/assembly";
+import { combinedGermanKnowledgeAcceptanceExperiment } from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluation-suite";
+import type {
+	RelationKindConfusion,
+	RelationLeafEvaluation,
+} from "../../src/promptsmith/laboratory/experiments/knowledge-analysis/de/combined/evaluator";
 import { untouchedAcceptanceReservation } from "../../src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/corpus";
 
 describe("German Relation Semantics human gate", () => {
+	test("keeps the frozen evaluation seam explicitly consumed", () => {
+		const emptyRequest = {} satisfies GermanKnowledgeGenerationRequest;
+		expect(isEmptyGermanKnowledgeRequest(emptyRequest)).toBe(true);
+		expect(
+			combinedGermanKnowledgeAcceptanceExperiment.evaluation.ids,
+		).toHaveLength(12);
+		function preserveFrozenEvaluationTypes(
+			_confusion: RelationKindConfusion,
+			_leaf: RelationLeafEvaluation,
+		): void {}
+		void preserveFrozenEvaluationTypes;
+	});
+
 	test("verifies and loads the exact frozen candidate", async () => {
 		const review = await loadFrozenReview();
 		expect(review.manifest.candidate.topology).toBe(
-			"current-combined-narrow-groups",
+			"combined-atomic-prompt-iterations",
 		);
 		expect(review.candidateReport.gatePass).toBe(false);
-		expect(review.state).toBe("awaiting-reservation-approval");
+		expect(review.state).toBe("development-gate-failed");
 		expect(review.acceptanceResult).toBeNull();
+		expect(review.acceptancePreflight).toMatchObject({
+			blocked: true,
+			callCount: 0,
+			maximumSpendUsd: "0.000000000",
+		});
 		expect(stableJson(review)).not.toContain(
 			"relation-acceptance-syn-01-streichholz",
 		);
@@ -100,12 +127,17 @@ describe("German Relation Semantics human gate", () => {
 		).toBe(true);
 	});
 
-	test("keeps Antonym's isolated signal visible without promoting it", async () => {
+	test("keeps every final-revision kind disabled and retains the stop regression", async () => {
 		const review = await loadFrozenReview();
-		expect(review.antonymIsolatedSignal?.gate.pass).toBe(true);
 		expect(
-			review.candidateReport.semanticReport.byRelation.antonym?.gate.pass,
-		).toBe(false);
+			Object.values(
+				review.candidateReport.semanticReport.byRelation,
+			).every((item) => item?.gate.pass === false),
+		).toBe(true);
+		expect(review.candidateReport.stopRuleTriggeredAfterRepetition).toBe(2);
+		expect(review.candidateReport.postStopAttemptCount).toBe(50);
+		expect(review.candidateReport.stopEnforcementPass).toBe(false);
+		expect(review.productionOutcome.qualifiedKinds).toEqual([]);
 	});
 
 	test("rejects a human verdict before untouched acceptance exists", async () => {
@@ -121,6 +153,6 @@ describe("German Relation Semantics human gate", () => {
 				},
 				{},
 			),
-		).toThrow("untouched acceptance must exist first");
+		).toThrow("development must clear every proposed per-kind threshold");
 	});
 });

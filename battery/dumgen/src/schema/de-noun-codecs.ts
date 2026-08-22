@@ -1,5 +1,5 @@
 import { codecBuilder4 } from "codec-builder-library/v4";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { z } from "zod";
 
 import { asObjectSchema } from "./as-object-schema";

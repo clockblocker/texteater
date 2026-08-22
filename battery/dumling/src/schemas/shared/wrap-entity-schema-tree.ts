@@ -1,4 +1,4 @@
-import type { SupportedLanguage } from "dumling/types";
+import type { SupportedLanguage } from "../../types.js";
 import type {
 	LanguageEntitySchemaTree,
 	RawLanguageEntitySchemaTree,

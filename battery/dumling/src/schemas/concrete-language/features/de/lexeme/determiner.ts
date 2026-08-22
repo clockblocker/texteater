@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { DeDeterminerFeatures } from "../../../../../types/concrete-language/features/de/lexeme/determiner.js";
+import { hasDistinctPair } from "../../../../../validation-semantics.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
@@ -12,7 +13,7 @@ const deDeterminerGenderSchema = z.union([
 	z
 		.array(abstractFeatureAtomSchemas.gender.extract(["Masc", "Neut"]))
 		.length(2)
-		.refine(([first, second]) => first !== second),
+		.refine(hasDistinctPair),
 ]) as z.ZodType<
 	DeDeterminerFeatures["inflectional"]["gender"] extends infer TGender
 		? Exclude<TGender, null>

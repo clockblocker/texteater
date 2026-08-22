@@ -1,17 +1,19 @@
-import { schemasFor } from "dumling/schema";
-import type { Attestation, Surface } from "dumling/types";
+import type { Attestation } from "dumling/types";
 
-import type { PROMPT_CATALOG } from "../catalog/prompt-catalog";
+import type { RUNTIME_PROMPT_CATALOG } from "../catalog/runtime-prompt-catalog";
 import type { GeneratorCatalog } from "../generator/generator";
 import { DumgenError } from "../generator/generator-error";
 import { INTAKE_LIMITS, type IntakeTrace } from "../intake/contracts";
+import {
+	ParsingError,
+	parseAsGermanAttestation,
+	parseAsGrammaticalInput,
+	parseAsGrammaticalResult,
+	parseAsSegmentationResult,
+	unwrapDumgenParse,
+} from "../parsing/lightweight-parsers";
 import { isGermanReachableHighLevelRoute } from "../schema/german-high-level-routes";
 import { projectGrammaticalResolutionInput } from "../schema/normalized-surface-projection";
-import {
-	grammaticalInputSchema,
-	grammaticalResultSchema,
-	segmentationResultSchema,
-} from "../schemas/public-schemas";
 import { segmentSource } from "../source-segmentation";
 import type { SourceSegmentationTrace } from "../source-segmentation/contracts";
 import type {
@@ -34,7 +36,7 @@ import type {
 	SegmentedSentenceId,
 } from "../types";
 
-type DumgenGenerators = GeneratorCatalog<typeof PROMPT_CATALOG>;
+type DumgenGenerators = GeneratorCatalog<typeof RUNTIME_PROMPT_CATALOG>;
 export type DumgenSection1Trace = IntakeTrace | SourceSegmentationTrace;
 type DumgenImplementationOptions = Readonly<{
 	readonly onSection1Trace?: (trace: DumgenSection1Trace) => void;
@@ -123,10 +125,12 @@ export function createDumgenImplementation(
 	): Promise<SegmentationResult> {
 		const inputError = validateSegmentationInput(sourceSentences);
 		if (inputError) {
-			return segmentationResultSchema.parse({
-				ok: false,
-				error: inputError,
-			});
+			return unwrapDumgenParse(
+				parseAsSegmentationResult({
+					ok: false,
+					error: inputError,
+				}),
+			);
 		}
 
 		let intake: Awaited<ReturnType<typeof generators.laboratory.intake>>;
@@ -144,14 +148,16 @@ export function createDumgenImplementation(
 					: new DumgenError("provider-error", "Intake failed.", {
 							cause,
 						});
-			return segmentationResultSchema.parse({
-				ok: false,
-				error: {
-					code: "IntakeFailure",
-					reason: error.code,
-					message: error.message,
-				},
-			});
+			return unwrapDumgenParse(
+				parseAsSegmentationResult({
+					ok: false,
+					error: {
+						code: "IntakeFailure",
+						reason: error.code,
+						message: error.message,
+					},
+				}),
+			);
 		}
 
 		notifySection1(options, {
@@ -214,7 +220,9 @@ export function createDumgenImplementation(
 			}
 		}
 
-		return segmentationResultSchema.parse({ ok: true, value: decisions });
+		return unwrapDumgenParse(
+			parseAsSegmentationResult({ ok: true, value: decisions }),
+		);
 	}
 
 	async function grammatical<L extends GrammaticalResolutionLanguage>(
@@ -388,7 +396,10 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 	language: L,
 	input: GrammaticalInput<L>,
 ): void {
-	if (language !== "de" || !grammaticalInputSchema.safeParse(input).success) {
+	if (
+		language !== "de" ||
+		parseAsGrammaticalInput(input, language) instanceof ParsingError
+	) {
 		throw invalidInput(
 			"The explicit language must match a valid Grammatical Input.",
 		);
@@ -397,16 +408,21 @@ function assertGrammaticalInput<L extends GrammaticalResolutionLanguage>(
 
 function parseGrammaticalResult<L extends GrammaticalResolutionLanguage>(
 	value: object,
-): GrammaticalResult<L> {
-	try {
-		grammaticalResultSchema.parse(value);
-		return Object.freeze(value) as GrammaticalResult<L>;
-	} catch (cause) {
+): GrammaticalResult<L>;
+function parseGrammaticalResult(value: object): GrammaticalResult<"de"> {
+	assertValidGermanGrammaticalResult(value);
+	return Object.freeze(value);
+}
+
+function assertValidGermanGrammaticalResult(
+	value: object,
+): asserts value is GrammaticalResult<"de"> {
+	const parsed = parseAsGrammaticalResult(value, "de");
+	if (parsed instanceof ParsingError)
 		throw invalidOutput(
 			"Grammatical Resolution produced an invalid public result.",
-			cause,
+			parsed,
 		);
-	}
 }
 
 function assertTarget(
@@ -480,36 +496,14 @@ function constructAttestation(
 		surface: resolution.surface,
 	};
 
-	try {
-		return attestationSchemaFor(resolution.surface).parse(value);
-	} catch (cause) {
+	const parsed = parseAsGermanAttestation(value);
+	if (parsed instanceof ParsingError) {
 		throw invalidOutput(
 			"Grammatical Resolution could not construct a valid Attestation.",
-			cause,
+			parsed,
 		);
 	}
-}
-
-function attestationSchemaFor(surface: Surface<"de">): {
-	parse(value: unknown): Attestation<"de">;
-} {
-	type Getter = () => { parse(value: unknown): Attestation<"de"> };
-	const attestationSchemas = schemasFor.de.entity
-		.Attestation as unknown as Record<
-		string,
-		| Record<string, Record<string, Getter | undefined> | undefined>
-		| undefined
-	>;
-	const getSchema =
-		attestationSchemas[surface.surfaceKind]?.[surface.lemma.family]?.[
-			surface.lemma.kind
-		];
-	if (!getSchema) {
-		throw invalidOutput(
-			`No Attestation schema exists for de/${surface.lemma.family}/${surface.lemma.kind}/${surface.surfaceKind}.`,
-		);
-	}
-	return getSchema();
+	return parsed;
 }
 
 function constructInteraction(

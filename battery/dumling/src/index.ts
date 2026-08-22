@@ -5,6 +5,14 @@ import {
 } from "./operations/index.js";
 import { readingFingerprint as operationsReadingFingerprint } from "./operations/reading-fingerprint.js";
 
+export {
+	ParsingError,
+	parseAsAttestation,
+	parseAsLemma,
+	parseAsReading,
+	parseAsSurface,
+} from "./operations/parsing/lightweight-parsers.js";
+
 export type * from "./types.js";
 
 export const dumling: typeof operationsDumling = operationsDumling;

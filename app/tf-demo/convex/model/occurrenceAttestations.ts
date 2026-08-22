@@ -56,6 +56,38 @@ export function readingValue(reading: ReadingRecord, lemma: LemmaRecord) {
 	};
 }
 
+export async function loadCompleteOccurrenceMembers(
+	ctx: ServerCtx,
+	attestationId: Id<"attestations">,
+): Promise<{
+	readonly sentenceId: Id<"sentences">;
+	readonly memberSegmentIndices: number[];
+} | null> {
+	const segments = await ctx.db
+		.query("segments")
+		.withIndex("by_attestation_id", (q) =>
+			q.eq("attestationMembership.attestationId", attestationId),
+		)
+		.take(MAX_SEGMENTS_PER_SENTENCE + 1);
+	if (segments.length === 0) return null;
+	if (segments.length > MAX_SEGMENTS_PER_SENTENCE) {
+		throw new Error("Occurrence Attestation has too many members.");
+	}
+	const sentenceId = segments[0]?.sentenceId;
+	if (
+		!sentenceId ||
+		segments.some((segment) => segment.sentenceId !== sentenceId)
+	) {
+		return null;
+	}
+	return {
+		sentenceId,
+		memberSegmentIndices: segments
+			.map(({ index }) => index)
+			.sort((left, right) => left - right),
+	};
+}
+
 /** Loads and validates every record needed to reconstruct one occurrence. */
 export async function loadOccurrenceAttestation(
 	ctx: ServerCtx,

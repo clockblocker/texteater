@@ -1,6 +1,6 @@
-import { getLanguageApi, supportedLanguages } from "dumling";
-import { readingFingerprint } from "dumling/reading";
-import { getSchemaTreeFor, readingSchema } from "dumling/schema";
+import { supportedLanguages } from "dumling";
+import { getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling/dangerously-heavy-schema-tree";
+import { readingSchema } from "dumling/schema";
 import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
 import {
 	directSemanticRelationSchema,
@@ -10,23 +10,50 @@ import {
 } from "dumrel/schema";
 import type {
 	KnowledgeChange,
-	MorphologicalTreeNode,
 	ReadingKnowledge,
 	UnitShadow,
 } from "dumrel/types";
 import { type ZodType, z } from "zod/v4";
-import { makeSurfaceId, type SurfaceId } from "./dumling";
-
-export type PendingEntryId<L extends SupportedLanguage> = string & {
-	readonly __pendingEntryIdBrand?: unique symbol;
-	readonly __language?: L;
-};
-
-export type StoreRevision = string & {
-	readonly __storeRevisionBrand?: unique symbol;
-};
+import type {
+	ChangePrecondition,
+	CommitChangesRequest,
+	DumdictPlan,
+	LemmaRecord,
+	PendingEntryId,
+	PendingSemanticRelationLocator,
+	PendingSemanticRelationRecord,
+	PlannedChangeOp,
+	ReadingEntry,
+	ReadingPatchOp,
+	StoreRevision,
+	SurfaceEntry,
+} from "./domain-types.js";
+import type { SurfaceId } from "./dumling";
+import {
+	dumdictNamedValidationErrors,
+	dumdictNamedValidationPredicates,
+	dumdictNamedValidationTransforms,
+	retainCommitChangesRequest,
+	retainDumdictPlan,
+} from "./validation-semantics";
 
 type SchemaGetter = () => ZodType;
+
+type ObjectSchemaWithField<
+	Output,
+	Key extends string,
+	FieldOutput,
+> = ZodType<Output> &
+	Readonly<{
+		shape: Readonly<Record<Key, ZodType<FieldOutput>>>;
+	}>;
+
+type ExtendableObjectSchemaWithField<
+	Output,
+	Key extends string,
+	FieldOutput,
+> = ZodType<Output> &
+	Pick<z.ZodObject<{ [Field in Key]: ZodType<FieldOutput> }>, "extend">;
 
 function collectSchemas(tree: unknown): ZodType[] {
 	if (typeof tree === "function") return [(tree as SchemaGetter)()];
@@ -48,85 +75,58 @@ function unionOf<T>(schemas: ZodType[]): ZodType<T> {
 	return z.union([first, second, ...rest]) as ZodType<T>;
 }
 
-function readingUsesLanguage<L extends SupportedLanguage>(
-	reading: Reading,
+function namedValidationPredicate<Value>(
+	name: keyof typeof dumdictNamedValidationPredicates,
+): (value: Value) => unknown {
+	return dumdictNamedValidationPredicates[name] as (value: Value) => unknown;
+}
+
+function namedValidationError(
+	name: keyof typeof dumdictNamedValidationErrors,
+): { readonly error: () => string } {
+	return { error: dumdictNamedValidationErrors[name] };
+}
+
+function pendingEntryIdTransform<L extends SupportedLanguage>(
 	language: L,
-): boolean {
-	return reading.lemma.language === language;
+): (value: string) => PendingEntryId<L> {
+	return dumdictNamedValidationTransforms[
+		`dumdict.pending-entry-id.${language}`
+	] as (value: string) => PendingEntryId<L>;
 }
 
-function lemmaUsesLanguage<L extends SupportedLanguage>(
-	lemma: Lemma,
+export type DumdictSchemasFor<L extends SupportedLanguage> = Readonly<{
+	lemmaRecordSchema: ExtendableObjectSchemaWithField<
+		LemmaRecord<L>,
+		"lemma",
+		Lemma<L>
+	>;
+	readingEntrySchema: ObjectSchemaWithField<
+		ReadingEntry<L>,
+		"reading",
+		Reading<L>
+	>;
+	surfaceEntrySchema: ObjectSchemaWithField<
+		SurfaceEntry<L>,
+		"surface",
+		Surface<L>
+	>;
+	pendingSemanticRelationLocatorSchema: ZodType<
+		PendingSemanticRelationLocator<L>
+	>;
+	pendingSemanticRelationRecordSchema: ZodType<
+		PendingSemanticRelationRecord<L>
+	>;
+	changePreconditionSchema: ZodType<ChangePrecondition<L>>;
+	readingPatchOpSchema: ZodType<ReadingPatchOp<L>>;
+	plannedChangeOpSchema: ZodType<PlannedChangeOp<L>>;
+	dumdictPlanSchema: ZodType<DumdictPlan<L>>;
+	commitChangesRequestSchema: ZodType<CommitChangesRequest<L>>;
+}>;
+
+function createSchemasFor<const L extends SupportedLanguage>(
 	language: L,
-): boolean {
-	return lemma.language === language;
-}
-
-function sameLemma<L extends SupportedLanguage>(
-	left: Lemma<L>,
-	right: Lemma<L>,
-): boolean {
-	const id = getLanguageApi(left.language).id.encode.asCsv;
-	return id(left) === id(right);
-}
-
-function sameReading<L extends SupportedLanguage>(
-	left: Reading<L>,
-	right: Reading<L>,
-): boolean {
-	return readingFingerprint(left) === readingFingerprint(right);
-}
-
-function knowledgeUsesLanguage<L extends SupportedLanguage>(
-	knowledge: ReadingKnowledge,
-	language: L,
-): boolean {
-	for (const targets of Object.values(knowledge.semanticRelations ?? {})) {
-		if (
-			(targets ?? []).some(
-				(target) => !lemmaUsesLanguage(target, language),
-			)
-		)
-			return false;
-	}
-
-	const visitMorphologyNode = (node: MorphologicalTreeNode): boolean => {
-		if (node.nodeKind === "morphemeReading")
-			return readingUsesLanguage(node.reading, language);
-		if (node.nodeKind === "unitShadow")
-			return node.unitShadow.language === language;
-		return node.children.every(visitMorphologyNode);
-	};
-
-	if (
-		knowledge.morphologicalTree !== undefined &&
-		!visitMorphologyNode(knowledge.morphologicalTree.root)
-	)
-		return false;
-	return (knowledge.lexicalBreakdown ?? []).every(
-		(shadow) => shadow.language === language,
-	);
-}
-
-function knowledgeChangeUsesLanguage<L extends SupportedLanguage>(
-	change: KnowledgeChange,
-	language: L,
-): boolean {
-	if (change.aspect === "semanticRelations" && "value" in change)
-		return change.value.every((lemma) =>
-			lemmaUsesLanguage(lemma, language),
-		);
-	if (change.aspect === "morphologicalTree" && "value" in change)
-		return knowledgeUsesLanguage(
-			{ morphologicalTree: change.value },
-			language,
-		);
-	if (change.aspect === "lexicalBreakdown" && "value" in change)
-		return change.value.every((shadow) => shadow.language === language);
-	return true;
-}
-
-function createSchemasFor<const L extends SupportedLanguage>(language: L) {
+): DumdictSchemasFor<L> {
 	const entitySchemas = getSchemaTreeFor(language).entity;
 	const lemmaSchema = unionOf<Lemma<L>>(collectSchemas(entitySchemas.Lemma));
 	const surfaceSchema = unionOf<Surface<L>>(
@@ -138,18 +138,20 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 	const languageReadingSchema = (
 		readingSchema as unknown as ZodType<Reading<L>>
 	).refine(
-		(reading) =>
-			readingUsesLanguage(reading as unknown as Reading, language),
-		`Reading must use ${language}.`,
+		namedValidationPredicate<Reading<L>>(
+			`dumdict.reading.language.${language}`,
+		),
+		namedValidationError(`dumdict.reading.language.${language}`),
 	);
 	const languageReadingKnowledgeSchema = (
 		readingKnowledgeSchema as unknown as ZodType<
 			ReadingKnowledge<string, Lemma<L>>
 		>
 	).refine(
-		(knowledge) =>
-			knowledgeUsesLanguage(knowledge as ReadingKnowledge, language),
-		`Reading Knowledge references must use ${language}.`,
+		namedValidationPredicate<ReadingKnowledge<string, Lemma<L>>>(
+			`dumdict.reading-knowledge.language.${language}`,
+		),
+		namedValidationError(`dumdict.reading-knowledge.language.${language}`),
 	);
 	const languagePendingSemanticRelationSchema = (
 		pendingSemanticRelationSchema as unknown as ZodType<{
@@ -157,8 +159,11 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 			target: UnitShadow<L>;
 		}>
 	).refine(
-		(pending) => pending.target.language === language,
-		`Pending Semantic Relation target must use ${language}.`,
+		namedValidationPredicate<{
+			relation: z.output<typeof directSemanticRelationSchema>;
+			target: UnitShadow<L>;
+		}>(`dumdict.pending.target-language.${language}`),
+		namedValidationError(`dumdict.pending.target-language.${language}`),
 	);
 
 	const stringArraySchema = z.array(z.string());
@@ -168,9 +173,10 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 	const surfaceIdSchema = z.string().min(1) as unknown as ZodType<
 		SurfaceId<L>
 	>;
-	const pendingEntryIdSchema = z.string().min(1) as ZodType<
-		PendingEntryId<L>
-	>;
+	const pendingEntryIdSchema = z
+		.string()
+		.min(1)
+		.transform(pendingEntryIdTransform(language));
 
 	const lemmaRecordSchema = z.strictObject({
 		lemma: lemmaSchema,
@@ -184,14 +190,8 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 			notes: z.string(),
 		})
 		.refine(
-			(entry) =>
-				Object.values(entry.knowledge?.semanticRelations ?? {}).every(
-					(targets) =>
-						(targets ?? []).every(
-							(target) => !sameLemma(entry.reading.lemma, target),
-						),
-				),
-			"Reading Knowledge cannot contain a direct same-Lemma relation.",
+			namedValidationPredicate("dumdict.reading-entry.no-same-lemma"),
+			namedValidationError("dumdict.reading-entry.no-same-lemma"),
 		);
 	const surfaceEntrySchema = z
 		.strictObject({
@@ -203,16 +203,12 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 			notes: z.string(),
 		})
 		.refine(
-			(entry) =>
-				sameLemma(
-					entry.ownerLemma,
-					entry.surface.lemma as unknown as Lemma<L>,
-				),
-			"Surface owner Lemma must match the realized Lemma.",
+			namedValidationPredicate("dumdict.surface.owner-matches"),
+			namedValidationError("dumdict.surface.owner-matches"),
 		)
 		.refine(
-			(entry) => entry.id === makeSurfaceId(language, entry.surface),
-			"Surface Entry id must match its Surface.",
+			namedValidationPredicate("dumdict.surface.id-matches"),
+			namedValidationError("dumdict.surface.id-matches"),
 		);
 	const pendingSemanticRelationLocatorSchema = z.strictObject({
 		sourceReadingKey: z.string().min(1),
@@ -226,14 +222,14 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 			locator: pendingSemanticRelationLocatorSchema,
 		})
 		.refine(
-			(record) =>
-				record.locator.sourceReadingKey ===
-				readingFingerprint(record.sourceReading),
-			"Pending Semantic Relation locator must identify its source Reading.",
+			namedValidationPredicate("dumdict.pending.locator-source"),
+			namedValidationError("dumdict.pending.locator-source"),
 		)
 		.refine(
-			(record) => record.locator.relation === record.pending.relation,
-			"Pending Semantic Relation locator must match its relation.",
+			namedValidationPredicate(
+				"dumdict.pending.locator-matches-relation",
+			),
+			namedValidationError("dumdict.pending.locator-matches-relation"),
 		);
 
 	const changePreconditionSchema = z.discriminatedUnion("kind", [
@@ -276,8 +272,12 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 
 	const languageReadingKnowledgeChangeValueSchema =
 		knowledgeChangeSchema.refine(
-			(change) => knowledgeChangeUsesLanguage(change, language),
-			`Reading Knowledge Change references must use ${language}.`,
+			namedValidationPredicate<KnowledgeChange>(
+				`dumdict.knowledge-change.language.${language}`,
+			),
+			namedValidationError(
+				`dumdict.knowledge-change.language.${language}`,
+			),
 		) as unknown as ZodType<KnowledgeChange<string, Lemma<L>>>;
 	const readingKnowledgeChangeSchema = z.strictObject({
 		reading: languageReadingSchema,
@@ -329,19 +329,21 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 			}),
 		])
 		.refine(
-			(change) =>
-				change.type !== "patchReading" ||
-				change.ops.every(
-					(op) =>
-						op.kind !== "applyKnowledgeChange" ||
-						sameReading(change.reading, op.envelope.reading),
-				),
-			"Knowledge Change Reading must match the patched Reading.",
+			namedValidationPredicate(
+				"dumdict.knowledge-change.reading-matches-patched",
+			),
+			namedValidationError(
+				"dumdict.knowledge-change.reading-matches-patched",
+			),
 		);
-	const commitChangesRequestSchema = z.strictObject({
+	const commitChangesRequestInputSchema = z.strictObject({
 		baseRevision: storeRevisionSchema,
 		changes: z.array(plannedChangeOpSchema),
 	});
+	const commitChangesRequestSchema =
+		commitChangesRequestInputSchema.transform(retainCommitChangesRequest);
+	const dumdictPlanSchema =
+		commitChangesRequestInputSchema.transform(retainDumdictPlan);
 
 	return {
 		lemmaRecordSchema,
@@ -352,14 +354,10 @@ function createSchemasFor<const L extends SupportedLanguage>(language: L) {
 		changePreconditionSchema,
 		readingPatchOpSchema,
 		plannedChangeOpSchema,
-		dumdictPlanSchema: commitChangesRequestSchema,
+		dumdictPlanSchema,
 		commitChangesRequestSchema,
 	};
 }
-
-export type DumdictSchemasFor<L extends SupportedLanguage> = ReturnType<
-	typeof createSchemasFor<L>
->;
 
 const schemasByLanguage = {
 	de: createSchemasFor("de"),
@@ -434,56 +432,20 @@ export const commitChangesResultSchema = z.discriminatedUnion("status", [
 	}),
 ]);
 
-export type LemmaRecord<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["lemmaRecordSchema"]
->;
-export type ReadingEntry<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["readingEntrySchema"]
->;
-export type SurfaceEntry<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["surfaceEntrySchema"]
->;
-export type PendingSemanticRelationLocator<L extends SupportedLanguage> =
-	z.output<DumdictSchemasFor<L>["pendingSemanticRelationLocatorSchema"]>;
-export type DumdictPendingSemanticRelation<L extends SupportedLanguage> =
-	z.output<
-		DumdictSchemasFor<L>["pendingSemanticRelationRecordSchema"]
-	>["pending"];
-export type PendingSemanticRelationRecord<L extends SupportedLanguage> =
-	z.output<DumdictSchemasFor<L>["pendingSemanticRelationRecordSchema"]>;
-export type ChangePrecondition<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["changePreconditionSchema"]
->;
-export type ReadingPatchOp<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["readingPatchOpSchema"]
->;
-export type PlannedChangeOp<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["plannedChangeOpSchema"]
->;
-
-type Primitive = string | number | boolean | bigint | symbol | null | undefined;
-type DeepReadonly<T> = T extends Primitive
-	? T
-	: T extends (...args: never[]) => unknown
-		? T
-		: T extends readonly unknown[]
-			? { readonly [Key in keyof T]: DeepReadonly<T[Key]> }
-			: T extends object
-				? { readonly [Key in keyof T]: DeepReadonly<T[Key]> }
-				: T;
-
-type ParsedCommitChangesRequest<L extends SupportedLanguage> = z.output<
-	DumdictSchemasFor<L>["commitChangesRequestSchema"]
->;
-/** A deeply immutable, validated plan handed to a host adapter. */
-export type DumdictPlan<L extends SupportedLanguage> = DeepReadonly<
-	z.output<DumdictSchemasFor<L>["dumdictPlanSchema"]>
->;
-/** A storage request whose change list cannot be replaced or extended. */
-export type CommitChangesRequest<L extends SupportedLanguage> = Readonly<{
-	[Key in keyof ParsedCommitChangesRequest<L>]: Key extends "changes"
-		? Readonly<ParsedCommitChangesRequest<L>[Key]>
-		: ParsedCommitChangesRequest<L>[Key];
-}>;
-export type CommitConflictCode = z.output<typeof commitConflictCodeSchema>;
-export type CommitChangesResult = z.output<typeof commitChangesResultSchema>;
+export type {
+	ChangePrecondition,
+	CommitChangesRequest,
+	CommitChangesResult,
+	CommitConflictCode,
+	DumdictPendingSemanticRelation,
+	DumdictPlan,
+	LemmaRecord,
+	PendingEntryId,
+	PendingSemanticRelationLocator,
+	PendingSemanticRelationRecord,
+	PlannedChangeOp,
+	ReadingEntry,
+	ReadingPatchOp,
+	StoreRevision,
+	SurfaceEntry,
+} from "./domain-types.js";

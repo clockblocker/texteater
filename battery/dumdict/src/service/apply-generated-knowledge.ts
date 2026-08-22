@@ -1,9 +1,10 @@
 import type { SupportedLanguage } from "dumling/types";
-import {
-	knowledgeChangeSchema,
-	pendingSemanticRelationSchema,
-} from "dumrel/schema";
 import { planApplyGeneratedKnowledge } from "../core/plan-mutation";
+import {
+	parseKnowledgeChangeForDumdictRuntime,
+	parsePendingSemanticRelationForDumdictRuntime,
+	unwrapDumdictParse,
+} from "../parsing/lightweight-parsers";
 import type {
 	ApplyGeneratedKnowledgeRequest,
 	DumdictMutationOptions,
@@ -20,7 +21,7 @@ export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
 ): Promise<MutationResult<L>> {
 	assertLanguageMatches(options.language, request.reading.lemma.language);
 	const changes = request.changes.map((change) =>
-		knowledgeChangeSchema.parse(change),
+		unwrapDumdictParse(parseKnowledgeChangeForDumdictRuntime(change)),
 	);
 	if (changes.some(({ aspect }) => aspect === "semanticRelations")) {
 		return {
@@ -31,7 +32,9 @@ export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
 		};
 	}
 	const pendingRelations = request.pendingRelations.map((pending) =>
-		pendingSemanticRelationSchema.parse(pending),
+		unwrapDumdictParse(
+			parsePendingSemanticRelationForDumdictRuntime(pending),
+		),
 	) as unknown as ApplyGeneratedKnowledgeRequest<L>["pendingRelations"];
 	for (const pending of pendingRelations)
 		assertLanguageMatches(options.language, pending.target.language);

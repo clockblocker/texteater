@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const aspectValues = [
 	"Hab", // habitual
 	"Imp", // imperfect
@@ -10,5 +8,5 @@ const aspectValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Aspect.html
-export const Aspect = z.enum(aspectValues);
-export type Aspect = z.infer<typeof Aspect>;
+export const Aspect = aspectValues;
+export type Aspect = (typeof Aspect)[number];

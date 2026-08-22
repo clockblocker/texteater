@@ -19,29 +19,6 @@ export {
 	DumgenError,
 	type DumgenErrorCode,
 } from "./generator/generator-error";
-export { requestableRelationSchema } from "./knowledge-generation/relations";
-export {
-	enabledSegmentationLanguageSchema,
-	grammaticalInputSchema,
-	grammaticalInteractionSchema,
-	grammaticalResolutionLanguageSchema,
-	grammaticalResultSchema,
-	grammaticalRouteSchema,
-	knowledgeGenerationInputSchema,
-	knowledgeGenerationLanguageSchema,
-	knowledgeGenerationRequestSchema,
-	knowledgeGenerationResultSchema,
-	notImplementedGrammaticalResultSchema,
-	resolvedGrammaticalResultSchema,
-	section1ErrorSchema,
-	segmentationDecisionSchema,
-	segmentationResultSchema,
-	segmentedSentenceIdSchema,
-	segmentedSentenceSchema,
-	segmentKindSchema,
-	segmentSchema,
-	unresolvedGrammaticalResultSchema,
-} from "./schemas/public-schemas";
 export type {
 	EnabledSegmentationLanguage,
 	GrammaticalInput,

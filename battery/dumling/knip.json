@@ -1,7 +1,11 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
+		"codegen/generate-validation-artifacts.ts",
+		"src/dangerously-heavy-schema-tree.ts",
+		"src/id.ts",
 		"src/index.ts",
+		"src/public-schema.ts",
 		"src/reading.ts",
 		"src/schema.ts",
 		"src/types.ts",
@@ -10,6 +14,7 @@
 		"tests/**/*.ts"
 	],
 	"project": [
+		"codegen/**/*.ts",
 		"generate-readme/**/*.ts",
 		"scripts/**/*.ts",
 		"src/**/*.ts",

@@ -3,4 +3,4 @@ export type {
 	PendingEntryId,
 	PendingSemanticRelationLocator,
 	PendingSemanticRelationRecord,
-} from "../schema";
+} from "../domain-types";

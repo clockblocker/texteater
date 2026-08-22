@@ -5,7 +5,7 @@ import {
 	type DumgenModelExchange,
 	type SegmentedSentence,
 } from "dumgen";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 
 import { DUMGEN_GENERATION_MODEL } from "../../src/ai-sdk/model-policy";
 import { DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS } from "../../src/catalog/laboratory/de-authored-grammatical-resolution-prompts";

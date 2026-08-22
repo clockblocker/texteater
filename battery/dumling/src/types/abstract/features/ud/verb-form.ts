@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const verbFormValues = [
 	"Conv", // converb; transgressive, adverbial participle, verbal adverb
 	"Fin", // finite verb
@@ -12,5 +10,5 @@ const verbFormValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/VerbForm.html
-export const VerbForm = z.enum(verbFormValues);
-export type VerbForm = z.infer<typeof VerbForm>;
+export const VerbForm = verbFormValues;
+export type VerbForm = (typeof VerbForm)[number];

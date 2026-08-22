@@ -1,4 +1,2 @@
-import { z } from "zod";
-
-export const Phrasal = z.literal("Yes");
-export type Phrasal = z.infer<typeof Phrasal>;
+export const Phrasal = ["Yes"] as const;
+export type Phrasal = (typeof Phrasal)[number];

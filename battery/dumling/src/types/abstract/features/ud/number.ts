@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const numberValues = [
 	"Coll", // collective; mass / singulare tantum
 	"Count", // count plural
@@ -15,5 +13,5 @@ const numberValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Number.html
-export const GrammaticalNumber = z.enum(numberValues);
-export type GrammaticalNumber = z.infer<typeof GrammaticalNumber>;
+export const GrammaticalNumber = numberValues;
+export type GrammaticalNumber = (typeof GrammaticalNumber)[number];

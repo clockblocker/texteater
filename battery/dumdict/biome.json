@@ -1,7 +1,11 @@
 {
 	"extends": "//",
 	"formatter": {
-		"includes": ["**", "!generate-readme/examples/**/*.ts"]
+		"includes": [
+			"**",
+			"!generate-readme/examples/**/*.ts",
+			"!src/generated/.validation-artifacts.json"
+		]
 	},
 	"linter": {
 		"includes": ["**", "!generate-readme/examples/**/*.ts"]

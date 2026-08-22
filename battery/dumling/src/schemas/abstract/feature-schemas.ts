@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type {
 	AbstractCoreFeatures,
+	AbstractFeatureAtomDefinition,
 	AbstractInflectionalFeatures,
 } from "../../types/abstract/features/features-catalog.js";
 import { abstractFeatureCatalog } from "../../types/abstract/features/features-catalog.js";
@@ -10,8 +11,34 @@ import {
 	requireNonEmptyFeatureObject,
 } from "../shared/feature-helpers.js";
 
-export const abstractFeatureAtomSchemas =
-	abstractFeatureCatalog satisfies FeatureSchemaShape;
+type AbstractFeatureAtomSchemaCatalog = {
+	[Name in keyof typeof abstractFeatureCatalog]: (typeof abstractFeatureCatalog)[Name] extends readonly [
+		infer Value extends string,
+	]
+		? z.ZodLiteral<Value>
+		: (typeof abstractFeatureCatalog)[Name] extends readonly string[]
+			? z.ZodEnum<{
+					[Value in (typeof abstractFeatureCatalog)[Name][number]]: Value;
+				}>
+			: z.ZodString;
+};
+
+function buildAbstractFeatureAtomSchema(
+	definition: AbstractFeatureAtomDefinition,
+): z.ZodType {
+	return definition === null
+		? z.string().min(1)
+		: definition.length === 1
+			? z.literal(definition[0] as string)
+			: z.enum(definition as readonly string[]);
+}
+
+export const abstractFeatureAtomSchemas = Object.fromEntries(
+	Object.entries(abstractFeatureCatalog).map(([name, definition]) => [
+		name,
+		buildAbstractFeatureAtomSchema(definition),
+	]),
+) as AbstractFeatureAtomSchemaCatalog satisfies FeatureSchemaShape;
 
 function buildAbstractFeatureObjectSchema(shape: FeatureSchemaShape) {
 	return z.strictObject(

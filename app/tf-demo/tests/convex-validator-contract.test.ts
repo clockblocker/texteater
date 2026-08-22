@@ -103,6 +103,22 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 	expect(storageSource).not.toContain("zodOutputToConvex");
 });
 
+test("operational application modules use package-owned lightweight parsers", async () => {
+	const operationalSources = await Promise.all(
+		[
+			"../convex/modules/notes/projections.ts",
+			"../convex/modules/notes/relations.ts",
+			"../convex/orchestration.ts",
+			"../server/linguisticOrchestration.ts",
+		].map((path) => Bun.file(new URL(path, import.meta.url)).text()),
+	);
+	const operationalSource = operationalSources.join("\n");
+
+	expect(operationalSource).not.toMatch(
+		/from ["'](?:dumdict|dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
+	);
+});
+
 test("Dumdict's Convex envelope stays compact", () => {
 	expect(
 		JSON.stringify(dumdictPlannedChangeValidator.json).length,
@@ -119,4 +135,75 @@ test("persistence result validators retain table-specific Convex IDs", () => {
 	expect(recordedJson).not.toContain(
 		'"clickId":{"fieldType":{"type":"string"',
 	);
+});
+
+test("the Convex runtime can inject Dumgen prompt data without package-relative file I/O", async () => {
+	const child = Bun.spawn(
+		[
+			process.execPath,
+			"-e",
+			`
+				const originalGetBuiltinModule = process.getBuiltinModule.bind(process);
+				process.getBuiltinModule = (id) => id === "node:fs"
+					? { ...originalGetBuiltinModule(id), readFileSync() { throw new Error("filesystem unavailable"); } }
+					: originalGetBuiltinModule(id);
+				const [
+					{ encodedRuntimePromptData },
+					{ buildKnowledgeDumgenRuntime },
+					{ buildDumgenRuntime },
+				] = await Promise.all([
+					import("dumgen/runtime-prompt-data"),
+					import("dumgen/knowledge-runtime"),
+					import("dumgen/runtime"),
+				]);
+				const sdk = {
+					async structuredGeneration() { throw new Error("provider reached"); },
+					async unstructuredGeneration() { throw new Error("provider reached"); },
+				};
+				const knowledgeDumgen = buildKnowledgeDumgenRuntime({
+					runtimePromptData: encodedRuntimePromptData,
+					sdk,
+				});
+				try {
+					await knowledgeDumgen.generate.knowledge("de", {
+						markedContext: "Die <TARGET>Bank</TARGET> genehmigte den Kredit.",
+						reading: {
+							lemma: {
+								canonicalForm: "Bank",
+								coreFeatures: { gender: "Fem", hyph: null },
+								family: "Lexeme",
+								kind: "NOUN",
+								language: "de",
+							},
+							emojiDescription: "🏦",
+						},
+						request: { definition: null },
+					});
+					throw new Error("knowledge provider was not reached");
+				} catch (error) {
+					if (error?.code !== "provider-error") throw error;
+				}
+				const dumgen = buildDumgenRuntime({
+					runtimePromptData: encodedRuntimePromptData,
+					sdk,
+					async generateKnowledge() { throw new Error("unexpected knowledge generation"); },
+				});
+				const result = await dumgen.segment(["Die Banken sind geöffnet."]);
+				if (result.ok || result.error.reason !== "provider-error") {
+					throw new Error(JSON.stringify(result));
+				}
+			`,
+		],
+		{
+			cwd: new URL("..", import.meta.url).pathname,
+			stderr: "pipe",
+			stdout: "pipe",
+		},
+	);
+	const [exitCode, stderr] = await Promise.all([
+		child.exited,
+		new Response(child.stderr).text(),
+	]);
+	expect(stderr).toBe("");
+	expect(exitCode).toBe(0);
 });

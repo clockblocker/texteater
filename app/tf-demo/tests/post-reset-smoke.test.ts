@@ -5,7 +5,10 @@ import {
 	makeSurfaceId,
 } from "dumdict";
 import { readingFingerprint } from "dumling";
-import { pendingSemanticRelationSchema } from "dumrel";
+import {
+	type PendingSemanticRelation,
+	parseAsPendingSemanticRelation,
+} from "dumrel";
 import { resetDemoDataBatch, resetDemoTableNames } from "../convex/demoReset";
 import {
 	commitDumdictChanges,
@@ -15,9 +18,10 @@ import {
 	loadDumdictNewNoteContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
-import { loadRelationProjections } from "../convex/presentation";
+import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import { unwrapOperationalParse } from "../server/operationalParsing";
 import {
 	IndexedTestDb,
 	runTestMutation,
@@ -60,7 +64,9 @@ const emptyNote = {
 };
 
 function pendingProposalKey(input: unknown): string {
-	const pending = pendingSemanticRelationSchema.parse(input);
+	const pending = unwrapOperationalParse<PendingSemanticRelation>(
+		parseAsPendingSemanticRelation(input),
+	);
 	return JSON.stringify([
 		pending.relation,
 		pending.target.language,

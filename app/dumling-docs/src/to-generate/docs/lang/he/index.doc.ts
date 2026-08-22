@@ -5,7 +5,9 @@ const document = defineGeneratedDocPage({
 	order: 120,
 	title: "Hebrew",
 	body: `
-Hebrew is available at \`dumling.he\`, \`getLanguageApi("he")\`, and \`schemasFor.he\`.
+Hebrew is available operationally at \`dumling.he\` and \`getLanguageApi("he")\`.
+The route-specific Zod tree is the roughly-100-MiB danger-zone
+\`dangerouslyHeavySchemasForAbout100MiBRss.he\`.
 
 ## Supported Lemma Families
 
@@ -74,9 +76,7 @@ dumling.he.parse.attestation(katavAttestation);
 ## Schema Access
 
 \`\`\`ts
-schemasFor.he.entity.Lemma.Lexeme.VERB();
-schemasFor.he.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.he.entity.Attestation.Inflection.Lexeme.VERB();
+dangerouslyHeavySchemasForAbout100MiBRss.he.entity.Lemma.Lexeme.VERB();
 \`\`\`
 `,
 });

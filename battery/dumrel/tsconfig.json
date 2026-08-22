@@ -2,6 +2,15 @@
 	"extends": "../../tooling/typescript/battery.json",
 	"compilerOptions": {
 		"paths": {
+			"common-utils": ["../common-utils/src/index.ts"],
+			"dumling": ["../dumling/src/index.ts"],
+			"dumling/dangerously-heavy-schema-tree": [
+				"../dumling/src/dangerously-heavy-schema-tree.ts"
+			],
+			"dumling/id": ["../dumling/src/id.ts"],
+			"dumling/reading": ["../dumling/src/reading.ts"],
+			"dumling/schema": ["../dumling/src/schema.ts"],
+			"dumling/types": ["../dumling/src/types.ts"],
 			"dumrel": ["./src/index.ts"],
 			"dumrel/relations": ["./src/relations.ts"],
 			"dumrel/schema": ["./src/schema.ts"],

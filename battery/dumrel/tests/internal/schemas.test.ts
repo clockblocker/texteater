@@ -16,7 +16,7 @@ import {
 	semanticRelationGraphSchema,
 	semanticRelationSchema,
 	unitShadowSchema,
-} from "../../src";
+} from "../../src/schema";
 import {
 	constructionReading,
 	morphemeReading,

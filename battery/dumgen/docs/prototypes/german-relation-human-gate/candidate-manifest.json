@@ -1,7 +1,7 @@
 {
 	"formatVersion": "german-relation-human-gate-candidate-v1",
-	"candidateId": "95f5256494b5495f2ddee493f18187215bc2bfbb59f6f9076b4510b1fde34403",
-	"state": "awaiting-human-gate",
+	"candidateId": "09e18df9462b6f11e52c75fe4e903c2fcf3dc3c0d6ee472a6093f3017e120036",
+	"state": "development-gate-failed",
 	"artifacts": [
 		{
 			"issue": 189,
@@ -19,7 +19,7 @@
 			"issue": 190,
 			"role": "adjudicated-development-corpus",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/golden-corpus/retained-cases.ts",
-			"sha256": "a1e32a68ffdacb43b5cf1a858c12e03e028cc35ca429d2170e4693679461fd99"
+			"sha256": "f1c69f4f4a1effac57466e1e995846553370014565b4dbec4c4624bf2d0fc80c"
 		},
 		{
 			"issue": 190,
@@ -42,26 +42,32 @@
 		{
 			"issue": 192,
 			"role": "candidate-policy",
-			"path": "battery/dumgen/docs/prototypes/german-relation-topology-lab/logic.ts",
-			"sha256": "0090e9673b77d9800eb7484b8ac6f7d3de48b5c051305011f1d9708ca03742ea"
+			"path": "battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/logic.ts",
+			"sha256": "f1d7eebba7bc1374c8c8f0bdc8fe49fe7b5d6515d945b96157b74d4676736dc5"
+		},
+		{
+			"issue": 192,
+			"role": "retained-runner",
+			"path": "battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/run.ts",
+			"sha256": "6141960a2cb6c49a590f4681e940195b4342f4bfc8dbb9998135aa2f9f150237"
 		},
 		{
 			"issue": 192,
 			"role": "prompt-source",
 			"path": "battery/dumgen/src/promptsmith/production/knowledge-analysis/de/combined/prompt-source.ts",
-			"sha256": "1ed13b84d53899c8443665cce4d029357ec545ff13313d372595f8d060e4794f"
+			"sha256": "412b6db56ae94ea3b0ab83feee0917099bac29de105fc18ace0223581e45c0db"
 		},
 		{
 			"issue": 192,
 			"role": "generated-system-prompt",
 			"path": "battery/dumgen/src/promptsmith/production/generated-system-prompt/knowledge-analysis/de/combined.ts",
-			"sha256": "7ac478ad13d638faefb57a24736878b6af2fd082421c99d6c4f3dfe4bf7337ec"
+			"sha256": "ea45336898d7a174696436817762f0e42bc16bd09f929ad79e23fea29359d99e"
 		},
 		{
 			"issue": 192,
 			"role": "model-facing-schema",
 			"path": "battery/dumgen/src/knowledge-generation/de/schemas.ts",
-			"sha256": "ca39468119fa36df9165b4206cd5ad0c6ce6f1a2acc657732b21b4ac1b0d376e"
+			"sha256": "6c776f496dcf13b69fcb7ecba8fb496b35f75bb15e0a0f79a032afb07f8a59c1"
 		},
 		{
 			"issue": 192,
@@ -72,28 +78,22 @@
 		{
 			"issue": 192,
 			"role": "retained-result",
-			"path": "battery/dumgen/docs/prototypes/german-relation-topology-lab/runs/2026-08-20T08-32-05-075Z/results.json",
-			"sha256": "c48de90d7f6f301d48bf126b849735280f8e530bd3491a01ffab36eaba42788d"
+			"path": "battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/runs/2026-08-20T17-05-28-531Z/results.json",
+			"sha256": "c968b9096f17a5dc756b3784f685dcf5c38975628280ee88d4e8f9efb753c082"
 		},
 		{
 			"issue": 193,
-			"role": "one-shot-acceptance-runner",
-			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/acceptance.ts",
-			"sha256": "77cabbd2c0a61e38662e1fd6e0fd403ebd44174e9b9d52dcd3cc88eed721a1ee"
-		},
-		{
-			"issue": 193,
-			"role": "human-review-and-verdict-writer",
+			"role": "human-review-development-gate",
 			"path": "battery/dumgen/docs/prototypes/german-relation-human-gate/review.ts",
-			"sha256": "d79f727a04896df98e2b0af5a38b515a550fc129114bf44c670db2aef3a06e8b"
+			"sha256": "72b7c12f949b3eab6262948d3368562a13827615a5b5e2263ef44063c4218119"
 		}
 	],
 	"candidate": {
-		"topology": "current-combined-narrow-groups",
+		"topology": "combined-atomic-prompt-iterations",
 		"model": "gpt-5.6-luna",
 		"reasoningEffort": "none",
-		"promptPolicy": "current combined prompt; Synonym/Near Synonym, Antonym/Near Antonym, and Hypernym/Holonym requested as three narrow groups; only requested nullable leaves; no retries",
-		"developmentRecommendation": "no-topology-clears-the-frozen-gate"
+		"promptPolicy": "six cumulative revisions of the combined atomic prompt over all 50 disclosed development cases; final revision planned for three repetitions; no retries; repeated harmful targets stop a revision",
+		"developmentRecommendation": "no-prompt-revision-clears-the-frozen-gate"
 	},
 	"acceptanceReservation": {
 		"status": "sealed-pending-human-approval",

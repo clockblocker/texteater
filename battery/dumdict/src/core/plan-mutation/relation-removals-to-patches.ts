@@ -1,8 +1,8 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { SupportedLanguage } from "dumling/types";
 import type { DirectSemanticRelation } from "dumrel/types";
+import type { StoreRevision } from "../../domain-types";
 import type { ReadingEntry } from "../../dto";
-import type { StoreRevision } from "../../schema";
 import { sameLemma } from "../identity";
 import type { PlannedRelationRemoval } from "../plan-relation-maintenance";
 import type { PlannedChangeOp } from "../planned-changes";

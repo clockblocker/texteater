@@ -1,5 +1,5 @@
 import { codecBuilder4 } from "codec-builder-library/v4";
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import type { Lemma, Surface } from "dumling/types";
 import { type input, type output, z } from "zod";
 
@@ -17,7 +17,7 @@ import type {
 	GrammaticalResolution,
 	GrammaticalResolutionInput,
 } from "../../types";
-import type { Prompt } from "../prompt-definition";
+import type { Prompt, PromptSchemaOutput } from "../prompt-definition";
 
 type ObjectSchema = z.ZodObject<z.ZodRawShape>;
 type ModelOwnedSurface<Value> = Value extends { readonly lemma: unknown }
@@ -223,7 +223,7 @@ export function createDeGrammaticalResolutionPrompt<
 		modelInputSchema: options.inputSchema,
 		outputSchema: options.outputSchema,
 		projectInput(input) {
-			return input as output<ModelInputSchema>;
+			return input as output<ModelInputSchema> as PromptSchemaOutput<ModelInputSchema>;
 		},
 		projectOutput(input, rawGenerated) {
 			return projectOutput(input, rawGenerated as output<OutputSchema>);

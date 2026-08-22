@@ -1,11 +1,14 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { SupportedLanguage } from "dumling/types";
-import { pendingSemanticRelationSchema } from "dumrel/schema";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,
 	ReadingKnowledgeChange,
 } from "../../dto";
+import {
+	parsePendingSemanticRelationForDumdictRuntime,
+	unwrapDumdictParse,
+} from "../../parsing/lightweight-parsers";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { NewNoteSlice, ReadingPatchOp } from "../../storage";
 import { derivePendingEntryId } from "../pending/identity";
@@ -30,8 +33,8 @@ function pendingRecords<L extends SupportedLanguage>(
 ): PendingSemanticRelationRecord<L>[] {
 	const sourceReadingKey = readingFingerprint(request.reading);
 	const records = request.pendingRelations.map((value) => {
-		const pending = pendingSemanticRelationSchema.parse(
-			value,
+		const pending = unwrapDumdictParse(
+			parsePendingSemanticRelationForDumdictRuntime(value),
 		) as unknown as PendingSemanticRelationRecord<L>["pending"];
 		return {
 			sourceReading: request.reading,

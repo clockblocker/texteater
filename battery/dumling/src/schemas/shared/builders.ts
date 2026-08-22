@@ -1,12 +1,16 @@
+import { z } from "zod";
+import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
 import type {
 	AttestationMember,
 	CoreFeaturesFor,
 	InflectionalFeaturesFor,
 	LemmaFamilyFor,
 	LemmaKindFor,
-} from "dumling/types";
-import { z } from "zod";
-import type { ConcreteLanguage } from "../../types/concrete-language/features/feature-registry.js";
+} from "../../types.js";
+import {
+	hasMarkedSurfaceFeature,
+	surfaceFeaturesNonEmptyError,
+} from "../../validation-semantics.js";
 import {
 	memberOrthographyValues,
 	realizationCoverageValues,
@@ -27,10 +31,9 @@ function nullableNonEmptyObjectSchema<TShape extends z.ZodRawShape>(
 ) {
 	return z
 		.strictObject(shape)
-		.refine(
-			(value) => Object.values(value).some((lemma) => lemma !== null),
-			"Feature bag must contain at least one marked value",
-		)
+		.refine(hasMarkedSurfaceFeature, {
+			error: surfaceFeaturesNonEmptyError,
+		})
 		.nullable();
 }
 

@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const pronTypeValues = [
 	"Art",
 	"Dem",
@@ -15,5 +13,5 @@ const pronTypeValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/PronType.html
-export const PronType = z.enum(pronTypeValues);
-export type PronType = z.infer<typeof PronType>;
+export const PronType = pronTypeValues;
+export type PronType = (typeof PronType)[number];

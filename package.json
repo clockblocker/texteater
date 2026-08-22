@@ -10,13 +10,15 @@
 		"battery/*"
 	],
 	"scripts": {
+		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
 		"build": "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
 		"check": "bun tooling/run-workspaces.ts check --if-present",
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" bun run --cwd app/tf-demo dev",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",
 		"test": "bun test ./tooling && bun tooling/run-workspaces.ts test",
-		"validate": "bun tooling/validate-repository.ts"
+		"validate": "bun tooling/validate-repository.ts && bun tooling/dum-runtime-verification/verify.ts",
+		"verify:dum-runtime": "bun tooling/dum-runtime-verification/verify.ts"
 	},
 	"devDependencies": {
 		"@babel/core": "7.29.7",
@@ -29,6 +31,7 @@
 		"dependency-cruiser": "^18.1.0",
 		"knip": "^6.29.0",
 		"node": "24.19.0",
+		"oxc-parser": "^0.140.0",
 		"typescript": "^7.0.2"
 	}
 }

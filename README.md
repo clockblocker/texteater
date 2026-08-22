@@ -9,6 +9,7 @@ responsibility:
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
 - `battery/dumrel`: lexical and morphological relation types, schemas, and rules
 - `battery/dumgen`: deterministic prompt construction and evaluation
+- `battery/dumtrain`: sentence-analysis corpus, training, evaluation, and local model release planning
 - `battery/dumdict`: dictionary workflows and storage boundaries
 
 An app is a self-contained, user-facing business unit. A battery is a generic,
@@ -106,7 +107,7 @@ package specifiers and declared exports:
 
 ```ts
 import { dumling } from "dumling";
-import { schemasFor } from "dumling/schema";
+import type { Reading } from "dumling/types";
 ```
 
 Relative imports into sibling workspaces and package-internal subpaths that

@@ -1,62 +1,25 @@
 import { expect, test } from "bun:test";
 import { readingFingerprint } from "dumling/reading";
 import { structuralShadowLocatorKey } from "../convex/model/shadows";
+import { projectFeaturesForPresentation as projectFeatures } from "../convex/modules/notes/featurePresentation";
 import {
-	getNote,
-	getTextView,
-	isUnitReadingFamily,
-	loadSourceContextPage,
-	loadTextFocus,
-	projectFeatures,
-	projectKnowledge,
 	projectReadingKnowledge,
 	projectReadingValue,
-	projectResolvedRelationTargets,
-} from "../convex/presentation";
+} from "../convex/modules/notes/projections";
+import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
+import { projectResolvedRelationTargets } from "../convex/modules/notes/relations";
+import { isUnitReadingFamily } from "../convex/modules/notes/unitReadingFamilies";
+import { get as getReadingNote } from "../convex/readingNotes";
+import { get as getTextView, loadTextFocus } from "../convex/textViews";
 
-const getNoteHandler = queryHandler<{
-	target: { kind: "UnitReadingNote"; readingId: string };
+const getReadingNoteHandler = queryHandler<{
+	readingId: string;
 	contextCursor?: string;
-	visitorId?: string;
-}>(getNote);
+}>(getReadingNote);
 const getTextViewHandler = queryHandler<{
-	target: { kind: "Text"; textId: string };
+	textId: string;
+	focusAttestationId?: string;
 }>(getTextView);
-
-test("projects learner Knowledge and direct relations without storing a view", () => {
-	const targetLemma = {
-		language: "de",
-		family: "Lexeme",
-		kind: "NOUN",
-		canonicalForm: "Institut",
-		coreFeatures: { gender: "Neut", hyph: null },
-	} as const;
-
-	expect(
-		projectKnowledge({
-			transcription: " baŋk ",
-			definition: "Ein Geldinstitut.",
-			translations: { en: ["bank"] },
-			semanticRelations: {
-				hypernym: [targetLemma],
-			},
-		}),
-	).toEqual({
-		transcription: "baŋk",
-		definition: "Ein Geldinstitut.",
-		translations: [{ language: "en", values: ["bank"] }],
-		morphologicalTree: null,
-		lexicalBreakdown: [],
-		relations: [
-			{
-				relation: "hypernym",
-				targetLemmaKey: expect.any(String),
-				targetCanonicalForm: "Institut",
-				provenance: "direct",
-			},
-		],
-	});
-});
 
 test("projects Dumling feature values for learner inspection", () => {
 	expect(projectFeatures({ gender: "Fem", hyph: null })).toEqual([
@@ -253,9 +216,8 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		},
 	};
 
-	const note = (await getNoteHandler(ctx, {
-		target: { kind: "UnitReadingNote", readingId: "reading-1" },
-		visitorId: "visitor-with-everything-disabled",
+	const note = (await getReadingNoteHandler(ctx, {
+		readingId: "reading-1",
 	})) as {
 		kind: string;
 		reading: { lemma: { coreFeatures: unknown } };
@@ -339,18 +301,20 @@ test("projects stored semantic endpoints as Lemma Route Note targets", () => {
 	]);
 });
 
-test("routed presentation queries accept targets and return app-owned IDs", () => {
+test("note and text queries expose target-specific interfaces", () => {
 	const textArgs = getTextView.exportArgs();
 	const textReturns = getTextView.exportReturns();
-	const noteArgs = getNote.exportArgs();
-	const noteReturns = getNote.exportReturns();
+	const noteArgs = getReadingNote.exportArgs();
+	const noteReturns = getReadingNote.exportReturns();
 
-	expect(textArgs).toContain('"value":"Text"');
-	expect(noteArgs).toContain('"value":"UnitReadingNote"');
-	expect(noteArgs).toContain('"value":"RouteNote"');
-	expect(noteArgs).toContain('"value":"ShadowNote"');
-	expect(noteArgs).toContain('"value":"Resolution"');
+	expect(textArgs).toContain('"textId"');
+	expect(textArgs).toContain('"focusAttestationId"');
+	expect(textArgs).not.toContain('"target"');
+	expect(noteArgs).toContain('"readingId"');
 	expect(noteArgs).toContain('"contextCursor"');
+	expect(noteArgs).not.toContain('"visitorId"');
+	expect(noteArgs).not.toContain('"value":"RouteNote"');
+	expect(noteArgs).not.toContain('"value":"ShadowNote"');
 	expect(noteReturns).toContain('"tableName":"readings"');
 	expect(noteReturns).toContain('"tableName":"attestations"');
 	expect(noteReturns).toContain('"sentenceSnippet"');
@@ -383,13 +347,13 @@ test("malformed routed IDs return not-found without reading documents", async ()
 	};
 
 	expect(
-		await getNoteHandler(ctx, {
-			target: { kind: "UnitReadingNote", readingId: "malformed id" },
+		await getReadingNoteHandler(ctx, {
+			readingId: "malformed id",
 		}),
 	).toBeNull();
 	expect(
 		await getTextViewHandler(ctx, {
-			target: { kind: "Text", textId: "malformed id" },
+			textId: "malformed id",
 		}),
 	).toBeNull();
 	expect(documentReads).toBe(0);
@@ -410,13 +374,13 @@ test("deleted routed records return the same defined not-found result", async ()
 	};
 
 	expect(
-		await getNoteHandler(ctx, {
-			target: { kind: "UnitReadingNote", readingId: "deleted-reading" },
+		await getReadingNoteHandler(ctx, {
+			readingId: "deleted-reading",
 		}),
 	).toBeNull();
 	expect(
 		await getTextViewHandler(ctx, {
-			target: { kind: "Text", textId: "deleted-text" },
+			textId: "deleted-text",
 		}),
 	).toBeNull();
 	expect(documentReads).toBe(2);

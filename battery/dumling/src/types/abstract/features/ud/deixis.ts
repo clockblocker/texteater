@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const deixisValues = [
 	"Abv",
 	"Bel",
@@ -11,5 +9,5 @@ const deixisValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Deixis.html
-export const Deixis = z.enum(deixisValues);
-export type Deixis = z.infer<typeof Deixis>;
+export const Deixis = deixisValues;
+export type Deixis = (typeof Deixis)[number];

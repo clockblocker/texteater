@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const styleValues = [
 	"Arch",
 	"Coll",
@@ -12,5 +10,5 @@ const styleValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Style.html
-export const Style = z.enum(styleValues);
-export type Style = z.infer<typeof Style>;
+export const Style = styleValues;
+export type Style = (typeof Style)[number];

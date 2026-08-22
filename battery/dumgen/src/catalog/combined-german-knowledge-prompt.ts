@@ -9,7 +9,19 @@ import {
 import { systemPrompt as combinedGermanKnowledgeSystemPrompt } from "../promptsmith/production/generated-system-prompt/knowledge-analysis/de/combined";
 import type { Prompt, PromptCatalogEntry } from "./prompt-definition";
 
-const prompt = {
+type CombinedGermanKnowledgePrompt = Omit<
+	Prompt<
+		typeof germanKnowledgeGenerationInputSchema,
+		typeof germanKnowledgeAnalysisSchema,
+		ReturnType<typeof projectGermanKnowledgeUpdate>
+	>,
+	"modelOutputSchemaFor" | "projectOutput"
+> & {
+	modelOutputSchemaFor: typeof modelOutputSchemaForGermanKnowledge;
+	projectOutput: typeof projectGermanKnowledgeUpdate;
+};
+
+const prompt: CombinedGermanKnowledgePrompt = {
 	systemPrompt: combinedGermanKnowledgeSystemPrompt,
 	inputSchema: germanKnowledgeGenerationInputSchema,
 	outputSchema: germanKnowledgeAnalysisSchema,
@@ -23,13 +35,9 @@ const prompt = {
 		return projectGermanKnowledgeUpdate(input, generated);
 	},
 	generationParams: { model: DUMGEN_GENERATION_MODEL, maxOutputTokens: 4096 },
-} satisfies Prompt<
-	typeof germanKnowledgeGenerationInputSchema,
-	typeof germanKnowledgeAnalysisSchema,
-	ReturnType<typeof projectGermanKnowledgeUpdate>
->;
+};
 
-export const combinedGermanKnowledgePrompt: PromptCatalogEntry<typeof prompt> =
+export const combinedGermanKnowledgePrompt: PromptCatalogEntry<CombinedGermanKnowledgePrompt> =
 	{
 		meta: { kind: "prompt" },
 		prompt,

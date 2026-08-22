@@ -1,13 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { readingFingerprint } from "dumling";
+import { makeSurfaceId, type StoreRevision } from "../../src";
 import {
 	commitChangesResultSchema,
 	dumdictPlanSchema,
 	getDumdictSchemasFor,
 	lemmaRecordSchema,
-	makeSurfaceId,
-	type StoreRevision,
-} from "../../src";
+} from "../../src/schema";
 import { germanHausLemma } from "../attested-entities/de/lemmas";
 import { germanHausCitationSurface } from "../attested-entities/de/surfaces";
 import { germanGehenLemma, germanGehenReading } from "../fixtures/de-notes";
@@ -81,6 +80,31 @@ describe("public storage-facing schemas", () => {
 				},
 			}).success,
 		).toBe(false);
+	});
+
+	test("language-scoped Reading validation returns failure for cross-language relation targets", () => {
+		const result = getDumdictSchemasFor("de").readingEntrySchema.safeParse({
+			reading: germanGehenReading,
+			attestedTranslations: [],
+			attestations: [],
+			notes: "",
+			knowledge: {
+				semanticRelations: {
+					nearSynonym: [englishRunReading.lemma],
+				},
+			},
+		});
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error.issues).toEqual([
+				{
+					code: "custom",
+					message: "Reading Knowledge references must use de.",
+					path: ["knowledge"],
+				},
+			]);
+		}
 	});
 
 	test("Surface Entries compose Dumling's concrete Surface schemas", () => {

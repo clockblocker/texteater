@@ -1,115 +1,176 @@
-import { type ZodType, z } from "zod";
-
-type JsonSchema = Record<string, unknown>;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isJsonSchema(value: unknown): value is JsonSchema {
-	return isRecord(value);
-}
-
-function acceptsNull(schema: JsonSchema): boolean {
-	if (schema.type === "null") return true;
-	return (
-		Array.isArray(schema.anyOf) &&
-		schema.anyOf.some(
-			(option) => isJsonSchema(option) && acceptsNull(option),
-		)
-	);
-}
-
-function compatibilityScore(schema: JsonSchema, value: unknown): number {
-	if ("const" in schema) {
-		return value === schema.const ? 0 : Number.POSITIVE_INFINITY;
-	}
-
-	if (Array.isArray(schema.anyOf)) {
-		return Math.min(
-			...schema.anyOf.map((option) =>
-				isJsonSchema(option)
-					? compatibilityScore(option, value)
-					: Number.POSITIVE_INFINITY,
-			),
-		);
-	}
-
-	if (schema.type === "object" && isRecord(value)) {
-		const properties = isRecord(schema.properties) ? schema.properties : {};
-		const required = new Set(
-			Array.isArray(schema.required)
-				? schema.required.filter(
-						(name): name is string => typeof name === "string",
-					)
-				: [],
-		);
-		let score = 0;
-		for (const [name, propertySchema] of Object.entries(properties)) {
-			if (!isJsonSchema(propertySchema)) continue;
-			if (name in value) {
-				score += compatibilityScore(propertySchema, value[name]);
-			} else if (required.has(name) && !acceptsNull(propertySchema)) {
-				score += 1;
-			}
-		}
-		return score;
-	}
-
-	return 0;
-}
-
-function canonicalize(schema: JsonSchema, value: unknown): unknown {
-	if (Array.isArray(schema.anyOf)) {
-		const candidates = schema.anyOf.filter(isJsonSchema);
-		const selected = candidates.reduce<JsonSchema | undefined>(
-			(best, candidate) =>
-				best === undefined ||
-				compatibilityScore(candidate, value) <
-					compatibilityScore(best, value)
-					? candidate
-					: best,
-			undefined,
-		);
-		return selected ? canonicalize(selected, value) : value;
-	}
-
-	if (schema.type === "array" && Array.isArray(value)) {
-		return isJsonSchema(schema.items)
-			? value.map((lemma) =>
-					canonicalize(schema.items as JsonSchema, lemma),
-				)
-			: value;
-	}
-
-	if (schema.type !== "object" || !isRecord(value)) return value;
-
-	const properties = isRecord(schema.properties) ? schema.properties : {};
-	const required = new Set(
-		Array.isArray(schema.required)
-			? schema.required.filter(
-					(name): name is string => typeof name === "string",
-				)
-			: [],
-	);
-	const result = { ...value };
-	for (const [name, propertySchema] of Object.entries(properties)) {
-		if (!isJsonSchema(propertySchema)) continue;
-		if (
-			name in result &&
-			!(result[name] === undefined && acceptsNull(propertySchema))
-		) {
-			result[name] = canonicalize(propertySchema, result[name]);
-		} else if (required.has(name) && acceptsNull(propertySchema)) {
-			result[name] = null;
-		}
-	}
-	return result;
-}
+import type { Constraint } from "common-utils";
 
 export function canonicalizeNullableProperties(
-	schema: ZodType,
+	constraint: Constraint,
+	definitions: Readonly<Record<string, Constraint>>,
 	value: unknown,
 ): unknown {
-	return canonicalize(z.toJSONSchema(schema) as JsonSchema, value);
+	const resolved = resolveConstraint(constraint, definitions);
+	switch (resolved[0]) {
+		case "array":
+			return Array.isArray(value)
+				? value.map((item) =>
+						canonicalizeNullableProperties(
+							resolved[1],
+							definitions,
+							item,
+						),
+					)
+				: value;
+		case "nullable":
+			return value === null
+				? null
+				: canonicalizeNullableProperties(
+						resolved[1],
+						definitions,
+						value,
+					);
+		case "object": {
+			if (
+				value === null ||
+				typeof value !== "object" ||
+				Array.isArray(value)
+			) {
+				return value;
+			}
+			const result: Record<string, unknown> = {
+				...(value as Record<string, unknown>),
+			};
+			for (const [key, child] of Object.entries(resolved[1])) {
+				if (
+					(!(key in result) || result[key] === undefined) &&
+					acceptsNull(child, definitions)
+				) {
+					result[key] = null;
+				} else if (key in result) {
+					result[key] = canonicalizeNullableProperties(
+						child,
+						definitions,
+						result[key],
+					);
+				}
+			}
+			return result;
+		}
+		case "pipe":
+			return canonicalizeNullableProperties(
+				resolved[1],
+				definitions,
+				value,
+			);
+		case "preprocess":
+			return canonicalizeNullableProperties(
+				resolved[2],
+				definitions,
+				value,
+			);
+		case "union": {
+			const selected = resolved[1].reduce<Constraint | undefined>(
+				(best, candidate) =>
+					best === undefined ||
+					compatibilityScore(candidate, value, definitions) <
+						compatibilityScore(best, value, definitions)
+						? candidate
+						: best,
+				undefined,
+			);
+			return selected === undefined
+				? value
+				: canonicalizeNullableProperties(selected, definitions, value);
+		}
+		default:
+			return value;
+	}
+}
+
+function acceptsNull(
+	constraint: Constraint,
+	definitions: Readonly<Record<string, Constraint>>,
+): boolean {
+	const resolved = resolveConstraint(constraint, definitions);
+	if (resolved[0] === "null" || resolved[0] === "nullable") return true;
+	if (resolved[0] === "pipe") return acceptsNull(resolved[1], definitions);
+	if (resolved[0] === "preprocess")
+		return acceptsNull(resolved[2], definitions);
+	return (
+		resolved[0] === "union" &&
+		resolved[1].some((candidate) => acceptsNull(candidate, definitions))
+	);
+}
+
+function compatibilityScore(
+	constraint: Constraint,
+	value: unknown,
+	definitions: Readonly<Record<string, Constraint>>,
+): number {
+	const resolved = resolveConstraint(constraint, definitions);
+	switch (resolved[0]) {
+		case "array":
+			return Array.isArray(value) ? 0 : Number.POSITIVE_INFINITY;
+		case "boolean":
+			return typeof value === "boolean" ? 0 : Number.POSITIVE_INFINITY;
+		case "enum":
+			return resolved[1].includes(value as never)
+				? 0
+				: Number.POSITIVE_INFINITY;
+		case "literal":
+			return Object.is(value, resolved[1]) ? 0 : Number.POSITIVE_INFINITY;
+		case "null":
+			return value === null ? 0 : Number.POSITIVE_INFINITY;
+		case "nullable":
+			return value === null
+				? 0
+				: compatibilityScore(resolved[1], value, definitions);
+		case "object": {
+			if (
+				value === null ||
+				typeof value !== "object" ||
+				Array.isArray(value)
+			) {
+				return Number.POSITIVE_INFINITY;
+			}
+			const record = value as Record<string, unknown>;
+			let score = 0;
+			for (const [key, child] of Object.entries(resolved[1])) {
+				if (key in record) {
+					score += compatibilityScore(
+						child,
+						record[key],
+						definitions,
+					);
+				} else if (!acceptsNull(child, definitions)) {
+					score += 1;
+				}
+			}
+			return score;
+		}
+		case "pipe":
+			return compatibilityScore(resolved[1], value, definitions);
+		case "preprocess":
+			return compatibilityScore(resolved[2], value, definitions);
+		case "string":
+			return typeof value === "string" ? 0 : Number.POSITIVE_INFINITY;
+		case "union":
+			return Math.min(
+				...resolved[1].map((candidate) =>
+					compatibilityScore(candidate, value, definitions),
+				),
+			);
+		default:
+			return 0;
+	}
+}
+
+function resolveConstraint(
+	constraint: Constraint,
+	definitions: Readonly<Record<string, Constraint>>,
+): Exclude<Constraint, readonly ["ref", string]> {
+	if (constraint[0] !== "ref") return constraint;
+	const referenced = definitions[constraint[1]];
+	if (referenced === undefined) {
+		throw new ReferenceError(
+			`Unknown validation artifact reference: ${constraint[1]}`,
+		);
+	}
+	return resolveConstraint(referenced, definitions);
 }

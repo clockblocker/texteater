@@ -13,8 +13,8 @@ import { z } from "zod";
 import { PROMPT_CATALOG } from "../../src/catalog/prompt-catalog";
 import type { PromptTree } from "../../src/catalog/prompt-definition";
 import { buildGeneratorCatalog } from "../../src/generator/generator";
+import * as lightweightParsers from "../../src/parsing/lightweight-parsers";
 import { GERMAN_HIGH_LEVEL_ROUTES } from "../../src/schema/german-high-level-routes";
-import { grammaticalResultSchema } from "../../src/schemas/public-schemas";
 
 const modelGrammar = {
 	memberOrthographies: ["Standard"],
@@ -295,8 +295,8 @@ describe("Dumgen module interface", () => {
 });
 
 describe("grammatical resolution", () => {
-	test("parses fresh, cached, and unresolved public results through the canonical schema", async () => {
-		const parse = spyOn(grammaticalResultSchema, "parse");
+	test("parses fresh, cached, and unresolved public results through the lightweight boundary", async () => {
+		const parse = spyOn(lightweightParsers, "parseAsGrammaticalResult");
 		try {
 			const source = sentence([
 				{ kind: "ResolvableText", text: "Bnak" },
@@ -356,12 +356,18 @@ describe("grammatical resolution", () => {
 		}
 	});
 
-	test("reports canonical public-result rejection as invalid output", async () => {
+	test("reports lightweight public-result rejection as invalid output", async () => {
 		const parse = spyOn(
-			grammaticalResultSchema,
-			"parse",
+			lightweightParsers,
+			"parseAsGrammaticalResult",
 		).mockImplementation(() => {
-			throw new Error("forced public-result rejection");
+			return new lightweightParsers.ParsingError([
+				{
+					code: "custom",
+					message: "forced public-result rejection",
+					path: [],
+				},
+			]);
 		});
 		try {
 			const unresolved = queueSdk([

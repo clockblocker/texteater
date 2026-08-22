@@ -42,7 +42,7 @@ function assertParseSuccess<T>(
 }
 
 function canonicalizeEntity<L extends SupportedLanguage>(
-	parse: LanguageApi<L>["parse"],
+	parse: Pick<LanguageApi<L>["parse"], "lemma" | "surface">,
 	value: Lemma<L> | Surface<L>,
 ): IdAddressableEntity<L> {
 	if ("surface" in value || "members" in value) {
@@ -65,7 +65,7 @@ function canonicalizeEntity<L extends SupportedLanguage>(
 
 function decodeReadableAsSuccess<L extends SupportedLanguage>(
 	language: L,
-	parse: LanguageApi<L>["parse"],
+	parse: Pick<LanguageApi<L>["parse"], "lemma" | "surface">,
 	input: string,
 	format: IdDecodeSuccess<L>["format"],
 ): DecodeResult<L> {
@@ -107,7 +107,7 @@ function hasReadableCsvLeadingWhitespace(input: string) {
 
 function decodeAny<L extends SupportedLanguage>(
 	language: L,
-	parse: LanguageApi<L>["parse"],
+	parse: Pick<LanguageApi<L>["parse"], "lemma" | "surface">,
 	input: string,
 ): DecodeResult<L> {
 	if (hasReadableCsvLeadingWhitespace(input)) {
@@ -149,7 +149,7 @@ function decodeAny<L extends SupportedLanguage>(
 
 export function buildIdOperations<L extends SupportedLanguage>(
 	language: L,
-	parse: LanguageApi<L>["parse"],
+	parse: Pick<LanguageApi<L>["parse"], "lemma" | "surface">,
 ): LanguageApi<L>["id"] {
 	function encodeCanonicalCsv(value: Lemma<L> | Surface<L>): DumlingCsv<L> {
 		const canonical = canonicalizeEntity(parse, value);

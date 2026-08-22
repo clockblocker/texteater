@@ -90,7 +90,7 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 
 function TextDataControls({ textId }: { textId: string }) {
 	const textQuery = useQuery({
-		...convexQuery(api.texts.get, { textId }),
+		...convexQuery(api.textViews.get, { textId }),
 		gcTime: 10_000,
 	});
 

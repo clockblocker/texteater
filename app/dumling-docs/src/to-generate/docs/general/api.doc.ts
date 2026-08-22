@@ -13,7 +13,8 @@ const document = defineGeneratedDocPage({
 | --- | --- |
 | \`dumling\` | Runtime API |
 | \`dumling/types\` | Public DTOs, feature helpers, descriptors, API result types, and ID types |
-| \`dumling/schema\` | Runtime Zod schema registries |
+| \`dumling/schema\` | Broad Zod composition schemas |
+| \`dumling/dangerously-heavy-schema-tree\` | Route-specific schema tree; roughly 100 MiB max RSS |
 
 ## Lemma → Surface → Attestation
 
@@ -82,14 +83,22 @@ Attestations are intentionally absent from the ID API.
 ## Schemas
 
 \`\`\`ts
-import { abstractSchemas, getSchemaTreeFor, schemasFor } from "dumling/schema";
+import { abstractSchemas, anyLemmaSchema, readingSchema } from "dumling/schema";
+import {
+	dangerouslyHeavySchemasForAbout100MiBRss,
+	getDangerouslyHeavySchemaTreeForAbout100MiBRss,
+} from "dumling/dangerously-heavy-schema-tree";
 
-schemasFor.de.entity.Lemma.Lexeme.NOUN();
-schemasFor.en.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.he.entity.Attestation.Inflection.Lexeme.NOUN();
-getSchemaTreeFor("de");
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
+getDangerouslyHeavySchemaTreeForAbout100MiBRss("de");
 void abstractSchemas.entity.Attestation;
+void anyLemmaSchema;
+void readingSchema;
 \`\`\`
+
+The danger-zone import adds roughly 100 MiB max RSS. Application validation
+uses the lightweight \`parseAsLemma\`, \`parseAsSurface\`,
+\`parseAsAttestation\`, and \`parseAsReading\` interfaces instead.
 `,
 });
 

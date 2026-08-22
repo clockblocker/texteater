@@ -1,4 +1,8 @@
-import { knowledgeChangeSchema, readingKnowledgeSchema } from "./schema.js";
+import {
+	parseAsKnowledgeChange,
+	parseAsReadingKnowledge,
+	unwrapDumrelParse,
+} from "./parsing/lightweight-parsers.js";
 import type {
 	KnowledgeChange,
 	LemmaReference,
@@ -143,8 +147,8 @@ export function applyKnowledgeChange(
 	existing: ReadingKnowledge | undefined,
 	change: KnowledgeChange,
 ): ReadingKnowledge {
-	const parsedChange = knowledgeChangeSchema.parse(change);
-	const result = readingKnowledgeSchema.parse(existing ?? {});
+	const parsedChange = unwrapDumrelParse(parseAsKnowledgeChange(change));
+	const result = unwrapDumrelParse(parseAsReadingKnowledge(existing ?? {}));
 	switch (parsedChange.aspect) {
 		case "translations":
 			applyLanguageBucket(result, parsedChange);
@@ -159,7 +163,7 @@ export function applyKnowledgeChange(
 			applyAtomicAspect(result, parsedChange);
 			break;
 	}
-	return readingKnowledgeSchema.parse(result);
+	return unwrapDumrelParse(parseAsReadingKnowledge(result));
 }
 
 type LanguageBucketChange = Extract<

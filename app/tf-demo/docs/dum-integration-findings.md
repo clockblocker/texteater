@@ -23,8 +23,9 @@ The real German click chain composes for the first vertical slice:
    claims every member, and records the Visitor Click.
 
 Knowledge application also composes when the caller supplies a Dumrel
-`KnowledgeChange`: the action validates it with `knowledgeChangeSchema`, applies
-it through `applyDumdictKnowledgeChange`, and persists the append-only
+`KnowledgeChange`: the action validates it through the lightweight
+`parseAsKnowledgeChange` interface, applies it through
+`applyDumdictKnowledgeChange`, and persists the append-only
 Knowledge Change plus accumulated Knowledge in a mutation.
 
 ## Integration gaps
@@ -67,8 +68,9 @@ The former integration gap was:
 - Dumdict privately defined `readingKey` without exporting it.
 - tf-demo duplicated its stable JSON algorithm for indexed Convex lookup.
 
-Resolved by the canonical Dumling `Reading` DTO, `readingSchema`, and
-`readingFingerprint` operation. Dumdict and tf-demo now consume that operation;
+Resolved by the canonical Dumling `Reading` DTO, lightweight `parseAsReading`
+interface, and `readingFingerprint` operation. Dumdict and tf-demo now consume
+that operation;
 `convex/model/linguisticKeys.ts` no longer contains a Reading identity
 algorithm. The public fingerprint preserves the established indexed key bytes.
 
@@ -141,14 +143,26 @@ bun --cwd app/tf-demo run lint
 With local Convex selected and `OPENAI_API_KEY` configured, the live path is:
 
 ```sh
-bun --cwd app/tf-demo x convex dev --once
-bun --cwd app/tf-demo x convex run orchestration:submitText \
+cd app/tf-demo
+bunx convex dev --once
+bunx convex run orchestration:submitText \
   '{"submissionKey":"smoke-bank-1","sourceText":"Die Banken sind geöffnet."}'
+# Copy the returned sentenceId into the next call.
+bunx convex run orchestration:resolveSegment \
+  '{"requestId":"smoke-bank-resolution-1","visitorId":"smoke-visitor-1","sentenceId":"<sentenceId>","clickedSegmentIndex":2}'
+# Copy ownerReadingKey from the resolved Reading into this call.
+bunx convex run orchestration:applyReadingKnowledgeChange \
+  '{"knowledgeChangeKey":"smoke-bank-definition-1","ownerReadingKey":"<ownerReadingKey>","change":{"kind":"Contribute","aspect":"definition","value":"Ein Geldinstitut."}}'
+bunx convex run readingNotes:get \
+  '{"readingId":"<readingId>"}'
 ```
 
-The 2026-08-15 live run used a supported Node 24 executable on `PATH` because
-the machine's default Node 25 is outside local Convex's supported Node-action
-range. Convex push passed. The real calls then produced:
+Convex must receive Dumgen's compressed generated prompt bytes through
+`dumgen/runtime-prompt-data`; its action bundler does not deploy package-relative
+sidecar files. A contract test disables package-relative file reads and proves
+that the injected runtime reaches the provider boundary.
+
+The 2026-08-21 live run passed Convex push. The real calls then produced:
 
 - accepted German Segments for `Die Banken sind geöffnet.`;
 - a resolved `Lexeme/NOUN` Lemma `Bank`, plural Surface `Banken`, structured
@@ -158,5 +172,6 @@ range. Convex push passed. The real calls then produced:
 - universal Resolved Segment Context reuse on a second Click without invoking
   Dumgen or duplicating the exact string attestation;
 - request-ID deduplication on an exact retry; and
-- a validated Reading Definition change accumulated as
-  `Ein Geldinstitut.`.
+- a validated Reading Definition change accumulated as `Ein Geldinstitut.`;
+  the resulting Unit Reading Note contained both that Definition and the source
+  context `Die Banken sind geöffnet.`.

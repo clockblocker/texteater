@@ -1,1 +1,1 @@
-export type { PlannedChangeOp } from "../schema";
+export type { PlannedChangeOp } from "../domain-types";

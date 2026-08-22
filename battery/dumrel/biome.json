@@ -1,3 +1,6 @@
 {
-	"extends": "//"
+	"extends": "//",
+	"formatter": {
+		"includes": ["**", "!src/generated/.validation-artifacts.json"]
+	}
 }

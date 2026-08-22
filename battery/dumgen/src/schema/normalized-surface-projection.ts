@@ -1,12 +1,4 @@
-import { z } from "zod";
-
 import type { GrammaticalResolutionInput, Segment } from "../types";
-
-const normalizedMemberSchema = z.string().min(1).regex(/^\S+$/u, {
-	message: "A normalized member must contain no whitespace.",
-});
-
-export const normalizedMembersSchema = z.array(normalizedMemberSchema).min(1);
 
 export type MemberOrthography = "Standard" | "Typo";
 
@@ -81,7 +73,8 @@ export function constructNormalizedSurface(args: {
 			attested === undefined ||
 			normalized === undefined ||
 			orthography === undefined ||
-			!normalizedMemberSchema.safeParse(normalized).success
+			normalized.length === 0 ||
+			/\s/u.test(normalized)
 		) {
 			throw new NormalizedSurfaceProjectionError(
 				`Normalized member ${position} contains whitespace.`,

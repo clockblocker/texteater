@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { applyKnowledgeChange, knowledgeChangeSchema } from "dumrel";
+import { applyKnowledgeChange } from "dumrel";
+import { knowledgeChangeSchema } from "dumrel/schema";
 
 import { LEGACY_KNOWLEDGE_PROMPT_CATALOG } from "../../src/catalog/legacy-knowledge-prompt-catalog";
 import { assembleSystemPrompt } from "../../src/promptsmith/assembly";

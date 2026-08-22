@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "files": [
+    ".runtime-prompt-artifacts.data",
+    "runtime-prompt-artifacts.ts",
+    "runtime-prompt-data.ts"
+  ]
+}

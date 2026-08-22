@@ -1,12 +1,12 @@
-import { readingSchema } from "dumling/schema";
 import type { Reading } from "dumling/types";
-import { type ReadingKnowledge, readingKnowledgeSchema } from "dumrel";
+import { parseAsReadingKnowledge, type ReadingKnowledge } from "dumrel";
 
-const unitReadingFamilies = new Set(["Lexeme", "Phraseme", "Morpheme"]);
+import {
+	parseGermanReading,
+	unwrapOperationalParse,
+} from "../../../server/operationalParsing";
 
-export function isUnitReadingFamily(family: string): boolean {
-	return unitReadingFamilies.has(family);
-}
+export { isUnitReadingFamily } from "./unitReadingFamilies";
 
 /** Reconstructs and validates the foundational Reading value at the database seam. */
 export function projectReadingValue(
@@ -18,8 +18,8 @@ export function projectReadingValue(
 		readonly canonicalForm: string;
 		readonly coreFeatures: unknown;
 	},
-): Reading {
-	return readingSchema.parse({
+): Reading<"de"> {
+	return parseGermanReading({
 		lemma: {
 			language: lemma.language,
 			family: lemma.family,
@@ -35,7 +35,9 @@ export function projectReadingValue(
 export function projectReadingKnowledge(
 	value: unknown,
 ): ReadingKnowledge<"en"> {
-	const knowledge = readingKnowledgeSchema.parse(value ?? {});
+	const knowledge = unwrapOperationalParse<ReadingKnowledge>(
+		parseAsReadingKnowledge(value ?? {}),
+	);
 	if (
 		knowledge.translations &&
 		Object.keys(knowledge.translations).some(

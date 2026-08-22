@@ -15,7 +15,7 @@ import {
 	shadowIsCompatible,
 	shadowKeyFor,
 } from "../convex/model/shadows";
-import { getNote } from "../convex/presentation";
+import { get as shadowNoteQuery } from "../convex/shadowNotes";
 import {
 	auditPendingShadowReferencesPage,
 	auditStructuralShadowReferencesPage,
@@ -164,6 +164,22 @@ function handler(value: unknown) {
 		}
 	)._handler;
 }
+
+const getShadowNote = {
+	_handler: (
+		ctx: unknown,
+		args: {
+			target: { shadowId: string };
+			contextCursor?: string;
+		},
+	) =>
+		handler(shadowNoteQuery)(ctx, {
+			shadowId: args.target.shadowId,
+			...(args.contextCursor
+				? { contextCursor: args.contextCursor }
+				: {}),
+		}),
+};
 
 const nounShadow = {
 	language: "de",
@@ -458,7 +474,7 @@ describe("Shadow backfills and presentation", () => {
 			record,
 		});
 
-		const note = (await handler(getNote)(
+		const note = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as Record<string, unknown> & {
@@ -474,7 +490,7 @@ describe("Shadow backfills and presentation", () => {
 		expect(note.references.page).toHaveLength(1);
 		expect(note.references.page[0]?.pendingRelations).toHaveLength(1);
 		expect(note.references.page[0]?.structuralReferences).toHaveLength(0);
-		const structuralPage = (await handler(getNote)(
+		const structuralPage = (await handler(getShadowNote)(
 			{ db },
 			{
 				target: { kind: "ShadowNote", shadowId },
@@ -490,7 +506,7 @@ describe("Shadow backfills and presentation", () => {
 		}
 		await replaceAccumulatedKnowledge(ctx, "reading-source", undefined);
 		expect(
-			await handler(getNote)(
+			await handler(getShadowNote)(
 				{ db },
 				{ target: { kind: "ShadowNote", shadowId } },
 			),
@@ -541,7 +557,7 @@ describe("Shadow backfills and presentation", () => {
 				record: pendingRecord("reading-source", targetPendingId),
 			});
 		}
-		const first = (await handler(getNote)(
+		const first = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as {
@@ -553,7 +569,7 @@ describe("Shadow backfills and presentation", () => {
 		};
 		expect(first.references.page[0]?.pendingRelations).toHaveLength(50);
 		expect(first.references.isDone).toBe(false);
-		const second = (await handler(getNote)(
+		const second = (await handler(getShadowNote)(
 			{ db },
 			{
 				target: { kind: "ShadowNote", shadowId },
@@ -634,7 +650,7 @@ describe("Shadow backfills and presentation", () => {
 			record,
 		});
 
-		const note = (await handler(getNote)(
+		const note = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as {
@@ -658,13 +674,13 @@ describe("Shadow backfills and presentation", () => {
 		]);
 
 		await db.delete("dictionary-candidate-2");
-		const one = (await handler(getNote)(
+		const one = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as typeof note;
 		expect(one.inspection.candidates).toHaveLength(1);
 		await db.delete("dictionary-candidate-1");
-		const zero = (await handler(getNote)(
+		const zero = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as typeof note;
@@ -731,7 +747,7 @@ describe("Shadow backfills and presentation", () => {
 			shadowId,
 			record,
 		});
-		const note = (await handler(getNote)(
+		const note = (await handler(getShadowNote)(
 			{ db },
 			{ target: { kind: "ShadowNote", shadowId } },
 		)) as { inspection: { candidates: unknown[] } };

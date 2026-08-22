@@ -7,8 +7,8 @@ The Dumdict model now consumes the settled Dumling contract directly.
 - `Lemma` with Canonical Form, Family, Kind, and Core Features
 - persistent `Surface` values with normalized contextual form, spelling status,
   Surface kind, applicable features, and their resolved Lemma
-- foundational `Reading` values, `readingSchema`, and the stable
-  `readingFingerprint` identity operation
+- foundational `Reading` values, the lightweight `parseAsReading` interface,
+  and the stable `readingFingerprint` identity operation
 - language-specific create, parse, extract, convert, describe, and ID APIs
 - `getLanguageApi` and `supportedLanguages`
 

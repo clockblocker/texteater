@@ -1,6 +1,6 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { Lemma, SupportedLanguage } from "dumling/types";
-import { directSemanticRelationSchema } from "dumrel/schema";
+import { directSemanticRelationValues } from "dumrel/relations";
 import type { DirectSemanticRelation, UnitShadow } from "dumrel/types";
 import type {
 	LemmaRecord,
@@ -79,7 +79,7 @@ function existingEdges<L extends SupportedLanguage>(
 			([relation, targets]) =>
 				(targets ?? []).map((targetLemma) => ({
 					reading: entry.reading,
-					relation: directSemanticRelationSchema.parse(relation),
+					relation: relation as DirectSemanticRelation,
 					targetLemma,
 				})),
 		),
@@ -116,7 +116,7 @@ export function planRelationMaintenance<L extends SupportedLanguage>(input: {
 	const unresolvedPending: PendingSemanticRelationRecord<L>[] = [];
 
 	for (const request of input.requests) {
-		if (!directSemanticRelationSchema.safeParse(request.relation).success) {
+		if (!directSemanticRelationValues.includes(request.relation)) {
 			return {
 				status: "rejected",
 				code: "invalidDraft",

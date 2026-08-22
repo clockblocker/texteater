@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import * as root from "../../src";
+import * as modelAuthoring from "../../src/model-authoring";
 import * as projection from "../../src/projection";
 import * as schema from "../../src/schema";
 import * as types from "../../src/types";
@@ -31,14 +32,27 @@ const schemaExports = [
 ].sort();
 
 describe("public API allowlists", () => {
-	test("the root exposes only constructors, errors, and public schemas", () => {
+	test("the root exposes constructors and errors without schema values", () => {
 		expect(Object.keys(root).sort()).toEqual(
 			[
 				"AiSdkGenerationError",
 				"DumgenError",
+				"ParsingError",
 				"buildAiSdk",
 				"buildDumgen",
-				...schemaExports,
+				"parseAsGrammaticalInput",
+				"parseAsGrammaticalInteraction",
+				"parseAsGrammaticalResult",
+				"parseAsGrammaticalRoute",
+				"parseAsKnowledgeGenerationInput",
+				"parseAsKnowledgeGenerationRequest",
+				"parseAsKnowledgeGenerationResult",
+				"parseAsSection1Error",
+				"parseAsSegment",
+				"parseAsSegmentationDecision",
+				"parseAsSegmentationResult",
+				"parseAsSegmentedSentence",
+				"parseAsSegmentedSentenceId",
 			].sort(),
 		);
 	});
@@ -53,7 +67,15 @@ describe("public API allowlists", () => {
 		expect(Object.keys(vocabulary).sort()).toEqual([
 			"enabledSegmentationLanguageValues",
 			"grammaticalResolutionLanguageValues",
+			"requestableRelationValues",
 			"segmentKindValues",
+		]);
+	});
+
+	test("the explicit model-authoring subpath owns the canonical Zod catalogs", () => {
+		expect(Object.keys(modelAuthoring).sort()).toEqual([
+			"PROMPT_CATALOG",
+			"combinedGermanKnowledgePrompt",
 		]);
 	});
 });

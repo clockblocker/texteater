@@ -15,16 +15,20 @@ import type {
 	SegmentedSentence,
 	SegmentedSentenceId,
 } from "dumgen";
-import { dumling, readingFingerprint } from "dumling";
-import { readingSchema } from "dumling/schema";
+import { readingFingerprint } from "dumling";
 import type { Reading } from "dumling/types";
 import {
 	type KnowledgeChange,
-	knowledgeChangeSchema,
+	parseAsKnowledgeChange,
 	type ReadingKnowledge,
 } from "dumrel";
 
 import { lemmaIdentityKey } from "./linguisticIdentity";
+import {
+	parseGermanLemma,
+	parseGermanReading,
+	unwrapOperationalParse,
+} from "./operationalParsing";
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -386,10 +390,10 @@ export function createTfDemoOrchestrator(options: {
 				({ reading }) => reading.emojiDescription,
 			),
 		});
-		const reading = readingSchema.parse({
+		const reading = parseGermanReading({
 			lemma,
 			emojiDescription: readingResolution.emojiDescription,
-		}) as Reading<"de">;
+		});
 		await options.observer?.readingAvailable({ reading });
 		let dictionaryPlan: DumdictPlan<"de"> | undefined;
 		const applyPlan = async (plan: DumdictPlan<"de">) => {
@@ -489,8 +493,10 @@ export function applyValidatedReadingKnowledgeChange(input: {
 	readonly change: KnowledgeChange;
 	readonly knowledge: ReadingKnowledge;
 } {
-	const change = knowledgeChangeSchema.parse(input.change);
-	const reading = readingSchema.parse(input.reading) as Reading<"de">;
+	const change = unwrapOperationalParse<KnowledgeChange>(
+		parseAsKnowledgeChange(input.change),
+	);
+	const reading = parseGermanReading(input.reading);
 	const record = {
 		reading,
 		...(input.knowledge === undefined
@@ -555,14 +561,6 @@ function parseGermanSentence(
 		language: "de",
 		segments: Object.freeze(segments),
 	});
-}
-
-function parseGermanLemma(value: unknown): Lemma<"de"> {
-	const parsed = dumling.de.parse.lemma(value);
-	if (!parsed.success) {
-		throw new Error(`Invalid German Lemma: ${parsed.error.message}`);
-	}
-	return parsed.data;
 }
 
 function isSegmentKind(value: string): value is Segment["kind"] {

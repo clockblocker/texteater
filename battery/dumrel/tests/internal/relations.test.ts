@@ -1,9 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { ZodError } from "zod";
-
 import {
 	directSemanticRelationValues,
 	inverseRelationFor,
+	ParsingError,
 	projectRelations,
 	propagateRelations,
 	semanticRelationValues,
@@ -36,10 +35,10 @@ describe("inverseRelationFor", () => {
 	});
 });
 
-test("the compatibility root retains Zod validation failures", () => {
+test("the compatibility root retains structured validation failures", () => {
 	expect(() =>
 		projectRelations({ readings: [], edges: [], extra: true } as never),
-	).toThrow(ZodError);
+	).toThrow(ParsingError);
 });
 
 describe("propagateRelations", () => {

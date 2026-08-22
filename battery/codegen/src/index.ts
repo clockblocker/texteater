@@ -35,3 +35,13 @@ export type {
 	TextSetInput,
 	TextSource,
 } from "./types.js";
+export type {
+	CompileZodValidationArtifactsOptions,
+	ZodValidationArtifactRegistry,
+	ZodValidationOperationConstruct,
+	ZodValidationOperationRegistration,
+} from "./zod-validation-artifact.js";
+export {
+	compileZodValidationArtifacts,
+	ZodValidationCompilationError,
+} from "./zod-validation-artifact.js";

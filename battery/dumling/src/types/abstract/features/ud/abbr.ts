@@ -1,6 +1,4 @@
-import { z } from "zod";
-
 // Source: https://universaldependencies.org/u/feat/Abbr.html
 
-export const Abbr = z.literal("Yes");
-export type Abbr = z.infer<typeof Abbr>;
+export const Abbr = ["Yes"] as const;
+export type Abbr = (typeof Abbr)[number];

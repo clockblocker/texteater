@@ -1,15 +1,21 @@
-import type { input, output, ZodType } from "zod";
-
 import type { AiSdk } from "../ai-sdk/ai-sdk";
 import { AiSdkGenerationError } from "../ai-sdk/ai-sdk-generation-error";
 import type {
 	Prompt,
 	PromptCatalogEntry,
+	PromptSchema,
+	PromptSchemaInput,
+	PromptSchemaOutput,
 	PromptTree,
 } from "../catalog/prompt-definition";
 import { DumgenError } from "./generator-error";
 
-type AnyPrompt = Prompt;
+type AnyPrompt = Prompt<
+	PromptSchema,
+	PromptSchema | null,
+	unknown,
+	PromptSchema
+>;
 
 type ModelExchangeAttempt = {
 	readonly promptPath: string;
@@ -45,12 +51,12 @@ type ResultOf<Definition extends AnyPrompt> = Definition extends {
 	readonly projectOutput: (...args: never[]) => infer Result;
 }
 	? Result
-	: Definition["outputSchema"] extends ZodType
-		? output<Definition["outputSchema"]>
+	: Definition["outputSchema"] extends PromptSchema
+		? PromptSchemaOutput<Definition["outputSchema"]>
 		: string;
 
 type GeneratorFor<Definition extends AnyPrompt> = (
-	input: input<Definition["inputSchema"]>,
+	input: PromptSchemaInput<Definition["inputSchema"]>,
 ) => Promise<ResultOf<Definition>>;
 
 export type GeneratorCatalog<Catalog> =
@@ -78,7 +84,7 @@ export function buildGeneratorCatalog<const Catalog extends PromptTree>(
 }
 
 function transformNode(
-	node: PromptTree | PromptCatalogEntry,
+	node: PromptTree | PromptCatalogEntry<AnyPrompt>,
 	sdk: AiSdk,
 	options: GeneratorCatalogOptions,
 	path: readonly string[],
@@ -98,7 +104,7 @@ function transformNode(
 }
 
 function isPromptCatalogEntry(
-	value: PromptTree | PromptCatalogEntry,
+	value: PromptTree | PromptCatalogEntry<AnyPrompt>,
 ): value is PromptCatalogEntry<AnyPrompt> {
 	const candidate = value as {
 		readonly meta?: { readonly kind?: unknown };
@@ -118,12 +124,12 @@ function makeGenerator<Definition extends AnyPrompt>(
 	options: GeneratorCatalogOptions,
 	path: readonly string[],
 ): GeneratorFor<Definition> {
-	return (async (rawInput: input<Definition["inputSchema"]>) => {
-		let parsedInput: output<Definition["inputSchema"]>;
+	return (async (rawInput: PromptSchemaInput<Definition["inputSchema"]>) => {
+		let parsedInput: PromptSchemaOutput<Definition["inputSchema"]>;
 		try {
-			parsedInput = prompt.inputSchema.parse(rawInput) as output<
-				Definition["inputSchema"]
-			>;
+			parsedInput = prompt.inputSchema.parse(
+				rawInput,
+			) as PromptSchemaOutput<Definition["inputSchema"]>;
 		} catch (cause) {
 			throw new DumgenError(
 				"invalid-input",
@@ -151,7 +157,7 @@ function makeGenerator<Definition extends AnyPrompt>(
 			...prompt.generationParams,
 			systemPrompt: prompt.systemPrompt,
 		};
-		let modelOutputSchema: ZodType | null;
+		let modelOutputSchema: PromptSchema | null;
 		try {
 			modelOutputSchema =
 				prompt.outputSchema === null

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { getNote } from "../convex/presentation";
+import { get } from "../convex/routeNotes";
 
 type Row = Record<string, unknown> & { _id: string };
 
@@ -77,14 +77,30 @@ class RouteDb {
 	}
 }
 
-const routeNote = (
-	getNote as unknown as {
+const routeNoteHandler = (
+	get as unknown as {
 		_handler: (
 			ctx: unknown,
 			args: Record<string, unknown>,
 		) => Promise<unknown>;
 	}
 )._handler;
+
+const routeNote = (
+	ctx: unknown,
+	{
+		target,
+		contextCursor,
+	}: {
+		target: { routeKind: "Attestation" | "Surface" | "Lemma"; id: string };
+		contextCursor?: string;
+	},
+) =>
+	routeNoteHandler(ctx, {
+		routeKind: target.routeKind,
+		id: target.id,
+		...(contextCursor ? { contextCursor } : {}),
+	});
 
 test("Route Note IDs are strict across Attestation, Surface, and Lemma kinds", async () => {
 	const db = new RouteDb({});

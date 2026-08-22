@@ -5,7 +5,12 @@
 			"**",
 			"!generate-readme/examples/**/*.ts",
 			"!docs/prototypes/**/runs/**",
-			"!src/promptsmith/laboratory/generated-system-prompt/**"
+			"!src/promptsmith/laboratory/generated-system-prompt/**",
+			"!src/generated/.runtime-prompt-artifacts.json",
+			"!src/generated/.validation-artifacts.json",
+			"!src/generated/runtime-prompt-artifacts.ts",
+			"!src/generated/runtime-prompt-data.ts",
+			"!src/generated/validation-artifacts.ts"
 		]
 	},
 	"linter": {

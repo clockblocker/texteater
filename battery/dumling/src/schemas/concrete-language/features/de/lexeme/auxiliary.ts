@@ -1,5 +1,9 @@
 import { z } from "zod";
 import type { DeAuxiliaryFeatures } from "../../../../../types/concrete-language/features/de/lexeme/auxiliary.js";
+import {
+	hasGermanVerbInflectionSignal,
+	inflectionalFeaturesNonEmptyError,
+} from "../../../../../validation-semantics.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildFeatureObjectSchema,
@@ -20,17 +24,8 @@ const deAuxiliaryInflectionalFeaturesSchema = markInflectionSurface(
 			voice: abstractFeatureAtomSchemas.voice
 				.extract(["Pass"])
 				.nullable(),
-		}).superRefine((value, ctx) => {
-			if (
-				value.number === null &&
-				value.tense === null &&
-				value.voice === null
-			) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: "inflectionalFeatures must not be empty",
-				});
-			}
+		}).refine(hasGermanVerbInflectionSignal, {
+			error: inflectionalFeaturesNonEmptyError,
 		}),
 		buildFeatureObjectSchema({
 			mood: abstractFeatureAtomSchemas.mood.extract(["Imp"]),

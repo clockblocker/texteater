@@ -1,4 +1,4 @@
-import { runCodegen } from "codegen";
+import { type RunMode, runCodegen } from "codegen";
 import type { SourcePage } from "../shared/types";
 import { defineDocsCodegen } from "./codegen";
 import { discoverDocsInitialOwnership } from "./initial-ownership";
@@ -21,12 +21,27 @@ function assertUniqueRouteIds(outputs: DocsOutput[]): void {
 	}
 }
 
-export async function generateDocs(): Promise<SourcePage[]> {
+export async function generateDocs(
+	mode: RunMode = "write",
+): Promise<SourcePage[]> {
 	const initialOwnership = discoverDocsInitialOwnership();
 	const outputs = await discoverTypedDocs(typedDocsGenerationConfig);
 	assertUniqueRouteIds(outputs);
-	await runCodegen(defineDocsCodegen(outputs, initialOwnership), {
-		mode: "write",
-	});
+	const result = await runCodegen(
+		defineDocsCodegen(outputs, initialOwnership),
+		{
+			mode,
+		},
+	);
+	// Generated docs are ignored build outputs, so a clean checkout legitimately
+	// plans creates. Existing outputs must still match their typed sources.
+	const hasStaleExistingOutput = result.plan.changes.some(
+		(change) => change.kind === "update" || change.kind === "delete",
+	);
+	if (mode === "check" && hasStaleExistingOutput) {
+		throw new Error(
+			"Committed Dumling docs are stale. Run `bun run generate:docs`.",
+		);
+	}
 	return outputs.map((output) => sourcePageFromDocsOutput(output));
 }

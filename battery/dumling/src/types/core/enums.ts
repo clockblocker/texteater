@@ -1,26 +1,17 @@
-import { z } from "zod";
 import { surfaceKindValues } from "../../vocabulary.js";
 
-const supportedLanguageValues = ["en", "de", "he"] as const;
+export type SupportedLanguage = "en" | "de" | "he";
 
-export const SupportedLanguage = z.enum(supportedLanguageValues);
-export type SupportedLanguage = z.infer<typeof SupportedLanguage>;
-
-export const AbstractLanguageTag = z.string().min(1);
-export type AbstractLanguageTag = string;
-
-const familyValues = [
+export const lemmaFamilyValues = [
 	"Phraseme",
 	"Lexeme",
 	"Morpheme",
 	"Construction",
 ] as const;
+export type LemmaFamily = (typeof lemmaFamilyValues)[number];
 
-export const LemmaFamily = z.enum(familyValues);
-export type LemmaFamily = z.infer<typeof LemmaFamily>;
-
-export const SurfaceKind = z.enum(surfaceKindValues);
-export type SurfaceKind = z.infer<typeof SurfaceKind>;
+export { surfaceKindValues };
+export type SurfaceKind = (typeof surfaceKindValues)[number];
 
 const openClassPosValues = [
 	"ADJ",
@@ -30,7 +21,6 @@ const openClassPosValues = [
 	"PROPN",
 	"VERB",
 ] as const;
-
 const closedClassPosValues = [
 	"ADP",
 	"AUX",
@@ -41,29 +31,24 @@ const closedClassPosValues = [
 	"PRON",
 	"SCONJ",
 ] as const;
-
 const otherPosValues = ["PUNCT", "SYM", "X"] as const;
-const posValues = [
+export const posValues = [
 	...openClassPosValues,
 	...closedClassPosValues,
 	...otherPosValues,
 ] as const;
+export type Pos = (typeof posValues)[number];
 
-export const Pos = z.enum(posValues);
-export type Pos = z.infer<typeof Pos>;
-
-const phrasemeKindValues = [
+export const phrasemeKindValues = [
 	"DiscourseFormula",
 	"Aphorism",
 	"Proverb",
 	"Idiom",
 	"Collocation",
 ] as const;
+export type PhrasemeKind = (typeof phrasemeKindValues)[number];
 
-export const PhrasemeKind = z.enum(phrasemeKindValues);
-export type PhrasemeKind = z.infer<typeof PhrasemeKind>;
-
-const morphemeKindValues = [
+export const morphemeKindValues = [
 	"Root",
 	"Prefix",
 	"Suffix",
@@ -76,21 +61,15 @@ const morphemeKindValues = [
 	"ToneMarking",
 	"Duplifix",
 ] as const;
+export type MorphemeKind = (typeof morphemeKindValues)[number];
 
-export const MorphemeKind = z.enum(morphemeKindValues);
-export type MorphemeKind = z.infer<typeof MorphemeKind>;
+export const constructionKindValues = ["Fusion"] as const;
+export type ConstructionKind = (typeof constructionKindValues)[number];
 
-const constructionKindValues = ["Fusion"] as const;
-
-export const ConstructionKind = z.enum(constructionKindValues);
-export type ConstructionKind = z.infer<typeof ConstructionKind>;
-
-const kindValues = [
+export const lemmaKindValues = [
 	...posValues,
 	...phrasemeKindValues,
 	...morphemeKindValues,
 	...constructionKindValues,
 ] as const;
-
-export const LemmaKind = z.enum(kindValues);
-export type LemmaKind = z.infer<typeof LemmaKind>;
+export type LemmaKind = (typeof lemmaKindValues)[number];

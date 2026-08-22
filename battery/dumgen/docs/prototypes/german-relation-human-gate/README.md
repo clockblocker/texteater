@@ -1,9 +1,10 @@
 # German Relation Semantics human gate
 
-This surface is the only human decision point for issue #193. It binds the
-review to the frozen judgment contract, corpus reservation, semantic evaluator,
-thresholds, prompt/model policy, and retained #192 result. It never calls a
-provider or writes a verdict merely by being opened.
+This surface is the human inspection point for issue #193. It binds the review
+to the frozen judgment contract, corpus reservation, semantic evaluator,
+thresholds, six cumulative combined-prompt revisions, model policy, and the
+retained #192 result. It never calls a provider or writes a verdict merely by
+being opened.
 
 From `battery/dumgen`, run:
 
@@ -12,40 +13,36 @@ bun run review:german-relation-human-gate
 ```
 
 The command verifies every frozen SHA-256 fingerprint, starts a loopback-only
-review server, and opens it in the default browser. The page shows every target
-emitted by the best retained #192 topology, every material null/omission, every
-execution error, the per-kind semantic metrics, and the isolated Antonym signal
-from the stopped all-kinds arm.
+review server, and opens it in the default browser. The page shows all six
+prompt revisions, every target emitted by the final revision, every material
+omission, every execution error, and the per-kind semantic metrics. It also
+keeps the 50 post-stop calls visible as an operational regression while
+excluding them from the decision metrics.
 
 ## State machine
 
-1. `awaiting-reservation-approval`: a non-empty, fingerprinted 12-case
-   reservation exists but no human has approved its one-time reveal. This is
-   the current state.
-2. `approved-awaiting-acceptance`: approval exists; the sealed selection may be
-   revealed and run exactly once under the frozen execution-failure policy.
-3. `awaiting-verdict`: retained untouched acceptance evidence exists and is
-   bound to the same candidate.
-4. `complete`: one explicit human verdict exists for every relation kind.
+The current and only valid state is `development-gate-failed`. No revision
+cleared the exact per-kind development gate, so #193's acceptance precondition
+is false. Approval, acceptance, and verdict endpoints return a hard conflict.
+The 12-case reservation remains sealed, with zero cases revealed and zero
+acceptance calls made.
 
-The review command will not replace an existing approval, acceptance result, or
-verdict. `promote` remains invalid unless the corresponding relation kind
-passes retained untouched acceptance. A development-only result can never
-unlock production publication.
+If an approval, acceptance result, or verdict appears despite the failed
+development gate, the review enters `invalid-post-development-artifact`. A
+development-only result can never unlock production publication.
 
 ## Handoff contract
 
 [`candidate-manifest.json`](candidate-manifest.json) is the machine-readable
-frozen candidate. A future human decision is written beside it as
-`verdict.json` with format `german-relation-human-verdict-v1`; that file is
-intentionally absent. Production consumers must treat an absent verdict, a
-candidate-ID mismatch, or any non-`promote` decision as disabled.
+frozen evidence inventory. `verdict.json`, `reservation-approval.json`, and
+`acceptance-result.json` are intentionally absent. Production consumers treat
+the absent verdict as an empty allowlist, so all six relation kinds remain
+disabled while base Knowledge generation continues.
 
 ## Exact human action
 
-Run the one command above, enter a reviewer name, and click **Approve seal & run
-once**. The confirmation shows and requires authorization of the deterministic
-USD `0.108635100` maximum before the first provider call. After the retained
-acceptance report appears, choose `promote`, `revise`, or `do-not-generate` for
-all six kinds and click **Record frozen verdict**. Approval and verdict are
-separate irreversible writes; neither is performed by preflight or page load.
+Run the one command above and inspect the evidence. There is no paid action and
+no promotion control. The page recommends `do-not-generate` for all six kinds,
+but it does not record a human verdict on the reviewer's behalf. A future
+candidate must first clear every required development threshold and receive a
+new frozen manifest before the untouched reservation can be approved.

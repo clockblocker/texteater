@@ -1,4 +1,4 @@
-import { schemasFor } from "dumling/schema";
+import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { z } from "zod";
 
 import { asObjectSchema } from "../../../../../../schema/as-object-schema";

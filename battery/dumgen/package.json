@@ -22,6 +22,10 @@
 			"types": "./dist/schema.d.ts",
 			"import": "./dist/schema.js"
 		},
+		"./model-authoring": {
+			"types": "./dist/model-authoring.d.ts",
+			"import": "./dist/model-authoring.js"
+		},
 		"./knowledge": {
 			"types": "./dist/knowledge.d.ts",
 			"import": "./dist/knowledge.js"
@@ -37,6 +41,10 @@
 		"./runtime": {
 			"types": "./dist/runtime.d.ts",
 			"import": "./dist/runtime.js"
+		},
+		"./runtime-prompt-data": {
+			"types": "./dist/runtime-prompt-data.d.ts",
+			"import": "./dist/runtime-prompt-data.js"
 		},
 		"./vocabulary": {
 			"types": "./dist/vocabulary.d.ts",
@@ -54,11 +62,15 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/knowledge.ts src/knowledge-runtime.ts src/openai-fetch.ts src/projection.ts src/runtime.ts src/schema.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/knowledge.ts src/knowledge-runtime.ts src/model-authoring.ts src/openai-fetch.ts src/projection.ts src/runtime.ts src/runtime-prompt-data.ts src/schema.ts src/vocabulary.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --minify-syntax --minify-whitespace && cp src/generated/.runtime-prompt-artifacts.data dist/",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
 		"generate:system-prompts": "bun run src/promptsmith/assembly/generate-system-prompts.ts",
+		"generate:validation": "bun run codegen/generate-validation-artifacts.ts",
+		"generate:validation:check": "bun run codegen/generate-validation-artifacts.ts --check",
+		"generate:runtime-prompts": "bun run codegen/generate-runtime-prompt-artifacts.ts",
+		"generate:runtime-prompts:check": "bun run codegen/generate-runtime-prompt-artifacts.ts --check",
 		"check:system-prompts": "bun run src/promptsmith/assembly/generate-system-prompts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
@@ -71,6 +83,7 @@
 		"prototype:target-classification-high-level": "bun --env-file ../../.env.local docs/prototypes/target-classification-high-level-contracts/run.ts",
 		"prototype:unit-shadow-classification": "bun --env-file ../../.env.local docs/prototypes/unit-shadow-classification/run.ts",
 		"prototype:target-classification-partizip-ii": "bun --env-file ../../.env.local docs/prototypes/target-classification-partizip-ii/run.ts",
+		"smoke:published-assets": "bun run tests/published-runtime-assets.ts",
 		"test": "bun test",
 		"test:external": "bun test tests/external",
 		"test:internal": "bun test tests/internal",
@@ -78,6 +91,7 @@
 	},
 	"dependencies": {
 		"codec-builder-library": "workspace:^",
+		"common-utils": "workspace:^",
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",

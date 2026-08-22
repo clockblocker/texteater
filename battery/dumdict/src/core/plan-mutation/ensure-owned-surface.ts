@@ -1,5 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
-import { makeSurfaceId } from "../../dumling";
+import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
 import type { NewNoteSlice } from "../../storage";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";

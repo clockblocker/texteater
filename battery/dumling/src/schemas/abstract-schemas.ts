@@ -1,10 +1,9 @@
 import type { z } from "zod";
 import { z as zod } from "zod";
 import {
-	AbstractLanguageTag,
-	LemmaFamily,
-	LemmaKind,
-	SurfaceKind,
+	lemmaFamilyValues,
+	lemmaKindValues,
+	surfaceKindValues,
 } from "../types/core/enums.js";
 import type {
 	AbstractAttestation,
@@ -49,23 +48,23 @@ type AbstractSchemaRegistry = {
 };
 
 const abstractLemmaDescriptorSchema = zod.strictObject({
-	language: AbstractLanguageTag,
-	family: LemmaFamily,
-	kind: LemmaKind,
+	language: zod.string().min(1),
+	family: zod.enum(lemmaFamilyValues),
+	kind: zod.enum(lemmaKindValues),
 }) as unknown as z.ZodType<AbstractDescriptor<"Lemma">>;
 
 const abstractSurfaceDescriptorSchema = zod.strictObject({
-	language: AbstractLanguageTag,
-	family: LemmaFamily,
-	kind: LemmaKind,
-	surfaceKind: SurfaceKind,
+	language: zod.string().min(1),
+	family: zod.enum(lemmaFamilyValues),
+	kind: zod.enum(lemmaKindValues),
+	surfaceKind: zod.enum(surfaceKindValues),
 }) as unknown as z.ZodType<AbstractDescriptor<"Surface">>;
 
 const abstractAttestationDescriptorSchema = zod.strictObject({
-	language: AbstractLanguageTag,
-	family: LemmaFamily,
-	kind: LemmaKind,
-	surfaceKind: SurfaceKind,
+	language: zod.string().min(1),
+	family: zod.enum(lemmaFamilyValues),
+	kind: zod.enum(lemmaKindValues),
+	surfaceKind: zod.enum(surfaceKindValues),
 }) as unknown as z.ZodType<AbstractDescriptor<"Attestation">>;
 
 export const abstractSchemas = {

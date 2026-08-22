@@ -1,93 +1,103 @@
-import type {
-	KnowledgeChange,
-	LexicalUnitShadow,
-	PendingSemanticRelation,
-} from "dumrel";
-import { knowledgeChangeSchema, pendingSemanticRelationSchema } from "dumrel";
-
-import { knowledgeGenerationResultSchema } from "../../schemas/public-schemas";
-import type { KnowledgeGenerationResult } from "../contracts";
 import {
-	type RequestableRelation,
-	requestableRelationSchema,
-} from "../relations";
+	parseAsKnowledgeGenerationResult,
+	unwrapDumgenParse,
+} from "../../parsing/lightweight-parsers";
+import { parseRuntimePromptSchema } from "../../parsing/runtime-prompt-schemas";
+import { requestableRelationValues } from "../../vocabulary";
+import type { KnowledgeGenerationResult } from "../contracts";
 import type {
 	GermanKnowledgeAnalysis,
 	GermanKnowledgeGenerationInput,
-} from "./schemas";
-import {
-	assertGermanKnowledgeAnalysisMirrorsRequest,
-	germanKnowledgeAnalysisSchema,
-	germanKnowledgeGenerationInputSchema,
-} from "./schemas";
+} from "./runtime-schema";
 
 export type GeneratedKnowledgeUpdate = KnowledgeGenerationResult;
 
-export const generatedKnowledgeUpdateSchema = knowledgeGenerationResultSchema;
-
-export const EMPTY_GENERATED_KNOWLEDGE_UPDATE =
-	generatedKnowledgeUpdateSchema.parse({
-		changes: [],
-		pendingRelations: [],
-	});
+export const EMPTY_GENERATED_KNOWLEDGE_UPDATE: GeneratedKnowledgeUpdate =
+	unwrapDumgenParse(
+		parseAsKnowledgeGenerationResult({
+			changes: [],
+			pendingRelations: [],
+		}),
+	);
 
 /** Pure conversion from one validated private analysis to Dumrel DTOs. */
 export function projectGermanKnowledgeUpdate(
 	rawInput: GermanKnowledgeGenerationInput,
 	rawAnalysis: GermanKnowledgeAnalysis,
 ): GeneratedKnowledgeUpdate {
-	const input = germanKnowledgeGenerationInputSchema.parse(rawInput);
-	const analysis = germanKnowledgeAnalysisSchema.parse(rawAnalysis);
-	assertGermanKnowledgeAnalysisMirrorsRequest(input, analysis);
+	const input = parseRuntimePromptSchema<GermanKnowledgeGenerationInput>(
+		"knowledge.de.combined#input",
+		rawInput,
+	);
+	const analysis = parseRuntimePromptSchema<GermanKnowledgeAnalysis>(
+		"knowledge.de.combined#output",
+		rawAnalysis,
+	);
+	assertAnalysisMirrorsRequest(input, analysis);
 
-	const changes: KnowledgeChange<"en">[] = [];
+	const changes: Array<Readonly<Record<string, unknown>>> = [];
 	if (
 		analysis.transcription !== undefined &&
 		analysis.transcription !== null
 	) {
-		changes.push(
-			knowledgeChangeSchema.parse({
-				kind: "Contribute",
-				aspect: "transcription",
-				value: analysis.transcription,
-			}) as KnowledgeChange<"en">,
-		);
+		changes.push({
+			kind: "Contribute",
+			aspect: "transcription",
+			value: analysis.transcription,
+		});
 	}
 	if (analysis.definition !== undefined && analysis.definition !== null) {
-		changes.push(
-			knowledgeChangeSchema.parse({
-				kind: "Contribute",
-				aspect: "definition",
-				value: analysis.definition,
-			}) as KnowledgeChange<"en">,
-		);
+		changes.push({
+			kind: "Contribute",
+			aspect: "definition",
+			value: analysis.definition,
+		});
 	}
 	if (
 		analysis.translations?.en !== undefined &&
 		analysis.translations.en !== null
 	) {
-		changes.push(
-			knowledgeChangeSchema.parse({
-				kind: "Contribute",
-				aspect: "translations",
-				language: "en",
-				value: [analysis.translations.en],
-			}) as KnowledgeChange<"en">,
-		);
+		changes.push({
+			kind: "Contribute",
+			aspect: "translations",
+			language: "en",
+			value: [analysis.translations.en],
+		});
 	}
 
-	const pendingRelations: PendingSemanticRelation[] = [];
-	const relationByTarget = new Map<string, RequestableRelation>();
-	for (const relation of requestableRelationSchema.options) {
+	const pendingRelations: Array<
+		Readonly<{
+			relation: (typeof requestableRelationValues)[number];
+			target: Readonly<{
+				canonicalForm: string;
+				family: string;
+				kind: string;
+				language: string;
+			}>;
+		}>
+	> = [];
+	const relationByTarget = new Map<
+		string,
+		(typeof requestableRelationValues)[number]
+	>();
+	for (const relation of requestableRelationValues) {
 		const targets = analysis.semanticRelations?.[relation];
 		if (targets === undefined || targets === null) continue;
-		const uniqueTargets = new Map<string, LexicalUnitShadow<"de">>();
+		const uniqueTargets = new Map<
+			string,
+			{
+				canonicalForm: string;
+				family: string;
+				kind: string;
+				language: string;
+			}
+		>();
 		for (const rawTarget of targets) {
-			const parsed = pendingSemanticRelationSchema.parse({
+			const parsed = {
 				relation,
 				target: rawTarget,
-			}) as PendingSemanticRelation;
-			const target = parsed.target as unknown as LexicalUnitShadow<"de">;
+			};
+			const target = parsed.target;
 			if (isOwnerTarget(input, target)) {
 				throw new Error(
 					"A Semantic Relation cannot target its source Reading.",
@@ -123,16 +133,54 @@ export function projectGermanKnowledgeUpdate(
 				}
 			}
 			relationByTarget.set(key, relation);
-			pendingRelations.push(
-				pendingSemanticRelationSchema.parse({ relation, target }),
-			);
+			pendingRelations.push({ relation, target });
 		}
 	}
 
-	return generatedKnowledgeUpdateSchema.parse({
-		changes,
-		pendingRelations,
-	});
+	return unwrapDumgenParse(
+		parseAsKnowledgeGenerationResult({ changes, pendingRelations }),
+	);
+}
+
+function assertAnalysisMirrorsRequest(
+	input: GermanKnowledgeGenerationInput,
+	analysis: GermanKnowledgeAnalysis,
+): void {
+	const expectedKeys = Object.keys(input.request).toSorted();
+	const actualKeys = Object.keys(analysis).toSorted();
+	if (!sameMembers(expectedKeys, actualKeys))
+		throw new TypeError(
+			"German Knowledge analysis does not mirror its request.",
+		);
+	if (
+		input.request.translations !== undefined &&
+		(analysis.translations === undefined ||
+			!sameMembers(
+				Object.keys(input.request.translations),
+				Object.keys(analysis.translations),
+			))
+	)
+		throw new TypeError(
+			"German Knowledge translations do not mirror their request.",
+		);
+	if (
+		input.request.semanticRelations !== undefined &&
+		(analysis.semanticRelations === undefined ||
+			!sameMembers(
+				Object.keys(input.request.semanticRelations),
+				Object.keys(analysis.semanticRelations),
+			))
+	)
+		throw new TypeError(
+			"German Knowledge relations do not mirror their request.",
+		);
+}
+
+function sameMembers(left: string[], right: string[]): boolean {
+	return (
+		left.length === right.length &&
+		left.every((value) => right.includes(value))
+	);
 }
 
 function targetKey(target: {
@@ -150,8 +198,18 @@ function targetKey(target: {
 }
 
 function compareTargets(
-	left: LexicalUnitShadow<"de">,
-	right: LexicalUnitShadow<"de">,
+	left: {
+		canonicalForm: string;
+		family: string;
+		kind: string;
+		language: string;
+	},
+	right: {
+		canonicalForm: string;
+		family: string;
+		kind: string;
+		language: string;
+	},
 ): number {
 	const leftKey = targetKey(left);
 	const rightKey = targetKey(right);
@@ -162,7 +220,12 @@ function compareTargets(
 
 function isOwnerTarget(
 	input: GermanKnowledgeGenerationInput,
-	target: LexicalUnitShadow<"de">,
+	target: {
+		canonicalForm: string;
+		family: string;
+		kind: string;
+		language: string;
+	},
 ): boolean {
 	const owner = input.reading.lemma;
 	return (

@@ -1,4 +1,4 @@
-import { readingFingerprint } from "dumling/reading";
+import { readingFingerprint } from "dumling/id";
 import type { Reading, SupportedLanguage } from "dumling/types";
 
 type LemmaLike = {

@@ -10,7 +10,6 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join, relative } from "node:path";
 import OpenAI from "openai";
-import { zodTextFormat } from "openai/helpers/zod";
 import type { ResponseCreateParamsNonStreaming } from "openai/resources/responses/responses";
 import { z } from "zod";
 
@@ -516,6 +515,8 @@ export function createDirectCachedEvaluationRunner<
 	function responseRequestFor(
 		input: z.output<InputSchema>,
 	): ResponseCreateParamsNonStreaming {
+		const modelOutputSchema =
+			config.modelOutputSchemaFor?.(input) ?? promptSource.outputSchema;
 		return {
 			model: DUMGEN_GENERATION_MODEL,
 			input: [
@@ -540,11 +541,26 @@ export function createDirectCachedEvaluationRunner<
 			reasoning: { effort: DUMGEN_REASONING_EFFORT },
 			store: false,
 			text: {
-				format: zodTextFormat(
-					config.modelOutputSchemaFor?.(input) ??
-						promptSource.outputSchema,
-					config.structuredOutputName,
-				),
+				format: {
+					name: config.structuredOutputName,
+					schema: z.toJSONSchema(modelOutputSchema, {
+						io: "input",
+						target: "draft-7",
+						override: ({ zodSchema, jsonSchema }) => {
+							const definition = zodSchema._zod.def;
+							if (
+								definition.type === "union" &&
+								"discriminator" in definition &&
+								Array.isArray(jsonSchema.oneOf)
+							) {
+								jsonSchema.anyOf = jsonSchema.oneOf;
+								delete jsonSchema.oneOf;
+							}
+						},
+					}),
+					strict: true,
+					type: "json_schema",
+				},
 				verbosity: TEXT_VERBOSITY,
 			},
 		};

@@ -22,7 +22,8 @@ This package ships working runtime surfaces for `de`, `en`, and `he`.
 | ---------------- | ----------------------------------------------------------------------------------------------- |
 | `dumling`        | Root runtime API, language helpers, and the stable `readingFingerprint` identity operation      |
 | `dumling/types`  | Public DTOs, feature helpers, descriptors, and API/result/error types                           |
-| `dumling/schema` | Concrete entity schema registry plus the canonical `readingSchema`                             |
+| `dumling/schema` | Broad Zod composition primitives: `abstractSchemas`, `anyLemmaSchema`, and `readingSchema`     |
+| `dumling/dangerously-heavy-schema-tree` | Route-specific Zod trees; importing costs roughly 100 MiB max RSS                    |
 
 ## Runtime API
 
@@ -132,13 +133,11 @@ Minimal end-to-end usage:
 
 ```ts
 import {
+	ParsingError as PackageParsingError,
 	dumling as packageDumling,
+	parseAsReading as packageParseAsReading,
 	readingFingerprint as packageReadingFingerprint,
 } from "dumling";
-import {
-	readingSchema as packageReadingSchema,
-	schemasFor as packageSchemas,
-} from "dumling/schema";
 import type {
 	Attestation as PackageAttestation,
 	DumlingDescriptorCsv as PackageDumlingDescriptorCsv,
@@ -165,11 +164,17 @@ const surface: PackageSurface<"de", "Citation", "Lexeme", "NOUN"> =
 		spelling: "Canonical",
 		surfaceFeatures: null,
 	});
-const reading = packageReadingSchema.parse({
+const reading = packageParseAsReading({
 	lemma,
 	emojiDescription: "\u{1F30A}",
-}) as PackageReading<"de">;
-const readingIdentity = packageReadingFingerprint(reading);
+}, "de", "Lexeme", "NOUN");
+if (reading instanceof PackageParsingError) {
+	throw reading;
+}
+reading satisfies PackageReading<"de", "Lexeme", "NOUN">;
+const readingIdentity = packageReadingFingerprint(
+	reading as PackageReading<"de">,
+);
 const attestation: PackageAttestation<"de", "Citation", "Lexeme", "NOUN"> =
 	packageDumling.de.convert.surface.toAttestation(surface, {
 		members: [{ attested: "See", orthography: "Standard" }],
@@ -204,10 +209,19 @@ gender satisfies "Masc";
 
 decoded.data.surfaceIdentity.normalizedSurface satisfies string;
 readingIdentity satisfies string;
-packageSchemas.de.entity.Attestation.Citation.Lexeme.NOUN().parse(parsed.data);
 ```
 
-`schemasFor.de.entity.*`, `schemasFor.en.entity.*`, and `schemasFor.he.entity.*` expose concrete Zod schema getters. `readingSchema` is the canonical supported-language Reading schema. Leaf calls return Zod schemas for validators, LLM response-schema callers, and other schema-consuming APIs.
+`dumling/schema` is deliberately broad: it supports Zod composition without advertising route-specific validation precision. Application validation belongs at the lightweight `parseAsLemma`, `parseAsSurface`, `parseAsAttestation`, and `parseAsReading` interfaces.
+
+The supported route-specific trees remain available only as an explicit danger-zone escape hatch for schema-authoring integrations that genuinely require an exact leaf:
+
+```ts
+import { dangerouslyHeavySchemasForAbout100MiBRss } from "dumling/dangerously-heavy-schema-tree";
+
+dangerouslyHeavySchemasForAbout100MiBRss.de.entity.Lemma.Lexeme.NOUN();
+```
+
+Importing that entrypoint adds roughly 100 MiB max RSS. Do not use it as an application validator or import it through a package root.
 
 ## Concepts / Search Terms
 

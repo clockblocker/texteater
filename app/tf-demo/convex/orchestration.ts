@@ -13,13 +13,18 @@ import type {
 	StoredReadingsSlice,
 } from "dumdict";
 import { createDumdictService, makeSurfaceId } from "dumdict/runtime";
-import type { Dumgen } from "dumgen";
 import {
-	notImplementedGrammaticalResultSchema,
-	resolvedGrammaticalResultSchema,
-	unresolvedGrammaticalResultSchema,
-} from "dumgen/schema";
-import { knowledgeChangeSchema, pendingSemanticRelationSchema } from "dumrel";
+	type Dumgen,
+	type GrammaticalResult,
+	parseAsGrammaticalResult,
+} from "dumgen";
+import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
+import {
+	type KnowledgeChange,
+	type PendingSemanticRelation,
+	parseAsKnowledgeChange,
+	parseAsPendingSemanticRelation,
+} from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
@@ -35,6 +40,7 @@ import {
 	readingIdentityKey,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
+import { unwrapOperationalParse } from "../server/operationalParsing";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
@@ -77,6 +83,7 @@ function getDumgen(): Promise<Dumgen> {
 		import("dumgen/runtime"),
 	]).then(([{ buildOpenAiFetchSdk }, { buildDumgenRuntime }]) =>
 		buildDumgenRuntime({
+			runtimePromptData: encodedRuntimePromptData,
 			sdk: buildOpenAiFetchSdk(),
 			async generateKnowledge() {
 				throw new Error(
@@ -126,10 +133,20 @@ function nonResolvedGrammaticalActionResult(
 	>,
 ): NonResolvedGrammaticalActionResult {
 	if (input.decision === "Unresolved") {
-		const parsed = unresolvedGrammaticalResultSchema.parse(input);
+		const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
+			parseAsGrammaticalResult(input, "de"),
+		);
+		if (parsed.decision !== "Unresolved") {
+			throw new Error("Expected an Unresolved grammatical result.");
+		}
 		return { decision: "Unresolved", language: parsed.language };
 	}
-	const parsed = notImplementedGrammaticalResultSchema.parse(input);
+	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
+		parseAsGrammaticalResult(input, "de"),
+	);
+	if (parsed.decision !== "NotImplemented") {
+		throw new Error("Expected a NotImplemented grammatical result.");
+	}
 	return {
 		decision: "NotImplemented",
 		language: parsed.language,
@@ -143,7 +160,12 @@ function resolvedGrammaticalActionResult(
 		{ decision: "Resolved" }
 	>,
 ): ResolvedGrammaticalActionResult {
-	const parsed = resolvedGrammaticalResultSchema.parse(input);
+	const parsed = unwrapOperationalParse<GrammaticalResult<"de">>(
+		parseAsGrammaticalResult(input, "de"),
+	);
+	if (parsed.decision !== "Resolved") {
+		throw new Error("Expected a Resolved grammatical result.");
+	}
 	return {
 		...parsed,
 		attestation: {
@@ -601,7 +623,9 @@ export const applyReadingKnowledgeChange = action({
 	},
 	returns: v.any(),
 	handler: async (ctx, args): Promise<unknown> => {
-		const change = knowledgeChangeSchema.parse(args.change);
+		const change = unwrapOperationalParse<KnowledgeChange>(
+			parseAsKnowledgeChange(args.change),
+		);
 		const persisted: unknown = await ctx.runMutation(
 			internal.persistence.persistKnowledgeChange,
 			{ ...args, change },
@@ -892,7 +916,9 @@ export const applyGeneratedKnowledgePlan = internalAction({
 });
 
 function pendingProposalIdentityKey(input: unknown): string {
-	const pending = pendingSemanticRelationSchema.parse(input);
+	const pending = unwrapOperationalParse<PendingSemanticRelation>(
+		parseAsPendingSemanticRelation(input),
+	);
 	return JSON.stringify([
 		pending.relation,
 		pending.target.language,

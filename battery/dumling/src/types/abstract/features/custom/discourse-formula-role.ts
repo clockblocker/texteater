@@ -1,5 +1,3 @@
-import z from "zod";
-
 const discourseFormulaRoles = [
 	"Greeting",
 	"Farewell",
@@ -13,5 +11,5 @@ const discourseFormulaRoles = [
 	"Transition",
 ] as const;
 
-export const DiscourseFormulaRole = z.enum(discourseFormulaRoles);
-export type DiscourseFormulaRole = z.infer<typeof DiscourseFormulaRole>;
+export const DiscourseFormulaRole = discourseFormulaRoles;
+export type DiscourseFormulaRole = (typeof DiscourseFormulaRole)[number];

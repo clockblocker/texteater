@@ -15,6 +15,7 @@
         "dependency-cruiser": "^18.1.0",
         "knip": "^6.29.0",
         "node": "24.19.0",
+        "oxc-parser": "^0.140.0",
         "typescript": "^7.0.2",
       },
     },
@@ -112,21 +113,41 @@
     "battery/codegen": {
       "name": "codegen",
       "version": "0.1.0",
+      "dependencies": {
+        "zod": "^4.4.0",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "2.5.7",
+        "@types/node": "^24.13.3",
+        "bun-types": "1.3.14",
+        "common-utils": "workspace:^",
+        "dependency-cruiser": "^18.1.0",
+        "knip": "^6.29.0",
+        "typescript": "^7.0.2",
+      },
+    },
+    "battery/common-utils": {
+      "name": "common-utils",
+      "version": "0.1.0",
       "devDependencies": {
         "@biomejs/biome": "2.5.7",
         "@types/node": "^24.13.3",
         "bun-types": "1.3.14",
         "dependency-cruiser": "^18.1.0",
+        "esbuild": "^0.28.1",
         "knip": "^6.29.0",
         "typescript": "^7.0.2",
+        "zod": "^4.4.0",
       },
     },
     "battery/dumdict": {
       "name": "dumdict",
       "version": "0.1.0",
       "dependencies": {
+        "common-utils": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
+        "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
       "devDependencies": {
@@ -145,6 +166,7 @@
       "version": "0.1.0",
       "dependencies": {
         "codec-builder-library": "workspace:^",
+        "common-utils": "workspace:^",
         "dumdict": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
@@ -168,6 +190,7 @@
       "version": "0.1.12",
       "dependencies": {
         "codec-builder-library": "workspace:^",
+        "common-utils": "workspace:^",
         "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
@@ -186,13 +209,16 @@
       "name": "dumrel",
       "version": "0.1.0",
       "dependencies": {
+        "common-utils": "workspace:^",
         "dumling": "workspace:^",
+        "emoji-regex": "^10.6.0",
         "zod": "^4.4.0",
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.7",
         "@types/node": "^24.13.3",
         "bun-types": "1.3.14",
+        "codegen": "workspace:^",
         "dependency-cruiser": "^18.1.0",
         "esbuild": "^0.28.1",
         "knip": "^6.29.0",
@@ -920,6 +946,8 @@
     "commander": ["commander@15.0.0", "", {}, "sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg=="],
 
     "common-ancestor-path": ["common-ancestor-path@2.0.0", "", {}, "sha512-dnN3ibLeoRf2HNC+OlCiNc5d2zxbLJXOtiZUudNFSXZrNSydxcCsSpRzXwfu7BBWCIfHPw+xTayeBvJCP/D8Ng=="],
+
+    "common-utils": ["common-utils@workspace:battery/common-utils"],
 
     "conf": ["conf@10.2.0", "", { "dependencies": { "ajv": "^8.6.3", "ajv-formats": "^2.1.1", "atomically": "^1.7.0", "debounce-fn": "^4.0.0", "dot-prop": "^6.0.1", "env-paths": "^2.2.1", "json-schema-typed": "^7.0.3", "onetime": "^5.1.2", "pkg-up": "^3.1.0", "semver": "^7.3.5" } }, "sha512-8fLl9F04EJqjSqH+QjITQfJF8BrOVaYr1jewVgSRAEWePfxT0sku4w2hrGQ60BC/TNLGQ2pgxNlTbWQmMPFvXg=="],
 

@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const caseValues = [
 	"Acc", // accusative
 	"Abe", // abessive; caritive | privative
@@ -37,5 +35,5 @@ const caseValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/u/feat/Case.html
-export const Case = z.enum(caseValues);
-export type Case = z.infer<typeof Case>;
+export const Case = caseValues;
+export type Case = (typeof Case)[number];

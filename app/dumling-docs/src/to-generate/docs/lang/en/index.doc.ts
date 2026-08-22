@@ -5,7 +5,9 @@ const document = defineGeneratedDocPage({
 	order: 100,
 	title: "English",
 	body: `
-English is available at \`dumling.en\`, \`getLanguageApi("en")\`, and \`schemasFor.en\`.
+English is available operationally at \`dumling.en\` and \`getLanguageApi("en")\`.
+The route-specific Zod tree is the roughly-100-MiB danger-zone
+\`dangerouslyHeavySchemasForAbout100MiBRss.en\`.
 
 ## Supported Lemma Families
 
@@ -90,9 +92,7 @@ dumling.en.parse.attestation(ranAttestation);
 ## Schema Access
 
 \`\`\`ts
-schemasFor.en.entity.Lemma.Lexeme.VERB();
-schemasFor.en.entity.Surface.Inflection.Lexeme.VERB();
-schemasFor.en.entity.Attestation.Inflection.Lexeme.VERB();
+dangerouslyHeavySchemasForAbout100MiBRss.en.entity.Lemma.Lexeme.VERB();
 \`\`\`
 `,
 });

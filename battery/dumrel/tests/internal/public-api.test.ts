@@ -7,6 +7,8 @@ import * as settings from "../../src/settings";
 import * as types from "../../src/types";
 
 const schemaExports = [
+	"bindLexicalUnitShadow",
+	"bindSupportedUnitShadow",
 	"directSemanticRelationSchema",
 	"directSemanticRelationGraphEdgeSchema",
 	"directSemanticRelationValues",
@@ -34,22 +36,41 @@ const schemaExports = [
 ].sort();
 
 describe("public API allowlists", () => {
-	test("the root exposes exactly six functions plus frozen schemas/values", () => {
+	test("the root exposes operations and constants without schema values", () => {
 		expect(Object.keys(root).sort()).toEqual(
 			[
 				"DEFAULT_KNOWLEDGE_SETTINGS",
+				"ParsingError",
 				"applyKnowledgeChange",
 				"defaultKnowledgeRequestMask",
+				"directSemanticRelationValues",
 				"intersectKnowledgeRequestMask",
 				"inverseRelationFor",
+				"parseAsDirectSemanticRelationGraphEdge",
+				"parseAsKnowledgeChange",
+				"parseAsKnowledgeRequestMask",
+				"parseAsKnowledgeSettings",
+				"parseAsLexemeUnitShadow",
+				"parseAsLexicalBreakdown",
+				"parseAsLexicalUnitShadow",
+				"parseAsMorphemeReadingReference",
+				"parseAsMorphologicalTree",
+				"parseAsMorphologicalTreeNode",
+				"parseAsMorphologicalTreeStructure",
+				"parseAsPendingSemanticRelation",
+				"parseAsReadingKnowledge",
+				"parseAsSemanticRelationGraph",
+				"parseAsSemanticRelationGraphReading",
+				"parseAsSemanticRelations",
+				"parseAsUnitShadow",
 				"projectRelations",
 				"propagateRelations",
-				...schemaExports,
+				"semanticRelationValues",
 			].sort(),
 		);
 		expect(
 			Object.values(root).filter((value) => typeof value === "function"),
-		).toHaveLength(6);
+		).toHaveLength(24);
 	});
 
 	test("dedicated subpaths expose only their owned contracts", () => {

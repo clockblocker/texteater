@@ -60,8 +60,13 @@ describe("published package entrypoints", () => {
 
 		const runtimeSmokeTest = `
 			import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";
+			import { readingFingerprint as idReadingFingerprint } from "dumling/id";
 			import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";
-			import { abstractSchemas, getSchemaTreeFor, readingSchema, schemasFor } from "dumling/schema";
+			import { abstractSchemas, readingSchema } from "dumling/schema";
+			import {
+				dangerouslyHeavySchemasForAbout100MiBRss as schemasFor,
+				getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor,
+			} from "dumling/dangerously-heavy-schema-tree";
 			import * as schemaModule from "dumling/schema";
 
 			if (supportedLanguages.join(",") !== "de,en,he") throw new Error("language inventory is missing");
@@ -81,6 +86,7 @@ describe("published package entrypoints", () => {
 			if (reading.emojiDescription !== "\u{1F30A}") throw new Error("Reading schema did not normalize its identity input");
 			if (!readingFingerprint(reading).includes("\u{1F30A}")) throw new Error("Reading fingerprint is missing");
 			if (leanReadingFingerprint(reading) !== readingFingerprint(reading)) throw new Error("lean Reading entrypoint disagrees with the root entrypoint");
+			if (idReadingFingerprint(reading) !== readingFingerprint(reading)) throw new Error("lean ID entrypoint disagrees with the root entrypoint");
 			const surface = dumling.de.convert.lemma.toSurface(lemma);
 			const attestation = dumling.de.convert.surface.toAttestation(surface, {
 				members: [{ attested: "See", orthography: "Standard" }],
@@ -102,6 +108,7 @@ describe("published package entrypoints", () => {
 		`;
 
 		run("node", ["--input-type=module", "--eval", runtimeSmokeTest]);
+		run(process.execPath, ["--eval", runtimeSmokeTest]);
 
 		const typecheckDir = mkdtempSync(join(projectRoot, ".typecheck-"));
 
@@ -110,10 +117,13 @@ describe("published package entrypoints", () => {
 				join(typecheckDir, "fixture.ts"),
 				[
 					'import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";',
+					'import { readingFingerprint as idReadingFingerprint } from "dumling/id";',
+					'import type { Reading as IdReading, ReadingFingerprint as IdReadingFingerprint } from "dumling/id";',
 					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
 					'import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";',
 					'import type { Reading as LeanReading, ReadingFingerprint as LeanReadingFingerprint } from "dumling/reading";',
-					'import { abstractSchemas, getSchemaTreeFor, readingSchema, schemasFor } from "dumling/schema";',
+					'import { abstractSchemas, readingSchema } from "dumling/schema";',
+					'import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor, getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling/dangerously-heavy-schema-tree";',
 					'import type * as z from "zod";',
 					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
@@ -134,8 +144,11 @@ describe("published package entrypoints", () => {
 					"const readingIdentity: ReadingFingerprint = readingFingerprint(reading);",
 					'const leanReading: LeanReading<"de"> = reading;',
 					"const leanReadingIdentity: LeanReadingFingerprint = leanReadingFingerprint(leanReading);",
+					'const idReading: IdReading<"de"> = reading;',
+					"const idReadingIdentity: IdReadingFingerprint = idReadingFingerprint(idReading);",
 					"void readingIdentity;",
 					"void leanReadingIdentity;",
+					"void idReadingIdentity;",
 					'const attestation: Attestation<"de"> = dumling.de.convert.surface.toAttestation(surface, {',
 					'\tmembers: [{ attested: "See", orthography: "Standard" }],',
 					'\trealizationCoverage: "Full",',
@@ -235,9 +248,24 @@ describe("published package entrypoints", () => {
 		expect(packedFiles).toContain("dist/schema.js");
 		expect(packedFiles).toContain("dist/reading.d.ts");
 		expect(packedFiles).toContain("dist/reading.js");
+		expect(packedFiles).toContain("dist/id.d.ts");
+		expect(packedFiles).toContain("dist/id.js");
 		expect(packedFiles).toContain("dist/operations/api-shape.d.ts");
 		expect(packedFiles).toContain("dist/types/public-types.d.ts");
 		expect(packedFiles).toContain("dist/schemas/public-schemas.d.ts");
+
+		const leanIdRuntime = readFileSync(
+			resolve(projectRoot, "dist/id.js"),
+			"utf8",
+		);
+		for (const forbidden of [
+			"codec-builder-library",
+			"emoji-regex",
+			"generated/validation-artifacts",
+			"zod",
+		]) {
+			expect(leanIdRuntime).not.toContain(forbidden);
+		}
 
 		for (const packedFile of packedFiles) {
 			expect(

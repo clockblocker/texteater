@@ -1,5 +1,5 @@
 import type { SupportedLanguage } from "dumling/types";
-import { semanticRelationSchema } from "dumrel/schema";
+import { semanticRelationValues } from "dumrel/relations";
 import { planCleanupRelations } from "../core/plan-mutation";
 import type {
 	CleanupRelationsRequest,
@@ -33,8 +33,7 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	if (
 		new Set(keys).size !== keys.length ||
 		request.resolutions.some(
-			({ locator }) =>
-				!semanticRelationSchema.safeParse(locator.relation).success,
+			({ locator }) => !semanticRelationValues.includes(locator.relation),
 		)
 	) {
 		return {

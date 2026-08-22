@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
-import { applyKnowledgeChange, readingKnowledgeSchema } from "../../src";
+import { applyKnowledgeChange } from "../../src";
+import { readingKnowledgeSchema } from "../../src/schema";
 import type {
 	LexicalBreakdown,
 	MorphologicalTree,

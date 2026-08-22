@@ -1,5 +1,5 @@
 import { buildAiSdk } from "./ai-sdk/ai-sdk";
-import { combinedGermanKnowledgePrompt } from "./catalog/combined-german-knowledge-prompt";
+import { runtimeCombinedGermanKnowledgePrompt } from "./catalog/runtime-prompt-catalog";
 import type { ModelExchange } from "./generator/generator";
 import {
 	createKnowledgeDumgen,
@@ -23,4 +23,6 @@ export function buildKnowledgeDumgen(
 }
 
 export type { KnowledgeDumgen };
-export { combinedGermanKnowledgePrompt };
+export {
+	runtimeCombinedGermanKnowledgePrompt as combinedGermanKnowledgePrompt,
+};

@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const hebBinyanValues = [
 	"HIFIL",
 	"HITPAEL",
@@ -11,5 +9,5 @@ const hebBinyanValues = [
 ] as const;
 
 // Source: https://universaldependencies.org/treebanks/he_htb/index.html
-export const HebBinyan = z.enum(hebBinyanValues);
-export type HebBinyan = z.infer<typeof HebBinyan>;
+export const HebBinyan = hebBinyanValues;
+export type HebBinyan = (typeof HebBinyan)[number];

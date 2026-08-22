@@ -109,6 +109,21 @@ export type LemmaFamilyForSurfaceKind<
 		: never
 	: LemmaFamilyFor<L>;
 
+export type LemmaKindForSurfaceKind<
+	L extends SupportedLanguage,
+	SK extends SurfaceKindFor<L>,
+	LK extends LemmaFamilyForSurfaceKind<L, SK>,
+> = L extends ConcreteLanguage
+	? SK extends keyof SurfaceByKindForLanguage<L>
+		? LK extends keyof SurfaceByKindForLanguage<L>[SK]
+			? Extract<
+					keyof SurfaceByKindForLanguage<L>[SK][LK],
+					LemmaKindFor<L, LK>
+				>
+			: never
+		: never
+	: LemmaKindFor<L, LK>;
+
 export type Lemma<
 	L extends SupportedLanguage = SupportedLanguage,
 	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
