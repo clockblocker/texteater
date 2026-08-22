@@ -10,18 +10,12 @@
 		var(--background);
 }
 
-.card-demo-header,
 .card-demo-text,
 .card-demo-note {
 	width: min(100%, 54rem);
 	margin-inline: auto;
 }
 
-.card-demo-header {
-	margin-bottom: 2.5rem;
-}
-
-.card-demo-header h1,
 .card-demo-page > h1 {
 	font-size: clamp(2rem, 5vw, 4.5rem);
 	font-weight: 650;
@@ -29,29 +23,14 @@
 	line-height: 0.95;
 }
 
-.card-demo-header > p:last-child,
 .card-demo-page > p {
 	max-width: 42rem;
 	margin-top: 1rem;
 	color: var(--muted-foreground);
 }
 
-.card-demo-kicker,
-.card-demo-fixture-label {
-	margin-bottom: 0.75rem;
-	color: var(--muted-foreground);
-	font-size: 0.75rem;
-	font-weight: 650;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-}
-
 .card-demo-text {
-	padding: clamp(1.25rem, 4vw, 3rem);
-	border: 1px solid var(--border);
-	border-radius: 1.5rem;
-	background: color-mix(in oklch, var(--card) 94%, transparent);
-	box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 6%);
+	padding-block: clamp(1.25rem, 4vw, 3rem);
 }
 
 .card-demo-segments {
@@ -197,11 +176,6 @@
 
 .card-demo-note .card-demo-card__title {
 	font-size: clamp(2rem, 5vw, 3.5rem);
-}
-
-.card-demo-note__disclaimer {
-	margin-top: 2rem;
-	color: var(--muted-foreground);
 }
 
 .card-demo-link {

@@ -28,7 +28,9 @@ test("renders the shared fake Text shell without production data", () => {
 	const markup = renderRoute("/playground/card-demo/native/text");
 	expect(markup).toContain('data-card-demo-variant="native"');
 	expect(markup).toContain('data-card-demo-segment="playground-segment-01"');
-	expect(markup).toContain("Every word is a fake Segment");
+	expect(markup).toContain("Lorem");
+	expect(markup).not.toContain("Card interaction playground");
+	expect(markup).not.toContain("Every word is a fake Segment");
 	expect(markup).not.toContain("convex");
 });
 
@@ -37,7 +39,7 @@ test("renders a matching fake Note route with the same presentation vocabulary",
 	expect(markup).toContain('data-card-demo-variant="motion"');
 	expect(markup).toContain('data-card-demo-note="lemma"');
 	expect(markup).toContain("Fake Lemma");
-	expect(markup).toContain("not a production tf-demo Note");
+	expect(markup).not.toContain("not a production tf-demo Note");
 });
 
 test("preserves selected Segment content through Note navigation state", () => {

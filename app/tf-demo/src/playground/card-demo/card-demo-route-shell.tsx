@@ -48,19 +48,12 @@ export function CardDemoRouteShell() {
 			selectedSegment ??
 			CARD_DEMO_FAKE_SENTENCE.segments[0];
 		return (
-			<CardDemoPageFrame
-				title={`${card.label} Note`}
-				variant={target.variant}
-			>
+			<CardDemoPageFrame variant={target.variant}>
 				<section
 					className="card-demo-note"
 					data-card-demo-note={card.kind}
 				>
 					<CardDemoCardContent card={card} segment={segment} />
-					<p className="card-demo-note__disclaimer">
-						This is a fake route destination, not a production
-						tf-demo Note.
-					</p>
 					<Link
 						className="card-demo-link"
 						onClick={() => setSelectedSegment(null)}
@@ -123,17 +116,13 @@ export function CardDemoTextPage({
 	};
 
 	return (
-		<CardDemoPageFrame title="Fake lorem-ipsum Text" variant={variant}>
+		<CardDemoPageFrame variant={variant}>
 			<section
 				aria-hidden={selectedSegment ? true : undefined}
 				aria-label="Fake Text"
 				className="card-demo-text"
 				inert={selectedSegment ? true : undefined}
 			>
-				<p className="card-demo-fixture-label">
-					Every word is a fake Segment. Select any Segment to reveal
-					the chain.
-				</p>
 				<p className="card-demo-segments">
 					{CARD_DEMO_FAKE_SENTENCE.segments.map((segment) => (
 						<button

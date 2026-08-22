@@ -87,25 +87,13 @@ export function CardDemoStackFrame({
 
 export function CardDemoPageFrame({
 	variant,
-	title,
 	children,
 }: {
 	readonly variant: CardDemoVariant;
-	readonly title: string;
 	readonly children: ReactNode;
 }) {
 	return (
 		<main className="card-demo-page" data-card-demo-variant={variant}>
-			<header className="card-demo-header">
-				<p className="card-demo-kicker">
-					Card interaction playground · {variant}
-				</p>
-				<h1>{title}</h1>
-				<p>
-					Fake data and shared presentation isolate interaction-engine
-					behavior from tf-demo production Notes.
-				</p>
-			</header>
 			{children}
 		</main>
 	);
