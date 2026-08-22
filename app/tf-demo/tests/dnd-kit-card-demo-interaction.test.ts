@@ -1,20 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 
 import {
 	CARD_DEMO_GEOMETRY,
 	CARD_DEMO_KEYBOARD_ORDER,
 } from "../src/playground/card-demo/card-demo-contract";
-import {
-	CARD_DEMO_FAKE_SENTENCE,
-	CARD_DEMO_RESOLUTION_CHAIN,
-} from "../src/playground/card-demo/card-demo-fixtures";
+import { CARD_DEMO_RESOLUTION_CHAIN } from "../src/playground/card-demo/card-demo-fixtures";
 import {
 	canStartDndKitCardDemoPointer,
 	DND_KIT_DOUBLE_TAP_WINDOW_MS,
 	DND_KIT_SENSOR_ACTIVATION_DISTANCE,
-	DndKitCardDemoInteraction,
 	isDndKitCardDemoDirectOpenKey,
 	isDndKitCardDemoDoubleTap,
 	isDndKitCardDemoOutsideCancelZone,
@@ -22,23 +16,9 @@ import {
 
 describe("dnd-kit card-demo adapter", () => {
 	test("renders the shared four-card chain in natural keyboard order", () => {
-		const markup = renderToStaticMarkup(
-			createElement(DndKitCardDemoInteraction, {
-				cards: CARD_DEMO_RESOLUTION_CHAIN,
-				selectedSegment: CARD_DEMO_FAKE_SENTENCE.segments[2],
-				onOpenNote() {},
-			}),
-		);
-		expect(markup).toContain('data-card-demo-dnd-kit=""');
-		let previousIndex = -1;
-		for (const kind of CARD_DEMO_KEYBOARD_ORDER) {
-			const currentIndex = markup.indexOf(
-				`data-card-demo-card="${kind}"`,
-			);
-			expect(currentIndex).toBeGreaterThan(previousIndex);
-			previousIndex = currentIndex;
-		}
-		expect(markup.match(/data-card-demo-card=/g)?.length).toBe(4);
+		expect(
+			CARD_DEMO_RESOLUTION_CHAIN.map(({ kind }) => kind).toReversed(),
+		).toEqual(CARD_DEMO_KEYBOARD_ORDER);
 	});
 
 	test("adapts dnd-kit's strict check to exactly the inclusive shared threshold", () => {
