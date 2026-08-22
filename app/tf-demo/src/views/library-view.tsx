@@ -1,22 +1,34 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAction } from "convex/react";
-import { ArrowRightIcon, BookOpenIcon, LibraryIcon } from "lucide-react";
+import {
+	ArrowRightIcon,
+	BookOpenIcon,
+	LibraryIcon,
+	PlusIcon,
+} from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { parseSubmittedTextId } from "@/lib/action-results";
@@ -86,64 +98,6 @@ export function LibraryView() {
 					<PageNavigation showLibrary={false} />
 				</header>
 
-				<Card>
-					<CardHeader>
-						<CardTitle>Add a text</CardTitle>
-						<CardDescription>
-							Analyze a short German sentence and save it to the
-							library.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<form
-							id="library-text-submission"
-							aria-label="Add text to library"
-							onSubmit={(event) => void handleSubmit(event)}
-						>
-							<FieldGroup>
-								<Field>
-									<FieldLabel htmlFor="library-source-text">
-										German sentence
-									</FieldLabel>
-									<Textarea
-										id="library-source-text"
-										name="text"
-										className="min-h-24 resize-y"
-										value={sourceText}
-										onChange={(event) =>
-											setSourceText(event.target.value)
-										}
-										disabled={submitText.isPending}
-									/>
-								</Field>
-							</FieldGroup>
-						</form>
-						{error ? (
-							<p
-								className="mt-4 text-sm text-destructive"
-								role="alert"
-							>
-								{error}
-							</p>
-						) : null}
-					</CardContent>
-					<CardFooter className="justify-end">
-						<Button
-							type="submit"
-							form="library-text-submission"
-							disabled={
-								submitText.isPending ||
-								sourceText.trim().length === 0
-							}
-						>
-							<BookOpenIcon data-icon="inline-start" />
-							{submitText.isPending
-								? "Analyzing…"
-								: "Analyze text"}
-						</Button>
-					</CardFooter>
-				</Card>
-
 				<section
 					className="flex flex-col gap-3"
 					aria-labelledby="library-title"
@@ -194,12 +148,81 @@ export function LibraryView() {
 						<Card size="sm">
 							<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
 								<LibraryIcon className="size-5" />
-								<p>No stored texts yet. Analyze one above.</p>
+								<p>
+									No stored texts yet. Add one with the plus
+									button.
+								</p>
 							</CardContent>
 						</Card>
 					)}
 				</section>
 			</div>
+
+			<Dialog>
+				<DialogTrigger
+					render={
+						<Button
+							size="icon-lg"
+							className="fixed bottom-6 left-6 size-14 rounded-full shadow-lg"
+						/>
+					}
+				>
+					<PlusIcon className="size-6" aria-hidden="true" />
+					<span className="sr-only">Add a text</span>
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-3xl">
+					<DialogHeader>
+						<DialogTitle>Add a text</DialogTitle>
+						<DialogDescription>
+							Analyze a short German sentence and save it to the
+							library.
+						</DialogDescription>
+					</DialogHeader>
+					<form
+						id="library-text-submission"
+						className="flex flex-col gap-4"
+						aria-label="Add text to library"
+						onSubmit={(event) => void handleSubmit(event)}
+					>
+						<FieldGroup>
+							<Field
+								data-disabled={
+									submitText.isPending || undefined
+								}
+							>
+								<FieldLabel htmlFor="library-source-text">
+									German sentence
+								</FieldLabel>
+								<Textarea
+									id="library-source-text"
+									name="text"
+									className="min-h-36 resize-y"
+									value={sourceText}
+									onChange={(event) =>
+										setSourceText(event.target.value)
+									}
+									disabled={submitText.isPending}
+								/>
+							</Field>
+						</FieldGroup>
+						{error ? <FieldError>{error}</FieldError> : null}
+						<DialogFooter>
+							<Button
+								type="submit"
+								disabled={
+									submitText.isPending ||
+									sourceText.trim().length === 0
+								}
+							>
+								<BookOpenIcon data-icon="inline-start" />
+								{submitText.isPending
+									? "Analyzing…"
+									: "Analyze text"}
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</main>
 	);
 }
