@@ -16,14 +16,18 @@ Each prototype owns exactly one adapter file under `variants/`:
 - `gesture-spring-card-demo-interaction.tsx`
 
 An adapter implements `CardDemoInteractionProps`, renders the supplied cards
-with `CardDemoStackFrame` and `CardDemoCardView`, and calls `onOpenNote(kind)`
-after its own interaction engine decides that a card should open. The registry,
-fixtures, routes, visual primitives, geometry, and acceptance scenarios remain
-shared.
+with `CardDemoStackFrame` and `CardDemoCardView`, and calls
+`onOpenNote(kind, origin)` after its own interaction engine decides that a card
+should open. `origin` distinguishes an outside drop from direct keyboard or
+double-tap activation. The registry, fixtures, routes, visual primitives,
+geometry, and acceptance scenarios remain shared.
 
 The stack element marked `data-card-demo-cancel-zone` is the cancel-zone
 footprint. The active card marks `data-outside-cancel-zone="true"` while it is
-outside so the common CSS applies the shared expanded presentation.
+outside so the common CSS grows it to two-thirds of the viewport. The route
+shell owns the shared card-to-page morph, its reverse, reduced-motion behavior,
+and fly-away dismissal; the four adapters continue to own only pointer and
+gesture mechanics.
 
 ## Acceptance automation
 

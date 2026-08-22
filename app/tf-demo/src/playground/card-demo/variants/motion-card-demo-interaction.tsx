@@ -22,7 +22,10 @@ import {
 	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
-import type { CardDemoInteractionProps } from "../card-demo-interaction";
+import type {
+	CardDemoInteractionProps,
+	CardDemoOpenOrigin,
+} from "../card-demo-interaction";
 import {
 	CardDemoCardView,
 	CardDemoStackFrame,
@@ -81,11 +84,11 @@ export function MotionCardDemoInteraction({
 	useEffect(() => clearTapCandidate, [clearTapCandidate]);
 
 	const openNote = useCallback(
-		(kind: CardDemoNoteKind) => {
+		(kind: CardDemoNoteKind, origin: CardDemoOpenOrigin) => {
 			if (navigationLockedRef.current) return;
 			navigationLockedRef.current = true;
 			clearTapCandidate();
-			onOpenNote(kind);
+			onOpenNote(kind, origin);
 		},
 		[clearTapCandidate, onOpenNote],
 	);
@@ -99,7 +102,7 @@ export function MotionCardDemoInteraction({
 				now - previous.startedAt <= MOTION_DOUBLE_TAP_WINDOW_MS
 			) {
 				clearTapCandidate();
-				openNote(kind);
+				openNote(kind, "direct");
 				return;
 			}
 
@@ -153,7 +156,7 @@ function MotionResolutionCard({
 	readonly stackRef: React.RefObject<HTMLDivElement | null>;
 	readonly clearTapCandidate: () => void;
 	readonly onTouchTap: (kind: CardDemoNoteKind) => void;
-	readonly onOpenNote: (kind: CardDemoNoteKind) => void;
+	readonly onOpenNote: CardDemoInteractionProps["onOpenNote"];
 }) {
 	const restingY = cardDemoRestingOffset(card.presentationLayer);
 	const x = useMotionValue(0);
@@ -302,7 +305,7 @@ function MotionResolutionCard({
 				event.clientY,
 			);
 			if (releasedOutside) {
-				onOpenNote(card.kind);
+				onOpenNote(card.kind, "drop");
 				return;
 			}
 			restoreCard();
@@ -322,7 +325,7 @@ function MotionResolutionCard({
 			event.code === "Space";
 		if (!activates || event.repeat) return;
 		event.preventDefault();
-		onOpenNote(card.kind);
+		onOpenNote(card.kind, "direct");
 	};
 
 	return (

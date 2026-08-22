@@ -16,7 +16,10 @@ import {
 	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../card-demo-contract";
-import type { CardDemoInteractionProps } from "../card-demo-interaction";
+import type {
+	CardDemoInteractionProps,
+	CardDemoOpenOrigin,
+} from "../card-demo-interaction";
 import {
 	CardDemoCardView,
 	CardDemoStackFrame,
@@ -164,11 +167,14 @@ function GestureSpringCard({
 		});
 	}, [api, baseY, reducedMotion, setOutsideState]);
 
-	const open = useCallback(() => {
-		if (!claimOpen()) return;
-		setDragActive(false);
-		onOpenNote(card.kind);
-	}, [card.kind, claimOpen, onOpenNote]);
+	const open = useCallback(
+		(origin: CardDemoOpenOrigin) => {
+			if (!claimOpen()) return;
+			setDragActive(false);
+			onOpenNote(card.kind, origin);
+		},
+		[card.kind, claimOpen, onOpenNote],
+	);
 
 	const bindDrag = useDrag(
 		({ active, canceled, event, first, movement: [x, y], xy }) => {
@@ -220,7 +226,7 @@ function GestureSpringCard({
 				api.start({
 					x,
 					y: baseY + y,
-					scale: nextOutside ? CARD_DEMO_GEOMETRY.outsideScale : 1,
+					scale: 1,
 					immediate: true,
 				});
 				return;
@@ -228,7 +234,7 @@ function GestureSpringCard({
 
 			if (active) return;
 			if (dragIntentionalRef.current) {
-				if (outsideRef.current) open();
+				if (outsideRef.current) open("drop");
 				else restore();
 				return;
 			}
@@ -236,7 +242,8 @@ function GestureSpringCard({
 				restore();
 				return;
 			}
-			if (pointerType === "touch" && registerTap(card.kind)) open();
+			if (pointerType === "touch" && registerTap(card.kind))
+				open("direct");
 		},
 		{
 			threshold: 0,
@@ -254,7 +261,7 @@ function GestureSpringCard({
 			return;
 		event.preventDefault();
 		cancelPendingTap();
-		open();
+		open("direct");
 	};
 
 	return (

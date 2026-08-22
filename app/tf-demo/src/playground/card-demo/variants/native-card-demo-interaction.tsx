@@ -132,7 +132,7 @@ export function NativeCardDemoInteraction({
 		const now = performance.now();
 		if (isNativeCardDemoDoubleTap(lastTouchTap.current, kind, now)) {
 			lastTouchTap.current = null;
-			onOpenNote(kind);
+			onOpenNote(kind, "direct");
 			return;
 		}
 		lastTouchTap.current = { kind, at: now };
@@ -159,7 +159,7 @@ export function NativeCardDemoInteraction({
 
 		if (!cancelled && session.active && releasedOutside) {
 			lastTouchTap.current = null;
-			onOpenNote(session.kind);
+			onOpenNote(session.kind, "drop");
 			return;
 		}
 		if (!cancelled && !session.moved && session.pointerType === "touch") {
@@ -175,7 +175,7 @@ export function NativeCardDemoInteraction({
 			return;
 		event.preventDefault();
 		resetPointerSession();
-		onOpenNote(kind);
+		onOpenNote(kind, "direct");
 	};
 
 	return (

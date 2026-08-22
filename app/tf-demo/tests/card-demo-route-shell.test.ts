@@ -67,6 +67,7 @@ test("renders a matching fake Note route with the same presentation vocabulary",
 	const markup = renderRoute("/playground/card-demo/motion/note/lemma");
 	expect(markup).toContain('data-card-demo-variant="motion"');
 	expect(markup).toContain('data-card-demo-note="lemma"');
+	expect(markup).toContain("card-demo-page--note");
 	expect(markup).toContain("Fake Lemma");
 	expect(markup).not.toContain("not a production tf-demo Note");
 });
@@ -102,4 +103,5 @@ test("keeps Text interactive while the nonmodal cards are open", () => {
 	expect(markup).not.toContain('aria-hidden="true"');
 	expect(markup).not.toContain("data-card-demo-backdrop");
 	expect(markup).not.toContain('aria-modal="true"');
+	expect(markup).toContain('aria-label="Close card view"');
 });

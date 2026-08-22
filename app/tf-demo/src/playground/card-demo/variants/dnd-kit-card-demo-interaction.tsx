@@ -140,10 +140,6 @@ export function DndKitCardDemoInteraction({
 	const stackElementRef = useRef<HTMLDivElement | null>(null);
 	const activeKindRef = useRef<CardDemoNoteKind | null>(null);
 	const pointerSessionRef = useRef<PointerSession | null>(null);
-	const lastPointerRef = useRef<{
-		readonly kind: CardDemoNoteKind;
-		readonly point: CardDemoPoint;
-	} | null>(null);
 	const lastTapRef = useRef<TapCandidate | null>(null);
 	const tapWindowTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
 		null,
@@ -173,14 +169,12 @@ export function DndKitCardDemoInteraction({
 	const resetDrag = useCallback(() => {
 		activeKindRef.current = null;
 		pointerSessionRef.current = null;
-		lastPointerRef.current = null;
 		setActiveKind(null);
 		setActiveOutside(false);
 	}, []);
 
 	const setOutsideFromPoint = useCallback(
 		(kind: CardDemoNoteKind, point: CardDemoPoint): boolean => {
-			lastPointerRef.current = { kind, point };
 			const zone = stackElementRef.current?.getBoundingClientRect();
 			const outside = zone
 				? isDndKitCardDemoOutsideCancelZone(point, zone)
@@ -207,12 +201,7 @@ export function DndKitCardDemoInteraction({
 		(event: DragMoveEvent) => {
 			const kind = noteKindFromId(event.active.id);
 			if (!kind) return;
-			const fallbackPoint = pointFromActivatorAndDelta(event);
-			const latest = lastPointerRef.current;
-			setOutsideFromPoint(
-				kind,
-				latest?.kind === kind ? latest.point : fallbackPoint,
-			);
+			setOutsideFromPoint(kind, pointFromActivatorAndDelta(event));
 		},
 		[setOutsideFromPoint],
 	);
@@ -224,17 +213,13 @@ export function DndKitCardDemoInteraction({
 				resetDrag();
 				return;
 			}
-			const latest = lastPointerRef.current;
-			const releasePoint =
-				latest?.kind === kind
-					? latest.point
-					: pointFromActivatorAndDelta(event);
+			const releasePoint = pointFromActivatorAndDelta(event);
 			const zone = stackElementRef.current?.getBoundingClientRect();
 			const shouldOpen = zone
 				? isDndKitCardDemoOutsideCancelZone(releasePoint, zone)
 				: false;
 			resetDrag();
-			if (shouldOpen) onOpenNote(kind);
+			if (shouldOpen) onOpenNote(kind, "drop");
 		},
 		[onOpenNote, resetDrag],
 	);
@@ -258,10 +243,6 @@ export function DndKitCardDemoInteraction({
 				pointerType: event.pointerType,
 				origin: { x: event.clientX, y: event.clientY },
 				moved: false,
-			};
-			lastPointerRef.current = {
-				kind,
-				point: { x: event.clientX, y: event.clientY },
 			};
 			try {
 				event.currentTarget.setPointerCapture(event.pointerId);
@@ -287,7 +268,6 @@ export function DndKitCardDemoInteraction({
 				return;
 			}
 			const point = { x: event.clientX, y: event.clientY };
-			lastPointerRef.current = { kind, point };
 			if (
 				pointDistance(session.origin, point) >=
 				CARD_DEMO_GEOMETRY.dragActivationDistance
@@ -307,10 +287,6 @@ export function DndKitCardDemoInteraction({
 			event: ReactPointerEvent<HTMLButtonElement>,
 		) => {
 			const session = pointerSessionRef.current;
-			lastPointerRef.current = {
-				kind,
-				point: { x: event.clientX, y: event.clientY },
-			};
 			if (
 				!session ||
 				session.kind !== kind ||
@@ -326,7 +302,7 @@ export function DndKitCardDemoInteraction({
 			const endedAt = event.timeStamp;
 			if (isDndKitCardDemoDoubleTap(lastTapRef.current, kind, endedAt)) {
 				clearTapCandidate();
-				onOpenNote(kind);
+				onOpenNote(kind, "direct");
 				return;
 			}
 			lastTapRef.current = { kind, endedAt };
@@ -493,7 +469,7 @@ function DndKitCard({
 	readonly segment: CardDemoInteractionProps["selectedSegment"];
 	readonly activeOutside: boolean;
 	readonly reducedMotion: boolean;
-	readonly onDirectOpen: (kind: CardDemoNoteKind) => void;
+	readonly onDirectOpen: CardDemoInteractionProps["onOpenNote"];
 	readonly onPointerDown: (
 		kind: CardDemoNoteKind,
 		event: ReactPointerEvent<HTMLButtonElement>,
@@ -541,7 +517,7 @@ function DndKitCard({
 				if (!isDndKitCardDemoDirectOpenKey(event.key, event.repeat))
 					return;
 				event.preventDefault();
-				onDirectOpen(card.kind);
+				onDirectOpen(card.kind, "direct");
 			}}
 			onLostPointerCapture={(event) =>
 				onLostPointerCapture(event.pointerId)

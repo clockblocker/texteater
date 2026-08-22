@@ -89,14 +89,22 @@ export function CardDemoPageFrame({
 	variant,
 	children,
 	className,
+	routeTransition = null,
+	transitionKind = null,
 }: {
 	readonly variant: CardDemoVariant;
 	readonly children: ReactNode;
 	readonly className?: string;
+	readonly routeTransition?: "opening" | "returning" | null;
+	readonly transitionKind?: CardDemoResolutionCard["kind"] | null;
 }) {
 	return (
 		<div
 			className={cn("card-demo-page", className)}
+			data-card-demo-route-transition-active={
+				routeTransition ?? undefined
+			}
+			data-card-demo-transition-kind={transitionKind ?? undefined}
 			data-card-demo-variant={variant}
 		>
 			{children}
