@@ -24,6 +24,7 @@ import {
 	CardDemoCardContent,
 	CardDemoPageFrame,
 } from "./card-demo-presentation";
+import { CardDemoTextPane } from "./card-demo-text-pane";
 import { CARD_DEMO_INTERACTIONS } from "./variants/card-demo-interaction-registry";
 import "./card-demo.css";
 
@@ -144,8 +145,8 @@ export function CardDemoTextPage({
 	};
 
 	return (
-		<CardDemoPageFrame variant={variant}>
-			<section aria-label="Fake Text" className="card-demo-text">
+		<CardDemoPageFrame className="card-demo-page--text" variant={variant}>
+			<CardDemoTextPane>
 				<div className="card-demo-copy">
 					{CARD_DEMO_FAKE_TEXT.paragraphs.map(
 						(paragraph, paragraphIndex) => (
@@ -181,7 +182,7 @@ export function CardDemoTextPage({
 						),
 					)}
 				</div>
-			</section>
+			</CardDemoTextPane>
 			{selectedSegment ? (
 				<CardDemoOverlay
 					onDismiss={dismiss}

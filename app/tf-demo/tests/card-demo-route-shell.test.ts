@@ -27,11 +27,28 @@ function renderRoute(
 test("renders the shared fake Text shell without production data", () => {
 	const markup = renderRoute("/playground/card-demo/native/text");
 	expect(markup).toContain('data-card-demo-variant="native"');
+	expect(markup).toContain('data-testid="card-demo-text-layout"');
+	expect(markup).toContain('data-testid="card-demo-text-pane"');
+	expect(markup.match(/role="separator"/g)).toHaveLength(2);
 	expect(markup).toContain('data-card-demo-segment="playground-segment-01"');
 	expect(markup).toContain("Lorem");
 	expect(markup).not.toContain("Card interaction playground");
 	expect(markup).not.toContain("Every word is a fake Segment");
 	expect(markup).not.toContain("convex");
+});
+
+test("uses the same resizable Text pane for all four playground variants", () => {
+	for (const variant of ["native", "motion", "dnd-kit", "gesture-spring"]) {
+		const markup = renderRoute(`/playground/card-demo/${variant}/text`);
+		expect(markup).toContain('data-testid="card-demo-text-layout"');
+		expect(markup).toContain('data-testid="card-demo-text-pane"');
+		expect(markup).toContain(
+			'aria-label="Resize the text pane from the left"',
+		);
+		expect(markup).toContain(
+			'aria-label="Resize the text pane from the right"',
+		);
+	}
 });
 
 test("lists every playground version at the playground root", () => {

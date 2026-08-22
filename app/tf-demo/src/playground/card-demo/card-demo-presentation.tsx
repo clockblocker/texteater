@@ -88,12 +88,17 @@ export function CardDemoStackFrame({
 export function CardDemoPageFrame({
 	variant,
 	children,
+	className,
 }: {
 	readonly variant: CardDemoVariant;
 	readonly children: ReactNode;
+	readonly className?: string;
 }) {
 	return (
-		<div className="card-demo-page" data-card-demo-variant={variant}>
+		<div
+			className={cn("card-demo-page", className)}
+			data-card-demo-variant={variant}
+		>
 			{children}
 		</div>
 	);

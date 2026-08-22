@@ -57,13 +57,17 @@
 
 .card-demo-text {
 	width: 100%;
-	min-height: calc(100dvh - clamp(3rem, 8vw, 8rem));
-	padding-block: clamp(1.25rem, 4vw, 3rem);
+	min-height: 100%;
+	padding: 3rem 2rem;
+}
+
+.card-demo-text-layout {
+	--card-demo-text-layout-height: calc(100dvh - 8rem);
 }
 
 .card-demo-copy {
 	display: grid;
-	gap: clamp(1rem, 2vw, 1.75rem);
+	gap: 1.25rem;
 }
 
 .card-demo-segments {
@@ -71,7 +75,7 @@
 	flex-wrap: wrap;
 	gap: 0.25rem 0.45rem;
 	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(1.15rem, 2vw, 1.65rem);
+	font-size: 1.35rem;
 	line-height: 1.6;
 }
 
@@ -221,5 +225,19 @@
 	.card-demo-card,
 	.card-demo-segment {
 		transition-duration: 0.01ms;
+	}
+}
+
+@media (max-width: 40rem) {
+	.card-demo-page--text {
+		padding-inline: 0;
+	}
+
+	.card-demo-text-layout {
+		--card-demo-text-layout-height: calc(100dvh - 3rem);
+	}
+
+	.card-demo-text {
+		padding: 2rem 1rem;
 	}
 }
