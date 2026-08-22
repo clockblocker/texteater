@@ -4,6 +4,7 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function requireConvexUrl() {
 	const convexUrl = import.meta.env.VITE_CONVEX_URL;
@@ -42,7 +43,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 		<ConvexProvider client={convexClient}>
 			<QueryClientProvider client={queryClient}>
 				<ThemeProvider storageKey="tf-demo-theme">
-					{children}
+					<TooltipProvider>{children}</TooltipProvider>
 				</ThemeProvider>
 			</QueryClientProvider>
 		</ConvexProvider>

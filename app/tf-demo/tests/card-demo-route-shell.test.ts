@@ -34,6 +34,18 @@ test("renders the shared fake Text shell without production data", () => {
 	expect(markup).not.toContain("convex");
 });
 
+test("lists every playground version at the playground root", () => {
+	const markup = renderRoute("/playground/card-demo");
+	expect(markup).toContain('data-card-demo-index=""');
+	expect(markup).toContain("Native");
+	expect(markup).toContain("Motion");
+	expect(markup).toContain("dnd-kit");
+	expect(markup).toContain("Gesture + Spring");
+	expect(
+		markup.match(/href="\/playground\/card-demo\/[^"]+\/text"/g),
+	).toHaveLength(4);
+});
+
 test("renders a matching fake Note route with the same presentation vocabulary", () => {
 	const markup = renderRoute("/playground/card-demo/motion/note/lemma");
 	expect(markup).toContain('data-card-demo-variant="motion"');

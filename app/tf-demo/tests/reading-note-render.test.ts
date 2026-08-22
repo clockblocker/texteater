@@ -53,7 +53,7 @@ test("dispatches malformed routes to an Error Note before Block rendering", () =
 	expect(markup).not.toContain('aria-label="Reading note"');
 });
 
-test("keeps Page Navigation in the shell while modeled defaults stay invisible", () => {
+test("keeps app navigation outside the Note composition while modeled defaults stay invisible", () => {
 	const markup = renderToStaticMarkup(
 		createElement(
 			MemoryRouter,
@@ -61,7 +61,7 @@ test("keeps Page Navigation in the shell while modeled defaults stay invisible",
 			renderReadingNote(readingNoteFixture()),
 		),
 	);
-	expect(markup).toContain('aria-label="Primary"');
+	expect(markup).not.toContain('aria-label="Primary"');
 	expect(markup).toContain('aria-label="Reading note"');
 	expect(markup).not.toContain("unavailable");
 

@@ -2,7 +2,6 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 import { DataControls } from "@/components/data-controls";
-import { PageNavigation } from "@/components/page-navigation";
 import {
 	Card,
 	CardContent,
@@ -24,18 +23,12 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 	});
 
 	return (
-		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-				<header className="flex flex-wrap items-start justify-between gap-4">
-					<div className="flex flex-col gap-2">
-						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-							Settings
-						</h1>
-						<p className="text-sm text-muted-foreground">
-							Preferences and demo maintenance for this browser.
-						</p>
-					</div>
-					<PageNavigation showSettings={false} />
+				<header>
+					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						Settings
+					</h1>
 				</header>
 
 				<Card>
@@ -84,7 +77,7 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 					<DataControls />
 				)}
 			</div>
-		</main>
+		</div>
 	);
 }
 

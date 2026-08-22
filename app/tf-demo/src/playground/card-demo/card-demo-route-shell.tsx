@@ -6,6 +6,7 @@ import type {
 	CardDemoNoteKind,
 	CardDemoVariant,
 } from "./card-demo-contract";
+import { CARD_DEMO_VARIANTS } from "./card-demo-contract";
 import {
 	CARD_DEMO_FAKE_SENTENCE,
 	CARD_DEMO_RESOLUTION_CHAIN,
@@ -30,9 +31,12 @@ import "./card-demo.css";
 export function CardDemoRouteShell() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const target = cardDemoTargetFromLocation(location);
 	const [selectedSegment, setSelectedSegment] =
 		useState<CardDemoFakeSegment | null>(null);
+	if (location.pathname === CARD_DEMO_BASE_PATH && location.search === "") {
+		return <CardDemoIndex />;
+	}
+	const target = cardDemoTargetFromLocation(location);
 
 	if (!target) return <CardDemoNotFound />;
 
@@ -86,6 +90,31 @@ export function CardDemoRouteShell() {
 			selectedSegment={selectedSegment}
 			variant={target.variant}
 		/>
+	);
+}
+
+const cardDemoVariantLabels = {
+	native: "Native",
+	motion: "Motion",
+	"dnd-kit": "dnd-kit",
+	"gesture-spring": "Gesture + Spring",
+} as const satisfies Record<CardDemoVariant, string>;
+
+export function CardDemoIndex() {
+	return (
+		<div className="card-demo-index" data-card-demo-index="">
+			<nav aria-label="Card playground versions">
+				<ul>
+					{CARD_DEMO_VARIANTS.map((variant) => (
+						<li key={variant}>
+							<Link to={cardDemoHref({ page: "text", variant })}>
+								{cardDemoVariantLabels[variant]}
+							</Link>
+						</li>
+					))}
+				</ul>
+			</nav>
+		</div>
 	);
 }
 
@@ -228,7 +257,7 @@ export function CardDemoOverlay({
 
 function CardDemoNotFound() {
 	return (
-		<main className="card-demo-page">
+		<div className="card-demo-page">
 			<h1>Card playground route not found</h1>
 			<p>Use one of the four registered variant Text or Note routes.</p>
 			<Link
@@ -237,6 +266,6 @@ function CardDemoNotFound() {
 			>
 				Open the native variant
 			</Link>
-		</main>
+		</div>
 	);
 }

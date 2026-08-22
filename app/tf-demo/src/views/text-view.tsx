@@ -4,7 +4,6 @@ import { useMutation as useConvexMutation } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { PageNavigation } from "@/components/page-navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SentenceView } from "@/lib/action-results";
@@ -112,15 +111,8 @@ export function TextView({ target }: { target: TextTarget }) {
 	}
 
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
-				<header className="flex flex-wrap items-center justify-between gap-4">
-					<h1 className="text-sm font-medium text-muted-foreground">
-						Text
-					</h1>
-					<PageNavigation settingsTextId={textDetail.textId} />
-				</header>
-
 				<SentenceList
 					sentences={sentences}
 					focus={textDetail.focus}
@@ -150,7 +142,7 @@ export function TextView({ target }: { target: TextTarget }) {
 					</p>
 				) : null}
 			</div>
-		</main>
+		</div>
 	);
 }
 
@@ -313,7 +305,7 @@ export function SentenceList({
 
 function TextViewSkeleton() {
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div
 				className="mx-auto w-full max-w-5xl"
 				role="status"
@@ -321,7 +313,7 @@ function TextViewSkeleton() {
 			>
 				<Skeleton className="h-9 w-96 max-w-full" />
 			</div>
-		</main>
+		</div>
 	);
 }
 

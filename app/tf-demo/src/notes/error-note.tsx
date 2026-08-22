@@ -19,8 +19,8 @@ export function renderErrorNote(
 				: "This Note could not be rendered.";
 
 	return (
-		<main
-			className="flex min-h-svh items-center justify-center bg-muted/30 px-4 py-12"
+		<div
+			className="flex flex-1 items-center justify-center bg-muted/30 px-4 py-12"
 			role="alert"
 		>
 			<Card className="w-full max-w-md">
@@ -29,6 +29,6 @@ export function renderErrorNote(
 					<CardDescription>{description}</CardDescription>
 				</CardHeader>
 			</Card>
-		</main>
+		</div>
 	);
 }

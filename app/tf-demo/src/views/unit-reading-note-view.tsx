@@ -269,7 +269,7 @@ function sourceContextFirstPageKey(note: ReadingNoteData): string {
 
 function ReadingNoteSkeleton() {
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div
 				className="mx-auto flex w-full max-w-5xl flex-col gap-3"
 				role="status"
@@ -278,7 +278,7 @@ function ReadingNoteSkeleton() {
 				<Skeleton className="h-7 w-48" />
 				<Skeleton className="h-20 w-full" />
 			</div>
-		</main>
+		</div>
 	);
 }
 

@@ -93,8 +93,8 @@ export function CardDemoPageFrame({
 	readonly children: ReactNode;
 }) {
 	return (
-		<main className="card-demo-page" data-card-demo-variant={variant}>
+		<div className="card-demo-page" data-card-demo-variant={variant}>
 			{children}
-		</main>
+		</div>
 	);
 }

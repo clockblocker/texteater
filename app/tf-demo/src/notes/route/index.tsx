@@ -1,6 +1,5 @@
 import { Fragment, type ReactElement } from "react";
 
-import { PageNavigation } from "@/components/page-navigation";
 import { renderErrorNote } from "../error-note";
 import type { NoteBlockKindFor } from "../note-block-kind";
 import { orderNoteBlockKinds } from "../note-block-order";
@@ -29,11 +28,8 @@ export function renderRouteNote(
 ): ReactElement {
 	try {
 		return (
-			<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+			<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 				<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-					<header className="flex justify-end">
-						<PageNavigation />
-					</header>
 					{(
 						orderNoteBlockKinds(
 							ROUTE_NOTE_BLOCKS,
@@ -50,7 +46,7 @@ export function renderRouteNote(
 						);
 					})}
 				</div>
-			</main>
+			</div>
 		);
 	} catch (cause) {
 		return renderErrorNote(cause, "Route Note unavailable");

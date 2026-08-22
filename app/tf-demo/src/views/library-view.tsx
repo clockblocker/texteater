@@ -10,7 +10,6 @@ import {
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -80,22 +79,12 @@ export function LibraryView() {
 	const error = interactionError ?? mutationMessage(textsQuery.error);
 
 	return (
-		<main className="min-h-svh bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-				<header className="flex flex-wrap items-start justify-between gap-4">
-					<div className="flex flex-col gap-2">
-						<p className="text-sm font-medium text-muted-foreground">
-							tf-demo
-						</p>
-						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-							Library
-						</h1>
-						<p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-							Open a stored text to inspect its sentences and
-							resolve German segments.
-						</p>
-					</div>
-					<PageNavigation showLibrary={false} />
+				<header>
+					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						Library
+					</h1>
 				</header>
 
 				<section
@@ -163,7 +152,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="fixed bottom-6 left-6 size-14 rounded-full shadow-lg"
+							className="fixed right-4 bottom-6 size-14 rounded-full shadow-lg sm:right-6 md:right-[max(1.5rem,calc((100vw-var(--sidebar-width-icon)-64rem)/2+1rem))]"
 						/>
 					}
 				>
@@ -223,7 +212,7 @@ export function LibraryView() {
 					</form>
 				</DialogContent>
 			</Dialog>
-		</main>
+		</div>
 	);
 }
 

@@ -10,6 +10,33 @@
 		var(--background);
 }
 
+.card-demo-index {
+	min-height: 100dvh;
+	padding: clamp(1.5rem, 4vw, 4rem);
+	background: var(--background);
+}
+
+.card-demo-index ul {
+	display: grid;
+	width: min(100%, 32rem);
+	margin-inline: auto;
+	gap: 0.75rem;
+}
+
+.card-demo-index a {
+	display: block;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	background: var(--card);
+	font-size: 1.125rem;
+	font-weight: 650;
+}
+
+.card-demo-index a:hover {
+	background: var(--accent);
+}
+
 .card-demo-text,
 .card-demo-note {
 	width: min(100%, 54rem);

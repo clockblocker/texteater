@@ -239,7 +239,7 @@ function deduplicateBy<Value>(
 
 function RouteNoteSkeleton() {
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div
 				className="mx-auto flex w-full max-w-5xl flex-col gap-5"
 				role="status"
@@ -247,6 +247,6 @@ function RouteNoteSkeleton() {
 				<Skeleton className="h-8 w-56" />
 				<Skeleton className="h-28 w-full" />
 			</div>
-		</main>
+		</div>
 	);
 }

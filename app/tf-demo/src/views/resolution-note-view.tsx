@@ -4,7 +4,6 @@ import { LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { PageNavigation } from "@/components/page-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hrefFor, type ResolutionTarget } from "@/lib/navigation";
@@ -66,13 +65,10 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 	const position = stagePosition[note.stage];
 	const isWorking = position < stagePosition.Complete;
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-				<header className="flex flex-wrap items-start justify-between gap-4">
+				<header>
 					<div className="flex flex-col gap-3">
-						<p className="text-sm font-medium text-muted-foreground">
-							Resolution Note
-						</p>
 						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
 							{note.reading
 								? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
@@ -91,7 +87,6 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 							) : null}
 						</div>
 					</div>
-					<PageNavigation />
 				</header>
 
 				<article
@@ -156,7 +151,7 @@ export function ResolutionNoteFrame({ note }: { note: ResolutionNote }) {
 					) : null}
 				</article>
 			</div>
-		</main>
+		</div>
 	);
 }
 
@@ -179,7 +174,7 @@ function ResolutionSection({
 
 function ResolutionNoteSkeleton() {
 	return (
-		<main className="min-h-svh bg-background px-4 py-8 sm:px-6 sm:py-12">
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div
 				className="mx-auto flex w-full max-w-5xl flex-col gap-5"
 				role="status"
@@ -187,7 +182,7 @@ function ResolutionNoteSkeleton() {
 				<Skeleton className="h-8 w-56" />
 				<Skeleton className="h-24 w-full" />
 			</div>
-		</main>
+		</div>
 	);
 }
 

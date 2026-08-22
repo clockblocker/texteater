@@ -1,5 +1,11 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
 import { CardDemoRouteShell } from "@/playground/card-demo/card-demo-route-shell";
 import { LibraryView } from "@/views/library-view";
@@ -13,17 +19,30 @@ import { UnitReadingNoteView } from "@/views/unit-reading-note-view";
 
 export function App() {
 	return (
-		<Routes>
-			<Route
-				path="/"
-				element={<Navigate to={hrefFor({ kind: "Library" })} replace />}
-			/>
-			<Route
-				path="/playground/card-demo/*"
-				element={<CardDemoRouteShell />}
-			/>
-			<Route path="*" element={<RoutedView />} />
-		</Routes>
+		<SidebarProvider open={false}>
+			<AppSidebar />
+			<SidebarInset>
+				<header className="flex h-12 shrink-0 items-center border-b px-3 md:hidden">
+					<SidebarTrigger />
+				</header>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<Navigate
+								to={hrefFor({ kind: "Library" })}
+								replace
+							/>
+						}
+					/>
+					<Route
+						path="/playground/card-demo/*"
+						element={<CardDemoRouteShell />}
+					/>
+					<Route path="*" element={<RoutedView />} />
+				</Routes>
+			</SidebarInset>
+		</SidebarProvider>
 	);
 }
 

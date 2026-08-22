@@ -18,7 +18,7 @@ export function NotFoundView({
 	description?: string;
 }) {
 	return (
-		<main className="flex min-h-svh items-center justify-center bg-muted/30 px-4 py-12">
+		<div className="flex flex-1 items-center justify-center bg-muted/30 px-4 py-12">
 			<div className="flex w-full max-w-md flex-col">
 				<Card className="w-full max-w-md self-center">
 					<CardHeader>
@@ -36,6 +36,6 @@ export function NotFoundView({
 					</CardFooter>
 				</Card>
 			</div>
-		</main>
+		</div>
 	);
 }
