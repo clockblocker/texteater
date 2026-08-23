@@ -50,6 +50,8 @@ describe("fixed German DET members", () => {
 		expect(identities).toEqual(
 			expect.arrayContaining([
 				"der/Art/null",
+				"die/Art/null",
+				"das/Art/null",
 				"ein/Art/null",
 				"dieser/Dem/null",
 				"selber/Emp/null",
@@ -65,6 +67,13 @@ describe("fixed German DET members", () => {
 				"wievielte/Int/null",
 			]),
 		);
+		for (const canonicalForm of ["der", "die", "das"]) {
+			expect(
+				catalog?.members.filter(
+					(lemma) => lemma.canonicalForm === canonicalForm,
+				),
+			).toHaveLength(1);
+		}
 		expect(
 			catalog?.members.some(
 				({ canonicalForm }) => canonicalForm === "the",

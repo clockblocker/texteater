@@ -49,7 +49,7 @@ export const determinerCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-det-demo-feminine-article-die": inflectionCase(
 			"<TARGET>Die</TARGET> Ärztin beginnt gleich mit der Sprechstunde.",
 			"Die",
-			"der",
+			"die",
 			{
 				...emptyInflection,
 				case: "Nom",
@@ -58,6 +58,21 @@ export const determinerCases = defineGoldenCaseCollection(import.meta.url, {
 			},
 			{
 				normalizedMember: "die",
+				coreFeatures: articleDef,
+			},
+		),
+		"grammar-de-det-demo-neuter-article-das": inflectionCase(
+			"<TARGET>Das</TARGET> Kind spielt im Garten.",
+			"Das",
+			"das",
+			{
+				...emptyInflection,
+				case: "Nom",
+				gender: "Neut",
+				number: "Sing",
+			},
+			{
+				normalizedMember: "das",
 				coreFeatures: articleDef,
 			},
 		),

@@ -55,7 +55,9 @@ normalizedMembers and preserve the lexeme's actual citation spelling. Do not
 modernize, shorten, or mark that quoted spelling Typo merely because it is
 rare or unfamiliar.
 All core fields are mandatory and nullable. Use these lexical policies:
-- definite article der: pronType Art, definite Def.
+- native definite articles der, die, and das are three separate Lemmas with
+  pronType Art and definite Def. Preserve an occurrence of any of these exact
+  forms as its own canonicalForm; never collapse die or das to der.
 - indefinite article ein: pronType Art, definite Ind, numType Card.
 - demonstrative: Dem; emphatic: Emp; exclamative: Exc; indefinite quantifier:
   Ind; interrogative: Int; relative determiner: Rel; negative kein/keinerlei:
@@ -105,6 +107,7 @@ const demonstrations = corpus.select([
 	"grammar-de-det-demo-definite-article-der",
 	"grammar-de-det-demo-possessive-meinem",
 	"grammar-de-det-demo-feminine-article-die",
+	"grammar-de-det-demo-neuter-article-das",
 	"grammar-de-det-demo-uninflected-derlei",
 	"grammar-de-det-demo-variant-ne",
 	"grammar-de-det-demo-standalone-jener",

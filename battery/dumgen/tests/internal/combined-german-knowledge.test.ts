@@ -115,7 +115,26 @@ describe("combined German Knowledge generation", () => {
 				{ aspect: "definition" },
 				{ aspect: "translations", language: "en", value: ["the"] },
 			],
-			pendingRelations: [],
+			pendingRelations: [
+				{
+					relation: "synonym",
+					target: {
+						language: "de",
+						family: "Lexeme",
+						kind: "DET",
+						canonicalForm: "die",
+					},
+				},
+				{
+					relation: "synonym",
+					target: {
+						language: "de",
+						family: "Lexeme",
+						kind: "DET",
+						canonicalForm: "das",
+					},
+				},
+			],
 		});
 		expect(calls).toHaveLength(0);
 	});

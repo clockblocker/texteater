@@ -2,9 +2,10 @@ import {
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
-import type { Reading } from "dumling/types";
+import type { Lemma, Reading } from "dumling/types";
 import type { ReadingKnowledge } from "./types.js";
 
+type DetLemma = Lemma<"de", "Lexeme", "DET">;
 type DetReading = Reading<"de", "Lexeme", "DET">;
 
 export type FixedKnowledgeCoverageState =
@@ -17,7 +18,7 @@ export type FixedKnowledgeCoverage = Readonly<{
 	definition: "Authored";
 	translations: Readonly<{ en: "Authored" }>;
 	semanticRelations: Readonly<{
-		synonym: "ReviewedEmpty";
+		synonym: "Authored" | "ReviewedEmpty";
 		nearSynonym: "ReviewedEmpty";
 		antonym: "ReviewedEmpty";
 		nearAntonym: "ReviewedEmpty";
@@ -25,8 +26,9 @@ export type FixedKnowledgeCoverage = Readonly<{
 }>;
 
 /**
- * Authored coverage for the DET v1 slice. Empty relation buckets were reviewed
- * and deliberately produce no direct relation claims; they are not unauthored.
+ * Default authored coverage for the DET v1 slice. Definite-article Readings
+ * override synonym coverage below; all remaining empty relation buckets were
+ * reviewed and deliberately produce no direct relation claims.
  */
 export const DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	transcription: "Unauthored",
@@ -37,6 +39,14 @@ export const DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 		nearSynonym: "ReviewedEmpty",
 		antonym: "ReviewedEmpty",
 		nearAntonym: "ReviewedEmpty",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
+const DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	...DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelations: {
+		...DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
+		synonym: "Authored",
 	},
 } as const satisfies FixedKnowledgeCoverage);
 
@@ -60,11 +70,14 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 		sameCanonicalValue(candidate, reading),
 	);
 	if (!catalogued) return MEMBER_NOT_CATALOGUED;
+	const detReading = catalogued as DetReading;
 	return deepFreeze({
 		decision: "Found",
 		scope: FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
-		coverage: DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
-		knowledge: authoredKnowledgeFor(catalogued as DetReading),
+		coverage: isPromotedDefiniteArticle(detReading.lemma)
+			? DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE
+			: DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
+		knowledge: authoredKnowledgeFor(detReading),
 	});
 }
 
@@ -79,6 +92,8 @@ const INVENTORY_NOT_LOADED = Object.freeze({
 
 const englishGlosses = {
 	der: ["the"],
+	die: ["the"],
+	das: ["the"],
 	ein: ["a", "an"],
 	mein: ["my"],
 	dein: ["your"],
@@ -131,10 +146,44 @@ function authoredKnowledgeFor(
 			`Missing English gloss for fixed DET ${canonicalForm}.`,
 		);
 	}
+	const semanticRelations = semanticRelationsFor(reading.lemma);
 	return deepFreeze({
 		definition: definitionFor(reading),
 		translations: { en: [...translations] },
+		...(semanticRelations === undefined ? {} : { semanticRelations }),
 	} satisfies ReadingKnowledge<"en">);
+}
+
+const promotedDefiniteArticleForms = new Set(["der", "die", "das"]);
+
+function isPromotedDefiniteArticle(lemma: DetLemma): boolean {
+	return (
+		lemma.coreFeatures.definite === "Def" &&
+		lemma.coreFeatures.pronType === "Art" &&
+		promotedDefiniteArticleForms.has(lemma.canonicalForm)
+	);
+}
+
+function semanticRelationsFor(
+	lemma: DetLemma,
+): ReadingKnowledge<"en", DetLemma>["semanticRelations"] | undefined {
+	if (!isPromotedDefiniteArticle(lemma)) return undefined;
+	const catalog = fixedMembersFor.lemma({
+		language: "de",
+		family: "Lexeme",
+		kind: "DET",
+	});
+	const synonyms = catalog?.members.filter(
+		(candidate) =>
+			isPromotedDefiniteArticle(candidate) &&
+			candidate.canonicalForm !== lemma.canonicalForm,
+	);
+	if (synonyms?.length !== 2) {
+		throw new Error(
+			`Expected two fixed definite-article synonyms for ${lemma.canonicalForm}.`,
+		);
+	}
+	return { synonym: [...synonyms] };
 }
 
 function definitionFor(reading: Reading<"de", "Lexeme", "DET">): string {

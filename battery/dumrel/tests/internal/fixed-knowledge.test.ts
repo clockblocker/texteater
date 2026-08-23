@@ -32,7 +32,26 @@ describe("fixed German DET Knowledge", () => {
 				expect(found.knowledge.translations?.en.length).toBeGreaterThan(
 					0,
 				);
-				expect(found.knowledge.semanticRelations).toBeUndefined();
+				const canonicalForm = reading.lemma.canonicalForm;
+				if (["der", "die", "das"].includes(canonicalForm)) {
+					expect(
+						found.knowledge.semanticRelations?.synonym?.map(
+							(target) => target.canonicalForm,
+						),
+					).toEqual(
+						["der", "die", "das"].filter(
+							(target) => target !== canonicalForm,
+						),
+					);
+					expect(found.coverage.semanticRelations.synonym).toBe(
+						"Authored",
+					);
+				} else {
+					expect(found.knowledge.semanticRelations).toBeUndefined();
+					expect(found.coverage.semanticRelations.synonym).toBe(
+						"ReviewedEmpty",
+					);
+				}
 				expect(Object.isFrozen(found.knowledge)).toBe(true);
 				const parsed = parseAsReadingKnowledge(found.knowledge);
 				expect(parsed).not.toBeInstanceOf(ParsingError);

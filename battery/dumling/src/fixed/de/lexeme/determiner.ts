@@ -50,11 +50,13 @@ const possessive = (
 });
 
 const specifications = Object.freeze([
-	{
-		canonicalForm: "der",
-		coreFeatures: core({ definite: "Def", pronType: "Art" }),
-		emojiDescription: "👉",
-	},
+	...["der", "die", "das"].map(
+		(canonicalForm): DetSpecification => ({
+			canonicalForm,
+			coreFeatures: core({ definite: "Def", pronType: "Art" }),
+			emojiDescription: "👉",
+		}),
+	),
 	{
 		canonicalForm: "ein",
 		coreFeatures: core({
