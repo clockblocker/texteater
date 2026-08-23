@@ -400,8 +400,6 @@ type RuntimeOperationSignature = Readonly<{
 
 function delegatedOperationName(name: string): string | undefined {
 	const exact: Readonly<Record<string, string>> = {
-		"dumgen.prompt.custom.hasDistinctPair":
-			"dumgen.transitive.custom.hasDistinctPair",
 		"dumgen.prompt.custom.hasEnglishTranslationSelection":
 			"dumgen.translation-request.english",
 		"dumgen.prompt.custom.hasMarkedInflectionFeature":

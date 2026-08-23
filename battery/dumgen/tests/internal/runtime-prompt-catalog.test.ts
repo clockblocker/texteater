@@ -28,6 +28,7 @@ import {
 	type RuntimePromptPath,
 } from "../../src/generated/runtime-prompt-artifacts";
 import { encodedDumgenValidationArtifacts } from "../../src/generated/validation-artifacts";
+import { corpus as deDeterminerCorpus } from "../../src/promptsmith/production/grammatical-resolution/de/lexeme/determiner/golden-corpus/corpus";
 import { productionDemonstrationSelection } from "../../src/promptsmith/production/prompt-part/target-classification/de/high-level-whole-unit";
 
 type CatalogNode = Readonly<Record<string, unknown>>;
@@ -162,7 +163,7 @@ async function canonicalPromptRepresentatives(): Promise<
 			const output = structuredClone(base.output) as {
 				surface: { inflectionalFeatures: { gender: unknown } };
 			};
-			output.surface.inflectionalFeatures.gender = ["Masc", "Neut"];
+			output.surface.inflectionalFeatures.gender = "Fem";
 			cases.push({ ...base, output });
 		}
 		representatives.set(path, { cases });
@@ -338,6 +339,41 @@ describe("generated operational runtime prompt catalog", () => {
 		expect(() => runtimeIntake.inputSchema.parse({ items: [] })).toThrow();
 		expect(() =>
 			runtimeIntake.outputSchema?.parse({ items: [] }),
+		).toThrow();
+
+		const feminineDeterminerCase =
+			deDeterminerCorpus.cases[
+				"grammar-de-det-demo-feminine-article-die"
+			];
+		if (feminineDeterminerCase === undefined)
+			throw new Error("Feminine determiner representative is missing.");
+		const validDeterminerOutput = structuredClone(
+			feminineDeterminerCase.idealOutput,
+		);
+		const authoredDeterminer =
+			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.DET
+				.prompt;
+		const runtimeDeterminer =
+			RUNTIME_PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme
+				.DET.prompt;
+		expect(
+			runtimeDeterminer.outputSchema?.parse(validDeterminerOutput),
+		).toEqual(authoredDeterminer.outputSchema.parse(validDeterminerOutput));
+		const invalidDeterminerOutput = structuredClone(
+			validDeterminerOutput,
+		) as {
+			surface: { inflectionalFeatures: { gender: unknown } };
+		};
+		invalidDeterminerOutput.surface.inflectionalFeatures.gender = [
+			"Fem",
+			"Masc",
+		];
+		expect(
+			authoredDeterminer.outputSchema.safeParse(invalidDeterminerOutput)
+				.success,
+		).toBe(false);
+		expect(() =>
+			runtimeDeterminer.outputSchema?.parse(invalidDeterminerOutput),
 		).toThrow();
 
 		const escapedGrammarInput = {

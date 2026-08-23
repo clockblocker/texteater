@@ -226,11 +226,6 @@ function constructDumgenValidationOperation(
 			});
 		case "dumgen.transitive.unit-shadow.supported-route":
 			return supportedUnitShadowRoute;
-		case "dumgen.transitive.custom.hasDistinctPair":
-			return customCheck(
-				name,
-				(value: readonly unknown[]) => value[0] !== value[1],
-			);
 		case "dumgen.transitive.custom.hasGermanVerbInflectionSignal":
 			return customCheck(
 				name,

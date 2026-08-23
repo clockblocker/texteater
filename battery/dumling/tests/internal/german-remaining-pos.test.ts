@@ -65,6 +65,56 @@ describe("German remaining POS schemas", () => {
 			}).success,
 		).toBe(true);
 
+		for (const gender of ["Fem", "Masc", "Neut"] as const) {
+			expect(
+				schemasFor.de.entity.Attestation.Inflection.Lexeme.DET().safeParse(
+					{
+						members: [
+							{ attested: "diese", orthography: "Standard" },
+						],
+						realizationCoverage: "Full",
+
+						surface: {
+							...makeLexemeSurfaceReference("de", "DET", "dies"),
+							language: "de",
+							normalizedSurface: "diese",
+							spelling: "Canonical",
+							surfaceKind: "Inflection",
+							inflectionalFeatures: {
+								case: "Nom",
+								degree: null,
+								gender,
+								"gender[psor]": null,
+								number: "Sing",
+								"number[psor]": null,
+							},
+						},
+					},
+				).success,
+			).toBe(true);
+		}
+		expect(
+			schemasFor.de.entity.Attestation.Inflection.Lexeme.DET().safeParse({
+				members: [{ attested: "diese", orthography: "Standard" }],
+				realizationCoverage: "Full",
+				surface: {
+					...makeLexemeSurfaceReference("de", "DET", "dies"),
+					language: "de",
+					normalizedSurface: "diese",
+					spelling: "Canonical",
+					surfaceKind: "Inflection",
+					inflectionalFeatures: {
+						case: "Nom",
+						degree: null,
+						gender: ["Fem", "Masc"],
+						"gender[psor]": null,
+						number: "Sing",
+						"number[psor]": null,
+					},
+				},
+			}).success,
+		).toBe(false);
+
 		expect(
 			schemasFor.de.entity.Lemma.Lexeme.X().safeParse({
 				language: "de",

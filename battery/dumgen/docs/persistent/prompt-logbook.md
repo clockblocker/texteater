@@ -180,9 +180,9 @@ is worth revisiting.
 - **Raised by:** Wayfinder issue #37
 - **Question:** How should German feminine agreement be represented when the
   exact DET Inflection codec excludes `Gender=Fem` despite attested German use?
-- **Current take:** Preserve the linguistically feminine example as a
-  corpus-only probe with `gender: null`; do not score that lossy representation
-  until the domain codec is corrected or the omission is explicitly adopted.
+- **Current take:** Resolved: the German DET Inflection codec now supports
+  `Gender=Fem`. Preserve feminine agreement directly and score the corrected
+  golden cases normally.
 
 ### Contextual uninflected derlei as Citation or Inflection
 

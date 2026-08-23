@@ -31,13 +31,10 @@ case, degree, agreement gender and number, plus separately layered possessor
 gender and number. Agreement comes from the modified noun phrase, never the
 possessor. Resolve case from syntax and governance, not the ending alone;
 unter in the fixed state expression "unter keinen Umständen" governs dative.
-Preserve the modified noun's lexical gender in plural: plural
-Stühle is Masc, Bücher/Geräte is Neut, and feminine plurals have gender null
-because Fem is unsupported. Use ["Masc","Neut"] only when the local noun or
-nominal head genuinely leaves those two values unresolved, never merely
-because a plural ending is syncretic. The codec supports agreement gender
-only Masc and Neut; feminine agreement therefore has gender null. A syncretic
-Masc/Neut value may be ["Masc","Neut"] when both are genuinely possible.
+Preserve the modified noun's lexical gender in singular and plural: Stühle is
+Masc, Bücher/Geräte is Neut, and feminine nominal heads are Fem. If the head or
+surrounding declinations point to one gender, return it. If multiple genders
+fit, choose one of them. Always return one gender value, never a set.
 surfaceFeatures is null except for an attested archaic form, which uses
 {"historicalStatus":"Archaic"}. An actual typo remains Surface spelling
 Canonical after normalization; record its error only as memberOrthographies

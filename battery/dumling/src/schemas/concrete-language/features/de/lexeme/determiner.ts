@@ -1,24 +1,11 @@
 import { z } from "zod";
 import type { DeDeterminerFeatures } from "../../../../../types/concrete-language/features/de/lexeme/determiner.js";
-import { hasDistinctPair } from "../../../../../validation-semantics.js";
 import { abstractFeatureAtomSchemas } from "../../../../abstract/feature-schemas.js";
 import {
 	buildOptionalFeatureObjectSchema,
 	featureValueSet,
 	requireNonEmptyFeatureObject,
 } from "../../../../shared/feature-helpers.js";
-
-const deDeterminerGenderSchema = z.union([
-	abstractFeatureAtomSchemas.gender.extract(["Masc", "Neut"]),
-	z
-		.array(abstractFeatureAtomSchemas.gender.extract(["Masc", "Neut"]))
-		.length(2)
-		.refine(hasDistinctPair),
-]) as z.ZodType<
-	DeDeterminerFeatures["inflectional"]["gender"] extends infer TGender
-		? Exclude<TGender, null>
-		: never
->;
 
 export const deDeterminerFeaturesSchema = z.strictObject({
 	core: buildOptionalFeatureObjectSchema({
@@ -55,7 +42,11 @@ export const deDeterminerFeaturesSchema = z.strictObject({
 				"Pos",
 				"Sup",
 			]),
-			gender: deDeterminerGenderSchema,
+			gender: abstractFeatureAtomSchemas.gender.extract([
+				"Fem",
+				"Masc",
+				"Neut",
+			]),
 			"gender[psor]": featureValueSet(
 				abstractFeatureAtomSchemas.gender.extract([
 					"Fem",

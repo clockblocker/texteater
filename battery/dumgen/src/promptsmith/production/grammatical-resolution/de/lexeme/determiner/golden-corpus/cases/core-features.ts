@@ -50,12 +50,15 @@ export const determinerCases = defineGoldenCaseCollection(import.meta.url, {
 			"<TARGET>Die</TARGET> Ärztin beginnt gleich mit der Sprechstunde.",
 			"Die",
 			"der",
-			{ ...emptyInflection, case: "Nom", number: "Sing" },
+			{
+				...emptyInflection,
+				case: "Nom",
+				gender: "Fem",
+				number: "Sing",
+			},
 			{
 				normalizedMember: "die",
 				coreFeatures: articleDef,
-				explanation:
-					"Feminine agreement is contextual, but the exact DET codec cannot represent Fem in the agreement-gender field, so gender stays null.",
 			},
 		),
 		"grammar-de-det-demo-uninflected-derlei": citationCase(
@@ -73,7 +76,12 @@ export const determinerCases = defineGoldenCaseCollection(import.meta.url, {
 			"Da steht <TARGET>ne</TARGET> Kiste auf dem Flur.",
 			"ne",
 			"ein",
-			{ ...emptyInflection, case: "Nom", number: "Sing" },
+			{
+				...emptyInflection,
+				case: "Nom",
+				gender: "Fem",
+				number: "Sing",
+			},
 			{ spelling: "Variant", coreFeatures: articleInd },
 		),
 		"grammar-de-det-demo-standalone-jener": inflectionCase(
@@ -92,7 +100,12 @@ export const determinerCases = defineGoldenCaseCollection(import.meta.url, {
 			"<TARGET>Welche</TARGET> Nachricht hat die Redaktion zuerst bestätigt?",
 			"Welche",
 			"welcher",
-			{ ...emptyInflection, case: "Acc", number: "Sing" },
+			{
+				...emptyInflection,
+				case: "Acc",
+				gender: "Fem",
+				number: "Sing",
+			},
 			{
 				normalizedMember: "welche",
 				coreFeatures: { ...unmarkedCore, pronType: "Int" },

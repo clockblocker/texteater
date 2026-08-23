@@ -40,11 +40,10 @@ export type DeDeterminerFeatures = {
 			AbstractFeatureValue<"degree">,
 			"Cmp" | "Pos" | "Sup"
 		> | null;
-		gender:
-			| Extract<AbstractFeatureValue<"gender">, "Masc" | "Neut">
-			| readonly ["Masc", "Neut"]
-			| readonly ["Neut", "Masc"]
-			| null;
+		gender: Extract<
+			AbstractFeatureValue<"gender">,
+			"Fem" | "Masc" | "Neut"
+		> | null;
 		"gender[psor]": FeatureValueSet<
 			Extract<AbstractFeatureValue<"gender">, "Fem" | "Masc" | "Neut">
 		> | null;
