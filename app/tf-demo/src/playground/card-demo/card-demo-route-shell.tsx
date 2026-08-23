@@ -275,10 +275,24 @@ export function CardDemoTextPage({
 		cancelDismiss();
 		onSelectedSegmentChange(segment);
 	};
+	const dismissOnUnoccupiedClick = (
+		event: ReactMouseEvent<HTMLDivElement>,
+	) => {
+		if (!selectedSegment) return;
+		const target = event.target;
+		if (
+			!(target instanceof Element) ||
+			target.closest("[data-card-demo-segment], [data-card-demo-overlay]")
+		)
+			return;
+
+		dismiss();
+	};
 
 	return (
 		<CardDemoPageFrame
 			className="card-demo-page--text"
+			onClick={dismissOnUnoccupiedClick}
 			routeTransition={routeTransition?.direction ?? null}
 			transitionKind={routeTransition?.card.kind ?? null}
 			variant={variant}

@@ -91,7 +91,8 @@ export function CardDemoPageFrame({
 	className,
 	routeTransition = null,
 	transitionKind = null,
-}: {
+	...props
+}: Omit<ComponentProps<"div">, "children" | "className"> & {
 	readonly variant: CardDemoVariant;
 	readonly children: ReactNode;
 	readonly className?: string;
@@ -106,6 +107,7 @@ export function CardDemoPageFrame({
 			}
 			data-card-demo-transition-kind={transitionKind ?? undefined}
 			data-card-demo-variant={variant}
+			{...props}
 		>
 			{children}
 		</div>
