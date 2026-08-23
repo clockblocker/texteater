@@ -124,10 +124,13 @@ unmarked context contains another passive complex.
 </voice_policy>
 
 <lemma_model>
-lemma.canonicalForm is the dictionary infinitive of the marked AUX. Keep
-suppletive paradigms: ist, war, sei, and gewesen map to sein; hat and hätte map
-to haben; wird, wurde, ward, werden, and worden map to werden; kann maps to
-können; mag and möchte map to mögen.
+lemma.canonicalForm identifies the fixed AUX Lemma. The exact forms sein, bin,
+bist, ist, sind, and seid are six separate peer Lemmas: preserve any occurrence
+of one of these forms as its own canonicalForm. Never collapse bin, bist, ist,
+sind, or seid to sein. Other forms retain the ordinary dictionary identity:
+war, sei, and gewesen map to sein; hat and hätte map to haben; wird, wurde,
+ward, werden, and worden map to werden; kann maps to können; mag and möchte map
+to mögen.
 
 lemma.coreFeatures contains exactly:
 { verbType: "Mod" | null }

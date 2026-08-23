@@ -139,6 +139,49 @@ describe("combined German Knowledge generation", () => {
 		expect(calls).toHaveLength(0);
 	});
 
+	test("routes promoted sein-peer Knowledge independently without calling Open", async () => {
+		const lemmaCatalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "AUX",
+		});
+		const lemma = lemmaCatalog?.members.find(
+			(member) => member.canonicalForm === "sein",
+		);
+		const reading = lemma && fixedMembersFor.reading(lemma)?.members[0];
+		if (!reading) throw new Error("Expected fixed sein Reading.");
+		const { calls, sdk } = queueSdk([]);
+
+		const result = await knowledgeRuntime(sdk)({
+			markedContext: "<TARGET>sein</TARGET>",
+			reading: reading as unknown as Reading<"de">,
+			request: {
+				definition: null,
+				translations: { en: null },
+				semanticRelations: { synonym: null },
+			},
+		});
+
+		expect(result).toMatchObject({
+			changes: [
+				{ aspect: "definition" },
+				{ aspect: "translations", language: "en", value: ["be"] },
+			],
+			pendingRelations: ["bin", "bist", "ist", "sind", "seid"].map(
+				(canonicalForm) => ({
+					relation: "synonym",
+					target: {
+						language: "de",
+						family: "Lexeme",
+						kind: "AUX",
+						canonicalForm,
+					},
+				}),
+			),
+		});
+		expect(calls).toHaveLength(0);
+	});
+
 	test("returns a CatalogMiss for requested Knowledge outside authored coverage", async () => {
 		const lemmaCatalog = fixedMembersFor.lemma({
 			language: "de",

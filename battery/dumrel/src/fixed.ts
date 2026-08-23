@@ -1,10 +1,13 @@
 import {
+	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
 import type { Lemma, Reading } from "dumling/types";
 import type { ReadingKnowledge } from "./types.js";
 
+type AuxLemma = Lemma<"de", "Lexeme", "AUX">;
+type AuxReading = Reading<"de", "Lexeme", "AUX">;
 type DetLemma = Lemma<"de", "Lexeme", "DET">;
 type DetReading = Reading<"de", "Lexeme", "DET">;
 
@@ -50,6 +53,27 @@ const DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	},
 } as const satisfies FixedKnowledgeCoverage);
 
+/** Default authored coverage for fixed German AUX Readings. */
+export const DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	transcription: "Unauthored",
+	definition: "Authored",
+	translations: { en: "Authored" },
+	semanticRelations: {
+		synonym: "ReviewedEmpty",
+		nearSynonym: "ReviewedEmpty",
+		antonym: "ReviewedEmpty",
+		nearAntonym: "ReviewedEmpty",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
+const DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelations: {
+		...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
+		synonym: "Authored",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
 export type FixedKnowledgeLookup =
 	| Readonly<{
 			decision: "Found";
@@ -70,6 +94,21 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 		sameCanonicalValue(candidate, reading),
 	);
 	if (!catalogued) return MEMBER_NOT_CATALOGUED;
+	if (catalogued.lemma.family !== "Lexeme") {
+		return MEMBER_NOT_CATALOGUED;
+	}
+	if (catalogued.lemma.kind === "AUX") {
+		const auxReading = catalogued as AuxReading;
+		return deepFreeze({
+			decision: "Found",
+			scope: FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
+			coverage: isPromotedSeinPeer(auxReading.lemma)
+				? DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE
+				: DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
+			knowledge: authoredAuxKnowledgeFor(auxReading),
+		});
+	}
+	if (catalogued.lemma.kind !== "DET") return MEMBER_NOT_CATALOGUED;
 	const detReading = catalogued as DetReading;
 	return deepFreeze({
 		decision: "Found",
@@ -77,7 +116,7 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 		coverage: isPromotedDefiniteArticle(detReading.lemma)
 			? DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE
 			: DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
-		knowledge: authoredKnowledgeFor(detReading),
+		knowledge: authoredDetKnowledgeFor(detReading),
 	});
 }
 
@@ -135,7 +174,7 @@ const englishGlosses = {
 	beide: ["both"],
 } as const satisfies Record<string, readonly [string, ...string[]]>;
 
-function authoredKnowledgeFor(
+function authoredDetKnowledgeFor(
 	reading: Reading<"de", "Lexeme", "DET">,
 ): ReadingKnowledge<"en"> {
 	const canonicalForm = reading.lemma.canonicalForm;
@@ -146,7 +185,7 @@ function authoredKnowledgeFor(
 			`Missing English gloss for fixed DET ${canonicalForm}.`,
 		);
 	}
-	const semanticRelations = semanticRelationsFor(reading.lemma);
+	const semanticRelations = detSemanticRelationsFor(reading.lemma);
 	return deepFreeze({
 		definition: definitionFor(reading),
 		translations: { en: [...translations] },
@@ -164,7 +203,7 @@ function isPromotedDefiniteArticle(lemma: DetLemma): boolean {
 	);
 }
 
-function semanticRelationsFor(
+function detSemanticRelationsFor(
 	lemma: DetLemma,
 ): ReadingKnowledge<"en", DetLemma>["semanticRelations"] | undefined {
 	if (!isPromotedDefiniteArticle(lemma)) return undefined;
@@ -184,6 +223,88 @@ function semanticRelationsFor(
 		);
 	}
 	return { synonym: [...synonyms] };
+}
+
+const auxEnglishGlosses = {
+	sein: ["be"],
+	bin: ["am"],
+	bist: ["are"],
+	ist: ["is"],
+	sind: ["are"],
+	seid: ["are"],
+	haben: ["have"],
+	werden: ["become", "will"],
+	dürfen: ["may"],
+	können: ["can"],
+	mögen: ["like", "may"],
+	müssen: ["must"],
+	sollen: ["should"],
+	wollen: ["want"],
+} as const satisfies Record<string, readonly [string, ...string[]]>;
+
+function authoredAuxKnowledgeFor(reading: AuxReading): ReadingKnowledge<"en"> {
+	const canonicalForm = reading.lemma.canonicalForm;
+	const translations =
+		auxEnglishGlosses[canonicalForm as keyof typeof auxEnglishGlosses];
+	if (!translations) {
+		throw new Error(
+			`Missing English gloss for fixed AUX ${canonicalForm}.`,
+		);
+	}
+	const semanticRelations = auxSemanticRelationsFor(reading.lemma);
+	return deepFreeze({
+		definition: auxDefinitionFor(reading),
+		translations: { en: [...translations] },
+		...(semanticRelations === undefined ? {} : { semanticRelations }),
+	} satisfies ReadingKnowledge<"en">);
+}
+
+const promotedSeinPeerForms = new Set([
+	"sein",
+	"bin",
+	"bist",
+	"ist",
+	"sind",
+	"seid",
+]);
+
+function isPromotedSeinPeer(lemma: AuxLemma): boolean {
+	return (
+		lemma.coreFeatures.verbType === null &&
+		promotedSeinPeerForms.has(lemma.canonicalForm)
+	);
+}
+
+function auxSemanticRelationsFor(
+	lemma: AuxLemma,
+): ReadingKnowledge<"en", AuxLemma>["semanticRelations"] | undefined {
+	if (!isPromotedSeinPeer(lemma)) return undefined;
+	const catalog = fixedMembersFor.lemma({
+		language: "de",
+		family: "Lexeme",
+		kind: "AUX",
+	});
+	const synonyms = catalog?.members.filter(
+		(candidate) =>
+			isPromotedSeinPeer(candidate) &&
+			candidate.canonicalForm !== lemma.canonicalForm,
+	);
+	if (synonyms?.length !== 5) {
+		throw new Error(
+			`Expected five fixed sein-peer synonyms for ${lemma.canonicalForm}.`,
+		);
+	}
+	return { synonym: [...synonyms] };
+}
+
+function auxDefinitionFor(reading: AuxReading): string {
+	const canonicalForm = reading.lemma.canonicalForm;
+	if (isPromotedSeinPeer(reading.lemma)) {
+		return `Das Auxiliar „${canonicalForm}“ bezeichnet dieselbe Identität wie „sein“ in einer eigenständigen grammatischen Form.`;
+	}
+	return reading.lemma.coreFeatures.verbType === "Mod"
+		? `Das Modalauxiliar „${canonicalForm}“ modifiziert die Geltung oder Möglichkeit einer Handlung.`
+		: `Das Auxiliar „${canonicalForm}“ bildet eine grammatische Verbkonstruktion.`;
 }
 
 function definitionFor(reading: Reading<"de", "Lexeme", "DET">): string {

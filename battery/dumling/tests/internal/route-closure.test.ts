@@ -8,6 +8,7 @@ import {
 import {
 	allFixedLemmaCatalogs,
 	allFixedReadingCatalogs,
+	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	fixedMembersFor,
 } from "../../src/fixed";
@@ -18,10 +19,21 @@ const detRoute = {
 	kind: "DET",
 } as const;
 
+const auxRoute = {
+	language: "de",
+	family: "Lexeme",
+	kind: "AUX",
+} as const;
+
 describe("Route Closure", () => {
 	test("promotes German DET for Reading and therefore Lemma", () => {
 		expect(isClosedRouteFor.reading(detRoute)).toBe(true);
 		expect(isClosedRouteFor.lemma(detRoute)).toBe(true);
+	});
+
+	test("promotes German AUX for Reading and therefore Lemma", () => {
+		expect(isClosedRouteFor.reading(auxRoute)).toBe(true);
+		expect(isClosedRouteFor.lemma(auxRoute)).toBe(true);
 	});
 
 	test("defaults every absent route to Open", () => {
@@ -110,10 +122,10 @@ describe("fixed German DET members", () => {
 	});
 
 	test("iterates catalogs for the idempotent application loader", () => {
-		expect(allFixedLemmaCatalogs()).toHaveLength(1);
+		expect(allFixedLemmaCatalogs()).toHaveLength(2);
 		expect(allFixedLemmaCatalogs()[0]?.route).toEqual(detRoute);
 		expect(Object.isFrozen(allFixedLemmaCatalogs())).toBe(true);
-		expect(allFixedReadingCatalogs()).toHaveLength(1);
+		expect(allFixedReadingCatalogs()).toHaveLength(2);
 		expect(allFixedReadingCatalogs()[0]?.scope).toBe(
 			FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 		);
@@ -139,5 +151,47 @@ describe("fixed German DET members", () => {
 					member.canonicalForm === foreignCandidate.canonicalForm,
 			),
 		).toBe(false);
+	});
+});
+
+describe("fixed German AUX members", () => {
+	test("covers the complete native AUX class and promoted sein peers", () => {
+		const catalog = fixedMembersFor.lemma(auxRoute);
+		expect(catalog?.scope).toBe(FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1);
+		expect(catalog?.coverage).toBe("Complete");
+		expect(
+			catalog?.members.map(
+				({ canonicalForm, coreFeatures }) =>
+					`${canonicalForm}/${coreFeatures.verbType}`,
+			),
+		).toEqual([
+			"sein/null",
+			"bin/null",
+			"bist/null",
+			"ist/null",
+			"sind/null",
+			"seid/null",
+			"haben/null",
+			"werden/null",
+			"dürfen/Mod",
+			"können/Mod",
+			"mögen/Mod",
+			"müssen/Mod",
+			"sollen/Mod",
+			"wollen/Mod",
+		]);
+	});
+
+	test("owns one ordinary frozen Reading per exact AUX Lemma", () => {
+		const catalog = fixedMembersFor.lemma(auxRoute);
+		for (const lemma of catalog?.members ?? []) {
+			const readings = fixedMembersFor.reading(lemma);
+			expect(readings?.scope).toBe(FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1);
+			expect(readings?.coverage).toBe("Complete");
+			expect(readings?.members).toHaveLength(1);
+			expect(readings?.members[0]?.lemma).toEqual(lemma);
+			expect(Object.isFrozen(lemma)).toBe(true);
+			expect(Object.isFrozen(readings?.members[0])).toBe(true);
+		}
 	});
 });

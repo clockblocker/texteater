@@ -19,7 +19,7 @@ type SparseRoutePromotionTree = {
  * convention callers must remember.
  */
 const CLOSED_READING_ROUTE_PROMOTIONS = deepFreeze({
-	de: { Lexeme: { DET: true } },
+	de: { Lexeme: { AUX: true, DET: true } },
 } as const satisfies SparseRoutePromotionTree);
 
 /* Add only routes whose Lemmas are Closed while their Readings remain Open. */

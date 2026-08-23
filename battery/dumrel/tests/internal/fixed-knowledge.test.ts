@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import {
 	allFixedLemmaCatalogs,
+	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
 import {
+	DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 	DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
 	fixedKnowledgeFor,
 } from "../../src/fixed";
@@ -13,7 +15,7 @@ import {
 	parseAsReadingKnowledge,
 } from "../../src/parsing/lightweight-parsers";
 
-describe("fixed German DET Knowledge", () => {
+describe("fixed German Knowledge", () => {
 	test("authors ordinary Knowledge for every fixed DET Reading", () => {
 		const catalog = allFixedLemmaCatalogs().find(
 			({ scope }) => scope === FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
@@ -75,6 +77,48 @@ describe("fixed German DET Knowledge", () => {
 		expect(Object.isFrozen(DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE)).toBe(
 			true,
 		);
+	});
+
+	test("authors one Reading and all peer synonyms for promoted sein forms", () => {
+		const peerForms = ["sein", "bin", "bist", "ist", "sind", "seid"];
+		const catalog = allFixedLemmaCatalogs().find(
+			({ scope }) => scope === FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
+		);
+		expect(catalog).toBeDefined();
+		for (const lemma of catalog?.members ?? []) {
+			const readings = fixedMembersFor.reading(lemma);
+			expect(readings?.members).toHaveLength(1);
+			const reading = readings?.members[0];
+			if (!reading) throw new Error("Expected one fixed AUX Reading.");
+			const found = fixedKnowledgeFor(reading);
+			expect(found.decision).toBe("Found");
+			if (found.decision !== "Found") continue;
+			expect(found.scope).toBe(FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1);
+			expect(found.knowledge.definition).toBeTruthy();
+			expect(found.knowledge.translations?.en.length).toBeGreaterThan(0);
+			if (peerForms.includes(lemma.canonicalForm)) {
+				expect(
+					found.knowledge.semanticRelations?.synonym?.map(
+						(target) => target.canonicalForm,
+					),
+				).toEqual(
+					peerForms.filter(
+						(target) => target !== lemma.canonicalForm,
+					),
+				);
+				expect(found.coverage.semanticRelations.synonym).toBe(
+					"Authored",
+				);
+			} else {
+				expect(found.knowledge.semanticRelations).toBeUndefined();
+				expect(found.coverage).toBe(
+					DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
+				);
+			}
+			const parsed = parseAsReadingKnowledge(found.knowledge);
+			expect(parsed).not.toBeInstanceOf(ParsingError);
+			expect(parsed).toEqual(found.knowledge);
+		}
 	});
 
 	test("returns an explicit Miss for an unauthored Reading", () => {

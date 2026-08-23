@@ -4,6 +4,11 @@ import type {
 	FixedMembersFor,
 } from "./fixed/catalog.js";
 import {
+	DE_LEXEME_AUX_FIXED_LEMMA_CATALOG,
+	DE_LEXEME_AUX_FIXED_READING_CATALOG,
+	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
+} from "./fixed/de/lexeme/auxiliary.js";
+import {
 	DE_LEXEME_DET_FIXED_LEMMA_CATALOG,
 	DE_LEXEME_DET_FIXED_READING_CATALOG,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
@@ -23,16 +28,22 @@ export type {
 	FixedCatalogCoverage,
 	FixedLemmaCatalog,
 } from "./fixed/catalog.js";
+export { FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1 } from "./fixed/de/lexeme/auxiliary.js";
 export { FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1 } from "./fixed/de/lexeme/determiner.js";
 
 const lemmaCatalogs = Object.freeze([
 	DE_LEXEME_DET_FIXED_LEMMA_CATALOG,
+	DE_LEXEME_AUX_FIXED_LEMMA_CATALOG,
 ]) satisfies readonly FixedLemmaCatalog[];
 
 const readingCatalogs = Object.freeze([
 	Object.freeze({
 		route: DE_LEXEME_DET_FIXED_LEMMA_CATALOG.route,
 		...DE_LEXEME_DET_FIXED_READING_CATALOG,
+	}),
+	Object.freeze({
+		route: DE_LEXEME_AUX_FIXED_LEMMA_CATALOG.route,
+		...DE_LEXEME_AUX_FIXED_READING_CATALOG,
 	}),
 ]);
 
@@ -116,3 +127,4 @@ function sameCanonicalValue(left: unknown, right: unknown): boolean {
 
 // Compile-time proof that the public constant remains tied to the catalog.
 FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1 satisfies typeof DE_LEXEME_DET_FIXED_LEMMA_CATALOG.scope;
+FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1 satisfies typeof DE_LEXEME_AUX_FIXED_LEMMA_CATALOG.scope;

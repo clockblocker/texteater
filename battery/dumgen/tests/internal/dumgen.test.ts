@@ -50,6 +50,17 @@ const derLemma = detCatalog.members.find(
 );
 if (!derLemma) throw new Error("Expected fixed der Lemma.");
 
+const auxCatalog = fixedMembersFor.lemma({
+	language: "de",
+	family: "Lexeme",
+	kind: "AUX",
+});
+if (!auxCatalog) throw new Error("Expected fixed AUX catalog.");
+const istLemma = auxCatalog.members.find(
+	(lemma) => lemma.canonicalForm === "ist",
+);
+if (!istLemma) throw new Error("Expected fixed ist Lemma.");
+
 function sentence(
 	parts: Array<{
 		kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
@@ -961,6 +972,49 @@ test("Closed grammar returns a terminal safe miss for an uncatalogued Lemma", as
 	});
 	expect(calls).toHaveLength(2);
 	expect(JSON.stringify(result)).not.toContain("markedContext");
+});
+
+test("Closed AUX grammar preserves a promoted sein-peer Lemma", async () => {
+	const source = sentence([{ kind: "ResolvableText", text: "ist" }]);
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "AUX" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["ist"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					mood: "Ind",
+					number: "Sing",
+					person: "3",
+					tense: "Pres",
+					verbForm: "Fin",
+					voice: null,
+				},
+			},
+			lemma: {
+				canonicalForm: "ist",
+				coreFeatures: { verbType: null },
+			},
+		},
+	]);
+
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "Resolved",
+		attestation: { surface: { lemma: istLemma } },
+	});
+	expect(calls).toHaveLength(2);
 });
 
 describe("reading resolution", () => {

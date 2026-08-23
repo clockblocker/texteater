@@ -50,7 +50,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-aux-demo-copula-ist": finiteCase(
 			"Der Innenhof <TARGET>ist</TARGET> heute still.",
 			"ist",
-			"sein",
+			"ist",
 			null,
 			{
 				mood: "Ind",
@@ -146,12 +146,51 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-aux-dev-copula-bin-muede": finiteCase(
 			"Nach der Reise <TARGET>bin</TARGET> ich müde.",
 			"bin",
-			"sein",
+			"bin",
 			null,
 			{
 				mood: "Ind",
 				number: "Sing",
 				person: "1",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-dev-copula-bist-muede": finiteCase(
+			"Nach der Reise <TARGET>bist</TARGET> du müde.",
+			"bist",
+			"bist",
+			null,
+			{
+				mood: "Ind",
+				number: "Sing",
+				person: "2",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-dev-copula-sind-muede": finiteCase(
+			"Nach der Reise <TARGET>sind</TARGET> wir müde.",
+			"sind",
+			"sind",
+			null,
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "1",
+				tense: "Pres",
+				voice: null,
+			},
+		),
+		"grammar-de-aux-dev-copula-seid-muede": finiteCase(
+			"Nach der Reise <TARGET>seid</TARGET> ihr müde.",
+			"seid",
+			"seid",
+			null,
+			{
+				mood: "Ind",
+				number: "Plur",
+				person: "2",
 				tense: "Pres",
 				voice: null,
 			},
@@ -273,7 +312,7 @@ export const inflectionCases = defineGoldenCaseCollection(import.meta.url, {
 		"grammar-de-aux-accept-perfect-ist-gegangen": finiteCase(
 			"Der Kurier <TARGET>ist</TARGET> pünktlich gegangen.",
 			"ist",
-			"sein",
+			"ist",
 			null,
 			{
 				mood: "Ind",

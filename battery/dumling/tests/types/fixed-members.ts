@@ -15,3 +15,18 @@ const detReadings = fixedMembersFor.reading(detLemma);
 if (detReadings) {
 	detReadings.members satisfies readonly Reading<"de", "Lexeme", "DET">[];
 }
+
+const auxCatalog = fixedMembersFor.lemma({
+	language: "de",
+	family: "Lexeme",
+	kind: "AUX",
+});
+if (auxCatalog) {
+	auxCatalog.members satisfies readonly Lemma<"de", "Lexeme", "AUX">[];
+}
+
+declare const auxLemma: Lemma<"de", "Lexeme", "AUX">;
+const auxReadings = fixedMembersFor.reading(auxLemma);
+if (auxReadings) {
+	auxReadings.members satisfies readonly Reading<"de", "Lexeme", "AUX">[];
+}

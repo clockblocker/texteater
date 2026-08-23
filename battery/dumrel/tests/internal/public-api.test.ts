@@ -87,6 +87,7 @@ describe("public API allowlists", () => {
 		expect(Object.keys(schema).sort()).toEqual(schemaExports);
 		expect(Object.keys(settings)).toEqual(["DEFAULT_KNOWLEDGE_SETTINGS"]);
 		expect(Object.keys(fixed).sort()).toEqual([
+			"DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE",
 			"DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE",
 			"fixedKnowledgeFor",
 		]);
