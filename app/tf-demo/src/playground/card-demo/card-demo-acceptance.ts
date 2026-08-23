@@ -2,7 +2,7 @@ import {
 	CARD_DEMO_GEOMETRY,
 	CARD_DEMO_KEYBOARD_ORDER,
 	CARD_DEMO_NOTE_KINDS,
-	CARD_DEMO_VARIANTS,
+	CARD_DEMO_VARIANT,
 	type CardDemoNoteKind,
 	type CardDemoVariant,
 } from "./card-demo-contract";
@@ -262,8 +262,6 @@ export const CARD_DEMO_ACCEPTANCE_SCENARIOS = [
 export async function runCardDemoAcceptanceSuite(
 	driver: CardDemoAcceptanceDriver,
 ): Promise<void> {
-	for (const variant of CARD_DEMO_VARIANTS) {
-		for (const scenario of CARD_DEMO_ACCEPTANCE_SCENARIOS)
-			await scenario.run(driver, variant);
-	}
+	for (const scenario of CARD_DEMO_ACCEPTANCE_SCENARIOS)
+		await scenario.run(driver, CARD_DEMO_VARIANT);
 }

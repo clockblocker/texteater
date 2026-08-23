@@ -7,7 +7,7 @@ import {
 import {
 	CARD_DEMO_GEOMETRY,
 	CARD_DEMO_NOTE_KINDS,
-	CARD_DEMO_VARIANTS,
+	CARD_DEMO_VARIANT,
 	type CardDemoNoteKind,
 } from "../src/playground/card-demo/card-demo-contract";
 import { CARD_DEMO_FAKE_TEXT } from "../src/playground/card-demo/card-demo-fixtures";
@@ -67,7 +67,7 @@ class RecordingDriver implements CardDemoAcceptanceDriver {
 		this.record("resources:released");
 }
 
-test("encodes every non-compensable gate for all four variants", async () => {
+test("encodes every non-compensable gate for Motion", async () => {
 	const driver = new RecordingDriver();
 	await runCardDemoAcceptanceSuite(driver);
 	for (const segment of CARD_DEMO_FAKE_TEXT.segments)
@@ -93,12 +93,15 @@ test("encodes every non-compensable gate for all four variants", async () => {
 	expect(driver.events).toContain("reduced-motion:applied");
 	expect(driver.events).toContain("route-transition:fallback");
 	expect(driver.events).toContain("resources:released");
-	for (const variant of CARD_DEMO_VARIANTS)
-		for (const noteKind of CARD_DEMO_NOTE_KINDS) {
-			expect(driver.events).toContain(
-				`path:${cardDemoHref({ page: "note", variant, noteKind })}`,
-			);
-		}
+	for (const noteKind of CARD_DEMO_NOTE_KINDS) {
+		expect(driver.events).toContain(
+			`path:${cardDemoHref({
+				page: "note",
+				variant: CARD_DEMO_VARIANT,
+				noteKind,
+			})}`,
+		);
+	}
 	expect(
 		new Set(CARD_DEMO_ACCEPTANCE_SCENARIOS.map((scenario) => scenario.id))
 			.size,

@@ -9,7 +9,10 @@ import {
 	CardDemoRouteShell,
 	CardDemoTextPage,
 } from "../src/playground/card-demo/card-demo-route-shell";
-import { PendingCardDemoInteraction } from "../src/playground/card-demo/variants/pending-card-demo-interaction";
+
+function TestCardDemoInteraction() {
+	return createElement("div", { "data-testid": "test-card-interaction" });
+}
 
 function renderRoute(
 	path: string | { pathname: string; state: unknown },
@@ -25,8 +28,8 @@ function renderRoute(
 }
 
 test("renders the shared fake Text shell without production data", () => {
-	const markup = renderRoute("/playground/card-demo/native/text");
-	expect(markup).toContain('data-card-demo-variant="native"');
+	const markup = renderRoute("/playground/card-demo/motion/text");
+	expect(markup).toContain('data-card-demo-variant="motion"');
 	expect(markup).toContain('data-testid="card-demo-text-layout"');
 	expect(markup).toContain('data-testid="card-demo-text-pane"');
 	expect(markup.match(/role="separator"/g)).toHaveLength(2);
@@ -37,30 +40,14 @@ test("renders the shared fake Text shell without production data", () => {
 	expect(markup).not.toContain("convex");
 });
 
-test("uses the same resizable Text pane for all four playground variants", () => {
-	for (const variant of ["native", "motion", "dnd-kit", "gesture-spring"]) {
-		const markup = renderRoute(`/playground/card-demo/${variant}/text`);
-		expect(markup).toContain('data-testid="card-demo-text-layout"');
-		expect(markup).toContain('data-testid="card-demo-text-pane"');
-		expect(markup).toContain(
-			'aria-label="Resize the text pane from the left"',
-		);
-		expect(markup).toContain(
-			'aria-label="Resize the text pane from the right"',
-		);
-	}
-});
-
-test("lists every playground version at the playground root", () => {
-	const markup = renderRoute("/playground/card-demo");
-	expect(markup).toContain('data-card-demo-index=""');
-	expect(markup).toContain("Native");
-	expect(markup).toContain("Motion");
-	expect(markup).toContain("dnd-kit");
-	expect(markup).toContain("Gesture + Spring");
-	expect(
-		markup.match(/href="\/playground\/card-demo\/[^"]+\/text"/g),
-	).toHaveLength(4);
+test("uses the resizable Text pane for Motion", () => {
+	const markup = renderRoute("/playground/card-demo/motion/text");
+	expect(markup).toContain('data-testid="card-demo-text-layout"');
+	expect(markup).toContain('data-testid="card-demo-text-pane"');
+	expect(markup).toContain('aria-label="Resize the text pane from the left"');
+	expect(markup).toContain(
+		'aria-label="Resize the text pane from the right"',
+	);
 });
 
 test("renders a matching fake Note route with the same presentation vocabulary", () => {
@@ -91,8 +78,8 @@ test("keeps Text interactive while the nonmodal cards are open", () => {
 			MemoryRouter,
 			{},
 			createElement(CardDemoTextPage, {
-				Interaction: PendingCardDemoInteraction,
-				variant: "native",
+				Interaction: TestCardDemoInteraction,
+				variant: "motion",
 				selectedSegment: CARD_DEMO_FAKE_TEXT.segments[2],
 				onSelectedSegmentChange() {},
 				onOpenNote() {},

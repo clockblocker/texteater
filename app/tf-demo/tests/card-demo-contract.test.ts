@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
 	CARD_DEMO_NOTE_KINDS,
-	CARD_DEMO_VARIANTS,
+	CARD_DEMO_VARIANT,
 	cardDemoRestingOffset,
 	isInsideCardDemoCancelZone,
 } from "../src/playground/card-demo/card-demo-contract";
@@ -35,7 +35,7 @@ describe("card-demo shared contract", () => {
 		).toBe(true);
 	});
 
-	test("fixes one four-card presentation order for every variant", () => {
+	test("fixes the four-card presentation order for Motion", () => {
 		expect(CARD_DEMO_RESOLUTION_CHAIN.map((card) => card.kind)).toEqual(
 			CARD_DEMO_NOTE_KINDS,
 		);
@@ -50,23 +50,28 @@ describe("card-demo shared contract", () => {
 	});
 
 	test("round trips every Text and matching Note route without production targets", () => {
-		for (const variant of CARD_DEMO_VARIANTS) {
-			const textTarget = { page: "text", variant } as const;
+		const textTarget = {
+			page: "text",
+			variant: CARD_DEMO_VARIANT,
+		} as const;
+		expect(
+			cardDemoTargetFromLocation({
+				pathname: cardDemoHref(textTarget),
+				search: "",
+			}),
+		).toEqual(textTarget);
+		for (const noteKind of CARD_DEMO_NOTE_KINDS) {
+			const noteTarget = {
+				page: "note",
+				variant: CARD_DEMO_VARIANT,
+				noteKind,
+			} as const;
 			expect(
 				cardDemoTargetFromLocation({
-					pathname: cardDemoHref(textTarget),
+					pathname: cardDemoHref(noteTarget),
 					search: "",
 				}),
-			).toEqual(textTarget);
-			for (const noteKind of CARD_DEMO_NOTE_KINDS) {
-				const noteTarget = { page: "note", variant, noteKind } as const;
-				expect(
-					cardDemoTargetFromLocation({
-						pathname: cardDemoHref(noteTarget),
-						search: "",
-					}),
-				).toEqual(noteTarget);
-			}
+			).toEqual(noteTarget);
 		}
 	});
 
@@ -74,11 +79,12 @@ describe("card-demo shared contract", () => {
 		for (const location of [
 			{ pathname: "/playground/card-demo/unknown/text", search: "" },
 			{
-				pathname: "/playground/card-demo/native/note/shadow",
+				pathname: "/playground/card-demo/motion/note/shadow",
 				search: "",
 			},
-			{ pathname: "/playground/card-demo/native/text/", search: "" },
-			{ pathname: "/playground/card-demo/native/text", search: "?x=1" },
+			{ pathname: "/playground/card-demo/native/text", search: "" },
+			{ pathname: "/playground/card-demo/motion/text/", search: "" },
+			{ pathname: "/playground/card-demo/motion/text", search: "?x=1" },
 		]) {
 			expect(cardDemoTargetFromLocation(location)).toBeNull();
 		}

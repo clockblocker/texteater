@@ -8,8 +8,8 @@ import type { CardDemoOpenOrigin } from "./card-demo-interaction";
 import { CardDemoCardContent } from "./card-demo-presentation";
 
 export const CARD_DEMO_MOTION = {
-	dismiss: 200,
-	dismissStagger: 24,
+	dismiss: 220,
+	dismissStagger: 18,
 	dropSettle: 120,
 	prime: 250,
 	expand: 350,
@@ -38,12 +38,9 @@ export function cardDemoPrimedBox(
 	viewportWidth: number,
 	viewportHeight: number,
 ): CardDemoTransitionBox {
-	const width = Math.min(
-		viewportWidth * (2 / 3),
-		Math.max(0, viewportWidth - 32),
-	);
+	const width = Math.min(viewportWidth / 3, Math.max(0, viewportWidth - 32));
 	const height = Math.min(
-		viewportHeight * (2 / 3),
+		viewportHeight / 3,
 		Math.max(0, viewportHeight - 32),
 	);
 	return {

@@ -1,11 +1,6 @@
-export const CARD_DEMO_VARIANTS = [
-	"native",
-	"motion",
-	"dnd-kit",
-	"gesture-spring",
-] as const;
+export const CARD_DEMO_VARIANT = "motion" as const;
 
-export type CardDemoVariant = (typeof CARD_DEMO_VARIANTS)[number];
+export type CardDemoVariant = typeof CARD_DEMO_VARIANT;
 
 export const CARD_DEMO_NOTE_KINDS = [
 	"attestation",
@@ -78,7 +73,7 @@ export function isInsideCardDemoCancelZone(
 }
 
 export function isCardDemoVariant(value: string): value is CardDemoVariant {
-	return (CARD_DEMO_VARIANTS as readonly string[]).includes(value);
+	return value === CARD_DEMO_VARIANT;
 }
 
 export function isCardDemoNoteKind(value: string): value is CardDemoNoteKind {

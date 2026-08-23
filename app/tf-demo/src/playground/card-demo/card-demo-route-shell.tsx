@@ -6,14 +6,14 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import type {
 	CardDemoFakeSegment,
 	CardDemoNoteKind,
 	CardDemoVariant,
 } from "./card-demo-contract";
-import { CARD_DEMO_VARIANTS } from "./card-demo-contract";
+import { CARD_DEMO_VARIANT } from "./card-demo-contract";
 import {
 	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
@@ -43,7 +43,7 @@ import {
 	cardDemoFullPageBox,
 } from "./card-demo-route-transition";
 import { CardDemoTextPane } from "./card-demo-text-pane";
-import { CARD_DEMO_INTERACTIONS } from "./variants/card-demo-interaction-registry";
+import { MotionCardDemoInteraction } from "./variants/motion-card-demo-interaction";
 import "./card-demo.css";
 
 export function CardDemoRouteShell() {
@@ -77,7 +77,12 @@ export function CardDemoRouteShell() {
 		[restoreTextScroll],
 	);
 	if (location.pathname === CARD_DEMO_BASE_PATH && location.search === "") {
-		return <CardDemoIndex />;
+		return (
+			<Navigate
+				replace
+				to={cardDemoHref({ page: "text", variant: CARD_DEMO_VARIANT })}
+			/>
+		);
 	}
 	const target = cardDemoTargetFromLocation(location);
 
@@ -153,7 +158,6 @@ export function CardDemoRouteShell() {
 		);
 	}
 
-	const Interaction = CARD_DEMO_INTERACTIONS[target.variant];
 	const openNote = (
 		noteKind: CardDemoNoteKind,
 		origin: CardDemoOpenOrigin,
@@ -204,7 +208,7 @@ export function CardDemoRouteShell() {
 	return (
 		<>
 			<CardDemoTextPage
-				Interaction={Interaction}
+				Interaction={MotionCardDemoInteraction}
 				onOpenNote={openNote}
 				onSelectedSegmentChange={setSelectedSegment}
 				routeTransition={routeTransition}
@@ -219,31 +223,6 @@ export function CardDemoRouteShell() {
 				/>
 			) : null}
 		</>
-	);
-}
-
-const cardDemoVariantLabels = {
-	native: "Native",
-	motion: "Motion",
-	"dnd-kit": "dnd-kit",
-	"gesture-spring": "Gesture + Spring",
-} as const satisfies Record<CardDemoVariant, string>;
-
-export function CardDemoIndex() {
-	return (
-		<div className="card-demo-index" data-card-demo-index="">
-			<nav aria-label="Card playground versions">
-				<ul>
-					{CARD_DEMO_VARIANTS.map((variant) => (
-						<li key={variant}>
-							<Link to={cardDemoHref({ page: "text", variant })}>
-								{cardDemoVariantLabels[variant]}
-							</Link>
-						</li>
-					))}
-				</ul>
-			</nav>
-		</div>
 	);
 }
 
@@ -279,12 +258,8 @@ export function CardDemoTextPage({
 		if (dismissing) return;
 		const segmentId = selectedSegment?.id;
 		setDismissing(true);
-		const reducedMotion = window.matchMedia(
-			"(prefers-reduced-motion: reduce)",
-		).matches;
-		const duration = reducedMotion
-			? CARD_DEMO_MOTION.reduced
-			: CARD_DEMO_MOTION.dismiss + CARD_DEMO_MOTION.dismissStagger * 3;
+		const duration =
+			CARD_DEMO_MOTION.dismiss + CARD_DEMO_MOTION.dismissStagger * 3;
 		dismissTimerRef.current = window.setTimeout(() => {
 			dismissTimerRef.current = null;
 			onSelectedSegmentChange(null);
@@ -420,12 +395,12 @@ function CardDemoNotFound() {
 	return (
 		<div className="card-demo-page">
 			<h1>Card playground route not found</h1>
-			<p>Use one of the four registered variant Text or Note routes.</p>
+			<p>Use the Motion Text or Note routes.</p>
 			<Link
 				className="card-demo-link"
-				to={`${CARD_DEMO_BASE_PATH}/native/text`}
+				to={`${CARD_DEMO_BASE_PATH}/motion/text`}
 			>
-				Open the native variant
+				Open the Motion demo
 			</Link>
 		</div>
 	);

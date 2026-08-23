@@ -6,20 +6,20 @@ import {
 	cardDemoPrimedBox,
 } from "../src/playground/card-demo/card-demo-route-transition";
 
-test("primes a card to two-thirds of both viewport dimensions", () => {
+test("primes a card to one-third of both viewport dimensions", () => {
 	expect(cardDemoPrimedBox(1_200, 900)).toEqual({
-		left: 200,
-		top: 150,
-		width: 800,
-		height: 600,
+		left: 400,
+		top: 300,
+		width: 400,
+		height: 300,
 	});
 });
 
 test("keeps the primed card inside a sixteen-pixel mobile margin", () => {
 	expect(cardDemoPrimedBox(375, 24)).toEqual({
-		left: 62.5,
+		left: 125,
 		top: 12,
-		width: 250,
+		width: 125,
 		height: 0,
 	});
 });
