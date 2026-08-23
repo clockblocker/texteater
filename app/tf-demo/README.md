@@ -39,9 +39,11 @@ it does not change a cloud deployment's function limits.
 After resolving a Segment, the workspace exposes the persisted Text, Sentence,
 Segment, grammatical Attestation and Surface, Lemma features, and Reading as a
 clickable resolution path. Reading notes present the exact Reading's Knowledge
-beside its Lemma. Dumdict stores semantic relations as Reading-owned edges to
-target Lemmas and presents resolved targets as Lemma Route Notes. A target that
-does not yet have an exact Lemma remains visible as a pending Shadow.
+beside its Lemma. Dumdict stores semantic relations as Reading-owned edges in
+one homogeneous target mode per Reading Knowledge value. Lemma targets are the
+default and open Lemma Route Notes. Reviewed closed inventories may target exact
+Readings and open Unit Reading Notes. A target that does not yet have an exact
+Lemma remains visible as a pending Shadow.
 
 Occurrence Attestations, Readings, relations, and Knowledge belong to one
 Shared Demo Dictionary. Selecting any member Segment of a committed occurrence

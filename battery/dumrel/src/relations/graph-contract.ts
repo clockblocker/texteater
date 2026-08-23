@@ -40,10 +40,26 @@ function parseReading(
 	index: number,
 ): SemanticRelationGraphReading {
 	const path = `readings.${index}`;
-	const record = strictRecord(value, ["reading", "lemma"], path);
+	const record = strictRecord(
+		value,
+		["reading", "lemma", "relationTargetKind"],
+		path,
+	);
+	const relationTargetKind = record.relationTargetKind;
+	if (
+		relationTargetKind !== undefined &&
+		relationTargetKind !== "lemma" &&
+		relationTargetKind !== "reading"
+	) {
+		return fail(
+			`${path}.relationTargetKind`,
+			'Expected "lemma" or "reading".',
+		);
+	}
 	return {
 		reading: normalizedNonEmptyString(record.reading, `${path}.reading`),
 		lemma: normalizedNonEmptyString(record.lemma, `${path}.lemma`),
+		...(relationTargetKind === undefined ? {} : { relationTargetKind }),
 	};
 }
 
@@ -52,11 +68,23 @@ function parseEdge(
 	index: number,
 ): DirectSemanticRelationGraphEdge {
 	const path = `edges.${index}`;
-	const record = strictRecord(
+	const initial = strictRecord(
 		value,
-		["sourceReading", "relation", "targetLemma"],
+		[
+			"sourceReading",
+			"relation",
+			"targetKind",
+			"targetLemma",
+			"targetReading",
+		],
 		path,
 	);
+	const targetKind = initial.targetKind ?? "lemma";
+	const allowedKeys =
+		targetKind === "reading"
+			? ["sourceReading", "relation", "targetKind", "targetReading"]
+			: ["sourceReading", "relation", "targetKind", "targetLemma"];
+	const record = strictRecord(value, allowedKeys, path);
 	const relation = record.relation;
 	if (
 		typeof relation !== "string" ||
@@ -64,12 +92,36 @@ function parseEdge(
 	) {
 		return fail(`${path}.relation`, "Expected a direct Semantic Relation.");
 	}
+	const sourceReading = normalizedNonEmptyString(
+		record.sourceReading,
+		`${path}.sourceReading`,
+	);
+	if (targetKind === "reading") {
+		if (relation !== "synonym") {
+			return fail(
+				`${path}.relation`,
+				"Only Synonym may directly target a Reading.",
+			);
+		}
+		return {
+			sourceReading,
+			relation: "synonym",
+			targetKind: "reading",
+			targetReading: normalizedNonEmptyString(
+				record.targetReading,
+				`${path}.targetReading`,
+			),
+		};
+	}
+	if (targetKind !== "lemma") {
+		return fail(`${path}.targetKind`, 'Expected "lemma" or "reading".');
+	}
 	return {
-		sourceReading: normalizedNonEmptyString(
-			record.sourceReading,
-			`${path}.sourceReading`,
-		),
+		sourceReading,
 		relation: relation as DirectSemanticRelation,
+		...(record.targetKind === undefined
+			? {}
+			: { targetKind: "lemma" as const }),
 		targetLemma: normalizedNonEmptyString(
 			record.targetLemma,
 			`${path}.targetLemma`,
@@ -91,6 +143,7 @@ export function parseSemanticRelationGraph(
 	const readings = graph.readings.map(parseReading);
 	const edges = graph.edges.map(parseEdge);
 	const readingOwners = new Map<string, string>();
+	const relationTargetKinds = new Map<string, "lemma" | "reading">();
 	for (const [index, node] of readings.entries()) {
 		const existing = readingOwners.get(node.reading);
 		if (existing !== undefined) {
@@ -102,12 +155,32 @@ export function parseSemanticRelationGraph(
 			);
 		}
 		readingOwners.set(node.reading, node.lemma);
+		relationTargetKinds.set(
+			node.reading,
+			node.relationTargetKind ?? "lemma",
+		);
 	}
 	for (const [index, edge] of edges.entries()) {
 		if (!readingOwners.has(edge.sourceReading)) {
 			fail(
 				`edges.${index}.sourceReading`,
 				"A relation edge source must be a declared Reading.",
+			);
+		}
+		const edgeTargetKind = edge.targetKind ?? "lemma";
+		if (relationTargetKinds.get(edge.sourceReading) !== edgeTargetKind) {
+			fail(
+				`edges.${index}.targetKind`,
+				"Every direct edge from one Reading must use its declared relation target kind.",
+			);
+		}
+		if (
+			edge.targetKind === "reading" &&
+			!readingOwners.has(edge.targetReading)
+		) {
+			fail(
+				`edges.${index}.targetReading`,
+				"A Reading-targeted relation edge must target a declared Reading.",
 			);
 		}
 	}

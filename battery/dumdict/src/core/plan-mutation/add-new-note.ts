@@ -1,6 +1,10 @@
 import { readingFingerprint } from "dumling/id";
-import type { Lemma, SupportedLanguage } from "dumling/types";
-import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import type {
+	DirectSemanticRelation,
+	LexemeUnitShadow,
+	ReadingKnowledge,
+} from "dumrel/types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
@@ -36,11 +40,15 @@ function uniqueBy<T>(values: T[], keyFor: (value: T) => string): T[] {
 }
 
 function appendRelation<L extends SupportedLanguage>(
-	knowledge: ReadingKnowledge<string, Lemma<L>>,
+	knowledge: ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>,
 	relation: DirectSemanticRelation,
 	target: Lemma<L>,
 ) {
-	const semanticRelations = knowledge.semanticRelations ?? {};
+	const semanticRelations =
+		knowledge.semanticRelations !== undefined &&
+		knowledge.semanticRelations.targetKind !== "reading"
+			? knowledge.semanticRelations
+			: {};
 	const existing = semanticRelations[relation] ?? [];
 	if (!existing.some((value) => sameLemma(value, target)))
 		semanticRelations[relation] = [...existing, target];
@@ -217,9 +225,17 @@ export function planAddNewNote<L extends SupportedLanguage>(
 	});
 	if (relationPlan.status === "rejected") return relationPlan;
 
-	const knowledge: ReadingKnowledge<string, Lemma<L>> = {};
+	const knowledge: ReadingKnowledge<
+		string,
+		Lemma<L>,
+		LexemeUnitShadow,
+		Reading<L>
+	> = {};
 	for (const addition of relationPlan.additions) {
-		if (sameReading(addition.reading, reading))
+		if (
+			addition.targetKind !== "reading" &&
+			sameReading(addition.reading, reading)
+		)
 			appendRelation(knowledge, addition.relation, addition.targetLemma);
 	}
 	const storedReading: ReadingEntry<L> = {

@@ -2003,8 +2003,6 @@ export const DUMDICT_OPERATION_FOCUSED_CASES = {
 	"dumdict.surface.id-matches": "surface-id-match",
 	"dumdict.surface.owner-matches": "surface-owner-match",
 	"dumdict.transitive.contextual.anonymous": "transitive-lexical-unit-shadow",
-	"dumdict.transitive.custom.hasDistinctPair":
-		"transitive-dumling-surface-semantics",
 	"dumdict.transitive.custom.hasGermanVerbInflectionSignal":
 		"transitive-dumling-surface-semantics",
 	"dumdict.transitive.custom.hasMarkedInflectionFeature":
@@ -2667,18 +2665,6 @@ function focusedDumdictInputs(
 									...surface,
 									surfaceFeatures: {
 										historicalStatus: "Archaic",
-									},
-								};
-							}
-							if (route.endsWith("/DET")) {
-								surface = {
-									...surface,
-									inflectionalFeatures: {
-										...(surface.inflectionalFeatures as Record<
-											string,
-											unknown
-										>),
-										gender: ["Masc", "Neut"],
 									},
 								};
 							}

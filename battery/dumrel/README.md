@@ -3,9 +3,10 @@
 An ownerless typed Knowledge kernel for Textfresser modules.
 
 `dumrel` defines a concrete DTO and Dumling-backed runtime schema for Reading
-Knowledge, pointer-only morphological structures,
-Reading-owned Lemma-targeted Semantic Relations, and Pending Semantic
-Relations. It exposes one Reading
+Knowledge, pointer-only morphological structures, and Pending Semantic
+Relations. Semantic Relation ownership is always one exact Reading. Each
+Reading Knowledge value chooses one homogeneous target mode: Lemma by default,
+or exact Reading for reviewed hand-maintained closed inventories. It exposes one Reading
 Knowledge contract and no owner union. It also owns the German linguistic
 applicability tree and the global-settings/request-mask selection algebra.
 Its behavioral functions are:

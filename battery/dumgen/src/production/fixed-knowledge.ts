@@ -1,6 +1,6 @@
 import type { Reading } from "dumling/types";
 import type { FixedKnowledgeLookup } from "dumrel/fixed";
-import type { ReadingKnowledge } from "dumrel/types";
+import type { DirectSemanticRelation, ReadingKnowledge } from "dumrel/types";
 import type {
 	KnowledgeGenerationInput,
 	KnowledgeGenerationResult,
@@ -113,10 +113,27 @@ function parseFixedSuccess(
 		});
 
 	const pendingRelations: Array<Record<string, unknown>> = [];
-	for (const relation of Object.keys(
-		request.semanticRelations ?? {},
-	) as Array<keyof NonNullable<typeof knowledge.semanticRelations>>) {
-		for (const lemma of knowledge.semanticRelations?.[relation] ?? []) {
+	const semanticRelations = knowledge.semanticRelations;
+	for (const relation of Object.keys(request.semanticRelations ?? {})) {
+		if (
+			semanticRelations !== undefined &&
+			semanticRelations.targetKind === "reading"
+		) {
+			if (relation === "synonym" && semanticRelations.synonym) {
+				changes.push({
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: "synonym",
+					targetKind: "reading",
+					value: [...semanticRelations.synonym],
+				});
+			}
+			continue;
+		}
+		const lemmaTargets =
+			semanticRelations?.[relation as DirectSemanticRelation];
+		if (!Array.isArray(lemmaTargets)) continue;
+		for (const lemma of lemmaTargets) {
 			pendingRelations.push({
 				relation,
 				target: {

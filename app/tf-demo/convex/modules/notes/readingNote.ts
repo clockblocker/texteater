@@ -3,6 +3,7 @@ import type {
 	LemmaReference,
 	ProjectedSemanticRelations,
 	ReadingKnowledge,
+	ReadingReference,
 } from "dumrel";
 
 import type { Id } from "../../_generated/dataModel";
@@ -46,6 +47,11 @@ const readingValueLemmaValidator = v.object({
 	coreFeatures: v.any(),
 });
 
+const readingValueReadingValidator = v.object({
+	lemma: readingValueLemmaValidator,
+	emojiDescription: v.string(),
+});
+
 const readingNoteLemmaValidator = v.object({
 	ownerKind: v.literal("Lemma"),
 	ownerKey: v.string(),
@@ -84,16 +90,30 @@ const readingKnowledgeValidator = v.object({
 	morphologicalTree: v.optional(v.any()),
 	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
 	semanticRelations: v.optional(
-		v.object({
-			synonym: v.optional(v.array(readingValueLemmaValidator)),
-			nearSynonym: v.optional(v.array(readingValueLemmaValidator)),
-			antonym: v.optional(v.array(readingValueLemmaValidator)),
-			nearAntonym: v.optional(v.array(readingValueLemmaValidator)),
-			hypernym: v.optional(v.array(readingValueLemmaValidator)),
-			hyponym: v.optional(v.array(readingValueLemmaValidator)),
-			meronym: v.optional(v.array(readingValueLemmaValidator)),
-			holonym: v.optional(v.array(readingValueLemmaValidator)),
-		}),
+		v.union(
+			v.object({
+				targetKind: v.optional(v.literal("lemma")),
+				synonym: v.optional(v.array(readingValueLemmaValidator)),
+				nearSynonym: v.optional(v.array(readingValueLemmaValidator)),
+				antonym: v.optional(v.array(readingValueLemmaValidator)),
+				nearAntonym: v.optional(v.array(readingValueLemmaValidator)),
+				hypernym: v.optional(v.array(readingValueLemmaValidator)),
+				hyponym: v.optional(v.array(readingValueLemmaValidator)),
+				meronym: v.optional(v.array(readingValueLemmaValidator)),
+				holonym: v.optional(v.array(readingValueLemmaValidator)),
+			}),
+			v.object({
+				targetKind: v.literal("reading"),
+				synonym: v.optional(v.array(readingValueReadingValidator)),
+				nearSynonym: v.optional(v.array(readingValueReadingValidator)),
+				antonym: v.optional(v.array(readingValueReadingValidator)),
+				nearAntonym: v.optional(v.array(readingValueReadingValidator)),
+				hypernym: v.optional(v.array(readingValueReadingValidator)),
+				hyponym: v.optional(v.array(readingValueReadingValidator)),
+				meronym: v.optional(v.array(readingValueReadingValidator)),
+				holonym: v.optional(v.array(readingValueReadingValidator)),
+			}),
+		),
 	),
 });
 
@@ -310,9 +330,15 @@ function projectReadingIdentity(
 
 function withResolvedSemanticRelations(
 	knowledge: ReadingKnowledge<"en">,
-	semanticRelations: ProjectedSemanticRelations<LemmaReference>,
+	semanticRelations: ProjectedSemanticRelations<
+		LemmaReference,
+		ReadingReference
+	>,
 ): Omit<ReadingKnowledge<"en">, "semanticRelations"> & {
-	semanticRelations?: ProjectedSemanticRelations<LemmaReference>;
+	semanticRelations?: ProjectedSemanticRelations<
+		LemmaReference,
+		ReadingReference
+	>;
 } {
 	return Object.keys(semanticRelations).length === 0
 		? knowledge

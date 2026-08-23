@@ -55,6 +55,12 @@ export function propagateRelations(
 	const readingLemma = new Map(
 		parsed.readings.map(({ reading, lemma }) => [reading, lemma]),
 	);
+	const relationTargetKind = new Map(
+		parsed.readings.map(({ reading, relationTargetKind }) => [
+			reading,
+			relationTargetKind ?? "lemma",
+		]),
+	);
 	const readingsByLemma = groupReadingsByLemma(parsed.readings);
 	const direct = deduplicate(parsed.edges);
 	const directKeys = new Set(direct.map(edgeKey));
@@ -67,13 +73,15 @@ export function propagateRelations(
 	for (const edge of direct) {
 		const sourceLemma = readingLemma.get(edge.sourceReading);
 		if (sourceLemma === undefined) continue;
-		for (const targetReading of readingsByLemma.get(edge.targetLemma) ??
-			[]) {
-			addEdge(base, {
-				sourceReading: targetReading,
-				relation: inverseRelationFor(edge.relation),
-				targetLemma: sourceLemma,
-			});
+		for (const targetReading of targetReadingsFor(edge, readingsByLemma)) {
+			const inverse = encodeTargetForSource(
+				targetReading,
+				inverseRelationFor(edge.relation),
+				edge.sourceReading,
+				readingLemma,
+				relationTargetKind,
+			);
+			if (inverse) addEdge(base, inverse);
 		}
 	}
 
@@ -92,19 +100,34 @@ export function propagateRelations(
 		const sourceReadings =
 			synonymComponents.get(edge.sourceReading) ??
 			new Set([edge.sourceReading]);
-		const targetLemmas = equivalentTargetLemmas(
-			edge.targetLemma,
-			readingsByLemma,
-			synonymComponents,
-			readingLemma,
-		);
+		const directTargetReadings = targetReadingsFor(edge, readingsByLemma);
 		for (const sourceReading of sourceReadings) {
-			for (const targetLemma of targetLemmas) {
-				addEdge(closure, {
-					sourceReading,
-					relation: edge.relation,
-					targetLemma,
-				});
+			if (
+				directTargetReadings.length === 0 &&
+				edge.targetKind !== "reading"
+			) {
+				if (relationTargetKind.get(sourceReading) !== "reading") {
+					addEdge(closure, {
+						sourceReading,
+						relation: edge.relation,
+						targetLemma: edge.targetLemma,
+					});
+				}
+				continue;
+			}
+			for (const directTargetReading of directTargetReadings) {
+				for (const targetReading of synonymComponents.get(
+					directTargetReading,
+				) ?? [directTargetReading]) {
+					const inferred = encodeTargetForSource(
+						sourceReading,
+						edge.relation,
+						targetReading,
+						readingLemma,
+						relationTargetKind,
+					);
+					if (inferred) addEdge(closure, inferred);
+				}
 			}
 		}
 	}
@@ -112,7 +135,7 @@ export function propagateRelations(
 	return [...closure.values()]
 		.filter(
 			(edge) =>
-				readingLemma.get(edge.sourceReading) !== edge.targetLemma &&
+				!isSelfEdge(edge, readingLemma) &&
 				!directKeys.has(edgeKey(edge)),
 		)
 		.sort(compareEdges);
@@ -160,8 +183,7 @@ function buildSynonymComponents(
 	);
 	for (const edge of edges) {
 		if (edge.relation !== "synonym") continue;
-		for (const targetReading of readingsByLemma.get(edge.targetLemma) ??
-			[]) {
+		for (const targetReading of targetReadingsFor(edge, readingsByLemma)) {
 			neighbors.get(edge.sourceReading)?.add(targetReading);
 			neighbors.get(targetReading)?.add(edge.sourceReading);
 		}
@@ -187,22 +209,43 @@ function buildSynonymComponents(
 	return components;
 }
 
-function equivalentTargetLemmas(
-	targetLemma: string,
+function targetReadingsFor(
+	edge: SemanticRelationGraphEdge,
 	readingsByLemma: ReadonlyMap<string, readonly string[]>,
-	synonymComponents: ReadonlyMap<string, ReadonlySet<string>>,
+): readonly string[] {
+	return edge.targetKind === "reading"
+		? [edge.targetReading]
+		: (readingsByLemma.get(edge.targetLemma) ?? []);
+}
+
+function encodeTargetForSource(
+	sourceReading: string,
+	relation: SemanticRelation,
+	targetReading: string,
 	readingLemma: ReadonlyMap<string, string>,
-): Set<string> {
-	const result = new Set([targetLemma]);
-	for (const targetReading of readingsByLemma.get(targetLemma) ?? []) {
-		for (const equivalentReading of synonymComponents.get(
+	relationTargetKind: ReadonlyMap<string, "lemma" | "reading">,
+): SemanticRelationGraphEdge | undefined {
+	if (relationTargetKind.get(sourceReading) === "reading") {
+		return {
+			sourceReading,
+			relation,
+			targetKind: "reading",
 			targetReading,
-		) ?? [targetReading]) {
-			const lemma = readingLemma.get(equivalentReading);
-			if (lemma !== undefined) result.add(lemma);
-		}
+		};
 	}
-	return result;
+	const targetLemma = readingLemma.get(targetReading);
+	return targetLemma === undefined
+		? undefined
+		: { sourceReading, relation, targetLemma };
+}
+
+function isSelfEdge(
+	edge: SemanticRelationGraphEdge,
+	readingLemma: ReadonlyMap<string, string>,
+): boolean {
+	return edge.targetKind === "reading"
+		? edge.sourceReading === edge.targetReading
+		: readingLemma.get(edge.sourceReading) === edge.targetLemma;
 }
 
 function deduplicate(
@@ -222,11 +265,19 @@ function addEdge(
 }
 
 function edgeKey(edge: SemanticRelationGraphEdge): string {
-	return JSON.stringify([
-		edge.sourceReading,
-		edge.relation,
-		edge.targetLemma,
-	]);
+	return edge.targetKind === "reading"
+		? JSON.stringify([
+				edge.sourceReading,
+				edge.relation,
+				"reading",
+				edge.targetReading,
+			])
+		: JSON.stringify([
+				edge.sourceReading,
+				edge.relation,
+				"lemma",
+				edge.targetLemma,
+			]);
 }
 
 function compareEdges(
@@ -237,8 +288,19 @@ function compareEdges(
 		compareStrings(left.sourceReading, right.sourceReading) ||
 		(relationOrder.get(left.relation) ?? 0) -
 			(relationOrder.get(right.relation) ?? 0) ||
-		compareStrings(left.targetLemma, right.targetLemma)
+		compareStrings(targetKindFor(left), targetKindFor(right)) ||
+		compareStrings(targetKeyFor(left), targetKeyFor(right))
 	);
+}
+
+function targetKindFor(edge: SemanticRelationGraphEdge): "lemma" | "reading" {
+	return edge.targetKind ?? "lemma";
+}
+
+function targetKeyFor(edge: SemanticRelationGraphEdge): string {
+	return edge.targetKind === "reading"
+		? edge.targetReading
+		: edge.targetLemma;
 }
 
 function compareStrings(left: string, right: string): number {

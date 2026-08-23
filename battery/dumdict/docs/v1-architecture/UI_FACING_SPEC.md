@@ -20,3 +20,7 @@ Mutations return `applied`, `conflict`, or `rejected`. Applied results include
 base and next revisions plus affected Lemmas, Readings, Surfaces, and pending
 target IDs. Conflicts are retryable storage or semantic-precondition failures;
 rejections represent invalid domain requests.
+
+Semantic Relation targets are homogeneous within one Reading Knowledge value.
+Lemma targets are the default. Exact Reading targets are reserved for reviewed
+closed inventories and navigate to Unit Reading Notes.

@@ -27,6 +27,11 @@ matches remain pending and inert. Only direct claims are durable; inverse,
 closure, substitution, and later-Reading consequences are provenance-bearing
 read projections.
 
+Each Reading Knowledge value uses one homogeneous target mode. Lemma Target
+Mode is the default for generated and open-class relations. Hand-maintained
+closed inventories may opt into exact Reading targets; they do not use pending
+Unit Shadows.
+
 ## Commitments
 
 1. Hosts own persistence and transaction mechanics.

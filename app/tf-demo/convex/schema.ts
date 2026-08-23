@@ -116,11 +116,16 @@ export default defineSchema({
 
 	semanticRelationEdges: defineTable({
 		sourceReadingId: v.id("readings"),
-		targetLemmaId: v.id("lemmas"),
+		targetKind: v.optional(
+			v.union(v.literal("lemma"), v.literal("reading")),
+		),
+		targetLemmaId: v.optional(v.id("lemmas")),
+		targetReadingId: v.optional(v.id("readings")),
 		relation: directSemanticRelationValidator,
 	})
 		.index("by_source_reading_id", ["sourceReadingId"])
 		.index("by_target_lemma_id", ["targetLemmaId"])
+		.index("by_target_reading_id", ["targetReadingId"])
 		.index("by_source_reading_id_and_relation", [
 			"sourceReadingId",
 			"relation",
@@ -129,6 +134,11 @@ export default defineSchema({
 			"sourceReadingId",
 			"relation",
 			"targetLemmaId",
+		])
+		.index("by_source_reading_id_and_relation_and_target_reading_id", [
+			"sourceReadingId",
+			"relation",
+			"targetReadingId",
 		]),
 
 	ownedSurfaces: defineTable({

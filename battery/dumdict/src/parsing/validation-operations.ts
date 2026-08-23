@@ -361,11 +361,6 @@ function constructDumdictValidationOperation(
 			return identity;
 		case "dumdict.transitive.contextual.anonymous":
 			return supportedUnitShadowRoute;
-		case "dumdict.transitive.custom.hasDistinctPair":
-			return customCheck(
-				name,
-				(value: readonly unknown[]) => value[0] !== value[1],
-			);
 		case "dumdict.transitive.custom.hasGermanVerbInflectionSignal":
 			return customCheck(
 				name,

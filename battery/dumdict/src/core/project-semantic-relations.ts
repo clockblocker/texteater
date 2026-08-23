@@ -1,7 +1,13 @@
 import { readingFingerprint } from "dumling/id";
 import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
-import { projectRelations } from "dumrel/relations";
-import type { DirectSemanticRelation, SemanticRelation } from "dumrel/types";
+import {
+	directSemanticRelationValues,
+	projectRelations,
+} from "dumrel/relations";
+import type {
+	DirectSemanticRelationGraphEdge,
+	SemanticRelation,
+} from "dumrel/types";
 import type { LemmaRecord, ReadingEntry } from "../dto";
 import { lemmaFingerprint } from "./identity";
 
@@ -11,17 +17,25 @@ export type ProjectSemanticRelationsInput<L extends SupportedLanguage> =
 		readings: readonly ReadingEntry<L>[];
 	}>;
 
-export type SemanticRelationProjection<L extends SupportedLanguage> = {
-	sourceReading: Reading<L>;
-	relation: SemanticRelation;
-	targetLemma: Lemma<L>;
-	provenance: "direct" | "inferred";
-};
+export type SemanticRelationProjection<L extends SupportedLanguage> =
+	| {
+			sourceReading: Reading<L>;
+			relation: SemanticRelation;
+			targetKind?: "lemma";
+			targetLemma: Lemma<L>;
+			targetReading?: never;
+			provenance: "direct" | "inferred";
+	  }
+	| {
+			sourceReading: Reading<L>;
+			relation: SemanticRelation;
+			targetKind: "reading";
+			targetReading: Reading<L>;
+			targetLemma: Lemma<L>;
+			provenance: "direct" | "inferred";
+	  };
 
-/**
- * Computes the complete deterministic read view from direct Reading Knowledge.
- * The returned projection is deliberately not accepted by Dumdict persistence.
- */
+/** Computes the complete deterministic read view from direct Reading Knowledge. */
 export function projectSemanticRelations<L extends SupportedLanguage>(
 	input: ProjectSemanticRelationsInput<L>,
 ): SemanticRelationProjection<L>[] {
@@ -39,43 +53,68 @@ export function projectSemanticRelations<L extends SupportedLanguage>(
 			lemmaFingerprint(entry.reading.lemma),
 			entry.reading.lemma,
 		);
-		for (const targets of Object.values(
-			entry.knowledge?.semanticRelations ?? {},
-		)) {
-			for (const target of targets ?? []) {
-				lemmaByKey.set(lemmaFingerprint(target), target);
-			}
+		const relations = entry.knowledge?.semanticRelations;
+		if (!relations) continue;
+		if (relations.targetKind === "reading") {
+			for (const target of relations.synonym ?? [])
+				readingByKey.set(readingFingerprint(target), target);
+		} else {
+			for (const relation of directSemanticRelationValues)
+				for (const target of relations[relation] ?? [])
+					lemmaByKey.set(lemmaFingerprint(target), target);
 		}
 	}
-	const direct = input.readings.flatMap((entry) =>
-		Object.entries(entry.knowledge?.semanticRelations ?? {}).flatMap(
-			([relation, targets]) =>
-				(targets ?? []).map((targetLemma) => ({
+	const direct = input.readings.flatMap(
+		(entry): DirectSemanticRelationGraphEdge[] => {
+			const relations = entry.knowledge?.semanticRelations;
+			if (!relations) return [];
+			if (relations.targetKind === "reading") {
+				return (relations.synonym ?? []).map((targetReading) => ({
 					sourceReading: readingFingerprint(entry.reading),
-					relation: relation as DirectSemanticRelation,
+					relation: "synonym" as const,
+					targetKind: "reading" as const,
+					targetReading: readingFingerprint(targetReading),
+				}));
+			}
+			return directSemanticRelationValues.flatMap((relation) =>
+				(relations[relation] ?? []).map((targetLemma) => ({
+					sourceReading: readingFingerprint(entry.reading),
+					relation,
 					targetLemma: lemmaFingerprint(targetLemma),
 				})),
-		),
+			);
+		},
 	);
 
 	return projectRelations({
-		readings: input.readings.map(({ reading }) => ({
+		readings: input.readings.map(({ reading, knowledge }) => ({
 			reading: readingFingerprint(reading),
 			lemma: lemmaFingerprint(reading.lemma),
+			relationTargetKind:
+				knowledge?.semanticRelations?.targetKind === "reading"
+					? "reading"
+					: "lemma",
 		})),
 		edges: direct,
 	}).flatMap((projection): SemanticRelationProjection<L>[] => {
 		const sourceReading = readingByKey.get(projection.sourceReading);
+		if (!sourceReading) return [];
+		if (projection.targetKind === "reading") {
+			const targetReading = readingByKey.get(projection.targetReading);
+			return targetReading
+				? [
+						{
+							...projection,
+							sourceReading,
+							targetReading,
+							targetLemma: targetReading.lemma,
+						},
+					]
+				: [];
+		}
 		const targetLemma = lemmaByKey.get(projection.targetLemma);
-		return sourceReading && targetLemma
-			? [
-					{
-						sourceReading,
-						relation: projection.relation,
-						targetLemma,
-						provenance: projection.provenance,
-					},
-				]
+		return targetLemma
+			? [{ ...projection, sourceReading, targetLemma }]
 			: [];
 	});
 }

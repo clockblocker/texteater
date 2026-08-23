@@ -1,5 +1,6 @@
 import { readingFingerprint } from "dumling/id";
 import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
+import { directSemanticRelationValues } from "dumrel/relations";
 import type {
 	KnowledgeChange,
 	MorphologicalTreeNode,
@@ -66,13 +67,23 @@ function knowledgeUsesLanguage(
 	knowledge: ReadingKnowledge,
 	language: SupportedLanguage,
 ): boolean {
-	for (const targets of Object.values(knowledge.semanticRelations ?? {})) {
+	const relations = knowledge.semanticRelations;
+	if (relations?.targetKind === "reading") {
 		if (
-			(targets ?? []).some(
-				(target) => !lemmaUsesLanguage(target, language),
+			(relations.synonym ?? []).some(
+				(target) => !readingUsesLanguage(target, language),
 			)
 		)
 			return false;
+	} else {
+		for (const relation of directSemanticRelationValues) {
+			if (
+				(relations?.[relation] ?? []).some(
+					(target) => !lemmaUsesLanguage(target, language),
+				)
+			)
+				return false;
+		}
 	}
 
 	const visitMorphologyNode = (node: MorphologicalTreeNode): boolean => {
@@ -98,9 +109,11 @@ function knowledgeChangeUsesLanguage(
 	language: SupportedLanguage,
 ): boolean {
 	if (change.aspect === "semanticRelations" && "value" in change)
-		return change.value.every((lemma) =>
-			lemmaUsesLanguage(lemma, language),
-		);
+		return change.targetKind === "reading"
+			? change.value.every((reading) =>
+					readingUsesLanguage(reading, language),
+				)
+			: change.value.every((lemma) => lemmaUsesLanguage(lemma, language));
 	if (change.aspect === "morphologicalTree" && "value" in change)
 		return knowledgeUsesLanguage(
 			{ morphologicalTree: change.value },
@@ -148,11 +161,15 @@ type PlannedChangeLike = {
 };
 
 function readingEntryHasNoDirectSameLemma(entry: ReadingEntryLike): boolean {
-	return Object.values(entry.knowledge?.semanticRelations ?? {}).every(
-		(targets) =>
-			(targets ?? []).every(
-				(target) => !sameLemma(entry.reading.lemma, target),
-			),
+	const relations = entry.knowledge?.semanticRelations;
+	if (relations?.targetKind === "reading")
+		return (relations.synonym ?? []).every(
+			(target) => !sameReading(entry.reading, target),
+		);
+	return directSemanticRelationValues.every((relation) =>
+		(relations?.[relation] ?? []).every(
+			(target) => !sameLemma(entry.reading.lemma, target),
+		),
 	);
 }
 

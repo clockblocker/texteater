@@ -2,13 +2,19 @@
 status: accepted
 source: "texteater#177"
 partially-supersedes: 0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
-partially-superseded-by: 0012-store-only-direct-semantic-relation-claims.md
+partially-superseded-by:
+  - 0012-store-only-direct-semantic-relation-claims.md
+  - 0016-use-homogeneous-semantic-relation-target-modes.md
 ---
 
 # Use Reading-owned, Lemma-targeted Semantic Relations
 
 ADR 0012 supersedes this ADR's inverse-materialization and later-Reading
 backfill clauses. Reading ownership and Lemma targeting remain accepted.
+
+ADR 0016 retains Lemma targeting as the default mode and introduces exact
+Reading targeting for reviewed closed inventories. The remainder of this ADR
+describes the default mode.
 
 A canonical Semantic Relation is Knowledge owned by one exact Reading and
 targets one exact Lemma:

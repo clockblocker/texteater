@@ -36,9 +36,19 @@ describe("fixed German Knowledge", () => {
 				);
 				const canonicalForm = reading.lemma.canonicalForm;
 				if (["der", "die", "das"].includes(canonicalForm)) {
+					expect(found.knowledge.semanticRelations?.targetKind).toBe(
+						"reading",
+					);
 					expect(
 						found.knowledge.semanticRelations?.synonym?.map(
-							(target) => target.canonicalForm,
+							(target) => {
+								if (!("lemma" in target)) {
+									throw new Error(
+										"Expected a Reading-targeted synonym.",
+									);
+								}
+								return target.lemma.canonicalForm;
+							},
 						),
 					).toEqual(
 						["der", "die", "das"].filter(
@@ -47,6 +57,9 @@ describe("fixed German Knowledge", () => {
 					);
 					expect(found.coverage.semanticRelations.synonym).toBe(
 						"Authored",
+					);
+					expect(found.coverage.semanticRelationTargetKind).toBe(
+						"reading",
 					);
 				} else {
 					expect(found.knowledge.semanticRelations).toBeUndefined();
@@ -67,6 +80,7 @@ describe("fixed German Knowledge", () => {
 			transcription: "Unauthored",
 			definition: "Authored",
 			translations: { en: "Authored" },
+			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
 				synonym: "ReviewedEmpty",
 				nearSynonym: "ReviewedEmpty",
@@ -97,9 +111,19 @@ describe("fixed German Knowledge", () => {
 			expect(found.knowledge.definition).toBeTruthy();
 			expect(found.knowledge.translations?.en.length).toBeGreaterThan(0);
 			if (peerForms.includes(lemma.canonicalForm)) {
+				expect(found.knowledge.semanticRelations?.targetKind).toBe(
+					"reading",
+				);
 				expect(
 					found.knowledge.semanticRelations?.synonym?.map(
-						(target) => target.canonicalForm,
+						(target) => {
+							if (!("lemma" in target)) {
+								throw new Error(
+									"Expected a Reading-targeted synonym.",
+								);
+							}
+							return target.lemma.canonicalForm;
+						},
 					),
 				).toEqual(
 					peerForms.filter(
@@ -108,6 +132,9 @@ describe("fixed German Knowledge", () => {
 				);
 				expect(found.coverage.semanticRelations.synonym).toBe(
 					"Authored",
+				);
+				expect(found.coverage.semanticRelationTargetKind).toBe(
+					"reading",
 				);
 			} else {
 				expect(found.knowledge.semanticRelations).toBeUndefined();

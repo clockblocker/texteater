@@ -30,8 +30,10 @@ const schemaExports = [
 	"readingReferenceSchema",
 	"semanticRelationGraphReadingSchema",
 	"semanticRelationGraphSchema",
+	"semanticRelationRetractKnowledgeChangeSchema",
 	"semanticRelationsSchema",
 	"semanticRelationSchema",
+	"semanticRelationSetKnowledgeChangeSchema",
 	"semanticRelationValues",
 	"unitShadowSchema",
 ].sort();

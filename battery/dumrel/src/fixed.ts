@@ -4,7 +4,18 @@ import {
 	fixedMembersFor,
 } from "dumling/fixed";
 import type { Lemma, Reading } from "dumling/types";
-import type { ReadingKnowledge } from "./types.js";
+import type {
+	LexemeUnitShadow,
+	ReadingKnowledge,
+	SemanticRelations,
+} from "./types.js";
+
+type FixedReadingKnowledge = ReadingKnowledge<
+	"en",
+	Lemma,
+	LexemeUnitShadow,
+	Reading
+>;
 
 type AuxLemma = Lemma<"de", "Lexeme", "AUX">;
 type AuxReading = Reading<"de", "Lexeme", "AUX">;
@@ -20,6 +31,7 @@ export type FixedKnowledgeCoverage = Readonly<{
 	transcription: "Unauthored";
 	definition: "Authored";
 	translations: Readonly<{ en: "Authored" }>;
+	semanticRelationTargetKind: "lemma" | "reading";
 	semanticRelations: Readonly<{
 		synonym: "Authored" | "ReviewedEmpty";
 		nearSynonym: "ReviewedEmpty";
@@ -37,6 +49,7 @@ export const DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	transcription: "Unauthored",
 	definition: "Authored",
 	translations: { en: "Authored" },
+	semanticRelationTargetKind: "lemma",
 	semanticRelations: {
 		synonym: "ReviewedEmpty",
 		nearSynonym: "ReviewedEmpty",
@@ -47,6 +60,7 @@ export const DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 
 const DE_LEXEME_DET_V1_ARTICLE_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	...DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelationTargetKind: "reading",
 	semanticRelations: {
 		...DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
 		synonym: "Authored",
@@ -58,6 +72,7 @@ export const DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	transcription: "Unauthored",
 	definition: "Authored",
 	translations: { en: "Authored" },
+	semanticRelationTargetKind: "lemma",
 	semanticRelations: {
 		synonym: "ReviewedEmpty",
 		nearSynonym: "ReviewedEmpty",
@@ -68,6 +83,7 @@ export const DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 
 const DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelationTargetKind: "reading",
 	semanticRelations: {
 		...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
 		synonym: "Authored",
@@ -79,7 +95,7 @@ export type FixedKnowledgeLookup =
 			decision: "Found";
 			scope: string;
 			coverage: FixedKnowledgeCoverage;
-			knowledge: ReadingKnowledge<"en">;
+			knowledge: FixedReadingKnowledge;
 	  }>
 	| Readonly<{
 			decision: "Miss";
@@ -176,7 +192,7 @@ const englishGlosses = {
 
 function authoredDetKnowledgeFor(
 	reading: Reading<"de", "Lexeme", "DET">,
-): ReadingKnowledge<"en"> {
+): FixedReadingKnowledge {
 	const canonicalForm = reading.lemma.canonicalForm;
 	const translations =
 		englishGlosses[canonicalForm as keyof typeof englishGlosses];
@@ -190,7 +206,7 @@ function authoredDetKnowledgeFor(
 		definition: definitionFor(reading),
 		translations: { en: [...translations] },
 		...(semanticRelations === undefined ? {} : { semanticRelations }),
-	} satisfies ReadingKnowledge<"en">);
+	} satisfies FixedReadingKnowledge);
 }
 
 const promotedDefiniteArticleForms = new Set(["der", "die", "das"]);
@@ -205,24 +221,37 @@ function isPromotedDefiniteArticle(lemma: DetLemma): boolean {
 
 function detSemanticRelationsFor(
 	lemma: DetLemma,
-): ReadingKnowledge<"en", DetLemma>["semanticRelations"] | undefined {
+): SemanticRelations<DetLemma, DetReading> | undefined {
 	if (!isPromotedDefiniteArticle(lemma)) return undefined;
 	const catalog = fixedMembersFor.lemma({
 		language: "de",
 		family: "Lexeme",
 		kind: "DET",
 	});
-	const synonyms = catalog?.members.filter(
+	const synonymLemmas = catalog?.members.filter(
 		(candidate) =>
 			isPromotedDefiniteArticle(candidate) &&
 			candidate.canonicalForm !== lemma.canonicalForm,
 	);
-	if (synonyms?.length !== 2) {
+	if (synonymLemmas?.length !== 2) {
 		throw new Error(
 			`Expected two fixed definite-article synonyms for ${lemma.canonicalForm}.`,
 		);
 	}
-	return { synonym: [...synonyms] };
+	return {
+		targetKind: "reading",
+		synonym: synonymLemmas.map(exactFixedReadingForLemma) as DetReading[],
+	};
+}
+
+function exactFixedReadingForLemma<L extends Lemma>(lemma: L): Reading {
+	const readings = fixedMembersFor.reading(lemma);
+	if (readings?.members.length !== 1) {
+		throw new Error(
+			`Expected one fixed Reading for ${lemma.canonicalForm}.`,
+		);
+	}
+	return readings.members[0] as Reading;
 }
 
 const auxEnglishGlosses = {
@@ -242,7 +271,7 @@ const auxEnglishGlosses = {
 	wollen: ["want"],
 } as const satisfies Record<string, readonly [string, ...string[]]>;
 
-function authoredAuxKnowledgeFor(reading: AuxReading): ReadingKnowledge<"en"> {
+function authoredAuxKnowledgeFor(reading: AuxReading): FixedReadingKnowledge {
 	const canonicalForm = reading.lemma.canonicalForm;
 	const translations =
 		auxEnglishGlosses[canonicalForm as keyof typeof auxEnglishGlosses];
@@ -256,7 +285,7 @@ function authoredAuxKnowledgeFor(reading: AuxReading): ReadingKnowledge<"en"> {
 		definition: auxDefinitionFor(reading),
 		translations: { en: [...translations] },
 		...(semanticRelations === undefined ? {} : { semanticRelations }),
-	} satisfies ReadingKnowledge<"en">);
+	} satisfies FixedReadingKnowledge);
 }
 
 const promotedSeinPeerForms = new Set([
@@ -277,24 +306,29 @@ function isPromotedSeinPeer(lemma: AuxLemma): boolean {
 
 function auxSemanticRelationsFor(
 	lemma: AuxLemma,
-): ReadingKnowledge<"en", AuxLemma>["semanticRelations"] | undefined {
+): SemanticRelations<AuxLemma, AuxReading> | undefined {
 	if (!isPromotedSeinPeer(lemma)) return undefined;
 	const catalog = fixedMembersFor.lemma({
 		language: "de",
 		family: "Lexeme",
 		kind: "AUX",
 	});
-	const synonyms = catalog?.members.filter(
+	const synonymLemmas = catalog?.members.filter(
 		(candidate) =>
 			isPromotedSeinPeer(candidate) &&
 			candidate.canonicalForm !== lemma.canonicalForm,
 	);
-	if (synonyms?.length !== 5) {
+	if (synonymLemmas?.length !== 5) {
 		throw new Error(
 			`Expected five fixed sein-peer synonyms for ${lemma.canonicalForm}.`,
 		);
 	}
-	return { synonym: [...synonyms] };
+	return {
+		targetKind: "reading",
+		synonym: synonymLemmas.map(
+			(candidate) => exactFixedReadingForLemma(candidate) as AuxReading,
+		),
+	};
 }
 
 function auxDefinitionFor(reading: AuxReading): string {

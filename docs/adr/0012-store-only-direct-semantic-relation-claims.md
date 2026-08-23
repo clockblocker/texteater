@@ -4,9 +4,14 @@ source: "texteater#197"
 supersedes:
   - inverse-materialization and later-Reading-backfill clauses of 0011-use-reading-owned-lemma-targeted-semantic-relations.md
   - persistence-choice clause of ../../battery/dumrel/docs/adr/0002-use-reading-owned-lemma-targeted-relations.md
+partially-superseded-by: 0016-use-homogeneous-semantic-relation-target-modes.md
 ---
 
 # Store only direct Semantic Relation claims
+
+ADR 0016 adds a homogeneous exact-Reading target mode beside the default Lemma
+mode. Direct-only storage and inferred read projections remain accepted in both
+modes.
 
 Durable Semantic Relation storage contains only direct Reading-owned claims in
 canonical orientation. The durable kinds are Synonym, Near Synonym, Antonym,

@@ -137,7 +137,7 @@ function concreteLemmaSchemas(): [ZodType, ...ZodType[]] {
 	return [first, ...rest];
 }
 
-/** Canonical runtime schema for supported-language Lemma relation targets. */
+/** Runtime schema for a target in the default Lemma Target Mode. */
 export const lemmaReferenceSchema = z
 	.preprocess(
 		normalizeLemmaCanonicalForm,
@@ -246,20 +246,47 @@ export const lexicalBreakdownSchema = z
 	.min(2)
 	.transform(retainAtLeastTwo);
 
-export const semanticRelationsSchema = z.partialRecord(
-	directSemanticRelationSchema,
-	z.array(lemmaReferenceSchema),
-);
-
-export const directSemanticRelationGraphEdgeSchema = z.strictObject({
-	sourceReading: normalizedNonEmptyStringSchema,
-	relation: directSemanticRelationSchema,
-	targetLemma: normalizedNonEmptyStringSchema,
+/** Schema for the default homogeneous Lemma Target Mode. */
+const lemmaTargetedSemanticRelationsSchema = z.strictObject({
+	targetKind: z.literal("lemma").optional(),
+	synonym: z.array(lemmaReferenceSchema).optional(),
+	nearSynonym: z.array(lemmaReferenceSchema).optional(),
+	antonym: z.array(lemmaReferenceSchema).optional(),
+	nearAntonym: z.array(lemmaReferenceSchema).optional(),
+	hypernym: z.array(lemmaReferenceSchema).optional(),
+	holonym: z.array(lemmaReferenceSchema).optional(),
 });
+
+const readingTargetedSemanticRelationsSchema = z.strictObject({
+	targetKind: z.literal("reading"),
+	synonym: z.array(readingSchema).optional(),
+});
+
+export const semanticRelationsSchema = z.union([
+	readingTargetedSemanticRelationsSchema,
+	lemmaTargetedSemanticRelationsSchema,
+]);
+
+/** Schema for direct graph edges in either homogeneous target mode. */
+export const directSemanticRelationGraphEdgeSchema = z.union([
+	z.strictObject({
+		sourceReading: normalizedNonEmptyStringSchema,
+		relation: z.literal("synonym"),
+		targetKind: z.literal("reading"),
+		targetReading: normalizedNonEmptyStringSchema,
+	}),
+	z.strictObject({
+		sourceReading: normalizedNonEmptyStringSchema,
+		relation: directSemanticRelationSchema,
+		targetKind: z.literal("lemma").optional(),
+		targetLemma: normalizedNonEmptyStringSchema,
+	}),
+]);
 
 export const semanticRelationGraphReadingSchema = z.strictObject({
 	reading: normalizedNonEmptyStringSchema,
 	lemma: normalizedNonEmptyStringSchema,
+	relationTargetKind: z.enum(["lemma", "reading"]).optional(),
 });
 
 export const semanticRelationGraphSchema = z
@@ -294,6 +321,41 @@ export const readingKnowledgeSchema = z.strictObject({
 
 const bucketKinds = z.enum(["Contribute", "Correct"]);
 
+const readingTargetedRelationSetChangeSchema = z.strictObject({
+	kind: bucketKinds,
+	aspect: z.literal("semanticRelations"),
+	relation: z.literal("synonym"),
+	targetKind: z.literal("reading"),
+	value: z.array(readingSchema),
+});
+const lemmaTargetedRelationSetChangeSchema = z.strictObject({
+	kind: bucketKinds,
+	aspect: z.literal("semanticRelations"),
+	relation: directSemanticRelationSchema,
+	targetKind: z.literal("lemma").optional(),
+	value: z.array(lemmaReferenceSchema),
+});
+export const semanticRelationSetKnowledgeChangeSchema = z.union([
+	readingTargetedRelationSetChangeSchema,
+	lemmaTargetedRelationSetChangeSchema,
+]);
+const readingTargetedRelationRetractChangeSchema = z.strictObject({
+	kind: z.literal("Retract"),
+	aspect: z.literal("semanticRelations"),
+	relation: z.literal("synonym"),
+	targetKind: z.literal("reading"),
+});
+const lemmaTargetedRelationRetractChangeSchema = z.strictObject({
+	kind: z.literal("Retract"),
+	aspect: z.literal("semanticRelations"),
+	relation: directSemanticRelationSchema,
+	targetKind: z.literal("lemma").optional(),
+});
+export const semanticRelationRetractKnowledgeChangeSchema = z.union([
+	readingTargetedRelationRetractChangeSchema,
+	lemmaTargetedRelationRetractChangeSchema,
+]);
+
 export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: bucketKinds,
@@ -315,17 +377,10 @@ export const knowledgeChangeSchema = z.union([
 		aspect: z.literal("translations"),
 		language: normalizedNonEmptyStringSchema,
 	}),
-	z.strictObject({
-		kind: bucketKinds,
-		aspect: z.literal("semanticRelations"),
-		relation: directSemanticRelationSchema,
-		value: z.array(lemmaReferenceSchema),
-	}),
-	z.strictObject({
-		kind: z.literal("Retract"),
-		aspect: z.literal("semanticRelations"),
-		relation: directSemanticRelationSchema,
-	}),
+	readingTargetedRelationSetChangeSchema,
+	lemmaTargetedRelationSetChangeSchema,
+	readingTargetedRelationRetractChangeSchema,
+	lemmaTargetedRelationRetractChangeSchema,
 	z.strictObject({
 		kind: bucketKinds,
 		aspect: z.literal("definition"),

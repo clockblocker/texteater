@@ -2,6 +2,7 @@ import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
 import type {
 	DirectSemanticRelation,
 	KnowledgeChange,
+	LexemeUnitShadow,
 	ReadingKnowledge,
 	UnitShadow,
 } from "dumrel/types";
@@ -32,9 +33,21 @@ export type LemmaRecord<L extends SupportedLanguage> = {
 	lemma: Lemma<L>;
 };
 
+/**
+ * A stored Reading and its learner-owned content.
+ *
+ * @remarks Semantic Relation targets are homogeneous within this Reading's
+ * Knowledge. Lemma targeting is the default; reviewed closed-class inventories
+ * may opt into exact Reading targeting.
+ */
 export type ReadingEntry<L extends SupportedLanguage> = {
 	reading: Reading<L>;
-	knowledge?: ReadingKnowledge<string, Lemma<L>>;
+	knowledge?: ReadingKnowledge<
+		string,
+		Lemma<L>,
+		LexemeUnitShadow,
+		Reading<L>
+	>;
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;
@@ -90,7 +103,7 @@ export type ChangePrecondition<L extends SupportedLanguage> =
 
 type ReadingKnowledgeChange<L extends SupportedLanguage> = {
 	reading: Reading<L>;
-	change: KnowledgeChange<string, Lemma<L>>;
+	change: KnowledgeChange<string, Lemma<L>, LexemeUnitShadow, Reading<L>>;
 };
 
 export type ReadingPatchOp<L extends SupportedLanguage> =

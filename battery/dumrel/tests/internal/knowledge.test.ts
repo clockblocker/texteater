@@ -56,7 +56,7 @@ describe("Knowledge schemas", () => {
 		).toBe(false);
 	});
 
-	test("accepts Lemma targets and rejects Reading targets", () => {
+	test("accepts explicit Reading targets without weakening the Lemma default", () => {
 		expect(
 			readingKnowledgeSchema.parse({
 				semanticRelations: { synonym: [nounReading.lemma] },
@@ -67,6 +67,27 @@ describe("Knowledge schemas", () => {
 		expect(
 			readingKnowledgeSchema.safeParse({
 				semanticRelations: { synonym: [nounReading] },
+			}).success,
+		).toBe(false);
+		expect(
+			readingKnowledgeSchema.parse({
+				semanticRelations: {
+					targetKind: "reading",
+					synonym: [nounReading],
+				},
+			}),
+		).toEqual({
+			semanticRelations: {
+				targetKind: "reading",
+				synonym: [nounReading],
+			},
+		});
+		expect(
+			readingKnowledgeSchema.safeParse({
+				semanticRelations: {
+					targetKind: "reading",
+					antonym: [nounReading],
+				},
 			}).success,
 		).toBe(false);
 	});
@@ -227,5 +248,27 @@ describe("applyKnowledgeChange", () => {
 				relation: "synonym",
 			}),
 		).toEqual({});
+	});
+
+	test("keeps one target mode for the whole Semantic Relation container", () => {
+		const readingTargeted = applyKnowledgeChange(undefined, {
+			kind: "Contribute",
+			aspect: "semanticRelations",
+			relation: "synonym",
+			targetKind: "reading",
+			value: [nounReading, nounReading],
+		});
+		expect(readingTargeted.semanticRelations).toEqual({
+			targetKind: "reading",
+			synonym: [nounReading],
+		});
+		expect(() =>
+			applyKnowledgeChange(readingTargeted, {
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				value: [secondNounReading.lemma],
+			}),
+		).toThrow("cannot mix");
 	});
 });

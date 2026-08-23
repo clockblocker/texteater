@@ -113,6 +113,45 @@ describe("propagateRelations", () => {
 		});
 	});
 
+	test("keeps Reading-targeted Synonyms exact", () => {
+		const projected = projectRelations({
+			readings: [
+				{ reading: "a", lemma: "la", relationTargetKind: "reading" },
+				{ reading: "b", lemma: "lb", relationTargetKind: "reading" },
+				{ reading: "b2", lemma: "lb" },
+			],
+			edges: [
+				{
+					sourceReading: "a",
+					relation: "synonym",
+					targetKind: "reading",
+					targetReading: "b",
+				},
+			],
+		});
+		expect(projected).toContainEqual({
+			sourceReading: "a",
+			relation: "synonym",
+			targetKind: "reading",
+			targetReading: "b",
+			provenance: "direct",
+		});
+		expect(projected).toContainEqual({
+			sourceReading: "b",
+			relation: "synonym",
+			targetKind: "reading",
+			targetReading: "a",
+			provenance: "inferred",
+		});
+		expect(
+			projected.some(
+				(edge) =>
+					edge.targetKind === "reading" &&
+					edge.targetReading === "b2",
+			),
+		).toBe(false);
+	});
+
 	test("substitutes exact Synonyms at both endpoints for substitutive relation kinds", () => {
 		for (const relation of directSemanticRelationValues.filter(
 			(relation) => relation !== "nearAntonym",

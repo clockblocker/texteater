@@ -3,6 +3,8 @@ import type {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
+	semanticRelationRetractKnowledgeChangeSchema,
+	semanticRelationSetKnowledgeChangeSchema,
 } from "dumrel/schema";
 import type { z } from "zod";
 import type {
@@ -60,16 +62,16 @@ type ActualDumdictValidationRouteKey =
 /** Private operational guards compiled alongside, but outside, the 31-key API. */
 export type InternalDumdictOperationalValidationSchemaRegistry = {
 	"internal:knowledge-change": typeof knowledgeChangeSchema;
-	"internal:knowledge-change:bucket:definition": (typeof knowledgeChangeSchema.options)[6];
-	"internal:knowledge-change:bucket:lexical-breakdown": (typeof knowledgeChangeSchema.options)[10];
-	"internal:knowledge-change:bucket:morphological-tree": (typeof knowledgeChangeSchema.options)[8];
-	"internal:knowledge-change:bucket:semantic-relations": (typeof knowledgeChangeSchema.options)[4];
+	"internal:knowledge-change:bucket:definition": (typeof knowledgeChangeSchema.options)[8];
+	"internal:knowledge-change:bucket:lexical-breakdown": (typeof knowledgeChangeSchema.options)[12];
+	"internal:knowledge-change:bucket:morphological-tree": (typeof knowledgeChangeSchema.options)[10];
+	"internal:knowledge-change:bucket:semantic-relations": typeof semanticRelationSetKnowledgeChangeSchema;
 	"internal:knowledge-change:bucket:transcription": (typeof knowledgeChangeSchema.options)[0];
 	"internal:knowledge-change:bucket:translations": (typeof knowledgeChangeSchema.options)[2];
-	"internal:knowledge-change:retract:definition": (typeof knowledgeChangeSchema.options)[7];
-	"internal:knowledge-change:retract:lexical-breakdown": (typeof knowledgeChangeSchema.options)[11];
-	"internal:knowledge-change:retract:morphological-tree": (typeof knowledgeChangeSchema.options)[9];
-	"internal:knowledge-change:retract:semantic-relations": (typeof knowledgeChangeSchema.options)[5];
+	"internal:knowledge-change:retract:definition": (typeof knowledgeChangeSchema.options)[9];
+	"internal:knowledge-change:retract:lexical-breakdown": (typeof knowledgeChangeSchema.options)[13];
+	"internal:knowledge-change:retract:morphological-tree": (typeof knowledgeChangeSchema.options)[11];
+	"internal:knowledge-change:retract:semantic-relations": typeof semanticRelationRetractKnowledgeChangeSchema;
 	"internal:knowledge-change:retract:transcription": (typeof knowledgeChangeSchema.options)[1];
 	"internal:knowledge-change:retract:translations": (typeof knowledgeChangeSchema.options)[3];
 	"internal:pending-semantic-relation": typeof pendingSemanticRelationSchema;

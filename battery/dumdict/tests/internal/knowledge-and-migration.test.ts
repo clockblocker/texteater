@@ -77,7 +77,7 @@ describe("Reading Knowledge Changes", () => {
 					{ reading: englishWalkReading, change },
 				);
 				const knowledge = result.knowledge ?? {};
-				expect(knowledge).toEqual(
+				expect(knowledge as unknown).toEqual(
 					applyKnowledgeChange(existing, change),
 				);
 				expect(
@@ -122,6 +122,47 @@ describe("Reading Knowledge Changes", () => {
 				);
 			}
 		}
+	});
+
+	test("keeps an explicit Lemma mode homogeneous", () => {
+		const readingEntry = enSerializedNotes[0]?.readingEntries[0];
+		if (!readingEntry) throw new Error("Expected Reading fixture.");
+		const withLemmaMode = {
+			...readingEntry,
+			knowledge: {
+				semanticRelations: {
+					targetKind: "lemma" as const,
+					synonym: [englishRunLemma],
+				},
+			},
+		};
+		const changed = applyDumdictKnowledgeChange(withLemmaMode, {
+			reading: englishWalkReading,
+			change: {
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "nearSynonym",
+				targetKind: "lemma",
+				value: [englishRunLemma],
+			},
+		});
+		expect(changed.knowledge?.semanticRelations).toEqual({
+			targetKind: "lemma",
+			synonym: [englishRunLemma],
+			nearSynonym: [englishRunLemma],
+		});
+		expect(() =>
+			applyDumdictKnowledgeChange(withLemmaMode, {
+				reading: englishWalkReading,
+				change: {
+					kind: "Contribute",
+					aspect: "semanticRelations",
+					relation: "synonym",
+					targetKind: "reading",
+					value: [englishRunReading],
+				},
+			}),
+		).toThrow("cannot mix");
 	});
 
 	test("treats absent Knowledge like canonical empty Knowledge without skipping guards", () => {

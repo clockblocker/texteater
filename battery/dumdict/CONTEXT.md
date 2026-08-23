@@ -45,8 +45,10 @@ An existing learner Reading returned for an exact resolved Lemma so the
 classifier can reuse it or propose a new Reading.
 
 **Semantic Relation Edge**:
-A durable direct Reading-owned claim whose target is a structural Lemma.
-Dumdict resolves only unambiguous generated Unit Shadows, enforces direct
-target conflicts, and supplies the dictionary inventory for deterministic
-direct/inferred read projections. It never stores inverse, closure,
-substitution, or later-Reading backfill edges.
+A durable direct Reading-owned claim whose target is either a Lemma or an exact
+Reading. Every Reading Knowledge value uses one homogeneous target mode. Lemma
+Target Mode is the default; reviewed closed inventories may select Reading
+Target Mode. Dumdict resolves generated Unit Shadows only in Lemma Target Mode,
+enforces direct target conflicts, and supplies the dictionary inventory for
+deterministic direct/inferred read projections. It never stores inverse,
+closure, or substitution edges.

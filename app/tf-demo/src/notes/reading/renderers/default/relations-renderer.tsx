@@ -20,7 +20,13 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 	return (
 		<ul className="flex flex-wrap gap-2" aria-label="Semantic relations">
 			{relations.map((relation) => (
-				<li key={`${relation.relation}:${relation.target.id}`}>
+				<li
+					key={`${relation.relation}:${
+						relation.target.kind === "UnitReadingNote"
+							? relation.target.readingId
+							: relation.target.id
+					}`}
+				>
 					<Link
 						to={capabilities.hrefFor(relation.target)}
 						className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"

@@ -4,6 +4,7 @@ import { readingFingerprint } from "dumling/reading";
 import type {
 	LemmaReference,
 	ProjectedSemanticRelations,
+	ReadingReference,
 	SemanticRelation,
 } from "dumrel";
 import { semanticRelationValues } from "dumrel/vocabulary";
@@ -19,40 +20,72 @@ const MAX_RELATIONS_PER_NOTE = 50;
 
 type UnknownRecord = Record<string, unknown>;
 
-export const relationFingerprintProjectionValidator = v.object({
-	relation: semanticRelationValidator,
-	targetLemmaKey: v.string(),
-	targetCanonicalForm: v.string(),
-	provenance: v.union(v.literal("direct"), v.literal("inferred")),
-});
+export const relationFingerprintProjectionValidator = v.union(
+	v.object({
+		relation: semanticRelationValidator,
+		targetKind: v.optional(v.literal("lemma")),
+		targetLemmaKey: v.string(),
+		targetCanonicalForm: v.string(),
+		provenance: v.union(v.literal("direct"), v.literal("inferred")),
+	}),
+	v.object({
+		relation: semanticRelationValidator,
+		targetKind: v.literal("reading"),
+		targetReadingKey: v.string(),
+		targetCanonicalForm: v.string(),
+		provenance: v.union(v.literal("direct"), v.literal("inferred")),
+	}),
+);
 
 export const relationProjectionValidator = v.object({
 	relation: semanticRelationValidator,
 	targetCanonicalForm: v.string(),
 	provenance: v.union(v.literal("direct"), v.literal("inferred")),
-	target: v.object({
-		kind: v.literal("RouteNote"),
-		routeKind: v.literal("Lemma"),
-		id: v.id("lemmas"),
-	}),
+	target: v.union(
+		v.object({
+			kind: v.literal("RouteNote"),
+			routeKind: v.literal("Lemma"),
+			id: v.id("lemmas"),
+		}),
+		v.object({
+			kind: v.literal("UnitReadingNote"),
+			readingId: v.id("readings"),
+		}),
+	),
 });
 
-export type RelationFingerprintProjection = {
-	readonly relation: SemanticRelation;
-	readonly targetLemmaKey: string;
-	readonly targetCanonicalForm: string;
-	readonly provenance: "direct" | "inferred";
-};
+export type RelationFingerprintProjection =
+	| {
+			readonly relation: SemanticRelation;
+			readonly targetKind?: "lemma";
+			readonly targetLemmaKey: string;
+			readonly targetReadingKey?: never;
+			readonly targetCanonicalForm: string;
+			readonly provenance: "direct" | "inferred";
+	  }
+	| {
+			readonly relation: SemanticRelation;
+			readonly targetKind: "reading";
+			readonly targetReadingKey: string;
+			readonly targetLemmaKey?: never;
+			readonly targetCanonicalForm: string;
+			readonly provenance: "direct" | "inferred";
+	  };
 
-export type RelationProjection<LemmaId extends string = string> = {
+export type RelationProjection<
+	LemmaId extends string = string,
+	ReadingId extends string = string,
+> = {
 	readonly relation: SemanticRelation;
 	readonly targetCanonicalForm: string;
 	readonly provenance: "direct" | "inferred";
-	readonly target: {
-		readonly kind: "RouteNote";
-		readonly routeKind: "Lemma";
-		readonly id: LemmaId;
-	};
+	readonly target:
+		| {
+				readonly kind: "RouteNote";
+				readonly routeKind: "Lemma";
+				readonly id: LemmaId;
+		  }
+		| { readonly kind: "UnitReadingNote"; readonly readingId: ReadingId };
 };
 
 export function flattenDirectSemanticRelations(
@@ -60,6 +93,7 @@ export function flattenDirectSemanticRelations(
 ): RelationFingerprintProjection[] {
 	const semanticRelations = optionalRecord(semanticRelationsValue);
 	if (!semanticRelations) return [];
+	const readingMode = semanticRelations.targetKind === "reading";
 
 	return semanticRelationValues
 		.flatMap((relation) => {
@@ -67,10 +101,26 @@ export function flattenDirectSemanticRelations(
 			if (!Array.isArray(targets)) return [];
 			return targets.flatMap(
 				(target): RelationFingerprintProjection[] => {
-					const lemma = optionalRecord(target);
+					const targetRecord = optionalRecord(target);
+					const lemma = readingMode
+						? optionalRecord(targetRecord?.lemma)
+						: targetRecord;
 					const targetCanonicalForm = optionalNonEmptyString(
 						lemma?.canonicalForm,
 					);
+					if (readingMode && targetCanonicalForm && targetRecord) {
+						return [
+							{
+								relation,
+								targetKind: "reading",
+								targetReadingKey: readingFingerprint(
+									targetRecord as unknown as ReadingReference,
+								),
+								targetCanonicalForm,
+								provenance: "direct",
+							},
+						];
+					}
 					return targetCanonicalForm && lemma
 						? [
 								{
@@ -99,6 +149,7 @@ export function projectResolvedRelationTargets<LemmaId extends string>(
 	);
 	return relations.flatMap(
 		({ targetLemmaKey, ...relation }): RelationProjection<LemmaId>[] => {
+			if (relation.targetKind === "reading" || !targetLemmaKey) return [];
 			const lemmaId = lemmaIdByKey.get(targetLemmaKey);
 			return lemmaId
 				? [
@@ -136,54 +187,107 @@ export async function loadRelationProjections(
 			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Semantic Relations.`,
 		);
 	}
-	const lemmas = await Promise.all(
-		projections.map(({ targetLemma }) =>
-			ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", lemmaIdentityKey(targetLemma)),
-				)
-				.unique(),
+	const targetDocs = await Promise.all(
+		projections.map((projection) =>
+			projection.targetKind === "reading"
+				? ctx.db
+						.query("readings")
+						.withIndex("by_reading_key", (q) =>
+							q.eq(
+								"readingKey",
+								readingFingerprint(projection.targetReading),
+							),
+						)
+						.unique()
+				: ctx.db
+						.query("lemmas")
+						.withIndex("by_lemma_key", (q) =>
+							q.eq(
+								"lemmaKey",
+								lemmaIdentityKey(projection.targetLemma),
+							),
+						)
+						.unique(),
 		),
 	);
-	const fingerprints = projections.flatMap((projection, index) => {
-		const lemma = lemmas[index];
-		return lemma
-			? [
-					{
-						relation: projection.relation,
-						targetLemmaKey: lemma.lemmaKey,
-						targetCanonicalForm: lemma.canonicalForm,
-						provenance: projection.provenance,
-					},
-				]
-			: [];
-	});
-	const knowledge: ProjectedSemanticRelations<LemmaReference> = {};
+	const readingMode = projections[0]?.targetKind === "reading";
+	if (
+		projections.some(
+			(projection) =>
+				(projection.targetKind === "reading") !== readingMode,
+		)
+	)
+		throw new Error(
+			"One Reading Note cannot mix Lemma- and Reading-targeted Semantic Relations.",
+		);
+	const fingerprints: RelationFingerprintProjection[] = [];
+	const resolved: RelationProjection<Id<"lemmas">, Id<"readings">>[] = [];
+	const knowledge: ProjectedSemanticRelations<
+		LemmaReference,
+		ReadingReference
+	> = readingMode ? { targetKind: "reading" } : {};
 	for (const [index, projection] of projections.entries()) {
-		const lemma = lemmas[index];
-		if (!lemma) continue;
+		const targetDoc = targetDocs[index];
+		if (!targetDoc) continue;
+		if (projection.targetKind === "reading") {
+			if (
+				!("readingKey" in targetDoc) ||
+				knowledge.targetKind !== "reading"
+			)
+				continue;
+			fingerprints.push({
+				relation: projection.relation,
+				targetKind: "reading",
+				targetReadingKey: targetDoc.readingKey,
+				targetCanonicalForm:
+					projection.targetReading.lemma.canonicalForm,
+				provenance: projection.provenance,
+			});
+			resolved.push({
+				relation: projection.relation,
+				targetCanonicalForm:
+					projection.targetReading.lemma.canonicalForm,
+				provenance: projection.provenance,
+				target: {
+					kind: "UnitReadingNote",
+					readingId: targetDoc._id,
+				},
+			});
+			const bucket = knowledge[projection.relation];
+			if (bucket) bucket.push(projection.targetReading);
+			else knowledge[projection.relation] = [projection.targetReading];
+			continue;
+		}
+		if (!("lemmaKey" in targetDoc) || knowledge.targetKind === "reading")
+			continue;
 		const target = parseGermanLemma({
-			language: lemma.language,
-			family: lemma.family,
-			kind: lemma.kind,
-			canonicalForm: lemma.canonicalForm,
-			coreFeatures: lemma.coreFeatures,
+			language: targetDoc.language,
+			family: targetDoc.family,
+			kind: targetDoc.kind,
+			canonicalForm: targetDoc.canonicalForm,
+			coreFeatures: targetDoc.coreFeatures,
 		});
-		const existingTargets = knowledge[projection.relation];
-		if (existingTargets) existingTargets.push(target);
+		fingerprints.push({
+			relation: projection.relation,
+			targetLemmaKey: targetDoc.lemmaKey,
+			targetCanonicalForm: targetDoc.canonicalForm,
+			provenance: projection.provenance,
+		});
+		resolved.push({
+			relation: projection.relation,
+			targetCanonicalForm: targetDoc.canonicalForm,
+			provenance: projection.provenance,
+			target: {
+				kind: "RouteNote",
+				routeKind: "Lemma",
+				id: targetDoc._id,
+			},
+		});
+		const bucket = knowledge[projection.relation];
+		if (bucket) bucket.push(target);
 		else knowledge[projection.relation] = [target];
 	}
-	return {
-		fingerprints,
-		knowledge,
-		resolved: projectResolvedRelationTargets(
-			fingerprints,
-			lemmas.flatMap((lemma) =>
-				lemma ? [{ lemmaKey: lemma.lemmaKey, lemmaId: lemma._id }] : [],
-			),
-		),
-	};
+	return { fingerprints, knowledge, resolved };
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {

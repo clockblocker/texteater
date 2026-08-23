@@ -382,6 +382,23 @@ export const clearReadingDataBatch = internalMutation({
 				)
 				.first();
 			if (remainingOutgoingEdge) continue;
+			const incomingReadingEdges = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_target_reading_id", (q) =>
+					q.eq("targetReadingId", reading._id),
+				)
+				.take(BATCH_SIZE - deleted);
+			for (const edge of incomingReadingEdges) {
+				await ctx.db.delete(edge._id);
+				deleted += 1;
+			}
+			const remainingIncomingReadingEdge = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex("by_target_reading_id", (q) =>
+					q.eq("targetReadingId", reading._id),
+				)
+				.first();
+			if (remainingIncomingReadingEdge) continue;
 			const entry = await ctx.db
 				.query("readingEntries")
 				.withIndex("by_reading_id", (q) =>

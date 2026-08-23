@@ -100,15 +100,26 @@ selected for generation.
 ## Relations
 
 **Semantic Relation**:
-A direct typed connection from one Reading to one Lemma. Semantic Relations
-are owned by the source Reading Knowledge; the target Lemma owns no Knowledge.
-Translations and component structure are not Semantic Relations.
+A direct typed connection owned by one exact source Reading. One Reading
+Knowledge value targets either Lemmas or exact Readings and cannot mix them.
+The target owns no copy of the direct claim. Translations and component
+structure are not Semantic Relations.
 _Avoid_: Lexical Relation
+
+**Lemma Target Mode**:
+The default Semantic Relation mode. Direct relation buckets contain Lemmas.
+Open classes, generated relations, and routes without an explicit reviewed
+policy use this mode.
+
+**Reading Target Mode**:
+An explicit `targetKind: "reading"` mode reserved for hand-maintained closed
+inventories. Targets are exact Readings. The current direct vocabulary in this
+mode is Synonym.
 
 **Pending Semantic Relation**:
 A transitional DTO containing a Semantic Relation and target Unit Shadow. It is
 not canonical Reading Knowledge; Dumdict supplies the source Reading and owns
-matching, resolution, removal, and the direct write.
+Lemma matching, resolution, removal, and the direct write in Lemma Target Mode.
 
 **Direct Semantic Relation Claim**:
 A durable Reading-owned relation in canonical orientation. The direct kinds are
@@ -123,21 +134,21 @@ Relation has the same properties.
 
 **Relation Propagation**:
 The derivation of new edges by applying Relation Algebra to a caller-selected
-finite Reading-to-Lemma graph and its caller-supplied Reading ownership
-inventory. Propagation never mutates direct Knowledge or merges Knowledge
+finite graph. A source Reading declares its target mode, and inferred edges use
+that mode. Propagation never mutates direct Knowledge or merges Knowledge
 applied to different Readings.
 
 **Inverse Relation**:
-The inferred Semantic Relation projected on every current Reading of a target
-Lemma, pointing to the original source Reading's Lemma. It may be the same
-Relation, as with Synonym, or a paired counterpart, as with Hypernym and
-Hyponym. It is never durable Knowledge.
+The inferred Semantic Relation projected from the target endpoint. In Lemma
+Target Mode, the inverse appears on current Readings of the target Lemma and
+targets the source Lemma. In Reading Target Mode, it appears on the exact target
+Reading and targets the exact source Reading. It is never durable Knowledge.
 
 **Synonym**:
-An exact semantic equivalence from a Reading to a Lemma. Synonym is symmetric
-across current target-Lemma Readings and transitive, and members of a Synonym
-cluster substitute at both endpoints during Relation Propagation without
-sharing owned Knowledge.
+An exact semantic equivalence. In Lemma Target Mode its endpoint is a Lemma; in
+Reading Target Mode it is an exact Reading. Synonym is symmetric and transitive,
+and members of a Synonym cluster substitute at both endpoints during Relation
+Propagation without sharing owned Knowledge.
 
 **Near Synonym**:
 A symmetric similarity from a Reading to a Lemma that is not itself transitive

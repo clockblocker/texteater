@@ -114,27 +114,17 @@ describe("combined German Knowledge generation", () => {
 			changes: [
 				{ aspect: "definition" },
 				{ aspect: "translations", language: "en", value: ["the"] },
-			],
-			pendingRelations: [
 				{
+					aspect: "semanticRelations",
 					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "DET",
-						canonicalForm: "die",
-					},
-				},
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "DET",
-						canonicalForm: "das",
-					},
+					targetKind: "reading",
+					value: [
+						{ lemma: { canonicalForm: "die" } },
+						{ lemma: { canonicalForm: "das" } },
+					],
 				},
 			],
+			pendingRelations: [],
 		});
 		expect(calls).toHaveLength(0);
 	});
@@ -166,18 +156,16 @@ describe("combined German Knowledge generation", () => {
 			changes: [
 				{ aspect: "definition" },
 				{ aspect: "translations", language: "en", value: ["be"] },
-			],
-			pendingRelations: ["bin", "bist", "ist", "sind", "seid"].map(
-				(canonicalForm) => ({
+				{
+					aspect: "semanticRelations",
 					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "AUX",
-						canonicalForm,
-					},
-				}),
-			),
+					targetKind: "reading",
+					value: ["bin", "bist", "ist", "sind", "seid"].map(
+						(canonicalForm) => ({ lemma: { canonicalForm } }),
+					),
+				},
+			],
+			pendingRelations: [],
 		});
 		expect(calls).toHaveLength(0);
 	});

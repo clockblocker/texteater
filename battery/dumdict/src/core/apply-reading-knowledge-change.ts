@@ -1,5 +1,10 @@
-import type { Lemma, SupportedLanguage } from "dumling/types";
-import type { KnowledgeChange, ReadingKnowledge } from "dumrel/types";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
+import type {
+	KnowledgeChange,
+	LexemeUnitShadow,
+	ReadingKnowledge,
+	SemanticRelations,
+} from "dumrel/types";
 import type { ReadingEntry, ReadingKnowledgeChange } from "../dto";
 import {
 	parseKnowledgeChangeForDumdictRuntime,
@@ -21,18 +26,23 @@ export function applyDumdictKnowledgeChange<L extends SupportedLanguage>(
 			"Knowledge Change Reading does not match the Reading Entry.",
 		);
 	}
+	const change = envelope.change;
 	if (
-		envelope.change.aspect === "semanticRelations" &&
-		"value" in envelope.change &&
-		envelope.change.value.some((target) =>
-			sameLemma(record.reading.lemma, target),
-		)
+		change.aspect === "semanticRelations" &&
+		"value" in change &&
+		(change.targetKind === "reading"
+			? change.value.some((target) => sameReading(record.reading, target))
+			: change.value.some((target) =>
+					sameLemma(record.reading.lemma, target),
+				))
 	)
 		throw new Error(
 			"Reading Knowledge cannot contain a direct same-Lemma relation.",
 		);
 	const knowledge = applyKnowledgeChangeForDumdictRuntime(
-		record.knowledge as ReadingKnowledge<string, Lemma<L>> | undefined,
+		record.knowledge as
+			| ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
+			| undefined,
 		envelope.change,
 	);
 	const { knowledge: _existing, ...withoutKnowledge } = record;
@@ -40,7 +50,12 @@ export function applyDumdictKnowledgeChange<L extends SupportedLanguage>(
 		? withoutKnowledge
 		: {
 				...withoutKnowledge,
-				knowledge: knowledge as ReadingKnowledge<string, Lemma<L>>,
+				knowledge: knowledge as ReadingKnowledge<
+					string,
+					Lemma<L>,
+					LexemeUnitShadow,
+					Reading<L>
+				>,
 			};
 }
 
@@ -116,21 +131,34 @@ function applyRelationBucket(
 	knowledge: ReadingKnowledge,
 	change: RelationBucketChange,
 ): void {
-	const relations = { ...knowledge.semanticRelations };
+	const targetKind = change.targetKind ?? "lemma";
+	const existing = knowledge.semanticRelations;
+	const existingTargetKind =
+		existing?.targetKind === "reading" ? "reading" : "lemma";
+	if (existing !== undefined && existingTargetKind !== targetKind)
+		throw new Error(
+			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
+		);
+	const relations: Record<string, unknown> = {
+		...existing,
+		...(targetKind === "reading" ? { targetKind: "reading" } : {}),
+	};
 	if (change.kind === "Retract") {
 		delete relations[change.relation];
-		if (Object.keys(relations).length === 0)
+		if (targetKind === "lemma" && Object.keys(relations).length === 0)
 			delete knowledge.semanticRelations;
-		else knowledge.semanticRelations = relations;
+		else knowledge.semanticRelations = relations as SemanticRelations;
 		return;
 	}
 
-	const existing = relations[change.relation] ?? [];
+	const existingTargets = Array.isArray(relations[change.relation])
+		? (relations[change.relation] as unknown[])
+		: [];
 	relations[change.relation] =
 		change.kind === "Correct"
-			? stableUnique(change.value)
-			: appendUnique(existing, change.value);
-	knowledge.semanticRelations = relations;
+			? stableUnique(change.value as readonly unknown[])
+			: appendUnique(existingTargets, change.value as readonly unknown[]);
+	knowledge.semanticRelations = relations as SemanticRelations;
 }
 
 type AtomicChange = Extract<

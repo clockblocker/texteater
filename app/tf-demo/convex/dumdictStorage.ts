@@ -479,15 +479,37 @@ async function loadCanonicalReadingKnowledge(
 			`A Reading supports at most ${MAX_RELATIONS_PER_READING} Semantic Relation edges.`,
 		);
 	}
-	const targets = await Promise.all(
-		edges.map((edge) => ctx.db.get(edge.targetLemmaId)),
+	const targetKinds = new Set(
+		edges.map((edge) =>
+			edge.targetKind === "reading" || edge.targetReadingId !== undefined
+				? "reading"
+				: "lemma",
+		),
 	);
+	if (targetKinds.size > 1)
+		throw new Error(
+			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
+		);
+	const targetKind = targetKinds.has("reading") ? "reading" : "lemma";
 	const semanticRelations: AnyRecord = {};
-	for (const [index, edge] of edges.entries()) {
-		const target = targets[index];
-		if (!target) continue;
+	if (targetKind === "reading") semanticRelations.targetKind = "reading";
+	for (const edge of edges) {
+		let targetValue: unknown;
+		if (targetKind === "reading") {
+			if (!edge.targetReadingId) continue;
+			const targetReading = await ctx.db.get(edge.targetReadingId);
+			if (!targetReading) continue;
+			const targetLemma = await ctx.db.get(targetReading.lemmaId);
+			if (!targetLemma) continue;
+			targetValue = readingValue(targetReading, targetLemma);
+		} else {
+			if (!edge.targetLemmaId) continue;
+			const targetLemma = await ctx.db.get(edge.targetLemmaId);
+			if (!targetLemma) continue;
+			targetValue = lemmaValue(targetLemma);
+		}
 		const bucket = (semanticRelations[edge.relation] ?? []) as unknown[];
-		bucket.push(lemmaValue(target));
+		bucket.push(targetValue);
 		semanticRelations[edge.relation] = bucket;
 	}
 	const base = withoutSemanticRelations(storedKnowledge);
@@ -1137,6 +1159,11 @@ async function syncSemanticRelationChange(
 	);
 	const relation = requireDirectSemanticRelation(change.relation);
 	const kind = requireChangeKind(change.kind);
+	const targetKind = change.targetKind === "reading" ? "reading" : "lemma";
+	if (targetKind === "reading" && relation !== "synonym")
+		throw new Error(
+			"Reading-targeted direct claims currently support Synonym only.",
+		);
 	const existing = await ctx.db
 		.query("semanticRelationEdges")
 		.withIndex("by_source_reading_id_and_relation", (q) =>
@@ -1148,11 +1175,63 @@ async function syncSemanticRelationChange(
 			`A Reading supports at most ${MAX_RELATIONS_PER_READING} Semantic Relation edges.`,
 		);
 	}
+	if (
+		existing.some(
+			(edge) =>
+				(edge.targetKind === "reading" ||
+					edge.targetReadingId !== undefined) !==
+				(targetKind === "reading"),
+		)
+	)
+		throw new Error(
+			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
+		);
 	if (kind === "Retract") {
 		for (const edge of existing) await ctx.db.delete(edge._id);
 		return;
 	}
 	const targets = requireArray(change.value, "Semantic Relation values");
+	if (targetKind === "reading") {
+		const resolvedTargets = await Promise.all(
+			targets.map((target) => findReading(ctx, target)),
+		);
+		if (resolvedTargets.some((target) => target === null))
+			throw new Error("A Semantic Relation target Reading is missing.");
+		const targetIds = new Set(
+			resolvedTargets.flatMap((target) => (target ? [target._id] : [])),
+		);
+		if (targetIds.has(sourceReadingId))
+			throw new Error("A Reading cannot relate directly to itself.");
+		if (kind === "Correct") {
+			for (const edge of existing)
+				if (
+					!edge.targetReadingId ||
+					!targetIds.has(edge.targetReadingId)
+				)
+					await ctx.db.delete(edge._id);
+		}
+		for (const targetReadingId of targetIds) {
+			const edge = await ctx.db
+				.query("semanticRelationEdges")
+				.withIndex(
+					"by_source_reading_id_and_relation_and_target_reading_id",
+					(q) =>
+						q
+							.eq("sourceReadingId", sourceReadingId)
+							.eq("relation", relation)
+							.eq("targetReadingId", targetReadingId),
+				)
+				.unique();
+			if (!edge)
+				await ctx.db.insert("semanticRelationEdges", {
+					sourceReadingId,
+					targetKind: "reading",
+					targetReadingId,
+					relation,
+				});
+		}
+		return;
+	}
 	const resolvedTargets = await Promise.all(
 		targets.map((target) => findLemma(ctx, target)),
 	);
@@ -1169,7 +1248,7 @@ async function syncSemanticRelationChange(
 	}
 	if (kind === "Correct") {
 		for (const edge of existing) {
-			if (!targetIds.has(edge.targetLemmaId))
+			if (!edge.targetLemmaId || !targetIds.has(edge.targetLemmaId))
 				await ctx.db.delete(edge._id);
 		}
 	}
@@ -1188,6 +1267,7 @@ async function syncSemanticRelationChange(
 		if (!edge) {
 			await ctx.db.insert("semanticRelationEdges", {
 				sourceReadingId,
+				targetKind: "lemma",
 				targetLemmaId,
 				relation,
 			});
@@ -1205,10 +1285,13 @@ async function syncSemanticRelationsFromKnowledge(
 	const relations = optionalRecord(knowledge?.semanticRelations);
 	if (!relations) return;
 	for (const [relation, value] of Object.entries(relations)) {
+		if (relation === "targetKind") continue;
 		await syncSemanticRelationChange(ctx, sourceReadingId, sourceLemmaId, {
 			kind: "Contribute",
 			aspect: "semanticRelations",
 			relation,
+			targetKind:
+				relations.targetKind === "reading" ? "reading" : "lemma",
 			value,
 		});
 	}

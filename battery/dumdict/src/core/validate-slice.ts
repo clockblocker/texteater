@@ -89,15 +89,24 @@ function validateReadingEntry<L extends SupportedLanguage>(
 		unwrapDumdictParse(
 			parseReadingKnowledgeForDumdictRuntime(entry.knowledge),
 		);
-		for (const targets of Object.values(
-			entry.knowledge.semanticRelations ?? {},
-		)) {
-			for (const target of targets ?? []) {
-				validateLemmaRecord(expected, { lemma: target });
-				if (sameLemma(entry.reading.lemma, target))
+		const relations = entry.knowledge.semanticRelations;
+		if (relations?.targetKind === "reading") {
+			for (const target of relations.synonym ?? []) {
+				validateReading(expected, target);
+				if (sameReading(entry.reading, target))
 					throw new Error(
-						"Reading Knowledge contains a direct same-Lemma relation.",
+						"Reading Knowledge contains a direct self relation.",
 					);
+			}
+		} else {
+			for (const relation of directSemanticRelationValues) {
+				for (const target of relations?.[relation] ?? []) {
+					validateLemmaRecord(expected, { lemma: target });
+					if (sameLemma(entry.reading.lemma, target))
+						throw new Error(
+							"Reading Knowledge contains a direct same-Lemma relation.",
+						);
+				}
 			}
 		}
 	}
@@ -169,19 +178,29 @@ function validateRelationInventory<L extends SupportedLanguage>(
 	const lemmaKeys = new Set(
 		lemmas.map(({ lemma }) => lemmaFingerprint(lemma)),
 	);
+	const readingKeys = new Set(
+		readings.map(({ reading }) => readingFingerprint(reading)),
+	);
 	for (const entry of readings) {
 		if (!lemmaKeys.has(lemmaFingerprint(entry.reading.lemma)))
 			throw new Error(
 				"relation Reading inventory references an unstored owner Lemma.",
 			);
-		for (const targets of Object.values(
-			entry.knowledge?.semanticRelations ?? {},
-		)) {
-			for (const target of targets ?? []) {
-				if (!lemmaKeys.has(lemmaFingerprint(target)))
+		const relations = entry.knowledge?.semanticRelations;
+		if (relations?.targetKind === "reading") {
+			for (const target of relations.synonym ?? [])
+				if (!readingKeys.has(readingFingerprint(target)))
 					throw new Error(
-						"relation Reading inventory references an unstored target Lemma.",
+						"relation Reading inventory references an unstored target Reading.",
 					);
+		} else {
+			for (const relation of directSemanticRelationValues) {
+				for (const target of relations?.[relation] ?? []) {
+					if (!lemmaKeys.has(lemmaFingerprint(target)))
+						throw new Error(
+							"relation Reading inventory references an unstored target Lemma.",
+						);
+				}
 			}
 		}
 	}

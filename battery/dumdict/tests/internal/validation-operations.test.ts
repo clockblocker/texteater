@@ -69,12 +69,6 @@ describe("lazy Dumdict validation operations", () => {
 			},
 		]);
 		expect(
-			operations["dumdict.transitive.custom.hasDistinctPair"]([
-				"Masc",
-				"Masc",
-			]).issues,
-		).toHaveLength(1);
-		expect(
 			operations[
 				"dumdict.transitive.custom.hasGermanVerbInflectionSignal"
 			]({ number: null, tense: null, voice: null }).issues,

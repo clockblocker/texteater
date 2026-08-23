@@ -662,6 +662,100 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(db.rows("dictionaryState")[0]?.revision).toBe(2);
 	});
 
+	test("persists exact Reading targets and navigates to the target Reading Note", async () => {
+		const db = new IndexedDb(initialSeed());
+		const dict = createDumdictService({
+			language: "de",
+			storage: storageFor(db),
+		});
+		expect(
+			await dict.addNewNote({
+				draft: { reading: laufenReading, note },
+			}),
+		).toMatchObject({ status: "applied" });
+		expect(
+			await applyDumdictPlanInTransaction({ db } as never, {
+				baseRevision: "convex-1" as StoreRevision,
+				changes: [
+					{
+						type: "patchReading",
+						reading: laufenReading,
+						ops: [
+							{
+								kind: "applyKnowledgeChange",
+								envelope: {
+									reading: laufenReading,
+									change: {
+										kind: "Contribute",
+										aspect: "semanticRelations",
+										relation: "synonym",
+										targetKind: "reading",
+										value: [gehenReading],
+									},
+								},
+							},
+						],
+						preconditions: [
+							{
+								kind: "revisionMatches",
+								revision: "convex-1" as StoreRevision,
+							},
+							{
+								kind: "readingExists",
+								reading: laufenReading,
+							},
+						],
+					},
+				],
+			} satisfies DumdictPlan<"de">),
+		).toMatchObject({ status: "committed" });
+
+		const source = db
+			.rows("readings")
+			.find(
+				(row) => row.readingKey === readingFingerprint(laufenReading),
+			);
+		const target = db
+			.rows("readings")
+			.find((row) => row.readingKey === readingFingerprint(gehenReading));
+		if (!source || !target) throw new Error("Expected exact Reading rows.");
+		expect(db.rows("semanticRelationEdges")).toContainEqual(
+			expect.objectContaining({
+				sourceReadingId: source._id,
+				targetKind: "reading",
+				targetReadingId: target._id,
+				relation: "synonym",
+			}),
+		);
+		expect(
+			await runQuery(db, loadDumdictReadingForPatch, {
+				readingKey: readingFingerprint(laufenReading),
+			}),
+		).toMatchObject({
+			reading: {
+				knowledge: {
+					semanticRelations: {
+						targetKind: "reading",
+						synonym: [gehenReading],
+					},
+				},
+			},
+		});
+		expect(
+			await loadRelationProjections({ db } as never, source._id as never),
+		).toMatchObject({
+			resolved: [
+				{
+					relation: "synonym",
+					target: {
+						kind: "UnitReadingNote",
+						readingId: target._id,
+					},
+				},
+			],
+		});
+	});
+
 	test("applies graph-wide direct target conflicts atomically at the Convex seam", async () => {
 		const db = new IndexedDb(initialSeed());
 		const dict = createDumdictService({

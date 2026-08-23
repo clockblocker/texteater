@@ -13,6 +13,8 @@ import {
 	knowledgeChangeSchema,
 	pendingSemanticRelationSchema,
 	readingKnowledgeSchema,
+	semanticRelationRetractKnowledgeChangeSchema,
+	semanticRelationSetKnowledgeChangeSchema,
 } from "dumrel/schema";
 import type { z } from "zod";
 import type { GeneratedDumlingCompatibilityValidationRouteKey } from "../src/generated/validation-artifacts.js";
@@ -249,25 +251,25 @@ export const actualDumlingCompatibilityValidationRouteKeys = Object.keys(
 const internalDumdictOperationalValidationSchemas = {
 	"internal:knowledge-change": knowledgeChangeSchema,
 	"internal:knowledge-change:bucket:definition":
-		knowledgeChangeSchema.options[6],
-	"internal:knowledge-change:bucket:lexical-breakdown":
-		knowledgeChangeSchema.options[10],
-	"internal:knowledge-change:bucket:morphological-tree":
 		knowledgeChangeSchema.options[8],
+	"internal:knowledge-change:bucket:lexical-breakdown":
+		knowledgeChangeSchema.options[12],
+	"internal:knowledge-change:bucket:morphological-tree":
+		knowledgeChangeSchema.options[10],
 	"internal:knowledge-change:bucket:semantic-relations":
-		knowledgeChangeSchema.options[4],
+		semanticRelationSetKnowledgeChangeSchema,
 	"internal:knowledge-change:bucket:transcription":
 		knowledgeChangeSchema.options[0],
 	"internal:knowledge-change:bucket:translations":
 		knowledgeChangeSchema.options[2],
 	"internal:knowledge-change:retract:definition":
-		knowledgeChangeSchema.options[7],
-	"internal:knowledge-change:retract:lexical-breakdown":
-		knowledgeChangeSchema.options[11],
-	"internal:knowledge-change:retract:morphological-tree":
 		knowledgeChangeSchema.options[9],
+	"internal:knowledge-change:retract:lexical-breakdown":
+		knowledgeChangeSchema.options[13],
+	"internal:knowledge-change:retract:morphological-tree":
+		knowledgeChangeSchema.options[11],
 	"internal:knowledge-change:retract:semantic-relations":
-		knowledgeChangeSchema.options[5],
+		semanticRelationRetractKnowledgeChangeSchema,
 	"internal:knowledge-change:retract:transcription":
 		knowledgeChangeSchema.options[1],
 	"internal:knowledge-change:retract:translations":

@@ -1,9 +1,9 @@
-import type { Lemma, SupportedLanguage } from "dumling/types";
+import type { Lemma, Reading, SupportedLanguage } from "dumling/types";
 import type { SemanticRelations } from "dumrel/types";
 
 export type ReadingNoteForDisambiguation<L extends SupportedLanguage> = {
 	attestedTranslations: string[];
 	attestations: string[];
 	notes: string;
-	semanticRelations?: SemanticRelations<Lemma<L>>;
+	semanticRelations?: SemanticRelations<Lemma<L>, Reading<L>>;
 };

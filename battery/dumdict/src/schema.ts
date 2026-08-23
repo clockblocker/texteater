@@ -10,6 +10,7 @@ import {
 } from "dumrel/schema";
 import type {
 	KnowledgeChange,
+	LexemeUnitShadow,
 	ReadingKnowledge,
 	UnitShadow,
 } from "dumrel/types";
@@ -145,12 +146,12 @@ function createSchemasFor<const L extends SupportedLanguage>(
 	);
 	const languageReadingKnowledgeSchema = (
 		readingKnowledgeSchema as unknown as ZodType<
-			ReadingKnowledge<string, Lemma<L>>
+			ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
 		>
 	).refine(
-		namedValidationPredicate<ReadingKnowledge<string, Lemma<L>>>(
-			`dumdict.reading-knowledge.language.${language}`,
-		),
+		namedValidationPredicate<
+			ReadingKnowledge<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
+		>(`dumdict.reading-knowledge.language.${language}`),
 		namedValidationError(`dumdict.reading-knowledge.language.${language}`),
 	);
 	const languagePendingSemanticRelationSchema = (
@@ -278,7 +279,9 @@ function createSchemasFor<const L extends SupportedLanguage>(
 			namedValidationError(
 				`dumdict.knowledge-change.language.${language}`,
 			),
-		) as unknown as ZodType<KnowledgeChange<string, Lemma<L>>>;
+		) as unknown as ZodType<
+			KnowledgeChange<string, Lemma<L>, LexemeUnitShadow, Reading<L>>
+		>;
 	const readingKnowledgeChangeSchema = z.strictObject({
 		reading: languageReadingSchema,
 		change: languageReadingKnowledgeChangeValueSchema,

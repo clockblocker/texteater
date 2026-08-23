@@ -70,17 +70,22 @@ export function knowledgeGenerationResultIssues(result: {
 }): ParsingIssue[] {
 	const issues: ParsingIssue[] = [];
 	for (const [index, change] of result.changes.entries()) {
-		if (
-			change.kind !== "Contribute" ||
-			(change.aspect !== "transcription" &&
-				change.aspect !== "definition" &&
-				change.aspect !== "translations")
-		) {
+		const isBaseContribution =
+			change.kind === "Contribute" &&
+			(change.aspect === "transcription" ||
+				change.aspect === "definition" ||
+				change.aspect === "translations");
+		const isFixedReadingRelationContribution =
+			change.kind === "Contribute" &&
+			change.aspect === "semanticRelations" &&
+			change.targetKind === "reading" &&
+			change.relation === "synonym";
+		if (!isBaseContribution && !isFixedReadingRelationContribution) {
 			issues.push({
 				code: "custom",
 				path: ["changes", index],
 				message:
-					"Generated Knowledge contains only base-aspect Contributions.",
+					"Generated Knowledge contains only base-aspect or fixed Reading-targeted Synonym Contributions.",
 			});
 		}
 		if (change.aspect === "translations" && change.language !== "en") {

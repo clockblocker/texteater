@@ -110,18 +110,42 @@ export type KnowledgeRequestMask = Readonly<{
 	semanticRelations?: Readonly<Partial<Record<SemanticRelation, null>>>;
 }>;
 
-export type SemanticRelations<Lemma extends LemmaReference = LemmaReference> =
-	Partial<Record<DirectSemanticRelation, Lemma[]>>;
+/** The homogeneous endpoint mode selected by one Reading Knowledge value. */
+export type SemanticRelationTargetKind = "lemma" | "reading";
+
+export type LemmaTargetedSemanticRelations<
+	Lemma extends LemmaReference = LemmaReference,
+> = { targetKind?: "lemma" } & Partial<Record<DirectSemanticRelation, Lemma[]>>;
+
+export type ReadingTargetedSemanticRelations<
+	Reading extends ReadingReference = ReadingReference,
+> = {
+	targetKind: "reading";
+	synonym?: Reading[];
+} & Partial<Record<Exclude<DirectSemanticRelation, "synonym">, never>>;
+
+export type SemanticRelations<
+	Lemma extends LemmaReference = LemmaReference,
+	Reading extends ReadingReference = ReadingReference,
+> =
+	| LemmaTargetedSemanticRelations<Lemma>
+	| ReadingTargetedSemanticRelations<Reading>;
 
 /** Read-only relation buckets after graph inference. Never a persistence DTO. */
 export type ProjectedSemanticRelations<
 	Lemma extends LemmaReference = LemmaReference,
-> = Partial<Record<SemanticRelation, Lemma[]>>;
+	Reading extends ReadingReference = ReadingReference,
+> =
+	| ({ targetKind?: "lemma" } & Partial<Record<SemanticRelation, Lemma[]>>)
+	| ({ targetKind: "reading" } & Partial<
+			Record<SemanticRelation, Reading[]>
+	  >);
 
 export type ReadingKnowledge<
 	TargetLang extends string = string,
 	Lemma extends LemmaReference = LemmaReference,
 	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+	Reading extends ReadingReference = ReadingReference,
 > = {
 	transcription?: string;
 	definition?: string;
@@ -130,7 +154,7 @@ export type ReadingKnowledge<
 		: Record<TargetLang, NonEmptyStrings>;
 	morphologicalTree?: MorphologicalTree;
 	lexicalBreakdown?: LexicalBreakdown<LexicalShadow>;
-	semanticRelations?: SemanticRelations<Lemma>;
+	semanticRelations?: SemanticRelations<Lemma, Reading>;
 };
 
 export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
@@ -141,20 +165,35 @@ export type PendingSemanticRelation<Shadow extends UnitShadow = UnitShadow> = {
 export type SemanticRelationGraphReading = {
 	reading: string;
 	lemma: string;
+	relationTargetKind?: SemanticRelationTargetKind;
 };
 
-export type SemanticRelationGraphEdge = {
+/** A Lemma-targeted edge in the default relation mode. */
+export type LemmaTargetedSemanticRelationGraphEdge = {
 	sourceReading: string;
 	relation: SemanticRelation;
+	targetKind?: "lemma";
 	targetLemma: string;
 };
 
-export type DirectSemanticRelationGraphEdge = Omit<
-	SemanticRelationGraphEdge,
-	"relation"
-> & {
-	relation: DirectSemanticRelation;
+export type ReadingTargetedSemanticRelationGraphEdge = {
+	sourceReading: string;
+	relation: SemanticRelation;
+	targetKind: "reading";
+	targetReading: string;
 };
+
+export type SemanticRelationGraphEdge =
+	| LemmaTargetedSemanticRelationGraphEdge
+	| ReadingTargetedSemanticRelationGraphEdge;
+
+export type DirectSemanticRelationGraphEdge =
+	| (Omit<LemmaTargetedSemanticRelationGraphEdge, "relation"> & {
+			relation: DirectSemanticRelation;
+	  })
+	| (Omit<ReadingTargetedSemanticRelationGraphEdge, "relation"> & {
+			relation: "synonym";
+	  });
 
 export type SemanticRelationGraphProjection = SemanticRelationGraphEdge & {
 	provenance: "direct" | "inferred";
@@ -169,6 +208,7 @@ export type KnowledgeChange<
 	TargetLang extends string = string,
 	Lemma extends LemmaReference = LemmaReference,
 	LexicalShadow extends LexemeUnitShadow = LexemeUnitShadow,
+	Reading extends ReadingReference = ReadingReference,
 > =
 	| {
 			kind: "Contribute" | "Correct";
@@ -187,12 +227,27 @@ export type KnowledgeChange<
 			kind: "Contribute" | "Correct";
 			aspect: "semanticRelations";
 			relation: DirectSemanticRelation;
+			targetKind?: "lemma";
 			value: Lemma[];
+	  }
+	| {
+			kind: "Contribute" | "Correct";
+			aspect: "semanticRelations";
+			relation: "synonym";
+			targetKind: "reading";
+			value: Reading[];
 	  }
 	| {
 			kind: "Retract";
 			aspect: "semanticRelations";
 			relation: DirectSemanticRelation;
+			targetKind?: "lemma";
+	  }
+	| {
+			kind: "Retract";
+			aspect: "semanticRelations";
+			relation: "synonym";
+			targetKind: "reading";
 	  }
 	| {
 			kind: "Contribute" | "Correct";

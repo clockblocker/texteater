@@ -8,6 +8,7 @@ import type {
 	LemmaReference,
 	LexemeUnitShadow,
 	ReadingKnowledge,
+	SemanticRelations,
 } from "./types.js";
 
 type SetTranslations<
@@ -205,21 +206,47 @@ function applyRelationBucket(
 	knowledge: ReadingKnowledge,
 	change: RelationBucketChange,
 ): void {
-	const relations = { ...knowledge.semanticRelations };
+	const requestedTargetKind = change.targetKind ?? "lemma";
+	const existingRelations = knowledge.semanticRelations;
+	const existingTargetKind =
+		existingRelations !== undefined &&
+		"targetKind" in existingRelations &&
+		existingRelations.targetKind === "reading"
+			? "reading"
+			: "lemma";
+	if (
+		knowledge.semanticRelations !== undefined &&
+		existingTargetKind !== requestedTargetKind
+	) {
+		throw new Error(
+			"One Reading Knowledge value cannot mix Lemma- and Reading-targeted Semantic Relations.",
+		);
+	}
+	const relations: Record<string, unknown> = {
+		...knowledge.semanticRelations,
+		...(requestedTargetKind === "reading"
+			? { targetKind: "reading" as const }
+			: {}),
+	};
 	if (change.kind === "Retract") {
 		delete relations[change.relation];
-		if (Object.keys(relations).length === 0)
+		if (
+			requestedTargetKind === "lemma" &&
+			Object.keys(relations).length === 0
+		)
 			delete knowledge.semanticRelations;
-		else knowledge.semanticRelations = relations;
+		else knowledge.semanticRelations = relations as SemanticRelations;
 		return;
 	}
 
-	const existing = relations[change.relation] ?? [];
+	const existing = Array.isArray(relations[change.relation])
+		? (relations[change.relation] as unknown[])
+		: [];
 	relations[change.relation] =
 		change.kind === "Correct"
-			? stableUnique(change.value)
-			: appendUnique(existing, change.value);
-	knowledge.semanticRelations = relations;
+			? stableUnique(change.value as readonly unknown[])
+			: appendUnique(existing, change.value as readonly unknown[]);
+	knowledge.semanticRelations = relations as SemanticRelations;
 }
 
 type AtomicChange = Extract<

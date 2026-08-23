@@ -21,6 +21,7 @@ import { readingFingerprint } from "dumling";
 import type { Reading } from "dumling/types";
 import {
 	type KnowledgeChange,
+	type LexemeUnitShadow,
 	parseAsKnowledgeChange,
 	type ReadingKnowledge,
 } from "dumrel";
@@ -561,7 +562,9 @@ export function applyValidatedReadingKnowledgeChange(input: {
 			: {
 					knowledge: input.knowledge as ReadingKnowledge<
 						string,
-						Lemma<"de">
+						Lemma<"de">,
+						LexemeUnitShadow,
+						Reading<"de">
 					>,
 				}),
 		attestedTranslations: [],
