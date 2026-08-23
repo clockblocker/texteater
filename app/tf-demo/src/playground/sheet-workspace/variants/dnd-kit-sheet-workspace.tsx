@@ -10,6 +10,7 @@ import type { Pane, Sheet } from "../sheet-workspace";
 import type { SheetWorkspaceAdapterProps } from "../sheet-workspace-contract";
 import {
 	SheetFace,
+	SheetWorkspaceBoard,
 	SheetWorkspacePane,
 	TransientCard,
 } from "../sheet-workspace-presentation";
@@ -57,15 +58,12 @@ export function DndKitSheetWorkspace({
 				});
 			}}
 		>
-			<div className="sheet-workspace-board">
-				{workspace.panes.map((pane) => (
-					<DndKitPane
-						key={pane.id}
-						pane={pane}
-						workspace={workspace}
-					/>
-				))}
-			</div>
+			<SheetWorkspaceBoard
+				workspace={workspace}
+				renderPane={(pane) => (
+					<DndKitPane pane={pane} workspace={workspace} />
+				)}
+			/>
 			<DragOverlay dropAnimation={{ duration: 180, easing: "ease-out" }}>
 				{(source) => {
 					const sheet =
@@ -100,7 +98,6 @@ function DndKitPane({
 					key={sheet.instanceId}
 					pane={pane}
 					sheet={sheet}
-					workspace={workspace}
 				/>
 			)}
 		/>
@@ -108,11 +105,9 @@ function DndKitPane({
 }
 
 function DndKitTopSheet({
-	workspace,
 	pane,
 	sheet,
 }: {
-	readonly workspace: SheetWorkspaceAdapterProps["workspace"];
 	readonly pane: Pane;
 	readonly sheet: Sheet;
 }) {
@@ -123,8 +118,6 @@ function DndKitTopSheet({
 		});
 	return (
 		<SheetFace
-			workspace={workspace}
-			pane={pane}
 			sheet={sheet}
 			isTop
 			stackIndex={pane.sheets.length - 1}

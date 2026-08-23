@@ -19,6 +19,7 @@
 		"preview": "vite preview",
 		"reset": "CONVEX_AGENT_MODE=anonymous convex run demoReset:resetDemoData",
 		"test": "bun ../../tooling/run-package-tests.ts",
+		"test:e2e": "playwright test",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
@@ -51,6 +52,7 @@
 		"zod": "^4.4.0"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.62.1",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
 		"@vitejs/plugin-react": "^6",

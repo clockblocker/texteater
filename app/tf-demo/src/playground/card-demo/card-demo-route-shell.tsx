@@ -1,29 +1,19 @@
 import {
 	type MouseEvent as ReactMouseEvent,
-	type ReactNode,
 	useCallback,
-	useEffect,
 	useRef,
 	useState,
 } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
-import type {
-	CardDemoFakeSegment,
-	CardDemoNoteKind,
-	CardDemoVariant,
-} from "./card-demo-contract";
+import type { CardDemoFakeSegment } from "./card-demo-contract";
 import { CARD_DEMO_VARIANT } from "./card-demo-contract";
 import {
 	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
 	cardDemoFakeSegmentById,
 } from "./card-demo-fixtures";
-import type {
-	CardDemoInteraction,
-	CardDemoInteractionProps,
-	CardDemoOpenOrigin,
-} from "./card-demo-interaction";
+import type { CardDemoOpenRequest } from "./card-demo-interaction";
 import {
 	CARD_DEMO_BASE_PATH,
 	cardDemoHref,
@@ -36,15 +26,15 @@ import {
 	CardDemoPageFrame,
 } from "./card-demo-presentation";
 import {
-	CARD_DEMO_MOTION,
 	CardDemoRouteTransition,
 	type CardDemoRouteTransitionJob,
 	cardDemoBoxFromElement,
 	cardDemoFullPageBox,
 } from "./card-demo-route-transition";
-import { CardDemoTextPane } from "./card-demo-text-pane";
+import { CardDemoTextPage } from "./card-demo-text-interaction";
 import { MotionCardDemoInteraction } from "./variants/motion-card-demo-interaction";
-import "./card-demo.css";
+
+export { CardDemoTextPage };
 
 export function CardDemoRouteShell() {
 	const location = useLocation();
@@ -158,23 +148,20 @@ export function CardDemoRouteShell() {
 		);
 	}
 
-	const openNote = (
-		noteKind: CardDemoNoteKind,
-		origin: CardDemoOpenOrigin,
-	) => {
+	const openNote = (request: CardDemoOpenRequest): boolean | undefined => {
 		if (!selectedSegment) return;
 		const card = CARD_DEMO_RESOLUTION_CHAIN.find(
-			(candidate) => candidate.kind === noteKind,
+			(candidate) => candidate.kind === request.kind,
 		);
 		if (!card) return;
 		const sourceElement =
 			document.querySelector(
-				`[data-card-demo-drag-overlay="${noteKind}"]`,
+				`[data-card-demo-drag-overlay="${request.kind}"]`,
 			) ??
 			document.querySelector(
-				`[data-card-demo-card="${noteKind}"][data-outside-cancel-zone="true"]`,
+				`[data-card-demo-card="${request.kind}"][data-outside-cancel-zone="true"]`,
 			) ??
-			document.querySelector(`[data-card-demo-card="${noteKind}"]`);
+			document.querySelector(`[data-card-demo-card="${request.kind}"]`);
 		const sourceBox = cardDemoBoxFromElement(sourceElement) ?? {
 			left: (document.documentElement.clientWidth - 320) / 2,
 			top: (document.documentElement.clientHeight - 176) / 2,
@@ -195,15 +182,16 @@ export function CardDemoRouteShell() {
 			direction: "opening",
 			card,
 			segment: selectedSegment,
-			origin,
+			origin: request.origin,
 			sourceBox,
 		});
 		const destination = cardDemoNoteNavigation(
 			target.variant,
-			noteKind,
+			request.kind,
 			selectedSegment.id,
 		);
 		navigate(destination.to, { state: destination.state });
+		return true;
 	};
 	return (
 		<>
@@ -223,185 +211,6 @@ export function CardDemoRouteShell() {
 				/>
 			) : null}
 		</>
-	);
-}
-
-export function CardDemoTextPage({
-	Interaction,
-	variant,
-	selectedSegment,
-	onSelectedSegmentChange,
-	onOpenNote,
-	routeTransition = null,
-}: {
-	readonly Interaction: CardDemoInteraction;
-	readonly variant: CardDemoVariant;
-	readonly selectedSegment: CardDemoFakeSegment | null;
-	readonly onSelectedSegmentChange: (
-		segment: CardDemoFakeSegment | null,
-	) => void;
-	readonly onOpenNote: CardDemoInteractionProps["onOpenNote"];
-	readonly routeTransition?: CardDemoRouteTransitionJob | null;
-}) {
-	const segmentButtons = useRef(new Map<string, HTMLButtonElement>());
-	const dismissTimerRef = useRef<number | null>(null);
-	const [dismissing, setDismissing] = useState(false);
-	const cancelDismiss = useCallback(() => {
-		if (dismissTimerRef.current !== null) {
-			window.clearTimeout(dismissTimerRef.current);
-			dismissTimerRef.current = null;
-		}
-		setDismissing(false);
-	}, []);
-	useEffect(() => cancelDismiss, [cancelDismiss]);
-	const dismiss = useCallback(() => {
-		if (dismissing) return;
-		const segmentId = selectedSegment?.id;
-		setDismissing(true);
-		const duration =
-			CARD_DEMO_MOTION.dismiss + CARD_DEMO_MOTION.dismissStagger * 3;
-		dismissTimerRef.current = window.setTimeout(() => {
-			dismissTimerRef.current = null;
-			onSelectedSegmentChange(null);
-			setDismissing(false);
-			if (segmentId) {
-				requestAnimationFrame(() =>
-					segmentButtons.current.get(segmentId)?.focus(),
-				);
-			}
-		}, duration);
-	}, [dismissing, onSelectedSegmentChange, selectedSegment]);
-	const selectSegment = (segment: CardDemoFakeSegment) => {
-		cancelDismiss();
-		onSelectedSegmentChange(segment);
-	};
-	const dismissOnUnoccupiedClick = (
-		event: ReactMouseEvent<HTMLDivElement>,
-	) => {
-		if (!selectedSegment) return;
-		const target = event.target;
-		if (
-			!(target instanceof Element) ||
-			target.closest("[data-card-demo-segment], [data-card-demo-overlay]")
-		)
-			return;
-
-		dismiss();
-	};
-
-	return (
-		<CardDemoPageFrame
-			className="card-demo-page--text"
-			onClick={dismissOnUnoccupiedClick}
-			routeTransition={routeTransition?.direction ?? null}
-			transitionKind={routeTransition?.card.kind ?? null}
-			variant={variant}
-		>
-			<CardDemoTextPane>
-				<div className="card-demo-copy">
-					{CARD_DEMO_FAKE_TEXT.paragraphs.map(
-						(paragraph, paragraphIndex) => (
-							<p
-								className="card-demo-segments"
-								key={`paragraph-${paragraphIndex}`}
-							>
-								{paragraph.map((segment) => (
-									<button
-										className="card-demo-segment"
-										data-card-demo-segment={segment.id}
-										key={segment.id}
-										onClick={() => selectSegment(segment)}
-										ref={(node) => {
-											if (node)
-												segmentButtons.current.set(
-													segment.id,
-													node,
-												);
-											else
-												segmentButtons.current.delete(
-													segment.id,
-												);
-										}}
-										type="button"
-									>
-										{segment.text}
-									</button>
-								))}
-							</p>
-						),
-					)}
-				</div>
-			</CardDemoTextPane>
-			{selectedSegment ? (
-				<CardDemoOverlay
-					dismissing={dismissing}
-					onDismiss={dismiss}
-					selectedSegment={selectedSegment}
-				>
-					<Interaction
-						cards={CARD_DEMO_RESOLUTION_CHAIN}
-						onOpenNote={onOpenNote}
-						selectedSegment={selectedSegment}
-					/>
-				</CardDemoOverlay>
-			) : null}
-		</CardDemoPageFrame>
-	);
-}
-
-export function CardDemoOverlay({
-	children,
-	selectedSegment,
-	onDismiss,
-	dismissing = false,
-}: {
-	readonly children: ReactNode;
-	readonly selectedSegment: CardDemoFakeSegment;
-	readonly onDismiss: () => void;
-	readonly dismissing?: boolean;
-}) {
-	const dialogRef = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		const focusableCards = () =>
-			Array.from(
-				dialogRef.current?.querySelectorAll<HTMLButtonElement>(
-					'[data-card-demo-card]:not([disabled]):not([tabindex="-1"])',
-				) ?? [],
-			);
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				event.preventDefault();
-				onDismiss();
-			}
-		};
-		window.addEventListener("keydown", onKeyDown);
-		focusableCards()[0]?.focus();
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [onDismiss]);
-
-	return (
-		<div
-			className="card-demo-overlay"
-			data-card-demo-dismissing={dismissing ? "true" : undefined}
-			data-card-demo-overlay=""
-		>
-			<div
-				aria-label={`Resolution Chain for ${selectedSegment.text}`}
-				className="card-demo-dialog"
-				ref={dialogRef}
-				role="dialog"
-			>
-				<button
-					aria-label="Close card view"
-					className="card-demo-close"
-					onClick={onDismiss}
-					type="button"
-				>
-					Close
-				</button>
-				{children}
-			</div>
-		</div>
 	);
 }
 

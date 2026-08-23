@@ -56,6 +56,10 @@
 	gap: 1.25rem;
 }
 
+.card-demo-text-interaction {
+	min-height: 100%;
+}
+
 .card-demo-segments {
 	display: flex;
 	flex-wrap: wrap;
@@ -85,7 +89,7 @@
 	place-items: center;
 	padding: 1rem;
 	background: rgb(0 0 0 / 20%);
-	pointer-events: none;
+	pointer-events: auto;
 	transition: background-color 200ms ease;
 }
 
@@ -99,6 +103,14 @@
 	background: rgb(0 0 0 / 20%);
 	pointer-events: none;
 	transition: background-color 200ms ease;
+}
+
+.card-demo-backdrop {
+	position: absolute;
+	inset: 0;
+	border: 0;
+	background: transparent;
+	cursor: default;
 }
 
 .card-demo-close {

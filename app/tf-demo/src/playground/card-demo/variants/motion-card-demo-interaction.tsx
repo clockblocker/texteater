@@ -24,7 +24,7 @@ import {
 } from "../card-demo-contract";
 import type {
 	CardDemoInteractionProps,
-	CardDemoOpenOrigin,
+	CardDemoOpenRequest,
 } from "../card-demo-interaction";
 import {
 	CardDemoCardView,
@@ -84,11 +84,12 @@ export function MotionCardDemoInteraction({
 	useEffect(() => clearTapCandidate, [clearTapCandidate]);
 
 	const openNote = useCallback(
-		(kind: CardDemoNoteKind, origin: CardDemoOpenOrigin) => {
-			if (navigationLockedRef.current) return;
+		(request: CardDemoOpenRequest) => {
+			if (navigationLockedRef.current) return false;
+			if (onOpenNote(request) === false) return false;
 			navigationLockedRef.current = true;
 			clearTapCandidate();
-			onOpenNote(kind, origin);
+			return true;
 		},
 		[clearTapCandidate, onOpenNote],
 	);
@@ -102,7 +103,7 @@ export function MotionCardDemoInteraction({
 				now - previous.startedAt <= MOTION_DOUBLE_TAP_WINDOW_MS
 			) {
 				clearTapCandidate();
-				openNote(kind, "direct");
+				openNote({ kind, origin: "direct" });
 				return;
 			}
 
@@ -156,7 +157,7 @@ function MotionResolutionCard({
 	readonly stackRef: React.RefObject<HTMLDivElement | null>;
 	readonly clearTapCandidate: () => void;
 	readonly onTouchTap: (kind: CardDemoNoteKind) => void;
-	readonly onOpenNote: CardDemoInteractionProps["onOpenNote"];
+	readonly onOpenNote: (request: CardDemoOpenRequest) => boolean;
 }) {
 	const restingY = cardDemoRestingOffset(card.presentationLayer);
 	const x = useMotionValue(0);
@@ -305,7 +306,12 @@ function MotionResolutionCard({
 				event.clientY,
 			);
 			if (releasedOutside) {
-				onOpenNote(card.kind, "drop");
+				const opened = onOpenNote({
+					kind: card.kind,
+					origin: "drop",
+					point: { x: event.clientX, y: event.clientY },
+				});
+				if (!opened) restoreCard();
 				return;
 			}
 			restoreCard();
@@ -325,7 +331,7 @@ function MotionResolutionCard({
 			event.code === "Space";
 		if (!activates || event.repeat) return;
 		event.preventDefault();
-		onOpenNote(card.kind, "direct");
+		onOpenNote({ kind: card.kind, origin: "direct" });
 	};
 
 	return (

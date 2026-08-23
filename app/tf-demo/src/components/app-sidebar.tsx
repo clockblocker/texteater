@@ -13,15 +13,15 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
-import { CARD_DEMO_BASE_PATH } from "@/playground/card-demo/card-demo-navigation";
+import { PLAYGROUND_BASE_PATH } from "@/playground/playground-navigation";
 
 export function AppSidebar() {
 	const location = useLocation();
 	const target = targetFromLocation(location);
 	const { setOpenMobile } = useSidebar();
 	const isPlayground =
-		location.pathname === CARD_DEMO_BASE_PATH ||
-		location.pathname.startsWith(`${CARD_DEMO_BASE_PATH}/`);
+		location.pathname === PLAYGROUND_BASE_PATH ||
+		location.pathname.startsWith(`${PLAYGROUND_BASE_PATH}/`);
 	const settingsTextId =
 		target?.kind === "Text" || target?.kind === "Settings"
 			? target.textId
@@ -59,7 +59,7 @@ export function AppSidebar() {
 										isActive={isPlayground}
 										render={
 											<Link
-												to={CARD_DEMO_BASE_PATH}
+												to={PLAYGROUND_BASE_PATH}
 												onClick={() =>
 													setOpenMobile(false)
 												}

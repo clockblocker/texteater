@@ -1,11 +1,15 @@
 import { describe, expect, test } from "bun:test";
 
+import { CARD_DEMO_FAKE_TEXT } from "../src/playground/card-demo/card-demo-fixtures";
+import { cardSheetOpeningOrigin } from "../src/playground/sheet-workspace/card-sheet-opening";
 import {
 	assertValidSheetWorkspace,
 	type SheetWorkspace,
 	transitionSheetWorkspace,
 } from "../src/playground/sheet-workspace/sheet-workspace";
 import {
+	cardDemoNoteSheetSource,
+	cardDemoNoteSubject,
 	createSheetWorkspaceFixture,
 	SHEET_WORKSPACE_SUBJECTS,
 	sheetPlacement,
@@ -24,9 +28,92 @@ function pane(workspace: SheetWorkspace, paneId: string) {
 	return result;
 }
 
+function createLayeredWorkspace(): SheetWorkspace {
+	let workspace = createSheetWorkspaceFixture();
+	workspace = transition(workspace, {
+		type: "OpenSheet",
+		sheet: sheetPlacement(
+			"sheet-central-grammar",
+			SHEET_WORKSPACE_SUBJECTS.grammar,
+		),
+		origin: { kind: "Sheet", sheetId: "sheet-central-text" },
+	});
+	workspace = transition(workspace, {
+		type: "OpenSheet",
+		sheet: sheetPlacement(
+			"sheet-west-text",
+			SHEET_WORKSPACE_SUBJECTS.article,
+		),
+		origin: { kind: "Placement", paneId: "west" },
+	});
+	return workspace;
+}
+
 describe("Sheet workspace algebra", () => {
-	test("opens from the Navigation Anchor centrally and from a Sheet locally", () => {
+	test("routes direct Card opening locally and dropped Cards to the hit Pane", () => {
+		const regions = [
+			{
+				paneId: "west",
+				bounds: { left: 0, top: 0, right: 300, bottom: 700 },
+			},
+			{
+				paneId: "central",
+				bounds: { left: 320, top: 0, right: 620, bottom: 700 },
+			},
+			{
+				paneId: "east",
+				bounds: { left: 640, top: 0, right: 940, bottom: 700 },
+			},
+		];
+		expect(
+			cardSheetOpeningOrigin(
+				{ kind: "reading", origin: "direct" },
+				"sheet-central-text",
+				regions,
+			),
+		).toEqual({ kind: "Sheet", sheetId: "sheet-central-text" });
+		expect(
+			cardSheetOpeningOrigin(
+				{
+					kind: "reading",
+					origin: "drop",
+					point: { x: 800, y: 350 },
+				},
+				"sheet-central-text",
+				regions,
+			),
+		).toEqual({ kind: "Placement", paneId: "east" });
+		expect(
+			cardSheetOpeningOrigin(
+				{
+					kind: "reading",
+					origin: "drop",
+					point: { x: 950, y: 350 },
+				},
+				"sheet-central-text",
+				regions,
+			),
+		).toBeNull();
+	});
+
+	test("reuses the Card demo Text and preserves Card selection in a Note Sheet", () => {
 		const initial = createSheetWorkspaceFixture();
+		expect(pane(initial, "central").sheets[0]?.subject).toEqual({
+			kind: "Text",
+			textId: CARD_DEMO_FAKE_TEXT.id,
+		});
+
+		const segment = CARD_DEMO_FAKE_TEXT.segments[7];
+		if (!segment) throw new Error("Card demo fixture requires Segment 8.");
+		const subject = cardDemoNoteSubject("lemma", segment);
+		expect(cardDemoNoteSheetSource(subject)).toEqual({
+			kind: "lemma",
+			segment,
+		});
+	});
+
+	test("opens from the Navigation Anchor centrally and from a Sheet locally", () => {
+		const initial = createLayeredWorkspace();
 		const navigationOpened = transition(initial, {
 			type: "OpenSheet",
 			sheet: sheetPlacement(
@@ -53,7 +140,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("allows repeated subjects while requiring unique Sheet instances", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		expect(
 			initial.panes
 				.flatMap((candidate) => candidate.sheets)
@@ -77,7 +164,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("automatically locks only the first Sheet placed into an empty Pane", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const first = transition(initial, {
 			type: "OpenSheet",
 			sheet: sheetPlacement(
@@ -100,7 +187,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("transfers a Pane lock explicitly and permits leaving no lock", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const transferred = transition(initial, {
 			type: "SetSheetLock",
 			sheetId: "sheet-central-grammar",
@@ -121,7 +208,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("moves only the top Sheet atomically and activates the destination", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const rejected = transitionSheetWorkspace(initial, {
 			type: "MoveTopSheet",
 			sourcePaneId: "central",
@@ -149,7 +236,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("retains a moving lock unless the destination lock wins", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const unlockedDestination = transition(initial, {
 			type: "MoveTopSheet",
 			sourcePaneId: "west",
@@ -174,7 +261,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("does not promote another lock when a Locked Sheet leaves", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const moved = transition(initial, {
 			type: "MoveTopSheet",
 			sourcePaneId: "west",
@@ -196,7 +283,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("collapses within the Active Pane and stops at its Locked Sheet", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const all = transition(initial, { type: "Collapse", extent: "all" });
 		expect(
 			pane(all, "central").sheets.map((sheet) => sheet.instanceId),
@@ -211,7 +298,7 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("Explicit Sheet Removal overrides the lock", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const removed = transition(initial, {
 			type: "RemoveSheet",
 			sheetId: "sheet-central-text",
@@ -237,17 +324,17 @@ describe("Sheet workspace algebra", () => {
 	});
 
 	test("cancellation performs no workspace transition", () => {
-		const initial = createSheetWorkspaceFixture();
+		const initial = createLayeredWorkspace();
 		const transientCard = {
 			sourcePaneId: "central",
 			sheetId: "sheet-central-grammar",
 		};
 		expect(transientCard).toBeDefined();
-		expect(createSheetWorkspaceFixture()).toEqual(initial);
+		expect(createLayeredWorkspace()).toEqual(initial);
 	});
 
 	test("rejects state with duplicate instances or multiple Pane locks", () => {
-		const duplicate = createSheetWorkspaceFixture();
+		const duplicate = createLayeredWorkspace();
 		const west = pane(duplicate, "west");
 		const central = pane(duplicate, "central");
 		const east = pane(duplicate, "east");
@@ -268,7 +355,7 @@ describe("Sheet workspace algebra", () => {
 			}),
 		).toThrow("occurs more than once");
 
-		const twoLocks = createSheetWorkspaceFixture();
+		const twoLocks = createLayeredWorkspace();
 		expect(() =>
 			assertValidSheetWorkspace({
 				...twoLocks,

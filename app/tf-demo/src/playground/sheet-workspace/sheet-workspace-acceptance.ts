@@ -36,7 +36,7 @@ export const SHEET_WORKSPACE_ACCEPTANCE_SCENARIOS = [
 		id: "pointer-touch-keyboard",
 		gate: "input",
 		instruction:
-			"Repeat a cross-Pane move with mouse, touch, keyboard where supported, and the click/tap move alternative.",
+			"Repeat a cross-Pane move with mouse and touch, then exercise each adapter's supported keyboard path.",
 	},
 	{
 		id: "focus-follows-placement",
@@ -75,22 +75,22 @@ export const SHEET_WORKSPACE_VARIANT_MECHANICS: Record<
 	motion: {
 		dnd: "Motion drag controls plus Pane hit testing",
 		handoff: "Shared layout identity and spring layout transition",
-		accessibility: "Application-owned move buttons and live region",
+		accessibility: "Focusable drag handle and application live region",
 	},
 	"dnd-kit": {
 		dnd: "dnd-kit pointer and keyboard sensors with Pane droppables",
 		handoff: "DragOverlay Card with focused drop animation",
-		accessibility: "dnd-kit sensor support plus shared move buttons",
+		accessibility: "dnd-kit pointer and keyboard sensors plus live region",
 	},
 	pragmatic: {
 		dnd: "Native-platform drag with registered element drop targets",
 		handoff: "Custom native Card preview and destination reveal",
-		accessibility: "Shared move buttons; native DnD is not the sole path",
+		accessibility:
+			"Native DnD handle; lack of a built-in keyboard path remains comparison evidence",
 	},
 	"react-aria": {
 		dnd: "React Aria low-level useDrag/useDrop lifecycle",
 		handoff: "DragPreview Card and application-owned destination reveal",
-		accessibility:
-			"Built-in keyboard/screen-reader drag plus shared move buttons",
+		accessibility: "Built-in keyboard and screen-reader drag interaction",
 	},
 };

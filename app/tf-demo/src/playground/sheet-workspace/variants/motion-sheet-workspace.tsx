@@ -8,7 +8,12 @@ import { useState } from "react";
 
 import type { Sheet } from "../sheet-workspace";
 import type { SheetWorkspaceAdapterProps } from "../sheet-workspace-contract";
-import { SheetFace, SheetWorkspacePane } from "../sheet-workspace-presentation";
+import {
+	SheetFace,
+	SheetWorkspaceBoard,
+	SheetWorkspacePane,
+	TransientCard,
+} from "../sheet-workspace-presentation";
 
 export function MotionSheetWorkspace({
 	workspace,
@@ -19,10 +24,10 @@ export function MotionSheetWorkspace({
 	return (
 		<MotionConfig reducedMotion="user">
 			<LayoutGroup id="sheet-workspace-motion">
-				<div className="sheet-workspace-board">
-					{workspace.panes.map((pane) => (
+				<SheetWorkspaceBoard
+					workspace={workspace}
+					renderPane={(pane) => (
 						<SheetWorkspacePane
-							key={pane.id}
 							pane={pane}
 							workspace={workspace}
 							renderTopSheet={(sheet) => (
@@ -51,8 +56,8 @@ export function MotionSheetWorkspace({
 								/>
 							)}
 						/>
-					))}
-				</div>
+					)}
+				/>
 			</LayoutGroup>
 		</MotionConfig>
 	);
@@ -111,8 +116,6 @@ function MotionTopSheet({
 			whileDrag={{ scale: 1.025 }}
 		>
 			<SheetFace
-				workspace={workspace}
-				pane={pane}
 				sheet={sheet}
 				isTop
 				stackIndex={pane.sheets.length - 1}
@@ -124,6 +127,11 @@ function MotionTopSheet({
 					},
 				}}
 			/>
+			{dragging ? (
+				<div className="sheet-workspace-motion-card">
+					<TransientCard sheet={sheet} />
+				</div>
+			) : null}
 		</motion.div>
 	);
 }

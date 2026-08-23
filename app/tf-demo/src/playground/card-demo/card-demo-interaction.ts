@@ -8,13 +8,24 @@ import type {
 
 export type CardDemoOpenOrigin = "direct" | "drop";
 
+export type CardDemoOpenRequest =
+	| {
+			readonly kind: CardDemoNoteKind;
+			readonly origin: "direct";
+	  }
+	| {
+			readonly kind: CardDemoNoteKind;
+			readonly origin: "drop";
+			readonly point: {
+				readonly x: number;
+				readonly y: number;
+			};
+	  };
+
 export type CardDemoInteractionProps = {
 	readonly cards: readonly CardDemoResolutionCard[];
 	readonly selectedSegment: CardDemoFakeSegment;
-	readonly onOpenNote: (
-		kind: CardDemoNoteKind,
-		origin: CardDemoOpenOrigin,
-	) => void;
+	readonly onOpenNote: (request: CardDemoOpenRequest) => boolean | undefined;
 };
 
 /** Each variant owns one implementation of this seam and no shared drag engine. */

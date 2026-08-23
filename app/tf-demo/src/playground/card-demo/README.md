@@ -12,9 +12,9 @@ The playground uses the Motion adapter in
 `variants/motion-card-demo-interaction.tsx`. It implements
 `CardDemoInteractionProps`, renders the supplied cards with
 `CardDemoStackFrame` and `CardDemoCardView`, and calls
-`onOpenNote(kind, origin)` after Motion decides that a card should open.
-`origin` distinguishes an outside drop from direct keyboard or double-tap
-activation.
+`onOpenNote(request)` after Motion decides that a card should open. The request
+distinguishes an outside drop from direct keyboard or double-tap activation;
+drop requests also preserve the release point for a workspace host to resolve.
 
 The fixtures, routes, visual primitives, geometry, and acceptance scenarios
 remain separate from the Motion-specific interaction mechanics.

@@ -5,14 +5,20 @@ This is decision input, not the implementation choice required by `#248`.
 
 ## Shared result
 
-All variants render the same three-Pane fixture, full reducer state, controls,
-minimum-width geometry, modifier Card preview, and acceptance checklist. A
-single pure transition module owns Sheet Opening, top-only atomic movement,
-lock precedence, Collapse, Explicit Sheet Removal, and Active Pane changes.
-Cards and DnD session state are not representable in that module.
+All variants render one shared three-Pane board with resizable separators,
+fully overlapping Sheet Stacks, a forced dark presentation, one Reset action,
+and the adapter switcher. The initial central Text Sheet uses the exact
+`CardDemoTextInteraction`: the same lorem fixture, selectable fake Segments,
+four layered Resolution Cards, and Motion interaction. Opening a Card pushes a
+Note Sheet onto that Text's Pane; it does not navigate a parallel fake surface.
 
-Thirteen focused Bun tests pass: twelve algebra scenarios and one shared
-adapter-contract test. A Vite production build also passes.
+A single pure transition module still owns Sheet Opening, top-only atomic
+movement, lock precedence, Collapse, Explicit Sheet Removal, and Active Pane
+changes. Cards and DnD session state are not representable in that module.
+
+Fourteen focused Bun tests pass: thirteen algebra/reuse scenarios and one
+shared adapter-contract test. The full tf-demo run passes 230 tests, and the
+Vite production build passes.
 
 ## Desktop browser evidence
 
@@ -20,12 +26,14 @@ adapter-contract test. A Vite production build also passes.
 | --- | --- | --- | --- |
 | Motion 13.1.1 | Real pointer drag from central to east | Passed after switching to measured Pane geometry | None |
 | `@dnd-kit/react` 0.5.0 | Real pointer drag from central to east | Passed | None |
-| Pragmatic DnD 3.0.0 | Native bindings plus shared click/tap movement | Shared path passed; in-app automation did not synthesize the native drag | None |
-| React Aria DnD 3.12.1 | Keyboard drag mode from central to east | Passed with built-in announcement and target traversal | None |
+| Pragmatic DnD 3.0.0 | Native draggable handle binding | Handle is the registered native source; in-app automation still does not synthesize HTML5 drag events | None |
+| React Aria DnD 3.12.1 | Keyboard drag mode from central to east; native handle inspection | Passed with built-in target traversal; handle carries native drag and description bindings | None |
 
-The shared click/tap alternative produced byte-for-byte equivalent reducer
-state for all four variants. Successful placement moved activity to east and
-automatically locked the first Sheet placed there.
+React Aria's keyboard path moved the central Text east, moved activity east,
+and automatically locked the first Sheet placed there. A real separator drag
+grew the west Pane from 395 px to 485 px while the other Panes absorbed the
+change. Card selection opened the matching Note Sheet with the selected Segment
+and Card kind intact; the lower Text Sheet remained mounted but fully covered.
 
 ## Built adapter chunks
 
@@ -34,10 +42,10 @@ route chunk.
 
 | Variant | Minified | Gzip |
 | --- | ---: | ---: |
-| Motion | 2.82 kB | 1.36 kB |
-| Pragmatic DnD | 23.41 kB | 7.10 kB |
-| dnd-kit | 98.63 kB | 32.65 kB |
-| React Aria DnD | 155.01 kB | 36.09 kB |
+| Motion | 2.88 kB | 1.39 kB |
+| Pragmatic DnD | 23.27 kB | 7.06 kB |
+| dnd-kit | 98.56 kB | 32.66 kB |
+| React Aria DnD | 154.96 kB | 36.09 kB |
 
 Motion is already a tf-demo dependency, so its variant chunk is not a complete
 measure of Motion's package cost. These numbers are useful for relative route

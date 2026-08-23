@@ -11,6 +11,7 @@ import type { Pane, Sheet } from "../sheet-workspace";
 import type { SheetWorkspaceAdapterProps } from "../sheet-workspace-contract";
 import {
 	SheetFace,
+	SheetWorkspaceBoard,
 	SheetWorkspacePane,
 	TransientCard,
 } from "../sheet-workspace-presentation";
@@ -52,16 +53,16 @@ export function PragmaticSheetWorkspace({
 	);
 
 	return (
-		<div className="sheet-workspace-board">
-			{workspace.panes.map((pane) => (
+		<SheetWorkspaceBoard
+			workspace={workspace}
+			renderPane={(pane) => (
 				<PragmaticPane
-					key={pane.id}
 					draggingSheetId={draggingSheetId}
 					pane={pane}
 					workspace={workspace}
 				/>
-			))}
-		</div>
+			)}
+		/>
 	);
 }
 
@@ -101,7 +102,6 @@ function PragmaticPane({
 					dragging={draggingSheetId === sheet.instanceId}
 					pane={pane}
 					sheet={sheet}
-					workspace={workspace}
 				/>
 			)}
 		/>
@@ -109,25 +109,20 @@ function PragmaticPane({
 }
 
 function PragmaticTopSheet({
-	workspace,
 	pane,
 	sheet,
 	dragging,
 }: {
-	readonly workspace: SheetWorkspaceAdapterProps["workspace"];
 	readonly pane: Pane;
 	readonly sheet: Sheet;
 	readonly dragging: boolean;
 }) {
-	const rootRef = useRef<HTMLElement>(null);
 	const handleRef = useRef<HTMLButtonElement>(null);
 	useEffect(() => {
-		const element = rootRef.current;
-		const dragHandle = handleRef.current;
-		if (!element || !dragHandle) return;
+		const element = handleRef.current;
+		if (!element) return;
 		return draggable({
 			element,
-			dragHandle,
 			getInitialData: () => ({
 				kind: PRAGMATIC_SOURCE_KIND,
 				sourcePaneId: pane.id,
@@ -148,12 +143,10 @@ function PragmaticTopSheet({
 
 	return (
 		<SheetFace
-			workspace={workspace}
-			pane={pane}
 			sheet={sheet}
 			isTop
 			stackIndex={pane.sheets.length - 1}
-			dnd={{ rootRef, handleRef, dragging, nativeDraggable: true }}
+			dnd={{ handleRef, dragging, handleDraggable: true }}
 		/>
 	);
 }

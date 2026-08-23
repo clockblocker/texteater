@@ -6,6 +6,7 @@ import type { Pane, Sheet } from "../sheet-workspace";
 import type { SheetWorkspaceAdapterProps } from "../sheet-workspace-contract";
 import {
 	SheetFace,
+	SheetWorkspaceBoard,
 	SheetWorkspacePane,
 	TransientCard,
 } from "../sheet-workspace-presentation";
@@ -14,11 +15,10 @@ const REACT_ARIA_SHEET_TYPE = "application/x-texteater-sheet-workspace";
 
 export function ReactAriaSheetWorkspace(props: SheetWorkspaceAdapterProps) {
 	return (
-		<div className="sheet-workspace-board">
-			{props.workspace.panes.map((pane) => (
-				<ReactAriaPane key={pane.id} {...props} pane={pane} />
-			))}
-		</div>
+		<SheetWorkspaceBoard
+			workspace={props.workspace}
+			renderPane={(pane) => <ReactAriaPane {...props} pane={pane} />}
+		/>
 	);
 }
 
@@ -58,7 +58,6 @@ function ReactAriaPane({
 					key={sheet.instanceId}
 					pane={pane}
 					sheet={sheet}
-					workspace={workspace}
 				/>
 			)}
 		/>
@@ -66,11 +65,9 @@ function ReactAriaPane({
 }
 
 function ReactAriaTopSheet({
-	workspace,
 	pane,
 	sheet,
 }: {
-	readonly workspace: SheetWorkspaceAdapterProps["workspace"];
 	readonly pane: Pane;
 	readonly sheet: Sheet;
 }) {
@@ -93,15 +90,13 @@ function ReactAriaTopSheet({
 	return (
 		<>
 			<SheetFace
-				workspace={workspace}
-				pane={pane}
 				sheet={sheet}
 				isTop
 				stackIndex={pane.sheets.length - 1}
 				dnd={{
-					rootProps: dragProps,
 					handleRef: dragButtonRef,
-					handleProps: buttonProps,
+					handleProps: { ...dragProps, ...buttonProps },
+					handleDraggable: true,
 					dragging: isDragging,
 				}}
 			/>

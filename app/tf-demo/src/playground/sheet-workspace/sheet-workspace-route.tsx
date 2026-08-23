@@ -13,7 +13,6 @@ import {
 	type SheetWorkspaceCommand,
 	transitionSheetWorkspace,
 } from "./sheet-workspace";
-import { SHEET_WORKSPACE_ACCEPTANCE_SCENARIOS } from "./sheet-workspace-acceptance";
 import { SheetWorkspaceActionsProvider } from "./sheet-workspace-context";
 import {
 	isSheetWorkspaceVariant,
@@ -52,6 +51,14 @@ const ADAPTERS: Record<SheetWorkspaceVariant, SheetWorkspaceAdapter> = {
 
 export function SheetWorkspaceRoute() {
 	const { variant } = useParams();
+	useEffect(() => {
+		const root = document.documentElement;
+		const alreadyDark = root.classList.contains("dark");
+		root.classList.add("dark");
+		return () => {
+			if (!alreadyDark) root.classList.remove("dark");
+		};
+	}, []);
 	if (!variant) {
 		return <Navigate replace to="/playground/sheet-workspace/motion" />;
 	}
@@ -76,6 +83,13 @@ function SheetWorkspaceHarness({
 	);
 	const [modifierPressed, setModifierPressed] = useState(false);
 	const Adapter = ADAPTERS[variant];
+	const activeTopSheet = workspace.panes
+		.find((pane) => pane.id === workspace.activePaneId)
+		?.sheets.at(-1);
+	const removableNoteId =
+		activeTopSheet?.subject.kind === "Note"
+			? activeTopSheet.instanceId
+			: null;
 
 	const dispatch = useCallback((command: SheetWorkspaceCommand) => {
 		setHarnessState((current) => {
@@ -98,11 +112,13 @@ function SheetWorkspaceHarness({
 		(request: SheetMoveRequest) => {
 			dispatch({ type: "MoveTopSheet", ...request });
 			requestAnimationFrame(() => {
-				document
-					.querySelector<HTMLElement>(
-						`[data-sheet-id="${CSS.escape(request.sheetId)}"] button`,
-					)
-					?.focus();
+				requestAnimationFrame(() => {
+					document
+						.querySelector<HTMLElement>(
+							`[data-sheet-id="${CSS.escape(request.sheetId)}"] .sheet-workspace-drag-handle`,
+						)
+						?.focus();
+				});
 			});
 		},
 		[dispatch],
@@ -114,6 +130,19 @@ function SheetWorkspaceHarness({
 			if (event.key === "Escape") {
 				setModifierPressed(false);
 				setPreviewCandidate(null);
+				if (
+					document.querySelector(
+						'[data-card-demo-overlay], [data-dragging="true"]',
+					)
+				)
+					return;
+				if (removableNoteId) {
+					event.preventDefault();
+					dispatch({
+						type: "RemoveSheet",
+						sheetId: removableNoteId,
+					});
+				}
 			}
 		};
 		const onKeyUp = (event: KeyboardEvent) => {
@@ -125,40 +154,35 @@ function SheetWorkspaceHarness({
 			window.removeEventListener("keydown", onKeyDown);
 			window.removeEventListener("keyup", onKeyUp);
 		};
-	}, []);
+	}, [dispatch, removableNoteId]);
 
 	const actions = useMemo(
 		() => ({
 			dispatch,
-			moveWithoutDragging: (
-				sourcePaneId: string,
-				destinationPaneId: string,
-				sheetId: string,
-			) => move({ sourcePaneId, destinationPaneId, sheetId }),
 			onPreviewCandidate: setPreviewCandidate,
 		}),
-		[dispatch, move],
+		[dispatch],
 	);
 
 	return (
 		<SheetWorkspaceActionsProvider value={actions}>
 			<section
-				aria-labelledby="sheet-workspace-title"
-				className="sheet-workspace-page"
+				aria-label="Pane-local Sheet workspace"
+				className="dark sheet-workspace-page"
 				data-variant={variant}
 			>
-				<header className="sheet-workspace-page__header">
-					<div>
-						<p>Throwaway comparison playground · issue #240</p>
-						<h1 id="sheet-workspace-title">
-							Pane-local Sheet workspace
-						</h1>
-						<span className="sheet-workspace-page__description">
-							Drag only a top Sheet. Hold Alt/Option while
-							hovering or focusing a Sheet to preview its
-							transient Card.
-						</span>
-					</div>
+				<header className="sheet-workspace-controls">
+					<button
+						type="button"
+						onClick={() => {
+							setHarnessState({
+								workspace: createSheetWorkspaceFixture(),
+								announcement: "Fixture reset.",
+							});
+						}}
+					>
+						Reset fixture
+					</button>
 					<nav aria-label="DnD implementation">
 						{SHEET_WORKSPACE_VARIANTS.map((candidate) => (
 							<Link
@@ -174,36 +198,6 @@ function SheetWorkspaceHarness({
 					</nav>
 				</header>
 
-				<div className="sheet-workspace-toolbar">
-					<button
-						type="button"
-						onClick={() =>
-							dispatch({ type: "Collapse", extent: "top" })
-						}
-					>
-						Collapse top in Active Pane
-					</button>
-					<button
-						type="button"
-						onClick={() =>
-							dispatch({ type: "Collapse", extent: "all" })
-						}
-					>
-						Collapse all to lock
-					</button>
-					<button
-						type="button"
-						onClick={() => {
-							setHarnessState({
-								workspace: createSheetWorkspaceFixture(),
-								announcement: "Fixture reset.",
-							});
-						}}
-					>
-						Reset fixture
-					</button>
-				</div>
-
 				<Suspense fallback={<SheetWorkspaceLoading />}>
 					<Adapter
 						workspace={workspace}
@@ -211,28 +205,6 @@ function SheetWorkspaceHarness({
 						onPreviewCandidate={setPreviewCandidate}
 					/>
 				</Suspense>
-
-				<div className="sheet-workspace-evidence">
-					<details open>
-						<summary>Full valid workspace state</summary>
-						<pre data-testid="sheet-workspace-state">
-							{JSON.stringify(workspace, null, 2)}
-						</pre>
-					</details>
-					<details>
-						<summary>Hands-on acceptance scenarios</summary>
-						<ol>
-							{SHEET_WORKSPACE_ACCEPTANCE_SCENARIOS.map(
-								(scenario) => (
-									<li key={scenario.id}>
-										<strong>{scenario.gate}</strong>{" "}
-										{scenario.instruction}
-									</li>
-								),
-							)}
-						</ol>
-					</details>
-				</div>
 
 				<div className="sr-only" aria-live="polite">
 					{announcement}

@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
 import { CardDemoRouteShell } from "@/playground/card-demo/card-demo-route-shell";
+import { PlaygroundIndexRoute } from "@/playground/playground-index-route";
+import { PLAYGROUND_BASE_PATH } from "@/playground/playground-navigation";
 import { SheetWorkspaceRoute } from "@/playground/sheet-workspace/sheet-workspace-route";
 import { LibraryView } from "@/views/library-view";
 import { NotFoundView } from "@/views/not-found-view";
@@ -35,6 +37,10 @@ export function App() {
 								replace
 							/>
 						}
+					/>
+					<Route
+						path={PLAYGROUND_BASE_PATH}
+						element={<PlaygroundIndexRoute />}
 					/>
 					<Route
 						path="/playground/card-demo/*"
