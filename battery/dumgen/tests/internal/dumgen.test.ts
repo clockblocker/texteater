@@ -61,6 +61,18 @@ const istLemma = auxCatalog.members.find(
 );
 if (!istLemma) throw new Error("Expected fixed ist Lemma.");
 
+const pronounCatalog = fixedMembersFor.lemma({
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+});
+if (!pronounCatalog) throw new Error("Expected fixed PRON population.");
+const michLemma = pronounCatalog.members.find(
+	(lemma) =>
+		lemma.canonicalForm === "mich" && lemma.coreFeatures.person === "1",
+);
+if (!michLemma) throw new Error("Expected fixed mich Lemma.");
+
 function sentence(
 	parts: Array<{
 		kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
@@ -1017,7 +1029,209 @@ test("Closed AUX grammar preserves a promoted sein-peer Lemma", async () => {
 	expect(calls).toHaveLength(2);
 });
 
+test("Open PRON grammar canonicalizes a fixed-population hit", async () => {
+	const source = sentence([{ kind: "ResolvableText", text: "mich" }]);
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "PRON" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["mich"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Acc",
+					gender: null,
+					number: "Sing",
+					reflex: null,
+				},
+			},
+			lemma: {
+				canonicalForm: "mich",
+				coreFeatures: michLemma.coreFeatures,
+			},
+		},
+	]);
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "Resolved",
+		attestation: { surface: { lemma: michLemma } },
+	});
+	expect(calls).toHaveLength(2);
+});
+
+test("Open PRON grammar selects the exact formal addressee-number identity", async () => {
+	const formalPlural = pronounCatalog.members.find(
+		({ canonicalForm, coreFeatures }) =>
+			canonicalForm === "Sie" &&
+			coreFeatures.polite === "Form" &&
+			coreFeatures.referenceNumber === "Plur",
+	);
+	if (!formalPlural) throw new Error("Expected fixed formal plural Sie.");
+	const source = sentence([{ kind: "ResolvableText", text: "Sie" }]);
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "PRON" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["Sie"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Nom",
+					gender: null,
+					number: "Plur",
+					reflex: null,
+				},
+			},
+			lemma: {
+				canonicalForm: "Sie",
+				coreFeatures: formalPlural.coreFeatures,
+			},
+		},
+	]);
+
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "Resolved",
+		attestation: { surface: { lemma: formalPlural } },
+	});
+	expect(calls).toHaveLength(2);
+});
+
+test("Open PRON grammar does not guess formal addressee number", async () => {
+	const formalPlural = pronounCatalog.members.find(
+		({ canonicalForm, coreFeatures }) =>
+			canonicalForm === "Sie" &&
+			coreFeatures.polite === "Form" &&
+			coreFeatures.referenceNumber === "Plur",
+	);
+	if (!formalPlural) throw new Error("Expected fixed formal plural Sie.");
+	const openLemma = {
+		...formalPlural,
+		coreFeatures: {
+			...formalPlural.coreFeatures,
+			referenceNumber: null,
+		},
+	};
+	const source = sentence([{ kind: "ResolvableText", text: "Sie" }]);
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "PRON" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["Sie"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Inflection",
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Nom",
+					gender: null,
+					number: "Plur",
+					reflex: null,
+				},
+			},
+			lemma: {
+				canonicalForm: openLemma.canonicalForm,
+				coreFeatures: openLemma.coreFeatures,
+			},
+		},
+	]);
+
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "Resolved",
+		attestation: { surface: { lemma: openLemma } },
+	});
+	expect(result).not.toHaveProperty("reason", "MemberNotCatalogued");
+	expect(calls).toHaveLength(2);
+});
+
+test("Open PRON grammar keeps an unmatched productive candidate ordinary", async () => {
+	const source = sentence([{ kind: "ResolvableText", text: "derselbige" }]);
+	const productiveLemma = {
+		...michLemma,
+		canonicalForm: "derselbige",
+		coreFeatures: {
+			...michLemma.coreFeatures,
+			person: null,
+			polite: null,
+			pronType: "Dem",
+			referenceNumber: null,
+		},
+	};
+	const { calls, sdk } = queueSdk([
+		{
+			decision: "Resolved",
+			additionalMemberIndices: [],
+			target: { family: "Lexeme", kind: "PRON" },
+		},
+		{
+			memberOrthographies: ["Standard"],
+			normalizedMembers: ["derselbige"],
+			surface: {
+				spelling: "Canonical",
+				surfaceKind: "Citation",
+				surfaceFeatures: null,
+			},
+			lemma: {
+				canonicalForm: productiveLemma.canonicalForm,
+				coreFeatures: productiveLemma.coreFeatures,
+			},
+		},
+	]);
+	const result = await buildDumgen({ sdk }).resolve.grammatical("de", {
+		sentence: source,
+		clickedSegmentIndex: 0,
+	});
+
+	expect(result).toMatchObject({
+		decision: "Resolved",
+		attestation: { surface: { lemma: productiveLemma } },
+	});
+	expect(result).not.toHaveProperty("reason", "MemberNotCatalogued");
+	expect(calls).toHaveLength(2);
+});
+
 describe("reading resolution", () => {
+	test("selects a fixed PRON Reading without an Open call", async () => {
+		const { calls, sdk } = queueSdk([]);
+		const result = await buildDumgen({ sdk }).resolve.reading("de", {
+			markedContext: "Er sieht <TARGET>mich</TARGET>.",
+			lemma: michLemma,
+			existingEmojiDescriptions: [],
+		});
+
+		expect(result).toEqual({ decision: "New", emojiDescription: "👤" });
+		expect(calls).toHaveLength(0);
+	});
+
 	test("selects the fixed Reading deterministically without an Open call", async () => {
 		const { calls, sdk } = queueSdk([]);
 		const result = await buildDumgen({ sdk }).resolve.reading("de", {

@@ -4,6 +4,8 @@ import { readingSchema } from "dumling/schema";
 import { type ZodType, z } from "zod";
 
 import type {
+	GrammaticalRelationClaim,
+	GrammaticalSeries,
 	LexemeUnitShadow,
 	LexicalUnitShadow,
 	MorphemeReadingReference,
@@ -31,6 +33,8 @@ import {
 } from "./validation-semantics.js";
 import {
 	directSemanticRelationValues,
+	grammaticalRelationValues,
+	grammaticalSeriesAxisValues,
 	semanticRelationValues,
 } from "./vocabulary.js";
 
@@ -44,6 +48,8 @@ export {
 } from "./validation-semantics.js";
 export {
 	directSemanticRelationValues,
+	grammaticalRelationValues,
+	grammaticalSeriesAxisValues,
 	semanticRelationValues,
 } from "./vocabulary.js";
 
@@ -57,6 +63,8 @@ export const semanticRelationSchema = z.enum(semanticRelationValues);
 export const directSemanticRelationSchema = z.enum(
 	directSemanticRelationValues,
 );
+export const grammaticalRelationSchema = z.enum(grammaticalRelationValues);
+export const grammaticalSeriesAxisSchema = z.enum(grammaticalSeriesAxisValues);
 
 const semanticRelationSettingsSchema = z.strictObject({
 	synonym: z.boolean(),
@@ -144,6 +152,66 @@ export const lemmaReferenceSchema = z
 		z.lazy(() => z.union(concreteLemmaSchemas())),
 	)
 	.transform(bindLemmaReference);
+
+const grammaticalCoordinatesSchema = z.record(
+	normalizedNonEmptyStringSchema,
+	z.union([normalizedNonEmptyStringSchema, z.null()]),
+);
+
+const lemmaGrammaticalRelationClaimSchema = z.strictObject({
+	endpointKind: z.literal("lemma"),
+	relation: grammaticalRelationSchema,
+	source: lemmaReferenceSchema,
+	target: lemmaReferenceSchema,
+});
+
+const readingGrammaticalRelationClaimSchema = z.strictObject({
+	endpointKind: z.literal("reading"),
+	relation: grammaticalRelationSchema,
+	source: readingSchema,
+	target: readingSchema,
+});
+
+export const grammaticalRelationClaimSchema: z.ZodType<GrammaticalRelationClaim> =
+	z.union([
+		readingGrammaticalRelationClaimSchema,
+		lemmaGrammaticalRelationClaimSchema,
+	]);
+
+const grammaticalSeriesBase = {
+	relation: grammaticalRelationSchema,
+	axis: grammaticalSeriesAxisSchema,
+	fixedCoordinates: grammaticalCoordinatesSchema,
+};
+
+export const grammaticalSeriesSchema: z.ZodType<GrammaticalSeries> = z.union([
+	z.strictObject({
+		...grammaticalSeriesBase,
+		endpointKind: z.literal("reading"),
+		members: z
+			.array(
+				z.strictObject({
+					axisValue: normalizedNonEmptyStringSchema,
+					endpoint: readingSchema,
+				}),
+			)
+			.min(1)
+			.transform(retainNonEmptyArray),
+	}),
+	z.strictObject({
+		...grammaticalSeriesBase,
+		endpointKind: z.literal("lemma"),
+		members: z
+			.array(
+				z.strictObject({
+					axisValue: normalizedNonEmptyStringSchema,
+					endpoint: lemmaReferenceSchema,
+				}),
+			)
+			.min(1)
+			.transform(retainNonEmptyArray),
+	}),
+]);
 
 export const morphemeReadingReferenceSchema = readingSchema
 	.refine(isMorphemeReading, {

@@ -301,8 +301,22 @@ export function createDumgenImplementation(
 			| Extract<GrammaticalResult<"de">, { decision: "CatalogMiss" }>
 		>({
 			closed: isClosedRouteFor.lemma(route),
-			runOpen: async () =>
-				generateGrammaticalCandidate(grammar, grammarInput, target),
+			runOpen: async () => {
+				const candidate = await generateGrammaticalCandidate(
+					grammar,
+					grammarInput,
+					target,
+				);
+				const { fixedPopulationFor } = await import("dumling/fixed");
+				const fixedLemma = fixedPopulationFor
+					.lemma(route)
+					?.members.find((member) =>
+						sameLemma(member, candidate.surface.lemma),
+					);
+				return fixedLemma
+					? withFixedLemma(candidate, fixedLemma)
+					: candidate;
+			},
 			runClosed: async () => {
 				const { fixedMembersFor } = await import("dumling/fixed");
 				const candidate = await generateGrammaticalCandidate(
@@ -334,13 +348,7 @@ export function createDumgenImplementation(
 						candidate: candidate.surface.lemma,
 					});
 				}
-				return Object.freeze({
-					...candidate,
-					surface: Object.freeze({
-						...candidate.surface,
-						lemma: fixedLemma,
-					}),
-				}) as unknown as GrammaticalResolution;
+				return withFixedLemma(candidate, fixedLemma);
 			},
 		});
 		if ("decision" in resolutionOrMiss) {
@@ -416,6 +424,14 @@ export function createDumgenImplementation(
 		const route = lemmaRouteFor(germanInput.lemma);
 		const { isClosedRouteFor } = await import("dumling");
 		const runOpen = async (): Promise<ReadingResolution> => {
+			const { fixedPopulationFor } = await import("dumling/fixed");
+			const fixed = fixedPopulationFor.reading(germanInput.lemma);
+			if (fixed?.members.length === 1) {
+				return readingSuccess(
+					fixed.members[0] as Reading<"de">,
+					germanInput.existingEmojiDescriptions,
+				);
+			}
 			const candidate = await generateReadingCandidate(
 				readingRoutes.de,
 				germanInput,
@@ -478,6 +494,19 @@ export function createDumgenImplementation(
 		resolve: Object.freeze({ grammatical, reading }),
 		generate: Object.freeze({ knowledge }),
 	});
+}
+
+function withFixedLemma(
+	candidate: GrammaticalResolution,
+	fixedLemma: Lemma,
+): GrammaticalResolution {
+	return Object.freeze({
+		...candidate,
+		surface: Object.freeze({
+			...candidate.surface,
+			lemma: fixedLemma,
+		}),
+	}) as GrammaticalResolution;
 }
 
 type CachedGrammaticalResolution = {

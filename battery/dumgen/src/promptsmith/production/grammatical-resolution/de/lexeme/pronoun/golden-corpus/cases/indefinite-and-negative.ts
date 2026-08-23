@@ -97,10 +97,14 @@ export const typeAndPossessorCases = defineGoldenCaseCollection(
 			"grammar-de-pron-dev-poss-meiner": inflectionCase(
 				"Der rote Regenschirm am Eingang ist <TARGET>meiner</TARGET>.",
 				"meiner",
-				"ich",
+				"mein",
 				{ case: "Nom", gender: "Masc", number: "Sing", reflex: null },
 				{
-					coreFeatures: core("Prs", { person: "1", poss: "Yes" }),
+					coreFeatures: core("Prs", {
+						person: "1",
+						poss: "Yes",
+						referenceNumber: "Sing",
+					}),
 					explanation:
 						"Possessor first person. Pronoun stands alone.",
 				},

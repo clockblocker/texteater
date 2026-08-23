@@ -63,7 +63,9 @@ describe("fixed-member assembly", () => {
 	});
 
 	test("commits through ordinary tables, marks Knowledge Full, and reruns without writes", async () => {
-		const entry = fixedReadingEntries()[0];
+		const entry = fixedReadingEntries().find(
+			(candidate) => candidate.knowledge?.semanticRelations === undefined,
+		);
 		if (!entry) throw new Error("Expected a representative fixed member.");
 		const readingKey = readingFingerprint(entry.reading);
 		const plan = {

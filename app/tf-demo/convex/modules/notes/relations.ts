@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { projectSemanticRelations } from "dumdict";
 import { readingFingerprint } from "dumling/reading";
 import type {
+	GrammaticalRelation,
 	LemmaReference,
 	ProjectedSemanticRelations,
 	ReadingReference,
@@ -53,6 +54,29 @@ export const relationProjectionValidator = v.object({
 		}),
 	),
 });
+
+export const grammaticalRelationProjectionValidator = v.object({
+	relation: v.union(
+		v.literal("CaseCounterpart"),
+		v.literal("PersonCounterpart"),
+	),
+	targetCanonicalForm: v.string(),
+	provenance: v.union(v.literal("direct"), v.literal("inferred")),
+	target: v.object({
+		kind: v.literal("UnitReadingNote"),
+		readingId: v.id("readings"),
+	}),
+});
+
+export type GrammaticalRelationProjection<ReadingId extends string = string> = {
+	readonly relation: GrammaticalRelation;
+	readonly targetCanonicalForm: string;
+	readonly provenance: "direct" | "inferred";
+	readonly target: {
+		readonly kind: "UnitReadingNote";
+		readonly readingId: ReadingId;
+	};
+};
 
 export type RelationFingerprintProjection =
 	| {
@@ -288,6 +312,80 @@ export async function loadRelationProjections(
 		else knowledge[projection.relation] = [target];
 	}
 	return { fingerprints, knowledge, resolved };
+}
+
+export async function loadGrammaticalRelationProjections(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+): Promise<GrammaticalRelationProjection<Id<"readings">>[]> {
+	const [outgoing, incoming] = await Promise.all([
+		ctx.db
+			.query("grammaticalRelationEdges")
+			.withIndex("by_source_reading_id", (q) =>
+				q.eq("sourceReadingId", readingId),
+			)
+			.take(MAX_RELATIONS_PER_NOTE + 1),
+		ctx.db
+			.query("grammaticalRelationEdges")
+			.withIndex("by_target_reading_id", (q) =>
+				q.eq("targetReadingId", readingId),
+			)
+			.take(MAX_RELATIONS_PER_NOTE + 1),
+	]);
+	const candidates = [
+		...outgoing.map((edge) => ({
+			relation: edge.relation,
+			targetReadingId: edge.targetReadingId,
+			provenance: "direct" as const,
+		})),
+		...incoming.map((edge) => ({
+			relation: edge.relation,
+			targetReadingId: edge.sourceReadingId,
+			provenance: "inferred" as const,
+		})),
+	];
+	if (candidates.length > MAX_RELATIONS_PER_NOTE) {
+		throw new Error(
+			`A Reading Note supports at most ${MAX_RELATIONS_PER_NOTE} Grammatical Relations.`,
+		);
+	}
+	const targetDocs = await Promise.all(
+		candidates.map(({ targetReadingId }) =>
+			targetReadingId ? ctx.db.get(targetReadingId) : null,
+		),
+	);
+	const targetLemmas = await Promise.all(
+		targetDocs.map((target) =>
+			target ? ctx.db.get(target.lemmaId) : Promise.resolve(null),
+		),
+	);
+	const unique = new Map<
+		string,
+		GrammaticalRelationProjection<Id<"readings">>
+	>();
+	for (const [index, candidate] of candidates.entries()) {
+		const targetLemma = targetLemmas[index];
+		if (!candidate.targetReadingId || !targetLemma) continue;
+		const projection: GrammaticalRelationProjection<Id<"readings">> = {
+			relation: candidate.relation,
+			targetCanonicalForm: targetLemma.canonicalForm,
+			provenance: candidate.provenance,
+			target: {
+				kind: "UnitReadingNote",
+				readingId: candidate.targetReadingId,
+			},
+		};
+		const key = `${projection.relation}:${projection.target.readingId}`;
+		const current = unique.get(key);
+		if (!current || projection.provenance === "direct") {
+			unique.set(key, projection);
+		}
+	}
+	return [...unique.values()].sort((left, right) =>
+		`${left.relation}:${left.targetCanonicalForm}:${left.target.readingId}`.localeCompare(
+			`${right.relation}:${right.targetCanonicalForm}:${right.target.readingId}`,
+		),
+	);
 }
 
 function optionalRecord(value: unknown): UnknownRecord | null {

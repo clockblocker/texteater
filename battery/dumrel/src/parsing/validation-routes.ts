@@ -1,5 +1,7 @@
 import type {
 	DirectSemanticRelationGraphEdge,
+	GrammaticalRelationClaim,
+	GrammaticalSeries,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSettings,
@@ -21,6 +23,8 @@ import type {
 /** Frozen domain contract for the lightweight package-root parsers. */
 export type DumrelValidationRouteOutputMap = {
 	parseAsDirectSemanticRelationGraphEdge: DirectSemanticRelationGraphEdge;
+	parseAsGrammaticalRelationClaim: GrammaticalRelationClaim;
+	parseAsGrammaticalSeries: GrammaticalSeries;
 	parseAsKnowledgeChange: KnowledgeChange;
 	parseAsKnowledgeRequestMask: KnowledgeRequestMask;
 	parseAsKnowledgeSettings: KnowledgeSettings;

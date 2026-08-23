@@ -23,6 +23,15 @@ export const dePronounFeaturesSchema = z.strictObject({
 			"Rel",
 			"Tot",
 		]),
+		referenceGender: abstractFeatureAtomSchemas.gender.extract([
+			"Fem",
+			"Masc",
+			"Neut",
+		]),
+		referenceNumber: abstractFeatureAtomSchemas.number.extract([
+			"Plur",
+			"Sing",
+		]),
 	}),
 	inflectional: requireNonEmptyFeatureObject(
 		buildOptionalFeatureObjectSchema({

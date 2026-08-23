@@ -36,6 +36,7 @@ import type * as modules_notes_unitReadingFamilies from "../modules/notes/unitRe
 import type * as modules_text_submission from "../modules/text/submission.js";
 import type * as orchestration from "../orchestration.js";
 import type * as persistence from "../persistence.js";
+import type * as pronounFixedPopulationMigration from "../pronounFixedPopulationMigration.js";
 import type * as readingNotes from "../readingNotes.js";
 import type * as relationPublication from "../relationPublication.js";
 import type * as resolutionSessions from "../resolutionSessions.js";
@@ -81,6 +82,7 @@ declare const fullApi: ApiFromModules<{
   "modules/text/submission": typeof modules_text_submission;
   orchestration: typeof orchestration;
   persistence: typeof persistence;
+  pronounFixedPopulationMigration: typeof pronounFixedPopulationMigration;
   readingNotes: typeof readingNotes;
   relationPublication: typeof relationPublication;
   resolutionSessions: typeof resolutionSessions;

@@ -1,4 +1,4 @@
-import type { LemmaRoute } from "dumling/types";
+import type { LemmaRoute, Reading } from "dumling/types";
 import type { AiSdk } from "../ai-sdk/ai-sdk";
 import { runtimeCombinedGermanKnowledgePrompt } from "../catalog/runtime-prompt-catalog";
 import {
@@ -80,6 +80,13 @@ export function createKnowledgeDumgen(options: {
 			kind: validated.reading.lemma.kind,
 		} as LemmaRoute;
 		const { isClosedRouteFor } = await import("dumling");
+		const { fixedKnowledgeFor } = await import("dumrel/fixed");
+		if (
+			fixedKnowledgeFor(validated.reading as unknown as Reading)
+				.decision === "Found"
+		) {
+			return generateFixedKnowledge(validated);
+		}
 		return dispatchProduction({
 			closed: isClosedRouteFor.reading(route),
 			runClosed: async () => generateFixedKnowledge(validated),

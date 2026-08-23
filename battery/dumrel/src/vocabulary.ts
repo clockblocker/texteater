@@ -18,3 +18,11 @@ export const directSemanticRelationValues = [
 	"hypernym",
 	"holonym",
 ] as const;
+
+/** Direct grammatical claims. These never enter Semantic Relation algebra. */
+export const grammaticalRelationValues = [
+	"CaseCounterpart",
+	"PersonCounterpart",
+] as const;
+
+export const grammaticalSeriesAxisValues = ["case", "person"] as const;

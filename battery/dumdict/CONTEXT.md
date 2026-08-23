@@ -52,3 +52,8 @@ Target Mode. Dumdict resolves generated Unit Shadows only in Lemma Target Mode,
 enforces direct target conflicts, and supplies the dictionary inventory for
 deterministic direct/inferred read projections. It never stores inverse,
 closure, or substitution edges.
+
+**Grammatical Relation Edge**:
+A durable direct Grammatical Relation claim with homogeneous Lemma or exact
+Reading endpoints. The host stores no symmetric inverse and no transitive or
+substitutive closure; read projection derives only the reverse view.

@@ -287,9 +287,9 @@ discontinuous or have different parts of speech. These components include
 governed prepositions, inherently reflexive pronouns, separable members, and
 perfect/future/passive auxiliaries. Modal auxiliaries with lexical verbs,
 copulas with predicates, free arguments, contextual reflexives, adjuncts, and
-modifiers remain separate targets. High-level membership does not prevent a
-later drill-down analysis of an individual AUX, preposition, pronoun, or other
-member.
+modifiers remain separate targets. A click on any fixed member selects the
+same whole Analysis Target; high-level membership does not itself produce an
+independent resolution of that member.
 
 For German participles, ADR 0007 applies the TIGER boundary. A productive
 `sein`-state-passive groups `sein` with Partizip II as one VERB target, while a
@@ -303,6 +303,30 @@ choices are conventional. In `eine Entscheidung treffen`, clicks on `eine`,
 `Entscheidung`, and `treffen` resolve separate Lexeme targets. Collocation
 remains a valid Dumling Lemma kind for explicit policies and supplied targets,
 but it is not reachable from this high-level policy.
+
+### Component Drilldown
+A future Dumgen resolution boundary that targets one realized member inside a
+multi-member Analysis Target without reclassifying the original high-level
+click. Component Drilldown is not implemented.
+
+Until #250 settles the member topology, an inherently reflexive member of a
+lexically reflexive verb is outside the system as an independently resolved
+PRON occurrence. It remains verb-owned realized material in the enclosing VERB
+Attestation and produces no separate PRON Attestation, Surface, Lemma
+selection, Reading selection, or learner note. This boundary does not apply to
+a contextual reflexive argument that High-Level Target Classification already
+places in its own PRON Analysis Target.
+
+The same verbal boundary applies to middle-like `sich` in `Die Schrift liest
+sich leicht`: the enclosing VERB Lemma carries Core Feature
+`lexicallyReflexive=Yes`, and the realized `sich` is not a separate PRON target.
+By contrast, the free-ish occurrences in `Sie begrüßen sich`, `Ich dusche
+mich`, `Ich wasche mir die Hände`, and `Ich kaufe mir etwas` are independent
+PRON Analysis Targets. They resolve to the fixed exact-form Lemmas `sich`,
+`mich`, or `mir`; occurrence-level `reflex=Yes` records coreference with the
+subject. In `Sie begrüßen sich`, the reciprocal meaning is expanded from free
+`sich` by context. It is not a second Lemma or Reading, a PRON Core Feature, or
+membership in the separate reciprocal-pronoun population.
 
 ### Attestation and interaction
 A successful grammatical resolution projects its click-independent Analysis
@@ -402,6 +426,14 @@ caller. Reading branch selection also governs Knowledge production.
 ### Open Route
 A language, Family, and Kind route whose Lemma or Reading Resolution Branch is
 the established Dumgen resolution pipeline.
+
+An Open Route may contain a Dumling Fixed Population. Dumgen replaces an exact
+generated member with its authored ordinary Lemma or Reading and uses authored
+fixed Knowledge when available. A population miss remains the generated Open
+result; it is never a Catalog Miss. For formal non-possessive German PRON,
+contextual `referenceNumber` selects the singular- or plural-addressee member;
+an unestablished addressee count remains null and therefore misses the
+population without guessing.
 
 ### Closed Route
 A language, Family, and Kind route whose separate Lemma or Reading Resolution

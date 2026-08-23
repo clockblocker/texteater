@@ -136,7 +136,9 @@ export function defineGoldenCorpus<
 	for (const { id, goldenCase, sourcePath } of flattenedCases) {
 		assertNonEmpty(id, "Golden Case ID");
 		const location = `Golden Case "${id}" for route "${args.route}"`;
-		const parsedInput = args.inputSchema.safeParse(goldenCase.input);
+		const parsedInput = args.inputSchema.safeParse(
+			withLegacyPronounReferenceNulls(goldenCase.input),
+		);
 		if (!parsedInput.success) {
 			throw new Error(`${location} has invalid input.`, {
 				cause: parsedInput.error,
@@ -232,6 +234,59 @@ export function defineGoldenCorpus<
 	}) as GoldenCorpus<InputSchema, OutputSchema, Collections>;
 	corpusStates.set(corpus, state);
 	return corpus;
+}
+
+function withLegacyPronounReferenceNulls(input: unknown): unknown {
+	if (input === null || typeof input !== "object" || Array.isArray(input)) {
+		return input;
+	}
+	const value = input as Readonly<Record<string, unknown>>;
+	const reading = value.reading;
+	if (
+		reading === null ||
+		typeof reading !== "object" ||
+		Array.isArray(reading)
+	) {
+		return input;
+	}
+	const readingRecord = reading as Readonly<Record<string, unknown>>;
+	const lemma = readingRecord.lemma;
+	if (lemma === null || typeof lemma !== "object" || Array.isArray(lemma)) {
+		return input;
+	}
+	const lemmaRecord = lemma as Readonly<Record<string, unknown>>;
+	const core = lemmaRecord.coreFeatures;
+	if (
+		lemmaRecord.language !== "de" ||
+		lemmaRecord.family !== "Lexeme" ||
+		lemmaRecord.kind !== "PRON" ||
+		core === null ||
+		typeof core !== "object" ||
+		Array.isArray(core)
+	) {
+		return input;
+	}
+	const coreRecord = core as Readonly<Record<string, unknown>>;
+	if (
+		Object.hasOwn(coreRecord, "referenceGender") &&
+		Object.hasOwn(coreRecord, "referenceNumber")
+	) {
+		return input;
+	}
+	return {
+		...value,
+		reading: {
+			...readingRecord,
+			lemma: {
+				...lemmaRecord,
+				coreFeatures: {
+					...coreRecord,
+					referenceGender: coreRecord.referenceGender ?? null,
+					referenceNumber: coreRecord.referenceNumber ?? null,
+				},
+			},
+		},
+	};
 }
 
 export function getGoldenCorpusState(corpus: GoldenCorpus): CorpusState {

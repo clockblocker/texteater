@@ -19,6 +19,8 @@ export type PronounCoreFeatures = {
 		| "Rel"
 		| "Tot"
 		| null;
+	readonly referenceGender: "Fem" | "Masc" | "Neut" | null;
+	readonly referenceNumber: "Plur" | "Sing" | null;
 };
 
 export type PronounInflectionalFeatures = {
@@ -47,6 +49,8 @@ const unmarkedCore = {
 	polite: null,
 	poss: null,
 	pronType: null,
+	referenceGender: null,
+	referenceNumber: null,
 } satisfies PronounCoreFeatures;
 
 export function core(

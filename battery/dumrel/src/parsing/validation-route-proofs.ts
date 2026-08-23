@@ -1,6 +1,8 @@
 import type { z } from "zod";
 import type {
 	directSemanticRelationGraphEdgeSchema,
+	grammaticalRelationClaimSchema,
+	grammaticalSeriesSchema,
 	knowledgeChangeSchema,
 	knowledgeRequestMaskSchema,
 	knowledgeSettingsSchema,
@@ -25,6 +27,8 @@ import type {
 
 export interface CanonicalDumrelValidationSchemaRegistry {
 	parseAsDirectSemanticRelationGraphEdge: typeof directSemanticRelationGraphEdgeSchema;
+	parseAsGrammaticalRelationClaim: typeof grammaticalRelationClaimSchema;
+	parseAsGrammaticalSeries: typeof grammaticalSeriesSchema;
 	parseAsKnowledgeChange: typeof knowledgeChangeSchema;
 	parseAsKnowledgeRequestMask: typeof knowledgeRequestMaskSchema;
 	parseAsKnowledgeSettings: typeof knowledgeSettingsSchema;

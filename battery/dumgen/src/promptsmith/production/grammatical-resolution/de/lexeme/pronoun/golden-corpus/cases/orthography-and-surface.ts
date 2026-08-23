@@ -26,7 +26,11 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 				{ case: "Nom", gender: "Neut", number: "Sing", reflex: null },
 				{
 					spelling: "Variant",
-					coreFeatures: core("Prs", { person: "3" }),
+					coreFeatures: core("Prs", {
+						person: "3",
+						referenceGender: "Neut",
+						referenceNumber: "Sing",
+					}),
 					explanation:
 						"Apostrophe outside member. Contracted es remains full.",
 				},
@@ -39,13 +43,16 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 				{
 					normalizedMember: "ich",
 					orthography: "Typo",
-					coreFeatures: core("Prs", { person: "1" }),
+					coreFeatures: core("Prs", {
+						person: "1",
+						referenceNumber: "Sing",
+					}),
 				},
 			),
 			"grammar-de-pron-dev-archaic-euer": inflectionCase(
 				"<TARGET>Euer</TARGET> gedenke ich in dieser schweren Stunde.",
 				"Euer",
-				"ihr",
+				"euer",
 				{ case: "Gen", gender: null, number: "Plur", reflex: null },
 				{
 					normalizedMember: "euer",
@@ -53,22 +60,39 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					coreFeatures: core("Prs", {
 						person: "2",
 						polite: "Infm",
+						referenceNumber: "Plur",
 					}),
 					explanation:
 						"Old genitive use. Initial capital is Standard.",
+				},
+			),
+			"grammar-de-pron-demo-archaic-meiner": inflectionCase(
+				"Er gedachte <TARGET>meiner</TARGET> in dieser schweren Stunde.",
+				"meiner",
+				"meiner",
+				{ case: "Gen", gender: null, number: "Sing", reflex: null },
+				{
+					historicalStatus: "Archaic",
+					coreFeatures: core("Prs", {
+						person: "1",
+						referenceNumber: "Sing",
+					}),
+					explanation:
+						"Personal genitive keeps the fixed meiner identity and is not possessive.",
 				},
 			),
 			"grammar-de-pron-dev-formal-lowercase-typo": inflectionCase(
 				"Frau Doktor, bitte setzen <TARGET>sie</TARGET> sich an den Tisch.",
 				"sie",
 				"Sie",
-				{ case: "Nom", gender: null, number: null, reflex: null },
+				{ case: "Nom", gender: null, number: "Plur", reflex: null },
 				{
 					normalizedMember: "Sie",
 					orthography: "Typo",
 					coreFeatures: core("Prs", {
 						person: "2",
 						polite: "Form",
+						referenceNumber: "Sing",
 					}),
 					explanation: "Formal address needs capital S.",
 				},
@@ -83,6 +107,8 @@ export const orthographyAndSurfaceCases = defineGoldenCaseCollection(
 					coreFeatures: core("Prs", {
 						foreign: "Yes",
 						person: "3",
+						referenceGender: "Masc",
+						referenceNumber: "Sing",
 					}),
 					explanation: "English code-switch PRON. Foreign Yes.",
 				},

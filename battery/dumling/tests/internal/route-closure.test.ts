@@ -10,7 +10,9 @@ import {
 	allFixedReadingCatalogs,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
+	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
+	fixedPopulationFor,
 } from "../../src/fixed";
 
 const detRoute = {
@@ -23,6 +25,12 @@ const auxRoute = {
 	language: "de",
 	family: "Lexeme",
 	kind: "AUX",
+} as const;
+
+const pronounRoute = {
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
 } as const;
 
 describe("Route Closure", () => {
@@ -38,6 +46,7 @@ describe("Route Closure", () => {
 
 	test("defaults every absent route to Open", () => {
 		for (const route of [
+			pronounRoute,
 			{ language: "de", family: "Lexeme", kind: "NOUN" },
 			{ language: "en", family: "Lexeme", kind: "DET" },
 			{ language: "he", family: "Lexeme", kind: "DET" },
@@ -122,10 +131,10 @@ describe("fixed German DET members", () => {
 	});
 
 	test("iterates catalogs for the idempotent application loader", () => {
-		expect(allFixedLemmaCatalogs()).toHaveLength(2);
+		expect(allFixedLemmaCatalogs()).toHaveLength(3);
 		expect(allFixedLemmaCatalogs()[0]?.route).toEqual(detRoute);
 		expect(Object.isFrozen(allFixedLemmaCatalogs())).toBe(true);
-		expect(allFixedReadingCatalogs()).toHaveLength(2);
+		expect(allFixedReadingCatalogs()).toHaveLength(3);
 		expect(allFixedReadingCatalogs()[0]?.scope).toBe(
 			FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 		);
@@ -151,6 +160,64 @@ describe("fixed German DET members", () => {
 					member.canonicalForm === foreignCandidate.canonicalForm,
 			),
 		).toBe(false);
+	});
+});
+
+describe("fixed German PRON population", () => {
+	test("keeps the route Open while curating forty-three exact identities", () => {
+		expect(isClosedRouteFor.lemma(pronounRoute)).toBe(false);
+		expect(isClosedRouteFor.reading(pronounRoute)).toBe(false);
+		const catalog = fixedPopulationFor.lemma(pronounRoute);
+		expect(catalog?.scope).toBe(
+			FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
+		);
+		expect(catalog?.coverage).toBe("Curated");
+		expect(catalog?.members).toHaveLength(43);
+		expect(
+			catalog?.members.filter(
+				({ coreFeatures }) => coreFeatures.poss === "Yes",
+			),
+		).toHaveLength(9);
+		expect(
+			catalog?.members.filter(
+				({ coreFeatures }) => coreFeatures.poss === null,
+			),
+		).toHaveLength(34);
+	});
+
+	test("distinguishes homographs by reference identity and owns one Reading each", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const ihm = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "ihm",
+		);
+		expect(ihm).toHaveLength(2);
+		expect(
+			ihm?.map(({ coreFeatures }) => coreFeatures.referenceGender).sort(),
+		).toEqual(["Masc", "Neut"]);
+		const ihr = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "ihr",
+		);
+		expect(ihr).toHaveLength(4);
+		const formalSie = catalog?.members.filter(
+			({ canonicalForm, coreFeatures }) =>
+				canonicalForm === "Sie" && coreFeatures.polite === "Form",
+		);
+		expect(
+			formalSie
+				?.map(({ coreFeatures }) => coreFeatures.referenceNumber)
+				.sort(),
+		).toEqual(["Plur", "Sing"]);
+		for (const lemma of catalog?.members ?? []) {
+			const readings = fixedPopulationFor.reading(lemma);
+			expect(readings?.members).toHaveLength(1);
+			expect(readings?.members[0]?.emojiDescription).toBe(
+				lemma.canonicalForm === "sich"
+					? "🪞"
+					: lemma.coreFeatures.poss === "Yes"
+						? "🔑"
+						: "👤",
+			);
+		}
 	});
 });
 

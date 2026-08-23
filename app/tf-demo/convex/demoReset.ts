@@ -36,6 +36,7 @@ export const resetDemoTableNames = [
 	"visitorClicks",
 	"ownedSurfaces",
 	"readingEntries",
+	"grammaticalRelationEdges",
 	"semanticRelationEdges",
 	"readings",
 	"dictionaryLemmas",
@@ -399,6 +400,40 @@ export const clearReadingDataBatch = internalMutation({
 				)
 				.first();
 			if (remainingIncomingReadingEdge) continue;
+			for (const index of [
+				"by_source_reading_id",
+				"by_target_reading_id",
+			] as const) {
+				const grammaticalEdges = await ctx.db
+					.query("grammaticalRelationEdges")
+					.withIndex(index, (q) =>
+						q.eq(
+							index === "by_source_reading_id"
+								? "sourceReadingId"
+								: "targetReadingId",
+							reading._id,
+						),
+					)
+					.take(BATCH_SIZE - deleted);
+				for (const edge of grammaticalEdges) {
+					await ctx.db.delete(edge._id);
+					deleted += 1;
+				}
+			}
+			const remainingGrammaticalEdge = await ctx.db
+				.query("grammaticalRelationEdges")
+				.withIndex("by_source_reading_id", (q) =>
+					q.eq("sourceReadingId", reading._id),
+				)
+				.first();
+			const remainingInverseGrammaticalEdge = await ctx.db
+				.query("grammaticalRelationEdges")
+				.withIndex("by_target_reading_id", (q) =>
+					q.eq("targetReadingId", reading._id),
+				)
+				.first();
+			if (remainingGrammaticalEdge || remainingInverseGrammaticalEdge)
+				continue;
 			const entry = await ctx.db
 				.query("readingEntries")
 				.withIndex("by_reading_id", (q) =>
@@ -482,6 +517,41 @@ export const clearLemmaDataBatch = internalMutation({
 				)
 				.first();
 			if (remainingIncomingEdge) continue;
+
+			for (const index of [
+				"by_source_lemma_id",
+				"by_target_lemma_id",
+			] as const) {
+				const grammaticalEdges = await ctx.db
+					.query("grammaticalRelationEdges")
+					.withIndex(index, (q) =>
+						q.eq(
+							index === "by_source_lemma_id"
+								? "sourceLemmaId"
+								: "targetLemmaId",
+							lemmaId,
+						),
+					)
+					.take(BATCH_SIZE - deleted);
+				for (const edge of grammaticalEdges) {
+					await ctx.db.delete(edge._id);
+					deleted += 1;
+				}
+			}
+			const remainingGrammaticalEdge = await ctx.db
+				.query("grammaticalRelationEdges")
+				.withIndex("by_source_lemma_id", (q) =>
+					q.eq("sourceLemmaId", lemmaId),
+				)
+				.first();
+			const remainingInverseGrammaticalEdge = await ctx.db
+				.query("grammaticalRelationEdges")
+				.withIndex("by_target_lemma_id", (q) =>
+					q.eq("targetLemmaId", lemmaId),
+				)
+				.first();
+			if (remainingGrammaticalEdge || remainingInverseGrammaticalEdge)
+				continue;
 
 			const dictionaryLemma = await ctx.db
 				.query("dictionaryLemmas")

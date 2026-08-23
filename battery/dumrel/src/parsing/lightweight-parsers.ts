@@ -43,6 +43,18 @@ export function parseAsKnowledgeSettings(
 	return parseDumrelRoute(input, "parseAsKnowledgeSettings");
 }
 
+export function parseAsGrammaticalRelationClaim(
+	input: unknown,
+): Parsed<DumrelValidationRouteOutput<"parseAsGrammaticalRelationClaim">> {
+	return parseDumrelRoute(input, "parseAsGrammaticalRelationClaim");
+}
+
+export function parseAsGrammaticalSeries(
+	input: unknown,
+): Parsed<DumrelValidationRouteOutput<"parseAsGrammaticalSeries">> {
+	return parseDumrelRoute(input, "parseAsGrammaticalSeries");
+}
+
 export function parseAsKnowledgeRequestMask(
 	input: unknown,
 ): Parsed<DumrelValidationRouteOutput<"parseAsKnowledgeRequestMask">> {
@@ -146,9 +158,50 @@ export function parseReadingReferenceForApplicability(
 ): Parsed<ReadingReference> {
 	return parseValidationArtifact(
 		decodeGeneratedDumrelValidationArtifact("internal:reading-reference"),
-		input,
+		withLegacyPronounReferenceNulls(input),
 		dumrelValidationOperations,
 	);
+}
+
+function withLegacyPronounReferenceNulls(input: unknown): unknown {
+	if (input === null || typeof input !== "object" || Array.isArray(input)) {
+		return input;
+	}
+	const reading = input as Readonly<Record<string, unknown>>;
+	const lemma = reading.lemma;
+	if (lemma === null || typeof lemma !== "object" || Array.isArray(lemma)) {
+		return input;
+	}
+	const lemmaRecord = lemma as Readonly<Record<string, unknown>>;
+	const core = lemmaRecord.coreFeatures;
+	if (
+		lemmaRecord.language !== "de" ||
+		lemmaRecord.family !== "Lexeme" ||
+		lemmaRecord.kind !== "PRON" ||
+		core === null ||
+		typeof core !== "object" ||
+		Array.isArray(core)
+	) {
+		return input;
+	}
+	const coreRecord = core as Readonly<Record<string, unknown>>;
+	if (
+		Object.hasOwn(coreRecord, "referenceGender") &&
+		Object.hasOwn(coreRecord, "referenceNumber")
+	) {
+		return input;
+	}
+	return {
+		...reading,
+		lemma: {
+			...lemmaRecord,
+			coreFeatures: {
+				...coreRecord,
+				referenceGender: coreRecord.referenceGender ?? null,
+				referenceNumber: coreRecord.referenceNumber ?? null,
+			},
+		},
+	};
 }
 
 export function decodeDumrelValidationArtifact<

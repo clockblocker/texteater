@@ -3,10 +3,17 @@ export {
 	defaultKnowledgeRequestMask,
 	intersectKnowledgeRequestMask,
 } from "./applicability.js";
+export {
+	compileGrammaticalSeries,
+	grammaticalRelationAlgebra,
+	projectGrammaticalRelations,
+} from "./grammatical-relations.js";
 export { applyKnowledgeChange } from "./knowledge.js";
 export {
 	ParsingError,
 	parseAsDirectSemanticRelationGraphEdge,
+	parseAsGrammaticalRelationClaim,
+	parseAsGrammaticalSeries,
 	parseAsKnowledgeChange,
 	parseAsKnowledgeRequestMask,
 	parseAsKnowledgeSettings,
@@ -32,9 +39,18 @@ export {
 export type {
 	DirectSemanticRelation,
 	DirectSemanticRelationGraphEdge,
+	GrammaticalEndpointKind,
+	GrammaticalRelation,
+	GrammaticalRelationClaim,
+	GrammaticalRelationProjection,
+	GrammaticalSeries,
+	GrammaticalSeriesAxis,
+	GrammaticalSeriesMember,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSettings,
+	LemmaGrammaticalRelationClaim,
+	LemmaGrammaticalSeries,
 	LemmaReference,
 	LemmaTargetedSemanticRelationGraphEdge,
 	LemmaTargetedSemanticRelations,
@@ -48,6 +64,8 @@ export type {
 	NonEmptyStrings,
 	PendingSemanticRelation,
 	ProjectedSemanticRelations,
+	ReadingGrammaticalRelationClaim,
+	ReadingGrammaticalSeries,
 	ReadingKnowledge,
 	ReadingReference,
 	ReadingTargetedSemanticRelationGraphEdge,
@@ -63,5 +81,7 @@ export type {
 } from "./types.js";
 export {
 	directSemanticRelationValues,
+	grammaticalRelationValues,
+	grammaticalSeriesAxisValues,
 	semanticRelationValues,
 } from "./vocabulary.js";

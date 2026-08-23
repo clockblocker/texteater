@@ -83,6 +83,22 @@ route, published with either `Complete` or intentionally non-exhaustive
 `Curated` coverage for a named scope.
 _Avoid_: Seed table, Closed DTO collection
 
+**Fixed Population**:
+A `Curated` package-owned set of ordinary Lemmas and Readings inside an Open
+Route. Exact members may be selected deterministically, while a non-member
+continues through ordinary Open behavior and never produces a Catalog Miss.
+The German PRON population distinguishes formal singular and plural addressee
+identities through Core `referenceNumber`; morphologically plural Surface
+number is not addressee identity evidence.
+_Avoid_: Partially Closed Route, fallback catalog
+
+**Free `sich`**:
+The independently resolvable personal/reflexive pronoun `sich`, distinct from a
+verb-owned reflexive member. A plural context may expand its interpretation to
+reciprocal meaning without changing its Lemma, Reading, or `pronType=Prs`;
+lexical reciprocal PRON such as `einander` remains a distinct identity.
+_Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
+
 **Catalog Miss**:
 A structured production result stating that an explicitly promoted route has
 no fixed member for the supplied linguistic candidate. It is catalog-growth
@@ -142,6 +158,23 @@ themselves make an Attestation Partial. An overt governed preposition,
 inherently reflexive pronoun, separable member, or perfect/future/passive
 auxiliary fixed by the Analysis Target is entity-owned occurrence material;
 omitting it is an alignment error, not Partial coverage.
+
+An inherently reflexive member inside a lexically reflexive VERB target
+contributes only to that VERB Attestation in the current Click Resolution
+Chain. It has no independent PRON Attestation, Surface, Lemma selection, or
+Reading selection until Component Drilldown and #250 settle that topology.
+Contextual reflexive arguments selected as their own PRON Analysis Targets are
+unaffected.
+
+This verb-owned class includes middle-like `sich` in `Die Schrift liest sich
+leicht`; the VERB Lemma has Core Feature `lexicallyReflexive=Yes`. Free-ish
+personal and reflexive arguments remain ordinary PRON occurrences instead:
+`sich` in `Sie begrüßen sich`, `mich` in `Ich dusche mich`, and `mir` in `Ich
+wasche mir die Hände` or `Ich kaufe mir etwas` resolve to their promoted
+exact-form Lemmas. Their Surface carries `reflex=Yes` when the occurrence is
+coreferential with the subject. In `Sie begrüßen sich`, reciprocity is a
+contextual expansion of free `sich`; it is not part of the pronoun's identity
+and does not mint a `pronType=Rcp` Lemma or Reading.
 _Avoid_: Selection, click result, selected Surface
 
 ## Segmentation boundary

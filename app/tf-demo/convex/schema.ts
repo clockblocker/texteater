@@ -141,6 +141,37 @@ export default defineSchema({
 			"targetReadingId",
 		]),
 
+	grammaticalRelationEdges: defineTable({
+		endpointKind: v.union(v.literal("lemma"), v.literal("reading")),
+		sourceLemmaId: v.optional(v.id("lemmas")),
+		targetLemmaId: v.optional(v.id("lemmas")),
+		sourceReadingId: v.optional(v.id("readings")),
+		targetReadingId: v.optional(v.id("readings")),
+		relation: v.union(
+			v.literal("CaseCounterpart"),
+			v.literal("PersonCounterpart"),
+		),
+	})
+		.index("by_source_lemma_id", ["sourceLemmaId"])
+		.index("by_target_lemma_id", ["targetLemmaId"])
+		.index("by_source_reading_id", ["sourceReadingId"])
+		.index("by_target_reading_id", ["targetReadingId"])
+		.index("by_source_lemma_id_and_relation", ["sourceLemmaId", "relation"])
+		.index("by_source_reading_id_and_relation", [
+			"sourceReadingId",
+			"relation",
+		])
+		.index("by_source_lemma_id_and_relation_and_target_lemma_id", [
+			"sourceLemmaId",
+			"relation",
+			"targetLemmaId",
+		])
+		.index("by_source_reading_id_and_relation_and_target_reading_id", [
+			"sourceReadingId",
+			"relation",
+			"targetReadingId",
+		]),
+
 	ownedSurfaces: defineTable({
 		surfaceId: v.id("surfaces"),
 		record: v.any(),

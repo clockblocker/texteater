@@ -13,49 +13,85 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 		({ relation }) =>
 			capabilities.knowledgeSettings.semanticRelations[relation],
 	);
-	if (relations.length === 0 && pendingRelations.length === 0) {
+	const grammaticalRelations = note.grammaticalRelations ?? [];
+	if (
+		relations.length === 0 &&
+		pendingRelations.length === 0 &&
+		grammaticalRelations.length === 0
+	) {
 		return null;
 	}
 
 	return (
-		<ul className="flex flex-wrap gap-2" aria-label="Semantic relations">
-			{relations.map((relation) => (
-				<li
-					key={`${relation.relation}:${
-						relation.target.kind === "UnitReadingNote"
-							? relation.target.readingId
-							: relation.target.id
-					}`}
+		<div className="space-y-2">
+			{relations.length > 0 || pendingRelations.length > 0 ? (
+				<ul
+					className="flex flex-wrap gap-2"
+					aria-label="Semantic relations"
 				>
-					<Link
-						to={capabilities.hrefFor(relation.target)}
-						className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<Badge variant="outline">
-							{relation.relation}: {relation.targetCanonicalForm}
-						</Badge>
-					</Link>
-				</li>
-			))}
-			{pendingRelations.map((relation) => (
-				<li key={relation.locatorKey}>
-					<Link
-						to={capabilities.hrefFor(relation.target)}
-						className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-					>
-						<Badge
-							variant="outline"
-							aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
+					{relations.map((relation) => (
+						<li
+							key={`${relation.relation}:${
+								relation.target.kind === "UnitReadingNote"
+									? relation.target.readingId
+									: relation.target.id
+							}`}
 						>
-							<LockIcon
-								data-icon="inline-start"
-								aria-hidden="true"
-							/>
-							{relation.relation}: {relation.targetCanonicalForm}
-						</Badge>
-					</Link>
-				</li>
-			))}
-		</ul>
+							<Link
+								to={capabilities.hrefFor(relation.target)}
+								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+							>
+								<Badge variant="outline">
+									{relation.relation}:{" "}
+									{relation.targetCanonicalForm}
+								</Badge>
+							</Link>
+						</li>
+					))}
+					{pendingRelations.map((relation) => (
+						<li key={relation.locatorKey}>
+							<Link
+								to={capabilities.hrefFor(relation.target)}
+								className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+							>
+								<Badge
+									variant="outline"
+									aria-label={`${relation.relation} relation to Unit Shadow ${relation.targetCanonicalForm}`}
+								>
+									<LockIcon
+										data-icon="inline-start"
+										aria-hidden="true"
+									/>
+									{relation.relation}:{" "}
+									{relation.targetCanonicalForm}
+								</Badge>
+							</Link>
+						</li>
+					))}
+				</ul>
+			) : null}
+			{grammaticalRelations.length > 0 ? (
+				<ul
+					className="flex flex-wrap gap-2"
+					aria-label="Grammatical relations"
+				>
+					{grammaticalRelations.map((relation) => (
+						<li
+							key={`${relation.relation}:${relation.target.readingId}`}
+						>
+							<Link
+								to={capabilities.hrefFor(relation.target)}
+								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+							>
+								<Badge variant="secondary">
+									{relation.relation}:{" "}
+									{relation.targetCanonicalForm}
+								</Badge>
+							</Link>
+						</li>
+					))}
+				</ul>
+			) : null}
+		</div>
 	);
 }) satisfies ReadingNoteDefaultRenderer;

@@ -3,6 +3,7 @@ import {
 	allFixedLemmaCatalogs,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
+	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
 import {
@@ -91,6 +92,30 @@ describe("fixed German Knowledge", () => {
 		expect(Object.isFrozen(DE_LEXEME_DET_V1_FIXED_KNOWLEDGE_COVERAGE)).toBe(
 			true,
 		);
+	});
+
+	test("authors fixed definitions and translations for all forty-three PRON Readings", () => {
+		const catalog = allFixedLemmaCatalogs().find(
+			({ scope }) =>
+				scope === FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
+		);
+		expect(catalog?.members).toHaveLength(43);
+		for (const lemma of catalog?.members ?? []) {
+			const reading = fixedMembersFor.reading(lemma)?.members[0];
+			if (!reading) throw new Error("Expected one fixed PRON Reading.");
+			const found = fixedKnowledgeFor(reading);
+			expect(found.decision).toBe("Found");
+			if (found.decision !== "Found") continue;
+			expect(found.scope).toBe(
+				FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
+			);
+			expect(found.knowledge.definition).toBeTruthy();
+			expect(found.knowledge.translations?.en.length).toBeGreaterThan(0);
+			expect(found.knowledge.semanticRelations).toBeUndefined();
+			expect(parseAsReadingKnowledge(found.knowledge)).toEqual(
+				found.knowledge,
+			);
+		}
 	});
 
 	test("authors one Reading and all peer synonyms for promoted sein forms", () => {

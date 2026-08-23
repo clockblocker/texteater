@@ -87,6 +87,37 @@ function knowledgeRuntime(
 }
 
 describe("combined German Knowledge generation", () => {
+	test("routes fixed PRON Knowledge independently without calling Open", async () => {
+		const lemmaCatalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+		});
+		const lemma = lemmaCatalog?.members.find(
+			(member) =>
+				member.canonicalForm === "mich" &&
+				member.coreFeatures.person === "1",
+		);
+		const reading = lemma && fixedMembersFor.reading(lemma)?.members[0];
+		if (!reading) throw new Error("Expected fixed mich Reading.");
+		const { calls, sdk } = queueSdk([]);
+
+		const result = await knowledgeRuntime(sdk)({
+			markedContext: "Er sieht <TARGET>mich</TARGET>.",
+			reading: reading as unknown as Reading<"de">,
+			request: { definition: null, translations: { en: null } },
+		});
+
+		expect(result).toMatchObject({
+			changes: [
+				{ aspect: "definition" },
+				{ aspect: "translations", language: "en", value: ["me"] },
+			],
+			pendingRelations: [],
+		});
+		expect(calls).toHaveLength(0);
+	});
+
 	test("routes fixed DET Knowledge independently without calling Open", async () => {
 		const lemmaCatalog = fixedMembersFor.lemma({
 			language: "de",

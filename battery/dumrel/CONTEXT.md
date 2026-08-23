@@ -99,6 +99,18 @@ selected for generation.
 
 ## Relations
 
+**Grammatical Relation**:
+A typed non-semantic connection between homogeneous Lemma endpoints or
+homogeneous exact Reading endpoints. Case Counterpart and Person Counterpart
+are symmetric, non-transitive, and non-substitutive. They never participate in
+Semantic Relation propagation, Synonym substitution, Knowledge Settings, or
+Reading Knowledge.
+
+**Grammatical Series**:
+An authored set of grammatical endpoints varying along one named axis while
+fixed coordinates describe what is preserved. Compilation emits unique direct
+peer claims without self-edges; overlapping Series do not imply closure.
+
 **Semantic Relation**:
 A direct typed connection owned by one exact source Reading. One Reading
 Knowledge value targets either Lemmas or exact Readings and cannot mix them.

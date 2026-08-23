@@ -56,6 +56,8 @@ import type { SupportedLanguage } from "../../battery/dumling/src/types";
 import { canonicalDumrelValidationSchemas } from "../../battery/dumrel/codegen/validation-artifacts";
 import {
 	parseAsDirectSemanticRelationGraphEdge,
+	parseAsGrammaticalRelationClaim,
+	parseAsGrammaticalSeries,
 	parseAsKnowledgeChange,
 	parseAsKnowledgeRequestMask,
 	parseAsKnowledgeSettings,
@@ -999,6 +1001,19 @@ const DUMREL_VALID_VALUES = {
 		sourceReading: "a",
 		targetLemma: "b",
 	},
+	parseAsGrammaticalRelationClaim: {
+		endpointKind: "lemma",
+		relation: "CaseCounterpart",
+		source: dumrelNounLemma,
+		target: dumrelNounLemma,
+	},
+	parseAsGrammaticalSeries: {
+		endpointKind: "lemma",
+		relation: "PersonCounterpart",
+		axis: "person",
+		fixedCoordinates: { case: "Nom", number: "Sing" },
+		members: [{ axisValue: "1", endpoint: dumrelNounLemma }],
+	},
 	parseAsKnowledgeChange: {
 		aspect: "definition",
 		kind: "Contribute",
@@ -1032,6 +1047,8 @@ const DUMREL_VALID_VALUES = {
 
 const DUMREL_PARSERS = {
 	parseAsDirectSemanticRelationGraphEdge,
+	parseAsGrammaticalRelationClaim,
+	parseAsGrammaticalSeries,
 	parseAsKnowledgeChange,
 	parseAsKnowledgeRequestMask,
 	parseAsKnowledgeSettings,
@@ -1168,6 +1185,25 @@ function dumrelFocusedValues(key: DumrelValidationRouteKey): unknown[] {
 		case "parseAsDirectSemanticRelationGraphEdge":
 			return [
 				{ relation: "hyponym", sourceReading: "a", targetLemma: "b" },
+			];
+		case "parseAsGrammaticalRelationClaim":
+			return [
+				{
+					endpointKind: "reading",
+					relation: "CaseCounterpart",
+					source: dumrelNounReading,
+					target: dumrelNounReading,
+				},
+			];
+		case "parseAsGrammaticalSeries":
+			return [
+				{
+					endpointKind: "lemma",
+					relation: "PersonCounterpart",
+					axis: "person",
+					fixedCoordinates: {},
+					members: [],
+				},
 			];
 		case "parseAsSemanticRelationGraphReading":
 			return [{ lemma: "  le\u0301mma ", reading: " reading " }];

@@ -7,6 +7,8 @@ import type {
 } from "dumling/types";
 import type {
 	directSemanticRelationValues,
+	grammaticalRelationValues,
+	grammaticalSeriesAxisValues,
 	semanticRelationValues,
 } from "./vocabulary.js";
 
@@ -82,6 +84,80 @@ export type LexicalBreakdown<
 export type SemanticRelation = (typeof semanticRelationValues)[number];
 export type DirectSemanticRelation =
 	(typeof directSemanticRelationValues)[number];
+
+export type GrammaticalRelation = (typeof grammaticalRelationValues)[number];
+export type GrammaticalSeriesAxis =
+	(typeof grammaticalSeriesAxisValues)[number];
+export type GrammaticalEndpointKind = "lemma" | "reading";
+
+export type LemmaGrammaticalRelationClaim<
+	Lemma extends LemmaReference = LemmaReference,
+> = Readonly<{
+	endpointKind: "lemma";
+	relation: GrammaticalRelation;
+	source: Lemma;
+	target: Lemma;
+}>;
+
+export type ReadingGrammaticalRelationClaim<
+	Reading extends ReadingReference = ReadingReference,
+> = Readonly<{
+	endpointKind: "reading";
+	relation: GrammaticalRelation;
+	source: Reading;
+	target: Reading;
+}>;
+
+export type GrammaticalRelationClaim<
+	Lemma extends LemmaReference = LemmaReference,
+	Reading extends ReadingReference = ReadingReference,
+> =
+	| LemmaGrammaticalRelationClaim<Lemma>
+	| ReadingGrammaticalRelationClaim<Reading>;
+
+export type GrammaticalSeriesMember<Endpoint> = Readonly<{
+	axisValue: string;
+	endpoint: Endpoint;
+}>;
+
+type GrammaticalSeriesBase = Readonly<{
+	relation: GrammaticalRelation;
+	axis: GrammaticalSeriesAxis;
+	fixedCoordinates: Readonly<Record<string, string | null>>;
+}>;
+
+export type LemmaGrammaticalSeries<
+	Lemma extends LemmaReference = LemmaReference,
+> = GrammaticalSeriesBase &
+	Readonly<{
+		endpointKind: "lemma";
+		members: readonly [
+			GrammaticalSeriesMember<Lemma>,
+			...GrammaticalSeriesMember<Lemma>[],
+		];
+	}>;
+
+export type ReadingGrammaticalSeries<
+	Reading extends ReadingReference = ReadingReference,
+> = GrammaticalSeriesBase &
+	Readonly<{
+		endpointKind: "reading";
+		members: readonly [
+			GrammaticalSeriesMember<Reading>,
+			...GrammaticalSeriesMember<Reading>[],
+		];
+	}>;
+
+export type GrammaticalSeries<
+	Lemma extends LemmaReference = LemmaReference,
+	Reading extends ReadingReference = ReadingReference,
+> = LemmaGrammaticalSeries<Lemma> | ReadingGrammaticalSeries<Reading>;
+
+export type GrammaticalRelationProjection<
+	Lemma extends LemmaReference = LemmaReference,
+	Reading extends ReadingReference = ReadingReference,
+> = GrammaticalRelationClaim<Lemma, Reading> &
+	Readonly<{ provenance: "direct" | "inferred" }>;
 
 /**
  * One application-wide user choice for every Knowledge leaf that Dumrel can

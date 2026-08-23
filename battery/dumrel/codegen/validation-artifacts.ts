@@ -10,6 +10,8 @@ import type { z } from "zod";
 import type { CanonicalDumrelValidationSchemaRegistry } from "../src/parsing/validation-route-proofs.js";
 import {
 	directSemanticRelationGraphEdgeSchema,
+	grammaticalRelationClaimSchema,
+	grammaticalSeriesSchema,
 	knowledgeChangeSchema,
 	knowledgeRequestMaskSchema,
 	knowledgeSettingsSchema,
@@ -52,6 +54,8 @@ const packageRoot = resolve(import.meta.dir, "..");
 export const canonicalDumrelValidationSchemas = {
 	parseAsDirectSemanticRelationGraphEdge:
 		directSemanticRelationGraphEdgeSchema,
+	parseAsGrammaticalRelationClaim: grammaticalRelationClaimSchema,
+	parseAsGrammaticalSeries: grammaticalSeriesSchema,
 	parseAsKnowledgeChange: knowledgeChangeSchema,
 	parseAsKnowledgeRequestMask: knowledgeRequestMaskSchema,
 	parseAsKnowledgeSettings: knowledgeSettingsSchema,

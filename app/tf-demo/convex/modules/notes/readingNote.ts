@@ -24,6 +24,8 @@ import {
 	projectReadingValue,
 } from "./projections";
 import {
+	grammaticalRelationProjectionValidator,
+	loadGrammaticalRelationProjections,
 	loadRelationProjections,
 	relationProjectionValidator,
 } from "./relations";
@@ -140,6 +142,7 @@ export const readingNoteValidator = v.object({
 	knowledge: readingKnowledgeValidator,
 	knowledgeUpdatedAt: v.union(v.null(), v.number()),
 	relations: v.array(relationProjectionValidator),
+	grammaticalRelations: v.array(grammaticalRelationProjectionValidator),
 	pendingRelations: v.array(pendingRelationProjectionValidator),
 	structuralReferences: v.array(structuralShadowProjectionValidator),
 	sourceContexts: v.object({
@@ -193,6 +196,7 @@ export async function loadUnitReadingNote(
 	const [
 		readingKnowledge,
 		relationProjections,
+		grammaticalRelations,
 		pendingRelations,
 		structuralReferences,
 		sourceContexts,
@@ -205,6 +209,7 @@ export async function loadUnitReadingNote(
 			)
 			.unique(),
 		loadRelationProjections(ctx, reading._id),
+		loadGrammaticalRelationProjections(ctx, reading._id),
 		ctx.db
 			.query("pendingSemanticRelations")
 			.withIndex("by_source_reading_key", (q) =>
@@ -263,6 +268,7 @@ export async function loadUnitReadingNote(
 		),
 		knowledgeUpdatedAt: readingKnowledge?.updatedAt ?? null,
 		relations: relationProjections.resolved,
+		grammaticalRelations,
 		pendingRelations: projectPendingRelations(pendingRelations),
 		structuralReferences,
 		sourceContexts,

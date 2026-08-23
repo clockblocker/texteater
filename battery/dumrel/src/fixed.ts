@@ -1,6 +1,7 @@
 import {
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
+	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 	fixedMembersFor,
 } from "dumling/fixed";
 import type { Lemma, Reading } from "dumling/types";
@@ -21,6 +22,7 @@ type AuxLemma = Lemma<"de", "Lexeme", "AUX">;
 type AuxReading = Reading<"de", "Lexeme", "AUX">;
 type DetLemma = Lemma<"de", "Lexeme", "DET">;
 type DetReading = Reading<"de", "Lexeme", "DET">;
+type PronounReading = Reading<"de", "Lexeme", "PRON">;
 
 export type FixedKnowledgeCoverageState =
 	| "Authored"
@@ -81,6 +83,20 @@ export const DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	},
 } as const satisfies FixedKnowledgeCoverage);
 
+/** Authored Knowledge coverage for every fixed German personal PRON Reading. */
+export const DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	transcription: "Unauthored",
+	definition: "Authored",
+	translations: { en: "Authored" },
+	semanticRelationTargetKind: "lemma",
+	semanticRelations: {
+		synonym: "ReviewedEmpty",
+		nearSynonym: "ReviewedEmpty",
+		antonym: "ReviewedEmpty",
+		nearAntonym: "ReviewedEmpty",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
 const DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 	semanticRelationTargetKind: "reading",
@@ -122,6 +138,15 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 				? DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE
 				: DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 			knowledge: authoredAuxKnowledgeFor(auxReading),
+		});
+	}
+	if (catalogued.lemma.kind === "PRON") {
+		const pronounReading = catalogued as PronounReading;
+		return deepFreeze({
+			decision: "Found",
+			scope: FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
+			coverage: DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
+			knowledge: authoredPronounKnowledgeFor(pronounReading),
 		});
 	}
 	if (catalogued.lemma.kind !== "DET") return MEMBER_NOT_CATALOGUED;
@@ -287,6 +312,92 @@ function authoredAuxKnowledgeFor(reading: AuxReading): FixedReadingKnowledge {
 		...(semanticRelations === undefined ? {} : { semanticRelations }),
 	} satisfies FixedReadingKnowledge);
 }
+
+function authoredPronounKnowledgeFor(
+	reading: PronounReading,
+): FixedReadingKnowledge {
+	return deepFreeze({
+		definition: pronounDefinitionFor(reading),
+		translations: { en: [...pronounEnglishTranslationsFor(reading)] },
+	} satisfies FixedReadingKnowledge);
+}
+
+function pronounDefinitionFor(reading: PronounReading): string {
+	const { canonicalForm, coreFeatures } = reading.lemma;
+	if (canonicalForm === "sich" && reading.emojiDescription === "🪞") {
+		return "Das Reflexivpronomen „sich“ verweist in der dritten Person auf den Bezug des Subjekts zurück.";
+	}
+	const reference = germanReferenceDescription(coreFeatures);
+	return coreFeatures.poss === "Yes"
+		? `Das substantivische Possessivpronomen „${canonicalForm}“ bezeichnet etwas, das ${reference} zugeordnet ist.`
+		: `Die Personalpronomenform „${canonicalForm}“ verweist auf ${reference}.`;
+}
+
+function germanReferenceDescription(
+	features: PronounReading["lemma"]["coreFeatures"],
+): string {
+	if (features.polite === "Form") {
+		if (features.referenceNumber === "Sing")
+			return "eine höflich angesprochene Person";
+		if (features.referenceNumber === "Plur")
+			return "mehrere höflich angesprochene Personen";
+		return "eine höflich angesprochene Person oder Gruppe";
+	}
+	const number = features.referenceNumber === "Plur" ? "Mehrzahl" : "Einzahl";
+	if (features.person === "1") return `die sprechende ${number}`;
+	if (features.person === "2") return `die angesprochene ${number}`;
+	const gender =
+		features.referenceGender === "Masc"
+			? "männliche "
+			: features.referenceGender === "Fem"
+				? "weibliche "
+				: features.referenceGender === "Neut"
+					? "sächliche "
+					: "";
+	return `die ${gender}dritte Person ${number}`;
+}
+
+function pronounEnglishTranslationsFor(
+	reading: PronounReading,
+): readonly [string, ...string[]] {
+	const { canonicalForm, coreFeatures } = reading.lemma;
+	if (coreFeatures.poss === "Yes") {
+		if (canonicalForm === "mein") return ["mine"];
+		if (canonicalForm === "dein") return ["yours"];
+		if (canonicalForm === "sein")
+			return coreFeatures.referenceGender === "Neut" ? ["its"] : ["his"];
+		if (canonicalForm === "ihr")
+			return coreFeatures.referenceNumber === "Plur"
+				? ["theirs"]
+				: ["hers"];
+		if (canonicalForm === "unser") return ["ours"];
+		if (canonicalForm === "euer") return ["yours (plural)"];
+		if (canonicalForm === "Ihr") return ["yours (formal)"];
+	}
+	if (canonicalForm === "sich") return ["oneself"];
+	if (coreFeatures.polite === "Form")
+		return coreFeatures.referenceNumber === "Sing"
+			? ["you (formal singular)"]
+			: ["you (formal plural)"];
+	if (coreFeatures.person === "1" && coreFeatures.referenceNumber === "Sing")
+		return canonicalForm === "ich" ? ["I"] : ["me"];
+	if (coreFeatures.person === "2") return ["you"];
+	if (coreFeatures.person === "1" && coreFeatures.referenceNumber === "Plur")
+		return canonicalForm === "wir" ? ["we"] : ["us"];
+	if (coreFeatures.referenceNumber === "Plur")
+		return canonicalForm === "sie" ? ["they", "them"] : ["them"];
+	if (coreFeatures.referenceGender === "Masc")
+		return canonicalForm === "er" ? ["he"] : ["him"];
+	if (coreFeatures.referenceGender === "Fem")
+		return canonicalForm === "sie" ? ["she", "her"] : ["her"];
+	if (coreFeatures.referenceGender === "Neut") return ["it"];
+	throw new Error(`Missing English gloss for fixed PRON ${canonicalForm}.`);
+}
+
+export {
+	allFixedGrammaticalRelationClaims,
+	allFixedGrammaticalSeries,
+} from "./fixed/de/lexeme/pronoun.js";
 
 const promotedSeinPeerForms = new Set([
 	"sein",

@@ -1,4 +1,10 @@
 import { v } from "convex/values";
+import { readingFingerprint } from "dumling/reading";
+import type { Lemma, Reading } from "dumling/types";
+import { ParsingError, parseAsGrammaticalRelationClaim } from "dumrel";
+import type { GrammaticalRelationClaim } from "dumrel/types";
+import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import type { MutationCtx } from "./_generated/server";
 import { internalMutation } from "./_generated/server";
 import {
 	applyDumdictPlanInTransaction,
@@ -91,3 +97,102 @@ export const commitFixedMember = internalMutation({
 		return { status: "loaded" as const };
 	},
 });
+
+export const commitFixedGrammaticalRelation = internalMutation({
+	args: { claim: v.any() },
+	returns: v.union(
+		v.object({ status: v.literal("loaded") }),
+		v.object({ status: v.literal("unchanged") }),
+	),
+	handler: async (ctx, { claim: unchecked }) => {
+		const parsed = parseAsGrammaticalRelationClaim(unchecked);
+		if (parsed instanceof ParsingError) throw parsed;
+		const claim = parsed as GrammaticalRelationClaim;
+		if (sameEndpoint(claim.source, claim.target)) {
+			throw new Error("A Grammatical Relation cannot be a self-edge.");
+		}
+		if (claim.endpointKind === "reading") {
+			const source = await readingByValue(ctx, claim.source);
+			const target = await readingByValue(ctx, claim.target);
+			if (!source || !target) {
+				throw new Error(
+					"Fixed grammatical Reading endpoint is not loaded.",
+				);
+			}
+			const existing = await ctx.db
+				.query("grammaticalRelationEdges")
+				.withIndex(
+					"by_source_reading_id_and_relation_and_target_reading_id",
+					(q) =>
+						q
+							.eq("sourceReadingId", source._id)
+							.eq("relation", claim.relation)
+							.eq("targetReadingId", target._id),
+				)
+				.unique();
+			if (existing) {
+				return { status: "unchanged" as const };
+			}
+			await ctx.db.insert("grammaticalRelationEdges", {
+				endpointKind: "reading",
+				sourceReadingId: source._id,
+				targetReadingId: target._id,
+				relation: claim.relation,
+			});
+			return { status: "loaded" as const };
+		}
+
+		const source = await lemmaByValue(ctx, claim.source);
+		const target = await lemmaByValue(ctx, claim.target);
+		if (!source || !target) {
+			throw new Error("Fixed grammatical Lemma endpoint is not loaded.");
+		}
+		const existing = await ctx.db
+			.query("grammaticalRelationEdges")
+			.withIndex(
+				"by_source_lemma_id_and_relation_and_target_lemma_id",
+				(q) =>
+					q
+						.eq("sourceLemmaId", source._id)
+						.eq("relation", claim.relation)
+						.eq("targetLemmaId", target._id),
+			)
+			.unique();
+		if (existing) {
+			return { status: "unchanged" as const };
+		}
+		await ctx.db.insert("grammaticalRelationEdges", {
+			endpointKind: "lemma",
+			sourceLemmaId: source._id,
+			targetLemmaId: target._id,
+			relation: claim.relation,
+		});
+		return { status: "loaded" as const };
+	},
+});
+
+function readingByValue(ctx: MutationCtx, reading: Reading) {
+	return ctx.db
+		.query("readings")
+		.withIndex("by_reading_key", (q) =>
+			q.eq("readingKey", readingFingerprint(reading)),
+		)
+		.unique();
+}
+
+function lemmaByValue(ctx: MutationCtx, lemma: Lemma) {
+	return ctx.db
+		.query("lemmas")
+		.withIndex("by_lemma_key", (q) =>
+			q.eq("lemmaKey", lemmaIdentityKey(lemma)),
+		)
+		.unique();
+}
+
+function sameEndpoint(left: Lemma | Reading, right: Lemma | Reading): boolean {
+	return "emojiDescription" in left && "emojiDescription" in right
+		? readingFingerprint(left) === readingFingerprint(right)
+		: !("emojiDescription" in left) &&
+				!("emojiDescription" in right) &&
+				lemmaIdentityKey(left) === lemmaIdentityKey(right);
+}

@@ -2,7 +2,12 @@ import type { ReadingEntry } from "dumdict";
 import { allFixedLemmaCatalogs, fixedMembersFor } from "dumling/fixed";
 import { readingFingerprint } from "dumling/reading";
 import type { Lemma, Reading } from "dumling/types";
-import { type FixedKnowledgeLookup, fixedKnowledgeFor } from "dumrel/fixed";
+import {
+	allFixedGrammaticalRelationClaims,
+	type FixedKnowledgeLookup,
+	fixedKnowledgeFor,
+} from "dumrel/fixed";
+import type { GrammaticalRelationClaim } from "dumrel/types";
 
 type GermanLemmaCatalog = Readonly<{
 	route: Readonly<{ language: string }>;
@@ -17,11 +22,13 @@ export type FixedInventoryAssemblySources = Readonly<{
 		| Readonly<{ scope: string; members: readonly Reading<"de">[] }>
 		| undefined;
 	knowledgeFor: (reading: Reading<"de">) => FixedKnowledgeLookup;
+	grammaticalRelations?: readonly GrammaticalRelationClaim[];
 }>;
 
 export type FixedInventory = Readonly<{
 	lemmas: readonly Lemma<"de">[];
 	readingEntries: readonly ReadingEntry<"de">[];
+	grammaticalRelations: readonly GrammaticalRelationClaim[];
 }>;
 
 function defaultSources(): FixedInventoryAssemblySources {
@@ -42,6 +49,7 @@ function defaultSources(): FixedInventoryAssemblySources {
 			fixedKnowledgeFor(
 				reading as Parameters<typeof fixedKnowledgeFor>[0],
 			),
+		grammaticalRelations: allFixedGrammaticalRelationClaims(),
 	};
 }
 
@@ -104,6 +112,9 @@ export function assembleFixedInventory(
 	return Object.freeze({
 		lemmas: Object.freeze(lemmas),
 		readingEntries: Object.freeze(entries),
+		grammaticalRelations: Object.freeze([
+			...(sources.grammaticalRelations ?? []),
+		]),
 	});
 }
 

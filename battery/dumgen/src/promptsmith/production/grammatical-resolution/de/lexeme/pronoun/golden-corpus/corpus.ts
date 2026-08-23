@@ -1,5 +1,6 @@
 import { defineGoldenCorpus } from "../../../../../../assembly";
 import { inputSchema, outputSchema } from "../schemas";
+import { fixedPopulationCases } from "./cases/fixed-population";
 import { typeAndPossessorCases } from "./cases/indefinite-and-negative";
 import { orthographyAndSurfaceCases } from "./cases/orthography-and-surface";
 import { personalAndPolitenessCases } from "./cases/personal-and-politeness";
@@ -10,6 +11,7 @@ export const corpus = defineGoldenCorpus({
 	inputSchema,
 	outputSchema,
 	collections: {
+		fixedPopulation: fixedPopulationCases,
 		personalAndPoliteness: personalAndPolitenessCases,
 		reflexiveAndReciprocal: reflexiveAndReciprocalCases,
 		typeAndPossessor: typeAndPossessorCases,

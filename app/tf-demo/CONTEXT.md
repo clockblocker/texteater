@@ -104,8 +104,8 @@ _Avoid_: Visitor Dictionary, personal dictionary
 
 **Fixed Member Loading**:
 The idempotent application setup operation that reconciles package-owned fixed
-Lemmas, Readings, and Reading Knowledge into the Shared Demo Dictionary through
-their ordinary records and identities.
+Lemmas, Readings, Reading Knowledge, and direct Grammatical Relation claims
+into the Shared Demo Dictionary through their ordinary records and identities.
 
 **Catalog Growth Signal**:
 A durable application-owned aggregate of equivalent Catalog Misses used to
@@ -113,12 +113,17 @@ prioritize additions to package-owned Fixed Catalogs. It is operational
 diagnostic evidence, not linguistic identity or Visitor history.
 
 **Semantic Relation Edge**:
-One normalized direct Reading-owned claim whose endpoint is a Lemma. Resolved
-direct and inferred views navigate to Lemma Route Notes with provenance. Only
-direct claims are durable. A missing or ambiguous exact Lemma is retained as a
-pending Unit Shadow and produces no inferred view; it is not replaced by a
-manually selected Reading.
-_Avoid_: Reading-to-Reading relation, target Reading
+One normalized direct Reading-owned claim whose endpoint mode is either Lemma
+or exact Reading. Resolved direct and inferred views preserve that endpoint
+mode and provenance. Only direct claims are durable. A missing or ambiguous
+generated Lemma target is retained as a pending Unit Shadow and produces no
+inferred view.
+
+**Grammatical Relation Edge**:
+One normalized direct Case Counterpart or Person Counterpart claim. tf-demo
+stores its homogeneous endpoints and projects the symmetric reverse without
+Semantic Relation settings, propagation, closure, or substitution. Exact
+Reading targets open the exact Unit Reading Note.
 
 **Unit Reading**:
 A Reading whose Lemma Family is Lexeme, Phraseme, or Morpheme. This tf-demo

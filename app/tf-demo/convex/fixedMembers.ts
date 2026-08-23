@@ -6,6 +6,7 @@ import type { DumdictPlan, ReadingEntry } from "dumdict";
 import { createDumdictService } from "dumdict/runtime";
 import { readingFingerprint } from "dumling/reading";
 import type { Lemma } from "dumling/types";
+import type { GrammaticalRelationClaim } from "dumrel/types";
 import { assembleFixedInventory } from "../server/fixedMemberAssembly";
 import { action } from "./_generated/server";
 import { createConvexDumdictStorage } from "./orchestration";
@@ -47,6 +48,19 @@ const commitFixedMember = makeFunctionReference<
 	CommitFixedMemberResult
 >;
 
+const commitFixedGrammaticalRelation = makeFunctionReference<
+	"mutation",
+	{ claim: GrammaticalRelationClaim },
+	{ status: "loaded" | "unchanged" }
+>(
+	"fixedMemberPersistence:commitFixedGrammaticalRelation",
+) as unknown as FunctionReference<
+	"mutation",
+	"internal",
+	{ claim: GrammaticalRelationClaim },
+	{ status: "loaded" | "unchanged" }
+>;
+
 export const load = action({
 	args: {},
 	returns: v.object({
@@ -55,7 +69,11 @@ export const load = action({
 		total: v.number(),
 	}),
 	handler: async (ctx) => {
-		const { lemmas, readingEntries: entries } = assembleFixedInventory();
+		const {
+			lemmas,
+			readingEntries: entries,
+			grammaticalRelations,
+		} = assembleFixedInventory();
 		let loaded = 0;
 		let unchanged = 0;
 		for (const lemma of lemmas) {
@@ -111,10 +129,18 @@ export const load = action({
 				);
 			}
 		}
+		for (const claim of grammaticalRelations) {
+			const committed = await ctx.runMutation(
+				commitFixedGrammaticalRelation,
+				{ claim },
+			);
+			if (committed.status === "loaded") loaded += 1;
+			else unchanged += 1;
+		}
 		return {
 			loaded,
 			unchanged,
-			total: lemmas.length + entries.length,
+			total: lemmas.length + entries.length + grammaticalRelations.length,
 		};
 	},
 });

@@ -11,6 +11,14 @@ export type DePronounFeatures = {
 			AbstractFeatureValue<"pronType">,
 			"Dem" | "Ind" | "Int" | "Neg" | "Prs" | "Rcp" | "Rel" | "Tot"
 		> | null;
+		referenceGender: Extract<
+			AbstractFeatureValue<"gender">,
+			"Fem" | "Masc" | "Neut"
+		> | null;
+		referenceNumber: Extract<
+			AbstractFeatureValue<"number">,
+			"Plur" | "Sing"
+		> | null;
 	};
 	inflectional: {
 		case: Extract<
