@@ -10,6 +10,10 @@
 		var(--background);
 }
 
+.card-demo-page :focus {
+	outline: none;
+}
+
 .card-demo-page--text {
 	padding: 0;
 }
@@ -73,13 +77,6 @@
 	background: var(--accent);
 }
 
-.card-demo-segment:focus-visible,
-.card-demo-card:focus-visible,
-.card-demo-link:focus-visible {
-	outline: 3px solid color-mix(in oklch, var(--ring) 60%, transparent);
-	outline-offset: 3px;
-}
-
 .card-demo-overlay {
 	position: fixed;
 	z-index: 50;
@@ -124,11 +121,6 @@
 
 .card-demo-close:hover {
 	background: var(--accent);
-}
-
-.card-demo-close:focus-visible {
-	outline: 3px solid color-mix(in oklch, var(--ring) 60%, transparent);
-	outline-offset: 3px;
 }
 
 .card-demo-stack {
