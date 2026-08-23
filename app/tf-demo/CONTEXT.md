@@ -6,6 +6,81 @@ encounter history but do not partition linguistic identity or Knowledge.
 
 ## Language
 
+### Workspace presentation
+
+**Sheet**:
+A placed, expanded workspace presentation of one Text or Note. Sheets at the
+same Pane form an ordered Sheet Stack; a Sheet adds no identity to its subject,
+and multiple Sheets may present the same subject.
+_Avoid_: Layer, expanded Card, View
+
+**Card**:
+The transient compact preview of a Text or Note shown during a Sheet Move or an
+explicit preview gesture. A Card never belongs to a Sheet Stack or constitutes
+valid placed workspace state.
+_Avoid_: collapsed Sheet, Note Card, unplaced Sheet
+
+**Sheet Stack**:
+The ordered Sheets placed at one Pane. Collapsing Sheets reveals lower Sheets
+or that Pane's base; only the top Sheet may move.
+_Avoid_: Card Stack, Layer Stack
+
+**Pane**:
+One workspace position that holds one Sheet Stack. The central Pane has the
+Navigation Anchor as its base; incidental Panes have an empty base. Each Pane
+may contain at most one Locked Sheet.
+_Avoid_: side region, docking region, panel
+
+**Active Pane**:
+The one Pane to which pane-scoped workspace operations apply. Activity is
+workspace state that follows pointer interaction, keyboard focus, or a
+successful Sheet Move into that Pane.
+_Avoid_: focused Pane, selected Pane
+
+**Navigation Anchor**:
+The non-collapsible base of the central Pane, revealed when its Sheet Stack is
+empty. The Library is its current presentation, not a synonym for the anchor.
+_Avoid_: Home Pane, Navigator Pane
+
+**Locked Sheet**:
+A Sheet carrying visible, explicitly controllable protection from Collapse.
+Every Sheet is eligible, the first Sheet placed into an empty Pane locks
+automatically, and its lock follows it during a Sheet Move unless the
+destination already has a Locked Sheet.
+_Avoid_: locked Text, pinned Note, locked Pane
+
+**Lock Transfer**:
+The explicit Pane-scoped operation that changes which Sheet carries its one
+lock. Locking an ordinary Sheet unlocks the previously Locked Sheet; unlocking
+the Locked Sheet leaves that Pane without a lock.
+_Avoid_: second lock, lock copy
+
+**Collapse**:
+Removal of one or more Sheets from a Sheet Stack, revealing what is beneath.
+Collapse is distinct from moving a Sheet, does not turn it into a Card, and
+cannot remove a Locked Sheet.
+_Avoid_: close Card, move
+
+**Explicit Sheet Removal**:
+Deliberate removal of one identified Sheet. It may remove a Locked Sheet and
+never promotes a remaining Sheet to carry the departed lock.
+_Avoid_: Collapse, unlock
+
+**Sheet Opening**:
+Placement of a new Sheet according to its interaction origin. The Navigation
+Anchor opens onto the central Pane, Sheet-local activation pushes onto that
+Sheet's Pane, and dragging chooses a destination Pane explicitly.
+_Avoid_: route navigation, global open
+
+**Sheet Move**:
+Relocation of the top Sheet between Panes, represented transiently as a Card.
+Only a valid drop commits the move by removing the source's top Sheet and
+pushing it onto the destination; the moved subject and its linguistic identity
+remain unchanged, and the source never promotes a replacement Locked Sheet.
+_Avoid_: Collapse, copy
+
+### Linguistic and application domain
+
 **Occurrence Attestation**:
 A durable tf-demo record for one resolved high-level occurrence in one
 Sentence. Every member Segment shares it; its application-owned database ID

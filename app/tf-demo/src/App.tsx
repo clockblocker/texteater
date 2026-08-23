@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
 import { CardDemoRouteShell } from "@/playground/card-demo/card-demo-route-shell";
+import { SheetWorkspaceRoute } from "@/playground/sheet-workspace/sheet-workspace-route";
 import { LibraryView } from "@/views/library-view";
 import { NotFoundView } from "@/views/not-found-view";
 import { ResolutionNoteView } from "@/views/resolution-note-view";
@@ -38,6 +39,10 @@ export function App() {
 					<Route
 						path="/playground/card-demo/*"
 						element={<CardDemoRouteShell />}
+					/>
+					<Route
+						path="/playground/sheet-workspace/:variant?"
+						element={<SheetWorkspaceRoute />}
 					/>
 					<Route path="*" element={<RoutedView />} />
 				</Routes>
