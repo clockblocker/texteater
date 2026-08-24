@@ -57,6 +57,30 @@ Comparative adjectives, degree words, predicates, noun phrases, and all other co
 
 <other_fixedness>
 An established non-compositional occurrence is Phraseme/Idiom; the same wording used literally is separate. Include fixed function words inside an Idiom, but exclude freely inserted modifiers. A marked fused source word is Construction/Fusion unless it belongs to a larger available fixed unit. Membership follows occurrence role, never spelling: a preposition introducing its own nominal phrase is not a separable particle merely because an identical form occurs later.
+
+For interrogatives, classify only the supplied occurrence's part of speech. Free wer, wen, wem, and wessen are singleton Lexeme/PRON targets. Adnominal wessen directly modifying a following noun is a singleton Lexeme/DET target. Do not infer Case or choose a Lemma at this seam.
+
+Apply the same occurrence-role boundary to total forms. Substantive alles, allem, alle, allen, and aller are singleton Lexeme/PRON targets. A total form directly modifying an overt following noun, as in alles Material, alle Gäste, allen Gästen, or aller Anfang, is a singleton Lexeme/DET target. Spelling alone never decides between the two routes, and this seam does not choose a Lemma or Surface features.
+
+Plural mehrere, mehreren, and mehrerer follow the same boundary: the standalone form is a singleton Lexeme/PRON target, while the form directly modifying an overt following noun is a singleton Lexeme/DET target. Context decides only PRON versus DET here; do not choose its Lemma, Case, Number, or Gender at this seam.
+
+Ordinary jedermann and genitive jedermanns are singleton Lexeme/PRON targets, including jedermanns Sache; the following noun does not turn this genitive pronoun into DET. Proper-name and work-title uses are separate identities and remain outside this ordinary PRON occurrence policy.
+
+Standalone mancher, manche, manches, manchen, and manchem are singleton Lexeme/PRON targets. The same forms directly modifying an overt noun, uninflected manch, and the determiner in so mancher remain singleton Lexeme/DET targets.
+
+The same boundary applies to singular jeder forms: standalone jeder, jede, jedes, jeden, and jedem are singleton Lexeme/PRON targets. When one of those forms directly modifies an overt noun, as in jeder Mensch, jede Person, jedes Kind, jeden Menschen, or jedem Kind, it remains a singleton Lexeme/DET target. Context decides the route; this seam does not infer the PRON Lemma or its Case and Gender.
+
+Standalone jedweder, jedwede, jedwedes, jedweden, and jedwedem are likewise singleton Lexeme/PRON targets. The same forms directly modifying an overt noun remain singleton Lexeme/DET targets. Their dated or emphatic register and their relation to jeder do not change this occurrence-role boundary.
+
+Standalone jeglicher, jegliche, jegliches, jeglichen, and jeglichem are singleton Lexeme/PRON targets in both singular and plural contexts. The same forms directly modifying an overt noun remain singleton Lexeme/DET targets. Same spelling never decides Number or route by itself.
+
+Substantive negative nichts and colloquial nix are singleton Lexeme/PRON targets whether subject or object. Keep homographic nominal Nichts after an article as Lexeme/NOUN, negation particle nicht as Lexeme/PART, and attributive kein as Lexeme/DET. Do not decide canonical versus Variant spelling at this seam.
+
+Free niemand, niemanden, niemandem, and niemandes are likewise singleton Lexeme/PRON targets. Do not choose their shared Lemma or infer Case at this seam.
+
+Apply the occurrence-role boundary to der, die, and das forms. A free substantive demonstrative and a form introducing or participating in a relative clause are singleton Lexeme/PRON targets. The same spelling directly modifying an overt following noun is a singleton Lexeme/DET target. Do not distinguish demonstrative from relative pronType, choose an exact-form Lemma, or infer Case, gender, or number at this seam.
+
+Standalone keiner, keine, keines, keinen, and keinem are singleton Lexeme/PRON targets. The same declined forms directly modifying an overt noun remain singleton Lexeme/DET targets; this seam decides that occurrence boundary without choosing the PRON Lemma or Surface analysis.
 </other_fixedness>
 
 <output_format>

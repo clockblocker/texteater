@@ -1,41 +1,44 @@
 import type { Attestation } from "dumling/types";
 
-const occurrenceAttestation = {
-	members: [
-		{
-			attested: "Viele",
-			orthography: "Standard",
-		},
-	],
-	realizationCoverage: "Full",
-	surface: {
-		language: "de",
-		normalizedSurface: "viele",
-		spelling: "Canonical",
-		surfaceKind: "Inflection",
-		inflectionalFeatures: {
-			case: "Nom",
-			number: "Plur",
-			gender: null,
-			reflex: null,
-		},
-		lemma: {
-			language: "de",
-			canonicalForm: "viel",
-			family: "Lexeme",
-			kind: "PRON",
-			coreFeatures: {
-				pronType: "Ind",
-				extPos: null,
-				foreign: null,
-				person: null,
-				polite: null,
-				poss: null,
+const occurrenceAttestation: Attestation<"de", "Inflection", "Lexeme", "PRON"> =
+	{
+		members: [
+			{
+				attested: "Viele",
+				orthography: "Standard",
 			},
+		],
+		realizationCoverage: "Full",
+		surface: {
+			language: "de",
+			normalizedSurface: "viele",
+			spelling: "Canonical",
+			surfaceKind: "Inflection",
+			inflectionalFeatures: {
+				case: "Nom",
+				number: "Plur",
+				gender: null,
+				reflex: null,
+			},
+			lemma: {
+				language: "de",
+				canonicalForm: "viel",
+				family: "Lexeme",
+				kind: "PRON",
+				coreFeatures: {
+					pronType: "Ind",
+					extPos: null,
+					foreign: null,
+					person: null,
+					polite: null,
+					poss: null,
+					referenceGender: null,
+					referenceNumber: null,
+				},
+			},
+			surfaceFeatures: null,
 		},
-		surfaceFeatures: null,
-	},
-} satisfies Attestation<"de", "Inflection", "Lexeme", "PRON">;
+	};
 
 export const attestation = {
 	attestation: occurrenceAttestation,

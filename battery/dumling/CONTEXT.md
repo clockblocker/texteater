@@ -90,6 +90,18 @@ continues through ordinary Open behavior and never produces a Catalog Miss.
 The German PRON population distinguishes formal singular and plural addressee
 identities through Core `referenceNumber`; morphologically plural Surface
 number is not addressee identity evidence.
+
+The general inflection topology names one paradigm by its singular citation
+form, normally masculine singular, and keeps Case, Gender, and Number
+realizations as Surfaces. A reviewed Fixed Population may deliberately promote
+selected grammatical coordinates into separate learner-facing Lemmas and
+Readings. German total PRON uses that exception for singular `alles` and plural
+`alle`; `allem` remains a Surface of `alles`, while `allen` and `aller` remain
+Surfaces of `alle`. The reviewed demonstrative and relative `der/die/das` PRON
+populations take the stronger exact-form exception: each of `der`, `die`, `das`,
+`den`, `dem`, `dessen`, `deren`, and `denen` is one Lemma per `pronType`, while
+Case, Gender, and Number remain Surface evidence. Homographic demonstrative and
+relative forms never share an identity.
 _Avoid_: Partially Closed Route, fallback catalog
 
 **Free `sich`**:

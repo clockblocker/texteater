@@ -123,6 +123,15 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumrel/relations",
 	},
 	{
+		classification: "operational",
+		operation: {
+			description: "Project an empty Grammatical Relation claim set.",
+			id: "dumrel.project-grammatical-relations",
+		},
+		rationale: "Lean grammatical-relation algebra runtime surface.",
+		specifier: "dumrel/grammatical-relations",
+	},
+	{
 		classification: "schema-authoring-exempt",
 		rationale:
 			"Deliberately Zod-bearing public schema composition surface.",

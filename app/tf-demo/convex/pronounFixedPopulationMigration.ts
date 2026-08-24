@@ -28,14 +28,322 @@ export function fixedPronounCandidatesForLegacySurface(
 	legacy: LegacyPronounSurface,
 ): readonly Reading<"de">[] {
 	const possessive = legacy.coreFeatures.poss === "Yes";
+	const jemandCaseForms = new Set([
+		"jemand",
+		"jemanden",
+		"jemandem",
+		"jemandes",
+	]);
+	const niemandCaseForms = new Set([
+		"niemand",
+		"niemanden",
+		"niemandem",
+		"niemandes",
+	]);
+	const legacyCase = legacy.inflectionalFeatures?.case;
+	const isUnresolvedUninflectedJemand =
+		legacy.normalizedSurface === "jemand" &&
+		legacyCase !== undefined &&
+		legacyCase !== null &&
+		legacyCase !== "Nom";
+	const isUnresolvedUninflectedNiemand =
+		legacy.normalizedSurface === "niemand" &&
+		legacyCase !== undefined &&
+		legacyCase !== null &&
+		legacyCase !== "Nom";
+	if (isUnresolvedUninflectedJemand || isUnresolvedUninflectedNiemand)
+		return [];
+	const collectsUnderJemand =
+		legacy.coreFeatures.pronType === "Ind" &&
+		jemandCaseForms.has(legacy.canonicalForm) &&
+		jemandCaseForms.has(legacy.normalizedSurface);
+	const collectsUnderNiemand =
+		legacy.coreFeatures.pronType === "Neg" &&
+		niemandCaseForms.has(legacy.canonicalForm) &&
+		niemandCaseForms.has(legacy.normalizedSurface);
+	const totalParadigm = {
+		alles: {
+			canonicalForm: "alles",
+			cases: ["Nom", "Acc"],
+			gender: "Neut",
+			number: "Sing",
+		},
+		allem: {
+			canonicalForm: "alles",
+			cases: ["Dat"],
+			gender: "Neut",
+			number: "Sing",
+		},
+		alle: {
+			canonicalForm: "alle",
+			cases: ["Nom", "Acc"],
+			gender: null,
+			number: "Plur",
+		},
+		allen: {
+			canonicalForm: "alle",
+			cases: ["Dat"],
+			gender: null,
+			number: "Plur",
+		},
+		aller: {
+			canonicalForm: "alle",
+			cases: ["Gen"],
+			gender: null,
+			number: "Plur",
+		},
+	} as const;
+	const totalForm =
+		legacy.coreFeatures.pronType === "Tot"
+			? totalParadigm[
+					legacy.normalizedSurface as keyof typeof totalParadigm
+				]
+			: undefined;
+	const mehrereSlots = [
+		["mehrere", "Nom"],
+		["mehrere", "Acc"],
+		["mehreren", "Dat"],
+		["mehrerer", "Gen"],
+	] as const;
+	const mehrereMatches = mehrereSlots.filter(
+		([form, grammaticalCase]) =>
+			legacy.normalizedSurface === form &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === null &&
+			legacy.inflectionalFeatures?.number === "Plur",
+	);
+	const attemptsMehrere =
+		legacy.coreFeatures.pronType === "Tot" &&
+		["mehrere", "mehreren", "mehrerer"].includes(legacy.canonicalForm) &&
+		["mehrere", "mehreren", "mehrerer"].includes(legacy.normalizedSurface);
+	if (attemptsMehrere && mehrereMatches.length !== 1) return [];
+	const jederSlots = [
+		["jeder", "Nom", "Masc"],
+		["jede", "Nom", "Fem"],
+		["jedes", "Nom", "Neut"],
+		["jeden", "Acc", "Masc"],
+		["jede", "Acc", "Fem"],
+		["jedes", "Acc", "Neut"],
+		["jedem", "Dat", "Masc"],
+		["jeder", "Dat", "Fem"],
+		["jedem", "Dat", "Neut"],
+		["jedes", "Gen", "Masc"],
+		["jeder", "Gen", "Fem"],
+		["jedes", "Gen", "Neut"],
+	] as const;
+	const jederMatches = jederSlots.filter(
+		([form, grammaticalCase, gender]) =>
+			legacy.normalizedSurface === form &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === gender &&
+			legacy.inflectionalFeatures?.number === "Sing",
+	);
+	const attemptsJeder =
+		legacy.coreFeatures.pronType === "Tot" &&
+		["jeder", "jede", "jedes", "jeden", "jedem"].includes(
+			legacy.canonicalForm,
+		) &&
+		["jeder", "jede", "jedes", "jeden", "jedem"].includes(
+			legacy.normalizedSurface,
+		);
+	if (attemptsJeder && jederMatches.length !== 1) return [];
+	const jedwederSlots = [
+		["jedweder", "Nom", "Masc"],
+		["jedwede", "Nom", "Fem"],
+		["jedwedes", "Nom", "Neut"],
+		["jedweden", "Acc", "Masc"],
+		["jedwede", "Acc", "Fem"],
+		["jedwedes", "Acc", "Neut"],
+		["jedwedem", "Dat", "Masc"],
+		["jedweder", "Dat", "Fem"],
+		["jedwedem", "Dat", "Neut"],
+		["jedwedes", "Gen", "Masc"],
+		["jedweder", "Gen", "Fem"],
+		["jedwedes", "Gen", "Neut"],
+	] as const;
+	const jedwederMatches = jedwederSlots.filter(
+		([form, grammaticalCase, gender]) =>
+			legacy.normalizedSurface === form &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === gender &&
+			legacy.inflectionalFeatures?.number === "Sing",
+	);
+	const attemptsJedweder =
+		legacy.coreFeatures.pronType === "Tot" &&
+		["jedweder", "jedwede", "jedwedes", "jedweden", "jedwedem"].includes(
+			legacy.canonicalForm,
+		) &&
+		["jedweder", "jedwede", "jedwedes", "jedweden", "jedwedem"].includes(
+			legacy.normalizedSurface,
+		);
+	if (attemptsJedweder && jedwederMatches.length !== 1) return [];
+	const jeglicherSlots = [
+		["jeglicher", "Nom", "Masc", "Sing"],
+		["jegliche", "Nom", "Fem", "Sing"],
+		["jegliches", "Nom", "Neut", "Sing"],
+		["jeglichen", "Acc", "Masc", "Sing"],
+		["jegliche", "Acc", "Fem", "Sing"],
+		["jegliches", "Acc", "Neut", "Sing"],
+		["jeglichem", "Dat", "Masc", "Sing"],
+		["jeglicher", "Dat", "Fem", "Sing"],
+		["jeglichem", "Dat", "Neut", "Sing"],
+		["jegliches", "Gen", "Masc", "Sing"],
+		["jeglicher", "Gen", "Fem", "Sing"],
+		["jegliches", "Gen", "Neut", "Sing"],
+		["jegliche", "Nom", null, "Plur"],
+		["jegliche", "Acc", null, "Plur"],
+		["jeglichen", "Dat", null, "Plur"],
+		["jeglicher", "Gen", null, "Plur"],
+	] as const;
+	const jeglicherMatches = jeglicherSlots.filter(
+		([form, grammaticalCase, gender, number]) =>
+			legacy.normalizedSurface === form &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === gender &&
+			legacy.inflectionalFeatures?.number === number,
+	);
+	const attemptsJeglicher =
+		legacy.coreFeatures.pronType === "Tot" &&
+		[
+			"jeglicher",
+			"jegliche",
+			"jegliches",
+			"jeglichen",
+			"jeglichem",
+		].includes(legacy.canonicalForm) &&
+		[
+			"jeglicher",
+			"jegliche",
+			"jegliches",
+			"jeglichen",
+			"jeglichem",
+		].includes(legacy.normalizedSurface);
+	if (attemptsJeglicher && jeglicherMatches.length !== 1) return [];
+	if (totalForm && legacy.inflectionalFeatures) {
+		const {
+			case: grammaticalCase,
+			gender,
+			number,
+		} = legacy.inflectionalFeatures;
+		if (
+			(grammaticalCase != null &&
+				!totalForm.cases.includes(grammaticalCase as never)) ||
+			(totalForm.gender === null
+				? gender != null
+				: gender != null && gender !== totalForm.gender) ||
+			(number != null && number !== totalForm.number)
+		) {
+			return [];
+		}
+	}
+	const collectsUnderNichts =
+		legacy.coreFeatures.pronType === "Neg" &&
+		["nichts", "nix"].includes(legacy.canonicalForm) &&
+		["nichts", "nix"].includes(legacy.normalizedSurface);
+	const keinerSlots = [
+		["keiner", "Nom", "Masc", "Sing"],
+		["keine", "Nom", "Fem", "Sing"],
+		["keines", "Nom", "Neut", "Sing"],
+		["keinen", "Acc", "Masc", "Sing"],
+		["keine", "Acc", "Fem", "Sing"],
+		["keines", "Acc", "Neut", "Sing"],
+		["keinem", "Dat", "Masc", "Sing"],
+		["keiner", "Dat", "Fem", "Sing"],
+		["keinem", "Dat", "Neut", "Sing"],
+		["keines", "Gen", "Masc", "Sing"],
+		["keiner", "Gen", "Fem", "Sing"],
+		["keines", "Gen", "Neut", "Sing"],
+		["keine", "Nom", null, "Plur"],
+		["keine", "Acc", null, "Plur"],
+		["keinen", "Dat", null, "Plur"],
+		["keiner", "Gen", null, "Plur"],
+	] as const;
+	const keinerMatches = keinerSlots.filter(
+		([form, grammaticalCase, gender, number]) =>
+			legacy.normalizedSurface === form &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === gender &&
+			legacy.inflectionalFeatures?.number === number,
+	);
+	const attemptsKeiner =
+		legacy.coreFeatures.pronType === "Neg" &&
+		["keiner", "keine", "keines", "keinen", "keinem"].includes(
+			legacy.normalizedSurface,
+		);
+	if (attemptsKeiner && keinerMatches.length !== 1) return [];
+	const mancherForms = [
+		"mancher",
+		"manche",
+		"manches",
+		"manchen",
+		"manche",
+		"manches",
+		"manchem",
+		"mancher",
+		"manchem",
+		"manches",
+		"mancher",
+		"manches",
+		"manche",
+		"manche",
+		"manchen",
+		"mancher",
+	] as const;
+	const mancherMatches = keinerSlots.filter(
+		([, grammaticalCase, gender, number], index) =>
+			legacy.normalizedSurface === mancherForms[index] &&
+			legacy.inflectionalFeatures?.case === grammaticalCase &&
+			legacy.inflectionalFeatures?.gender === gender &&
+			legacy.inflectionalFeatures?.number === number,
+	);
+	const attemptsMancher =
+		legacy.coreFeatures.pronType === "Tot" &&
+		["mancher", "manche", "manches", "manchen", "manchem"].includes(
+			legacy.normalizedSurface,
+		);
+	if (attemptsMancher && mancherMatches.length !== 1) return [];
+	const attemptsJedermann =
+		legacy.coreFeatures.pronType === "Tot" &&
+		["jedermann", "jedermanns"].includes(legacy.normalizedSurface);
+	const jedermannCase = legacy.inflectionalFeatures?.case;
+	if (
+		attemptsJedermann &&
+		(legacy.inflectionalFeatures?.number !== "Sing" ||
+			legacy.inflectionalFeatures?.gender != null ||
+			(legacy.normalizedSurface === "jedermann"
+				? !["Nom", "Acc", "Dat"].includes(String(jedermannCase))
+				: jedermannCase !== "Gen"))
+	)
+		return [];
+	const expectedCanonicalForm = possessive
+		? legacy.canonicalForm
+		: collectsUnderJemand
+			? "jemand"
+			: collectsUnderNiemand
+				? "niemand"
+				: collectsUnderNichts
+					? "nichts"
+					: attemptsKeiner
+						? "keiner"
+						: attemptsJedermann
+							? "jedermann"
+							: attemptsMancher
+								? "mancher"
+								: attemptsMehrere
+									? "mehrere"
+									: attemptsJeder
+										? "jeder"
+										: attemptsJedweder
+											? "jedweder"
+											: attemptsJeglicher
+												? "jeglicher"
+												: (totalForm?.canonicalForm ??
+													legacy.normalizedSurface);
 	return pronounReadings.filter((reading) => {
 		const candidateCore = reading.lemma.coreFeatures as Readonly<
 			Record<string, unknown>
 		>;
-		if (
-			reading.lemma.canonicalForm !==
-			(possessive ? legacy.canonicalForm : legacy.normalizedSurface)
-		) {
+		if (reading.lemma.canonicalForm !== expectedCanonicalForm) {
 			return false;
 		}
 		const coreMatches = [

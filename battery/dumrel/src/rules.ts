@@ -12,7 +12,7 @@ const relationAlgebra = {
 	synonym: { inverse: "synonym", substitutesThroughSynonyms: true },
 	nearSynonym: {
 		inverse: "nearSynonym",
-		substitutesThroughSynonyms: true,
+		substitutesThroughSynonyms: false,
 	},
 	antonym: { inverse: "antonym", substitutesThroughSynonyms: true },
 	nearAntonym: {

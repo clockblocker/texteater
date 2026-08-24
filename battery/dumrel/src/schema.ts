@@ -11,6 +11,7 @@ import type {
 	MorphemeReadingReference,
 	MorphologicalTreeNode,
 	MorphologicalTreeStructure,
+	ReadingKnowledge,
 	UnitShadow,
 } from "./types.js";
 import {
@@ -378,14 +379,15 @@ const languageBucketsSchema = z.record(
 	nonEmptyStringsSchema,
 );
 
-export const readingKnowledgeSchema = z.strictObject({
-	transcription: normalizedNonEmptyStringSchema.optional(),
-	definition: normalizedNonEmptyStringSchema.optional(),
-	translations: languageBucketsSchema.optional(),
-	morphologicalTree: morphologicalTreeSchema.optional(),
-	lexicalBreakdown: lexicalBreakdownSchema.optional(),
-	semanticRelations: semanticRelationsSchema.optional(),
-});
+export const readingKnowledgeSchema: z.ZodType<ReadingKnowledge> =
+	z.strictObject({
+		transcription: normalizedNonEmptyStringSchema.optional(),
+		definition: normalizedNonEmptyStringSchema.optional(),
+		translations: languageBucketsSchema.optional(),
+		morphologicalTree: morphologicalTreeSchema.optional(),
+		lexicalBreakdown: lexicalBreakdownSchema.optional(),
+		semanticRelations: semanticRelationsSchema.optional(),
+	});
 
 const bucketKinds = z.enum(["Contribute", "Correct"]);
 

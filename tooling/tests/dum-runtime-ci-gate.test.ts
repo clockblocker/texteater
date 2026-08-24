@@ -180,8 +180,8 @@ describe("differential validation CI contract", () => {
 		}
 
 		for (const operationName of [
-			"dumgen.transitive.custom.hasDistinctPair",
 			"dumgen.transitive.custom.hasGermanVerbInflectionSignal",
+			"dumgen.transitive.custom.hasMarkedInflectionFeature",
 			"dumgen.transitive.custom.hasMarkedSurfaceFeature",
 		] as const) {
 			let mismatchCount = 0;
@@ -230,16 +230,6 @@ describe("differential validation CI contract", () => {
 				return result.success ? [] : result.error.issues;
 			});
 		const expectedFocusedIssues: ParsingIssue[] = [
-			{
-				code: "custom",
-				message: "Invalid input",
-				path: [
-					"attestation",
-					"surface",
-					"inflectionalFeatures",
-					"gender",
-				],
-			},
 			{
 				code: "custom",
 				message: "inflectionalFeatures must not be empty",

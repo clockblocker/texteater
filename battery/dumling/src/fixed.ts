@@ -46,15 +46,27 @@ const lemmaCatalogs = Object.freeze([
 const readingCatalogs = Object.freeze([
 	Object.freeze({
 		route: DE_LEXEME_DET_FIXED_LEMMA_CATALOG.route,
-		...DE_LEXEME_DET_FIXED_READING_CATALOG,
+		scope: DE_LEXEME_DET_FIXED_READING_CATALOG.scope,
+		coverage: DE_LEXEME_DET_FIXED_READING_CATALOG.coverage,
+		get members() {
+			return DE_LEXEME_DET_FIXED_READING_CATALOG.members;
+		},
 	}),
 	Object.freeze({
 		route: DE_LEXEME_AUX_FIXED_LEMMA_CATALOG.route,
-		...DE_LEXEME_AUX_FIXED_READING_CATALOG,
+		scope: DE_LEXEME_AUX_FIXED_READING_CATALOG.scope,
+		coverage: DE_LEXEME_AUX_FIXED_READING_CATALOG.coverage,
+		get members() {
+			return DE_LEXEME_AUX_FIXED_READING_CATALOG.members;
+		},
 	}),
 	Object.freeze({
 		route: DE_LEXEME_PRON_PERSONAL_FIXED_LEMMA_CATALOG.route,
-		...DE_LEXEME_PRON_PERSONAL_FIXED_READING_CATALOG,
+		scope: DE_LEXEME_PRON_PERSONAL_FIXED_READING_CATALOG.scope,
+		coverage: DE_LEXEME_PRON_PERSONAL_FIXED_READING_CATALOG.coverage,
+		get members() {
+			return DE_LEXEME_PRON_PERSONAL_FIXED_READING_CATALOG.members;
+		},
 	}),
 ]);
 
@@ -91,13 +103,20 @@ export const fixedMembersFor: FixedMembersFor = Object.freeze({
 			sameRoute(candidate, route),
 		);
 		if (!catalog) return undefined;
+		const canonicalLemma =
+			catalog.members.find((reading) => reading.lemma === lemma)?.lemma ??
+			catalog.members.find((reading) =>
+				sameCanonicalValue(reading.lemma, lemma),
+			)?.lemma;
 		return Object.freeze({
 			scope: catalog.scope,
 			coverage: catalog.coverage,
 			members: Object.freeze(
-				catalog.members.filter((reading) =>
-					sameCanonicalValue(reading.lemma, lemma),
-				),
+				canonicalLemma === undefined
+					? []
+					: catalog.members.filter(
+							(reading) => reading.lemma === canonicalLemma,
+						),
 			),
 		}) as FixedCatalog<Reading<L, F, K>>;
 	},

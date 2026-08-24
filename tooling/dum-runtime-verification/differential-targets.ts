@@ -1711,6 +1711,25 @@ const DUMGEN_VALUES_BY_ROUTE = {
 		},
 		{
 			attestation: {
+				members: [{ attested: "Banken", orthography: "Standard" }],
+				realizationCoverage: "Full",
+				surface: {
+					inflectionalFeatures: { case: null, number: null },
+					language: "de",
+					lemma: dumgenGermanReading.lemma,
+					normalizedSurface: "Banken",
+					spelling: "Canonical",
+					surfaceFeatures: null,
+					surfaceKind: "Inflection",
+				},
+			},
+			decision: "Resolved",
+			interaction: dumgenInteraction,
+			language: "de",
+			markedContext: "<TARGET>Banken</TARGET>",
+		},
+		{
+			attestation: {
 				members: [{ attested: "der", orthography: "Standard" }],
 				realizationCoverage: "Full",
 				surface: {

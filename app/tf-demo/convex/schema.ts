@@ -150,6 +150,7 @@ export default defineSchema({
 		relation: v.union(
 			v.literal("CaseCounterpart"),
 			v.literal("PersonCounterpart"),
+			v.literal("NumberCounterpart"),
 		),
 	})
 		.index("by_source_lemma_id", ["sourceLemmaId"])

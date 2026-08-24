@@ -254,6 +254,488 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 	expect(db.paginations.every(({ numItems }) => numItems === 25)).toBe(true);
 });
 
+test("jemand Lemma navigation infers all four persisted case Surfaces", async () => {
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-jemand", "de", "jemand", "Lexeme", "PRON")],
+		surfaces: ["jemand", "jemanden", "jemandem", "jemandes"].map(
+			(normalizedSurface, index) =>
+				surface(
+					`surface-jemand-${index}`,
+					"lemma-jemand",
+					"de",
+					normalizedSurface,
+				),
+		),
+		readings: [
+			{
+				_id: "reading-jemand",
+				lemmaId: "lemma-jemand",
+				emojiDescription: "👤",
+			},
+		],
+	});
+
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-jemand",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual([
+		"surface-jemand-0",
+		"surface-jemand-1",
+		"surface-jemand-2",
+		"surface-jemand-3",
+	]);
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-jemand" }),
+	]);
+});
+
+test("niemand Lemma navigation infers all four persisted case Surfaces", async () => {
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-niemand", "de", "niemand", "Lexeme", "PRON")],
+		surfaces: ["niemand", "niemanden", "niemandem", "niemandes"].map(
+			(normalizedSurface, index) =>
+				surface(
+					`surface-niemand-${index}`,
+					"lemma-niemand",
+					"de",
+					normalizedSurface,
+				),
+		),
+		readings: [
+			{
+				_id: "reading-niemand",
+				lemmaId: "lemma-niemand",
+				emojiDescription: "🚫",
+			},
+		],
+	});
+
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-niemand",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual([
+		"surface-niemand-0",
+		"surface-niemand-1",
+		"surface-niemand-2",
+		"surface-niemand-3",
+	]);
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-niemand" }),
+	]);
+});
+
+test("keiner Lemma navigation exposes all sixteen persisted Surface analyses", async () => {
+	const forms = [
+		"keiner",
+		"keine",
+		"keines",
+		"keinen",
+		"keine",
+		"keines",
+		"keinem",
+		"keiner",
+		"keinem",
+		"keines",
+		"keiner",
+		"keines",
+		"keine",
+		"keine",
+		"keinen",
+		"keiner",
+	];
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-keiner", "de", "keiner", "Lexeme", "PRON")],
+		surfaces: forms.map((form, index) =>
+			surface(`surface-keiner-${index}`, "lemma-keiner", "de", form),
+		),
+		readings: [
+			{
+				_id: "reading-keiner",
+				lemmaId: "lemma-keiner",
+				emojiDescription: "🚫",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-keiner",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual(forms.map((_, index) => `surface-keiner-${index}`));
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-keiner" }),
+	]);
+});
+
+test("jedermann Lemma navigation exposes its four case Surfaces", async () => {
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-jedermann", "de", "jedermann", "Lexeme", "PRON")],
+		surfaces: ["jedermann", "jedermann", "jedermann", "jedermanns"].map(
+			(form, index) =>
+				surface(
+					`surface-jedermann-${index}`,
+					"lemma-jedermann",
+					"de",
+					form,
+				),
+		),
+		readings: [
+			{
+				_id: "reading-jedermann",
+				lemmaId: "lemma-jedermann",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-jedermann",
+	});
+	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(4);
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-jedermann" }),
+	]);
+});
+
+test("mancher Lemma navigation exposes all sixteen persisted analyses", async () => {
+	const forms = [
+		"mancher",
+		"manche",
+		"manches",
+		"manchen",
+		"manche",
+		"manches",
+		"manchem",
+		"mancher",
+		"manchem",
+		"manches",
+		"mancher",
+		"manches",
+		"manche",
+		"manche",
+		"manchen",
+		"mancher",
+	];
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-mancher", "de", "mancher", "Lexeme", "PRON")],
+		surfaces: forms.map((form, index) =>
+			surface(`surface-mancher-${index}`, "lemma-mancher", "de", form),
+		),
+		readings: [
+			{
+				_id: "reading-mancher",
+				lemmaId: "lemma-mancher",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-mancher",
+	});
+	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(16);
+	expect(pages.flatMap((page) => page.connections.readings)).toHaveLength(1);
+});
+
+test("nichts Lemma navigation exposes canonical nichts and Variant nix Surfaces", async () => {
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-nichts", "de", "nichts", "Lexeme", "PRON")],
+		surfaces: [
+			surface("surface-nichts", "lemma-nichts", "de", "nichts"),
+			{
+				...surface("surface-nix", "lemma-nichts", "de", "nix"),
+				spelling: "Variant",
+			},
+		],
+		readings: [
+			{
+				_id: "reading-nichts",
+				lemmaId: "lemma-nichts",
+				emojiDescription: "🚫",
+			},
+		],
+	});
+
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-nichts",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual(["surface-nichts", "surface-nix"]);
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-nichts" }),
+	]);
+});
+
+test("jeder Lemma navigation exposes all twelve syncretic Surface analyses", async () => {
+	const slots = [
+		["jeder", "Nom", "Masc"],
+		["jede", "Nom", "Fem"],
+		["jedes", "Nom", "Neut"],
+		["jeden", "Acc", "Masc"],
+		["jede", "Acc", "Fem"],
+		["jedes", "Acc", "Neut"],
+		["jedem", "Dat", "Masc"],
+		["jeder", "Dat", "Fem"],
+		["jedem", "Dat", "Neut"],
+		["jedes", "Gen", "Masc"],
+		["jeder", "Gen", "Fem"],
+		["jedes", "Gen", "Neut"],
+	] as const;
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-jeder", "de", "jeder", "Lexeme", "PRON")],
+		surfaces: slots.map(([form, grammaticalCase, gender], index) => ({
+			...surface(`surface-jeder-${index}`, "lemma-jeder", "de", form),
+			inflectionalFeatures: {
+				case: grammaticalCase,
+				gender,
+				number: "Sing",
+				reflex: null,
+			},
+		})),
+		readings: [
+			{
+				_id: "reading-jeder",
+				lemmaId: "lemma-jeder",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-jeder",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual(slots.map((_, index) => `surface-jeder-${index}`));
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-jeder" }),
+	]);
+});
+
+test("jedweder Lemma navigation exposes its own twelve Surface analyses", async () => {
+	const slots = [
+		["jedweder", "Nom", "Masc"],
+		["jedwede", "Nom", "Fem"],
+		["jedwedes", "Nom", "Neut"],
+		["jedweden", "Acc", "Masc"],
+		["jedwede", "Acc", "Fem"],
+		["jedwedes", "Acc", "Neut"],
+		["jedwedem", "Dat", "Masc"],
+		["jedweder", "Dat", "Fem"],
+		["jedwedem", "Dat", "Neut"],
+		["jedwedes", "Gen", "Masc"],
+		["jedweder", "Gen", "Fem"],
+		["jedwedes", "Gen", "Neut"],
+	] as const;
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-jedweder", "de", "jedweder", "Lexeme", "PRON")],
+		surfaces: slots.map(([form, grammaticalCase, gender], index) => ({
+			...surface(
+				`surface-jedweder-${index}`,
+				"lemma-jedweder",
+				"de",
+				form,
+			),
+			inflectionalFeatures: {
+				case: grammaticalCase,
+				gender,
+				number: "Sing",
+				reflex: null,
+			},
+		})),
+		readings: [
+			{
+				_id: "reading-jedweder",
+				lemmaId: "lemma-jedweder",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-jedweder",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual(slots.map((_, index) => `surface-jedweder-${index}`));
+});
+
+test("jeglicher Lemma navigation exposes all sixteen singular and plural Surfaces", async () => {
+	const slots = [
+		["jeglicher", "Nom", "Masc", "Sing"],
+		["jegliche", "Nom", "Fem", "Sing"],
+		["jegliches", "Nom", "Neut", "Sing"],
+		["jeglichen", "Acc", "Masc", "Sing"],
+		["jegliche", "Acc", "Fem", "Sing"],
+		["jegliches", "Acc", "Neut", "Sing"],
+		["jeglichem", "Dat", "Masc", "Sing"],
+		["jeglicher", "Dat", "Fem", "Sing"],
+		["jeglichem", "Dat", "Neut", "Sing"],
+		["jegliches", "Gen", "Masc", "Sing"],
+		["jeglicher", "Gen", "Fem", "Sing"],
+		["jegliches", "Gen", "Neut", "Sing"],
+		["jegliche", "Nom", null, "Plur"],
+		["jegliche", "Acc", null, "Plur"],
+		["jeglichen", "Dat", null, "Plur"],
+		["jeglicher", "Gen", null, "Plur"],
+	] as const;
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-jeglicher", "de", "jeglicher", "Lexeme", "PRON")],
+		surfaces: slots.map(
+			([form, grammaticalCase, gender, number], index) => ({
+				...surface(
+					`surface-jeglicher-${index}`,
+					"lemma-jeglicher",
+					"de",
+					form,
+				),
+				inflectionalFeatures: {
+					case: grammaticalCase,
+					gender,
+					number,
+					reflex: null,
+				},
+			}),
+		),
+		readings: [
+			{
+				_id: "reading-jeglicher",
+				lemmaId: "lemma-jeglicher",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-jeglicher",
+	});
+	expect(pages.flatMap((page) => page.connections.surfaces)).toHaveLength(16);
+});
+
+test("total Lemma navigation keeps singular and plural Surface paradigms separate", async () => {
+	const db = new RouteDb({
+		lemmas: [
+			lemma("lemma-alles", "de", "alles", "Lexeme", "PRON"),
+			lemma("lemma-alle", "de", "alle", "Lexeme", "PRON"),
+		],
+		surfaces: [
+			surface("surface-alles-nom", "lemma-alles", "de", "alles"),
+			surface("surface-alles-acc", "lemma-alles", "de", "alles"),
+			surface("surface-allem-dat", "lemma-alles", "de", "allem"),
+			surface("surface-alle-nom", "lemma-alle", "de", "alle"),
+			surface("surface-alle-acc", "lemma-alle", "de", "alle"),
+			surface("surface-allen-dat", "lemma-alle", "de", "allen"),
+			surface("surface-aller-gen", "lemma-alle", "de", "aller"),
+		],
+		readings: [
+			{
+				_id: "reading-alles",
+				lemmaId: "lemma-alles",
+				emojiDescription: "🌐",
+			},
+			{
+				_id: "reading-alle",
+				lemmaId: "lemma-alle",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+
+	const allesPages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-alles",
+	});
+	const allePages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-alle",
+	});
+	expect(
+		allesPages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual(["surface-alles-nom", "surface-alles-acc", "surface-allem-dat"]);
+	expect(
+		allePages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual([
+		"surface-alle-nom",
+		"surface-alle-acc",
+		"surface-allen-dat",
+		"surface-aller-gen",
+	]);
+});
+
+test("plural-only mehrere Lemma navigation exposes all four distinct Case Surfaces", async () => {
+	const db = new RouteDb({
+		lemmas: [lemma("lemma-mehrere", "de", "mehrere", "Lexeme", "PRON")],
+		surfaces: [
+			surface("surface-mehrere-nom", "lemma-mehrere", "de", "mehrere"),
+			surface("surface-mehrere-acc", "lemma-mehrere", "de", "mehrere"),
+			surface("surface-mehreren-dat", "lemma-mehrere", "de", "mehreren"),
+			surface("surface-mehrerer-gen", "lemma-mehrere", "de", "mehrerer"),
+		],
+		readings: [
+			{
+				_id: "reading-mehrere",
+				lemmaId: "lemma-mehrere",
+				emojiDescription: "🌐",
+			},
+		],
+	});
+
+	const pages = await exhaustRoutePages(db, {
+		kind: "RouteNote",
+		routeKind: "Lemma",
+		id: "lemma-mehrere",
+	});
+	expect(
+		pages
+			.flatMap((page) => page.connections.surfaces)
+			.map(({ surfaceId }) => surfaceId),
+	).toEqual([
+		"surface-mehrere-nom",
+		"surface-mehrere-acc",
+		"surface-mehreren-dat",
+		"surface-mehrerer-gen",
+	]);
+	expect(pages.flatMap((page) => page.connections.readings)).toEqual([
+		expect.objectContaining({ readingId: "reading-mehrere" }),
+	]);
+});
+
 test("Surface pages expose every occurrence and 100 distinct exact same-written-form peers", async () => {
 	const attestations = Array.from({ length: 51 }, (_, index) => ({
 		_id: `attestation-${index}`,
@@ -319,6 +801,49 @@ test("Surface pages expose every occurrence and 100 distinct exact same-written-
 	expect(db.indexedQueries).toContain(
 		"surfaces.by_language_and_normalized_surface",
 	);
+});
+
+test("homographic demonstrative and relative Lemma navigation keeps exact Readings separate", async () => {
+	const db = new RouteDb({
+		lemmas: [
+			lemma("lemma-dem-der", "de", "der", "Lexeme", "PRON"),
+			lemma("lemma-rel-der", "de", "der", "Lexeme", "PRON"),
+		],
+		surfaces: [
+			surface("surface-dem-der", "lemma-dem-der", "de", "der"),
+			surface("surface-rel-der", "lemma-rel-der", "de", "der"),
+		],
+		readings: [
+			{
+				_id: "reading-dem-der",
+				lemmaId: "lemma-dem-der",
+				emojiDescription: "👤",
+			},
+			{
+				_id: "reading-rel-der",
+				lemmaId: "lemma-rel-der",
+				emojiDescription: "👤",
+			},
+		],
+	});
+
+	for (const pronType of ["dem", "rel"] as const) {
+		const pages = await exhaustRoutePages(db, {
+			kind: "RouteNote",
+			routeKind: "Lemma",
+			id: `lemma-${pronType}-der`,
+		});
+		expect(
+			pages
+				.flatMap((page) => page.connections.surfaces)
+				.map(({ surfaceId }) => surfaceId),
+		).toEqual([`surface-${pronType}-der`]);
+		expect(
+			pages
+				.flatMap((page) => page.connections.readings)
+				.map(({ readingId }) => readingId),
+		).toEqual([`reading-${pronType}-der`]);
+	}
 });
 
 test("Construction records and derived links are consistently unavailable", async () => {

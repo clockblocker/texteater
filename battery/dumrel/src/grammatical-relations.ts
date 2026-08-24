@@ -37,6 +37,11 @@ export const grammaticalRelationAlgebra = deepFreeze({
 		transitive: false,
 		substitutive: false,
 	},
+	NumberCounterpart: {
+		symmetric: true,
+		transitive: false,
+		substitutive: false,
+	},
 } as const);
 
 /** Compiles one authored Series into unique, canonical direct peer claims. */

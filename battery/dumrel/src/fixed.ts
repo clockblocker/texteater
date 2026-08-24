@@ -1,4 +1,5 @@
 import {
+	allFixedReadingCatalogs,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_AUX_V1,
 	FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
 	FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
@@ -36,7 +37,7 @@ export type FixedKnowledgeCoverage = Readonly<{
 	semanticRelationTargetKind: "lemma" | "reading";
 	semanticRelations: Readonly<{
 		synonym: "Authored" | "ReviewedEmpty";
-		nearSynonym: "ReviewedEmpty";
+		nearSynonym: "Authored" | "ReviewedEmpty";
 		antonym: "ReviewedEmpty";
 		nearAntonym: "ReviewedEmpty";
 	}>;
@@ -97,6 +98,31 @@ export const DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	},
 } as const satisfies FixedKnowledgeCoverage);
 
+const DE_LEXEME_PRON_KEINER_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelations: {
+		...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
+		nearSynonym: "Authored",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
+const DE_LEXEME_PRON_JEDWEDER_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelations: {
+		...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
+		synonym: "Authored",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
+const DE_LEXEME_PRON_DER_PARADIGM_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
+	...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
+	semanticRelationTargetKind: "reading",
+	semanticRelations: {
+		...DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE.semanticRelations,
+		synonym: "Authored",
+	},
+} as const satisfies FixedKnowledgeCoverage);
+
 const DE_LEXEME_AUX_V1_SEIN_FIXED_KNOWLEDGE_COVERAGE = deepFreeze({
 	...DE_LEXEME_AUX_V1_FIXED_KNOWLEDGE_COVERAGE,
 	semanticRelationTargetKind: "reading",
@@ -145,7 +171,15 @@ export function fixedKnowledgeFor(reading: Reading): FixedKnowledgeLookup {
 		return deepFreeze({
 			decision: "Found",
 			scope: FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
-			coverage: DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
+			coverage: isDerParadigmPronoun(pronounReading.lemma)
+				? DE_LEXEME_PRON_DER_PARADIGM_FIXED_KNOWLEDGE_COVERAGE
+				: pronounReading.lemma.canonicalForm === "keiner"
+					? DE_LEXEME_PRON_KEINER_FIXED_KNOWLEDGE_COVERAGE
+					: ["jedweder", "jeglicher"].includes(
+								pronounReading.lemma.canonicalForm,
+							)
+						? DE_LEXEME_PRON_JEDWEDER_FIXED_KNOWLEDGE_COVERAGE
+						: DE_LEXEME_PRON_PERSONAL_V1_FIXED_KNOWLEDGE_COVERAGE,
 			knowledge: authoredPronounKnowledgeFor(pronounReading),
 		});
 	}
@@ -263,9 +297,22 @@ function detSemanticRelationsFor(
 			`Expected two fixed definite-article synonyms for ${lemma.canonicalForm}.`,
 		);
 	}
+	const synonymReadings = allFixedReadingCatalogs()
+		.find(
+			(candidate) =>
+				candidate.scope === FIXED_CATALOG_SCOPE_DE_LEXEME_DET_V1,
+		)
+		?.members.filter((candidate) =>
+			synonymLemmas.includes(candidate.lemma as DetLemma),
+		);
+	if (synonymReadings?.length !== 2) {
+		throw new Error(
+			`Expected one fixed Reading for each definite-article synonym of ${lemma.canonicalForm}.`,
+		);
+	}
 	return {
 		targetKind: "reading",
-		synonym: synonymLemmas.map(exactFixedReadingForLemma) as DetReading[],
+		synonym: synonymReadings as DetReading[],
 	};
 }
 
@@ -316,14 +363,143 @@ function authoredAuxKnowledgeFor(reading: AuxReading): FixedReadingKnowledge {
 function authoredPronounKnowledgeFor(
 	reading: PronounReading,
 ): FixedReadingKnowledge {
+	const semanticRelations = pronounSemanticRelationsFor(reading.lemma);
 	return deepFreeze({
 		definition: pronounDefinitionFor(reading),
 		translations: { en: [...pronounEnglishTranslationsFor(reading)] },
+		...(semanticRelations === undefined ? {} : { semanticRelations }),
 	} satisfies FixedReadingKnowledge);
+}
+
+function pronounSemanticRelationsFor(
+	lemma: PronounReading["lemma"],
+): SemanticRelations<PronounReading["lemma"], PronounReading> | undefined {
+	if (
+		["jedweder", "jeglicher"].includes(lemma.canonicalForm) &&
+		lemma.coreFeatures.pronType === "Tot"
+	) {
+		const jeder = fixedMembersFor
+			.lemma({ language: "de", family: "Lexeme", kind: "PRON" })
+			?.members.filter(
+				(candidate) =>
+					candidate.canonicalForm === "jeder" &&
+					candidate.coreFeatures.pronType === "Tot",
+			);
+		if (jeder?.length !== 1) {
+			throw new Error(
+				`Expected one fixed jeder PRON Synonym target for ${lemma.canonicalForm}.`,
+			);
+		}
+		return { targetKind: "lemma", synonym: jeder };
+	}
+	if (isDerParadigmPronoun(lemma)) {
+		const catalog = fixedMembersFor.lemma({
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+		});
+		const synonyms = catalog?.members.filter(
+			(candidate) =>
+				candidate.coreFeatures.pronType ===
+					lemma.coreFeatures.pronType &&
+				candidate.canonicalForm !== lemma.canonicalForm,
+		);
+		if (synonyms?.length !== 7) {
+			throw new Error(
+				`Expected seven fixed ${lemma.coreFeatures.pronType} PRON Synonyms for ${lemma.canonicalForm}.`,
+			);
+		}
+		return {
+			targetKind: "reading",
+			synonym: synonyms.map(
+				exactFixedReadingForLemma,
+			) as PronounReading[],
+		};
+	}
+	if (
+		lemma.canonicalForm !== "keiner" ||
+		lemma.coreFeatures.pronType !== "Neg"
+	)
+		return undefined;
+	const catalog = fixedMembersFor.lemma({
+		language: "de",
+		family: "Lexeme",
+		kind: "PRON",
+	});
+	const nearSynonyms = catalog?.members.filter(
+		(candidate) =>
+			candidate.coreFeatures.pronType === "Neg" &&
+			["niemand", "nichts"].includes(candidate.canonicalForm),
+	);
+	if (nearSynonyms?.length !== 2) {
+		throw new Error("Expected fixed niemand and nichts Near Synonyms.");
+	}
+	return { targetKind: "lemma", nearSynonym: nearSynonyms };
+}
+
+function isDerParadigmPronoun(lemma: PronounReading["lemma"]): boolean {
+	return (
+		(lemma.coreFeatures.pronType === "Dem" ||
+			lemma.coreFeatures.pronType === "Rel") &&
+		[
+			"der",
+			"die",
+			"das",
+			"den",
+			"dem",
+			"dessen",
+			"deren",
+			"denen",
+		].includes(lemma.canonicalForm)
+	);
 }
 
 function pronounDefinitionFor(reading: PronounReading): string {
 	const { canonicalForm, coreFeatures } = reading.lemma;
+	if (canonicalForm === "mehrere" && coreFeatures.pronType === "Tot") {
+		return "Das Totalpronomen „mehrere“ bezeichnet eine unbestimmte Mehrzahl von Personen oder Sachen.";
+	}
+	if (coreFeatures.pronType === "Dem") {
+		return `Das Demonstrativpronomen „${canonicalForm}“ verweist betont auf eine im Kontext bestimmte Person oder Sache.`;
+	}
+	if (coreFeatures.pronType === "Rel") {
+		return `Das Relativpronomen „${canonicalForm}“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.`;
+	}
+	if (canonicalForm === "jemand" && coreFeatures.pronType === "Ind") {
+		return "Das Indefinitpronomen „jemand“ verweist auf eine nicht näher bestimmte Person.";
+	}
+	if (canonicalForm === "niemand" && coreFeatures.pronType === "Neg") {
+		return "Das Negativpronomen „niemand“ bezeichnet keine Person.";
+	}
+	if (canonicalForm === "nichts" && coreFeatures.pronType === "Neg") {
+		return "Das Negativpronomen „nichts“ verneint das Vorhandensein einer Sache.";
+	}
+	if (canonicalForm === "jeder" && coreFeatures.pronType === "Tot") {
+		return "Das Totalpronomen „jeder“ bezeichnet jedes einzelne Mitglied einer Gruppe.";
+	}
+	if (canonicalForm === "jedweder" && coreFeatures.pronType === "Tot") {
+		return "Das gehoben oder veraltet wirkende Totalpronomen „jedweder“ bezeichnet nachdrücklich jedes einzelne Mitglied einer Gruppe.";
+	}
+	if (canonicalForm === "jeglicher" && coreFeatures.pronType === "Tot") {
+		return "Das gehoben wirkende Totalpronomen „jeglicher“ bezeichnet jedes einzelne Mitglied einer Gruppe und kann auch pluralisch gebraucht werden.";
+	}
+	if (canonicalForm === "keiner" && coreFeatures.pronType === "Neg") {
+		return "Das Negativpronomen „keiner“ verneint die Zugehörigkeit zu einer im Kontext bestimmten Menge und kann sich auf Personen oder Sachen beziehen.";
+	}
+	if (canonicalForm === "jedermann" && coreFeatures.pronType === "Tot") {
+		return "Das Totalpronomen „jedermann“ bezeichnet ausnahmslos jede Person einer betrachteten Gruppe.";
+	}
+	if (canonicalForm === "mancher" && coreFeatures.pronType === "Tot") {
+		return "Das Totalpronomen „mancher“ bezeichnet einen nicht vollständigen Teil einer im Kontext bestimmten Menge.";
+	}
+	if (coreFeatures.pronType === "Int") {
+		return `Das Interrogativpronomen „${canonicalForm}“ fragt nach einer Person in der durch seine Form ausgedrückten Kasusrolle.`;
+	}
+	if (coreFeatures.pronType === "Tot") {
+		return canonicalForm === "alles"
+			? "Das Totalpronomen „alles“ bezeichnet die Gesamtheit in der Einzahl."
+			: "Das Totalpronomen „alle“ bezeichnet die Gesamtheit in der Mehrzahl.";
+	}
 	if (canonicalForm === "sich" && reading.emojiDescription === "🪞") {
 		return "Das Reflexivpronomen „sich“ verweist in der dritten Person auf den Bezug des Subjekts zurück.";
 	}
@@ -361,6 +537,47 @@ function pronounEnglishTranslationsFor(
 	reading: PronounReading,
 ): readonly [string, ...string[]] {
 	const { canonicalForm, coreFeatures } = reading.lemma;
+	if (canonicalForm === "mehrere" && coreFeatures.pronType === "Tot") {
+		return ["several", "multiple"];
+	}
+	if (coreFeatures.pronType === "Dem") return ["that one", "this one"];
+	if (coreFeatures.pronType === "Rel") return ["who", "which", "that"];
+	if (canonicalForm === "jemand" && coreFeatures.pronType === "Ind") {
+		return ["someone", "somebody"];
+	}
+	if (canonicalForm === "niemand" && coreFeatures.pronType === "Neg") {
+		return ["nobody", "no one"];
+	}
+	if (canonicalForm === "nichts" && coreFeatures.pronType === "Neg") {
+		return ["nothing"];
+	}
+	if (canonicalForm === "jeder" && coreFeatures.pronType === "Tot") {
+		return ["everyone", "each"];
+	}
+	if (canonicalForm === "jedweder" && coreFeatures.pronType === "Tot") {
+		return ["each and every", "everyone"];
+	}
+	if (canonicalForm === "jeglicher" && coreFeatures.pronType === "Tot") {
+		return ["each", "any", "every one"];
+	}
+	if (canonicalForm === "keiner" && coreFeatures.pronType === "Neg") {
+		return ["none", "no one"];
+	}
+	if (canonicalForm === "jedermann" && coreFeatures.pronType === "Tot") {
+		return ["everyone", "everybody"];
+	}
+	if (canonicalForm === "mancher" && coreFeatures.pronType === "Tot") {
+		return ["some", "many a one"];
+	}
+	if (coreFeatures.pronType === "Int") {
+		if (canonicalForm === "wer") return ["who"];
+		if (canonicalForm === "wen" || canonicalForm === "wem") return ["whom"];
+		if (canonicalForm === "wessen") return ["whose"];
+	}
+	if (coreFeatures.pronType === "Tot") {
+		if (canonicalForm === "alles") return ["everything", "all"];
+		if (canonicalForm === "alle") return ["all", "everyone"];
+	}
 	if (coreFeatures.poss === "Yes") {
 		if (canonicalForm === "mein") return ["mine"];
 		if (canonicalForm === "dein") return ["yours"];

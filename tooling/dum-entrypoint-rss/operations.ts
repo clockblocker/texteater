@@ -200,6 +200,19 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"Dumrel representative graph must project to an empty edge list.",
 		);
 	},
+	"dumrel.project-grammatical-relations"(publicModule) {
+		const projectGrammaticalRelations = exportedFunction(
+			publicModule,
+			"projectGrammaticalRelations",
+		);
+		const result = projectGrammaticalRelations([] as never);
+		assert(
+			Array.isArray(result) &&
+				result.length === 0 &&
+				Object.isFrozen(result),
+			"Dumrel representative grammatical projection must return a frozen empty claim list.",
+		);
+	},
 	"dumrel.read-default-settings"(publicModule) {
 		const settings = publicModule.DEFAULT_KNOWLEDGE_SETTINGS as
 			| { definition?: boolean }

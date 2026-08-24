@@ -4,7 +4,7 @@ import {
 } from "../../../../../../../assembly";
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
 import { addCaseEvidence, resolved, sentence, sentences } from "./builders";
-import { evidence, IDS } from "./sources";
+import { evidence, IDS, udPartOfSpeech } from "./sources";
 
 const greeting = sentence(["Guten", "Morgen"], "!");
 const demonstrationDecisionSupportVerb = sentence([
@@ -54,6 +54,54 @@ const supportVerbCombination = sentence([
 	"Entscheidung",
 ]);
 const freeObject = sentence(["Der", "Kellner", "bringt", "eine", "Cola"]);
+const jemandNominative = sentence(["Jemand", "wartet", "vor", "der", "Tür"]);
+const jemandAccusative = sentence([
+	"Ich",
+	"sehe",
+	"jemanden",
+	"vor",
+	"der",
+	"Tür",
+]);
+const jemandDative = sentence([
+	"Ich",
+	"helfe",
+	"jemandem",
+	"aus",
+	"der",
+	"Nachbarschaft",
+]);
+const jemandGenitive = sentence([
+	"Es",
+	"bedarf",
+	"jemandes",
+	"mit",
+	"Erfahrung",
+]);
+const niemandNominative = sentence(["Niemand", "wartet", "vor", "der", "Tür"]);
+const niemandAccusative = sentence([
+	"Ich",
+	"sehe",
+	"niemanden",
+	"vor",
+	"der",
+	"Tür",
+]);
+const niemandDative = sentence([
+	"Ich",
+	"helfe",
+	"niemandem",
+	"aus",
+	"der",
+	"Nachbarschaft",
+]);
+const niemandGenitive = sentence([
+	"Es",
+	"bedarf",
+	"niemandes",
+	"mit",
+	"Erfahrung",
+]);
 const fixedFunctionWords = sentences([
 	["Aus", "Opportunismus", "folgt", "sie", "immer", "der", "Mehrheit"],
 	["Sie", "heult", "mit", "den", "hungrigen", "Wölfen"],
@@ -423,6 +471,62 @@ const cases = {
 	),
 	"target-de-diagnostic-optional-reflexive-click-sich": resolved(
 		diagnosticOptionalReflexive,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-jemand-nom": resolved(
+		jemandNominative,
+		0,
+		[0],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-jemanden-acc": resolved(
+		jemandAccusative,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-jemandem-dat": resolved(
+		jemandDative,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-jemandes-gen": resolved(
+		jemandGenitive,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-niemand-nom": resolved(
+		niemandNominative,
+		0,
+		[0],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-niemanden-acc": resolved(
+		niemandAccusative,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-niemandem-dat": resolved(
+		niemandDative,
+		4,
+		[4],
+		"Lexeme",
+		"PRON",
+	),
+	"target-de-boundary-niemandes-gen": resolved(
+		niemandGenitive,
 		4,
 		[4],
 		"Lexeme",
@@ -1024,6 +1128,18 @@ export const boundaryCases = defineGoldenCaseCollection(import.meta.url, {
 });
 
 function boundaryEvidence(caseId: string): string {
+	if (caseId.includes("boundary-niemand")) {
+		return evidence(
+			udPartOfSpeech("PRON"),
+			"Each free niemand case form is one independently clickable pronoun occurrence. Issue #256 fixes Target Classification to a singleton Lexeme/PRON without deciding its Case or Surface.",
+		);
+	}
+	if (caseId.includes("boundary-jemand")) {
+		return evidence(
+			udPartOfSpeech("PRON"),
+			"Each free jemand case form is one independently clickable pronoun occurrence. Issue #254 fixes Target Classification to a singleton Lexeme/PRON without deciding its Case or Surface.",
+		);
+	}
 	if (caseId.includes("state-passive-banken")) {
 		return evidence(
 			IDS.participialBoundary,

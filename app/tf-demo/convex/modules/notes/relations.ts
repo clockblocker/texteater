@@ -59,6 +59,7 @@ export const grammaticalRelationProjectionValidator = v.object({
 	relation: v.union(
 		v.literal("CaseCounterpart"),
 		v.literal("PersonCounterpart"),
+		v.literal("NumberCounterpart"),
 	),
 	targetCanonicalForm: v.string(),
 	provenance: v.union(v.literal("direct"), v.literal("inferred")),

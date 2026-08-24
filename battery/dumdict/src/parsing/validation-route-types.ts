@@ -4,9 +4,11 @@ import type {
 	SupportedLanguage,
 	Surface,
 } from "dumling/types";
-import type { readingKnowledgeSchema } from "dumrel/schema";
-import type { KnowledgeChange, PendingSemanticRelation } from "dumrel/types";
-import type { z } from "zod";
+import type {
+	KnowledgeChange,
+	PendingSemanticRelation,
+	ReadingKnowledge,
+} from "dumrel/types";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,
@@ -119,7 +121,7 @@ export type InternalDumdictValidationRouteOutputMap = {
 	"internal:reading:de": ReadingEntry<"de">["reading"];
 	"internal:reading:en": ReadingEntry<"en">["reading"];
 	"internal:reading:he": ReadingEntry<"he">["reading"];
-	"internal:reading-knowledge": z.output<typeof readingKnowledgeSchema>;
+	"internal:reading-knowledge": ReadingKnowledge;
 	"internal:surface:de": SurfaceEntry<"de">["surface"];
 	"internal:surface:en": SurfaceEntry<"en">["surface"];
 	"internal:surface:he": SurfaceEntry<"he">["surface"];

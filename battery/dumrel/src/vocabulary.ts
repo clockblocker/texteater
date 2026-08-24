@@ -23,6 +23,11 @@ export const directSemanticRelationValues = [
 export const grammaticalRelationValues = [
 	"CaseCounterpart",
 	"PersonCounterpart",
+	"NumberCounterpart",
 ] as const;
 
-export const grammaticalSeriesAxisValues = ["case", "person"] as const;
+export const grammaticalSeriesAxisValues = [
+	"case",
+	"person",
+	"number",
+] as const;

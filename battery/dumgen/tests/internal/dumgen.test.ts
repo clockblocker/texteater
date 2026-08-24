@@ -1220,6 +1220,48 @@ test("Open PRON grammar keeps an unmatched productive candidate ordinary", async
 });
 
 describe("reading resolution", () => {
+	test("selects the fixed nichts Reading without an Open call", async () => {
+		const lemma = pronounCatalog.members.find(
+			(candidate) =>
+				candidate.canonicalForm === "nichts" &&
+				candidate.coreFeatures.pronType === "Neg",
+		);
+		if (!lemma) throw new Error("Expected fixed nichts Lemma.");
+		const { calls, sdk } = queueSdk([]);
+		const result = await buildDumgen({ sdk }).resolve.reading("de", {
+			markedContext: "Ich sehe <TARGET>nix</TARGET>.",
+			lemma,
+			existingEmojiDescriptions: [],
+		});
+
+		expect(result).toEqual({ decision: "New", emojiDescription: "🚫" });
+		expect(calls).toHaveLength(0);
+	});
+
+	test("selects each fixed interrogative Reading without an Open call", async () => {
+		for (const canonicalForm of ["wer", "wen", "wem", "wessen"] as const) {
+			const lemma = pronounCatalog.members.find(
+				(candidate) =>
+					candidate.canonicalForm === canonicalForm &&
+					candidate.coreFeatures.pronType === "Int",
+			);
+			if (!lemma)
+				throw new Error(`Expected fixed ${canonicalForm} Lemma.`);
+			const { calls, sdk } = queueSdk([]);
+			const result = await buildDumgen({ sdk }).resolve.reading("de", {
+				markedContext: `<TARGET>${canonicalForm}</TARGET>?`,
+				lemma,
+				existingEmojiDescriptions: [],
+			});
+
+			expect(result).toEqual({
+				decision: "New",
+				emojiDescription: "❓",
+			});
+			expect(calls).toHaveLength(0);
+		}
+	});
+
 	test("selects a fixed PRON Reading without an Open call", async () => {
 		const { calls, sdk } = queueSdk([]);
 		const result = await buildDumgen({ sdk }).resolve.reading("de", {

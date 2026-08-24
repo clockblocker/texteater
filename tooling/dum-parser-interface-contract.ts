@@ -115,6 +115,8 @@ export const DUM_PARSER_INTERFACE_CONTRACT = {
 			parseAsPendingSemanticRelation: ["input"],
 			parseAsReadingKnowledge: ["input"],
 			parseAsKnowledgeChange: ["input"],
+			parseAsGrammaticalRelationClaim: ["input"],
+			parseAsGrammaticalSeries: ["input"],
 		},
 		dumdict: {
 			parseAsLemmaRecord: ["input", "language"],

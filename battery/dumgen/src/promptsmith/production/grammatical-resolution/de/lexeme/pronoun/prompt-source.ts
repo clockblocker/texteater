@@ -35,7 +35,17 @@ spelling is Variant only for a licensed whole-form variant or contraction relati
 </surface_model>
 
 <lemma_model>
-lemma.canonicalForm is the normalized dictionary form of this PRON identity. The fixed personal population promotes every supported case form to its own Lemma: use mich for mich, mir for mir, ihm for ihm, euch for euch, Ihnen for Ihnen, and likewise for the other listed personal forms. Reflexive and non-reflexive occurrences of mich, dich, uns, and euch share that exact form identity while Surface reflex distinguishes the occurrence. Contracted apostrophe-s resolves to fixed es. Preserve a productive lexicalized compound's complete normalized identity: irgendwer and irgendjemand do not collapse to wer or jemand.
+The fixed singular total forms jeder, jede, jedes, jeden, and jedem all return the one Lemma jeder while contextual Case, Gender, and singular Number remain Surface evidence. Never mint declined-form Lemmas, never invent a plural jeder Surface, and never relate jeder to alle.
+
+The plural-only Lemma mehrere covers nominative and accusative mehrere, dative mehreren, and genitive mehrerer. Every contextual form is an Inflection Surface with plural Number and null Gender. Never mint declined-form or singular Lemmas, invent a singular Surface, or reclassify the supplied PRON as DET.
+
+The dated or emphatic singular total forms jedweder, jedwede, jedwedes, jedweden, and jedwedem all return the separate Lemma jedweder with contextual Case, Gender, and singular Number on the Surface. Its semantic synonymy with jeder never changes canonicalForm, merges attestations, or licenses a plural Surface.
+
+The total forms jeglicher, jegliche, jegliches, jeglichen, and jeglichem all return the separate Lemma jeglicher. Preserve contextual Case and Number, with Gender on singular Surfaces and null Gender on plural Surfaces. Its authored synonym target is jeder; ordinary Synonym closure exposes jedweder without changing any Lemma, attestation, or Surface paradigm.
+
+For the fixed der/die/das paradigms, return the exact normalized written form as the Lemma: der, die, das, den, dem, dessen, deren, or denen. Choose pronType Dem for a free substantive demonstrative use and Rel when the form introduces or participates in a relative clause. The two populations remain separate even when spelling is identical. Preserve contextual Case, singular Gender, and Number on the Inflection Surface; syncretism never changes the exact-form Lemma. Target Classification already chose PRON, so never reclassify an adnominal-looking supplied target as DET.
+
+lemma.canonicalForm is the normalized dictionary form of this PRON identity. The fixed personal population promotes every supported case form to its own Lemma: use mich for mich, mir for mir, ihm for ihm, euch for euch, Ihnen for Ihnen, and likewise for the other listed personal forms. The fixed interrogative population likewise promotes each free case form exactly: wer for nominative, wen for accusative, wem for dative, and wessen for genitive. Never collapse wen, wem, or wessen to wer. In contrast, the fixed indefinite jemand population has one Lemma: jemand, jemanden, jemandem, and jemandes all return canonicalForm jemand while their Surface retains Nom, Acc, Dat, or Gen and singular number. The fixed negative niemand population likewise has one Lemma: niemand, niemanden, niemandem, and niemandes all return canonicalForm niemand while their Surface retains Nom, Acc, Dat, or Gen and singular number. Standalone keiner, keine, keines, keinen, and keinem form one fixed negative PRON Lemma keiner across sixteen contextual Case, Number, and singular Gender analyses. Never promote a declined form or resolve this identity to its Near Synonyms niemand or nichts; an already-classified PRON target never becomes DET. Standalone mancher, manche, manches, manchen, and manchem likewise form one fixed total PRON Lemma mancher across sixteen contextual Case, Number, and singular Gender analyses; never promote a declined form, substitute another total Lemma, or reclassify the supplied PRON as DET. Singular total jedermann has one separate Lemma: nominative, accusative, and dative jedermann plus genitive jedermanns all return canonicalForm jedermann with singular, gender-null Surface evidence. Never promote jedermanns or resolve either spelling to jeder. The fixed total population deliberately has two Lemmas: singular alles covers nominative/accusative alles and dative allem; plural alle covers nominative/accusative alle, dative allen, and genitive aller. Never mint case-form Lemmas for allem, allen, or aller, and never invent a genitive alles Surface. Fixed negative nichts has two invariant Citation Surfaces: canonical nichts and colloquial Variant nix. Both return canonicalForm nichts and pronType Neg; nix remains Standard, normalizes to nix, and is never a Lemma or typo repair. Reflexive and non-reflexive occurrences of mich, dich, uns, and euch share that exact form identity while Surface reflex distinguishes the occurrence. Contracted apostrophe-s resolves to fixed es. Preserve a productive lexicalized compound's complete normalized identity: irgendwer and irgendjemand do not collapse to wer or jemand. Negative niemand remains its own productive identity and never resolves to jemand or nichts.
 
 Substantive possessives instead resolve declined contextual forms to the fixed possessive base: meiner/meine/meins/meines/meinem/meinen -> mein; corresponding dein, sein, ihr, unser, euer, and formal Ihr forms resolve to those bases. Attributive possessives are outside this already-classified PRON route. Distinguish the possessive base from archaic personal genitive: Der Schirm ist meiner resolves to possessive mein, while Er gedachte meiner resolves to personal meiner. Euer gedenke ich resolves to personal euer.
 
@@ -70,6 +80,7 @@ Distinguish possessive from archaic personal genitive by syntax. A standalone po
 - Resolve only the supplied PRON members; membership is authoritative.
 - Do not absorb a governing adposition or verb.
 - A nearby DET, ADV, or PART does not change the supplied PRON route.
+- For identical der/die/das spellings, free pointing use selects Dem and relative-clause use selects Rel; both keep the exact normalized form as canonicalForm.
 - A pronoun governed by an inherently reflexive VERB remains a PRON Surface with reflex Yes.
 - Syncretic sie uses context for feminine singular, plural, or formal address; do not guess beyond what agreement and discourse establish. Within formal address, use explicit singular or plural addressee evidence for referenceNumber and return null when count is unstated.
 - In a formal imperative with an addressed Sie and a neighboring reflexive sich, Sie is the nominative subject; do not copy the reflexive object's case.
@@ -126,6 +137,18 @@ Never return decision, resolution, Unresolved, realizationCoverage, normalizedSu
 - Co-referential personal arguments use reflex Yes; do not reserve Reflex for sich.
 - Wer-derived contextual forms are singular Inflection, including compounds; demonstrative gender comes from the target paradigm, not a neighboring noun.
 - Contextual jemand and niemand base forms are nominative singular Inflection even though Surface and Lemma spellings match.
+- Invariant nichts and nix are Citation with no inflectionalFeatures. Nix is a Standard Variant Surface of Lemma nichts and keeps normalizedMembers nix; never repair it or mint Lemma nix.
+- The overt jemanden, jemandem, and jemandes case forms keep their spelling as normalizedMembers but all resolve to Lemma jemand; never mint case-form Lemmas or a Case relation.
+- The overt niemanden, niemandem, and niemandes case forms keep their spelling as normalizedMembers but all resolve to Lemma niemand; never mint case-form Lemmas or a Case relation.
+- Every standalone keiner-form is an Inflection Surface of Lemma keiner with contextual Case and Number, plus Gender only in the singular. Syncretic spellings remain distinct analyses; no Case, Gender, or Number relation is created.
+- Every standalone mancher-form is an Inflection Surface of Lemma mancher with contextual Case and Number, plus Gender only in the singular. It has no relation to neighboring total identities.
+- Contextual jedermann is singular Inflection in Nom, Acc, or Dat; jedermanns is its Gen Surface. Both resolve only to Lemma jedermann with no Gender and no relation to jeder.
+- Total PRON returns pronType Tot. Singular alles and allem are neuter singular Surfaces of Lemma alles; plural alle, allen, and aller are gender-null plural Surfaces of Lemma alle. Syncretic nominative/accusative spellings remain distinct by case.
+- Mehrere, mehreren, and mehrerer resolve to the plural-only Lemma mehrere with contextual Case and plural Number; never invent Gender or a singular Surface, and never create a Case, Number, or Semantic relation.
+- Every supplied standalone jeder form returns pronType Tot and Lemma jeder. Preserve all contextual Case/Gender combinations as singular Inflection Surfaces; never mint Lemmas jede, jedes, jeden, or jedem.
+- Every supplied standalone jedweder form returns pronType Tot and Lemma jedweder. Preserve all contextual Case/Gender combinations as singular Inflection Surfaces; never mint declined-form Lemmas, return Lemma jeder, or invent a plural jedweder Surface.
+- Every supplied standalone jeglicher form returns pronType Tot and Lemma jeglicher. Preserve all sixteen contextual Case/Number/Gender analyses, keep plural Gender null, and never lend plural Surfaces to synonym Lemmas jeder or jedweder.
+- Every demonstrative or relative der-paradigm occurrence is an Inflection Surface whose Lemma is its exact normalized form. Use Dem only for free demonstrative use and Rel only for relative-clause use; preserve Case, singular Gender, and Number and never return DET.
 - A lexicalized indefinite compound keeps its full normalized compound as canonicalForm; do not strip irgend- or another productive prefix.
 - A foreign PRON canonicalForm remains the normalized foreign form; never translate it into German.
 - Foreign status alone decides no Surface kind: contextual foreign personal paradigms inflect, while invariant foreign total forms remain Citation.
@@ -137,11 +160,41 @@ const demonstrations = corpus.select([
 	"grammar-de-pron-demo-personal-ihm",
 	"grammar-de-pron-demo-formal-ihnen",
 	"grammar-de-pron-demo-reflexive-sich",
-	"grammar-de-pron-demo-relative-der",
-	"grammar-de-pron-demo-indefinite-etwas",
+	"grammar-de-pron-fixed-der-paradigm-dem-der-nom-masc",
+	"grammar-de-pron-fixed-der-paradigm-rel-der-nom-masc",
+	"grammar-de-pron-fixed-jemand-jemandem",
+	"grammar-de-pron-fixed-niemand-niemandem",
+	"grammar-de-pron-fixed-keiner-nom-sing-masc",
+	"grammar-de-pron-fixed-keiner-nom-sing-neut",
+	"grammar-de-pron-fixed-keiner-nom-plur",
+	"grammar-de-pron-fixed-jedermann-acc",
+	"grammar-de-pron-fixed-jedermann-gen",
+	"grammar-de-pron-fixed-mancher-nom-sing-masc",
+	"grammar-de-pron-fixed-mancher-nom-plur",
+	"grammar-de-pron-fixed-mancher-dat-sing-neut",
 	"grammar-de-pron-demo-variant-nix",
 	"grammar-de-pron-dev-poss-meiner",
 	"grammar-de-pron-demo-archaic-meiner",
+	"grammar-de-pron-fixed-wem",
+	"grammar-de-pron-fixed-alles-acc",
+	"grammar-de-pron-fixed-alle-nom",
+	"grammar-de-pron-fixed-aller-gen",
+	"grammar-de-pron-fixed-jeder-nom-masc",
+	"grammar-de-pron-fixed-jeder-acc-fem",
+	"grammar-de-pron-fixed-jeder-dat-neut",
+	"grammar-de-pron-fixed-jeder-gen-fem",
+	"grammar-de-pron-fixed-jedweder-nom-masc",
+	"grammar-de-pron-fixed-jedweder-acc-fem",
+	"grammar-de-pron-fixed-jedweder-dat-neut",
+	"grammar-de-pron-fixed-jedweder-gen-fem",
+	"grammar-de-pron-fixed-jeglicher-nom-sing-masc",
+	"grammar-de-pron-fixed-jeglicher-acc-sing-fem",
+	"grammar-de-pron-fixed-jeglicher-dat-sing-neut",
+	"grammar-de-pron-fixed-jeglicher-gen-sing-fem",
+	"grammar-de-pron-fixed-jeglicher-nom-plur",
+	"grammar-de-pron-fixed-jeglicher-dat-plur",
+	"grammar-de-pron-fixed-mehrere-dat",
+	"grammar-de-pron-fixed-mehrere-gen",
 ]);
 
 export const promptSource = definePromptSource({

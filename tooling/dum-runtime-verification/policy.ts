@@ -109,6 +109,14 @@ export const PARSER_DIFFERENTIAL_POLICIES = {
 		differentialTargetId: "dumrel:parseAsKnowledgeChange",
 		status: "strict",
 	},
+	"dumrel:parseAsGrammaticalRelationClaim": {
+		differentialTargetId: "dumrel:parseAsGrammaticalRelationClaim",
+		status: "strict",
+	},
+	"dumrel:parseAsGrammaticalSeries": {
+		differentialTargetId: "dumrel:parseAsGrammaticalSeries",
+		status: "strict",
+	},
 	"dumdict:parseAsLemmaRecord": {
 		differentialTargetId: "dumdict:parseAsLemmaRecord",
 		status: "strict",
@@ -225,6 +233,7 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	"dumling/fixed": strict,
 	dumrel: strict,
 	"dumrel/relations": strict,
+	"dumrel/grammatical-relations": strict,
 	"dumrel/settings": strict,
 	"dumrel/vocabulary": strict,
 	"dumrel/fixed": strict,

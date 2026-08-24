@@ -164,7 +164,7 @@ describe("fixed German DET members", () => {
 });
 
 describe("fixed German PRON population", () => {
-	test("keeps the route Open while curating forty-three exact identities", () => {
+	test("keeps the route Open while curating exact identities", () => {
 		expect(isClosedRouteFor.lemma(pronounRoute)).toBe(false);
 		expect(isClosedRouteFor.reading(pronounRoute)).toBe(false);
 		const catalog = fixedPopulationFor.lemma(pronounRoute);
@@ -172,17 +172,60 @@ describe("fixed German PRON population", () => {
 			FIXED_POPULATION_SCOPE_DE_LEXEME_PRON_PERSONAL_V1,
 		);
 		expect(catalog?.coverage).toBe("Curated");
-		expect(catalog?.members).toHaveLength(43);
+		expect(catalog?.members.length).toBeGreaterThanOrEqual(52);
 		expect(
 			catalog?.members.filter(
 				({ coreFeatures }) => coreFeatures.poss === "Yes",
 			),
 		).toHaveLength(9);
+	});
+
+	test("promotes total alles and alle as separate fixed Lemmas with one Reading each", () => {
+		const catalog = fixedPopulationFor.lemma(pronounRoute);
+		const totals = catalog?.members.filter(
+			({ canonicalForm, coreFeatures }) =>
+				coreFeatures.pronType === "Tot" &&
+				["alles", "alle"].includes(canonicalForm),
+		);
+
 		expect(
-			catalog?.members.filter(
-				({ coreFeatures }) => coreFeatures.poss === null,
-			),
-		).toHaveLength(34);
+			totals?.map(({ canonicalForm, coreFeatures }) => ({
+				canonicalForm,
+				coreFeatures,
+			})),
+		).toEqual([
+			{
+				canonicalForm: "alles",
+				coreFeatures: {
+					extPos: null,
+					foreign: null,
+					person: null,
+					polite: null,
+					poss: null,
+					pronType: "Tot",
+					referenceGender: null,
+					referenceNumber: null,
+				},
+			},
+			{
+				canonicalForm: "alle",
+				coreFeatures: {
+					extPos: null,
+					foreign: null,
+					person: null,
+					polite: null,
+					poss: null,
+					pronType: "Tot",
+					referenceGender: null,
+					referenceNumber: null,
+				},
+			},
+		]);
+		for (const lemma of totals ?? []) {
+			const readings = fixedPopulationFor.reading(lemma);
+			expect(readings?.members).toHaveLength(1);
+			expect(readings?.members[0]?.lemma).toEqual(lemma);
+		}
 	});
 
 	test("distinguishes homographs by reference identity and owns one Reading each", () => {
@@ -213,11 +256,286 @@ describe("fixed German PRON population", () => {
 			expect(readings?.members[0]?.emojiDescription).toBe(
 				lemma.canonicalForm === "sich"
 					? "🪞"
-					: lemma.coreFeatures.poss === "Yes"
-						? "🔑"
-						: "👤",
+					: lemma.coreFeatures.pronType === "Tot"
+						? "🌐"
+						: lemma.coreFeatures.pronType === "Int"
+							? "❓"
+							: lemma.coreFeatures.pronType === "Neg"
+								? "🚫"
+								: lemma.coreFeatures.poss === "Yes"
+									? "🔑"
+									: "👤",
 			);
 		}
+	});
+
+	test("collects the jemand case paradigm under one fixed indefinite Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const jemand = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "jemand",
+		);
+
+		expect(jemand).toHaveLength(1);
+		expect(jemand?.[0]?.coreFeatures).toEqual({
+			extPos: null,
+			foreign: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Ind",
+			referenceGender: null,
+			referenceNumber: null,
+		});
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["jemanden", "jemandem", "jemandes"].includes(canonicalForm),
+			),
+		).toEqual([]);
+		const fixedJemand = jemand?.[0];
+		if (!fixedJemand) throw new Error("Expected fixed jemand Lemma.");
+		const readings = fixedMembersFor.reading(fixedJemand);
+		expect(readings?.members).toHaveLength(1);
+		expect(readings?.members[0]?.lemma).toEqual(fixedJemand);
+		expect(readings?.members[0]?.emojiDescription).toBe("👤");
+	});
+
+	test("promotes one negative nichts Lemma with one Reading and no nix identity", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const nichts = catalog?.members.filter(
+			({ canonicalForm, coreFeatures }) =>
+				canonicalForm === "nichts" && coreFeatures.pronType === "Neg",
+		);
+
+		expect(nichts).toHaveLength(1);
+		expect(nichts?.[0]?.coreFeatures).toEqual({
+			extPos: null,
+			foreign: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Neg",
+			referenceGender: null,
+			referenceNumber: null,
+		});
+		expect(
+			catalog?.members.some(
+				({ canonicalForm }) => canonicalForm === "nix",
+			),
+		).toBe(false);
+		const lemma = nichts?.[0];
+		if (!lemma) throw new Error("Expected fixed nichts Lemma.");
+		const readings = fixedMembersFor.reading(lemma);
+		expect(readings?.members).toHaveLength(1);
+		expect(readings?.members[0]).toEqual({
+			lemma,
+			emojiDescription: "🚫",
+		});
+	});
+
+	test("collects the singular jeder paradigm under one fixed total Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const jeder = catalog?.members.filter(
+			({ canonicalForm, coreFeatures }) =>
+				canonicalForm === "jeder" && coreFeatures.pronType === "Tot",
+		);
+		expect(jeder).toHaveLength(1);
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["jede", "jedes", "jeden", "jedem"].includes(canonicalForm),
+			),
+		).toEqual([]);
+		const lemma = jeder?.[0];
+		if (!lemma) throw new Error("Expected fixed jeder Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toEqual([
+			{ lemma, emojiDescription: "🌐" },
+		]);
+	});
+
+	test("collects the singular jedweder paradigm under one separate fixed total Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const lemmas = catalog?.members.filter(
+			({ canonicalForm, coreFeatures }) =>
+				canonicalForm === "jedweder" && coreFeatures.pronType === "Tot",
+		);
+		expect(lemmas).toHaveLength(1);
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["jedwede", "jedwedes", "jedweden", "jedwedem"].includes(
+					canonicalForm,
+				),
+			),
+		).toEqual([]);
+		const lemma = lemmas?.[0];
+		if (!lemma) throw new Error("Expected fixed jedweder Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toEqual([
+			{ lemma, emojiDescription: "🌐" },
+		]);
+	});
+
+	test("collects singular and plural jeglicher under one separate fixed total Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const lemmas = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "jeglicher",
+		);
+		expect(lemmas).toHaveLength(1);
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["jegliche", "jegliches", "jeglichen", "jeglichem"].includes(
+					canonicalForm,
+				),
+			),
+		).toEqual([]);
+		const lemma = lemmas?.[0];
+		if (!lemma) throw new Error("Expected fixed jeglicher Lemma.");
+		expect(lemma.coreFeatures.pronType).toBe("Tot");
+		expect(fixedMembersFor.reading(lemma)?.members).toEqual([
+			{ lemma, emojiDescription: "🌐" },
+		]);
+	});
+
+	test("collects the niemand case paradigm under one fixed negative Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const niemand = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "niemand",
+		);
+
+		expect(niemand).toHaveLength(1);
+		expect(niemand?.[0]?.coreFeatures).toEqual({
+			extPos: null,
+			foreign: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Neg",
+			referenceGender: null,
+			referenceNumber: null,
+		});
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["niemanden", "niemandem", "niemandes"].includes(canonicalForm),
+			),
+		).toEqual([]);
+		const fixedNiemand = niemand?.[0];
+		if (!fixedNiemand) throw new Error("Expected fixed niemand Lemma.");
+		const readings = fixedMembersFor.reading(fixedNiemand);
+		expect(readings?.members).toHaveLength(1);
+		expect(readings?.members[0]?.lemma).toEqual(fixedNiemand);
+		expect(readings?.members[0]?.emojiDescription).toBe("🚫");
+	});
+
+	test("collects all standalone kein- forms under one fixed keiner Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const keiner = catalog?.members.filter(
+			({ canonicalForm }) => canonicalForm === "keiner",
+		);
+		expect(keiner).toHaveLength(1);
+		expect(keiner?.[0]?.coreFeatures.pronType).toBe("Neg");
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["keine", "keines", "keinen", "keinem"].includes(canonicalForm),
+			),
+		).toEqual([]);
+		const lemma = keiner?.[0];
+		if (!lemma) throw new Error("Expected fixed keiner Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toHaveLength(1);
+	});
+
+	test("promotes one singular total jedermann Lemma without jedermanns", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const lemma = catalog?.members.find(
+			({ canonicalForm }) => canonicalForm === "jedermann",
+		);
+		expect(lemma?.coreFeatures.pronType).toBe("Tot");
+		expect(
+			catalog?.members.some(
+				({ canonicalForm }) => canonicalForm === "jedermanns",
+			),
+		).toBe(false);
+		if (!lemma) throw new Error("Expected fixed jedermann Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toHaveLength(1);
+	});
+
+	test("collects all standalone manch- forms under one fixed mancher Lemma", () => {
+		const catalog = fixedMembersFor.lemma(pronounRoute);
+		const lemma = catalog?.members.find(
+			({ canonicalForm }) => canonicalForm === "mancher",
+		);
+		expect(lemma?.coreFeatures.pronType).toBe("Tot");
+		expect(
+			catalog?.members.filter(({ canonicalForm }) =>
+				["manche", "manches", "manchen", "manchem"].includes(
+					canonicalForm,
+				),
+			),
+		).toEqual([]);
+		if (!lemma) throw new Error("Expected fixed mancher Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toHaveLength(1);
+	});
+
+	test("promotes separate exact-form demonstrative and relative populations", () => {
+		const members = fixedMembersFor.lemma(pronounRoute)?.members ?? [];
+		const forms = [
+			"der",
+			"die",
+			"das",
+			"den",
+			"dem",
+			"dessen",
+			"deren",
+			"denen",
+		];
+		for (const pronType of ["Dem", "Rel"] as const) {
+			const population = members.filter(
+				(candidate) => candidate.coreFeatures.pronType === pronType,
+			);
+			expect(
+				population.map(({ canonicalForm }) => canonicalForm),
+			).toEqual(forms);
+			for (const lemma of population) {
+				expect(lemma.coreFeatures).toEqual({
+					extPos: null,
+					foreign: null,
+					person: null,
+					polite: null,
+					poss: null,
+					pronType,
+					referenceGender: null,
+					referenceNumber: null,
+				});
+				expect(fixedMembersFor.reading(lemma)?.members).toEqual([
+					{
+						lemma,
+						emojiDescription: "👤",
+					},
+				]);
+			}
+		}
+	});
+
+	test("promotes one plural-only mehrere total Lemma and Reading", () => {
+		const mehrere = fixedMembersFor
+			.lemma(pronounRoute)
+			?.members.filter(
+				({ canonicalForm, coreFeatures }) =>
+					canonicalForm === "mehrere" &&
+					coreFeatures.pronType === "Tot",
+			);
+		expect(mehrere).toHaveLength(1);
+		expect(mehrere?.[0]?.coreFeatures).toEqual({
+			extPos: null,
+			foreign: null,
+			person: null,
+			polite: null,
+			poss: null,
+			pronType: "Tot",
+			referenceGender: null,
+			referenceNumber: null,
+		});
+		const lemma = mehrere?.[0];
+		if (!lemma) throw new Error("Expected fixed mehrere Lemma.");
+		expect(fixedMembersFor.reading(lemma)?.members).toEqual([
+			{ lemma, emojiDescription: "🌐" },
+		]);
 	});
 });
 

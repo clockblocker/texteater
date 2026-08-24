@@ -1,6 +1,8 @@
 import type { ParsingError } from "../battery/common-utils/src/index";
 import type {
 	DirectSemanticRelationGraphEdge,
+	GrammaticalRelationClaim,
+	GrammaticalSeries,
 	KnowledgeChange,
 	KnowledgeRequestMask,
 	KnowledgeSettings,
@@ -42,4 +44,6 @@ export interface DumrelParserInterface {
 	readonly parseAsPendingSemanticRelation: Parser<PendingSemanticRelation>;
 	readonly parseAsReadingKnowledge: Parser<ReadingKnowledge>;
 	readonly parseAsKnowledgeChange: Parser<KnowledgeChange>;
+	readonly parseAsGrammaticalRelationClaim: Parser<GrammaticalRelationClaim>;
+	readonly parseAsGrammaticalSeries: Parser<GrammaticalSeries>;
 }

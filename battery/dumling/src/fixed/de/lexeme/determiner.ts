@@ -193,23 +193,15 @@ export const DE_LEXEME_DET_FIXED_READING_CATALOG = Object.freeze({
 }) satisfies FixedCatalog<DetReading>;
 
 function fixedLemma(specification: DetSpecification): DetLemma {
-	return deepFreeze({
+	return Object.freeze({
 		language: "de",
 		family: "Lexeme",
 		kind: "DET",
 		canonicalForm: specification.canonicalForm,
-		coreFeatures: specification.coreFeatures,
+		coreFeatures: Object.freeze(specification.coreFeatures),
 	} satisfies DetLemma);
 }
 
 function fixedReading(lemma: DetLemma, emojiDescription: string): DetReading {
-	return deepFreeze({ lemma, emojiDescription } satisfies DetReading);
-}
-
-function deepFreeze<T>(value: T): T {
-	if (value !== null && typeof value === "object") {
-		for (const member of Object.values(value)) deepFreeze(member);
-		Object.freeze(value);
-	}
-	return value;
+	return Object.freeze({ lemma, emojiDescription } satisfies DetReading);
 }

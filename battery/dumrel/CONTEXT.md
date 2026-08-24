@@ -101,15 +101,25 @@ selected for generation.
 
 **Grammatical Relation**:
 A typed non-semantic connection between homogeneous Lemma endpoints or
-homogeneous exact Reading endpoints. Case Counterpart and Person Counterpart
-are symmetric, non-transitive, and non-substitutive. They never participate in
-Semantic Relation propagation, Synonym substitution, Knowledge Settings, or
-Reading Knowledge.
+homogeneous exact Reading endpoints. Case Counterpart, Person Counterpart, and
+Number Counterpart are symmetric, non-transitive, and non-substitutive. They
+never participate in Semantic Relation propagation, Synonym substitution,
+Knowledge Settings, or Reading Knowledge. Number Counterpart is reserved for
+exact Readings whose singular/plural learner identities were explicitly
+promoted by a reviewed Fixed Population, such as German total `alles` and
+`alle` or the separate formal singular/plural addressee Readings of `Sie`,
+`Ihnen`, and `Ihrer`. It also connects the reviewed singular/plural branches
+inside each exact-form demonstrative or relative `der/die/das` population. It
+is not inferred between independent personal or possessive identities merely
+because referents or possessors differ in number; ordinary personal and
+possessor-number relations remain unresolved.
 
 **Grammatical Series**:
 An authored set of grammatical endpoints varying along one named axis while
 fixed coordinates describe what is preserved. Compilation emits unique direct
 peer claims without self-edges; overlapping Series do not imply closure.
+The `number` axis records only an explicitly promoted grammatical-number split;
+it does not turn general referent number into an automatic relation.
 
 **Semantic Relation**:
 A direct typed connection owned by one exact source Reading. One Reading
@@ -126,7 +136,9 @@ policy use this mode.
 **Reading Target Mode**:
 An explicit `targetKind: "reading"` mode reserved for hand-maintained closed
 inventories. Targets are exact Readings. The current direct vocabulary in this
-mode is Synonym.
+mode is Synonym. Fixed demonstrative and relative `der/die/das` PRON Knowledge
+uses separate within-population Reading targets; identical spelling never
+creates a cross-`pronType` edge.
 
 **Pending Semantic Relation**:
 A transitional DTO containing a Semantic Relation and target Unit Shadow. It is

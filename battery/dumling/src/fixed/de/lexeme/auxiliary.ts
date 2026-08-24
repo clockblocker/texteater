@@ -61,23 +61,15 @@ export const DE_LEXEME_AUX_FIXED_READING_CATALOG = Object.freeze({
 }) satisfies FixedCatalog<AuxReading>;
 
 function fixedLemma(specification: AuxSpecification): AuxLemma {
-	return deepFreeze({
+	return Object.freeze({
 		language: "de",
 		family: "Lexeme",
 		kind: "AUX",
 		canonicalForm: specification.canonicalForm,
-		coreFeatures: { verbType: specification.verbType },
+		coreFeatures: Object.freeze({ verbType: specification.verbType }),
 	} satisfies AuxLemma);
 }
 
 function fixedReading(lemma: AuxLemma, emojiDescription: string): AuxReading {
-	return deepFreeze({ lemma, emojiDescription } satisfies AuxReading);
-}
-
-function deepFreeze<T>(value: T): T {
-	if (value !== null && typeof value === "object") {
-		for (const member of Object.values(value)) deepFreeze(member);
-		Object.freeze(value);
-	}
-	return value;
+	return Object.freeze({ lemma, emojiDescription } satisfies AuxReading);
 }

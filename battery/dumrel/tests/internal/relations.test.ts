@@ -154,7 +154,7 @@ describe("propagateRelations", () => {
 
 	test("substitutes exact Synonyms at both endpoints for substitutive relation kinds", () => {
 		for (const relation of directSemanticRelationValues.filter(
-			(relation) => relation !== "nearAntonym",
+			(relation) => !["nearSynonym", "nearAntonym"].includes(relation),
 		)) {
 			const inferred = propagateRelations({
 				readings,
@@ -178,6 +178,78 @@ describe("propagateRelations", () => {
 				targetLemma: "lb2",
 			});
 		}
+	});
+
+	test("keeps Near Synonym symmetric, non-transitive, and non-substitutive", () => {
+		const inferred = propagateRelations({
+			readings,
+			edges: [
+				{ sourceReading: "a", relation: "synonym", targetLemma: "la2" },
+				{
+					sourceReading: "a",
+					relation: "nearSynonym",
+					targetLemma: "lb",
+				},
+				{
+					sourceReading: "b",
+					relation: "nearSynonym",
+					targetLemma: "lc",
+				},
+			],
+		});
+		expect(inferred).toContainEqual({
+			sourceReading: "b",
+			relation: "nearSynonym",
+			targetLemma: "la",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "a2",
+			relation: "nearSynonym",
+			targetLemma: "lb",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "a",
+			relation: "nearSynonym",
+			targetLemma: "lc",
+		});
+	});
+
+	test("does not close two Near Synonym targets through their shared source", () => {
+		const inferred = propagateRelations({
+			readings,
+			edges: [
+				{
+					sourceReading: "a",
+					relation: "nearSynonym",
+					targetLemma: "lb",
+				},
+				{
+					sourceReading: "a",
+					relation: "nearSynonym",
+					targetLemma: "lc",
+				},
+			],
+		});
+		expect(inferred).toContainEqual({
+			sourceReading: "b",
+			relation: "nearSynonym",
+			targetLemma: "la",
+		});
+		expect(inferred).toContainEqual({
+			sourceReading: "c",
+			relation: "nearSynonym",
+			targetLemma: "la",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "b",
+			relation: "nearSynonym",
+			targetLemma: "lc",
+		});
+		expect(inferred).not.toContainEqual({
+			sourceReading: "c",
+			relation: "nearSynonym",
+			targetLemma: "lb",
+		});
 	});
 
 	test("keeps Near Antonym symmetric, non-transitive, and non-substitutive", () => {

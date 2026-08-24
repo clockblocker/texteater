@@ -1,6 +1,5 @@
 import { readingFingerprint } from "dumling/id";
 import type { Reading, SupportedLanguage } from "dumling/types";
-import { fixedKnowledgeFor } from "dumrel/fixed";
 import type { KnowledgeChange } from "dumrel/types";
 import { planApplyGeneratedKnowledge } from "../core/plan-mutation";
 import {
@@ -36,7 +35,10 @@ export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
 	);
 	if (
 		semanticChanges.length > 0 &&
-		!approvedFixedReadingTargetChanges(request.reading, semanticChanges)
+		!(await approvedFixedReadingTargetChanges(
+			request.reading,
+			semanticChanges,
+		))
 	) {
 		return {
 			status: "rejected",
@@ -73,13 +75,14 @@ export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
 	return applyPlan(options, plan, mutationOptions);
 }
 
-function approvedFixedReadingTargetChanges<L extends SupportedLanguage>(
+async function approvedFixedReadingTargetChanges<L extends SupportedLanguage>(
 	reading: Reading<L>,
 	changes: readonly Extract<
 		KnowledgeChange,
 		{ aspect: "semanticRelations" }
 	>[],
-): boolean {
+): Promise<boolean> {
+	const { fixedKnowledgeFor } = await import("dumrel/fixed");
 	const fixed = fixedKnowledgeFor(reading as unknown as Reading);
 	if (
 		fixed.decision !== "Found" ||

@@ -31,6 +31,8 @@ const occurrenceAttestation = {
 				person: null,
 				polite: null,
 				poss: null,
+				referenceGender: null,
+				referenceNumber: null,
 			},
 		},
 		surfaceFeatures: null,

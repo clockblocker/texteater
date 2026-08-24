@@ -17,6 +17,8 @@ const packageRootParsers = {
 	ParsingError: dumrel.ParsingError,
 	parseAsDirectSemanticRelationGraphEdge:
 		dumrel.parseAsDirectSemanticRelationGraphEdge,
+	parseAsGrammaticalRelationClaim: dumrel.parseAsGrammaticalRelationClaim,
+	parseAsGrammaticalSeries: dumrel.parseAsGrammaticalSeries,
 	parseAsKnowledgeChange: dumrel.parseAsKnowledgeChange,
 	parseAsKnowledgeRequestMask: dumrel.parseAsKnowledgeRequestMask,
 	parseAsKnowledgeSettings: dumrel.parseAsKnowledgeSettings,

@@ -120,10 +120,10 @@ generated Lemma target is retained as a pending Unit Shadow and produces no
 inferred view.
 
 **Grammatical Relation Edge**:
-One normalized direct Case Counterpart or Person Counterpart claim. tf-demo
-stores its homogeneous endpoints and projects the symmetric reverse without
-Semantic Relation settings, propagation, closure, or substitution. Exact
-Reading targets open the exact Unit Reading Note.
+One normalized direct Case Counterpart, Person Counterpart, or Number
+Counterpart claim. tf-demo stores its homogeneous endpoints and projects the
+symmetric reverse without Semantic Relation settings, propagation, closure, or
+substitution. Exact Reading targets open the exact Unit Reading Note.
 
 **Unit Reading**:
 A Reading whose Lemma Family is Lexeme, Phraseme, or Morpheme. This tf-demo
