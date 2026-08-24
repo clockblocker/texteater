@@ -85,6 +85,8 @@ function SheetWorkspaceHarness({
 	const [modifierPressed, setModifierPressed] = useState(false);
 	const [cardDropTargetPaneId, setCardDropTargetPaneId] =
 		useState<PaneId | null>(null);
+	const [cardOverlayContainer, setCardOverlayContainer] =
+		useState<HTMLDivElement | null>(null);
 	const Adapter = ADAPTERS[variant];
 	const activeTopSheet = workspace.panes
 		.find((pane) => pane.id === workspace.activePaneId)
@@ -161,12 +163,13 @@ function SheetWorkspaceHarness({
 
 	const actions = useMemo(
 		() => ({
+			cardOverlayContainer,
 			cardDropTargetPaneId,
 			dispatch,
 			onPreviewCandidate: setPreviewCandidate,
 			setCardDropTargetPaneId,
 		}),
-		[cardDropTargetPaneId, dispatch],
+		[cardDropTargetPaneId, cardOverlayContainer, dispatch],
 	);
 
 	return (
@@ -211,6 +214,11 @@ function SheetWorkspaceHarness({
 						onPreviewCandidate={setPreviewCandidate}
 					/>
 				</Suspense>
+				<div
+					className="sheet-workspace-overlay-plane"
+					data-sheet-workspace-overlay-plane=""
+					ref={setCardOverlayContainer}
+				/>
 
 				<div className="sr-only" aria-live="polite">
 					{announcement}

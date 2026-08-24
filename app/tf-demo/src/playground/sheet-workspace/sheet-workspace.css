@@ -5,6 +5,13 @@
 	--sheet-paper: #151922;
 	--sheet-paper-raised: #1b202b;
 	--sheet-accent: #8ba4ff;
+	--sheet-layer-sheet: 1;
+	--sheet-layer-sheet-control: 5;
+	--sheet-layer-pane-feedback: 10;
+	--sheet-layer-moving-sheet: 20;
+	--sheet-layer-resize-handle: 30;
+	--sheet-layer-card-overlay: 40;
+	--sheet-layer-modifier-preview: 50;
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
@@ -90,7 +97,7 @@
 }
 
 .sheet-workspace-resize-handle {
-	z-index: 40;
+	z-index: var(--sheet-layer-resize-handle);
 	width: 0.65rem;
 	border-inline: 1px solid #242a34;
 	background: #0a0d13;
@@ -108,7 +115,6 @@
 
 .sheet-workspace-pane {
 	position: relative;
-	isolation: isolate;
 	height: 100%;
 	min-width: 0;
 	overflow: visible;
@@ -121,7 +127,7 @@
 .sheet-workspace-pane::after {
 	position: absolute;
 	inset: 0;
-	z-index: 50;
+	z-index: var(--sheet-layer-pane-feedback);
 	pointer-events: none;
 	content: "";
 	opacity: 0;
@@ -267,7 +273,7 @@
 
 .sheet-workspace-drag-handle {
 	position: absolute;
-	z-index: 20;
+	z-index: var(--sheet-layer-sheet-control);
 	left: 50%;
 	bottom: 1rem;
 	translate: -50% 0;
@@ -295,11 +301,11 @@
 }
 
 .sheet-workspace-motion-shell {
-	z-index: 1;
+	z-index: var(--sheet-layer-sheet);
 }
 
 .sheet-workspace-motion-shell[data-motion-card="true"] {
-	z-index: 50;
+	z-index: var(--sheet-layer-moving-sheet);
 }
 
 .sheet-workspace-motion-card {
@@ -359,11 +365,26 @@
 	pointer-events: none;
 }
 
+/*
+ * Panes deliberately share the board's stacking context. Viewport-level Cards
+ * render into this sibling plane instead of competing with Pane-local layers.
+ */
+.sheet-workspace-overlay-plane {
+	position: fixed;
+	inset: 0;
+	z-index: var(--sheet-layer-card-overlay);
+	pointer-events: none;
+}
+
+.sheet-workspace-overlay-plane > .card-demo-overlay {
+	z-index: auto;
+}
+
 .sheet-workspace-modifier-preview {
 	position: fixed;
 	right: 1.25rem;
 	bottom: 1.25rem;
-	z-index: 100;
+	z-index: var(--sheet-layer-modifier-preview);
 }
 
 .sheet-workspace-loading {

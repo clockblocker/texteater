@@ -214,7 +214,8 @@ export function SheetFace({
 }
 
 function TextSheetInteraction({ sheet }: { readonly sheet: Sheet }) {
-	const { dispatch, setCardDropTargetPaneId } = useSheetWorkspaceActions();
+	const { cardOverlayContainer, dispatch, setCardDropTargetPaneId } =
+		useSheetWorkspaceActions();
 	const [selectedSegment, setSelectedSegment] =
 		useState<CardDemoFakeSegment | null>(null);
 	const openSequence = useRef(0);
@@ -233,6 +234,7 @@ function TextSheetInteraction({ sheet }: { readonly sheet: Sheet }) {
 		<div className="sheet-workspace-text-sheet">
 			<CardDemoTextInteraction
 				Interaction={MotionCardDemoInteraction}
+				overlayContainer={cardOverlayContainer}
 				onDragPointChange={trackCardDragPoint}
 				onOpenNote={(request) => {
 					if (!selectedSegment) return;

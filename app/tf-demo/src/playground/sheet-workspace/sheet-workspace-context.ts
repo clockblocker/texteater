@@ -4,6 +4,7 @@ import type { PaneId, Sheet, SheetWorkspaceCommand } from "./sheet-workspace";
 
 export type SheetWorkspaceActions = {
 	readonly dispatch: (command: SheetWorkspaceCommand) => void;
+	readonly cardOverlayContainer: HTMLDivElement | null;
 	readonly cardDropTargetPaneId: PaneId | null;
 	readonly setCardDropTargetPaneId: (paneId: PaneId | null) => void;
 	readonly onPreviewCandidate: (sheet: Sheet | null) => void;

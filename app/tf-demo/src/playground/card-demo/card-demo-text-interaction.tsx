@@ -5,6 +5,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 import type {
 	CardDemoFakeSegment,
@@ -28,6 +29,7 @@ import "./card-demo.css";
 
 export type CardDemoTextInteractionProps = {
 	readonly Interaction: CardDemoInteraction;
+	readonly overlayContainer?: Element | DocumentFragment | null;
 	readonly selectedSegment: CardDemoFakeSegment | null;
 	readonly onSelectedSegmentChange: (
 		segment: CardDemoFakeSegment | null,
@@ -43,6 +45,7 @@ export type CardDemoTextInteractionProps = {
  */
 export function CardDemoTextInteraction({
 	Interaction,
+	overlayContainer,
 	selectedSegment,
 	onSelectedSegmentChange,
 	onOpenNote,
@@ -140,26 +143,37 @@ export function CardDemoTextInteraction({
 					),
 				)}
 			</div>
-			{selectedSegment ? (
-				<CardDemoOverlay
-					dismissing={dismissing}
-					onDismiss={dismiss}
-					selectedSegment={selectedSegment}
-				>
-					<Interaction
-						cards={CARD_DEMO_RESOLUTION_CHAIN}
-						onDragPointChange={onDragPointChange}
-						onOpenNote={onOpenNote}
-						selectedSegment={selectedSegment}
-					/>
-				</CardDemoOverlay>
-			) : null}
+			{selectedSegment
+				? renderCardDemoOverlay(
+						<CardDemoOverlay
+							dismissing={dismissing}
+							onDismiss={dismiss}
+							selectedSegment={selectedSegment}
+						>
+							<Interaction
+								cards={CARD_DEMO_RESOLUTION_CHAIN}
+								onDragPointChange={onDragPointChange}
+								onOpenNote={onOpenNote}
+								selectedSegment={selectedSegment}
+							/>
+						</CardDemoOverlay>,
+						overlayContainer,
+					)
+				: null}
 		</div>
 	);
 }
 
+function renderCardDemoOverlay(
+	overlay: ReactNode,
+	container: Element | DocumentFragment | null | undefined,
+): ReactNode {
+	return container ? createPortal(overlay, container) : overlay;
+}
+
 export function CardDemoTextPage({
 	Interaction,
+	overlayContainer,
 	variant,
 	selectedSegment,
 	onSelectedSegmentChange,
@@ -183,6 +197,7 @@ export function CardDemoTextPage({
 					onDragPointChange={onDragPointChange}
 					onOpenNote={onOpenNote}
 					onSelectedSegmentChange={onSelectedSegmentChange}
+					overlayContainer={overlayContainer}
 					selectedSegment={selectedSegment}
 				/>
 			</CardDemoTextPane>

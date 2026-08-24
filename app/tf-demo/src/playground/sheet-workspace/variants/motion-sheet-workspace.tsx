@@ -111,7 +111,6 @@ function MotionTopSheet({
 			}}
 			className="sheet-workspace-motion-shell"
 			data-motion-card={dragging ? "true" : undefined}
-			style={{ zIndex: dragging ? 20 : 1 }}
 			transition={{ type: "spring", stiffness: 420, damping: 36 }}
 			whileDrag={{ scale: 1.025 }}
 		>

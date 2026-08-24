@@ -233,37 +233,71 @@ test("dnd-kit keeps the compact top-Sheet Card under the pointer and above Panes
 	await page.mouse.up();
 });
 
-test("dnd-kit keeps a dragged Resolution Card above the highlighted target Pane", async ({
-	page,
-}) => {
-	await page.goto("/playground/sheet-workspace/dnd-kit");
-	await openResolutionCards(page, "Lorem");
-	const east = pane(page, "east");
-	await dragCardToPane(
+for (const variant of workspaceVariants) {
+	test(`${variant}: a dragged Resolution Card paints above the neighboring Pane`, async ({
 		page,
-		page.getByRole("button", {
-			name: "Open Reading Note for Lorem",
-			exact: true,
-		}),
-		east,
-		async (destination) => {
-			await expect(east).toHaveAttribute("data-drop-target", "true");
-			const topCardKind = await page
-				.locator('[data-card-demo-card="reading"]')
-				.evaluate(
-					(element, { x, y }) =>
-						element.ownerDocument
-							.elementsFromPoint(x, y)
-							.find((candidate: typeof element) =>
-								candidate.matches("[data-card-demo-card]"),
-							)
-							?.getAttribute("data-card-demo-card") ?? null,
-					destination,
+	}) => {
+		await page.goto(`/playground/sheet-workspace/${variant}`);
+		await openResolutionCards(page, "Lorem");
+		const east = pane(page, "east");
+		await dragCardToPane(
+			page,
+			page.getByRole("button", {
+				name: "Open Reading Note for Lorem",
+				exact: true,
+			}),
+			east,
+			async (destination) => {
+				await expect(east).toHaveAttribute("data-drop-target", "true");
+				const topCardKind = await page
+					.locator('[data-card-demo-card="reading"]')
+					.evaluate(
+						(element, { x, y }) =>
+							element.ownerDocument
+								.elementFromPoint(x, y)
+								?.closest("[data-card-demo-card]")
+								?.getAttribute("data-card-demo-card"),
+						destination,
+					);
+				expect(topCardKind).toBe("reading");
+				const layers = await page
+					.locator("[data-sheet-workspace-overlay-plane]")
+					.evaluate((plane) => {
+						const ownerWindow = plane.ownerDocument.defaultView;
+						const eastPane = plane.ownerDocument.querySelector(
+							'[data-sheet-workspace-pane="east"]',
+						);
+						return {
+							cardIsPortaled: Boolean(
+								plane.querySelector("[data-card-demo-overlay]"),
+							),
+							cardLayer: ownerWindow
+								? Number.parseInt(
+										ownerWindow.getComputedStyle(plane)
+											.zIndex,
+										10,
+									)
+								: Number.NaN,
+							paneFeedbackLayer:
+								ownerWindow && eastPane
+									? Number.parseInt(
+											ownerWindow.getComputedStyle(
+												eastPane,
+												"::after",
+											).zIndex,
+											10,
+										)
+									: Number.NaN,
+						};
+					});
+				expect(layers.cardIsPortaled).toBe(true);
+				expect(layers.cardLayer).toBeGreaterThan(
+					layers.paneFeedbackLayer,
 				);
-			expect(topCardKind).toBe("reading");
-		},
-	);
-});
+			},
+		);
+	});
+}
 
 test("a dropped Note focuses its Close control and Enter removes it", async ({
 	page,
