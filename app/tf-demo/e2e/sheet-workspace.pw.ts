@@ -16,7 +16,12 @@ async function openResolutionCards(page: Page, segment: string) {
 	).toBeVisible();
 }
 
-async function dragCardToPane(page: Page, card: Locator, targetPane: Locator) {
+async function dragCardToPane(
+	page: Page,
+	card: Locator,
+	targetPane: Locator,
+	beforeDrop?: () => Promise<void>,
+) {
 	const cardBox = await card.boundingBox();
 	const paneBox = await targetPane.boundingBox();
 	if (!cardBox || !paneBox) throw new Error("Card and Pane must be visible.");
@@ -34,8 +39,10 @@ async function dragCardToPane(page: Page, card: Locator, targetPane: Locator) {
 	await page.mouse.down();
 	await page.mouse.move(start.x + 12, start.y);
 	await expect(card).toHaveAttribute("data-drag-active", "true");
+	await expect(page.locator('[data-drop-target="true"]')).toHaveCount(0);
 	await page.mouse.move(destination.x, destination.y, { steps: 8 });
 	await page.mouse.move(destination.x, destination.y);
+	await beforeDrop?.();
 	await page.mouse.up();
 }
 
@@ -44,6 +51,45 @@ test.beforeEach(async ({ page }) => {
 	await expect(
 		pane(page, "central").locator('[data-sheet-id="sheet-central-text"]'),
 	).toBeVisible();
+});
+
+test("the Card stack stays nonmodal and an unoccupied click dismisses it", async ({
+	page,
+}) => {
+	await openResolutionCards(page, "Lorem");
+	const overlay = page.locator("[data-card-demo-overlay]");
+	await expect(overlay).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+
+	const ipsum = page.getByRole("button", { name: "ipsum", exact: true });
+	const restingBackground = await ipsum.evaluate(
+		(element) =>
+			element.ownerDocument.defaultView?.getComputedStyle(element)
+				.backgroundColor ?? "",
+	);
+	await ipsum.hover();
+	await expect
+		.poll(() =>
+			ipsum.evaluate(
+				(element) =>
+					element.ownerDocument.defaultView?.getComputedStyle(element)
+						.backgroundColor ?? "",
+			),
+		)
+		.not.toBe(restingBackground);
+	await ipsum.click();
+	await expect(
+		page.getByRole("dialog", {
+			name: "Resolution Chain for ipsum",
+			exact: true,
+		}),
+	).toBeVisible();
+
+	const textSheetBox = await page
+		.locator(".sheet-workspace-text-sheet")
+		.boundingBox();
+	if (!textSheetBox) throw new Error("Text Sheet must be visible.");
+	await page.mouse.click(textSheetBox.x + 4, textSheetBox.y + 4);
+	await expect(overlay).toHaveCount(0);
 });
 
 test("dragging a Card to a Pane places the Note there and Escape removes it", async ({
@@ -56,7 +102,19 @@ test("dragging a Card to a Pane places the Note there and Escape removes it", as
 	});
 	const east = pane(page, "east");
 
-	await dragCardToPane(page, readingCard, east);
+	await dragCardToPane(page, readingCard, east, async () => {
+		await expect(east).toHaveAttribute("data-drop-target", "true");
+		await expect
+			.poll(() =>
+				east.evaluate(
+					(element) =>
+						element.ownerDocument.defaultView?.getComputedStyle(
+							element,
+						).boxShadow ?? "none",
+				),
+			)
+			.not.toBe("none");
+	});
 
 	await expect(east.locator("[data-sheet-id]")).toHaveCount(1);
 	await expect(east.locator('[data-card-demo-note="reading"]')).toBeVisible();

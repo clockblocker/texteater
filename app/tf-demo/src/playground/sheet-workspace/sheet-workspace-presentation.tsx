@@ -3,6 +3,7 @@ import {
 	type HTMLAttributes,
 	type ReactNode,
 	type Ref,
+	useCallback,
 	useEffect,
 	useRef,
 	useState,
@@ -19,10 +20,15 @@ import {
 	CARD_DEMO_FAKE_TEXT,
 	CARD_DEMO_RESOLUTION_CHAIN,
 } from "@/playground/card-demo/card-demo-fixtures";
+import type { CardDemoViewportPoint } from "@/playground/card-demo/card-demo-interaction";
 import { CardDemoCardContent } from "@/playground/card-demo/card-demo-presentation";
 import { CardDemoTextInteraction } from "@/playground/card-demo/card-demo-text-interaction";
 import { MotionCardDemoInteraction } from "@/playground/card-demo/variants/motion-card-demo-interaction";
-import { cardSheetOpeningOrigin } from "./card-sheet-opening";
+import {
+	cardSheetDropPaneId,
+	cardSheetOpeningOrigin,
+	type PaneDropRegion,
+} from "./card-sheet-opening";
 import type { Pane, Sheet, SheetWorkspace } from "./sheet-workspace";
 import { useSheetWorkspaceActions } from "./sheet-workspace-context";
 import {
@@ -92,8 +98,9 @@ export function SheetWorkspacePane({
 	readonly isDropTarget?: boolean;
 	readonly renderTopSheet: (sheet: Sheet) => ReactNode;
 }) {
-	const { dispatch } = useSheetWorkspaceActions();
+	const { cardDropTargetPaneId, dispatch } = useSheetWorkspaceActions();
 	const topSheet = pane.sheets.at(-1);
+	const acceptsDrop = isDropTarget || cardDropTargetPaneId === pane.id;
 	return (
 		<section
 			{...dropProps}
@@ -103,7 +110,7 @@ export function SheetWorkspacePane({
 			data-active={
 				workspace.activePaneId === pane.id ? "true" : undefined
 			}
-			data-drop-target={isDropTarget ? "true" : undefined}
+			data-drop-target={acceptsDrop ? "true" : undefined}
 			data-sheet-workspace-pane={pane.id}
 			onFocusCapture={() =>
 				dispatch({
@@ -207,32 +214,32 @@ export function SheetFace({
 }
 
 function TextSheetInteraction({ sheet }: { readonly sheet: Sheet }) {
-	const { dispatch } = useSheetWorkspaceActions();
+	const { dispatch, setCardDropTargetPaneId } = useSheetWorkspaceActions();
 	const [selectedSegment, setSelectedSegment] =
 		useState<CardDemoFakeSegment | null>(null);
 	const openSequence = useRef(0);
+	const trackCardDragPoint = useCallback(
+		(point: CardDemoViewportPoint | null) => {
+			setCardDropTargetPaneId(
+				point
+					? cardSheetDropPaneId(point, currentPaneDropRegions())
+					: null,
+			);
+		},
+		[setCardDropTargetPaneId],
+	);
 
 	return (
 		<div className="sheet-workspace-text-sheet">
 			<CardDemoTextInteraction
 				Interaction={MotionCardDemoInteraction}
+				onDragPointChange={trackCardDragPoint}
 				onOpenNote={(request) => {
 					if (!selectedSegment) return;
-					const regions = Array.from(
-						document.querySelectorAll<HTMLElement>(
-							"[data-sheet-workspace-pane]",
-						),
-					).map((element) => {
-						const bounds = element.getBoundingClientRect();
-						return {
-							paneId: element.dataset.sheetWorkspacePane ?? "",
-							bounds,
-						};
-					});
 					const origin = cardSheetOpeningOrigin(
 						request,
 						sheet.instanceId,
-						regions,
+						currentPaneDropRegions(),
 					);
 					if (!origin) return false;
 					openSequence.current += 1;
@@ -255,6 +262,15 @@ function TextSheetInteraction({ sheet }: { readonly sheet: Sheet }) {
 			/>
 		</div>
 	);
+}
+
+function currentPaneDropRegions(): PaneDropRegion[] {
+	return Array.from(
+		document.querySelectorAll<HTMLElement>("[data-sheet-workspace-pane]"),
+	).map((element) => ({
+		paneId: element.dataset.sheetWorkspacePane ?? "",
+		bounds: element.getBoundingClientRect(),
+	}));
 }
 
 function NoteSheet({ sheet }: { readonly sheet: Sheet }) {

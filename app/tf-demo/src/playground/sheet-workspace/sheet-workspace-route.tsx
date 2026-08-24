@@ -9,6 +9,7 @@ import {
 import { Link, Navigate, useParams } from "react-router-dom";
 
 import {
+	type PaneId,
 	type Sheet,
 	type SheetWorkspaceCommand,
 	transitionSheetWorkspace,
@@ -82,6 +83,8 @@ function SheetWorkspaceHarness({
 		null,
 	);
 	const [modifierPressed, setModifierPressed] = useState(false);
+	const [cardDropTargetPaneId, setCardDropTargetPaneId] =
+		useState<PaneId | null>(null);
 	const Adapter = ADAPTERS[variant];
 	const activeTopSheet = workspace.panes
 		.find((pane) => pane.id === workspace.activePaneId)
@@ -158,10 +161,12 @@ function SheetWorkspaceHarness({
 
 	const actions = useMemo(
 		() => ({
+			cardDropTargetPaneId,
 			dispatch,
 			onPreviewCandidate: setPreviewCandidate,
+			setCardDropTargetPaneId,
 		}),
-		[dispatch],
+		[cardDropTargetPaneId, dispatch],
 	);
 
 	return (
@@ -175,6 +180,7 @@ function SheetWorkspaceHarness({
 					<button
 						type="button"
 						onClick={() => {
+							setCardDropTargetPaneId(null);
 							setHarnessState({
 								workspace: createSheetWorkspaceFixture(),
 								announcement: "Fixture reset.",

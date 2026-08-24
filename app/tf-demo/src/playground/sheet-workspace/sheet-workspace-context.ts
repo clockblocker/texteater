@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 
-import type { Sheet, SheetWorkspaceCommand } from "./sheet-workspace";
+import type { PaneId, Sheet, SheetWorkspaceCommand } from "./sheet-workspace";
 
 export type SheetWorkspaceActions = {
 	readonly dispatch: (command: SheetWorkspaceCommand) => void;
+	readonly cardDropTargetPaneId: PaneId | null;
+	readonly setCardDropTargetPaneId: (paneId: PaneId | null) => void;
 	readonly onPreviewCandidate: (sheet: Sheet | null) => void;
 };
 

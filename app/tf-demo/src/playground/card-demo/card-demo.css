@@ -88,8 +88,8 @@
 	display: grid;
 	place-items: center;
 	padding: 1rem;
-	background: rgb(0 0 0 / 20%);
-	pointer-events: auto;
+	background: transparent;
+	pointer-events: none;
 	transition: background-color 200ms ease;
 }
 
@@ -100,17 +100,9 @@
 	place-items: center;
 	width: min(100%, 28rem);
 	min-height: 20rem;
-	background: rgb(0 0 0 / 20%);
+	background: transparent;
 	pointer-events: none;
 	transition: background-color 200ms ease;
-}
-
-.card-demo-backdrop {
-	position: absolute;
-	inset: 0;
-	border: 0;
-	background: transparent;
-	cursor: default;
 }
 
 .card-demo-close {
@@ -139,7 +131,7 @@
 	position: relative;
 	width: min(20rem, calc(100vw - 2rem));
 	height: 13.625rem;
-	background: rgb(0 0 0 / 20%);
+	background: transparent;
 	pointer-events: auto;
 }
 

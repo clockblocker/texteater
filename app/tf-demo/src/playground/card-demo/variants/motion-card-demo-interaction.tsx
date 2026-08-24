@@ -69,6 +69,7 @@ export function MotionCardDemoInteraction({
 	cards,
 	selectedSegment,
 	onOpenNote,
+	onDragPointChange,
 }: CardDemoInteractionProps) {
 	const stackRef = useRef<HTMLDivElement>(null);
 	const tapCandidateRef = useRef<TapCandidate | null>(null);
@@ -133,6 +134,7 @@ export function MotionCardDemoInteraction({
 							clearTapCandidate={clearTapCandidate}
 							key={card.kind}
 							onOpenNote={openNote}
+							onDragPointChange={onDragPointChange}
 							onTouchTap={registerTouchTap}
 							selectedSegment={selectedSegment}
 							stackRef={stackRef}
@@ -151,6 +153,7 @@ function MotionResolutionCard({
 	clearTapCandidate,
 	onTouchTap,
 	onOpenNote,
+	onDragPointChange,
 }: {
 	readonly card: CardDemoResolutionCard;
 	readonly selectedSegment: CardDemoInteractionProps["selectedSegment"];
@@ -158,6 +161,7 @@ function MotionResolutionCard({
 	readonly clearTapCandidate: () => void;
 	readonly onTouchTap: (kind: CardDemoNoteKind) => void;
 	readonly onOpenNote: (request: CardDemoOpenRequest) => boolean;
+	readonly onDragPointChange: CardDemoInteractionProps["onDragPointChange"];
 }) {
 	const restingY = cardDemoRestingOffset(card.presentationLayer);
 	const x = useMotionValue(0);
@@ -170,6 +174,7 @@ function MotionResolutionCard({
 	const restoreCard = useCallback(() => {
 		setDragging(false);
 		setOutside(false);
+		onDragPointChange?.(null);
 		x.stop();
 		y.stop();
 		if (shouldReduceMotion) {
@@ -185,7 +190,7 @@ function MotionResolutionCard({
 		};
 		animate(x, [x.get(), 0], spring);
 		animate(y, [y.get(), restingY], spring);
-	}, [restingY, shouldReduceMotion, x, y]);
+	}, [onDragPointChange, restingY, shouldReduceMotion, x, y]);
 
 	const releaseCapture = useCallback((session: PointerSession) => {
 		if (!session.target.hasPointerCapture(session.pointerId)) return;
@@ -209,11 +214,14 @@ function MotionResolutionCard({
 		() => () => {
 			const session = pointerSessionRef.current;
 			pointerSessionRef.current = null;
-			if (session) releaseCapture(session);
+			if (session) {
+				releaseCapture(session);
+				onDragPointChange?.(null);
+			}
 			x.stop();
 			y.stop();
 		},
-		[releaseCapture, x, y],
+		[onDragPointChange, releaseCapture, x, y],
 	);
 
 	const pointIsOutside = useCallback(
@@ -288,6 +296,9 @@ function MotionResolutionCard({
 		x.set(event.clientX - session.originX);
 		y.set(restingY + event.clientY - session.originY);
 		const nextOutside = pointIsOutside(event.clientX, event.clientY);
+		onDragPointChange?.(
+			nextOutside ? { x: event.clientX, y: event.clientY } : null,
+		);
 		if (session.outside !== nextOutside) {
 			session.outside = nextOutside;
 			setOutside(nextOutside);
@@ -299,6 +310,7 @@ function MotionResolutionCard({
 		if (!session || session.pointerId !== event.pointerId) return;
 		pointerSessionRef.current = null;
 		releaseCapture(session);
+		onDragPointChange?.(null);
 
 		if (session.dragging) {
 			const releasedOutside = pointIsOutside(

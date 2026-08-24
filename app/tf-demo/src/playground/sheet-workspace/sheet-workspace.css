@@ -124,7 +124,11 @@
 
 .sheet-workspace-pane[data-drop-target="true"] {
 	background: color-mix(in srgb, var(--sheet-accent) 12%, #0f131b);
-	box-shadow: inset 0 0 0 3px var(--sheet-accent);
+	box-shadow:
+		inset 0 0 0 2px var(--sheet-accent),
+		inset 0 0 1.5rem
+		color-mix(in srgb, var(--sheet-accent) 18%, transparent),
+		0 0 1.25rem color-mix(in srgb, var(--sheet-accent) 28%, transparent);
 }
 
 .sheet-workspace-pane__stack {
@@ -330,11 +334,6 @@
 	right: 1.25rem;
 	bottom: 1.25rem;
 	z-index: 100;
-}
-
-.sheet-workspace-page .card-demo-overlay,
-.sheet-workspace-page .card-demo-dialog {
-	background: rgb(2 4 8 / 72%);
 }
 
 .sheet-workspace-loading {

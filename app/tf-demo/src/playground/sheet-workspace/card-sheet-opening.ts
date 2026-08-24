@@ -1,4 +1,7 @@
-import type { CardDemoOpenRequest } from "../card-demo/card-demo-interaction";
+import type {
+	CardDemoOpenRequest,
+	CardDemoViewportPoint,
+} from "../card-demo/card-demo-interaction";
 import type {
 	PaneId,
 	SheetInstanceId,
@@ -24,15 +27,23 @@ export function cardSheetOpeningOrigin(
 		return { kind: "Sheet", sheetId: sourceSheetId };
 	}
 
+	const destinationPaneId = cardSheetDropPaneId(request.point, regions);
+	return destinationPaneId
+		? { kind: "Placement", paneId: destinationPaneId }
+		: null;
+}
+
+export function cardSheetDropPaneId(
+	point: CardDemoViewportPoint,
+	regions: readonly PaneDropRegion[],
+): PaneId | null {
 	const destination = regions.find(
 		(region) =>
 			region.paneId.length > 0 &&
-			request.point.x >= region.bounds.left &&
-			request.point.x <= region.bounds.right &&
-			request.point.y >= region.bounds.top &&
-			request.point.y <= region.bounds.bottom,
+			point.x >= region.bounds.left &&
+			point.x <= region.bounds.right &&
+			point.y >= region.bounds.top &&
+			point.y <= region.bounds.bottom,
 	);
-	return destination
-		? { kind: "Placement", paneId: destination.paneId }
-		: null;
+	return destination?.paneId ?? null;
 }

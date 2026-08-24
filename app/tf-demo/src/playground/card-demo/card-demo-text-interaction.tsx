@@ -33,6 +33,7 @@ export type CardDemoTextInteractionProps = {
 		segment: CardDemoFakeSegment | null,
 	) => void;
 	readonly onOpenNote: CardDemoInteractionProps["onOpenNote"];
+	readonly onDragPointChange?: CardDemoInteractionProps["onDragPointChange"];
 };
 
 /**
@@ -45,8 +46,10 @@ export function CardDemoTextInteraction({
 	selectedSegment,
 	onSelectedSegmentChange,
 	onOpenNote,
+	onDragPointChange,
 }: CardDemoTextInteractionProps) {
 	const segmentButtons = useRef(new Map<string, HTMLButtonElement>());
+	const interactionRef = useRef<HTMLDivElement>(null);
 	const dismissTimerRef = useRef<number | null>(null);
 	const [dismissing, setDismissing] = useState(false);
 	const cancelDismiss = useCallback(() => {
@@ -78,9 +81,32 @@ export function CardDemoTextInteraction({
 		cancelDismiss();
 		onSelectedSegmentChange(segment);
 	};
+	useEffect(() => {
+		const interaction = interactionRef.current;
+		if (!interaction || !selectedSegment) return;
+		const textSurface =
+			interaction.closest(
+				".card-demo-page--text, .sheet-workspace-text-sheet",
+			) ?? interaction;
+		const dismissOnUnoccupiedClick = (event: MouseEvent) => {
+			const target = event.target;
+			if (
+				!(target instanceof Element) ||
+				!textSurface.contains(target) ||
+				target.closest(
+					"[data-card-demo-segment], [data-card-demo-overlay]",
+				)
+			)
+				return;
+			dismiss();
+		};
+		document.addEventListener("click", dismissOnUnoccupiedClick);
+		return () =>
+			document.removeEventListener("click", dismissOnUnoccupiedClick);
+	}, [dismiss, selectedSegment]);
 
 	return (
-		<div className="card-demo-text-interaction">
+		<div className="card-demo-text-interaction" ref={interactionRef}>
 			<div className="card-demo-copy">
 				{CARD_DEMO_FAKE_TEXT.paragraphs.map(
 					(paragraph, paragraphIndex) => (
@@ -122,6 +148,7 @@ export function CardDemoTextInteraction({
 				>
 					<Interaction
 						cards={CARD_DEMO_RESOLUTION_CHAIN}
+						onDragPointChange={onDragPointChange}
 						onOpenNote={onOpenNote}
 						selectedSegment={selectedSegment}
 					/>
@@ -137,6 +164,7 @@ export function CardDemoTextPage({
 	selectedSegment,
 	onSelectedSegmentChange,
 	onOpenNote,
+	onDragPointChange,
 	routeTransition = null,
 }: CardDemoTextInteractionProps & {
 	readonly variant: CardDemoVariant;
@@ -152,6 +180,7 @@ export function CardDemoTextPage({
 			<CardDemoTextPane>
 				<CardDemoTextInteraction
 					Interaction={Interaction}
+					onDragPointChange={onDragPointChange}
 					onOpenNote={onOpenNote}
 					onSelectedSegmentChange={onSelectedSegmentChange}
 					selectedSegment={selectedSegment}
@@ -197,13 +226,6 @@ export function CardDemoOverlay({
 			data-card-demo-dismissing={dismissing ? "true" : undefined}
 			data-card-demo-overlay=""
 		>
-			<button
-				aria-label="Dismiss card view"
-				className="card-demo-backdrop"
-				onClick={onDismiss}
-				tabIndex={-1}
-				type="button"
-			/>
 			<div
 				aria-label={`Resolution Chain for ${selectedSegment.text}`}
 				className="card-demo-dialog"
