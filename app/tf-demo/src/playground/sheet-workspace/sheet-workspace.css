@@ -108,12 +108,26 @@
 
 .sheet-workspace-pane {
 	position: relative;
+	isolation: isolate;
 	height: 100%;
 	min-width: 0;
 	overflow: visible;
 	background: #0f131b;
 	transition:
 		background-color 120ms ease,
+		box-shadow 120ms ease;
+}
+
+.sheet-workspace-pane::after {
+	position: absolute;
+	inset: 0;
+	z-index: 50;
+	pointer-events: none;
+	content: "";
+	opacity: 0;
+	box-shadow: none;
+	transition:
+		opacity 120ms ease,
 		box-shadow 120ms ease;
 }
 
@@ -129,6 +143,14 @@
 		inset 0 0 1.5rem
 		color-mix(in srgb, var(--sheet-accent) 18%, transparent),
 		0 0 1.25rem color-mix(in srgb, var(--sheet-accent) 28%, transparent);
+}
+
+.sheet-workspace-pane[data-drop-target="true"]::after {
+	opacity: 1;
+	box-shadow:
+		inset 0 0 0 2px var(--sheet-accent),
+		inset 0 0 1.5rem
+		color-mix(in srgb, var(--sheet-accent) 22%, transparent);
 }
 
 .sheet-workspace-pane__stack {
@@ -327,6 +349,14 @@
 
 .sheet-workspace-card .card-demo-card__summary {
 	margin-top: auto;
+}
+
+.sheet-workspace-dnd-kit-overlay > .sheet-workspace-card {
+	position: absolute;
+	left: 50%;
+	bottom: 1rem;
+	translate: -50% 0;
+	pointer-events: none;
 }
 
 .sheet-workspace-modifier-preview {

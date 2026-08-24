@@ -64,7 +64,10 @@ export function DndKitSheetWorkspace({
 					<DndKitPane pane={pane} workspace={workspace} />
 				)}
 			/>
-			<DragOverlay dropAnimation={{ duration: 180, easing: "ease-out" }}>
+			<DragOverlay
+				className="sheet-workspace-dnd-kit-overlay"
+				dropAnimation={{ duration: 180, easing: "ease-out" }}
+			>
 				{(source) => {
 					const sheet =
 						(source?.data as DndKitDragData | undefined)?.sheet ??
