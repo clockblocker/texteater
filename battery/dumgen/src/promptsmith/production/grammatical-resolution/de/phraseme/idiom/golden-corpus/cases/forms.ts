@@ -117,6 +117,18 @@ export const formCases = defineGoldenCaseCollection(import.meta.url, {
 				"Second occurrence. Fixed object omitted by coordination. Meaning stays clear.",
 			contaminationKeys: ["de-idiom-lemma:das-handtuch-werfen"],
 		},
+		"grammar-de-idiom-was-zum-truncation-partial": {
+			input: idiomInput("<TARGET>Was</TARGET> <TARGET>zum</TARGET> …?"),
+			idealOutput: citation({
+				normalizedMembers: ["was", "zum"],
+				canonicalForm: "was zum Teufel",
+				memberOrthographies: ["Standard", "Standard"],
+				realizationCoverage: "Partial",
+			}),
+			explanation:
+				"Conventional truncation. Was + zum identify the exact Idiom; Teufel is unrealized fixed material.",
+			contaminationKeys: ["de-idiom-lemma:was-zum-teufel"],
+		},
 		"grammar-de-idiom-faeustchen-perfect-full": {
 			input: idiomInput(
 				"Nach der überraschenden Nachricht <TARGET>hat</TARGET> sie <TARGET>sich</TARGET> heimlich <TARGET>ins</TARGET> <TARGET>Fäustchen</TARGET> <TARGET>gelacht</TARGET>.",

@@ -5,6 +5,8 @@ import {
 import type { canonicalInputSchema, canonicalOutputSchema } from "../schemas";
 import { resolved, sentence } from "./builders";
 
+const wasZum = sentence(["Was", "zum"], "…?");
+
 const cases = {
 	"target-de-interrogative-free-wer": resolved(
 		sentence(["Wer", "kommt", "heute"], "?"),
@@ -41,6 +43,14 @@ const cases = {
 		"Lexeme",
 		"DET",
 	),
+	"target-de-interrogative-partial-idiom-was-zum-click-was": {
+		...resolved(wasZum, 0, [0, 2], "Phraseme", "Idiom"),
+		contaminationKeys: ["target-phraseme:idiom:was-zum-teufel"],
+	},
+	"target-de-interrogative-partial-idiom-was-zum-click-zum": {
+		...resolved(wasZum, 2, [0, 2], "Phraseme", "Idiom"),
+		contaminationKeys: ["target-phraseme:idiom:was-zum-teufel"],
+	},
 } satisfies GoldenCaseRegistry<
 	typeof canonicalInputSchema,
 	typeof canonicalOutputSchema

@@ -185,6 +185,13 @@ inherently reflexive pronoun, separable member, or perfect/future/passive
 auxiliary fixed by the Analysis Target is entity-owned occurrence material;
 omitting it is an alignment error, not Partial coverage.
 
+A conventional truncation may be Partial when its realized wording still
+identifies one exact Phraseme. German `was zum …` is a Partial Attestation of
+the Idiom `was zum Teufel`: `was` and `zum` are realized members, while
+`Teufel` remains part of the Lemma's complete lexical inventory. A generic
+unfinished fragment that does not identify one exact Phraseme is not promoted
+by this exception.
+
 An inherently reflexive member inside a lexically reflexive VERB target
 contributes only to that VERB Attestation in the current Click Resolution
 Chain. It has no independent PRON Attestation, Surface, Lemma selection, or

@@ -50,9 +50,11 @@ realizationCoverage is Full when this occurrence realizes all entity-owned
 lexical material. It is Partial only when settled Idiom material is genuinely
 unrealized yet the exact occurrence and full Lemma remain defensible, chiefly
 recoverable coordination ellipsis such as a second parallel clause whose fixed
-object is omitted. Partial never licenses inventing a normalized member: emit
-only supplied realized members. An overt but unselected word is not evidence
-of Partial because membership is outside this operation.
+object is omitted, or a conventional truncation such as was zum … whose
+realized members identify the complete Idiom was zum Teufel. Partial never
+licenses inventing a normalized member: emit only supplied realized members.
+An overt but unselected word is not evidence of Partial because membership is
+outside this operation.
 </coverage>
 
 <surface_projection>
@@ -66,8 +68,11 @@ spelling Variant. Use Variant only for a licensed noncanonical orthographic
 form. surfaceFeatures is null unless this exact use is archaic, then
 {historicalStatus:"Archaic"}.
 
-Use Citation only when the sentence explicitly presents the target as a
-dictionary, list, or citation form. Ordinary clause uses are Inflection.
+Use Citation when the sentence explicitly presents the target as a dictionary,
+list, or citation form, and for an invariant non-verbal Idiom occurrence with
+no supported inflectional evidence. Thus partial was zum … is Citation while
+its missing Teufel is represented only by realizationCoverage Partial and the
+complete canonicalForm. Ordinary verbal clause uses are Inflection.
 
 For Inflection, describe the route-owning lexical verbal head, not an analytic
 auxiliary. A finite head uses verbForm Fin. Indicative and subjunctive finite
