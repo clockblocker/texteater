@@ -400,7 +400,7 @@ test("dropping a Sheet into a Pane's bottom removal zone deletes it", async ({
 	).toBeVisible();
 });
 
-test("the source Stack reveals its lower Sheet only after a committed move", async ({
+test("a moving Sheet becomes a Card while source and destination previews update", async ({
 	page,
 }) => {
 	await selectSegment(page, "central", "geschlossen");
@@ -416,6 +416,12 @@ test("the source Stack reveals its lower Sheet only after a committed move", asy
 		noteSheet.locator('[data-subject-id*="workspace-note:reading:"]'),
 	).toBeVisible();
 	await expect(textSheet).toBeHidden();
+	const noteSheetId = await noteSheet.getAttribute("data-sheet-id");
+	const noteSheetBox = await noteSheet.boundingBox();
+	if (!noteSheetId || !noteSheetBox)
+		throw new Error(
+			"The top Sheet must have visible geometry and identity.",
+		);
 
 	const handle = noteSheet.getByRole("button", {
 		name: "Move top Sheet from top handle",
@@ -435,12 +441,37 @@ test("the source Stack reveals its lower Sheet only after a committed move", asy
 		steps: 10,
 	});
 	await expect(noteSheet).toHaveAttribute("data-dragging", "true");
-	await expect(textSheet).toBeHidden();
-	await page.mouse.up();
+	await expect(noteSheet).toBeHidden();
 	await expect(textSheet).toBeVisible();
+
+	const movingCard = page.locator(
+		'.card-sheet-workspace__drag-overlay > [data-subject-presentation="Card"][data-sheet-drag-edge="top"]',
+	);
+	await expect(movingCard).toBeVisible();
+	await expect
+		.poll(async () => (await movingCard.boundingBox())?.height ?? Infinity)
+		.toBeLessThan(noteSheetBox.height * 0.7);
+	await expect
+		.poll(async () => (await movingCard.boundingBox())?.width ?? Infinity)
+		.toBeLessThan(noteSheetBox.width - 16);
+
+	const destinationPreview = pane(page, "east").locator(
+		`[data-sheet-drop-preview="${noteSheetId}"]`,
+	);
+	await expect(destinationPreview).toBeVisible();
+	await expect(
+		destinationPreview.locator('[data-subject-presentation="Sheet"]'),
+	).toBeVisible();
+	await expect(central.locator("[data-sheet-drop-preview]")).toHaveCount(0);
+	await page.mouse.up();
+	await expect(destinationPreview).toHaveCount(0);
+	await expect(textSheet).toBeVisible();
+	await expect(
+		pane(page, "east").locator(`[data-sheet-id="${noteSheetId}"]`),
+	).toBeVisible();
 });
 
-test("lock is visible and clickable while a moving Sheet stays as a dim placeholder", async ({
+test("lock is controllable before its Sheet becomes a moving Card", async ({
 	page,
 }) => {
 	const central = pane(page, "central");
@@ -464,7 +495,12 @@ test("lock is visible and clickable while a moving Sheet stays as a dim placehol
 		central.locator('[data-sheet-id="sheet-central-text"]'),
 	).toHaveAttribute("data-dragging", "true");
 	await expect(
-		page.locator('[data-subject-presentation="Card"]'),
+		central.locator('[data-sheet-id="sheet-central-text"]'),
+	).toBeHidden();
+	await expect(
+		page.locator(
+			'.card-sheet-workspace__drag-overlay > [data-subject-presentation="Card"]',
+		),
 	).toBeVisible();
 	await page.keyboard.press("Escape");
 	await page.mouse.up();

@@ -72,6 +72,9 @@ type SubjectInteraction = {
 const SubjectInteractionContext = createContext<SubjectInteraction | null>(
 	null,
 );
+const PASSIVE_SUBJECT_INTERACTION: SubjectInteraction = {
+	requestCardLayer: () => {},
+};
 
 /** Available to subject presentation code without exposing Pane geometry. */
 export function useCardLayerRequest(): SubjectInteraction["requestCardLayer"] {
@@ -117,6 +120,7 @@ type SheetDragData = {
 	readonly kind: "Sheet";
 	readonly sourcePaneId: PaneId;
 	readonly sheet: Sheet;
+	readonly edge: "top" | "bottom";
 };
 
 type LayerCardDragData = {
@@ -312,6 +316,13 @@ export function CardSheetWorkspace({
 							: data?.subject;
 					return subject ? (
 						<SubjectCard
+							className={cn(
+								data?.kind === "Sheet" &&
+									"card-sheet-workspace__sheet-move-card",
+							)}
+							sheetDragEdge={
+								data?.kind === "Sheet" ? data.edge : undefined
+							}
 							subject={subject}
 							renderSubject={renderSubject}
 						/>
@@ -350,6 +361,20 @@ function WorkspacePane({
 		data: { kind: "Pane", paneId: pane.id },
 	});
 	const topSheet = pane.sheets.at(-1);
+	const isSheetMovingFromPane =
+		activeDrag?.kind === "Sheet" && activeDrag.sourcePaneId === pane.id;
+	const revealedSheetId = isSheetMovingFromPane
+		? pane.sheets.at(-2)?.instanceId
+		: undefined;
+	const previewedSheet =
+		activeDrag?.kind === "Sheet" &&
+		activeDrag.sourcePaneId !== pane.id &&
+		isDropTarget
+			? activeDrag.sheet
+			: undefined;
+	const isBaseCovered =
+		pane.sheets.length > 0 &&
+		!(isSheetMovingFromPane && pane.sheets.length === 1);
 	const dismissOnUnoccupiedClick = (
 		event: ReactPointerEvent<HTMLElement>,
 	) => {
@@ -398,27 +423,38 @@ function WorkspacePane({
 			ref={ref}
 		>
 			<div className="card-sheet-workspace__stack">
-				{pane.sheets.length === 0 ? (
-					pane.id === workspace.centralPaneId ? (
+				<div
+					aria-hidden={isBaseCovered}
+					className="card-sheet-workspace__stack-base"
+					data-covered={isBaseCovered ? "true" : undefined}
+					inert={isBaseCovered}
+				>
+					{pane.id === workspace.centralPaneId ? (
 						navigationAnchor
 					) : (
 						<div className="card-sheet-workspace__empty-base">
 							Drop a Card or Sheet
 						</div>
-					)
-				) : (
-					pane.sheets.map((sheet, index) => (
-						<WorkspaceSheet
-							dispatch={dispatch}
-							isTop={sheet.instanceId === topSheet?.instanceId}
-							key={sheet.instanceId}
-							pane={pane}
-							renderSubject={renderSubject}
-							sheet={sheet}
-							stackIndex={index}
-						/>
-					))
-				)}
+					)}
+				</div>
+				{pane.sheets.map((sheet, index) => (
+					<WorkspaceSheet
+						dispatch={dispatch}
+						isTop={sheet.instanceId === topSheet?.instanceId}
+						isRevealed={sheet.instanceId === revealedSheetId}
+						key={sheet.instanceId}
+						pane={pane}
+						renderSubject={renderSubject}
+						sheet={sheet}
+						stackIndex={index}
+					/>
+				))}
+				{previewedSheet ? (
+					<SheetDropPreview
+						renderSubject={renderSubject}
+						sheet={previewedSheet}
+					/>
+				) : null}
 			</div>
 			{cardLayer ? (
 				<CardLayerView
@@ -461,6 +497,7 @@ function WorkspaceSheet({
 	pane,
 	sheet,
 	isTop,
+	isRevealed,
 	stackIndex,
 	dispatch,
 	renderSubject,
@@ -468,6 +505,7 @@ function WorkspaceSheet({
 	readonly pane: Pane;
 	readonly sheet: Sheet;
 	readonly isTop: boolean;
+	readonly isRevealed: boolean;
 	readonly stackIndex: number;
 	readonly dispatch: React.Dispatch<WorkspaceAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
@@ -475,13 +513,18 @@ function WorkspaceSheet({
 	const sheetElement = useRef<HTMLElement>(null);
 	const topDrag = useDraggable<SheetDragData>({
 		id: `sheet:${sheet.instanceId}:top`,
-		data: { kind: "Sheet", sourcePaneId: pane.id, sheet },
+		data: { kind: "Sheet", sourcePaneId: pane.id, sheet, edge: "top" },
 		disabled: !isTop,
 		element: sheetElement,
 	});
 	const bottomDrag = useDraggable<SheetDragData>({
 		id: `sheet:${sheet.instanceId}:bottom`,
-		data: { kind: "Sheet", sourcePaneId: pane.id, sheet },
+		data: {
+			kind: "Sheet",
+			sourcePaneId: pane.id,
+			sheet,
+			edge: "bottom",
+		},
 		disabled: !isTop,
 		element: sheetElement,
 	});
@@ -513,6 +556,7 @@ function WorkspaceSheet({
 			data-sheet-id={sheet.instanceId}
 			data-sheet-stack-index={stackIndex}
 			data-sheet-top={isTop ? "true" : undefined}
+			data-sheet-revealed={isRevealed ? "true" : undefined}
 			inert={!isTop}
 			ref={sheetElement}
 		>
@@ -588,6 +632,36 @@ function WorkspaceSheet({
 					</div>
 				</>
 			) : null}
+		</article>
+	);
+}
+
+function SheetDropPreview({
+	sheet,
+	renderSubject,
+}: {
+	readonly sheet: Sheet;
+	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
+}) {
+	return (
+		<article
+			aria-hidden
+			className="card-sheet-workspace__sheet-drop-preview"
+			data-sheet-drop-preview={sheet.instanceId}
+			inert
+		>
+			<SubjectInteractionContext.Provider
+				value={PASSIVE_SUBJECT_INTERACTION}
+			>
+				<div
+					className="card-sheet-workspace__subject"
+					data-subject-id={subjectIdentity(sheet.subject)}
+					data-subject-kind={sheet.subject.kind}
+					data-subject-presentation="Sheet"
+				>
+					{renderSubject(sheet.subject, "Sheet")}
+				</div>
+			</SubjectInteractionContext.Provider>
 		</article>
 	);
 }
@@ -739,20 +813,22 @@ function LayerCardView({
 function SubjectCard({
 	subject,
 	renderSubject,
+	className,
+	sheetDragEdge,
 }: {
 	readonly subject: WorkspaceSubject;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
+	readonly className?: string;
+	readonly sheetDragEdge?: "top" | "bottom";
 }) {
-	const interaction = useMemo<SubjectInteraction>(
-		() => ({ requestCardLayer: () => {} }),
-		[],
-	);
 	return (
-		<SubjectInteractionContext.Provider value={interaction}>
+		<SubjectInteractionContext.Provider value={PASSIVE_SUBJECT_INTERACTION}>
 			<div
+				className={className}
 				data-subject-id={subjectIdentity(subject)}
 				data-subject-kind={subject.kind}
 				data-subject-presentation="Card"
+				data-sheet-drag-edge={sheetDragEdge}
 				inert
 			>
 				{renderSubject(subject, "Card")}

@@ -101,6 +101,14 @@
 	overflow: hidden;
 }
 
+.card-sheet-workspace__stack-base {
+	height: 100%;
+}
+
+.card-sheet-workspace__stack-base[data-covered="true"] {
+	visibility: hidden;
+}
+
 .card-sheet-workspace__sheet {
 	position: absolute;
 	inset: 0;
@@ -116,13 +124,16 @@
 		transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.card-sheet-workspace__sheet:not([data-sheet-top="true"]) {
+.card-sheet-workspace__sheet:not([data-sheet-top="true"]):not(
+	[data-sheet-revealed="true"]
+) {
 	visibility: hidden;
 	pointer-events: none;
 }
 
 .card-sheet-workspace__sheet--dragging {
-	opacity: 0.16;
+	visibility: hidden;
+	opacity: 0;
 }
 
 .card-sheet-workspace__sheet--dropping {
@@ -140,6 +151,24 @@
 
 .card-sheet-workspace__subject > * {
 	min-height: 100%;
+}
+
+.card-sheet-workspace__sheet-drop-preview {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	min-width: 0;
+	min-height: 0;
+	overflow: hidden;
+	pointer-events: none;
+	color: var(--workspace-ink);
+	background: var(--workspace-paper);
+	box-shadow:
+		inset 0 0 0 2px rgb(145 168 255 / 72%),
+		0 0 2.5rem rgb(145 168 255 / 32%);
+	opacity: 0.24;
+	animation: workspace-sheet-preview-arrive 160ms ease-out;
 }
 
 .card-sheet-workspace__sheet-handles {
@@ -447,6 +476,36 @@
 	color: #f1f4fa;
 	background: var(--workspace-raised);
 	box-shadow: 0 1.6rem 4rem rgb(0 0 0 / 58%);
+}
+
+.card-sheet-workspace__drag-overlay > .card-sheet-workspace__sheet-move-card {
+	position: absolute;
+	top: 0.5rem;
+	left: 50%;
+	width: min(calc(100% - 2rem), 38rem);
+	height: min(calc(100% - 1rem), 17rem);
+	translate: -50% 0;
+	animation: workspace-sheet-become-card 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card-sheet-workspace__drag-overlay
+	> .card-sheet-workspace__sheet-move-card[data-sheet-drag-edge="bottom"] {
+	top: auto;
+	bottom: 0.5rem;
+}
+
+@keyframes workspace-sheet-become-card {
+	from {
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+	}
+}
+
+@keyframes workspace-sheet-preview-arrive {
+	from {
+		opacity: 0;
+	}
 }
 
 @keyframes workspace-sheet-arrive {
