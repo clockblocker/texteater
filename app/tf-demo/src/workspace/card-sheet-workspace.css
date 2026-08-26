@@ -8,6 +8,7 @@
 	--workspace-pane-feedback: 10;
 	--workspace-sheet-controls: 20;
 	--workspace-card-layer: 30;
+	--workspace-removal-zone: 35;
 	--workspace-drag-overlay: 40;
 	width: 100%;
 	height: 100%;
@@ -150,17 +151,26 @@
 
 .card-sheet-workspace__sheet-handle {
 	position: absolute;
-	left: 50%;
+	left: 0;
 	display: grid;
-	place-items: center;
-	width: 4.5rem;
-	height: 1.7rem;
-	translate: -50% 0;
-	border: 1px solid #465065;
-	border-radius: 999px;
-	color: #dce3f8;
-	background: rgb(12 15 22 / 92%);
-	box-shadow: 0 0.4rem 1.2rem rgb(0 0 0 / 38%);
+	align-items: start;
+	justify-items: center;
+	width: 100%;
+	height: 4.6rem;
+	padding-top: 0.75rem;
+	border: 0;
+	border-radius: 0;
+	color: rgb(229 235 249 / 62%);
+	background: linear-gradient(
+		180deg,
+		rgb(6 8 12 / 94%) 0%,
+		rgb(7 9 14 / 82%) 18%,
+		rgb(8 11 17 / 60%) 38%,
+		rgb(9 12 18 / 34%) 59%,
+		rgb(9 12 18 / 13%) 78%,
+		transparent 100%
+	);
+	box-shadow: inset 0 1px rgb(255 255 255 / 9%);
 	cursor: grab;
 	pointer-events: auto;
 	touch-action: none;
@@ -168,16 +178,30 @@
 }
 
 .card-sheet-workspace__sheet-handle svg {
-	width: 1rem;
-	height: 1rem;
+	width: 1.2rem;
+	height: 1.2rem;
+	filter: drop-shadow(0 0.2rem 0.5rem rgb(0 0 0 / 50%));
 }
 
 .card-sheet-workspace__sheet-handle[data-sheet-handle="top"] {
-	top: 0.55rem;
+	top: 0;
 }
 
 .card-sheet-workspace__sheet-handle[data-sheet-handle="bottom"] {
-	bottom: 0.55rem;
+	bottom: 0;
+	align-items: end;
+	padding-top: 0;
+	padding-bottom: 0.75rem;
+	background: linear-gradient(
+		0deg,
+		rgb(6 8 12 / 94%) 0%,
+		rgb(7 9 14 / 82%) 18%,
+		rgb(8 11 17 / 60%) 38%,
+		rgb(9 12 18 / 34%) 59%,
+		rgb(9 12 18 / 13%) 78%,
+		transparent 100%
+	);
+	box-shadow: inset 0 -1px rgb(255 255 255 / 9%);
 }
 
 .card-sheet-workspace__sheet-handle:active {
@@ -241,6 +265,48 @@
 	font-size: 1.2rem;
 	letter-spacing: normal;
 	text-transform: none;
+}
+
+.card-sheet-workspace__sheet-removal-zone {
+	position: absolute;
+	z-index: var(--workspace-removal-zone);
+	right: clamp(0.45rem, 3cqw, 1rem);
+	bottom: 3rem;
+	left: clamp(0.45rem, 3cqw, 1rem);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	height: 3.5rem;
+	border: 1px dashed rgb(248 113 113 / 68%);
+	border-radius: 0.8rem;
+	color: #fca5a5;
+	background: rgb(69 10 10 / 82%);
+	box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 35%);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	pointer-events: none;
+	transition:
+		border-color 140ms ease,
+		background-color 140ms ease,
+		box-shadow 140ms ease,
+		transform 140ms ease;
+}
+
+.card-sheet-workspace__sheet-removal-zone svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.card-sheet-workspace__sheet-removal-zone[data-drop-target="true"] {
+	transform: scale(1.02);
+	border-color: #f87171;
+	color: #fee2e2;
+	background: rgb(127 29 29 / 94%);
+	box-shadow:
+		0 0 0 2px rgb(248 113 113 / 28%),
+		0 0 1.5rem rgb(248 113 113 / 35%);
 }
 
 .card-sheet-workspace__card-layer {
@@ -340,14 +406,23 @@
 .card-sheet-workspace__card-tail {
 	display: flex;
 	flex: none;
-	align-items: center;
+	align-items: end;
+	justify-content: center;
 	width: 100%;
-	height: 2rem;
-	padding: 0.35rem 0.8rem;
+	height: 4rem;
+	padding: 0.35rem 0.8rem 0.65rem;
 	border: 0;
-	border-top: 1px solid #3c4454;
 	color: #d7ddef;
-	background: #111620;
+	background: linear-gradient(
+		0deg,
+		rgb(6 8 12 / 98%) 0%,
+		rgb(7 9 14 / 86%) 22%,
+		rgb(8 11 17 / 62%) 43%,
+		rgb(9 12 18 / 35%) 63%,
+		rgb(9 12 18 / 13%) 81%,
+		transparent 100%
+	);
+	box-shadow: inset 0 -1px rgb(255 255 255 / 8%);
 	font-size: 0.7rem;
 	font-weight: 700;
 	letter-spacing: 0.04em;

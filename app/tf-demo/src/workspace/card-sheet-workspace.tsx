@@ -1,3 +1,4 @@
+import { pointerIntersection } from "@dnd-kit/collision";
 import {
 	DragDropProvider,
 	DragOverlay,
@@ -8,6 +9,7 @@ import {
 	GripHorizontalIcon,
 	LockIcon,
 	LockOpenIcon,
+	Trash2Icon,
 	XIcon,
 } from "lucide-react";
 import {
@@ -52,7 +54,7 @@ import "./card-sheet-workspace.css";
 
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
 const MINIMUM_DRAG_DISTANCE = 4;
-const CARD_LAYER_COLLISION_PRIORITY = 4;
+const NESTED_DROP_ZONE_COLLISION_PRIORITY = 4;
 
 export type CardSheetWorkspaceProps = {
 	readonly initialWorkspace: SheetWorkspace;
@@ -137,7 +139,15 @@ type CardLayerDropData = {
 	readonly paneId: PaneId;
 };
 
-type WorkspaceDropData = PaneDropData | CardLayerDropData;
+type SheetRemovalDropData = {
+	readonly kind: "SheetRemoval";
+	readonly paneId: PaneId;
+};
+
+type WorkspaceDropData =
+	| PaneDropData
+	| CardLayerDropData
+	| SheetRemovalDropData;
 
 export function CardSheetWorkspace({
 	initialWorkspace,
@@ -214,6 +224,16 @@ export function CardSheetWorkspace({
 						type: "ReturnCard",
 						paneId: source.sourcePaneId,
 						cardId: source.cardId,
+					});
+					return;
+				}
+				if (source.kind === "Sheet" && target.kind === "SheetRemoval") {
+					dispatch({
+						type: "Command",
+						command: {
+							type: "RemoveSheet",
+							sheetId: source.sheet.instanceId,
+						},
 					});
 					return;
 				}
@@ -409,6 +429,34 @@ function WorkspacePane({
 					renderSubject={renderSubject}
 				/>
 			) : null}
+			{activeDrag?.kind === "Sheet" ? (
+				<SheetRemovalDropZone paneId={pane.id} />
+			) : null}
+		</section>
+	);
+}
+
+function SheetRemovalDropZone({ paneId }: { readonly paneId: PaneId }) {
+	const { ref, isDropTarget } = useDroppable<SheetRemovalDropData>({
+		id: `sheet-removal:${paneId}`,
+		data: { kind: "SheetRemoval", paneId },
+		accept: (source) => {
+			const data = source.data as WorkspaceDragData | undefined;
+			return data?.kind === "Sheet";
+		},
+		collisionDetector: pointerIntersection,
+		collisionPriority: NESTED_DROP_ZONE_COLLISION_PRIORITY,
+	});
+	return (
+		<section
+			aria-label={`Remove Sheet in ${paneId} Pane`}
+			className="card-sheet-workspace__sheet-removal-zone"
+			data-drop-target={isDropTarget ? "true" : undefined}
+			data-sheet-removal-zone={paneId}
+			ref={ref}
+		>
+			<Trash2Icon aria-hidden="true" />
+			<span>{isDropTarget ? "Release to remove" : "Remove Sheet"}</span>
 		</section>
 	);
 }
@@ -590,7 +638,8 @@ function CardLayerView({
 		},
 		// The Card Layer sits inside a Pane, so it must win their overlapping
 		// pointer collision when a Card is returned to its deck.
-		collisionPriority: CARD_LAYER_COLLISION_PRIORITY,
+		collisionDetector: pointerIntersection,
+		collisionPriority: NESTED_DROP_ZONE_COLLISION_PRIORITY,
 	});
 	return (
 		<section

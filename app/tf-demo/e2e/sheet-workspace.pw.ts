@@ -354,6 +354,49 @@ test("moving an originating Sheet dismisses its layer and uses both handles", as
 	).toBeVisible();
 });
 
+test("dropping a Sheet into a Pane's bottom removal zone deletes it", async ({
+	page,
+}) => {
+	const central = pane(page, "central");
+	const sheet = central.locator('[data-sheet-id="sheet-central-text"]');
+	const handle = central.getByRole("button", {
+		name: "Move top Sheet from top handle",
+		exact: true,
+	});
+	const handleBox = await handle.boundingBox();
+	if (!handleBox) throw new Error("Sheet handle must be visible.");
+
+	await page.mouse.move(
+		handleBox.x + handleBox.width / 2,
+		handleBox.y + handleBox.height / 2,
+	);
+	await page.mouse.down();
+	await page.mouse.move(handleBox.x + 16, handleBox.y + 12, { steps: 3 });
+
+	const removalZone = central.getByRole("region", {
+		name: "Remove Sheet in central Pane",
+		exact: true,
+	});
+	await expect(page.locator("[data-sheet-removal-zone]")).toHaveCount(3);
+	await expect(removalZone).toBeVisible();
+	const removalBox = await removalZone.boundingBox();
+	if (!removalBox) throw new Error("Sheet removal zone must be visible.");
+	await page.mouse.move(
+		removalBox.x + removalBox.width / 2,
+		removalBox.y + removalBox.height / 2,
+		{ steps: 10 },
+	);
+	await expect(removalZone).toHaveAttribute("data-drop-target", "true");
+	await expect(removalZone).toContainText("Release to remove");
+	await page.mouse.up();
+
+	await expect(sheet).toHaveCount(0);
+	await expect(removalZone).toHaveCount(0);
+	await expect(
+		central.getByText("Navigation Anchor", { exact: true }),
+	).toBeVisible();
+});
+
 test("the source Stack reveals its lower Sheet only after a committed move", async ({
 	page,
 }) => {
