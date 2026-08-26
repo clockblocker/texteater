@@ -253,6 +253,28 @@
 	pointer-events: none;
 }
 
+.card-sheet-workspace__card-layer::before {
+	position: absolute;
+	inset: -0.35rem;
+	z-index: -1;
+	border: 2px solid transparent;
+	border-radius: 1.25rem;
+	content: "";
+	pointer-events: none;
+	transition:
+		border-color 140ms ease,
+		background-color 140ms ease,
+		box-shadow 140ms ease;
+}
+
+.card-sheet-workspace__card-layer[data-drop-target="true"]::before {
+	border-color: var(--workspace-accent);
+	background: rgb(145 168 255 / 8%);
+	box-shadow:
+		0 0 0.8rem rgb(145 168 255 / 25%),
+		inset 0 0 1.5rem rgb(145 168 255 / 10%);
+}
+
 .card-sheet-workspace__card-layer-close {
 	position: absolute;
 	z-index: 20;

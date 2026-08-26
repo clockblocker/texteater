@@ -52,6 +52,7 @@ import "./card-sheet-workspace.css";
 
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
 const MINIMUM_DRAG_DISTANCE = 4;
+const CARD_LAYER_COLLISION_PRIORITY = 4;
 
 export type CardSheetWorkspaceProps = {
 	readonly initialWorkspace: SheetWorkspace;
@@ -104,6 +105,11 @@ type WorkspaceAction =
 			readonly sourcePaneId: PaneId;
 			readonly destinationPaneId: PaneId;
 			readonly cardId: string;
+	  }
+	| {
+			readonly type: "ReturnCard";
+			readonly paneId: PaneId;
+			readonly cardId: string;
 	  };
 
 type SheetDragData = {
@@ -125,6 +131,13 @@ type PaneDropData = {
 	readonly kind: "Pane";
 	readonly paneId: PaneId;
 };
+
+type CardLayerDropData = {
+	readonly kind: "CardLayer";
+	readonly paneId: PaneId;
+};
+
+type WorkspaceDropData = PaneDropData | CardLayerDropData;
 
 export function CardSheetWorkspace({
 	initialWorkspace,
@@ -178,7 +191,7 @@ export function CardSheetWorkspace({
 					| WorkspaceDragData
 					| undefined;
 				const target = operation.target?.data as
-					| PaneDropData
+					| WorkspaceDropData
 					| undefined;
 				setActiveDrag(null);
 				const moved = Math.hypot(
@@ -189,9 +202,22 @@ export function CardSheetWorkspace({
 					canceled ||
 					moved < MINIMUM_DRAG_DISTANCE ||
 					!source ||
-					target?.kind !== "Pane"
+					!target
 				)
 					return;
+				if (
+					source.kind === "LayerCard" &&
+					target.kind === "CardLayer" &&
+					target.paneId === source.sourcePaneId
+				) {
+					dispatch({
+						type: "ReturnCard",
+						paneId: source.sourcePaneId,
+						cardId: source.cardId,
+					});
+					return;
+				}
+				if (target.kind !== "Pane") return;
 				if (source.kind === "LayerCard") {
 					dispatch({
 						type: "PlaceCard",
@@ -553,11 +579,26 @@ function CardLayerView({
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
 }) {
+	const { ref, isDropTarget } = useDroppable<CardLayerDropData>({
+		id: `card-layer:${layer.paneId}`,
+		data: { kind: "CardLayer", paneId: layer.paneId },
+		accept: (source) => {
+			const data = source.data as WorkspaceDragData | undefined;
+			return (
+				data?.kind === "LayerCard" && data.sourcePaneId === layer.paneId
+			);
+		},
+		// The Card Layer sits inside a Pane, so it must win their overlapping
+		// pointer collision when a Card is returned to its deck.
+		collisionPriority: CARD_LAYER_COLLISION_PRIORITY,
+	});
 	return (
 		<section
 			aria-label={`Card Layer in ${layer.paneId} Pane`}
 			className="card-sheet-workspace__card-layer"
 			data-card-layer={layer.paneId}
+			data-drop-target={isDropTarget ? "true" : undefined}
+			ref={ref}
 		>
 			<button
 				aria-label={`Close Card Layer in ${layer.paneId} Pane`}
@@ -730,6 +771,16 @@ function workspaceReducer(
 				),
 				nextSheetSequence: state.nextSheetSequence + 1,
 				announcement: `Placed ${subjectLabel(card.subject)} Card in ${action.destinationPaneId} Pane as a Sheet.`,
+			};
+		}
+		case "ReturnCard": {
+			const card = state.cardLayers
+				.find((layer) => layer.paneId === action.paneId)
+				?.cards.find((candidate) => candidate.id === action.cardId);
+			if (!card) return state;
+			return {
+				...state,
+				announcement: `Returned ${subjectLabel(card.subject)} Card to its Card Layer.`,
 			};
 		}
 		case "Command": {

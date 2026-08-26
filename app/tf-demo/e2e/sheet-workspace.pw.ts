@@ -22,7 +22,11 @@ async function selectSegment(
 	).toBeVisible();
 }
 
-async function dragTo(source: Locator, target: Locator) {
+async function dragTo(
+	source: Locator,
+	target: Locator,
+	destinationRatio = { x: 0.5, y: 0.5 },
+) {
 	const sourceBox = await source.boundingBox();
 	const targetBox = await target.boundingBox();
 	if (!sourceBox || !targetBox) {
@@ -34,8 +38,8 @@ async function dragTo(source: Locator, target: Locator) {
 		y: sourceBox.y + sourceBox.height / 2,
 	};
 	const destination = {
-		x: targetBox.x + targetBox.width / 2,
-		y: targetBox.y + targetBox.height / 2,
+		x: targetBox.x + targetBox.width * destinationRatio.x,
+		y: targetBox.y + targetBox.height * destinationRatio.y,
 	};
 	await page.mouse.move(start.x, start.y);
 	await page.mouse.down();
@@ -216,6 +220,36 @@ test("the foremost Card drags across Panes and remaining Cards keep order", asyn
 	).resolves.toEqual(["lemma", "surface", "attestation"]);
 });
 
+test("a Card returned to its deck snaps back into its original place", async ({
+	page,
+}) => {
+	await selectSegment(page, "central", "geschlossen");
+	const central = pane(page, "central");
+	const layer = page.locator('[data-card-layer="central"]');
+	const card = layer.locator('[data-card-order="0"]');
+	const cardId = await card.getAttribute("data-card-id");
+	if (!cardId) throw new Error("Card must have an identity.");
+
+	await dragTo(card, layer);
+
+	await expect(layer.locator("[data-card-id]")).toHaveCount(4);
+	await expect(layer.locator('[data-card-order="0"]')).toHaveAttribute(
+		"data-card-id",
+		cardId,
+	);
+	await expect(
+		layer
+			.locator("[data-card-id]")
+			.evaluateAll((cards) =>
+				cards.map((candidate) =>
+					candidate.getAttribute("data-card-order"),
+				),
+			),
+	).resolves.toEqual(["0", "1", "2", "3"]);
+	await expect(central.locator("[data-sheet-id]")).toHaveCount(1);
+	await expect(pane(page, "east").locator("[data-sheet-id]")).toHaveCount(0);
+});
+
 test("an occluded Card drags only from its visible Tail", async ({ page }) => {
 	await selectSegment(page, "central", "geschlossen");
 	const centralLayer = page.locator('[data-card-layer="central"]');
@@ -328,6 +362,7 @@ test("the source Stack reveals its lower Sheet only after a committed move", asy
 	await dragTo(
 		page.locator('[data-card-layer="central"] [data-card-order="0"]'),
 		central,
+		{ x: 0.5, y: 0.1 },
 	);
 	const noteSheet = central.locator('[data-sheet-top="true"]');
 	const textSheet = central.locator('[data-sheet-id="sheet-central-text"]');

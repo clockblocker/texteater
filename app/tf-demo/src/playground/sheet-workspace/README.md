@@ -17,8 +17,9 @@ order: Reading, Lemma, Surface, and Occurrence Attestation.
 Card Layers are replaced by a new selection in the same Pane and dismissed by
 Escape, their close control, unoccupied Pane clicks, or when their originating
 Sheet is hidden, moved, or removed. Moving the final Card into a Sheet Stack
-also removes the layer. The foremost Card drags from its full surface; each
-occluded Card drags from its Note-owned Tail.
+also removes the layer. A Card released over its own Card Layer returns to its
+original place without changing the deck order. The foremost Card drags from
+its full surface; each occluded Card drags from its Note-owned Tail.
 
 Deferred work remains resolution-owned Card selection, final Tail designs,
 nested Card links, exact shortcut and non-pointer placement design,
