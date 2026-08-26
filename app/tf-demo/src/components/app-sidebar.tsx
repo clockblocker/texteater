@@ -13,15 +13,13 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
-import { PLAYGROUND_BASE_PATH } from "@/playground/playground-navigation";
+import { SHEET_WORKSPACE_PATH } from "@/playground/sheet-workspace/sheet-workspace-fixtures";
 
 export function AppSidebar() {
 	const location = useLocation();
 	const target = targetFromLocation(location);
 	const { setOpenMobile } = useSidebar();
-	const isPlayground =
-		location.pathname === PLAYGROUND_BASE_PATH ||
-		location.pathname.startsWith(`${PLAYGROUND_BASE_PATH}/`);
+	const isPlayground = location.pathname === SHEET_WORKSPACE_PATH;
 	const settingsTextId =
 		target?.kind === "Text" || target?.kind === "Settings"
 			? target.textId
@@ -59,7 +57,7 @@ export function AppSidebar() {
 										isActive={isPlayground}
 										render={
 											<Link
-												to={PLAYGROUND_BASE_PATH}
+												to={SHEET_WORKSPACE_PATH}
 												onClick={() =>
 													setOpenMobile(false)
 												}

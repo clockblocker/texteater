@@ -23,13 +23,10 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
-		"@atlaskit/pragmatic-drag-and-drop": "3.0.0",
 		"@base-ui/react": "^1.7.0",
 		"@convex-dev/react-query": "^0.1.0",
 		"@dnd-kit/react": "0.5.0",
 		"@fontsource-variable/geist": "^5.3.0",
-		"@react-aria/button": "^3.15.1",
-		"@react-aria/dnd": "3.12.1",
 		"@tailwindcss/vite": "^4",
 		"@tanstack/react-query": "^5.101.4",
 		"class-variance-authority": "^0.7.1",
@@ -40,7 +37,6 @@
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"lucide-react": "^1.31.0",
-		"motion": "13.1.1",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
 		"react-resizable-panels": "^4.12.3",

@@ -1,25 +1,13 @@
 .sheet-workspace-page {
-	--sheet-ink: #f5f7fb;
-	--sheet-muted: #9299a8;
-	--sheet-border: #303642;
-	--sheet-paper: #151922;
-	--sheet-paper-raised: #1b202b;
-	--sheet-accent: #8ba4ff;
-	--sheet-layer-sheet: 1;
-	--sheet-layer-sheet-control: 5;
-	--sheet-layer-pane-feedback: 10;
-	--sheet-layer-moving-sheet: 20;
-	--sheet-layer-resize-handle: 30;
-	--sheet-layer-card-overlay: 40;
-	--sheet-layer-modifier-preview: 50;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	gap: 0.75rem;
 	height: 100dvh;
-	min-height: 38rem;
+	min-height: 34rem;
 	padding: 0.75rem;
 	overflow: hidden;
-	color: var(--sheet-ink);
+	color: #f5f7fb;
 	background:
 		radial-gradient(
 			circle at 50% -20%,
@@ -29,406 +17,76 @@
 		#090b10;
 }
 
-.sheet-workspace-page button:focus-visible,
-.sheet-workspace-page a:focus-visible,
-.sheet-workspace-page [role="separator"]:focus-visible {
-	outline: 2px solid var(--sheet-accent);
-	outline-offset: 2px;
-}
-
 .sheet-workspace-controls {
 	display: flex;
 	flex: none;
 	align-items: center;
-	justify-content: end;
-	gap: 0.5rem;
+	justify-content: space-between;
+	gap: 0.75rem;
 }
 
-.sheet-workspace-controls nav {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: end;
-	gap: 0.35rem;
-}
-
-.sheet-workspace-controls > button,
-.sheet-workspace-controls nav a,
-.sheet-workspace-navigation-anchor button {
-	display: inline-flex;
-	align-items: center;
-	min-height: 2.2rem;
-	padding: 0.45rem 0.7rem;
-	border: 1px solid var(--sheet-border);
-	border-radius: 0.45rem;
-	color: var(--sheet-ink);
-	background: #121620;
-	font-size: 0.78rem;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.sheet-workspace-controls > button:hover,
-.sheet-workspace-controls nav a:hover,
-.sheet-workspace-navigation-anchor button:hover {
-	border-color: #4a5262;
-	background: #1a1f2a;
-}
-
-.sheet-workspace-controls nav a[aria-current="page"] {
-	border-color: var(--sheet-accent);
-	color: #081024;
-	background: var(--sheet-accent);
-}
-
-.sheet-workspace-board {
-	flex: 1;
-	min-height: 0;
-	width: 100%;
-	overflow: visible;
-	border: 1px solid var(--sheet-border);
-	border-radius: 0.75rem;
-	background: #0d1017;
-	box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 45%);
-}
-
-.sheet-workspace-board [data-slot="resizable-panel"] {
-	min-width: 0;
-	overflow: visible;
-}
-
-.sheet-workspace-resize-handle {
-	z-index: var(--sheet-layer-resize-handle);
-	width: 0.65rem;
-	border-inline: 1px solid #242a34;
-	background: #0a0d13;
-}
-
-.sheet-workspace-resize-handle::after {
-	width: 0.65rem;
-}
-
-.sheet-workspace-resize-handle > div {
-	width: 0.18rem;
-	height: 2.5rem;
-	background: #586174;
-}
-
-.sheet-workspace-pane {
-	position: relative;
-	height: 100%;
-	min-width: 0;
-	overflow: visible;
-	background: #0f131b;
-	transition:
-		background-color 120ms ease,
-		box-shadow 120ms ease;
-}
-
-.sheet-workspace-pane::after {
-	position: absolute;
-	inset: 0;
-	z-index: var(--sheet-layer-pane-feedback);
-	pointer-events: none;
-	content: "";
-	opacity: 0;
-	box-shadow: none;
-	transition:
-		opacity 120ms ease,
-		box-shadow 120ms ease;
-}
-
-.sheet-workspace-pane[data-active="true"] {
-	box-shadow: inset 0 0 0 1px
-		color-mix(in srgb, var(--sheet-accent) 62%, transparent);
-}
-
-.sheet-workspace-pane[data-drop-target="true"] {
-	background: color-mix(in srgb, var(--sheet-accent) 12%, #0f131b);
-	box-shadow:
-		inset 0 0 0 2px var(--sheet-accent),
-		inset 0 0 1.5rem
-		color-mix(in srgb, var(--sheet-accent) 18%, transparent),
-		0 0 1.25rem color-mix(in srgb, var(--sheet-accent) 28%, transparent);
-}
-
-.sheet-workspace-pane[data-drop-target="true"]::after {
-	opacity: 1;
-	box-shadow:
-		inset 0 0 0 2px var(--sheet-accent),
-		inset 0 0 1.5rem
-		color-mix(in srgb, var(--sheet-accent) 22%, transparent);
-}
-
-.sheet-workspace-pane__stack {
-	position: relative;
-	height: 100%;
-	min-height: 0;
-	overflow: visible;
-}
-
-.sheet-workspace-sheet,
-.sheet-workspace-motion-shell {
-	position: absolute;
-	inset: 0;
-	min-width: 0;
-	min-height: 0;
-}
-
-.sheet-workspace-sheet {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	border: 0;
-	border-radius: 0;
-	color: var(--sheet-ink);
-	background: var(--sheet-paper);
-	box-shadow: 0 0 0 1px rgb(255 255 255 / 4%);
-	transition:
-		opacity 120ms ease,
-		box-shadow 180ms ease;
-}
-
-.sheet-workspace-sheet:not([data-sheet-top="true"]) {
-	visibility: hidden;
-	pointer-events: none;
-}
-
-.sheet-workspace-sheet--dragging {
-	opacity: 0.12;
-}
-
-.sheet-workspace-sheet--dropping {
-	animation: sheet-workspace-arrive 180ms ease-out;
-}
-
-.sheet-workspace-text-sheet {
-	height: 100%;
-	padding: clamp(1.25rem, 3vw, 2.5rem);
-	padding-bottom: 5rem;
-	overflow: auto;
-	background:
-		radial-gradient(circle at 80% 0%, rgb(65 79 115 / 20%), transparent 38%),
-		var(--sheet-paper);
-}
-
-.sheet-workspace-text-sheet .card-demo-copy {
-	max-width: 52rem;
-	margin-inline: auto;
-}
-
-.sheet-workspace-text-sheet .card-demo-segments {
-	color: #e8ebf2;
-	font-size: clamp(1rem, 1.4vw, 1.28rem);
-}
-
-.sheet-workspace-text-sheet .card-demo-segment {
-	color: inherit;
-}
-
-.sheet-workspace-text-sheet .card-demo-segment:hover {
-	background: #293249;
-}
-
-.sheet-workspace-note-sheet {
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.7rem;
-	height: 100%;
-	padding: clamp(1.5rem, 4vw, 3rem);
-	padding-bottom: 5rem;
-	overflow: auto;
-	background:
-		radial-gradient(
-			circle at 85% 5%,
-			rgb(84 101 147 / 22%),
-			transparent 42%
-		),
-		var(--sheet-paper-raised);
-}
-
-.sheet-workspace-note-sheet .card-demo-card__title {
-	font-size: clamp(2rem, 5vw, 4rem);
-}
-
-.sheet-workspace-note-sheet .card-demo-card__summary {
-	margin-top: auto;
-}
-
-.sheet-workspace-note-sheet__close {
-	align-self: flex-end;
-	padding: 0.4rem 0.65rem;
-	border: 1px solid var(--sheet-border);
-	border-radius: 999px;
-	color: var(--sheet-ink);
-	background: #111620;
-	font-size: 0.75rem;
-	cursor: pointer;
-}
-
-.sheet-workspace-note-sheet__close:hover {
-	border-color: var(--sheet-accent);
-}
-
-.sheet-workspace-drag-handle {
-	position: absolute;
-	z-index: var(--sheet-layer-sheet-control);
-	left: 50%;
-	bottom: 1rem;
-	translate: -50% 0;
-	min-width: 8.5rem;
-	padding: 0.55rem 0.8rem;
-	border: 1px solid #465065;
-	border-radius: 999px;
-	color: #dce3f8;
-	background: rgb(12 15 22 / 92%);
-	box-shadow: 0 0.6rem 1.8rem rgb(0 0 0 / 40%);
-	font-size: 0.75rem;
-	font-weight: 650;
-	cursor: grab;
-	touch-action: none;
-	user-select: none;
-}
-
-.sheet-workspace-drag-handle:hover {
-	border-color: var(--sheet-accent);
-	color: white;
-}
-
-.sheet-workspace-drag-handle:active {
-	cursor: grabbing;
-}
-
-.sheet-workspace-motion-shell {
-	z-index: var(--sheet-layer-sheet);
-}
-
-.sheet-workspace-motion-shell[data-motion-card="true"] {
-	z-index: var(--sheet-layer-moving-sheet);
-}
-
-.sheet-workspace-motion-card {
-	position: absolute;
-	z-index: 2;
-	left: 50%;
-	bottom: 1rem;
-	translate: -50% 0;
-	pointer-events: none;
-}
-
-.sheet-workspace-empty-base,
-.sheet-workspace-navigation-anchor {
-	display: grid;
-	place-content: center;
-	justify-items: center;
-	gap: 0.8rem;
-	height: 100%;
-	padding: 1rem;
-	color: #697184;
-	font-size: 0.78rem;
-	letter-spacing: 0.08em;
+.sheet-workspace-controls p {
+	color: #9299a8;
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
 	text-transform: uppercase;
 }
 
-.sheet-workspace-navigation-anchor strong {
-	color: #bec6d6;
-	font-size: 1.25rem;
-	letter-spacing: normal;
-	text-transform: none;
+.sheet-workspace-controls h1 {
+	font-size: clamp(1rem, 2vw, 1.35rem);
+	font-weight: 650;
+	letter-spacing: -0.02em;
 }
 
-.sheet-workspace-card {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	width: min(17rem, calc(100vw - 2rem));
-	height: 11rem;
-	padding: 1rem;
-	border: 1px solid #59647b;
-	border-radius: 1rem;
-	color: #f1f4fa;
-	background: #1b202b;
-	box-shadow: 0 1.4rem 4rem rgb(0 0 0 / 58%);
-	overflow: hidden;
+.sheet-workspace-controls button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	min-height: 2.2rem;
+	padding: 0.45rem 0.7rem;
+	border: 1px solid #303642;
+	border-radius: 0.5rem;
+	color: #f5f7fb;
+	background: #121620;
+	font-size: 0.75rem;
+	cursor: pointer;
 }
 
-.sheet-workspace-card .card-demo-card__summary {
-	margin-top: auto;
+.sheet-workspace-controls button:hover {
+	border-color: #59647b;
+	background: #1a1f2a;
 }
 
-.sheet-workspace-dnd-kit-overlay > .sheet-workspace-card {
-	position: absolute;
-	left: 50%;
-	bottom: 1rem;
-	translate: -50% 0;
-	pointer-events: none;
+.sheet-workspace-controls button:focus-visible {
+	outline: 2px solid #91a8ff;
+	outline-offset: 2px;
 }
 
-/*
- * Panes deliberately share the board's stacking context. Viewport-level Cards
- * render into this sibling plane instead of competing with Pane-local layers.
- */
-.sheet-workspace-overlay-plane {
-	position: fixed;
-	inset: 0;
-	z-index: var(--sheet-layer-card-overlay);
-	pointer-events: none;
+.sheet-workspace-controls svg {
+	width: 0.9rem;
+	height: 0.9rem;
 }
 
-.sheet-workspace-overlay-plane > .card-demo-overlay {
-	z-index: auto;
-}
-
-.sheet-workspace-modifier-preview {
-	position: fixed;
-	right: 1.25rem;
-	bottom: 1.25rem;
-	z-index: var(--sheet-layer-modifier-preview);
-}
-
-.sheet-workspace-loading {
-	display: grid;
+.sheet-workspace-host {
 	flex: 1;
-	place-content: center;
-	color: var(--sheet-muted);
-}
-
-@keyframes sheet-workspace-arrive {
-	from {
-		opacity: 0.45;
-		transform: scale(0.97);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.sheet-workspace-page *,
-	.sheet-workspace-page *::before,
-	.sheet-workspace-page *::after {
-		scroll-behavior: auto;
-		animation-duration: 0.01ms;
-		animation-iteration-count: 1;
-		transition-duration: 0.01ms;
-	}
+	min-height: 0;
 }
 
 @media (max-width: 760px) {
 	.sheet-workspace-page {
-		min-height: 32rem;
-		padding: 0.5rem;
+		padding: 0.45rem;
 	}
 
-	.sheet-workspace-controls {
-		align-items: stretch;
-		flex-direction: column;
+	.sheet-workspace-controls p {
+		display: none;
 	}
 
-	.sheet-workspace-controls nav {
-		justify-content: stretch;
+	.sheet-workspace-controls h1 {
+		font-size: 0.95rem;
 	}
 
-	.sheet-workspace-controls nav a {
-		flex: 1;
-		justify-content: center;
+	.sheet-workspace-controls button {
+		padding-inline: 0.55rem;
 	}
 }

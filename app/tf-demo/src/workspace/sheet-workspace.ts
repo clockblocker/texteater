@@ -1,13 +1,15 @@
 export type SheetInstanceId = string;
 export type PaneId = string;
 
-export type SheetSubject =
+export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly textId: string }
 	| { readonly kind: "Note"; readonly noteId: string };
 
+export type WorkspacePresentation = "Card" | "Sheet";
+
 export type Sheet = {
 	readonly instanceId: SheetInstanceId;
-	readonly subject: SheetSubject;
+	readonly subject: WorkspaceSubject;
 	readonly locked: boolean;
 };
 
@@ -49,6 +51,7 @@ export type SheetWorkspaceCommand =
 	  }
 	| {
 			readonly type: "Collapse";
+			readonly paneId: PaneId;
 			readonly extent: "top" | "all";
 	  }
 	| {
@@ -75,16 +78,14 @@ export type SheetWorkspaceTransition = {
 };
 
 /**
- * Pure semantic boundary for valid Sheet workspace state. Cards, gesture
- * sessions, drop geometry, animation phases, and modifier keys cannot be
- * represented here and therefore cannot leak into a Sheet Stack.
+ * Pure semantic interface for placed workspace state. Card Layers and drag
+ * sessions are deliberately not representable here.
  */
 export function transitionSheetWorkspace(
 	workspace: SheetWorkspace,
 	command: SheetWorkspaceCommand,
 ): SheetWorkspaceTransition {
 	assertValidSheetWorkspace(workspace);
-
 	const result = transitionValidWorkspace(workspace, command);
 	assertValidSheetWorkspace(result.workspace);
 	return result;
@@ -93,17 +94,14 @@ export function transitionSheetWorkspace(
 export function assertValidSheetWorkspace(workspace: SheetWorkspace): void {
 	const paneIds = new Set<PaneId>();
 	const sheetIds = new Set<SheetInstanceId>();
-
 	if (workspace.panes.length === 0) {
 		throw new Error("A Sheet workspace must contain at least one Pane.");
 	}
-
 	for (const pane of workspace.panes) {
 		if (paneIds.has(pane.id)) {
 			throw new Error(`Pane id ${pane.id} occurs more than once.`);
 		}
 		paneIds.add(pane.id);
-
 		let lockedSheets = 0;
 		for (const sheet of pane.sheets) {
 			if (sheetIds.has(sheet.instanceId)) {
@@ -120,7 +118,6 @@ export function assertValidSheetWorkspace(workspace: SheetWorkspace): void {
 			);
 		}
 	}
-
 	if (!paneIds.has(workspace.centralPaneId)) {
 		throw new Error("The central Pane must belong to the workspace.");
 	}
@@ -169,7 +166,6 @@ function openSheet(
 	if (findSheet(workspace, command.sheet.instanceId)) {
 		return rejected(workspace, command, "duplicate-sheet");
 	}
-
 	const destinationPaneId = openingPaneId(workspace, command.origin);
 	if (!destinationPaneId) {
 		return rejected(
@@ -184,7 +180,6 @@ function openSheet(
 	if (!destination) {
 		return rejected(workspace, command, "pane-not-found");
 	}
-
 	const sheet: Sheet = {
 		...command.sheet,
 		locked: destination.sheets.length === 0,
@@ -217,17 +212,14 @@ function moveTopSheet(
 				: "sheet-not-found",
 		);
 	}
-
 	if (source.id === destination.id) {
-		if (workspace.activePaneId === destination.id) {
-			return unchanged(workspace, command);
-		}
-		return committed(
-			{ ...workspace, activePaneId: destination.id },
-			command,
-		);
+		return workspace.activePaneId === destination.id
+			? unchanged(workspace, command)
+			: committed(
+					{ ...workspace, activePaneId: destination.id },
+					command,
+				);
 	}
-
 	const destinationHasLock = destination.sheets.some((sheet) => sheet.locked);
 	const movedSheet: Sheet = {
 		...sourceTop,
@@ -235,18 +227,20 @@ function moveTopSheet(
 			destination.sheets.length === 0 ||
 			(sourceTop.locked && !destinationHasLock),
 	};
-	const panes = workspace.panes.map((pane) => {
-		if (pane.id === source.id) {
-			return { ...pane, sheets: pane.sheets.slice(0, -1) };
-		}
-		if (pane.id === destination.id) {
-			return { ...pane, sheets: [...pane.sheets, movedSheet] };
-		}
-		return pane;
-	});
-
 	return committed(
-		{ ...workspace, activePaneId: destination.id, panes },
+		{
+			...workspace,
+			activePaneId: destination.id,
+			panes: workspace.panes.map((pane) => {
+				if (pane.id === source.id) {
+					return { ...pane, sheets: pane.sheets.slice(0, -1) };
+				}
+				if (pane.id === destination.id) {
+					return { ...pane, sheets: [...pane.sheets, movedSheet] };
+				}
+				return pane;
+			}),
+		},
 		command,
 	);
 }
@@ -255,30 +249,22 @@ function collapseSheets(
 	workspace: SheetWorkspace,
 	command: Extract<SheetWorkspaceCommand, { type: "Collapse" }>,
 ): SheetWorkspaceTransition {
-	const activePane = findPane(workspace, workspace.activePaneId);
-	if (!activePane) {
-		return rejected(workspace, command, "pane-not-found");
-	}
-
-	let nextSheets = activePane.sheets;
+	const pane = findPane(workspace, command.paneId);
+	if (!pane) return rejected(workspace, command, "pane-not-found");
+	let sheets = pane.sheets;
 	if (command.extent === "top") {
-		const top = nextSheets.at(-1);
+		const top = sheets.at(-1);
 		if (!top || top.locked) return unchanged(workspace, command);
-		nextSheets = nextSheets.slice(0, -1);
+		sheets = sheets.slice(0, -1);
 	} else {
-		const lockedIndex = nextSheets.findLastIndex((sheet) => sheet.locked);
-		nextSheets =
-			lockedIndex === -1 ? [] : nextSheets.slice(0, lockedIndex + 1);
-		if (nextSheets.length === activePane.sheets.length) {
+		const lockedIndex = sheets.findLastIndex((sheet) => sheet.locked);
+		sheets = lockedIndex === -1 ? [] : sheets.slice(0, lockedIndex + 1);
+		if (sheets.length === pane.sheets.length) {
 			return unchanged(workspace, command);
 		}
 	}
-
 	return committed(
-		updatePane(workspace, activePane.id, (pane) => ({
-			...pane,
-			sheets: nextSheets,
-		})),
+		updatePane(workspace, pane.id, (current) => ({ ...current, sheets })),
 		command,
 	);
 }
@@ -289,7 +275,6 @@ function removeSheet(
 ): SheetWorkspaceTransition {
 	const match = findSheet(workspace, command.sheetId);
 	if (!match) return rejected(workspace, command, "sheet-not-found");
-
 	return committed(
 		updatePane(workspace, match.pane.id, (pane) => ({
 			...pane,
@@ -310,7 +295,6 @@ function setSheetLock(
 	if (match.sheet.locked === command.locked) {
 		return unchanged(workspace, command);
 	}
-
 	return committed(
 		updatePane(workspace, match.pane.id, (pane) => ({
 			...pane,
@@ -342,11 +326,14 @@ function openingPaneId(
 	}
 }
 
-function findPane(workspace: SheetWorkspace, paneId: PaneId): Pane | undefined {
+export function findPane(
+	workspace: SheetWorkspace,
+	paneId: PaneId,
+): Pane | undefined {
 	return workspace.panes.find((pane) => pane.id === paneId);
 }
 
-function findSheet(
+export function findSheet(
 	workspace: SheetWorkspace,
 	sheetId: SheetInstanceId,
 ): { readonly pane: Pane; readonly sheet: Sheet } | undefined {

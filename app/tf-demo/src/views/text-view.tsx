@@ -111,17 +111,58 @@ export function TextView({ target }: { target: TextTarget }) {
 	}
 
 	return (
+		<TextPresentation
+			error={error}
+			focus={textDetail.focus}
+			isResolving={selectSegment.isPending}
+			notice={notice}
+			onSegmentClick={handleSegmentSelection}
+			selectedSegmentKey={selectedSegmentKey}
+			sentences={sentences}
+		/>
+	);
+}
+
+export function TextPresentation({
+	sentences,
+	focus,
+	isResolving,
+	selectedSegmentKey,
+	onSegmentClick,
+	notice = null,
+	error = null,
+}: {
+	readonly sentences: readonly SentenceView[];
+	readonly focus:
+		| { readonly kind: "None" | "Missing" }
+		| {
+				readonly kind: "Occurrence";
+				readonly attestationId: string;
+				readonly sentenceId: string;
+				readonly memberSegmentIndices: readonly number[];
+		  };
+	readonly isResolving: boolean;
+	readonly selectedSegmentKey: string | null;
+	readonly onSegmentClick: (
+		sentence: SentenceView,
+		clickedSegmentIndex: number,
+		altKey: boolean,
+	) => Promise<void>;
+	readonly notice?: string | null;
+	readonly error?: string | null;
+}) {
+	return (
 		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
 			<div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
 				<SentenceList
 					sentences={sentences}
-					focus={textDetail.focus}
-					isResolving={selectSegment.isPending}
+					focus={focus}
+					isResolving={isResolving}
 					selectedSegmentKey={selectedSegmentKey}
-					onSegmentClick={handleSegmentSelection}
+					onSegmentClick={onSegmentClick}
 				/>
 
-				{textDetail.focus.kind === "Missing" ? (
+				{focus.kind === "Missing" ? (
 					<p className="text-sm text-muted-foreground" role="status">
 						This Source Context is no longer available. The Text is
 						still open, and no new resolution was started.

@@ -7,9 +7,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { hrefFor, targetFromLocation } from "@/lib/navigation";
-import { CardDemoRouteShell } from "@/playground/card-demo/card-demo-route-shell";
-import { PlaygroundIndexRoute } from "@/playground/playground-index-route";
-import { PLAYGROUND_BASE_PATH } from "@/playground/playground-navigation";
+import { SHEET_WORKSPACE_PATH } from "@/playground/sheet-workspace/sheet-workspace-fixtures";
 import { SheetWorkspaceRoute } from "@/playground/sheet-workspace/sheet-workspace-route";
 import { LibraryView } from "@/views/library-view";
 import { NotFoundView } from "@/views/not-found-view";
@@ -39,15 +37,7 @@ export function App() {
 						}
 					/>
 					<Route
-						path={PLAYGROUND_BASE_PATH}
-						element={<PlaygroundIndexRoute />}
-					/>
-					<Route
-						path="/playground/card-demo/*"
-						element={<CardDemoRouteShell />}
-					/>
-					<Route
-						path="/playground/sheet-workspace/:variant?"
+						path={SHEET_WORKSPACE_PATH}
 						element={<SheetWorkspaceRoute />}
 					/>
 					<Route path="*" element={<RoutedView />} />

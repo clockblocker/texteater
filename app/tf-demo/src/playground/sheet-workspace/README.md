@@ -1,28 +1,26 @@
-# Sheet workspace comparison playground
+# Card and Sheet workspace playground
 
-Throwaway implementations for [`texteater#240`](https://github.com/clockblocker/texteater/issues/240).
-They deliberately stay isolated from production Text, Note, Convex, URL, and
-persistence behavior.
+The single playground route is `/playground/sheet-workspace/dnd-kit`.
 
-The workspace is built on the Card playground rather than beside it. Its
-initial central Text Sheet renders `CardDemoTextInteraction`, including the
-same lorem-ipsum fixture, selectable fake Segments, layered Resolution Cards,
-and Motion card mechanics. Opening one of those Cards pushes a Note Sheet onto
-the Text Sheet's Pane when activated directly; dropping it over a Pane places
-the Note Sheet in that Pane.
+The reusable module lives in `src/workspace/`. Its interface accepts Text and
+Note subjects, a renderer that receives only `Card` or `Sheet` presentation,
+and a subject-owned Card Tail renderer. It owns Pane-local Card Layers,
+dnd-kit sessions, Sheet controls, and the handoff between transient Cards and
+placed Sheets. Pure Sheet Stack algebra remains in `sheet-workspace.ts`; Card
+Layers remain separate transient state.
 
-Run `bun run demo` from the repository root, then open:
+The route is a thin fixture host. It renders the application Text sentence
+presentation and the application Reading and Route Note presentation modules
+from static fake data. Selecting a Segment opens four Cards in user-facing
+order: Reading, Lemma, Surface, and Occurrence Attestation.
 
-- `/playground/sheet-workspace/motion`
-- `/playground/sheet-workspace/dnd-kit`
-- `/playground/sheet-workspace/pragmatic`
-- `/playground/sheet-workspace/react-aria`
+Card Layers are replaced by a new selection in the same Pane and dismissed by
+Escape, their close control, unoccupied Pane clicks, or when their originating
+Sheet is hidden, moved, or removed. Moving the final Card into a Sheet Stack
+also removes the layer. The foremost Card drags from its full surface; each
+occluded Card drags from its Note-owned Tail.
 
-Run the real Chromium pointer and keyboard regressions with
-`bun run --cwd app/tf-demo test:e2e`.
-
-All four adapters receive the same valid `SheetWorkspace`, emit only a proposed
-top-Sheet placement, and commit through `transitionSheetWorkspace`. Cards,
-gesture sessions, hit testing, and animation state never enter the reducer.
-The shared presentation gives every adapter the same resizable Panes, fully
-overlapping Sheet Stacks, dark appearance, and compact comparison controls.
+Deferred work remains resolution-owned Card selection, final Tail designs,
+nested Card links, exact shortcut and non-pointer placement design,
+presentation-specific Note blocks, and production Convex/application-route
+integration.

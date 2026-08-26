@@ -15,10 +15,30 @@ and multiple Sheets may present the same subject.
 _Avoid_: Layer, expanded Card, View
 
 **Card**:
-The transient compact preview of a Text or Note shown during a Sheet Move or an
-explicit preview gesture. A Card never belongs to a Sheet Stack or constitutes
-valid placed workspace state.
+An independent transient presentation of one Text or Note, shown in a Card
+Layer or during a Sheet Move. A Card never belongs to a Sheet Stack,
+constitutes valid placed workspace state, or carries lock, Collapse, placement,
+or Sheet Stack algebra.
 _Avoid_: collapsed Sheet, Note Card, unplaced Sheet
+
+**Card Layer**:
+A Pane-local transient presentation layer containing independent Cards. Each
+Pane may host at most one Card Layer, and several Panes may host Card Layers at
+the same time. A Card Layer is not part of its Pane's Sheet Stack.
+_Avoid_: Card Stack, modal overlay, Sheet layer
+
+**Card Tail**:
+The subject-owned compact presentation exposed at the bottom of an occluded
+Card. It is a drag handle for that Card and does not reorder Cards when
+activated. Notes own their Tail presentation; default Note-kind placeholders
+are used until proper Tail presentations exist.
+_Avoid_: Sheet tab, stack tab, reorder handle
+
+**Workspace Presentation**:
+The content-independent contract that tells a Text or Note only whether it is
+presented as `Card` or `Sheet`. Subject content receives no workspace
+dimensions or linguistic layout data and responds to its CSS container width.
+_Avoid_: Card dimensions, Sheet renderer mode
 
 **Sheet Stack**:
 The ordered Sheets placed at one Pane. Collapsing Sheets reveals lower Sheets
