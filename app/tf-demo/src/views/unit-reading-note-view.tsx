@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { hrefFor, type UnitReadingNoteTarget } from "@/lib/navigation";
+import type { UnitReadingNoteTarget } from "@/lib/navigation";
 import {
 	normalizeReadingDefinition,
 	readingDefinitionChange,
@@ -20,6 +20,7 @@ import type {
 	ReadingNotePresentationCapabilities,
 } from "@/notes/reading";
 import { NotFoundView } from "@/views/not-found-view";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export type UnitReadingNote = ReadingNoteData;
@@ -79,6 +80,7 @@ function ReadingNoteContainer({
 	note: ReadingNoteData;
 	knowledgeSettings: KnowledgeSettings;
 }) {
+	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
 	const applyKnowledgeChangeAction = useAction(
 		api.orchestration.applyReadingKnowledgeChange,
@@ -186,7 +188,7 @@ function ReadingNoteContainer({
 				: null,
 			save: saveDefinition,
 		},
-		hrefFor,
+		follow,
 	};
 
 	return renderNote(note, capabilities);

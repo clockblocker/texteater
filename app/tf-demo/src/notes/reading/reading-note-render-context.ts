@@ -2,7 +2,7 @@ import type { Lemma, Reading } from "dumling/types";
 import { DEFAULT_KNOWLEDGE_SETTINGS, type KnowledgeSettings } from "dumrel";
 import type { ReactElement } from "react";
 
-import { hrefFor, type NavigationTarget } from "@/lib/navigation";
+import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { NoteDataFor } from "../note-data";
 import type { TargetLanguage } from "../target-language";
 import type {
@@ -40,7 +40,7 @@ export type ReadingNotePresentationCapabilities = {
 		readonly error: string | null;
 		readonly save: ((definition: string | null) => Promise<void>) | null;
 	};
-	readonly hrefFor: (target: NavigationTarget) => string;
+	readonly follow: (target: WorkspaceTarget) => void;
 };
 
 export type ReadingNoteRenderContext<
@@ -89,6 +89,6 @@ export function createDefaultReadingNoteCapabilities(
 			error: null,
 			save: null,
 		},
-		hrefFor,
+		follow: () => {},
 	};
 }

@@ -1,9 +1,25 @@
+import type {
+	ResolutionTarget,
+	RouteNoteTarget,
+	ShadowNoteTarget,
+	TextTarget,
+	UnitReadingNoteTarget,
+} from "../../shared/navigation";
+
 export type SheetInstanceId = string;
 export type PaneId = string;
 
+export type WorkspaceNoteTarget =
+	| UnitReadingNoteTarget
+	| RouteNoteTarget
+	| ShadowNoteTarget
+	| ResolutionTarget;
+
+export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
+
 export type WorkspaceSubject =
-	| { readonly kind: "Text"; readonly textId: string }
-	| { readonly kind: "Note"; readonly noteId: string };
+	| { readonly kind: "Text"; readonly target: TextTarget }
+	| { readonly kind: "Note"; readonly target: WorkspaceNoteTarget };
 
 export type WorkspacePresentation = "Card" | "Sheet";
 
@@ -57,6 +73,11 @@ export type SheetWorkspaceCommand =
 	| {
 			readonly type: "RemoveSheet";
 			readonly sheetId: SheetInstanceId;
+	  }
+	| {
+			readonly type: "ReplaceSheetSubject";
+			readonly sheetId: SheetInstanceId;
+			readonly subject: WorkspaceSubject;
 	  }
 	| {
 			readonly type: "SetSheetLock";
@@ -141,9 +162,33 @@ function transitionValidWorkspace(
 			return collapseSheets(workspace, command);
 		case "RemoveSheet":
 			return removeSheet(workspace, command);
+		case "ReplaceSheetSubject":
+			return replaceSheetSubject(workspace, command);
 		case "SetSheetLock":
 			return setSheetLock(workspace, command);
 	}
+}
+
+function replaceSheetSubject(
+	workspace: SheetWorkspace,
+	command: Extract<SheetWorkspaceCommand, { type: "ReplaceSheetSubject" }>,
+): SheetWorkspaceTransition {
+	const match = findSheet(workspace, command.sheetId);
+	if (!match) return rejected(workspace, command, "sheet-not-found");
+	if (workspaceSubjectsEqual(match.sheet.subject, command.subject)) {
+		return unchanged(workspace, command);
+	}
+	return committed(
+		updatePane(workspace, match.pane.id, (pane) => ({
+			...pane,
+			sheets: pane.sheets.map((sheet) =>
+				sheet.instanceId === command.sheetId
+					? { ...sheet, subject: command.subject }
+					: sheet,
+			),
+		})),
+		command,
+	);
 }
 
 function activatePane(
@@ -344,6 +389,72 @@ export function findSheet(
 		if (sheet) return { pane, sheet };
 	}
 	return undefined;
+}
+
+export function workspaceSubjectFor(target: WorkspaceTarget): WorkspaceSubject {
+	return target.kind === "Text"
+		? { kind: "Text", target }
+		: { kind: "Note", target };
+}
+
+export function workspaceSubjectKey(subject: WorkspaceSubject): string {
+	const { target } = subject;
+	switch (target.kind) {
+		case "Text":
+			return `Text:${target.textId}`;
+		case "UnitReadingNote":
+			return `UnitReadingNote:${target.readingId}`;
+		case "RouteNote":
+			return `RouteNote:${target.routeKind}:${target.id}`;
+		case "ShadowNote":
+			return `ShadowNote:${target.shadowId}`;
+		case "Resolution":
+			return `Resolution:${target.requestId}`;
+	}
+}
+
+export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
+	if (!isRecord(value) || !isRecord(value.target)) return false;
+	const target = value.target;
+	if (value.kind === "Text" && target.kind === "Text") {
+		return (
+			typeof target.textId === "string" &&
+			(target.focusAttestationId === undefined ||
+				typeof target.focusAttestationId === "string")
+		);
+	}
+	if (value.kind !== "Note") return false;
+	switch (target.kind) {
+		case "UnitReadingNote":
+			return typeof target.readingId === "string";
+		case "RouteNote":
+			return (
+				(target.routeKind === "Attestation" ||
+					target.routeKind === "Surface" ||
+					target.routeKind === "Lemma") &&
+				typeof target.id === "string"
+			);
+		case "ShadowNote":
+			return typeof target.shadowId === "string";
+		case "Resolution":
+			return typeof target.requestId === "string";
+		default:
+			return false;
+	}
+}
+
+function workspaceSubjectsEqual(
+	left: WorkspaceSubject,
+	right: WorkspaceSubject,
+): boolean {
+	if (workspaceSubjectKey(left) !== workspaceSubjectKey(right)) return false;
+	return left.target.kind !== "Text" || right.target.kind !== "Text"
+		? true
+		: left.target.focusAttestationId === right.target.focusAttestationId;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null;
 }
 
 function updatePane(

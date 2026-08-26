@@ -12,15 +12,12 @@ import {
 	XIcon,
 } from "lucide-react";
 import {
-	createContext,
 	Fragment,
 	type ReactNode,
 	type PointerEvent as ReactPointerEvent,
 	useCallback,
-	useContext,
 	useEffect,
 	useMemo,
-	useReducer,
 	useRef,
 	useState,
 } from "react";
@@ -31,24 +28,25 @@ import {
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
+import type { CardLayer } from "./card-layers";
 import {
-	type CardCandidate,
-	type CardLayer,
-	dismissCardLayer,
-	reconcileCardLayers,
-	removeLayerCard,
-	replaceCardLayer,
-} from "./card-layers";
-import {
+	isWorkspaceSubject,
 	type Pane,
 	type PaneId,
 	type Sheet,
 	type SheetWorkspace,
-	type SheetWorkspaceCommand,
-	transitionSheetWorkspace,
 	type WorkspacePresentation,
 	type WorkspaceSubject,
+	workspaceSubjectFor,
+	workspaceSubjectKey,
 } from "./sheet-workspace";
+import {
+	cardCandidatesFor,
+	PASSIVE_WORKSPACE_INTERACTION,
+	useWorkspaceRuntime,
+	type WorkspaceInteraction,
+	WorkspaceInteractionProvider,
+} from "./workspace-controller";
 import {
 	type PaneDragProjection,
 	projectWorkspaceDrag,
@@ -58,6 +56,7 @@ import {
 	type WorkspaceDragSource,
 	type WorkspaceDragTarget,
 } from "./workspace-drag";
+import type { WorkspaceSessionAction } from "./workspace-session";
 import "./card-sheet-workspace.css";
 
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
@@ -65,7 +64,6 @@ const MINIMUM_DRAG_DISTANCE = 4;
 const NESTED_DROP_ZONE_COLLISION_PRIORITY = 4;
 
 export type CardSheetWorkspaceProps = {
-	readonly initialWorkspace: SheetWorkspace;
 	readonly renderSubject: (
 		subject: WorkspaceSubject,
 		presentation: WorkspacePresentation,
@@ -74,69 +72,12 @@ export type CardSheetWorkspaceProps = {
 	readonly navigationAnchor?: ReactNode;
 };
 
-type SubjectInteraction = {
-	readonly requestCardLayer: (cards: readonly CardCandidate[]) => void;
-};
-
-const SubjectInteractionContext = createContext<SubjectInteraction | null>(
-	null,
-);
-const PASSIVE_SUBJECT_INTERACTION: SubjectInteraction = {
-	requestCardLayer: () => {},
-};
-
-/** Available to subject presentation code without exposing Pane geometry. */
-export function useCardLayerRequest(): SubjectInteraction["requestCardLayer"] {
-	const interaction = useContext(SubjectInteractionContext);
-	if (!interaction) {
-		throw new Error(
-			"useCardLayerRequest must be used inside a CardSheetWorkspace subject.",
-		);
-	}
-	return interaction.requestCardLayer;
-}
-
-type WorkspaceState = {
-	readonly workspace: SheetWorkspace;
-	readonly cardLayers: readonly CardLayer[];
-	readonly nextSheetSequence: number;
-	readonly announcement: string;
-};
-
-type WorkspaceAction =
-	| { readonly type: "Command"; readonly command: SheetWorkspaceCommand }
-	| {
-			readonly type: "OpenCardLayer";
-			readonly paneId: PaneId;
-			readonly originSheetId: string;
-			readonly cards: readonly CardCandidate[];
-	  }
-	| { readonly type: "DismissCardLayer"; readonly paneId: PaneId }
-	| { readonly type: "DismissAllCardLayers" }
-	| {
-			readonly type: "PlaceCard";
-			readonly sourcePaneId: PaneId;
-			readonly destinationPaneId: PaneId;
-			readonly cardId: string;
-	  }
-	| {
-			readonly type: "ReturnCard";
-			readonly paneId: PaneId;
-			readonly cardId: string;
-	  };
-
 export function CardSheetWorkspace({
-	initialWorkspace,
 	renderSubject,
 	renderCardTail,
 	navigationAnchor = DEFAULT_NAVIGATION_ANCHOR,
 }: CardSheetWorkspaceProps) {
-	const [state, dispatch] = useReducer(workspaceReducer, {
-		workspace: initialWorkspace,
-		cardLayers: [],
-		nextSheetSequence: 1,
-		announcement: "Card and Sheet workspace ready.",
-	});
+	const { session: state, dispatch } = useWorkspaceRuntime();
 	const [dragSession, setDragSession] = useState<WorkspaceDragSession | null>(
 		null,
 	);
@@ -291,7 +232,7 @@ type WorkspacePaneProps = {
 	readonly pane: Pane;
 	readonly cardLayer: CardLayer | undefined;
 	readonly dragProjection: PaneDragProjection;
-	readonly dispatch: React.Dispatch<WorkspaceAction>;
+	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
 	readonly navigationAnchor: ReactNode;
@@ -326,6 +267,25 @@ function WorkspacePane({
 	const isBaseCovered =
 		pane.sheets.length > 0 && dragProjection.sourceReveal?.kind !== "Base";
 	const isPlacementCovered = dragProjection.sheetPlacementPreview !== null;
+	const navigationInteraction = useMemo<WorkspaceInteraction>(
+		() => ({
+			...PASSIVE_WORKSPACE_INTERACTION,
+			follow: (target) => {
+				dispatch({
+					type: "Command",
+					command: {
+						type: "OpenSheet",
+						sheet: {
+							instanceId: newSheetInstanceId(),
+							subject: workspaceSubjectFor(target),
+						},
+						origin: { kind: "NavigationAnchor" },
+					},
+				});
+			},
+		}),
+		[dispatch],
+	);
 	const dismissOnUnoccupiedClick = (
 		event: ReactPointerEvent<HTMLElement>,
 	) => {
@@ -385,7 +345,11 @@ function WorkspacePane({
 					inert={isBaseCovered}
 				>
 					{pane.id === workspace.centralPaneId ? (
-						navigationAnchor
+						<WorkspaceInteractionProvider
+							interaction={navigationInteraction}
+						>
+							{navigationAnchor}
+						</WorkspaceInteractionProvider>
 					) : (
 						<div className="card-sheet-workspace__empty-base">
 							Drop a Card or Sheet
@@ -475,7 +439,7 @@ function WorkspaceSheet({
 	readonly isRevealed: boolean;
 	readonly isPlacementCovered: boolean;
 	readonly stackIndex: number;
-	readonly dispatch: React.Dispatch<WorkspaceAction>;
+	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 }) {
 	const sheetElement = useRef<HTMLElement>(null);
@@ -505,15 +469,36 @@ function WorkspaceSheet({
 	});
 	const isDragging = topDrag.isDragging || bottomDrag.isDragging;
 	const isDropping = topDrag.isDropping || bottomDrag.isDropping;
-	const interaction = useMemo<SubjectInteraction>(
+	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
-			requestCardLayer: (cards) => {
+			follow: (target) => {
+				if (!isTop) return;
+				dispatch({
+					type: "Command",
+					command: {
+						type: "OpenSheet",
+						sheet: {
+							instanceId: newSheetInstanceId(),
+							subject: workspaceSubjectFor(target),
+						},
+						origin: { kind: "Sheet", sheetId: sheet.instanceId },
+					},
+				});
+			},
+			presentCards: (cards) => {
 				if (!isTop) return;
 				dispatch({
 					type: "OpenCardLayer",
 					paneId: pane.id,
 					originSheetId: sheet.instanceId,
-					cards,
+					cards: cardCandidatesFor(cards),
+				});
+			},
+			reconcile: (target) => {
+				dispatch({
+					type: "ReplaceSubject",
+					location: { kind: "Sheet", sheetId: sheet.instanceId },
+					subject: workspaceSubjectFor(target),
 				});
 			},
 		}),
@@ -538,7 +523,7 @@ function WorkspaceSheet({
 			inert={!isTop || isPlacementCovered}
 			ref={sheetElement}
 		>
-			<SubjectInteractionContext.Provider value={interaction}>
+			<WorkspaceInteractionProvider interaction={interaction}>
 				<div
 					className="card-sheet-workspace__subject"
 					data-subject-id={subjectIdentity(sheet.subject)}
@@ -547,7 +532,7 @@ function WorkspaceSheet({
 				>
 					{renderSubject(sheet.subject, "Sheet")}
 				</div>
-			</SubjectInteractionContext.Provider>
+			</WorkspaceInteractionProvider>
 			{isTop ? (
 				<>
 					<div className="card-sheet-workspace__sheet-handles">
@@ -628,8 +613,8 @@ function SheetPlacementPreviewView({
 			data-sheet-drop-preview={preview.sourceId}
 			inert
 		>
-			<SubjectInteractionContext.Provider
-				value={PASSIVE_SUBJECT_INTERACTION}
+			<WorkspaceInteractionProvider
+				interaction={PASSIVE_WORKSPACE_INTERACTION}
 			>
 				<div
 					className="card-sheet-workspace__subject"
@@ -639,7 +624,7 @@ function SheetPlacementPreviewView({
 				>
 					{renderSubject(preview.subject, "Sheet")}
 				</div>
-			</SubjectInteractionContext.Provider>
+			</WorkspaceInteractionProvider>
 		</article>
 	);
 }
@@ -673,7 +658,7 @@ function CardLayerView({
 }: {
 	readonly layer: CardLayer;
 	readonly isDropTarget: boolean;
-	readonly dispatch: React.Dispatch<WorkspaceAction>;
+	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
 }) {
@@ -714,6 +699,7 @@ function CardLayerView({
 				{layer.cards.map((card, index) => (
 					<LayerCardView
 						card={card}
+						dispatch={dispatch}
 						index={index}
 						key={card.id}
 						layer={layer}
@@ -730,12 +716,14 @@ function LayerCardView({
 	layer,
 	card,
 	index,
+	dispatch,
 	renderSubject,
 	renderCardTail,
 }: {
 	readonly layer: CardLayer;
 	readonly card: CardLayer["cards"][number];
 	readonly index: number;
+	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
 }) {
@@ -749,6 +737,23 @@ function LayerCardView({
 			subject: card.subject,
 		},
 	});
+	const interaction = useMemo<WorkspaceInteraction>(
+		() => ({
+			...PASSIVE_WORKSPACE_INTERACTION,
+			reconcile: (target) => {
+				dispatch({
+					type: "ReplaceSubject",
+					location: {
+						kind: "Card",
+						paneId: layer.paneId,
+						cardId: card.id,
+					},
+					subject: workspaceSubjectFor(target),
+				});
+			},
+		}),
+		[card.id, dispatch, layer.paneId],
+	);
 	return (
 		<article
 			aria-label={`${subjectLabel(card.subject)} Card`}
@@ -769,6 +774,7 @@ function LayerCardView({
 		>
 			<div className="card-sheet-workspace__card-content">
 				<SubjectCard
+					interaction={interaction}
 					renderSubject={renderSubject}
 					subject={card.subject}
 				/>
@@ -793,14 +799,16 @@ function SubjectCard({
 	renderSubject,
 	className,
 	sheetDragEdge,
+	interaction = PASSIVE_WORKSPACE_INTERACTION,
 }: {
 	readonly subject: WorkspaceSubject;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly className?: string;
 	readonly sheetDragEdge?: "top" | "bottom";
+	readonly interaction?: WorkspaceInteraction;
 }) {
 	return (
-		<SubjectInteractionContext.Provider value={PASSIVE_SUBJECT_INTERACTION}>
+		<WorkspaceInteractionProvider interaction={interaction}>
 			<div
 				className={className}
 				data-subject-id={subjectIdentity(subject)}
@@ -811,7 +819,7 @@ function SubjectCard({
 			>
 				{renderSubject(subject, "Card")}
 			</div>
-		</SubjectInteractionContext.Provider>
+		</WorkspaceInteractionProvider>
 	);
 }
 
@@ -858,14 +866,6 @@ function normalizeDragTarget(data: unknown): WorkspaceDragTarget | null {
 	return { kind: data.kind, paneId: data.paneId };
 }
 
-function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
-	if (!isRecord(value)) return false;
-	return (
-		(value.kind === "Text" && typeof value.textId === "string") ||
-		(value.kind === "Note" && typeof value.noteId === "string")
-	);
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null;
 }
@@ -885,7 +885,7 @@ function paneProjection(
 
 function dispatchDropEffect(
 	effect: WorkspaceDragDropEffect,
-	dispatch: React.Dispatch<WorkspaceAction>,
+	dispatch: React.Dispatch<WorkspaceSessionAction>,
 	focusSheet: (sheetId: string) => void,
 ): void {
 	switch (effect.kind) {
@@ -910,6 +910,7 @@ function dispatchDropEffect(
 				sourcePaneId: effect.sourcePaneId,
 				destinationPaneId: effect.destinationPaneId,
 				cardId: effect.cardId,
+				sheetId: newSheetInstanceId(),
 			});
 			return;
 		case "MoveSheet":
@@ -926,121 +927,19 @@ function dispatchDropEffect(
 	}
 }
 
-function workspaceReducer(
-	state: WorkspaceState,
-	action: WorkspaceAction,
-): WorkspaceState {
-	switch (action.type) {
-		case "OpenCardLayer":
-			return {
-				...state,
-				cardLayers: replaceCardLayer(state.cardLayers, action),
-				announcement: `Opened ${action.cards.length} Cards in ${action.paneId} Pane.`,
-			};
-		case "DismissCardLayer":
-			return {
-				...state,
-				cardLayers: dismissCardLayer(state.cardLayers, action.paneId),
-				announcement: `Dismissed Cards in ${action.paneId} Pane.`,
-			};
-		case "DismissAllCardLayers":
-			return {
-				...state,
-				cardLayers: [],
-				announcement: "Dismissed all Card Layers.",
-			};
-		case "PlaceCard": {
-			const layer = state.cardLayers.find(
-				(candidate) => candidate.paneId === action.sourcePaneId,
-			);
-			const card = layer?.cards.find(
-				(candidate) => candidate.id === action.cardId,
-			);
-			if (!card) return state;
-			const sheetId = `sheet-${state.nextSheetSequence}-${card.key}`;
-			const command: SheetWorkspaceCommand = {
-				type: "OpenSheet",
-				sheet: { instanceId: sheetId, subject: card.subject },
-				origin: { kind: "Placement", paneId: action.destinationPaneId },
-			};
-			const transition = transitionSheetWorkspace(
-				state.workspace,
-				command,
-			);
-			if (transition.status !== "committed") return state;
-			const remaining = removeLayerCard(
-				state.cardLayers,
-				action.sourcePaneId,
-				action.cardId,
-			);
-			return {
-				workspace: transition.workspace,
-				cardLayers: reconcileCardLayers(
-					remaining,
-					transition.workspace,
-				),
-				nextSheetSequence: state.nextSheetSequence + 1,
-				announcement: `Placed ${subjectLabel(card.subject)} Card in ${action.destinationPaneId} Pane as a Sheet.`,
-			};
-		}
-		case "ReturnCard": {
-			const card = state.cardLayers
-				.find((layer) => layer.paneId === action.paneId)
-				?.cards.find((candidate) => candidate.id === action.cardId);
-			if (!card) return state;
-			return {
-				...state,
-				announcement: `Returned ${subjectLabel(card.subject)} Card to its Card Layer.`,
-			};
-		}
-		case "Command": {
-			const transition = transitionSheetWorkspace(
-				state.workspace,
-				action.command,
-			);
-			if (transition.status === "unchanged") return state;
-			if (transition.status === "rejected") {
-				return {
-					...state,
-					announcement: `Workspace command rejected: ${transition.rejection}.`,
-				};
-			}
-			return {
-				...state,
-				workspace: transition.workspace,
-				cardLayers: reconcileCardLayers(
-					state.cardLayers,
-					transition.workspace,
-				),
-				announcement: announcementFor(action.command),
-			};
-		}
-	}
-}
-
-function announcementFor(command: SheetWorkspaceCommand): string {
-	switch (command.type) {
-		case "ActivatePane":
-			return `${command.paneId} Pane is Active.`;
-		case "OpenSheet":
-			return `Opened Sheet ${command.sheet.instanceId}.`;
-		case "MoveTopSheet":
-			return `Moved Sheet ${command.sheetId} to ${command.destinationPaneId} Pane.`;
-		case "Collapse":
-			return `Collapsed ${command.extent} in ${command.paneId} Pane.`;
-		case "RemoveSheet":
-			return `Removed Sheet ${command.sheetId}.`;
-		case "SetSheetLock":
-			return `${command.locked ? "Locked" : "Unlocked"} Sheet ${command.sheetId}.`;
-	}
-}
-
 function subjectLabel(subject: WorkspaceSubject): string {
 	return subject.kind === "Text" ? "Text" : "Note";
 }
 
 function subjectIdentity(subject: WorkspaceSubject): string {
-	return subject.kind === "Text" ? subject.textId : subject.noteId;
+	return workspaceSubjectKey(subject);
+}
+
+function newSheetInstanceId(): string {
+	return (
+		globalThis.crypto?.randomUUID?.() ??
+		`sheet-${Date.now()}-${Math.random().toString(36).slice(2)}`
+	);
 }
 
 function DefaultNavigationAnchor() {

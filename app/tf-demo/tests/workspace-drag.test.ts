@@ -16,7 +16,10 @@ import {
 
 const note: WorkspaceSubject = {
 	kind: "Note",
-	noteId: "workspace-note:reading:1:6",
+	target: {
+		kind: "UnitReadingNote",
+		readingId: "workspace-note:reading:1:6",
+	},
 };
 
 const sheetSource: WorkspaceDragSource = {

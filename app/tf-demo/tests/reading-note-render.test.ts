@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
 import { createElement, Fragment } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
 import { renderNote } from "../src/notes";
 import type { NoteBlockKindFor } from "../src/notes/note-block-kind";
 import {
@@ -55,11 +54,7 @@ test("dispatches malformed routes to an Error Note before Block rendering", () =
 
 test("keeps app navigation outside the Note composition while modeled defaults stay invisible", () => {
 	const markup = renderToStaticMarkup(
-		createElement(
-			MemoryRouter,
-			{},
-			renderReadingNote(readingNoteFixture()),
-		),
+		renderReadingNote(readingNoteFixture()),
 	);
 	expect(markup).not.toContain('aria-label="Primary"');
 	expect(markup).toContain('aria-label="Reading note"');
@@ -75,7 +70,7 @@ test("keeps app navigation outside the Note composition while modeled defaults s
 	expect(Object.keys(DEFAULT_READING_NOTE_RENDERER_FOR)).toHaveLength(7);
 });
 
-test("renders the four visible defaults in weighted order with navigable targets", () => {
+test("renders the four visible defaults in weighted order with workspace commands", () => {
 	const base = readingNoteFixture({
 		canonicalForm: "Bank",
 		transcription: "baŋk",
@@ -132,9 +127,8 @@ test("renders the four visible defaults in weighted order with navigable targets
 	expect(markup).toContain("🏦 Bank");
 	expect(markup).toContain("/baŋk/");
 	expect(markup).toContain("gender: Fem");
-	expect(markup).toContain("/text/text-1?at=attestation-1");
-	expect(markup).toContain("/note/route/lemma/lemma-1");
-	expect(markup).toContain("/note/shadow/shadow-1");
+	expect(markup.match(/<button type="button"/g)).toHaveLength(3);
+	expect(markup).not.toContain("href=");
 	expect(markup).toContain("relation to Unit Shadow Sparkasse");
 	expect(markup).not.toContain("unresolved Reading");
 	expect(markup).toContain("en: bank");
@@ -502,9 +496,7 @@ function renderPublicReadingNote(
 	note: ReadingNoteData,
 	capabilities?: ReadingNotePresentationCapabilities,
 ): string {
-	return renderToStaticMarkup(
-		createElement(MemoryRouter, {}, renderNote(note, capabilities)),
-	);
+	return renderToStaticMarkup(renderNote(note, capabilities));
 }
 
 function markerRenderers(): Record<

@@ -1,28 +1,22 @@
 import { useCallback } from "react";
 
 import type { SentenceView } from "@/lib/action-results";
-import type { NavigationTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import type { ReadingNoteData } from "@/notes/reading";
 import { createDefaultReadingNoteCapabilities } from "@/notes/reading/reading-note-render-context";
 import type { RouteNoteData } from "@/notes/route";
 import { createDefaultRouteNoteCapabilities } from "@/notes/route/route-note-render-context";
 import { TextPresentation } from "@/views/text-view";
-import type { CardCandidate } from "@/workspace/card-layers";
-import {
-	type CardSheetWorkspaceProps,
-	useCardLayerRequest,
-} from "@/workspace/card-sheet-workspace";
+import type { CardSheetWorkspaceProps } from "@/workspace/card-sheet-workspace";
 import type {
 	SheetWorkspace,
 	WorkspaceSubject,
 } from "@/workspace/sheet-workspace";
-
-export const SHEET_WORKSPACE_PATH = "/playground/sheet-workspace/dnd-kit";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 
 export const FIXTURE_TEXT_SUBJECT = {
 	kind: "Text",
-	textId: "workspace-text-die-bank",
+	target: { kind: "Text", textId: "workspace-text-die-bank" },
 } as const satisfies WorkspaceSubject;
 
 const FIXTURE_SOURCE_TEXT =
@@ -97,7 +91,7 @@ export const renderFixtureSubject: CardSheetWorkspaceProps["renderSubject"] = (
 	if (subject.kind === "Text") {
 		return <FixtureTextPresentation />;
 	}
-	const source = fixtureNoteSource(subject.noteId);
+	const source = fixtureNoteSource(fixtureSubjectId(subject));
 	if (!source) return <p>Unknown Note fixture.</p>;
 	const note = fixtureNote(source);
 	return note.kind === "UnitReadingNote"
@@ -108,7 +102,7 @@ export const renderFixtureSubject: CardSheetWorkspaceProps["renderSubject"] = (
 export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
 	(subject) => {
 		if (subject.kind !== "Note") return <span>Text preview</span>;
-		const source = fixtureNoteSource(subject.noteId);
+		const source = fixtureNoteSource(fixtureSubjectId(subject));
 		return (
 			<span data-note-tail={source?.kind}>
 				{source ? placeholderTail(source.kind) : "Note preview"}
@@ -117,30 +111,25 @@ export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
 	};
 
 function FixtureTextPresentation() {
-	const requestCardLayer = useCardLayerRequest();
+	const { presentCards } = useWorkspaceInteraction();
 	const selectSegment = useCallback(
 		async (selectedSentence: SentenceView, segmentIndex: number) => {
 			const segment = selectedSentence.segments.find(
 				(candidate) => candidate.index === segmentIndex,
 			);
 			if (segment?.kind !== "ResolvableText") return;
-			requestCardLayer(
-				FIXTURE_CARD_ORDER.map(
-					(kind): CardCandidate => ({
-						key: `${kind}-${selectedSentence.position}-${segmentIndex}`,
-						subject: {
-							kind: "Note",
-							noteId: fixtureNoteId(
-								kind,
-								selectedSentence.position,
-								segmentIndex,
-							),
-						},
-					}),
-				),
+			presentCards(
+				FIXTURE_CARD_ORDER.map((kind) => ({
+					key: `${kind}-${selectedSentence.position}-${segmentIndex}`,
+					target: fixtureTarget(
+						kind,
+						selectedSentence.position,
+						segmentIndex,
+					),
+				})),
 			);
 		},
-		[requestCardLayer],
+		[presentCards],
 	);
 	return (
 		<TextPresentation
@@ -159,6 +148,34 @@ function fixtureNoteId(
 	segmentIndex: number,
 ): string {
 	return `workspace-note:${kind}:${sentencePosition}:${segmentIndex}`;
+}
+
+function fixtureTarget(
+	kind: FixtureNoteKind,
+	sentencePosition: number,
+	segmentIndex: number,
+) {
+	const id = fixtureNoteId(kind, sentencePosition, segmentIndex);
+	return kind === "reading"
+		? ({ kind: "UnitReadingNote", readingId: id } as const)
+		: ({
+				kind: "RouteNote",
+				routeKind:
+					kind === "lemma"
+						? "Lemma"
+						: kind === "surface"
+							? "Surface"
+							: "Attestation",
+				id,
+			} as const);
+}
+
+function fixtureSubjectId(subject: WorkspaceSubject): string {
+	if (subject.target.kind === "UnitReadingNote") {
+		return subject.target.readingId;
+	}
+	if (subject.target.kind === "RouteNote") return subject.target.id;
+	return "";
 }
 
 function fixtureNoteSource(noteId: string) {
@@ -336,13 +353,13 @@ function sourceContext(sentence: SentenceView, segmentIndex: number) {
 	const suffix = `${sentence.position}-${segmentIndex}`;
 	return {
 		attestationId: `attestation-${suffix}` as never,
-		textId: FIXTURE_TEXT_SUBJECT.textId as never,
+		textId: FIXTURE_TEXT_SUBJECT.target.textId as never,
 		sentencePosition: sentence.position,
 		sentenceSnippet: sentence.stitchedText,
 		memberSegmentIndices: [segmentIndex],
 		target: {
 			kind: "Text" as const,
-			textId: FIXTURE_TEXT_SUBJECT.textId as never,
+			textId: FIXTURE_TEXT_SUBJECT.target.textId as never,
 			focusAttestationId: `attestation-${suffix}` as never,
 		},
 	};
@@ -356,22 +373,11 @@ function routeTarget(
 }
 
 function readingCapabilities(note: ReadingNoteData) {
-	const defaults = createDefaultReadingNoteCapabilities(note);
-	return {
-		...defaults,
-		hrefFor: fixtureHref,
-	};
+	return createDefaultReadingNoteCapabilities(note);
 }
 
 function routeCapabilities() {
-	return {
-		...createDefaultRouteNoteCapabilities(),
-		hrefFor: fixtureHref,
-	};
-}
-
-function fixtureHref(_target: NavigationTarget): string {
-	return "#fixture-link-deferred";
+	return createDefaultRouteNoteCapabilities();
 }
 
 function fixtureSentence(

@@ -5,7 +5,7 @@ import type { FunctionReturnType } from "convex/server";
 import { useEffect, useReducer, useRef, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { hrefFor, type ShadowNoteTarget } from "@/lib/navigation";
+import type { ShadowNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import type {
 	ShadowNoteData,
@@ -13,6 +13,7 @@ import type {
 	ShadowNoteReferrer,
 } from "@/notes/shadow";
 import { NotFoundView } from "@/views/not-found-view";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export type ShadowNote = ShadowNoteData;
@@ -110,6 +111,7 @@ function ShadowNoteContainer({
 	note: ShadowNote;
 	onRefresh: () => Promise<void>;
 }) {
+	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
 	const cleanupPendingRelation = useAction(
 		api.orchestration.cleanupPendingRelation,
@@ -234,7 +236,7 @@ function ShadowNoteContainer({
 			outcome: controls.outcome,
 			resolve: cleanUp,
 		},
-		hrefFor,
+		follow,
 	};
 	return renderNote(note, capabilities);
 }

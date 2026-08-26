@@ -1,9 +1,5 @@
 import { expect, test } from "bun:test";
-import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
-
-import { hrefFor } from "../src/lib/navigation";
 import { renderNote } from "../src/notes";
 import type { RouteNoteData } from "../src/notes/route";
 import {
@@ -14,7 +10,7 @@ import {
 
 type RouteNote = RouteNoteData;
 
-test("renders the complete Attestation route with typed link targets", () => {
+test("renders the complete Attestation route with typed workspace targets", () => {
 	const note = {
 		kind: "RouteNote",
 		routeKind: "Attestation",
@@ -55,12 +51,11 @@ test("renders the complete Attestation route with typed link targets", () => {
 	} as RouteNote;
 	const markup = renderBody(note);
 	expect(markup).toContain("Er steht auf.");
-	expect(markup).toContain('href="/text/text-1?at=attestation-1"');
-	expect(markup).toContain('href="/note/route/surface/surface-1"');
-	expect(markup).toContain('href="/note/reading/reading-1"');
+	expect(markup.match(/<button type="button"/g)).toHaveLength(3);
+	expect(markup).not.toContain("href=");
 });
 
-test("renders Surface and Lemma traversal links, including polysemy and same-form travel", () => {
+test("renders Surface and Lemma workspace commands, including polysemy and same-form travel", () => {
 	const surface = {
 		kind: "RouteNote",
 		routeKind: "Surface",
@@ -157,14 +152,10 @@ test("renders Surface and Lemma traversal links, including polysemy and same-for
 	} as RouteNote;
 	const surfaceMarkup = renderBody(surface);
 	const lemmaMarkup = renderBody(lemma);
-	expect(surfaceMarkup).toContain('href="/note/route/lemma/lemma-1"');
-	expect(surfaceMarkup).toContain(
-		'href="/note/route/attestation/attestation-1"',
-	);
-	expect(surfaceMarkup).toContain('href="/note/route/surface/surface-2"');
-	expect(lemmaMarkup).toContain('href="/note/reading/reading-1"');
-	expect(lemmaMarkup).toContain('href="/note/reading/reading-2"');
-	expect(lemmaMarkup).toContain('href="/note/route/lemma/lemma-2"');
+	expect(surfaceMarkup.match(/<button type="button"/g)).toHaveLength(3);
+	expect(lemmaMarkup.match(/<button type="button"/g)).toHaveLength(4);
+	expect(surfaceMarkup).not.toContain("href=");
+	expect(lemmaMarkup).not.toContain("href=");
 });
 
 test("page merging deduplicates connections and a reactive first page resets cursor state", () => {
@@ -214,19 +205,15 @@ test("a rejected old page cannot report an error after a reactive reset", async 
 test("the root renderer consumes injected route pagination state", () => {
 	const note = lemmaPage("cursor-next", false, ["reading-1"]);
 	const markup = renderToStaticMarkup(
-		createElement(
-			MemoryRouter,
-			{},
-			renderNote(note, {
-				pagination: {
-					hasMore: true,
-					isLoading: false,
-					error: "Continuation failed.",
-					async loadMore() {},
-				},
-				hrefFor,
-			}),
-		),
+		renderNote(note, {
+			pagination: {
+				hasMore: true,
+				isLoading: false,
+				error: "Continuation failed.",
+				async loadMore() {},
+			},
+			follow: () => {},
+		}),
 	);
 	expect(markup).toContain("Load more route connections");
 	expect(markup).toContain('role="alert"');
@@ -262,7 +249,5 @@ function lemmaPage(
 }
 
 function renderBody(note: RouteNote) {
-	return renderToStaticMarkup(
-		createElement(MemoryRouter, {}, renderNote(note)),
-	);
+	return renderToStaticMarkup(renderNote(note));
 }

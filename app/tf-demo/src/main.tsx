@@ -1,6 +1,5 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import { AppProvider } from "@/components/app-provider";
@@ -12,12 +11,18 @@ if (!rootElement) {
 	throw new Error("The #root element is required to mount tf-demo.");
 }
 
+if (
+	window.location.pathname !== "/" ||
+	window.location.search !== "" ||
+	window.location.hash !== ""
+) {
+	window.history.replaceState(null, "", "/");
+}
+
 createRoot(rootElement).render(
 	<StrictMode>
-		<BrowserRouter>
-			<AppProvider>
-				<App />
-			</AppProvider>
-		</BrowserRouter>
+		<AppProvider>
+			<App />
+		</AppProvider>
 	</StrictMode>,
 );

@@ -15,6 +15,11 @@ It runs React and Vite against a persistent anonymous Convex deployment on the
 local machine. Convex is the backend and orchestrator; there is no separate
 application server.
 
+The frontend has one canonical URL, `/`. The Library is the central Pane's
+Navigation Anchor, while Texts and Notes open as Sheets or transient Cards in a
+persistent browser-local workspace. Settings is shell state and does not replace
+or encode the workspace in the URL.
+
 ## Develop locally
 
 From the repository root, install the Bun workspace and start both Convex and

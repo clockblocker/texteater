@@ -1,5 +1,4 @@
-import { FlaskConicalIcon, LibraryIcon, SettingsIcon } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { LibraryIcon, SettingsIcon } from "lucide-react";
 
 import {
 	Sidebar,
@@ -12,18 +11,23 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { hrefFor, targetFromLocation } from "@/lib/navigation";
-import { SHEET_WORKSPACE_PATH } from "@/playground/sheet-workspace/sheet-workspace-fixtures";
 
-export function AppSidebar() {
-	const location = useLocation();
-	const target = targetFromLocation(location);
+export function AppSidebar({
+	libraryActive,
+	settingsActive,
+	onShowLibrary,
+	onShowSettings,
+}: {
+	readonly libraryActive: boolean;
+	readonly settingsActive: boolean;
+	readonly onShowLibrary: () => void;
+	readonly onShowSettings: () => void;
+}) {
 	const { setOpenMobile } = useSidebar();
-	const isPlayground = location.pathname === SHEET_WORKSPACE_PATH;
-	const settingsTextId =
-		target?.kind === "Text" || target?.kind === "Settings"
-			? target.textId
-			: undefined;
+	const runAndClose = (command: () => void) => {
+		command();
+		setOpenMobile(false);
+	};
 
 	return (
 		<Sidebar collapsible="icon">
@@ -34,38 +38,14 @@ export function AppSidebar() {
 							<SidebarMenu>
 								<SidebarMenuItem>
 									<SidebarMenuButton
-										tooltip="Library"
-										isActive={target?.kind === "Library"}
-										render={
-											<Link
-												to={hrefFor({
-													kind: "Library",
-												})}
-												onClick={() =>
-													setOpenMobile(false)
-												}
-											/>
+										isActive={libraryActive}
+										onClick={() =>
+											runAndClose(onShowLibrary)
 										}
+										tooltip="Library"
 									>
 										<LibraryIcon />
 										<span>Library</span>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton
-										tooltip="Playground"
-										isActive={isPlayground}
-										render={
-											<Link
-												to={SHEET_WORKSPACE_PATH}
-												onClick={() =>
-													setOpenMobile(false)
-												}
-											/>
-										}
-									>
-										<FlaskConicalIcon />
-										<span>Playground</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							</SidebarMenu>
@@ -78,19 +58,9 @@ export function AppSidebar() {
 					<SidebarMenu>
 						<SidebarMenuItem>
 							<SidebarMenuButton
+								isActive={settingsActive}
+								onClick={() => runAndClose(onShowSettings)}
 								tooltip="Settings"
-								isActive={target?.kind === "Settings"}
-								render={
-									<Link
-										to={hrefFor({
-											kind: "Settings",
-											...(settingsTextId
-												? { textId: settingsTextId }
-												: {}),
-										})}
-										onClick={() => setOpenMobile(false)}
-									/>
-								}
 							>
 								<SettingsIcon />
 								<span>Settings</span>

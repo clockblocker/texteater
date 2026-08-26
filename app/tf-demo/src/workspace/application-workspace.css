@@ -1,0 +1,22 @@
+.application-workspace {
+	min-width: 0;
+	min-height: 0;
+	flex: 1;
+	padding: 0.75rem;
+	background: #090c12;
+}
+
+.application-workspace > .card-sheet-workspace {
+	min-height: calc(100svh - 1.5rem);
+}
+
+@media (max-width: 767px) {
+	.application-workspace {
+		padding: 0;
+	}
+
+	.application-workspace > .card-sheet-workspace {
+		min-height: calc(100svh - 3rem);
+		border-radius: 0;
+	}
+}

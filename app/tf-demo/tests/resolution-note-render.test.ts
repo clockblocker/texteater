@@ -1,54 +1,46 @@
 import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
 
 import {
-	completionNavigation,
 	completionTarget,
 	ResolutionNoteFrame,
 } from "../src/views/resolution-note-view";
 
 test("renders learner-safe Resolution sections in lifecycle order", () => {
 	const markup = renderToStaticMarkup(
-		createElement(
-			MemoryRouter,
-			{},
-			createElement(ResolutionNoteFrame, {
-				note: {
-					kind: "ResolutionNote",
-					target: { kind: "Resolution", requestId: "request-1" },
-					progress: "ReadingAvailable",
-					activity: "Running",
-					route: {
-						textId: "text-1" as never,
-						sentenceId: "sentence-1" as never,
-						stitchedText: "Die Banken.",
-						clickedSegmentIndex: 2,
-						selectedSegment: "Banken",
-					},
-					grammar: {
-						members: [
-							{ attested: "Banken", orthography: "Standard" },
-						],
-						realizationCoverage: "Full",
-						normalizedSurface: "Banken",
-						spelling: "Canonical",
-						surfaceKind: "Inflection",
-						canonicalForm: "Bank",
-						family: "Lexeme",
-						kind: "NOUN",
-					},
-					reading: {
-						emojiDescription: "🏦",
-						canonicalForm: "Bank",
-						family: "Lexeme",
-						kind: "NOUN",
-					},
-					updatedAt: 1,
+		createElement(ResolutionNoteFrame, {
+			note: {
+				kind: "ResolutionNote",
+				target: { kind: "Resolution", requestId: "request-1" },
+				progress: "ReadingAvailable",
+				activity: "Running",
+				route: {
+					textId: "text-1" as never,
+					sentenceId: "sentence-1" as never,
+					stitchedText: "Die Banken.",
+					clickedSegmentIndex: 2,
+					selectedSegment: "Banken",
 				},
-			}),
-		),
+				grammar: {
+					members: [{ attested: "Banken", orthography: "Standard" }],
+					realizationCoverage: "Full",
+					normalizedSurface: "Banken",
+					spelling: "Canonical",
+					surfaceKind: "Inflection",
+					canonicalForm: "Bank",
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+				reading: {
+					emojiDescription: "🏦",
+					canonicalForm: "Bank",
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+				updatedAt: 1,
+			},
+		}),
 	);
 
 	expect(markup.indexOf('aria-label="Source"')).toBeLessThan(
@@ -63,7 +55,7 @@ test("renders learner-safe Resolution sections in lifecycle order", () => {
 	expect(markup).not.toContain("provider");
 });
 
-test("completion navigation preserves its canonical Route Note destination", () => {
+test("completion reconciliation preserves its canonical Route Note target", () => {
 	const note = {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId: "request-1" },
@@ -92,9 +84,5 @@ test("completion navigation preserves its canonical Route Note destination", () 
 		kind: "RouteNote",
 		routeKind: "Attestation",
 		id: "attestation-1",
-	});
-	expect(completionNavigation(note)).toEqual({
-		href: "/note/route/attestation/attestation-1",
-		options: { replace: true },
 	});
 });

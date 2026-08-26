@@ -1,9 +1,5 @@
 import { expect, test } from "bun:test";
-import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
-
-import { hrefFor } from "../src/lib/navigation";
 import { renderNote } from "../src/notes";
 import type { ShadowNoteData } from "../src/notes/shadow";
 import {
@@ -85,26 +81,22 @@ function noteFixture(): ShadowNote {
 
 function render(note: ShadowNote) {
 	return renderToStaticMarkup(
-		createElement(
-			MemoryRouter,
-			{},
-			renderNote(note, {
-				references: {
-					items: note.references.page,
-					hasMore: false,
-					isLoading: false,
-					error: null,
-					loadMore: null,
-				},
-				cleanup: {
-					activeLocator: null,
-					actionError: null,
-					outcome: null,
-					async resolve() {},
-				},
-				hrefFor,
-			}),
-		),
+		renderNote(note, {
+			references: {
+				items: note.references.page,
+				hasMore: false,
+				isLoading: false,
+				error: null,
+				loadMore: null,
+			},
+			cleanup: {
+				activeLocator: null,
+				actionError: null,
+				outcome: null,
+				async resolve() {},
+			},
+			follow: () => {},
+		}),
 	);
 }
 
@@ -114,7 +106,8 @@ test("renders one deterministic resolve control per exact equal-looking locator"
 	expect(markup).toContain("locator-two");
 	expect(markup).not.toContain("Discard reference");
 	expect(markup.match(/Resolve exact Lemma match/g)).toHaveLength(2);
-	expect(markup).toContain('href="/note/route/lemma/lemma-bank-b"');
+	expect(markup).not.toContain("href=");
+	expect(markup.match(/<button type="button"/g)).toHaveLength(7);
 	expect(markup).toContain("nounClass: institution");
 });
 

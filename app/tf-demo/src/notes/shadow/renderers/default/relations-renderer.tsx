@@ -1,5 +1,4 @@
 import { LoaderCircleIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import type {
@@ -66,13 +65,16 @@ function ShadowReferenceList({
 					key={referrer.reading.readingId}
 					className="rounded-lg border bg-card p-4"
 				>
-					<Link
-						to={capabilities.hrefFor(referrer.reading.target)}
+					<button
+						type="button"
+						onClick={() =>
+							capabilities.follow(referrer.reading.target)
+						}
 						className="font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 					>
 						{referrer.reading.emojiDescription}{" "}
 						{referrer.reading.canonicalForm}
-					</Link>
+					</button>
 					{referrer.pendingRelations.map((reference) => (
 						<section
 							key={reference.locatorKey}
@@ -119,15 +121,18 @@ function ShadowReferenceList({
 									key={`details:${candidate.lemmaId}`}
 									className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
 								>
-									<Link
-										to={capabilities.hrefFor(
-											candidate.target,
-										)}
+									<button
+										type="button"
+										onClick={() =>
+											capabilities.follow(
+												candidate.target,
+											)
+										}
 										className="font-medium hover:text-foreground hover:underline"
 									>
 										Inspect {candidate.canonicalForm} ·{" "}
 										{candidate.family}/{candidate.kind}
-									</Link>
+									</button>
 									{candidate.coreFeatures.map((feature) => (
 										<Badge
 											key={`${feature.name}:${feature.value}`}

@@ -4,13 +4,14 @@ import { useConvex } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { hrefFor, type RouteNoteTarget } from "@/lib/navigation";
+import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import type {
 	RouteNoteData,
 	RouteNotePresentationCapabilities,
 } from "@/notes/route";
 import { NotFoundView } from "@/views/not-found-view";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export type RouteNote = RouteNoteData;
@@ -27,6 +28,7 @@ type RouteNotePaginationState = {
 };
 
 export function RouteNoteView({ target }: { target: RouteNoteTarget }) {
+	const { follow } = useWorkspaceInteraction();
 	const noteQuery = useQuery({
 		...convexQuery(api.routeNotes.get, {
 			routeKind: target.routeKind,
@@ -47,7 +49,7 @@ export function RouteNoteView({ target }: { target: RouteNoteTarget }) {
 		);
 	}
 	return noteQuery.data.routeKind === "Attestation" ? (
-		renderNote(noteQuery.data, routeNoteCapabilities())
+		renderNote(noteQuery.data, routeNoteCapabilities(follow))
 	) : (
 		<PaginatedRouteNote initialNote={noteQuery.data} />
 	);
@@ -69,6 +71,7 @@ function PaginatedRouteNote({
 }: {
 	initialNote: PaginatedRouteNote;
 }) {
+	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
 	const [pagination, setPagination] = useState(() =>
 		resetRouteNotePagination(initialNote),
@@ -133,7 +136,7 @@ function PaginatedRouteNote({
 
 	return renderNote(
 		note,
-		routeNoteCapabilities({
+		routeNoteCapabilities(follow, {
 			hasMore: !isDone,
 			isLoading,
 			error,
@@ -143,6 +146,7 @@ function PaginatedRouteNote({
 }
 
 function routeNoteCapabilities(
+	follow: RouteNotePresentationCapabilities["follow"],
 	pagination: RouteNotePresentationCapabilities["pagination"] = {
 		hasMore: false,
 		isLoading: false,
@@ -150,7 +154,7 @@ function routeNoteCapabilities(
 		loadMore: null,
 	},
 ): RouteNotePresentationCapabilities {
-	return { pagination, hrefFor };
+	return { pagination, follow };
 }
 
 export function routePageFailureMessage(

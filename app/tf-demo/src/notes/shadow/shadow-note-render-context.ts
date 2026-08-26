@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-import { hrefFor, type NavigationTarget } from "@/lib/navigation";
+import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { NoteDataFor } from "../note-data";
 
 export type ShadowNoteData = NoteDataFor<"ShadowNote">;
@@ -20,7 +20,7 @@ export type ShadowNotePresentationCapabilities = {
 		readonly outcome: string | null;
 		readonly resolve: ((locatorKey: string) => Promise<void>) | null;
 	};
-	readonly hrefFor: (target: NavigationTarget) => string;
+	readonly follow: (target: WorkspaceTarget) => void;
 };
 
 export type ShadowNoteRenderContext = {
@@ -49,6 +49,6 @@ export function createDefaultShadowNoteCapabilities(
 			outcome: null,
 			resolve: null,
 		},
-		hrefFor,
+		follow: () => {},
 	};
 }

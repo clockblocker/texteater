@@ -2,12 +2,11 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SentenceView } from "@/lib/action-results";
-import { hrefFor, type TextTarget } from "@/lib/navigation";
+import type { TextTarget } from "@/lib/navigation";
 import {
 	shouldRequestRouteNote,
 	useRouteNotePreference,
@@ -18,10 +17,11 @@ import {
 } from "@/lib/source-context-focus";
 import { cn } from "@/lib/utils";
 import { NotFoundView } from "@/views/not-found-view";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export function TextView({ target }: { target: TextTarget }) {
-	const navigate = useNavigate();
+	const { presentCards } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
 	const [routeNotesEnabled] = useRouteNotePreference();
 	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
@@ -86,13 +86,18 @@ export function TextView({ target }: { target: TextTarget }) {
 					altKey,
 				),
 			});
-			navigate(
-				hrefFor(
-					result.kind === "Available"
-						? result.target
-						: { kind: "Resolution", requestId: result.requestId },
-				),
-			);
+			presentCards([
+				{
+					key: requestId,
+					target:
+						result.kind === "Available"
+							? result.target
+							: {
+									kind: "Resolution",
+									requestId: result.requestId,
+								},
+				},
+			]);
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Segment resolution failed.",

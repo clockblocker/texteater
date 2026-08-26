@@ -8,7 +8,6 @@ import {
 	PlusIcon,
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { parseSubmittedTextId } from "@/lib/action-results";
-import { hrefFor } from "@/lib/navigation";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
@@ -40,7 +39,7 @@ const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
 });
 
 export function LibraryView() {
-	const navigate = useNavigate();
+	const { follow } = useWorkspaceInteraction();
 	const [sourceText, setSourceText] = useState(exampleText);
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
@@ -63,12 +62,10 @@ export function LibraryView() {
 				submissionKey: submissionKeyFor(normalized),
 				sourceText: normalized,
 			});
-			navigate(
-				hrefFor({
-					kind: "Text",
-					textId: parseSubmittedTextId(result),
-				}),
-			);
+			follow({
+				kind: "Text",
+				textId: parseSubmittedTextId(result),
+			});
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Text analysis failed.",
@@ -110,13 +107,16 @@ export function LibraryView() {
 					) : textsQuery.data && textsQuery.data.length > 0 ? (
 						<div className="grid gap-3 sm:grid-cols-2">
 							{textsQuery.data.map((text) => (
-								<Link
+								<button
 									key={text.textId}
-									to={hrefFor({
-										kind: "Text",
-										textId: text.textId,
-									})}
-									className="group rounded-xl bg-card p-4 text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+									type="button"
+									onClick={() =>
+										follow({
+											kind: "Text",
+											textId: text.textId,
+										})
+									}
+									className="group rounded-xl bg-card p-4 text-left text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
 								>
 									<div className="flex items-start justify-between gap-4">
 										<div className="flex min-w-0 flex-col gap-2">
@@ -130,7 +130,7 @@ export function LibraryView() {
 										</div>
 										<ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
 									</div>
-								</Link>
+								</button>
 							))}
 						</div>
 					) : (

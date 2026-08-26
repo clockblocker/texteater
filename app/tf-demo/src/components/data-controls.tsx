@@ -8,7 +8,6 @@ import {
 	UserRoundXIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,8 +25,8 @@ import {
 } from "@/components/ui/field";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { parseSubmittedTextId } from "@/lib/action-results";
-import { hrefFor } from "@/lib/navigation";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
+import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 type TextId = FunctionArgs<typeof api.demoReset.stripTextAnalysis>["textId"];
@@ -37,7 +36,7 @@ export function DataControls({
 }: {
 	text?: { textId: TextId; sourceText: string; isAnalyzed: boolean };
 }) {
-	const navigate = useNavigate();
+	const { revealLibrary } = useWorkspaceController();
 	const visitorId = useAnonymousVisitorId();
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const [notice, setNotice] = useState<string | null>(null);
@@ -146,7 +145,7 @@ export function DataControls({
 		setInteractionError(null);
 		try {
 			const result = await clearSharedData.mutateAsync({});
-			navigate(hrefFor({ kind: "Library" }));
+			revealLibrary();
 			setNotice(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
 			);

@@ -1,5 +1,4 @@
 import { LockIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import type { ReadingNoteDefaultRenderer } from "../../reading-note-render-context";
@@ -37,21 +36,27 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 									: relation.target.id
 							}`}
 						>
-							<Link
-								to={capabilities.hrefFor(relation.target)}
+							<button
+								type="button"
+								onClick={() =>
+									capabilities.follow(relation.target)
+								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
 								<Badge variant="outline">
 									{relation.relation}:{" "}
 									{relation.targetCanonicalForm}
 								</Badge>
-							</Link>
+							</button>
 						</li>
 					))}
 					{pendingRelations.map((relation) => (
 						<li key={relation.locatorKey}>
-							<Link
-								to={capabilities.hrefFor(relation.target)}
+							<button
+								type="button"
+								onClick={() =>
+									capabilities.follow(relation.target)
+								}
 								className="inline-flex rounded-md opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
 								<Badge
@@ -65,7 +70,7 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 									{relation.relation}:{" "}
 									{relation.targetCanonicalForm}
 								</Badge>
-							</Link>
+							</button>
 						</li>
 					))}
 				</ul>
@@ -79,15 +84,18 @@ export const renderDefaultReadingRelations = (({ note, capabilities }) => {
 						<li
 							key={`${relation.relation}:${relation.target.readingId}`}
 						>
-							<Link
-								to={capabilities.hrefFor(relation.target)}
+							<button
+								type="button"
+								onClick={() =>
+									capabilities.follow(relation.target)
+								}
 								className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 							>
 								<Badge variant="secondary">
 									{relation.relation}:{" "}
 									{relation.targetCanonicalForm}
 								</Badge>
-							</Link>
+							</button>
 						</li>
 					))}
 				</ul>

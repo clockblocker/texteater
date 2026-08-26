@@ -1,8 +1,7 @@
 import { LoaderCircleIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
-import type { NavigationTarget } from "@/lib/navigation";
+import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type {
 	RouteNoteData,
 	RouteNoteDefaultRenderer,
@@ -255,17 +254,18 @@ function RouteLink({
 	children,
 	capabilities,
 }: {
-	target: NavigationTarget;
+	target: WorkspaceTarget;
 	children: React.ReactNode;
 	capabilities: RouteNotePresentationCapabilities;
 }) {
 	return (
-		<Link
-			to={capabilities.hrefFor(target)}
-			className="block rounded-lg border bg-background px-4 py-3 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+		<button
+			type="button"
+			onClick={() => capabilities.follow(target)}
+			className="block w-full rounded-lg border bg-background px-4 py-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
 		>
 			{children}
-		</Link>
+		</button>
 	);
 }
 
@@ -276,7 +276,7 @@ function RouteGrid({
 }: {
 	items: readonly {
 		key: string;
-		target: NavigationTarget;
+		target: WorkspaceTarget;
 		label: string;
 		detail?: string;
 	}[];
@@ -340,7 +340,7 @@ function surfaceRouteItem(surface: {
 	canonicalForm: string;
 	family: string;
 	kind: string;
-	target: NavigationTarget;
+	target: WorkspaceTarget;
 }) {
 	return {
 		key: surface.surfaceId,

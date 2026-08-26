@@ -3,14 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useMutation as useConvexMutation } from "convex/react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { hrefFor, type ResolutionTarget } from "@/lib/navigation";
+import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
+import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 
@@ -23,7 +23,7 @@ const progressPosition = {
 } as const;
 
 export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
-	const navigate = useNavigate();
+	const { reconcile } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
 	const retryResolution = useConvexMutation(
 		api.resolutionSessions.retryResolution,
@@ -37,10 +37,10 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 	const note: ResolutionNote | null = noteQuery.data ?? null;
 
 	useEffect(() => {
-		const command = completionNavigation(note);
-		if (!command) return;
-		navigate(command.href, command.options);
-	}, [navigate, note?.terminal]);
+		const completedTarget = completionTarget(note);
+		if (!completedTarget) return;
+		reconcile(completedTarget);
+	}, [note, reconcile]);
 
 	if (noteQuery.isPending) return <ResolutionNoteSkeleton />;
 	if (!note) {
@@ -63,13 +63,6 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 
 export function completionTarget(note: ResolutionNote | null) {
 	return note?.terminal?.kind === "Complete" ? note.terminal.target : null;
-}
-
-export function completionNavigation(note: ResolutionNote | null) {
-	const target = completionTarget(note);
-	return target
-		? { href: hrefFor(target), options: { replace: true as const } }
-		: null;
 }
 
 export function ResolutionNoteFrame({

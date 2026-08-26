@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-import { hrefFor, type NavigationTarget } from "@/lib/navigation";
+import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { NoteDataFor } from "../note-data";
 
 export type RouteNoteData = NoteDataFor<"RouteNote">;
@@ -12,7 +12,7 @@ export type RouteNotePresentationCapabilities = {
 		readonly error: string | null;
 		readonly loadMore: (() => Promise<void>) | null;
 	};
-	readonly hrefFor: (target: NavigationTarget) => string;
+	readonly follow: (target: WorkspaceTarget) => void;
 };
 
 export type RouteNoteRenderContext = {
@@ -32,6 +32,6 @@ export function createDefaultRouteNoteCapabilities(): RouteNotePresentationCapab
 			error: null,
 			loadMore: null,
 		},
-		hrefFor,
+		follow: () => {},
 	};
 }

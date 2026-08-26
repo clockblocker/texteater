@@ -1,12 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
 import {
 	createSheetWorkspaceFixture,
 	FIXTURE_TEXT_SUBJECT,
 	renderFixtureSubject,
-	SHEET_WORKSPACE_PATH,
 } from "../src/playground/sheet-workspace/sheet-workspace-fixtures";
 import {
 	dismissCardLayer,
@@ -23,19 +21,34 @@ import {
 
 const reading = {
 	kind: "Note" as const,
-	noteId: "workspace-note:reading:1:6",
+	target: {
+		kind: "UnitReadingNote" as const,
+		readingId: "workspace-note:reading:1:6",
+	},
 };
 const lemma = {
 	kind: "Note" as const,
-	noteId: "workspace-note:lemma:1:6",
+	target: {
+		kind: "RouteNote" as const,
+		routeKind: "Lemma" as const,
+		id: "workspace-note:lemma:1:6",
+	},
 };
 const surface = {
 	kind: "Note" as const,
-	noteId: "workspace-note:surface:1:6",
+	target: {
+		kind: "RouteNote" as const,
+		routeKind: "Surface" as const,
+		id: "workspace-note:surface:1:6",
+	},
 };
 const attestation = {
 	kind: "Note" as const,
-	noteId: "workspace-note:attestation:1:6",
+	target: {
+		kind: "RouteNote" as const,
+		routeKind: "Attestation" as const,
+		id: "workspace-note:attestation:1:6",
+	},
 };
 
 function transition(
@@ -253,7 +266,7 @@ test("the reusable interface renders actual Text and Note modules with presentat
 		return renderFixtureSubject(subject, presentation);
 	};
 	const markup = renderToStaticMarkup(
-		createElement(MemoryRouter, {}, renderer(reading, "Sheet")),
+		createElement("div", {}, renderer(reading, "Sheet")),
 	);
 	expect(presentations).toEqual(["Sheet"]);
 	expect(markup).toContain('aria-label="Reading note"');
@@ -261,5 +274,4 @@ test("the reusable interface renders actual Text and Note modules with presentat
 	expect(markup).toContain("to close");
 	expect(markup).not.toContain("sheet-workspace-fixture");
 	expect(markup).not.toContain("workspaceWidth");
-	expect(SHEET_WORKSPACE_PATH).toBe("/playground/sheet-workspace/dnd-kit");
 });

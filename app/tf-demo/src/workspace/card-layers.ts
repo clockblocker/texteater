@@ -63,6 +63,24 @@ export function removeLayerCard(
 	});
 }
 
+export function replaceLayerCardSubject(
+	layers: readonly CardLayer[],
+	paneId: PaneId,
+	cardId: string,
+	subject: WorkspaceSubject,
+): readonly CardLayer[] {
+	return layers.map((layer) =>
+		layer.paneId === paneId
+			? {
+					...layer,
+					cards: layer.cards.map((card) =>
+						card.id === cardId ? { ...card, subject } : card,
+					),
+				}
+			: layer,
+	);
+}
+
 /** Dismiss a layer as soon as its originating Sheet is no longer foremost. */
 export function reconcileCardLayers(
 	layers: readonly CardLayer[],

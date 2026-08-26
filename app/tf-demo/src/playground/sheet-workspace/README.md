@@ -1,6 +1,4 @@
-# Card and Sheet workspace playground
-
-The single playground route is `/playground/sheet-workspace/dnd-kit`.
+# Card and Sheet workspace fixtures
 
 The reusable module lives in `src/workspace/`. Its interface accepts Text and
 Note subjects, a renderer that receives only `Card` or `Sheet` presentation,
@@ -9,10 +7,9 @@ dnd-kit sessions, Sheet controls, and the handoff between transient Cards and
 placed Sheets. Pure Sheet Stack algebra remains in `sheet-workspace.ts`; Card
 Layers remain separate transient state.
 
-The route is a thin fixture host. It renders the application Text sentence
-presentation and the application Reading and Route Note presentation modules
-from static fake data. Selecting a Segment opens four Cards in user-facing
-order: Reading, Lemma, Surface, and Occurrence Attestation.
+These static fixtures remain test support for the pure workspace algebra and
+application Text, Reading, and Route Note presentations. They are not mounted
+by the application and have no URL.
 
 Card Layers are replaced by a new selection in the same Pane and dismissed by
 Escape, their close control, unoccupied Pane clicks, or when their originating
@@ -23,7 +20,7 @@ its full surface; each occluded Card drags from its Note-owned Tail. Dragging a
 Sheet reveals removal zones near the bottom of every Pane; releasing over one
 performs Explicit Sheet Removal, including for a Locked Sheet.
 
-Deferred work remains resolution-owned Card selection, final Tail designs,
-nested Card links, exact shortcut and non-pointer placement design,
-presentation-specific Note blocks, and production Convex/application-route
-integration.
+Production integration lives in `src/App.tsx` and uses the workspace controller
+with live Convex views. Deferred work remains final Tail designs, nested Card
+commands, exact shortcut and non-pointer placement design, and
+presentation-specific Note blocks.
