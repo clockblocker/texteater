@@ -131,6 +131,11 @@
 	pointer-events: none;
 }
 
+.card-sheet-workspace__sheet[data-sheet-placement-covered="true"] {
+	visibility: hidden;
+	pointer-events: none;
+}
+
 .card-sheet-workspace__sheet--dragging {
 	visibility: hidden;
 	opacity: 0;

@@ -325,6 +325,7 @@ function WorkspacePane({
 			: undefined;
 	const isBaseCovered =
 		pane.sheets.length > 0 && dragProjection.sourceReveal?.kind !== "Base";
+	const isPlacementCovered = dragProjection.sheetPlacementPreview !== null;
 	const dismissOnUnoccupiedClick = (
 		event: ReactPointerEvent<HTMLElement>,
 	) => {
@@ -394,6 +395,7 @@ function WorkspacePane({
 				{pane.sheets.map((sheet, index) => (
 					<WorkspaceSheet
 						dispatch={dispatch}
+						isPlacementCovered={isPlacementCovered}
 						isTop={sheet.instanceId === topSheet?.instanceId}
 						isRevealed={sheet.instanceId === revealedSheetId}
 						key={sheet.instanceId}
@@ -462,6 +464,7 @@ function WorkspaceSheet({
 	sheet,
 	isTop,
 	isRevealed,
+	isPlacementCovered,
 	stackIndex,
 	dispatch,
 	renderSubject,
@@ -470,6 +473,7 @@ function WorkspaceSheet({
 	readonly sheet: Sheet;
 	readonly isTop: boolean;
 	readonly isRevealed: boolean;
+	readonly isPlacementCovered: boolean;
 	readonly stackIndex: number;
 	readonly dispatch: React.Dispatch<WorkspaceAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
@@ -517,7 +521,7 @@ function WorkspaceSheet({
 	);
 	return (
 		<article
-			aria-hidden={!isTop}
+			aria-hidden={!isTop || isPlacementCovered}
 			className={cn(
 				"card-sheet-workspace__sheet",
 				isDragging && "card-sheet-workspace__sheet--dragging",
@@ -525,10 +529,13 @@ function WorkspaceSheet({
 			)}
 			data-dragging={isDragging ? "true" : undefined}
 			data-sheet-id={sheet.instanceId}
+			data-sheet-placement-covered={
+				isPlacementCovered ? "true" : undefined
+			}
 			data-sheet-stack-index={stackIndex}
 			data-sheet-top={isTop ? "true" : undefined}
 			data-sheet-revealed={isRevealed ? "true" : undefined}
-			inert={!isTop}
+			inert={!isTop || isPlacementCovered}
 			ref={sheetElement}
 		>
 			<SubjectInteractionContext.Provider value={interaction}>

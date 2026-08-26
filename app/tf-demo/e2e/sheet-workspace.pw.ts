@@ -136,6 +136,45 @@ test("a dragging Card keeps its source geometry and does not leave a ghost", asy
 	await page.mouse.up();
 });
 
+test("a Sheet placement preview hides the target Pane's current Sheet", async ({
+	page,
+}) => {
+	await selectSegment(page, "central", "geschlossen");
+	const card = page.locator(
+		'[data-card-layer="central"] [data-card-order="0"]',
+	);
+	const targetPane = pane(page, "west");
+	const sourceBox = await card.boundingBox();
+	const targetBox = await targetPane.boundingBox();
+	if (!sourceBox || !targetBox) {
+		throw new Error("Card and target Pane must be visible.");
+	}
+
+	await page.mouse.move(
+		sourceBox.x + sourceBox.width / 2,
+		sourceBox.y + sourceBox.height / 2,
+	);
+	await page.mouse.down();
+	await page.mouse.move(sourceBox.x + sourceBox.width / 2 + 12, sourceBox.y, {
+		steps: 2,
+	});
+	await page.mouse.move(
+		targetBox.x + targetBox.width / 2,
+		targetBox.y + targetBox.height * 0.2,
+		{ steps: 10 },
+	);
+
+	await expect(targetPane).toHaveAttribute("data-drop-target", "true");
+	await expect(targetPane.locator("[data-sheet-drop-preview]")).toBeVisible();
+	await expect(targetPane.locator('[data-sheet-top="true"]')).toHaveCSS(
+		"visibility",
+		"hidden",
+	);
+
+	await page.keyboard.press("Escape");
+	await page.mouse.up();
+});
+
 test("a Tail drag previews the whole Card rather than the Tail", async ({
 	page,
 }) => {
