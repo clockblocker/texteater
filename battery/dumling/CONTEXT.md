@@ -111,6 +111,20 @@ reciprocal meaning without changing its Lemma, Reading, or `pronType=Prs`;
 lexical reciprocal PRON such as `einander` remains a distinct identity.
 _Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
 
+**Standalone `einander`**:
+The invariant German reciprocal PRON is one fixed Lemma, one fixed `↔️`
+Reading, and one canonical Citation Surface with no Core or Inflectional
+Features. Its fixed Reading targets the fixed free `sich` Lemma with a Near
+Synonym claim.
+_Avoid_: Case-specific `einander`, `pronType=Rcp` `einander`
+
+**Reciprocal Pronominal Adverb**:
+A German `Lexeme/ADV` whose whole form combines a prepositional element with
+`einander` in reciprocal use, such as `miteinander` or `voneinander`. Each
+whole form is one Lemma; its internal composition belongs to Morphological Tree
+Knowledge rather than separate occurrence targets.
+_Avoid_: `preposition + einander` PRON, reciprocal PRON compound
+
 **Catalog Miss**:
 A structured production result stating that an explicitly promoted route has
 no fixed member for the supplied linguistic candidate. It is catalog-growth

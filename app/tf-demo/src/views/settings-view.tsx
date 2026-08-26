@@ -2,6 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 import { DataControls } from "@/components/data-controls";
+import { useTheme } from "@/components/theme-provider";
 import {
 	Card,
 	CardContent,
@@ -9,7 +10,15 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	Field,
+	FieldContent,
+	FieldDescription,
+	FieldLabel,
+	FieldTitle,
+} from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { SettingsTarget } from "@/lib/navigation";
 import { api } from "../../convex/_generated/api";
@@ -30,6 +39,18 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 						Settings
 					</h1>
 				</header>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Appearance</CardTitle>
+						<CardDescription>
+							Choose how tf-demo looks in this browser.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ThemeSettings />
+					</CardContent>
+				</Card>
 
 				<Card>
 					<CardHeader>
@@ -78,6 +99,30 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 				)}
 			</div>
 		</div>
+	);
+}
+
+function ThemeSettings() {
+	const { theme, setTheme } = useTheme();
+
+	return (
+		<FieldLabel htmlFor="dark-mode">
+			<Field orientation="horizontal">
+				<FieldContent>
+					<FieldTitle>Dark mode</FieldTitle>
+					<FieldDescription>
+						Use the dark appearance throughout the demo.
+					</FieldDescription>
+				</FieldContent>
+				<Switch
+					id="dark-mode"
+					checked={theme === "dark"}
+					onCheckedChange={(checked) =>
+						setTheme(checked ? "dark" : "light")
+					}
+				/>
+			</Field>
+		</FieldLabel>
 	);
 }
 

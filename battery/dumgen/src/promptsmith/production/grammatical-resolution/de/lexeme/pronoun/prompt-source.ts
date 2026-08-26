@@ -68,7 +68,7 @@ Core Features describe stable lexical identity. A foreign code-switch PRON keeps
 - demonstrative: Dem; indefinite: Ind; interrogative: Int; negative: Neg; reciprocal: Rcp; relative: Rel; total: Tot;
 - substantive possessive: Prs, poss Yes, and the possessor's person when established;
 - referenceNumber and referenceGender describe the stable referent, or the possessor when poss is Yes. They distinguish fixed homographs such as feminine-singular versus plural sie, masculine versus neuter ihm, and formal singular-addressee versus plural-addressee Sie. Dedicated sich and formal substantive possessive Ihr keep both null. Surface number and gender continue to describe contextual realization or agreement and never encode formal addressee count;
-- extPos DET only when an established PRON heads a phrase but externally behaves as a determiner; in was für plus a noun phrase, use extPos DET and take case, gender, and number from the whole construction, including nominative neuter singular in a copular exclamation;
+- extPos DET only when an established PRON heads a phrase but externally behaves as a determiner; never use it to split the separate multi-member DET was für ein into a PRON target;
 - foreign Yes only for an established foreign code-switch PRON identity, whose source-language canonicalForm is preserved without translation.
 
 The German codec has one scalar pronType, not a set. Some upstream annotation sources combine labels for homographic paradigms. The operation remains total: select the single codec value matching this occurrence's fixed role, such as Rel in a relative clause and Int in a direct question. Never return Unresolved and never encode a comma-separated value. Use null only when no supported value is established.

@@ -42,7 +42,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	return (
 		<ConvexProvider client={convexClient}>
 			<QueryClientProvider client={queryClient}>
-				<ThemeProvider storageKey="tf-demo-theme">
+				<ThemeProvider
+					defaultTheme="dark"
+					storageKey="tf-demo-theme"
+				>
 					<TooltipProvider>{children}</TooltipProvider>
 				</ThemeProvider>
 			</QueryClientProvider>

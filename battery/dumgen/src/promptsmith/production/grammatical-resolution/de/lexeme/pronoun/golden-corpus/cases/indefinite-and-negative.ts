@@ -83,17 +83,6 @@ export const typeAndPossessorCases = defineGoldenCaseCollection(
 						"Foreign invariant total PRON. Citation Surface.",
 				},
 			),
-			"grammar-de-pron-dev-extpos-was": inflectionCase(
-				"<TARGET>Was</TARGET> für eine Überraschung war das!",
-				"Was",
-				"was",
-				{ case: "Nom", gender: "Neut", number: "Sing", reflex: null },
-				{
-					normalizedMember: "was",
-					coreFeatures: core("Int", { extPos: "DET" }),
-					explanation: "Interrogative-exclamative PRON. ExtPos DET.",
-				},
-			),
 			"grammar-de-pron-dev-poss-meiner": inflectionCase(
 				"Der rote Regenschirm am Eingang ist <TARGET>meiner</TARGET>.",
 				"meiner",
