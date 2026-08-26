@@ -270,43 +270,42 @@
 .card-sheet-workspace__sheet-removal-zone {
 	position: absolute;
 	z-index: var(--workspace-removal-zone);
-	right: clamp(0.45rem, 3cqw, 1rem);
-	bottom: 3rem;
-	left: clamp(0.45rem, 3cqw, 1rem);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.45rem;
-	height: 3.5rem;
-	border: 1px dashed rgb(248 113 113 / 68%);
-	border-radius: 0.8rem;
-	color: #fca5a5;
-	background: rgb(69 10 10 / 82%);
-	box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 35%);
-	font-size: 0.72rem;
-	font-weight: 700;
-	letter-spacing: 0.02em;
+	right: 0;
+	bottom: 2.75rem;
+	left: 0;
+	height: clamp(5rem, 22%, 10rem);
 	pointer-events: none;
 	transition:
-		border-color 140ms ease,
-		background-color 140ms ease,
-		box-shadow 140ms ease,
-		transform 140ms ease;
+		opacity 140ms ease,
+		filter 140ms ease;
 }
 
-.card-sheet-workspace__sheet-removal-zone svg {
-	width: 1rem;
-	height: 1rem;
+.card-sheet-workspace__sheet-removal-zone::before {
+	position: absolute;
+	inset: 0 0 -2.75rem;
+	border-top: 1px solid rgb(248 113 113 / 20%);
+	background: linear-gradient(
+		to bottom,
+		rgb(127 29 29 / 10%),
+		rgb(127 29 29 / 46%)
+	);
+	content: "";
+	transition:
+		border-color 140ms ease,
+		background 140ms ease;
 }
 
 .card-sheet-workspace__sheet-removal-zone[data-drop-target="true"] {
-	transform: scale(1.02);
-	border-color: #f87171;
-	color: #fee2e2;
-	background: rgb(127 29 29 / 94%);
-	box-shadow:
-		0 0 0 2px rgb(248 113 113 / 28%),
-		0 0 1.5rem rgb(248 113 113 / 35%);
+	filter: saturate(1.25);
+}
+
+.card-sheet-workspace__sheet-removal-zone[data-drop-target="true"]::before {
+	border-color: rgb(248 113 113 / 45%);
+	background: linear-gradient(
+		to bottom,
+		rgb(153 27 27 / 20%),
+		rgb(127 29 29 / 68%)
+	);
 }
 
 .card-sheet-workspace__card-layer {

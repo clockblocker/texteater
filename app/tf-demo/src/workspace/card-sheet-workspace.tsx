@@ -9,7 +9,6 @@ import {
 	GripHorizontalIcon,
 	LockIcon,
 	LockOpenIcon,
-	Trash2Icon,
 	XIcon,
 } from "lucide-react";
 import {
@@ -454,10 +453,7 @@ function SheetRemovalDropZone({ paneId }: { readonly paneId: PaneId }) {
 			data-drop-target={isDropTarget ? "true" : undefined}
 			data-sheet-removal-zone={paneId}
 			ref={ref}
-		>
-			<Trash2Icon aria-hidden="true" />
-			<span>{isDropTarget ? "Release to remove" : "Remove Sheet"}</span>
-		</section>
+		/>
 	);
 }
 

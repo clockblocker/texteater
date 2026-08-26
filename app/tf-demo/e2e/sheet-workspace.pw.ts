@@ -380,14 +380,17 @@ test("dropping a Sheet into a Pane's bottom removal zone deletes it", async ({
 	await expect(page.locator("[data-sheet-removal-zone]")).toHaveCount(3);
 	await expect(removalZone).toBeVisible();
 	const removalBox = await removalZone.boundingBox();
-	if (!removalBox) throw new Error("Sheet removal zone must be visible.");
+	const paneBox = await central.boundingBox();
+	if (!removalBox || !paneBox)
+		throw new Error("Sheet removal zone and Pane must be visible.");
+	expect(Math.abs(removalBox.x - paneBox.x)).toBeLessThan(2);
+	expect(Math.abs(removalBox.width - paneBox.width)).toBeLessThan(2);
 	await page.mouse.move(
 		removalBox.x + removalBox.width / 2,
 		removalBox.y + removalBox.height / 2,
 		{ steps: 10 },
 	);
 	await expect(removalZone).toHaveAttribute("data-drop-target", "true");
-	await expect(removalZone).toContainText("Release to remove");
 	await page.mouse.up();
 
 	await expect(sheet).toHaveCount(0);
