@@ -186,6 +186,12 @@ One ephemeral Visitor interaction with a Segment. It either opens an already
 available Note or starts one operational Resolution Session.
 _Avoid_: Click record, Resolution, Occurrence Attestation
 
+**Resolution Step Note**:
+A transient learner-facing projection of the Attestation, Surface, Lemma, or
+Reading reached by one active Resolution Session. It adds only session-scoped
+step identity and converges to the canonical Note subject after commit.
+_Avoid_: provisional Route Note, fake Note, progress screen
+
 **Visitor Encounter**:
 The single durable association of one Visitor with one Segment after its first
 selection. Later selections reuse it; a committed Occurrence Attestation may

@@ -7,7 +7,10 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { LibraryView } from "@/views/library-view";
-import { ResolutionNoteView } from "@/views/resolution-note-view";
+import {
+	ResolutionNoteView,
+	ResolutionStepNoteView,
+} from "@/views/resolution-note-view";
 import { RouteNoteView } from "@/views/route-note-view";
 import { SettingsView } from "@/views/settings-view";
 import { ShadowNoteView } from "@/views/shadow-note-view";
@@ -117,6 +120,13 @@ function renderApplicationSubject(
 			return (
 				<ResolutionNoteView key={target.requestId} target={target} />
 			);
+		case "ResolutionStep":
+			return (
+				<ResolutionStepNoteView
+					key={`${target.requestId}:${target.stepKind}`}
+					target={target}
+				/>
+			);
 	}
 }
 
@@ -133,6 +143,8 @@ function renderCardTail(subject: WorkspaceSubject) {
 			return "Shadow";
 		case "Resolution":
 			return "Resolving";
+		case "ResolutionStep":
+			return target.stepKind;
 	}
 }
 

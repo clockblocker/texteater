@@ -740,6 +740,14 @@ function LayerCardView({
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
 			...PASSIVE_WORKSPACE_INTERACTION,
+			presentCards: (cards) => {
+				dispatch({
+					type: "OpenCardLayer",
+					paneId: layer.paneId,
+					originSheetId: layer.originSheetId,
+					cards: cardCandidatesFor(cards),
+				});
+			},
 			reconcile: (target) => {
 				dispatch({
 					type: "ReplaceSubject",
@@ -752,7 +760,7 @@ function LayerCardView({
 				});
 			},
 		}),
-		[card.id, dispatch, layer.paneId],
+		[card.id, dispatch, layer.originSheetId, layer.paneId],
 	);
 	return (
 		<article

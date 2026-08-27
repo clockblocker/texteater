@@ -1,11 +1,37 @@
 import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-
+import { resolutionDeckCards } from "../src/views/resolution-deck";
 import {
 	completionTarget,
 	ResolutionNoteFrame,
 } from "../src/views/resolution-note-view";
+
+const route = {
+	textId: "text-1" as never,
+	sentenceId: "sentence-1" as never,
+	stitchedText: "Die Banken.",
+	clickedSegmentIndex: 2,
+	selectedSegment: "Banken",
+};
+
+const grammar = {
+	members: [{ attested: "Banken", orthography: "Standard" as const }],
+	realizationCoverage: "Full" as const,
+	normalizedSurface: "Banken",
+	spelling: "Canonical" as const,
+	surfaceKind: "Inflection" as const,
+	canonicalForm: "Bank",
+	family: "Lexeme",
+	kind: "NOUN",
+};
+
+const reading = {
+	emojiDescription: "🏦",
+	canonicalForm: "Bank",
+	family: "Lexeme",
+	kind: "NOUN",
+};
 
 test("renders learner-safe Resolution sections in lifecycle order", () => {
 	const markup = renderToStaticMarkup(
@@ -15,29 +41,9 @@ test("renders learner-safe Resolution sections in lifecycle order", () => {
 				target: { kind: "Resolution", requestId: "request-1" },
 				progress: "ReadingAvailable",
 				activity: "Running",
-				route: {
-					textId: "text-1" as never,
-					sentenceId: "sentence-1" as never,
-					stitchedText: "Die Banken.",
-					clickedSegmentIndex: 2,
-					selectedSegment: "Banken",
-				},
-				grammar: {
-					members: [{ attested: "Banken", orthography: "Standard" }],
-					realizationCoverage: "Full",
-					normalizedSurface: "Banken",
-					spelling: "Canonical",
-					surfaceKind: "Inflection",
-					canonicalForm: "Bank",
-					family: "Lexeme",
-					kind: "NOUN",
-				},
-				reading: {
-					emojiDescription: "🏦",
-					canonicalForm: "Bank",
-					family: "Lexeme",
-					kind: "NOUN",
-				},
+				route,
+				grammar,
+				reading,
 				updatedAt: 1,
 			},
 		}),
@@ -53,6 +59,119 @@ test("renders learner-safe Resolution sections in lifecycle order", () => {
 	expect(markup).toContain("🏦 Bank");
 	expect(markup).not.toContain("visitor");
 	expect(markup).not.toContain("provider");
+});
+
+test("projects each available Resolution step onto the front of one deck", () => {
+	const starting = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "Starting",
+		activity: "Running",
+		route,
+		updatedAt: 1,
+	});
+	const routed = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "RouteAvailable",
+		activity: "Running",
+		route,
+		updatedAt: 2,
+	});
+	const grammatical = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "GrammarAvailable",
+		activity: "Running",
+		route,
+		grammar,
+		updatedAt: 3,
+	});
+	const readable = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "ReadingAvailable",
+		activity: "Running",
+		route,
+		grammar,
+		reading,
+		updatedAt: 4,
+	});
+
+	expect(starting.map(({ target }) => target.kind)).toEqual(["Resolution"]);
+	expect(stepKinds(routed)).toEqual(["Attestation"]);
+	expect(stepKinds(grammatical)).toEqual(["Lemma", "Surface", "Attestation"]);
+	expect(stepKinds(readable)).toEqual([
+		"Reading",
+		"Lemma",
+		"Surface",
+		"Attestation",
+	]);
+});
+
+test("a completed Resolution converges the deck to canonical Notes", () => {
+	const cards = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "Committing",
+		activity: "Terminal",
+		outcome: "Complete",
+		route,
+		grammar,
+		reading,
+		terminal: {
+			kind: "Complete",
+			attestationId: "attestation-1" as never,
+			target: {
+				kind: "UnitReadingNote",
+				readingId: "reading-1" as never,
+			},
+			canonical: {
+				readingId: "reading-1" as never,
+				lemmaId: "lemma-1" as never,
+				surfaceId: "surface-1" as never,
+				attestationId: "attestation-1" as never,
+			},
+		},
+		updatedAt: 5,
+	});
+
+	expect(cards.map(({ target }) => target)).toEqual([
+		{ kind: "UnitReadingNote", readingId: "reading-1" },
+		{ kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
+		{ kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
+		{
+			kind: "RouteNote",
+			routeKind: "Attestation",
+			id: "attestation-1",
+		},
+	]);
+});
+
+test("a terminal failure keeps Resolution foremost without discarding reached steps", () => {
+	const cards = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		progress: "GrammarAvailable",
+		activity: "Terminal",
+		outcome: "PermanentFailure",
+		route,
+		grammar,
+		terminal: {
+			kind: "PermanentFailure",
+			failureCode: "ProviderUnavailable",
+			diagnosticId: "diagnostic-1",
+			message: "Reading is temporarily unavailable.",
+		},
+		updatedAt: 5,
+	});
+
+	expect(stepKinds(cards)).toEqual([
+		"Resolution",
+		"Lemma",
+		"Surface",
+		"Attestation",
+	]);
 });
 
 test("completion reconciliation preserves its canonical Route Note target", () => {
@@ -86,3 +205,9 @@ test("completion reconciliation preserves its canonical Route Note target", () =
 		id: "attestation-1",
 	});
 });
+
+function stepKinds(cards: ReturnType<typeof resolutionDeckCards>) {
+	return cards.map(({ target }) =>
+		target.kind === "ResolutionStep" ? target.stepKind : target.kind,
+	);
+}

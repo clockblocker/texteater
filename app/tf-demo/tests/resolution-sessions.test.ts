@@ -364,11 +364,15 @@ describe("Resolution Session", () => {
 		};
 		const ordinaryDb = new SessionDb({
 			resolutionSessions: [{ _id: "session-1", ...common }],
+			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
+			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
 		});
 		const routeDb = new SessionDb({
 			resolutionSessions: [
 				{ _id: "session-2", ...common, routeNoteRequested: true },
 			],
+			readings: [{ _id: "reading-1", lemmaId: "lemma-1" }],
+			attestations: [{ _id: "attestation-1", surfaceId: "surface-1" }],
 		});
 		expect(
 			(
@@ -380,6 +384,12 @@ describe("Resolution Session", () => {
 		).toMatchObject({
 			kind: "Complete",
 			target: { kind: "UnitReadingNote", readingId: "reading-1" },
+			canonical: {
+				readingId: "reading-1",
+				lemmaId: "lemma-1",
+				surfaceId: "surface-1",
+				attestationId: "attestation-1",
+			},
 		});
 		expect(
 			(await loadResolutionNote(ordinaryDbContext(routeDb), "request-1"))

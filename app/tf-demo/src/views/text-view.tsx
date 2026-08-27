@@ -17,6 +17,7 @@ import {
 } from "@/lib/source-context-focus";
 import { cn } from "@/lib/utils";
 import { NotFoundView } from "@/views/not-found-view";
+import { resolutionDeckCardKey } from "@/views/resolution-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
@@ -88,7 +89,13 @@ export function TextView({ target }: { target: TextTarget }) {
 			});
 			presentCards([
 				{
-					key: requestId,
+					key:
+						result.kind === "Available"
+							? requestId
+							: resolutionDeckCardKey(
+									result.requestId,
+									"Resolver",
+								),
 					target:
 						result.kind === "Available"
 							? result.target

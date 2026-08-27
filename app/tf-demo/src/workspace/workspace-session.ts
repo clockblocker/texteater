@@ -73,12 +73,15 @@ export function reduceWorkspaceSession(
 	action: WorkspaceSessionAction,
 ): WorkspaceSession {
 	switch (action.type) {
-		case "OpenCardLayer":
+		case "OpenCardLayer": {
+			const cardLayers = replaceCardLayer(state.cardLayers, action);
+			if (cardLayers === state.cardLayers) return state;
 			return {
 				...state,
-				cardLayers: replaceCardLayer(state.cardLayers, action),
+				cardLayers,
 				announcement: `Opened ${action.cards.length} Cards in ${action.paneId} Pane.`,
 			};
+		}
 		case "DismissCardLayer":
 			return {
 				...state,

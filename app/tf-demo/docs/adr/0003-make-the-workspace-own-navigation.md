@@ -8,8 +8,11 @@ tf-demo has one canonical application URL, `/`. Library, Text, and Note are
 workspace subjects rather than browser destinations. Following a subject from
 the Library opens a Sheet in the central Pane; following one from a Sheet opens
 another Sheet in that Pane. A Segment Selection presents its result as a
-Pane-local Card, and a completed Resolution replaces that Card or Sheet subject
-in place.
+Pane-local Card. During an active Resolution, each newly available Attestation,
+Surface, Lemma, or Reading projection becomes the foremost Card in that one
+Pane-local Card Layer while prior steps remain underneath. Completion converges
+the four session-scoped Resolution Step Notes to their canonical Note subjects;
+failure instead keeps the operational Resolution subject foremost.
 
 The Library remains the Navigation Anchor at the base of the central Pane. A
 Library command reveals that base subject to Locked Sheet rules, so it does not

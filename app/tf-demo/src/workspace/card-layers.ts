@@ -3,6 +3,7 @@ import {
 	type PaneId,
 	type SheetWorkspace,
 	type WorkspaceSubject,
+	workspaceSubjectsEqual,
 } from "./sheet-workspace";
 
 export type CardCandidate = {
@@ -38,10 +39,30 @@ export function replaceCardLayer(
 			id: `${request.paneId}:${request.originSheetId}:${card.key}`,
 		})),
 	};
+	const current = layers.find(
+		(candidate) => candidate.paneId === request.paneId,
+	);
+	if (current && cardLayersEqual(current, layer)) return layers;
 	return [
 		...layers.filter((candidate) => candidate.paneId !== request.paneId),
 		...(layer.cards.length > 0 ? [layer] : []),
 	];
+}
+
+function cardLayersEqual(left: CardLayer, right: CardLayer): boolean {
+	return (
+		left.originSheetId === right.originSheetId &&
+		left.cards.length === right.cards.length &&
+		left.cards.every((card, index) => {
+			const candidate = right.cards[index];
+			return (
+				candidate !== undefined &&
+				card.id === candidate.id &&
+				card.key === candidate.key &&
+				workspaceSubjectsEqual(card.subject, candidate.subject)
+			);
+		})
+	);
 }
 
 export function dismissCardLayer(

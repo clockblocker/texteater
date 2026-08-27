@@ -9,11 +9,24 @@ import type {
 export type SheetInstanceId = string;
 export type PaneId = string;
 
+export type ResolutionStepKind =
+	| "Reading"
+	| "Lemma"
+	| "Surface"
+	| "Attestation";
+
+export type ResolutionStepTarget = {
+	readonly kind: "ResolutionStep";
+	readonly requestId: string;
+	readonly stepKind: ResolutionStepKind;
+};
+
 export type WorkspaceNoteTarget =
 	| UnitReadingNoteTarget
 	| RouteNoteTarget
 	| ShadowNoteTarget
-	| ResolutionTarget;
+	| ResolutionTarget
+	| ResolutionStepTarget;
 
 export type WorkspaceTarget = TextTarget | WorkspaceNoteTarget;
 
@@ -410,6 +423,8 @@ export function workspaceSubjectKey(subject: WorkspaceSubject): string {
 			return `ShadowNote:${target.shadowId}`;
 		case "Resolution":
 			return `Resolution:${target.requestId}`;
+		case "ResolutionStep":
+			return `ResolutionStep:${target.requestId}:${target.stepKind}`;
 	}
 }
 
@@ -438,12 +453,26 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 			return typeof target.shadowId === "string";
 		case "Resolution":
 			return typeof target.requestId === "string";
+		case "ResolutionStep":
+			return (
+				typeof target.requestId === "string" &&
+				isResolutionStepKind(target.stepKind)
+			);
 		default:
 			return false;
 	}
 }
 
-function workspaceSubjectsEqual(
+function isResolutionStepKind(value: unknown): value is ResolutionStepKind {
+	return (
+		value === "Reading" ||
+		value === "Lemma" ||
+		value === "Surface" ||
+		value === "Attestation"
+	);
+}
+
+export function workspaceSubjectsEqual(
 	left: WorkspaceSubject,
 	right: WorkspaceSubject,
 ): boolean {

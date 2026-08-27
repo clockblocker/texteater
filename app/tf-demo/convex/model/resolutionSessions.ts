@@ -133,6 +133,14 @@ export const resolutionNoteValidator = v.object({
 			v.object({
 				kind: v.literal("Complete"),
 				attestationId: v.id("attestations"),
+				canonical: v.optional(
+					v.object({
+						readingId: v.id("readings"),
+						lemmaId: v.id("lemmas"),
+						surfaceId: v.id("surfaces"),
+						attestationId: v.id("attestations"),
+					}),
+				),
 				target: v.union(
 					v.object({
 						kind: v.literal("UnitReadingNote"),
@@ -225,6 +233,14 @@ export async function loadResolutionNote(
 		lifecycle.state === "Active" ? lifecycle.activity : "Terminal";
 	const outcome =
 		lifecycle.state === "Terminal" ? lifecycle.outcome : undefined;
+	const canonical =
+		outcome === "Complete" && session.readingId && session.attestationId
+			? await loadCanonicalResolution(
+					ctx,
+					session.readingId,
+					session.attestationId,
+				)
+			: null;
 	return {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId },
@@ -239,6 +255,7 @@ export async function loadResolutionNote(
 					terminal: {
 						kind: "Complete" as const,
 						attestationId: session.attestationId,
+						...(canonical ? { canonical } : {}),
 						target: session.routeNoteRequested
 							? {
 									kind: "RouteNote" as const,
@@ -267,6 +284,24 @@ export async function loadResolutionNote(
 						}
 					: {}),
 		updatedAt: session.updatedAt,
+	};
+}
+
+async function loadCanonicalResolution(
+	ctx: QueryCtx,
+	readingId: Id<"readings">,
+	attestationId: Id<"attestations">,
+) {
+	const [reading, attestation] = await Promise.all([
+		ctx.db.get(readingId),
+		ctx.db.get(attestationId),
+	]);
+	if (!reading || !attestation) return null;
+	return {
+		readingId,
+		lemmaId: reading.lemmaId,
+		surfaceId: attestation.surfaceId,
+		attestationId,
 	};
 }
 

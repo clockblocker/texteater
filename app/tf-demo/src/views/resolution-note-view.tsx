@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
+import { resolutionDeckCards } from "@/views/resolution-deck";
+import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
@@ -23,7 +25,7 @@ const progressPosition = {
 } as const;
 
 export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
-	const { reconcile } = useWorkspaceInteraction();
+	const { presentCards } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
 	const retryResolution = useConvexMutation(
 		api.resolutionSessions.retryResolution,
@@ -36,11 +38,7 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 	});
 	const note: ResolutionNote | null = noteQuery.data ?? null;
 
-	useEffect(() => {
-		const completedTarget = completionTarget(note);
-		if (!completedTarget) return;
-		reconcile(completedTarget);
-	}, [note, reconcile]);
+	useResolutionDeck(note, presentCards);
 
 	if (noteQuery.isPending) return <ResolutionNoteSkeleton />;
 	if (!note) {
@@ -59,6 +57,43 @@ export function ResolutionNoteView({ target }: { target: ResolutionTarget }) {
 			}
 		/>
 	);
+}
+
+export function ResolutionStepNoteView({
+	target,
+}: {
+	target: ResolutionStepTarget;
+}) {
+	const { presentCards } = useWorkspaceInteraction();
+	const noteQuery = useQuery({
+		...convexQuery(api.resolutionSessions.getResolutionNote, {
+			requestId: target.requestId,
+		}),
+		gcTime: 10_000,
+	});
+	const note: ResolutionNote | null = noteQuery.data ?? null;
+	useResolutionDeck(note, presentCards);
+
+	if (noteQuery.isPending) return <ResolutionNoteSkeleton />;
+	if (!note) {
+		return (
+			<NotFoundView
+				title="Resolution not found"
+				description="This Resolution Session does not exist or is no longer active."
+			/>
+		);
+	}
+	return <ResolutionStepNoteFrame note={note} stepKind={target.stepKind} />;
+}
+
+function useResolutionDeck(
+	note: ResolutionNote | null,
+	presentCards: ReturnType<typeof useWorkspaceInteraction>["presentCards"],
+) {
+	useEffect(() => {
+		if (!note) return;
+		presentCards(resolutionDeckCards(note));
+	}, [note, presentCards]);
 }
 
 export function completionTarget(note: ResolutionNote | null) {
@@ -192,6 +227,136 @@ export function ResolutionNoteFrame({
 			</div>
 		</div>
 	);
+}
+
+export function ResolutionStepNoteFrame({
+	note,
+	stepKind,
+}: {
+	note: ResolutionNote;
+	stepKind: ResolutionStepTarget["stepKind"];
+}) {
+	return (
+		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
+			<div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+				<header className="flex flex-col gap-3">
+					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+						{stepTitle(note, stepKind)}
+					</h1>
+					<div className="flex flex-wrap items-center gap-2">
+						<Badge variant="secondary">{stepKind}</Badge>
+						{note.activity !== "Terminal" ? (
+							<LoaderCircleIcon
+								className="size-4 animate-spin text-muted-foreground"
+								aria-label="Resolution in progress"
+							/>
+						) : null}
+					</div>
+				</header>
+				<ResolutionStepBody note={note} stepKind={stepKind} />
+			</div>
+		</div>
+	);
+}
+
+function ResolutionStepBody({
+	note,
+	stepKind,
+}: {
+	note: ResolutionNote;
+	stepKind: ResolutionStepTarget["stepKind"];
+}) {
+	switch (stepKind) {
+		case "Attestation":
+			return (
+				<article aria-label="Attestation resolution step">
+					<ResolutionSection title="Source" available>
+						<p className="text-base leading-relaxed">
+							{note.route.stitchedText}
+						</p>
+					</ResolutionSection>
+				</article>
+			);
+		case "Surface":
+			return (
+				<article aria-label="Surface resolution step">
+					<ResolutionSection
+						title="Surface"
+						available={Boolean(note.grammar)}
+					>
+						{note.grammar ? (
+							<div className="flex flex-wrap gap-2">
+								<Badge variant="outline">
+									{note.grammar.spelling}
+								</Badge>
+								<Badge variant="outline">
+									{note.grammar.surfaceKind}
+								</Badge>
+								<Badge variant="outline">
+									{note.grammar.realizationCoverage}
+								</Badge>
+							</div>
+						) : null}
+					</ResolutionSection>
+				</article>
+			);
+		case "Lemma":
+			return (
+				<article aria-label="Lemma resolution step">
+					<ResolutionSection
+						title="Lemma"
+						available={Boolean(note.grammar)}
+					>
+						{note.grammar ? (
+							<div className="flex flex-wrap gap-2">
+								<Badge variant="outline">
+									{note.grammar.family}
+								</Badge>
+								<Badge variant="outline">
+									{note.grammar.kind}
+								</Badge>
+							</div>
+						) : null}
+					</ResolutionSection>
+				</article>
+			);
+		case "Reading":
+			return (
+				<article aria-label="Reading resolution step">
+					<ResolutionSection
+						title="Reading"
+						available={Boolean(note.reading)}
+					>
+						{note.reading ? (
+							<p className="text-lg font-medium">
+								{note.reading.emojiDescription}{" "}
+								{note.reading.canonicalForm}
+							</p>
+						) : null}
+					</ResolutionSection>
+				</article>
+			);
+	}
+}
+
+function stepTitle(
+	note: ResolutionNote,
+	stepKind: ResolutionStepTarget["stepKind"],
+): string {
+	switch (stepKind) {
+		case "Attestation":
+			return note.route.selectedSegment;
+		case "Surface":
+			return (
+				note.grammar?.normalizedSurface ?? note.route.selectedSegment
+			);
+		case "Lemma":
+			return note.grammar?.canonicalForm ?? note.route.selectedSegment;
+		case "Reading":
+			return note.reading
+				? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
+				: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
+	}
 }
 
 function ResolutionSection({

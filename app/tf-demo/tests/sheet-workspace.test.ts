@@ -202,6 +202,21 @@ describe("Pane-local Card Layers", () => {
 		).toBe("reading-new");
 	});
 
+	test("leaves an identical Card Layer unchanged", () => {
+		const layers = replaceCardLayer([], {
+			paneId: "central",
+			originSheetId: "sheet-central-text",
+			cards: fourCards,
+		});
+		expect(
+			replaceCardLayer(layers, {
+				paneId: "central",
+				originSheetId: "sheet-central-text",
+				cards: fourCards,
+			}),
+		).toBe(layers);
+	});
+
 	test("removes one placed Card without reordering the remaining Cards", () => {
 		const layers = replaceCardLayer([], {
 			paneId: "central",
