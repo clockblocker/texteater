@@ -59,9 +59,10 @@ describe("published package entrypoints", () => {
 		run(process.execPath, ["run", "build"]);
 
 		const runtimeSmokeTest = `
-			import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";
+			import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling";
 			import { readingFingerprint as idReadingFingerprint } from "dumling/id";
 			import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";
+			import { presentedFeatureNames } from "dumling/vocabulary";
 			import { abstractSchemas, readingSchema } from "dumling/schema";
 			import {
 				dangerouslyHeavySchemasForAbout100MiBRss as schemasFor,
@@ -70,6 +71,7 @@ describe("published package entrypoints", () => {
 			import * as schemaModule from "dumling/schema";
 
 			if (supportedLanguages.join(",") !== "de,en,he") throw new Error("language inventory is missing");
+			if (presentedFeatureNames.length !== 46) throw new Error("presented feature inventory is incomplete");
 			if (getLanguageApi("de") !== dumling.de) throw new Error("language API helper returned the wrong API");
 			if ("schema" in schemaModule) throw new Error("old schema export leaked");
 			if ("schemas" in schemaModule) throw new Error("old schemas export leaked");
@@ -88,6 +90,9 @@ describe("published package entrypoints", () => {
 			if (leanReadingFingerprint(reading) !== readingFingerprint(reading)) throw new Error("lean Reading entrypoint disagrees with the root entrypoint");
 			if (idReadingFingerprint(reading) !== readingFingerprint(reading)) throw new Error("lean ID entrypoint disagrees with the root entrypoint");
 			const surface = dumling.de.convert.lemma.toSurface(lemma);
+			const presentedSurface = toPresented.surface(surface);
+			const parsedPresentedSurface = parseAs.surface(presentedSurface, "de", "Citation", "Lexeme", "NOUN");
+			if (parsedPresentedSurface instanceof Error) throw parsedPresentedSurface;
 			const attestation = dumling.de.convert.surface.toAttestation(surface, {
 				members: [{ attested: "See", orthography: "Standard" }],
 				realizationCoverage: "Full",
@@ -116,19 +121,21 @@ describe("published package entrypoints", () => {
 			writeFileSync(
 				join(typecheckDir, "fixture.ts"),
 				[
-					'import { dumling, getLanguageApi, readingFingerprint, supportedLanguages } from "dumling";',
+					'import { dumling, getLanguageApi, parseAs, readingFingerprint, supportedLanguages, toPresented } from "dumling";',
 					'import { readingFingerprint as idReadingFingerprint } from "dumling/id";',
 					'import type { Reading as IdReading, ReadingFingerprint as IdReadingFingerprint } from "dumling/id";',
 					'import type { LanguageApi as RootLanguageApi, SupportedLanguage as RootSupportedLanguage } from "dumling";',
 					'import { readingFingerprint as leanReadingFingerprint } from "dumling/reading";',
+					'import { presentedFeatureNames } from "dumling/vocabulary";',
 					'import type { Reading as LeanReading, ReadingFingerprint as LeanReadingFingerprint } from "dumling/reading";',
 					'import { abstractSchemas, readingSchema } from "dumling/schema";',
 					'import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor, getDangerouslyHeavySchemaTreeForAbout100MiBRss as getSchemaTreeFor } from "dumling/dangerously-heavy-schema-tree";',
 					'import type * as z from "zod";',
-					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
+					'import type { AbstractLemma, ApiResult, Descriptor, DumlingBase64Url, DumlingDescriptorCsv, EntityForKind, EntityValue, IdDecodeError, IdDecodeErrorCode, IdDecodeSuccess, LanguageApi, Lemma, ParseError, ParseErrorCode, PresentedAttestation, PresentedLemma, PresentedSurface, Reading, ReadingFingerprint, Attestation, AttestationOptionsFor, SupportedLanguage, Surface } from "dumling/types";',
 					"",
 					'const languages: readonly ("de" | "en" | "he")[] = supportedLanguages;',
 					"void languages;",
+					"presentedFeatureNames satisfies readonly string[];",
 					'const rootLanguage: RootSupportedLanguage = "de";',
 					"const rootApi: RootLanguageApi<typeof rootLanguage> = dumling.de;",
 					"void rootApi;",
@@ -140,6 +147,10 @@ describe("published package entrypoints", () => {
 					"});",
 					"",
 					"const surface = dumling.de.convert.lemma.toSurface(lemma);",
+					"const presentedSurface = toPresented.surface(surface);",
+					'presentedSurface satisfies PresentedSurface<"de", "Citation", "Lexeme", "NOUN">;',
+					'const presentedLemma = toPresented.lemma(lemma) satisfies PresentedLemma<"de", "Lexeme", "NOUN">;',
+					'parseAs.surface(presentedSurface, "de", "Citation", "Lexeme", "NOUN");',
 					'const reading = readingSchema.parse({ lemma, emojiDescription: "\u{1F30A}" }) as Reading<"de">;',
 					"const readingIdentity: ReadingFingerprint = readingFingerprint(reading);",
 					'const leanReading: LeanReading<"de"> = reading;',
@@ -153,6 +164,9 @@ describe("published package entrypoints", () => {
 					'\tmembers: [{ attested: "See", orthography: "Standard" }],',
 					'\trealizationCoverage: "Full",',
 					"});",
+					'const presentedAttestation = toPresented.attestation(attestation) satisfies PresentedAttestation<"de">;',
+					"void presentedLemma;",
+					"void presentedAttestation;",
 					"const parsed = dumling.de.parse.attestation(attestation);",
 					"if (!parsed.success) throw new Error(parsed.error.message);",
 					'const dynamicApi = getLanguageApi("de");',
@@ -258,6 +272,19 @@ describe("published package entrypoints", () => {
 			resolve(projectRoot, "dist/id.js"),
 			"utf8",
 		);
+		const rootRuntime = readFileSync(
+			resolve(projectRoot, "dist/index.js"),
+			"utf8",
+		);
+		const vocabularyRuntime = readFileSync(
+			resolve(projectRoot, "dist/vocabulary.js"),
+			"utf8",
+		);
+		for (const runtime of [rootRuntime, vocabularyRuntime]) {
+			for (const forbidden of ["codec-builder-library", "zod"]) {
+				expect(runtime).not.toContain(forbidden);
+			}
+		}
 		for (const forbidden of [
 			"codec-builder-library",
 			"emoji-regex",

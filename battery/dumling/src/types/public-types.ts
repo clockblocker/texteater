@@ -319,6 +319,69 @@ export type InflectionalFeaturesFor<
 export type AbstractFeatureValue<F extends AbstractFeatureName> =
 	AbstractFeatureValueForName<F>;
 
+type PresentedFeatureValue<F extends AbstractFeatureName> =
+	| AbstractFeatureValueForName<F>
+	| readonly [
+			AbstractFeatureValueForName<F>,
+			...AbstractFeatureValueForName<F>[],
+	  ]
+	| null;
+
+/**
+ * Stable presentation feature bag. Every known feature leaf is present;
+ * features that do not apply to the selected canonical route are `null`.
+ */
+export type PresentedFeatureSet = {
+	[F in AbstractFeatureName]-?: PresentedFeatureValue<F>;
+};
+
+/** A fully totalized Lemma DTO for presentation-layer consumers. */
+export type PresentedLemma<
+	L extends SupportedLanguage = SupportedLanguage,
+	LK extends LemmaFamilyFor<L> = LemmaFamilyFor<L>,
+	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
+> = {
+	language: L;
+	canonicalForm: string;
+	family: LK;
+	kind: LSK;
+	coreFeatures: PresentedFeatureSet;
+};
+
+/** A fully totalized Surface DTO for presentation-layer consumers. */
+export type PresentedSurface<
+	L extends SupportedLanguage = SupportedLanguage,
+	SK extends SurfaceKindFor<L> = SurfaceKindFor<L>,
+	LK extends LemmaFamilyForSurfaceKind<L, SK> = LemmaFamilyForSurfaceKind<
+		L,
+		SK
+	>,
+	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
+> = {
+	language: L;
+	normalizedSurface: string;
+	spelling: "Canonical" | "Variant";
+	surfaceKind: SK;
+	surfaceFeatures: SurfaceFeatures;
+	lemma: PresentedLemma<L, LK, LSK>;
+	inflectionalFeatures: PresentedFeatureSet;
+};
+
+/** A fully totalized Attestation DTO for presentation-layer consumers. */
+export type PresentedAttestation<
+	L extends SupportedLanguage = SupportedLanguage,
+	SK extends SurfaceKindFor<L> = SurfaceKindFor<L>,
+	LK extends LemmaFamilyForSurfaceKind<L, SK> = LemmaFamilyForSurfaceKind<
+		L,
+		SK
+	>,
+	LSK extends LemmaKindFor<L, LK> = LemmaKindFor<L, LK>,
+> = {
+	members: readonly [AttestationMember, ...AttestationMember[]];
+	realizationCoverage: "Full" | "Partial";
+	surface: PresentedSurface<L, SK, LK, LSK>;
+};
+
 export type FeatureName<
 	L extends SupportedLanguage,
 	K extends FeatureSetKind,

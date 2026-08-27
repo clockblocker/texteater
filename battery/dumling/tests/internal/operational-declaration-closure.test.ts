@@ -9,6 +9,7 @@ const operationalRoots = [
 	"id.d.ts",
 	"reading.d.ts",
 	"types.d.ts",
+	"vocabulary.d.ts",
 ];
 
 function declarationImports(contents: string): readonly string[] {

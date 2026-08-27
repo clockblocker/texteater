@@ -1,5 +1,11 @@
 import type { ZodType } from "zod";
-import { dumling, readingFingerprint } from "../../src";
+import {
+	dumling,
+	type ParsingError,
+	parseAs,
+	readingFingerprint,
+	toPresented,
+} from "../../src";
 import { abstractSchemas, schemasFor } from "../../src/schema";
 import type {
 	AbstractAttestation,
@@ -12,6 +18,9 @@ import type {
 	EntityForKind,
 	FeatureValue,
 	Lemma,
+	PresentedAttestation,
+	PresentedLemma,
+	PresentedSurface,
 	Reading,
 	ReadingFingerprint,
 	Surface,
@@ -40,6 +49,34 @@ const attestation = dumling.de.convert.surface.toAttestation(
 	surface,
 	options,
 ) satisfies Attestation<"de", "Citation", "Lexeme", "NOUN">;
+
+const presentedLemma = toPresented.lemma(lemma) satisfies PresentedLemma<
+	"de",
+	"Lexeme",
+	"NOUN"
+>;
+const presentedSurface = toPresented.surface(
+	surface,
+) satisfies PresentedSurface<"de", "Citation", "Lexeme", "NOUN">;
+const presentedAttestation = toPresented.attestation(
+	attestation,
+) satisfies PresentedAttestation<"de", "Citation", "Lexeme", "NOUN">;
+
+parseAs.lemma(presentedLemma, "de", "Lexeme", "NOUN") satisfies
+	| Lemma<"de", "Lexeme", "NOUN">
+	| ParsingError<Lemma<"de", "Lexeme", "NOUN">>;
+parseAs.surface(presentedSurface, "de", "Citation", "Lexeme", "NOUN") satisfies
+	| Surface<"de", "Citation", "Lexeme", "NOUN">
+	| ParsingError<Surface<"de", "Citation", "Lexeme", "NOUN">>;
+parseAs.attestation(
+	presentedAttestation,
+	"de",
+	"Citation",
+	"Lexeme",
+	"NOUN",
+) satisfies
+	| Attestation<"de", "Citation", "Lexeme", "NOUN">
+	| ParsingError<Attestation<"de", "Citation", "Lexeme", "NOUN">>;
 
 const reading = {
 	lemma,

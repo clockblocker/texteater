@@ -19,6 +19,7 @@ import type {
 	Surface,
 	SurfaceKindFor,
 } from "../../types/public-types.js";
+import { collapsePresentedProperties } from "../presentation/collapse-presented.js";
 import { canonicalizeNullableProperties } from "../shared/parse/canonicalize-nullable.js";
 import { dumlingValidationOperations } from "./validation-operations.js";
 import {
@@ -142,6 +143,33 @@ export function parseDumlingRoute<
 					input,
 				)
 			: input,
+		dumlingValidationOperations,
+	);
+}
+
+/** Internal adapter seam for the public `parseAs` object facade. */
+export function parsePresentedDumlingRoute<
+	Route extends
+		OperationalDumlingValidationRoute<GeneratedDumlingValidationRouteKey>,
+>(input: unknown, route: Route): Parsed<DumlingValidationRouteOutput<Route>> {
+	type Output = DumlingValidationRouteOutput<Route>;
+	const artifact = decodeDumlingValidationArtifact(route);
+	if (artifact === undefined) {
+		return new ParsingError<Output>([
+			{
+				code: "custom",
+				message: `Unsupported Dumling validation route: ${route.key}`,
+				path: [],
+			},
+		]);
+	}
+	return parseValidationArtifact(
+		artifact,
+		collapsePresentedProperties(
+			artifact.root,
+			artifact.definitions ?? {},
+			input,
+		),
 		dumlingValidationOperations,
 	);
 }

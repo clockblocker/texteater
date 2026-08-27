@@ -65,14 +65,10 @@ export function canonicalizeNullableProperties(
 				value,
 			);
 		case "union": {
-			const selected = resolved[1].reduce<Constraint | undefined>(
-				(best, candidate) =>
-					best === undefined ||
-					compatibilityScore(candidate, value, definitions) <
-						compatibilityScore(best, value, definitions)
-						? candidate
-						: best,
-				undefined,
+			const selected = selectCompatibleConstraint(
+				resolved[1],
+				value,
+				definitions,
 			);
 			return selected === undefined
 				? value
@@ -81,6 +77,23 @@ export function canonicalizeNullableProperties(
 		default:
 			return value;
 	}
+}
+
+/** Internal constraint traversal seam shared by presentation normalization. */
+export function selectCompatibleConstraint(
+	candidates: readonly Constraint[],
+	value: unknown,
+	definitions: Readonly<Record<string, Constraint>>,
+): Constraint | undefined {
+	return candidates.reduce<Constraint | undefined>(
+		(best, candidate) =>
+			best === undefined ||
+			compatibilityScore(candidate, value, definitions) <
+				compatibilityScore(best, value, definitions)
+				? candidate
+				: best,
+		undefined,
+	);
 }
 
 function acceptsNull(
@@ -161,7 +174,8 @@ function compatibilityScore(
 	}
 }
 
-function resolveConstraint(
+/** Internal constraint traversal seam shared by presentation normalization. */
+export function resolveConstraint(
 	constraint: Constraint,
 	definitions: Readonly<Record<string, Constraint>>,
 ): Exclude<Constraint, readonly ["ref", string]> {

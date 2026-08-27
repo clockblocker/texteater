@@ -5,8 +5,10 @@ import {
 	dumling,
 	getLanguageApi,
 	ParsingError,
+	parseAs,
 	readingFingerprint,
 	supportedLanguages,
+	toPresented,
 } from "../../src";
 import {
 	abstractSchemas,
@@ -18,18 +20,22 @@ import {
 describe("public API usage", () => {
 	it("exposes the curated root runtime surface", () => {
 		expect(runtimeLemma.dumling).toBe(dumling);
+		expect(runtimeLemma.parseAs).toBe(parseAs);
 		expect(ParsingError).toBe(SharedParsingError);
+		expect(runtimeLemma.toPresented).toBe(toPresented);
 		expect(Object.keys(runtimeLemma).sort()).toEqual([
 			"ParsingError",
 			"dumling",
 			"getLanguageApi",
 			"isClosedRouteFor",
+			"parseAs",
 			"parseAsAttestation",
 			"parseAsLemma",
 			"parseAsReading",
 			"parseAsSurface",
 			"readingFingerprint",
 			"supportedLanguages",
+			"toPresented",
 		]);
 		expect("schema" in runtimeLemma).toBe(false);
 		expect("Language" in runtimeLemma).toBe(false);
