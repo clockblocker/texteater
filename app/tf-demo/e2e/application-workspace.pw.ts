@@ -13,8 +13,45 @@ test("old resource paths canonicalize to the one live workspace", async ({
 	await expect(
 		pane(page, "central").getByRole("heading", { name: "Library" }),
 	).toBeVisible();
+	const centralPane = pane(page, "central");
+	const library = centralPane.locator(
+		".card-sheet-workspace__stack-base > div",
+	);
+	const { paneHeight, libraryHeight } = await library.evaluate(
+		(libraryElement) => ({
+			paneHeight:
+				libraryElement
+					.closest("[data-workspace-pane]")
+					?.getBoundingClientRect().height ?? 0,
+			libraryHeight: libraryElement.getBoundingClientRect().height,
+		}),
+	);
+	expect(libraryHeight).toBeGreaterThanOrEqual(paneHeight - 2);
+	await expect(
+		centralPane.getByRole("button", { name: "Add a text" }),
+	).toBeVisible();
+	const paneBox = await centralPane.boundingBox();
+	const addTextBox = await centralPane
+		.getByRole("button", { name: "Add a text" })
+		.boundingBox();
+	if (!paneBox || !addTextBox) {
+		throw new Error(
+			"The central Pane and Add Text action must be visible.",
+		);
+	}
+	expect(addTextBox.x).toBeGreaterThanOrEqual(paneBox.x);
+	expect(addTextBox.x + addTextBox.width).toBeLessThanOrEqual(
+		paneBox.x + paneBox.width,
+	);
 	await expect(pane(page, "west")).toContainText("Drop a Card or Sheet");
 	await expect(pane(page, "east")).toContainText("Drop a Card or Sheet");
+	await centralPane.getByRole("button", { name: "Add a text" }).click();
+	await expect(
+		page.getByRole("dialog").getByRole("heading", { name: "Add a text" }),
+	).toBeVisible();
+	await expect(
+		page.getByRole("textbox", { name: "German text" }),
+	).toBeVisible();
 });
 
 test("Settings is shell state and never changes the workspace URL", async ({

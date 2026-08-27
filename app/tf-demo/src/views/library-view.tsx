@@ -76,75 +76,77 @@ export function LibraryView() {
 	const error = interactionError ?? mutationMessage(textsQuery.error);
 
 	return (
-		<div className="flex-1 bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
-			<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-				<header>
-					<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-						Library
-					</h1>
-				</header>
+		<div className="relative flex h-full min-h-0 flex-col bg-muted/30">
+			<div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-24">
+				<div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+					<header>
+						<h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+							Library
+						</h1>
+					</header>
 
-				<section
-					className="flex flex-col gap-3"
-					aria-labelledby="library-title"
-				>
-					<div className="flex items-center justify-between gap-4">
-						<h2
-							id="library-title"
-							className="text-lg font-semibold"
-						>
-							Stored texts
-						</h2>
-						{textsQuery.data ? (
-							<Badge variant="secondary">
-								{textsQuery.data.length}
-							</Badge>
-						) : null}
-					</div>
-
-					{textsQuery.isPending ? (
-						<LibrarySkeleton />
-					) : textsQuery.data && textsQuery.data.length > 0 ? (
-						<div className="grid gap-3 sm:grid-cols-2">
-							{textsQuery.data.map((text) => (
-								<button
-									key={text.textId}
-									type="button"
-									onClick={() =>
-										follow({
-											kind: "Text",
-											textId: text.textId,
-										})
-									}
-									className="group rounded-xl bg-card p-4 text-left text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-								>
-									<div className="flex items-start justify-between gap-4">
-										<div className="flex min-w-0 flex-col gap-2">
-											<p className="line-clamp-3 text-base leading-relaxed font-medium">
-												{text.sourceText}
-											</p>
-											<p className="text-xs text-muted-foreground">
-												Added{" "}
-												{formatDate(text.createdAt)}
-											</p>
-										</div>
-										<ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-									</div>
-								</button>
-							))}
+					<section
+						className="flex flex-col gap-3"
+						aria-labelledby="library-title"
+					>
+						<div className="flex items-center justify-between gap-4">
+							<h2
+								id="library-title"
+								className="text-lg font-semibold"
+							>
+								Stored texts
+							</h2>
+							{textsQuery.data ? (
+								<Badge variant="secondary">
+									{textsQuery.data.length}
+								</Badge>
+							) : null}
 						</div>
-					) : (
-						<Card size="sm">
-							<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
-								<LibraryIcon className="size-5" />
-								<p>
-									No stored texts yet. Add one with the plus
-									button.
-								</p>
-							</CardContent>
-						</Card>
-					)}
-				</section>
+
+						{textsQuery.isPending ? (
+							<LibrarySkeleton />
+						) : textsQuery.data && textsQuery.data.length > 0 ? (
+							<div className="grid gap-3 sm:grid-cols-2">
+								{textsQuery.data.map((text) => (
+									<button
+										key={text.textId}
+										type="button"
+										onClick={() =>
+											follow({
+												kind: "Text",
+												textId: text.textId,
+											})
+										}
+										className="group rounded-xl bg-card p-4 text-left text-card-foreground ring-1 ring-foreground/10 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+									>
+										<div className="flex items-start justify-between gap-4">
+											<div className="flex min-w-0 flex-col gap-2">
+												<p className="line-clamp-3 text-base leading-relaxed font-medium">
+													{text.sourceText}
+												</p>
+												<p className="text-xs text-muted-foreground">
+													Added{" "}
+													{formatDate(text.createdAt)}
+												</p>
+											</div>
+											<ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+										</div>
+									</button>
+								))}
+							</div>
+						) : (
+							<Card size="sm">
+								<CardContent className="flex items-center gap-3 py-3 text-muted-foreground">
+									<LibraryIcon className="size-5" />
+									<p>
+										No stored texts yet. Add one with the
+										plus button.
+									</p>
+								</CardContent>
+							</Card>
+						)}
+					</section>
+				</div>
 			</div>
 
 			<Dialog>
@@ -152,7 +154,7 @@ export function LibraryView() {
 					render={
 						<Button
 							size="icon-lg"
-							className="fixed right-4 bottom-6 size-14 rounded-full shadow-lg sm:right-6 md:right-[max(1.5rem,calc((100vw-var(--sidebar-width-icon)-64rem)/2+1rem))]"
+							className="absolute right-4 bottom-6 size-14 rounded-full shadow-lg sm:right-6"
 						/>
 					}
 				>
