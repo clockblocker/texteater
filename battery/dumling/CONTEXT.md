@@ -210,6 +210,13 @@ contextual expansion of free `sich`; it is not part of the pronoun's identity
 and does not mint a `pronType=Rcp` Lemma or Reading.
 _Avoid_: Selection, click result, selected Surface
 
+**Presented Lemma / Surface / Attestation**:
+A totalized presentation-layer projection of the corresponding canonical
+entity. Every presentation branch and every catalogued feature leaf exists;
+`null` represents absent or inapplicable feature evidence. Presented entities
+do not define identity and are not canonical persistence values.
+_Avoid_: Canonical entity, storage record
+
 ## Segmentation boundary
 
 Dumgen and the segmenter own the immutable Segmented Sentence aggregate,

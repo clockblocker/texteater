@@ -70,7 +70,7 @@ export function presentLemma(
 	value: LemmaValue,
 ): Infer<typeof presentedLemmaValidator> {
 	const parsed = getLanguageApi(value.language).parse.lemma(value);
-	if (!parsed.success) throw parsed.error;
+	if (!parsed.success) throw new Error(parsed.error.message);
 	const presented = exactPresentedLemma(toPresented.lemma(parsed.data));
 	assertCompletePresentedFeatureSet(presented.coreFeatures);
 	return presented as unknown as Infer<typeof presentedLemmaValidator>;
@@ -80,7 +80,7 @@ export function presentSurface(
 	value: SurfaceValue,
 ): Infer<typeof presentedSurfaceValidator> {
 	const parsed = getLanguageApi(value.language).parse.surface(value);
-	if (!parsed.success) throw parsed.error;
+	if (!parsed.success) throw new Error(parsed.error.message);
 	const presented = exactPresentedSurface(toPresented.surface(parsed.data));
 	assertCompletePresentedSurface(presented);
 	return presented as unknown as Infer<typeof presentedSurfaceValidator>;
@@ -91,7 +91,7 @@ export function presentAttestation(
 ): Infer<typeof presentedAttestationValidator> {
 	const language = value.surface.language;
 	const parsed = getLanguageApi(language).parse.attestation(value);
-	if (!parsed.success) throw parsed.error;
+	if (!parsed.success) throw new Error(parsed.error.message);
 	const projected = toPresented.attestation(parsed.data);
 	const presented: PresentedAttestation = {
 		...projected,

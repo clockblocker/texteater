@@ -98,3 +98,32 @@ also keep every root and operational subpath below the independent import-only
 and import-plus-operation RSS budgets. Adding a parser, coordinate, wrapper, or
 success widening changes this public interface and requires an explicit follow-
 up decision rather than an incidental migration edit.
+
+## Presented entity facade
+
+Dumling additionally exposes two object-shaped package-root interfaces for
+presentation seams:
+
+```ts
+toPresented.surface(surface)
+toPresented.lemma(lemma)
+toPresented.attestation(attestation)
+
+parseAs.surface(input, language, surfaceKind, family, kind)
+parseAs.lemma(input, language, family, kind)
+parseAs.attestation(input, language, surfaceKind, family, kind)
+```
+
+`toPresented` projects a trusted canonical entity into its totalized
+presentation DTO. Every presentation branch exists, every catalogued feature
+leaf exists, and absent or inapplicable values are represented by `null`.
+`parseAs` accepts either that totalized representation or the canonical one,
+collapses only recognized null-valued presentation fields, and then delegates
+to canonical route validation. A non-null inapplicable feature and an arbitrary
+unknown field remain validation failures.
+
+The four frozen named parsers above remain unchanged and continue to match the
+canonical Zod schemas differentially. The object-shaped `parseAs` facade is an
+additive adapter rather than a widening of those functions. The presentation
+implementation remains synchronous and Zod-free at runtime; it does not load
+schema trees or codec-builder machinery.
