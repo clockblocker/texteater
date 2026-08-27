@@ -182,8 +182,9 @@ Resolution, Lemma, Reading, relation, or Knowledge identity.
 _Avoid_: Learner, User, account
 
 **Segment Selection**:
-One ephemeral Visitor interaction with a Segment. It either opens an already
-available Note or starts one operational Resolution Session.
+One ephemeral Visitor interaction with a Segment. It either presents the
+already available canonical resolution route or starts one operational
+Resolution Session.
 _Avoid_: Click record, Resolution, Occurrence Attestation
 
 **Resolution Step Note**:

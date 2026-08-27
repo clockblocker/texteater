@@ -5,6 +5,13 @@ import type {
 } from "../workspace/sheet-workspace";
 import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 
+export type CanonicalResolution = {
+	readonly readingId: string;
+	readonly lemmaId: string;
+	readonly surfaceId: string;
+	readonly attestationId: string;
+};
+
 const progressPosition = {
 	Starting: 0,
 	RouteAvailable: 1,
@@ -73,26 +80,38 @@ function completedCards(
 				)
 			: [finalCard, ...steps];
 	}
-	const reading = canonicalCard(note.target.requestId, "Reading", {
+	return canonicalResolutionDeckCards(
+		note.target.requestId,
+		terminal.target,
+		canonical,
+	);
+}
+
+export function canonicalResolutionDeckCards(
+	requestId: string,
+	foregroundTarget: WorkspaceTarget,
+	canonical: CanonicalResolution,
+): readonly WorkspaceCardTarget[] {
+	const reading = canonicalCard(requestId, "Reading", {
 		kind: "UnitReadingNote",
 		readingId: canonical.readingId,
 	});
-	const lemma = canonicalCard(note.target.requestId, "Lemma", {
+	const lemma = canonicalCard(requestId, "Lemma", {
 		kind: "RouteNote",
 		routeKind: "Lemma",
 		id: canonical.lemmaId,
 	});
-	const surface = canonicalCard(note.target.requestId, "Surface", {
+	const surface = canonicalCard(requestId, "Surface", {
 		kind: "RouteNote",
 		routeKind: "Surface",
 		id: canonical.surfaceId,
 	});
-	const attestation = canonicalCard(note.target.requestId, "Attestation", {
+	const attestation = canonicalCard(requestId, "Attestation", {
 		kind: "RouteNote",
 		routeKind: "Attestation",
 		id: canonical.attestationId,
 	});
-	return terminal.target.kind === "UnitReadingNote"
+	return foregroundTarget.kind === "UnitReadingNote"
 		? [reading, lemma, surface, attestation]
 		: [attestation, reading, lemma, surface];
 }

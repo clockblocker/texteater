@@ -261,6 +261,12 @@ describe("Resolution Session", () => {
 
 		expect(await run(ctx, beginArgs)).toEqual({
 			kind: "Available",
+			canonical: {
+				readingId: "reading-1",
+				lemmaId: "lemma-1",
+				surfaceId: "surface-1",
+				attestationId: "attestation-1",
+			},
 			target: {
 				kind: "UnitReadingNote",
 				readingId: "reading-1",
@@ -274,6 +280,12 @@ describe("Resolution Session", () => {
 			}),
 		).toEqual({
 			kind: "Available",
+			canonical: {
+				readingId: "reading-1",
+				lemmaId: "lemma-1",
+				surfaceId: "surface-1",
+				attestationId: "attestation-1",
+			},
 			target: {
 				kind: "RouteNote",
 				routeKind: "Attestation",

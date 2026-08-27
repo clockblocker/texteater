@@ -6,6 +6,7 @@ import {
 	completionTarget,
 	ResolutionNoteFrame,
 } from "../src/views/resolution-note-view";
+import { segmentSelectionDeckCards } from "../src/views/segment-selection-deck";
 
 const route = {
 	textId: "text-1" as never,
@@ -146,6 +147,52 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 			id: "attestation-1",
 		},
 	]);
+});
+
+test("a stored Resolution opens the same four canonical Card subjects", () => {
+	const canonical = {
+		readingId: "reading-1",
+		lemmaId: "lemma-1",
+		surfaceId: "surface-1",
+		attestationId: "attestation-1",
+	};
+	const cards = segmentSelectionDeckCards("request-available", {
+		kind: "Available",
+		target: { kind: "UnitReadingNote", readingId: "reading-1" },
+		canonical,
+	});
+
+	expect(cards.map(({ target }) => target)).toEqual([
+		{ kind: "UnitReadingNote", readingId: "reading-1" },
+		{ kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
+		{ kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
+		{
+			kind: "RouteNote",
+			routeKind: "Attestation",
+			id: "attestation-1",
+		},
+	]);
+
+	const routeCards = segmentSelectionDeckCards("request-route", {
+		kind: "Available",
+		target: {
+			kind: "RouteNote",
+			routeKind: "Attestation",
+			id: "attestation-1",
+		},
+		canonical,
+	});
+	expect(routeCards.map(({ target }) => target.kind)).toEqual([
+		"RouteNote",
+		"UnitReadingNote",
+		"RouteNote",
+		"RouteNote",
+	]);
+	expect(routeCards[0]?.target).toEqual({
+		kind: "RouteNote",
+		routeKind: "Attestation",
+		id: "attestation-1",
+	});
 });
 
 test("a terminal failure keeps Resolution foremost without discarding reached steps", () => {

@@ -55,6 +55,12 @@ export const selectSegment = mutation({
 	returns: v.union(
 		v.object({
 			kind: v.literal("Available"),
+			canonical: v.object({
+				readingId: v.id("readings"),
+				lemmaId: v.id("lemmas"),
+				surfaceId: v.id("surfaces"),
+				attestationId: v.id("attestations"),
+			}),
 			target: v.union(
 				v.object({
 					kind: v.literal("UnitReadingNote"),
@@ -158,6 +164,12 @@ export const selectSegment = mutation({
 			});
 			return {
 				kind: "Available" as const,
+				canonical: {
+					readingId: reading._id,
+					lemmaId: reading.lemmaId,
+					surfaceId: attestation.surfaceId,
+					attestationId,
+				},
 				target: args.routeNoteRequested
 					? {
 							kind: "RouteNote" as const,
