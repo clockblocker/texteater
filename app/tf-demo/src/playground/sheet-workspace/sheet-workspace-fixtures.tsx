@@ -1,3 +1,4 @@
+import { presentedFeatureNames } from "dumling/vocabulary";
 import { useCallback } from "react";
 
 import type { SentenceView } from "@/lib/action-results";
@@ -260,11 +261,7 @@ function fixtureNote(
 				routeKind: "Lemma",
 				id: `lemma-${suffix}`,
 			},
-			language: "de",
-			canonicalForm: lexeme.canonicalForm,
-			family: "Lexeme",
-			lemmaKind: lexeme.kind,
-			coreFeatures: lexeme.coreFeatures,
+			presented: fixturePresentedLemma(lexeme),
 			connections: {
 				surfaces: [
 					{
@@ -297,18 +294,8 @@ function fixtureNote(
 			kind: "RouteNote",
 			routeKind: "Surface",
 			target: routeTarget("Surface", `surface-${suffix}`),
-			language: "de",
-			normalizedSurface: normalized,
-			spelling: "Canonical",
-			surfaceKind: "Citation",
-			surfaceFeatures: {},
-			inflectionalFeatures: null,
-			lemma: {
-				canonicalForm: lexeme.canonicalForm,
-				family: "Lexeme",
-				kind: lexeme.kind,
-				target: routeTarget("Lemma", `lemma-${suffix}`),
-			},
+			presented: fixturePresentedSurface(normalized, lexeme),
+			lemmaTarget: routeTarget("Lemma", `lemma-${suffix}`),
 			connections: {
 				occurrences: [
 					{
@@ -332,21 +319,53 @@ function fixtureNote(
 		routeKind: "Attestation",
 		target: routeTarget("Attestation", `attestation-${suffix}`),
 		source: sourceContext(sentence, segmentIndex),
-		members: [{ segmentIndex, attested: written, orthography: "Standard" }],
-		realizationCoverage: "Full",
-		surface: {
-			normalizedSurface: normalized,
-			target: routeTarget("Surface", `surface-${suffix}`),
+		presented: {
+			members: [{ attested: written, orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: fixturePresentedSurface(normalized, lexeme),
 		},
+		surfaceTarget: routeTarget("Surface", `surface-${suffix}`),
 		reading: {
 			emojiDescription: lexeme.emojiDescription,
-			canonicalForm: lexeme.canonicalForm,
 			target: {
 				kind: "UnitReadingNote",
 				readingId: `reading-${suffix}`,
 			},
 		},
 	} as unknown as RouteNoteData;
+}
+
+function fixturePresentedFeatureSet(
+	features: Readonly<Record<string, string | readonly string[] | null>> = {},
+) {
+	return Object.fromEntries(
+		presentedFeatureNames.map((name) => [name, features[name] ?? null]),
+	);
+}
+
+function fixturePresentedLemma(lexeme: ReturnType<typeof fixtureLexeme>) {
+	return {
+		language: "de" as const,
+		canonicalForm: lexeme.canonicalForm,
+		family: "Lexeme" as const,
+		kind: lexeme.kind,
+		coreFeatures: fixturePresentedFeatureSet(lexeme.coreFeatures),
+	};
+}
+
+function fixturePresentedSurface(
+	normalizedSurface: string,
+	lexeme: ReturnType<typeof fixtureLexeme>,
+) {
+	return {
+		language: "de" as const,
+		normalizedSurface,
+		spelling: "Canonical" as const,
+		surfaceKind: "Citation" as const,
+		surfaceFeatures: { historicalStatus: null },
+		lemma: fixturePresentedLemma(lexeme),
+		inflectionalFeatures: fixturePresentedFeatureSet(),
+	};
 }
 
 function sourceContext(sentence: SentenceView, segmentIndex: number) {

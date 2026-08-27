@@ -2,23 +2,23 @@ import { v } from "convex/values";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
-import { loadOccurrenceAttestation } from "../../model/occurrenceAttestations";
 import {
-	languageValidator,
-	orthographyValidator,
-	realizationCoverageValidator,
-	surfaceKindValidator,
-	surfaceSpellingValidator,
-} from "../../model/validators";
+	lemmaValue,
+	loadOccurrenceAttestation,
+	surfaceValue,
+} from "../../model/occurrenceAttestations";
+import {
+	presentAttestation,
+	presentedAttestationValidator,
+	presentedLemmaValidator,
+	presentedSurfaceValidator,
+	presentLemma,
+	presentSurface,
+} from "../../model/presentedDumling";
 import { isUnitReadingFamily } from "./unitReadingFamilies";
 
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const ROUTE_CONNECTION_PAGE_SIZE = 25;
-
-const featureSetValidator = v.record(
-	v.string(),
-	v.union(v.null(), v.string(), v.array(v.string())),
-);
 
 export const routeNoteTargetValidator = v.object({
 	kind: v.literal("RouteNote"),
@@ -45,21 +45,10 @@ const attestationRouteNoteValidator = v.object({
 			focusAttestationId: v.id("attestations"),
 		}),
 	}),
-	members: v.array(
-		v.object({
-			segmentIndex: v.number(),
-			attested: v.string(),
-			orthography: orthographyValidator,
-		}),
-	),
-	realizationCoverage: realizationCoverageValidator,
-	surface: v.object({
-		normalizedSurface: v.string(),
-		target: routeNoteTargetValidator,
-	}),
+	presented: presentedAttestationValidator,
+	surfaceTarget: routeNoteTargetValidator,
 	reading: v.object({
 		emojiDescription: v.string(),
-		canonicalForm: v.string(),
 		target: v.object({
 			kind: v.literal("UnitReadingNote"),
 			readingId: v.id("readings"),
@@ -80,18 +69,8 @@ const surfaceRouteNoteValidator = v.object({
 	kind: v.literal("RouteNote"),
 	routeKind: v.literal("Surface"),
 	target: routeNoteTargetValidator,
-	language: languageValidator,
-	normalizedSurface: v.string(),
-	spelling: surfaceSpellingValidator,
-	surfaceKind: surfaceKindValidator,
-	surfaceFeatures: featureSetValidator,
-	inflectionalFeatures: v.union(v.null(), featureSetValidator),
-	lemma: v.object({
-		canonicalForm: v.string(),
-		family: v.string(),
-		kind: v.string(),
-		target: routeNoteTargetValidator,
-	}),
+	presented: presentedSurfaceValidator,
+	lemmaTarget: routeNoteTargetValidator,
 	connections: v.object({
 		occurrences: v.array(
 			v.object({
@@ -112,7 +91,6 @@ const lemmaRouteConnectionValidator = v.object({
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),
-	coreFeatures: featureSetValidator,
 	target: routeNoteTargetValidator,
 });
 
@@ -120,11 +98,7 @@ const lemmaRouteNoteValidator = v.object({
 	kind: v.literal("RouteNote"),
 	routeKind: v.literal("Lemma"),
 	target: routeNoteTargetValidator,
-	language: languageValidator,
-	canonicalForm: v.string(),
-	family: v.string(),
-	lemmaKind: v.string(),
-	coreFeatures: featureSetValidator,
+	presented: presentedLemmaValidator,
 	connections: v.object({
 		surfaces: v.array(surfaceRouteConnectionValidator),
 		readings: v.array(
@@ -207,25 +181,14 @@ async function loadAttestationRouteNote(
 				focusAttestationId: occurrence.attestation._id,
 			},
 		},
-		members: occurrence.members.map((member) => ({
-			segmentIndex: member.index,
-			attested: member.text,
-			orthography: member.attestationMembership?.orthography as
-				| "Standard"
-				| "Typo",
-		})),
-		realizationCoverage: occurrence.attestation.realizationCoverage,
-		surface: {
-			normalizedSurface: occurrence.surface.normalizedSurface,
-			target: {
-				kind: "RouteNote" as const,
-				routeKind: "Surface" as const,
-				id: occurrence.surface._id,
-			},
+		presented: presentAttestation(occurrence.publicAttestation),
+		surfaceTarget: {
+			kind: "RouteNote" as const,
+			routeKind: "Surface" as const,
+			id: occurrence.surface._id,
 		},
 		reading: {
 			emojiDescription: occurrence.reading.emojiDescription,
-			canonicalForm: occurrence.lemma.canonicalForm,
 			target: {
 				kind: "UnitReadingNote" as const,
 				readingId: occurrence.reading._id,
@@ -329,21 +292,11 @@ async function loadSurfaceRouteNote(
 			routeKind: "Surface" as const,
 			id: surface._id,
 		},
-		language: surface.language,
-		normalizedSurface: surface.normalizedSurface,
-		spelling: surface.spelling,
-		surfaceKind: surface.surfaceKind,
-		surfaceFeatures: surface.surfaceFeatures,
-		inflectionalFeatures: surface.inflectionalFeatures ?? null,
-		lemma: {
-			canonicalForm: lemma.canonicalForm,
-			family: lemma.family,
-			kind: lemma.kind,
-			target: {
-				kind: "RouteNote" as const,
-				routeKind: "Lemma" as const,
-				id: lemma._id,
-			},
+		presented: presentSurface(surfaceValue(surface, lemma)),
+		lemmaTarget: {
+			kind: "RouteNote" as const,
+			routeKind: "Lemma" as const,
+			id: lemma._id,
 		},
 		connections: {
 			occurrences: occurrences.filter(
@@ -491,11 +444,7 @@ async function loadLemmaRouteNote(
 			routeKind: "Lemma" as const,
 			id: lemma._id,
 		},
-		language: lemma.language,
-		canonicalForm: lemma.canonicalForm,
-		family: lemma.family,
-		lemmaKind: lemma.kind,
-		coreFeatures: lemma.coreFeatures,
+		presented: presentLemma(lemmaValue(lemma)),
 		connections: {
 			surfaces: surfaces.flatMap((surface) =>
 				surface.language === lemma.language
@@ -532,7 +481,6 @@ async function loadLemmaRouteNote(
 								canonicalForm: candidate.canonicalForm,
 								family: candidate.family,
 								kind: candidate.kind,
-								coreFeatures: candidate.coreFeatures,
 								target: {
 									kind: "RouteNote" as const,
 									routeKind: "Lemma" as const,

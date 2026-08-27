@@ -20,6 +20,7 @@ import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
+import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_validators from "../model/validators.js";
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
+  "model/presentedDumling": typeof model_presentedDumling;
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/shadows": typeof model_shadows;
   "model/validators": typeof model_validators;

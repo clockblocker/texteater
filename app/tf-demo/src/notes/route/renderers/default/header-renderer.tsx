@@ -19,10 +19,12 @@ function routeNoteTitle(
 ): string {
 	switch (note.routeKind) {
 		case "Attestation":
-			return note.members.map(({ attested }) => attested).join(" ");
+			return note.presented.members
+				.map(({ attested }) => attested)
+				.join(" ");
 		case "Surface":
-			return note.normalizedSurface;
+			return note.presented.normalizedSurface;
 		case "Lemma":
-			return note.canonicalForm;
+			return note.presented.canonicalForm;
 	}
 }

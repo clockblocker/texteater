@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { presentedFeatureNames } from "dumling/vocabulary";
 import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
 import type { RouteNoteData } from "../src/notes/route";
@@ -30,22 +31,21 @@ test("renders the complete Attestation route with typed workspace targets", () =
 				focusAttestationId: "attestation-1",
 			},
 		},
-		members: [
-			{ segmentIndex: 1, attested: "steht", orthography: "Standard" },
-			{ segmentIndex: 2, attested: "auf", orthography: "Standard" },
-		],
-		realizationCoverage: "Full",
-		surface: {
-			normalizedSurface: "steht auf",
-			target: {
-				kind: "RouteNote",
-				routeKind: "Surface",
-				id: "surface-1",
-			},
+		presented: {
+			members: [
+				{ attested: "steht", orthography: "Standard" },
+				{ attested: "auf", orthography: "Standard" },
+			],
+			realizationCoverage: "Full",
+			surface: presentedSurface("steht auf", "aufstehen", "VERB"),
+		},
+		surfaceTarget: {
+			kind: "RouteNote",
+			routeKind: "Surface",
+			id: "surface-1",
 		},
 		reading: {
 			emojiDescription: "🧍",
-			canonicalForm: "aufstehen",
 			target: { kind: "UnitReadingNote", readingId: "reading-1" },
 		},
 	} as RouteNote;
@@ -60,17 +60,13 @@ test("renders Surface and Lemma workspace commands, including polysemy and same-
 		kind: "RouteNote",
 		routeKind: "Surface",
 		target: { kind: "RouteNote", routeKind: "Surface", id: "surface-1" },
-		language: "de",
-		normalizedSurface: "Bank",
-		spelling: "Canonical",
-		surfaceKind: "Citation",
-		surfaceFeatures: {},
-		inflectionalFeatures: null,
-		lemma: {
-			canonicalForm: "Bank",
-			family: "Lexeme",
-			kind: "NOUN",
-			target: { kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
+		presented: presentedSurface("Bank", "Bank", "NOUN", {
+			gender: "Fem",
+		}),
+		lemmaTarget: {
+			kind: "RouteNote",
+			routeKind: "Lemma",
+			id: "lemma-1",
 		},
 		connections: {
 			occurrences: [
@@ -107,11 +103,7 @@ test("renders Surface and Lemma workspace commands, including polysemy and same-
 		kind: "RouteNote",
 		routeKind: "Lemma",
 		target: { kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		language: "de",
-		canonicalForm: "Bank",
-		family: "Lexeme",
-		lemmaKind: "NOUN",
-		coreFeatures: {},
+		presented: presentedLemma("Bank", "NOUN", { gender: "Fem" }),
 		connections: {
 			surfaces: [
 				{
@@ -138,7 +130,6 @@ test("renders Surface and Lemma workspace commands, including polysemy and same-
 					canonicalForm: "Bank",
 					family: "Lexeme",
 					kind: "VERB",
-					coreFeatures: {},
 					target: {
 						kind: "RouteNote",
 						routeKind: "Lemma",
@@ -154,6 +145,9 @@ test("renders Surface and Lemma workspace commands, including polysemy and same-
 	const lemmaMarkup = renderBody(lemma);
 	expect(surfaceMarkup.match(/<button type="button"/g)).toHaveLength(3);
 	expect(lemmaMarkup.match(/<button type="button"/g)).toHaveLength(4);
+	expect(lemmaMarkup).toContain("gender: Fem");
+	expect(surfaceMarkup).not.toContain("abbr:");
+	expect(lemmaMarkup).not.toContain("abbr:");
 	expect(surfaceMarkup).not.toContain("href=");
 	expect(lemmaMarkup).not.toContain("href=");
 });
@@ -229,11 +223,7 @@ function lemmaPage(
 		kind: "RouteNote",
 		routeKind: "Lemma",
 		target: { kind: "RouteNote", routeKind: "Lemma", id: "lemma-1" },
-		language: "de",
-		canonicalForm: "Bank",
-		family: "Lexeme",
-		lemmaKind: "NOUN",
-		coreFeatures: {},
+		presented: presentedLemma("Bank", "NOUN", { gender: "Fem" }),
 		connections: {
 			surfaces: [],
 			readings: readingIds.map((readingId) => ({
@@ -250,4 +240,47 @@ function lemmaPage(
 
 function renderBody(note: RouteNote) {
 	return renderToStaticMarkup(renderNote(note));
+}
+
+function presentedFeatures(
+	overrides: Readonly<Record<string, string | readonly string[] | null>> = {},
+) {
+	return Object.fromEntries(
+		presentedFeatureNames.map((name) => [name, overrides[name] ?? null]),
+	);
+}
+
+function presentedLemma(
+	canonicalForm: string,
+	kind: string,
+	coreFeatures: Readonly<
+		Record<string, string | readonly string[] | null>
+	> = {},
+) {
+	return {
+		language: "de",
+		canonicalForm,
+		family: "Lexeme",
+		kind,
+		coreFeatures: presentedFeatures(coreFeatures),
+	};
+}
+
+function presentedSurface(
+	normalizedSurface: string,
+	canonicalForm: string,
+	kind: string,
+	coreFeatures: Readonly<
+		Record<string, string | readonly string[] | null>
+	> = {},
+) {
+	return {
+		language: "de",
+		normalizedSurface,
+		spelling: "Canonical",
+		surfaceKind: "Citation",
+		surfaceFeatures: { historicalStatus: null },
+		lemma: presentedLemma(canonicalForm, kind, coreFeatures),
+		inflectionalFeatures: presentedFeatures(),
+	};
 }

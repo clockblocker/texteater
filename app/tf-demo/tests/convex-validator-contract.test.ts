@@ -6,12 +6,20 @@ import {
 } from "dumgen/vocabulary";
 import {
 	memberOrthographyValues,
+	presentedFeatureNames,
 	realizationCoverageValues,
 	surfaceKindValues,
 	surfaceSpellingValues,
 } from "dumling/vocabulary";
 import { semanticRelationValues } from "dumrel/vocabulary";
 
+import {
+	presentedAttestationValidator,
+	presentedFeatureSetValidator,
+	presentedLemmaValidator,
+	presentedSurfaceValidator,
+	presentLemma,
+} from "../convex/model/presentedDumling";
 import {
 	dictionaryPlanValidator,
 	dumdictPlannedChangeValidator,
@@ -27,6 +35,7 @@ import {
 	surfaceKindValidator,
 	surfaceSpellingValidator,
 } from "../convex/model/validators";
+import { routeNoteValidator } from "../convex/modules/notes/routeNotes";
 
 function fieldType(
 	validator: { json: unknown },
@@ -85,6 +94,95 @@ test("Convex validators describe compact storage contracts", () => {
 	expect(literalValues(semanticRelationValidator)).toEqual(
 		semanticRelationValues,
 	);
+});
+
+test("Presented Dumling validators cover the exact stable presentation branches", () => {
+	const featureJson = presentedFeatureSetValidator.json as {
+		type: string;
+		keys: Record<string, unknown>;
+	};
+	expect(featureJson.type).toBe("record");
+	expect(featureJson.keys).toEqual({ type: "string" });
+	const projected = presentLemma({
+		language: "de",
+		canonicalForm: "Bank",
+		family: "Lexeme",
+		kind: "NOUN",
+		coreFeatures: { gender: "Fem", hyph: null },
+	});
+	expect(Object.keys(projected.coreFeatures)).toEqual(presentedFeatureNames);
+
+	expect(fieldType(presentedLemmaValidator, "coreFeatures")).toEqual(
+		presentedFeatureSetValidator.json,
+	);
+	const surfaceFeatures = fieldType(
+		presentedSurfaceValidator,
+		"surfaceFeatures",
+	) as {
+		type?: string;
+		value?: Record<string, { optional?: boolean }>;
+	};
+	expect(surfaceFeatures.type).toBe("object");
+	expect(Object.keys(surfaceFeatures.value ?? {})).toEqual([
+		"historicalStatus",
+	]);
+	expect(surfaceFeatures.value?.historicalStatus?.optional).not.toBe(true);
+	expect(fieldType(presentedSurfaceValidator, "lemma")).toEqual(
+		presentedLemmaValidator.json,
+	);
+	expect(
+		fieldType(presentedSurfaceValidator, "inflectionalFeatures"),
+	).toEqual(presentedFeatureSetValidator.json);
+	expect(fieldType(presentedAttestationValidator, "surface")).toEqual(
+		presentedSurfaceValidator.json,
+	);
+});
+
+test("each Route Note variant has one required Presented entity field", () => {
+	const routeUnion = routeNoteValidator.json as {
+		type: string;
+		value: Array<{
+			type: string;
+			value: Record<
+				string,
+				{
+					optional?: boolean;
+					fieldType: { type?: string; value?: unknown };
+				}
+			>;
+		}>;
+	};
+	expect(routeUnion.type).toBe("union");
+	expect(routeUnion.value).toHaveLength(3);
+	const duplicatedEntityFields = {
+		Attestation: ["members", "realizationCoverage", "surface"],
+		Surface: [
+			"language",
+			"normalizedSurface",
+			"spelling",
+			"surfaceKind",
+			"surfaceFeatures",
+			"inflectionalFeatures",
+			"lemma",
+		],
+		Lemma: [
+			"language",
+			"canonicalForm",
+			"family",
+			"lemmaKind",
+			"coreFeatures",
+		],
+	} as const;
+	for (const variant of routeUnion.value) {
+		expect(variant.type).toBe("object");
+		expect(variant.value.presented?.optional).not.toBe(true);
+		expect(variant.value.presented?.fieldType.type).toBe("object");
+		const routeKind = variant.value.routeKind?.fieldType
+			.value as keyof typeof duplicatedEntityFields;
+		for (const field of duplicatedEntityFields[routeKind]) {
+			expect(variant.value[field]).toBeUndefined();
+		}
+	}
 });
 
 test("the persistence adapter does not load exhaustive domain schemas", async () => {

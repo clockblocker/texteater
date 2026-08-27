@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { presentedFeatureNames } from "dumling/vocabulary";
 
 import { get } from "../convex/routeNotes";
 
@@ -187,17 +188,17 @@ test("Attestation Route Note preserves ordered members and reaches Surface and R
 			},
 		},
 	)) as {
-		members: { attested: string }[];
+		presented: { members: { attested: string }[] };
 		source: { memberSegmentIndices: number[] };
-		surface: { target: Record<string, string> };
+		surfaceTarget: Record<string, string>;
 		reading: { target: Record<string, string> };
 	};
-	expect(note.members.map((member) => member.attested)).toEqual([
+	expect(note.presented.members.map((member) => member.attested)).toEqual([
 		"steht",
 		"auf",
 	]);
 	expect(note.source.memberSegmentIndices).toEqual([1, 3]);
-	expect(note.surface.target).toEqual({
+	expect(note.surfaceTarget).toEqual({
 		kind: "RouteNote",
 		routeKind: "Surface",
 		id: "surface-1",
@@ -787,6 +788,29 @@ test("Surface pages expose every occurrence and 100 distinct exact same-written-
 		],
 		attestations,
 	});
+	const firstPage = (await routeNote(
+		{ db },
+		{
+			target: {
+				kind: "RouteNote",
+				routeKind: "Surface",
+				id: "surface-0",
+			},
+		},
+	)) as {
+		presented: {
+			surfaceFeatures: unknown;
+			inflectionalFeatures: unknown;
+		};
+	};
+	expect(firstPage.presented.surfaceFeatures).toEqual({
+		historicalStatus: null,
+	});
+	expect(typeof firstPage.presented.inflectionalFeatures).toBe("object");
+	expect(firstPage.presented.inflectionalFeatures).not.toBeNull();
+	expect(
+		Object.keys(firstPage.presented.inflectionalFeatures as object),
+	).toEqual(presentedFeatureNames);
 	const pages = await exhaustRoutePages(db, {
 		kind: "RouteNote",
 		routeKind: "Surface",
@@ -956,7 +980,7 @@ function lemma(
 		canonicalForm,
 		family,
 		kind,
-		coreFeatures: {},
+		coreFeatures: lemmaCoreFeatures(_id, canonicalForm, kind),
 	};
 }
 
@@ -974,7 +998,36 @@ function surface(
 		normalizedSurface,
 		spelling: "Canonical",
 		surfaceKind: "Citation",
-		surfaceFeatures: {},
+		surfaceFeatures: null,
+	};
+}
+
+function lemmaCoreFeatures(_id: string, canonicalForm: string, kind: string) {
+	if (kind === "NOUN") return { gender: null, hyph: null };
+	if (kind === "VERB") {
+		return {
+			verbType: null,
+			lexicallyReflexive: null,
+			hasSepPrefix: null,
+			hasGovPrep: null,
+		};
+	}
+	if (kind !== "PRON") return {};
+	const pronType = _id.includes("rel-")
+		? "Rel"
+		: _id.includes("dem-")
+			? "Dem"
+			: ["niemand", "nichts", "keiner"].includes(canonicalForm)
+				? "Neg"
+				: ["alles", "alle", "jeder", "jedweder", "jeglicher"].includes(
+							canonicalForm,
+						)
+					? "Tot"
+					: "Ind";
+	return {
+		pronType,
+		referenceGender: null,
+		referenceNumber: null,
 	};
 }
 

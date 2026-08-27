@@ -93,9 +93,11 @@ function AttestationRouteNote({
 			</RouteSection>
 			<RouteSection title="Ordered members">
 				<ol className="grid gap-2">
-					{note.members.map((member) => (
+					{note.presented.members.map((member, index) => (
 						<li
-							key={member.segmentIndex}
+							key={
+								note.source.memberSegmentIndices[index] ?? index
+							}
 							className="flex items-center gap-2"
 						>
 							<span>{member.attested}</span>
@@ -105,22 +107,24 @@ function AttestationRouteNote({
 						</li>
 					))}
 				</ol>
-				<Badge variant="secondary">{note.realizationCoverage}</Badge>
+				<Badge variant="secondary">
+					{note.presented.realizationCoverage}
+				</Badge>
 			</RouteSection>
 			<RouteSection title="Resolution route">
 				<div className="grid gap-2 sm:grid-cols-2">
 					<RouteLink
-						target={note.surface.target}
+						target={note.surfaceTarget}
 						capabilities={capabilities}
 					>
-						Surface · {note.surface.normalizedSurface}
+						Surface · {note.presented.surface.normalizedSurface}
 					</RouteLink>
 					<RouteLink
 						target={note.reading.target}
 						capabilities={capabilities}
 					>
 						Unit Reading · {note.reading.emojiDescription}{" "}
-						{note.reading.canonicalForm}
+						{note.presented.surface.lemma.canonicalForm}
 					</RouteLink>
 				</div>
 			</RouteSection>
@@ -141,23 +145,23 @@ function SurfaceRouteNote({
 			aria-label="Surface Route Note"
 		>
 			<div className="flex flex-wrap gap-2">
-				<Badge variant="secondary">{note.language}</Badge>
-				<Badge variant="outline">{note.spelling}</Badge>
-				<Badge variant="outline">{note.surfaceKind}</Badge>
+				<Badge variant="secondary">{note.presented.language}</Badge>
+				<Badge variant="outline">{note.presented.spelling}</Badge>
+				<Badge variant="outline">{note.presented.surfaceKind}</Badge>
 			</div>
 			<FeatureList
 				featureSets={[
-					note.surfaceFeatures,
-					note.inflectionalFeatures ?? {},
+					note.presented.surfaceFeatures,
+					note.presented.inflectionalFeatures,
 				]}
 			/>
 			<RouteSection title="Lemma">
 				<RouteLink
-					target={note.lemma.target}
+					target={note.lemmaTarget}
 					capabilities={capabilities}
 				>
-					{note.lemma.canonicalForm} · {note.lemma.family} ·{" "}
-					{note.lemma.kind}
+					{note.presented.lemma.canonicalForm} ·{" "}
+					{note.presented.lemma.family} · {note.presented.lemma.kind}
 				</RouteLink>
 			</RouteSection>
 			<RouteSection title="Source occurrences">
@@ -195,11 +199,11 @@ function LemmaRouteNote({
 	return (
 		<article className="flex flex-col gap-5" aria-label="Lemma Route Note">
 			<div className="flex flex-wrap gap-2">
-				<Badge variant="secondary">{note.language}</Badge>
-				<Badge variant="outline">{note.family}</Badge>
-				<Badge variant="outline">{note.lemmaKind}</Badge>
+				<Badge variant="secondary">{note.presented.language}</Badge>
+				<Badge variant="outline">{note.presented.family}</Badge>
+				<Badge variant="outline">{note.presented.kind}</Badge>
 			</div>
-			<FeatureList featureSets={[note.coreFeatures]} />
+			<FeatureList featureSets={[note.presented.coreFeatures]} />
 			<RouteSection title="Known Surfaces">
 				<RouteGrid
 					items={note.connections.surfaces.map(surfaceRouteItem)}
@@ -212,7 +216,7 @@ function LemmaRouteNote({
 					items={note.connections.readings.map((reading) => ({
 						key: reading.readingId,
 						target: reading.target,
-						label: `${reading.emojiDescription} ${note.canonicalForm}`,
+						label: `${reading.emojiDescription} ${note.presented.canonicalForm}`,
 					}))}
 					empty="No Unit Readings for this Lemma."
 					capabilities={capabilities}
@@ -312,15 +316,18 @@ function FeatureList({
 	>[];
 }) {
 	const features = featureSets.flatMap((featureSet) =>
-		Object.entries(featureSet).map(([name, value]) => ({
-			name,
-			value:
-				value === null
-					? "—"
-					: Array.isArray(value)
-						? value.join(", ")
-						: value,
-		})),
+		Object.entries(featureSet).flatMap(([name, value]) =>
+			value === null
+				? []
+				: [
+						{
+							name,
+							value: Array.isArray(value)
+								? value.join(", ")
+								: value,
+						},
+					],
+		),
 	);
 	if (features.length === 0) return null;
 	return (
