@@ -1,4 +1,4 @@
-add another one with the silouette being the result of layered black cicles
+add another one with the silouette being the result of layered (black cicles)[img/icon-sketch.png]
 in the rainbow order
 red -> orange -> yellow -> ...
 
