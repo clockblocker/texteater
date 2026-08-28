@@ -69,6 +69,7 @@ export function TextView({ target }: { target: TextTarget }) {
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 		altKey: boolean,
+		anchorElement: HTMLElement,
 	) {
 		setNotice(null);
 		setInteractionError(null);
@@ -87,7 +88,9 @@ export function TextView({ target }: { target: TextTarget }) {
 					altKey,
 				),
 			});
-			presentCards(segmentSelectionDeckCards(requestId, result));
+			presentCards(segmentSelectionDeckCards(requestId, result), {
+				anchor: anchorElement,
+			});
 		} catch (cause) {
 			setInteractionError(
 				mutationMessage(cause) ?? "Segment resolution failed.",
@@ -142,6 +145,7 @@ export function TextPresentation({
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 		altKey: boolean,
+		anchorElement: HTMLElement,
 	) => Promise<void>;
 	readonly notice?: string | null;
 	readonly error?: string | null;
@@ -204,6 +208,7 @@ export function SentenceList({
 		sentence: SentenceView,
 		clickedSegmentIndex: number,
 		altKey: boolean,
+		anchorElement: HTMLElement,
 	) => Promise<void>;
 }) {
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
@@ -272,7 +277,8 @@ export function SentenceList({
 								type="button"
 								className={cn(
 									"-mx-0.5 cursor-pointer appearance-none rounded-sm border-0 bg-transparent px-0.5 py-0 align-baseline text-inherit transition-colors [font:inherit] leading-[1.35] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 aria-pressed:bg-primary aria-pressed:text-primary-foreground disabled:pointer-events-none",
-									isSourceContextMember && "bg-[#4d8ce6]/25",
+									isSourceContextMember &&
+										"bg-workspace-highlight/25",
 								)}
 								data-source-context-member={
 									isSourceContextMember || undefined
@@ -300,6 +306,7 @@ export function SentenceList({
 										sentence,
 										segment.index,
 										event.altKey,
+										event.currentTarget,
 									)
 								}
 							>
@@ -309,7 +316,8 @@ export function SentenceList({
 							<span
 								key={segment.index}
 								className={cn(
-									isSourceContextMember && "bg-[#4d8ce6]/25",
+									isSourceContextMember &&
+										"bg-workspace-highlight/25",
 								)}
 								data-source-context-member={
 									isSourceContextMember || undefined

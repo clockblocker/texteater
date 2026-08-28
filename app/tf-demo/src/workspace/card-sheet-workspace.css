@@ -1,10 +1,4 @@
 .card-sheet-workspace {
-	--workspace-ink: #f5f7fb;
-	--workspace-muted: #9299a8;
-	--workspace-border: #303642;
-	--workspace-paper: #151922;
-	--workspace-raised: #1b202b;
-	--workspace-accent: #91a8ff;
 	--workspace-pane-feedback: 10;
 	--workspace-sheet-controls: 20;
 	--workspace-card-layer: 30;
@@ -15,9 +9,9 @@
 	min-height: 0;
 	overflow: visible;
 	border: 1px solid var(--workspace-border);
-	border-radius: 0.8rem;
+	border-radius: var(--radius-xl);
 	color: var(--workspace-ink);
-	background: #0d1017;
+	background: var(--workspace-surface);
 	box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 45%);
 }
 
@@ -35,19 +29,20 @@
 
 .card-sheet-workspace__resize-handle {
 	z-index: 35;
-	width: 0.55rem;
-	border-inline: 1px solid #242a34;
-	background: #0a0d13;
+	width: calc(var(--spacing) * 2);
+	border-inline: 1px solid
+		color-mix(in srgb, var(--workspace-border) 70%, var(--workspace-sunken));
+	background: var(--workspace-sunken);
 }
 
 .card-sheet-workspace__resize-handle::after {
-	width: 0.6rem;
+	width: calc(var(--spacing) * 2.5);
 }
 
 .card-sheet-workspace__resize-handle > div {
-	width: 0.18rem;
-	height: 2.5rem;
-	background: #586174;
+	width: calc(var(--spacing) * 0.75);
+	height: calc(var(--spacing) * 10);
+	background: var(--workspace-border-strong);
 }
 
 .card-sheet-workspace__pane {
@@ -55,7 +50,7 @@
 	height: 100%;
 	min-width: 0;
 	overflow: visible;
-	background: #0f131b;
+	background: var(--workspace-pane);
 	transition:
 		background-color 140ms ease,
 		box-shadow 140ms ease;
@@ -68,14 +63,16 @@
 	pointer-events: none;
 	content: "";
 	opacity: 0;
-	box-shadow: inset 0 0 0 1px rgb(145 168 255 / 30%);
+	box-shadow: inset 0 0 0 1px
+		color-mix(in srgb, var(--workspace-accent) 30%, transparent);
 	transition:
 		opacity 140ms ease,
 		box-shadow 140ms ease;
 }
 
 .card-sheet-workspace__pane[data-active="true"] {
-	box-shadow: inset 0 0 0 1px rgb(145 168 255 / 55%);
+	box-shadow: inset 0 0 0 1px
+		color-mix(in srgb, var(--workspace-accent) 55%, transparent);
 }
 
 .card-sheet-workspace__pane[data-accepts-drop="true"]::after {
@@ -83,15 +80,20 @@
 }
 
 .card-sheet-workspace__pane[data-drop-target="true"] {
-	background: color-mix(in srgb, var(--workspace-accent) 12%, #0f131b);
+	background: color-mix(
+		in srgb,
+		var(--workspace-accent) 12%,
+		var(--workspace-pane)
+	);
 }
 
 .card-sheet-workspace__pane[data-drop-target="true"]::after {
 	opacity: 1;
 	box-shadow:
 		inset 0 0 0 2px var(--workspace-accent),
-		inset 0 0 1.5rem rgb(145 168 255 / 22%),
-		0 0 1.25rem rgb(145 168 255 / 28%);
+		inset 0 0 1.5rem
+		color-mix(in srgb, var(--workspace-accent) 22%, transparent),
+		0 0 1.25rem color-mix(in srgb, var(--workspace-accent) 28%, transparent);
 }
 
 .card-sheet-workspace__stack {
@@ -118,7 +120,8 @@
 	overflow: hidden;
 	color: var(--workspace-ink);
 	background: var(--workspace-paper);
-	box-shadow: 0 0 0 1px rgb(255 255 255 / 4%);
+	box-shadow: 0 0 0 1px
+		color-mix(in srgb, var(--workspace-ink) 6%, transparent);
 	transition:
 		opacity 140ms ease,
 		transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -170,8 +173,9 @@
 	color: var(--workspace-ink);
 	background: var(--workspace-paper);
 	box-shadow:
-		inset 0 0 0 2px rgb(145 168 255 / 72%),
-		0 0 2.5rem rgb(145 168 255 / 32%);
+		inset 0 0 0 2px
+		color-mix(in srgb, var(--workspace-accent) 72%, transparent),
+		0 0 2.5rem color-mix(in srgb, var(--workspace-accent) 32%, transparent);
 	opacity: 0.24;
 	animation: workspace-sheet-preview-arrive 160ms ease-out;
 }
@@ -190,18 +194,18 @@
 	align-items: start;
 	justify-items: center;
 	width: 100%;
-	height: 4.6rem;
-	padding-top: 0.75rem;
+	height: calc(var(--spacing) * 18);
+	padding-top: calc(var(--spacing) * 3);
 	border: 0;
 	border-radius: 0;
-	color: rgb(229 235 249 / 62%);
+	color: color-mix(in srgb, var(--workspace-ink-soft) 62%, transparent);
 	background: linear-gradient(
 		180deg,
-		rgb(6 8 12 / 94%) 0%,
-		rgb(7 9 14 / 82%) 18%,
-		rgb(8 11 17 / 60%) 38%,
-		rgb(9 12 18 / 34%) 59%,
-		rgb(9 12 18 / 13%) 78%,
+		color-mix(in srgb, var(--workspace-scrim) 94%, transparent) 0%,
+		color-mix(in srgb, var(--workspace-scrim) 82%, transparent) 18%,
+		color-mix(in srgb, var(--workspace-scrim) 60%, transparent) 38%,
+		color-mix(in srgb, var(--workspace-scrim) 34%, transparent) 59%,
+		color-mix(in srgb, var(--workspace-scrim) 13%, transparent) 78%,
 		transparent 100%
 	);
 	box-shadow: inset 0 1px rgb(255 255 255 / 9%);
@@ -212,8 +216,8 @@
 }
 
 .card-sheet-workspace__sheet-handle svg {
-	width: 1.2rem;
-	height: 1.2rem;
+	width: calc(var(--spacing) * 5);
+	height: calc(var(--spacing) * 5);
 	filter: drop-shadow(0 0.2rem 0.5rem rgb(0 0 0 / 50%));
 }
 
@@ -225,14 +229,14 @@
 	bottom: 0;
 	align-items: end;
 	padding-top: 0;
-	padding-bottom: 0.75rem;
+	padding-bottom: calc(var(--spacing) * 3);
 	background: linear-gradient(
 		0deg,
-		rgb(6 8 12 / 94%) 0%,
-		rgb(7 9 14 / 82%) 18%,
-		rgb(8 11 17 / 60%) 38%,
-		rgb(9 12 18 / 34%) 59%,
-		rgb(9 12 18 / 13%) 78%,
+		color-mix(in srgb, var(--workspace-scrim) 94%, transparent) 0%,
+		color-mix(in srgb, var(--workspace-scrim) 82%, transparent) 18%,
+		color-mix(in srgb, var(--workspace-scrim) 60%, transparent) 38%,
+		color-mix(in srgb, var(--workspace-scrim) 34%, transparent) 59%,
+		color-mix(in srgb, var(--workspace-scrim) 13%, transparent) 78%,
 		transparent 100%
 	);
 	box-shadow: inset 0 -1px rgb(255 255 255 / 9%);
@@ -245,26 +249,31 @@
 .card-sheet-workspace__sheet-actions {
 	position: absolute;
 	z-index: calc(var(--workspace-sheet-controls) + 1);
-	top: 0.55rem;
-	right: 0.55rem;
+	top: calc(var(--spacing) * 2);
+	right: calc(var(--spacing) * 2);
 	display: flex;
 	align-items: center;
-	gap: 0.3rem;
+	gap: calc(var(--spacing) * 1);
 }
 
 .card-sheet-workspace__sheet-actions button,
 .card-sheet-workspace__card-layer-close {
 	display: inline-grid;
 	place-items: center;
-	min-width: 1.9rem;
-	height: 1.9rem;
-	padding-inline: 0.45rem;
-	border: 1px solid #3d4556;
+	min-width: calc(var(--spacing) * 8);
+	height: calc(var(--spacing) * 8);
+	padding-inline: calc(var(--spacing) * 1.5);
+	border: 1px solid
+		color-mix(
+			in srgb,
+			var(--workspace-border) 65%,
+			var(--workspace-border-strong)
+		);
 	border-radius: 999px;
-	color: #dce3f8;
-	background: rgb(12 15 22 / 90%);
-	font-size: 0.68rem;
-	font-weight: 650;
+	color: var(--workspace-ink-soft);
+	background: color-mix(in srgb, var(--workspace-scrim) 90%, transparent);
+	font-size: var(--text-xs);
+	font-weight: 600;
 	cursor: pointer;
 }
 
@@ -275,8 +284,8 @@
 
 .card-sheet-workspace__sheet-actions svg,
 .card-sheet-workspace__card-layer-close svg {
-	width: 0.9rem;
-	height: 0.9rem;
+	width: calc(var(--spacing) * 4);
+	height: calc(var(--spacing) * 4);
 }
 
 .card-sheet-workspace__empty-base,
@@ -284,19 +293,23 @@
 	display: grid;
 	place-content: center;
 	justify-items: center;
-	gap: 0.55rem;
+	gap: calc(var(--spacing) * 2);
 	height: 100%;
-	padding: 1rem;
-	color: #697184;
-	font-size: 0.7rem;
+	padding: calc(var(--spacing) * 4);
+	color: var(--workspace-faint);
+	font-size: var(--text-xs);
 	letter-spacing: 0.08em;
 	text-align: center;
 	text-transform: uppercase;
 }
 
 .card-sheet-workspace__navigation-anchor strong {
-	color: #bec6d6;
-	font-size: 1.2rem;
+	color: color-mix(
+		in srgb,
+		var(--workspace-ink-soft) 65%,
+		var(--workspace-muted)
+	);
+	font-size: var(--text-xl);
 	letter-spacing: normal;
 	text-transform: none;
 }
@@ -305,7 +318,7 @@
 	position: absolute;
 	z-index: var(--workspace-removal-zone);
 	right: 0;
-	bottom: 2.75rem;
+	bottom: calc(var(--spacing) * 11);
 	left: 0;
 	height: clamp(5rem, 22%, 10rem);
 	pointer-events: none;
@@ -316,12 +329,13 @@
 
 .card-sheet-workspace__sheet-removal-zone::before {
 	position: absolute;
-	inset: 0 0 -2.75rem;
-	border-top: 1px solid rgb(248 113 113 / 20%);
+	inset: 0 0 calc(var(--spacing) * -11);
+	border-top: 1px solid
+		color-mix(in srgb, var(--workspace-danger) 20%, transparent);
 	background: linear-gradient(
 		to bottom,
-		rgb(127 29 29 / 10%),
-		rgb(127 29 29 / 46%)
+		color-mix(in srgb, var(--workspace-danger-strong) 10%, transparent),
+		color-mix(in srgb, var(--workspace-danger-strong) 46%, transparent)
 	);
 	content: "";
 	transition:
@@ -334,30 +348,37 @@
 }
 
 .card-sheet-workspace__sheet-removal-zone[data-drop-target="true"]::before {
-	border-color: rgb(248 113 113 / 45%);
+	border-color: color-mix(in srgb, var(--workspace-danger) 45%, transparent);
 	background: linear-gradient(
 		to bottom,
-		rgb(153 27 27 / 20%),
-		rgb(127 29 29 / 68%)
+		color-mix(in srgb, var(--workspace-danger-strong) 20%, transparent),
+		color-mix(in srgb, var(--workspace-danger-strong) 68%, transparent)
 	);
 }
 
 .card-sheet-workspace__card-layer {
 	position: absolute;
 	z-index: var(--workspace-card-layer);
-	right: clamp(0.4rem, 3cqw, 1.25rem);
-	bottom: clamp(0.6rem, 4cqw, 1.5rem);
-	left: clamp(0.4rem, 3cqw, 1.25rem);
-	height: min(23rem, calc(100% - 2rem));
+	right: 0;
+	bottom: clamp(calc(var(--spacing) * 2), 4cqw, calc(var(--spacing) * 6));
+	left: 0;
+	height: 40%;
 	pointer-events: none;
+}
+
+/* An anchored deck hangs below the segment that opened it instead of the
+   Pane edge; the offset arrives as --card-layer-top on the element. */
+.card-sheet-workspace__card-layer[data-card-layer-anchored="true"] {
+	top: var(--card-layer-top);
+	bottom: auto;
 }
 
 .card-sheet-workspace__card-layer::before {
 	position: absolute;
-	inset: -0.35rem;
+	inset: calc(var(--spacing) * -1.5);
 	z-index: -1;
 	border: 2px solid transparent;
-	border-radius: 1.25rem;
+	border-radius: var(--radius-3xl);
 	content: "";
 	pointer-events: none;
 	transition:
@@ -368,23 +389,24 @@
 
 .card-sheet-workspace__card-layer[data-drop-target="true"]::before {
 	border-color: var(--workspace-accent);
-	background: rgb(145 168 255 / 8%);
+	background: color-mix(in srgb, var(--workspace-accent) 8%, transparent);
 	box-shadow:
-		0 0 0.8rem rgb(145 168 255 / 25%),
-		inset 0 0 1.5rem rgb(145 168 255 / 10%);
+		0 0 0.8rem color-mix(in srgb, var(--workspace-accent) 25%, transparent),
+		inset 0 0 1.5rem
+		color-mix(in srgb, var(--workspace-accent) 10%, transparent);
 }
 
 .card-sheet-workspace__card-layer-close {
 	position: absolute;
 	z-index: 20;
-	top: -0.8rem;
-	right: -0.35rem;
+	top: calc(var(--spacing) * -3);
+	right: calc(var(--spacing) * -1.5);
 	pointer-events: auto;
 }
 
 .card-sheet-workspace__cards {
 	position: relative;
-	width: min(100%, 38rem);
+	width: 85%;
 	height: 100%;
 	margin-inline: auto;
 }
@@ -398,14 +420,16 @@
 	min-width: 0;
 	height: calc(100% - 6rem);
 	translate: 0 calc(var(--card-layer-index) * 2rem);
-	border: 1px solid #59647b;
-	border-radius: 1rem;
-	color: #f1f4fa;
+	border: 1px solid var(--workspace-border-strong);
+	border-radius: var(--radius-2xl);
+	color: var(--workspace-ink);
 	background: var(--workspace-raised);
 	box-shadow: 0 1rem 3rem rgb(0 0 0 / 48%);
 	overflow: hidden;
 	pointer-events: auto;
-	touch-action: none;
+	/* pan-y (not none) so touch input can scroll the Card content; the
+	   Card itself stays draggable with pointer input. */
+	touch-action: pan-y;
 	transition:
 		opacity 140ms ease,
 		translate 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -425,15 +449,23 @@
 }
 
 .card-sheet-workspace__card-content {
+	container: workspace-card / inline-size;
 	flex: 1;
 	min-height: 0;
-	overflow: hidden;
-	pointer-events: none;
+	overflow-y: auto;
+	pointer-events: auto;
+	touch-action: pan-y;
 }
 
 .card-sheet-workspace__card-content [data-subject-presentation="Card"] {
-	height: 100%;
-	overflow: hidden;
+	min-height: 100%;
+}
+
+@container workspace-card (width < 40rem) {
+	.card-sheet-workspace__card-content [data-subject-presentation="Card"] h1 {
+		font-size: var(--text-xl);
+		line-height: var(--text-xl--line-height);
+	}
 }
 
 .card-sheet-workspace__card-tail {
@@ -443,20 +475,21 @@
 	justify-content: center;
 	width: 100%;
 	height: 4rem;
-	padding: 0.35rem 0.8rem 0.65rem;
+	padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3)
+		calc(var(--spacing) * 2.5);
 	border: 0;
-	color: #d7ddef;
+	color: var(--workspace-ink-soft);
 	background: linear-gradient(
 		0deg,
-		rgb(6 8 12 / 98%) 0%,
-		rgb(7 9 14 / 86%) 22%,
-		rgb(8 11 17 / 62%) 43%,
-		rgb(9 12 18 / 35%) 63%,
-		rgb(9 12 18 / 13%) 81%,
+		color-mix(in srgb, var(--workspace-scrim) 98%, transparent) 0%,
+		color-mix(in srgb, var(--workspace-scrim) 86%, transparent) 22%,
+		color-mix(in srgb, var(--workspace-scrim) 62%, transparent) 43%,
+		color-mix(in srgb, var(--workspace-scrim) 35%, transparent) 63%,
+		color-mix(in srgb, var(--workspace-scrim) 13%, transparent) 81%,
 		transparent 100%
 	);
 	box-shadow: inset 0 -1px rgb(255 255 255 / 8%);
-	font-size: 0.7rem;
+	font-size: var(--text-xs);
 	font-weight: 700;
 	letter-spacing: 0.04em;
 	cursor: grab;
@@ -476,16 +509,16 @@
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	border: 1px solid #63708a;
-	border-radius: 1rem;
-	color: #f1f4fa;
+	border: 1px solid var(--workspace-border-strong);
+	border-radius: var(--radius-2xl);
+	color: var(--workspace-ink);
 	background: var(--workspace-raised);
 	box-shadow: 0 1.6rem 4rem rgb(0 0 0 / 58%);
 }
 
 .card-sheet-workspace__drag-overlay > .card-sheet-workspace__sheet-move-card {
 	position: absolute;
-	top: 0.5rem;
+	top: calc(var(--spacing) * 2);
 	left: 50%;
 	width: min(calc(100% - 2rem), 38rem);
 	height: min(calc(100% - 1rem), 17rem);
@@ -496,7 +529,7 @@
 .card-sheet-workspace__drag-overlay
 	> .card-sheet-workspace__sheet-move-card[data-sheet-drag-edge="bottom"] {
 	top: auto;
-	bottom: 0.5rem;
+	bottom: calc(var(--spacing) * 2);
 }
 
 @keyframes workspace-sheet-become-card {
@@ -533,10 +566,7 @@
 
 @media (max-width: 760px) {
 	.card-sheet-workspace__card-layer {
-		right: 0.3rem;
-		bottom: 0.5rem;
-		left: 0.3rem;
-		height: min(20rem, calc(100% - 1rem));
+		bottom: calc(var(--spacing) * 2);
 	}
 
 	.card-sheet-workspace__card {

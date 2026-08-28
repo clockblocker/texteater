@@ -46,6 +46,23 @@
 	--radius-2xl: calc(var(--radius) * 1.8);
 	--radius-3xl: calc(var(--radius) * 2.2);
 	--radius-4xl: calc(var(--radius) * 2.6);
+	--color-workspace-background: var(--workspace-background);
+	--color-workspace-surface: var(--workspace-surface);
+	--color-workspace-sunken: var(--workspace-sunken);
+	--color-workspace-pane: var(--workspace-pane);
+	--color-workspace-paper: var(--workspace-paper);
+	--color-workspace-raised: var(--workspace-raised);
+	--color-workspace-scrim: var(--workspace-scrim);
+	--color-workspace-ink: var(--workspace-ink);
+	--color-workspace-ink-soft: var(--workspace-ink-soft);
+	--color-workspace-muted: var(--workspace-muted);
+	--color-workspace-faint: var(--workspace-faint);
+	--color-workspace-border: var(--workspace-border);
+	--color-workspace-border-strong: var(--workspace-border-strong);
+	--color-workspace-accent: var(--workspace-accent);
+	--color-workspace-danger: var(--workspace-danger);
+	--color-workspace-danger-strong: var(--workspace-danger-strong);
+	--color-workspace-highlight: var(--workspace-highlight);
 }
 
 :root {
@@ -81,6 +98,23 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
+	--workspace-background: #e7eaf0;
+	--workspace-surface: #f5f7fa;
+	--workspace-sunken: #dde2e9;
+	--workspace-pane: #eceff4;
+	--workspace-paper: #ffffff;
+	--workspace-raised: #ffffff;
+	--workspace-scrim: #f2f4f8;
+	--workspace-ink: #1b2230;
+	--workspace-ink-soft: #3d4557;
+	--workspace-muted: #626b7d;
+	--workspace-faint: #98a0b0;
+	--workspace-border: #d3d8e1;
+	--workspace-border-strong: #b6bfcc;
+	--workspace-accent: #4c63d2;
+	--workspace-danger: #dc2626;
+	--workspace-danger-strong: #991b1b;
+	--workspace-highlight: #2f6fd6;
 }
 
 .dark {
@@ -115,6 +149,23 @@
 	--sidebar-accent-foreground: oklch(0.985 0 0);
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.556 0 0);
+	--workspace-background: #090c12;
+	--workspace-surface: #0d1017;
+	--workspace-sunken: #0a0d13;
+	--workspace-pane: #0f131b;
+	--workspace-paper: #151922;
+	--workspace-raised: #1b202b;
+	--workspace-scrim: #06080c;
+	--workspace-ink: #f5f7fb;
+	--workspace-ink-soft: #d8dff0;
+	--workspace-muted: #9299a8;
+	--workspace-faint: #697184;
+	--workspace-border: #303642;
+	--workspace-border-strong: #59647b;
+	--workspace-accent: #91a8ff;
+	--workspace-danger: #f87171;
+	--workspace-danger-strong: #7f1d1d;
+	--workspace-highlight: #4d8ce6;
 }
 
 @layer base {
