@@ -1,4 +1,4 @@
-import { LibraryIcon, SettingsIcon } from "lucide-react";
+import { LibraryIcon, SettingsIcon, TestTubesIcon } from "lucide-react";
 
 import {
 	Sidebar,
@@ -46,6 +46,15 @@ export function AppSidebar({
 									>
 										<LibraryIcon />
 										<span>Library</span>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+								<SidebarMenuItem>
+									<SidebarMenuButton
+										render={<a href="/playground" />}
+										tooltip="Playground"
+									>
+										<TestTubesIcon />
+										<span>Playground</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							</SidebarMenu>

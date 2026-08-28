@@ -1,5 +1,7 @@
 import type { ComponentType } from "react";
 
+import { NotesStudyPlayground } from "@/playground/notes-study/notes-study-playground";
+import { SegmentTextPlayground } from "@/playground/segment-text/segment-text-playground";
 import { SheetWorkspacePlayground } from "@/playground/sheet-workspace/sheet-workspace-playground";
 
 export type PlaygroundExperiment = {
@@ -19,6 +21,24 @@ export const PLAYGROUND_EXPERIMENTS = [
 		instructions:
 			"Select a word in either text sheet to open its card deck. Drag cards and sheets between panes; reload or reset to restore the fixture.",
 		component: SheetWorkspacePlayground,
+	},
+	{
+		id: "segment-text",
+		title: "Segments in continuous text",
+		description:
+			"Assess quiet hover and focus styling across fully segmented prose, including split members of German separable verbs.",
+		instructions:
+			"Hover or focus any word. Grouped units illuminate together; click a segment to keep its complete resolved unit visible.",
+		component: SegmentTextPlayground,
+	},
+	{
+		id: "notes-study",
+		title: "Reading note directions",
+		description:
+			"Compare three visual systems for a German reading note, each tested as both a full pane and a compact card.",
+		instructions:
+			"Compare the same note across all three directions. Use each local toggle to switch that prototype independently between pane and card.",
+		component: NotesStudyPlayground,
 	},
 ] as const satisfies readonly PlaygroundExperiment[];
 

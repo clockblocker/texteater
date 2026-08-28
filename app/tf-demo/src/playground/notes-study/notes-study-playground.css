@@ -1,0 +1,744 @@
+.notes-study {
+	--study-ink: #202a37;
+	--study-muted: #697588;
+	contain: layout paint;
+	height: 100%;
+	overflow: auto;
+	background: #edf1f5;
+	color: var(--study-ink);
+	font-family: "Geist Variable", sans-serif;
+}
+
+.notes-study__intro {
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+	gap: 3rem;
+	align-items: end;
+	padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 4.5rem)
+		clamp(1.75rem, 4vw, 3.5rem);
+	border-bottom: 1px solid #cbd3dd;
+}
+
+.notes-study__kicker,
+.notes-prototype__number {
+	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+.notes-study__kicker {
+	display: block;
+	margin-bottom: 0.65rem;
+	color: #315af5;
+	font-size: 0.66rem;
+	font-weight: 750;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.notes-study__intro h2 {
+	max-width: 13ch;
+	margin: 0;
+	font-size: clamp(2.2rem, 5vw, 4.5rem);
+	font-weight: 590;
+	letter-spacing: -0.065em;
+	line-height: 0.94;
+}
+
+.notes-study__intro p {
+	max-width: 50ch;
+	margin: 0;
+	color: var(--study-muted);
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+
+.notes-study__variants {
+	display: grid;
+	gap: clamp(3.5rem, 8vw, 7rem);
+	padding: clamp(2rem, 5vw, 4.5rem) clamp(0.75rem, 3vw, 3rem) 7rem;
+}
+
+.notes-prototype {
+	min-width: 0;
+}
+
+.notes-prototype__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 2rem;
+	max-width: 92rem;
+	margin: 0 auto 1rem;
+}
+
+.notes-prototype__header > div {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.notes-prototype__number {
+	padding-top: 0.3rem;
+	color: #f06b45;
+	font-size: 0.65rem;
+	font-weight: 750;
+}
+
+.notes-prototype__header h3 {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 650;
+	letter-spacing: -0.035em;
+}
+
+.notes-prototype__header p {
+	max-width: 55ch;
+	margin: 0.25rem 0 0;
+	color: var(--study-muted);
+	font-size: 0.78rem;
+	line-height: 1.45;
+}
+
+.note-view-toggle {
+	display: inline-flex;
+	flex: 0 0 auto;
+	gap: 0.2rem;
+	margin: 0;
+	padding: 0.2rem;
+	border: 1px solid #c7d0db;
+	border-radius: 0.5rem;
+	background: rgb(255 255 255 / 55%);
+}
+
+.note-view-toggle button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.38rem;
+	border: 0;
+	border-radius: 0.32rem;
+	padding: 0.48rem 0.66rem;
+	background: transparent;
+	color: #687487;
+	font: inherit;
+	font-size: 0.7rem;
+	font-weight: 620;
+	cursor: pointer;
+}
+
+.note-view-toggle button svg {
+	width: 0.85rem;
+	height: 0.85rem;
+}
+
+.note-view-toggle button[aria-pressed="true"] {
+	background: #263449;
+	color: white;
+}
+
+.note-view-toggle button:focus-visible,
+.lexical-note button:focus-visible,
+.lexical-note textarea:focus-visible {
+	outline: 2px solid #4f7cff;
+	outline-offset: 2px;
+}
+
+.notes-prototype__stage {
+	max-width: 92rem;
+	min-height: 34rem;
+	margin: 0 auto;
+	overflow: hidden;
+	border: 1px solid #c8d0d8;
+}
+
+.notes-prototype__stage[data-view="card"] {
+	display: grid;
+	min-height: 47rem;
+	padding: clamp(1rem, 4vw, 4rem);
+	place-items: start center;
+}
+
+.lexical-note {
+	--note-bg: #1c2128;
+	--note-bg-deep: #171b20;
+	--note-ink: #e2e5e9;
+	--note-soft: #a3aab4;
+	--note-muted: #7c8591;
+	--note-link: #7dacfa;
+	--note-accent: #ffc071;
+	--note-rule: #383e47;
+	--note-context-rule: #669ef3;
+	--note-selection-bg: #9cc6ed;
+	--note-selection-ink: #111824;
+	--note-body-font: "Geist Variable", sans-serif;
+	--note-section-font: ui-monospace, "SFMono-Regular", Consolas, monospace;
+	--note-body-size: 0.95rem;
+	--note-section-size: 0.62rem;
+	width: 100%;
+	min-height: 34rem;
+	background: var(--note-bg);
+	color: var(--note-ink);
+	font-family: var(--note-body-font);
+	font-size: var(--note-body-size);
+	transition:
+		width 180ms ease,
+		box-shadow 180ms ease;
+}
+
+.lexical-note ::selection {
+	background: var(--note-selection-bg);
+	color: var(--note-selection-ink);
+}
+
+.notes-prototype__stage[data-view="card"] .lexical-note {
+	width: min(100%, 47rem);
+	min-height: 0;
+}
+
+.lexical-note__article {
+	padding: clamp(1.4rem, 3vw, 3.15rem);
+}
+
+.lexical-note__title-row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding-bottom: 1.2rem;
+	border-bottom: 1px dashed var(--note-rule);
+}
+
+.lexical-note__lemma {
+	display: flex;
+	min-width: 0;
+	align-items: baseline;
+	gap: 0.45rem;
+}
+
+.lexical-note h4 {
+	margin: 0;
+	font-weight: 570;
+	letter-spacing: -0.025em;
+	line-height: 1.25;
+}
+
+.lexical-note h4 > span {
+	color: var(--note-link);
+	font-weight: 470;
+}
+
+.lexical-note button {
+	font: inherit;
+}
+
+.linked-word {
+	appearance: none;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--note-link);
+	cursor: pointer;
+	text-align: inherit;
+}
+
+.linked-word:hover {
+	text-decoration: underline;
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.16em;
+}
+
+.lexical-note__sound,
+.lexical-note__meta button {
+	appearance: none;
+	border: 0;
+	padding: 0.1rem;
+	background: transparent;
+	color: var(--note-link);
+	cursor: pointer;
+}
+
+.lexical-note .lexical-note__sound svg,
+.lexical-note .lexical-note__meta svg {
+	display: block;
+	width: 1rem;
+	height: 1rem;
+}
+
+.lexical-note__meta {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 0.55rem;
+	padding-top: 0.25rem;
+	color: var(--note-muted);
+	font-style: italic;
+}
+
+.lexical-note__meta span + span::before {
+	margin-right: 0.55rem;
+	color: var(--note-rule);
+	content: "/";
+}
+
+.lexical-note__layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1.55fr) minmax(15rem, 0.75fr);
+	column-gap: clamp(2rem, 5vw, 5rem);
+}
+
+.note-section {
+	min-width: 0;
+	padding: 1.3rem 0;
+	border-bottom: 1px dashed var(--note-rule);
+}
+
+.note-section--contexts,
+.note-section--writing {
+	grid-column: 1 / -1;
+}
+
+.note-section--translation,
+.note-section--forms {
+	grid-column: 1;
+}
+
+.note-section--relations,
+.note-section--word-building {
+	grid-column: 2;
+}
+
+.note-section--relations {
+	grid-row: 3 / span 2;
+}
+
+.note-section--word-building {
+	grid-row: 5 / span 2;
+}
+
+.note-section__label {
+	margin: 0 0 0.85rem;
+	color: var(--note-muted);
+	font-family: var(--note-section-font);
+	font-size: var(--note-section-size);
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.source-contexts {
+	display: grid;
+	gap: 1.25rem;
+}
+
+.source-contexts blockquote {
+	position: relative;
+	margin: 0;
+	padding: 0.2rem 2.5rem 0.2rem clamp(1rem, 2.5vw, 2.5rem);
+	border-left: 3px solid var(--note-context-rule);
+	font-weight: 430;
+	letter-spacing: -0.012em;
+	line-height: 1.55;
+}
+
+.source-contexts blockquote::after {
+	position: absolute;
+	top: 50%;
+	right: 0.35rem;
+	color: var(--note-rule);
+	content: "↗";
+	transform: translateY(-50%);
+}
+
+.note-writing textarea {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 6.5rem;
+	resize: vertical;
+	border: 0;
+	padding: 0.25rem 0.5rem;
+	background: transparent;
+	color: var(--note-ink);
+	font: inherit;
+	line-height: 1.6;
+}
+
+.note-writing textarea::placeholder {
+	color: var(--note-muted);
+	font-style: italic;
+}
+
+.relation-list {
+	display: grid;
+	gap: 0.45rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.relation-list li {
+	display: grid;
+	grid-template-columns: 1rem minmax(0, 1fr);
+	gap: 0.35rem;
+	line-height: 1.45;
+}
+
+.relation-mark {
+	color: var(--note-ink);
+	font-weight: 600;
+}
+
+.note-section--word-building p,
+.note-section--translation p {
+	margin: 0;
+	line-height: 1.55;
+}
+
+.note-section--word-building p + p {
+	margin-top: 0.35rem;
+}
+
+.word-seam b {
+	color: var(--note-accent);
+	font-weight: 400;
+}
+
+.note-section--forms dl,
+.note-section--forms div {
+	margin: 0;
+}
+
+.note-section--forms div {
+	display: grid;
+	grid-template-columns: 1.25rem minmax(0, 1fr);
+	gap: 0.35rem;
+	line-height: 1.55;
+}
+
+.note-section--forms dt {
+	color: var(--note-muted);
+}
+
+.note-section--forms dd {
+	margin: 0;
+}
+
+.lexical-note__footer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	padding-top: 1.25rem;
+}
+
+.lexical-note .lexical-note__footer span {
+	border-radius: 999px;
+	padding: 0.3rem 0.65rem;
+	background: color-mix(in srgb, var(--note-ink) 12%, transparent);
+	color: var(--note-soft);
+}
+
+/* Catalog leaf: a reference surface organized by a visible indexing rail. */
+.notes-prototype--catalog .notes-prototype__stage {
+	background: #dce3e8;
+}
+
+.notes-prototype--catalog .lexical-note {
+	--note-bg: #f7f8f5;
+	--note-bg-deep: #eef1ed;
+	--note-ink: #1e2a32;
+	--note-soft: #55636b;
+	--note-muted: #76828a;
+	--note-link: #315f86;
+	--note-accent: #be513f;
+	--note-rule: #cbd2d3;
+	--note-context-rule: #be513f;
+	--note-selection-bg: #be513f;
+	--note-selection-ink: #fffaf5;
+	--note-body-font: Georgia, "Times New Roman", serif;
+	box-shadow: none;
+}
+
+.notes-prototype--catalog
+	.notes-prototype__stage[data-view="card"]
+	.lexical-note {
+	box-shadow: 0.8rem 0.8rem 0 #bbc7ce;
+}
+
+.notes-prototype--catalog .lexical-note__article {
+	position: relative;
+	padding-left: clamp(4.5rem, 9vw, 8rem);
+}
+
+.notes-prototype--catalog .lexical-note__article::before {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: clamp(3rem, 6vw, 5.5rem);
+	width: 1px;
+	background: var(--note-rule);
+	content: "";
+}
+
+.notes-prototype--catalog .lexical-note__article::after {
+	position: absolute;
+	top: 2.95rem;
+	left: clamp(0.8rem, 2.3vw, 2.2rem);
+	color: var(--note-accent);
+	content: "DE · N · 041";
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	transform: rotate(-90deg) translateX(-100%);
+	transform-origin: top left;
+}
+
+.notes-prototype--catalog .lexical-note h4 {
+	font-weight: 500;
+}
+
+.notes-prototype--catalog .lexical-note h4 > span {
+	font-style: italic;
+}
+
+.notes-prototype--catalog .source-contexts {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1px;
+	background: var(--note-rule);
+}
+
+.notes-prototype--catalog .source-contexts blockquote {
+	padding: 1rem 2.1rem 1rem 1.15rem;
+	border: 0;
+	background: var(--note-bg);
+}
+
+.notes-prototype--catalog .note-writing textarea {
+	min-height: 4.5rem;
+	border-bottom: 1px solid var(--note-rule);
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0,
+		transparent 1.55rem,
+		color-mix(in srgb, var(--note-rule) 65%, transparent) 1.6rem
+	);
+}
+
+.notes-prototype--catalog .lexical-note__footer span {
+	border: 1px solid var(--note-rule);
+	border-radius: 0;
+	background: transparent;
+}
+
+/* Field folio: a spacious working note with margin labels and paper texture. */
+.notes-prototype--field .notes-prototype__stage {
+	background: #dbe3dc;
+}
+
+.notes-prototype--field .lexical-note {
+	--note-bg: #f1f0e8;
+	--note-bg-deep: #e8e9df;
+	--note-ink: #28352f;
+	--note-soft: #5d6961;
+	--note-muted: #778178;
+	--note-link: #476a8a;
+	--note-accent: #985963;
+	--note-rule: #c8ccc0;
+	--note-context-rule: #8a6065;
+	--note-selection-bg: #985963;
+	--note-selection-ink: #fffaf1;
+	--note-body-font: Georgia, "Times New Roman", serif;
+	background-image: radial-gradient(#c5cabc 0.55px, transparent 0.55px);
+	background-size: 9px 9px;
+}
+
+.notes-prototype--field
+	.notes-prototype__stage[data-view="card"]
+	.lexical-note {
+	border: 1px solid #b7bdb1;
+	border-radius: 0.8rem;
+	box-shadow: 0 1.3rem 2.5rem rgb(58 70 61 / 18%);
+}
+
+.notes-prototype--field .lexical-note__title-row {
+	border-bottom-style: solid;
+}
+
+.notes-prototype--field .lexical-note__title-row::before {
+	display: grid;
+	flex: 0 0 auto;
+	width: 2rem;
+	height: 2rem;
+	place-items: center;
+	border-radius: 50%;
+	background: var(--note-accent);
+	color: white;
+	content: "D";
+	font-style: italic;
+}
+
+.notes-prototype--field .lexical-note__lemma {
+	flex: 1 1 auto;
+}
+
+.notes-prototype--field .lexical-note h4 {
+	font-weight: 500;
+}
+
+.notes-prototype--field .lexical-note__layout {
+	grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.3fr);
+	column-gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.notes-prototype--field .note-section--contexts,
+.notes-prototype--field .note-section--writing {
+	grid-column: 2;
+}
+
+.notes-prototype--field .note-section--relations,
+.notes-prototype--field .note-section--word-building,
+.notes-prototype--field .note-section--translation,
+.notes-prototype--field .note-section--forms {
+	grid-column: 1;
+	grid-row: auto;
+}
+
+.notes-prototype--field .note-section--contexts {
+	grid-row: 1 / span 3;
+}
+
+.notes-prototype--field .note-section--writing {
+	grid-row: 4 / span 2;
+	align-self: stretch;
+}
+
+.notes-prototype--field .source-contexts blockquote {
+	padding: 0.2rem 1.75rem 0.2rem 1.2rem;
+	border-left-width: 1px;
+}
+
+.notes-prototype--field .note-writing textarea {
+	min-height: 8rem;
+	border-radius: 0.35rem;
+	padding: 1rem;
+	background: rgb(255 255 255 / 38%);
+	box-shadow: inset 0 0 0 1px var(--note-rule);
+}
+
+.notes-prototype--field .note-section__label {
+	color: var(--note-accent);
+}
+
+.notes-prototype--field .lexical-note__footer {
+	justify-content: flex-end;
+}
+
+/* Card mode becomes one intentionally narrow reading column in every direction. */
+.notes-prototype__stage[data-view="card"] .lexical-note__article {
+	padding: clamp(1.2rem, 4vw, 2.5rem);
+}
+
+.notes-prototype__stage[data-view="card"] .lexical-note__layout {
+	display: block;
+}
+
+.notes-prototype__stage[data-view="card"] .note-section {
+	grid-column: auto;
+	grid-row: auto;
+}
+
+.notes-prototype--catalog
+	.notes-prototype__stage[data-view="card"]
+	.lexical-note__article {
+	padding-left: clamp(3.4rem, 9vw, 5rem);
+}
+
+.notes-prototype--catalog
+	.notes-prototype__stage[data-view="card"]
+	.lexical-note__article::before {
+	left: clamp(2.55rem, 7vw, 3.8rem);
+}
+
+.notes-prototype--catalog
+	.notes-prototype__stage[data-view="card"]
+	.source-contexts {
+	grid-template-columns: 1fr;
+}
+
+@media (max-width: 820px) {
+	.notes-study__intro {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.notes-prototype__header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.note-view-toggle {
+		align-self: stretch;
+	}
+
+	.note-view-toggle button {
+		justify-content: center;
+		width: 50%;
+	}
+
+	.lexical-note__layout,
+	.notes-prototype--field .lexical-note__layout {
+		display: block;
+	}
+
+	.note-section,
+	.notes-prototype--field .note-section {
+		grid-column: auto;
+		grid-row: auto;
+	}
+
+	.source-contexts,
+	.notes-prototype--catalog .source-contexts {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 560px) {
+	.notes-study__variants {
+		padding-inline: 0;
+	}
+
+	.notes-prototype__header {
+		padding-inline: 1rem;
+	}
+
+	.notes-prototype__stage {
+		border-right: 0;
+		border-left: 0;
+	}
+
+	.notes-prototype__stage[data-view="card"] {
+		min-height: 0;
+		padding: 0.7rem;
+	}
+
+	.lexical-note__title-row {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.lexical-note__meta {
+		align-self: flex-end;
+	}
+
+	.source-contexts blockquote {
+		padding-right: 1.5rem;
+	}
+
+	.notes-prototype--catalog .lexical-note__article::after {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.lexical-note {
+		transition: none;
+	}
+}

@@ -21,7 +21,7 @@ export function PlaygroundProviders({
 }) {
 	return (
 		<ThemeProvider
-			defaultTheme="light"
+			defaultTheme="dark"
 			storageKey="tf-demo-playground-theme"
 		>
 			<TooltipProvider>{children}</TooltipProvider>

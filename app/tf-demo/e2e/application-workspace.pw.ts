@@ -67,6 +67,18 @@ test("Settings is shell state and never changes the workspace URL", async ({
 	await expect(page).toHaveURL("/");
 });
 
+test("Playground is linked from the primary navigation", async ({ page }) => {
+	await page.goto("/");
+	await page.getByRole("link", { name: "Playground" }).click();
+
+	await expect(page).toHaveURL("/playground");
+	await expect(
+		page.getByRole("heading", {
+			name: "Experiments need a room of their own.",
+		}),
+	).toBeVisible();
+});
+
 test("placed Sheets survive reload without encoding themselves in the URL", async ({
 	page,
 }) => {

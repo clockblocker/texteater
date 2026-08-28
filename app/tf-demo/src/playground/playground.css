@@ -1,4 +1,18 @@
-:root {
+:root,
+.dark {
+	color-scheme: dark;
+	--playground-canvas: #080c13;
+	--playground-paper: #111824;
+	--playground-ink: #edf3ff;
+	--playground-muted: #93a1b8;
+	--playground-rule: #2b3749;
+	--playground-grid: #151e2b;
+	--playground-cobalt: #7698ff;
+	--playground-safety: #ff8a66;
+}
+
+.light {
+	color-scheme: light;
 	--playground-canvas: #eef3f9;
 	--playground-paper: #f9fbfe;
 	--playground-ink: #172033;
@@ -56,7 +70,7 @@
 	height: 2.5rem;
 	place-items: center;
 	background: var(--playground-ink);
-	color: white;
+	color: var(--playground-canvas);
 	font-size: 0.75rem;
 	font-weight: 750;
 	letter-spacing: 0.08em;
@@ -218,7 +232,7 @@
 .playground-ledger a {
 	padding: 0.7rem 0.85rem;
 	background: var(--playground-cobalt);
-	color: white;
+	color: #071126;
 }
 
 .playground-index__footer {
@@ -267,7 +281,7 @@
 .playground-specimen__header button {
 	border: 1px solid var(--playground-rule);
 	padding: 0.65rem 0.8rem;
-	background: white;
+	background: var(--playground-paper);
 	color: var(--playground-ink);
 	cursor: pointer;
 }
