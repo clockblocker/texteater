@@ -1,21 +1,32 @@
 import {
 	ExternalLinkIcon,
-	PanelTopIcon,
-	SquareIcon,
+	GripHorizontalIcon,
 	Volume2Icon,
 } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import {
+	type CSSProperties,
+	type ReactNode,
+	type PointerEvent as ReactPointerEvent,
+	useState,
+} from "react";
+import { createPortal } from "react-dom";
 
 import "./notes-study-playground.css";
 
-type NoteView = "pane" | "card";
+type DragEdge = "top" | "bottom";
 type VariantId = "midnight" | "catalog" | "field";
 
 type NoteVariant = {
 	readonly id: VariantId;
 	readonly title: string;
 	readonly description: string;
-	readonly initialView: NoteView;
+};
+
+type CardDrag = {
+	readonly edge: DragEdge;
+	readonly pointerId: number;
+	readonly x: number;
+	readonly y: number;
 };
 
 const VARIANTS: readonly NoteVariant[] = [
@@ -23,62 +34,72 @@ const VARIANTS: readonly NoteVariant[] = [
 		id: "midnight",
 		title: "Midnight index",
 		description:
-			"A low-light reading surface where memory-blue links and long source lines do most of the work.",
-		initialView: "pane",
+			"A low-light memory surface led by the definition and one vivid source line.",
 	},
 	{
 		id: "catalog",
 		title: "Catalog leaf",
 		description:
-			"An archival, scan-friendly arrangement with a persistent label column and compact evidence rows.",
-		initialView: "card",
+			"An archival reference system that compresses the reading into a scan-ready index card.",
 	},
 	{
 		id: "field",
 		title: "Field folio",
 		description:
-			"A softer working note that gives personal annotation equal footing with dictionary knowledge.",
-		initialView: "pane",
+			"A working note that gives the learner’s own association the most valuable space.",
 	},
 ] as const;
 
-const INITIAL_VIEWS = Object.fromEntries(
-	VARIANTS.map(({ id, initialView }) => [id, initialView]),
-) as Record<VariantId, NoteView>;
-
 export function NotesStudyPlayground() {
-	const [views, setViews] = useState(INITIAL_VIEWS);
-
 	return (
 		<div className="notes-study">
 			<div className="notes-study__variants">
 				{VARIANTS.map((variant) => (
-					<NotePrototype
-						key={variant.id}
-						variant={variant}
-						view={views[variant.id]}
-						onViewChange={(view) =>
-							setViews((current) => ({
-								...current,
-								[variant.id]: view,
-							}))
-						}
-					/>
+					<NotePrototype key={variant.id} variant={variant} />
 				))}
 			</div>
 		</div>
 	);
 }
 
-function NotePrototype({
-	variant,
-	view,
-	onViewChange,
-}: {
-	readonly variant: NoteVariant;
-	readonly view: NoteView;
-	readonly onViewChange: (view: NoteView) => void;
-}) {
+function NotePrototype({ variant }: { readonly variant: NoteVariant }) {
+	const [drag, setDrag] = useState<CardDrag | null>(null);
+
+	function beginDrag(
+		event: ReactPointerEvent<HTMLButtonElement>,
+		edge: DragEdge,
+	) {
+		event.preventDefault();
+		event.currentTarget.setPointerCapture(event.pointerId);
+		setDrag({
+			edge,
+			pointerId: event.pointerId,
+			x: event.clientX,
+			y: event.clientY,
+		});
+	}
+
+	function moveDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+		setDrag((current) =>
+			current?.pointerId === event.pointerId
+				? { ...current, x: event.clientX, y: event.clientY }
+				: current,
+		);
+	}
+
+	function finishDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+		setDrag((current) =>
+			current?.pointerId === event.pointerId ? null : current,
+		);
+	}
+
+	const dragStyle = drag
+		? ({
+				"--drag-x": `${drag.x}px`,
+				"--drag-y": `${drag.y}px`,
+			} as CSSProperties)
+		: undefined;
+
 	return (
 		<section
 			className={`notes-prototype notes-prototype--${variant.id}`}
@@ -86,8 +107,8 @@ function NotePrototype({
 		>
 			<header className="notes-prototype__header">
 				<div>
-					<span className="notes-prototype__number">
-						{String(VARIANTS.indexOf(variant) + 1).padStart(2, "0")}
+					<span className="notes-prototype__kind">
+						Sheet / {variant.id}
 					</span>
 					<div>
 						<h3 id={`${variant.id}-prototype-title`}>
@@ -96,49 +117,183 @@ function NotePrototype({
 						<p>{variant.description}</p>
 					</div>
 				</div>
-				<ViewToggle
-					label={`${variant.title} view`}
-					value={view}
-					onChange={onViewChange}
-				/>
+				<p className="notes-prototype__instruction">
+					<GripHorizontalIcon aria-hidden="true" />
+					Pull from either edge to lift a card
+				</p>
 			</header>
 
-			<div className="notes-prototype__stage" data-view={view}>
-				<div className="lexical-note" data-note-view={view}>
-					<NoteArticle variantId={variant.id} />
+			<div
+				className="notes-prototype__stage"
+				data-dragging={drag ? "true" : undefined}
+			>
+				<div
+					className="notes-prototype__sheet"
+					data-note-sheet={variant.id}
+				>
+					<SheetDragSurface
+						edge="top"
+						onPointerDown={beginDrag}
+						onPointerMove={moveDrag}
+						onPointerEnd={finishDrag}
+					/>
+					<div className="lexical-note">
+						<NoteArticle variantId={variant.id} />
+					</div>
+					<SheetDragSurface
+						edge="bottom"
+						onPointerDown={beginDrag}
+						onPointerMove={moveDrag}
+						onPointerEnd={finishDrag}
+					/>
 				</div>
 			</div>
+
+			{drag
+				? createPortal(
+						<div
+							aria-hidden="true"
+							className="notes-prototype__card-drag-layer"
+							data-card-preview={variant.id}
+							data-drag-edge={drag.edge}
+							style={dragStyle}
+						>
+							<NoteCard variantId={variant.id} />
+						</div>,
+						document.body,
+					)
+				: null}
 		</section>
 	);
 }
 
-function ViewToggle({
-	label,
-	value,
-	onChange,
+function SheetDragSurface({
+	edge,
+	onPointerDown,
+	onPointerMove,
+	onPointerEnd,
 }: {
-	readonly label: string;
-	readonly value: NoteView;
-	readonly onChange: (view: NoteView) => void;
+	readonly edge: DragEdge;
+	readonly onPointerDown: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+		edge: DragEdge,
+	) => void;
+	readonly onPointerMove: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+	) => void;
+	readonly onPointerEnd: (
+		event: ReactPointerEvent<HTMLButtonElement>,
+	) => void;
 }) {
 	return (
-		<fieldset className="note-view-toggle" aria-label={label}>
-			<legend className="sr-only">{label}</legend>
-			<button
-				type="button"
-				aria-pressed={value === "pane"}
-				onClick={() => onChange("pane")}
-			>
-				<PanelTopIcon aria-hidden="true" /> Pane
-			</button>
-			<button
-				type="button"
-				aria-pressed={value === "card"}
-				onClick={() => onChange("card")}
-			>
-				<SquareIcon aria-hidden="true" /> Card
-			</button>
-		</fieldset>
+		<button
+			type="button"
+			className="notes-prototype__sheet-handle"
+			data-sheet-drag-edge={edge}
+			aria-label={`Lift Sheet as Card from ${edge} edge`}
+			onPointerDown={(event) => onPointerDown(event, edge)}
+			onPointerMove={onPointerMove}
+			onPointerUp={onPointerEnd}
+			onPointerCancel={onPointerEnd}
+			onLostPointerCapture={onPointerEnd}
+		>
+			<GripHorizontalIcon aria-hidden="true" />
+			<span>{edge === "top" ? "Lift card" : "Pull card"}</span>
+		</button>
+	);
+}
+
+function NoteCard({ variantId }: { readonly variantId: VariantId }) {
+	if (variantId === "catalog") return <CatalogCard />;
+	if (variantId === "field") return <FieldCard />;
+	return <MidnightCard />;
+}
+
+function MidnightCard() {
+	return (
+		<article className="note-card note-card--midnight">
+			<header className="note-card__word-row">
+				<div>
+					<p>German · noun · feminine</p>
+					<h4>die Dämmerung</h4>
+				</div>
+				<button
+					type="button"
+					tabIndex={-1}
+					aria-label="Play pronunciation"
+				>
+					<Volume2Icon aria-hidden="true" />
+				</button>
+			</header>
+			<div className="midnight-card__meaning">
+				<span>twilight</span>
+				<small>/ˈdɛmərʊŋ/</small>
+			</div>
+			<blockquote>
+				Die <b>Dämmerung</b> legte sich langsam über den See, und am
+				Ufer gingen die ersten Lichter an.
+			</blockquote>
+			<footer>
+				<span>≈ Abendlicht</span>
+				<span>≠ Tageslicht</span>
+			</footer>
+		</article>
+	);
+}
+
+function CatalogCard() {
+	return (
+		<article className="note-card note-card--catalog">
+			<div className="catalog-card__rail" aria-hidden="true">
+				DE · N · 041
+			</div>
+			<header>
+				<span>noun / feminine</span>
+				<h4>Dämmerung</h4>
+				<p>twilight; dusk</p>
+			</header>
+			<dl>
+				<div>
+					<dt>Plural</dt>
+					<dd>Dämmerungen</dd>
+				</div>
+				<div>
+					<dt>Built from</dt>
+					<dd>dämmern + -ung</dd>
+				</div>
+			</dl>
+			<blockquote>noch vor der Dämmerung auf den Rückweg</blockquote>
+			<footer>
+				<span>TAGESZEIT</span>
+				<span>ABLEITUNG</span>
+			</footer>
+		</article>
+	);
+}
+
+function FieldCard() {
+	return (
+		<article className="note-card note-card--field">
+			<header>
+				<span className="field-card__initial">D</span>
+				<div>
+					<p>field note · German</p>
+					<h4>die Dämmerung</h4>
+				</div>
+				<span className="field-card__translation">twilight</span>
+			</header>
+			<section>
+				<p>Your note</p>
+				<strong>
+					“The blue hour on the walk home—light is leaving, but it
+					isn’t dark yet.”
+				</strong>
+			</section>
+			<blockquote>
+				Wir machten uns noch vor der Dämmerung auf den Rückweg.
+			</blockquote>
+			<footer>Abendlicht · Zwielicht · Sonnenuntergang</footer>
+		</article>
 	);
 }
 
@@ -178,7 +333,7 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					<span>N · f</span>
 					<button
 						type="button"
-						aria-label="Open this note in a new pane"
+						aria-label="Open this note in a new sheet"
 					>
 						<ExternalLinkIcon aria-hidden="true" />
 					</button>
@@ -418,5 +573,9 @@ function LinkedWord({
 }
 
 function RelationMark({ children }: { readonly children: ReactNode }) {
-	return <b className="relation-mark">{children}</b>;
+	return (
+		<span className="relation-mark" aria-hidden="true">
+			{children}
+		</span>
+	);
 }

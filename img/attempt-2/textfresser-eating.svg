@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
+  <title>textfresser eating a page</title>
+  <desc>Construction: a white page holds black rounded word bars and a small black eye. Six equal black circles, positioned as in the animation sketch, bite the page away around the textfresser, leaving it as the white silhouette with two ears, a small head with the eye, and a body flaring out to the bottom of the page. The bites land in rainbow order (red, orange, yellow, green, blue, purple). Where a bite covers a word, a blue rectangle is layered directly on top of its black original: the eaten words turn blue, floating on the black that replaced the page. Darker blue words are not yet known, lighter blue ones are processed.</desc>
+  <!-- the canvas -->
+  <rect width="640" height="640" fill="#000000"/>
+  <!-- the page -->
+  <rect width="640" height="640" fill="#FFFFFF"/>
+  <!-- the words, uneaten -->
+  <rect x="196.3" y="69" width="98.7" height="29" rx="7" fill="#1E1613"/>
+  <rect x="344.4" y="69" width="114.9" height="29" rx="7" fill="#1E1613"/>
+  <rect x="55.4" y="149" width="177.7" height="30" rx="7" fill="#1E1613"/>
+  <rect x="304.2" y="149" width="54.8" height="30" rx="7" fill="#1E1613"/>
+  <rect x="410.1" y="149" width="71.9" height="30" rx="7" fill="#1E1613"/>
+  <rect x="580.2" y="149" width="38.7" height="30" rx="7" fill="#1E1613"/>
+  <rect x="21.7" y="226" width="114.8" height="30" rx="7" fill="#1E1613"/>
+  <rect x="213.6" y="226" width="136.3" height="30" rx="7" fill="#1E1613"/>
+  <rect x="18.5" y="299" width="93.9" height="31" rx="7" fill="#1E1613"/>
+  <rect x="196.8" y="299" width="105.2" height="31" rx="7" fill="#1E1613"/>
+  <rect x="53.5" y="406" width="41.3" height="30" rx="7" fill="#1E1613"/>
+  <rect x="215.2" y="406" width="165.2" height="30" rx="7" fill="#1E1613"/>
+  <rect x="398.1" y="406" width="144.4" height="30" rx="7" fill="#1E1613"/>
+  <rect x="188.4" y="481" width="87.0" height="28" rx="7" fill="#1E1613"/>
+  <rect x="314.5" y="481" width="100.4" height="28" rx="7" fill="#1E1613"/>
+  <rect x="437.8" y="481" width="47.2" height="28" rx="7" fill="#1E1613"/>
+  <!-- the eye -->
+  <circle cx="401.1" cy="244.5" r="13.1" fill="#1E1613"/>
+  <!-- the six bites eat the page away, leaving the textfresser (in rainbow order) -->
+  <circle cx="129.7" cy="65.1" r="177.1" fill="#000000"/><!-- red -->
+  <circle cx="649.8" cy="3.4" r="178.2" fill="#000000"/><!-- orange -->
+  <circle cx="437.8" cy="43.6" r="177.1" fill="#000000"/><!-- yellow -->
+  <circle cx="672.9" cy="239.0" r="177.1" fill="#000000"/><!-- green -->
+  <circle cx="203.2" cy="227.7" r="177.1" fill="#000000"/><!-- blue -->
+  <circle cx="27.1" cy="355.0" r="177.1" fill="#000000"/><!-- purple -->
+  <!-- eaten words: blue copies on top of their black originals, only where the bites cover them -->
+  <clipPath id="bites">
+    <circle cx="129.7" cy="65.1" r="177.1"/>
+    <circle cx="649.8" cy="3.4" r="178.2"/>
+    <circle cx="437.8" cy="43.6" r="177.1"/>
+    <circle cx="672.9" cy="239.0" r="177.1"/>
+    <circle cx="203.2" cy="227.7" r="177.1"/>
+    <circle cx="27.1" cy="355.0" r="177.1"/>
+  </clipPath>
+  <g clip-path="url(#bites)">
+  <rect x="196.3" y="69" width="98.7" height="29" rx="7" fill="#0D385B"/>
+  <rect x="344.4" y="69" width="114.9" height="29" rx="7" fill="#071E2E"/>
+  <rect x="55.4" y="149" width="177.7" height="30" rx="7" fill="#071E2E"/>
+  <rect x="304.2" y="149" width="54.8" height="30" rx="7" fill="#0D385B"/>
+  <rect x="410.1" y="149" width="71.9" height="30" rx="7" fill="#071E2E"/>
+  <rect x="580.2" y="149" width="38.7" height="30" rx="7" fill="#0D385B"/>
+  <rect x="21.7" y="226" width="114.8" height="30" rx="7" fill="#0D385B"/>
+  <rect x="213.6" y="226" width="136.3" height="30" rx="7" fill="#071E2E"/>
+  <rect x="18.5" y="299" width="93.9" height="31" rx="7" fill="#071E2E"/>
+  <rect x="196.8" y="299" width="105.2" height="31" rx="7" fill="#0D385B"/>
+  <rect x="53.5" y="406" width="41.3" height="30" rx="7" fill="#071E2E"/>
+  </g>
+</svg>

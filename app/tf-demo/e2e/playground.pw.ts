@@ -108,15 +108,16 @@ test("the segment text study links split members of one resolved unit", async ({
 	await expect(page.getByText("Memory ink · 0 kept")).toBeVisible();
 });
 
-test("each reading note direction switches independently between pane and card", async ({
+test("each reading note Sheet lifts into its own purpose-built Card", async ({
 	page,
 }) => {
 	await page.goto("/playground/notes-study");
 
 	await expect(
-		page.getByRole("heading", { name: "Reading note directions" }),
+		page.getByRole("heading", { name: "Reading note cards" }),
 	).toBeVisible();
 	await expect(page.locator(".notes-prototype")).toHaveCount(3);
+	await expect(page.locator(".note-view-toggle")).toHaveCount(0);
 	const rootOverflow = await page.evaluate(() => {
 		const browser = globalThis as unknown as {
 			readonly document: {
@@ -165,38 +166,45 @@ test("each reading note direction switches independently between pane and card",
 			).toHaveCSS("color", color);
 		}
 	}
-	await expect(midnight.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"pane",
-	);
-	await expect(catalog.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"card",
-	);
 
-	await midnight
-		.getByRole("group", { name: "Midnight index view" })
-		.getByRole("button", { name: "Card", exact: true })
-		.click();
-	await expect(midnight.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"card",
-	);
-	await expect(catalog.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"card",
-	);
+	for (const [variant, expectedText] of [
+		[midnight, "Die Dämmerung legte sich langsam über den See"],
+		[catalog, "dämmern + -ung"],
+		[field, "The blue hour on the walk home"],
+	] as const) {
+		const id = await variant.getAttribute("class");
+		const variantId = id?.match(/notes-prototype--(\w+)/)?.[1];
+		if (!variantId) throw new Error("Missing note variant id.");
+		const stageBox = await variant
+			.locator(".notes-prototype__stage")
+			.boundingBox();
+		const sheetBox = await variant
+			.locator(".notes-prototype__sheet")
+			.boundingBox();
+		if (!stageBox || !sheetBox) throw new Error("Missing Sheet geometry.");
+		expect(sheetBox.width).toBeLessThan(stageBox.width - 20);
+		await expect(
+			variant.locator(".notes-prototype__sheet-handle"),
+		).toHaveCount(2);
+		const handle = variant.getByRole("button", {
+			name: "Lift Sheet as Card from top edge",
+		});
+		await handle.scrollIntoViewIfNeeded();
+		const box = await handle.boundingBox();
+		if (!box) throw new Error("Missing Sheet handle geometry.");
 
-	await catalog
-		.getByRole("group", { name: "Catalog leaf view" })
-		.getByRole("button", { name: "Pane", exact: true })
-		.click();
-	await expect(catalog.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"pane",
-	);
-	await expect(midnight.locator(".notes-prototype__stage")).toHaveAttribute(
-		"data-view",
-		"card",
-	);
+		await page.mouse.move(box.x + box.width / 2, box.y + 12);
+		await page.mouse.down();
+		await page.mouse.move(box.x + box.width / 2 + 36, box.y + 70, {
+			steps: 4,
+		});
+		const preview = page.locator(`[data-card-preview="${variantId}"]`);
+		await expect(preview).toBeVisible();
+		await expect(preview).toContainText(expectedText);
+		await expect(
+			variant.locator(".notes-prototype__stage"),
+		).toHaveAttribute("data-dragging", "true");
+		await page.mouse.up();
+		await expect(preview).toHaveCount(0);
+	}
 });
