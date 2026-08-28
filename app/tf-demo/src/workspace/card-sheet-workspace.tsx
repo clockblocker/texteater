@@ -69,6 +69,17 @@ import "./card-sheet-workspace.css";
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
 const MINIMUM_DRAG_DISTANCE = 4;
 const NESTED_DROP_ZONE_COLLISION_PRIORITY = 4;
+const NO_LANDING = {
+	settlingSheetId: null,
+	focusSheetId: null,
+} as const satisfies WorkspaceLanding;
+
+type WorkspaceLanding = {
+	/** Sheet held back until its drop flight lands on it. */
+	readonly settlingSheetId: string | null;
+	/** Sheet to focus once its drop flight has landed. */
+	readonly focusSheetId: string | null;
+};
 
 export type CardSheetWorkspaceProps = {
 	readonly renderSubject: (
@@ -92,7 +103,7 @@ export function CardSheetWorkspace({
 	const flightPlanRef = useRef<WorkspaceDropFlightPlan>(
 		RETURN_TO_SOURCE_PLAN,
 	);
-	const focusAfterLandingRef = useRef<string | null>(null);
+	const landingRef = useRef<WorkspaceLanding | null>(null);
 	const dragProjection = useMemo(
 		() => projectWorkspaceDrag(state.workspace, dragSession),
 		[state.workspace, dragSession],
@@ -111,10 +122,17 @@ export function CardSheetWorkspace({
 	}, []);
 
 	const landFlight = useCallback(() => {
-		setSettlingSheetId(null);
-		const focusTarget = focusAfterLandingRef.current;
-		focusAfterLandingRef.current = null;
-		if (focusTarget) focusSheet(focusTarget);
+		const landing = landingRef.current;
+		landingRef.current = null;
+		if (!landing) return;
+		if (landing.settlingSheetId !== null) {
+			setSettlingSheetId((current) =>
+				current === landing.settlingSheetId ? null : current,
+			);
+		}
+		if (landing.focusSheetId !== null) {
+			focusSheet(landing.focusSheetId);
+		}
 	}, [focusSheet]);
 
 	const dropAnimation = useCallback(
@@ -149,7 +167,7 @@ export function CardSheetWorkspace({
 			onDragStart={({ operation }) => {
 				const source = normalizeDragSource(operation.source?.data);
 				flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
-				focusAfterLandingRef.current = null;
+				landingRef.current = null;
 				setDragSession(source ? { source, target: null } : null);
 			}}
 			onDragOver={({ operation }) => {
@@ -175,6 +193,7 @@ export function CardSheetWorkspace({
 				);
 				if (canceled || moved < MINIMUM_DRAG_DISTANCE || !source) {
 					flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
+					landingRef.current = NO_LANDING;
 					return;
 				}
 				const projection = projectWorkspaceDrag(state.workspace, {
@@ -190,12 +209,16 @@ export function CardSheetWorkspace({
 					placedSheetId,
 				);
 				flightPlanRef.current = flight;
+				landingRef.current = {
+					settlingSheetId:
+						flight.kind === "LandAsSheet" ? flight.sheetId : null,
+					focusSheetId:
+						projection.dropEffect.kind === "MoveSheet"
+							? projection.dropEffect.sheetId
+							: null,
+				};
 				if (flight.kind === "LandAsSheet") {
 					setSettlingSheetId(flight.sheetId);
-				}
-				if (projection.dropEffect.kind === "MoveSheet") {
-					focusAfterLandingRef.current =
-						projection.dropEffect.sheetId;
 				}
 				dispatchDropEffect(
 					projection.dropEffect,

@@ -21,6 +21,13 @@ its full surface; each occluded Card drags from its Note-owned Tail. Dragging a
 Sheet reveals removal zones near the bottom of every Pane; releasing over one
 performs Explicit Sheet Removal, including for a Locked Sheet.
 
+Every drop ends as a drop flight (`workspace-flight.ts`): the dragged visual
+flies onto the Sheet it becomes, or back into the slot it left, instead of
+dnd-kit's default return-to-source animation, which aims at a detached element
+whenever a drop unmounts its source. The landing Sheet is held back with
+`data-sheet-settling` until the flight arrives, and the deck closes its gaps
+with height and translate traveling together.
+
 Production integration lives in `src/App.tsx` and uses the workspace controller
 with live Convex views. Deferred work remains final Tail designs, nested Card
 commands, exact shortcut and non-pointer placement design, and
