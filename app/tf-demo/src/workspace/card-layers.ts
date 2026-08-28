@@ -23,6 +23,14 @@ export type CardLayer = {
 	readonly cards: readonly LayerCard[];
 };
 
+/** A deck never shows more than this many Cards stacked behind the foremost. */
+export const MAXIMUM_DECK_SIZE = 4;
+
+/** Deck size for layout math: at least the foremost Card, never past the cap. */
+export function deckSizeFor(cardCount: number): number {
+	return Math.max(1, Math.min(MAXIMUM_DECK_SIZE, cardCount));
+}
+
 export function replaceCardLayer(
 	layers: readonly CardLayer[],
 	request: {

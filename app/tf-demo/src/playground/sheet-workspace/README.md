@@ -7,9 +7,10 @@ dnd-kit sessions, Sheet controls, and the handoff between transient Cards and
 placed Sheets. Pure Sheet Stack algebra remains in `sheet-workspace.ts`; Card
 Layers remain separate transient state.
 
-These static fixtures remain test support for the pure workspace algebra and
-application Text, Reading, and Route Note presentations. They are not mounted
-by the application and have no URL.
+These static fixtures support the pure workspace algebra and application Text,
+Reading, and Route Note presentations. The playground mounts them at
+`/playground/sheet-workspace`; they remain isolated from application data and
+browser workspace persistence.
 
 Card Layers are replaced by a new selection in the same Pane and dismissed by
 Escape, their close control, unoccupied Pane clicks, or when their originating

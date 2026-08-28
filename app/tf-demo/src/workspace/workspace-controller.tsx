@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import type { CardCandidate } from "./card-layers";
+import { MAXIMUM_DECK_SIZE } from "./card-layers";
 import {
 	findPane,
 	type SheetWorkspace,
@@ -32,9 +33,17 @@ export type WorkspaceCardTarget = {
 	readonly target: WorkspaceTarget;
 };
 
+export type PresentCardsOptions = {
+	/** Element the deck should present below, e.g. the clicked segment. */
+	readonly anchor?: Element | null;
+};
+
 export type WorkspaceInteraction = {
 	readonly follow: (target: WorkspaceTarget) => void;
-	readonly presentCards: (cards: readonly WorkspaceCardTarget[]) => void;
+	readonly presentCards: (
+		cards: readonly WorkspaceCardTarget[],
+		options?: PresentCardsOptions,
+	) => void;
 	readonly reconcile: (target: WorkspaceTarget) => void;
 };
 
@@ -172,7 +181,7 @@ export function useWorkspaceRuntime(): WorkspaceRuntime {
 export function cardCandidatesFor(
 	cards: readonly WorkspaceCardTarget[],
 ): readonly CardCandidate[] {
-	return cards.map((card) => ({
+	return cards.slice(0, MAXIMUM_DECK_SIZE).map((card) => ({
 		key: card.key,
 		subject: workspaceSubjectFor(card.target),
 	}));

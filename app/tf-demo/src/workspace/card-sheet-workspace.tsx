@@ -28,7 +28,8 @@ import {
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
-import type { CardLayer } from "./card-layers";
+import { cardLayerTopBelowAnchor } from "./card-layer-placement";
+import { type CardLayer, deckSizeFor } from "./card-layers";
 import {
 	isWorkspaceSubject,
 	type Pane,
@@ -259,6 +260,20 @@ function WorkspacePane({
 }: WorkspacePaneProps & {
 	readonly dropRef: (element: Element | null) => void;
 }) {
+	const paneElementRef = useRef<HTMLElement | null>(null);
+	const [cardLayerTop, setCardLayerTop] = useState<number | null>(null);
+	const anchorCardLayer = useCallback(
+		(anchor: Element | null | undefined, cardCount: number) => {
+			setCardLayerTop(
+				cardLayerTopBelowAnchor(
+					anchor,
+					paneElementRef.current,
+					deckSizeFor(cardCount),
+				),
+			);
+		},
+		[],
+	);
 	const topSheet = pane.sheets.at(-1);
 	const revealedSheetId =
 		dragProjection.sourceReveal?.kind === "Sheet"
@@ -335,7 +350,10 @@ function WorkspacePane({
 					},
 				})
 			}
-			ref={dropRef}
+			ref={(element) => {
+				paneElementRef.current = element;
+				dropRef(element);
+			}}
 		>
 			<div className="card-sheet-workspace__stack">
 				<div
@@ -358,6 +376,7 @@ function WorkspacePane({
 				</div>
 				{pane.sheets.map((sheet, index) => (
 					<WorkspaceSheet
+						anchorCardLayer={anchorCardLayer}
 						dispatch={dispatch}
 						isPlacementCovered={isPlacementCovered}
 						isTop={sheet.instanceId === topSheet?.instanceId}
@@ -383,6 +402,7 @@ function WorkspacePane({
 					dispatch={dispatch}
 					renderCardTail={renderCardTail}
 					renderSubject={renderSubject}
+					top={cardLayerTop}
 				/>
 			) : null}
 			{dragProjection.sheetRemoval.visible ? (
@@ -432,6 +452,7 @@ function WorkspaceSheet({
 	stackIndex,
 	dispatch,
 	renderSubject,
+	anchorCardLayer,
 }: {
 	readonly pane: Pane;
 	readonly sheet: Sheet;
@@ -441,6 +462,10 @@ function WorkspaceSheet({
 	readonly stackIndex: number;
 	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
+	readonly anchorCardLayer: (
+		anchor: Element | null | undefined,
+		cardCount: number,
+	) => void;
 }) {
 	const sheetElement = useRef<HTMLElement>(null);
 	const topDrag = useDraggable<WorkspaceDragSource>({
@@ -485,8 +510,9 @@ function WorkspaceSheet({
 					},
 				});
 			},
-			presentCards: (cards) => {
+			presentCards: (cards, options) => {
 				if (!isTop) return;
+				anchorCardLayer(options?.anchor, cards.length);
 				dispatch({
 					type: "OpenCardLayer",
 					paneId: pane.id,
@@ -502,7 +528,7 @@ function WorkspaceSheet({
 				});
 			},
 		}),
-		[dispatch, isTop, pane.id, sheet.instanceId],
+		[anchorCardLayer, dispatch, isTop, pane.id, sheet.instanceId],
 	);
 	return (
 		<article
@@ -655,12 +681,14 @@ function CardLayerView({
 	dispatch,
 	renderSubject,
 	renderCardTail,
+	top,
 }: {
 	readonly layer: CardLayer;
 	readonly isDropTarget: boolean;
 	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
+	readonly top: number | null;
 }) {
 	const { ref } = useDroppable<WorkspaceDragTarget>({
 		id: `card-layer:${layer.paneId}`,
@@ -679,7 +707,15 @@ function CardLayerView({
 			aria-label={`Card Layer in ${layer.paneId} Pane`}
 			className="card-sheet-workspace__card-layer"
 			data-card-layer={layer.paneId}
+			data-card-layer-anchored={top === null ? undefined : "true"}
 			data-drop-target={isDropTarget ? "true" : undefined}
+			style={
+				{
+					"--card-layer-top":
+						top === null ? undefined : `${top}px`,
+					"--deck-size": deckSizeFor(layer.cards.length),
+				} as React.CSSProperties
+			}
 			ref={ref}
 		>
 			<button

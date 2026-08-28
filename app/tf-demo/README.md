@@ -20,6 +20,11 @@ Navigation Anchor, while Texts and Notes open as Sheets or transient Cards in a
 persistent browser-local workspace. Settings is shell state and does not replace
 or encode the workspace in the URL.
 
+Contributor UI experiments live in the application-independent playground at
+`/playground`. Its registry gives each deterministic fixture a stable URL and
+does not initialize Convex. See [`src/playground/README.md`](./src/playground/README.md)
+for the experiment contract.
+
 ## Develop locally
 
 From the repository root, install the Bun workspace and start both Convex and

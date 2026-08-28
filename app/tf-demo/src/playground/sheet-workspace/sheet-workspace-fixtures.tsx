@@ -114,7 +114,12 @@ export const renderFixtureCardTail: CardSheetWorkspaceProps["renderCardTail"] =
 function FixtureTextPresentation() {
 	const { presentCards } = useWorkspaceInteraction();
 	const selectSegment = useCallback(
-		async (selectedSentence: SentenceView, segmentIndex: number) => {
+		async (
+			selectedSentence: SentenceView,
+			segmentIndex: number,
+			_altKey: boolean,
+			anchorElement: HTMLElement,
+		) => {
 			const segment = selectedSentence.segments.find(
 				(candidate) => candidate.index === segmentIndex,
 			);
@@ -128,6 +133,7 @@ function FixtureTextPresentation() {
 						segmentIndex,
 					),
 				})),
+				{ anchor: anchorElement },
 			);
 		},
 		[presentCards],
