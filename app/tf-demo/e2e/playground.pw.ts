@@ -31,6 +31,44 @@ test("the playground registry launches and resets an isolated experiment", async
 	await expect(page.locator("[data-card-layer]")).toHaveCount(0);
 });
 
+test("a deck card dragged onto a pane lands as a settled sheet", async ({
+	page,
+}) => {
+	await page.goto("/playground/sheet-workspace");
+
+	await page
+		.locator('[data-workspace-pane="central"]')
+		.getByRole("button", { name: "Morgen" })
+		.click();
+	const deck = page.locator('[data-card-layer="central"]');
+	await expect(deck.locator("[data-card-id]")).toHaveCount(4);
+
+	const card = deck.locator("[data-card-id]").first();
+	const east = page.locator('[data-workspace-pane="east"]');
+	const cardBox = await card.boundingBox();
+	const eastBox = await east.boundingBox();
+	if (!cardBox || !eastBox) throw new Error("Missing drag geometry.");
+
+	// Pointer drags activate after a short hold and travel; the workspace
+	// follows dnd-kit's default pointer activation constraints.
+	await page.mouse.move(
+		cardBox.x + cardBox.width / 2,
+		cardBox.y + cardBox.height / 2,
+	);
+	await page.mouse.down();
+	await page.waitForTimeout(250);
+	await page.mouse.move(
+		eastBox.x + eastBox.width / 2,
+		eastBox.y + eastBox.height / 2,
+		{ steps: 12 },
+	);
+	await page.mouse.up();
+
+	await expect(east.locator("[data-sheet-id]")).toHaveCount(1);
+	await expect(east.locator("[data-sheet-settling]")).toHaveCount(0);
+	await expect(deck.locator("[data-card-id]")).toHaveCount(3);
+});
+
 test("the segment text study links split members of one resolved unit", async ({
 	page,
 }) => {
@@ -94,6 +132,39 @@ test("each reading note direction switches independently between pane and card",
 
 	const midnight = page.locator(".notes-prototype--midnight");
 	const catalog = page.locator(".notes-prototype--catalog");
+	const field = page.locator(".notes-prototype--field");
+	for (const [variant, colors] of [
+		[
+			midnight,
+			{
+				feminine: "rgb(230, 154, 157)",
+				neuter: "rgb(163, 195, 159)",
+				masculine: "rgb(170, 178, 216)",
+			},
+		],
+		[
+			catalog,
+			{
+				feminine: "rgb(233, 132, 110)",
+				neuter: "rgb(148, 184, 142)",
+				masculine: "rgb(170, 164, 207)",
+			},
+		],
+		[
+			field,
+			{
+				feminine: "rgb(206, 137, 148)",
+				neuter: "rgb(152, 179, 149)",
+				masculine: "rgb(153, 168, 202)",
+			},
+		],
+	] as const) {
+		for (const [gender, color] of Object.entries(colors)) {
+			await expect(
+				variant.locator(`[data-noun-gender="${gender}"]`).first(),
+			).toHaveCSS("color", color);
+		}
+	}
 	await expect(midnight.locator(".notes-prototype__stage")).toHaveAttribute(
 		"data-view",
 		"pane",

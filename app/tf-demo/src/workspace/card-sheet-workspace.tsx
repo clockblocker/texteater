@@ -57,6 +57,12 @@ import {
 	type WorkspaceDragSource,
 	type WorkspaceDragTarget,
 } from "./workspace-drag";
+import {
+	planWorkspaceDropFlight,
+	RETURN_TO_SOURCE_PLAN,
+	runWorkspaceDropFlight,
+	type WorkspaceDropFlightPlan,
+} from "./workspace-flight";
 import type { WorkspaceSessionAction } from "./workspace-session";
 import "./card-sheet-workspace.css";
 
@@ -82,21 +88,15 @@ export function CardSheetWorkspace({
 	const [dragSession, setDragSession] = useState<WorkspaceDragSession | null>(
 		null,
 	);
+	const [settlingSheetId, setSettlingSheetId] = useState<string | null>(null);
+	const flightPlanRef = useRef<WorkspaceDropFlightPlan>(
+		RETURN_TO_SOURCE_PLAN,
+	);
+	const focusAfterLandingRef = useRef<string | null>(null);
 	const dragProjection = useMemo(
 		() => projectWorkspaceDrag(state.workspace, dragSession),
 		[state.workspace, dragSession],
 	);
-
-	useEffect(() => {
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== "Escape" || dragSession) return;
-			if (state.cardLayers.length === 0) return;
-			event.preventDefault();
-			dispatch({ type: "DismissAllCardLayers" });
-		};
-		window.addEventListener("keydown", onKeyDown);
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [dragSession, state.cardLayers.length]);
 
 	const focusSheet = useCallback((sheetId: string) => {
 		requestAnimationFrame(() => {
@@ -110,10 +110,46 @@ export function CardSheetWorkspace({
 		});
 	}, []);
 
+	const landFlight = useCallback(() => {
+		setSettlingSheetId(null);
+		const focusTarget = focusAfterLandingRef.current;
+		focusAfterLandingRef.current = null;
+		if (focusTarget) focusSheet(focusTarget);
+	}, [focusSheet]);
+
+	const dropAnimation = useCallback(
+		(context: {
+			readonly element: Element;
+			readonly feedbackElement: Element;
+		}) =>
+			runWorkspaceDropFlight(
+				{
+					sourceElement: context.element,
+					overlayElement: context.feedbackElement,
+				},
+				flightPlanRef.current,
+				{ onLanded: landFlight },
+			),
+		[landFlight],
+	);
+
+	useEffect(() => {
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key !== "Escape" || dragSession) return;
+			if (state.cardLayers.length === 0) return;
+			event.preventDefault();
+			dispatch({ type: "DismissAllCardLayers" });
+		};
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	}, [dragSession, state.cardLayers.length]);
+
 	return (
 		<DragDropProvider
 			onDragStart={({ operation }) => {
 				const source = normalizeDragSource(operation.source?.data);
+				flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
+				focusAfterLandingRef.current = null;
 				setDragSession(source ? { source, target: null } : null);
 			}}
 			onDragOver={({ operation }) => {
@@ -137,13 +173,35 @@ export function CardSheetWorkspace({
 					operation.transform.x,
 					operation.transform.y,
 				);
-				if (canceled || moved < MINIMUM_DRAG_DISTANCE || !source)
+				if (canceled || moved < MINIMUM_DRAG_DISTANCE || !source) {
+					flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
 					return;
+				}
 				const projection = projectWorkspaceDrag(state.workspace, {
 					source,
 					target,
 				});
-				dispatchDropEffect(projection.dropEffect, dispatch, focusSheet);
+				const placedSheetId =
+					projection.dropEffect.kind === "PlaceCard"
+						? newSheetInstanceId()
+						: null;
+				const flight = planWorkspaceDropFlight(
+					projection.dropEffect,
+					placedSheetId,
+				);
+				flightPlanRef.current = flight;
+				if (flight.kind === "LandAsSheet") {
+					setSettlingSheetId(flight.sheetId);
+				}
+				if (projection.dropEffect.kind === "MoveSheet") {
+					focusAfterLandingRef.current =
+						projection.dropEffect.sheetId;
+				}
+				dispatchDropEffect(
+					projection.dropEffect,
+					dispatch,
+					placedSheetId,
+				);
 			}}
 		>
 			<ResizablePanelGroup
@@ -172,6 +230,7 @@ export function CardSheetWorkspace({
 								pane={pane}
 								renderCardTail={renderCardTail}
 								renderSubject={renderSubject}
+								settlingSheetId={settlingSheetId}
 								workspace={state.workspace}
 							/>
 						</ResizablePanel>
@@ -188,10 +247,7 @@ export function CardSheetWorkspace({
 
 			<DragOverlay
 				className="card-sheet-workspace__drag-overlay"
-				dropAnimation={{
-					duration: 220,
-					easing: "cubic-bezier(.2,.8,.2,1)",
-				}}
+				dropAnimation={dropAnimation}
 			>
 				{(source) => {
 					const fallbackSource = normalizeDragSource(source?.data);
@@ -237,6 +293,7 @@ type WorkspacePaneProps = {
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
 	readonly renderCardTail: CardSheetWorkspaceProps["renderCardTail"];
 	readonly navigationAnchor: ReactNode;
+	readonly settlingSheetId: string | null;
 };
 
 function WorkspacePaneDropTarget(props: WorkspacePaneProps) {
@@ -256,6 +313,7 @@ function WorkspacePane({
 	renderSubject,
 	renderCardTail,
 	navigationAnchor,
+	settlingSheetId,
 	dropRef,
 }: WorkspacePaneProps & {
 	readonly dropRef: (element: Element | null) => void;
@@ -379,6 +437,7 @@ function WorkspacePane({
 						anchorCardLayer={anchorCardLayer}
 						dispatch={dispatch}
 						isPlacementCovered={isPlacementCovered}
+						isSettling={sheet.instanceId === settlingSheetId}
 						isTop={sheet.instanceId === topSheet?.instanceId}
 						isRevealed={sheet.instanceId === revealedSheetId}
 						key={sheet.instanceId}
@@ -449,6 +508,7 @@ function WorkspaceSheet({
 	isTop,
 	isRevealed,
 	isPlacementCovered,
+	isSettling,
 	stackIndex,
 	dispatch,
 	renderSubject,
@@ -459,6 +519,7 @@ function WorkspaceSheet({
 	readonly isTop: boolean;
 	readonly isRevealed: boolean;
 	readonly isPlacementCovered: boolean;
+	readonly isSettling: boolean;
 	readonly stackIndex: number;
 	readonly dispatch: React.Dispatch<WorkspaceSessionAction>;
 	readonly renderSubject: CardSheetWorkspaceProps["renderSubject"];
@@ -543,6 +604,7 @@ function WorkspaceSheet({
 			data-sheet-placement-covered={
 				isPlacementCovered ? "true" : undefined
 			}
+			data-sheet-settling={isSettling ? "true" : undefined}
 			data-sheet-stack-index={stackIndex}
 			data-sheet-top={isTop ? "true" : undefined}
 			data-sheet-revealed={isRevealed ? "true" : undefined}
@@ -711,8 +773,7 @@ function CardLayerView({
 			data-drop-target={isDropTarget ? "true" : undefined}
 			style={
 				{
-					"--card-layer-top":
-						top === null ? undefined : `${top}px`,
+					"--card-layer-top": top === null ? undefined : `${top}px`,
 					"--deck-size": deckSizeFor(layer.cards.length),
 				} as React.CSSProperties
 			}
@@ -804,6 +865,7 @@ function LayerCardView({
 			className={cn(
 				"card-sheet-workspace__card",
 				drag.isDragging && "card-sheet-workspace__card--dragging",
+				drag.isDropping && "card-sheet-workspace__card--dropping",
 			)}
 			data-card-id={card.id}
 			data-card-order={index}
@@ -930,7 +992,7 @@ function paneProjection(
 function dispatchDropEffect(
 	effect: WorkspaceDragDropEffect,
 	dispatch: React.Dispatch<WorkspaceSessionAction>,
-	focusSheet: (sheetId: string) => void,
+	placedSheetId: string | null,
 ): void {
 	switch (effect.kind) {
 		case "None":
@@ -954,7 +1016,7 @@ function dispatchDropEffect(
 				sourcePaneId: effect.sourcePaneId,
 				destinationPaneId: effect.destinationPaneId,
 				cardId: effect.cardId,
-				sheetId: newSheetInstanceId(),
+				sheetId: placedSheetId ?? newSheetInstanceId(),
 			});
 			return;
 		case "MoveSheet":
@@ -967,7 +1029,6 @@ function dispatchDropEffect(
 					sheetId: effect.sheetId,
 				},
 			});
-			focusSheet(effect.sheetId);
 	}
 }
 

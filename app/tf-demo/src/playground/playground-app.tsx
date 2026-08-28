@@ -113,22 +113,22 @@ function ExperimentRoute({ experimentId }: { readonly experimentId: string }) {
 	const Experiment = experiment.component;
 	return (
 		<main className="playground-specimen">
-			<header className="playground-specimen__header">
-				<a href={PLAYGROUND_PATH}>
-					<ArrowLeftIcon aria-hidden="true" /> Registry
+			<nav
+				className="playground-specimen__controls"
+				aria-label="Experiment controls"
+			>
+				<h1 className="sr-only">{experiment.title}</h1>
+				<a href={PLAYGROUND_PATH} aria-label="Back to registry">
+					<ArrowLeftIcon aria-hidden="true" />
 				</a>
-				<div>
-					<code>{experiment.id}</code>
-					<h1>{experiment.title}</h1>
-					<p>{experiment.instructions}</p>
-				</div>
 				<button
 					type="button"
+					aria-label="Reset fixture"
 					onClick={() => setRevision((value) => value + 1)}
 				>
-					<RotateCcwIcon aria-hidden="true" /> Reset fixture
+					<RotateCcwIcon aria-hidden="true" />
 				</button>
-			</header>
+			</nav>
 			<section
 				className="playground-specimen__stage"
 				aria-label={`${experiment.title} experiment`}

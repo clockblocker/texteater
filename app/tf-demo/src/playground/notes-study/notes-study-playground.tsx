@@ -51,20 +51,6 @@ export function NotesStudyPlayground() {
 
 	return (
 		<div className="notes-study">
-			<header className="notes-study__intro">
-				<div>
-					<span className="notes-study__kicker">
-						Reading note / 03 studies
-					</span>
-					<h2>One word, three reading rooms.</h2>
-				</div>
-				<p>
-					Each direction carries the same knowledge. Switch its
-					container to judge how the note behaves as a workspace pane
-					or as a portable card.
-				</p>
-			</header>
-
 			<div className="notes-study__variants">
 				{VARIANTS.map((variant) => (
 					<NotePrototype
@@ -170,8 +156,14 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 						🌒
 					</span>
 					<h4 id={`${noteId}-title`}>
-						die <LinkedWord>Dämmerung</LinkedWord>
-						<span>, die Dämmerungen</span>
+						die{" "}
+						<LinkedWord nounGender="feminine">Dämmerung</LinkedWord>
+						<span>
+							, die{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerungen
+							</LinkedWord>
+						</span>
 					</h4>
 					<button
 						type="button"
@@ -203,14 +195,21 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 					</SectionLabel>
 					<div className="source-contexts">
 						<blockquote>
-							Die <LinkedWord>Dämmerung</LinkedWord> legte sich
-							langsam über den See, und am gegenüberliegenden Ufer
-							gingen die ersten Lichter an.
+							Die{" "}
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>{" "}
+							legte sich langsam über den See, und am
+							gegenüberliegenden Ufer gingen die ersten Lichter
+							an.
 						</blockquote>
 						<blockquote>
 							Wir machten uns noch vor der{" "}
-							<LinkedWord>Dämmerung</LinkedWord> auf den Rückweg,
-							damit wir den schmalen Pfad erkennen konnten.
+							<LinkedWord nounGender="feminine">
+								Dämmerung
+							</LinkedWord>{" "}
+							auf den Rückweg, damit wir den schmalen Pfad
+							erkennen konnten.
 						</blockquote>
 					</div>
 				</section>
@@ -247,22 +246,37 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 						<li>
 							<RelationMark>=</RelationMark>
 							<span>
-								<LinkedWord>Zwielicht</LinkedWord>,{" "}
-								<LinkedWord>Abenddämmerung</LinkedWord>
+								<LinkedWord nounGender="neuter">
+									Zwielicht
+								</LinkedWord>
+								,{" "}
+								<LinkedWord nounGender="feminine">
+									Abenddämmerung
+								</LinkedWord>
 							</span>
 						</li>
 						<li>
 							<RelationMark>≈</RelationMark>
 							<span>
-								<LinkedWord>Abendlicht</LinkedWord>,{" "}
-								<LinkedWord>Halbdunkel</LinkedWord>
+								<LinkedWord nounGender="neuter">
+									Abendlicht
+								</LinkedWord>
+								,{" "}
+								<LinkedWord nounGender="masculine">
+									Sonnenuntergang
+								</LinkedWord>
 							</span>
 						</li>
 						<li>
 							<RelationMark>≠</RelationMark>
 							<span>
-								<LinkedWord>Dunkelheit</LinkedWord>,{" "}
-								<LinkedWord>Tageslicht</LinkedWord>
+								<LinkedWord nounGender="feminine">
+									Dunkelheit
+								</LinkedWord>
+								,{" "}
+								<LinkedWord nounGender="neuter">
+									Tageslicht
+								</LinkedWord>
 							</span>
 						</li>
 					</ul>
@@ -306,29 +320,53 @@ function NoteArticle({ variantId }: { readonly variantId: VariantId }) {
 						<div>
 							<dt>N</dt>
 							<dd>
-								die <LinkedWord>Dämmerung</LinkedWord>, die
-								Dämmerungen
+								die{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerung
+								</LinkedWord>
+								, die{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerungen
+								</LinkedWord>
 							</dd>
 						</div>
 						<div>
 							<dt>A</dt>
 							<dd>
-								die <LinkedWord>Dämmerung</LinkedWord>, die
-								Dämmerungen
+								die{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerung
+								</LinkedWord>
+								, die{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerungen
+								</LinkedWord>
 							</dd>
 						</div>
 						<div>
 							<dt>G</dt>
 							<dd>
-								der <LinkedWord>Dämmerung</LinkedWord>, der
-								Dämmerungen
+								der{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerung
+								</LinkedWord>
+								, der{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerungen
+								</LinkedWord>
 							</dd>
 						</div>
 						<div>
 							<dt>D</dt>
 							<dd>
-								der <LinkedWord>Dämmerung</LinkedWord>, den
-								Dämmerungen
+								der{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerung
+								</LinkedWord>
+								, den{" "}
+								<LinkedWord nounGender="feminine">
+									Dämmerungen
+								</LinkedWord>
 							</dd>
 						</div>
 					</dl>
@@ -358,9 +396,22 @@ function SectionLabel({
 	);
 }
 
-function LinkedWord({ children }: { readonly children: ReactNode }) {
+function LinkedWord({
+	children,
+	nounGender,
+}: {
+	readonly children: string;
+	readonly nounGender?: "feminine" | "neuter" | "masculine";
+}) {
 	return (
-		<button type="button" className="linked-word">
+		<button
+			type="button"
+			className="linked-word"
+			data-noun-gender={nounGender}
+			aria-label={
+				nounGender ? `${children}, ${nounGender} noun` : undefined
+			}
+		>
 			{children}
 		</button>
 	);

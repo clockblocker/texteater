@@ -52,7 +52,7 @@
 .playground-brand,
 .playground-app-link,
 .playground-ledger a,
-.playground-specimen__header > a,
+.playground-specimen__controls a,
 .playground-missing a {
 	color: inherit;
 	text-decoration: none;
@@ -94,9 +94,9 @@
 
 .playground-app-link,
 .playground-ledger a,
-.playground-specimen__header > a,
+.playground-specimen__controls a,
 .playground-missing a,
-.playground-specimen__header button {
+.playground-specimen__controls button {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.45rem;
@@ -106,7 +106,7 @@
 
 .playground-app-link svg,
 .playground-ledger a svg,
-.playground-specimen__header svg,
+.playground-specimen__controls svg,
 .playground-missing a svg {
 	width: 1rem;
 	height: 1rem;
@@ -125,8 +125,7 @@
 .playground-ledger__number,
 .playground-ledger > header span,
 .playground-index__footer,
-.playground-index__footer code,
-.playground-specimen__header code {
+.playground-index__footer code {
 	font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 
@@ -209,8 +208,7 @@
 	font-weight: 750;
 }
 
-.playground-ledger code,
-.playground-specimen__header code {
+.playground-ledger code {
 	color: var(--playground-cobalt);
 	font-size: 0.68rem;
 }
@@ -248,42 +246,43 @@
 }
 
 .playground-specimen {
-	display: grid;
-	grid-template-rows: auto minmax(0, 1fr);
+	position: relative;
 	height: 100svh;
 	overflow: hidden;
 }
 
-.playground-specimen__header {
+.playground-specimen__controls {
+	position: absolute;
+	top: 50%;
+	right: 0.75rem;
+	z-index: 20;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	transform: translateY(-50%);
+}
+
+.playground-specimen__controls a,
+.playground-specimen__controls button {
 	display: grid;
-	grid-template-columns: minmax(8rem, 0.5fr) minmax(20rem, 2fr) auto;
-	gap: 2rem;
-	align-items: center;
-	padding: 1rem clamp(1rem, 3vw, 2rem);
-	border-bottom: 1px solid var(--playground-rule);
-	background: color-mix(in srgb, var(--playground-paper) 95%, transparent);
-}
-
-.playground-specimen__header h1 {
-	margin: 0.15rem 0 0.25rem;
-	font-size: 1.35rem;
-	letter-spacing: -0.035em;
-}
-
-.playground-specimen__header p {
-	max-width: 74ch;
-	margin: 0;
-	color: var(--playground-muted);
-	font-size: 0.78rem;
-	line-height: 1.4;
-}
-
-.playground-specimen__header button {
+	width: 2rem;
+	height: 2rem;
+	place-items: center;
 	border: 1px solid var(--playground-rule);
-	padding: 0.65rem 0.8rem;
-	background: var(--playground-paper);
+	padding: 0;
+	background: color-mix(in srgb, var(--playground-paper) 82%, transparent);
 	color: var(--playground-ink);
+	box-shadow: 0 0.35rem 1.2rem rgb(0 0 0 / 24%);
+	backdrop-filter: blur(0.6rem);
 	cursor: pointer;
+	opacity: 0.62;
+}
+
+.playground-specimen__controls a:hover,
+.playground-specimen__controls button:hover,
+.playground-specimen__controls a:focus-visible,
+.playground-specimen__controls button:focus-visible {
+	opacity: 1;
 }
 
 .playground-specimen__stage,
@@ -292,11 +291,8 @@
 }
 
 .playground-specimen__stage {
-	margin: clamp(0.6rem, 1.4vw, 1rem);
-	border: 1px solid var(--playground-rule);
-	background: var(--playground-paper);
-	box-shadow: 5px 5px 0
-		color-mix(in srgb, var(--playground-cobalt) 16%, transparent);
+	height: 100%;
+	background: var(--playground-canvas);
 	overflow: hidden;
 }
 
@@ -354,8 +350,8 @@
 .playground-app-link:focus-visible,
 .playground-brand:focus-visible,
 .playground-ledger a:focus-visible,
-.playground-specimen__header a:focus-visible,
-.playground-specimen__header button:focus-visible,
+.playground-specimen__controls a:focus-visible,
+.playground-specimen__controls button:focus-visible,
 .playground-missing a:focus-visible {
 	outline: 3px solid
 		color-mix(in srgb, var(--playground-cobalt) 45%, transparent);
@@ -379,20 +375,5 @@
 
 	.playground-index__footer {
 		flex-direction: column;
-	}
-
-	.playground-specimen__header {
-		grid-template-columns: 1fr auto;
-		gap: 0.75rem 1rem;
-	}
-
-	.playground-specimen__header > div {
-		grid-column: 1 / -1;
-		grid-row: 2;
-	}
-
-	.playground-specimen__header button {
-		grid-column: 2;
-		grid-row: 1;
 	}
 }
