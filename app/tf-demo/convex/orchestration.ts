@@ -51,6 +51,7 @@ import {
 } from "./model/resolutionSessions";
 import {
 	type nonResolvedGrammaticalValidator,
+	readingDefinitionChangeValidator,
 	relationPublicationRunValidator,
 	type resolvedGrammaticalValidator,
 	resolveSegmentResultValidator,
@@ -59,6 +60,19 @@ import {
 import type { RelationPublicationRun } from "./relationPublication";
 
 const MAX_KNOWLEDGE_PLAN_ATTEMPTS = 3;
+
+const submitTextResultValidator = v.union(
+	v.object({
+		status: v.literal("Accepted"),
+		textId: v.id("texts"),
+	}),
+	v.object({
+		status: v.literal("Rejected"),
+		message: v.string(),
+	}),
+);
+
+type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
 
 type ResolutionCatalogMiss = Extract<
 	ResolveSegmentResult,
@@ -421,9 +435,20 @@ export const submitText = action({
 		submissionKey: v.string(),
 		sourceText: v.string(),
 	},
-	returns: v.any(),
-	handler: async (ctx, args): Promise<unknown> =>
-		orchestratorFor(ctx).submitText(args),
+	returns: submitTextResultValidator,
+	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
+		const result = await orchestratorFor(ctx).submitText(args);
+		if (!result.ok) {
+			return {
+				status: "Rejected",
+				message: result.error.message,
+			};
+		}
+		return {
+			status: "Accepted",
+			textId: convexId<"texts">(result.persisted.textId),
+		};
+	},
 });
 
 export const resolveSegment = action({
@@ -607,18 +632,23 @@ export const applyReadingKnowledgeChange = action({
 	args: {
 		knowledgeChangeKey: v.string(),
 		ownerReadingKey: v.string(),
-		change: v.any(),
+		change: readingDefinitionChangeValidator,
 	},
-	returns: v.any(),
-	handler: async (ctx, args): Promise<unknown> => {
+	returns: v.null(),
+	handler: async (ctx, args): Promise<null> => {
 		const change = unwrapOperationalParse<KnowledgeChange>(
 			parseAsKnowledgeChange(args.change),
 		);
-		const persisted: unknown = await ctx.runMutation(
-			internal.persistence.persistKnowledgeChange,
-			{ ...args, change },
-		);
-		return persisted;
+		if (change.aspect !== "definition") {
+			throw new Error(
+				"Only definition changes are accepted by this action.",
+			);
+		}
+		await ctx.runMutation(internal.persistence.persistKnowledgeChange, {
+			...args,
+			change,
+		});
+		return null;
 	},
 });
 

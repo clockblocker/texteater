@@ -1206,10 +1206,26 @@ describe("Resolution Session", () => {
 				},
 			],
 		});
-		await handler<
-			{ visitorId: string },
-			{ deleted: number; hasMore: boolean }
-		>(clearVisitorDataBatch)({ db: visitorDb }, { visitorId: "visitor-1" });
+		let phase:
+			| "ResolutionSessions"
+			| "GenerationAttempts"
+			| "KnowledgeSettings"
+			| "VisitorClicks"
+			| "Done" = "ResolutionSessions";
+		for (let batch = 0; batch < 8 && phase !== "Done"; batch += 1) {
+			const result = await handler<
+				{ visitorId: string; phase: typeof phase },
+				{
+					deleted: number;
+					hasMore: boolean;
+					nextPhase: typeof phase;
+				}
+			>(clearVisitorDataBatch)(
+				{ db: visitorDb },
+				{ visitorId: "visitor-1", phase },
+			);
+			phase = result.nextPhase;
+		}
 		expect(visitorDb.rows("resolutionSessions")).toEqual([]);
 		expect(visitorDb.rows("visitorClicks")).toEqual([]);
 
@@ -1218,10 +1234,14 @@ describe("Resolution Session", () => {
 			resolutionSessions: [seededSession],
 		});
 		const reset = await handler<
-			Record<string, never>,
-			{ deleted: number; hasMore: boolean }
-		>(resetDemoDataBatch)({ db: resetDb }, {});
-		expect(reset).toEqual({ deleted: 1, hasMore: true });
+			{ tableIndex?: number },
+			{ deleted: number; hasMore: boolean; nextTableIndex: number }
+		>(resetDemoDataBatch)({ db: resetDb }, { tableIndex: 0 });
+		expect(reset).toEqual({
+			deleted: 1,
+			hasMore: true,
+			nextTableIndex: 1,
+		});
 		expect(resetDb.rows("resolutionSessions")).toEqual([]);
 		expect(resetDb.rows("segments")).toHaveLength(1);
 	});

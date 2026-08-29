@@ -15,6 +15,10 @@ import {
 	type PersistedSentence,
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
+import {
+	MAX_SOURCE_SENTENCE_CHARACTERS,
+	MAX_SOURCE_TEXT_CHARACTERS,
+} from "../server/textSubmissionLimits";
 
 const revision = "revision-0" as StoreRevision;
 
@@ -88,6 +92,49 @@ function createPlanningStorage() {
 	};
 	return { commits, storage };
 }
+
+test("rejects text limits before invoking Dumgen", async () => {
+	const { storage } = createPlanningStorage();
+	let segmentCalls = 0;
+	const orchestrator = createTfDemoOrchestrator({
+		dumgen: {
+			async segment() {
+				segmentCalls += 1;
+				throw new Error("Dumgen must not receive over-limit text.");
+			},
+		} as unknown as Dumgen,
+		dictionary: createDumdictService({ language: "de", storage }),
+		persistence: {} as OrchestrationPersistence,
+	});
+	const overTotal = Array.from(
+		{ length: 6 },
+		(_, index) => `${String(index)}${"a".repeat(1_900)}.`,
+	).join(" ");
+	expect(overTotal.length).toBeGreaterThan(MAX_SOURCE_TEXT_CHARACTERS);
+	const inputs = [
+		{
+			sourceText: overTotal,
+			message: `Source text is limited to ${MAX_SOURCE_TEXT_CHARACTERS} characters.`,
+		},
+		{
+			sourceText: "Kurz. ".repeat(10),
+			message: "At most 9 sentences are allowed.",
+		},
+		{
+			sourceText: "a".repeat(MAX_SOURCE_SENTENCE_CHARACTERS + 1),
+			message: `Each sentence is limited to ${MAX_SOURCE_SENTENCE_CHARACTERS} characters.`,
+		},
+	];
+	for (const [index, input] of inputs.entries()) {
+		await expect(
+			orchestrator.submitText({
+				submissionKey: `over-limit-${index}`,
+				sourceText: input.sourceText,
+			}),
+		).rejects.toThrow(input.message);
+	}
+	expect(segmentCalls).toBe(0);
+});
 
 test("a durable retry resumes Reading from its Grammar checkpoint", async () => {
 	const { storage } = createPlanningStorage();

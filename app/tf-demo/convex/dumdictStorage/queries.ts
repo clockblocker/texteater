@@ -138,9 +138,9 @@ async function loadExactPendingRecords(
 }
 
 export const loadDumdictReadingEntryContext = internalQuery({
-	args: readingEntryContextArgsValidator,
+	args: { request: readingEntryContextArgsValidator },
 	returns: v.any(),
-	handler: async (ctx, args) => {
+	handler: async (ctx, { request: args }) => {
 		switch (args.intent) {
 			case "ensureReadingEntry": {
 				const [revision, lemma, reading] = await Promise.all([

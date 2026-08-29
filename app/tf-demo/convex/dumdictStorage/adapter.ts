@@ -91,7 +91,7 @@ export function createConvexDumdictStorage(
 			})();
 			return ctx.runQuery(
 				internal.dumdictStorage.loadDumdictReadingEntryContext,
-				args,
+				{ request: args },
 			) as unknown as Promise<ReadingEntryContext<"de">>;
 		},
 		async loadReadingForPatch({ reading }) {

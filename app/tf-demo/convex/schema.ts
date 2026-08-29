@@ -254,6 +254,11 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
+		.index("by_reading_id", { fields: ["readingId"], staged: true })
+		.index("by_attestation_id", {
+			fields: ["attestationId"],
+			staged: true,
+		})
 		.index("by_attempt_key", ["attemptKey"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])
 		.index("by_owner_reading_key_and_updated_at", [
@@ -287,6 +292,14 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
+		.index("by_source_reading_id", {
+			fields: ["sourceReadingId"],
+			staged: true,
+		})
+		.index("by_context_attestation_id", {
+			fields: ["contextAttestationId"],
+			staged: true,
+		})
 		.index("by_run_key", ["runKey"])
 		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
 		.index("by_relation_and_created_at", ["relation", "createdAt"]),
@@ -310,6 +323,14 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
+		.index("by_source_reading_id", {
+			fields: ["sourceReadingId"],
+			staged: true,
+		})
+		.index("by_context_attestation_id", {
+			fields: ["contextAttestationId"],
+			staged: true,
+		})
 		.index("by_proposal_key", ["proposalKey"])
 		.index("by_attempt_key_and_run_number", ["attemptKey", "runNumber"])
 		.index("by_relation_and_created_at", ["relation", "createdAt"])
@@ -374,6 +395,12 @@ export default defineSchema({
 		createdAt: v.number(),
 		updatedAt: v.number(),
 	})
+		.index("by_segment_id", { fields: ["segmentId"], staged: true })
+		.index("by_reading_id", { fields: ["readingId"], staged: true })
+		.index("by_attestation_id", {
+			fields: ["attestationId"],
+			staged: true,
+		})
 		.index("by_request_id", ["requestId"])
 		.index("by_sentence_id", ["sentenceId"])
 		.index("by_visitor_id_and_updated_at", ["visitorId", "updatedAt"])

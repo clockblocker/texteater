@@ -690,8 +690,10 @@ test("the production application path keeps generated relations outside Dumdict"
 	expect(result).toBeNull();
 	expect(queryInputs).toEqual([
 		expect.objectContaining({
-			intent: "applyGeneratedKnowledge",
-			pendingLocatorKeys: [],
+			request: expect.objectContaining({
+				intent: "applyGeneratedKnowledge",
+				pendingLocatorKeys: [],
+			}),
 		}),
 	]);
 	expect(mutationInputs).toEqual([

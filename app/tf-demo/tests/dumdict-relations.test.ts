@@ -167,6 +167,10 @@ async function runQuery(db: IndexedDb, fn: unknown, args: unknown) {
 	return registeredHandler(fn)({ db }, args);
 }
 
+async function runReadingEntryContextQuery(db: IndexedDb, request: unknown) {
+	return runQuery(db, loadDumdictReadingEntryContext, { request });
+}
+
 async function runMutation(db: IndexedDb, fn: unknown, args: unknown) {
 	const draft = db.fork();
 	const result = await registeredHandler(fn)({ db: draft }, args);
@@ -294,7 +298,7 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 			const readingKey = readingFingerprint(request.reading);
 			switch (request.intent) {
 				case "addNewNote":
-					return (await runQuery(db, loadDumdictReadingEntryContext, {
+					return (await runReadingEntryContextQuery(db, {
 						intent: request.intent,
 						lemmaKey: lemmaIdentityKey(request.reading.lemma),
 						proposedLemma: request.reading.lemma,
@@ -323,7 +327,7 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 						),
 					})) as never;
 				case "applyGeneratedKnowledge":
-					return (await runQuery(db, loadDumdictReadingEntryContext, {
+					return (await runReadingEntryContextQuery(db, {
 						intent: request.intent,
 						readingKey,
 						pendingLocatorKeys: request.pendingRelations.map(
@@ -337,14 +341,14 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 						),
 					})) as never;
 				case "ensureOwnedSurface":
-					return (await runQuery(db, loadDumdictReadingEntryContext, {
+					return (await runReadingEntryContextQuery(db, {
 						intent: request.intent,
 						lemmaKey: lemmaIdentityKey(request.reading.lemma),
 						readingKey,
 						surfaceKey: makeSurfaceId("de", request.surface),
 					})) as never;
 				case "ensureReadingEntry":
-					return (await runQuery(db, loadDumdictReadingEntryContext, {
+					return (await runReadingEntryContextQuery(db, {
 						intent: request.intent,
 						lemmaKey: lemmaIdentityKey(request.reading.lemma),
 						readingKey,
@@ -470,10 +474,10 @@ describe("tf-demo Dumdict relation storage", () => {
 			),
 		};
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, newNoteArgs),
+			runReadingEntryContextQuery(db, newNoteArgs),
 		).resolves.toMatchObject({ revision: "convex-0" });
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, {
+			runReadingEntryContextQuery(db, {
 				...newNoteArgs,
 				pendingLocatorKeys: [
 					...newNoteArgs.pendingLocatorKeys,
@@ -484,7 +488,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			"New-note context can produce at most 50 planned changes",
 		);
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, {
+			runReadingEntryContextQuery(db, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(gehenLemma),
 				proposedLemma: gehenLemma,
@@ -548,7 +552,7 @@ describe("tf-demo Dumdict relation storage", () => {
 
 	test("loads every requested owned Surface and explicit existing Lemma target", async () => {
 		const db = new IndexedDb(initialSeed());
-		const result = (await runQuery(db, loadDumdictReadingEntryContext, {
+		const result = (await runReadingEntryContextQuery(db, {
 			intent: "addNewNote",
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
@@ -1215,7 +1219,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			dictionaryLemmas: dictionaryRows,
 		});
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, {
+			runReadingEntryContextQuery(db, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
@@ -1237,7 +1241,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		}));
 		const db = new IndexedDb(seed);
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, {
+			runReadingEntryContextQuery(db, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
@@ -1262,7 +1266,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 		const db = new IndexedDb(seed);
 		await expect(
-			runQuery(db, loadDumdictReadingEntryContext, {
+			runReadingEntryContextQuery(db, {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,

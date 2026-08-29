@@ -1,10 +1,13 @@
 import type { Infer } from "convex/values";
-
+import { splitInSentences } from "../../../server/sentenceSplitting";
+import {
+	assertTextSubmissionWithinLimits,
+	MAX_SOURCE_SENTENCES,
+} from "../../../server/textSubmissionLimits";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx } from "../../_generated/server";
 import type { sentenceInputValidator } from "../../model/validators";
 
-const MAX_SENTENCES_PER_SUBMISSION = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 
 type SubmittedText = {
@@ -36,11 +39,14 @@ export async function persistSubmittedText(
 	input: SubmittedText,
 ): Promise<PersistedSubmittedText> {
 	assertNonEmpty(input.submissionKey, "submissionKey");
-	if (input.sentences.length > MAX_SENTENCES_PER_SUBMISSION) {
-		throw new Error(
-			`At most ${MAX_SENTENCES_PER_SUBMISSION} sentences are allowed.`,
-		);
-	}
+	assertTextSubmissionWithinLimits(
+		input.sourceText,
+		splitInSentences(input.sourceText),
+	);
+	assertTextSubmissionWithinLimits(
+		input.sourceText,
+		input.sentences.map(({ stitchedText }) => stitchedText),
+	);
 	const positions = new Set<number>();
 	const sentenceKeys = new Set<string>();
 	for (const sentence of input.sentences) {
@@ -98,7 +104,7 @@ export async function persistSubmittedText(
 			.withIndex("by_text_id_and_position", (q) =>
 				q.eq("textId", existingText._id),
 			)
-			.take(MAX_SENTENCES_PER_SUBMISSION);
+			.take(MAX_SOURCE_SENTENCES);
 		const submittedSentences = [...input.sentences].sort(
 			(left, right) => left.position - right.position,
 		);

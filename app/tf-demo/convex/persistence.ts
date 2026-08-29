@@ -24,6 +24,7 @@ import {
 	dictionaryPlanValidator,
 	languageValidator,
 	occurrenceAttestationInputValidator,
+	readingDefinitionChangeValidator,
 	readingValueValidator,
 	recordedClickValidator,
 	resolutionSessionGuardValidator,
@@ -781,7 +782,7 @@ export const persistKnowledgeChange = internalMutation({
 	args: {
 		knowledgeChangeKey: v.string(),
 		ownerReadingKey: v.string(),
-		change: v.any(),
+		change: readingDefinitionChangeValidator,
 	},
 	returns: v.object({
 		knowledgeChangeId: v.id("knowledgeChanges"),

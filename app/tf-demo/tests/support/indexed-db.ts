@@ -95,6 +95,20 @@ export class IndexedTestDb {
 			async take(limit: number) {
 				return matches().slice(0, limit);
 			},
+			async paginate(options: {
+				cursor: string | null;
+				numItems: number;
+			}) {
+				const start = options.cursor ? Number(options.cursor) : 0;
+				const rows = matches();
+				const page = rows.slice(start, start + options.numItems);
+				const next = start + page.length;
+				return {
+					page,
+					continueCursor: String(next),
+					isDone: next >= rows.length,
+				};
+			},
 		};
 		return {
 			...selection,

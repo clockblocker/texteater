@@ -5,11 +5,12 @@ import { readingFingerprint } from "dumling/reading";
 import type { Reading, Surface } from "dumling/types";
 
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import type { MutationCtx } from "./_generated/server";
 import { internalMutation } from "./_generated/server";
 
 const PAGE_LIMIT = 64;
+const ATTESTATION_PAGE_LIMIT = 100;
 const pronounReadings = Object.freeze(
 	allFixedReadingCatalogs()
 		.find((catalog) => catalog.scope === "de-Lexeme-PRON-personal-v1")
@@ -536,16 +537,6 @@ export const reconcilePronounSurfacesPage = internalMutation({
 				});
 				continue;
 			}
-			if (
-				surface.lemmaId === targetLemma._id &&
-				(await allAttestationsTarget(
-					ctx,
-					surface._id,
-					targetReading._id,
-				))
-			) {
-				continue;
-			}
 			const surfaceValue = {
 				language: "de",
 				normalizedSurface: surface.normalizedSurface,
@@ -571,21 +562,34 @@ export const reconcilePronounSurfacesPage = internalMutation({
 				});
 				continue;
 			}
-			await ctx.db.patch(surface._id, {
-				lemmaId: targetLemma._id,
-				surfaceKey,
-			});
-			for (const attestation of await ctx.db
+			const surfaceNeedsPatch =
+				surface.lemmaId !== targetLemma._id ||
+				surface.surfaceKey !== surfaceKey;
+			if (surfaceNeedsPatch) {
+				await ctx.db.patch(surface._id, {
+					lemmaId: targetLemma._id,
+					surfaceKey,
+				});
+				changed += 1;
+			}
+			const firstAttestation = await ctx.db
 				.query("attestations")
 				.withIndex("by_surface_id", (q) =>
 					q.eq("surfaceId", surface._id),
 				)
-				.collect()) {
-				await ctx.db.patch(attestation._id, {
-					readingId: targetReading._id,
-				});
+				.first();
+			if (firstAttestation) {
+				await ctx.scheduler.runAfter(
+					0,
+					internal.pronounFixedPopulationMigration
+						.reconcilePronounSurfaceAttestationsPage,
+					{
+						surfaceId: surface._id,
+						targetReadingId: targetReading._id,
+						cursor: null,
+					},
+				);
 			}
-			changed += 1;
 		}
 		return {
 			continueCursor: page.continueCursor,
@@ -598,16 +602,47 @@ export const reconcilePronounSurfacesPage = internalMutation({
 	},
 });
 
-async function allAttestationsTarget(
-	ctx: MutationCtx,
-	surfaceId: Id<"surfaces">,
-	readingId: Id<"readings">,
-): Promise<boolean> {
-	const attestations = await ctx.db
-		.query("attestations")
-		.withIndex("by_surface_id", (q) => q.eq("surfaceId", surfaceId))
-		.collect();
-	return attestations.every(
-		(attestation) => attestation.readingId === readingId,
-	);
-}
+/** Continue one heavily reused Surface in bounded, independently retried mutations. */
+export const reconcilePronounSurfaceAttestationsPage = internalMutation({
+	args: {
+		surfaceId: v.id("surfaces"),
+		targetReadingId: v.id("readings"),
+		cursor: cursorValidator,
+	},
+	returns: v.object({
+		continueCursor: v.string(),
+		isDone: v.boolean(),
+		visited: v.number(),
+		changed: v.number(),
+	}),
+	handler: async (ctx, { surfaceId, targetReadingId, cursor }) => {
+		const page = await ctx.db
+			.query("attestations")
+			.withIndex("by_surface_id", (q) => q.eq("surfaceId", surfaceId))
+			.paginate({ cursor, numItems: ATTESTATION_PAGE_LIMIT });
+		let changed = 0;
+		for (const attestation of page.page) {
+			if (attestation.readingId === targetReadingId) continue;
+			await ctx.db.patch(attestation._id, { readingId: targetReadingId });
+			changed += 1;
+		}
+		if (!page.isDone) {
+			await ctx.scheduler.runAfter(
+				0,
+				internal.pronounFixedPopulationMigration
+					.reconcilePronounSurfaceAttestationsPage,
+				{
+					surfaceId,
+					targetReadingId,
+					cursor: page.continueCursor,
+				},
+			);
+		}
+		return {
+			continueCursor: page.continueCursor,
+			isDone: page.isDone,
+			visited: page.page.length,
+			changed,
+		};
+	},
+});

@@ -33,6 +33,7 @@ import {
 	unwrapOperationalParse,
 } from "./operationalParsing";
 import { splitInSentences } from "./sentenceSplitting";
+import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -220,7 +221,7 @@ export type OrchestrationPersistence = {
 		readonly submissionKey: string;
 		readonly sourceText: string;
 		readonly sentences: readonly SubmittedSentence[];
-	}): Promise<unknown>;
+	}): Promise<{ readonly textId: string }>;
 	getSentenceForResolution(input: {
 		readonly sentenceId: string;
 	}): Promise<PersistedSentence | null>;
@@ -296,6 +297,7 @@ export function createTfDemoOrchestrator(options: {
 		assertNonEmpty(input.sourceText, "sourceText");
 
 		const sourceSentences = splitInSentences(input.sourceText);
+		assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
 		const segmentation = await options.dumgen.segment(sourceSentences);
 		if (!segmentation.ok) return segmentation;
 

@@ -11,6 +11,11 @@
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as demoReset from "../demoReset.js";
 import type * as dumdictStorage from "../dumdictStorage.js";
+import type * as dumdictStorage_adapter from "../dumdictStorage/adapter.js";
+import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionaryPlan.js";
+import type * as dumdictStorage_queries from "../dumdictStorage/queries.js";
+import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
+import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
 import type * as fixedMemberPersistence from "../fixedMemberPersistence.js";
 import type * as fixedMembers from "../fixedMembers.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
@@ -59,6 +64,11 @@ declare const fullApi: ApiFromModules<{
   catalogGrowthSignals: typeof catalogGrowthSignals;
   demoReset: typeof demoReset;
   dumdictStorage: typeof dumdictStorage;
+  "dumdictStorage/adapter": typeof dumdictStorage_adapter;
+  "dumdictStorage/dictionaryPlan": typeof dumdictStorage_dictionaryPlan;
+  "dumdictStorage/queries": typeof dumdictStorage_queries;
+  "dumdictStorage/storage": typeof dumdictStorage_storage;
+  "dumdictStorage/transaction": typeof dumdictStorage_transaction;
   fixedMemberPersistence: typeof fixedMemberPersistence;
   fixedMembers: typeof fixedMembers;
   knowledgeGeneration: typeof knowledgeGeneration;

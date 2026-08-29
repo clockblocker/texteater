@@ -135,6 +135,18 @@ export const knowledgeStatusValidator = v.union(
 	v.literal("Full"),
 );
 
+export const readingDefinitionChangeValidator = v.union(
+	v.object({
+		kind: v.union(v.literal("Contribute"), v.literal("Correct")),
+		aspect: v.literal("definition"),
+		value: v.string(),
+	}),
+	v.object({
+		kind: v.literal("Retract"),
+		aspect: v.literal("definition"),
+	}),
+);
+
 export const knowledgeGenerationAttemptStateValidator = v.union(
 	v.literal("Scheduled"),
 	v.literal("Running"),

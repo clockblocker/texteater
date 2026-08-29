@@ -1,6 +1,18 @@
 import { expect, test } from "bun:test";
-import { fixedPronounCandidatesForLegacySurface } from "../convex/pronounFixedPopulationMigration";
+import {
+	fixedPronounCandidatesForLegacySurface,
+	reconcilePronounSurfaceAttestationsPage,
+} from "../convex/pronounFixedPopulationMigration";
 import { withLegacyPronounReferenceNulls } from "../server/operationalParsing";
+import { IndexedTestDb } from "./support/indexed-db";
+
+function handler(value: unknown) {
+	return (
+		value as {
+			_handler: (ctx: unknown, args: unknown) => Promise<unknown>;
+		}
+	)._handler;
+}
 
 const legacyCore = {
 	extPos: null,
@@ -23,6 +35,55 @@ test("legacy PRON reads gain explicit nullable reference keys", () => {
 	expect(normalized).toMatchObject({
 		coreFeatures: { referenceGender: null, referenceNumber: null },
 	});
+});
+
+test("reconciles a heavily reused Surface through scheduled attestation pages", async () => {
+	const db = new IndexedTestDb({
+		attestations: Array.from({ length: 101 }, (_, index) => ({
+			_id: `attestation-${index}`,
+			surfaceId: "surface-1",
+			readingId: "reading-old",
+		})),
+	});
+	const scheduled: unknown[] = [];
+	const first = (await handler(reconcilePronounSurfaceAttestationsPage)(
+		{
+			db,
+			scheduler: {
+				async runAfter(_delay: number, _fn: unknown, args: unknown) {
+					scheduled.push(args);
+				},
+			},
+		},
+		{
+			surfaceId: "surface-1",
+			targetReadingId: "reading-fixed",
+			cursor: null,
+		},
+	)) as {
+		continueCursor: string;
+		isDone: boolean;
+		visited: number;
+		changed: number;
+	};
+	expect(first).toEqual({
+		continueCursor: "100",
+		isDone: false,
+		visited: 100,
+		changed: 100,
+	});
+	expect(scheduled).toEqual([
+		{
+			surfaceId: "surface-1",
+			targetReadingId: "reading-fixed",
+			cursor: "100",
+		},
+	]);
+	expect(
+		db
+			.rows("attestations")
+			.filter(({ readingId }) => readingId === "reading-fixed"),
+	).toHaveLength(100);
 });
 
 test("migration identifies deterministic case forms and reports homographs", () => {

@@ -6,7 +6,11 @@ import {
 } from "dumdict";
 import { derivePendingSemanticRelationLocator } from "dumdict/pending";
 import { readingFingerprint } from "dumling";
-import { resetDemoDataBatch, resetDemoTableNames } from "../convex/demoReset";
+import {
+	clearVisitorDataBatch,
+	resetDemoDataBatch,
+	resetDemoTableNames,
+} from "../convex/demoReset";
 import {
 	commitDumdictChanges,
 	findDumdictStoredReadings,
@@ -82,46 +86,50 @@ function storageFor(db: IndexedTestDb): DumdictStoragePort<"de"> {
 			const readingKey = readingFingerprint(request.reading);
 			if (request.intent === "addNewNote")
 				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
-					intent: request.intent,
-					lemmaKey: lemmaIdentityKey(request.reading.lemma),
-					proposedLemma: request.reading.lemma,
-					readingKey,
-					surfaceKeys: request.ownedSurfaces.map((surface) =>
-						makeSurfaceId("de", surface),
-					),
-					explicitLemmaTargetKeys: request.relations.flatMap(
-						({ target }) =>
-							target.kind === "existing"
-								? [lemmaIdentityKey(target.lemma)]
-								: [],
-					),
-					pendingLocatorKeys: request.relations.flatMap(
-						({ target }) =>
-							target.kind === "pending"
-								? [
-										locatorKey(
-											derivePendingSemanticRelationLocator(
-												request.reading,
-												target.pending,
+					request: {
+						intent: request.intent,
+						lemmaKey: lemmaIdentityKey(request.reading.lemma),
+						proposedLemma: request.reading.lemma,
+						readingKey,
+						surfaceKeys: request.ownedSurfaces.map((surface) =>
+							makeSurfaceId("de", surface),
+						),
+						explicitLemmaTargetKeys: request.relations.flatMap(
+							({ target }) =>
+								target.kind === "existing"
+									? [lemmaIdentityKey(target.lemma)]
+									: [],
+						),
+						pendingLocatorKeys: request.relations.flatMap(
+							({ target }) =>
+								target.kind === "pending"
+									? [
+											locatorKey(
+												derivePendingSemanticRelationLocator(
+													request.reading,
+													target.pending,
+												),
 											),
-										),
-									]
-								: [],
-					),
+										]
+									: [],
+						),
+					},
 				})) as never;
 			if (request.intent === "applyGeneratedKnowledge")
 				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
-					intent: request.intent,
-					readingKey,
-					pendingLocatorKeys: request.pendingRelations.map(
-						(pending) =>
-							locatorKey(
-								derivePendingSemanticRelationLocator(
-									request.reading,
-									pending,
+					request: {
+						intent: request.intent,
+						readingKey,
+						pendingLocatorKeys: request.pendingRelations.map(
+							(pending) =>
+								locatorKey(
+									derivePendingSemanticRelationLocator(
+										request.reading,
+										pending,
+									),
 								),
-							),
-					),
+						),
+					},
 				})) as never;
 			throw new Error(
 				`Unexpected Reading Entry intent: ${request.intent}`,
@@ -168,13 +176,21 @@ describe("tf-demo post-reset contract", () => {
 			),
 		);
 		let deleted = 0;
-		for (let batch = 0; batch < 3; batch += 1) {
-			const result = (await runTestMutation(
-				db,
-				resetDemoDataBatch,
-				{},
-			)) as { deleted: number; hasMore: boolean };
+		let tableIndex = 0;
+		for (
+			let batch = 0;
+			batch < resetDemoTableNames.length * 2;
+			batch += 1
+		) {
+			const result = (await runTestMutation(db, resetDemoDataBatch, {
+				tableIndex,
+			})) as {
+				deleted: number;
+				hasMore: boolean;
+				nextTableIndex: number;
+			};
 			deleted += result.deleted;
+			tableIndex = result.nextTableIndex;
 			if (!result.hasMore) break;
 		}
 
@@ -182,6 +198,60 @@ describe("tf-demo post-reset contract", () => {
 		for (const tableName of schemaTableNames) {
 			expect(db.rows(tableName), tableName).toEqual([]);
 		}
+	});
+
+	test("reset batches spend one transaction-wide budget and expose continuation", async () => {
+		const db = new IndexedTestDb({
+			resolutionSessions: Array.from({ length: 400 }, (_, index) => ({
+				_id: `session-${index}`,
+			})),
+			resolutionRuns: [{ _id: "run-after-session-phase" }],
+		});
+		const first = (await runTestMutation(db, resetDemoDataBatch, {
+			tableIndex: 0,
+		})) as {
+			deleted: number;
+			hasMore: boolean;
+			nextTableIndex: number;
+		};
+		expect(first).toEqual({
+			deleted: 400,
+			hasMore: true,
+			nextTableIndex: 0,
+		});
+		expect(db.rows("resolutionRuns")).toHaveLength(1);
+
+		const visitorDb = new IndexedTestDb({
+			resolutionSessions: Array.from({ length: 400 }, (_, index) => ({
+				_id: `visitor-session-${index}`,
+				visitorId: "visitor-1",
+				updatedAt: index,
+			})),
+			knowledgeSettings: [{ _id: "settings-1", visitorId: "visitor-1" }],
+			visitorClicks: [
+				{
+					_id: "click-1",
+					visitorId: "visitor-1",
+					clickedAt: 1,
+				},
+			],
+		});
+		const visitorFirst = (await runTestMutation(
+			visitorDb,
+			clearVisitorDataBatch,
+			{ visitorId: "visitor-1", phase: "ResolutionSessions" },
+		)) as {
+			deleted: number;
+			hasMore: boolean;
+			nextPhase: string;
+		};
+		expect(visitorFirst).toEqual({
+			deleted: 400,
+			hasMore: true,
+			nextPhase: "ResolutionSessions",
+		});
+		expect(visitorDb.rows("knowledgeSettings")).toHaveLength(1);
+		expect(visitorDb.rows("visitorClicks")).toHaveLength(1);
 	});
 
 	test("a clean database stores base Knowledge and direct claims while projecting only valid inferred views", async () => {

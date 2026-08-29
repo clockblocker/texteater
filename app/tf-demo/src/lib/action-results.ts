@@ -25,101 +25,19 @@ export type SentenceView = {
 
 export function parseSubmittedTextId(resultValue: unknown): Id<"texts"> {
 	const result = requireRecord(resultValue, "Text submission result");
-	if (result.ok !== true) {
-		const error = optionalRecord(result.error);
+	if (result.status === "Rejected") {
 		throw new Error(
-			optionalString(error?.message) ??
+			optionalString(result.message) ??
 				"Dumgen rejected the source text.",
 		);
 	}
-	const persisted = requireRecord(result.persisted, "Persisted submission");
-	if (typeof persisted.textId !== "string") {
+	if (result.status !== "Accepted" || typeof result.textId !== "string") {
 		throw new Error("Persisted submission has no Text identifier.");
 	}
-	return persisted.textId as Id<"texts">;
+	return result.textId as Id<"texts">;
 }
 
 type UnknownRecord = Record<string, unknown>;
-
-export function parseSubmittedSentences(
-	resultValue: unknown,
-	sourceText: string,
-): readonly SentenceView[] {
-	const result = requireRecord(resultValue, "Text submission result");
-	if (result.ok !== true) {
-		const error = optionalRecord(result.error);
-		throw new Error(
-			optionalString(error?.message) ??
-				"Dumgen rejected the source text.",
-		);
-	}
-	const persisted = requireRecord(result.persisted, "Persisted submission");
-	if (!Array.isArray(persisted.sentenceIds)) {
-		throw new Error("Persisted submission has no Sentence identifiers.");
-	}
-	const sentenceIds = persisted.sentenceIds.map((value) => {
-		if (typeof value !== "string") {
-			throw new Error("A persisted Sentence identifier is invalid.");
-		}
-		return value as Id<"sentences">;
-	});
-	if (!Array.isArray(result.value)) {
-		throw new Error("Dumgen returned no segmentation decisions.");
-	}
-
-	let persistedIndex = 0;
-	const sentences = result.value.flatMap(
-		(decisionValue, position): SentenceView[] => {
-			const decision = optionalRecord(decisionValue);
-			if (decision?.decision !== "Accepted") return [];
-			const language = decision.language;
-			if (language !== "de" && language !== "he") {
-				throw new Error("Dumgen returned an unsupported language.");
-			}
-			const sentence = requireRecord(
-				decision.sentence,
-				"Segmented Sentence",
-			);
-			if (!Array.isArray(sentence.segments)) {
-				throw new Error("A Segmented Sentence has no Segments.");
-			}
-			const sentenceId = sentenceIds[persistedIndex];
-			persistedIndex += 1;
-			if (!sentenceId) {
-				throw new Error("A Segmented Sentence was not persisted.");
-			}
-			const segments = sentence.segments.map((segmentValue, index) => {
-				const segment = requireRecord(segmentValue, "Segment");
-				const kind = requireSegmentKind(segment.kind);
-				const text = requireString(segment.text, "Segment text");
-				return {
-					index,
-					kind,
-					text,
-					isClicked: false,
-					isResolutionMember: false,
-				};
-			});
-			return [
-				{
-					sentenceId,
-					position,
-					language,
-					stitchedText: segments.map(({ text }) => text).join(""),
-					sourceText,
-					segments,
-				},
-			];
-		},
-	);
-	if (sentences.length === 0) {
-		throw new Error("Dumgen did not accept a German source sentence.");
-	}
-	if (persistedIndex !== sentenceIds.length) {
-		throw new Error("Persisted Sentences do not match Dumgen output.");
-	}
-	return sentences;
-}
 
 export function parseResolutionDecision(resultValue: unknown): string {
 	const result = requireRecord(resultValue, "Resolution result");
@@ -178,23 +96,4 @@ function optionalString(value: unknown): string | null {
 	return typeof value === "string" && value.trim().length > 0
 		? value.trim()
 		: null;
-}
-
-function requireString(value: unknown, name: string): string {
-	if (typeof value !== "string" || value.length === 0) {
-		throw new Error(`${name} must be a non-empty string.`);
-	}
-	return value;
-}
-
-function requireSegmentKind(value: unknown): SegmentKind {
-	if (
-		value === "ResolvableText" ||
-		value === "OpaqueText" ||
-		value === "Whitespace" ||
-		value === "Punctuation"
-	) {
-		return value;
-	}
-	throw new Error("Segment kind is invalid.");
 }

@@ -5,6 +5,7 @@ import {
 	clearSharedDataBatch,
 	clearVisitorDataBatch,
 	resetDemoDataBatch,
+	resetDemoTableNames,
 } from "../convex/demoReset";
 import {
 	attachPendingShadowReference,
@@ -826,7 +827,19 @@ describe("Shadow reset lifecycle", () => {
 	] as const) {
 		test(`${name} removes active and dormant Shadow rows`, async () => {
 			const { db } = await lifecycleDb();
-			await handler(reset)({ db }, {});
+			let tableIndex = 0;
+			for (
+				let batch = 0;
+				batch < 100 && tableIndex < resetDemoTableNames.length;
+				batch += 1
+			) {
+				const result = (await handler(reset)(
+					{ db },
+					{ tableIndex },
+				)) as { hasMore: boolean; nextTableIndex: number };
+				tableIndex = result.nextTableIndex;
+				if (!result.hasMore) break;
+			}
 			expect(db.rows("pendingSemanticRelations")).toEqual([]);
 			expect(db.rows("structuralShadowReferences")).toEqual([]);
 			expect(db.rows("shadows")).toEqual([]);

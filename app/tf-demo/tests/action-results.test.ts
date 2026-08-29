@@ -1,6 +1,23 @@
 import { describe, expect, test } from "bun:test";
 
-import { parseResolvedReadingId } from "../src/lib/action-results";
+import {
+	parseResolvedReadingId,
+	parseSubmittedTextId,
+} from "../src/lib/action-results";
+
+describe("parseSubmittedTextId", () => {
+	test("reads the compact accepted submission DTO", () => {
+		expect(
+			parseSubmittedTextId({ status: "Accepted", textId: "text_123" }),
+		).toBe("text_123");
+	});
+
+	test("surfaces the compact rejected submission DTO", () => {
+		expect(() =>
+			parseSubmittedTextId({ status: "Rejected", message: "Too long." }),
+		).toThrow("Too long.");
+	});
+});
 
 describe("parseResolvedReadingId", () => {
 	for (const status of ["Committed", "Reused", "Resolved"] as const) {

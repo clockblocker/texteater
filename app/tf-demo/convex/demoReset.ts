@@ -9,10 +9,11 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { deleteAccumulatedKnowledge } from "./model/shadows";
 
 const BATCH_SIZE = 400;
-const MAX_BATCHES = 100;
+const CLEANUP_DELETE_BUDGET = BATCH_SIZE - 1;
+const MAX_BATCHES = 1_000;
+const MAX_CLEANUP_PHASE_STEPS = 64;
 const MAX_SENTENCES_PER_TEXT = 9;
 const MAX_SEGMENTS_PER_SENTENCE = 512;
 const DESCRIPTOR_PAGE_SIZE = 20;
@@ -63,97 +64,147 @@ async function bumpDictionaryRevision(ctx: MutationCtx): Promise<void> {
 	else await ctx.db.insert("dictionaryState", { key: "global", revision: 1 });
 }
 
+const tableResetResultValidator = v.object({
+	deleted: v.number(),
+	hasMore: v.boolean(),
+	nextTableIndex: v.number(),
+});
+
+async function clearTableBatch(
+	ctx: MutationCtx,
+	tableIndexValue: number | undefined,
+) {
+	const tableIndex = tableIndexValue ?? 0;
+	if (
+		!Number.isSafeInteger(tableIndex) ||
+		tableIndex < 0 ||
+		tableIndex > resetDemoTableNames.length
+	) {
+		throw new Error("Reset table index is invalid.");
+	}
+	if (tableIndex === resetDemoTableNames.length) {
+		return { deleted: 0, hasMore: false, nextTableIndex: tableIndex };
+	}
+	const tableName = resetDemoTableNames[tableIndex];
+	if (!tableName) throw new Error("Reset table index is invalid.");
+	const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
+	for (const document of documents) await ctx.db.delete(document._id);
+	const nextTableIndex =
+		documents.length === BATCH_SIZE ? tableIndex : tableIndex + 1;
+	return {
+		deleted: documents.length,
+		hasMore: nextTableIndex < resetDemoTableNames.length,
+		nextTableIndex,
+	};
+}
+
 export const clearSharedDataBatch = internalMutation({
-	args: {},
-	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
-	handler: async (ctx) => {
-		const sessions = await ctx.db
-			.query("resolutionSessions")
-			.take(BATCH_SIZE);
-		if (sessions.length > 0) {
-			for (const session of sessions) await ctx.db.delete(session._id);
-			return { deleted: sessions.length, hasMore: true };
-		}
-		let deleted = 0;
-		let hasMore = false;
-		for (const tableName of resetDemoTableNames.slice(1)) {
-			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
-			for (const document of documents) {
-				await ctx.db.delete(document._id);
-				deleted += 1;
-			}
-			if (documents.length === BATCH_SIZE) hasMore = true;
-		}
-		return { deleted, hasMore };
-	},
+	args: { tableIndex: v.optional(v.number()) },
+	returns: tableResetResultValidator,
+	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
+});
+
+const visitorResetPhaseValidator = v.union(
+	v.literal("ResolutionSessions"),
+	v.literal("GenerationAttempts"),
+	v.literal("KnowledgeSettings"),
+	v.literal("VisitorClicks"),
+	v.literal("Done"),
+);
+
+type VisitorResetPhase =
+	| "ResolutionSessions"
+	| "GenerationAttempts"
+	| "KnowledgeSettings"
+	| "VisitorClicks"
+	| "Done";
+
+const visitorResetResultValidator = v.object({
+	deleted: v.number(),
+	hasMore: v.boolean(),
+	nextPhase: visitorResetPhaseValidator,
 });
 
 export const clearVisitorDataBatch = internalMutation({
-	args: { visitorId: v.string() },
-	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
-	handler: async (ctx, { visitorId }) => {
+	args: {
+		visitorId: v.string(),
+		phase: v.optional(visitorResetPhaseValidator),
+	},
+	returns: visitorResetResultValidator,
+	handler: async (ctx, { visitorId, phase: phaseValue }) => {
 		assertVisitorId(visitorId);
-		const sessions = await ctx.db
-			.query("resolutionSessions")
-			.withIndex("by_visitor_id_and_updated_at", (q) =>
-				q.eq("visitorId", visitorId),
-			)
-			.take(BATCH_SIZE);
-		for (const session of sessions) await ctx.db.delete(session._id);
-		const attempts = await ctx.db
-			.query("knowledgeGenerationAttempts")
-			.withIndex("by_visitor_id_and_updated_at", (q) =>
-				q.eq("visitorId", visitorId),
-			)
-			.take(BATCH_SIZE - sessions.length);
-		for (const attempt of attempts) await ctx.db.delete(attempt._id);
-		const settings = await ctx.db
-			.query("knowledgeSettings")
-			.withIndex("by_visitor_id", (q) => q.eq("visitorId", visitorId))
-			.unique();
-		if (settings) await ctx.db.delete(settings._id);
-		const clicks = await ctx.db
-			.query("visitorClicks")
-			.withIndex("by_visitor_id_and_clicked_at", (q) =>
-				q.eq("visitorId", visitorId),
-			)
-			.take(BATCH_SIZE - sessions.length - attempts.length);
-		for (const click of clicks) await ctx.db.delete(click._id);
-		const deleted =
-			sessions.length +
-			attempts.length +
-			clicks.length +
-			(settings ? 1 : 0);
-		return {
-			deleted,
-			hasMore: deleted === BATCH_SIZE,
-		};
+		const phase: VisitorResetPhase = phaseValue ?? "ResolutionSessions";
+		let deleted = 0;
+		let nextPhase: VisitorResetPhase;
+		switch (phase) {
+			case "ResolutionSessions": {
+				const rows = await ctx.db
+					.query("resolutionSessions")
+					.withIndex("by_visitor_id_and_updated_at", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE
+						? "ResolutionSessions"
+						: "GenerationAttempts";
+				break;
+			}
+			case "GenerationAttempts": {
+				const rows = await ctx.db
+					.query("knowledgeGenerationAttempts")
+					.withIndex("by_visitor_id_and_updated_at", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE
+						? "GenerationAttempts"
+						: "KnowledgeSettings";
+				break;
+			}
+			case "KnowledgeSettings": {
+				const row = await ctx.db
+					.query("knowledgeSettings")
+					.withIndex("by_visitor_id", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.unique();
+				if (row) {
+					await ctx.db.delete(row._id);
+					deleted = 1;
+				}
+				nextPhase = "VisitorClicks";
+				break;
+			}
+			case "VisitorClicks": {
+				const rows = await ctx.db
+					.query("visitorClicks")
+					.withIndex("by_visitor_id_and_clicked_at", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE ? "VisitorClicks" : "Done";
+				break;
+			}
+			case "Done":
+				nextPhase = "Done";
+		}
+		return { deleted, hasMore: nextPhase !== "Done", nextPhase };
 	},
 });
 
 export const resetDemoDataBatch = internalMutation({
-	args: {},
-	returns: v.object({ deleted: v.number(), hasMore: v.boolean() }),
-	handler: async (ctx) => {
-		const sessions = await ctx.db
-			.query("resolutionSessions")
-			.take(BATCH_SIZE);
-		if (sessions.length > 0) {
-			for (const session of sessions) await ctx.db.delete(session._id);
-			return { deleted: sessions.length, hasMore: true };
-		}
-		let deleted = 0;
-		let hasMore = false;
-		for (const tableName of resetDemoTableNames.slice(1)) {
-			const documents = await ctx.db.query(tableName).take(BATCH_SIZE);
-			for (const document of documents) {
-				await ctx.db.delete(document._id);
-				deleted += 1;
-			}
-			if (documents.length === BATCH_SIZE) hasMore = true;
-		}
-		return { deleted, hasMore };
-	},
+	args: { tableIndex: v.optional(v.number()) },
+	returns: tableResetResultValidator,
+	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
 });
 
 const textAnalysisCandidatesValidator = v.object({
@@ -323,250 +374,444 @@ export const describeReadingCleanupCandidates = internalQuery({
 	},
 });
 
+const readingCleanupPhaseValidator = v.union(
+	v.literal("PendingRelations"),
+	v.literal("KnowledgeChanges"),
+	v.literal("StructuralReferences"),
+	v.literal("AccumulatedKnowledge"),
+	v.literal("OutgoingSemanticEdges"),
+	v.literal("IncomingSemanticEdges"),
+	v.literal("OutgoingGrammaticalEdges"),
+	v.literal("IncomingGrammaticalEdges"),
+	v.literal("Reading"),
+);
+
+type ReadingCleanupPhase =
+	| "PendingRelations"
+	| "KnowledgeChanges"
+	| "StructuralReferences"
+	| "AccumulatedKnowledge"
+	| "OutgoingSemanticEdges"
+	| "IncomingSemanticEdges"
+	| "OutgoingGrammaticalEdges"
+	| "IncomingGrammaticalEdges"
+	| "Reading";
+
+type ReadingCleanupCursor = {
+	itemIndex: number;
+	phase: ReadingCleanupPhase;
+};
+
+const readingCleanupCursorValidator = v.object({
+	itemIndex: v.number(),
+	phase: readingCleanupPhaseValidator,
+});
+
+function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
+	switch (phase) {
+		case "PendingRelations":
+			return "KnowledgeChanges";
+		case "KnowledgeChanges":
+			return "StructuralReferences";
+		case "StructuralReferences":
+			return "AccumulatedKnowledge";
+		case "AccumulatedKnowledge":
+			return "OutgoingSemanticEdges";
+		case "OutgoingSemanticEdges":
+			return "IncomingSemanticEdges";
+		case "IncomingSemanticEdges":
+			return "OutgoingGrammaticalEdges";
+		case "OutgoingGrammaticalEdges":
+			return "IncomingGrammaticalEdges";
+		case "IncomingGrammaticalEdges":
+			return "Reading";
+		case "Reading":
+			return "PendingRelations";
+	}
+}
+
 export const clearReadingDataBatch = internalMutation({
-	args: { readingKeys: v.array(v.string()) },
-	returns: v.object({ deleted: v.number(), deletedReadings: v.number() }),
-	handler: async (ctx, { readingKeys }) => {
+	args: {
+		readingKeys: v.array(v.string()),
+		cursor: v.optional(readingCleanupCursorValidator),
+	},
+	returns: v.object({
+		deleted: v.number(),
+		deletedReadings: v.number(),
+		hasMore: v.boolean(),
+		nextCursor: v.union(v.null(), readingCleanupCursorValidator),
+	}),
+	handler: async (ctx, { readingKeys, cursor: cursorValue }) => {
+		let cursor: ReadingCleanupCursor = cursorValue ?? {
+			itemIndex: 0,
+			phase: "PendingRelations",
+		};
+		if (
+			!Number.isSafeInteger(cursor.itemIndex) ||
+			cursor.itemIndex < 0 ||
+			cursor.itemIndex > readingKeys.length
+		) {
+			throw new Error("Reading cleanup cursor is invalid.");
+		}
 		let deleted = 0;
 		let deletedReadings = 0;
-		for (const readingKey of readingKeys) {
-			if (deleted >= BATCH_SIZE) break;
-			const pending = await ctx.db
-				.query("pendingSemanticRelations")
-				.withIndex("by_source_reading_key", (q) =>
-					q.eq("sourceReadingKey", readingKey),
-				)
-				.take(BATCH_SIZE - deleted);
-			for (const relation of pending) {
-				await ctx.db.delete(relation._id);
-				deleted += 1;
-			}
-			const knowledgeChanges = await ctx.db
-				.query("knowledgeChanges")
-				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", readingKey),
-				)
-				.take(BATCH_SIZE - deleted);
-			for (const storedChange of knowledgeChanges) {
-				await ctx.db.delete(storedChange._id);
-				deleted += 1;
-			}
-			const accumulated = await ctx.db
-				.query("accumulatedKnowledge")
-				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", readingKey),
-				)
-				.unique();
-			await deleteAccumulatedKnowledge(ctx, readingKey);
-			if (accumulated) deleted += 1;
-			const reading = await ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", readingKey),
-				)
-				.unique();
-			if (!reading) continue;
-			const outgoingEdges = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", reading._id),
-				)
-				.take(BATCH_SIZE - deleted);
-			for (const edge of outgoingEdges) {
-				await ctx.db.delete(edge._id);
-				deleted += 1;
-			}
-			const remainingOutgoingEdge = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", reading._id),
-				)
-				.first();
-			if (remainingOutgoingEdge) continue;
-			const incomingReadingEdges = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_target_reading_id", (q) =>
-					q.eq("targetReadingId", reading._id),
-				)
-				.take(BATCH_SIZE - deleted);
-			for (const edge of incomingReadingEdges) {
-				await ctx.db.delete(edge._id);
-				deleted += 1;
-			}
-			const remainingIncomingReadingEdge = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_target_reading_id", (q) =>
-					q.eq("targetReadingId", reading._id),
-				)
-				.first();
-			if (remainingIncomingReadingEdge) continue;
-			for (const index of [
-				"by_source_reading_id",
-				"by_target_reading_id",
-			] as const) {
-				const grammaticalEdges = await ctx.db
-					.query("grammaticalRelationEdges")
-					.withIndex(index, (q) =>
-						q.eq(
-							index === "by_source_reading_id"
-								? "sourceReadingId"
-								: "targetReadingId",
-							reading._id,
-						),
-					)
-					.take(BATCH_SIZE - deleted);
-				for (const edge of grammaticalEdges) {
-					await ctx.db.delete(edge._id);
-					deleted += 1;
+		let steps = 0;
+		while (
+			cursor.itemIndex < readingKeys.length &&
+			deleted < CLEANUP_DELETE_BUDGET &&
+			steps < MAX_CLEANUP_PHASE_STEPS
+		) {
+			steps += 1;
+			const readingKey = readingKeys[cursor.itemIndex];
+			if (!readingKey) break;
+			const remaining = CLEANUP_DELETE_BUDGET - deleted;
+			let phaseComplete = true;
+			switch (cursor.phase) {
+				case "PendingRelations": {
+					const rows = await ctx.db
+						.query("pendingSemanticRelations")
+						.withIndex("by_source_reading_key", (q) =>
+							q.eq("sourceReadingKey", readingKey),
+						)
+						.take(remaining);
+					for (const row of rows) await ctx.db.delete(row._id);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "KnowledgeChanges": {
+					const rows = await ctx.db
+						.query("knowledgeChanges")
+						.withIndex("by_owner_reading_key", (q) =>
+							q.eq("ownerReadingKey", readingKey),
+						)
+						.take(remaining);
+					for (const row of rows) await ctx.db.delete(row._id);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "StructuralReferences": {
+					const rows = await ctx.db
+						.query("structuralShadowReferences")
+						.withIndex("by_owner_reading_key", (q) =>
+							q.eq("ownerReadingKey", readingKey),
+						)
+						.take(remaining);
+					for (const row of rows) await ctx.db.delete(row._id);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "AccumulatedKnowledge": {
+					const row = await ctx.db
+						.query("accumulatedKnowledge")
+						.withIndex("by_owner_reading_key", (q) =>
+							q.eq("ownerReadingKey", readingKey),
+						)
+						.unique();
+					if (row) {
+						await ctx.db.delete(row._id);
+						deleted += 1;
+					}
+					break;
+				}
+				case "OutgoingSemanticEdges":
+				case "IncomingSemanticEdges":
+				case "OutgoingGrammaticalEdges":
+				case "IncomingGrammaticalEdges": {
+					const reading = await ctx.db
+						.query("readings")
+						.withIndex("by_reading_key", (q) =>
+							q.eq("readingKey", readingKey),
+						)
+						.unique();
+					if (!reading) break;
+					if (cursor.phase === "OutgoingSemanticEdges") {
+						const rows = await ctx.db
+							.query("semanticRelationEdges")
+							.withIndex("by_source_reading_id", (q) =>
+								q.eq("sourceReadingId", reading._id),
+							)
+							.take(remaining);
+						for (const row of rows) await ctx.db.delete(row._id);
+						deleted += rows.length;
+						phaseComplete = rows.length < remaining;
+					} else if (cursor.phase === "IncomingSemanticEdges") {
+						const rows = await ctx.db
+							.query("semanticRelationEdges")
+							.withIndex("by_target_reading_id", (q) =>
+								q.eq("targetReadingId", reading._id),
+							)
+							.take(remaining);
+						for (const row of rows) await ctx.db.delete(row._id);
+						deleted += rows.length;
+						phaseComplete = rows.length < remaining;
+					} else {
+						const outgoing =
+							cursor.phase === "OutgoingGrammaticalEdges";
+						const rows = await ctx.db
+							.query("grammaticalRelationEdges")
+							.withIndex(
+								outgoing
+									? "by_source_reading_id"
+									: "by_target_reading_id",
+								(q) =>
+									outgoing
+										? q.eq("sourceReadingId", reading._id)
+										: q.eq("targetReadingId", reading._id),
+							)
+							.take(remaining);
+						for (const row of rows) await ctx.db.delete(row._id);
+						deleted += rows.length;
+						phaseComplete = rows.length < remaining;
+					}
+					break;
+				}
+				case "Reading": {
+					const reading = await ctx.db
+						.query("readings")
+						.withIndex("by_reading_key", (q) =>
+							q.eq("readingKey", readingKey),
+						)
+						.unique();
+					if (reading) {
+						const entry = await ctx.db
+							.query("readingEntries")
+							.withIndex("by_reading_id", (q) =>
+								q.eq("readingId", reading._id),
+							)
+							.unique();
+						const required = entry ? 2 : 1;
+						if (required > remaining) {
+							phaseComplete = false;
+							break;
+						}
+						if (entry) await ctx.db.delete(entry._id);
+						await ctx.db.delete(reading._id);
+						deleted += required;
+						deletedReadings += 1;
+					}
+					break;
 				}
 			}
-			const remainingGrammaticalEdge = await ctx.db
-				.query("grammaticalRelationEdges")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", reading._id),
-				)
-				.first();
-			const remainingInverseGrammaticalEdge = await ctx.db
-				.query("grammaticalRelationEdges")
-				.withIndex("by_target_reading_id", (q) =>
-					q.eq("targetReadingId", reading._id),
-				)
-				.first();
-			if (remainingGrammaticalEdge || remainingInverseGrammaticalEdge)
-				continue;
-			const entry = await ctx.db
-				.query("readingEntries")
-				.withIndex("by_reading_id", (q) =>
-					q.eq("readingId", reading._id),
-				)
-				.unique();
-			if (entry) {
-				await ctx.db.delete(entry._id);
-				deleted += 1;
+			if (!phaseComplete) break;
+			if (cursor.phase === "Reading") {
+				cursor = {
+					itemIndex: cursor.itemIndex + 1,
+					phase: "PendingRelations",
+				};
+			} else {
+				cursor = { ...cursor, phase: nextReadingPhase(cursor.phase) };
 			}
-			await ctx.db.delete(reading._id);
-			deleted += 1;
-			deletedReadings += 1;
 		}
 		if (deleted > 0) await bumpDictionaryRevision(ctx);
-		return { deleted, deletedReadings };
+		const nextCursor =
+			cursor.itemIndex >= readingKeys.length ? null : cursor;
+		return {
+			deleted,
+			deletedReadings,
+			hasMore: nextCursor !== null,
+			nextCursor,
+		};
 	},
 });
 
+const lemmaCleanupPhaseValidator = v.union(
+	v.literal("Surfaces"),
+	v.literal("IncomingSemanticEdges"),
+	v.literal("OutgoingGrammaticalEdges"),
+	v.literal("IncomingGrammaticalEdges"),
+	v.literal("Lemma"),
+);
+
+type LemmaCleanupPhase =
+	| "Surfaces"
+	| "IncomingSemanticEdges"
+	| "OutgoingGrammaticalEdges"
+	| "IncomingGrammaticalEdges"
+	| "Lemma";
+
+type LemmaCleanupCursor = { itemIndex: number; phase: LemmaCleanupPhase };
+
+const lemmaCleanupCursorValidator = v.object({
+	itemIndex: v.number(),
+	phase: lemmaCleanupPhaseValidator,
+});
+
+function nextLemmaPhase(phase: LemmaCleanupPhase): LemmaCleanupPhase {
+	switch (phase) {
+		case "Surfaces":
+			return "IncomingSemanticEdges";
+		case "IncomingSemanticEdges":
+			return "OutgoingGrammaticalEdges";
+		case "OutgoingGrammaticalEdges":
+			return "IncomingGrammaticalEdges";
+		case "IncomingGrammaticalEdges":
+			return "Lemma";
+		case "Lemma":
+			return "Surfaces";
+	}
+}
+
 export const clearLemmaDataBatch = internalMutation({
-	args: { lemmaIds: v.array(v.id("lemmas")) },
-	returns: v.object({ deleted: v.number(), deletedLemmas: v.number() }),
-	handler: async (ctx, { lemmaIds }) => {
+	args: {
+		lemmaIds: v.array(v.id("lemmas")),
+		cursor: v.optional(lemmaCleanupCursorValidator),
+	},
+	returns: v.object({
+		deleted: v.number(),
+		deletedLemmas: v.number(),
+		hasMore: v.boolean(),
+		nextCursor: v.union(v.null(), lemmaCleanupCursorValidator),
+	}),
+	handler: async (ctx, { lemmaIds, cursor: cursorValue }) => {
+		let cursor: LemmaCleanupCursor = cursorValue ?? {
+			itemIndex: 0,
+			phase: "Surfaces",
+		};
+		if (
+			!Number.isSafeInteger(cursor.itemIndex) ||
+			cursor.itemIndex < 0 ||
+			cursor.itemIndex > lemmaIds.length
+		) {
+			throw new Error("Lemma cleanup cursor is invalid.");
+		}
 		let deleted = 0;
 		let deletedLemmas = 0;
-		for (const lemmaId of lemmaIds) {
-			if (deleted >= BATCH_SIZE) break;
+		let steps = 0;
+		while (
+			cursor.itemIndex < lemmaIds.length &&
+			deleted < CLEANUP_DELETE_BUDGET &&
+			steps < MAX_CLEANUP_PHASE_STEPS
+		) {
+			steps += 1;
+			const lemmaId = lemmaIds[cursor.itemIndex];
+			if (!lemmaId) break;
 			const lemma = await ctx.db.get(lemmaId);
-			if (!lemma) continue;
-			const reading = await ctx.db
-				.query("readings")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
-				.first();
-			if (reading) continue;
-
-			const surfaces = await ctx.db
-				.query("surfaces")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
-				.take(BATCH_SIZE - deleted);
-			for (const surface of surfaces) {
-				const attestation = await ctx.db
-					.query("attestations")
-					.withIndex("by_surface_id", (q) =>
-						q.eq("surfaceId", surface._id),
-					)
-					.first();
-				if (attestation) continue;
-				const entry = await ctx.db
-					.query("ownedSurfaces")
-					.withIndex("by_surface_id", (q) =>
-						q.eq("surfaceId", surface._id),
-					)
-					.unique();
-				if (entry) {
-					await ctx.db.delete(entry._id);
-					deleted += 1;
-				}
-				await ctx.db.delete(surface._id);
-				deleted += 1;
-			}
-			const survivingSurface = await ctx.db
-				.query("surfaces")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
-				.first();
-			if (survivingSurface) continue;
-
-			const incomingEdges = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_target_lemma_id", (q) =>
-					q.eq("targetLemmaId", lemmaId),
-				)
-				.take(BATCH_SIZE - deleted);
-			for (const edge of incomingEdges) {
-				await ctx.db.delete(edge._id);
-				deleted += 1;
-			}
-			const remainingIncomingEdge = await ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_target_lemma_id", (q) =>
-					q.eq("targetLemmaId", lemmaId),
-				)
-				.first();
-			if (remainingIncomingEdge) continue;
-
-			for (const index of [
-				"by_source_lemma_id",
-				"by_target_lemma_id",
-			] as const) {
-				const grammaticalEdges = await ctx.db
-					.query("grammaticalRelationEdges")
-					.withIndex(index, (q) =>
-						q.eq(
-							index === "by_source_lemma_id"
-								? "sourceLemmaId"
-								: "targetLemmaId",
-							lemmaId,
-						),
-					)
-					.take(BATCH_SIZE - deleted);
-				for (const edge of grammaticalEdges) {
-					await ctx.db.delete(edge._id);
-					deleted += 1;
-				}
-			}
-			const remainingGrammaticalEdge = await ctx.db
-				.query("grammaticalRelationEdges")
-				.withIndex("by_source_lemma_id", (q) =>
-					q.eq("sourceLemmaId", lemmaId),
-				)
-				.first();
-			const remainingInverseGrammaticalEdge = await ctx.db
-				.query("grammaticalRelationEdges")
-				.withIndex("by_target_lemma_id", (q) =>
-					q.eq("targetLemmaId", lemmaId),
-				)
-				.first();
-			if (remainingGrammaticalEdge || remainingInverseGrammaticalEdge)
+			const reading = lemma
+				? await ctx.db
+						.query("readings")
+						.withIndex("by_lemma_id", (q) =>
+							q.eq("lemmaId", lemmaId),
+						)
+						.first()
+				: null;
+			if (!lemma || reading) {
+				cursor = { itemIndex: cursor.itemIndex + 1, phase: "Surfaces" };
 				continue;
-
-			const dictionaryLemma = await ctx.db
-				.query("dictionaryLemmas")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemmaId))
-				.unique();
-			if (dictionaryLemma) {
-				await ctx.db.delete(dictionaryLemma._id);
-				deleted += 1;
 			}
-			await ctx.db.delete(lemmaId);
-			deleted += 1;
-			deletedLemmas += 1;
+			const remaining = CLEANUP_DELETE_BUDGET - deleted;
+			let phaseComplete = true;
+			let skipLemma = false;
+			switch (cursor.phase) {
+				case "Surfaces": {
+					const limit = Math.min(100, Math.floor(remaining / 2));
+					if (limit === 0) {
+						phaseComplete = false;
+						break;
+					}
+					const surfaces = await ctx.db
+						.query("surfaces")
+						.withIndex("by_lemma_id", (q) =>
+							q.eq("lemmaId", lemmaId),
+						)
+						.take(limit);
+					for (const surface of surfaces) {
+						const attestation = await ctx.db
+							.query("attestations")
+							.withIndex("by_surface_id", (q) =>
+								q.eq("surfaceId", surface._id),
+							)
+							.first();
+						if (attestation) {
+							skipLemma = true;
+							break;
+						}
+						const entry = await ctx.db
+							.query("ownedSurfaces")
+							.withIndex("by_surface_id", (q) =>
+								q.eq("surfaceId", surface._id),
+							)
+							.unique();
+						if (entry) {
+							await ctx.db.delete(entry._id);
+							deleted += 1;
+						}
+						await ctx.db.delete(surface._id);
+						deleted += 1;
+					}
+					phaseComplete = !skipLemma && surfaces.length < limit;
+					break;
+				}
+				case "IncomingSemanticEdges": {
+					const rows = await ctx.db
+						.query("semanticRelationEdges")
+						.withIndex("by_target_lemma_id", (q) =>
+							q.eq("targetLemmaId", lemmaId),
+						)
+						.take(remaining);
+					for (const row of rows) await ctx.db.delete(row._id);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "OutgoingGrammaticalEdges":
+				case "IncomingGrammaticalEdges": {
+					const outgoing =
+						cursor.phase === "OutgoingGrammaticalEdges";
+					const rows = await ctx.db
+						.query("grammaticalRelationEdges")
+						.withIndex(
+							outgoing
+								? "by_source_lemma_id"
+								: "by_target_lemma_id",
+							(q) =>
+								outgoing
+									? q.eq("sourceLemmaId", lemmaId)
+									: q.eq("targetLemmaId", lemmaId),
+						)
+						.take(remaining);
+					for (const row of rows) await ctx.db.delete(row._id);
+					deleted += rows.length;
+					phaseComplete = rows.length < remaining;
+					break;
+				}
+				case "Lemma": {
+					const dictionaryLemma = await ctx.db
+						.query("dictionaryLemmas")
+						.withIndex("by_lemma_id", (q) =>
+							q.eq("lemmaId", lemmaId),
+						)
+						.unique();
+					const required = dictionaryLemma ? 2 : 1;
+					if (required > remaining) {
+						phaseComplete = false;
+						break;
+					}
+					if (dictionaryLemma)
+						await ctx.db.delete(dictionaryLemma._id);
+					await ctx.db.delete(lemmaId);
+					deleted += required;
+					deletedLemmas += 1;
+					break;
+				}
+			}
+			if (skipLemma || cursor.phase === "Lemma") {
+				cursor = { itemIndex: cursor.itemIndex + 1, phase: "Surfaces" };
+				continue;
+			}
+			if (!phaseComplete) break;
+			cursor = { ...cursor, phase: nextLemmaPhase(cursor.phase) };
 		}
 		if (deleted > 0) await bumpDictionaryRevision(ctx);
-		return { deleted, deletedLemmas };
+		const nextCursor = cursor.itemIndex >= lemmaIds.length ? null : cursor;
+		return {
+			deleted,
+			deletedLemmas,
+			hasMore: nextCursor !== null,
+			nextCursor,
+		};
 	},
 });
 
@@ -575,12 +820,14 @@ export const resetDemoData = internalAction({
 	returns: v.object({ deleted: v.number() }),
 	handler: async (ctx): Promise<{ deleted: number }> => {
 		let deleted = 0;
+		let tableIndex = 0;
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(
 				internal.demoReset.resetDemoDataBatch,
-				{},
+				{ tableIndex },
 			);
 			deleted += result.deleted;
+			tableIndex = result.nextTableIndex;
 			if (!result.hasMore) return { deleted };
 		}
 		throw new Error("Demo reset exceeded its batch limit.");
@@ -592,12 +839,14 @@ export const clearSharedData = action({
 	returns: v.object({ deleted: v.number() }),
 	handler: async (ctx): Promise<{ deleted: number }> => {
 		let deleted = 0;
+		let tableIndex = 0;
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(
 				internal.demoReset.clearSharedDataBatch,
-				{},
+				{ tableIndex },
 			);
 			deleted += result.deleted;
+			tableIndex = result.nextTableIndex;
 			if (!result.hasMore) return { deleted };
 		}
 		throw new Error("Shared-data reset exceeded its batch limit.");
@@ -657,26 +906,46 @@ export const stripTextAnalysis = action({
 		);
 		const doomedReadingKeys = doomed.map(({ readingKey }) => readingKey);
 		let deletedReadings = 0;
+		let readingCursor: ReadingCleanupCursor = {
+			itemIndex: 0,
+			phase: "PendingRelations",
+		};
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(
 				internal.demoReset.clearReadingDataBatch,
-				{ readingKeys: doomedReadingKeys },
+				{ readingKeys: doomedReadingKeys, cursor: readingCursor },
 			);
 			removed += result.deleted;
 			deletedReadings += result.deletedReadings;
-			if (result.deleted === 0) break;
+			if (!result.nextCursor) break;
+			readingCursor = result.nextCursor;
+			if (batch === MAX_BATCHES - 1) {
+				throw new Error(
+					"Analysis stripping exceeded its Reading cleanup batch limit.",
+				);
+			}
 		}
 
 		const lemmaIds = [...new Set(doomed.map(({ lemmaId }) => lemmaId))];
 		let deletedLemmas = 0;
+		let lemmaCursor: LemmaCleanupCursor = {
+			itemIndex: 0,
+			phase: "Surfaces",
+		};
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result = await ctx.runMutation(
 				internal.demoReset.clearLemmaDataBatch,
-				{ lemmaIds },
+				{ lemmaIds, cursor: lemmaCursor },
 			);
 			removed += result.deleted;
 			deletedLemmas += result.deletedLemmas;
-			if (result.deleted === 0) break;
+			if (!result.nextCursor) break;
+			lemmaCursor = result.nextCursor;
+			if (batch === MAX_BATCHES - 1) {
+				throw new Error(
+					"Analysis stripping exceeded its Lemma cleanup batch limit.",
+				);
+			}
 		}
 		return { removed, deletedReadings, deletedLemmas };
 	},
@@ -688,12 +957,18 @@ export const clearVisitorData = action({
 	handler: async (ctx, { visitorId }): Promise<{ deleted: number }> => {
 		assertVisitorId(visitorId);
 		let deleted = 0;
+		let phase: VisitorResetPhase = "ResolutionSessions";
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
-			const result = await ctx.runMutation(
+			const result: {
+				deleted: number;
+				hasMore: boolean;
+				nextPhase: VisitorResetPhase;
+			} = await ctx.runMutation(
 				internal.demoReset.clearVisitorDataBatch,
-				{ visitorId },
+				{ visitorId, phase },
 			);
 			deleted += result.deleted;
+			phase = result.nextPhase;
 			if (!result.hasMore) return { deleted };
 		}
 		throw new Error("Visitor-data reset exceeded its batch limit.");
