@@ -1,8 +1,9 @@
-export { createConvexDumdictStorage } from "./dumdictStorage/adapter";
-export {
-	type DictionaryPlanResult,
-	dictionaryPlanResult,
-} from "./dumdictStorage/dictionaryPlan";
+/**
+ * Convex transport functions for the action-level Dumdict storage adapter.
+ *
+ * This file is deliberately only a registered-function surface. Production
+ * callers choose either `dumdictActionStorage.ts` or `dumdictTransaction.ts`.
+ */
 export {
 	findDumdictStoredReadings,
 	getDumdictRelationsCleanupInfo,
@@ -11,14 +12,4 @@ export {
 	loadDumdictReadingEntryContext,
 	loadDumdictReadingForPatch,
 } from "./dumdictStorage/queries";
-export {
-	applyTrustedReadingKnowledgeChange,
-	hasDumdictLemma,
-	loadDumdictReadingEntryByKey,
-	loadDumdictRevision,
-	loadRelationInventory,
-} from "./dumdictStorage/storage";
-export {
-	applyDumdictPlanInTransaction,
-	commitDumdictChanges,
-} from "./dumdictStorage/transaction";
+export { commitDumdictChanges } from "./dumdictStorage/transaction";

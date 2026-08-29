@@ -10,12 +10,14 @@
 
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as demoReset from "../demoReset.js";
+import type * as dumdictActionStorage from "../dumdictActionStorage.js";
 import type * as dumdictStorage from "../dumdictStorage.js";
 import type * as dumdictStorage_adapter from "../dumdictStorage/adapter.js";
 import type * as dumdictStorage_dictionaryPlan from "../dumdictStorage/dictionaryPlan.js";
 import type * as dumdictStorage_queries from "../dumdictStorage/queries.js";
 import type * as dumdictStorage_storage from "../dumdictStorage/storage.js";
 import type * as dumdictStorage_transaction from "../dumdictStorage/transaction.js";
+import type * as dumdictTransaction from "../dumdictTransaction.js";
 import type * as fixedMemberPersistence from "../fixedMemberPersistence.js";
 import type * as fixedMembers from "../fixedMembers.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
@@ -27,6 +29,7 @@ import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexe
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
+import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_resolutionSessions from "../model/resolutionSessions.js";
 import type * as model_shadows from "../model/shadows.js";
 import type * as model_validators from "../model/validators.js";
@@ -63,12 +66,14 @@ import type {
 declare const fullApi: ApiFromModules<{
   catalogGrowthSignals: typeof catalogGrowthSignals;
   demoReset: typeof demoReset;
+  dumdictActionStorage: typeof dumdictActionStorage;
   dumdictStorage: typeof dumdictStorage;
   "dumdictStorage/adapter": typeof dumdictStorage_adapter;
   "dumdictStorage/dictionaryPlan": typeof dumdictStorage_dictionaryPlan;
   "dumdictStorage/queries": typeof dumdictStorage_queries;
   "dumdictStorage/storage": typeof dumdictStorage_storage;
   "dumdictStorage/transaction": typeof dumdictStorage_transaction;
+  dumdictTransaction: typeof dumdictTransaction;
   fixedMemberPersistence: typeof fixedMemberPersistence;
   fixedMembers: typeof fixedMembers;
   knowledgeGeneration: typeof knowledgeGeneration;
@@ -80,6 +85,7 @@ declare const fullApi: ApiFromModules<{
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;
+  "model/readingKnowledge": typeof model_readingKnowledge;
   "model/resolutionSessions": typeof model_resolutionSessions;
   "model/shadows": typeof model_shadows;
   "model/validators": typeof model_validators;

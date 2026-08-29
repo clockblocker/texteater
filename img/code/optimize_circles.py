@@ -1,42 +1,26 @@
 #!/usr/bin/env python3
-"""Derive the six bite circles from the mascot PNG, all with the same radius.
+"""Fit six distinct, equal-radius bite circles to the mascot silhouette.
 
-The icon is constructed as: white page minus six black circles. The mascot's
-contour is hand-drawn (not circle-exact), so the circles are fitted to the
-mascot's filled silhouette by symmetric-difference loss (Nelder-Mead,
-multi-resolution). The fit lives on the square 640x640 icon canvas: the
-mascot mask is resampled first, so the emitted radius is the final SVG
-radius and equal by construction.
+The animation sketch is the construction model, not merely a loose visual
+reference. Its rainbow order fixes six spatial jobs:
 
-All six circles share one radius, fixed by the single-bite reference the
-author attached alongside the clearer animation sketch: a blue disc of
-285 px on a 1066 px page, i.e. 26.6% of the page -- 171 px on the 640
-canvas (attempt-4's 231.6 was too large). Only the six centers are fitted,
-bounded to their spatial roles so the rainbow application order in
-generate_icon.py keeps its meaning; IoU 0.985 -- better than every
-previous attempt, including the free-radius one.
+  red    upper-left
+  orange above-head
+  yellow upper-right
+  green  lower-left
+  blue   left-of-head
+  violet right-of-head
 
-SEED below is the multi-start winner (equal-radius Nelder-Mead, several
-random restarts, half-res fit + full-res polish; wide re-ranks between the
-quarter- and half-resolution losses made blind re-runs land in worse
-basins, so the winner is kept as the deterministic seed). The script
-re-verifies it against the current mascot mask, refines all six centers
-multi-resolution with a contour-weighted loss (the visible edge matters
-more than bulk area), and asserts every circle stays at its post -- a
-drift fails loudly instead of silently mislabeling the rainbow order.
-
-Not every circle binds the final contour: on this silhouette four arcs do
-the carving (dome, right side, head slope, left sweep) and the remaining
-two bites land earlier in the sequence, eating fresh white that later
-bites then overlap. Between black bites the overlap is invisible, and the
-animation still shows six real mouthfuls; generate_icon.py asserts the
-order-aware freshness. The result is written to optimal_circles.json in
-canvas coordinates, with each circle's spatial role.
+Every bite must add fresh page area when it lands and retain unique area in
+the final union. The surviving page must be one connected white component;
+detached white slivers and specks are invalid, even when their pixel area is
+small. Within those hard constraints the optimizer minimizes contour error
+against img/textfresser-mascot.png.
 
 Usage:
     python3 optimize_circles.py [path-to-mascot.png]
 
-Requires: pillow, numpy, scipy  (pip install pillow numpy scipy)
+Requires: pillow, numpy, scipy
 """
 
 import json
@@ -44,260 +28,297 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from scipy import ndimage, optimize
 from PIL import Image
+from scipy import ndimage, optimize
 
 IMG_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_MASCOT = IMG_DIR / "textfresser-mascot.png"
 OUT_JSON = Path(__file__).resolve().parent / "optimal_circles.json"
 
-# Icon canvas
-SIZE = 640.0
+SIZE = 640
+ROLE_ORDER = (
+    "upper-left",
+    "above-head",
+    "upper-right",
+    "lower-left",
+    "left-of-head",
+    "right-of-head",
+)
 
-# The multi-start winner in canvas coordinates (see module docstring).
-# Roles describe where each bite comes from; the rainbow application order
-# that consumes them lives in generate_icon.py.
+# A contour-polished version of the six colored positions in
+# img/animation-sketch.png. Unlike attempts 5 and 6, these parameters include
+# the yellow top-right bite and do not include a redundant second far-left bite.
 SEED = {
-    "upper-left":   (147.39,  92.64),  # the page's top-left corner
-    "upper-right":  (671.03, 248.04),  # off the right edge, the right side + top-right
-    "above-head":   (469.39,  55.45),  # straight from the top, carves the head dome
-    "left-of-head": (195.75, 241.31),  # carves the head's left slope
-    "far-left":     (-85.00, 405.00),  # off the far left; overlapping story bite
-    "left-middle":  (11.36, 369.02),   # off the left edge, carves the left sweep
+    "upper-left": (130.9200, 96.0522),
+    "above-head": (429.8764, 52.3311),
+    "upper-right": (672.2313, 65.7132),
+    "lower-left": (13.2184, 370.5257),
+    "left-of-head": (197.8397, 242.7188),
+    "right-of-head": (668.4694, 247.9745),
 }
-ROLE_ORDER = ("upper-left", "upper-right", "above-head", "left-of-head", "far-left", "left-middle")
-SEED_RADIUS = 171.0
+SEED_RADIUS = 168.6251
+
+# The bounds keep each parameter attached to its narrative job throughout
+# optimization. Roles are never recovered after the fact by nearest-neighbour
+# matching, as they were in attempts 5 and 6.
+ROLE_BOUNDS = {
+    "upper-left": ((80.0, 180.0), (30.0, 140.0)),
+    "above-head": ((380.0, 490.0), (0.0, 130.0)),
+    "upper-right": ((570.0, 700.0), (0.0, 140.0)),
+    "lower-left": ((-100.0, 80.0), (300.0, 460.0)),
+    "left-of-head": ((140.0, 260.0), (170.0, 320.0)),
+    "right-of-head": ((610.0, 740.0), (170.0, 350.0)),
+}
+RADIUS_BOUNDS = (166.0, 172.0)
+
+CLEAN_SCALE = 4
+MIN_FRESH_AREA = 500.0
+MIN_UNIQUE_AREA = 500.0
+FALSE_WHITE_WEIGHT = 1.35
+DETACHED_PIXEL_PENALTY = 5000.0
+BOUNDS_PENALTY = 1_000_000.0
+
+
+def trim_presentation_frame(rgb):
+    """Remove the thin uniform export frame without cropping icon content."""
+    frame = rgb[0, 0]
+    content = np.any(rgb != frame, axis=2)
+    if not content.any():
+        return rgb
+    ys, xs = np.where(content)
+    x0, x1 = int(xs.min()), int(xs.max()) + 1
+    y0, y1 = int(ys.min()), int(ys.max()) + 1
+    margins = (x0, rgb.shape[1] - x1, y0, rgb.shape[0] - y1)
+    if max(margins) <= 8:
+        return rgb[y0:y1, x0:x1]
+    return rgb
 
 
 def filled_silhouette(mascot_path):
-    a = np.asarray(Image.open(mascot_path).convert("RGB")).astype(float)
-    r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
-    lum = (r + g + b) / 3
-    neutral = np.maximum(np.maximum(r, g), b) - np.minimum(np.minimum(r, g), b) < 16
-    white = neutral & (lum > 128)
-    # words and the eye punch holes into the white page; the silhouette is the
-    # filled region
+    """Extract and fill the mascot's white shape on the 640px icon canvas."""
+    rgb = np.asarray(Image.open(mascot_path).convert("RGB"))
+    rgb = trim_presentation_frame(rgb).astype(float)
+    red, green, blue = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+    luminance = (red + green + blue) / 3
+    neutral = np.maximum.reduce((red, green, blue)) - np.minimum.reduce((red, green, blue)) < 16
+    white = neutral & (luminance > 128)
     filled = ndimage.binary_fill_holes(white)
-    # resample onto the square icon canvas (bilinear coverage, then threshold)
-    cov = np.asarray(Image.fromarray(filled.astype(np.uint8) * 255)
-                     .resize((int(SIZE), int(SIZE)), Image.BILINEAR))
-    return cov > 127
+    coverage = np.asarray(
+        Image.fromarray(filled.astype(np.uint8) * 255).resize(
+            (SIZE, SIZE), Image.Resampling.BILINEAR
+        )
+    )
+    return coverage > 127
+
+
+def seed_vector():
+    return np.array(
+        [SEED[role][0] for role in ROLE_ORDER]
+        + [SEED[role][1] for role in ROLE_ORDER]
+        + [SEED_RADIUS],
+        dtype=float,
+    )
+
+
+def role_penalty(parameters):
+    penalty = 0.0
+    for index, role in enumerate(ROLE_ORDER):
+        for value, (lower, upper) in (
+            (parameters[index], ROLE_BOUNDS[role][0]),
+            (parameters[6 + index], ROLE_BOUNDS[role][1]),
+        ):
+            if value < lower:
+                penalty += (lower - value) ** 2 * BOUNDS_PENALTY
+            elif value > upper:
+                penalty += (value - upper) ** 2 * BOUNDS_PENALTY
+    radius = parameters[12]
+    if radius < RADIUS_BOUNDS[0]:
+        penalty += (RADIUS_BOUNDS[0] - radius) ** 2 * BOUNDS_PENALTY
+    elif radius > RADIUS_BOUNDS[1]:
+        penalty += (radius - RADIUS_BOUNDS[1]) ** 2 * BOUNDS_PENALTY
+    return penalty
 
 
 def grid(mask, factor):
-    h, w = mask.shape
-    hs, ws = h // factor, w // factor
-    t = mask[: hs * factor, : ws * factor].reshape(hs, factor, ws, factor).mean(axis=(1, 3)) > 0.5
-    yg, xg = np.mgrid[0:hs, 0:ws]
-    return t, xg.astype(np.float32) * factor + factor / 2, yg.astype(np.float32) * factor + factor / 2
+    height, width = mask.shape
+    scaled_height, scaled_width = height // factor, width // factor
+    target = mask[: scaled_height * factor, : scaled_width * factor]
+    target = target.reshape(scaled_height, factor, scaled_width, factor).mean(axis=(1, 3)) > 0.5
+    y_grid, x_grid = np.mgrid[0:scaled_height, 0:scaled_width]
+    x_grid = x_grid.astype(np.float32) * factor + factor / 2
+    y_grid = y_grid.astype(np.float32) * factor + factor / 2
+    return target, x_grid, y_grid
 
 
-def make_loss(target, xg, yg):
-    """Symmetric difference between the model's white and the target mask.
-    Parameter vector, blocked layout: (cx1..cx6, cy1..cy6, shared_radius)."""
+def circle_masks(parameters, x_grid, y_grid):
+    radius_squared = parameters[12] ** 2
+    return [
+        (x_grid - parameters[index]) ** 2
+        + (y_grid - parameters[6 + index]) ** 2
+        <= radius_squared
+        for index in range(6)
+    ]
 
-    def loss(p):
-        rad = p[12]
-        if rad <= 10:
-            return 1e12
-        covered = np.zeros(target.shape, dtype=bool)
-        for i in range(6):
-            covered |= (xg - p[i]) ** 2 + (yg - p[6 + i]) ** 2 <= rad * rad
-        return float((~covered ^ target).sum())
+
+def detached_pixels(model):
+    labels, count = ndimage.label(model)
+    if count <= 1:
+        return 0
+    sizes = ndimage.sum(model, labels, range(1, count + 1))
+    return int(sizes.sum() - sizes.max())
+
+
+def edge_weights(mask, band=6.0):
+    """Weight a true two-sided band around the target contour."""
+    boundary = mask ^ ndimage.binary_erosion(mask)
+    distance_to_boundary = ndimage.distance_transform_edt(~boundary)
+    return np.where(distance_to_boundary <= band, 4.0, 1.0).astype(np.float32)
+
+
+def make_loss(mask, factor):
+    target, x_grid, y_grid = grid(mask, factor)
+    weights = edge_weights(mask)
+    if factor != 1:
+        height, width = target.shape
+        weights = weights[: height * factor, : width * factor]
+        weights = weights.reshape(height, factor, width, factor).mean(axis=(1, 3))
+
+    def loss(parameters):
+        masks = circle_masks(parameters, x_grid, y_grid)
+        model = ~np.logical_or.reduce(masks)
+        false_white = model & ~target
+        false_black = ~model & target
+        pixel_error = (false_white * FALSE_WHITE_WEIGHT + false_black) * weights
+        topology_error = detached_pixels(model) + int(model[0].sum())
+        return float(
+            pixel_error.sum()
+            + topology_error * DETACHED_PIXEL_PENALTY
+            + role_penalty(parameters)
+        )
 
     return loss
 
 
-def evaluate(p, mask, factor):
-    t, xg, yg = grid(mask, factor)
-    covered = np.zeros(t.shape, dtype=bool)
-    for i in range(6):
-        covered |= (xg - p[i]) ** 2 + (yg - p[6 + i]) ** 2 <= p[12] ** 2
-    model = ~covered
-    return float((model & t).sum() / (model | t).sum())
+def layout_metrics(parameters, scale=1):
+    sample_count = SIZE * scale
+    coordinates = (np.arange(sample_count, dtype=np.float32) + 0.5) / scale
+    x_grid, y_grid = np.meshgrid(coordinates, coordinates)
+    masks = circle_masks(parameters, x_grid, y_grid)
+    union = np.logical_or.reduce(masks)
+    model = ~union
+    labels, component_count = ndimage.label(model)
+    sizes = ndimage.sum(model, labels, range(1, component_count + 1))
+    detached = 0.0 if component_count <= 1 else float(sizes.sum() - sizes.max()) / scale**2
+
+    fresh_by_role = {}
+    unique_by_role = {}
+    previous = np.zeros_like(model)
+    for index, role in enumerate(ROLE_ORDER):
+        other_masks = masks[:index] + masks[index + 1:]
+        other_union = np.logical_or.reduce(other_masks)
+        fresh_by_role[role] = float((masks[index] & ~previous).sum()) / scale**2
+        unique_by_role[role] = float((masks[index] & ~other_union).sum()) / scale**2
+        previous |= masks[index]
+
+    return {
+        "components": int(component_count),
+        "detached_white_area": detached,
+        "top_edge_leaks": float(model[0].sum()) / scale,
+        "fresh_area_by_role": fresh_by_role,
+        "unique_area_by_role": unique_by_role,
+    }
 
 
-def edge_weights(mask, band=6.0):
-    """Weights that stress the contour: pixels within `band` of the target
-    silhouette boundary count 5x in the loss, so the fit nails the visible
-    edge (the head dome, its mid-top peak, the left sweep) instead of only
-    bulk area."""
-    dist_out = ndimage.distance_transform_edt(~mask)
-    dist_in = ndimage.distance_transform_edt(mask)
-    band_px = np.minimum(dist_out, dist_in)
-    w = np.where(band_px <= band, 5.0, 1.0).astype(np.float32)
-    return w
-
-
-def refine(mask, vec, factors, weight_band=6.0):
-    """Multi-resolution Nelder-Mead over all six centers (radius fixed by
-    the reference) on the contour-weighted, edge-leak-penalized loss.
-    Accepts only improvements at each resolution."""
-    p = vec.copy()
-    full_w = edge_weights(mask, weight_band)
-
-    def weights_at(factor):
-        if factor == 1:
-            return full_w
-        h = full_w.shape[0] // factor
-        wd = full_w.shape[1] // factor
-        return full_w[:h * factor, :wd * factor].reshape(h, factor, wd, factor).mean(axis=(1, 3))
-
-    def make_loss(factor):
-        t, xg, yg = grid(mask, factor)
-        w = weights_at(factor)
-
-        def loss(q):
-            cov = np.zeros(t.shape, dtype=bool)
-            for i in range(6):
-                cov |= (xg - q[i]) ** 2 + (yg - q[6 + i]) ** 2 <= p[12] ** 2
-            return float(((~cov ^ t) * w).sum())
-
-        return loss
-
-    for factor in factors:
-        loss = make_loss(factor)
-        q0 = np.array([p[i] for i in range(12)])
-        best_f, best_q = loss(q0), q0
-        # jittered restarts per resolution escape shallow notches; sigma
-        # scales down as the resolution sharpens
-        rng = np.random.default_rng(7 * factor)
-        sigma = {8: 25.0, 4: 15.0, 2: 8.0, 1: 4.0}[factor]
-        starts = [q0] + [q0 + rng.normal(0, sigma, 12) for _ in range(6)]
-        for s in starts:
-            cand = optimize.minimize(loss, s, method="Nelder-Mead",
-                                     options=dict(maxiter=30000, maxfev=30000,
-                                                  xatol=0.15, fatol=2.0, adaptive=True))
-            if cand.fun < best_f:
-                best_f, best_q = cand.fun, cand.x
-        if best_f < loss(q0):
-            p[:12] = best_q
-
-    # greedy per-circle scan: each bite tries small shifts on its own,
-    # escaping the coupled basins Nelder-Mead refuses to leave
-    t1, x1, y1 = grid(mask, 1)
-    full_w = edge_weights(mask, weight_band)
-
-    def wloss(p):
-        cov = np.zeros(t1.shape, dtype=bool)
-        for i in range(6):
-            cov |= (x1 - p[i]) ** 2 + (y1 - p[6 + i]) ** 2 <= p[12] ** 2
-        return float(((~cov ^ t1) * full_w).sum())
-
-    # adjacent bite pairs (closing a sliver needs both circles to move),
-    # swept on a half-resolution grid to keep the 4-D scan affordable
-    t2, x2, y2 = grid(mask, 2)
-    w2 = full_w[:640:2, :640:2] + full_w[1:640:2, :640:2] + full_w[:640:2, 1:640:2] + full_w[1:640:2, 1:640:2]
-
-    def wloss2(p):
-        cov = np.zeros(t2.shape, dtype=bool)
-        for i in range(6):
-            cov |= (x2 - p[i]) ** 2 + (y2 - p[6 + i]) ** 2 <= p[12] ** 2
-        return float(((~cov ^ t2) * w2).sum())
-
-    PAIRS = [(0, 2), (2, 1), (2, 3), (3, 4), (3, 5)]  # role indices in ROLE_ORDER
-    for step in (2.0, 1.0):
-        rng = np.arange(-6 if step == 2.0 else -2, (6.5 if step == 2.0 else 2.5), step)
-        for _ in range(3):
-            improved = False
-            for i, j in PAIRS:
-                base = wloss2(p)
-                best_d, best_f = None, base
-                oi0, oj0 = (p[i], p[6 + i]), (p[j], p[6 + j])
-                for dxi in rng:
-                    for dyi in rng:
-                        for dxj in rng:
-                            for dyj in rng:
-                                if dxi == dyi == dxj == dyj == 0:
-                                    continue
-                                p[i], p[6 + i] = oi0[0] + dxi, oi0[1] + dyi
-                                p[j], p[6 + j] = oj0[0] + dxj, oj0[1] + dyj
-                                f = wloss2(p)
-                                if f < best_f:
-                                    best_d, best_f = ((dxi, dyi), (dxj, dyj)), f
-                p[i], p[6 + i] = oi0
-                p[j], p[6 + j] = oj0
-                if best_d is not None:
-                    p[i], p[6 + i] = p[i] + best_d[0][0], p[6 + i] + best_d[0][1]
-                    p[j], p[6 + j] = p[j] + best_d[1][0], p[6 + j] + best_d[1][1]
-                    improved = True
-            if not improved:
-                break
-
-    # fine single-circle polish at full resolution
-    for _ in range(3):
-        improved = False
-        for i in range(6):
-            base = wloss(p)
-            best_d, best_f = (0.0, 0.0), base
-            for dx in np.arange(-6, 6.5, 1.0):
-                for dy in np.arange(-6, 6.5, 1.0):
-                    if dx == 0 and dy == 0:
-                        continue
-                    p[i], p[6 + i] = p[i] + dx, p[6 + i] + dy
-                    f = wloss(p)
-                    p[i], p[6 + i] = p[i] - dx, p[6 + i] - dy
-                    if f < best_f:
-                        best_d, best_f = (dx, dy), f
-            if best_f < base:
-                p[i] += best_d[0]
-                p[6 + i] += best_d[1]
-                improved = True
-        if not improved:
-            break
-    return p
-
-
-def assign_roles(p):
-    """Match circles to spatial roles by center proximity to the seed."""
-    circles = [(p[i], p[6 + i], p[12]) for i in range(6)]
-    out = {}
-    used = set()
+def assert_valid_layout(parameters, scale=CLEAN_SCALE):
+    if role_penalty(parameters):
+        raise AssertionError("one or more bite parameters left their sketch-derived role bounds")
+    metrics = layout_metrics(parameters, scale)
+    if metrics["components"] != 1 or metrics["detached_white_area"]:
+        raise AssertionError(
+            f"silhouette contains {metrics['detached_white_area']:.4f}px of detached white artifacts"
+        )
+    if metrics["top_edge_leaks"]:
+        raise AssertionError(
+            f"silhouette leaks {metrics['top_edge_leaks']:.4f}px along the top edge"
+        )
     for role in ROLE_ORDER:
-        sx, sy = SEED[role]
-        best, bestd = None, 1e18
-        for i, (cx, cy, rad) in enumerate(circles):
-            if i in used:
-                continue
-            d = (cx - sx) ** 2 + (cy - sy) ** 2
-            if d < bestd:
-                best, bestd = i, d
-        used.add(best)
-        out[role] = circles[best]
-        if bestd > 60**2:
-            raise SystemExit(f"circle drifted from seed role {role!r} by {bestd**0.5:.0f}px; "
-                             "review the rainbow-order assignment before generating the SVG")
-    assert len(used) == 6
-    return out
+        if metrics["fresh_area_by_role"][role] < MIN_FRESH_AREA:
+            raise AssertionError(f"{role} has no meaningful fresh bite area")
+        if metrics["unique_area_by_role"][role] < MIN_UNIQUE_AREA:
+            raise AssertionError(f"{role} is redundant in the final silhouette")
+    return metrics
+
+
+def evaluate_iou(parameters, mask):
+    target, x_grid, y_grid = grid(mask, 1)
+    model = ~np.logical_or.reduce(circle_masks(parameters, x_grid, y_grid))
+    return float((model & target).sum() / (model | target).sum())
+
+
+def refine(mask, parameters):
+    """Polish the sketch-derived seed without sacrificing its hard rules."""
+    current = parameters.copy()
+    for factor, max_evaluations in ((4, 1400), (2, 1800), (1, 1800)):
+        loss = make_loss(mask, factor)
+        candidate = optimize.minimize(
+            loss,
+            current,
+            method="Nelder-Mead",
+            options={
+                "maxiter": max_evaluations,
+                "maxfev": max_evaluations,
+                "xatol": 0.04,
+                "fatol": 0.2,
+                "adaptive": True,
+            },
+        )
+        if candidate.fun >= loss(current):
+            continue
+        try:
+            assert_valid_layout(candidate.x)
+        except AssertionError:
+            continue
+        current = candidate.x
+    return current
 
 
 def main():
     mascot = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_MASCOT
-    mask = filled_silhouette(mascot)
-    seed_vec = np.array([SEED[r][0] for r in ROLE_ORDER] + [SEED[r][1] for r in ROLE_ORDER] + [SEED_RADIUS])
+    target = filled_silhouette(mascot)
+    parameters = refine(target, seed_vector())
+    # The JSON and SVG use two decimal places, so validate the values that will
+    # actually ship rather than a higher-precision precursor.
+    parameters = np.round(parameters, 2)
+    metrics = assert_valid_layout(parameters)
+    iou = evaluate_iou(parameters, target)
+    if iou < 0.99:
+        raise SystemExit(f"fit degraded to IoU {iou:.4f}; refusing to write attempt data")
 
-    seed_iou = evaluate(seed_vec, mask, 1)
-    p = refine(mask, seed_vec, factors=(8, 4, 2, 1))
-    iou1 = evaluate(p, mask, 1)
-    if iou1 < seed_iou:
-        # the weighted loss is a proxy; never ship a fit that fits the
-        # mascot worse than the seed does
-        print(f"refine degraded iou {iou1:.4f} < seed {seed_iou:.4f}; keeping seed")
-        p, iou1 = seed_vec, seed_iou
-    print(f"seed iou(full)={seed_iou:.4f}  polished iou(full)={iou1:.4f}  R={p[12]:.2f}")
-    if iou1 < 0.97:
-        raise SystemExit(f"fit degraded to {iou1:.4f}; the seed no longer matches this mascot")
-
-    roles = assign_roles(p)
-    doc = {
+    circles = {
+        role: [
+            round(float(parameters[index]), 2),
+            round(float(parameters[6 + index]), 2),
+            round(float(parameters[12]), 2),
+        ]
+        for index, role in enumerate(ROLE_ORDER)
+    }
+    document = {
         "source": str(mascot),
         "canvas": "640x640, canvas coordinates",
-        "shared_radius": round(p[12], 2),
-        "ioU_vs_mascot": round(iou1, 4),
-        "circles_by_role": {r: [round(v, 2) for v in c] for r, c in roles.items()},
+        "shared_radius": round(float(parameters[12]), 2),
+        "ioU_vs_mascot": round(iou, 4),
+        "cleanliness_sample_scale": CLEAN_SCALE,
+        "detached_white_area": round(metrics["detached_white_area"], 4),
+        "fresh_area_by_role": {
+            role: round(metrics["fresh_area_by_role"][role], 1) for role in ROLE_ORDER
+        },
+        "unique_area_by_role": {
+            role: round(metrics["unique_area_by_role"][role], 1) for role in ROLE_ORDER
+        },
+        "circles_by_role": circles,
     }
-    OUT_JSON.write_text(json.dumps(doc, indent=2) + "\n")
-    print(json.dumps(doc, indent=2))
+    OUT_JSON.write_text(json.dumps(document, indent=2) + "\n")
+    print(json.dumps(document, indent=2))
     print(f"\nwrote {OUT_JSON}")
 
 

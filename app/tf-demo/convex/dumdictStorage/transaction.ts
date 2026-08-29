@@ -5,6 +5,14 @@ import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import { internalMutation, type MutationCtx } from "../_generated/server";
 import {
+	type AnyRecord,
+	requireArray,
+	requireChangeKind,
+	requireRecord,
+	requireString,
+	withoutKeys,
+} from "../model/readingKnowledge";
+import {
 	attachPendingShadowReference,
 	ensureAccumulatedKnowledgeStatus,
 	pendingShadowDescriptor,
@@ -12,7 +20,6 @@ import {
 } from "../model/shadows";
 import { dumdictPlannedChangeValidator } from "../model/validators";
 import {
-	type AnyRecord,
 	applyReadingKnowledgeChange,
 	assertLemmaRecordHasNoKnowledge,
 	type CompactReadingEntry,
@@ -29,14 +36,9 @@ import {
 	MAX_RELATIONS_PER_READING,
 	pendingLocatorKey,
 	readingIdentityKey,
-	requireArray,
-	requireChangeKind,
 	requireDirectSemanticRelation,
-	requireRecord,
-	requireString,
 	revisionString,
 	STATE_KEY,
-	withoutKeys,
 	withoutSemanticRelations,
 } from "./storage";
 

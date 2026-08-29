@@ -189,7 +189,10 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 	const storageSources = await Promise.all(
 		[
 			"../convex/model/validators.ts",
+			"../convex/model/readingKnowledge.ts",
+			"../convex/dumdictActionStorage.ts",
 			"../convex/dumdictStorage.ts",
+			"../convex/dumdictTransaction.ts",
 			"../convex/dumdictStorage/adapter.ts",
 			"../convex/dumdictStorage/dictionaryPlan.ts",
 			"../convex/dumdictStorage/queries.ts",

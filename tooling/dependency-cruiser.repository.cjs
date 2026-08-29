@@ -34,10 +34,11 @@ module.exports = {
 		{
 			name: "tf-demo-dumdict-storage-implementation-is-private",
 			comment:
-				"Callers must use the Dumdict storage interface file; its implementation folder is private.",
+				"Callers must choose the action-level or transaction-local Dumdict interface; its implementation folder is private.",
 			severity: "error",
 			from: {
-				pathNot: "^app/tf-demo/convex/dumdictStorage(?:\\.ts|/)",
+				pathNot:
+					"^app/tf-demo/convex/(?:dumdictStorage|dumdictActionStorage|dumdictTransaction)(?:\\.ts|/)",
 			},
 			to: { path: "^app/tf-demo/convex/dumdictStorage/" },
 		},

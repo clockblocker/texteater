@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { readingFingerprint } from "dumling";
-import { applyDumdictPlanInTransaction } from "../convex/dumdictStorage";
+import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import {
 	persistResolvedClick,
 	persistUnresolvedClick,
@@ -42,7 +42,7 @@ test("a host-composed empty Dumdict plan does not advance revision", async () =>
 		},
 	};
 
-	const result = await applyDumdictPlanInTransaction(ctx as never, {
+	const result = await createDumdictTransaction(ctx as never).commit({
 		baseRevision: "convex-2",
 		changes: [],
 	});
@@ -75,7 +75,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 	};
 
 	await expect(
-		applyDumdictPlanInTransaction(ctx as never, {
+		createDumdictTransaction(ctx as never).commit({
 			baseRevision: "convex-0",
 			changes: [
 				{
@@ -87,7 +87,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 		}),
 	).rejects.toThrow();
 	await expect(
-		applyDumdictPlanInTransaction(ctx as never, {
+		createDumdictTransaction(ctx as never).commit({
 			baseRevision: "convex-0",
 			changes: [
 				{

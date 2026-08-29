@@ -1,38 +1,56 @@
 {
-  "source": "/Users/annagorelova/work/textfresser-batteries/img/textfresser-mascot.png",
+  "source": "img/textfresser-mascot.png",
   "canvas": "640x640, canvas coordinates",
-  "shared_radius": 171.0,
-  "ioU_vs_mascot": 0.9854,
+  "shared_radius": 168.63,
+  "ioU_vs_mascot": 0.9944,
+  "cleanliness_sample_scale": 4,
+  "detached_white_area": 0.0,
+  "fresh_area_by_role": {
+    "upper-left": 69776.7,
+    "above-head": 58482.7,
+    "upper-right": 12822.2,
+    "lower-left": 45038.0,
+    "left-of-head": 33269.7,
+    "right-of-head": 23502.2
+  },
+  "unique_area_by_role": {
+    "upper-left": 29579.2,
+    "above-head": 42061.6,
+    "upper-right": 3842.6,
+    "lower-left": 28959.6,
+    "left-of-head": 33269.7,
+    "right-of-head": 23502.2
+  },
   "circles_by_role": {
     "upper-left": [
-      145.97,
-      91.56,
-      171.0
-    ],
-    "upper-right": [
-      670.39,
-      247.53,
-      171.0
+      130.92,
+      96.05,
+      168.63
     ],
     "above-head": [
-      469.26,
-      54.4,
-      171.0
+      429.88,
+      52.33,
+      168.63
+    ],
+    "upper-right": [
+      672.23,
+      65.71,
+      168.63
+    ],
+    "lower-left": [
+      13.22,
+      370.53,
+      168.63
     ],
     "left-of-head": [
-      195.86,
-      241.18,
-      171.0
+      197.84,
+      242.72,
+      168.63
     ],
-    "far-left": [
-      -102.77,
-      407.57,
-      171.0
-    ],
-    "left-middle": [
-      10.36,
-      370.08,
-      171.0
+    "right-of-head": [
+      668.47,
+      247.97,
+      168.63
     ]
   }
 }

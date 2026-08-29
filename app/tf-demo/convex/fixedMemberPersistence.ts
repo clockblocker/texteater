@@ -6,12 +6,7 @@ import type { GrammaticalRelationClaim } from "dumrel/types";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import type { MutationCtx } from "./_generated/server";
 import { internalMutation } from "./_generated/server";
-import {
-	applyDumdictPlanInTransaction,
-	hasDumdictLemma,
-	loadDumdictReadingEntryByKey,
-	loadDumdictRevision,
-} from "./dumdictStorage";
+import { createDumdictTransaction } from "./dumdictTransaction";
 import { sameCanonicalJson } from "./model/canonicalJson";
 import { ensureAccumulatedKnowledgeStatus } from "./model/shadows";
 import {
@@ -26,11 +21,12 @@ export const commitFixedLemma = internalMutation({
 		v.object({ status: v.literal("unchanged") }),
 	),
 	handler: async (ctx, { lemma }) => {
-		if (await hasDumdictLemma(ctx, lemma)) {
+		const dictionary = createDumdictTransaction(ctx);
+		if (await dictionary.containsLemma(lemma)) {
 			return { status: "unchanged" as const };
 		}
-		const revision = await loadDumdictRevision(ctx);
-		const committed = await applyDumdictPlanInTransaction(ctx, {
+		const revision = await dictionary.readRevision();
+		const committed = await dictionary.commit({
 			baseRevision: revision,
 			changes: [
 				{
@@ -62,7 +58,8 @@ export const commitFixedMember = internalMutation({
 		v.object({ status: v.literal("conflict") }),
 	),
 	handler: async (ctx, args) => {
-		const before = await loadDumdictReadingEntryByKey(ctx, args.readingKey);
+		const dictionary = createDumdictTransaction(ctx);
+		const before = await dictionary.loadReadingEntry(args.readingKey);
 		if (before && !sameCanonicalJson(before, args.expectedEntry)) {
 			throw new Error(
 				"Fixed member collides with incompatible ordinary Reading Entry content.",
@@ -79,15 +76,12 @@ export const commitFixedMember = internalMutation({
 		}
 
 		if (!before) {
-			const committed = await applyDumdictPlanInTransaction(
-				ctx,
-				args.plan,
-			);
+			const committed = await dictionary.commit(args.plan);
 			if (committed.status === "conflict") {
 				return { status: "conflict" as const };
 			}
 		}
-		const stored = await loadDumdictReadingEntryByKey(ctx, args.readingKey);
+		const stored = await dictionary.loadReadingEntry(args.readingKey);
 		if (!stored || !sameCanonicalJson(stored, args.expectedEntry)) {
 			throw new Error(
 				"Fixed member commit did not produce the exact ordinary Reading Entry.",

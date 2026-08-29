@@ -1,27 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import {
-	createDumdictService,
-	type DumdictStoragePort,
-	makeSurfaceId,
-} from "dumdict";
-import { derivePendingSemanticRelationLocator } from "dumdict/pending";
+import { createDumdictService, type DumdictStoragePort } from "dumdict";
 import { readingFingerprint } from "dumling";
 import {
 	clearVisitorDataBatch,
 	resetDemoDataBatch,
 	resetDemoTableNames,
 } from "../convex/demoReset";
-import {
-	commitDumdictChanges,
-	findDumdictStoredReadings,
-	getDumdictRelationsCleanupInfo,
-	loadDumdictCleanupRelationsContext,
-	loadDumdictReadingEntryContext,
-	loadDumdictReadingForPatch,
-} from "../convex/dumdictStorage";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
+import { createTestConvexDumdictStorage } from "./support/dumdict-storage";
 import {
 	IndexedTestDb,
 	runTestMutation,
@@ -63,103 +50,13 @@ const emptyNote = {
 	notes: "",
 };
 
-function locatorKey(locator: {
-	sourceReadingKey: string;
-	relation: string;
-	targetPendingId: string;
-}): string {
-	return JSON.stringify([
-		locator.sourceReadingKey,
-		locator.relation,
-		locator.targetPendingId,
-	]);
-}
-
 function storageFor(db: IndexedTestDb): DumdictStoragePort<"de"> {
-	return {
-		async findStoredReadings({ lemma }) {
-			return (await runTestQuery(db, findDumdictStoredReadings, {
-				lemmaKey: lemmaIdentityKey(lemma),
-			})) as never;
-		},
-		async loadReadingEntryContext(request) {
-			const readingKey = readingFingerprint(request.reading);
-			if (request.intent === "addNewNote")
-				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
-					request: {
-						intent: request.intent,
-						lemmaKey: lemmaIdentityKey(request.reading.lemma),
-						proposedLemma: request.reading.lemma,
-						readingKey,
-						surfaceKeys: request.ownedSurfaces.map((surface) =>
-							makeSurfaceId("de", surface),
-						),
-						explicitLemmaTargetKeys: request.relations.flatMap(
-							({ target }) =>
-								target.kind === "existing"
-									? [lemmaIdentityKey(target.lemma)]
-									: [],
-						),
-						pendingLocatorKeys: request.relations.flatMap(
-							({ target }) =>
-								target.kind === "pending"
-									? [
-											locatorKey(
-												derivePendingSemanticRelationLocator(
-													request.reading,
-													target.pending,
-												),
-											),
-										]
-									: [],
-						),
-					},
-				})) as never;
-			if (request.intent === "applyGeneratedKnowledge")
-				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
-					request: {
-						intent: request.intent,
-						readingKey,
-						pendingLocatorKeys: request.pendingRelations.map(
-							(pending) =>
-								locatorKey(
-									derivePendingSemanticRelationLocator(
-										request.reading,
-										pending,
-									),
-								),
-						),
-					},
-				})) as never;
-			throw new Error(
-				`Unexpected Reading Entry intent: ${request.intent}`,
-			);
-		},
-		async loadReadingForPatch({ reading }) {
-			return (await runTestQuery(db, loadDumdictReadingForPatch, {
-				readingKey: readingFingerprint(reading),
-			})) as never;
-		},
-		async getInfoForRelationsCleanup({ canonicalForm }) {
-			return (await runTestQuery(db, getDumdictRelationsCleanupInfo, {
-				canonicalForm,
-			})) as never;
-		},
-		async loadCleanupRelationsContext({ resolutions }) {
-			return (await runTestQuery(db, loadDumdictCleanupRelationsContext, {
-				locatorKeys: resolutions.map(({ locator }) =>
-					locatorKey(locator),
-				),
-			})) as never;
-		},
-		async commitChanges(request) {
-			return (await runTestMutation(
-				db,
-				commitDumdictChanges,
-				request,
-			)) as never;
-		},
-	};
+	return createTestConvexDumdictStorage({
+		runQuery: (implementation, args) =>
+			runTestQuery(db, implementation, args),
+		runMutation: (implementation, args) =>
+			runTestMutation(db, implementation, args),
+	});
 }
 
 describe("tf-demo post-reset contract", () => {

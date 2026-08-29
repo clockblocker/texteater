@@ -2,6 +2,7 @@ import { v } from "convex/values";
 
 import { internalQuery, type QueryCtx } from "../_generated/server";
 import { lemmaValue } from "../model/occurrenceAttestations";
+import { requireRecord } from "../model/readingKnowledge";
 import { pendingShadowDescriptor } from "../model/shadows";
 import { lemmaValueValidator } from "../model/validators";
 import {
@@ -16,7 +17,6 @@ import {
 	MAX_PENDING_RELATIONS_PER_SLICE,
 	MAX_READING_CANDIDATES,
 	pendingLocatorKey,
-	requireRecord,
 	uniqueBoundedKeys,
 } from "./storage";
 

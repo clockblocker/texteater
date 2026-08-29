@@ -8,7 +8,7 @@ import {
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
-import { applyDumdictPlanInTransaction } from "./dumdictStorage";
+import { createDumdictTransaction } from "./dumdictTransaction";
 import { scheduleKnowledgeGeneration } from "./knowledgeGeneration";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import {
@@ -666,8 +666,7 @@ export const persistResolvedClick = internalMutation({
 			};
 		}
 
-		const dictionaryCommit = await applyDumdictPlanInTransaction(
-			ctx,
+		const dictionaryCommit = await createDumdictTransaction(ctx).commit(
 			args.dictionaryPlan,
 		);
 		if (dictionaryCommit.status === "conflict") {

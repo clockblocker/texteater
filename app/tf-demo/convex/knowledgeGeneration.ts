@@ -9,7 +9,7 @@ import {
 	mutation,
 	type QueryCtx,
 } from "./_generated/server";
-import { applyDumdictPlanInTransaction } from "./dumdictStorage";
+import { createDumdictTransaction } from "./dumdictTransaction";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
@@ -270,8 +270,7 @@ export const commitGenerated = internalMutation({
 			ctx,
 			args.relationPublication,
 		);
-		const dictionaryCommit = await applyDumdictPlanInTransaction(
-			ctx,
+		const dictionaryCommit = await createDumdictTransaction(ctx).commit(
 			publishRelations ? args.plan : args.baseKnowledgePlan,
 		);
 		if (dictionaryCommit.status === "conflict") {

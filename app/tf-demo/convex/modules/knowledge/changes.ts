@@ -1,7 +1,7 @@
 import type { KnowledgeChange } from "dumrel";
 import type { Id } from "../../_generated/dataModel";
 import type { MutationCtx } from "../../_generated/server";
-import { applyTrustedReadingKnowledgeChange } from "../../dumdictStorage";
+import { applyTrustedReadingKnowledgeChange } from "../../model/readingKnowledge";
 import { replaceAccumulatedKnowledge } from "../../model/shadows";
 
 type ReadingKnowledgeReference = {

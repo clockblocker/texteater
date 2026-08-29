@@ -42,7 +42,7 @@ import {
 	createConvexDumdictStorage,
 	type DictionaryPlanResult,
 	dictionaryPlanResult,
-} from "./dumdictStorage";
+} from "./dumdictActionStorage";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	projectResolutionGrammar,
