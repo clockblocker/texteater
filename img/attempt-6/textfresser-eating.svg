@@ -25,20 +25,20 @@
   <!-- the eye -->
   <circle cx="407.5" cy="262.0" r="15.0" fill="#1E1613"/>
   <!-- the six equal bites eat the page away, leaving the textfresser (rainbow order) -->
-  <circle cx="104.07" cy="90.18" r="231.57" fill="#000000"/><!-- red bite, upper-left -->
-  <circle cx="724.09" cy="212.12" r="231.57" fill="#000000"/><!-- orange bite, upper-right -->
-  <circle cx="428.79" cy="-10.71" r="231.57" fill="#000000"/><!-- yellow bite, above-head -->
-  <circle cx="148.32" cy="196.56" r="231.57" fill="#000000"/><!-- green bite, left-of-head -->
-  <circle cx="-184.42" cy="316.48" r="231.57" fill="#000000"/><!-- blue bite, far-left -->
-  <circle cx="-26.67" cy="318.76" r="231.57" fill="#000000"/><!-- violet bite, left-edge -->
+  <circle cx="145.97" cy="91.56" r="171.00" fill="#000000"/><!-- red bite, upper-left -->
+  <circle cx="670.39" cy="247.53" r="171.00" fill="#000000"/><!-- orange bite, upper-right -->
+  <circle cx="469.26" cy="54.40" r="171.00" fill="#000000"/><!-- yellow bite, above-head -->
+  <circle cx="195.86" cy="241.18" r="171.00" fill="#000000"/><!-- green bite, left-of-head -->
+  <circle cx="-102.77" cy="407.57" r="171.00" fill="#000000"/><!-- blue bite, far-left -->
+  <circle cx="10.36" cy="370.08" r="171.00" fill="#000000"/><!-- violet bite, left-middle -->
   <!-- eaten words: blue copies on top of their black originals, only where the bites cover them -->
   <clipPath id="bites">
-    <circle cx="104.07" cy="90.18" r="231.57"/>
-    <circle cx="724.09" cy="212.12" r="231.57"/>
-    <circle cx="428.79" cy="-10.71" r="231.57"/>
-    <circle cx="148.32" cy="196.56" r="231.57"/>
-    <circle cx="-184.42" cy="316.48" r="231.57"/>
-    <circle cx="-26.67" cy="318.76" r="231.57"/>
+    <circle cx="145.97" cy="91.56" r="171.00"/>
+    <circle cx="670.39" cy="247.53" r="171.00"/>
+    <circle cx="469.26" cy="54.40" r="171.00"/>
+    <circle cx="195.86" cy="241.18" r="171.00"/>
+    <circle cx="-102.77" cy="407.57" r="171.00"/>
+    <circle cx="10.36" cy="370.08" r="171.00"/>
   </clipPath>
   <g clip-path="url(#bites)">
   <rect x="178" y="54" width="117" height="31" rx="8" fill="#0D385B"/>

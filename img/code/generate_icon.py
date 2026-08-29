@@ -28,7 +28,7 @@ Before writing anything the script asserts the storytelling invariants:
     has taken (no dead beats in the animation).
 
 Usage:
-    python3 generate_icon.py [output-dir]   (default: ../attempt-5)
+    python3 generate_icon.py [output-dir]   (default: ../attempt-6)
 """
 
 import json
@@ -211,7 +211,7 @@ def animated_svg(bites):
 
 
 def main():
-    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-5"
+    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-6"
     out_dir.mkdir(parents=True, exist_ok=True)
     bites = load_bites()
     check_invariants(bites)
