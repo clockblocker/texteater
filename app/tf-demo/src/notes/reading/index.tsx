@@ -18,13 +18,18 @@ import {
 export type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
 
 export type {
+	ReadingBlockKind,
+	ReadingBlockLayout,
+	ReadingBlockPlan,
+} from "./reading-block-plan";
+export { resolveReadingBlockPlan } from "./reading-block-plan";
+export type {
 	ReadingNoteBlockRenderer,
 	ReadingNoteDefaultRenderer,
 	ReadingNotePresentationCapabilities,
 	ReadingNoteRenderContext,
 } from "./reading-note-render-context";
 export type {
-	ReadingNoteBlockMap,
 	ReadingNoteRoute,
 	ReadingNoteRouteKey,
 	UnitReadingFamilyFor,

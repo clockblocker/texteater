@@ -8,7 +8,7 @@ own word/eye placement.
 
 The six bites are applied in rainbow order, red -> orange -> yellow ->
 green -> blue -> violet, following the spatial layout in
-img/animation-sketch.png:
+img/code/animation-sketch.png:
 
   red    = upper-left     takes the page's top-left corner
   orange = above-head     carves the head's shallow dome
@@ -28,7 +28,7 @@ Before writing anything the script asserts the storytelling invariants:
     detached corner slivers or specks.
 
 Usage:
-    python3 generate_icon.py [output-dir]   (default: ../attempt-7)
+    python3 generate_icon.py [output-dir]   (default: ../icon)
 """
 
 import json
@@ -85,8 +85,14 @@ RASTER_SCALE = 2
 MIN_FRESH_AREA = 500
 MIN_UNIQUE_AREA = 500
 
-# attempt-1's approved bite timing
-BEGIN0, STAGGER, DUR = 0.40, 0.55, 0.45
+# Each bite arrives at full size in one frame. The uneven gaps keep the
+# sequence from reading like a metronome while preserving the rainbow order.
+BITE_BEGIN_SECONDS = (0.50, 1.00, 1.20, 1.40, 2.20, 3.00)
+assert len(BITE_BEGIN_SECONDS) == len(BITE_SEQUENCE)
+assert all(
+    earlier < later
+    for earlier, later in zip(BITE_BEGIN_SECONDS, BITE_BEGIN_SECONDS[1:])
+)
 
 
 def load_bites():
@@ -267,16 +273,15 @@ def static_svg(bites):
 def animated_svg(bites):
     lines, clip_lines = [], []
     for i, (role, cx, cy, r) in enumerate(bites):
+        begin = BITE_BEGIN_SECONDS[i]
         lines.append(f'  <circle cx="{cx:.2f}" cy="{cy:.2f}" r="0" fill="{PAGE_BG}">'
                      f'<!-- {RAINBOW[i]} bite ({role}) -->'
-                     f'<animate attributeName="r" values="0;{r:.2f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
-                     f'dur="{DUR}s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>')
+                     f'<set attributeName="r" to="{r:.2f}" begin="{begin:.2f}s" fill="freeze"/></circle>')
         clip_lines.append(f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="0">'
-                          f'<animate attributeName="r" values="0;{r:.2f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
-                          f'dur="{DUR}s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>')
+                          f'<set attributeName="r" to="{r:.2f}" begin="{begin:.2f}s" fill="freeze"/></circle>')
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
   <title>textfresser eating a page (animated)</title>
-  <desc>{DESC} This version replays the construction: the six equal bites grow in rainbow order and the eaten words turn blue exactly where they are covered.</desc>
+  <desc>{DESC} This version replays the construction: six full-size bites appear in rainbow order at a slightly irregular rhythm, and the eaten words turn blue with the bite that covers them.</desc>
   <!-- the canvas -->
   <rect width="640" height="640" fill="{PAGE_BG}"/>
   <!-- the page -->
@@ -285,7 +290,7 @@ def animated_svg(bites):
 {words_xml()}
   <!-- the eye -->
   <circle cx="{EYE[0]}" cy="{EYE[1]}" r="{EYE[2]}" fill="{INK}"/>
-  <!-- the bites, in rainbow order: they grow in and eat the page away -->
+  <!-- the bites, in rainbow order: each full circle appears in one frame -->
 {chr(10).join(lines)}
   <!-- eaten words: blue copies revealed exactly where the bites cover them -->
   <clipPath id="bites">
@@ -299,7 +304,7 @@ def animated_svg(bites):
 
 
 def main():
-    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-7"
+    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "icon"
     out_dir.mkdir(parents=True, exist_ok=True)
     bites = load_bites()
     check_invariants(bites)

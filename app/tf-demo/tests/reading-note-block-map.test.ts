@@ -2,7 +2,14 @@ import { describe, expect, test } from "bun:test";
 import { dangerouslyHeavySchemasForAbout100MiBRss as schemasFor } from "dumling/dangerously-heavy-schema-tree";
 import { defaultKnowledgeRequestMask } from "dumrel";
 
-import { DE_READING_NOTE_BLOCK_MAP } from "../src/notes/reading/de/block-map";
+import { supportedReadingRoutes } from "../shared/reading-block-layout";
+import { orderNoteBlockKinds } from "../src/notes/note-block-order";
+import {
+	type ReadingBlockLayout,
+	resolveReadingBlockPlan,
+} from "../src/notes/reading/reading-block-plan";
+import type { ReadingNoteRoute } from "../src/notes/reading/reading-note-route";
+import { availableBlocksFor } from "../src/notes/reading/system-block-catalog";
 
 const familyKinds = {
 	Lexeme: [
@@ -53,40 +60,110 @@ const universalBlocks = [
 	"Translations",
 ] as const;
 
-describe("German Reading Note Block applicability", () => {
-	test("fully materializes all 33 Unit Reading routes without Construction", () => {
-		expect(Object.keys(DE_READING_NOTE_BLOCK_MAP)).toEqual(
-			Object.keys(familyKinds),
+describe("German Reading Block catalog", () => {
+	test("resolves a complete valid plan for all 33 Unit Reading routes", () => {
+		const routes = supportedReadingRoutes("de").map(
+			(route) => route as ReadingNoteRoute,
 		);
-		let routeCount = 0;
-		for (const [family, kinds] of Object.entries(familyKinds)) {
+		expect(routes).toHaveLength(33);
+		expect(new Set(routes.map(({ family }) => family))).toEqual(
+			new Set(Object.keys(familyKinds)),
+		);
+
+		for (const route of routes) {
+			const available = availableBlocksFor(route);
+			const plan = resolveReadingBlockPlan(route, {
+				order: available,
+				hidden: new Set(),
+			});
+			expect(plan.map(({ blockKind }) => blockKind)).toEqual(available);
 			expect(
-				Object.keys(
-					DE_READING_NOTE_BLOCK_MAP[
-						family as keyof typeof DE_READING_NOTE_BLOCK_MAP
-					],
-				),
-			).toEqual([...kinds]);
-			routeCount += kinds.length;
+				plan.every(({ renderer }) => typeof renderer === "function"),
+			).toBeTrue();
 		}
-		expect(routeCount).toBe(33);
-		expect(DE_READING_NOTE_BLOCK_MAP).not.toHaveProperty("Construction");
 	});
 
-	test("includes every universal Block and omits unfrozen structure Blocks", () => {
-		for (const blocks of allBlockSets()) {
+	test("keeps applicability behind the catalog interface", () => {
+		for (const route of supportedReadingRoutes("de")) {
+			const blocks = new Set(
+				availableBlocksFor(route as ReadingNoteRoute),
+			);
 			for (const block of universalBlocks)
 				expect(blocks.has(block)).toBeTrue();
 			expect(blocks.has("MorphologicalTree")).toBeFalse();
 			expect(blocks.has("LexicalBreakdown")).toBeFalse();
 			expect(blocks.has("Routes" as never)).toBeFalse();
 		}
+		expect(
+			availableBlocksFor({
+				targetLanguage: "de",
+				family: "Construction",
+				kind: "Clause",
+			}),
+		).toBeNull();
+	});
+
+	test("reconciles duplicate, stale, unsupported, and missing layout entries", () => {
+		const route = {
+			targetLanguage: "de",
+			family: "Lexeme",
+			kind: "PUNCT",
+		} as const;
+		const staleLayout = {
+			order: [
+				"Translations",
+				"Routes",
+				"Header",
+				"Translations",
+				"Relations",
+			],
+			hidden: new Set(["Definition", "Relations", "Routes"]),
+		} as unknown as ReadingBlockLayout;
+
+		expect(
+			resolveReadingBlockPlan(route, staleLayout).map(
+				({ blockKind }) => blockKind,
+			),
+		).toEqual(["Translations", "Header", "SourceContexts"]);
+	});
+
+	test("retains a hidden Block's position when it is re-enabled", () => {
+		const route = {
+			targetLanguage: "de",
+			family: "Lexeme",
+			kind: "NOUN",
+		} as const;
+		const order = [
+			"Relations",
+			"Header",
+			"SourceContexts",
+			"Translations",
+			"Definition",
+		] as const;
+
+		expect(
+			resolveReadingBlockPlan(route, {
+				order,
+				hidden: new Set(["Relations"]),
+			}).map(({ blockKind }) => blockKind),
+		).toEqual(["Header", "SourceContexts", "Translations", "Definition"]);
+		expect(
+			resolveReadingBlockPlan(route, {
+				order,
+				hidden: new Set(),
+			}).map(({ blockKind }) => blockKind),
+		).toEqual(order);
 	});
 
 	test("matches Dumrel's frozen German Relations applicability contract", () => {
 		for (const [family, kinds] of Object.entries(familyKinds)) {
 			for (const kind of kinds) {
-				const blocks = blockSetFor(family, kind);
+				const route = {
+					targetLanguage: "de",
+					family,
+					kind,
+				} as ReadingNoteRoute;
+				const blocks = new Set(availableBlocksFor(route));
 				const lemmaSchema = lemmaSchemaFor(family, kind);
 				const coreFeatures = Object.fromEntries(
 					Object.keys(lemmaSchema.shape.coreFeatures.shape).map(
@@ -111,6 +188,17 @@ describe("German Reading Note Block applicability", () => {
 			}
 		}
 	});
+
+	test("keeps Route and Shadow Note ordering on the static weight system", () => {
+		expect(orderNoteBlockKinds(new Set(["Routes", "Header"]))).toEqual([
+			"Header",
+			"Routes",
+		]);
+		expect(orderNoteBlockKinds(new Set(["Relations", "Header"]))).toEqual([
+			"Header",
+			"Relations",
+		]);
+	});
 });
 
 type RuntimeLemmaSchema = {
@@ -131,20 +219,4 @@ function lemmaSchemaFor(family: string, kind: string): RuntimeLemmaSchema {
 	if (!schema)
 		throw new Error(`Missing Dumling schema for ${family}/${kind}.`);
 	return schema;
-}
-
-function blockSetFor(family: string, kind: string) {
-	const familyMap = DE_READING_NOTE_BLOCK_MAP[
-		family as keyof typeof DE_READING_NOTE_BLOCK_MAP
-	] as Readonly<Record<string, ReadonlySet<string>>>;
-	const blocks = familyMap[kind];
-	if (!blocks)
-		throw new Error(`Missing Reading Block map for ${family}/${kind}.`);
-	return blocks;
-}
-
-function allBlockSets() {
-	return Object.values(DE_READING_NOTE_BLOCK_MAP).flatMap((familyMap) =>
-		Object.values(familyMap),
-	);
 }

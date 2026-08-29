@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
   <title>textfresser eating a page (animated)</title>
-  <desc>Construction: a white page holds black rounded word bars and a small black eye. Six equal black circles bite the page away around the textfresser, leaving one clean white silhouette aligned with the reference mascot. Every circle contributes visible final area. The bites land in rainbow order (red, orange, yellow, green, blue, violet): red takes the upper left, orange carves the head dome, yellow closes the upper right, green takes the lower left, blue carves the head's left side, and violet carves its right side. Where a bite covers a word, a blue rectangle is layered directly on top of its black original: the eaten words turn blue, floating on the black that replaced the page. Darker blue words are not yet known, lighter blue ones are processed. This version replays the construction: the six equal bites grow in rainbow order and the eaten words turn blue exactly where they are covered.</desc>
+  <desc>Construction: a white page holds black rounded word bars and a small black eye. Six equal black circles bite the page away around the textfresser, leaving one clean white silhouette aligned with the reference mascot. Every circle contributes visible final area. The bites land in rainbow order (red, orange, yellow, green, blue, violet): red takes the upper left, orange carves the head dome, yellow closes the upper right, green takes the lower left, blue carves the head's left side, and violet carves its right side. Where a bite covers a word, a blue rectangle is layered directly on top of its black original: the eaten words turn blue, floating on the black that replaced the page. Darker blue words are not yet known, lighter blue ones are processed. This version replays the construction: six full-size bites appear in rainbow order at a slightly irregular rhythm, and the eaten words turn blue with the bite that covers them.</desc>
   <!-- the canvas -->
   <rect width="640" height="640" fill="#000000"/>
   <!-- the page -->
@@ -24,21 +24,21 @@
   <rect x="432" y="529" width="51" height="31" rx="8" fill="#1E1613"/>
   <!-- the eye -->
   <circle cx="407.5" cy="262.0" r="15.0" fill="#1E1613"/>
-  <!-- the bites, in rainbow order: they grow in and eat the page away -->
-  <circle cx="130.92" cy="96.05" r="0" fill="#000000"><!-- red bite (upper-left) --><animate attributeName="r" values="0;168.63" begin="0.40s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-  <circle cx="429.88" cy="52.33" r="0" fill="#000000"><!-- orange bite (above-head) --><animate attributeName="r" values="0;168.63" begin="0.95s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-  <circle cx="672.23" cy="65.71" r="0" fill="#000000"><!-- yellow bite (upper-right) --><animate attributeName="r" values="0;168.63" begin="1.50s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-  <circle cx="13.22" cy="370.53" r="0" fill="#000000"><!-- green bite (lower-left) --><animate attributeName="r" values="0;168.63" begin="2.05s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-  <circle cx="197.84" cy="242.72" r="0" fill="#000000"><!-- blue bite (left-of-head) --><animate attributeName="r" values="0;168.63" begin="2.60s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-  <circle cx="668.47" cy="247.97" r="0" fill="#000000"><!-- violet bite (right-of-head) --><animate attributeName="r" values="0;168.63" begin="3.15s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
+  <!-- the bites, in rainbow order: each full circle appears in one frame -->
+  <circle cx="130.92" cy="96.05" r="0" fill="#000000"><!-- red bite (upper-left) --><set attributeName="r" to="168.63" begin="0.50s" fill="freeze"/></circle>
+  <circle cx="429.88" cy="52.33" r="0" fill="#000000"><!-- orange bite (above-head) --><set attributeName="r" to="168.63" begin="1.00s" fill="freeze"/></circle>
+  <circle cx="672.23" cy="65.71" r="0" fill="#000000"><!-- yellow bite (upper-right) --><set attributeName="r" to="168.63" begin="1.20s" fill="freeze"/></circle>
+  <circle cx="13.22" cy="370.53" r="0" fill="#000000"><!-- green bite (lower-left) --><set attributeName="r" to="168.63" begin="1.40s" fill="freeze"/></circle>
+  <circle cx="197.84" cy="242.72" r="0" fill="#000000"><!-- blue bite (left-of-head) --><set attributeName="r" to="168.63" begin="2.20s" fill="freeze"/></circle>
+  <circle cx="668.47" cy="247.97" r="0" fill="#000000"><!-- violet bite (right-of-head) --><set attributeName="r" to="168.63" begin="3.00s" fill="freeze"/></circle>
   <!-- eaten words: blue copies revealed exactly where the bites cover them -->
   <clipPath id="bites">
-    <circle cx="130.92" cy="96.05" r="0"><animate attributeName="r" values="0;168.63" begin="0.40s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-    <circle cx="429.88" cy="52.33" r="0"><animate attributeName="r" values="0;168.63" begin="0.95s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-    <circle cx="672.23" cy="65.71" r="0"><animate attributeName="r" values="0;168.63" begin="1.50s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-    <circle cx="13.22" cy="370.53" r="0"><animate attributeName="r" values="0;168.63" begin="2.05s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-    <circle cx="197.84" cy="242.72" r="0"><animate attributeName="r" values="0;168.63" begin="2.60s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
-    <circle cx="668.47" cy="247.97" r="0"><animate attributeName="r" values="0;168.63" begin="3.15s" dur="0.45s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>
+    <circle cx="130.92" cy="96.05" r="0"><set attributeName="r" to="168.63" begin="0.50s" fill="freeze"/></circle>
+    <circle cx="429.88" cy="52.33" r="0"><set attributeName="r" to="168.63" begin="1.00s" fill="freeze"/></circle>
+    <circle cx="672.23" cy="65.71" r="0"><set attributeName="r" to="168.63" begin="1.20s" fill="freeze"/></circle>
+    <circle cx="13.22" cy="370.53" r="0"><set attributeName="r" to="168.63" begin="1.40s" fill="freeze"/></circle>
+    <circle cx="197.84" cy="242.72" r="0"><set attributeName="r" to="168.63" begin="2.20s" fill="freeze"/></circle>
+    <circle cx="668.47" cy="247.97" r="0"><set attributeName="r" to="168.63" begin="3.00s" fill="freeze"/></circle>
   </clipPath>
   <g clip-path="url(#bites)">
   <rect x="178" y="54" width="117" height="31" rx="8" fill="#0D385B"/>

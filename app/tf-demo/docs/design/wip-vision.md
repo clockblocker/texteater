@@ -2,6 +2,9 @@
 
 Core wayfinder: [#159: tf-demo linked Notes and source-context navigation](https://github.com/clockblocker/texteater/issues/159)
 
+Block policy wayfinder:
+[Wayfinder: configurable Unit Reading Note blocks](https://github.com/clockblocker/texteater/issues/281)
+
 tf-demo is the proper implementation of an idea first explored in Obsidian:
 
 > A learner builds a map of a language from the language they actually

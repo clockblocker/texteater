@@ -2,21 +2,20 @@ import { expect, test } from "bun:test";
 import { createElement, Fragment } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
-import type { NoteBlockKindFor } from "../src/notes/note-block-kind";
 import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import {
+	type ReadingBlockPlan,
 	type ReadingNoteData,
-	type ReadingNoteDefaultRenderer,
 	type ReadingNotePresentationCapabilities,
 	type ReadingNoteRenderContext,
 	renderReadingNote,
+	resolveReadingBlockPlan,
 } from "../src/notes/reading";
-import { DEFAULT_READING_NOTE_RENDERER_FOR } from "../src/notes/reading/default-renderers";
 import { ReadingNoteBlockErrorBoundary } from "../src/notes/reading/error-block";
 import { createDefaultReadingNoteCapabilities } from "../src/notes/reading/reading-note-render-context";
 import { narrowReadingNoteRoute } from "../src/notes/reading/reading-note-route";
-import { renderReadingNoteBlocks } from "../src/notes/reading/render-reading-note";
-import type { ReadingNoteRendererOverrideRegistry } from "../src/notes/reading/renderer-overrides";
+import { renderReadingBlockPlan } from "../src/notes/reading/render-reading-note";
+import { rendererFor } from "../src/notes/reading/system-block-catalog";
 import { readingDefinitionMutationArgs } from "../src/views/unit-reading-note-view";
 
 test("narrows each valid Reading route once and rejects unsupported coordinates", () => {
@@ -55,13 +54,18 @@ test("keeps app navigation outside the Note composition while modeled defaults s
 	expect(markup).not.toContain("unavailable");
 
 	const context = renderContext();
-	expect(
-		renderReadingNoteBlocks(context, new Set(["Header", "Definition"]), {}),
-	).toHaveLength(1);
-	expect(
-		renderReadingNoteBlocks(context, new Set(["Definition"]), {}),
-	).toHaveLength(0);
-	expect(Object.keys(DEFAULT_READING_NOTE_RENDERER_FOR)).toHaveLength(7);
+	const plan = resolveReadingBlockPlan(
+		context.route,
+		context.capabilities.blockLayout,
+	);
+	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
+		"Header",
+		"SourceContexts",
+		"Relations",
+		"Translations",
+		"Definition",
+	]);
+	expect(renderReadingBlockPlan(context, plan)).toHaveLength(1);
 });
 
 test("renders the four visible defaults in weighted order with workspace commands", () => {
@@ -193,43 +197,37 @@ test("renders Source Context pagination loading and failure state from capabilit
 	expect(markup).toContain("Source Context page failed.");
 });
 
-test("orders applicable Blocks by shared weights and prefers a sparse override", () => {
+test("resolves configured order and keeps the German VERB Header specialization sparse", () => {
 	const context = renderContext();
-	let overrideReceivedContext = false;
-	const overrides = {
-		Lexeme: {
-			NOUN: {
-				Relations(received) {
-					overrideReceivedContext = received === context;
-					return createElement("span", {
-						"data-block": "Relations override",
-					});
-				},
-			},
-		},
-	} satisfies ReadingNoteRendererOverrideRegistry<"de">;
-	const blocks = renderReadingNoteBlocks(
-		context,
-		new Set(["Definition", "Relations", "Header", "Translations"]),
-		overrides,
-		markerRenderers(),
-	);
-	const markup = renderToStaticMarkup(createElement(Fragment, {}, ...blocks));
+	const plan = resolveReadingBlockPlan(context.route, {
+		order: [
+			"Translations",
+			"Relations",
+			"Header",
+			"Definition",
+			"SourceContexts",
+		],
+		hidden: new Set(),
+	});
+	const verbRoute = {
+		targetLanguage: "de",
+		family: "Lexeme",
+		kind: "VERB",
+	} as const;
 
-	expect(overrideReceivedContext).toBeTrue();
-	expect(markup.indexOf("Header default")).toBeLessThan(
-		markup.indexOf("Relations override"),
+	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
+		"Translations",
+		"Relations",
+		"Header",
+		"Definition",
+		"SourceContexts",
+	]);
+	expect(rendererFor(verbRoute, "Header")).not.toBe(
+		rendererFor(context.route, "Header"),
 	);
-	expect(markup.indexOf("Relations override")).toBeLessThan(
-		markup.indexOf("Translations default"),
+	expect(rendererFor(verbRoute, "Relations")).toBe(
+		rendererFor(context.route, "Relations"),
 	);
-	expect(markup.indexOf("Translations default")).toBeLessThan(
-		markup.indexOf("Definition default"),
-	);
-	expect(markup).not.toContain("Relations default");
-	expect(
-		blocks.every(({ type }) => type === ReadingNoteBlockErrorBoundary),
-	).toBe(true);
 });
 
 test("renders the specialized German verb Header through the public Reading renderer", () => {
@@ -302,21 +300,28 @@ test("German verb Header treats governed prepositions and separable prefixes ind
 });
 
 test("isolates an invoked renderer failure without hiding successful siblings", () => {
-	const defaults = markerRenderers();
-	defaults.Relations = () => {
-		throw new Error("Relations exploded");
-	};
-	const blocks = renderReadingNoteBlocks(
-		renderContext(),
-		new Set(["Relations", "Header"]),
-		{},
-		defaults,
-	);
+	const plan: ReadingBlockPlan<"de", "Lexeme", "NOUN"> = [
+		{
+			blockKind: "Header",
+			renderer: () =>
+				createElement("span", { "data-block": "Header default" }),
+		},
+		{
+			blockKind: "Relations",
+			renderer: () => {
+				throw new Error("Relations exploded");
+			},
+		},
+	];
+	const blocks = renderReadingBlockPlan(renderContext(), plan);
 	const markup = renderToStaticMarkup(createElement(Fragment, {}, ...blocks));
 
 	expect(markup).toContain("Header default");
 	expect(markup).toContain("Relations unavailable");
 	expect(markup).toContain("Relations exploded");
+	expect(
+		blocks.every(({ type }) => type === ReadingNoteBlockErrorBoundary),
+	).toBe(true);
 });
 
 test("resets a failed Block boundary when reactive render input changes", () => {
@@ -466,24 +471,6 @@ function renderPublicReadingNote(
 	capabilities?: ReadingNotePresentationCapabilities,
 ): string {
 	return renderToStaticMarkup(renderNote(note, capabilities));
-}
-
-function markerRenderers(): Record<
-	NoteBlockKindFor<"UnitReadingNote">,
-	ReadingNoteDefaultRenderer
-> {
-	return Object.fromEntries(
-		Object.keys(DEFAULT_READING_NOTE_RENDERER_FOR).map((blockKind) => [
-			blockKind,
-			() =>
-				createElement("span", {
-					"data-block": `${blockKind} default`,
-				}),
-		]),
-	) as Record<
-		NoteBlockKindFor<"UnitReadingNote">,
-		ReadingNoteDefaultRenderer
-	>;
 }
 
 type ReadingNoteFixtureOptions = Partial<{

@@ -1,24 +1,13 @@
 import type { ReactElement } from "react";
 
-import type { NoteBlockKindFor } from "../note-block-kind";
-import { orderNoteBlockKinds } from "../note-block-order";
 import type { TargetLanguage } from "../target-language";
-import { DEFAULT_READING_NOTE_RENDERER_FOR } from "./default-renderers";
 import { ReadingNoteBlockErrorBoundary, renderErrorBlock } from "./error-block";
+import type { ReadingBlockPlan } from "./reading-block-plan";
+import type { ReadingNoteRenderContext } from "./reading-note-render-context";
 import type {
-	ReadingNoteDefaultRenderer,
-	ReadingNoteRenderContext,
-} from "./reading-note-render-context";
-import type {
-	ReadingNoteRouteKey,
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
-import {
-	type ReadingNoteRendererOverrideRegistry,
-	readingNoteRendererOverrideFor,
-	selectReadingNoteRenderer,
-} from "./renderer-overrides";
 
 export function renderReadingNoteComposition<
 	L extends TargetLanguage,
@@ -26,8 +15,7 @@ export function renderReadingNoteComposition<
 	K extends UnitReadingKindFor<L, F>,
 >(
 	context: ReadingNoteRenderContext<L, F, K>,
-	applicableBlockKinds: ReadonlySet<NoteBlockKindFor<"UnitReadingNote">>,
-	rendererOverrides: ReadingNoteRendererOverrideRegistry<L>,
+	plan: ReadingBlockPlan<L, F, K>,
 ): ReactElement {
 	return (
 		<div className="flex-1 bg-background px-4 py-8 sm:px-6 sm:py-12">
@@ -36,47 +24,25 @@ export function renderReadingNoteComposition<
 					className="flex flex-col gap-5"
 					aria-label="Reading note"
 				>
-					{renderReadingNoteBlocks(
-						context,
-						applicableBlockKinds,
-						rendererOverrides,
-					)}
+					{renderReadingBlockPlan(context, plan)}
 				</article>
 			</div>
 		</div>
 	);
 }
 
-export function renderReadingNoteBlocks<
+export function renderReadingBlockPlan<
 	L extends TargetLanguage,
 	F extends UnitReadingFamilyFor<L>,
 	K extends UnitReadingKindFor<L, F>,
 >(
 	context: ReadingNoteRenderContext<L, F, K>,
-	applicableBlockKinds: ReadonlySet<NoteBlockKindFor<"UnitReadingNote">>,
-	rendererOverrides: ReadingNoteRendererOverrideRegistry<L>,
-	defaultRenderers: Record<
-		NoteBlockKindFor<"UnitReadingNote">,
-		ReadingNoteDefaultRenderer
-	> = DEFAULT_READING_NOTE_RENDERER_FOR,
+	plan: ReadingBlockPlan<L, F, K>,
 ): readonly ReactElement[] {
-	const orderedBlockKinds = orderNoteBlockKinds(
-		applicableBlockKinds,
-	) as readonly NoteBlockKindFor<"UnitReadingNote">[];
-	return orderedBlockKinds.flatMap((blockKind) => {
-		const defaultRenderer = defaultRenderers[blockKind];
-		const override = readingNoteRendererOverrideFor<L, F, K>(
-			rendererOverrides,
-			context.route as ReadingNoteRouteKey<L, F, K>,
-			blockKind,
-		);
-		const renderer = selectReadingNoteRenderer(defaultRenderer, override);
+	return plan.flatMap(({ blockKind, renderer }) => {
 		let rendered: ReactElement | null;
 		try {
-			// The route-indexed registry guarantees that this renderer and context
-			// share one concrete L/F/K tuple. TypeScript represents a heterogeneous
-			// lookup as a union of functions, whose safe call signature is `never`.
-			rendered = renderer(context as never);
+			rendered = renderer(context);
 		} catch (cause) {
 			rendered = renderErrorBlock(blockKind, cause);
 		}

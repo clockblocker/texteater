@@ -1,9 +1,8 @@
 import type { LemmaFamilyFor, LemmaKindFor } from "dumling/types";
 
-import type { NoteBlockKindFor } from "../note-block-kind";
 import type { NoteDataFor } from "../note-data";
 import { type TargetLanguage, targetLanguageSchema } from "../target-language";
-import { DE_READING_NOTE_BLOCK_MAP } from "./de/block-map";
+import { availableBlocksFor } from "./system-block-catalog";
 
 type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
 
@@ -41,23 +40,6 @@ export type ReadingNoteRoute = {
 	[Language in TargetLanguage]: ReadingNoteRouteFor<Language>;
 }[TargetLanguage];
 
-export type ReadingNoteBlockMap<L extends TargetLanguage> = {
-	[Family in UnitReadingFamilyFor<L>]: {
-		[Kind in UnitReadingKindFor<L, Family>]: ReadonlySet<
-			NoteBlockKindFor<"UnitReadingNote">
-		>;
-	};
-};
-
-type RuntimeReadingNoteBlockMap = Readonly<
-	Record<
-		string,
-		Readonly<
-			Record<string, ReadonlySet<NoteBlockKindFor<"UnitReadingNote">>>
-		>
-	>
->;
-
 /** Narrows the widened Convex route once, before applicability or dispatch. */
 export function narrowReadingNoteRoute(
 	note: ReadingNoteData,
@@ -66,15 +48,11 @@ export function narrowReadingNoteRoute(
 	const language = targetLanguageSchema.safeParse(lemma.language);
 	if (!language.success) return null;
 
-	const mapForLanguage: RuntimeReadingNoteBlockMap =
-		language.data === "de" ? DE_READING_NOTE_BLOCK_MAP : {};
-	if (mapForLanguage[lemma.family]?.[lemma.kind] === undefined) {
-		return null;
-	}
-
-	return {
+	const route = {
 		targetLanguage: language.data,
 		family: lemma.family,
 		kind: lemma.kind,
-	} as ReadingNoteRoute;
+	};
+	if (availableBlocksFor(route) === null) return null;
+	return route as ReadingNoteRoute;
 }

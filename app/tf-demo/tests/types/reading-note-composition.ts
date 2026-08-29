@@ -1,11 +1,13 @@
 import type { Reading } from "dumling/types";
 import type {
+	ReadingBlockLayout,
+	ReadingBlockPlan,
 	ReadingNoteBlockRenderer,
 	ReadingNoteRenderContext,
 	UnitReadingFamilyFor,
 } from "../../src/notes/reading";
-import { DE_READING_NOTE_BLOCK_MAP } from "../../src/notes/reading/de/block-map";
-import type { ReadingNoteRendererOverrideRegistry } from "../../src/notes/reading/renderer-overrides";
+import { resolveReadingBlockPlan } from "../../src/notes/reading/reading-block-plan";
+import { rendererFor } from "../../src/notes/reading/system-block-catalog";
 
 type Equal<Left, Right> =
 	(<Value>() => Value extends Left ? 1 : 2) extends <
@@ -33,19 +35,18 @@ const verbHeader: ReadingNoteBlockRenderer<"de", "Lexeme", "VERB"> = (
 		| null;
 	return null;
 };
+void verbHeader;
 
-const overrides = {
-	Lexeme: { VERB: { Header: verbHeader } },
-} satisfies ReadingNoteRendererOverrideRegistry<"de">;
-void overrides;
-
-const wrongRoute: ReadingNoteRendererOverrideRegistry<"de"> = {
-	Lexeme: {
-		// @ts-expect-error The German VERB renderer cannot be installed on NOUN.
-		NOUN: { Header: verbHeader },
-	},
-};
-void wrongRoute;
+const verbRoute = {
+	targetLanguage: "de",
+	family: "Lexeme",
+	kind: "VERB",
+} as const;
+rendererFor(verbRoute, "Header") satisfies ReadingNoteBlockRenderer<
+	"de",
+	"Lexeme",
+	"VERB"
+>;
 
 export type ImpossibleContext = ReadingNoteRenderContext<
 	"de",
@@ -68,5 +69,12 @@ void mismatchedVerbContext;
 const constructionFamily: UnitReadingFamilyFor<"de"> = "Construction";
 void constructionFamily;
 
-// @ts-expect-error Applicability leaves expose no mutating Set API.
-DE_READING_NOTE_BLOCK_MAP.Lexeme.NOUN.add("Definition");
+declare const blockLayout: ReadingBlockLayout;
+// @ts-expect-error Layout visibility exposes no mutating Set interface.
+blockLayout.hidden.add("Definition");
+
+resolveReadingBlockPlan(verbRoute, blockLayout) satisfies ReadingBlockPlan<
+	"de",
+	"Lexeme",
+	"VERB"
+>;

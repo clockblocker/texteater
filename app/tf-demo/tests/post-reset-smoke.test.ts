@@ -151,6 +151,67 @@ describe("tf-demo post-reset contract", () => {
 		expect(visitorDb.rows("visitorClicks")).toHaveLength(1);
 	});
 
+	test("visitor reset removes Reading layouts without touching another visitor", async () => {
+		const db = new IndexedTestDb({
+			knowledgeSettings: [
+				{ _id: "knowledge-1", visitorId: "visitor-1" },
+				{ _id: "knowledge-2", visitorId: "visitor-2" },
+			],
+			readingLanguageLayouts: [
+				{
+					_id: "language-layout-1",
+					visitorId: "visitor-1",
+					targetLanguage: "de",
+				},
+				{
+					_id: "language-layout-2",
+					visitorId: "visitor-2",
+					targetLanguage: "de",
+				},
+			],
+			readingFamilyKindLayouts: [
+				{
+					_id: "family-kind-layout-1",
+					visitorId: "visitor-1",
+					targetLanguage: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+				{
+					_id: "family-kind-layout-2",
+					visitorId: "visitor-2",
+					targetLanguage: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+				},
+			],
+		});
+		let phase:
+			| "KnowledgeSettings"
+			| "ReadingLanguageLayouts"
+			| "ReadingFamilyKindLayouts"
+			| "VisitorClicks"
+			| "Done" = "KnowledgeSettings";
+		for (let step = 0; step < 5 && phase !== "Done"; step += 1) {
+			const result = (await runTestMutation(db, clearVisitorDataBatch, {
+				visitorId: "visitor-1",
+				phase,
+			})) as { nextPhase: typeof phase };
+			phase = result.nextPhase;
+		}
+
+		expect(phase).toBe("Done");
+		for (const tableName of [
+			"knowledgeSettings",
+			"readingLanguageLayouts",
+			"readingFamilyKindLayouts",
+		] as const) {
+			expect(
+				db.rows(tableName).map(({ visitorId }) => visitorId),
+			).toEqual(["visitor-2"]);
+		}
+	});
+
 	test("a clean database stores base Knowledge and direct claims while projecting only valid inferred views", async () => {
 		const db = new IndexedTestDb();
 		const dictionary = createDumdictService({

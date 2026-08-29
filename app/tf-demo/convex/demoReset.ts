@@ -28,6 +28,8 @@ export const resetDemoTableNames = [
 	"knowledgeGenerationAttempts",
 	"relationPublicationControls",
 	"knowledgeSettings",
+	"readingLanguageLayouts",
+	"readingFamilyKindLayouts",
 	"structuralShadowReferences",
 	"knowledgeChanges",
 	"accumulatedKnowledge",
@@ -108,6 +110,8 @@ const visitorResetPhaseValidator = v.union(
 	v.literal("ResolutionSessions"),
 	v.literal("GenerationAttempts"),
 	v.literal("KnowledgeSettings"),
+	v.literal("ReadingLanguageLayouts"),
+	v.literal("ReadingFamilyKindLayouts"),
 	v.literal("VisitorClicks"),
 	v.literal("Done"),
 );
@@ -116,6 +120,8 @@ type VisitorResetPhase =
 	| "ResolutionSessions"
 	| "GenerationAttempts"
 	| "KnowledgeSettings"
+	| "ReadingLanguageLayouts"
+	| "ReadingFamilyKindLayouts"
 	| "VisitorClicks"
 	| "Done";
 
@@ -178,7 +184,38 @@ export const clearVisitorDataBatch = internalMutation({
 					await ctx.db.delete(row._id);
 					deleted = 1;
 				}
-				nextPhase = "VisitorClicks";
+				nextPhase = "ReadingLanguageLayouts";
+				break;
+			}
+			case "ReadingLanguageLayouts": {
+				const rows = await ctx.db
+					.query("readingLanguageLayouts")
+					.withIndex("by_visitor_id_and_target_language", (q) =>
+						q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE
+						? "ReadingLanguageLayouts"
+						: "ReadingFamilyKindLayouts";
+				break;
+			}
+			case "ReadingFamilyKindLayouts": {
+				const rows = await ctx.db
+					.query("readingFamilyKindLayouts")
+					.withIndex(
+						"by_visitor_id_and_target_language_and_family_and_kind",
+						(q) => q.eq("visitorId", visitorId),
+					)
+					.take(BATCH_SIZE);
+				for (const row of rows) await ctx.db.delete(row._id);
+				deleted = rows.length;
+				nextPhase =
+					rows.length === BATCH_SIZE
+						? "ReadingFamilyKindLayouts"
+						: "VisitorClicks";
 				break;
 			}
 			case "VisitorClicks": {

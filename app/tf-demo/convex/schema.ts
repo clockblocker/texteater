@@ -10,6 +10,7 @@ import {
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
+	readingBlockKindValidator,
 	readingValueValidator,
 	realizationCoverageValidator,
 	relationProposalOutcomeValidator,
@@ -344,6 +345,32 @@ export default defineSchema({
 		settings: knowledgeSettingsValidator,
 		updatedAt: v.number(),
 	}).index("by_visitor_id", ["visitorId"]),
+
+	readingLanguageLayouts: defineTable({
+		visitorId: v.string(),
+		targetLanguage: v.literal("de"),
+		order: v.array(readingBlockKindValidator),
+		hidden: v.array(readingBlockKindValidator),
+		updatedAt: v.number(),
+	}).index("by_visitor_id_and_target_language", [
+		"visitorId",
+		"targetLanguage",
+	]),
+
+	readingFamilyKindLayouts: defineTable({
+		visitorId: v.string(),
+		targetLanguage: v.literal("de"),
+		family: v.string(),
+		kind: v.string(),
+		order: v.array(readingBlockKindValidator),
+		hidden: v.array(readingBlockKindValidator),
+		updatedAt: v.number(),
+	}).index("by_visitor_id_and_target_language_and_family_and_kind", [
+		"visitorId",
+		"targetLanguage",
+		"family",
+		"kind",
+	]),
 
 	visitorClicks: defineTable({
 		requestId: v.string(),

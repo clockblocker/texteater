@@ -15,6 +15,8 @@ import {
 	semanticRelationValues,
 } from "dumrel/vocabulary";
 
+import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
+
 function literalUnion<const Value extends string>(
 	values: readonly [Value, ...Value[]],
 ) {
@@ -171,6 +173,21 @@ export const knowledgeSettingsValidator = v.object({
 		meronym: v.boolean(),
 		holonym: v.boolean(),
 	}),
+});
+
+export const readingBlockKindValidator = literalUnion(
+	READING_BLOCK_KIND_VALUES,
+);
+
+export const readingBlockRouteValidator = v.object({
+	targetLanguage: v.literal("de"),
+	family: v.string(),
+	kind: v.string(),
+});
+
+export const readingBlockLayoutValidator = v.object({
+	order: v.array(readingBlockKindValidator),
+	hidden: v.array(readingBlockKindValidator),
 });
 
 export const occurrenceAttestationInputValidator = v.object({

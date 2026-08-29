@@ -5,11 +5,14 @@ import type { ReactElement } from "react";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { NoteDataFor } from "../note-data";
 import type { TargetLanguage } from "../target-language";
+import type { ReadingBlockLayout } from "./reading-block-plan";
 import type {
 	ReadingNoteRouteKey,
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
+import { narrowReadingNoteRoute } from "./reading-note-route";
+import { availableBlocksFor } from "./system-block-catalog";
 
 type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
 type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
@@ -27,6 +30,7 @@ type ConcreteReadingNoteData<
 };
 
 export type ReadingNotePresentationCapabilities = {
+	readonly blockLayout: ReadingBlockLayout;
 	readonly knowledgeSettings: KnowledgeSettings;
 	readonly sourceContexts: {
 		readonly items: readonly SourceContext[];
@@ -75,7 +79,19 @@ export type ReadingNoteDefaultRenderer = <
 export function createDefaultReadingNoteCapabilities(
 	note: ReadingNoteData,
 ): ReadingNotePresentationCapabilities {
+	const route = narrowReadingNoteRoute(note);
+	if (!route) {
+		const lemma = note.reading.lemma;
+		throw new Error(
+			`Unsupported Reading route: ${lemma.language}/${lemma.family}/${lemma.kind}.`,
+		);
+	}
+
 	return {
+		blockLayout: {
+			order: availableBlocksFor(route),
+			hidden: new Set(),
+		},
 		knowledgeSettings: DEFAULT_KNOWLEDGE_SETTINGS,
 		sourceContexts: {
 			items: note.sourceContexts.page,
