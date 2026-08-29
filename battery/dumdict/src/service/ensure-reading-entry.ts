@@ -27,16 +27,16 @@ export async function ensureReadingEntry<L extends SupportedLanguage>(
 		};
 	}
 
-	const slice = await options.storage.loadNewNoteContext({
-		draft: {
-			reading: request.entry.reading,
-			note: {
-				attestedTranslations: request.entry.attestedTranslations,
-				attestations: request.entry.attestations,
-				notes: request.entry.notes,
-			},
+	const draft = {
+		reading: request.entry.reading,
+		note: {
+			attestedTranslations: request.entry.attestedTranslations,
+			attestations: request.entry.attestations,
+			notes: request.entry.notes,
 		},
-	});
+	};
+	const slice = await options.storage.loadNewNoteContext({ draft });
+	options.sliceValidation.newNote(slice, draft);
 	const plan = planEnsureReadingEntry(slice, request);
 	if (plan.status === "rejected") return plan;
 	return applyPlan(options, plan, mutationOptions);

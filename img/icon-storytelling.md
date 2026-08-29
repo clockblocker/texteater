@@ -1,4 +1,4 @@
-add another one with the silouette being the result of layered (black cicles)[img/animation-sketch.png]
+Mke a scv version of the [img/textfresser-mascot.png] one with the silouette being the result of layered (black cicles of the same radius)[img/animation-sketch.png]
 in the rainbow order
 red -> orange -> yellow -> ...
 

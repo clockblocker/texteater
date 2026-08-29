@@ -1,9 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import type { ReadingEntry } from "../../../src";
 import {
+	createDumdictService,
 	englishSwimReading,
 	englishWalkLemma,
 	getBootedUpDumdict,
+	type StoreRevision,
+	withUnusedCleanupStorageMethods,
 } from "./helpers";
 
 const fixedEntry = (): ReadingEntry<"en"> => ({
@@ -17,6 +20,40 @@ const fixedEntry = (): ReadingEntry<"en"> => ({
 });
 
 describe("ensureReadingEntry", () => {
+	test("rejects a mismatched storage slice before planning or commit", async () => {
+		let commitCalls = 0;
+		const storage = withUnusedCleanupStorageMethods({
+			async findStoredReadings() {
+				throw new Error("Unexpected storage call");
+			},
+			async loadReadingForPatch() {
+				throw new Error("Unexpected storage call");
+			},
+			async loadNewNoteContext() {
+				return {
+					revision: "mismatched-slice" as StoreRevision,
+					existingLemma: { lemma: englishWalkLemma },
+					existingOwnedSurfaces: [],
+					explicitExistingLemmaTargets: [],
+					existingPendingRelationsForProposedPendingTargets: [],
+					pendingRelationsMatchingProposedLemma: [],
+					relationLemmas: [],
+					relationReadings: [],
+				};
+			},
+			async commitChanges() {
+				commitCalls += 1;
+				throw new Error("Unexpected commit");
+			},
+		});
+		const dict = createDumdictService({ language: "en", storage });
+
+		await expect(
+			dict.ensureReadingEntry({ entry: fixedEntry() }),
+		).rejects.toThrow("existing Lemma does not match the draft identity");
+		expect(commitCalls).toBe(0);
+	});
+
 	test("creates an ordinary Reading Entry and an exact rerun is a no-op", async () => {
 		const { dict, storage } = getBootedUpDumdict("en");
 
