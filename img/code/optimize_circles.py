@@ -8,11 +8,13 @@ multi-resolution). The fit lives on the square 640x640 icon canvas: the
 mascot mask is resampled first, so the emitted radius is the final SVG
 radius and equal by construction.
 
-All six circles share a single radius: the animation sketch
-(img/animation-sketch.png) draws them equal (pixel fit: 321-331 px on a
-2070x1556 canvas), and the bites are meant to read as six same-size
-mouthfuls. That leaves 13 free parameters (6 centers + the shared radius)
-instead of 18, and IoU 0.98 -- on par with the free-radius attempt-3 fit.
+All six circles share one radius, fixed by the single-bite reference the
+author attached alongside the clearer animation sketch: a blue disc of
+285 px on a 1066 px page, i.e. 26.6% of the page -- 171 px on the 640
+canvas (attempt-4's 231.6 was too large). Only the six centers are fitted,
+bounded to their spatial roles so the rainbow application order in
+generate_icon.py keeps its meaning; IoU 0.985 -- better than every
+previous attempt, including the free-radius one.
 
 SEED below is the multi-start winner (equal-radius Nelder-Mead, several
 random restarts, half-res fit + full-res polish; wide re-ranks between the
@@ -55,15 +57,15 @@ SIZE = 640.0
 # Roles describe where each bite comes from; the rainbow application order
 # that consumes them lives in generate_icon.py.
 SEED = {
-    "above-head":   (428.68, -10.71),  # from the top, carves the head dome
-    "upper-right":  (724.07, 211.94),  # off the right edge, carves the right side
-    "upper-left":   (103.97,  89.89),  # the page's top-left corner
-    "left-of-head": (148.36, 196.58),  # carves the head's left slope
-    "far-left":     (-184.14, 315.82), # off the far left, outer left white
-    "left-edge":    (-26.66, 318.76),  # off the left edge, carves the lower-left sweep
+    "upper-left":   (147.39,  92.64),  # the page's top-left corner
+    "upper-right":  (671.03, 248.04),  # off the right edge, the right side + top-right
+    "above-head":   (469.39,  55.45),  # straight from the top, carves the head dome
+    "left-of-head": (195.75, 241.31),  # carves the head's left slope
+    "far-left":     (-85.00, 405.00),  # off the far left; overlapping story bite
+    "left-middle":  (11.36, 369.02),   # off the left edge, carves the left sweep
 }
-ROLE_ORDER = ("above-head", "upper-right", "upper-left", "left-of-head", "far-left", "left-edge")
-SEED_RADIUS = 231.57
+ROLE_ORDER = ("upper-left", "upper-right", "above-head", "left-of-head", "far-left", "left-middle")
+SEED_RADIUS = 171.0
 
 
 def filled_silhouette(mascot_path):
@@ -115,12 +117,26 @@ def evaluate(p, mask, factor):
 
 
 def run_polish(mask, seed_vec):
-    """One gentle full-resolution polish; accepts only improvements."""
+    """One gentle full-resolution polish of the four carving circles'
+    centers (radius is fixed by the reference); accepts only improvements."""
     t1, x1, y1 = grid(mask, 1)
-    loss1 = make_loss(t1, x1, y1)
-    cand = optimize.minimize(loss1, seed_vec, method="Nelder-Mead",
-                             options=dict(maxiter=4000, maxfev=4000, xatol=0.15, fatol=4.0, adaptive=True))
-    return cand.x if cand.fun < loss1(seed_vec) else seed_vec
+
+    def loss_c(q):
+        p = seed_vec.copy()
+        p[[0, 1, 2, 3]], p[[6, 7, 8, 9]] = q[:4], q[4:]
+        cov = np.zeros(t1.shape, dtype=bool)
+        for i in range(6):
+            cov |= (x1 - p[i]) ** 2 + (y1 - p[6 + i]) ** 2 <= p[12] ** 2
+        return float((~cov ^ t1).sum())
+
+    q0 = np.array([seed_vec[i] for i in (0, 1, 2, 3, 6, 7, 8, 9)])
+    cand = optimize.minimize(loss_c, q0, method="Nelder-Mead",
+                             options=dict(maxiter=15000, maxfev=15000, xatol=0.2, fatol=5.0, adaptive=True))
+    if cand.fun >= loss_c(q0):
+        return seed_vec
+    p = seed_vec.copy()
+    p[[0, 1, 2, 3]], p[[6, 7, 8, 9]] = cand.x[:4], cand.x[4:]
+    return p
 
 
 def assign_roles(p):

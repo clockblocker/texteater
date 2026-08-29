@@ -16,7 +16,7 @@ application and each colored circle was pixel-fitted to pin its position:
   yellow = above-head    straight from the top, takes the dome
   green  = left-of-head  the head's left slope
   blue   = far-left      off the far left, the outer left white
-  violet = left-edge     off the left edge, the lower-left sweep that
+  violet = left-middle   off the left edge, the left sweep that
                          completes the silhouette
 
 Before writing anything the script asserts the storytelling invariants:
@@ -28,7 +28,7 @@ Before writing anything the script asserts the storytelling invariants:
     has taken (no dead beats in the animation).
 
 Usage:
-    python3 generate_icon.py [output-dir]   (default: ../attempt-4)
+    python3 generate_icon.py [output-dir]   (default: ../attempt-5)
 """
 
 import json
@@ -71,7 +71,7 @@ INK = "#1E1613"
 BLUE = {'L': "#0D385B", 'D': "#071E2E"}
 
 RAINBOW = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']
-ROLE_ORDER = ['upper-left', 'upper-right', 'above-head', 'left-of-head', 'far-left', 'left-edge']
+ROLE_ORDER = ['upper-left', 'upper-right', 'above-head', 'left-of-head', 'far-left', 'left-middle']
 
 # attempt-1's approved bite timing
 BEGIN0, STAGGER, DUR = 0.40, 0.55, 0.45
@@ -211,7 +211,7 @@ def animated_svg(bites):
 
 
 def main():
-    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-4"
+    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-5"
     out_dir.mkdir(parents=True, exist_ok=True)
     bites = load_bites()
     check_invariants(bites)

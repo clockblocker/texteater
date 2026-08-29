@@ -1,38 +1,38 @@
 {
   "source": "/Users/annagorelova/work/textfresser-batteries/img/textfresser-mascot.png",
   "canvas": "640x640, canvas coordinates",
-  "shared_radius": 231.57,
-  "ioU_vs_mascot": 0.9811,
+  "shared_radius": 171.0,
+  "ioU_vs_mascot": 0.985,
   "circles_by_role": {
-    "above-head": [
-      428.79,
-      -10.71,
-      231.57
+    "upper-left": [
+      147.06,
+      92.6,
+      171.0
     ],
     "upper-right": [
-      724.09,
-      212.12,
-      231.57
+      671.04,
+      248.05,
+      171.0
     ],
-    "upper-left": [
-      104.07,
-      90.18,
-      231.57
+    "above-head": [
+      469.37,
+      55.43,
+      171.0
     ],
     "left-of-head": [
-      148.32,
-      196.56,
-      231.57
+      195.75,
+      241.3,
+      171.0
     ],
     "far-left": [
-      -184.42,
-      316.48,
-      231.57
+      -85.0,
+      405.0,
+      171.0
     ],
-    "left-edge": [
-      -26.67,
-      318.76,
-      231.57
+    "left-middle": [
+      11.36,
+      369.02,
+      171.0
     ]
   }
 }
