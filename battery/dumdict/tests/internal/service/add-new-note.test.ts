@@ -114,12 +114,13 @@ describe("configured service", () => {
 			async loadReadingForPatch() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				return {
+					intent: "addNewNote" as const,
 					revision: "stub-1" as StoreRevision,
 					existingOwnedSurfaces: [existingSurfaceEntry],
 					explicitExistingLemmaTargets: [],
-					existingPendingRelationsForProposedPendingTargets: [],
+					exactPendingRelations: [],
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],
@@ -163,12 +164,13 @@ describe("configured service", () => {
 			async loadReadingForPatch() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				return {
+					intent: "addNewNote" as const,
 					revision: "new-1" as StoreRevision,
 					existingOwnedSurfaces: [],
 					explicitExistingLemmaTargets: [],
-					existingPendingRelationsForProposedPendingTargets: [],
+					exactPendingRelations: [],
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],

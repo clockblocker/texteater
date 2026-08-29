@@ -190,6 +190,11 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 		[
 			"../convex/model/validators.ts",
 			"../convex/dumdictStorage.ts",
+			"../convex/dumdictStorage/adapter.ts",
+			"../convex/dumdictStorage/dictionaryPlan.ts",
+			"../convex/dumdictStorage/queries.ts",
+			"../convex/dumdictStorage/storage.ts",
+			"../convex/dumdictStorage/transaction.ts",
 			"../convex/persistence.ts",
 		].map((path) => Bun.file(new URL(path, import.meta.url)).text()),
 	);

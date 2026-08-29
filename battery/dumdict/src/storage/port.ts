@@ -5,9 +5,9 @@ import type {
 	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
 	LoadCleanupRelationsContextRequest,
-	LoadNewNoteContextRequest,
+	LoadReadingEntryContextRequest,
 	LoadReadingForPatchRequest,
-	NewNoteSlice,
+	ReadingEntryContext,
 	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
@@ -26,9 +26,9 @@ export type DumdictStoragePort<L extends SupportedLanguage> = {
 		request: LoadReadingForPatchRequest<L>,
 	): Promise<ReadingPatchSlice<L>>;
 
-	loadNewNoteContext(
-		request: LoadNewNoteContextRequest<L>,
-	): Promise<NewNoteSlice<L>>;
+	loadReadingEntryContext(
+		request: LoadReadingEntryContextRequest<L>,
+	): Promise<ReadingEntryContext<L>>;
 
 	loadCleanupRelationsContext(
 		request: LoadCleanupRelationsContextRequest<L>,

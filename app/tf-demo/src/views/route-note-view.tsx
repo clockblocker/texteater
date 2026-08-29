@@ -1,11 +1,12 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useConvex } from "convex/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
+import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
 import type {
 	RouteNoteData,
 	RouteNotePresentationCapabilities,
@@ -19,13 +20,6 @@ type PaginatedRouteNote = Extract<
 	RouteNote,
 	{ routeKind: "Surface" | "Lemma" }
 >;
-
-type RouteNotePaginationState = {
-	readonly note: PaginatedRouteNote;
-	readonly cursor: string;
-	readonly isDone: boolean;
-	readonly isLoading: boolean;
-};
 
 export function RouteNoteView({ target }: { target: RouteNoteTarget }) {
 	const { follow } = useWorkspaceInteraction();
@@ -55,17 +49,6 @@ export function RouteNoteView({ target }: { target: RouteNoteTarget }) {
 	);
 }
 
-export function resetRouteNotePagination(
-	note: PaginatedRouteNote,
-): RouteNotePaginationState {
-	return {
-		note,
-		cursor: note.connections.continueCursor,
-		isDone: note.connections.isDone,
-		isLoading: false,
-	};
-}
-
 function PaginatedRouteNote({
 	initialNote,
 }: {
@@ -73,74 +56,29 @@ function PaginatedRouteNote({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
-	const [pagination, setPagination] = useState(() =>
-		resetRouteNotePagination(initialNote),
-	);
-	const [error, setError] = useState<string | null>(null);
-	const revision = useRef(0);
-	const { note, cursor, isDone, isLoading } = pagination;
-
-	useEffect(() => {
-		revision.current += 1;
-		setPagination(resetRouteNotePagination(initialNote));
-		setError(null);
-	}, [initialNote]);
-
-	async function loadMore() {
-		if (isDone || isLoading) return;
-		setPagination((current) => ({ ...current, isLoading: true }));
-		setError(null);
-		const requestedRevision = revision.current;
-		try {
+	const loadRoutePage = useCallback(
+		async (cursor: string): Promise<PaginatedRouteNote | null> => {
 			const next = await convex.query(api.routeNotes.get, {
-				routeKind: note.target.routeKind,
-				id: note.target.id,
+				routeKind: initialNote.target.routeKind,
+				id: initialNote.target.id,
 				contextCursor: cursor,
 			});
-			if (
-				requestedRevision !== revision.current ||
-				next?.kind !== "RouteNote" ||
-				next.routeKind !== note.routeKind
-			) {
-				if (requestedRevision === revision.current) {
-					setPagination((current) => ({
-						...current,
-						isDone: true,
-						isLoading: false,
-					}));
-				}
-				return;
-			}
-			setPagination((current) => ({
-				note: mergeRouteNotePages(current.note, next),
-				cursor: next.connections.continueCursor,
-				isDone: next.connections.isDone,
-				isLoading: current.isLoading,
-			}));
-		} catch (cause) {
-			const message = routePageFailureMessage(
-				cause,
-				requestedRevision,
-				revision.current,
-			);
-			if (message) setError(message);
-		} finally {
-			if (requestedRevision === revision.current) {
-				setPagination((current) => ({
-					...current,
-					isLoading: false,
-				}));
-			}
-		}
-	}
+			return next?.kind === "RouteNote" &&
+				next.routeKind !== "Attestation"
+				? next
+				: null;
+		},
+		[convex, initialNote.target.id, initialNote.target.routeKind],
+	);
+	const pagination = usePaginatedNoteLoading(initialNote, loadRoutePage);
 
 	return renderNote(
-		note,
+		pagination.note,
 		routeNoteCapabilities(follow, {
-			hasMore: !isDone,
-			isLoading,
-			error,
-			loadMore,
+			hasMore: pagination.hasMore,
+			isLoading: pagination.isLoading,
+			error: pagination.error,
+			loadMore: pagination.hasMore ? pagination.loadMore : null,
 		}),
 	);
 }
@@ -155,90 +93,6 @@ function routeNoteCapabilities(
 	},
 ): RouteNotePresentationCapabilities {
 	return { pagination, follow };
-}
-
-export function routePageFailureMessage(
-	cause: unknown,
-	requestedRevision: number,
-	currentRevision: number,
-): string | null {
-	if (requestedRevision !== currentRevision) return null;
-	return cause instanceof Error
-		? cause.message
-		: "Route connections could not be loaded.";
-}
-
-export function mergeRouteNotePages(
-	current: PaginatedRouteNote,
-	next: PaginatedRouteNote,
-): PaginatedRouteNote {
-	if (current.routeKind === "Surface" && next.routeKind === "Surface") {
-		return {
-			...current,
-			connections: {
-				occurrences: deduplicateBy(
-					[
-						...current.connections.occurrences,
-						...next.connections.occurrences,
-					],
-					(value) => value.attestationId,
-				),
-				sameWrittenForm: deduplicateBy(
-					[
-						...current.connections.sameWrittenForm,
-						...next.connections.sameWrittenForm,
-					],
-					(value) => value.surfaceId,
-				),
-				continueCursor: next.connections.continueCursor,
-				isDone: next.connections.isDone,
-			},
-		};
-	}
-	if (current.routeKind === "Lemma" && next.routeKind === "Lemma") {
-		return {
-			...current,
-			connections: {
-				surfaces: deduplicateBy(
-					[
-						...current.connections.surfaces,
-						...next.connections.surfaces,
-					],
-					(value) => value.surfaceId,
-				),
-				readings: deduplicateBy(
-					[
-						...current.connections.readings,
-						...next.connections.readings,
-					],
-					(value) => value.readingId,
-				),
-				sameWrittenForm: deduplicateBy(
-					[
-						...current.connections.sameWrittenForm,
-						...next.connections.sameWrittenForm,
-					],
-					(value) => value.lemmaId,
-				),
-				continueCursor: next.connections.continueCursor,
-				isDone: next.connections.isDone,
-			},
-		};
-	}
-	throw new Error("Route Note pages must describe the same target kind.");
-}
-
-function deduplicateBy<Value>(
-	values: readonly Value[],
-	key: (value: Value) => string,
-): Value[] {
-	const seen = new Set<string>();
-	return values.filter((value) => {
-		const identity = key(value);
-		if (seen.has(identity)) return false;
-		seen.add(identity);
-		return true;
-	});
 }
 
 function RouteNoteSkeleton() {

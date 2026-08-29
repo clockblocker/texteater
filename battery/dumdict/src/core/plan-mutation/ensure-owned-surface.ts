@@ -1,11 +1,11 @@
 import type { SupportedLanguage } from "dumling/types";
 import { makeSurfaceId } from "../../dumling-id";
 import type { EnsureOwnedSurfaceRequest } from "../../public";
-import type { NewNoteSlice } from "../../storage";
+import type { EnsureOwnedSurfaceContext } from "../../storage";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
 export function planEnsureOwnedSurface<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: EnsureOwnedSurfaceContext<L>,
 	request: EnsureOwnedSurfaceRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	if (!slice.existingLemma || !slice.existingReading) {

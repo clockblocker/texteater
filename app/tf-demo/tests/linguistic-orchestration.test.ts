@@ -38,16 +38,36 @@ function createPlanningStorage() {
 		async findStoredReadings() {
 			return { revision, candidates: [] };
 		},
-		async loadNewNoteContext() {
-			return {
-				revision,
-				existingOwnedSurfaces: [],
-				explicitExistingLemmaTargets: [],
-				existingPendingRelationsForProposedPendingTargets: [],
-				pendingRelationsMatchingProposedLemma: [],
-				relationLemmas: [],
-				relationReadings: [],
-			};
+		async loadReadingEntryContext(request) {
+			switch (request.intent) {
+				case "addNewNote":
+					return {
+						intent: request.intent,
+						revision,
+						existingOwnedSurfaces: [],
+						explicitExistingLemmaTargets: [],
+						exactPendingRelations: [],
+						pendingRelationsMatchingProposedLemma: [],
+						relationLemmas: [],
+						relationReadings: [],
+					};
+				case "applyGeneratedKnowledge":
+					return {
+						intent: request.intent,
+						revision,
+						exactPendingRelations: [],
+						relationLemmas: [],
+						relationReadings: [],
+					};
+				case "ensureOwnedSurface":
+					return {
+						intent: request.intent,
+						revision,
+						existingOwnedSurfaces: [],
+					};
+				case "ensureReadingEntry":
+					return { intent: request.intent, revision };
+			}
 		},
 		async commitChanges(request) {
 			commits.push(request);

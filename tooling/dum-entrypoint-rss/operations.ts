@@ -285,6 +285,33 @@ const operations: Readonly<Record<string, RepresentativeOperation>> = {
 			"Dumdict empty inventory must project to an empty relation list.",
 		);
 	},
+	"dumdict.derive-pending-identity"(publicModule) {
+		const createPendingSemanticRelationRecord = exportedFunction(
+			publicModule,
+			"createPendingSemanticRelationRecord",
+		);
+		const result = createPendingSemanticRelationRecord(
+			englishReading as never,
+			{
+				relation: "nearSynonym",
+				target: {
+					language: "en",
+					canonicalForm: "  swim  ",
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			} as never,
+		) as {
+			locator?: { targetPendingId?: string };
+			pending?: { target?: { canonicalForm?: string } };
+		};
+		assert(
+			result.pending?.target?.canonicalForm === "swim" &&
+				result.locator?.targetPendingId ===
+					"pending-entry:v2:en:Lexeme:VERB:swim",
+			"Dumdict Pending Semantic Relation identity must be canonical.",
+		);
+	},
 	"dumgen.build"(publicModule) {
 		const buildDumgen = exportedFunction(publicModule, "buildDumgen");
 		const dumgen = buildDumgen({ sdk: noNetworkSdk() } as never) as {

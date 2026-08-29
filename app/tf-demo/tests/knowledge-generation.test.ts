@@ -638,6 +638,7 @@ test("the production application path keeps generated relations outside Dumdict"
 			async runQuery(_reference: unknown, input: unknown) {
 				queryInputs.push(input);
 				return {
+					intent: "applyGeneratedKnowledge",
 					revision: "convex-0",
 					existingReading: {
 						reading,
@@ -645,10 +646,7 @@ test("the production application path keeps generated relations outside Dumdict"
 						attestations: [],
 						notes: "",
 					},
-					existingOwnedSurfaces: [],
-					explicitExistingLemmaTargets: [],
-					existingPendingRelationsForProposedPendingTargets: [],
-					pendingRelationsMatchingProposedLemma: [],
+					exactPendingRelations: [],
 					relationLemmas: [],
 					relationReadings: [],
 				};
@@ -692,8 +690,8 @@ test("the production application path keeps generated relations outside Dumdict"
 	expect(result).toBeNull();
 	expect(queryInputs).toEqual([
 		expect.objectContaining({
-			explicitLemmaTargetKeys: [],
-			pendingProposalKeys: [],
+			intent: "applyGeneratedKnowledge",
+			pendingLocatorKeys: [],
 		}),
 	]);
 	expect(mutationInputs).toEqual([

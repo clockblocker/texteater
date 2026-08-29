@@ -54,7 +54,6 @@ import {
 import {
 	inputSchema as nounInputSchema,
 	outputSchema as nounOutputSchema,
-	projectNounNormalizedSurface,
 } from "../../promptsmith/production/grammatical-resolution/de/lexeme/noun/schemas";
 import {
 	inputSchema as numeralInputSchema,
@@ -163,7 +162,6 @@ export const DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS = {
 			systemPrompt: nounSystemPrompt,
 			inputSchema: nounInputSchema,
 			outputSchema: nounOutputSchema,
-			normalizedSurfaceProjector: projectNounNormalizedSurface,
 		}),
 		NUM: createDeGrammaticalResolutionPrompt({
 			family: "Lexeme",
@@ -213,7 +211,6 @@ export const DE_AUTHORED_GRAMMATICAL_RESOLUTION_PROMPTS = {
 			systemPrompt: verbSystemPrompt,
 			inputSchema: verbInputSchema,
 			outputSchema: verbOutputSchema,
-			fixedLemmaCoreFeatures: { verbType: null },
 		}),
 		X: createDeGrammaticalResolutionPrompt({
 			family: "Lexeme",

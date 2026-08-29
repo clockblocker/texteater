@@ -20,7 +20,7 @@ const fixedEntry = (): ReadingEntry<"en"> => ({
 });
 
 describe("ensureReadingEntry", () => {
-	test("rejects a mismatched storage slice before planning or commit", async () => {
+	test("rejects a mismatched storage context before planning or commit", async () => {
 		let commitCalls = 0;
 		const storage = withUnusedCleanupStorageMethods({
 			async findStoredReadings() {
@@ -29,16 +29,11 @@ describe("ensureReadingEntry", () => {
 			async loadReadingForPatch() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				return {
+					intent: "ensureReadingEntry" as const,
 					revision: "mismatched-slice" as StoreRevision,
 					existingLemma: { lemma: englishWalkLemma },
-					existingOwnedSurfaces: [],
-					explicitExistingLemmaTargets: [],
-					existingPendingRelationsForProposedPendingTargets: [],
-					pendingRelationsMatchingProposedLemma: [],
-					relationLemmas: [],
-					relationReadings: [],
 				};
 			},
 			async commitChanges() {
@@ -50,7 +45,9 @@ describe("ensureReadingEntry", () => {
 
 		await expect(
 			dict.ensureReadingEntry({ entry: fixedEntry() }),
-		).rejects.toThrow("existing Lemma does not match the draft identity");
+		).rejects.toThrow(
+			"existing Lemma does not match the requested Reading identity",
+		);
 		expect(commitCalls).toBe(0);
 	});
 

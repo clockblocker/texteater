@@ -1,8 +1,9 @@
 import { readingFingerprint } from "dumling/id";
 import type { SupportedLanguage } from "dumling/types";
-import type { PendingSemanticRelationLocator, Reading } from "../../dto";
+import type { Reading } from "../../dto";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
+import { pendingSemanticRelationLocatorKey } from "../pending";
 import {
 	planRelationMaintenance,
 	type RelationRequest,
@@ -12,17 +13,13 @@ import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-function locatorKey<L extends SupportedLanguage>(
-	value: PendingSemanticRelationLocator<L>,
-) {
-	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
-}
-
 export function planCleanupRelations<L extends SupportedLanguage>(
 	slice: CleanupRelationsSlice<L>,
 	request: CleanupRelationsRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
-	const keys = request.resolutions.map(({ locator }) => locatorKey(locator));
+	const keys = request.resolutions.map(({ locator }) =>
+		pendingSemanticRelationLocatorKey(locator),
+	);
 	if (new Set(keys).size !== keys.length)
 		return {
 			status: "rejected",
@@ -32,11 +29,17 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 
 	const pendingByKey = new Map(
 		slice.pendingRelations.map(
-			(record) => [locatorKey(record.locator), record] as const,
+			(record) =>
+				[
+					pendingSemanticRelationLocatorKey(record.locator),
+					record,
+				] as const,
 		),
 	);
 	const selected = request.resolutions.flatMap(({ locator }) => {
-		const record = pendingByKey.get(locatorKey(locator));
+		const record = pendingByKey.get(
+			pendingSemanticRelationLocatorKey(locator),
+		);
 		return record ? [record] : [];
 	});
 	const relationRequests: RelationRequest<L>[] = selected.map((record) => ({
@@ -57,11 +60,11 @@ export function planCleanupRelations<L extends SupportedLanguage>(
 
 	const resolvedKeys = new Set(
 		relationPlan.resolvedPending.map((record) =>
-			locatorKey(record.locator),
+			pendingSemanticRelationLocatorKey(record.locator),
 		),
 	);
 	const resolved = selected.filter((record) =>
-		resolvedKeys.has(locatorKey(record.locator)),
+		resolvedKeys.has(pendingSemanticRelationLocatorKey(record.locator)),
 	);
 	const changes: PlannedChangeOp<L>[] = [
 		...relationRemovalsToPatches(

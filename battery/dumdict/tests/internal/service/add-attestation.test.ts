@@ -52,7 +52,7 @@ describe("configured service", () => {
 					reading: englishWalkReadingEntry(),
 				};
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				throw new Error("Unexpected storage call");
 			},
 			async commitChanges() {
@@ -91,7 +91,7 @@ describe("configured service", () => {
 					reading: englishWalkReadingEntry(),
 				};
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				throw new Error("Unexpected storage call");
 			},
 			async commitChanges(request) {
@@ -131,7 +131,7 @@ describe("configured service", () => {
 					reading: englishWalkReadingEntry(),
 				};
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				throw new Error("Unexpected storage call");
 			},
 			async commitChanges() {

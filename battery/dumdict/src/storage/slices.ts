@@ -1,9 +1,9 @@
-import type { Lemma, SupportedLanguage } from "dumling/types";
+import type { Lemma, Reading, SupportedLanguage, Surface } from "dumling/types";
 import type {
-	DumdictReadingDraft,
+	DumdictPendingSemanticRelation,
+	DumdictSemanticRelationDraft,
 	LemmaRecord,
 	PendingSemanticRelationRecord,
-	Reading,
 	ReadingEntry,
 	StoreRevision,
 	SurfaceEntry,
@@ -31,21 +31,70 @@ export type ReadingPatchSlice<L extends SupportedLanguage> = {
 	reading?: ReadingEntry<L>;
 };
 
-export type LoadNewNoteContextRequest<L extends SupportedLanguage> = {
-	draft: DumdictReadingDraft<L>;
-};
+export type LoadReadingEntryContextRequest<L extends SupportedLanguage> =
+	| {
+			intent: "addNewNote";
+			reading: Reading<L>;
+			ownedSurfaces: Surface<L>[];
+			relations: DumdictSemanticRelationDraft<L>[];
+	  }
+	| {
+			intent: "applyGeneratedKnowledge";
+			reading: Reading<L>;
+			pendingRelations: DumdictPendingSemanticRelation<L>[];
+	  }
+	| {
+			intent: "ensureOwnedSurface";
+			reading: Reading<L>;
+			surface: Surface<L>;
+	  }
+	| {
+			intent: "ensureReadingEntry";
+			reading: Reading<L>;
+	  };
 
-export type NewNoteSlice<L extends SupportedLanguage> = {
+export type AddNewNoteContext<L extends SupportedLanguage> = {
+	intent: "addNewNote";
 	revision: StoreRevision;
 	existingLemma?: LemmaRecord<L>;
 	existingReading?: ReadingEntry<L>;
 	existingOwnedSurfaces: SurfaceEntry<L>[];
 	explicitExistingLemmaTargets: LemmaRecord<L>[];
-	existingPendingRelationsForProposedPendingTargets: PendingSemanticRelationRecord<L>[];
+	exactPendingRelations: PendingSemanticRelationRecord<L>[];
 	pendingRelationsMatchingProposedLemma: PendingSemanticRelationRecord<L>[];
 	relationLemmas: LemmaRecord<L>[];
 	relationReadings: ReadingEntry<L>[];
 };
+
+export type ApplyGeneratedKnowledgeContext<L extends SupportedLanguage> = {
+	intent: "applyGeneratedKnowledge";
+	revision: StoreRevision;
+	existingReading?: ReadingEntry<L>;
+	exactPendingRelations: PendingSemanticRelationRecord<L>[];
+	relationLemmas: LemmaRecord<L>[];
+	relationReadings: ReadingEntry<L>[];
+};
+
+export type EnsureOwnedSurfaceContext<L extends SupportedLanguage> = {
+	intent: "ensureOwnedSurface";
+	revision: StoreRevision;
+	existingLemma?: LemmaRecord<L>;
+	existingReading?: ReadingEntry<L>;
+	existingOwnedSurfaces: SurfaceEntry<L>[];
+};
+
+export type EnsureReadingEntryContext<L extends SupportedLanguage> = {
+	intent: "ensureReadingEntry";
+	revision: StoreRevision;
+	existingLemma?: LemmaRecord<L>;
+	existingReading?: ReadingEntry<L>;
+};
+
+export type ReadingEntryContext<L extends SupportedLanguage> =
+	| AddNewNoteContext<L>
+	| ApplyGeneratedKnowledgeContext<L>
+	| EnsureOwnedSurfaceContext<L>
+	| EnsureReadingEntryContext<L>;
 
 export type GetInfoForRelationsCleanupStorageRequest<
 	_L extends SupportedLanguage,

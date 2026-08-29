@@ -2,10 +2,10 @@ import type { Reading } from "dumling/types";
 import type {
 	ReadingNoteBlockRenderer,
 	ReadingNoteRenderContext,
-	ReadingNoteRendererOverrideRegistry,
 	UnitReadingFamilyFor,
 } from "../../src/notes/reading";
 import { DE_READING_NOTE_BLOCK_MAP } from "../../src/notes/reading/de/block-map";
+import type { ReadingNoteRendererOverrideRegistry } from "../../src/notes/reading/renderer-overrides";
 
 type Equal<Left, Right> =
 	(<Value>() => Value extends Left ? 1 : 2) extends <

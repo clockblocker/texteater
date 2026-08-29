@@ -4,24 +4,20 @@ import {
 	type DumdictStoragePort,
 	makeSurfaceId,
 } from "dumdict";
+import { derivePendingSemanticRelationLocator } from "dumdict/pending";
 import { readingFingerprint } from "dumling";
-import {
-	type PendingSemanticRelation,
-	parseAsPendingSemanticRelation,
-} from "dumrel";
 import { resetDemoDataBatch, resetDemoTableNames } from "../convex/demoReset";
 import {
 	commitDumdictChanges,
 	findDumdictStoredReadings,
 	getDumdictRelationsCleanupInfo,
 	loadDumdictCleanupRelationsContext,
-	loadDumdictNewNoteContext,
+	loadDumdictReadingEntryContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
-import { unwrapOperationalParse } from "../server/operationalParsing";
 import {
 	IndexedTestDb,
 	runTestMutation,
@@ -63,19 +59,6 @@ const emptyNote = {
 	notes: "",
 };
 
-function pendingProposalKey(input: unknown): string {
-	const pending = unwrapOperationalParse<PendingSemanticRelation>(
-		parseAsPendingSemanticRelation(input),
-	);
-	return JSON.stringify([
-		pending.relation,
-		pending.target.language,
-		pending.target.canonicalForm,
-		pending.target.family,
-		pending.target.kind,
-	]);
-}
-
 function locatorKey(locator: {
 	sourceReadingKey: string;
 	relation: string;
@@ -95,28 +78,54 @@ function storageFor(db: IndexedTestDb): DumdictStoragePort<"de"> {
 				lemmaKey: lemmaIdentityKey(lemma),
 			})) as never;
 		},
-		async loadNewNoteContext({ draft }) {
-			return (await runTestQuery(db, loadDumdictNewNoteContext, {
-				lemmaKey: lemmaIdentityKey(draft.reading.lemma),
-				proposedLemma: draft.reading.lemma,
-				readingKey: readingFingerprint(draft.reading),
-				surfaceKeys:
-					draft.ownedSurfaces?.map(({ surface }) =>
+		async loadReadingEntryContext(request) {
+			const readingKey = readingFingerprint(request.reading);
+			if (request.intent === "addNewNote")
+				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
+					intent: request.intent,
+					lemmaKey: lemmaIdentityKey(request.reading.lemma),
+					proposedLemma: request.reading.lemma,
+					readingKey,
+					surfaceKeys: request.ownedSurfaces.map((surface) =>
 						makeSurfaceId("de", surface),
-					) ?? [],
-				explicitLemmaTargetKeys:
-					draft.relations?.flatMap(({ target }) =>
-						target.kind === "existing"
-							? [lemmaIdentityKey(target.lemma)]
-							: [],
-					) ?? [],
-				pendingProposalKeys:
-					draft.relations?.flatMap(({ target }) =>
-						target.kind === "pending"
-							? [pendingProposalKey(target.pending)]
-							: [],
-					) ?? [],
-			})) as never;
+					),
+					explicitLemmaTargetKeys: request.relations.flatMap(
+						({ target }) =>
+							target.kind === "existing"
+								? [lemmaIdentityKey(target.lemma)]
+								: [],
+					),
+					pendingLocatorKeys: request.relations.flatMap(
+						({ target }) =>
+							target.kind === "pending"
+								? [
+										locatorKey(
+											derivePendingSemanticRelationLocator(
+												request.reading,
+												target.pending,
+											),
+										),
+									]
+								: [],
+					),
+				})) as never;
+			if (request.intent === "applyGeneratedKnowledge")
+				return (await runTestQuery(db, loadDumdictReadingEntryContext, {
+					intent: request.intent,
+					readingKey,
+					pendingLocatorKeys: request.pendingRelations.map(
+						(pending) =>
+							locatorKey(
+								derivePendingSemanticRelationLocator(
+									request.reading,
+									pending,
+								),
+							),
+					),
+				})) as never;
+			throw new Error(
+				`Unexpected Reading Entry intent: ${request.intent}`,
+			);
 		},
 		async loadReadingForPatch({ reading }) {
 			return (await runTestQuery(db, loadDumdictReadingForPatch, {

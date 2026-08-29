@@ -2,17 +2,8 @@
 
 import { type FunctionReference, makeFunctionReference } from "convex/server";
 import { type Infer, v } from "convex/values";
-import type {
-	ApplyGeneratedKnowledgeRequest,
-	CleanupRelationsSlice,
-	DumdictPlan,
-	DumdictStoragePort,
-	NewNoteSlice,
-	ReadingPatchSlice,
-	RelationsCleanupInfoSlice,
-	StoredReadingsSlice,
-} from "dumdict";
-import { createDumdictService, makeSurfaceId } from "dumdict/runtime";
+import type { ApplyGeneratedKnowledgeRequest, DumdictPlan } from "dumdict";
+import { createDumdictService } from "dumdict/runtime";
 import {
 	type Dumgen,
 	type GenerationEvent,
@@ -20,26 +11,20 @@ import {
 	parseAsGrammaticalResult,
 } from "dumgen";
 import { encodedRuntimePromptData } from "dumgen/runtime-prompt-data";
-import {
-	type KnowledgeChange,
-	type PendingSemanticRelation,
-	parseAsKnowledgeChange,
-	parseAsPendingSemanticRelation,
-} from "dumrel";
+import { type KnowledgeChange, parseAsKnowledgeChange } from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";
-import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type LateResolvedClickCommit,
 	type OrchestrationPersistence,
 	type PersistedSentence,
 	type RecordedClick,
+	type ResolutionProgressObserver,
 	type ResolvedClickCommit,
 	type ResolveSegmentInput,
 	type ResolveSegmentResult,
 	type ReusableAttestation,
 	type ReusedResolvedClickCommit,
-	readingIdentityKey,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
 import {
@@ -47,14 +32,17 @@ import {
 	unwrapOperationalParse,
 } from "../server/operationalParsing";
 import {
-	classifyResolutionFailure,
-	projectResolutionGenerationEvent,
-	type ResolutionGenerationEvent,
-	type ResolutionRunPhase,
-} from "../server/resolutionFailure";
+	executeResolutionSession,
+	type ResolutionSessionLifecyclePort,
+} from "../server/resolutionSessionExecution";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import { type ActionCtx, action, internalAction } from "./_generated/server";
+import {
+	createConvexDumdictStorage,
+	type DictionaryPlanResult,
+	dictionaryPlanResult,
+} from "./dumdictStorage";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	projectResolutionGrammar,
@@ -62,7 +50,6 @@ import {
 	type ResolutionSessionGuard,
 } from "./model/resolutionSessions";
 import {
-	type dictionaryPlanValidator,
 	type nonResolvedGrammaticalValidator,
 	relationPublicationRunValidator,
 	type resolvedGrammaticalValidator,
@@ -153,7 +140,6 @@ type NonResolvedGrammaticalActionResult = Infer<
 	typeof nonResolvedGrammaticalValidator
 >;
 type ReusableAttestationResult = Infer<typeof reusableAttestationValidator>;
-type DictionaryPlanResult = Infer<typeof dictionaryPlanValidator>;
 type GrammaticalResolveSegmentResult = Extract<
 	ResolveSegmentResult,
 	{ grammatical: unknown }
@@ -241,142 +227,6 @@ function reusableAttestationResult(
 			...input.reading,
 			lemma: { ...input.reading.lemma },
 		},
-	};
-}
-
-function mutableReading(input: ReusableAttestation["reading"]) {
-	return { ...input, lemma: { ...input.lemma } };
-}
-
-function mutablePendingRecord(
-	input: Extract<
-		DumdictPlan<"de">["changes"][number],
-		{
-			type:
-				| "createPendingSemanticRelation"
-				| "deletePendingSemanticRelation";
-		}
-	>["record"],
-) {
-	return {
-		sourceReading: mutableReading(input.sourceReading),
-		pending: {
-			...input.pending,
-			target: { ...input.pending.target },
-		},
-		locator: { ...input.locator },
-	};
-}
-
-function mutablePreconditions(
-	input: DumdictPlan<"de">["changes"][number]["preconditions"],
-) {
-	return input.map((precondition) => {
-		switch (precondition.kind) {
-			case "lemmaExists":
-			case "lemmaMissing":
-				return { ...precondition, lemma: { ...precondition.lemma } };
-			case "readingExists":
-			case "readingMissing":
-			case "readingAttestationMissing":
-				return {
-					...precondition,
-					reading: mutableReading(precondition.reading),
-				};
-			case "pendingRelationExists":
-			case "pendingRelationMissing":
-				return {
-					...precondition,
-					record: mutablePendingRecord(precondition.record),
-				};
-			default:
-				return { ...precondition };
-		}
-	});
-}
-
-export function dictionaryPlanResult(
-	input: DumdictPlan<"de">,
-): DictionaryPlanResult {
-	const parsed = input;
-	return {
-		baseRevision: parsed.baseRevision,
-		changes: parsed.changes.map((change) => {
-			const preconditions = mutablePreconditions(change.preconditions);
-			switch (change.type) {
-				case "createLemma":
-					return {
-						...change,
-						record: {
-							...change.record,
-							lemma: { ...change.record.lemma },
-						},
-						preconditions,
-					};
-				case "createReading":
-					return {
-						...change,
-						entry: {
-							...change.entry,
-							reading: mutableReading(change.entry.reading),
-							attestedTranslations: [
-								...change.entry.attestedTranslations,
-							],
-							attestations: [...change.entry.attestations],
-						},
-						preconditions,
-					};
-				case "patchReading":
-					return {
-						...change,
-						reading: mutableReading(change.reading),
-						ops: change.ops.map((operation) =>
-							operation.kind === "addAttestation"
-								? { ...operation }
-								: {
-										...operation,
-										envelope: {
-											...operation.envelope,
-											reading: mutableReading(
-												operation.envelope.reading,
-											),
-										},
-									},
-						),
-						preconditions,
-					};
-				case "createOwnedSurface":
-					return {
-						...change,
-						entry: {
-							...change.entry,
-							ownerLemma: { ...change.entry.ownerLemma },
-							surface: {
-								...change.entry.surface,
-								lemma: { ...change.entry.surface.lemma },
-							},
-							attestedTranslations: [
-								...change.entry.attestedTranslations,
-							],
-							attestations: [...change.entry.attestations],
-						},
-						preconditions,
-					};
-				case "createPendingSemanticRelation":
-				case "deletePendingSemanticRelation":
-					return {
-						...change,
-						record: mutablePendingRecord(change.record),
-						preconditions,
-					};
-				default: {
-					const unsupported: never = change;
-					throw new Error(
-						`Unsupported Dumdict plan change: ${String(unsupported)}`,
-					);
-				}
-			}
-		}),
 	};
 }
 
@@ -601,170 +451,157 @@ export const runResolutionSession = internalAction({
 	},
 	returns: v.null(),
 	handler: async (ctx, guard): Promise<null> => {
-		const input = await ctx.runQuery(
-			internal.resolutionSessions.getRunInput,
-			{ guard },
-		);
-		if (!input) return null;
-		const started = await ctx.runMutation(
-			internal.resolutionSessions.markRunStarted,
-			{ guard },
-		);
-		if (!started) return null;
-		let phase: ResolutionRunPhase = "Route";
-		const generationEvents: ResolutionGenerationEvent[] = [];
-		const onGenerationEvent = (event: GenerationEvent) => {
-			const projected = projectResolutionGenerationEvent(event, {
-				requestId: guard.requestId,
-				runToken: guard.runToken,
-				phase,
-			});
-			if (generationEvents.length < 64) generationEvents.push(projected);
-			console.info(
-				JSON.stringify({
-					event: "ResolutionGeneration",
-					generation: projected,
-				}),
+		await executeResolutionSession({
+			identity: guard,
+			lifecycle: createConvexResolutionSessionLifecycle(ctx, guard),
+			resolve: (selection, checkpoints, observer, onGenerationEvent) =>
+				orchestratorFor(
+					ctx,
+					guard,
+					observer,
+					onGenerationEvent,
+				).resolveSegment(selection, checkpoints),
+		});
+		return null;
+	},
+});
+
+function createConvexResolutionSessionLifecycle(
+	ctx: ActionCtx,
+	guard: ResolutionSessionGuard,
+): ResolutionSessionLifecyclePort {
+	return {
+		async begin() {
+			const input = await ctx.runQuery(
+				internal.resolutionSessions.getRunInput,
+				{ guard },
 			);
-		};
-		try {
-			await ctx.runMutation(internal.resolutionSessions.advance, {
-				guard,
-				progress: "RouteAvailable",
-			});
-			phase = input.checkpoints.reading
-				? "Commit"
-				: input.checkpoints.grammatical
-					? "Reading"
-					: "Grammar";
-			const result = await orchestratorFor(
-				ctx,
-				guard,
-				(nextPhase) => {
-					phase = nextPhase;
-				},
-				onGenerationEvent,
-			).resolveSegment(input.selection, {
-				...(input.checkpoints.grammatical
-					? {
-							grammatical: resolvedGrammaticalCheckpoint(
-								input.checkpoints.grammatical,
-							),
-						}
-					: {}),
-				...(input.checkpoints.reading
-					? {
-							reading: {
-								resolution:
-									input.checkpoints.reading.resolution,
-								reading: parseGermanReading(
-									input.checkpoints.reading.reading,
+			if (!input) return null;
+			const started = await ctx.runMutation(
+				internal.resolutionSessions.markRunStarted,
+				{ guard },
+			);
+			if (!started) return null;
+			return {
+				selection: input.selection,
+				checkpoints: {
+					...(input.checkpoints.grammatical
+						? {
+								grammatical: resolvedGrammaticalCheckpoint(
+									input.checkpoints.grammatical,
 								),
-							},
-						}
-					: {}),
-			});
-			if ("catalogMiss" in result) {
+							}
+						: {}),
+					...(input.checkpoints.reading
+						? {
+								reading: {
+									resolution:
+										input.checkpoints.reading.resolution,
+									reading: parseGermanReading(
+										input.checkpoints.reading.reading,
+									),
+								},
+							}
+						: {}),
+				},
+			};
+		},
+		async advance(event) {
+			switch (event.progress) {
+				case "RouteAvailable":
+				case "Committing":
+					await ctx.runMutation(internal.resolutionSessions.advance, {
+						guard,
+						progress: event.progress,
+					});
+					return;
+				case "GrammarAvailable":
+					await ctx.runMutation(internal.resolutionSessions.advance, {
+						guard,
+						progress: event.progress,
+						grammar: projectResolutionGrammar(event.grammatical),
+						grammaticalCheckpoint: resolvedGrammaticalActionResult(
+							event.grammatical,
+						),
+					});
+					return;
+				case "ReadingAvailable":
+					await ctx.runMutation(internal.resolutionSessions.advance, {
+						guard,
+						progress: event.progress,
+						reading: projectResolutionReading(event.reading),
+						readingCheckpoint: {
+							resolution: event.readingResolution,
+							reading: event.reading,
+						},
+					});
+			}
+		},
+		async settle(result) {
+			if (result.kind === "CatalogMiss") {
 				await ctx.runMutation(recordAndSettleCatalogMiss, {
 					guard,
-					miss: result.catalogMiss,
+					miss: result.miss,
 				});
-				await ctx.runMutation(
-					internal.resolutionSessions.recordRunSuccess,
-					{ guard, phase, generationEvents },
-				);
-				return null;
-			}
-			if ("deduplicated" in result && result.deduplicated) {
-				if (result.persisted.status === "Resolved") {
-					await ctx.runMutation(
-						internal.resolutionSessions.settleAfterRun,
-						{
-							guard,
-							result: {
-								kind: "Complete",
-								readingId: convexId<"readings">(
-									result.persisted.readingId,
-								),
-								attestationId: convexId<"attestations">(
-									result.persisted.occurrence.attestationId,
-								),
-								grammar: projectResolutionGrammar(
-									result.persisted.occurrence.grammatical,
-								),
-								reading: projectResolutionReading(
-									result.persisted.occurrence.reading,
-								),
-							},
-						},
-					);
-				} else {
-					await ctx.runMutation(
-						internal.resolutionSessions.settleAfterRun,
-						{ guard, result: { kind: "Unresolved" } },
-					);
-				}
+				return;
 			}
 			await ctx.runMutation(
-				internal.resolutionSessions.recordRunSuccess,
-				{ guard, phase, generationEvents },
+				internal.resolutionSessions.settleAfterRun,
+				result.kind === "Complete"
+					? {
+							guard,
+							result: {
+								...result,
+								readingId: convexId<"readings">(
+									result.readingId,
+								),
+								attestationId: convexId<"attestations">(
+									result.attestationId,
+								),
+							},
+						}
+					: { guard, result },
 			);
-		} catch (error) {
-			const classified = classifyResolutionFailure(error);
-			const diagnosticId = crypto.randomUUID();
-			try {
-				if (classified.kind === "Generation") {
+		},
+		async record(record) {
+			switch (record.kind) {
+				case "Succeeded":
+					await ctx.runMutation(
+						internal.resolutionSessions.recordRunSuccess,
+						{
+							guard,
+							phase: record.phase,
+							generationEvents: [...record.generationEvents],
+						},
+					);
+					return;
+				case "GenerationFailed":
 					await ctx.runMutation(
 						internal.resolutionSessions.recordRunFailure,
 						{
 							guard,
-							phase,
-							failure: classified.failure,
-							generationEvents,
+							phase: record.phase,
+							failure: record.failure,
+							generationEvents: [...record.generationEvents],
 						},
 					);
-				} else {
-					console.error(
-						JSON.stringify({
-							event: "ResolutionRunInternalFailure",
-							requestId: guard.requestId,
-							runToken: guard.runToken,
-							phase,
-							diagnosticId,
-							errorName: classified.errorName,
-							errorFingerprint: classified.errorFingerprint,
-						}),
-					);
+					return;
+				case "InternalFailed":
 					await ctx.runMutation(
 						internal.resolutionSessions.recordInternalRunFailure,
 						{
 							guard,
-							phase,
-							diagnosticId,
-							errorName: classified.errorName,
-							errorFingerprint: classified.errorFingerprint,
-							generationEvents,
+							phase: record.phase,
+							diagnosticId: record.diagnosticId,
+							errorName: record.errorName,
+							errorFingerprint: record.errorFingerprint,
+							generationEvents: [...record.generationEvents],
 						},
 					);
-				}
-			} catch (recordingError) {
-				const recordingFailure =
-					classifyResolutionFailure(recordingError);
-				console.error(
-					JSON.stringify({
-						event: "ResolutionFailureRecordingFailed",
-						requestId: guard.requestId,
-						runToken: guard.runToken,
-						phase,
-						diagnosticId,
-						recordingFailure,
-					}),
-				);
 			}
-		}
-		return null;
-	},
-});
+		},
+	};
+}
 
 export const applyReadingKnowledgeChange = action({
 	args: {
@@ -788,7 +625,7 @@ export const applyReadingKnowledgeChange = action({
 function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard?: ResolutionSessionGuard,
-	onPhase?: (phase: ResolutionRunPhase) => void,
+	observer?: ResolutionProgressObserver,
 	onGenerationEvent?: (event: GenerationEvent) => void,
 ) {
 	return createTfDemoOrchestrator({
@@ -800,53 +637,7 @@ function orchestratorFor(
 			storage: createConvexDumdictStorage(ctx),
 		}),
 		persistence: createConvexPersistence(ctx, sessionGuard),
-		...(sessionGuard
-			? {
-					observer: {
-						async grammarAvailable({ grammatical }) {
-							await ctx.runMutation(
-								internal.resolutionSessions.advance,
-								{
-									guard: sessionGuard,
-									progress: "GrammarAvailable",
-									grammar:
-										projectResolutionGrammar(grammatical),
-									grammaticalCheckpoint:
-										resolvedGrammaticalActionResult(
-											grammatical,
-										),
-								},
-							);
-							onPhase?.("Reading");
-						},
-						async readingAvailable({ reading, readingResolution }) {
-							await ctx.runMutation(
-								internal.resolutionSessions.advance,
-								{
-									guard: sessionGuard,
-									progress: "ReadingAvailable",
-									reading: projectResolutionReading(reading),
-									readingCheckpoint: {
-										resolution: readingResolution,
-										reading,
-									},
-								},
-							);
-							onPhase?.("Commit");
-						},
-						async committing() {
-							onPhase?.("Commit");
-							await ctx.runMutation(
-								internal.resolutionSessions.advance,
-								{
-									guard: sessionGuard,
-									progress: "Committing",
-								},
-							);
-						},
-					},
-				}
-			: {}),
+		...(observer ? { observer } : {}),
 	});
 }
 
@@ -939,75 +730,6 @@ function convexSegmentSelectionArgs(input: ResolveSegmentInput) {
 	};
 }
 
-export function createConvexDumdictStorage(
-	ctx: ActionCtx,
-): DumdictStoragePort<"de"> {
-	return {
-		async findStoredReadings({ lemma }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.findDumdictStoredReadings,
-				{ lemmaKey: lemmaIdentityKey(lemma) },
-			) as unknown as Promise<StoredReadingsSlice<"de">>;
-		},
-		async loadNewNoteContext({ draft }) {
-			const readingKey = readingIdentityKey(draft.reading);
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictNewNoteContext,
-				{
-					lemmaKey: lemmaIdentityKey(draft.reading.lemma),
-					proposedLemma: draft.reading.lemma,
-					readingKey,
-					surfaceKeys:
-						draft.ownedSurfaces?.map(({ surface }) =>
-							makeSurfaceId("de", surface),
-						) ?? [],
-					explicitLemmaTargetKeys:
-						draft.relations?.flatMap(({ target }) =>
-							target.kind === "existing"
-								? [lemmaIdentityKey(target.lemma)]
-								: [],
-						) ?? [],
-					pendingProposalKeys:
-						draft.relations?.flatMap(({ target }) =>
-							target.kind === "pending"
-								? [pendingProposalIdentityKey(target.pending)]
-								: [],
-						) ?? [],
-				},
-			) as unknown as Promise<NewNoteSlice<"de">>;
-		},
-		async loadReadingForPatch({ reading }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictReadingForPatch,
-				{ readingKey: readingIdentityKey(reading) },
-			) as Promise<ReadingPatchSlice<"de">>;
-		},
-		async commitChanges({ baseRevision, changes }) {
-			const plan = dictionaryPlanResult({ baseRevision, changes });
-			return ctx.runMutation(
-				internal.dumdictStorage.commitDumdictChanges,
-				plan,
-			);
-		},
-		async getInfoForRelationsCleanup({ canonicalForm }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.getDumdictRelationsCleanupInfo,
-				{ canonicalForm },
-			) as unknown as Promise<RelationsCleanupInfoSlice<"de">>;
-		},
-		async loadCleanupRelationsContext({ resolutions }) {
-			return ctx.runQuery(
-				internal.dumdictStorage.loadDumdictCleanupRelationsContext,
-				{
-					locatorKeys: resolutions.map(({ locator }) =>
-						pendingLocatorIdentityKey(locator),
-					),
-				},
-			) as unknown as Promise<CleanupRelationsSlice<"de">>;
-		},
-	};
-}
-
 export const applyGeneratedKnowledgePlan = internalAction({
 	args: {
 		attemptKey: v.string(),
@@ -1085,31 +807,6 @@ export const applyGeneratedKnowledgePlan = internalAction({
 		}
 	},
 });
-
-function pendingProposalIdentityKey(input: unknown): string {
-	const pending = unwrapOperationalParse<PendingSemanticRelation>(
-		parseAsPendingSemanticRelation(input),
-	);
-	return JSON.stringify([
-		pending.relation,
-		pending.target.language,
-		pending.target.canonicalForm,
-		pending.target.family,
-		pending.target.kind,
-	]);
-}
-
-function pendingLocatorIdentityKey(input: {
-	sourceReadingKey: string;
-	relation: string;
-	targetPendingId: string;
-}): string {
-	return JSON.stringify([
-		input.sourceReadingKey,
-		input.relation,
-		input.targetPendingId,
-	]);
-}
 
 function pendingLocatorFromRecord(value: unknown): {
 	sourceReadingKey: string;

@@ -2,20 +2,25 @@
 """Generate the textfresser icon SVGs (static + animated) for an attempt.
 
 Reads the six bite circles from optimal_circles.json (produced by
-optimize_circles.py, mascot pixel coordinates) and re-projects them onto the
-640x640 icon canvas. Words, eye and colors follow attempt-1, which matches
-the mascot's own layout. The bites are applied in rainbow order:
-red -> orange -> yellow -> green -> blue -> violet.
+optimize_circles.py, 640x640 canvas coordinates, all sharing one radius)
+and lays them over the attempt-1 page layout, which matches the mascot's
+own word/eye placement.
 
-Role -> rainbow color mapping (the eating sequence):
-  red    = top          first bite takes the page's top band (rows 1-2)
-  orange = center-left  mouthful opening mid-page left
-  yellow = top-left     finishes the upper-left (rows 2-3)
-  green  = left-mid     eats the left middle (row 4)
-  blue   = bottom-left  eats the bottom-left corner (row 5)
-  violet = right        final bite reveals the complete silhouette
+The six bites are applied in rainbow order, red -> orange -> yellow ->
+green -> blue -> violet, following the animation sketch
+(img/animation-sketch.png), where the colors communicate the order of
+application and each colored circle was pixel-fitted to pin its position:
+
+  red    = upper-left    the page's top-left corner
+  orange = upper-right   off the right edge, the head's right side
+  yellow = above-head    straight from the top, takes the dome
+  green  = left-of-head  the head's left slope
+  blue   = far-left      off the far left, the outer left white
+  violet = left-edge     off the left edge, the lower-left sweep that
+                         completes the silhouette
 
 Before writing anything the script asserts the storytelling invariants:
+  - all six bites share one radius (same-size mouthfuls),
   - the eye survives on white,
   - every uneaten (black) word sits fully on white,
   - every eaten word is fully covered by at least one bite,
@@ -23,10 +28,11 @@ Before writing anything the script asserts the storytelling invariants:
     has taken (no dead beats in the animation).
 
 Usage:
-    python3 generate_icon.py [output-dir]   (default: ../attempt-3)
+    python3 generate_icon.py [output-dir]   (default: ../attempt-4)
 """
 
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -65,7 +71,7 @@ INK = "#1E1613"
 BLUE = {'L': "#0D385B", 'D': "#071E2E"}
 
 RAINBOW = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']
-ROLE_ORDER = ['top', 'center-left', 'top-left', 'left-mid', 'bottom-left', 'right']
+ROLE_ORDER = ['upper-left', 'upper-right', 'above-head', 'left-of-head', 'far-left', 'left-edge']
 
 # attempt-1's approved bite timing
 BEGIN0, STAGGER, DUR = 0.40, 0.55, 0.45
@@ -73,13 +79,9 @@ BEGIN0, STAGGER, DUR = 0.40, 0.55, 0.45
 
 def load_bites():
     doc = json.loads(CIRCLES_JSON.read_text())
-    mw, mh = doc['image_size']
-    sx, sy = SIZE / mw, SIZE / mh
-    bites = []
-    for role in ROLE_ORDER:
-        cx, cy, r = doc['circles_by_role'][role]
-        bites.append((role, cx * sx, cy * sy, r * (sx + sy) / 2))
-    return bites
+    radii = {c[2] for c in doc['circles_by_role'].values()}
+    assert len(radii) == 1, f"bites must share one radius, found {sorted(radii)}"
+    return [(role, *doc['circles_by_role'][role]) for role in ROLE_ORDER]
 
 
 def check_invariants(bites):
@@ -93,7 +95,6 @@ def check_invariants(bites):
 
     ex, ey, er = EYE
     for a in range(0, 360, 15):
-        import math
         x = ex + (er + 1) * math.cos(math.radians(a))
         y = ey + (er + 1) * math.sin(math.radians(a))
         assert not covered(x, y), f"eye ring covered by a bite at angle {a}"
@@ -108,7 +109,6 @@ def check_invariants(bites):
                 assert covered(px, py), f"eaten word at ({x},{y}) is not fully covered by the bites"
 
     # each bite must eat white that no earlier bite has taken
-    import math
     step = 4
     for i, (_, cx, cy, r) in enumerate(bites):
         fresh = 0
@@ -134,20 +134,23 @@ def blue_xml():
         for x, y, w, h, b in WORDS if b)
 
 
-DESC = ("Construction: a white page holds black rounded word bars and a small black eye. Six black circles bite "
-        "the page away around the textfresser, leaving it as the white silhouette (round, circular-arc contours, "
-        "two pointed ears, a small head, a body flaring out to the bottom) aligned with the reference mascot. "
-        "The bites land in rainbow order (red, orange, yellow, green, blue, violet). Where a bite covers a word, "
-        "a blue rectangle is layered directly on top of its black original: the eaten words turn blue, floating "
-        "on the black that replaced the page. Darker blue words are not yet known, lighter blue ones are processed.")
+DESC = ("Construction: a white page holds black rounded word bars and a small black eye. Six equal black "
+        "circles bite the page away around the textfresser, leaving it as the white silhouette (round head "
+        "with a domed top, body flaring out to the bottom-left) aligned with the reference mascot. The bites "
+        "land in rainbow order (red, orange, yellow, green, blue, violet): red takes the top-left corner, "
+        "orange the upper right, yellow drops straight onto the head from above, green the head's left "
+        "slope, blue the far left, and violet the lower-left sweep that completes the silhouette. Where a "
+        "bite covers a word, a blue rectangle is layered directly on top of its black original: the eaten "
+        "words turn blue, floating on the black that replaced the page. Darker blue words are not yet "
+        "known, lighter blue ones are processed.")
 
 
 def static_svg(bites):
     bites_xml = '\n'.join(
-        f'  <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{PAGE_BG}"/><!-- {role} bite, {col} -->'
+        f'  <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}" fill="{PAGE_BG}"/><!-- {col} bite, {role} -->'
         for col, (role, cx, cy, r) in zip(RAINBOW, bites))
     clip_xml = '\n'.join(
-        f'    <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}"/>'
+        f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="{r:.2f}"/>'
         for role, cx, cy, r in bites)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
   <title>textfresser eating a page</title>
@@ -160,7 +163,7 @@ def static_svg(bites):
 {words_xml()}
   <!-- the eye -->
   <circle cx="{EYE[0]}" cy="{EYE[1]}" r="{EYE[2]}" fill="{INK}"/>
-  <!-- the six bites eat the page away, leaving the textfresser (rainbow order) -->
+  <!-- the six equal bites eat the page away, leaving the textfresser (rainbow order) -->
 {bites_xml}
   <!-- eaten words: blue copies on top of their black originals, only where the bites cover them -->
   <clipPath id="bites">
@@ -176,16 +179,16 @@ def static_svg(bites):
 def animated_svg(bites):
     lines, clip_lines = [], []
     for i, (role, cx, cy, r) in enumerate(bites):
-        lines.append(f'  <circle cx="{cx:.1f}" cy="{cy:.1f}" r="0" fill="{PAGE_BG}">'
+        lines.append(f'  <circle cx="{cx:.2f}" cy="{cy:.2f}" r="0" fill="{PAGE_BG}">'
                      f'<!-- {RAINBOW[i]} bite ({role}) -->'
-                     f'<animate attributeName="r" values="0;{r:.1f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
+                     f'<animate attributeName="r" values="0;{r:.2f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
                      f'dur="{DUR}s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>')
-        clip_lines.append(f'    <circle cx="{cx:.1f}" cy="{cy:.1f}" r="0">'
-                          f'<animate attributeName="r" values="0;{r:.1f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
+        clip_lines.append(f'    <circle cx="{cx:.2f}" cy="{cy:.2f}" r="0">'
+                          f'<animate attributeName="r" values="0;{r:.2f}" begin="{BEGIN0 + STAGGER * i:.2f}s" '
                           f'dur="{DUR}s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.2 1" keyTimes="0;1"/></circle>')
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
   <title>textfresser eating a page (animated)</title>
-  <desc>{DESC} This version replays the construction: the six bites grow in rainbow order and the eaten words turn blue exactly where they are covered.</desc>
+  <desc>{DESC} This version replays the construction: the six equal bites grow in rainbow order and the eaten words turn blue exactly where they are covered.</desc>
   <!-- the canvas -->
   <rect width="640" height="640" fill="{PAGE_BG}"/>
   <!-- the page -->
@@ -208,7 +211,7 @@ def animated_svg(bites):
 
 
 def main():
-    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-3"
+    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else CODE_DIR.parent / "attempt-4"
     out_dir.mkdir(parents=True, exist_ok=True)
     bites = load_bites()
     check_invariants(bites)
@@ -217,7 +220,7 @@ def main():
     print(f"wrote {out_dir / 'textfresser-eating.svg'}")
     print(f"wrote {out_dir / 'textfresser-eating-animated.svg'}")
     for col, (role, cx, cy, r) in zip(RAINBOW, bites):
-        print(f"  {col:7s} {role:12s} ({cx:7.1f},{cy:7.1f}) r={r:6.1f}")
+        print(f"  {col:7s} {role:13s} ({cx:7.2f},{cy:7.2f}) r={r:6.2f}")
 
 
 if __name__ == "__main__":

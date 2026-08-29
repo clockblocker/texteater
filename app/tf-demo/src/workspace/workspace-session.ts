@@ -14,6 +14,7 @@ import {
 	transitionSheetWorkspace,
 	type WorkspaceSubject,
 } from "./sheet-workspace";
+import type { WorkspaceDragDropEffect } from "./workspace-drag";
 
 export type WorkspaceSession = {
 	readonly workspace: SheetWorkspace;
@@ -31,6 +32,11 @@ export type WorkspaceSubjectLocation =
 
 export type WorkspaceSessionAction =
 	| { readonly type: "Command"; readonly command: SheetWorkspaceCommand }
+	| {
+			readonly type: "FinishPresentationDrag";
+			readonly dropEffect: WorkspaceDragDropEffect;
+			readonly placedSheetId: string | null;
+	  }
 	| {
 			readonly type: "OpenCardLayer";
 			readonly paneId: PaneId;
@@ -73,6 +79,12 @@ export function reduceWorkspaceSession(
 	action: WorkspaceSessionAction,
 ): WorkspaceSession {
 	switch (action.type) {
+		case "FinishPresentationDrag":
+			return applyPresentationDrop(
+				state,
+				action.dropEffect,
+				action.placedSheetId,
+			);
 		case "OpenCardLayer": {
 			const cardLayers = replaceCardLayer(state.cardLayers, action);
 			if (cardLayers === state.cardLayers) return state;
@@ -138,6 +150,45 @@ export function reduceWorkspaceSession(
 			return revealNavigationAnchor(state);
 		case "Command":
 			return applyWorkspaceCommand(state, action.command);
+	}
+}
+
+function applyPresentationDrop(
+	state: WorkspaceSession,
+	effect: WorkspaceDragDropEffect,
+	placedSheetId: string | null,
+): WorkspaceSession {
+	switch (effect.kind) {
+		case "None":
+			return state;
+		case "ReturnCard":
+			return reduceWorkspaceSession(state, {
+				type: "ReturnCard",
+				paneId: effect.paneId,
+				cardId: effect.cardId,
+			});
+		case "RemoveSheet":
+			return applyWorkspaceCommand(state, {
+				type: "RemoveSheet",
+				sheetId: effect.sheetId,
+			});
+		case "PlaceCard":
+			return placedSheetId === null
+				? state
+				: reduceWorkspaceSession(state, {
+						type: "PlaceCard",
+						sourcePaneId: effect.sourcePaneId,
+						destinationPaneId: effect.destinationPaneId,
+						cardId: effect.cardId,
+						sheetId: placedSheetId,
+					});
+		case "MoveSheet":
+			return applyWorkspaceCommand(state, {
+				type: "MoveTopSheet",
+				sourcePaneId: effect.sourcePaneId,
+				destinationPaneId: effect.destinationPaneId,
+				sheetId: effect.sheetId,
+			});
 	}
 }
 

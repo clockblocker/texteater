@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { KnowledgeSettings } from "dumrel";
-import { useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
@@ -15,6 +15,7 @@ import {
 	readingDefinitionChange,
 } from "@/lib/reading-definition";
 import { renderNote } from "@/notes";
+import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
 import type {
 	ReadingNoteData,
 	ReadingNotePresentationCapabilities,
@@ -24,16 +25,6 @@ import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
 export type UnitReadingNote = ReadingNoteData;
-
-type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
-
-export type SourceContextPaginationState = {
-	readonly firstPageKey: string;
-	readonly additionalSourceContexts: readonly SourceContext[];
-	readonly cursor: string;
-	readonly isDone: boolean;
-	readonly isLoading: boolean;
-};
 
 export function UnitReadingNoteView({
 	target,
@@ -88,76 +79,17 @@ function ReadingNoteContainer({
 	const definitionMutation = useReactQueryMutation({
 		mutationFn: applyKnowledgeChangeAction,
 	});
-	const firstPageKey = sourceContextFirstPageKey(note);
-	const firstPageCursor = note.sourceContexts.continueCursor;
-	const firstPageIsDone = note.sourceContexts.isDone;
-	const [pagination, setPagination] = useState(() =>
-		resetSourceContextPagination(note),
-	);
-	const [sourceContextError, setSourceContextError] = useState<string | null>(
-		null,
-	);
-	const paginationRevision = useRef(0);
-	const currentPagination =
-		pagination.firstPageKey === firstPageKey
-			? pagination
-			: resetSourceContextPagination(note);
-
-	useEffect(() => {
-		paginationRevision.current += 1;
-		setPagination({
-			firstPageKey,
-			additionalSourceContexts: [],
-			cursor: firstPageCursor,
-			isDone: firstPageIsDone,
-			isLoading: false,
-		});
-		setSourceContextError(null);
-	}, [firstPageCursor, firstPageIsDone, firstPageKey]);
-
-	async function loadMoreSourceContexts() {
-		if (currentPagination.isDone || currentPagination.isLoading) return;
-		setPagination((current) => ({ ...current, isLoading: true }));
-		setSourceContextError(null);
-		const requestedRevision = paginationRevision.current;
-		try {
-			const nextNote = await convex.query(api.readingNotes.get, {
+	const loadSourceContextPage = useCallback(
+		async (cursor: string): Promise<ReadingNoteData | null> => {
+			const next = await convex.query(api.readingNotes.get, {
 				readingId: note.target.readingId,
-				contextCursor: currentPagination.cursor,
+				contextCursor: cursor,
 			});
-			if (
-				requestedRevision !== paginationRevision.current ||
-				nextNote?.kind !== "UnitReadingNote" ||
-				nextNote.target.readingId !== note.target.readingId
-			) {
-				if (requestedRevision === paginationRevision.current) {
-					setPagination((current) => ({
-						...current,
-						isDone: true,
-						isLoading: false,
-					}));
-				}
-				return;
-			}
-			setPagination((current) =>
-				mergeSourceContextPage(current, nextNote),
-			);
-		} catch (cause) {
-			const message = sourceContextPageFailureMessage(
-				cause,
-				requestedRevision,
-				paginationRevision.current,
-			);
-			if (message) setSourceContextError(message);
-		} finally {
-			if (requestedRevision === paginationRevision.current) {
-				setPagination((current) => ({
-					...current,
-					isLoading: false,
-				}));
-			}
-		}
-	}
+			return next?.kind === "UnitReadingNote" ? next : null;
+		},
+		[convex, note.target.readingId],
+	);
+	const pagination = usePaginatedNoteLoading(note, loadSourceContextPage);
 
 	async function saveDefinition(definition: string | null) {
 		const args = readingDefinitionMutationArgs(
@@ -168,18 +100,14 @@ function ReadingNoteContainer({
 		if (args) await definitionMutation.mutateAsync(args);
 	}
 
-	const sourceContexts = deduplicateSourceContexts([
-		...note.sourceContexts.page,
-		...currentPagination.additionalSourceContexts,
-	]);
 	const capabilities: ReadingNotePresentationCapabilities = {
 		knowledgeSettings,
 		sourceContexts: {
-			items: sourceContexts,
-			hasMore: !currentPagination.isDone,
-			isLoading: currentPagination.isLoading,
-			error: sourceContextError,
-			loadMore: currentPagination.isDone ? null : loadMoreSourceContexts,
+			items: pagination.note.sourceContexts.page,
+			hasMore: pagination.hasMore,
+			isLoading: pagination.isLoading,
+			error: pagination.error,
+			loadMore: pagination.hasMore ? pagination.loadMore : null,
 		},
 		definition: {
 			isSaving: definitionMutation.isPending,
@@ -191,56 +119,7 @@ function ReadingNoteContainer({
 		follow,
 	};
 
-	return renderNote(note, capabilities);
-}
-
-export function resetSourceContextPagination(
-	note: ReadingNoteData,
-): SourceContextPaginationState {
-	return {
-		firstPageKey: sourceContextFirstPageKey(note),
-		additionalSourceContexts: [],
-		cursor: note.sourceContexts.continueCursor,
-		isDone: note.sourceContexts.isDone,
-		isLoading: false,
-	};
-}
-
-export function mergeSourceContextPage(
-	current: SourceContextPaginationState,
-	nextNote: ReadingNoteData,
-): SourceContextPaginationState {
-	return {
-		...current,
-		additionalSourceContexts: deduplicateSourceContexts([
-			...current.additionalSourceContexts,
-			...nextNote.sourceContexts.page,
-		]),
-		cursor: nextNote.sourceContexts.continueCursor,
-		isDone: nextNote.sourceContexts.isDone,
-	};
-}
-
-export function deduplicateSourceContexts<
-	SourceContextValue extends { readonly attestationId: string },
->(sourceContexts: readonly SourceContextValue[]): SourceContextValue[] {
-	const seen = new Set<string>();
-	return sourceContexts.filter(({ attestationId }) => {
-		if (seen.has(attestationId)) return false;
-		seen.add(attestationId);
-		return true;
-	});
-}
-
-export function sourceContextPageFailureMessage(
-	cause: unknown,
-	requestedRevision: number,
-	currentRevision: number,
-): string | null {
-	if (requestedRevision !== currentRevision) return null;
-	return cause instanceof Error
-		? cause.message
-		: "Source Contexts could not be loaded.";
+	return renderNote(pagination.note, capabilities);
 }
 
 export function readingDefinitionMutationArgs(
@@ -259,14 +138,6 @@ export function readingDefinitionMutationArgs(
 		ownerReadingKey: note.reading.ownerKey,
 		change,
 	};
-}
-
-function sourceContextFirstPageKey(note: ReadingNoteData): string {
-	return JSON.stringify([
-		note.sourceContexts.page.map(({ attestationId }) => attestationId),
-		note.sourceContexts.continueCursor,
-		note.sourceContexts.isDone,
-	]);
 }
 
 function ReadingNoteSkeleton() {

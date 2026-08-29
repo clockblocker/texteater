@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 
 import { renderErrorNote } from "../error-note";
 import type { NoteDataFor } from "../note-data";
-import { deReadingNoteModule } from "./de";
+import { renderGermanReadingNote } from "./de";
 import {
 	createDefaultReadingNoteCapabilities,
 	type ReadingNotePresentationCapabilities,
@@ -14,7 +14,6 @@ import {
 	type UnitReadingFamilyFor,
 	type UnitReadingKindFor,
 } from "./reading-note-route";
-import { renderReadingNoteComposition } from "./render-reading-note";
 
 export type ReadingNoteData = NoteDataFor<"UnitReadingNote">;
 
@@ -31,10 +30,6 @@ export type {
 	UnitReadingFamilyFor,
 	UnitReadingKindFor,
 } from "./reading-note-route";
-export type {
-	ReadingNoteRendererOverrideRegistry,
-	ReadingNoteRouteRendererOverrides,
-} from "./renderer-overrides";
 
 export function renderReadingNote(
 	note: ReadingNoteData,
@@ -57,11 +52,7 @@ export function renderReadingNote(
 					route,
 					renderCapabilities,
 				);
-				return renderReadingNoteComposition(
-					context,
-					deReadingNoteModule.blockKindsFor(route),
-					deReadingNoteModule.rendererOverrides,
-				);
+				return renderGermanReadingNote(context);
 			}
 			default:
 				return renderUnconfiguredTargetLanguage(route.targetLanguage);

@@ -5,7 +5,6 @@ import {
 	semanticRelationValues,
 } from "dumrel/relations";
 import type {
-	DumdictReadingDraft,
 	LemmaRecord,
 	PendingSemanticRelationRecord,
 	Reading,
@@ -25,13 +24,23 @@ import {
 } from "../parsing/lightweight-parsers";
 import { DumdictLanguageMismatchError } from "../public";
 import type {
+	AddNewNoteContext,
+	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
-	NewNoteSlice,
+	EnsureOwnedSurfaceContext,
+	EnsureReadingEntryContext,
+	LoadReadingEntryContextRequest,
+	ReadingEntryContext,
 	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
 import { lemmaFingerprint, sameLemma, sameReading } from "./identity";
+import {
+	assertPendingSemanticRelationRecordIdentity,
+	derivePendingSemanticRelationLocator,
+	pendingSemanticRelationLocatorKey,
+} from "./pending";
 
 function assertLanguage(
 	expected: SupportedLanguage,
@@ -47,13 +56,6 @@ function assertLanguage(
 function assertNoDuplicates(values: string[], context: string) {
 	if (new Set(values).size !== values.length)
 		throw new Error(`${context} contains duplicates.`);
-}
-
-function locatorKey<L extends SupportedLanguage>(
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const { sourceReadingKey, relation, targetPendingId } = record.locator;
-	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
 }
 
 function validateLemmaRecord<L extends SupportedLanguage>(
@@ -135,29 +137,21 @@ function validatePendingRecord<L extends SupportedLanguage>(
 	expected: L,
 	record: PendingSemanticRelationRecord<L>,
 ) {
-	unwrapDumdictParse(parseAsPendingSemanticRelationRecord(record, expected));
-	validateReading(expected, record.sourceReading);
-	const parsed = unwrapDumdictParse(
-		parsePendingSemanticRelationForDumdictRuntime(record.pending),
+	const parsedRecord = unwrapDumdictParse(
+		parseAsPendingSemanticRelationRecord(record, expected),
 	);
-	assertLanguage(expected, parsed.target.language);
-	if (parsed.target.language !== record.sourceReading.lemma.language)
+	validateReading(expected, parsedRecord.sourceReading);
+	assertLanguage(expected, parsedRecord.pending.target.language);
+	if (
+		parsedRecord.pending.target.language !==
+		parsedRecord.sourceReading.lemma.language
+	)
 		throw new Error(
 			"Pending Semantic Relation endpoints must use the same language.",
 		);
-	if (!semanticRelationValues.includes(record.locator.relation))
+	if (!semanticRelationValues.includes(parsedRecord.locator.relation))
 		throw new Error("Invalid Semantic Relation.");
-	if (
-		record.locator.sourceReadingKey !==
-		readingFingerprint(record.sourceReading)
-	)
-		throw new Error(
-			"Pending Semantic Relation locator has the wrong source Reading key.",
-		);
-	if (record.locator.relation !== parsed.relation)
-		throw new Error(
-			"Pending Semantic Relation locator has the wrong relation.",
-		);
+	assertPendingSemanticRelationRecordIdentity(parsedRecord);
 }
 
 function validateRelationInventory<L extends SupportedLanguage>(
@@ -238,52 +232,243 @@ export function validateReadingPatchSlice<L extends SupportedLanguage>(
 		);
 }
 
-export function validateNewNoteSlice<L extends SupportedLanguage>(
+function validateRevision(value: unknown) {
+	if (typeof value !== "string" || value.length === 0)
+		throw new Error("Reading Entry context has an invalid revision.");
+}
+
+function validateExistingIdentity<L extends SupportedLanguage>(
 	expected: L,
-	slice: NewNoteSlice<L>,
-	draft?: DumdictReadingDraft<L>,
+	context: {
+		existingLemma?: LemmaRecord<L>;
+		existingReading?: ReadingEntry<L>;
+	},
+	reading: Reading<L>,
 ) {
-	if (draft) {
-		validateReading(expected, draft.reading);
-		for (const relation of draft.relations ?? []) {
-			if (relation.target.kind === "pending")
-				unwrapDumdictParse(
-					parsePendingSemanticRelationForDumdictRuntime(
-						relation.target.pending,
-					),
-				);
-			else if ("relation" in relation)
-				if (!directSemanticRelationValues.includes(relation.relation))
-					throw new Error("Invalid direct Semantic Relation.");
-		}
-	}
-	if (slice.existingLemma) {
-		validateLemmaRecord(expected, slice.existingLemma);
-		if (draft && !sameLemma(slice.existingLemma.lemma, draft.reading.lemma))
+	if (context.existingLemma) {
+		validateLemmaRecord(expected, context.existingLemma);
+		if (!sameLemma(context.existingLemma.lemma, reading.lemma))
 			throw new Error(
-				"existing Lemma does not match the draft identity.",
+				"existing Lemma does not match the requested Reading identity.",
 			);
 	}
-	if (slice.existingReading) {
-		validateReadingEntry(expected, slice.existingReading);
-		if (draft && !sameReading(slice.existingReading.reading, draft.reading))
+	if (context.existingReading) {
+		validateReadingEntry(expected, context.existingReading);
+		if (!sameReading(context.existingReading.reading, reading))
 			throw new Error(
-				"existing Reading does not match the draft identity.",
+				"existing Reading does not match the requested Reading identity.",
 			);
 	}
-	for (const entry of slice.existingOwnedSurfaces)
+}
+
+function validateRequestedSurfaces<L extends SupportedLanguage>(
+	expected: L,
+	entries: SurfaceEntry<L>[],
+	requestedSurfaceIds: Set<string>,
+) {
+	for (const entry of entries) {
 		validateSurfaceEntry(expected, entry);
-	for (const entry of slice.explicitExistingLemmaTargets)
-		validateLemmaRecord(expected, entry);
-	for (const record of slice.existingPendingRelationsForProposedPendingTargets)
+		if (!requestedSurfaceIds.has(entry.id))
+			throw new Error(
+				"existing owned Surface was not requested by this workflow.",
+			);
+	}
+	assertNoDuplicates(
+		entries.map(({ id }) => id),
+		"existing owned Surfaces",
+	);
+}
+
+function validateExactPendingSelection<L extends SupportedLanguage>(
+	expected: L,
+	records: PendingSemanticRelationRecord<L>[],
+	requestedKeys: Set<string>,
+) {
+	for (const record of records) {
 		validatePendingRecord(expected, record);
-	for (const record of slice.pendingRelationsMatchingProposedLemma)
+		if (
+			!requestedKeys.has(
+				pendingSemanticRelationLocatorKey(record.locator),
+			)
+		)
+			throw new Error(
+				"pending Semantic Relation was not requested by this workflow.",
+			);
+	}
+	assertNoDuplicates(
+		records.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+		"exact pending Semantic Relations",
+	);
+}
+
+function validateAddNewNoteContext<L extends SupportedLanguage>(
+	expected: L,
+	context: AddNewNoteContext<L>,
+	request: Extract<
+		LoadReadingEntryContextRequest<L>,
+		{ intent: "addNewNote" }
+	>,
+) {
+	validateExistingIdentity(expected, context, request.reading);
+	validateRequestedSurfaces(
+		expected,
+		context.existingOwnedSurfaces,
+		new Set(
+			request.ownedSurfaces.map((surface) =>
+				makeSurfaceId(expected, surface),
+			),
+		),
+	);
+	const requestedLemmaKeys = new Set(
+		request.relations.flatMap((relation) =>
+			relation.target.kind === "existing"
+				? [lemmaFingerprint(relation.target.lemma)]
+				: [],
+		),
+	);
+	for (const record of context.explicitExistingLemmaTargets) {
+		validateLemmaRecord(expected, record);
+		if (!requestedLemmaKeys.has(lemmaFingerprint(record.lemma)))
+			throw new Error(
+				"explicit existing Lemma target was not requested by this workflow.",
+			);
+	}
+	const requestedPendingKeys = new Set(
+		request.relations.flatMap((relation) =>
+			relation.target.kind === "pending"
+				? [
+						pendingSemanticRelationLocatorKey(
+							derivePendingSemanticRelationLocator(
+								request.reading,
+								relation.target.pending,
+							),
+						),
+					]
+				: [],
+		),
+	);
+	validateExactPendingSelection(
+		expected,
+		context.exactPendingRelations,
+		requestedPendingKeys,
+	);
+	for (const record of context.pendingRelationsMatchingProposedLemma) {
 		validatePendingRecord(expected, record);
+		const target = record.pending.target;
+		const lemma = request.reading.lemma;
+		if (
+			target.language !== lemma.language ||
+			target.canonicalForm !== lemma.canonicalForm ||
+			target.family !== lemma.family ||
+			target.kind !== lemma.kind
+		)
+			throw new Error(
+				"pending Semantic Relation does not match the proposed Lemma.",
+			);
+	}
 	validateRelationInventory(
 		expected,
-		slice.relationLemmas,
-		slice.relationReadings,
+		context.relationLemmas,
+		context.relationReadings,
 	);
+}
+
+function validateApplyGeneratedKnowledgeContext<L extends SupportedLanguage>(
+	expected: L,
+	context: ApplyGeneratedKnowledgeContext<L>,
+	request: Extract<
+		LoadReadingEntryContextRequest<L>,
+		{ intent: "applyGeneratedKnowledge" }
+	>,
+) {
+	if (context.existingReading) {
+		validateReadingEntry(expected, context.existingReading);
+		if (!sameReading(context.existingReading.reading, request.reading))
+			throw new Error(
+				"existing Reading does not match the requested Reading identity.",
+			);
+	}
+	validateExactPendingSelection(
+		expected,
+		context.exactPendingRelations,
+		new Set(
+			request.pendingRelations.map((pending) =>
+				pendingSemanticRelationLocatorKey(
+					derivePendingSemanticRelationLocator(
+						request.reading,
+						pending,
+					),
+				),
+			),
+		),
+	);
+	validateRelationInventory(
+		expected,
+		context.relationLemmas,
+		context.relationReadings,
+	);
+}
+
+export function validateReadingEntryContext<L extends SupportedLanguage>(
+	expected: L,
+	context: ReadingEntryContext<L>,
+	request: LoadReadingEntryContextRequest<L>,
+) {
+	if (context.intent !== request.intent)
+		throw new Error(
+			"Reading Entry context intent does not match the request.",
+		);
+	validateRevision(context.revision);
+	validateReading(expected, request.reading);
+	switch (request.intent) {
+		case "addNewNote":
+			for (const relation of request.relations) {
+				if (relation.target.kind === "pending")
+					unwrapDumdictParse(
+						parsePendingSemanticRelationForDumdictRuntime(
+							relation.target.pending,
+						),
+					);
+				else if (
+					"relation" in relation &&
+					!directSemanticRelationValues.includes(relation.relation)
+				)
+					throw new Error("Invalid direct Semantic Relation.");
+			}
+			validateAddNewNoteContext(
+				expected,
+				context as AddNewNoteContext<L>,
+				request,
+			);
+			return;
+		case "applyGeneratedKnowledge":
+			validateApplyGeneratedKnowledgeContext(
+				expected,
+				context as ApplyGeneratedKnowledgeContext<L>,
+				request,
+			);
+			return;
+		case "ensureOwnedSurface":
+			validateExistingIdentity(
+				expected,
+				context as EnsureOwnedSurfaceContext<L>,
+				request.reading,
+			);
+			validateRequestedSurfaces(
+				expected,
+				(context as EnsureOwnedSurfaceContext<L>).existingOwnedSurfaces,
+				new Set([makeSurfaceId(expected, request.surface)]),
+			);
+			return;
+		case "ensureReadingEntry":
+			validateExistingIdentity(
+				expected,
+				context as EnsureReadingEntryContext<L>,
+				request.reading,
+			);
+	}
 }
 
 export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
@@ -319,7 +504,9 @@ export function validateRelationsCleanupInfoSlice<L extends SupportedLanguage>(
 			);
 	}
 	assertNoDuplicates(
-		slice.pendingRelations.map(locatorKey),
+		slice.pendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
 		"pending Semantic Relations",
 	);
 }
@@ -331,7 +518,9 @@ export function validateCleanupRelationsSlice<L extends SupportedLanguage>(
 	for (const record of slice.pendingRelations)
 		validatePendingRecord(expected, record);
 	assertNoDuplicates(
-		slice.pendingRelations.map(locatorKey),
+		slice.pendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
 		"pending Semantic Relations",
 	);
 	validateRelationInventory(

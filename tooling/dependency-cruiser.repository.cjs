@@ -32,6 +32,16 @@ module.exports = {
 			to: { path: "^app/tf-demo/src/" },
 		},
 		{
+			name: "tf-demo-dumdict-storage-implementation-is-private",
+			comment:
+				"Callers must use the Dumdict storage interface file; its implementation folder is private.",
+			severity: "error",
+			from: {
+				pathNot: "^app/tf-demo/convex/dumdictStorage(?:\\.ts|/)",
+			},
+			to: { path: "^app/tf-demo/convex/dumdictStorage/" },
+		},
+		{
 			name: "tf-demo-german-reading-renderer-overrides-are-private",
 			comment:
 				"Private German Reading renderer leaves may only be imported by the auditable German override index.",

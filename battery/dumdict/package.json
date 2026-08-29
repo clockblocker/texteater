@@ -30,6 +30,10 @@
 			"types": "./dist/relations.d.ts",
 			"import": "./dist/relations.js"
 		},
+		"./pending": {
+			"types": "./dist/pending.d.ts",
+			"import": "./dist/pending.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -42,7 +46,7 @@
 	},
 	"scripts": {
 		"build": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/runtime.ts src/relations.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --alias:dumling/id=../dumling/src/id.ts",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/dangerously-heavy-schema-tree.ts src/runtime.ts src/relations.ts src/pending.ts --bundle --outdir=dist --platform=node --format=esm --packages=external --alias:dumling/id=../dumling/src/id.ts",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",

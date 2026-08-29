@@ -240,6 +240,7 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	dumdict: strict,
 	"dumdict/runtime": strict,
 	"dumdict/relations": strict,
+	"dumdict/pending": strict,
 	dumgen: strict,
 	"dumgen/projection": strict,
 	"dumgen/knowledge": strict,

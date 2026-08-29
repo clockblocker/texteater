@@ -8,7 +8,7 @@ import {
 	type StoreRevision,
 	type SurfaceEntry,
 } from "../../../src";
-import { derivePendingEntryId } from "../../../src/core/pending/identity";
+import { derivePendingEntryId } from "../../../src/core/pending";
 import { getBootedUpDumdict } from "../../../src/testing/boot";
 import {
 	deSerializedNotes,
@@ -95,8 +95,8 @@ export function withUnusedCleanupStorageMethods<
 	};
 }
 
-export const storageRejectingNewNoteContext = () => {
-	let loadNewNoteContextCalls = 0;
+export const storageRejectingReadingEntryContext = () => {
+	let loadReadingEntryContextCalls = 0;
 	const storage = withUnusedCleanupStorageMethods({
 		async findStoredReadings() {
 			throw new Error("Unexpected storage call");
@@ -104,17 +104,9 @@ export const storageRejectingNewNoteContext = () => {
 		async loadReadingForPatch() {
 			throw new Error("Unexpected storage call");
 		},
-		async loadNewNoteContext() {
-			loadNewNoteContextCalls += 1;
-			return {
-				revision: "never" as StoreRevision,
-				existingOwnedSurfaces: [],
-				explicitExistingLemmaTargets: [],
-				existingPendingRelationsForProposedPendingTargets: [],
-				pendingRelationsMatchingProposedLemma: [],
-				relationLemmas: [],
-				relationReadings: [],
-			};
+		async loadReadingEntryContext() {
+			loadReadingEntryContextCalls += 1;
+			throw new Error("Unexpected storage call");
 		},
 		async commitChanges() {
 			throw new Error("Unexpected storage call");
@@ -123,6 +115,6 @@ export const storageRejectingNewNoteContext = () => {
 
 	return {
 		storage,
-		getLoadNewNoteContextCalls: () => loadNewNoteContextCalls,
+		getLoadReadingEntryContextCalls: () => loadReadingEntryContextCalls,
 	};
 };

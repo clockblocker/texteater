@@ -7,30 +7,26 @@ import {
 	makeSurfaceId,
 	type StoreRevision,
 } from "dumdict";
+import { derivePendingSemanticRelationLocator } from "dumdict/pending";
 import type { Dumgen } from "dumgen";
 import { readingFingerprint } from "dumling";
-import {
-	type PendingSemanticRelation,
-	parseAsPendingSemanticRelation,
-} from "dumrel";
 
 import {
 	applyDumdictPlanInTransaction,
 	commitDumdictChanges,
+	createConvexDumdictStorage,
 	findDumdictStoredReadings,
 	getDumdictRelationsCleanupInfo,
 	loadDumdictCleanupRelationsContext,
-	loadDumdictNewNoteContext,
+	loadDumdictReadingEntryContext,
 	loadDumdictReadingForPatch,
 } from "../convex/dumdictStorage";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
-import { createConvexDumdictStorage } from "../convex/orchestration";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 } from "../server/linguisticOrchestration";
-import { unwrapOperationalParse } from "../server/operationalParsing";
 
 type Row = Record<string, unknown> & { _id: string };
 
@@ -275,19 +271,6 @@ function initialSeed(): Record<string, readonly Row[]> {
 	};
 }
 
-function pendingProposalKey(input: unknown): string {
-	const pending = unwrapOperationalParse<PendingSemanticRelation>(
-		parseAsPendingSemanticRelation(input),
-	);
-	return JSON.stringify([
-		pending.relation,
-		pending.target.language,
-		pending.target.canonicalForm,
-		pending.target.family,
-		pending.target.kind,
-	]);
-}
-
 function locatorKey(locator: {
 	sourceReadingKey: string;
 	relation: string;
@@ -307,28 +290,66 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 				lemmaKey: lemmaIdentityKey(lemma),
 			})) as never;
 		},
-		async loadNewNoteContext({ draft }) {
-			return (await runQuery(db, loadDumdictNewNoteContext, {
-				lemmaKey: lemmaIdentityKey(draft.reading.lemma),
-				proposedLemma: draft.reading.lemma,
-				readingKey: readingFingerprint(draft.reading),
-				surfaceKeys:
-					draft.ownedSurfaces?.map(({ surface: value }) =>
-						makeSurfaceId("de", value),
-					) ?? [],
-				explicitLemmaTargetKeys:
-					draft.relations?.flatMap(({ target }) =>
-						target.kind === "existing"
-							? [lemmaIdentityKey(target.lemma)]
-							: [],
-					) ?? [],
-				pendingProposalKeys:
-					draft.relations?.flatMap(({ target }) =>
-						target.kind === "pending"
-							? [pendingProposalKey(target.pending)]
-							: [],
-					) ?? [],
-			})) as never;
+		async loadReadingEntryContext(request) {
+			const readingKey = readingFingerprint(request.reading);
+			switch (request.intent) {
+				case "addNewNote":
+					return (await runQuery(db, loadDumdictReadingEntryContext, {
+						intent: request.intent,
+						lemmaKey: lemmaIdentityKey(request.reading.lemma),
+						proposedLemma: request.reading.lemma,
+						readingKey,
+						surfaceKeys: request.ownedSurfaces.map((surface) =>
+							makeSurfaceId("de", surface),
+						),
+						explicitLemmaTargetKeys: request.relations.flatMap(
+							({ target }) =>
+								target.kind === "existing"
+									? [lemmaIdentityKey(target.lemma)]
+									: [],
+						),
+						pendingLocatorKeys: request.relations.flatMap(
+							({ target }) =>
+								target.kind === "pending"
+									? [
+											locatorKey(
+												derivePendingSemanticRelationLocator(
+													request.reading,
+													target.pending,
+												),
+											),
+										]
+									: [],
+						),
+					})) as never;
+				case "applyGeneratedKnowledge":
+					return (await runQuery(db, loadDumdictReadingEntryContext, {
+						intent: request.intent,
+						readingKey,
+						pendingLocatorKeys: request.pendingRelations.map(
+							(pending) =>
+								locatorKey(
+									derivePendingSemanticRelationLocator(
+										request.reading,
+										pending,
+									),
+								),
+						),
+					})) as never;
+				case "ensureOwnedSurface":
+					return (await runQuery(db, loadDumdictReadingEntryContext, {
+						intent: request.intent,
+						lemmaKey: lemmaIdentityKey(request.reading.lemma),
+						readingKey,
+						surfaceKey: makeSurfaceId("de", request.surface),
+					})) as never;
+				case "ensureReadingEntry":
+					return (await runQuery(db, loadDumdictReadingEntryContext, {
+						intent: request.intent,
+						lemmaKey: lemmaIdentityKey(request.reading.lemma),
+						readingKey,
+					})) as never;
+			}
 		},
 		async loadReadingForPatch({ reading }) {
 			return (await runQuery(db, loadDumdictReadingForPatch, {
@@ -360,7 +381,10 @@ function storageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 function actualConvexStorageFor(db: IndexedDb): DumdictStoragePort<"de"> {
 	const queries = new Map<string, unknown>([
 		["dumdictStorage:findDumdictStoredReadings", findDumdictStoredReadings],
-		["dumdictStorage:loadDumdictNewNoteContext", loadDumdictNewNoteContext],
+		[
+			"dumdictStorage:loadDumdictReadingEntryContext",
+			loadDumdictReadingEntryContext,
+		],
 		[
 			"dumdictStorage:loadDumdictReadingForPatch",
 			loadDumdictReadingForPatch,
@@ -428,6 +452,7 @@ describe("tf-demo Dumdict relation storage", () => {
 	test("rejects over-budget and duplicate-heavy slices before planning while admitting the exact transaction boundary", async () => {
 		const db = new IndexedDb(initialSeed());
 		const newNoteArgs = {
+			intent: "addNewNote" as const,
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
 			readingKey: readingFingerprint(gehenReading),
@@ -439,19 +464,19 @@ describe("tf-demo Dumdict relation storage", () => {
 				{ length: 16 },
 				(_, index) => `reading-${index}`,
 			),
-			pendingProposalKeys: Array.from(
+			pendingLocatorKeys: Array.from(
 				{ length: 16 },
 				(_, index) => `pending-${index}`,
 			),
 		};
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, newNoteArgs),
+			runQuery(db, loadDumdictReadingEntryContext, newNoteArgs),
 		).resolves.toMatchObject({ revision: "convex-0" });
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, {
+			runQuery(db, loadDumdictReadingEntryContext, {
 				...newNoteArgs,
-				pendingProposalKeys: [
-					...newNoteArgs.pendingProposalKeys,
+				pendingLocatorKeys: [
+					...newNoteArgs.pendingLocatorKeys,
 					"overflow",
 				],
 			}),
@@ -459,7 +484,8 @@ describe("tf-demo Dumdict relation storage", () => {
 			"New-note context can produce at most 50 planned changes",
 		);
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, {
+			runQuery(db, loadDumdictReadingEntryContext, {
+				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(gehenLemma),
 				proposedLemma: gehenLemma,
 				readingKey: readingFingerprint(gehenReading),
@@ -467,7 +493,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				explicitLemmaTargetKeys: Array.from({ length: 49 }, () =>
 					lemmaIdentityKey(gehenLemma),
 				),
-				pendingProposalKeys: [],
+				pendingLocatorKeys: [],
 			}),
 		).rejects.toThrow(
 			"New-note context can produce at most 50 planned changes",
@@ -522,7 +548,8 @@ describe("tf-demo Dumdict relation storage", () => {
 
 	test("loads every requested owned Surface and explicit existing Lemma target", async () => {
 		const db = new IndexedDb(initialSeed());
-		const result = (await runQuery(db, loadDumdictNewNoteContext, {
+		const result = (await runQuery(db, loadDumdictReadingEntryContext, {
+			intent: "addNewNote",
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
 			readingKey: readingFingerprint({
@@ -534,7 +561,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				makeSurfaceId("de", surface("ging")),
 			],
 			explicitLemmaTargetKeys: [lemmaIdentityKey(gehenLemma)],
-			pendingProposalKeys: [],
+			pendingLocatorKeys: [],
 		})) as {
 			existingOwnedSurfaces: unknown[];
 			explicitExistingLemmaTargets: unknown[];
@@ -544,6 +571,62 @@ describe("tf-demo Dumdict relation storage", () => {
 		expect(result.explicitExistingLemmaTargets).toEqual([
 			{ lemma: gehenLemma },
 		]);
+	});
+
+	test("loads every Reading Entry intent through one discriminated Convex query", async () => {
+		const db = new IndexedDb(initialSeed());
+		const queryInputs: unknown[] = [];
+		const storage = createConvexDumdictStorage({
+			async runQuery(reference: unknown, args: unknown) {
+				expect(getFunctionName(reference as never)).toBe(
+					"dumdictStorage:loadDumdictReadingEntryContext",
+				);
+				queryInputs.push(args);
+				return runQuery(db, loadDumdictReadingEntryContext, args);
+			},
+			async runMutation() {
+				throw new Error("Unexpected Convex mutation.");
+			},
+		} as never);
+
+		const contexts = await Promise.all([
+			storage.loadReadingEntryContext({
+				intent: "addNewNote",
+				reading: laufenReading,
+				ownedSurfaces: [],
+				relations: [],
+			}),
+			storage.loadReadingEntryContext({
+				intent: "applyGeneratedKnowledge",
+				reading: gehenReading,
+				pendingRelations: [],
+			}),
+			storage.loadReadingEntryContext({
+				intent: "ensureOwnedSurface",
+				reading: gehenReading,
+				surface: surface("gehen"),
+			}),
+			storage.loadReadingEntryContext({
+				intent: "ensureReadingEntry",
+				reading: gehenReading,
+			}),
+		]);
+
+		expect(queryInputs).toHaveLength(4);
+		expect(
+			contexts.map(({ intent, revision }) => ({ intent, revision })),
+		).toEqual([
+			{ intent: "addNewNote", revision: "convex-0" },
+			{
+				intent: "applyGeneratedKnowledge",
+				revision: "convex-0",
+			},
+			{ intent: "ensureOwnedSurface", revision: "convex-0" },
+			{ intent: "ensureReadingEntry", revision: "convex-0" },
+		]);
+		expect(contexts[2]).not.toHaveProperty("relationLemmas");
+		expect(contexts[3]).not.toHaveProperty("relationReadings");
+		expect(contexts[1]).toHaveProperty("relationLemmas");
 	});
 
 	test("authors only direct Knowledge, deduplicates pending proposals, and survives a repeated encounter", async () => {
@@ -1132,13 +1215,14 @@ describe("tf-demo Dumdict relation storage", () => {
 			dictionaryLemmas: dictionaryRows,
 		});
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, {
+			runQuery(db, loadDumdictReadingEntryContext, {
+				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
 				readingKey: readingFingerprint(laufenReading),
 				surfaceKeys: [],
 				explicitLemmaTargetKeys: [],
-				pendingProposalKeys: [],
+				pendingLocatorKeys: [],
 			}),
 		).rejects.toThrow("at most 100 dictionary Lemmas");
 	});
@@ -1153,13 +1237,14 @@ describe("tf-demo Dumdict relation storage", () => {
 		}));
 		const db = new IndexedDb(seed);
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, {
+			runQuery(db, loadDumdictReadingEntryContext, {
+				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
 				readingKey: readingFingerprint(laufenReading),
 				surfaceKeys: [],
 				explicitLemmaTargetKeys: [],
-				pendingProposalKeys: [],
+				pendingLocatorKeys: [],
 			}),
 		).rejects.toThrow("at most 200 dictionary Readings");
 	});
@@ -1177,13 +1262,14 @@ describe("tf-demo Dumdict relation storage", () => {
 		);
 		const db = new IndexedDb(seed);
 		await expect(
-			runQuery(db, loadDumdictNewNoteContext, {
+			runQuery(db, loadDumdictReadingEntryContext, {
+				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(laufenLemma),
 				proposedLemma: laufenLemma,
 				readingKey: readingFingerprint(laufenReading),
 				surfaceKeys: [],
 				explicitLemmaTargetKeys: [],
-				pendingProposalKeys: [],
+				pendingLocatorKeys: [],
 			}),
 		).rejects.toThrow("at most 200 Semantic Relation edges");
 	});
@@ -1265,6 +1351,45 @@ describe("tf-demo Dumdict relation storage", () => {
 			status: "conflict",
 			code: "semanticPreconditionFailed",
 		});
+		expect(db.snapshot()).toEqual(before);
+
+		const forgedRecord = {
+			sourceReading: gehenReading,
+			pending: {
+				relation: "synonym",
+				target: {
+					language: "de",
+					canonicalForm: "laufen",
+					family: "Lexeme",
+					kind: "VERB",
+				},
+			},
+			locator: {
+				sourceReadingKey: readingFingerprint(gehenReading),
+				relation: "synonym",
+				targetPendingId: "pending-entry:v2:de:Lexeme:VERB:forged",
+			},
+		} as const;
+		const forgedPlan: DumdictPlan<"de"> = {
+			baseRevision: revision,
+			changes: [
+				{
+					type: "createPendingSemanticRelation",
+					record: forgedRecord,
+					preconditions: [
+						{ kind: "revisionMatches", revision },
+						{ kind: "readingExists", reading: gehenReading },
+						{
+							kind: "pendingRelationMissing",
+							record: forgedRecord,
+						},
+					],
+				},
+			],
+		};
+		await expect(
+			applyDumdictPlanInTransaction({ db } as never, forgedPlan),
+		).rejects.toThrow("wrong target Pending Entry ID");
 		expect(db.snapshot()).toEqual(before);
 	});
 

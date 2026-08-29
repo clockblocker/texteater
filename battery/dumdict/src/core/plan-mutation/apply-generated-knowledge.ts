@@ -10,8 +10,15 @@ import {
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
-import type { NewNoteSlice, ReadingPatchOp } from "../../storage";
-import { derivePendingEntryId } from "../pending/identity";
+import type {
+	ApplyGeneratedKnowledgeContext,
+	ReadingPatchOp,
+} from "../../storage";
+import {
+	createPendingSemanticRelationRecord,
+	deduplicatePendingSemanticRelationRecords,
+	pendingSemanticRelationLocatorKey,
+} from "../pending";
 import {
 	planRelationMaintenance,
 	type RelationRequest,
@@ -21,39 +28,20 @@ import { relationAdditionsToPatches } from "./relation-additions-to-patches";
 import { relationRemovalsToPatches } from "./relation-removals-to-patches";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
-function locatorKey<L extends SupportedLanguage>(
-	record: PendingSemanticRelationRecord<L>,
-): string {
-	const { sourceReadingKey, relation, targetPendingId } = record.locator;
-	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
-}
-
 function pendingRecords<L extends SupportedLanguage>(
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): PendingSemanticRelationRecord<L>[] {
-	const sourceReadingKey = readingFingerprint(request.reading);
 	const records = request.pendingRelations.map((value) => {
 		const pending = unwrapDumdictParse(
 			parsePendingSemanticRelationForDumdictRuntime(value),
 		) as unknown as PendingSemanticRelationRecord<L>["pending"];
-		return {
-			sourceReading: request.reading,
-			pending,
-			locator: {
-				sourceReadingKey,
-				relation: pending.relation,
-				targetPendingId: derivePendingEntryId(pending.target),
-			},
-		};
+		return createPendingSemanticRelationRecord(request.reading, pending);
 	});
-	const unique = new Map(
-		records.map((record) => [locatorKey(record), record]),
-	);
-	return [...unique.values()];
+	return deduplicatePendingSemanticRelationRecords(records);
 }
 
 export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: ApplyGeneratedKnowledgeContext<L>,
 	request: ApplyGeneratedKnowledgeRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	if (!slice.existingReading) {
@@ -66,12 +54,16 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 
 	const proposed = pendingRecords(request);
 	const existingByKey = new Map(
-		slice.existingPendingRelationsForProposedPendingTargets.map(
-			(record) => [locatorKey(record), record],
-		),
+		slice.exactPendingRelations.map((record) => [
+			pendingSemanticRelationLocatorKey(record.locator),
+			record,
+		]),
 	);
 	const relationRequests: RelationRequest<L>[] = proposed.map((record) => {
-		const pendingRecord = existingByKey.get(locatorKey(record)) ?? record;
+		const pendingRecord =
+			existingByKey.get(
+				pendingSemanticRelationLocatorKey(record.locator),
+			) ?? record;
 		return {
 			sourceReading: request.reading,
 			relation: pendingRecord.pending.relation,
@@ -133,9 +125,15 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 		operations.set(readingKey, patch);
 	}
 
-	const resolvedKeys = new Set(relationPlan.resolvedPending.map(locatorKey));
+	const resolvedKeys = new Set(
+		relationPlan.resolvedPending.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+	);
 	const unresolvedKeys = new Set(
-		relationPlan.unresolvedPending.map(locatorKey),
+		relationPlan.unresolvedPending.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
 	);
 	const changes: PlannedChangeOp<L>[] = [
 		...[...operations.values()].map(
@@ -150,7 +148,7 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 			}),
 		),
 		...proposed.flatMap((record): PlannedChangeOp<L>[] => {
-			const key = locatorKey(record);
+			const key = pendingSemanticRelationLocatorKey(record.locator);
 			if (existingByKey.has(key) || !unresolvedKeys.has(key)) return [];
 			return [
 				{
@@ -165,7 +163,9 @@ export function planApplyGeneratedKnowledge<L extends SupportedLanguage>(
 		}),
 		...[...existingByKey.values()].flatMap(
 			(record): PlannedChangeOp<L>[] =>
-				resolvedKeys.has(locatorKey(record))
+				resolvedKeys.has(
+					pendingSemanticRelationLocatorKey(record.locator),
+				)
 					? [
 							{
 								type: "deletePendingSemanticRelation",

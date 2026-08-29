@@ -3,27 +3,21 @@ import { createElement, Fragment } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
 import type { NoteBlockKindFor } from "../src/notes/note-block-kind";
+import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import {
 	type ReadingNoteData,
 	type ReadingNoteDefaultRenderer,
 	type ReadingNotePresentationCapabilities,
 	type ReadingNoteRenderContext,
-	type ReadingNoteRendererOverrideRegistry,
 	renderReadingNote,
 } from "../src/notes/reading";
-import { deReadingNoteModule } from "../src/notes/reading/de";
 import { DEFAULT_READING_NOTE_RENDERER_FOR } from "../src/notes/reading/default-renderers";
 import { ReadingNoteBlockErrorBoundary } from "../src/notes/reading/error-block";
 import { createDefaultReadingNoteCapabilities } from "../src/notes/reading/reading-note-render-context";
 import { narrowReadingNoteRoute } from "../src/notes/reading/reading-note-route";
 import { renderReadingNoteBlocks } from "../src/notes/reading/render-reading-note";
-import {
-	deduplicateSourceContexts,
-	mergeSourceContextPage,
-	readingDefinitionMutationArgs,
-	resetSourceContextPagination,
-	sourceContextPageFailureMessage,
-} from "../src/views/unit-reading-note-view";
+import type { ReadingNoteRendererOverrideRegistry } from "../src/notes/reading/renderer-overrides";
+import { readingDefinitionMutationArgs } from "../src/views/unit-reading-note-view";
 
 test("narrows each valid Reading route once and rejects unsupported coordinates", () => {
 	const note = readingNoteFixture();
@@ -238,15 +232,6 @@ test("orders applicable Blocks by shared weights and prefers a sparse override",
 	).toBe(true);
 });
 
-test("German renderer index exposes only the Lexeme VERB Header specialization", () => {
-	expect(Object.keys(deReadingNoteModule.rendererOverrides)).toEqual([
-		"Lexeme",
-	]);
-	expect(
-		Object.keys(deReadingNoteModule.rendererOverrides.Lexeme?.VERB ?? {}),
-	).toEqual(["Header"]);
-});
-
 test("renders the specialized German verb Header through the public Reading renderer", () => {
 	const ordinary = renderPublicReadingNote(
 		readingNoteFixture({
@@ -316,27 +301,6 @@ test("German verb Header treats governed prepositions and separable prefixes ind
 	expect(prepositionOnly).toContain(">auf</span>");
 });
 
-test("German verb specialization leaves other Blocks on exhaustive defaults", () => {
-	const context = renderContext({
-		kind: "VERB",
-		canonicalForm: "rennen",
-		coreFeatures: verbFeatures(),
-	});
-	const blocks = renderReadingNoteBlocks(
-		context,
-		new Set(["Header", "SourceContexts", "Relations", "Translations"]),
-		deReadingNoteModule.rendererOverrides,
-		markerRenderers(),
-	);
-	const markup = renderToStaticMarkup(createElement(Fragment, {}, ...blocks));
-
-	expect(markup).toContain("rennen");
-	expect(markup).not.toContain("Header default");
-	expect(markup).toContain("SourceContexts default");
-	expect(markup).toContain("Relations default");
-	expect(markup).toContain("Translations default");
-});
-
 test("isolates an invoked renderer failure without hiding successful siblings", () => {
 	const defaults = markerRenderers();
 	defaults.Relations = () => {
@@ -392,7 +356,7 @@ test("resets a failed Block boundary when reactive render input changes", () => 
 	).toEqual({ hasError: false, cause: undefined, resetToken: nextToken });
 });
 
-test("resets, merges, and deduplicates reactive Source Context pages", () => {
+test("the paginated Note interface resets, merges, and deduplicates Source Context pages", async () => {
 	const first = {
 		...readingNoteFixture(),
 		sourceContexts: {
@@ -401,14 +365,6 @@ test("resets, merges, and deduplicates reactive Source Context pages", () => {
 			isDone: false,
 		},
 	};
-	const initial = resetSourceContextPagination(first);
-	expect(initial).toMatchObject({
-		additionalSourceContexts: [],
-		cursor: "cursor-1",
-		isDone: false,
-		isLoading: false,
-	});
-
 	const next = {
 		...first,
 		sourceContexts: {
@@ -421,16 +377,29 @@ test("resets, merges, and deduplicates reactive Source Context pages", () => {
 			isDone: true,
 		},
 	};
-	const merged = mergeSourceContextPage(initial, next);
-	const visible = deduplicateSourceContexts([
-		...first.sourceContexts.page,
-		...merged.additionalSourceContexts,
-	]);
-	expect(visible.map(({ attestationId }) => attestationId)).toEqual([
-		"attestation-1",
-		"attestation-2",
-	]);
-	expect(merged).toMatchObject({ cursor: "", isDone: true });
+	const loader = createPaginatedNoteLoader(first, async () => next);
+	expect(loader.current()).toMatchObject({
+		hasMore: true,
+		isLoading: false,
+		error: null,
+	});
+	await loader.loadMore();
+	expect(
+		loader
+			.current()
+			.note.sourceContexts.page.map(({ attestationId }) => attestationId),
+	).toEqual(["attestation-1", "attestation-2"]);
+	expect(loader.current()).toMatchObject({
+		hasMore: false,
+		isLoading: false,
+		error: null,
+	});
+	loader.refresh(first);
+	expect(
+		loader
+			.current()
+			.note.sourceContexts.page.map(({ attestationId }) => attestationId),
+	).toEqual(["attestation-1", "attestation-2"]);
 
 	const reactive = {
 		...first,
@@ -440,20 +409,20 @@ test("resets, merges, and deduplicates reactive Source Context pages", () => {
 			isDone: false,
 		},
 	};
-	const reset = resetSourceContextPagination(reactive);
-	expect(reset.additionalSourceContexts).toEqual([]);
-	expect(reset.cursor).toBe("cursor-reactive");
-	expect(reset.firstPageKey).not.toBe(initial.firstPageKey);
+	loader.reset(reactive);
+	expect(
+		loader
+			.current()
+			.note.sourceContexts.page.map(({ attestationId }) => attestationId),
+	).toEqual(["attestation-3"]);
+	expect(loader.current()).toMatchObject({
+		hasMore: true,
+		isLoading: false,
+		error: null,
+	});
 });
 
-test("ignores stale Source Context errors and preserves Definition mutation planning", () => {
-	expect(
-		sourceContextPageFailureMessage(new Error("old failure"), 1, 2),
-	).toBeNull();
-	expect(
-		sourceContextPageFailureMessage(new Error("current failure"), 2, 2),
-	).toBe("current failure");
-
+test("preserves Definition mutation planning", () => {
 	const absent = readingNoteFixture();
 	expect(
 		readingDefinitionMutationArgs(absent, "  Neue Definition  ", "key-1"),

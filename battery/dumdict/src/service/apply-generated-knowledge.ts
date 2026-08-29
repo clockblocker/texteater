@@ -14,6 +14,7 @@ import type {
 } from "../public";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
@@ -60,16 +61,10 @@ export async function applyGeneratedKnowledge<L extends SupportedLanguage>(
 		changes,
 		pendingRelations,
 	} as ApplyGeneratedKnowledgeRequest<L>;
-	const slice = await options.storage.loadNewNoteContext({
-		draft: {
-			reading: request.reading,
-			note: { attestedTranslations: [], attestations: [], notes: "" },
-			relations: pendingRelations.map((pending) => ({
-				target: { kind: "pending" as const, pending },
-			})),
-		},
+	const slice = await loadReadingEntryContext(options, {
+		intent: "applyGeneratedKnowledge",
+		request: normalizedRequest,
 	});
-	options.sliceValidation.newNote(slice);
 	const plan = planApplyGeneratedKnowledge(slice, normalizedRequest);
 	if (plan.status === "rejected") return plan;
 	return applyPlan(options, plan, mutationOptions);

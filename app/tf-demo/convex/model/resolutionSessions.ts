@@ -2,6 +2,12 @@ import { type Infer, v } from "convex/values";
 
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+
+export {
+	projectResolutionGrammar,
+	projectResolutionReading,
+} from "../../server/resolutionSessionProjection";
+
 import {
 	resolutionActivityValidator,
 	resolutionGrammarProjectionValidator,
@@ -27,35 +33,6 @@ export type ResolutionGrammarProjection = Infer<
 export type ResolutionReadingProjection = Infer<
 	typeof resolutionReadingProjectionValidator
 >;
-
-type ResolvedGrammaticalProjectionInput = {
-	readonly attestation: {
-		readonly members: readonly {
-			readonly attested: string;
-			readonly orthography: "Standard" | "Typo";
-		}[];
-		readonly realizationCoverage: "Full" | "Partial";
-		readonly surface: {
-			readonly normalizedSurface: string;
-			readonly spelling: "Canonical" | "Variant";
-			readonly surfaceKind: "Citation" | "Inflection";
-			readonly lemma: {
-				readonly canonicalForm: string;
-				readonly family: string;
-				readonly kind: string;
-			};
-		};
-	};
-};
-
-type ReadingProjectionInput = {
-	readonly emojiDescription: string;
-	readonly lemma: {
-		readonly canonicalForm: string;
-		readonly family: string;
-		readonly kind: string;
-	};
-};
 
 const progressPosition: Readonly<Record<ResolutionProgress, number>> = {
 	Starting: 0,
@@ -184,36 +161,6 @@ export function resolutionProgressHasReached(
 	target: ResolutionProgress,
 ): boolean {
 	return progressPosition[current] > progressPosition[target];
-}
-
-export function projectResolutionGrammar(
-	grammatical: ResolvedGrammaticalProjectionInput,
-): ResolutionGrammarProjection {
-	const surface = grammatical.attestation.surface;
-	return {
-		members: grammatical.attestation.members.map((member) => ({
-			attested: member.attested,
-			orthography: member.orthography,
-		})),
-		realizationCoverage: grammatical.attestation.realizationCoverage,
-		normalizedSurface: surface.normalizedSurface,
-		spelling: surface.spelling,
-		surfaceKind: surface.surfaceKind,
-		canonicalForm: surface.lemma.canonicalForm,
-		family: surface.lemma.family,
-		kind: surface.lemma.kind,
-	};
-}
-
-export function projectResolutionReading(
-	reading: ReadingProjectionInput,
-): ResolutionReadingProjection {
-	return {
-		emojiDescription: reading.emojiDescription,
-		canonicalForm: reading.lemma.canonicalForm,
-		family: reading.lemma.family,
-		kind: reading.lemma.kind,
-	};
 }
 
 export async function loadResolutionNote(

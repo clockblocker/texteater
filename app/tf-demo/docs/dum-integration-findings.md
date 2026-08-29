@@ -116,8 +116,9 @@ host-composable without advancing the dictionary revision.
 
 Reproduction path:
 
-- Dumdict `loadNewNoteContext` requires explicit existing Lemma targets, exact
-  pending-Shadow matches, and the complete relation-bearing dictionary slice.
+- Dumdict's `addNewNote` Reading Entry context requires explicit existing Lemma
+  targets, exact pending-Shadow matches, and the complete relation-bearing
+  dictionary slice.
 - Ambiguous exact Lemmas keep their Unit Shadow pending and inert.
 - A Reading added later to a target Lemma acquires inverse views without a
   backfill write.

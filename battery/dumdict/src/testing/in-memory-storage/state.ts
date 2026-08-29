@@ -8,10 +8,12 @@ import type {
 	StoreRevision,
 } from "../../dto";
 import type { DumdictStoragePort } from "../../storage";
+import type { ReadingEntryContextRead } from "./load-slices";
 
 export type InMemoryTestStorage<L extends SupportedLanguage> =
 	DumdictStoragePort<L> & {
 		loadAll(): SerializedDictionaryNote<L>[];
+		readingEntryContextReads(): ReadingEntryContextRead[];
 	};
 
 export type InMemoryStorageState<L extends SupportedLanguage> = {

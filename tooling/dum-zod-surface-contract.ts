@@ -98,6 +98,7 @@ export const DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES = [
 	"dumdict",
 	"dumdict/runtime",
 	"dumdict/relations",
+	"dumdict/pending",
 	"dumgen",
 	"dumgen/projection",
 	"dumgen/knowledge",

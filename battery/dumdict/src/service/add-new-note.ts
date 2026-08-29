@@ -8,6 +8,7 @@ import type {
 } from "../public";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 export async function addNewNote<L extends SupportedLanguage>(
@@ -37,8 +38,10 @@ export async function addNewNote<L extends SupportedLanguage>(
 		}
 	}
 
-	const slice = await options.storage.loadNewNoteContext(request);
-	options.sliceValidation.newNote(slice, request.draft);
+	const slice = await loadReadingEntryContext(options, {
+		intent: "addNewNote",
+		request,
+	});
 
 	const plan = planAddNewNote(slice, request);
 	if (plan.status === "rejected") {

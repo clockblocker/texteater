@@ -593,49 +593,7 @@ describe("generated operational runtime prompt catalog", () => {
 		);
 	});
 
-	test("dispatches target and grammatical projections exactly like authoring", () => {
-		const targetInput = {
-			clickedSegmentIndex: 0,
-			segments: [
-				{ kind: "ResolvableText", text: "auf" },
-				{ kind: "Whitespace", text: " " },
-				{ kind: "ResolvableText", text: "passen" },
-			],
-		};
-		const targetOutput = {
-			additionalMemberIndices: [1],
-			decision: "Resolved",
-			target: { family: "Lexeme", kind: "VERB" },
-		};
-		const authoredTarget =
-			PROMPT_CATALOG.laboratory.targetClassification.de.highLevelWholeUnit
-				.prompt;
-		const runtimeTarget =
-			RUNTIME_PROMPT_CATALOG.laboratory.targetClassification.de
-				.highLevelWholeUnit.prompt;
-		const authoredParsedTargetInput =
-			authoredTarget.inputSchema.parse(targetInput);
-		const runtimeParsedTargetInput =
-			runtimeTarget.inputSchema.parse(targetInput);
-		const authoredParsedTargetOutput =
-			authoredTarget.outputSchema.parse(targetOutput);
-		const runtimeParsedTargetOutput =
-			runtimeTarget.outputSchema?.parse(targetOutput);
-		expect(runtimeTarget.projectInput?.(runtimeParsedTargetInput)).toEqual(
-			authoredTarget.projectInput?.(authoredParsedTargetInput),
-		);
-		expect(
-			runtimeTarget.projectOutput?.(
-				runtimeParsedTargetInput,
-				runtimeParsedTargetOutput,
-			),
-		).toEqual(
-			authoredTarget.projectOutput?.(
-				authoredParsedTargetInput,
-				authoredParsedTargetOutput,
-			),
-		);
-
+	test("binds runtime grammatical dispatch to the shared projection", () => {
 		const grammarInput = {
 			markedContext:
 				"<TARGET>entweder</TARGET> heute <TARGET>oder</TARGET> morgen",
@@ -650,18 +608,11 @@ describe("generated operational runtime prompt catalog", () => {
 			normalizedMembers: ["entweder", "oder"],
 			surface: { spelling: "Canonical", surfaceFeatures: null },
 		};
-		const authoredGrammar =
-			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.CCONJ
-				.prompt;
 		const runtimeGrammar =
 			RUNTIME_PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme
 				.CCONJ.prompt;
-		const authoredParsedGrammarInput =
-			authoredGrammar.inputSchema.parse(grammarInput);
 		const runtimeParsedGrammarInput =
 			runtimeGrammar.inputSchema.parse(grammarInput);
-		const authoredParsedGrammarOutput =
-			authoredGrammar.outputSchema.parse(grammarOutput);
 		const runtimeParsedGrammarOutput =
 			runtimeGrammar.outputSchema?.parse(grammarOutput);
 		expect(
@@ -669,56 +620,25 @@ describe("generated operational runtime prompt catalog", () => {
 				runtimeParsedGrammarInput,
 				runtimeParsedGrammarOutput,
 			),
-		).toEqual(
-			authoredGrammar.projectOutput?.(
-				authoredParsedGrammarInput,
-				authoredParsedGrammarOutput,
-			),
-		);
-
-		const nounInput = {
-			markedContext:
-				"Sie verkauft <TARGET>Kinder-</TARGET> und Jugendbücher.",
-			members: ["Kinder-"],
-		};
-		const nounOutput = {
-			lemma: {
-				canonicalForm: "Kinderbuch",
-				coreFeatures: { gender: "Neut", hyph: null },
-			},
-			memberOrthographies: ["Standard"],
-			normalizedMembers: ["Kinderbücher"],
+		).toEqual({
+			memberOrthographies: ["Standard", "Standard"],
+			normalizedMembers: ["entweder", "oder"],
+			realizationCoverage: "Full",
 			surface: {
-				inflectionalFeatures: { case: "Acc", number: "Plur" },
+				language: "de",
+				lemma: {
+					canonicalForm: "entweder … oder",
+					coreFeatures: { conjType: null },
+					family: "Lexeme",
+					kind: "CCONJ",
+					language: "de",
+				},
+				normalizedSurface: "entweder oder",
 				spelling: "Canonical",
 				surfaceFeatures: null,
-				surfaceKind: "Inflection",
+				surfaceKind: "Citation",
 			},
-		};
-		const authoredNoun =
-			PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme.NOUN
-				.prompt;
-		const runtimeNoun =
-			RUNTIME_PROMPT_CATALOG.laboratory.grammaticalResolution.de.Lexeme
-				.NOUN.prompt;
-		const authoredParsedNounInput =
-			authoredNoun.inputSchema.parse(nounInput);
-		const runtimeParsedNounInput = runtimeNoun.inputSchema.parse(nounInput);
-		const authoredParsedNounOutput =
-			authoredNoun.outputSchema.parse(nounOutput);
-		const runtimeParsedNounOutput =
-			runtimeNoun.outputSchema?.parse(nounOutput);
-		expect(
-			runtimeNoun.projectOutput?.(
-				runtimeParsedNounInput,
-				runtimeParsedNounOutput,
-			),
-		).toEqual(
-			authoredNoun.projectOutput?.(
-				authoredParsedNounInput,
-				authoredParsedNounOutput,
-			),
-		);
+		});
 	});
 
 	test("keeps all 78 generated parser roots differentially bound", async () => {

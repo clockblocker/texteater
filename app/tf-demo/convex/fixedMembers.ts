@@ -9,7 +9,7 @@ import type { Lemma } from "dumling/types";
 import type { GrammaticalRelationClaim } from "dumrel/types";
 import { assembleFixedInventory } from "../server/fixedMemberAssembly";
 import { action } from "./_generated/server";
-import { createConvexDumdictStorage } from "./orchestration";
+import { createConvexDumdictStorage } from "./dumdictStorage";
 
 const MAX_COMMIT_ATTEMPTS = 3;
 

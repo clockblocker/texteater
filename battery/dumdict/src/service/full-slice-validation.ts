@@ -1,7 +1,7 @@
 import type { SupportedLanguage } from "dumling/types";
 import {
 	validateCleanupRelationsSlice,
-	validateNewNoteSlice,
+	validateReadingEntryContext,
 	validateReadingPatchSlice,
 	validateRelationsCleanupInfoSlice,
 	validateStoredReadingsSlice,
@@ -22,7 +22,8 @@ export function createFullSliceValidation<L extends SupportedLanguage>(
 			validateStoredReadingsSlice(language, slice, requestedLemma),
 		readingPatch: (slice, requestedReading) =>
 			validateReadingPatchSlice(language, slice, requestedReading),
-		newNote: (slice, draft) => validateNewNoteSlice(language, slice, draft),
+		readingEntryContext: (context, request) =>
+			validateReadingEntryContext(language, context, request),
 		relationsCleanupInfo: (slice, requestedCanonicalForm) =>
 			validateRelationsCleanupInfoSlice(
 				language,

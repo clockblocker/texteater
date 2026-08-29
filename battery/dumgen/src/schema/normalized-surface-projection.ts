@@ -1,7 +1,5 @@
 import type { GrammaticalResolutionInput, Segment } from "../types";
 
-export type MemberOrthography = "Standard" | "Typo";
-
 export class NormalizedSurfaceProjectionError extends Error {
 	override readonly name = "NormalizedSurfaceProjectionError";
 }
@@ -44,52 +42,6 @@ export function projectGrammaticalResolutionInput(args: {
 	}) satisfies GrammaticalResolutionInput;
 }
 
-/**
- * Validates a grammar projection member-by-member and constructs Dumling's
- * canonical scalar Surface spelling. Array position is the alignment key;
- * repeated equal strings therefore remain distinct occurrences.
- */
-export function constructNormalizedSurface(args: {
-	readonly attestedMembers: readonly string[];
-	readonly normalizedMembers: readonly string[];
-	readonly memberOrthographies: readonly MemberOrthography[];
-}): string {
-	const { attestedMembers, normalizedMembers, memberOrthographies } = args;
-	if (
-		attestedMembers.length === 0 ||
-		normalizedMembers.length !== attestedMembers.length ||
-		memberOrthographies.length !== attestedMembers.length
-	) {
-		throw new NormalizedSurfaceProjectionError(
-			"Attested, normalized, and orthography members must align one-to-one.",
-		);
-	}
-
-	for (let position = 0; position < attestedMembers.length; position += 1) {
-		const attested = attestedMembers[position];
-		const normalized = normalizedMembers[position];
-		const orthography = memberOrthographies[position];
-		if (
-			attested === undefined ||
-			normalized === undefined ||
-			orthography === undefined ||
-			normalized.length === 0 ||
-			/\s/u.test(normalized)
-		) {
-			throw new NormalizedSurfaceProjectionError(
-				`Normalized member ${position} contains whitespace.`,
-			);
-		}
-		if (!isLicensedNormalization(attested, normalized, orthography)) {
-			throw new NormalizedSurfaceProjectionError(
-				`Normalized member ${position} is not a positional normalization of its attested member.`,
-			);
-		}
-	}
-
-	return normalizedMembers.join(" ");
-}
-
 export function extractMarkedContextMembers(
 	markedContext: string,
 ): readonly string[] {
@@ -115,28 +67,4 @@ function decodeOwnedMarkedContextEntities(member: string): string {
 		.replaceAll("&lt;", "<")
 		.replaceAll("&gt;", ">")
 		.replaceAll("&amp;", "&");
-}
-
-function isLicensedNormalization(
-	attested: string,
-	normalized: string,
-	orthography: MemberOrthography,
-): boolean {
-	if (attested === normalized) return true;
-
-	const foldedAttested = foldMember(attested);
-	const foldedNormalized = foldMember(normalized);
-	if (foldedAttested === foldedNormalized) {
-		return true;
-	}
-	if (orthography !== "Typo") return false;
-
-	// Typo repair is a linguistic judgment made by the route prompt. Do not add
-	// an edit-distance policy here: it would reject licensed Unicode spellings
-	// and repairs that are not mechanically character-local.
-	return true;
-}
-
-function foldMember(member: string): string {
-	return member.normalize("NFC").toLocaleLowerCase("de");
 }

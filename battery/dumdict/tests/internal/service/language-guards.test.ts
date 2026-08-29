@@ -7,12 +7,12 @@ import {
 	englishSwimDraft,
 	germanGehenLemma,
 	germanGehenReading,
-	storageRejectingNewNoteContext,
+	storageRejectingReadingEntryContext,
 } from "./helpers";
 
 describe("language guards", () => {
 	test("findStoredReadings rejects a requested Lemma language mismatch", async () => {
-		const { storage } = storageRejectingNewNoteContext();
+		const { storage } = storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
 		await expect(
@@ -21,7 +21,7 @@ describe("language guards", () => {
 	});
 
 	test("addAttestation rejects a requested Reading language mismatch", async () => {
-		const { storage } = storageRejectingNewNoteContext();
+		const { storage } = storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
 		await expect(
@@ -33,8 +33,8 @@ describe("language guards", () => {
 	});
 
 	test("addNewNote rejects a draft Lemma language mismatch", async () => {
-		const { storage, getLoadNewNoteContextCalls } =
-			storageRejectingNewNoteContext();
+		const { storage, getLoadReadingEntryContextCalls } =
+			storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 
 		await expect(
@@ -48,12 +48,12 @@ describe("language guards", () => {
 				},
 			} as never),
 		).rejects.toThrow(DumdictLanguageMismatchError);
-		expect(getLoadNewNoteContextCalls()).toBe(0);
+		expect(getLoadReadingEntryContextCalls()).toBe(0);
 	});
 
 	test("addNewNote rejects a Surface owned by another Lemma", async () => {
-		const { storage, getLoadNewNoteContextCalls } =
-			storageRejectingNewNoteContext();
+		const { storage, getLoadReadingEntryContextCalls } =
+			storageRejectingReadingEntryContext();
 		const dict = createDumdictService({ language: "en", storage });
 		const result = await dict.addNewNote({
 			draft: {
@@ -78,6 +78,6 @@ describe("language guards", () => {
 			status: "rejected",
 			code: "invalidDraft",
 		});
-		expect(getLoadNewNoteContextCalls()).toBe(0);
+		expect(getLoadReadingEntryContextCalls()).toBe(0);
 	});
 });

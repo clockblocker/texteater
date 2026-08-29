@@ -16,7 +16,6 @@ import {
 	type ReactNode,
 	type PointerEvent as ReactPointerEvent,
 	useCallback,
-	useEffect,
 	useMemo,
 	useRef,
 	useState,
@@ -31,7 +30,6 @@ import { cn } from "@/lib/utils";
 import { cardLayerTopBelowAnchor } from "./card-layer-placement";
 import { type CardLayer, deckSizeFor } from "./card-layers";
 import {
-	isWorkspaceSubject,
 	type Pane,
 	type PaneId,
 	type Sheet,
@@ -49,37 +47,20 @@ import {
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
 import {
+	acceptsCardLayerReturn,
+	acceptsSheetRemoval,
+	createWorkspaceSheetId,
 	type PaneDragProjection,
-	projectWorkspaceDrag,
 	type SheetPlacementPreview,
-	type WorkspaceDragDropEffect,
-	type WorkspaceDragSession,
+	useWorkspacePresentationInteraction,
 	type WorkspaceDragSource,
 	type WorkspaceDragTarget,
-} from "./workspace-drag";
-import {
-	planWorkspaceDropFlight,
-	RETURN_TO_SOURCE_PLAN,
-	runWorkspaceDropFlight,
-	type WorkspaceDropFlightPlan,
-} from "./workspace-flight";
-import type { WorkspaceSessionAction } from "./workspace-session";
+	type WorkspaceSessionAction,
+} from "./workspace-presentation-interaction";
 import "./card-sheet-workspace.css";
 
 const DEFAULT_NAVIGATION_ANCHOR = <DefaultNavigationAnchor />;
-const MINIMUM_DRAG_DISTANCE = 4;
 const NESTED_DROP_ZONE_COLLISION_PRIORITY = 4;
-const NO_LANDING = {
-	settlingSheetId: null,
-	focusSheetId: null,
-} as const satisfies WorkspaceLanding;
-
-type WorkspaceLanding = {
-	/** Sheet held back until its drop flight lands on it. */
-	readonly settlingSheetId: string | null;
-	/** Sheet to focus once its drop flight has landed. */
-	readonly focusSheetId: string | null;
-};
 
 export type CardSheetWorkspaceProps = {
 	readonly renderSubject: (
@@ -96,137 +77,10 @@ export function CardSheetWorkspace({
 	navigationAnchor = DEFAULT_NAVIGATION_ANCHOR,
 }: CardSheetWorkspaceProps) {
 	const { session: state, dispatch } = useWorkspaceRuntime();
-	const [dragSession, setDragSession] = useState<WorkspaceDragSession | null>(
-		null,
-	);
-	const [settlingSheetId, setSettlingSheetId] = useState<string | null>(null);
-	const flightPlanRef = useRef<WorkspaceDropFlightPlan>(
-		RETURN_TO_SOURCE_PLAN,
-	);
-	const landingRef = useRef<WorkspaceLanding | null>(null);
-	const dragProjection = useMemo(
-		() => projectWorkspaceDrag(state.workspace, dragSession),
-		[state.workspace, dragSession],
-	);
-
-	const focusSheet = useCallback((sheetId: string) => {
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
-				document
-					.querySelector<HTMLElement>(
-						`[data-sheet-id="${CSS.escape(sheetId)}"] [data-sheet-handle="top"]`,
-					)
-					?.focus();
-			});
-		});
-	}, []);
-
-	const landFlight = useCallback(() => {
-		const landing = landingRef.current;
-		landingRef.current = null;
-		if (!landing) return;
-		if (landing.settlingSheetId !== null) {
-			setSettlingSheetId((current) =>
-				current === landing.settlingSheetId ? null : current,
-			);
-		}
-		if (landing.focusSheetId !== null) {
-			focusSheet(landing.focusSheetId);
-		}
-	}, [focusSheet]);
-
-	const dropAnimation = useCallback(
-		(context: {
-			readonly element: Element;
-			readonly feedbackElement: Element;
-		}) =>
-			runWorkspaceDropFlight(
-				{
-					sourceElement: context.element,
-					overlayElement: context.feedbackElement,
-				},
-				flightPlanRef.current,
-				{ onLanded: landFlight },
-			),
-		[landFlight],
-	);
-
-	useEffect(() => {
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== "Escape" || dragSession) return;
-			if (state.cardLayers.length === 0) return;
-			event.preventDefault();
-			dispatch({ type: "DismissAllCardLayers" });
-		};
-		window.addEventListener("keydown", onKeyDown);
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [dragSession, state.cardLayers.length]);
+	const interaction = useWorkspacePresentationInteraction(state, dispatch);
 
 	return (
-		<DragDropProvider
-			onDragStart={({ operation }) => {
-				const source = normalizeDragSource(operation.source?.data);
-				flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
-				landingRef.current = null;
-				setDragSession(source ? { source, target: null } : null);
-			}}
-			onDragOver={({ operation }) => {
-				const source = normalizeDragSource(operation.source?.data);
-				setDragSession(
-					source
-						? {
-								source,
-								target: normalizeDragTarget(
-									operation.target?.data,
-								),
-							}
-						: null,
-				);
-			}}
-			onDragEnd={({ operation, canceled }) => {
-				const source = normalizeDragSource(operation.source?.data);
-				const target = normalizeDragTarget(operation.target?.data);
-				setDragSession(null);
-				const moved = Math.hypot(
-					operation.transform.x,
-					operation.transform.y,
-				);
-				if (canceled || moved < MINIMUM_DRAG_DISTANCE || !source) {
-					flightPlanRef.current = RETURN_TO_SOURCE_PLAN;
-					landingRef.current = NO_LANDING;
-					return;
-				}
-				const projection = projectWorkspaceDrag(state.workspace, {
-					source,
-					target,
-				});
-				const placedSheetId =
-					projection.dropEffect.kind === "PlaceCard"
-						? newSheetInstanceId()
-						: null;
-				const flight = planWorkspaceDropFlight(
-					projection.dropEffect,
-					placedSheetId,
-				);
-				flightPlanRef.current = flight;
-				landingRef.current = {
-					settlingSheetId:
-						flight.kind === "LandAsSheet" ? flight.sheetId : null,
-					focusSheetId:
-						projection.dropEffect.kind === "MoveSheet"
-							? projection.dropEffect.sheetId
-							: null,
-				};
-				if (flight.kind === "LandAsSheet") {
-					setSettlingSheetId(flight.sheetId);
-				}
-				dispatchDropEffect(
-					projection.dropEffect,
-					dispatch,
-					placedSheetId,
-				);
-			}}
-		>
+		<DragDropProvider {...interaction.dragEvents}>
 			<ResizablePanelGroup
 				className="card-sheet-workspace"
 				orientation="horizontal"
@@ -245,7 +99,7 @@ export function CardSheetWorkspace({
 									(layer) => layer.paneId === pane.id,
 								)}
 								dragProjection={paneProjection(
-									dragProjection.panes,
+									interaction.projection.panes,
 									pane.id,
 								)}
 								dispatch={dispatch}
@@ -253,7 +107,7 @@ export function CardSheetWorkspace({
 								pane={pane}
 								renderCardTail={renderCardTail}
 								renderSubject={renderSubject}
-								settlingSheetId={settlingSheetId}
+								settlingSheetId={interaction.settlingSheetId}
 								workspace={state.workspace}
 							/>
 						</ResizablePanel>
@@ -270,18 +124,10 @@ export function CardSheetWorkspace({
 
 			<DragOverlay
 				className="card-sheet-workspace__drag-overlay"
-				dropAnimation={dropAnimation}
+				dropAnimation={interaction.dropAnimation}
 			>
 				{(source) => {
-					const fallbackSource = normalizeDragSource(source?.data);
-					const overlay =
-						dragProjection.cardOverlay ??
-						(fallbackSource
-							? projectWorkspaceDrag(state.workspace, {
-									source: fallbackSource,
-									target: null,
-								}).cardOverlay
-							: null);
+					const overlay = interaction.overlayFor(source?.data);
 					return overlay ? (
 						<SubjectCard
 							className={cn(
@@ -372,7 +218,7 @@ function WorkspacePane({
 					command: {
 						type: "OpenSheet",
 						sheet: {
-							instanceId: newSheetInstanceId(),
+							instanceId: createWorkspaceSheetId(),
 							subject: workspaceSubjectFor(target),
 						},
 						origin: { kind: "NavigationAnchor" },
@@ -507,10 +353,7 @@ function SheetRemovalDropZone({
 	const { ref } = useDroppable<WorkspaceDragTarget>({
 		id: `sheet-removal:${paneId}`,
 		data: { kind: "SheetRemoval", paneId },
-		accept: (source) => {
-			const data = normalizeDragSource(source.data);
-			return data?.kind === "Sheet";
-		},
+		accept: (source) => acceptsSheetRemoval(source.data),
 		collisionDetector: pointerIntersection,
 		collisionPriority: NESTED_DROP_ZONE_COLLISION_PRIORITY,
 	});
@@ -587,7 +430,7 @@ function WorkspaceSheet({
 					command: {
 						type: "OpenSheet",
 						sheet: {
-							instanceId: newSheetInstanceId(),
+							instanceId: createWorkspaceSheetId(),
 							subject: workspaceSubjectFor(target),
 						},
 						origin: { kind: "Sheet", sheetId: sheet.instanceId },
@@ -778,10 +621,7 @@ function CardLayerView({
 	const { ref } = useDroppable<WorkspaceDragTarget>({
 		id: `card-layer:${layer.paneId}`,
 		data: { kind: "CardLayer", paneId: layer.paneId },
-		accept: (source) => {
-			const data = normalizeDragSource(source.data);
-			return data?.kind === "LayerCard" && data.paneId === layer.paneId;
-		},
+		accept: (source) => acceptsCardLayerReturn(source.data, layer.paneId),
 		// The Card Layer sits inside a Pane, so it must win their overlapping
 		// pointer collision when a Card is returned to its deck.
 		collisionDetector: pointerIntersection,
@@ -952,53 +792,6 @@ function SubjectCard({
 	);
 }
 
-function normalizeDragSource(data: unknown): WorkspaceDragSource | null {
-	if (!isRecord(data) || !isWorkspaceSubject(data.subject)) return null;
-	if (
-		data.kind === "Sheet" &&
-		typeof data.id === "string" &&
-		typeof data.paneId === "string" &&
-		(data.edge === "top" || data.edge === "bottom")
-	) {
-		return {
-			kind: data.kind,
-			id: data.id,
-			paneId: data.paneId,
-			subject: data.subject,
-			edge: data.edge,
-		};
-	}
-	if (
-		data.kind === "LayerCard" &&
-		typeof data.id === "string" &&
-		typeof data.paneId === "string"
-	) {
-		return {
-			kind: data.kind,
-			id: data.id,
-			paneId: data.paneId,
-			subject: data.subject,
-		};
-	}
-	return null;
-}
-
-function normalizeDragTarget(data: unknown): WorkspaceDragTarget | null {
-	if (
-		!isRecord(data) ||
-		typeof data.paneId !== "string" ||
-		(data.kind !== "Pane" &&
-			data.kind !== "CardLayer" &&
-			data.kind !== "SheetRemoval")
-	)
-		return null;
-	return { kind: data.kind, paneId: data.paneId };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null;
-}
-
 function paneProjection(
 	projections: readonly PaneDragProjection[],
 	paneId: PaneId,
@@ -1012,62 +805,12 @@ function paneProjection(
 	return projection;
 }
 
-function dispatchDropEffect(
-	effect: WorkspaceDragDropEffect,
-	dispatch: React.Dispatch<WorkspaceSessionAction>,
-	placedSheetId: string | null,
-): void {
-	switch (effect.kind) {
-		case "None":
-			return;
-		case "ReturnCard":
-			dispatch({
-				type: "ReturnCard",
-				paneId: effect.paneId,
-				cardId: effect.cardId,
-			});
-			return;
-		case "RemoveSheet":
-			dispatch({
-				type: "Command",
-				command: { type: "RemoveSheet", sheetId: effect.sheetId },
-			});
-			return;
-		case "PlaceCard":
-			dispatch({
-				type: "PlaceCard",
-				sourcePaneId: effect.sourcePaneId,
-				destinationPaneId: effect.destinationPaneId,
-				cardId: effect.cardId,
-				sheetId: placedSheetId ?? newSheetInstanceId(),
-			});
-			return;
-		case "MoveSheet":
-			dispatch({
-				type: "Command",
-				command: {
-					type: "MoveTopSheet",
-					sourcePaneId: effect.sourcePaneId,
-					destinationPaneId: effect.destinationPaneId,
-					sheetId: effect.sheetId,
-				},
-			});
-	}
-}
-
 function subjectLabel(subject: WorkspaceSubject): string {
 	return subject.kind === "Text" ? "Text" : "Note";
 }
 
 function subjectIdentity(subject: WorkspaceSubject): string {
 	return workspaceSubjectKey(subject);
-}
-
-function newSheetInstanceId(): string {
-	return (
-		globalThis.crypto?.randomUUID?.() ??
-		`sheet-${Date.now()}-${Math.random().toString(36).slice(2)}`
-	);
 }
 
 function DefaultNavigationAnchor() {

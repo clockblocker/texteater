@@ -7,6 +7,7 @@ import type {
 } from "../public";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
 
 export async function ensureReadingEntry<L extends SupportedLanguage>(
@@ -27,16 +28,10 @@ export async function ensureReadingEntry<L extends SupportedLanguage>(
 		};
 	}
 
-	const draft = {
-		reading: request.entry.reading,
-		note: {
-			attestedTranslations: request.entry.attestedTranslations,
-			attestations: request.entry.attestations,
-			notes: request.entry.notes,
-		},
-	};
-	const slice = await options.storage.loadNewNoteContext({ draft });
-	options.sliceValidation.newNote(slice, draft);
+	const slice = await loadReadingEntryContext(options, {
+		intent: "ensureReadingEntry",
+		request,
+	});
 	const plan = planEnsureReadingEntry(slice, request);
 	if (plan.status === "rejected") return plan;
 	return applyPlan(options, plan, mutationOptions);

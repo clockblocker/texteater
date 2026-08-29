@@ -5,7 +5,7 @@ import type {
 	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
 	LoadCleanupRelationsContextRequest,
-	LoadNewNoteContextRequest,
+	LoadReadingEntryContextRequest,
 	LoadReadingForPatchRequest,
 } from "../../storage";
 import { commitChanges } from "./commit";
@@ -13,8 +13,9 @@ import {
 	findStoredReadings,
 	getInfoForRelationsCleanup,
 	loadCleanupRelationsContext,
-	loadNewNoteContext,
+	loadReadingEntryContext,
 	loadReadingForPatch,
+	type ReadingEntryContextRead,
 } from "./load-slices";
 import { createInMemoryStorageState, type InMemoryTestStorage } from "./state";
 
@@ -25,6 +26,7 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 	notes: SerializedDictionaryNote<L>[] = [],
 ): InMemoryTestStorage<L> {
 	const state = createInMemoryStorageState(language, notes);
+	const readingEntryContextReads: ReadingEntryContextRead[] = [];
 
 	return {
 		async findStoredReadings(request: FindStoredReadingsStorageRequest<L>) {
@@ -41,8 +43,12 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 			return loadReadingForPatch(state, request);
 		},
 
-		async loadNewNoteContext(request: LoadNewNoteContextRequest<L>) {
-			return loadNewNoteContext(state, request);
+		async loadReadingEntryContext(
+			request: LoadReadingEntryContextRequest<L>,
+		) {
+			return loadReadingEntryContext(state, request, (read) =>
+				readingEntryContextReads.push(read),
+			);
 		},
 
 		async loadCleanupRelationsContext(
@@ -59,6 +65,10 @@ export function createInMemoryTestStorage<L extends SupportedLanguage>(
 			return structuredClone(
 				state.storedNotes,
 			) as SerializedDictionaryNote<L>[];
+		},
+
+		readingEntryContextReads() {
+			return [...readingEntryContextReads];
 		},
 	};
 }

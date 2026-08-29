@@ -1,12 +1,11 @@
-import { codecBuilder4 } from "codec-builder-library/v4";
 import { z } from "zod";
 
 import { stableJson } from "../../../../../../lib/stable-json";
+import { createGermanHighLevelTargetClassificationProjection } from "../../../../../../target-classification/de/high-level-target-classification-projection";
 import type { PromptRepresentationAdapter } from "../../../../../assembly";
 import {
 	canonicalInputSchema,
 	canonicalOutputSchema,
-	canonicalTargetSchema,
 	GERMAN_HIGH_LEVEL_TARGET_CLASSIFICATION_ROUTES,
 } from "./corpus/schemas";
 
@@ -16,13 +15,6 @@ export type RepresentationId = (typeof REPRESENTATION_IDS)[number];
 
 const TARGET_OPEN = "<target>";
 const TARGET_CLOSE = "</target>";
-
-function escapeXmlText(text: string): string {
-	return text
-		.replaceAll("&", "&amp;")
-		.replaceAll("<", "&lt;")
-		.replaceAll(">", "&gt;");
-}
 
 export const classificationInputSchema = z
 	.strictObject({
@@ -130,218 +122,60 @@ export const additionalIndicesOutputSchema = z
 
 type CanonicalInput = z.output<typeof canonicalInputSchema>;
 type CanonicalOutput = z.output<typeof canonicalOutputSchema>;
-type CanonicalTarget = z.output<typeof canonicalTargetSchema>;
 type ClassificationInput = z.output<typeof classificationInputSchema>;
 
 export type ClassificationProjection = Readonly<{
 	input: ClassificationInput;
-	compactToOriginal: readonly number[];
-	originalToCompact: ReadonlyMap<number, number>;
 }>;
 
 export function projectClassificationInput(
 	input: CanonicalInput,
 ): ClassificationProjection {
 	const canonicalInput = canonicalInputSchema.parse(input);
-	const markedSentence = canonicalInput.segments
-		.map((segment, originalIndex) =>
-			originalIndex === canonicalInput.clickedSegmentIndex
-				? `${TARGET_OPEN}${escapeXmlText(segment.text)}${TARGET_CLOSE}`
-				: escapeXmlText(segment.text),
-		)
-		.join("");
-	const segments: ClassificationInput["segments"] = [];
-	const compactToOriginal: number[] = [];
-	const originalToCompact = new Map<number, number>();
-	for (const [originalIndex, segment] of canonicalInput.segments.entries()) {
-		if (segment.kind === "Whitespace") continue;
-		const compactIndex = compactToOriginal.length;
-		compactToOriginal.push(originalIndex);
-		originalToCompact.set(originalIndex, compactIndex);
-		if (segment.kind === "ResolvableText") {
-			segments.push({ s: segment.text, i: compactIndex });
-		}
-	}
-	const clickedIndex = originalToCompact.get(
-		canonicalInput.clickedSegmentIndex,
-	);
-	if (clickedIndex === undefined) {
-		throw new Error(
-			"The clicked canonical segment is not a ResolvableText candidate.",
-		);
-	}
+	const projection =
+		createGermanHighLevelTargetClassificationProjection(canonicalInput);
 	return Object.freeze({
-		input: classificationInputSchema.parse({
-			markedSentence,
-			segments,
-			clickedIndex,
-		}),
-		compactToOriginal: Object.freeze(compactToOriginal),
-		originalToCompact,
+		input: classificationInputSchema.parse(projection.modelInput),
 	});
 }
-
-function canonicalTargetFromAdditionalMembers(args: {
-	canonicalInput: CanonicalInput;
-	privateInput: ClassificationInput;
-	projection: ClassificationProjection;
-	route: z.output<typeof classificationTargetSchema>;
-	additionalMemberIndices: readonly number[];
-}): CanonicalTarget {
-	const additional = args.additionalMemberIndices;
-	let previous = -1;
-	for (const memberIndex of additional) {
-		if (!Number.isSafeInteger(memberIndex) || memberIndex <= previous) {
-			throw new Error(
-				"Additional membership must be ordered and unique before click insertion.",
-			);
-		}
-		previous = memberIndex;
-	}
-	if (additional.includes(args.privateInput.clickedIndex)) {
-		throw new Error(
-			"Additional membership must exclude the clicked index.",
-		);
-	}
-	const memberIndices = [
-		args.privateInput.clickedIndex,
-		...additional,
-	].toSorted((left, right) => left - right);
-	const originalMembers = memberIndices.map((memberIndex) => {
-		const originalIndex = args.projection.compactToOriginal[memberIndex];
-		if (
-			originalIndex === undefined ||
-			args.canonicalInput.segments[originalIndex]?.kind !==
-				"ResolvableText"
-		) {
-			throw new Error("Membership must reference ResolvableText.");
-		}
-		return originalIndex;
-	});
-	return canonicalTargetSchema.parse({
-		...args.route,
-		memberSegmentIndices: originalMembers,
-	});
-}
-
-function additionalMembersFromCanonicalTarget(args: {
-	canonicalInput: CanonicalInput;
-	privateInput: ClassificationInput;
-	projection: ClassificationProjection;
-	target: CanonicalTarget;
-}) {
-	const compactMembers = args.target.memberSegmentIndices.map(
-		(originalIndex) => {
-			if (
-				args.canonicalInput.segments[originalIndex]?.kind !==
-				"ResolvableText"
-			) {
-				throw new Error(
-					`Canonical member ${originalIndex} must reference ResolvableText.`,
-				);
-			}
-			const compactIndex =
-				args.projection.originalToCompact.get(originalIndex);
-			if (compactIndex === undefined) {
-				throw new Error(
-					`Canonical member ${originalIndex} was removed by compaction.`,
-				);
-			}
-			return compactIndex;
-		},
-	);
-	let previous = -1;
-	for (const memberIndex of compactMembers) {
-		if (memberIndex <= previous) {
-			throw new Error("Canonical membership must be ordered and unique.");
-		}
-		previous = memberIndex;
-	}
-	if (!compactMembers.includes(args.privateInput.clickedIndex)) {
-		throw new Error(
-			"Canonical membership must include the clicked member.",
-		);
-	}
-	return compactMembers.filter(
-		(memberIndex) => memberIndex !== args.privateInput.clickedIndex,
-	);
-}
-
-const unresolvedCanonicalToPrivateCodec = codecBuilder4.buildFixedFieldsCodec(
-	unresolvedAdditionalIndicesOutputSchema,
-	{
-		target: null,
-		additionalMemberIndices: null,
-	},
-);
 
 function buildAdditionalIndicesOutputCodec(
 	canonicalInput: CanonicalInput,
 	privateInput: ClassificationInput,
 ) {
-	const projection = projectClassificationInput(canonicalInput);
-	if (stableJson(projection.input) !== stableJson(privateInput)) {
+	const parsedCanonicalInput = canonicalInputSchema.parse(canonicalInput);
+	const parsedPrivateInput = classificationInputSchema.parse(privateInput);
+	const projection =
+		createGermanHighLevelTargetClassificationProjection(
+			parsedCanonicalInput,
+		);
+	if (stableJson(projection.modelInput) !== stableJson(parsedPrivateInput)) {
 		throw new Error(
 			"Private input is not the canonical input's classification projection.",
 		);
 	}
 
-	const extractRouteCodec = codecBuilder4.buildReshapeCodec(
-		resolvedAdditionalIndicesOutputSchema,
-		{
-			fieldName: "route",
-			fieldSchema: classificationTargetSchema,
-			dropFields: ["target"],
-			construct: (input) => input.target,
-			reconstruct: (route) => ({ target: route }),
-		},
-	);
-	const restoreCanonicalTargetCodec = codecBuilder4.buildReshapeCodec(
-		extractRouteCodec.out,
-		{
-			fieldName: "target",
-			fieldSchema: canonicalTargetSchema,
-			dropFields: ["route", "additionalMemberIndices"],
-			construct: (input) =>
-				canonicalTargetFromAdditionalMembers({
-					canonicalInput,
-					privateInput,
-					projection,
-					route: input.route,
-					additionalMemberIndices: input.additionalMemberIndices,
-				}),
-			reconstruct: (target) => ({
-				route: classificationTargetSchema.parse({
-					family: target.family,
-					kind: target.kind,
-				}),
-				additionalMemberIndices: additionalMembersFromCanonicalTarget({
-					canonicalInput,
-					privateInput,
-					projection,
-					target,
-				}),
-			}),
-		},
-	);
-	const resolvedCodec = codecBuilder4.helpers.pipeCodecs(
-		extractRouteCodec,
-		restoreCanonicalTargetCodec,
-	);
-
 	return z.codec(additionalIndicesOutputSchema, canonicalOutputSchema, {
-		decode: (output) =>
-			output.decision === "Resolved"
-				? resolvedCodec.decode(
-						resolvedAdditionalIndicesOutputSchema.parse(output),
-					)
-				: unresolvedCanonicalToPrivateCodec.encode(
-						unresolvedAdditionalIndicesOutputSchema.parse(output),
-					),
+		decode: (output) => {
+			const canonical = projection.canonicalize(
+				output.decision === "Resolved"
+					? resolvedAdditionalIndicesOutputSchema.parse(output)
+					: unresolvedAdditionalIndicesOutputSchema.parse(output),
+			);
+			return canonicalOutputSchema.parse(
+				"decision" in canonical
+					? canonical
+					: { decision: "Resolved" as const, target: canonical },
+			);
+		},
 		encode: (canonical) =>
-			canonical.decision === "Resolved"
-				? resolvedCodec.encode(canonical)
-				: unresolvedCanonicalToPrivateCodec.decode(canonical),
+			additionalIndicesOutputSchema.parse(
+				projection.materialize(
+					canonical.decision === "Resolved"
+						? canonical.target
+						: canonical,
+				),
+			),
 	});
 }
 

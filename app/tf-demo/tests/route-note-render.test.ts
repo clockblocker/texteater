@@ -2,12 +2,8 @@ import { expect, test } from "bun:test";
 import { presentedFeatureNames } from "dumling/vocabulary";
 import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
+import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import type { RouteNoteData } from "../src/notes/route";
-import {
-	mergeRouteNotePages,
-	resetRouteNotePagination,
-	routePageFailureMessage,
-} from "../src/views/route-note-view";
 
 type RouteNote = RouteNoteData;
 
@@ -152,22 +148,24 @@ test("renders Surface and Lemma workspace commands, including polysemy and same-
 	expect(lemmaMarkup).not.toContain("href=");
 });
 
-test("page merging deduplicates connections and a reactive first page resets cursor state", () => {
+test("the paginated Note interface deduplicates Route connections and resets reactively", async () => {
 	const first = lemmaPage("cursor-old", false, ["reading-1"]);
 	const continuation = lemmaPage("cursor-next", false, [
 		"reading-1",
 		"reading-2",
 	]);
-	const merged = mergeRouteNotePages(first, continuation);
+	const loader = createPaginatedNoteLoader(first, async () => continuation);
+	await loader.loadMore();
+	const merged = loader.current().note;
 	if (merged.routeKind !== "Lemma") throw new Error("Expected Lemma page.");
 	expect(
 		merged.connections.readings.map(({ readingId }) => readingId),
 	).toEqual(["reading-1", "reading-2"]);
 
 	const refreshed = lemmaPage("cursor-fresh", true, ["reading-3"]);
-	const reset = resetRouteNotePagination(refreshed);
-	expect(reset.cursor).toBe("cursor-fresh");
-	expect(reset.isDone).toBe(true);
+	loader.reset(refreshed);
+	const reset = loader.current();
+	expect(reset.hasMore).toBe(false);
 	expect(reset.isLoading).toBe(false);
 	expect(
 		reset.note.routeKind === "Lemma"
@@ -176,24 +174,22 @@ test("page merging deduplicates connections and a reactive first page resets cur
 	).toEqual(["reading-3"]);
 });
 
-test("a rejected old page cannot report an error after a reactive reset", async () => {
+test("a rejected old Route page cannot report an error after a reactive reset", async () => {
 	let rejectOldPage: ((cause: Error) => void) | undefined;
 	const oldPage = new Promise<never>((_resolve, reject) => {
 		rejectOldPage = reject;
 	});
-	const requestedRevision = 0;
-	let currentRevision = requestedRevision;
-	let isLoading = true;
-	const message = oldPage.catch((cause: unknown) =>
-		routePageFailureMessage(cause, requestedRevision, currentRevision),
+	const loader = createPaginatedNoteLoader(
+		lemmaPage("cursor-old", false, ["reading-1"]),
+		async () => oldPage,
 	);
-	currentRevision += 1;
-	isLoading = resetRouteNotePagination(
-		lemmaPage("cursor-fresh", false, ["reading-3"]),
-	).isLoading;
+	const request = loader.loadMore();
+	expect(loader.current().isLoading).toBe(true);
+	loader.reset(lemmaPage("cursor-fresh", false, ["reading-3"]));
 	rejectOldPage?.(new Error("stale failure"));
-	expect(await message).toBeNull();
-	expect(isLoading).toBe(false);
+	await request;
+	expect(loader.current().error).toBeNull();
+	expect(loader.current().isLoading).toBe(false);
 });
 
 test("the root renderer consumes injected route pagination state", () => {

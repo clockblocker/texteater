@@ -8,13 +8,8 @@ import type {
 } from "../public";
 import { applyPlan } from "./apply-plan";
 import { assertLanguageMatches } from "./language-guard";
+import { loadReadingEntryContext } from "./load-reading-entry-context";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
-
-const emptyNote = {
-	attestedTranslations: [] as string[],
-	attestations: [] as string[],
-	notes: "",
-};
 
 export async function ensureOwnedSurface<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
@@ -38,13 +33,10 @@ export async function ensureOwnedSurface<L extends SupportedLanguage>(
 		};
 	}
 
-	const draft = {
-		reading: request.reading,
-		note: emptyNote,
-		ownedSurfaces: [request.ownedSurface],
-	};
-	const slice = await options.storage.loadNewNoteContext({ draft });
-	options.sliceValidation.newNote(slice, draft);
+	const slice = await loadReadingEntryContext(options, {
+		intent: "ensureOwnedSurface",
+		request,
+	});
 	const plan = planEnsureOwnedSurface(slice, request);
 	if (plan.status === "rejected") return plan;
 	return applyPlan(options, plan, mutationOptions);

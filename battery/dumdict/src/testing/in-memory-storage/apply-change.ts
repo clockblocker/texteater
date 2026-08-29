@@ -1,20 +1,13 @@
 import type { SupportedLanguage } from "dumling/types";
 import { applyDumdictKnowledgeChange } from "../../core/apply-reading-knowledge-change";
 import { sameReading } from "../../core/identity";
+import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type { PlannedChangeOp } from "../../core/planned-changes";
-import type { PendingSemanticRelationRecord } from "../../dto";
 import type { DraftStorageState } from "./preconditions";
 import {
 	findDraftBundleByLemma,
 	findDraftBundleByReading,
 } from "./preconditions";
-
-function locatorKey<L extends SupportedLanguage>(
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const { sourceReadingKey, relation, targetPendingId } = record.locator;
-	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
-}
 
 export function applyChange<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
@@ -63,9 +56,12 @@ export function applyChange<L extends SupportedLanguage>(
 				change.record.sourceReading,
 			);
 			if (!bundle) return false;
-			const key = locatorKey(change.record);
 			bundle.pendingRelations = bundle.pendingRelations.filter(
-				(record) => locatorKey(record) !== key,
+				(record) =>
+					!samePendingSemanticRelationLocator(
+						record.locator,
+						change.record.locator,
+					),
 			);
 			return true;
 		}

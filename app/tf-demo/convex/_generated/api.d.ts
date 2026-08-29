@@ -18,6 +18,7 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
+import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
@@ -65,6 +66,7 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   "model/canonicalJson": typeof model_canonicalJson;
   "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
+  "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
   "model/presentedDumling": typeof model_presentedDumling;

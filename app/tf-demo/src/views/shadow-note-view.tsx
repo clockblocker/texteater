@@ -2,15 +2,15 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useAction, useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ShadowNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
+import { usePaginatedNoteLoading } from "@/notes/paginated-note-loading";
 import type {
 	ShadowNoteData,
 	ShadowNotePresentationCapabilities,
-	ShadowNoteReferrer,
 } from "@/notes/shadow";
 import { NotFoundView } from "@/views/not-found-view";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -116,33 +116,26 @@ function ShadowNoteContainer({
 	const cleanupPendingRelation = useAction(
 		api.orchestration.cleanupPendingRelation,
 	);
-	const [additionalReferrers, setAdditionalReferrers] = useState<
-		ShadowNote["references"]["page"]
-	>([]);
-	const [cursor, setCursor] = useState(note.references.continueCursor);
-	const [isDone, setIsDone] = useState(note.references.isDone);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const loadShadowPage = useCallback(
+		async (cursor: string): Promise<ShadowNote | null> => {
+			const next = await convex.query(api.shadowNotes.get, {
+				shadowId: note.target.shadowId,
+				contextCursor: cursor,
+			});
+			return next?.kind === "ShadowNote" ? next : null;
+		},
+		[convex, note.target.shadowId],
+	);
+	const pagination = usePaginatedNoteLoading(note, loadShadowPage);
 	const [activeLocator, setActiveLocator] = useState<string | null>(null);
 	const [controls, dispatchControls] = useReducer(reduceShadowControls, {
 		targetShadowId: note.target.shadowId,
 		actionError: null,
 		outcome: null,
 	});
-	const revision = useRef(0);
 	const actionEpoch = useRef(0);
-	const referrers = mergeReferrers([
-		...note.references.page,
-		...additionalReferrers,
-	]);
 
 	useEffect(() => {
-		revision.current += 1;
-		setAdditionalReferrers([]);
-		setCursor(note.references.continueCursor);
-		setIsDone(note.references.isDone);
-		setIsLoading(false);
-		setError(null);
 		setActiveLocator(null);
 		dispatchControls({
 			type: "refreshed",
@@ -157,44 +150,10 @@ function ShadowNoteContainer({
 		});
 	}, [note.target.shadowId]);
 
-	async function loadMore() {
-		if (isDone || isLoading) return;
-		const requestedRevision = revision.current;
-		setIsLoading(true);
-		setError(null);
-		try {
-			const nextNote = await convex.query(api.shadowNotes.get, {
-				shadowId: note.target.shadowId,
-				contextCursor: cursor,
-			});
-			if (nextNote?.kind !== "ShadowNote") {
-				if (requestedRevision === revision.current) setIsDone(true);
-				return;
-			}
-			if (requestedRevision !== revision.current) return;
-			setAdditionalReferrers((current) => [
-				...current,
-				...nextNote.references.page,
-			]);
-			setCursor(nextNote.references.continueCursor);
-			setIsDone(nextNote.references.isDone);
-		} catch (cause) {
-			if (requestedRevision !== revision.current) return;
-			setError(
-				cause instanceof Error
-					? cause.message
-					: "Shadow references could not be loaded.",
-			);
-		} finally {
-			if (requestedRevision === revision.current) setIsLoading(false);
-		}
-	}
-
 	async function cleanUp(locatorKey: string) {
 		if (activeLocator) return;
 		const attempt = ++actionEpoch.current;
 		setActiveLocator(locatorKey);
-		setError(null);
 		dispatchControls({ type: "begin" });
 		try {
 			const result = await cleanupPendingRelation({
@@ -224,11 +183,11 @@ function ShadowNoteContainer({
 
 	const capabilities: ShadowNotePresentationCapabilities = {
 		references: {
-			items: referrers,
-			hasMore: !isDone,
-			isLoading,
-			error,
-			loadMore: isDone ? null : loadMore,
+			items: pagination.note.references.page,
+			hasMore: pagination.hasMore,
+			isLoading: pagination.isLoading,
+			error: pagination.error,
+			loadMore: pagination.hasMore ? pagination.loadMore : null,
 		},
 		cleanup: {
 			activeLocator,
@@ -238,32 +197,7 @@ function ShadowNoteContainer({
 		},
 		follow,
 	};
-	return renderNote(note, capabilities);
-}
-
-function mergeReferrers(
-	referrers: readonly ShadowNoteReferrer[],
-): ShadowNoteReferrer[] {
-	const merged = new Map<string, ShadowNoteReferrer>();
-	for (const referrer of referrers) {
-		const current = merged.get(referrer.reading.readingId);
-		if (!current) {
-			merged.set(referrer.reading.readingId, referrer);
-			continue;
-		}
-		merged.set(referrer.reading.readingId, {
-			reading: current.reading,
-			pendingRelations: [
-				...current.pendingRelations,
-				...referrer.pendingRelations,
-			],
-			structuralReferences: [
-				...current.structuralReferences,
-				...referrer.structuralReferences,
-			],
-		});
-	}
-	return [...merged.values()];
+	return renderNote(pagination.note, capabilities);
 }
 
 function ShadowNoteSkeleton() {

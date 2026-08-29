@@ -1,4 +1,5 @@
 import { type Infer, v } from "convex/values";
+import { derivePendingEntryId } from "dumdict/pending";
 import type { DirectSemanticRelation } from "dumrel";
 import { directSemanticRelationValues } from "dumrel/vocabulary";
 
@@ -9,6 +10,7 @@ import {
 	type MutationCtx,
 	type QueryCtx,
 } from "./_generated/server";
+import { pendingLocatorIndexKey } from "./model/dumdictPendingIndexes";
 import {
 	effectiveRelationPublicationPolicy,
 	type RelationPublicationFingerprints,
@@ -183,23 +185,18 @@ function proposalKey(
 	return JSON.stringify([attemptKey, runNumber, relation, targetKey(target)]);
 }
 
-function pendingEntryId(target: Infer<typeof relationTargetShadowValidator>) {
-	return `pending-entry:v2:${[
-		target.language,
-		target.family,
-		target.kind,
-		target.canonicalForm,
-	]
-		.map(encodeURIComponent)
-		.join(":")}`;
-}
-
 function pendingLocatorKey(
 	sourceReadingKey: string,
 	relation: DirectSemanticRelation,
 	target: Infer<typeof relationTargetShadowValidator>,
 ): string {
-	return JSON.stringify([sourceReadingKey, relation, pendingEntryId(target)]);
+	return pendingLocatorIndexKey({
+		sourceReadingKey,
+		relation,
+		targetPendingId: derivePendingEntryId(
+			target as Parameters<typeof derivePendingEntryId<"de">>[0],
+		),
+	});
 }
 
 function sampledForReview(key: string): boolean {

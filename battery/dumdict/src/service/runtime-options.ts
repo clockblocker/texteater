@@ -1,5 +1,5 @@
 import type { Lemma, SupportedLanguage } from "dumling/types";
-import type { DumdictReadingDraft, Reading } from "../dto";
+import type { Reading } from "../dto";
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,
@@ -8,7 +8,8 @@ import type {
 } from "../storage";
 import type {
 	CleanupRelationsSlice,
-	NewNoteSlice,
+	LoadReadingEntryContextRequest,
+	ReadingEntryContext,
 	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
@@ -23,9 +24,9 @@ export type DumdictSliceValidation<L extends SupportedLanguage> = {
 		slice: ReadingPatchSlice<L>,
 		requestedReading?: Reading<L>,
 	) => void;
-	readonly newNote: (
-		slice: NewNoteSlice<L>,
-		draft?: DumdictReadingDraft<L>,
+	readonly readingEntryContext: (
+		context: ReadingEntryContext<L>,
+		request: LoadReadingEntryContextRequest<L>,
 	) => void;
 	readonly relationsCleanupInfo: (
 		slice: RelationsCleanupInfoSlice<L>,

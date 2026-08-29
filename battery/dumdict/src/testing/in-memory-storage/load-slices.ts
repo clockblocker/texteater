@@ -1,29 +1,23 @@
-import { readingFingerprint } from "dumling/id";
 import type { SupportedLanguage } from "dumling/types";
 import { sameLemma } from "../../core/identity";
-import { derivePendingEntryId } from "../../core/pending/identity";
+import {
+	derivePendingSemanticRelationLocator,
+	pendingSemanticRelationLocatorKey,
+} from "../../core/pending";
 import { makeSurfaceId } from "../../dumling-id";
 import type {
 	CleanupRelationsSlice,
 	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
 	LoadCleanupRelationsContextRequest,
-	LoadNewNoteContextRequest,
+	LoadReadingEntryContextRequest,
 	LoadReadingForPatchRequest,
-	NewNoteSlice,
+	ReadingEntryContext,
 	ReadingPatchSlice,
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../../storage";
 import type { InMemoryStorageState } from "./state";
-
-function locatorKey(value: {
-	sourceReadingKey: string;
-	relation: string;
-	targetPendingId: string;
-}) {
-	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
-}
 
 function pendingMatchesLemma<L extends SupportedLanguage>(
 	record: InMemoryStorageState<L>["storedNotes"][number]["pendingRelations"][number],
@@ -65,55 +59,140 @@ export function loadReadingForPatch<L extends SupportedLanguage>(
 	};
 }
 
-export function loadNewNoteContext<L extends SupportedLanguage>(
+export type ReadingEntryContextRead =
+	| "existingLemma"
+	| "existingReading"
+	| "requestedOwnedSurfaces"
+	| "explicitLemmaTargets"
+	| "exactPendingRelations"
+	| "pendingRelationsMatchingLemma"
+	| "relationLemmas"
+	| "relationReadings";
+
+export function loadReadingEntryContext<L extends SupportedLanguage>(
 	state: InMemoryStorageState<L>,
-	request: LoadNewNoteContextRequest<L>,
-): NewNoteSlice<L> {
-	const { reading } = request.draft;
+	request: LoadReadingEntryContextRequest<L>,
+	recordRead: (read: ReadingEntryContextRead) => void = () => {},
+): ReadingEntryContext<L> {
+	const { reading } = request;
+	recordRead("existingReading");
+	const existingReading = state.findStoredReading(reading);
+	if (request.intent === "applyGeneratedKnowledge") {
+		const proposedPendingKeys = new Set(
+			request.pendingRelations.map((pending) =>
+				pendingSemanticRelationLocatorKey(
+					derivePendingSemanticRelationLocator(reading, pending),
+				),
+			),
+		);
+		recordRead("exactPendingRelations");
+		const exactPending = state
+			.allPendingRelations()
+			.filter(({ locator }) =>
+				proposedPendingKeys.has(
+					pendingSemanticRelationLocatorKey(locator),
+				),
+			);
+		recordRead("relationLemmas");
+		const relationLemmas = state.storedNotes.map(
+			({ lemmaRecord }) => lemmaRecord,
+		);
+		recordRead("relationReadings");
+		const relationReadings = state.storedNotes.flatMap(
+			({ readingEntries }) => readingEntries,
+		);
+		return {
+			intent: request.intent,
+			revision: state.currentRevision(),
+			...(existingReading ? { existingReading } : {}),
+			exactPendingRelations: exactPending,
+			relationLemmas,
+			relationReadings,
+		};
+	}
+
+	recordRead("existingLemma");
 	const existingBundle = state.findStoredBundleByLemma(reading.lemma);
-	const draftSurfaceIds =
-		request.draft.ownedSurfaces?.map(({ surface }) =>
-			makeSurfaceId(state.language, surface),
-		) ?? [];
-	const explicitLemmas =
-		request.draft.relations?.flatMap((relation) =>
-			relation.target.kind === "existing" ? [relation.target.lemma] : [],
-		) ?? [];
+	if (request.intent === "ensureReadingEntry")
+		return {
+			intent: request.intent,
+			revision: state.currentRevision(),
+			...(existingBundle
+				? { existingLemma: existingBundle.lemmaRecord }
+				: {}),
+			...(existingReading ? { existingReading } : {}),
+		};
+
+	if (request.intent === "ensureOwnedSurface") {
+		recordRead("requestedOwnedSurfaces");
+		const existingSurface = state.findStoredSurfaceById(
+			makeSurfaceId(state.language, request.surface),
+		);
+		return {
+			intent: request.intent,
+			revision: state.currentRevision(),
+			...(existingBundle
+				? { existingLemma: existingBundle.lemmaRecord }
+				: {}),
+			...(existingReading ? { existingReading } : {}),
+			existingOwnedSurfaces: existingSurface ? [existingSurface] : [],
+		};
+	}
+
+	const draftSurfaceIds = request.ownedSurfaces.map((surface) =>
+		makeSurfaceId(state.language, surface),
+	);
+	const explicitLemmas = request.relations.flatMap((relation) =>
+		relation.target.kind === "existing" ? [relation.target.lemma] : [],
+	);
 	const proposedPendingKeys = new Set(
-		request.draft.relations?.flatMap((relation) => {
+		request.relations.flatMap((relation) => {
 			if (relation.target.kind !== "pending") return [];
 			const { pending } = relation.target;
 			return [
-				locatorKey({
-					sourceReadingKey: readingFingerprint(reading),
-					relation: pending.relation,
-					targetPendingId: derivePendingEntryId(pending.target),
-				}),
+				pendingSemanticRelationLocatorKey(
+					derivePendingSemanticRelationLocator(reading, pending),
+				),
 			];
-		}) ?? [],
+		}),
+	);
+	recordRead("requestedOwnedSurfaces");
+	const existingOwnedSurfaces = draftSurfaceIds
+		.map((id) => state.findStoredSurfaceById(id))
+		.filter((value) => value !== undefined);
+	recordRead("explicitLemmaTargets");
+	const explicitExistingLemmaTargets = explicitLemmas
+		.map((value) => state.findStoredBundleByLemma(value)?.lemmaRecord)
+		.filter((value) => value !== undefined);
+	recordRead("exactPendingRelations");
+	const exactPending = state
+		.allPendingRelations()
+		.filter(({ locator }) =>
+			proposedPendingKeys.has(pendingSemanticRelationLocatorKey(locator)),
+		);
+	recordRead("pendingRelationsMatchingLemma");
+	const matchingPending = state
+		.allPendingRelations()
+		.filter((record) => pendingMatchesLemma(record, reading.lemma));
+	recordRead("relationLemmas");
+	const relationLemmas = state.storedNotes.map(
+		({ lemmaRecord }) => lemmaRecord,
+	);
+	recordRead("relationReadings");
+	const relationReadings = state.storedNotes.flatMap(
+		({ readingEntries }) => readingEntries,
 	);
 	return {
+		intent: request.intent,
 		revision: state.currentRevision(),
 		existingLemma: existingBundle?.lemmaRecord,
-		existingReading: state.findStoredReading(reading),
-		existingOwnedSurfaces: draftSurfaceIds
-			.map((id) => state.findStoredSurfaceById(id))
-			.filter((value) => value !== undefined),
-		explicitExistingLemmaTargets: explicitLemmas
-			.map((value) => state.findStoredBundleByLemma(value)?.lemmaRecord)
-			.filter((value) => value !== undefined),
-		existingPendingRelationsForProposedPendingTargets: state
-			.allPendingRelations()
-			.filter(({ locator }) =>
-				proposedPendingKeys.has(locatorKey(locator)),
-			),
-		pendingRelationsMatchingProposedLemma: state
-			.allPendingRelations()
-			.filter((record) => pendingMatchesLemma(record, reading.lemma)),
-		relationLemmas: state.storedNotes.map(({ lemmaRecord }) => lemmaRecord),
-		relationReadings: state.storedNotes.flatMap(
-			({ readingEntries }) => readingEntries,
-		),
+		...(existingReading ? { existingReading } : {}),
+		existingOwnedSurfaces,
+		explicitExistingLemmaTargets,
+		exactPendingRelations: exactPending,
+		pendingRelationsMatchingProposedLemma: matchingPending,
+		relationLemmas,
+		relationReadings,
 	};
 }
 
@@ -143,13 +222,17 @@ export function loadCleanupRelationsContext<L extends SupportedLanguage>(
 	request: LoadCleanupRelationsContextRequest<L>,
 ): CleanupRelationsSlice<L> {
 	const locatorKeys = new Set(
-		request.resolutions.map(({ locator }) => locatorKey(locator)),
+		request.resolutions.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
 	);
 	return {
 		revision: state.currentRevision(),
 		pendingRelations: state
 			.allPendingRelations()
-			.filter(({ locator }) => locatorKeys.has(locatorKey(locator))),
+			.filter(({ locator }) =>
+				locatorKeys.has(pendingSemanticRelationLocatorKey(locator)),
+			),
 		relationLemmas: state.storedNotes.map(({ lemmaRecord }) => lemmaRecord),
 		relationReadings: state.storedNotes.flatMap(
 			({ readingEntries }) => readingEntries,

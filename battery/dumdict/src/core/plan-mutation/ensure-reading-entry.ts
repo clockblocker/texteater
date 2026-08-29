@@ -1,7 +1,7 @@
 import type { SupportedLanguage } from "dumling/types";
 import type { ReadingEntry } from "../../dto";
 import type { EnsureReadingEntryRequest } from "../../public";
-import type { NewNoteSlice } from "../../storage";
+import type { EnsureReadingEntryContext } from "../../storage";
 import type { PlannedChangeOp } from "../planned-changes";
 import type { PlanMutationRejected, PlanMutationResult } from "./result";
 
@@ -38,7 +38,7 @@ function sameValue(left: unknown, right: unknown): boolean {
 }
 
 export function planEnsureReadingEntry<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: EnsureReadingEntryContext<L>,
 	request: EnsureReadingEntryRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { entry } = request;

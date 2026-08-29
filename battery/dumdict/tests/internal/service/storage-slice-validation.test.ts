@@ -1,21 +1,35 @@
 import { describe, expect, test } from "bun:test";
+import type { DumdictReadingDraft } from "../../../src";
 import {
-	validateNewNoteSlice,
+	validateReadingEntryContext,
 	validateStoredReadingsSlice,
 } from "../../../src/core/validate-slice";
 import { createDumdictService } from "../../../src/runtime";
-import type { NewNoteSlice, StoredReadingsSlice } from "../../../src/storage";
+import type {
+	AddNewNoteContext,
+	LoadReadingEntryContextRequest,
+	StoredReadingsSlice,
+} from "../../../src/storage";
 import {
 	englishRunLemma,
 	englishSwimDraft,
 	englishWalkLemma,
 	englishWalkReading,
 	englishWalkReadingEntry,
+	enSerializedNotesWithPendingSwimRelation,
 	type StoreRevision,
 	withUnusedCleanupStorageMethods,
 } from "./helpers";
 
 const revision = "validation-test" as StoreRevision;
+const addNewNoteRequest = (
+	draft: DumdictReadingDraft<"en"> = englishSwimDraft,
+): Extract<LoadReadingEntryContextRequest<"en">, { intent: "addNewNote" }> => ({
+	intent: "addNewNote",
+	reading: draft.reading,
+	ownedSurfaces: draft.ownedSurfaces?.map(({ surface }) => surface) ?? [],
+	relations: [...(draft.relations ?? [])],
+});
 
 describe("storage slice validation", () => {
 	test("rejects a Reading paired with the wrong Lemma", () => {
@@ -52,7 +66,7 @@ describe("storage slice validation", () => {
 			async loadReadingForPatch() {
 				throw new Error("Unexpected storage call");
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				throw new Error("Unexpected storage call");
 			},
 			async commitChanges() {
@@ -82,7 +96,7 @@ describe("storage slice validation", () => {
 					reading: englishWalkReadingEntry(),
 				};
 			},
-			async loadNewNoteContext() {
+			async loadReadingEntryContext() {
 				throw new Error("Unexpected storage call");
 			},
 			async commitChanges() {
@@ -122,44 +136,83 @@ describe("storage slice validation", () => {
 		);
 	});
 
-	test("rejects an existing Lemma that does not match the draft identity", () => {
+	test("rejects an existing Lemma that does not match the requested Reading", () => {
 		const slice = {
+			intent: "addNewNote",
 			revision,
 			existingLemma: {
 				lemma: englishWalkLemma,
 			},
 			existingOwnedSurfaces: [],
 			explicitExistingLemmaTargets: [],
-			existingPendingRelationsForProposedPendingTargets: [],
+			exactPendingRelations: [],
 			pendingRelationsMatchingProposedLemma: [],
 			relationLemmas: [],
 			relationReadings: [],
-		} satisfies NewNoteSlice<"en">;
+		} satisfies AddNewNoteContext<"en">;
 
 		expect(() =>
-			validateNewNoteSlice("en", slice, englishSwimDraft),
-		).toThrow("existing Lemma does not match the draft identity");
+			validateReadingEntryContext("en", slice, addNewNoteRequest()),
+		).toThrow(
+			"existing Lemma does not match the requested Reading identity",
+		);
 	});
 
 	test("rejects a Reading whose emoji description is not canonical", () => {
 		const slice = {
+			intent: "addNewNote",
 			revision,
 			existingOwnedSurfaces: [],
 			explicitExistingLemmaTargets: [],
-			existingPendingRelationsForProposedPendingTargets: [],
+			exactPendingRelations: [],
 			pendingRelationsMatchingProposedLemma: [],
 			relationLemmas: [],
 			relationReadings: [],
-		} satisfies NewNoteSlice<"en">;
+		} satisfies AddNewNoteContext<"en">;
 
 		expect(() =>
-			validateNewNoteSlice("en", slice, {
-				...englishSwimDraft,
-				reading: {
-					...englishSwimDraft.reading,
-					emojiDescription: "plain prose",
-				},
-			}),
+			validateReadingEntryContext(
+				"en",
+				slice,
+				addNewNoteRequest({
+					...englishSwimDraft,
+					reading: {
+						...englishSwimDraft.reading,
+						emojiDescription: "plain prose",
+					},
+				}),
+			),
 		).toThrow();
+	});
+
+	test("rejects a pending record whose target ID is not derived from its Unit Shadow", () => {
+		const stored =
+			enSerializedNotesWithPendingSwimRelation[0]?.pendingRelations[0];
+		if (!stored) throw new Error("Expected a pending relation fixture.");
+		const slice = {
+			intent: "addNewNote",
+			revision,
+			existingOwnedSurfaces: [],
+			explicitExistingLemmaTargets: [],
+			exactPendingRelations: [],
+			pendingRelationsMatchingProposedLemma: [
+				{
+					...stored,
+					locator: {
+						...stored.locator,
+						targetPendingId:
+							"pending-entry:v2:en:Lexeme:VERB:forged",
+					},
+				},
+			],
+			relationLemmas: [],
+			relationReadings: [],
+		} satisfies AddNewNoteContext<"en">;
+
+		expect(() =>
+			validateReadingEntryContext("en", slice, addNewNoteRequest()),
+		).toThrow(
+			"Pending Semantic Relation locator has the wrong target Pending Entry ID",
+		);
 	});
 });

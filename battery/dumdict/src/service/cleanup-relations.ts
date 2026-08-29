@@ -1,5 +1,6 @@
 import type { SupportedLanguage } from "dumling/types";
 import { semanticRelationValues } from "dumrel/relations";
+import { pendingSemanticRelationLocatorKey } from "../core/pending";
 import { planCleanupRelations } from "../core/plan-mutation";
 import type {
 	CleanupRelationsRequest,
@@ -8,12 +9,6 @@ import type {
 } from "../public";
 import { applyPlan } from "./apply-plan";
 import type { DumdictServiceRuntimeOptions } from "./runtime-options";
-
-function locatorKey(
-	value: CleanupRelationsRequest<SupportedLanguage>["resolutions"][number]["locator"],
-) {
-	return `${value.sourceReadingKey}\0${value.relation}\0${value.targetPendingId}`;
-}
 
 export async function cleanupRelations<L extends SupportedLanguage>(
 	options: DumdictServiceRuntimeOptions<L>,
@@ -29,7 +24,9 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 			summary: { message: "No relations cleaned up." },
 		};
 	}
-	const keys = request.resolutions.map(({ locator }) => locatorKey(locator));
+	const keys = request.resolutions.map(({ locator }) =>
+		pendingSemanticRelationLocatorKey(locator),
+	);
 	if (
 		new Set(keys).size !== keys.length ||
 		request.resolutions.some(
@@ -58,10 +55,16 @@ export async function cleanupRelations<L extends SupportedLanguage>(
 	}
 
 	const pendingKeys = new Set(
-		slice.pendingRelations.map(({ locator }) => locatorKey(locator)),
+		slice.pendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
 	);
 	for (const resolution of request.resolutions) {
-		if (!pendingKeys.has(locatorKey(resolution.locator))) {
+		if (
+			!pendingKeys.has(
+				pendingSemanticRelationLocatorKey(resolution.locator),
+			)
+		) {
 			return {
 				status: "conflict",
 				code: "semanticPreconditionFailed",

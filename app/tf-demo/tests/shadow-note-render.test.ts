@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { renderNote } from "../src/notes";
+import { createPaginatedNoteLoader } from "../src/notes/paginated-note-loading";
 import type { ShadowNoteData } from "../src/notes/shadow";
 import {
 	isCurrentShadowAction,
@@ -109,6 +110,35 @@ test("renders one deterministic resolve control per exact equal-looking locator"
 	expect(markup).not.toContain("href=");
 	expect(markup.match(/<button type="button"/g)).toHaveLength(7);
 	expect(markup).toContain("nounClass: institution");
+});
+
+test("the paginated Note interface merges Shadow referrers by Reading", async () => {
+	const first = noteFixture();
+	first.references.continueCursor = "cursor-1";
+	first.references.isDone = false;
+	const next = noteFixture();
+	next.references.page = [
+		{
+			...next.references.page[0],
+			pendingRelations: [
+				{ locatorKey: "locator-three", relation: "synonym" },
+			],
+			structuralReferences: [],
+		},
+	];
+	const loader = createPaginatedNoteLoader(first, async () => next);
+
+	await loader.loadMore();
+
+	expect(loader.current().hasMore).toBe(false);
+	expect(loader.current().note.references.page).toHaveLength(1);
+	expect(
+		loader
+			.current()
+			.note.references.page[0]?.pendingRelations.map(
+				({ locatorKey }) => locatorKey,
+			),
+	).toEqual(["locator-one", "locator-two", "locator-three"]);
 });
 
 test("renders zero-candidate and structural-resolution gates without inventing a structural action", () => {

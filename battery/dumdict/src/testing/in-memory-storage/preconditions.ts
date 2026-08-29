@@ -1,5 +1,6 @@
 import type { Lemma, SupportedLanguage } from "dumling/types";
 import { sameLemma, sameReading } from "../../core/identity";
+import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type {
 	PendingSemanticRelationRecord,
 	Reading,
@@ -39,21 +40,15 @@ function findDraftSurfaceById<L extends SupportedLanguage>(
 		.find(({ id }) => id === surfaceId);
 }
 
-function locatorKey<L extends SupportedLanguage>(
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const { sourceReadingKey, relation, targetPendingId } = record.locator;
-	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
-}
-
 function hasDraftPendingRelation<L extends SupportedLanguage>(
 	draft: DraftStorageState<L>,
 	record: PendingSemanticRelationRecord<L>,
 ) {
-	const expected = locatorKey(record);
 	return draft.draftNotes
 		.flatMap(({ pendingRelations }) => pendingRelations)
-		.some((stored) => locatorKey(stored) === expected);
+		.some((stored) =>
+			samePendingSemanticRelationLocator(stored.locator, record.locator),
+		);
 }
 
 export function draftPreconditionFails<L extends SupportedLanguage>(

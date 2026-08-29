@@ -5,7 +5,7 @@ import type {
 	SerializedDictionaryNote,
 	Surface,
 } from "../../src";
-import { derivePendingEntryId } from "../../src/core/pending/identity";
+import { derivePendingEntryId } from "../../src/core/pending";
 
 const englishVerbFeatures = {
 	style: null,

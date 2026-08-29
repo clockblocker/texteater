@@ -17,9 +17,13 @@ import {
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
-import type { NewNoteSlice } from "../../storage";
+import type { AddNewNoteContext } from "../../storage";
 import { lemmaFingerprint, sameLemma, sameReading } from "../identity";
-import { derivePendingEntryId } from "../pending/identity";
+import {
+	createPendingSemanticRelationRecord,
+	deduplicatePendingSemanticRelationRecords,
+	pendingSemanticRelationLocatorKey,
+} from "../pending";
 import {
 	planRelationMaintenance,
 	type RelationRequest,
@@ -55,23 +59,16 @@ function appendRelation<L extends SupportedLanguage>(
 	knowledge.semanticRelations = semanticRelations;
 }
 
-function pendingRecordKey<L extends SupportedLanguage>(
-	record: PendingSemanticRelationRecord<L>,
-) {
-	const { sourceReadingKey, relation, targetPendingId } = record.locator;
-	return `${sourceReadingKey}\0${relation}\0${targetPendingId}`;
-}
-
 function makePendingRecords<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ): PendingSemanticRelationRecord<L>[] {
 	const existing = new Set(
-		slice.existingPendingRelationsForProposedPendingTargets.map(
-			pendingRecordKey,
+		slice.exactPendingRelations.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
 		),
 	);
-	return uniqueBy(
+	return deduplicatePendingSemanticRelationRecords(
 		(request.draft.relations ?? []).flatMap((relation) => {
 			if (relation.target.kind !== "pending") return [];
 			const pending = unwrapDumdictParse(
@@ -79,21 +76,16 @@ function makePendingRecords<L extends SupportedLanguage>(
 					relation.target.pending,
 				),
 			) as unknown as PendingSemanticRelationRecord<L>["pending"];
-			const targetPendingId = derivePendingEntryId(
-				pending.target as Parameters<typeof derivePendingEntryId<L>>[0],
-			);
-			const record: PendingSemanticRelationRecord<L> = {
-				sourceReading: request.draft.reading,
+			const record = createPendingSemanticRelationRecord(
+				request.draft.reading,
 				pending,
-				locator: {
-					sourceReadingKey: readingFingerprint(request.draft.reading),
-					relation: pending.relation,
-					targetPendingId,
-				},
-			};
-			return existing.has(pendingRecordKey(record)) ? [] : [record];
+			);
+			return existing.has(
+				pendingSemanticRelationLocatorKey(record.locator),
+			)
+				? []
+				: [record];
 		}),
-		pendingRecordKey,
 	);
 }
 
@@ -113,7 +105,7 @@ function relationLanguagesMatch<L extends SupportedLanguage>(
 }
 
 function explicitTargetsArePresent<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ) {
 	const lemmas = new Set(
@@ -129,7 +121,7 @@ function explicitTargetsArePresent<L extends SupportedLanguage>(
 }
 
 export function planAddNewNote<L extends SupportedLanguage>(
-	slice: NewNoteSlice<L>,
+	slice: AddNewNoteContext<L>,
 	request: AddNewNoteRequest<L>,
 ): PlanMutationResult<L> | PlanMutationRejected {
 	const { reading, note } = request.draft;
@@ -186,10 +178,10 @@ export function planAddNewNote<L extends SupportedLanguage>(
 		({ id }) => id,
 	);
 	const newPending = makePendingRecords(slice, request);
-	const pending = uniqueBy(
-		[...newPending, ...slice.pendingRelationsMatchingProposedLemma],
-		pendingRecordKey,
-	);
+	const pending = deduplicatePendingSemanticRelationRecords([
+		...newPending,
+		...slice.pendingRelationsMatchingProposedLemma,
+	]);
 	const requests: RelationRequest<L>[] = [
 		...(request.draft.relations ?? []).flatMap((relation) =>
 			relation.target.kind === "existing" && "relation" in relation
@@ -255,12 +247,19 @@ export function planAddNewNote<L extends SupportedLanguage>(
 			slice.revision,
 		),
 	];
-	const newPendingKeys = new Set(newPending.map(pendingRecordKey));
+	const newPendingKeys = new Set(
+		newPending.map(({ locator }) =>
+			pendingSemanticRelationLocatorKey(locator),
+		),
+	);
 	const pendingToCreate = relationPlan.unresolvedPending.filter((record) =>
-		newPendingKeys.has(pendingRecordKey(record)),
+		newPendingKeys.has(pendingSemanticRelationLocatorKey(record.locator)),
 	);
 	const pendingToDelete = relationPlan.resolvedPending.filter(
-		(record) => !newPendingKeys.has(pendingRecordKey(record)),
+		(record) =>
+			!newPendingKeys.has(
+				pendingSemanticRelationLocatorKey(record.locator),
+			),
 	);
 
 	const changes: PlannedChangeOp<L>[] = [];

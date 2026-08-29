@@ -215,6 +215,16 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumdict/relations",
 	},
 	{
+		classification: "operational",
+		operation: {
+			description:
+				"Construct canonical Pending Semantic Relation identity.",
+			id: "dumdict.derive-pending-identity",
+		},
+		rationale: "Dictionary pending-identity runtime surface.",
+		specifier: "dumdict/pending",
+	},
+	{
 		classification: "metadata",
 		rationale: "Package metadata, not executable application code.",
 		specifier: "dumdict/package.json",
