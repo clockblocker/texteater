@@ -248,7 +248,7 @@ test("enforces the minimal installed ADR structure and status vocabulary", () =>
 	]);
 });
 
-test("enforces contiguous ADR numbering within each scope", async () => {
+test("allows ADR number gaps left by deleted decisions", async () => {
 	const root = await temporaryRepository();
 	await writeSource(
 		root,
@@ -257,7 +257,7 @@ test("enforces contiguous ADR numbering within each scope", async () => {
 	);
 	expect(
 		await auditAdrs(root, ["docs/adr/0002-skip-the-first-decision.md"]),
-	).toMatchObject([{ kind: "adr-structure" }]);
+	).toEqual([]);
 });
 
 test("detects empty and placeholder scaffolding", () => {

@@ -817,40 +817,13 @@ export async function auditAdrs(
 	const adrFiles = files.filter(
 		(path) => path.includes("/docs/adr/") || path.startsWith("docs/adr/"),
 	);
-	const byDirectory = new Map<string, string[]>();
 	for (const file of adrFiles) {
-		const directory = dirname(file);
-		const entries = byDirectory.get(directory) ?? [];
-		entries.push(file);
-		byDirectory.set(directory, entries);
 		issues.push(
 			...adrStructureIssues(
 				file,
 				await readFile(join(repositoryRoot, file), "utf8"),
 			),
 		);
-	}
-	for (const [directory, entries] of byDirectory) {
-		const numbers = entries
-			.map((file) => Number.parseInt(basename(file).slice(0, 4), 10))
-			.filter(Number.isFinite)
-			.toSorted((left, right) => left - right);
-		for (const [index, number] of numbers.entries()) {
-			if (number !== index + 1) {
-				issues.push({
-					detail: `ADR numbering in ${directory} must be contiguous from 0001`,
-					file:
-						entries.find((file) =>
-							basename(file).startsWith(
-								String(number).padStart(4, "0"),
-							),
-						) ?? directory,
-					kind: "adr-structure",
-					severity: "error",
-				});
-				break;
-			}
-		}
 	}
 	return issues;
 }
