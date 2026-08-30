@@ -4,6 +4,7 @@
 .bun-cache/
 .bun-tmp/
 .types-temp/
+.turbo/
 .astro/
 coverage/
 dist/
