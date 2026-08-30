@@ -1,5 +1,9 @@
 # Dumgen `Selection` → `Attestation` migration research
 
+> **Lifecycle: historical implementation map.** The migration is complete.
+> Current Attestation contracts live in the Dumling and Dumgen Contexts and
+> accepted system ADRs 0003 and 0004.
+
 Status: repository and issue-tracker trace for
 [texteater#73](https://github.com/clockblocker/texteater/issues/73), child of
 [map #69](https://github.com/clockblocker/texteater/issues/69). This is a

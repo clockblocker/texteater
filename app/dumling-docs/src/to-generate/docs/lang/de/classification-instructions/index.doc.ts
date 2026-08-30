@@ -113,7 +113,9 @@ This split matters in German because many tempting distinctions belong in differ
 
 \`case\`, \`number\`, \`gender\`, \`degree\`, \`mood\`, \`tense\`, and \`verbForm\` are surface-level facts when they are actually encoded or recoverable for the attested form.
 
-Learner semantic identity is a Reading—one Lemma plus one emoji description—resolved above Dumling and is not stored in these DTOs.
+Semantic identity is a Dumling Reading—one Lemma plus one emoji description.
+Reading Resolution happens after grammatical resolution, and a Reading is not
+stored inside the Attestation, Surface, or Lemma DTO.
 
 ## High-ROI German Feature Areas
 

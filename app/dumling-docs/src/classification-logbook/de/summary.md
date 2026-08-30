@@ -22,12 +22,13 @@ into a Phraseme. Resolve the learner-facing token normally.
 
 Source: `[Wegen]_dem_Regen_kamen_wir_zu_spät.ts`
 
-## Learner-Owned Reading
+## Reading Ownership
 
 Historical rows incorrectly stored scene-level emoji meaning on Dumling
-entities. Current correction: learner-owned Reading is resolved downstream
-from the attested learner-facing unit. Dumling stores Lemma identity,
-linguistic Surfaces, and occurrence Attestation evidence; it does not own Reading.
+entities. Current correction: Dumling owns the foundational Reading value, its
+schema, equality, and stable identity operation. A dictionary owns the learner
+or hosted scope, records, and workflows, and Reading Resolution still happens
+downstream from grammatical resolution.
 
 ## Review Span Versus Attestation Coverage
 
@@ -91,9 +92,10 @@ Lemma rather than a Phraseme. Avoid unsupported prescriptive Core Features.
 
 - Lemma's grammatical tuple is durable identity; `canonicalForm` is its display form.
 - Equal spelling does not imply equal Lemma identity.
-- Different learner-owned Readings may share one Lemma ID when the linguistic
+- Different dictionary-scoped Readings may share one Lemma ID when the linguistic
   identity is the same, as with contextual readings of `Schloss`.
-- Learner-owned Reading remains outside Dumling.
+- Dumling owns the foundational Reading value; dictionaries own scoped Reading
+  records and workflows.
 
 ## Split And Governed Verb Constructions
 

@@ -494,13 +494,14 @@ selects an existing learner-owned Reading or drafts a new one.
 Each chain can be investigated by multiple Prompt Experiments. A chain is not
 itself an experiment.
 
-### Laboratory Prompt Namespace
+### Runtime Prompt Namespace
 
-The current executable prompts are laboratory instruments. The pre-click chain
-makes one model call, registered as `laboratory.intake`. Accepted German and
-Hebrew items then use deterministic Source Segmentation modules; these are
-observable through laboratory rule traces but are not prompt routes. Post-click
-classification begins at
+The runtime catalog retains its `laboratory.*` identifiers for compatibility,
+while the human-authored Prompt Sources and generated prompt artifacts live in
+the Production stage. The pre-click chain makes one model call, registered as
+`laboratory.intake`. Accepted German and Hebrew items then use deterministic
+Source Segmentation modules; these are observable through laboratory rule
+traces but are not prompt routes. Post-click classification begins at
 `laboratory.targetClassification.de.highLevelWholeUnit`, then dispatches to
 physically distinct `laboratory.grammaticalResolution.de.<Family>.<Kind>`
 leaves. Reading Resolution depends only on the language and is registered once
@@ -508,21 +509,21 @@ as `laboratory.readingResolution.de`. The high-level policy registers Lexeme,
 Phraseme, and Construction routes; it deliberately excludes Morpheme routes.
 
 Human-authored Prompt Sources use a stage-first hierarchy under
-`laboratory/prompt-source`: Intake has no language level; every language-specific
-stage places the language immediately after the stage, followed only by the
-dimensions on which that stage depends. Language-first authoring paths are not
-used.
+`src/promptsmith/production`: Intake has no language level; every
+language-specific stage places the language immediately after the stage,
+followed only by the dimensions on which that stage depends. Language-first
+authoring paths are not used.
 
 Filesystem routes use lowercase kebab-case, while the shared typed catalog uses
 camelCase stage names and preserves canonical Dumling discriminants. For
 example,
-`prompt-source/grammatical-resolution/de/lexeme/noun` supplies
+`grammatical-resolution/de/lexeme/noun` supplies
 `laboratory.grammaticalResolution.de.Lexeme.NOUN`.
 
 Prompt Assembly writes disposable `systemPrompt` assets under
-`laboratory/generated-system-prompt`, mirroring the Prompt Source routes. The
-handwritten `PROMPT_CATALOG` imports those assets together with each authored
-`schemas.ts` module.
+`src/promptsmith/production/generated-system-prompt`, mirroring the Prompt
+Source routes. The handwritten `PROMPT_CATALOG` imports those assets together
+with each authored `schemas.ts` module.
 
 The structured Prompt Source scope is batch Intake, Target Classification<de,
 HighLevelWholeUnit>, the enabled German Grammatical Resolution inventory, and

@@ -77,16 +77,16 @@ IDs, click indices, and marked context belong to the calling application.
 
 \`kind\` is the public subtype field for all four families. The package does not expose separate public discriminator names like \`pos\`, \`morphemeKind\`, or \`phrasemeKind\`.
 
-## Reading Boundary
+## Reading
 
-Dumling stops at Lemma. A learner's semantic identity is a \`Reading\` outside
-this package:
+A \`Reading\` is Dumling's foundational semantic value:
 
 \`Reading = { lemma, emojiDescription }\`
 
-The same Lemma may participate in several Readings. A classifier reuses a
-learner's existing Reading when it is close enough or proposes a new one; a
-learner-owned Reading remains an application value rather than a Dumling DTO.
+The same Lemma may participate in several Readings. Dumling owns the Reading
+DTO, schema, value equality, and stable tuple-derived identity operation. A
+dictionary establishes the learner or hosted scope and owns Reading records,
+candidate lookup, selection, persistence, and workflows.
 
 ## Features
 

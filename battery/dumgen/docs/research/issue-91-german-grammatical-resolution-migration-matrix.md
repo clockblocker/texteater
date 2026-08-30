@@ -1,5 +1,9 @@
 # German Grammatical Resolution: 21-route migration matrix
 
+> **Lifecycle: historical dispatch specification.** The 21-route migration is
+> complete; current Prompt Sources and the final evidence audit record its
+> implemented result.
+
 Status: repository audit for [texteater#91](https://github.com/clockblocker/texteater/issues/91), child of [map #90](https://github.com/clockblocker/texteater/issues/90). This is a dispatch specification, not implementation. The source snapshot is commit [`8c46dd7`](https://github.com/clockblocker/texteater/tree/8c46dd7dd5b5c67b7b815b52304aef2f5aeba3f1).
 
 ## Contract shared by every row

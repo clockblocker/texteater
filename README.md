@@ -3,7 +3,8 @@
 The build-your-own-dictionary product is a Bun monorepo split by
 responsibility:
 
-- `app/dumling-docs`: user-facing documentation for `dumling`
+- [`app/dumling-docs`](./app/dumling-docs/README.md): user-facing documentation
+  for `dumling`
 - `battery/codec-builder`: composable Zod 3 and Zod 4 codec builders
 - `battery/codegen`: deterministic, filesystem-safe code generation
 - `battery/dumling`: linguistic schemas, DTOs, operations, and stable IDs
@@ -91,6 +92,7 @@ From the root:
 bun validate
 bun test
 bun run build
+bun run check:docs
 ```
 
 Root `bun validate` checks repository manifest policy, cross-workspace

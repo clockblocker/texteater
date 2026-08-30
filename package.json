@@ -13,6 +13,7 @@
 		"benchmark:dum-entrypoints": "bun tooling/dum-entrypoint-rss/benchmark.ts",
 		"build": "bun tooling/manifest-policy.ts repository && bun tooling/run-workspaces.ts build",
 		"check": "bun tooling/run-workspaces.ts check --if-present",
+		"check:docs": "bun tooling/documentation-integrity.ts",
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" bun run --cwd app/tf-demo dev",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",

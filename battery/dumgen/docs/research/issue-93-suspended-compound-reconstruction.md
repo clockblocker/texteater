@@ -1,5 +1,8 @@
 # German NOUN suspended-compound reconstruction
 
+> **Lifecycle: implemented decision evidence.** System ADR 0004 governs the
+> current narrow Ergänzungsstrich reconstruction rule.
+
 Status: decision and focused test inventory for
 [texteater#93](https://github.com/clockblocker/texteater/issues/93), which
 unblocks the NOUN leaf of [texteater#90](https://github.com/clockblocker/texteater/issues/90).

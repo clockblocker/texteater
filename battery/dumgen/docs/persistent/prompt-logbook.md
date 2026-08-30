@@ -1,5 +1,9 @@
 # Prompt Logbook
 
+**Status: active human-review queue.** Entries without an explicit `Status`
+remain open for human review. Resolved entries stay in place as history and are
+labelled individually.
+
 This is the single review queue for prompt examples, policy tensions, and open
 questions that deserve human thought after automated prompt authoring and
 evaluation. Routine failures and run output stay with their Prompt Experiments.
@@ -21,7 +25,7 @@ is worth revisiting.
 - **Current take:** <the best provisional answer, including uncertainty>
 ```
 
-## Open
+## Review queue
 
 <!-- Append new entries here. -->
 
@@ -33,6 +37,7 @@ is worth revisiting.
 
 ### Ergänzungsstrich reconstruction as a Full noun Surface
 
+- **Status:** Resolved by system ADRs 0003 and 0004.
 - **Route:** `grammatical-resolution/de/lexeme/noun`
 - **Golden Case:** suspended-compound matrix in Wayfinder issue #93
 - **Raised by:** Wayfinder issues #30 and #93
@@ -175,6 +180,7 @@ is worth revisiting.
 
 ### Feminine DET agreement missing from the codec
 
+- **Status:** Resolved by the current German DET Inflection codec.
 - **Route:** `grammatical-resolution/de/lexeme/determiner`
 - **Golden Case:** `grammar-de-det-provisional-feminine-die`
 - **Raised by:** Wayfinder issue #37

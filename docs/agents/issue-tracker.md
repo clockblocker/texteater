@@ -1,15 +1,26 @@
 # Issue tracker: GitHub
 
-Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+Issues and PRDs for this repo live as GitHub issues. Use `gh api` for all
+operations. In endpoint paths, `{owner}` and `{repo}` are filled from the
+current Git remote.
 
 ## Conventions
 
-- Create an issue with `gh issue create`.
-- Read an issue with `gh issue view <number> --comments`.
-- List issues with `gh issue list`, including bodies, labels, and comments when needed.
-- Comment with `gh issue comment <number>`.
-- Apply or remove labels with `gh issue edit`.
-- Close with `gh issue close <number> --comment "..."`.
+- Create an issue with
+  `gh api --method POST repos/{owner}/{repo}/issues -f title='...' -f body='...'`.
+- Read an issue with `gh api repos/{owner}/{repo}/issues/<number>` and fetch its
+  comments with `gh api --paginate repos/{owner}/{repo}/issues/<number>/comments`.
+- List issues with `gh api --paginate repos/{owner}/{repo}/issues`; the endpoint
+  also returns pull requests, so filter out objects with a `pull_request` field
+  when the operation is issue-only.
+- Comment with
+  `gh api --method POST repos/{owner}/{repo}/issues/<number>/comments -f body='...'`.
+- Apply the complete desired label set with
+  `gh api --method PATCH repos/{owner}/{repo}/issues/<number> -f 'labels[]=...'`.
+  Remove one label with
+  `gh api --method DELETE repos/{owner}/{repo}/issues/<number>/labels/<label>`.
+- Close by posting the final comment, then run
+  `gh api --method PATCH repos/{owner}/{repo}/issues/<number> -f state=closed`.
 - Infer the repository from the current Git remote.
 
 ## Authentication diagnostics
@@ -30,9 +41,12 @@ such as `401 Bad credentials`.
 
 When a skill says "publish to the issue tracker," create a GitHub issue.
 
-When a skill says "fetch the relevant ticket," run:
+When a skill says "fetch the relevant ticket," run both:
 
-`gh issue view <number> --comments`
+```sh
+gh api repos/{owner}/{repo}/issues/<number>
+gh api --paginate repos/{owner}/{repo}/issues/<number>/comments
+```
 
 ## Wayfinding operations
 

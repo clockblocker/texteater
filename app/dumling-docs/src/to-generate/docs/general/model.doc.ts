@@ -25,8 +25,9 @@ A Lemma owns its \`language\`, \`canonicalForm\`, \`family\`, \`kind\`, and
 separate opaque identity layered above the Lemma.
 
 Grammatically indistinguishable homonyms share one Lemma. Semantic identity is
-a learner-scoped Reading—the pair of a Lemma and an emoji description—and
-belongs outside Dumling.
+a Reading—the pair of a Lemma and an emoji description. Dumling owns that
+foundational value and its equality and identity operations; dictionary scope,
+records, and workflows belong to consumers.
 
 ## Surface
 

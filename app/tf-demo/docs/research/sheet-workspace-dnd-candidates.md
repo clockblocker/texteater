@@ -1,5 +1,9 @@
 # Sheet workspace DnD and animation candidates
 
+> **Status: historical candidate shortlist.** The retained implementation
+> evidence exercised these candidates, and the dnd-kit decision records the
+> implemented choice.
+
 Research date: 2026-08-23. This note answers
 [`#241`](https://github.com/clockblocker/texteater/issues/241) under wayfinder
 [`#240`](https://github.com/clockblocker/texteater/issues/240). It compares

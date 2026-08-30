@@ -53,16 +53,15 @@ are returned as typed results. Programming defects in later operations still
 throw.
 
 Prompt Sources live under
-`src/promptsmith/laboratory/prompt-source` in stage-first routes. Each leaf owns
+`src/promptsmith/production` in stage-first routes. Each leaf owns
 its combined model schemas, instructions, and validated demonstrations. Routes
 with canonical semantic cases also own a route-local Golden Corpus.
 `bun run generate:system-prompts` deterministically rebuilds the committed
 system-prompt modules; `bun run check:system-prompts` checks them without
 modifying the workspace.
 
-See [persistent prompt-chain decisions](./docs/persistent/prompt-chains.md) for
-the agreed chain topology and the distinction between runtime stages and test
-infrastructure.
+See the [Dumgen documentation index](./docs/persistent/README.md) for the
+current prompt-chain contract and the durable authoring rules behind it.
 
 ## Scope
 

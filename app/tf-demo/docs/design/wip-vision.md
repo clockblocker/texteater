@@ -1,5 +1,9 @@
 # tf-demo vision (WIP)
 
+> **Status: superseded design history.** Accepted local ADR 0003 replaced the
+> route model below with one canonical `/` and workspace-owned Pane, Sheet, and
+> Card navigation. Retain this document as proposal history, not architecture.
+
 Core wayfinder: [#159: tf-demo linked Notes and source-context navigation](https://github.com/clockblocker/texteater/issues/159)
 
 Block policy wayfinder:

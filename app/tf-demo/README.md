@@ -25,6 +25,9 @@ Contributor UI experiments live in the application-independent playground at
 does not initialize Convex. See [`src/playground/README.md`](./src/playground/README.md)
 for the experiment contract.
 
+The [tf-demo documentation index](./docs/README.md) separates current
+decisions and operations from proposals and retained design history.
+
 ## Develop locally
 
 From the repository root, install the Bun workspace and start both Convex and

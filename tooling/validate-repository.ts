@@ -26,6 +26,14 @@ const commands = [
 		label: "repository dependency architecture",
 	},
 	{
+		args: [
+			"bun",
+			join(repositoryRoot, "tooling/documentation-integrity.ts"),
+		],
+		cwd: repositoryRoot,
+		label: "documentation integrity",
+	},
+	{
 		args: ["bun", "test", join(repositoryRoot, "tooling")],
 		cwd: repositoryRoot,
 		label: "tooling tests",

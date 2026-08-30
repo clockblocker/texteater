@@ -1,5 +1,9 @@
 # dnd-kit vs Pragmatic Drag and Drop for the Card/Sheet workspace
 
+> **Status: implemented library decision.** The production workspace currently
+> uses the pinned `@dnd-kit/react` and `@dnd-kit/collision` packages described
+> here.
+
 Research date: 2026-08-25.
 
 ## Decision

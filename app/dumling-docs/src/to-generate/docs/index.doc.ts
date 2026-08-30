@@ -56,6 +56,7 @@ Dumling focuses on lexical classification for learning tools:
 - **Lemma**: normalized grammatical identity, such as _"walk"_, _"give up"_, or _"walk in the park"_
 - **Surface**: the normalized contextual form, such as _"gave up"_
 - **Attestation**: click-independent occurrence evidence with one or more exact, source-ordered members
+- **Reading**: foundational semantic value formed by one Lemma and one emoji description
 - Lemma family: \`Lexeme\`, \`Morpheme\`, \`Phraseme\`, or \`Construction\`
 - member orthography: whether each attested member is standard text or a typo
 - Surface spelling and Attestation realization coverage: licensed variants and genuinely partial realizations
@@ -72,8 +73,10 @@ Dumling intentionally does not try to be a full grammar model.
 It does not model syntactic dependency relations, phrase structure, or sentence-level grammar. It also does not try to explain every grammatical relation between words in a sentence.
 
 The scope is narrower: connect attested evidence to a Surface and its Lemma,
-then describe that grammatical chain in a stable, language-aware shape. A learner's
-semantic Reading—one Lemma plus one emoji description—belongs outside Dumling.
+then describe that grammatical chain in a stable, language-aware shape.
+Dumling also owns the foundational Reading DTO, schema, value equality, and
+stable tuple-derived identity operation. Applications and dictionary modules
+own learner-scoped Reading records, selection, persistence, and workflows.
 
 ## Runtime Scope
 

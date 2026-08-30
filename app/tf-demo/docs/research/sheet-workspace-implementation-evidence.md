@@ -1,5 +1,8 @@
 # Sheet workspace implementation evidence
 
+> **Status: historical prototype evidence.** This evidence informed the later
+> dnd-kit decision; it is not the current implementation contract.
+
 Recorded 2026-08-23 for [`#240`](https://github.com/clockblocker/texteater/issues/240).
 This is decision input, not the implementation choice required by `#248`.
 

@@ -1,5 +1,8 @@
 # German high-level target and Attestation membership footprint
 
+> **Lifecycle: historical implementation map.** The fixed-member policy was
+> implemented and is governed by system ADR 0004 and current code.
+
 Status: implementation map for
 [texteater#83](https://github.com/clockblocker/texteater/issues/83), a research
 child of [map #82](https://github.com/clockblocker/texteater/issues/82). This

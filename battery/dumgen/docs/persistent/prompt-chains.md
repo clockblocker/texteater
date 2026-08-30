@@ -1,30 +1,32 @@
 # Prompt Chains
 
-Decisions about Dumgen prompt topology and boundaries. The prompts remain
-laboratory work in progress.
+**Status: current runtime contract.** Accepted local ADR 0001 governs Intake
+and Source Segmentation. Prompt experiments remain laboratory evidence; the
+runtime stages described here are implemented production behavior.
 
 ## Segmentation chain
 
 ```text
 Source Sentence
   -> Intake model call
-  -> if Accepted: Segmentation<Lang> model call
+  -> if Accepted: deterministic Source Segmentation<Lang>
 ```
 
-This is always a chain of two distinct, sequential model calls. Intake and
-Segmentation are never combined into one prompt or call. A rejected Intake
-Decision stops the chain before Segmentation.
+The batch-only public operation makes exactly one Intake model call. Intake and
+Source Segmentation remain distinct stages, but German and Hebrew segmentation
+are deterministic local modules and never make a second model call. A rejected
+Intake Decision stops the chain before Source Segmentation.
 
 Intake returns one of:
 
 - `Accepted` with an Enabled Segmentation Language, used to dispatch
-  `Segmentation<Lang>`
-- `UnsupportedLanguage` with the resolved language
+  `SourceSegmentation<Lang>`
+- `UnsupportedLanguage` without a language projection
 - `Unintelligible` without a language
 
-For now, Intake resolves one primary language and dispatches one route. Only
-`Segmentation<de>` is enabled. It preserves non-primary-language spans as
-`OpaqueText`. Multilingual routing is deferred to
+For now, Intake resolves one primary language and dispatches one route. German
+and Hebrew are enabled. Their Source Segmentation modules preserve
+non-primary-language spans as `OpaqueText`. Multilingual routing is deferred to
 [texteater#19](https://github.com/clockblocker/texteater/issues/19).
 
 ## Classification chain
@@ -41,6 +43,11 @@ owns static routing data. Code owns identity, copied input, derivable values,
 presentation data, and validation. Reading Resolution's `decision` is the sole
 deliberate redundancy; it helps expose hallucination without controlling
 application behavior.
+
+Human-authored runtime Prompt Sources live under
+`src/promptsmith/production/**/prompt-source.ts`. Prompt experiments and their
+evaluators live under `src/promptsmith/laboratory/experiments`; they do not
+define a second runtime chain.
 
 Consumers enter these chains through `segment`, `resolve.grammatical`, and
 `resolve.reading`. The prompt catalog and its stage topology are internal to

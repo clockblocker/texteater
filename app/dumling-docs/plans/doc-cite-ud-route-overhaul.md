@@ -1,5 +1,9 @@
 # Doc-Cite `u` route overhaul
 
+> **Status: completed implementation plan, retained as history.** The route
+> hierarchy and generated navigation are implemented. Paths beginning with
+> `docs-site/**` below record the pre-move layout and are obsolete.
+
 ## Outcome
 
 Rebuild doc-cite around a UD-like public tree:

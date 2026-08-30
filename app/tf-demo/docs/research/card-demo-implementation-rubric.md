@@ -1,5 +1,8 @@
 # Card-demo implementation comparison rubric
 
+> **Status: historical prototype criteria.** The later Sheet-workspace evidence
+> and dnd-kit decision completed this comparison sequence.
+
 Research date: 2026-08-22. This note answers [issue #216](https://github.com/clockblocker/texteater/issues/216) for the fixed behavior in [map #215](https://github.com/clockblocker/texteater/issues/215). It compares implementation fit, not visual design.
 
 ## Local and package constraints
