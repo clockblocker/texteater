@@ -14,6 +14,11 @@ Use the default five-role triage vocabulary. See `docs/agents/triage-labels.md`.
 
 Use the multi-context domain-documentation layout. See `docs/agents/domain.md`.
 
+### Documentation inventory
+
+Before adding, moving, pruning, or reconciling repository documentation, read
+`docs/agents/documentation-inventory.md`.
+
 ### Important
 
 Do NOT EDIT `**/GOAL.md` or `**/VISION.md` unless explicitly asted for.

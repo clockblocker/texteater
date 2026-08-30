@@ -168,9 +168,9 @@ operational evidence, not documentation authority.
 
 ### Other battery lifecycle notes
 
-- Dumdict's seven `docs/v1-architecture/*.md` files have no local index or
-  authority statement. `UNRESOLVED_TARGET_IDENTITY.md` labels itself superseded
-  but remains in the current-looking directory.
+- Dumdict's seven architecture documents now have a local lifecycle index.
+  `UNRESOLVED_TARGET_IDENTITY.md` remains in the branch as explicitly
+  superseded history.
 - Dumling's two migration reports are historical. Their titles and placement do
   not say that the Selection-to-Attestation migration is complete.
 - Dumrel's Context, README, and Vision overlap. The Vision is materially older
@@ -190,7 +190,7 @@ The primary boundary contains 913 Markdown files:
 | ------------------------------------ | ----: | ----------------------------------------------------------------------------------------------------------------------- |
 | `README.md`                          |     1 | Source-authority, generation-stage, and lifecycle index                                                                 |
 | `src/classification-logbook/**/*.md` |     8 | One substantive German rule/summary cluster, one empty German edge-case file, and four placeholder English/Hebrew files |
-| `plans/*.md`                         |     1 | Mostly implemented route-overhaul plan                                                                                  |
+| `plans/*.md`                         |     1 | Completed historical route-overhaul plan                                                                                |
 | `src/generated/docs/**/*.md`         |   189 | Generated page cache                                                                                                    |
 | `src/generated/entities/**/*.md`     |   262 | Generated curated-example cache                                                                                         |
 | `public/**/*.md`                     |   452 | Publication cache: 451 content pages plus `nav.md`                                                                      |
@@ -227,9 +227,10 @@ integrity checker fails when both stages exist and differ.
 | `src/playground/**/README.md`          |     2 | Contributor experiment and current Sheet/Card fixture contracts                           |
 
 The root domain path reaches tf-demo Context and local ADRs. The README points
-to the playground contract and reset verification. Most research, the
-relation-publication spec, TanStack proposal, WIP design, and nested
-sheet-workspace README have no index or inbound documentation pointer.
+to the scoped docs index, playground contract, and reset verification. The docs
+index now routes current procedures, proposals, and retained research; the
+nested sheet-workspace README remains discoverable through the playground
+contract.
 
 ### Laboratory
 
@@ -274,7 +275,7 @@ These are inventory findings, not edits to the affected authorities.
 6. **Historical evidence contains stale local code pointers.** At least 27
    relative code links are missing across six Dumgen, Dumling, and tf-demo
    research documents. The Markdown document targets themselves resolve, with
-   one additional broken heading anchor from Dumgen research into the Dumling
+   one additional broken heading anchor from Dumling research into the Dumling
    classification summary. Historical snapshots may retain conclusions, but
    their local evidence paths no longer reproduce directly.
 
@@ -302,12 +303,11 @@ These are inventory findings, not edits to the affected authorities.
 
 Each step ends at a checkable boundary.
 
-1. **Repair live pointers — autonomous portion complete.** Reconcile the
-   issue-tracker commands; replace or correct Dumgen's stale agreed-chain
-   pointer; and stop current docs from using protected Visions as architecture.
-   Complete when every always-loaded or README-linked target agrees with
-   accepted ADRs and current paths. Protected Vision-to-Vision pointers remain
-   a human-owned follow-up.
+1. **Repair live pointers — autonomous portion complete.** The issue-tracker
+   commands, Dumgen's stale agreed-chain pointer, and editable current docs now
+   agree with accepted ADRs and current paths. Protected Vision-to-Vision
+   pointers that still present older architecture remain a human-owned
+   follow-up.
 2. **Correct public source docs — complete.** Update the Dumling typed/logbook
    sources that place Reading outside Dumling, regenerate all three output
    stages, and verify `public` and `dist` match. Complete when no published page
@@ -330,12 +330,12 @@ Each step ends at a checkable boundary.
    Complete when each is pointed to, explicitly historical, or removed.
 6. **Automate integrity — non-destructive portion complete.** Check local
    Markdown targets and anchors, generated cache freshness, tf-demo mirror
-   equality, and lifecycle metadata in CI. Complete when the known broken
-   anchor, stale `dist` pages, and stale research links are either fixed or
-   explicitly exempted as historical. The checker now reports exactly 27
-   missing historical targets and one broken anchor as advisories; making them
-   fail or exempting them requires the retention policy decision this cleanup
-   deliberately does not infer.
+   equality, and lifecycle metadata in CI. `public` and `dist` currently match;
+   the remaining policy boundary is whether the known stale research links and
+   broken anchor should be fixed or explicitly exempted as historical. The
+   checker reports exactly 27 missing historical targets and one broken anchor
+   as advisories; making them fail or exempting them requires the retention
+   policy decision this cleanup deliberately does not infer.
 
 ## Reproduce the primary count
 
