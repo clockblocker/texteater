@@ -678,16 +678,15 @@ export function contextMapStructureIssues(text: string): DocumentationIssue[] {
 	const file = "CONTEXT-MAP.md";
 	const headings = text.split("\n").filter((line) => /^#{1,6}\s/u.test(line));
 	if (
-		headings.length === 3 &&
+		headings.length === 2 &&
 		headings[0] === "# Context Map" &&
-		headings[1] === "## Contexts" &&
-		headings[2] === "## Relationships"
+		headings[1] === "## Contexts"
 	) {
 		return [];
 	}
 	return [
 		{
-			detail: "Context Map headings must be # Context Map, ## Contexts, then ## Relationships",
+			detail: "Context Map headings must be # Context Map, then ## Contexts",
 			file,
 			kind: "context-map-structure",
 			severity: "error",

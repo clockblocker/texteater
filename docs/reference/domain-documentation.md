@@ -6,6 +6,8 @@ Before domain work:
 2. Follow it to the relevant scoped `CONTEXT.md` files.
 3. Read applicable system ADRs in `docs/adr/` and scoped ADRs in the owning app
    or battery.
+4. Apply `writing-for-agents` and `unslop` to every retained or rewritten
+   agent-facing domain document.
 
 A Context is a glossary. Use its canonical terms and avoid the rejected
 synonyms it names. Record implementation decisions in ADRs only when they are

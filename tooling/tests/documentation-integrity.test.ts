@@ -220,12 +220,12 @@ _Avoid_: Transaction
 test("enforces the installed Context Map headings", () => {
 	expect(
 		contextMapStructureIssues(
-			"# Context Map\n\n## Contexts\n\n- Ordering\n\n## Relationships\n\n- Ordering sends events.\n",
+			"# Context Map\n\n## Contexts\n\n- Ordering\n",
 		),
 	).toEqual([]);
 	expect(
 		contextMapStructureIssues(
-			"# Context Map\n\n## Contexts\n\n## Architecture\n",
+			"# Context Map\n\n## Contexts\n\n## Relationships\n",
 		),
 	).toMatchObject([{ kind: "context-map-structure" }]);
 });
